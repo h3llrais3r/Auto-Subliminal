@@ -1,0 +1,233 @@
+#import autosub
+
+<table>
+	<tr>
+		<td width="140px">Path</td>
+		<td><input type="text" size="50" name="path" value="$autosub.PATH" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationPath"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationPath" class="dropdown-menu has-tip" align="left"><ul><li>The folder where the auto-sub files are located.<br />This field is required!</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">Rootpath</td>
+		<td><input type="text" size="50" name="rootpath" value="$autosub.ROOTPATH" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationRootpath"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationRootpath" class="dropdown-menu has-tip" align="left"><ul><li>The folder where your series are located.<br />This field is required!</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">Logfile</td>
+		<td><input type="text" size="50" name="logfile" value="$autosub.LOGFILE" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationLogfile"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationLogfile" class="dropdown-menu has-tip" align="left"><ul><li>The location and the name of the logfile. When not set, AutoSubService.log will be used.<br />This field is required!</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">Launchbrowser</td>
+		<td><select name="launchbrowser">
+#if $autosub.LAUNCHBROWSER
+  <option value="True" selected="selected">Enabled</option>
+  <option value="False">Disabled</option>
+#else
+  <option value="True">Enabled</option>
+  <option value="False" selected="selected">Disabled</option>
+#end if
+		</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationLauchbrowser"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationLauchbrowser" class="dropdown-menu has-tip" align="left"><ul><li>Should we start a browser every time Auto-Sub starts? This overwrites the commandline parameters</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">Fallback to English</td>
+		<td><select name="fallbacktoeng">
+#if $autosub.FALLBACKTOENG
+  <option value="True" selected="selected">Enabled</option>
+  <option value="False">Disabled</option>
+#else
+  <option value="True">Enabled</option>
+  <option value="False" selected="selected">Disabled</option>
+#end if
+</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationFallbacktoeng"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationFallbacktoeng" class="dropdown-menu has-tip" align="left"><ul><li>When Enabled, English subtitles are downloaded when there are no Dutch subtitles available.<br />Default is Enabled.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">Download English</td>
+		<td><select name="downloadeng"> <!--value="$autosub.DOWNLOADENG" />-->
+#if $autosub.DOWNLOADENG
+  <option value="True" selected="selected">Enabled</option>
+  <option value="False">Disabled</option>
+#else
+  <option value="True">Enabled</option>
+  <option value="False" selected="selected">Disabled</option>
+#end if
+</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationDownloadeng"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationDownloadeng" class="dropdown-menu has-tip" align="left"><ul><li>When Enabled, English subtitles are always downloaded.<br />Default is Disabled.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">Subtitle English</td>
+		<td><input type="text" size="50" name="subeng" value="$autosub.SUBENG" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationSubeng"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationSubeng" class="dropdown-menu has-tip" align="left"><ul><li>When Fallback to English is enabled, English subtitles are renamed to: filename.subeng.srt.<br />Default is 'en' (filename.en.srt).</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">Subtitle Dutch</td>
+		<td><input type="text" size="50" name="subnl" value="$autosub.SUBNL" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationSubnl"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationSubnl" class="dropdown-menu has-tip" align="left"><ul><li>When downloading Dutch subtitles, files are renamed to: filename.srt when left emtpy.<br />Default is Empty.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">Notify English</td>
+		<td><select name="notifyen">
+			#if $autosub.NOTIFYEN
+			  <option value="True" selected="selected">Enabled</option>
+			  <option value="False">Disabled</option>
+			#else
+			  <option value="True">Enabled</option>
+			  <option value="False" selected="selected">Disabled</option>
+			#end if
+		</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationNotifyEN"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationNotifyEN" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, Autosub will send a notification when an English subtitle has been downloaded.<br />Default is Enabled.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">Notify Dutch</td>
+		<td><select name="notifynl">
+			#if $autosub.NOTIFYNL
+			  <option value="True" selected="selected">Enabled</option>
+			  <option value="False">Disabled</option>
+			#else
+			  <option value="True">Enabled</option>
+			  <option value="False" selected="selected">Disabled</option>
+			#end if
+		</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationNotifyNL"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationNotifyNL" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, Autosub will send a notification when a Dutch subtitle has been downloaded.<br />Default is Enabled.</li></ul></div></td>
+	</tr>
+	
+	<tr>
+		<td width="140px">Post-process CMD</td>
+		<td><input type="text" size="50" name="postprocesscmd" value="$autosub.POSTPROCESSCMD" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationPostprocesscmd"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationPostprocesscmd" class="dropdown-menu has-tip" align="left"><ul><li>AutoSub will run this command after downloading a subtitle.<br />Check: http://code.google.com/p/auto-sub/wiki/ExamplePostProcessScript for more info.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">MinMatchScore</td>
+		<td>
+		#set $temp = $autosub.MINMATCHSCORE
+		#set $temp = $temp - 8
+		Source: 
+		#if $temp >= 0
+			<input type="checkbox" name="mmssource" checked value=1>
+		#else
+			<input type="checkbox" name="mmssource" value=1>
+			#set $temp = $temp + 8
+		#end if
+
+		#set $temp = $temp - 4
+		Quality: 
+		#if $temp >= 0
+			<input type="checkbox" name="mmsquality" checked value=1>
+		#else
+			<input type="checkbox" name="mmsquality" value=1>
+			#set $temp = $temp + 4
+		#end if
+
+		#set $temp = $temp - 2
+		Codec: 
+		#if $temp >= 0
+			<input type="checkbox" name="mmscodec" checked="True" value=1>
+		#else
+			<input type="checkbox" name="mmscodec" value=1>
+			#set $temp = $temp + 2
+		#end if
+
+		#set $temp = $temp - 1
+		Releasegroup: 
+		#if $temp >= 0
+			<input type="checkbox" name="mmsrelease" checked value=1>
+		#else
+			<input type="checkbox" name="mmsrelease" value=1>
+		#end if
+		
+		</td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationMinmatchscore"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a>
+		<div id="informationMinmatchscore" class="dropdown-menu has-tip" align="left"><ul><li>
+		What items should match before a subtitle is downloaded via the API? 
+		</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">MinMatchScore RSS</td>
+		<td>
+		#set $temp = $autosub.MINMATCHSCORERSS
+		#set $temp = $temp - 8
+		Source: 
+		#if $temp >= 0
+			<input type="checkbox" name="mmsrsource" checked value=1>
+		#else
+			<input type="checkbox" name="mmsrsource" value=1>
+			#set $temp = $temp + 8
+		#end if
+
+		#set $temp = $temp - 4
+		Quality: 
+		#if $temp >= 0
+			<input type="checkbox" name="mmsrquality" checked value=1>
+		#else
+			<input type="checkbox" name="mmsrquality" value=1>
+			#set $temp = $temp + 4
+		#end if
+
+		#set $temp = $temp - 2
+		Codec: 
+		#if $temp >= 0
+			<input type="checkbox" name="mmsrcodec" checked="True" value=1>
+		#else
+			<input type="checkbox" name="mmsrcodec" value=1>
+			#set $temp = $temp + 2
+		#end if
+
+		#set $temp = $temp - 1
+		Releasegroup: 
+		#if $temp >= 0
+			<input type="checkbox" name="mmsrrelease" checked value=1>
+		#else
+			<input type="checkbox" name="mmsrrelease" value=1>
+		#end if
+
+		</td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationMinmatchscorerss"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a>
+		<div id="informationMinmatchscorerss" class="dropdown-menu has-tip" align="left"><ul><li>What items should match before a subtitle is downloaded via the RSS feed?</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">Skip hidden directories</td>
+		<td><select name="skiphiddendirs">
+		#if $autosub.SKIPHIDDENDIRS
+			<option value="True" selected="selected">Enabled</option>
+			<option value="False">Disabled</option>
+		#else
+			<option value="True">Enabled</option>
+			<option value="False" selected="selected">Disabled</option>
+		#end if
+		</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationSkiphiddendirs"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationSkiphiddendirs" class="dropdown-menu has-tip" align="left"><ul><li>Should we scan hidden directories (directories that start with a dot, for example .AppleDouble)? Doesn't work for Windows style hidden directories.</li></ul></div></td>
+	</tr>
+	
+	<tr>
+		<td width="140px">ScanDisk</td>
+		<td><input type="text" size="50" name="scandisk" value="$autosub.SCHEDULERSCANDISK" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationScandisk"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationScandisk" class="dropdown-menu has-tip" align="left"><ul><li>Change the interval of the ScanDisk thread, it scans the disk for missing subtitle files.<br />Time is in seconds, default is 3600 seconds.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">CheckSub</td>
+		<td><input type="text" size="50" name="checksub" value="$autosub.SCHEDULERCHECKSUB" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationChecksub"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationChecksub" class="dropdown-menu has-tip" align="left"><ul><li>Change the interval of the CheckSub thread, it checks if there is a match on the bierdopje API. Cannot not be set lower then 21600.<br />Time is in seconds, default is 28800 seconds.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">CheckRSS</td>
+		<td><input type="text" size="50" name="checkrss" value="$autosub.SCHEDULERCHECKRSS" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationCheckrss"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationCheckrss" class="dropdown-menu has-tip" align="left"><ul><li>Change the interval of the CheckRSS thread, it checks if there is a match on the bierdopje RSS feed. Cannot be et lower then 60.<br />Time is in seconds, default is 900 seconds.</li></ul></div></td>
+	</tr>
+	
+</table>
+

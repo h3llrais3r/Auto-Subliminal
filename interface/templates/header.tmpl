@@ -1,0 +1,59 @@
+#import autosub
+
+<!doctype html>
+<html>
+	<head>
+	
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+		<title>AutoSub</title>
+
+		<link rel="stylesheet" href="$autosub.WEBROOT/css/h5bp/normalize.css">
+		<link rel="stylesheet" href="$autosub.WEBROOT/css/h5bp/non-semantic.helper.classes.css">
+		<link rel="stylesheet" href="$autosub.WEBROOT/css/content.css">
+		<link rel="stylesheet" href="$autosub.WEBROOT/css/typographics.css">
+		<link rel="stylesheet" href="$autosub.WEBROOT/css/sprite.tables.css">
+		<link rel="stylesheet" href="$autosub.WEBROOT/css/menu.css">
+		<link rel="stylesheet" href="$autosub.WEBROOT/css/default.css">
+		<link rel="stylesheet" href="$autosub.WEBROOT/css/solidblocksmenu.css">
+		<link rel="stylesheet" href="$autosub.WEBROOT/css/jquery.dropdown.css">
+		<link rel="stylesheet" href="$autosub.WEBROOT/css/tabs.css">
+		
+		<script type="text/javascript" src="$autosub.WEBROOT/scripts/jquery-1.7.1.min.js"></script>
+		<script type="text/javascript" src="$autosub.WEBROOT/scripts/jquery-ui-1.8.17.min.js"></script>
+		<script type="text/javascript" src="$autosub.WEBROOT/scripts/hoverIntent.js"></script>
+		<script type="text/javascript" src="$autosub.WEBROOT/scripts/ddtabmenu.js"></script>
+		<script type="text/javascript" src="$autosub.WEBROOT/scripts/jquery.dropdown.js"></script>
+		<script type="text/javascript" src="$autosub.WEBROOT/scripts/jquery-ui-1.8.17.min.js"></script>
+		<script type="text/javascript" src="$autosub.WEBROOT/scripts/sorttable.js"></script>
+		
+		<script type="text/javascript">
+
+		urlPath=window.location.pathname;
+		urlPathArray = urlPath.split('/');
+		urlPath1=urlPathArray[urlPathArray.length-2];
+		
+		if (urlPath1 == 'home') {
+			ddtabmenu.definemenu("ddtabs3", 0) }
+		else if (urlPath1 == 'config') {
+			ddtabmenu.definemenu("ddtabs3", 1) }
+		else {
+			ddtabmenu.definemenu("ddtabs3", 2) }
+
+		</script>
+
+		<script language="JavaScript">
+		\$(document).ready(function() {
+		  \$("#tabs").tabs();
+		  });
+		</script>
+		
+	</head>
+
+<body>
+<div id="header">
+<a name="top"></a>
+    <span id="logo"><a href="$autosub.WEBROOT/home/" title="AutoSub homepage"><img alt="AutoSub" src="$autosub.WEBROOT/images/Header_Autosub.png"/></a></span>
+</div>
+
+

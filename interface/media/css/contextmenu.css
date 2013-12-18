@@ -1,0 +1,94 @@
+.pcMenu {
+    position: absolute;
+    z-index: 99999;
+    border: solid 1px #c6c6c6;
+    background: #FFF;
+    padding: 5px 0 1px 0;
+    margin: 0px;
+    top: 0;
+    left: 0;
+    display: none;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	font-family: inherit;
+	-moz-box-shadow: 0 0 15px rgba(0,0,0,.3);
+	-webkit-box-shadow: 0 0 15px rgba(0,0,0,.3);
+	box-shadow: 0 0 15px rgba(0,0,0,.3);
+}
+.pcMenu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.pcMenu li {
+    margin: 0px 0 4px 0;
+    padding: 0;
+    color : #333;
+}
+.pcMenu a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    line-height: 20px;
+    height: 20px;
+    outline: none;
+    padding: 1px 5px;
+    padding-left: 28px;
+	padding-right: 25px;
+}
+.pcMenu img {
+    float: left;
+    margin-top: 2px;
+    margin-left: 28px;
+	margin-right: 5px;
+}
+.pcMenu li.separator {
+    border-top: 1px solid #CCC;
+}
+.pcMenu li.hover {
+    color: #FFF;
+    background-color: #5795ea;
+	border-top: 1px solid #3f7dd4;
+  	margin: -1px 0 4px -1px;
+	padding-left: 1px;
+   	background: rgb(120,177,237); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(120,177,237,1) 0%, rgba(65,123,181,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(120,177,237,1)), color-stop(100%,rgba(65,123,181,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(120,177,237,1) 0%,rgba(65,123,181,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(120,177,237,1) 0%,rgba(65,123,181,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(120,177,237,1) 0%,rgba(65,123,181,1) 100%); /* IE10+ */
+	background: linear-gradient(top,  rgba(120,177,237,1) 0%,rgba(65,123,181,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#78b1ed', endColorstr='#417bb5',GradientType=0 ); /* IE6-9 */	
+}
+.pcMenu li.disabled {
+    color: #999;
+}
+.pcMenu li span {
+    background-image: url('arrow.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 10px;
+    height: 20px;
+    float: right;
+	margin-right: -17px;
+}
+.pcMenu li.hover>a>span {
+	background-image: url('arrow_white.png') !important;
+}
+.pcMenu li ul {
+    margin-top: -2px;
+    left: 180px;
+    position: absolute;
+    width: 180px;
+    border: solid 1px #c6c6c6;
+    background: #FFF;
+    display: none;
+    top: 0px;
+	-moz-border-radius-bottomright: 5px;
+	-moz-border-radius-bottomleft: 5px;
+	border-bottom-right-radius: 5px;
+	border-bottom-left-radius: 5px;
+	-moz-box-shadow: 0 0 15px rgba(0,0,0,.3);
+	-webkit-box-shadow: 0 0 15px rgba(0,0,0,.3);
+	box-shadow: 0 0 15px rgba(0,0,0,.3);
+}

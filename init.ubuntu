@@ -1,0 +1,50 @@
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides: AutoSub
+# Required-Start: $remote_fs $syslog
+# Required-Stop: $remote_fs $syslog
+# Default-Start: 2 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: AutoSub
+# Description: Script to control AutoSub
+### END INIT INFO
+
+## START EDIT ##
+
+NAME=AutoSub
+INIT_DIR=/etc/init.d
+DAEMON=/usr/bin/python
+DAEMON_OPTS=" /home/user/auto-sub/AutoSub.py -c/home/user/auto-sub/config.properties -d -l"
+
+## STOP EDIT ##
+
+autosub_start() {
+	echo "Starting $NAME"
+	$DAEMON ${DAEMON_OPTS}
+}
+autosub_stop() {
+	echo "Stopping $NAME"
+	for pid in $(/bin/pidof python); do
+		/bin/grep -q "AutoSub.py" /proc/$pid/cmdline && /bin/kill $pid
+	done
+	/bin/sleep 2
+}
+
+case "$1" in
+	start)
+		autosub_start
+	;;
+	stop)
+		autosub_stop
+	;;
+	restart|force-reload)
+		echo "Restarting $NAME"
+		autosub_stop
+		autosub_start
+	;;
+	*)
+		echo "Usage: $0 {start|stop|restart|force-reload}" >&2
+		exit 1
+	;;
+esac
+exit 0

@@ -1,0 +1,465 @@
+ * ================
+ *   Typographics
+ * ================
+ * 
+ * -----------------
+ * TABLE OF CONTENTS
+ * -----------------
+ * 
+ *  1) Generic
+ *  2) Header
+ *     a) Toolbar
+ *  3) Navigation
+ *  4) Sidebar
+ *     a) Navigation
+ *  5) Footer
+ *  -- Sprites:
+ *  6) Forms
+ *     a) Placeholders
+ *  7) Activity Stream
+ *  8) Loading Box
+ *  9) User Info
+ * 10) Stats List
+ * 11) Steps
+ * 12) Alert Boxes
+ * 13) Boxes
+ * 14) Buttons
+ * 15) Shortcuts
+ * 16) Tables
+ * 17) Wizard
+ *     a) Steps
+ *     b) Sidebar
+ *     c) Content
+ */
+
+/* ==================================================
+ * 1) Generic
+ * ================================================== */
+
+a, a:visited {
+	color: #164a7e;
+	text-decoration: none;
+}
+
+a:hover, a:active, a:focus {
+	color: #052646;
+	outline: none;
+}
+
+/* ==================================================
+ * 2) Header
+ * ================================================== */
+
+header a, header a:visited, header a:focus {
+	color: #4a4a4a;
+	text-decoration: none;
+	outline: none;
+}
+
+header a:hover {
+	color: #191919;
+}
+
+#header_toolbar h1 {
+	color: #FFFFFF;
+	font-size: 17px;
+	line-height: 37px;
+}
+
+/* ==================================================
+ * 2a) Header: Toolbar
+ * ================================================== */
+
+.toolbar_small > .toolbutton > span {
+	font-size: 10px;
+	color: #fff;
+	text-shadow: 0px 1px 1px rgba(0, 0, 00, 0.75);
+	filter: dropshadow(color=#CC000000, offx=0, offy=1);
+	/* In the circle Arial looks better */
+	font-family: Arial;
+}
+
+.toolbox h3 {
+	color: #efefef;
+	font-size: 12px;
+	text-shadow: 0px 1px 1px rgba(0, 0, 00, 0.75);
+	filter: dropshadow(color=#CC000000, offx=0, offy=1);
+}
+
+.toolbar_large .toolcaption {
+	color: #fff;
+	text-shadow: 0px 1px 1px rgba(0, 0, 00, 0.75);
+	filter: dropshadow(color=#CC000000, offx=0, offy=1);
+}
+
+.toolbar_large .dropdown {
+	color: #2b2b2b;
+}
+
+.toolbar_large .dropdown li:hover a, .toolbar_large .dropdown li:active a {
+	color: #fff;
+}
+
+/* ==================================================
+ * 3) Navigation
+ * ================================================== */
+#nav_main > li a {
+	font-size: 13px;
+	text-shadow: 0px 1px 0px #ffffff;
+	filter: shadow(color=#ffffff, direction: 180, strength: 1);
+}
+
+#nav_main > li.current > a, #nav_main > li.current > ul li.current a  {
+	color: #205a94;
+}
+
+/* ==================================================
+ * 4) Sidebar
+ * ================================================== */
+
+aside, aside h2 {
+	font-size: 13px;
+}
+
+/* ==================================================
+ * 4a) Sidebar: Navigation
+ * ================================================== */
+
+aside nav a, aside nav a:visited, aside nav a:focus {
+	outline: none;
+	color: #4b4b4b;
+	text-decoration: none;
+}
+
+aside nav a:hover, aside nav a.current:hover {
+	color: #fff;
+	text-shadow: 0px 1px 0px #000;
+	filter: shadow(color=#000, direction: 120, strength: 1);
+}
+
+aside nav a.current {
+	color: #205a94;
+	text-shadow: 0px 1px 0px #fff;
+	filter: shadow(color=#fff, direction: 120, strength: 1);
+}
+
+aside nav ul.sub a:hover {
+	color: #292929;
+}
+
+aside nav ul.sub a.current {
+	color: #164a7e;
+}
+
+/* ==================================================
+ * 5) Footer
+ * ================================================== */
+footer {
+	color: #f4f4f4;
+	font-size: 12px;
+	text-shadow: 0px 1px 0px #353535;
+	filter: shadow(color=#353535, direction: 180, strength: 1) progid:DXImageTransform.Microsoft.gradient( startColorstr='#313131', endColorstr='#101010',GradientType=0 );
+}
+
+footer #button_bar a, footer #button_bar a:visited, footer #button_bar a:focus {
+	color: #e6e6e6;
+	text-decoration: none;
+}
+
+footer #button_bar a:active {
+	color: #ffffff;
+}
+
+/* ==================================================
+ * Sprites
+ * ================================================== */
+
+/* ==================================================
+ * 6) Sprite: Forms
+ * ================================================== */
+
+input {
+	color: #54616a;
+}
+
+input, label {
+	font-size: 12px;
+}
+
+label, form p {
+	color: #58646d;
+}
+
+legend {
+	font-weight: bold;
+}
+
+label, .label {
+	color: #666666;
+	font-size: 12px;
+	font-weight: 700;
+	text-shadow: 0 1px 0 #FFFFFF;
+}
+
+input.error {
+	color: #870d0d;
+}
+
+label.error {
+	color: #b13636;
+}
+
+label.error.red {
+	color: #fff !important;
+	text-shadow: 0px 1px 1px #460909;
+	filter: dropshadow(color=#460909, offx=0, offy=1);
+}
+
+/* ==================================================
+ * 6a) Sprite: Forms: Placeholders
+ * ================================================== */
+
+::-webkit-input-placeholder {
+	color: #c8c8c8;
+}
+
+input:-moz-placeholder {
+	color: #c8c8c8;
+}
+
+/* ==================================================
+ * 7) Sprite: Acitivty Stream
+ * ================================================== */
+
+.activity .description, .activity .description a, .activity .description small {
+	color: #262626;
+	font-size: 12px;
+}
+
+.activity .description a {
+	color: #305883;
+	text-decoration: none;
+}
+
+.activity .description small a {
+	color: #747474;
+}
+
+/* ==================================================
+ * 8) Sprite: Loading Box
+ * ================================================== */
+
+#loading p {
+	color: #fff;
+	text-shadow: 0px 1px 1px #000;
+	filter: dropshadow(color=#000, offx=0, offy=1);
+}
+
+/* ==================================================
+ * 9) Sprite: User Info
+ * ================================================== */
+
+.userinfo .info a  {
+	font-size: 12px;
+	color: #6f6f6f;
+	text-decoration: none;
+	text-shadow: 1px 1px 0px #fff;
+	filter: dropshadow(color=#fff, offx=1, offy=1);
+}
+
+.userinfo .links li a {
+	color: #4d4d4d;
+	text-shadow: 1px 1px 0px #fff;
+	filter: dropshadow(color=#fff, offx=1, offy=1);
+	text-decoration: none;
+}
+
+/* ==================================================
+ * 10) Sprite: Stats List
+ * ================================================== */
+
+.stats-list span {
+	color: #313131;
+	font-size: 18px;
+}
+
+.stats-list a {
+	color: #464646 !important;
+	text-decoration: none;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+/* ==================================================
+ * 11) Sprite: Steps
+ * ================================================== */
+
+.step span {
+	text-align: center;
+	background: #fff;
+	color: #2e5681;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.step a {
+	text-decoration: none;
+}
+
+.step strong, .step small {
+	font-size: 12px;
+}
+
+.step strong {
+	display: block;
+	color: #2a2a2a;
+}
+
+.step small {
+	color: #717171;
+}
+
+/* ==================================================
+ * 12) Sprite: Alert Box
+ * ================================================== */
+
+.alert {
+	text-shadow: 0px 1px 1px #fff;
+}
+
+.alert span.hide {
+	text-shadow: 1px 1px 0 #FFFFFF;
+}
+
+.alert.success {
+	color: #2a632e;
+}
+
+.alert.error {
+	color: #820101;
+}
+
+.alert.warning {
+	color: #675100;
+}
+
+.alert.info {
+	color: #205a94;
+}
+
+.alert.note {
+	color: #5b5b5b;
+}
+
+/* ==================================================
+ * 13) Sprite: Boxes
+ * ================================================== */
+
+.box .header h3 {
+	font-size: 13px;
+	color: #fff;
+	text-shadow: 0 1px 0 #000;
+	font-weight: 700;
+}
+
+.box .header h1 {
+	font-size: 15px;
+	color: #fff;
+	text-shadow: 0 1px 0 #000;
+	font-weight: 700;
+	padding-left: 10px;
+}
+
+
+/* ==================================================
+ * 16) Sprite: Tables
+ * ================================================== */
+
+.dataTables_wrapper {
+	text-shadow: 0 1px 0 #fff;
+	font-weight: 400;
+}
+
+.table thead th:hover {
+	color: #023a73;
+}
+
+.dataTables_wrapper .actions {
+	text-shadow: 0 1px 0 #e5e5e5;
+	color: #222222;
+}
+
+.paginate_button, .paginate_active {
+    color: #373737;
+    text-shadow: 0 1px 0 #FFFFFF;
+}
+
+.paginate_button_disabled {
+    color: #9F9F9F;
+}
+
+.paginate_active {
+    color: #FCFCFC;
+    text-shadow: 0 1px 0 #000000;
+}
+
+/* ==================================================
+ * 17) Sprite: Wizard
+ * ================================================== */
+
+.wizard p {
+	font-size: 12px;
+	color: #545454;
+}
+
+/* ==================================================
+ * 17a) Sprite: Wizard: Steps
+ * ================================================== */
+
+.wizard .steps li a {
+	text-decoration: none;
+	color: #000;
+}
+
+.wizard .steps li span, .wizard .steps li strong {
+	color: #2d2d2d;
+}
+
+.wizard .steps li span {
+	font-size: 13px;
+}
+
+.wizard .steps li strong {
+	font-size: 12px;
+}
+
+.wizard .steps li small {
+	color: #8b8b8b;
+	font-size: 11px;
+}
+
+/* ==================================================
+ * 17b) Sprite: Wizard: Sidebar
+ * ================================================== */
+
+.wiz_sidebar > span, .wiz_sidebar > div > strong {
+	color: #2d2d2d;
+}
+
+.wiz_sidebar > span {
+	font-size: 25px;
+}
+
+.wiz_sidebar > div > small {
+	color: #8b8b8b;
+	font-size: 11px;
+}
+
+/* ==================================================
+ * 17c) Sprite: Wizard: Content
+ * ================================================== */
+
+.wiz_content h3 {
+	color: #2d2d2d;
+	font-size: 15px;
+}

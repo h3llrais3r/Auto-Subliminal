@@ -1,0 +1,20 @@
+#import autosub
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/menu.tmpl")
+
+Visit: <a href="$url" target="_blank">$url</a> <br>
+and enter pin below
+
+<form method="post" action="$autosub.WEBROOT/config/regTwitter">
+
+<input type="text" name="token_pin">
+
+<input type="hidden" name="token_key" value="$token_key">
+<input type="hidden" name="token_secret" value="$token_secret">
+<input type="submit" value="ok">
+
+</form>
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/footer.tmpl")

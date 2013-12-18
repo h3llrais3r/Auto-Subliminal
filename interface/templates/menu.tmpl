@@ -1,0 +1,48 @@
+#import autosub
+#import autosub.Helpers
+#import cherrypy
+#set useragent = cherrypy.request.headers.get("User-Agent", '')
+<div id="ddtabs3" class="solidblockmenu">
+	<ul>
+		<li><a href="$autosub.WEBROOT/home" rel="sb1">Home</a></li>
+		<li><a href="$autosub.WEBROOT/config" rel="sb2">Config</a></li>
+		<li><a href="$autosub.WEBROOT/log" rel="sb3">Log</a></li>
+	</ul>
+</div>
+
+<div class="tabcontainer ieclass">
+
+<div id="sb1" class="tabcontent">
+	<ul>
+		<li><a href="$autosub.WEBROOT/home/runNow">Run Now</a></li>
+		<li><a href="http://code.google.com/p/auto-sub/issues/list" target="_blank">Report issue</a></li>
+		<li><a href="$autosub.WEBROOT/home/shutdown">Shutdown</a></li>
+		#if $autosub.Helpers.CheckMobileDevice($useragent) == True
+			<li><a href="$autosub.WEBROOT/home/exitMini">Mobile Interface</a></li>
+		#end if
+	</ul>
+</div>
+
+<div id="sb2" class="tabcontent">
+	<ul>
+		<li><a href="$autosub.WEBROOT/config/info">Info</a></li>
+		<li><a href="$autosub.WEBROOT/config/flushCache">Flush Cache</a></li>
+		<li><a href="$autosub.WEBROOT/config/flushLastdown">Flush Downloaded</a></li>
+		<li><a href="$autosub.WEBROOT/config/checkVersion">Check Version</a></li>
+	</ul>
+</div>
+
+<div id="sb3" class="tabcontent">
+	<ul>
+		<li><a href="$autosub.WEBROOT/log/viewLog/info">Info</a></li>
+		<li><a href="$autosub.WEBROOT/log/viewLog/debug">Debug</a></li>
+		<li><a href="$autosub.WEBROOT/log/viewLog/error">Error</a></li>
+		<li><a href="$autosub.WEBROOT/log/viewLog/warning">Warning</a></li>
+		<li><a href="$autosub.WEBROOT/log/viewLog/critical">Critical</a></li>
+	</ul>
+</div>
+
+</div>
+
+<div>
+  <div id="content">

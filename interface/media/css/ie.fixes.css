@@ -1,0 +1,108 @@
+/* ==================================================
+ * 1) Make bad browsers happy
+ * ================================================== */
+ 
+ .ie7 .special_page .background {
+	text-align: left;
+	left: 50%;
+	margin-left: -395px;
+}
+
+ .ie7 .special_page .content .wrapper {
+	text-align: left;
+	left: 50%;
+	margin-left: -200px;
+}
+ 
+.ie7 #nav_main li {
+	margin-right: 4px;
+}
+.ie7 #nav_main li, .ie7 #nav_main li a {
+	zoom: 1;
+	display: inline;
+}
+
+.ie7 #nav_main li a {
+	padding-top: 10px;
+}
+
+.ie7 #nav_sub li {
+	display: inline;
+	zoom: 1;
+}
+
+.ie7 #nav_main li ul {
+	padding-top: 10px;
+}
+
+.ie7 aside nav li.last-child, .ie8 aside nav li.last-child {
+	border-bottom: none;
+}
+
+.ie button:hover, .ie button:active {
+	box-shadow: inset 0px 0px 1px 0px rgba(255, 255, 255, 0.42);
+}
+
+.ie7 body, .ie7 html {
+	font-family: Arial;
+}
+
+.ie7 .shortcuts li {
+	zoom: 1;
+	display: inline;
+}
+
+.ie7 .wizard .steps li a {
+	zoom: 1;
+	display: inline;
+}
+
+.ie7 .wizard .steps li {
+	zoom: 1;
+	display: inline !important;
+}
+
+.ie7 .stats-list span, .ie7 .stats-list a {
+	zoom: 1;
+	display: inline;
+	float: none;
+}
+
+.ie7 aside {
+	position: static;
+}
+
+.ie7 .toolbar_small, .ie7 .toolbar_large {
+	zoom:1;
+	display: inline;
+	
+}
+
+.ie7 .step {
+	zoom: 1;
+	display: inline;
+}
+
+.ie7 .box .content {
+	zoom: 1;
+}
+
+.ie7 .box .actions {
+	zoom: 1;
+}
+
+.ie7 .gallery li {
+	zoom: 1;
+	display: inline;
+	background: #000;
+}
+
+.ie7 .activity .avatar {
+	zoom: 1;
+	display: inline;
+}
+
+.ie7 .activity .description {
+	zoom: 1;
+	display: inline;
+}

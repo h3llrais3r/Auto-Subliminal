@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<autosub>
+	<release>
+		<version>Alpha 0.5.8</version>
+		<releasedate>20-06-2013</releasedate>
+		<changelog>Lib updates and bug fixes&lt;br&gt;
+ - Added notify pushalotd&lt;br&gt;
+ - Removed notify my windows phone&lt;br&gt;
+ - Update twitter library to a new version&lt;br&gt;
+ - Removed Reset API button&lt;br&gt;
+ 		</changelog>
+	</release>
+	<release>
+		<version>Beta 0.5.7</version>
+		<releasedate>09-05-2013</releasedate>
+		<changelog>Bug fixes&lt;br&gt;
+ - Codec matching now supported&lt;br&gt;
+ - Added Notify My Windows Phone&lt;br&gt;
+ - Added API Limited (429 errors)&lt;br&gt;
+ - Removed Reset API button&lt;br&gt;
+ - Reduced API connections to 10 per 60 seconds&lt;br&gt;
+ - Added new releasegroups&lt;br&gt;
+ - Added support for webrip&lt;br&gt;
+ - Added option to skip hidden directories&lt;br&gt;
+ - Fixed issue 178 (test-buttons did not work with webroot set)
+ 		</changelog>
+	</release>
+	<release>
+		<version>Beta 0.5.6</version>
+		<releasedate>16-11-2012</releasedate>
+		<changelog>Bug fixes, lot of enhancements&lt;br&gt;
+ - Codec matching now supported&lt;br&gt;
+ - Datetime stamp integrated into webui &lt;br&gt;
+ - Releasegrp in webui &lt;br&gt;
+ - Which subtitle was release can now be viewed in webui &lt;br&gt;
+ - Growl & Prowl Notifications &lt;br&gt;
+ - Auto-Sub goes mobile! a nice simple mobilegui! &lt;br&gt;
+ - Core enhancements, auto-sub works better with a lot of files. &lt;br&gt;
+ - Small bug fixes
+ 		</changelog>
+	</release>
+	<release>
+		<version>Alpha 0.5.5</version>
+		<releasedate>01-06-2012</releasedate>
+		<changelog>Bug fixes, notify library en new webui feature!&lt;br&gt;
+ - Notifications are now integrated for: Twitter, Email and NMA. Growl not yet!&lt;br&gt;
+ - New webui features:&lt;br&gt;
+    - Notifications are configurable through webui&lt;br&gt;
+    - Log is viewable through webui&lt;br&gt;
+    - Info page: Project changes in webui, change log in webui &lt;br&gt;
+and Information regarding AutoSub (python version, python location, file location etc) &lt;br&gt;
+ - Small Webui fixes &lt;br&gt;
+ - Beter filename detection &lt;br&gt;
+ - Unicode fixes / workaround &lt;br&gt;
+ - Small bug fixes
+ 		</changelog>
+	</release>
+	<release>
+		<version>Alpha 0.5.4</version>
+		<releasedate>05-05-2012</releasedate>
+		<changelog>Bug fixes and features!&lt;br&gt;
+ - Python 2.5 is supported now&lt;br&gt;
+ - ExamplePostProcess supports Notify My Android&lt;br&gt;
+ - New namemappings&lt;br&gt;
+ - Matching scores works beter for web-dl (critical bug fix)&lt;br&gt;
+ - Beter unicode support</changelog>
+	</release>
+	<release>
+		<version>Alpha 0.5.3</version>
+		<releasedate>25-03-2012</releasedate>
+		<changelog>Bug fix release, with some features!&lt;br&gt;
+ - New Skipshow menu&lt;br&gt;
+ - UserAgent updated because of the upcoming rule change for api&lt;br&gt;
+ - Distutils is now included in our libraries&lt;br&gt;
+ - AutoSub is now able to handle UTF8 chars is shownames&lt;br&gt;
+ - matchScore escapes regex sensitive chars&lt;br&gt;
+ - API timer is now reset correctly&lt;br&gt;
+ - AutoSub now download subtitle with the correct linefeed on Windows platform&lt;br&gt;
+ - ExamplePostProcess.py now works for Windows&lt;br&gt;
+ - ExamplePostProcess.py doesn't require password &amp; username anymore</changelog>
+	</release>
+</autosub>

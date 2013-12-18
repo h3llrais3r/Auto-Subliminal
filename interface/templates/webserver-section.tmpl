@@ -1,0 +1,34 @@
+#import autosub
+
+<table>
+	<tr>
+		<td width="120px">Webserverip</td>
+		<td><input type="text" name="webserverip" value="$autosub.WEBSERVERIP" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationWebserverIP"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationWebserverIP" class="dropdown-menu has-tip" align="left"><ul><li>To allow hosts to connect to any ip number assign to the machine use '0.0.0.0'</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="120px">Webserverport</td>
+		<td><input type="text" name="webserverport" value="$autosub.WEBSERVERPORT" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationWebserverport"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationWebserverport" class="dropdown-menu has-tip" align="left"><ul><li>Set port</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="120px">Username</td>
+		<td><input type="text" name="username" value="$autosub.USERNAME" /> </td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationUsername"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationUsername" class="dropdown-menu has-tip" align="left"><ul><li>If a username and password are set, the webserver requires authentication. Otherwise no authentication is set or required</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="120px">Password</td>
+		<td><input type="password" name="password" value="$autosub.PASSWORD" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationPassword"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationPassword" class="dropdown-menu has-tip" align="left"><ul><li>Set password</li></ul></div></td>
+	</tr>
+
+        <tr>
+                <td width="120px">Webroot</td>
+                <td><input type="text" name="webroot" value="$autosub.WEBROOT" /></td>
+                <td width="25px" align="right"><a href='#' data-dropdown="#informationWebroot"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationWebroot" class="dropdown-menu has-tip" align="left"><ul><li>Set Webroot for reverse proxying. Example: to proxy it to http://localhost/autosub/ webroot needs to be: /autosub</li></ul></div></td>
+        </tr>
+
+</table>

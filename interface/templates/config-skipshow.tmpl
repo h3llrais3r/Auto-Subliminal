@@ -1,0 +1,17 @@
+#import autosub
+#import cgi
+
+#include $os.path.join($autosub.PATH, "interface/templates/header.tmpl")
+
+#include $os.path.join($autosub.PATH, "interface/templates/menu.tmpl")
+
+<form method='post' action=/config/skipShow>
+Please enter which season to skip for: $title<br>
+<input type='text' name='season' size='5'> <input type='submit' value='ok'><br>
+
+Note: enter 0 to skip the show completely, enter 00 to skip special show.
+#set $title_escaped = $cgi.escape($title, True)
+<input type='hidden' name='title' value="$title_escaped">
+</form>
+
+#include $os.path.join($autosub.PATH, "interface/templates/footer.tmpl")

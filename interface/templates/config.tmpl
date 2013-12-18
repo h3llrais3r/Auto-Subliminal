@@ -1,0 +1,46 @@
+#import autosub
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/menu.tmpl")
+
+<form method="post" action="$autosub.WEBROOT/config/saveConfig">
+  <div id="tabs">
+    <ul>
+        <li><a href="#general">General</a></li>
+        <li><a href="#logfile">Logfile</a></li>
+		<li><a href="#namemapping">NameMapping</a></li>
+		<li><a href="#notifications">Notifications</a></li>
+        <li><a href="#skipshow">Skipshow</a></li>
+        <li><a href="#webserver">Webserver</a></li>
+    </ul>
+	
+    <div id="general">
+      #include $os.path.join($autosub.PATH.encode(), "interface/templates/config-section.tmpl")
+    </div>
+	
+    <div id="logfile">
+      #include $os.path.join($autosub.PATH.encode(), "interface/templates/logfile-section.tmpl")
+    </div>
+	
+    <div id="webserver">
+      #include $os.path.join($autosub.PATH.encode(), "interface/templates/webserver-section.tmpl")
+    </div>
+	
+    <div id="skipshow">
+      #include $os.path.join($autosub.PATH.encode(), "interface/templates/skipshow-section.tmpl")
+    </div>
+	
+    <div id="namemapping">
+      #include $os.path.join($autosub.PATH.encode(), "interface/templates/namemapping-section.tmpl")
+    </div>
+	
+    <div id="notifications">
+      #include $os.path.join($autosub.PATH.encode(), "interface/templates/notification-section.tmpl")
+    </div>
+	
+  </div>
+  <input type="submit" value="Save" />
+</form>
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/footer.tmpl")

@@ -1,0 +1,28 @@
+#import autosub
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/menu.tmpl")
+
+  <div id="tabs">
+    <ul>
+        <li><a href="#projectupdates">Project Updates</a></li>
+        <li><a href="#info">Info</a></li>
+		<li><a href="#changelog">Changelog</a></li>
+    </ul>
+	
+    <div id="projectupdates">
+      #include $os.path.join($autosub.PATH.encode(), "interface/templates/info-projectupdates.tmpl")
+    </div>
+	
+    <div id="info">
+      #include $os.path.join($autosub.PATH.encode(), "interface/templates/info-section.tmpl")
+    </div>
+	
+	<div id="changelog">
+      #include $os.path.join($autosub.PATH.encode(), "interface/templates/info-changelog.tmpl")
+    </div>
+		
+  </div>
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/footer.tmpl")

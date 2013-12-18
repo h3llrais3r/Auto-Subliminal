@@ -1,0 +1,92 @@
+#import autosub
+#import logging
+
+<table>
+	<tr>
+		<td width="120px">Loglevel</td>
+		<td><select name="loglevel">
+  #if $logging.getLevelName(autosub.LOGLEVEL).lower() == 'info'
+    <option value=$logging.INFO selected="selected">Info</option>
+    <option value=$logging.CRITICAL>Critical</option>
+    <option value=$logging.WARNING>Warning</option>
+    <option value=$logging.ERROR>Error</option>
+    <option value=$logging.DEBUG>Debug</option>
+  #elif $logging.getLevelName(autosub.LOGLEVEL).lower() == 'critical'
+    <option value=$logging.INFO>Info</option>
+    <option value=$logging.CRITICAL selected="selected">Critical</option>
+    <option value=$logging.WARNING>Warning</option>
+    <option value=$logging.ERROR>Error</option>
+    <option value=$logging.DEBUG>Debug</option>
+  #elif $logging.getLevelName(autosub.LOGLEVEL).lower() == 'warning'
+    <option value=$logging.INFO>Info</option>
+    <option value=$logging.CRITICAL>Critical</option>
+    <option value=$logging.WARNING selected="selected">Warning</option>
+    <option value=$logging.ERROR>Error</option>
+    <option value=$logging.DEBUG>Debug</option>
+  #elif $logging.getLevelName(autosub.LOGLEVEL).lower() == 'error'
+    <option value=$logging.INFO>Info</option>
+    <option value=$logging.CRITICAL>Critical</option>
+    <option value=$logging.WARNING>Warning</option>
+    <option value=$logging.ERROR selected="selected">Error</option>
+    <option value=$logging.DEBUG>Debug</option>
+  #elif $logging.getLevelName(autosub.LOGLEVEL).lower() == 'debug'
+    <option value=$logging.INFO>Info</option>
+    <option value=$logging.CRITICAL>Critical</option>
+    <option value=$logging.WARNING>Warning</option>
+    <option value=$logging.ERROR>Error</option>
+    <option value=$logging.DEBUG selected="selected">Debug</option>
+  #end if
+</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationLoglevel"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationLoglevel" class="dropdown-menu has-tip" align="left"><ul><li>Set the loglevel</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="120px">Lognum</td>
+		<td><input type="text" name="lognum" value="$autosub.LOGNUM" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationLognum"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationLognum" class="dropdown-menu has-tip" align="left"><ul><li>Set the amount of log files</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="120px">Logsize</td>
+		<td><input type="text" name="logsize" value="$autosub.LOGSIZE" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationLogsize"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationLogsize" class="dropdown-menu has-tip" align="left"><ul><li>Set the maximum size of the log files in bytes</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="120px">Loglevelconsole</td>
+		<td><select name="loglevelconsole">
+  #if $logging.getLevelName(autosub.LOGLEVELCONSOLE).lower() == 'info'
+    <option value=$logging.INFO selected="selected">Info</option>
+    <option value=$logging.CRITICAL>Critical</option>
+    <option value=$logging.WARNING>Warning</option>
+    <option value=$logging.ERROR>Error</option>
+    <option value=$logging.DEBUG>Debug</option>
+  #elif $logging.getLevelName(autosub.LOGLEVELCONSOLE).lower() == 'critical'
+    <option value=$logging.INFO>Info</option>
+    <option value=$logging.CRITICAL selected="selected">Critical</option>
+    <option value=$logging.WARNING>Warning</option>
+    <option value=$logging.ERROR>Error</option>
+    <option value=$logging.DEBUG>Debug</option>
+  #elif $logging.getLevelName(autosub.LOGLEVELCONSOLE).lower() == 'warning'
+    <option value=$logging.INFO>Info</option>
+    <option value=$logging.CRITICAL>Critical</option>
+    <option value=$logging.WARNING selected="selected">Warning</option>
+    <option value=$logging.ERROR>Error</option>
+    <option value=$logging.DEBUG>Debug</option>
+  #elif $logging.getLevelName(autosub.LOGLEVELCONSOLE).lower() == 'error'
+    <option value=$logging.INFO>Info</option>
+    <option value=$logging.CRITICAL>Critical</option>
+    <option value=$logging.WARNING>Warning</option>
+    <option value=$logging.ERROR selected="selected">Error</option>
+    <option value=$logging.DEBUG>Debug</option>
+  #elif $logging.getLevelName(autosub.LOGLEVELCONSOLE).lower() == 'debug'
+    <option value=$logging.INFO>Info</option>
+    <option value=$logging.CRITICAL>Critical</option>
+    <option value=$logging.WARNING>Warning</option>
+    <option value=$logging.ERROR>Error</option>
+    <option value=$logging.DEBUG selected="selected">Debug</option>
+  #end if
+</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationLoglevelconsole"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationLoglevelconsole" class="dropdown-menu has-tip" align="left"><ul><li>Set the loglevel for the console</li></ul></div></td>
+	</tr>
+</table>

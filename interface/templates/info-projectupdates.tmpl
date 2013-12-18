@@ -1,0 +1,49 @@
+#import autosub
+#import urllib2
+#from library.beautifulsoup import BeautifulStoneSoup
+#from autosub.Bierdopje import API
+#import HTMLParser
+
+#try:
+	#set $api = API('http://groups.google.com/group/autosub/feed/rss_v2_0_topics.xml', RSS=True)
+	$api.connect()
+	#set $page = $BeautifulStoneSoup(api.resp)
+	#set $result = $page.findAll("item") 
+	#set $counter = 0
+
+	<font style="font-size: large;"><b>Latest project updates</b></font><br /><br />
+
+	<table>
+	#for x in $result:
+		#set $soupx = $BeautifulStoneSoup(str(x))
+		#set $title = $soupx.find('title').string
+		#set $description = $soupx.find('description').text
+		#set $link = $soupx.find('link').string
+		#set $pubdate = $soupx.find('pubdate').string
+		<tr>
+			<td width="140px"><b>Title</b></td>
+			<td><a href="$link" target="_blank"><u><b>$title</b></u></a></td>
+		</tr>
+		<tr>
+			<td width="140px"><b>Posted On</b></td>
+			<td>$pubdate</td>
+		</tr>
+		<tr>
+			<td width="140px"><b>Description</b></td>
+			<td>$HTMLParser.HTMLParser().unescape($description)</td>
+		</tr>
+		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		#set $counter = $counter + 1
+		
+		#if $counter >= 3
+			#break
+		#end if
+	#end for
+	</table>
+
+	For older updates, please go to the <a href="http://groups.google.com/group/autosub" target="_blank"><u>Google Groups</u></a> page.
+#except:
+	Feed cannot be found right now, please try again later.
+#end try:

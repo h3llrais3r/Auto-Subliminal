@@ -1,0 +1,67 @@
+#import autosub
+#import sys
+#import os
+#from autosub.version import autosubversion
+
+<font style="font-size: large;"><b>Configuration</b></font><br /><br />
+<table>
+	<tr>
+		<td width="140px">Config file</td>
+		<td>
+			#if $os.path.split($autosub.CONFIGFILE)[0] == ''	
+				$os.path.join($autosub.PATH, $autosub.CONFIGFILE)
+			#else
+				$autosub.CONFIGFILE
+			#end if
+		</td>
+	</tr>
+	<tr>
+		<td width="140px">Database file</td>
+		<td>$os.path.join($autosub.PATH, $autosub.DBFILE)</td>
+	</tr>
+	<tr>
+		<td width="140px">Log file</td>
+		<td>
+			#if $os.path.split($autosub.LOGFILE)[0] == ''	
+				$os.path.join($autosub.PATH, $autosub.LOGFILE)
+			#else
+				$autosub.LOGFILE
+			#end if
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="140px">Auto-Sub version</td>
+		<td>$autosubversion</td>
+	</tr>
+	<tr>
+		<td width="140px">Python version</td>
+		<td>$sys.version</td>
+	</tr>
+	<tr>
+		<td width="140px">Python location</td>
+		<td>$os.path.dirname($sys.executable)</td>
+	</tr>
+</table>
+<hr>
+<font style="font-size: large;"><b>Websites</b></font><br /><br />
+<table>
+	<tr>
+		<td width="140px">Source</td>
+		<td><a href="http://code.google.com/p/auto-sub/" target="_blank">http://code.google.com/p/auto-sub/</a></td>
+	</tr>
+	<tr>
+		<td width="140px">Open Issues</td>
+		<td><a href="http://code.google.com/p/auto-sub/issues/list" target="_blank">http://code.google.com/p/auto-sub/issues/list</a></td>
+	</tr>
+	<tr>
+		<td width="140px">Wiki</td>
+		<td><a href="http://code.google.com/p/auto-sub/w/list" target="_blank">http://code.google.com/p/auto-sub/w/list</a></td>
+	</tr>	
+	<tr>
+		<td width="140px">Project Updates</td>
+		<td><a href="http://groups.google.com/group/autosub" target="_blank">http://groups.google.com/group/autosub</a></td>
+	</tr>	
+</table>

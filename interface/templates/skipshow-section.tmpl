@@ -1,0 +1,18 @@
+#import autosub
+
+<textarea rows="10" cols="75" name="skipshow">$autosub.Config.displaySkipshow</textarea> 
+
+<table>
+	<tr>
+		<td width="140px">Information</td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationSkipshowInfo"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationSkipshowInfo" class="dropdown-menu has-tip" align="left"><ul><li>Required. It allows the user to skip a show or a show season</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">Example</td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationSkipshowExample"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationSkipshowExample" class="dropdown-menu has-tip" align="left"><ul><li>Serie Name = 0 (this will skip the show 'Serie Name' completely<br />
+Another Serie name = 1,5,6 (this will skip the show 'Another Serie Name' season 1, 5 and 6<br />
+Show Name = 00,6,7 (this will skip the show 'Show Name' season 00 (specials), 6 and 7. <br />
+00 is different then 0, 0 skips a show, 00 skips specials (season 0)</li></ul></div></td>
+	</tr>
+</table>

@@ -1,0 +1,46 @@
+#import autosub
+#import urllib2
+#from library.beautifulsoup import BeautifulStoneSoup
+#from autosub.Bierdopje import API
+#import HTMLParser
+
+#try:
+	#set $api = API('http://auto-sub.googlecode.com/hg/changelog.xml', RSS=True)
+	$api.connect()
+	#set $page = $BeautifulStoneSoup(api.resp)
+	#set $result = $page.findAll("release") 
+	#set $counter = 0
+
+	<font style="font-size: large;"><b>Changelog</b></font><br /><br />
+
+	<table>
+	#for x in $result:
+		#set $soupx = $BeautifulStoneSoup(str(x))
+		#set $version = $soupx.find('version').string
+		#set $releasedate = $soupx.find('releasedate').text
+		#set $changelog = $soupx.find('changelog').string
+		<tr>
+			<td width="140px"><b>Version</b></td>
+			<td><b>$version</b></td>
+		</tr>
+		<tr>
+			<td width="140px"><b>Releasedate</b></td>
+			<td>$releasedate</td>
+		</tr>
+		<tr>
+			<td width="140px"><b>Changelog</b></td>
+			<td>$HTMLParser.HTMLParser().unescape($changelog)</td>
+		</tr>
+		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		#set $counter = $counter + 1
+		
+		#if $counter >= 3
+			#break
+		#end if
+	#end for
+	</table>
+#except:
+	Feed cannot be found right now, please try again later.
+#end try:

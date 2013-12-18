@@ -1,0 +1,238 @@
+#import autosub
+#import time
+#import cgi
+#import urllib
+#import re
+#from types import *
+#from autosub.Db import lastDown
+#from autosub.Helpers import ConvertTimestamp, ConvertTimestampTable
+#from autosub.Helpers import getAttr
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
+
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/menu.tmpl")
+
+$autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
+
+#if $len($autosub.WANTEDQUEUE) >= 1
+<div class="box">
+<div class="header">
+	<h1>Wanted</h1><span></span>
+</div>
+<div class="content no-padding">
+
+<table class="table sortable">
+	<thead>
+		<tr>
+			<th>Show name</th>
+			<th>Season</th>
+			<th>Episode</th>
+			<th>Source</th>
+			<th>Quality</th>
+			<th>Codec</th>
+			<th>Group</th>
+			<th>Language</th>
+			<th>Time</th>
+		</tr>
+	</thead>
+<tbody>
+#set $counter = 0
+#for $var in $autosub.WANTEDQUEUE
+#set $divname = "skipshow-" + str($counter)
+#set $buttonname = "skipshowbutton-" + str($counter)
+#set $buttonseason = "skipshowbuttonseason-" + str($counter)
+#set $buttonall = "skipshowbuttonall-" + str($counter)
+#set $counter = $counter + 1
+
+#set $title_escaped = $cgi.escape($var['title'], True)
+
+<tr>
+	<td><b><a href='#' data-dropdown="#dropdown-$counter">$var['title']</a></b></td>
+	<td width="75px" align="center">$var['season']</td>
+	<td width="75px" align="center">$var['episode']</td>
+
+#if $type($var['source']) == UnicodeType:
+	<td width="75px" align="center">$var['source'].upper()</td>
+#else
+	<td width="75px" align="center">Unknown</td>
+#end if
+
+
+#if $type($var['quality']) == UnicodeType:
+	<td width="75px" align="center">$var['quality'].upper()</td>
+#else
+	<td width="75px" align="center">Unknown</td>
+#end if
+
+#if $type($var['codec']) == UnicodeType:
+	<td width="75px" align="center">$var['codec'].upper()</td>
+#else
+	<td width="75px" align="center">Unknown</td>
+#end if
+
+#if $type($var['releasegrp']) == UnicodeType:
+	<td width="75px" align="center">$var['releasegrp'].upper()</td>
+#else
+	<td width="75px" align="center">Unknown</td>
+#end if
+
+	<td width="75px" align="center">
+#for lang in $var['lang']
+#if lang == "nl"
+	<img src="$autosub.WEBROOT/images/nl.png" alt="nl">
+#end if
+#if lang == "en"
+	<img src="$autosub.WEBROOT/images/en.png" alt="en">
+#end if
+#end for
+	</td>
+
+#if $type($var['timestamp']) == UnicodeType:
+	<td width="150px" align="center" sorttable_customkey="$ConvertTimestampTable($var['timestamp'])">$ConvertTimestamp($var['timestamp'])</td>
+#else
+	<td width="150px" align="center">Unknown</td>
+#end if
+	
+</tr>
+
+#end for
+</table>
+#set $counter = 0
+#for $var in $autosub.WANTEDQUEUE
+#set $counter = $counter + 1
+<div id="dropdown-$counter" class="dropdown-menu has-tip">
+    <ul>
+        <li><a href="$autosub.WEBROOT/config/skipShow/$var['title']/$var['season']">Skip season $var['season']</a></li>
+        <li><a href="$autosub.WEBROOT/config/skipShow/$var['title']/0">Skip show</a></li>
+    </ul>
+</div>
+#end for
+
+</div>
+</div>
+<i>Click showname in wanted list to skip it</i>
+#end if
+<p>
+
+
+#set $lastdownload = lastDown().getlastDown()
+
+#if $len($lastdownload) >= 1
+    
+<div class="box">
+<div class="header">
+	<h1>Latest downloaded subtitles</h1><span></span>
+</div>
+<div class="content no-padding">
+<table class="table sortable">
+<thead>
+<tr>
+	<th>Show name</th>
+	<th>Season</th>
+	<th>Episode</th>
+	<th>Source</th>
+	<th>Quality</th>
+	<th>Codec</th>
+	<th>Group</th>
+	<th>Language</th>
+	<th>Time</th>
+</tr>
+</thead>
+
+#for $var in $lastdownload
+<tr>
+	<td><b><a href='#' data-dropdown="#dropdown-lastDown-$var['id']">$var['show_name']</a></b></td>
+	<td width="75px" align="center">$var['season']</td>
+	<td width="75px" align="center">$var['episode']</td>
+
+#if $type($var['source']) == UnicodeType:
+	<td width="75px" align="center">$var['source'].upper()</td>
+#else
+	<td width="75px" align="center">Unknown</td>
+#end if
+
+#if $type($var['quality']) == UnicodeType:
+	<td width="75px" align="center">$var['quality'].upper()</td>
+#else
+	<td width="75px" align="center">Unknown</td>
+#end if
+
+#if $type($var['codec']) == UnicodeType:
+	<td width="75px" align="center">$var['codec'].upper()</td>
+#else
+	<td width="75px" align="center">Unknown</td>
+#end if
+
+#if $type($var['releasegrp']) == UnicodeType:
+	<td width="75px" align="center">$var['releasegrp'].upper()</td>
+#else
+	<td width="75px" align="center">Unknown</td>
+#end if
+
+<td width="75px" align="center">
+	#set $imageurl = $autosub.WEBROOT + "/images/" + $var['language'] + ".png"
+	<img src="$imageurl" alt="$var['language']" />
+</td>
+
+#if $type($var['timestamp']) == UnicodeType:
+	<td width="150px" align="center" sorttable_customkey="$ConvertTimestampTable($var['timestamp'])">$ConvertTimestamp($var['timestamp'])</td>
+#else
+	<td width="150px" align="center">Unknown</td>
+#end if
+
+</tr>
+
+<div id="dropdown-lastDown-$var['id']" class="dropdown-menu has-tip">
+    <ul>
+        <li>
+        #if $var['subtitle'] == None
+        	N/A
+        #else
+        	$var['subtitle']
+        #end if
+        </li>
+    </ul>
+</div>
+
+#end for
+
+</table>
+</div>
+</div>
+
+#end if
+<br>
+<table>
+	<tr>
+		<td width="100px">Next RSSCheck</td> 
+		<td>
+			#try
+			  $time.strftime('%H:%M:%S', $time.gmtime(($autosub.CHECKRSS.interval - ($time.time() - $autosub.CHECKRSS.lastrun) ))) <br>
+			#except
+			  Please wait... <br>
+			#end try
+		</td>
+	</tr>
+	
+	<tr>
+		<td width="100px">Next ScanDisk</td>
+		<td>
+			#try
+			  $time.strftime('%H:%M:%S', $time.gmtime(($autosub.SCANDISK.interval - ($time.time() - $autosub.SCANDISK.lastrun) ))) <br>
+			#except
+			  Please wait... <br>
+			#end try
+		</td>
+	</tr>
+	
+	<tr>
+		<td width="100px">Next CheckSub</td>
+		<td>
+			#try
+			  $time.strftime('%H:%M:%S', $time.gmtime(($autosub.CHECKSUB.interval - ($time.time() - $autosub.CHECKSUB.lastrun) ))) <br>
+			#except
+			  Please wait... <br>
+			#end try
+		</td>
+	</tr>
+</table>
+#include $os.path.join($autosub.PATH.encode(), "interface/templates/footer.tmpl")

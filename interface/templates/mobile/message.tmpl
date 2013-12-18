@@ -1,0 +1,41 @@
+#import autosub
+#import time
+#import cgi
+#import urllib
+#import re
+
+#from autosub.Db import lastDown
+#from autosub.version import autosubversion
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Auto-Sub Mini</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0;" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<link rel="stylesheet" href="$autosub.WEBROOT/mobile/css/jquery.mobile-1.0.min.css">
+		<script type="text/javascript" src="$autosub.WEBROOT/mobile/scripts/jquery-1.6.4.min.js"></script>
+		<script type="text/javascript" src="$autosub.WEBROOT/mobile/scripts/jquery.mobile-1.0.min.js"></script>
+		
+	</head>
+
+	<body>
+		<div data-role="page" data-add-back-btn="false">
+			<div data-role="header" id="header">
+				<div style="position: absolute; top: 5px; left: 5px;"><a href="$autosub.WEBROOT/home" data-role="button" data-icon="home" data-theme="b">Home</a></div><h1>MINI</h1>
+			</div>
+
+			<div data-role="content">
+				<div data-role="collapsible-set" data-theme="b" align="center">
+					<a href="#" data-role="button" data-icon="check" data-theme="b">$message</a>
+				</div>
+			</div>
+
+			  <div data-role="footer" data-theme="b">
+            <div class="ui-bar" align="center">
+				$autosubversion.upper() - API CALLS LEFT: $autosub.APICALLS</div>
+			</div>
+		</div>
+	</body>
+</html>
