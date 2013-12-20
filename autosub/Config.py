@@ -424,6 +424,11 @@ def ReadConfig(configfile):
         if cfg.has_option('dev', 'apikey'):
             autosub.APIKEY = cfg.get('dev', 'apikey')
 
+    if cfg.has_section('subliminal'):
+        autosub.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
+        if autosub.SUBLIMINALPROVIDERS:
+            autosub.SUBLIMINALPROVIDERLIST = autosub.SUBLIMINALPROVIDERS.split(',')
+
     # Settings
     autosub.SHOWID_CACHE = {}
 
