@@ -131,10 +131,10 @@ def start():
     autosub.SCANDISK.thread.start()
     log.info("AutoSub: scanDisk thread started")
 
-    log.info("AutoSub: Starting checkRss thread")
-    autosub.CHECKRSS = autosub.Scheduler.Scheduler(autosub.checkRss.checkRss(), autosub.SCHEDULERCHECKRSS, True, "CHECKRSS")
-    autosub.CHECKRSS.thread.start()
-    log.info("AutoSub: checkRss thread started")
+    # log.info("AutoSub: Starting checkRss thread")
+    # autosub.CHECKRSS = autosub.Scheduler.Scheduler(autosub.checkRss.checkRss(), autosub.SCHEDULERCHECKRSS, True, "CHECKRSS")
+    # autosub.CHECKRSS.thread.start()
+    # log.info("AutoSub: checkRss thread started")
 
     log.info("AutoSub: Starting checkSub thread")
     autosub.CHECKSUB = autosub.Scheduler.Scheduler(autosub.checkSub.checkSub(), autosub.SCHEDULERCHECKSUB, True, "CHECKSUB")
@@ -146,9 +146,9 @@ def stop():
     autosub.SCANDISK.stop = True
     autosub.SCANDISK.thread.join(10)
 
-    log.info("AutoSub: Stopping checkRss thread")
-    autosub.CHECKRSS.stop = True
-    autosub.CHECKRSS.thread.join(10)
+    # log.info("AutoSub: Stopping checkRss thread")
+    # autosub.CHECKRSS.stop = True
+    # autosub.CHECKRSS.thread.join(10)
 
     log.info("AutoSub: Stopping checkSub thread")
     autosub.CHECKSUB.stop = True
