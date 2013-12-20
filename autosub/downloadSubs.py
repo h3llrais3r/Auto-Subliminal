@@ -14,7 +14,7 @@ from autosub.Db import lastDown
 from autosub.Bierdopje import API
 import autosub.notify as notify
 
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 
 #TODO: Remove DOWNLOADQUEUELOCK everywhere
 #TODO: Remove DownloadSubs threath

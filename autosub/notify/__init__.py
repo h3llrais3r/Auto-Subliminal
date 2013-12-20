@@ -16,7 +16,7 @@ from autosub.notify import growl
 from autosub.notify import prowl
 from autosub.notify import pushalot
 
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 
 def notifyTest(notifylib):
     """

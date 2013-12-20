@@ -13,7 +13,7 @@ import autosub
 import autosub.Helpers
 from autosub.ProcessFilename import ProcessFilename
 # Settings
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 
 def walkDir(path):
     for dirname, dirnames, filenames in os.walk(os.path.join(path)):

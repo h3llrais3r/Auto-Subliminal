@@ -21,7 +21,7 @@ import autosub.version as version
 # Location of the configuration file:
 # configfile = "config.properties"
 # Set the logger
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 #/Settings -----------------------------------------------------------------------------------------------------------------------------------------
 
 # TODO: Webserver config, basic are done. CherryPy logging still needs a file only

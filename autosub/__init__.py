@@ -1,5 +1,5 @@
 import Config
-import logging.handlers
+import logging
 import time
 from autosub.version import autosubversion
 
@@ -154,17 +154,18 @@ def Initialize():
     APICALLSRESETINT = 86400
     APICALLSMAX = 300
     APICALLS = APICALLSMAX
+
+    initLogging()
     
-def initLogging(logfile):
-    global LOGLEVEL, LOGSIZE, LOGNUM, LOGLEVELCONSOLE, \
+def initLogging():
+    global LOGFILE, LOGLEVEL, LOGSIZE, LOGNUM, LOGLEVELCONSOLE, \
     DAEMON
     
-    # initialize logging
-    # A log directory has to be created below the start directory
-    log = logging.getLogger("thelogger")
+    # initialize logging (customize the root logger so every logger outputs to this)
+    log = logging.root
     log.setLevel(LOGLEVEL)
 
-    log_script = logging.handlers.RotatingFileHandler(logfile, 'a', LOGSIZE, LOGNUM)
+    log_script = logging.handlers.RotatingFileHandler(LOGFILE, 'a', LOGSIZE, LOGNUM)
     log_script_formatter=logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
     log_script.setFormatter(log_script_formatter)
     log_script.setLevel(LOGLEVEL)
@@ -178,5 +179,3 @@ def initLogging(logfile):
         formatter = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
         console.setFormatter(formatter)
         log.addHandler(console)
- 
-    return log

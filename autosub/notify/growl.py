@@ -4,7 +4,7 @@ import autosub
 from library.growl import gntp
 import socket
 
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 
 def _send_notify(message):
     host = autosub.GROWLHOST

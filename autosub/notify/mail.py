@@ -6,7 +6,7 @@ from email.mime.text import MIMEText
 
 import autosub
 
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 
 def _send_notify(message):
     try:

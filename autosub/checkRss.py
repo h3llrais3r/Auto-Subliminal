@@ -14,7 +14,7 @@ import autosub.Helpers
 from autosub.Bierdopje import API
 from autosub.ProcessFilename import ProcessFilename
 from autosub.downloadSubs import DownloadSub
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 
 class checkRss():
     """

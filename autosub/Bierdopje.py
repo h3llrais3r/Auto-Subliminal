@@ -14,7 +14,7 @@ from operator import itemgetter
 import autosub.Helpers
 from autosub.ProcessFilename import ProcessFilename
 # Settings
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 
 class API:
     """

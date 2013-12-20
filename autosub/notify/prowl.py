@@ -4,7 +4,7 @@ import autosub
 from httplib import HTTPSConnection
 from urllib import urlencode
 
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 
 def _send_notify(message):
     try:

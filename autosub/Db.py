@@ -10,7 +10,7 @@ import autosub
 import autosub.version as version
 
 # Settings
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 
 def dict_factory(cursor, row):
     d = {}

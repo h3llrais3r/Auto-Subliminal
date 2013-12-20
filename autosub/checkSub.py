@@ -11,7 +11,7 @@ import autosub.Bierdopje
 import autosub.Helpers as Helpers
 from autosub.downloadSubs import DownloadSub
 # Settings
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 
 
 class checkSub():

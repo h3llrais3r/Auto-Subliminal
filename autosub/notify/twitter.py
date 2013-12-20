@@ -2,7 +2,7 @@ import library.pythontwitter as twitter
 import autosub
 import logging
 
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 
 try:
     from urlparse import parse_qsl

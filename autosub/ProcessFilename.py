@@ -4,7 +4,7 @@ from autosub.Helpers import CleanSerieName
 import re
 import logging
 
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 
 def _checkTitle(title):
     if not title:

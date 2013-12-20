@@ -1,3 +1,4 @@
+import logging
 import sys
 import getopt
 import os
@@ -103,7 +104,7 @@ def main(argv=None):
         os._exit(1)
     
     print "AutoSub: Starting output to log. Bye!"
-    log = autosub.initLogging(autosub.LOGFILE)
+    log = logging.getLogger(__name__)
     log.debug("AutoSub: Systemencoding is: %s" %autosub.SYSENCODING)
     log.debug("AutoSub: Configversion is: %d" %autosub.CONFIGVERSION)
     log.debug("AutoSub: Dbversion is: %d" %autosub.DBVERSION)

@@ -2,7 +2,7 @@ import logging
 import library.pynma as pynma
 import autosub
 
-log = logging.getLogger('thelogger')
+log = logging.getLogger(__name__)
 
 def _send_notify(message):
     nma_instance = pynma.PyNMA(str(autosub.NMAAPI))
