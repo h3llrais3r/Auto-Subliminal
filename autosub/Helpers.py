@@ -222,6 +222,8 @@ def SkipShow(showName, season, episode):
 
 
 def getShowid(show_name):
+    #TODO: implement this again (disabled for now because of dead provider Bierdopje)
+    return 1;
     log.debug('getShowid: trying to get showid for %s' %show_name)
     show_id = nameMapping(show_name)
     if show_id:
@@ -254,6 +256,8 @@ def getShowid(show_name):
 
 
 def checkAPICalls(use=False):
+    #TODO: implement this again (disabled for now because of dead provider Bierdopje)
+    return True
     """
     Checks if there are still API calls left
     Set true if a API call is being made.
