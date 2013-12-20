@@ -1,0 +1,5 @@
+# Compiled files
+*.pyc
+
+# PyCharm IDE
+.idea
