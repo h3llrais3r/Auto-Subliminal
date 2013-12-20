@@ -4,6 +4,8 @@ import autosub.checkRss
 import autosub.checkSub
 import autosub.WebServer
 
+import subliminal
+
 import logging
 import os
 import cherrypy
@@ -125,6 +127,12 @@ def start():
     
     if autosub.LAUNCHBROWSER:
         launchBrowser()
+
+    # configure subliminal/dogpile cache
+    # use MutexLock otherwise some providers will not work due to fcntl module import error in windows
+    cache_file = os.path.abspath(os.path.expanduser(autosub.SUBLIMINALCACHEFILE))
+    subliminal.cache_region.configure(autosub.DOGPILECACHEFILE,
+                                      arguments={'filename': cache_file, 'lock_factory': subliminal.MutexLock})
 
     log.info("AutoSub: Starting scanDisk thread")
     autosub.SCANDISK = autosub.Scheduler.Scheduler(autosub.scanDisk.scanDisk(), autosub.SCHEDULERSCANDISK, True, "LOCALDISK")
