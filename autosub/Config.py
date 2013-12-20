@@ -59,10 +59,19 @@ def ReadConfig(configfile):
         else:
             autosub.DOWNLOADENG = False
 
+        # use subliminal scores (see examples below on how it is calculated)
+        # score calculation for version > 0.7.3
+        # video.scores['episode']+video.scores['series']+video.scores['season']+video.scores['resolution']+video.scores['year']+video.scores['release_group'] = 68
+        # video.scores['episode']+video.scores['series']+video.scores['season']+video.scores['video_codec']+video.scores['resolution']+video.scores['year']+video.scores['release_group'] = 70
+        # video.scores['hash'] = 71
+        # score calculation for version = 0.7.3
+        # video.scores['episode']+video.scores['series']+video.scores['season']+video.scores['resolution']+video.scores['release_group'] = 43
+        # video.scores['episode']+video.scores['series']+video.scores['season']+video.scores['video_codec']+video.scores['resolution']+video.scores['release_group'] = 45
+        # video.scores['hash'] = 46
         if cfg.has_option('config', 'minmatchscore'):
             autosub.MINMATCHSCORE = int(cfg.get('config', 'minmatchscore'))
         else:
-            autosub.MINMATCHSCORE = 0
+            autosub.MINMATCHSCORE = 43
 
         if cfg.has_option('config', 'minmatchscoreRSS'):
             autosub.MINMATCHSCORERSS = int(cfg.get('config', 'minmatchscorerss'))
@@ -156,7 +165,7 @@ def ReadConfig(configfile):
         print "Config ERROR: Variable ROOTPATH is missing. This is required! Using current working directory instead."
         autosub.PATH = unicode(os.getcwd(), autosub.SYSENCODING)
         autosub.DOWNLOADENG = False
-        autosub.MINMATCHSCORE = 8
+        autosub.MINMATCHSCORE = 43
         autosub.MINMATCHSCORERSS = 14
         autosub.SCHEDULERSCANDISK = 3600
         autosub.SCHEDULERCHECKSUB = 28800
