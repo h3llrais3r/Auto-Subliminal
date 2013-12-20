@@ -11,17 +11,17 @@ import locale
 help_message = '''
 Usage:
     -h (--help)     Prints this message
-    -c (--config=)  Forces AutoSub.py to use a configfile other than ./config.properties
-    -d (--daemon)   Run AutoSub in the background
-    -l (--nolaunch) Stop AutoSub from launching a webbrowser
+    -c (--config=)  Forces AutoSubliminal.py to use a configfile other than ./config.properties
+    -d (--daemon)   Run AutoSubliminal in the background
+    -l (--nolaunch) Stop AutoSubliminal from launching a webbrowser
     
 Example:
-    python AutoSub.py
-    python AutoSub.py -d
-    python AutoSub.py -d -l
-    python AutoSub.py -c/home/user/config.properties
-    python AutoSub.py --config=/home/user/config.properties
-    python AutoSub.py --config=/home/user/config.properties --daemon
+    python AutoSubliminal.py
+    python AutoSubliminal.py -d
+    python AutoSubliminal.py -d -l
+    python AutoSubliminal.py -c/home/user/config.properties
+    python AutoSubliminal.py --config=/home/user/config.properties
+    python AutoSubliminal.py --config=/home/user/config.properties --daemon
     
 '''
 
@@ -81,7 +81,7 @@ def main(argv=None):
     #load configuration
     if os.path.isfile('config.properties.dev'):
         autosub.CONFIGFILE='config.properties.dev'
-    print "AutoSub: Initializing variables and loading config"
+    print "Initializing variables and loading config"
     autosub.Initialize()
     
     import autosub.AutoSub
@@ -100,19 +100,19 @@ def main(argv=None):
     if os.path.exists(autosub.PATH):
         os.chdir(autosub.PATH)
     else:
-        print "AutoSub: ERROR PATH does not exist, check config."
+        print "ERROR PATH does not exist, check config."
         os._exit(1)
     
-    print "AutoSub: Starting output to log. Bye!"
+    print "Starting output to log. Bye!"
     log = logging.getLogger(__name__)
-    log.debug("AutoSub: Systemencoding is: %s" %autosub.SYSENCODING)
-    log.debug("AutoSub: Configversion is: %d" %autosub.CONFIGVERSION)
-    log.debug("AutoSub: Dbversion is: %d" %autosub.DBVERSION)
+    log.debug("Systemencoding is: %s" %autosub.SYSENCODING)
+    log.debug("Configversion is: %d" %autosub.CONFIGVERSION)
+    log.debug("Dbversion is: %d" %autosub.DBVERSION)
     
-    log.info("AutoSub: Starting threads")
+    log.info("Starting threads")
     autosub.AutoSub.start()
     
-    log.info("AutoSub: threads started, going into a loop to keep the main thread going")
+    log.info("Threads started, going into a loop to keep the main thread going")
     
     while True:
         time.sleep(1)
