@@ -159,6 +159,7 @@ def upgradeDb(from_version, to_version):
             cursor=connection.cursor()
             cursor.execute("DROP TABLE id_cache;")
             cursor.execute("CREATE TABLE id_cache (tvdb_id INTEGER, show_name TEXT);")
+            cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (4,3))
             connection.commit()
             connection.close()
 
