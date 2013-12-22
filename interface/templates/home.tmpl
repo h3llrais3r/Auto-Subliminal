@@ -203,17 +203,6 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 <br>
 <table>
 	<tr>
-		<td width="100px">Next RSSCheck</td> 
-		<td>
-			#try
-			  $time.strftime('%H:%M:%S', $time.gmtime(($autosub.CHECKRSS.interval - ($time.time() - $autosub.CHECKRSS.lastrun) ))) <br>
-			#except
-			  Please wait... <br>
-			#end try
-		</td>
-	</tr>
-	
-	<tr>
 		<td width="100px">Next ScanDisk</td>
 		<td>
 			#try

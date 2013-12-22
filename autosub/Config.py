@@ -73,11 +73,6 @@ def ReadConfig(configfile):
         else:
             autosub.MINMATCHSCORE = 43
 
-        if cfg.has_option('config', 'minmatchscoreRSS'):
-            autosub.MINMATCHSCORERSS = int(cfg.get('config', 'minmatchscorerss'))
-        else:
-            autosub.MINMATCHSCORERSS = 4
-
         if cfg.has_option('config', 'scandisk'):
             autosub.SCHEDULERSCANDISK = int(cfg.get('config', 'scandisk'))
         else:
@@ -86,21 +81,12 @@ def ReadConfig(configfile):
         if cfg.has_option('config', 'checksub'):
             autosub.SCHEDULERCHECKSUB = int(cfg.get('config', 'checksub'))
             # CHECKSUB may only be runed 6 times a day, to prevent the API key from being banned
-            # If you want new subtitles faster, you should decrease the CHECKRSS time
+            # If you want new subtitles faster, you should decrease the CHECKSUB time
             if autosub.SCHEDULERCHECKSUB < 21600:
                 print "Config WARNING: checksub variable is lower then 21600! This is not allowed, this is to prevent our API-key from being banned."
                 autosub.SCHEDULERCHECKSUB = 21600  # Run every 6 hours
         else:
             autosub.SCHEDULERCHECKSUB = 86400  # Run every 8 hours
-
-        if cfg.has_option('config', 'checkrss'):
-            autosub.SCHEDULERCHECKRSS = int(cfg.get('config', 'checkrss'))
-            # Because of the http timeout it is not recommened to set checkrss lower then 1 minute
-            if autosub.SCHEDULERCHECKRSS < 60:
-                print "Config WARNING: checkrss variable is lower then 60. Because of http timeout it is not recommended to set it below 60 seconds."
-                autosub.SCHEDULERCHECKRSS = 60  # Run every minute
-        else:
-            autosub.SCHEDULERCHECKRSS = 900  # Run every 15 minutes
 
         if cfg.has_option("config", "rootpath"):
             autosub.ROOTPATH = cfg.get("config", "rootpath")
@@ -166,10 +152,8 @@ def ReadConfig(configfile):
         autosub.PATH = unicode(os.getcwd(), autosub.SYSENCODING)
         autosub.DOWNLOADENG = False
         autosub.MINMATCHSCORE = 43
-        autosub.MINMATCHSCORERSS = 14
         autosub.SCHEDULERSCANDISK = 3600
         autosub.SCHEDULERCHECKSUB = 28800
-        autosub.SCHEDULERCHECKRSS = 900
         print "Config ERROR: Variable ROOTPATH is missing. This is required! Using current working directory instead."
         autosub.ROOTPATH = unicode(os.getcwd(), autosub.SYSENCODING)
         autosub.FALLBACKTOENG = True
@@ -725,10 +709,8 @@ def saveConfigSection():
     cfg.set(section, "path", autosub.PATH)
     cfg.set(section, "downloadeng", str(autosub.DOWNLOADENG))
     cfg.set(section, "minmatchscore", str(autosub.MINMATCHSCORE))
-    cfg.set(section, "minmatchscorerss", str(autosub.MINMATCHSCORERSS))
     cfg.set(section, "scandisk", str(autosub.SCHEDULERSCANDISK))
     cfg.set(section, "checksub", str(autosub.SCHEDULERCHECKSUB))
-    cfg.set(section, "checkrss", str(autosub.SCHEDULERCHECKRSS))
     cfg.set(section, "rootpath", autosub.ROOTPATH)
     cfg.set(section, "fallbacktoeng", str(autosub.FALLBACKTOENG))
     cfg.set(section, "subeng", autosub.SUBENG)
@@ -917,7 +899,6 @@ def checkForRestart():
     # Set the default values
     schedulerscandisk = 3600
     schedulerchecksub = 86400
-    schedulercheckrss = 900
     loglevel = logging.INFO
     loglevelconsole = logging.ERROR
     logsize = 1000000
@@ -935,9 +916,6 @@ def checkForRestart():
 
         if cfg.has_option('config', 'checksub'):
             schedulerchecksub = int(cfg.get('config', 'checksub'))
-
-        if cfg.has_option('config', 'checkrss'):
-            schedulercheckrss = int(cfg.get('config', 'checkrss'))
 
     if cfg.has_option("config", "logfile"):
         logfile = cfg.get("config", "logfile")
@@ -986,7 +964,7 @@ def checkForRestart():
             password = cfg.get('webserver', 'password')
 
     # Now compare the values, if one differs a restart is required.
-    if schedulerscandisk != autosub.SCHEDULERSCANDISK or schedulerchecksub != autosub.SCHEDULERCHECKSUB or schedulercheckrss != autosub.SCHEDULERCHECKRSS or loglevel != autosub.LOGLEVEL or loglevelconsole != autosub.LOGLEVELCONSOLE or logsize != autosub.LOGSIZE or lognum != autosub.LOGNUM or webserverip != autosub.WEBSERVERIP or webserverport != autosub.WEBSERVERPORT or username != autosub.USERNAME or password != autosub.PASSWORD or webroot != autosub.WEBROOT:
+    if schedulerscandisk != autosub.SCHEDULERSCANDISK or schedulerchecksub != autosub.SCHEDULERCHECKSUB or loglevel != autosub.LOGLEVEL or loglevelconsole != autosub.LOGLEVELCONSOLE or logsize != autosub.LOGSIZE or lognum != autosub.LOGNUM or webserverip != autosub.WEBSERVERIP or webserverport != autosub.WEBSERVERPORT or username != autosub.USERNAME or password != autosub.PASSWORD or webroot != autosub.WEBROOT:
         return True
     else:
         return False
@@ -1043,19 +1021,14 @@ def upgradeConfig(from_version, to_version):
     else:
         if from_version == 1 and to_version == 2:
             print "Config: Upgrading minmatchscores"
-            print "Config: Old value's Minmatchscore: %d & MinmatchscoreRSS: %d" %(autosub.MINMATCHSCORE, autosub.MINMATCHSCORERSS)
+            print "Config: Old value's Minmatchscore: %d" %(autosub.MINMATCHSCORE)
             
             if (autosub.MINMATCHSCORE % 2) == 0:
                 autosub.MINMATCHSCORE = (autosub.MINMATCHSCORE * 2) + 2
             else:
                 autosub.MINMATCHSCORE = (autosub.MINMATCHSCORE * 2) + 1
             
-            if (autosub.MINMATCHSCORERSS % 2) == 0:
-                autosub.MINMATCHSCORERSS = (autosub.MINMATCHSCORERSS * 2) + 2
-            else:
-                autosub.MINMATCHSCORERSS = (autosub.MINMATCHSCORERSS * 2) + 1
-            
-            print "Config: New value's Minmatchscore: %d & MinmatchscoreRSS: %d" %(autosub.MINMATCHSCORE, autosub.MINMATCHSCORERSS)
+            print "Config: New value's Minmatchscore: %d" %(autosub.MINMATCHSCORE)
             print "Config: Config upgraded to version 2"
             autosub.CONFIGVERSION = 2
             autosub.CONFIGUPGRADED = True

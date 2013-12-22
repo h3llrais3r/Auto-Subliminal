@@ -1,4 +1,4 @@
-# Autosub autosub/checkRss.py - http://code.google.com/p/auto-sub/
+# Autosub autosub/Scheduler.py - http://code.google.com/p/auto-sub/
 #
 # The Autosub Scheduler module
 #

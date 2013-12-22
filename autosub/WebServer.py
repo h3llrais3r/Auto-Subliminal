@@ -70,7 +70,7 @@ class Config:
         return str(tmpl)
 
     @cherrypy.expose
-    def saveConfig(self, subeng, checksub, scandisk, checkrss, skiphiddendirs, subnl, postprocesscmd, path, logfile, rootpath, launchbrowser, fallbacktoeng, downloadeng, username, password, webroot, skipshow, lognum, loglevelconsole, logsize, loglevel, webserverip, webserverport, usernamemapping, notifymail, notifygrowl, notifynma, notifytwitter, mailsrv, mailfromaddr, mailtoaddr, mailusername, mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi, twitterkey, twittersecret, notifyen, notifynl, 
+    def saveConfig(self, subeng, checksub, scandisk, skiphiddendirs, subnl, postprocesscmd, path, logfile, rootpath, launchbrowser, fallbacktoeng, downloadeng, username, password, webroot, skipshow, lognum, loglevelconsole, logsize, loglevel, webserverip, webserverport, usernamemapping, notifymail, notifygrowl, notifynma, notifytwitter, mailsrv, mailfromaddr, mailtoaddr, mailusername, mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi, twitterkey, twittersecret, notifyen, notifynl,
                    notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi, 
                    mmssource = None, mmsquality = None, mmscodec = None, mmsrelease = None,
                    mmsrsource = None, mmsrquality = None, mmsrcodec = None, mmsrrelease = None):
@@ -96,21 +96,10 @@ class Config:
         if mmscodec:
             autosub.MINMATCHSCORE += 2
         if mmsrelease:
-            autosub.MINMATCHSCORE += 1 
-        
-        autosub.MINMATCHSCORERSS = 0
-        if mmsrsource:
-            autosub.MINMATCHSCORERSS += 8
-        if mmsrquality:
-            autosub.MINMATCHSCORERSS += 4
-        if mmsrcodec:
-            autosub.MINMATCHSCORERSS += 2
-        if mmsrrelease:
-            autosub.MINMATCHSCORERSS += 1 
+            autosub.MINMATCHSCORE += 1
         
         autosub.SCHEDULERSCANDISK = int(scandisk)
         autosub.SCHEDULERCHECKSUB = int(checksub)
-        autosub.SCHEDULERCHECKRSS = int(checkrss)
         autosub.LOGLEVEL = int(loglevel)
         autosub.LOGNUM = int(lognum)
         autosub.LOGSIZE = int(logsize)
@@ -267,7 +256,6 @@ class Home:
         #time.sleep is here to prevent a timing issue, where checksub is runned before scandisk
         autosub.SCANDISK.runnow = True
         time.sleep(5)
-        autosub.CHECKRSS.runnow = True
         autosub.CHECKSUB.runnow = True
         useragent = cherrypy.request.headers.get("User-Agent", '')
         tmpl = PageTemplate(file="interface/templates/message.tmpl")

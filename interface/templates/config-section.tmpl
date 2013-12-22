@@ -154,50 +154,6 @@
 	</tr>
 
 	<tr>
-		<td width="140px">MinMatchScore RSS</td>
-		<td>
-		#set $temp = $autosub.MINMATCHSCORERSS
-		#set $temp = $temp - 8
-		Source: 
-		#if $temp >= 0
-			<input type="checkbox" name="mmsrsource" checked value=1>
-		#else
-			<input type="checkbox" name="mmsrsource" value=1>
-			#set $temp = $temp + 8
-		#end if
-
-		#set $temp = $temp - 4
-		Quality: 
-		#if $temp >= 0
-			<input type="checkbox" name="mmsrquality" checked value=1>
-		#else
-			<input type="checkbox" name="mmsrquality" value=1>
-			#set $temp = $temp + 4
-		#end if
-
-		#set $temp = $temp - 2
-		Codec: 
-		#if $temp >= 0
-			<input type="checkbox" name="mmsrcodec" checked="True" value=1>
-		#else
-			<input type="checkbox" name="mmsrcodec" value=1>
-			#set $temp = $temp + 2
-		#end if
-
-		#set $temp = $temp - 1
-		Releasegroup: 
-		#if $temp >= 0
-			<input type="checkbox" name="mmsrrelease" checked value=1>
-		#else
-			<input type="checkbox" name="mmsrrelease" value=1>
-		#end if
-
-		</td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationMinmatchscorerss"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a>
-		<div id="informationMinmatchscorerss" class="dropdown-menu has-tip" align="left"><ul><li>What items should match before a subtitle is downloaded via the RSS feed?</li></ul></div></td>
-	</tr>
-
-	<tr>
 		<td width="140px">Skip hidden directories</td>
 		<td><select name="skiphiddendirs">
 		#if $autosub.SKIPHIDDENDIRS
@@ -221,12 +177,6 @@
 		<td width="140px">CheckSub</td>
 		<td><input type="text" size="50" name="checksub" value="$autosub.SCHEDULERCHECKSUB" /></td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationChecksub"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationChecksub" class="dropdown-menu has-tip" align="left"><ul><li>Change the interval of the CheckSub thread, it checks if there is a match on the bierdopje API. Cannot not be set lower then 21600.<br />Time is in seconds, default is 28800 seconds.</li></ul></div></td>
-	</tr>
-
-	<tr>
-		<td width="140px">CheckRSS</td>
-		<td><input type="text" size="50" name="checkrss" value="$autosub.SCHEDULERCHECKRSS" /></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationCheckrss"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationCheckrss" class="dropdown-menu has-tip" align="left"><ul><li>Change the interval of the CheckRSS thread, it checks if there is a match on the bierdopje RSS feed. Cannot be et lower then 60.<br />Time is in seconds, default is 900 seconds.</li></ul></div></td>
 	</tr>
 	
 </table>

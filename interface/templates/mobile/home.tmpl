@@ -115,17 +115,6 @@
 					<p>
 						<table border="0px" cellspacing="0px" cellpadding="0px">
 							<tr>
-								<td>NEXT RSSCHECK</td> 
-								<td>
-									#try
-									  &nbsp;@&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosub.CHECKRSS.interval - ($time.time() - $autosub.CHECKRSS.lastrun) ))) <br>
-									#except
-									  &nbsp;@&nbsp;Please wait... <br>
-									#end try
-								</td>
-							</tr>
-							
-							<tr>
 								<td>NEXT SCANDISK</td>
 								<td>
 									#try
