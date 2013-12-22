@@ -11,6 +11,7 @@ import time
 import urllib2
 import codecs
 import os
+import tvdb_api
 
 from library import version
 from autosub.version import autosubversion
@@ -222,8 +223,6 @@ def SkipShow(showName, season, episode):
 
 
 def getShowid(show_name):
-    #TODO: implement this again (disabled for now because of dead provider Bierdopje)
-    return 1;
     log.debug('getShowid: trying to get showid for %s' %show_name)
     show_id = nameMapping(show_name)
     if show_id:
@@ -240,7 +239,9 @@ def getShowid(show_name):
     
     #do we have enough api calls?
     if checkAPICalls(use=False):
-        show_id = autosub.Bierdopje.getShowidApi(show_name)
+        show = tvdb_api.Tvdb()[show_name]
+        if show:
+            show_id = show['id']
     else:
         log.warning("getShowid: Out of API calls")
         return None

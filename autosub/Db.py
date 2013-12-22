@@ -20,7 +20,7 @@ def dict_factory(cursor, row):
 
 class idCache():
     def __init__(self):
-        self.query_getId = 'select bierdopje_id from id_cache where show_name = ?'
+        self.query_getId = 'select tvdb_id from id_cache where show_name = ?'
         self.query_setId = 'insert into id_cache values (?,?)'
         self.query_flush = 'delete from id_cache'
         
@@ -30,21 +30,21 @@ class idCache():
         connection=sqlite3.connect(autosub.DBFILE)
         cursor=connection.cursor()
         cursor.execute(self.query_getId, [show_name.upper()])
-        bierdopje_id = None
+        tvdb_id = None
         
         for row in cursor:
-            bierdopje_id = row[0]
+            tvdb_id = row[0]
         
         connection.close()
-        if bierdopje_id:
-            return int(bierdopje_id)
+        if tvdb_id:
+            return int(tvdb_id)
     
-    def setId(self, bierdopje_id, show_name):
+    def setId(self, tvdb_id, show_name):
         show_name = show_name
         
         connection=sqlite3.connect(autosub.DBFILE)
         cursor=connection.cursor()
-        cursor.execute(self.query_setId,[bierdopje_id, show_name.upper()])
+        cursor.execute(self.query_setId,[tvdb_id, show_name.upper()])
         connection.commit()
         connection.close()
     
@@ -110,7 +110,7 @@ def createDatabase():
         connection=sqlite3.connect(autosub.DBFILE)
         cursor=connection.cursor()
         
-        cursor.execute("CREATE TABLE id_cache (bierdopje_id INTEGER, show_name TEXT);")
+        cursor.execute("CREATE TABLE id_cache (tvdb_id INTEGER, show_name TEXT);")
         cursor.execute("CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, show_name TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, releasegrp TEXT, subtitle TEXT);")
         cursor.execute("CREATE TABLE info (database_version NUMERIC);")
         connection.commit()
