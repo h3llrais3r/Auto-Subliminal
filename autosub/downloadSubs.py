@@ -11,13 +11,12 @@ import time
 import tempfile
 
 from autosub.Db import lastDown
-from autosub.Bierdopje import API
 import autosub.notify as notify
 
 log = logging.getLogger(__name__)
 
-#TODO: Remove DOWNLOADQUEUELOCK everywhere
-#TODO: Remove DownloadSubs threath
+#TODO: Currently not used
+#TODO: Use subliminal download_best_subtitles here, currently it's used directly in the checkSub.py
 
 def DownloadSub(downloadDict):
     #Before we download, lest check if there are enough APICalls left
@@ -33,7 +32,7 @@ def DownloadSub(downloadDict):
         downloadLink = downloadDict['downloadLink']
         
         try:
-            bierdopjeapi = API(downloadLink)
+            #bierdopjeapi = API(downloadLink)
             log.debug("downloadSubs: Trying to download the following subtitle %s" %downloadLink)
         except:
             log.error("downloadSubs: The server returned an error for request %s" % downloadLink)
@@ -51,10 +50,11 @@ def DownloadSub(downloadDict):
         tmpfile = tempfile.TemporaryFile('w+b')
         
         try:
-            if bierdopjeapi.resp:
-                tmpfile.write(bierdopjeapi.resp.read())
-                tmpfile.write('\n') #If subtitle is exclusive for bierdopje, they add some footer which doesn't have a line feed >.>
-            bierdopjeapi.close()
+            log.debug("downloadSubs: get subtitle")
+            # if bierdopjeapi.resp:
+            #     tmpfile.write(bierdopjeapi.resp.read())
+            #     tmpfile.write('\n') #If subtitle is exclusive for bierdopje, they add some footer which doesn't have a line feed >.>
+            # bierdopjeapi.close()
         except:
             log.error("downloadSubs: Error while downloading subtitle %s. Common cases: bierdopje.com not reachable or the subtitle is corrupt on bierdopje.com. " % destsrt)
             return False

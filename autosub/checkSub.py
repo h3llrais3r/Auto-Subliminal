@@ -1,4 +1,4 @@
-# Autosub Db.py - http://code.google.com/p/auto-sub/
+# Autosub checkSub.py - http://code.google.com/p/auto-sub/
 #
 # The Autosub checkSub module
 #
@@ -7,9 +7,7 @@ import logging
 import os
 
 # Autosub specific modules
-import autosub.Bierdopje
-import autosub.Helpers as Helpers
-
+import autosub
 import subliminal
 import babelfish
 
@@ -58,7 +56,7 @@ class checkSub():
             engsrtfile = os.path.splitext(originalfile)[0] + u"." + autosub.SUBENG + u".srt"
 
             #lets try to find a showid
-            showid = Helpers.getShowid(title)
+            showid = autosub.Helpers.getShowid(title)
 
             #no showid? skip this item
             if not showid:
