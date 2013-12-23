@@ -112,8 +112,8 @@ def read_config(configfile):
         if cfg.has_option("config", "logfile"):
             autosub.LOGFILE = cfg.get("config", "logfile")
         else:
-            print "ERROR: Required variable LOGFILE is missing. Using 'AutoSubService.log' instead."
-            autosub.LOGFILE = u"AutoSubService.log"
+            print "ERROR: Required variable LOGFILE is missing. Using 'AutoSubliminal.log' instead."
+            autosub.LOGFILE = u"AutoSubliminal.log"
 
         if cfg.has_option("config", "postprocesscmd"):
             autosub.POSTPROCESSCMD = cfg.get("config", "postprocesscmd")
@@ -148,14 +148,14 @@ def read_config(configfile):
         autosub.NOTIFYEN = True
         autosub.NOTIFYNL = True
         autosub.SKIPHIDDENDIRS = False
-        print "ERROR: Required variable LOGFILE is missing. Using 'AutoSubService.log' instead."
-        autosub.LOGFILE = u"AutoSubService.log"
+        print "ERROR: Required variable LOGFILE is missing. Using 'AutoSuliminal.log' instead."
+        autosub.LOGFILE = u"AutoSubliminal.log"
         autosub.CONFIGVERSION = version.CONFIG_VERSION
 
     if autosub.CONFIGVERSION < version.CONFIG_VERSION:
         upgrade_config(autosub.CONFIGVERSION, version.CONFIG_VERSION)
     elif autosub.CONFIGVERSION > version.CONFIG_VERSION:
-        print "ERROR: Config version higher then this version of AutoSubliminal supports. Update AutoSubliminal."
+        print "ERROR: Config version higher then this version of Auto-Subliminal supports. Update Auto-Subliminal."
         os._exit(1)
 
     if cfg.has_section('logfile'):

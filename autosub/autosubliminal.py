@@ -13,7 +13,7 @@ log = logging.getLogger(__name__)
 
 
 def daemon():
-    print "AutoSubliminal: Starting as a daemon"
+    print "Auto-Subliminal: Starting as a daemon"
     try:
         pid = os.fork()
         if pid > 0:
@@ -31,7 +31,7 @@ def daemon():
     except OSError:
         sys.exit(1)
 
-    print "AutoSubliminal: Disabling console output for daemon."
+    print "Auto-Subliminal: Disabling console output for daemon."
 
     cherrypy.log.screen = False
     sys.stdin.close()

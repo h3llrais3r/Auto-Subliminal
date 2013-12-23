@@ -193,5 +193,5 @@ def init_db():
     if autosub.DBVERSION < version.DB_VERSION:
         upgrade_db(autosub.DBVERSION, version.DB_VERSION)
     elif autosub.DBVERSION > version.DB_VERSION:
-        print "INFO: Database version higher then this version of AutoSubliminal supports. Update."
+        print "INFO: Database version higher then this version of Auto-Subliminal supports. Update."
         os._exit(1)

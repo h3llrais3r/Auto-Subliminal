@@ -15,9 +15,9 @@ import autosub.autosubliminal
 help_message = '''
 Usage:
     -h (--help)     Prints this message
-    -c (--config=)  Forces AutoSubliminal.py to use a configfile other than ./config.properties
-    -d (--daemon)   Run AutoSubliminal in the background
-    -l (--nolaunch) Stop AutoSubliminal from launching a webbrowser
+    -c (--config=)  Forces Auto-Subliminal to use a configfile other than ./config.properties
+    -d (--daemon)   Run Auto-Subliminal in the background
+    -l (--nolaunch) Stop Auto-Subliminal from launching a webbrowser
     
 Example:
     python AutoSubliminal.py
