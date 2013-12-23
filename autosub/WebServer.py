@@ -7,21 +7,21 @@ except:
 
 import threading
 import time
-import autosub.Config
-from autosub.Db import idCache, lastDown
 
-import autosub.notify as notify
+import autosub
+from autosub import config, utils, notify
+from autosub.db import IdCache, LastDownloads
 
-import autosub.Helpers
 
-def redirect(abspath, *args, **KWs):
+def redirect(abspath, *args, **kwargs):
     assert abspath[0] == '/'
-    raise cherrypy.HTTPRedirect(autosub.WEBROOT + abspath, *args, **KWs)
+    raise cherrypy.HTTPRedirect(autosub.WEBROOT + abspath, *args, **kwargs)
 
 # TODO: Create webdesign
-class PageTemplate (Template):
+class PageTemplate(Template):
     #Placeholder for future, this object can be used to add stuff to the template
     pass
+
 
 class Config:
     @cherrypy.expose
@@ -32,10 +32,10 @@ class Config:
     @cherrypy.expose
     def info(self):
         tmpl = PageTemplate(file="interface/templates/information.tmpl")
-        return str(tmpl)  
+        return str(tmpl)
 
     @cherrypy.expose
-    def skipShow(self, title, season=None):
+    def skip_show(self, title, season=None):
         if not season:
             tmpl = PageTemplate(file="interface/templates/config-skipshow.tmpl")
             tmpl.title = title
@@ -56,24 +56,29 @@ class Config:
             else:
                 if not season == '00':
                     season = str(int(season))
-            autosub.Config.SaveToConfig('skipshow',title,season)
-            autosub.Config.applyskipShow()
-            
-            tmpl.message = "Done<br> Remember, WantedQueue will be refresh at the next run of scanDisk <br> <a href='" + autosub.WEBROOT + "/home'>Return home</a>" 
+            config.save_to_config('skipshow', title, season)
+            config.apply_skip_show()
+
+            tmpl.message = "Done<br> Remember, WantedQueue will be refresh at the next run of scanDisk <br> <a href='" + autosub.WEBROOT + "/home'>Return home</a>"
             return str(tmpl)
-    
+
     @cherrypy.expose
-    def applyConfig(self):
-        autosub.Config.applyAllSettings()
+    def apply_config(self):
+        autosub.config.apply_all_settings()
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
         tmpl.message = "Settings read & applied<br><a href='" + autosub.WEBROOT + "/config'>Return</a>"
         return str(tmpl)
 
     @cherrypy.expose
-    def saveConfig(self, subeng, checksub, scandisk, skiphiddendirs, subnl, postprocesscmd, path, logfile, rootpath, launchbrowser, fallbacktoeng, downloadeng, username, password, webroot, skipshow, lognum, loglevelconsole, logsize, loglevel, webserverip, webserverport, usernamemapping, notifymail, notifygrowl, notifynma, notifytwitter, mailsrv, mailfromaddr, mailtoaddr, mailusername, mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi, twitterkey, twittersecret, notifyen, notifynl,
-                   notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi, 
-                   mmssource = None, mmsquality = None, mmscodec = None, mmsrelease = None,
-                   mmsrsource = None, mmsrquality = None, mmsrcodec = None, mmsrrelease = None):
+    def save_config(self, subeng, checksub, scandisk, skiphiddendirs, subnl, postprocesscmd, path, logfile, rootpath,
+                    launchbrowser, fallbacktoeng, downloadeng, username, password, webroot, skipshow, lognum,
+                    loglevelconsole, logsize, loglevel, webserverip, webserverport, usernamemapping, notifymail,
+                    notifygrowl, notifynma, notifytwitter, mailsrv, mailfromaddr, mailtoaddr, mailusername,
+                    mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi,
+                    twitterkey, twittersecret, notifyen, notifynl,
+                    notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi,
+                    mmssource=None, mmsquality=None, mmscodec=None, mmsrelease=None,
+                    mmsrsource=None, mmsrquality=None, mmsrcodec=None, mmsrrelease=None):
         # Set all internal variables
         autosub.PATH = path
         autosub.ROOTPATH = rootpath
@@ -87,7 +92,7 @@ class Config:
         autosub.POSTPROCESSCMD = postprocesscmd
         autosub.LAUNCHBROWSER = launchbrowser
         autosub.SKIPHIDDENDIRS = skiphiddendirs
-        
+
         autosub.MINMATCHSCORE = 0
         if mmssource:
             autosub.MINMATCHSCORE += 8
@@ -97,7 +102,7 @@ class Config:
             autosub.MINMATCHSCORE += 2
         if mmsrelease:
             autosub.MINMATCHSCORE += 1
-        
+
         autosub.SCHEDULERSCANDISK = int(scandisk)
         autosub.SCHEDULERCHECKSUB = int(checksub)
         autosub.LOGLEVEL = int(loglevel)
@@ -109,8 +114,8 @@ class Config:
         autosub.USERNAME = username
         autosub.PASSWORD = password
         autosub.WEBROOT = webroot
-        autosub.SKIPSHOW = autosub.Config.stringToDict(skipshow)
-        autosub.USERNAMEMAPPING = autosub.Config.stringToDict(usernamemapping)
+        autosub.SKIPSHOW = config.string_to_dict(skipshow)
+        autosub.USERNAMEMAPPING = config.string_to_dict(usernamemapping)
 
         # Set all internal notify variables
         autosub.NOTIFYMAIL = notifymail
@@ -138,32 +143,32 @@ class Config:
         autosub.PUSHALOTAPI = pushalotapi
 
         # Now save to the configfile
-        message = autosub.Config.WriteConfig()
+        message = config.write_config()
 
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
         tmpl.message = message
         return str(tmpl)
 
     @cherrypy.expose
-    def flushCache(self):
-        idCache().flushCache()
+    def flush_cache(self):
+        IdCache().flush_cache()
         message = 'Id Cache flushed'
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
         tmpl.message = message
         return str(tmpl)
-    
+
     @cherrypy.expose
-    def flushLastdown(self):
-        lastDown().flushLastdown()
+    def flush_last_downloads(self):
+        LastDownloads().flush_last_downloads()
         message = 'Last downloaded subtitle database flushed'
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
         tmpl.message = message
         return str(tmpl)
-    
+
     @cherrypy.expose
-    def checkVersion(self):
-        checkversion = autosub.Helpers.CheckVersion()
-        
+    def check_version(self):
+        checkversion = utils.check_version()
+
         if checkversion == 0:
             message = 'You are running the latest version!'
         elif checkversion == 1:
@@ -178,27 +183,28 @@ class Config:
             message = 'Something went wrong there, is google-project reachable? Or are you running a really old release?'
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
         tmpl.message = message
-        return str(tmpl)   
-    
+        return str(tmpl)
+
     @cherrypy.expose
-    def testNotify(self, notifylib):
-        if notify.notifyTest(notifylib):
+    def test_notify(self, notifylib):
+        if notify.notify_test(notifylib):
             message = 'Sent a test message!'
         else:
             message = 'Failed to send a test message'
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
         tmpl.message = message
-        return str(tmpl) 
-    
+        return str(tmpl)
+
     @cherrypy.expose
-    def regTwitter(self, token_key=None, token_secret=None, token_pin=None):
+    def reg_twitter(self, token_key=None, token_secret=None, token_pin=None):
         import library.oauth2 as oauth
-        import autosub.notify.twitter as notifytwitter 
+        import autosub.notify.twitter as notifytwitter
+
         try:
             from urlparse import parse_qsl
         except:
             from cgi import parse_qsl
-        
+
         if not token_key and not token_secret:
             consumer = oauth.Consumer(key=notifytwitter.CONSUMER_KEY, secret=notifytwitter.CONSUMER_SECRET)
             oauth_client = oauth.Client(consumer)
@@ -217,14 +223,15 @@ class Config:
                 tmpl.token_key = token_key
                 tmpl.token_secret = token_secret
                 return str(tmpl)
-        
+
         if token_key and token_secret and token_pin:
-            
+
             token = oauth.Token(token_key, token_secret)
             token.set_verifier(token_pin)
             consumer = oauth.Consumer(key=notifytwitter.CONSUMER_KEY, secret=notifytwitter.CONSUMER_SECRET)
             oauth_client2 = oauth.Client(consumer, token)
-            response, content = oauth_client2.request(notifytwitter.ACCESS_TOKEN_URL, method='POST', body='oauth_verifier=%s' % token_pin)
+            response, content = oauth_client2.request(notifytwitter.ACCESS_TOKEN_URL, method='POST',
+                                                      body='oauth_verifier=%s' % token_pin)
             access_token = dict(parse_qsl(content))
 
             if response['status'] != '200':
@@ -235,66 +242,68 @@ class Config:
             else:
                 autosub.TWITTERKEY = access_token['oauth_token']
                 autosub.TWITTERSECRET = access_token['oauth_token_secret']
-                
+
                 message = "Twitter is now set up, remember to save your config and remember to test twitter! <br> <a href='" + autosub.WEBROOT + "/config'>Return</a>"
                 tmpl = PageTemplate(file="interface/templates/message.tmpl")
                 tmpl.message = message
                 return str(tmpl)
-                
+
 
 class Home:
     @cherrypy.expose
     def index(self):
         useragent = cherrypy.request.headers.get("User-Agent", '')
         tmpl = PageTemplate(file="interface/templates/home.tmpl")
-        if autosub.Helpers.CheckMobileDevice(useragent) and autosub.MOBILEAUTOSUB:
+        if utils.check_mobile_device(useragent) and autosub.MOBILEAUTOSUB:
             tmpl = PageTemplate(file="interface/templates/mobile/home.tmpl")
         return str(tmpl)
-    
+
     @cherrypy.expose
-    def runNow(self):
+    def run_now(self):
         #time.sleep is here to prevent a timing issue, where checksub is runned before scandisk
         autosub.SCANDISK.runnow = True
         time.sleep(5)
         autosub.CHECKSUB.runnow = True
         useragent = cherrypy.request.headers.get("User-Agent", '')
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
-        if autosub.Helpers.CheckMobileDevice(useragent) and autosub.MOBILEAUTOSUB:
+        if utils.check_mobile_device(useragent) and autosub.MOBILEAUTOSUB:
             tmpl = PageTemplate(file="interface/templates/mobile/message.tmpl")
         tmpl.message = "Running everything! <br> <a href='" + autosub.WEBROOT + "/home'>Return</a>"
         return str(tmpl)
-    
+
     @cherrypy.expose
-    def exitMini(self):
+    def exit_mini(self):
         if autosub.MOBILEAUTOSUB:
             autosub.MOBILEAUTOSUB = False
             redirect("/home")
         else:
             autosub.MOBILEAUTOSUB = True
             redirect("/home")
-    
+
     @cherrypy.expose
     def shutdown(self):
         tmpl = PageTemplate(file="interface/templates/stopped.tmpl")
-        threading.Timer(2, autosub.AutoSub.stop).start()
+        threading.Timer(2, autosub.autosubliminal.stop).start()
         return str(tmpl)
+
 
 class Log:
     @cherrypy.expose
-    def index(self, loglevel = ''):
+    def index(self, loglevel=''):
         redirect("/log/viewLog")
-    
+
     @cherrypy.expose
-    def viewLog(self, loglevel = ''):
+    def view_log(self, loglevel=''):
         tmpl = PageTemplate(file="interface/templates/viewlog.tmpl")
         if loglevel == '':
             tmpl.loglevel = 'All'
         else:
             tmpl.loglevel = loglevel
-        result = autosub.Helpers.DisplayLogFile(loglevel)
+        result = utils.display_logfile(loglevel)
         tmpl.message = result
-        
+
         return str(tmpl)
+
 
 class Mobile:
     @cherrypy.expose
@@ -302,11 +311,12 @@ class Mobile:
         tmpl = PageTemplate(file="interface/templates/mobile/home.tmpl")
         return str(tmpl)
 
+
 class WebServerInit():
     @cherrypy.expose
     def index(self):
         redirect("/home")
-    
+
     home = Home()
     config = Config()
     log = Log()
@@ -314,10 +324,13 @@ class WebServerInit():
 
     def error_page_401(status, message, traceback, version):
         return "Error %s - Well, I'm very sorry but you don't have access to this resource!" % status
+
     def error_page_404(status, message, traceback, version):
         return "Error %s - Well, I'm very sorry but this page could not be found!" % status
+
     def error_page_500(status, message, traceback, version):
         return "Error %s - Please refresh! If this error doesn't go away (after a few minutes), seek help!" % status
-    _cp_config = {'error_page.401':error_page_401,
-                  'error_page.404':error_page_404,
-                  'error_page.500':error_page_500}
+
+    _cp_config = {'error_page.401': error_page_401,
+                  'error_page.404': error_page_404,
+                  'error_page.500': error_page_500}

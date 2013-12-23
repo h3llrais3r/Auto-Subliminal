@@ -1,24 +1,19 @@
-import autosub.Scheduler
-import autosub.scanDisk
-import autosub.checkSub
-import autosub.WebServer
-
-import subliminal
-
 import logging
 import os
-import cherrypy
 import sys
 import webbrowser
 
-import HTMLParser #Don't remove this one, needed for the windows bins
+import subliminal
 
-# Settings
+import autosub
+from autosub import scheduler, diskscanner, subchecker, webserver
+import cherrypy
+
 log = logging.getLogger(__name__)
 
 
 def daemon():
-    print "AutoSub: Starting as a daemon"
+    print "AutoSubliminal: Starting as a daemon"
     try:
         pid = os.fork()
         if pid > 0:
@@ -36,14 +31,15 @@ def daemon():
     except OSError:
         sys.exit(1)
 
-    print "AutoSub: Disabling console output for daemon."
+    print "AutoSubliminal: Disabling console output for daemon."
 
     cherrypy.log.screen = False
     sys.stdin.close()
     sys.stdout.flush()
     sys.stderr.flush()
 
-def launchBrowser():
+
+def launch_browser():
     host = autosub.WEBSERVERIP
     port = autosub.WEBSERVERPORT
     wr = autosub.WEBROOT
@@ -58,97 +54,101 @@ def launchBrowser():
         try:
             webbrowser.open(url, 1, 1)
         except:
-            log.error('launchBrowser: Failed')
+            log.error('Browser launh failed')
+
 
 def start():
     # Only use authentication in CherryPy is a username and password is set by the user
     if autosub.USERNAME and autosub.PASSWORD:
         users = {autosub.USERNAME: autosub.PASSWORD}
         cherrypy.config.update({'server.socket_host': autosub.WEBSERVERIP,
-                            'server.socket_port': autosub.WEBSERVERPORT,
-                            'tools.digest_auth.on': True,
-                            'tools.digest_auth.realm': 'AutoSub website',
-                            'tools.digest_auth.users': users
-                           })
+                                'server.socket_port': autosub.WEBSERVERPORT,
+                                'tools.digest_auth.on': True,
+                                'tools.digest_auth.realm': 'AutoSub website',
+                                'tools.digest_auth.users': users
+        })
     else:
         cherrypy.config.update({'server.socket_host': autosub.WEBSERVERIP,
-                            'server.socket_port': autosub.WEBSERVERPORT
-                           })
-    
+                                'server.socket_port': autosub.WEBSERVERPORT
+        })
+
     conf = {
-            '/': {
+        '/': {
             'tools.encode.encoding': 'utf-8',
             'tools.decode.encoding': 'utf-8',
             'tools.staticdir.root': os.path.join(autosub.PATH, 'interface/media/'),
-            },
-            '/css':{
+        },
+        '/css': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "css",
             'tools.expires.on': True,
             'tools.expires.secs': 3600 * 24 * 7
-            },
-            '/images':{
+        },
+        '/images': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "images",
             'tools.expires.on': True,
             'tools.expires.secs': 3600 * 24 * 7
-            },
-            '/scripts':{
+        },
+        '/scripts': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "scripts",
             'tools.expires.on': True,
             'tools.expires.secs': 3600 * 24 * 7
-            },
-            '/mobile':{
+        },
+        '/mobile': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "mobile",
             'tools.expires.on': True,
             'tools.expires.secs': 3600 * 24 * 7
-            },
-            '/favicon.ico':{
-            'tools.staticfile.on' : True,
-            'tools.staticfile.filename' : os.path.join(autosub.PATH, 'interface/media/images/favicon.ico')
-            }    
+        },
+        '/favicon.ico': {
+            'tools.staticfile.on': True,
+            'tools.staticfile.filename': os.path.join(autosub.PATH, 'interface/media/images/favicon.ico')
         }
-    
-    cherrypy.tree.mount(autosub.WebServer.WebServerInit(),autosub.WEBROOT, config = conf)
-    log.info("AutoSub: Starting CherryPy webserver")
+    }
+
+    cherrypy.tree.mount(autosub.webserver.WebServerInit(), autosub.WEBROOT, config=conf)
+    log.info("Starting CherryPy webserver")
 
     # TODO: Let CherryPy log do another log file and not to screen
     # TODO: CherryPy settings, etc...
     try:
         cherrypy.server.start()
     except:
-        log.error("AutoSub: Could not start webserver. Exiting")
+        log.error("Could not start webserver. Exiting")
         os._exit(1)
 
     cherrypy.server.wait()
-    
-    if autosub.LAUNCHBROWSER:
-        launchBrowser()
 
-    # configure subliminal/dogpile cache
-    # use MutexLock otherwise some providers will not work due to fcntl module import error in windows
+    if autosub.LAUNCHBROWSER:
+        launch_browser()
+
+    # Configure subliminal/dogpile cache
+    # Use MutexLock otherwise some providers will not work due to fcntl module import error in windows
     cache_file = os.path.abspath(os.path.expanduser(autosub.SUBLIMINALCACHEFILE))
     subliminal.cache_region.configure(autosub.DOGPILECACHEFILE,
                                       arguments={'filename': cache_file, 'lock_factory': subliminal.MutexLock})
 
-    log.info("AutoSub: Starting scanDisk thread")
-    autosub.SCANDISK = autosub.Scheduler.Scheduler(autosub.scanDisk.scanDisk(), autosub.SCHEDULERSCANDISK, True, "LOCALDISK")
+    log.info("Starting SCANDISK thread")
+    autosub.SCANDISK = autosub.scheduler.Scheduler(autosub.diskscanner.DiskScanner(), autosub.SCHEDULERSCANDISK, True,
+                                                   "SCANDISK")
     autosub.SCANDISK.thread.start()
-    log.info("AutoSub: scanDisk thread started")
+    log.info("SCANDISK thread started")
 
-    log.info("AutoSub: Starting checkSub thread")
-    autosub.CHECKSUB = autosub.Scheduler.Scheduler(autosub.checkSub.checkSub(), autosub.SCHEDULERCHECKSUB, True, "CHECKSUB")
+    log.info("Starting CHECKSUB thread")
+    autosub.CHECKSUB = autosub.scheduler.Scheduler(autosub.subchecker.SubChecker(), autosub.SCHEDULERCHECKSUB, True,
+                                                   "CHECKSUB")
     autosub.CHECKSUB.thread.start()
-    log.info("AutoSub: checkSub thread started")
+    log.info("CHECKSUB thread started")
+
 
 def stop():
-    log.info("AutoSub: Stopping scanDisk thread")
+    log.info("Stopping SCANDISK thread")
     autosub.SCANDISK.stop = True
     autosub.SCANDISK.thread.join(10)
 
-    log.info("AutoSub: Stopping checkSub thread")
+    log.info("Stopping CHECKSUB thread")
     autosub.CHECKSUB.stop = True
     autosub.CHECKSUB.thread.join(10)
 
@@ -156,6 +156,7 @@ def stop():
 
     os._exit(0)
 
+
 def signal_handler(signum, frame):
-    log.debug("AutoSub: got signal. Shutting down")
+    log.debug("Got signal. Shutting down")
     os._exit(0)

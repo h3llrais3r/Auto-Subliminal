@@ -1,3 +1,3 @@
-autosubversion='Alpha 0.5.8'
-configversion=2
-dbversion=4
+RELEASE_VERSION = 'Alpha 0.5.8'
+CONFIG_VERSION = 2
+DB_VERSION = 4

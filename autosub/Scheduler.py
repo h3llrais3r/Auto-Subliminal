@@ -1,12 +1,8 @@
-# Autosub autosub/Scheduler.py - http://code.google.com/p/auto-sub/
-#
-# The Autosub Scheduler module
-#
-
 import time
 import threading
 import os
 import traceback
+
 
 class Scheduler:
     def __init__(self, command, interval, runnow, name):
@@ -23,7 +19,7 @@ class Scheduler:
             except:
                 print traceback.format_exc()
                 os._exit(1)
-            
+
     def runcommand(self):
         while True:
             currentime = time.time()
@@ -34,7 +30,7 @@ class Scheduler:
                 except:
                     print traceback.format_exc()
                     os._exit(1)
-            
+
             if self.runnow:
                 try:
                     if self.command.run():
