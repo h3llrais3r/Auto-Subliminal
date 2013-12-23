@@ -1,17 +1,18 @@
-#import autosub
 #import time
 #import cgi
 #import urllib
 #import re
 #from types import *
-#from autosub.Db import lastDown
-#from autosub.Helpers import ConvertTimestamp, ConvertTimestampTable
-#from autosub.Helpers import getAttr
+
+#import autosub
+#from autosub.db import LastDownloads
+#from autosub.utils import convert_timestamp, convert_timestamp_table, get_attr
+
 #include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
 
 #include $os.path.join($autosub.PATH.encode(), "interface/templates/menu.tmpl")
 
-$autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
+$autosub.WANTEDQUEUE.sort(key=$get_attr('title'))
 
 #if $len($autosub.WANTEDQUEUE) >= 1
 <div class="box">
@@ -87,7 +88,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 	</td>
 
 #if $type($var['timestamp']) == UnicodeType:
-	<td width="150px" align="center" sorttable_customkey="$ConvertTimestampTable($var['timestamp'])">$ConvertTimestamp($var['timestamp'])</td>
+	<td width="150px" align="center" sorttable_customkey="$convert_timestamp_table($var['timestamp'])">$convert_timestamp($var['timestamp'])</td>
 #else
 	<td width="150px" align="center">Unknown</td>
 #end if
@@ -114,7 +115,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 <p>
 
 
-#set $lastdownload = lastDown().getlastDown()
+#set $lastdownload = LastDownloads().get_last_downloads()
 
 #if $len($lastdownload) >= 1
     
@@ -174,7 +175,7 @@ $autosub.WANTEDQUEUE.sort(key=$getAttr('title'))
 </td>
 
 #if $type($var['timestamp']) == UnicodeType:
-	<td width="150px" align="center" sorttable_customkey="$ConvertTimestampTable($var['timestamp'])">$ConvertTimestamp($var['timestamp'])</td>
+	<td width="150px" align="center" sorttable_customkey="$convert_timestamp_table($var['timestamp'])">$convert_timestamp($var['timestamp'])</td>
 #else
 	<td width="150px" align="center">Unknown</td>
 #end if

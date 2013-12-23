@@ -1,11 +1,11 @@
-#import autosub
 #import time
 #import cgi
 #import urllib
 #import re
 
-#from autosub.Db import lastDown
-#from autosub.version import autosubversion
+#import autosub
+#from autosub import version
+#from autosub.db import LastDownloads
 
 <!DOCTYPE html>
 <html>
@@ -34,7 +34,7 @@
 
 			  <div data-role="footer" data-theme="b">
             <div class="ui-bar" align="center">
-				$autosubversion.upper() - API CALLS LEFT: $autosub.APICALLS</div>
+				$version.RELEASE_VERSION.upper() - API CALLS LEFT: $autosub.APICALLS</div>
 			</div>
 		</div>
 	</body>
