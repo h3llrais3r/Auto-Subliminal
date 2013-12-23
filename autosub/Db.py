@@ -121,7 +121,7 @@ def create_db():
         print "INFO: Succesfully created the sqlite database"
         autosub.DBVERSION = version.DB_VERSION
     except:
-        print "ERROR: Could not create database, please check if AutoSub has write access to write the following file %s" % autosub.DBFILE
+        print "ERROR: Could not create database, please check if Auto-Subliminal has write access to write the following file %s" % autosub.DBFILE
 
     return True
 

@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 def _check_title(title):
     if not title:
         log.error(
-            "Invalid title. AutoSub needs a showtitle in the video file! S01E02.mkv file are not supported...")
+            "Invalid title. Auto-Subliminal needs a showtitle in the video file! S01E02.mkv file are not supported...")
         return
 
     for reg in episode_regex:

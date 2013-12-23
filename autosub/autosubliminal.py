@@ -64,7 +64,7 @@ def start():
         cherrypy.config.update({'server.socket_host': autosub.WEBSERVERIP,
                                 'server.socket_port': autosub.WEBSERVERPORT,
                                 'tools.digest_auth.on': True,
-                                'tools.digest_auth.realm': 'AutoSub website',
+                                'tools.digest_auth.realm': 'Auto-Subliminal website',
                                 'tools.digest_auth.users': users
         })
     else:

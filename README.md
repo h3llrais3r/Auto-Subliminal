@@ -19,11 +19,11 @@ How to use:
  * Install python
  * Install python cheetah package
  * Install Auto-Subliminal (it will automatically install needed packages)
- * Start the script: " python AutoSub.py "
+ * Start the script: " python AutoSubliminal.py "
  * A web browser should now open
  * Go to the config page, check the settings, make sure you set at least:
-    * Path: Should point to the location where AutoSub.py is located
+    * Path: Should point to the location where AutoSubliminal.py is located
     * Rootpath: Should point to the root of your series folder
- * Shutdown AutoSub and start it again
+ * Shutdown Auto-Subliminal and start it again
 
 Enjoy your subtitles!
