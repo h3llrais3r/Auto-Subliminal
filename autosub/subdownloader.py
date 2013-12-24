@@ -1,4 +1,3 @@
-# TODO: Currently not used
 # TODO: Use subliminal download_best_subtitles here, currently it's used directly in the subchecker.py
 
 import logging
@@ -13,7 +12,41 @@ from autosub.db import LastDownloads
 log = logging.getLogger(__name__)
 
 
+#TODO: refactor this when subliminal has split up search for subtitle and dnwload subtitle (should be from next version)
 def download_subtitle(download_dict):
+    # Before we download, lest check if there are enough APICalls left
+    if not utils.check_apicalls():
+        log.error("Out of api calls")
+        return False
+
+    if 'destinationFileLocationOnDisk' in download_dict.keys() and 'downloadLink' in download_dict.keys():
+        log.debug("Download dict seems ok. Dumping it for debug: %r" % download_dict)
+        destsrt = download_dict['destinationFileLocationOnDisk']
+
+        download_dict['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
+
+        LastDownloads().set_last_downloads(dict=download_dict)
+
+        notify.notify(download_dict['downlang'], destsrt, download_dict["originalFileLocationOnDisk"])
+
+        if autosub.POSTPROCESSCMD:
+            postprocesscmdconstructed = autosub.POSTPROCESSCMD + ' "' + download_dict[
+                "destinationFileLocationOnDisk"] + '" "' + download_dict["originalFileLocationOnDisk"] + '"'
+            log.debug("Postprocess: running %s" % postprocesscmdconstructed)
+            log.info("Running PostProcess")
+            postprocessoutput, postprocesserr = utils.run_cmd(postprocesscmdconstructed)
+            if postprocesserr:
+                log.error("PostProcess: %s" % postprocesserr)
+            log.debug("PostProcess Output:% s" % postprocessoutput)
+
+        return True
+
+    else:
+        log.error("No downloadLink or locationOnDisk found at download_item, skipping")
+        return False
+
+
+def download_subtitle_old(download_dict):
     # Before we download, lest check if there are enough APICalls left
     if not utils.check_apicalls():
         log.error("Out of api calls")
