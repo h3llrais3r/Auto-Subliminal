@@ -72,7 +72,7 @@ class SubChecker():
 
                 # Download the best subtitle with min_score
                 subtitles = subliminal.download_best_subtitles({video}, {language}, autosub.SUBLIMINALPROVIDERLIST,
-                                                               min_score=autosub.MINMATCHSCORE)
+                                                               single=True, min_score=autosub.MINMATCHSCORE)
 
                 #TODO: review completely if support for multiple languages is needed
                 # Check if subtitle found
