@@ -422,7 +422,7 @@ def read_config(configfile):
     autosub.LASTESTDOWNLOAD = []
 
 
-def save_to_config(section=None, variable=None, value=None):
+def save_config(section=None, variable=None, value=None):
     """
     Add a variable and value to section in the config file.
     
@@ -453,7 +453,7 @@ def save_to_config(section=None, variable=None, value=None):
             cfg.write(file)
 
 
-def apply_name_mapping():
+def apply_namemapping():
     """
     Read namemapping in the config file.
     """
@@ -475,7 +475,7 @@ def apply_name_mapping():
         autosub.USERNAMEMAPPINGUPPER[x.upper()] = autosub.USERNAMEMAPPING[x]
 
 
-def apply_skip_show():
+def apply_skipshow():
     """
     Read skipshow in the config file.
     """
@@ -496,15 +496,15 @@ def apply_skip_show():
         autosub.SKIPSHOWUPPER[x.upper()] = autosub.SKIPSHOW[x].split(',')
 
 
-def apply_all_settings():
+def apply_allsettings():
     """
     Read namemapping and skipshow from the config file.
     """
-    apply_name_mapping()
-    apply_skip_show()
+    apply_namemapping()
+    apply_skipshow()
 
 
-def display_skip_show():
+def display_skipshow():
     """
     Return a string containing all info from skipshow.
     After each shows skip info an '\n' is added to create multiple rows
@@ -516,7 +516,7 @@ def display_skip_show():
     return s
 
 
-def display_name_mapping():
+def display_namemapping():
     """
     Return a string containing all info from user namemapping.
     After each shows namemapping an '\n' is added to create multiple rows
@@ -666,10 +666,10 @@ def save_skipshow_section():
             cfg.write(file)
 
     for x in autosub.SKIPSHOW:
-        save_to_config('skipshow', x, autosub.SKIPSHOW[x])
+        save_config('skipshow', x, autosub.SKIPSHOW[x])
 
     # Set all skipshow stuff correct
-    apply_skip_show()
+    apply_skipshow()
 
 
 def save_usernamemapping_section():
@@ -694,10 +694,10 @@ def save_usernamemapping_section():
             cfg.write(file)
 
     for x in autosub.USERNAMEMAPPING:
-        save_to_config('namemapping', x, autosub.USERNAMEMAPPING[x])
+        save_config('namemapping', x, autosub.USERNAMEMAPPING[x])
 
     # Set all namemapping stuff correct
-    apply_name_mapping()
+    apply_namemapping()
 
 
 def save_notify_section():

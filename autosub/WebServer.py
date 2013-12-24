@@ -56,15 +56,15 @@ class Config:
             else:
                 if not season == '00':
                     season = str(int(season))
-            config.save_to_config('skipshow', title, season)
-            config.apply_skip_show()
+            config.save_config('skipshow', title, season)
+            config.apply_skipshow()
 
             tmpl.message = "Done<br> Remember, WantedQueue will be refresh at the next run of scanDisk <br> <a href='" + autosub.WEBROOT + "/home'>Return home</a>"
             return str(tmpl)
 
     @cherrypy.expose
     def apply_config(self):
-        autosub.config.apply_all_settings()
+        autosub.config.apply_allsettings()
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
         tmpl.message = "Settings read & applied<br><a href='" + autosub.WEBROOT + "/config'>Return</a>"
         return str(tmpl)
