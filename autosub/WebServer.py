@@ -34,7 +34,7 @@ class Config:
         tmpl = PageTemplate(file="interface/templates/information.tmpl")
         return str(tmpl)
 
-    @cherrypy.expose
+    @cherrypy.expose(alias='skipShow')
     def skip_show(self, title, season=None):
         if not season:
             tmpl = PageTemplate(file="interface/templates/config-skipshow.tmpl")
@@ -62,14 +62,14 @@ class Config:
             tmpl.message = "Done<br> Remember, WantedQueue will be refresh at the next run of scanDisk <br> <a href='" + autosub.WEBROOT + "/home'>Return home</a>"
             return str(tmpl)
 
-    @cherrypy.expose
+    @cherrypy.expose(alias='applyConfig')
     def apply_config(self):
         autosub.config.apply_allsettings()
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
         tmpl.message = "Settings read & applied<br><a href='" + autosub.WEBROOT + "/config'>Return</a>"
         return str(tmpl)
 
-    @cherrypy.expose
+    @cherrypy.expose(alias='saveConfig')
     def save_config(self, subeng, checksub, scandisk, skiphiddendirs, subnl, postprocesscmd, path, logfile, rootpath,
                     launchbrowser, fallbacktoeng, downloadeng, username, password, webroot, skipshow, lognum,
                     loglevelconsole, logsize, loglevel, webserverip, webserverport, usernamemapping, notifymail,
@@ -149,7 +149,7 @@ class Config:
         tmpl.message = message
         return str(tmpl)
 
-    @cherrypy.expose
+    @cherrypy.expose(alias='flushCache')
     def flush_cache(self):
         IdCache().flush_cache()
         message = 'Id Cache flushed'
@@ -157,7 +157,7 @@ class Config:
         tmpl.message = message
         return str(tmpl)
 
-    @cherrypy.expose
+    @cherrypy.expose(alias='flushLastdown')
     def flush_last_downloads(self):
         LastDownloads().flush_last_downloads()
         message = 'Last downloaded subtitle database flushed'
@@ -165,7 +165,7 @@ class Config:
         tmpl.message = message
         return str(tmpl)
 
-    @cherrypy.expose
+    @cherrypy.expose(alias='checkVersion')
     def check_version(self):
         checkversion = utils.check_version()
 
@@ -185,7 +185,7 @@ class Config:
         tmpl.message = message
         return str(tmpl)
 
-    @cherrypy.expose
+    @cherrypy.expose(alias='testNotify')
     def test_notify(self, notifylib):
         if notify.notify_test(notifylib):
             message = 'Sent a test message!'
@@ -195,7 +195,7 @@ class Config:
         tmpl.message = message
         return str(tmpl)
 
-    @cherrypy.expose
+    @cherrypy.expose(alias='regTwitter')
     def reg_twitter(self, token_key=None, token_secret=None, token_pin=None):
         import library.oauth2 as oauth
         import autosub.notify.twitter as notifytwitter
@@ -258,7 +258,7 @@ class Home:
             tmpl = PageTemplate(file="interface/templates/mobile/home.tmpl")
         return str(tmpl)
 
-    @cherrypy.expose
+    @cherrypy.expose(alias='runNow')
     def run_now(self):
         #time.sleep is here to prevent a timing issue, where checksub is runned before scandisk
         autosub.SCANDISK.runnow = True
@@ -271,7 +271,7 @@ class Home:
         tmpl.message = "Running everything! <br> <a href='" + autosub.WEBROOT + "/home'>Return</a>"
         return str(tmpl)
 
-    @cherrypy.expose
+    @cherrypy.expose(alias='exitMini')
     def exit_mini(self):
         if autosub.MOBILEAUTOSUB:
             autosub.MOBILEAUTOSUB = False
@@ -292,7 +292,7 @@ class Log:
     def index(self, loglevel=''):
         redirect("/log/viewLog")
 
-    @cherrypy.expose
+    @cherrypy.expose(alias='viewLog')
     def view_log(self, loglevel=''):
         tmpl = PageTemplate(file="interface/templates/viewlog.tmpl")
         if loglevel == '':
