@@ -38,7 +38,7 @@ class SubChecker():
             season = wanted_item['season']
             episode = wanted_item['episode']
             originalfile = wanted_item['originalFileLocationOnDisk']
-            languages = wanted_item['lang']
+            langs = wanted_item['lang']
 
             if not utils.check_apicalls():
                 # Make sure that we are allow to connect to bierdopje
@@ -59,19 +59,25 @@ class SubChecker():
             if not showid:
                 continue
 
-            # Scan the video
-            video = subliminal.scan_video(originalfile)
+            # Scan the video (disable scan for subtitles)
+            # With subtitle scan enabled, enzyme looks inside for embedded subtitles (f.e. Grimm.S03E04.720p.WEB-DL.DD5.1.H.264-ECI)
+            # When an 'UND' subtitle language is found, no other subtitles will be downloaded
+            # The video will be filtered out in those cases in subliminal.download_best_subtitles
+            # TODO: check if this is still the case with a newer version of subliminal
+            video = subliminal.scan_video(originalfile, subtitles=False, embedded_subtitles=False)
 
             # Check sub for each language
-            tmp_languages = languages[:]
-            for tmp_language in tmp_languages:
-                language = babelfish.Language.fromietf(tmp_language)
+            for lang in langs[:]:
+                language = babelfish.Language.fromietf(lang)
                 if not language:
-                    log.error("Invalid language '%s' specified" % tmp_language)
+                    log.error("Invalid language '%s' specified" % lang)
                     continue
 
                 # Download the best subtitle with min_score
-                subtitles = subliminal.download_best_subtitles({video}, {language}, autosub.SUBLIMINALPROVIDERLIST,
+                videos = [video]
+                languages = [language]
+                subtitles = subliminal.download_best_subtitles(set(videos), set(languages),
+                                                               autosub.SUBLIMINALPROVIDERLIST,
                                                                single=True, min_score=autosub.MINMATCHSCORE)
 
                 #TODO: review completely if support for multiple languages is needed
@@ -90,25 +96,24 @@ class SubChecker():
                     #TODO: Should be replaced with the real donwnload link when subliminal provides it
                     #TODO: For now, just to mark it's already been downloaded
                     download_item['downloadLink'] = 'downloaded'
-                    download_item['downlang'] = tmp_language
+                    download_item['downlang'] = lang
                     #TODO: Should be replaced with real subtitle name from download when subliminal provides it
                     #TODO: For now, just use name of the subtitle itself (not the real downloaded name)
                     download_item['subtitle'] = os.path.split(wanted_item['destinationFileLocationOnDisk'])[1][:-4]
 
                     subdownloader.download_subtitle(download_item)
 
-                    if language == language_nl and (
-                            autosub.FALLBACKTOENG and not autosub.DOWNLOADENG) and language_en in languages:
+                    if lang == 'nl' and (autosub.FALLBACKTOENG and not autosub.DOWNLOADENG) and 'en' in langs:
                         log.debug(
                             'A dutch subtitle is found and fallback is true. Removing the english subtitle from the wantedlist.')
-                        languages.remove('en')
-                        languages.remove(tmp_language)
-                        if len(languages) == 0:
+                        langs.remove('en')
+                        langs.remove(lang)
+                        if len(langs) == 0:
                             to_delete_wanted_queue.append(index)
                         break
 
-                    languages.remove(tmp_language)
-                    if len(languages) == 0:
+                    langs.remove(lang)
+                    if len(langs) == 0:
                         to_delete_wanted_queue.append(index)
 
         i = len(to_delete_wanted_queue) - 1
