@@ -45,11 +45,11 @@ class SubChecker():
                 log.warning("checkSub: out of api calls")
                 break
 
+            # This should map on the srt file names created by subliminal!
             if autosub.SUBNL != "":
                 srtfile = os.path.splitext(originalfile)[0] + u"." + autosub.SUBNL + u".srt"
             else:
                 srtfile = os.path.splitext(originalfile)[0] + u".srt"
-
             engsrtfile = os.path.splitext(originalfile)[0] + u"." + autosub.SUBENG + u".srt"
 
             # Lets try to find a showid
@@ -73,12 +73,19 @@ class SubChecker():
                     log.error("Invalid language '%s' specified" % lang)
                     continue
 
+                # Determine if language suffix is needed in srt file name (f.e. <episode_name>.nl.srt)
+                # Default this is true, except when no prefix is defined for nl language
+                single = False
+                if language == language_nl:
+                    if autosub.SUBNL == "":
+                        single = True
+
                 # Download the best subtitle with min_score
                 videos = [video]
                 languages = [language]
                 subtitles = subliminal.download_best_subtitles(set(videos), set(languages),
                                                                autosub.SUBLIMINALPROVIDERLIST,
-                                                               single=True, min_score=autosub.MINMATCHSCORE)
+                                                               single=single, min_score=autosub.MINMATCHSCORE)
 
                 #TODO: review completely if support for multiple languages is needed
                 # Check if subtitle found
@@ -87,7 +94,6 @@ class SubChecker():
                         title, season, episode))
 
                     # Handle the donwload/post-download stuff
-                    subtitle = subtitles[video][0]
                     if language == language_nl:
                         wanted_item['destinationFileLocationOnDisk'] = srtfile
                     elif language == language_en:
