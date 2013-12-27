@@ -3,7 +3,7 @@ Auto-Subliminal
 
 Thank you for choosing Auto-Subliminal! The automated python subtitle downloader.
 
-This is a modified version of the discontinued Auto-Sub Alpha 0.5.8 (https://code.google.com/p/auto-sub/).
+This is a modified version of the discontinued Auto-Sub Alpha 0.5.8 project (https://code.google.com/p/auto-sub/).
 It makes use of Subliminal (https://github.com/Diaoul/subliminal) for checking and downloading subtitles.
 
 What it does:
