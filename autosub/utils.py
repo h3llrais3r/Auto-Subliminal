@@ -16,19 +16,6 @@ from autosub.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
 
-REGEXES = [
-    re.compile(
-        "^((?P<title>.+?)[. _-]+)?s(?P<season>\d+)[x. _-]*e(?P<episode>\d+)(([. _-]*e|-)(?P<extra_ep_num>(?!(1080|720)[pi])\d+))*[. _-]*((?P<quality>(1080|720|SD))*[pi]*[. _-]*(?P<source>(hdtv|dvdrip|bdrip|blu[e]*ray|web[. _-]*dl))*[. _]*(?P<extra_info>.+?)((?<![. _-])-(?P<releasegrp>[^-]+))?)?$",
-        re.IGNORECASE),
-    re.compile(
-        "^((?P<title>.+?)[\[. _-]+)?(?P<season>\d+)x(?P<episode>\d+)(([. _-]*x|-)(?P<extra_ep_num>(?!(1080|720)[pi])\d+))*[. _-]*((?P<quality>(1080|720|SD))*[pi]*[. _-]*(?P<source>(hdtv|dvdrip|bdrip|blu[e]*ray|web[. _-]*dl))*[. _]*(?P<extra_info>.+?)((?<![. _-])-(?P<releasegrp>[^-]+))?)?$",
-        re.IGNORECASE),
-    re.compile(
-        "^(?P<title>.+?)[. _-]+(?P<season>\d{1,2})(?P<episode>\d{2})([. _-]*(?P<quality>(1080|720|SD))*[pi]*[. _-]*(?P<source>(hdtv|dvdrip|bdrip|blu[e]*ray|web[. _-]*dl))*[. _]*(?P<extra_info>.+?)((?<![. _-])-(?P<releasegrp>[^-]+))?)?$",
-        re.IGNORECASE)
-]
-SOURCE_PARSER = re.compile("(hdtv|tv|dvdrip|dvd|bdrip|blu[e]*ray|web[. _-]*dl)", re.IGNORECASE)
-QUALITY_PARSER = re.compile("(1080|720|HD|SD)", re.IGNORECASE)
 LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2})\ (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
                         re.IGNORECASE)
 
@@ -128,82 +115,6 @@ def return_upper(text):
         return text
     except:
         pass
-
-
-def match_quality(quality, item):
-    if quality == u"SD":
-        if re.search('720', item):
-            log.debug("Quality SD did not match to %s" % item)
-            return None
-        elif re.search('1080', item):
-            log.debug("Quality SD did not match to %s" % item)
-            return None
-        else:
-            log.debug("Quality matched SD to %s" % item)
-            return 1
-    elif quality == u"1080p" and re.search('1080', item):
-        log.debug("Quality is 1080 matched to %s" % item)
-        return 1
-    elif quality == u"720p" and re.search('720', item):
-        log.debug("Quality is 720 matched to %s" % item)
-        return 1
-
-
-def score_match(releasedict, release, quality, releasegrp, source, codec):
-    """
-    Return how high the match is. Currently 7 is the best match
-    This function give the flexibility to change the most important attribute for matching or even give the user the possibility to set his own preference
-    release is the filename as it is in the result from bierdopje
-    If quality is matched, score increased with 2
-    If releasegrp is matched, score is increased with 1
-    If source is matched, score is increased with 4
-    """
-    score = 0
-    log.debug("Giving a matchscore for: %r. Try to match it with Q: %r GRP: %r S: %r" % (
-        releasedict, quality, releasegrp, source))
-
-    releasesource = None
-    releasequality = None
-    releasereleasegrp = None
-    releasecodec = None
-
-    if 'source' in releasedict.keys(): releasesource = releasedict['source']
-    if 'quality' in releasedict.keys(): releasequality = releasedict['quality']
-    if 'releasegrp' in releasedict.keys(): releasereleasegrp = releasedict['releasegrp']
-    if 'codec' in releasedict.keys(): releasecodec = releasedict['codec']
-
-    if releasegrp and releasereleasegrp:
-        if releasereleasegrp == releasegrp:
-            score += 1
-    if source and releasesource:
-        if releasesource == source:
-            score += 8
-    if quality and releasequality:
-        if quality == releasequality:
-            score += 4
-    if codec and releasecodec:
-        if codec == releasecodec:
-            score += 2
-
-    if not releasedict:
-        log.warning(
-            "Something went wrong, ProcessFileName could not process the file, %s, please report this!" % release)
-        log.info("Falling back to old matching system, to make sure you get your subtitle!")
-        if releasegrp:
-            if re.search(re.escape(releasegrp), release, re.IGNORECASE):
-                score += 1
-        if source:
-            if re.search(re.escape(source), release, re.IGNORECASE):
-                score += 8
-        if quality:
-            if match_quality(re.escape(quality), release):
-                score += 4
-        if codec:
-            if re.search(re.escape(codec), release, re.IGNORECASE):
-                score += 2
-
-    log.debug("MatchScore is %s" % str(score))
-    return score
 
 
 def name_mapping(show_name):

@@ -77,8 +77,7 @@ class Config:
                     mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi,
                     twitterkey, twittersecret, notifyen, notifynl,
                     notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi,
-                    mmssource=None, mmsquality=None, mmscodec=None, mmsrelease=None,
-                    mmsrsource=None, mmsrquality=None, mmsrcodec=None, mmsrrelease=None):
+                    mssdefault=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None):
         # Set all internal variables
         autosub.PATH = path
         autosub.ROOTPATH = rootpath
@@ -94,14 +93,15 @@ class Config:
         autosub.SKIPHIDDENDIRS = skiphiddendirs
 
         autosub.MINMATCHSCORE = 0
-        if mmssource:
-            autosub.MINMATCHSCORE += 8
+        # mssdefault is the minimal default score (which cannot be edited)
+        if mssdefault:
+            autosub.MINMATCHSCORE += autosub.MINMATCHSCOREDEFAULT
         if mmsquality:
-            autosub.MINMATCHSCORE += 4
+            autosub.MINMATCHSCORE += 2
         if mmscodec:
             autosub.MINMATCHSCORE += 2
-        if mmsrelease:
-            autosub.MINMATCHSCORE += 1
+        if mmsreleasegroup:
+            autosub.MINMATCHSCORE += 6
 
         autosub.SCHEDULERSCANDISK = int(scandisk)
         autosub.SCHEDULERCHECKSUB = int(checksub)

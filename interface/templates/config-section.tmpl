@@ -111,22 +111,24 @@
 		<td width="140px">MinMatchScore</td>
 		<td>
 		#set $temp = $autosub.MINMATCHSCORE
-		#set $temp = $temp - 8
-		Source: 
+		#set $temp = $temp - 35
+		Show:
 		#if $temp >= 0
-			<input type="checkbox" name="mmssource" checked value=1>
+			<input type="checkbox" name="mssshow" disabled checked value=1>
+			<input type="hidden" name="mssdefault" value=1>
 		#else
-			<input type="checkbox" name="mmssource" value=1>
-			#set $temp = $temp + 8
+			## this should never be possible because the default value is forced at startup for invalid scores
+			<input type="checkbox" name="mmsshow" value=1>
+			#set $temp = 0
 		#end if
 
-		#set $temp = $temp - 4
+		#set $temp = $temp - 2
 		Quality: 
 		#if $temp >= 0
 			<input type="checkbox" name="mmsquality" checked value=1>
 		#else
 			<input type="checkbox" name="mmsquality" value=1>
-			#set $temp = $temp + 4
+			#set $temp = $temp + 2
 		#end if
 
 		#set $temp = $temp - 2
@@ -138,12 +140,12 @@
 			#set $temp = $temp + 2
 		#end if
 
-		#set $temp = $temp - 1
+		#set $temp = $temp - 6
 		Releasegroup: 
 		#if $temp >= 0
-			<input type="checkbox" name="mmsrelease" checked value=1>
+			<input type="checkbox" name="mmsreleasegroup" checked value=1>
 		#else
-			<input type="checkbox" name="mmsrelease" value=1>
+			<input type="checkbox" name="mmsreleasegroup" value=1>
 		#end if
 		
 		</td>

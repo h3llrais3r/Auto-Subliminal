@@ -45,19 +45,14 @@ def read_config(configfile):
         else:
             autosub.DOWNLOADENG = False
 
-        # use subliminal scores (see examples below on how it is calculated)
-        # score calculation for version > 0.7.3
-        # video.scores['episode']+video.scores['series']+video.scores['season']+video.scores['resolution']+video.scores['year']+video.scores['release_group'] = 68
-        # video.scores['episode']+video.scores['series']+video.scores['season']+video.scores['video_codec']+video.scores['resolution']+video.scores['year']+video.scores['release_group'] = 70
-        # video.scores['hash'] = 71
-        # score calculation for version = 0.7.3
-        # video.scores['episode']+video.scores['series']+video.scores['season']+video.scores['resolution']+video.scores['release_group'] = 43
-        # video.scores['episode']+video.scores['series']+video.scores['season']+video.scores['video_codec']+video.scores['resolution']+video.scores['release_group'] = 45
-        # video.scores['hash'] = 46
         if cfg.has_option('config', 'minmatchscore'):
             autosub.MINMATCHSCORE = int(cfg.get('config', 'minmatchscore'))
+            # Force the default minmatchscore when a wrongly configured value is entered manually in the config file
+            if autosub.MINMATCHSCORE < autosub.MINMATCHSCOREDEFAULT:
+                print "WARNING: Invalid MINMATCHSCORE found. Using the default score (%s) instead." % autosub.MINMATCHSCOREDEFAULT
+                autosub.MINMATCHSCORE = autosub.MINMATCHSCOREDEFAULT
         else:
-            autosub.MINMATCHSCORE = 43
+            autosub.MINMATCHSCORE = autosub.MINMATCHSCOREDEFAULT
 
         if cfg.has_option('config', 'scandisk'):
             autosub.SCHEDULERSCANDISK = int(cfg.get('config', 'scandisk'))
@@ -137,7 +132,7 @@ def read_config(configfile):
         print "ERROR: Required variable ROOTPATH is missing. Using current working directory instead."
         autosub.PATH = unicode(os.getcwd(), autosub.SYSENCODING)
         autosub.DOWNLOADENG = False
-        autosub.MINMATCHSCORE = 43
+        autosub.MINMATCHSCORE = autosub.MINMATCHSCOREDEFAULT
         autosub.SCHEDULERSCANDISK = 3600
         autosub.SCHEDULERCHECKSUB = 28800
         print "ERROR: Required variable ROOTPATH is missing. Using current working directory instead."
@@ -886,15 +881,50 @@ def upgrade_config(from_version, to_version):
             upgrade_config((from_version - 1) + x, x + 1)
     else:
         if from_version == 1 and to_version == 2:
-            print "INFO: Upgrading minmatchscores"
-            print "INFO: Old value's Minmatchscore: %d" % autosub.MINMATCHSCORE
-
+            print "INFO: Upgrading minmatchscore"
+            print "INFO: Old value minmatchscore: %d" % autosub.MINMATCHSCORE
             if (autosub.MINMATCHSCORE % 2) == 0:
                 autosub.MINMATCHSCORE = (autosub.MINMATCHSCORE * 2) + 2
             else:
                 autosub.MINMATCHSCORE = (autosub.MINMATCHSCORE * 2) + 1
-
-            print "INFO: New value's Minmatchscore: %d" % autosub.MINMATCHSCORE
+            print "INFO: New value minmatchscore: %d" % autosub.MINMATCHSCORE
             print "INFO: Config upgraded to version 2"
             autosub.CONFIGVERSION = 2
+            autosub.CONFIGUPGRADED = True
+
+        # use subliminal scores (see examples below on how it is calculated)
+        ###########################
+        # Suliminal version > 0.7.3
+        ###########################
+        # video.scores['episode'] = 6
+        # video.scores['series'] = 24
+        # video.scores['season'] = 6
+        # video.scores['year'] = 24 -> TODO: TO BE CHECKED IF OK TO BE DEFAULT
+        # --> these 4 should always be matched by default -> not visible in GUI -> minmatchscore = 60
+        # video.scores['resolution'] = 2
+        # video.scores['release_group'] = 6
+        # video.scores['video_codec'] = 2
+        # --> these 3 are configurable -> max minmatchscore = 60 + 2 + 6 + 2 = 70
+        # video.scores['hash'] = 46
+        # --> perfect match -> not configurable
+        #########################
+        # Suliminal version 0.7.3
+        #########################
+        # video.scores['episode'] = 6
+        # video.scores['series'] = 23
+        # video.scores['season'] = 6
+        # --> these 3 should always be matched by default -> not visible in GUI -> minmatchscore = 35
+        # video.scores['resolution'] = 2
+        # video.scores['release_group'] = 6
+        # video.scores['video_codec'] = 2
+        # --> these 3 are configurable -> max minmatchscore = 35 + 2 + 6 + 2 = 45
+        # video.scores['hash'] = 46
+        # --> perfect match -> not configurable
+        if from_version == 2 and to_version == 3:
+            print "INFO: New default minmatchscore"
+            print "INFO: Old value minmatchscore: %d" % autosub.MINMATCHSCORE
+            autosub.MINMATCHSCORE = autosub.MINMATCHSCOREDEFAULT
+            print "INFO: New value minmatchscore: %d" % autosub.MINMATCHSCORE
+            print "INFO: Config upgraded to version 3"
+            autosub.CONFIGVERSION = 3
             autosub.CONFIGUPGRADED = True
