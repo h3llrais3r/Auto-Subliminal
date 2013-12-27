@@ -127,7 +127,7 @@ def initialize():
     release = version.RELEASE_VERSION.split(' ')[0]
     versionnumber = version.RELEASE_VERSION.split(' ')[1]
 
-    VERSIONURL = 'http://auto-sub.googlecode.com/hg/autosub/version.py'
+    VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosub/version.py'
     USERAGENT = 'AutoSub/' + versionnumber + release.lower()[0]
 
     WANTEDQUEUE = []
