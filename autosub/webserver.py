@@ -172,13 +172,13 @@ class Config:
         if checkversion == 0:
             message = 'You are running the latest version!'
         elif checkversion == 1:
-            message = 'There is a new version available! Visit: <a href=http://code.google.com/p/auto-sub/downloads/list>Google-Project</a>'
+            message = 'There is a new version available! Visit: <a href=https://github.com/h3llrais3r/Auto-Subliminal/releases>Github</a>'
         elif checkversion == 2:
-            message = 'There is a new major release available for your version. For example, you are running a alpha version and there is beta version available consider upgrading! Visit: <a href=http://code.google.com/p/auto-sub/downloads/list>Google-Project</a>'
+            message = 'There is a new major release available for your version. For example, you are running a alpha version and there is beta version available consider upgrading! Visit: <a href=https://github.com/h3llrais3r/Auto-Subliminal/releases>Github</a>'
         elif checkversion == 3:
-            message = 'There is a newer testing version available. Only the risk-takers should upgrade! But keep an eye out on <a href=http://code.google.com/p/auto-sub/downloads/list>Google-Project</a>, because there is an upcoming new release!'
+            message = 'There is a newer testing version available. Only the risk-takers should upgrade! But keep an eye out on <a href=https://github.com/h3llrais3r/Auto-Subliminal/releases>Github</a>, because there is an upcoming new release!'
         elif checkversion == 4:
-            message = 'What are you doing here??? It is time to upgrade! Visit: <a href=http://code.google.com/p/auto-sub/downloads/list>Google-Project</a>'
+            message = 'What are you doing here??? It is time to upgrade! Visit: <a href=https://github.com/h3llrais3r/Auto-Subliminal/releases>Github</a>'
         else:
             message = 'Something went wrong there, is google-project reachable? Or are you running a really old release?'
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
