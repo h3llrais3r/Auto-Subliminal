@@ -3,3 +3,10 @@
 
 # PyCharm IDE
 .idea
+
+build/
+*.log*
+Auto_Subliminal.egg-info/
+dist/
+config.properties
+*.db
