@@ -115,8 +115,9 @@ def start():
     # TODO: CherryPy settings, etc...
     try:
         cherrypy.server.start()
-    except:
+    except Exception, e:
         log.error("Could not start webserver. Exiting")
+        log.exception(e)
         os._exit(1)
 
     cherrypy.server.wait()
