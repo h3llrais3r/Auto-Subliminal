@@ -55,7 +55,7 @@ class IdCache():
 
 class LastDownloads():
     def __init__(self):
-        self.query_get = 'select * from last_downloads'
+        self.query_get = 'select * from last_downloads order by timestamp desc'
         self.query_set = 'insert into last_downloads values (NULL,?,?,?,?,?,?,?,?,?,?)'
         self.query_flush = 'delete from last_downloads'
 
@@ -67,9 +67,9 @@ class LastDownloads():
         result_list = cursor.fetchall()
         connection.close()
 
-        # Return the last 10 items
-        if len(result_list) > 9:
-            return result_list[len(result_list) - 10:]
+        # Return the last 20 items
+        if len(result_list) > 19:
+            return result_list[0:20]
         else:
             return result_list
 
