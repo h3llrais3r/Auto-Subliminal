@@ -1,12 +1,20 @@
+# PyCharm IDE files
+.idea
+
 # Compiled files
 *.pyc
 
-# PyCharm IDE
-.idea
+# Log files
+*.log
 
-build/
-*.log*
-Auto_Subliminal.egg-info/
-dist/
-config.properties
+# Database files
 *.db
+*.dbm
+
+# Config files
+config.properties
+
+# Installation files
+build/
+dist/
+Auto_Subliminal.egg-info/
