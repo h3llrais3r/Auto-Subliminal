@@ -53,11 +53,6 @@ def read_config(configfile):
                 autosub.MINMATCHSCORE = autosub.MINMATCHSCOREDEFAULT
         else:
             autosub.MINMATCHSCORE = autosub.MINMATCHSCOREDEFAULT
-        
-        if cfg.has_option('config', 'matchreleasegroup'):
-            autosub.MATCHRELEASEGROUP = cfg.getboolean('config', 'matchreleasegroup')
-        else:
-            autosub.MATCHRELEASEGROUP = False
             
         if cfg.has_option('config', 'matchquality'):
             autosub.MATCHQUALITY = cfg.getboolean('config', 'matchquality')
@@ -68,6 +63,11 @@ def read_config(configfile):
             autosub.MATCHCODEC = cfg.getboolean('config', 'matchcodec')
         else:
             autosub.MATCHCODEC = False
+
+        if cfg.has_option('config', 'matchreleasegroup'):
+            autosub.MATCHRELEASEGROUP = cfg.getboolean('config', 'matchreleasegroup')
+        else:
+            autosub.MATCHRELEASEGROUP = False
 
         if cfg.has_option('config', 'scandisk'):
             autosub.SCHEDULERSCANDISK = int(cfg.get('config', 'scandisk'))
@@ -148,9 +148,9 @@ def read_config(configfile):
         autosub.PATH = unicode(os.getcwd(), autosub.SYSENCODING)
         autosub.DOWNLOADENG = False
         autosub.MINMATCHSCORE = autosub.MINMATCHSCOREDEFAULT
-        autosub.MATCHRELEASEGROUP = False
         autosub.MATCHQUALITY = False
         autosub.MATCHCODEC = False
+        autosub.MATCHRELEASEGROUP = False
         autosub.SCHEDULERSCANDISK = 3600
         autosub.SCHEDULERCHECKSUB = 28800
         print "ERROR: Required variable ROOTPATH is missing. Using current working directory instead."
@@ -584,9 +584,9 @@ def save_config_section():
     cfg.set(section, "path", autosub.PATH)
     cfg.set(section, "downloadeng", str(autosub.DOWNLOADENG))
     cfg.set(section, "minmatchscore", str(autosub.MINMATCHSCORE))
-    cfg.set(section, "matchreleasegroup", str(autosub.MATCHRELEASEGROUP))
     cfg.set(section, "matchcodec", str(autosub.MATCHCODEC))
     cfg.set(section, "matchquality", str(autosub.MATCHQUALITY))
+    cfg.set(section, "matchreleasegroup", str(autosub.MATCHRELEASEGROUP))
     cfg.set(section, "scandisk", str(autosub.SCHEDULERSCANDISK))
     cfg.set(section, "checksub", str(autosub.SCHEDULERCHECKSUB))
     cfg.set(section, "rootpath", autosub.ROOTPATH)
