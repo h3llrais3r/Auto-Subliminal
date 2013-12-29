@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 #TODO: refactor this when subliminal has split up search for subtitle and dnwload subtitle (should be from next version)
 def download_subtitle(download_dict):
     # Before we download, lest check if there are enough APICalls left
-    if not utils.check_apicalls():
+    if not utils.check_apicalls(use=True):
         log.error("Out of api calls")
         return False
 

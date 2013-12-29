@@ -40,9 +40,8 @@ class SubChecker():
             originalfile = wanted_item['originalFileLocationOnDisk']
             langs = wanted_item['lang']
 
-            if not utils.check_apicalls():
-                # Make sure that we are allow to connect to bierdopje
-                log.warning("checkSub: out of api calls")
+            if not utils.check_apicalls(use=True):
+                log.warning("Out of api calls")
                 break
 
             # This should map on the srt file names created by subliminal!

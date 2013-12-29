@@ -173,7 +173,7 @@ def get_showid(show_name):
         return int(show_id)
 
     # Do we have enough api calls?
-    if check_apicalls(use=False):
+    if check_apicalls():
         show = tvdb_api.Tvdb()[show_name]
         if show:
             show_id = show['id']
@@ -191,24 +191,21 @@ def get_showid(show_name):
     IdCache().set_id(-1, show_name)
 
 
-# TODO: implement this again if needed to limit the api calls
 def check_apicalls(use=False):
-    if False:
-        currentime = time.time()
-        lastrun = autosub.APICALLSLASTRESET
-        interval = autosub.APICALLSRESETINT
+    currentime = time.time()
+    lastrun = autosub.APICALLSLASTRESET
+    interval = autosub.APICALLSRESETINT
 
-        if currentime - lastrun > interval:
-            autosub.APICALLS = autosub.APICALLSMAX
-            autosub.APICALLSLASTRESET = time.time()
+    if currentime - lastrun > interval:
+        autosub.APICALLS = autosub.APICALLSMAX
+        autosub.APICALLSLASTRESET = time.time()
 
-        if autosub.APICALLS > 0:
-            if use:
-                autosub.APICALLS -= 1
-            return True
-        else:
-            return False
-    return True
+    if autosub.APICALLS > 0:
+        if use:
+            autosub.APICALLS -= 1
+        return True
+    else:
+        return False
 
 
 def display_logfile(loglevel):
