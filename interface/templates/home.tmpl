@@ -204,8 +204,9 @@ $autosub.WANTEDQUEUE.sort(key=$get_attr('title'))
 <br>
 <table>
 	<tr>
-		<td width="100px">Next ScanDisk</td>
-		<td>
+		<td align="left">Next disk scan in</td>
+		<td align="center" width="25px">:</td>
+		<td align="right">
 			#try
 			  $time.strftime('%H:%M:%S', $time.gmtime(($autosub.SCANDISK.interval - ($time.time() - $autosub.SCANDISK.lastrun) ))) <br>
 			#except
@@ -215,8 +216,9 @@ $autosub.WANTEDQUEUE.sort(key=$get_attr('title'))
 	</tr>
 	
 	<tr>
-		<td width="100px">Next CheckSub</td>
-		<td>
+		<td align="left">Next subtitle check in</td>
+		<td align="center" width="25px">:</td>
+		<td align="right">
 			#try
 			  $time.strftime('%H:%M:%S', $time.gmtime(($autosub.CHECKSUB.interval - ($time.time() - $autosub.CHECKSUB.lastrun) ))) <br>
 			#except
