@@ -14,11 +14,26 @@ What it does:
  * Once every day it will do a full rescan of your local content
  * If no dutch version can be found it can (based on a setting) download the english version instead
 
+What it uses:
+
+ * cheetah
+ * cherrypy
+ * beautifulsoup
+ * growl
+ * httplib2
+ * oauth2
+ * pynma
+ * pynmwp
+ * pythontwitter
+ * simplejson
+ * version
+ * subliminal
+
 How to use:
 
  * Install python
  * Install python cheetah package
- * Install Auto-Subliminal (it will automatically install needed packages)
+ * Install Auto-Subliminal (python setup.py install) -> it will automatically install the needed packages
  * Start the script: " python AutoSubliminal.py "
  * A web browser should now open
  * Go to the config page, check the settings, make sure you set at least:

@@ -4,12 +4,11 @@
 #from library.beautifulsoup import BeautifulStoneSoup
 
 #import autosub
-#from autosub.Bierdopje import API
+#from autosub import utils
 
 #try:
-	#set $api = API('http://auto-sub.googlecode.com/hg/changelog.xml', RSS=True)
-	$api.connect()
-	#set $page = $BeautifulStoneSoup(api.resp)
+	#set $response = utils.connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/master/changelog.xml')
+	#set $page = $BeautifulStoneSoup($response)
 	#set $result = $page.findAll("release") 
 	#set $counter = 0
 
@@ -44,5 +43,5 @@
 	#end for
 	</table>
 #except:
-	Feed cannot be found right now, please try again later.
+	Changelog cannot be found right now, please try again later.
 #end try:
