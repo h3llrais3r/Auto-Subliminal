@@ -1,5 +1,6 @@
 import logging
 import re
+import socket
 import subprocess
 from string import capwords
 import time
@@ -30,6 +31,24 @@ def run_cmd(cmd):
     shellerr = process.stderr.read()
     process.wait()
     return shell, shellerr
+
+
+def connect_url(url):
+    response = None
+    errorcode = None
+    socket.setdefaulttimeout(autosub.TIMEOUT)
+    try:
+        response = urllib2.urlopen(url)
+        errorcode = response.getcode()
+    except urllib2.HTTPError, e:
+        errorcode = e.getcode()
+
+    if errorcode == 200:
+        log.debug("API: HTTP Code: 200: OK!")
+    else:
+        log.error("HTTP Code: %s: NOT OK!" % errorcode)
+
+    return response
 
 
 def check_version():
