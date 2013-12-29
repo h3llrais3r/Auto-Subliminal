@@ -12,7 +12,7 @@ import codecs
 from ConfigParser import SafeConfigParser
 
 import autosub
-from autosub import version
+from autosub import version, utils
 
 log = logging.getLogger(__name__)
 
@@ -164,12 +164,6 @@ def read_config(configfile):
         print "ERROR: Required variable LOGFILE is missing. Using 'AutoSuliminal.log' instead."
         autosub.LOGFILE = u"AutoSubliminal.log"
         autosub.CONFIGVERSION = version.CONFIG_VERSION
-
-    if autosub.CONFIGVERSION < version.CONFIG_VERSION:
-        upgrade_config(autosub.CONFIGVERSION, version.CONFIG_VERSION)
-    elif autosub.CONFIGVERSION > version.CONFIG_VERSION:
-        print "ERROR: Config version higher then this version of Auto-Subliminal supports. Update Auto-Subliminal."
-        os._exit(1)
 
     if cfg.has_section('logfile'):
         if cfg.has_option("logfile", "loglevel"):
@@ -421,11 +415,18 @@ def read_config(configfile):
         if autosub.SUBLIMINALPROVIDERS:
             autosub.SUBLIMINALPROVIDERLIST = autosub.SUBLIMINALPROVIDERS.split(',')
 
+    # Check if config needs to be upgraded
+    if autosub.CONFIGVERSION < version.CONFIG_VERSION:
+        upgrade_config(autosub.CONFIGVERSION, version.CONFIG_VERSION)
+    elif autosub.CONFIGVERSION > version.CONFIG_VERSION:
+        print "ERROR: Config version higher then this version of Auto-Subliminal supports. Update Auto-Subliminal."
+        os._exit(1)
+
     # Settings
     autosub.SHOWID_CACHE = {}
 
+    # If needed add default namemappings here
     # This dictionary maps local series names to TVDB ID's
-    # If needed add default mappings here, but currently not used because TVDB ID is retrieved when checking for subs
     # Example: namemapping = {"Arrow" : "257655", "Grimm" : "248736"}
     autosub.NAMEMAPPING = {}
     autosub.NAMEMAPPINGUPPER = {}
@@ -946,6 +947,17 @@ def upgrade_config(from_version, to_version):
             print "INFO: Old value minmatchscore: %d" % autosub.MINMATCHSCORE
             autosub.MINMATCHSCORE = autosub.MINMATCHSCOREDEFAULT
             print "INFO: New value minmatchscore: %d" % autosub.MINMATCHSCORE
+            print "INFO: Replacing old user namemappings with tvdb id's"
+            for x in autosub.USERNAMEMAPPING.keys():
+                # Search for tvdb id
+                tvdb_id = utils.get_showid(x, force_search=True)
+                # Replace by tvdb id or remove namemapping
+                if tvdb_id:
+                    autosub.USERNAMEMAPPING[x] = str(tvdb_id)
+                    autosub.USERNAMEMAPPINGUPPER[x.upper()] = str(tvdb_id)
+                else:
+                    del autosub.USERNAMEMAPPING[x]
+                    del autosub.USERNAMEMAPPINGUPPER[x.upper()]
             print "INFO: Config upgraded to version 3"
             autosub.CONFIGVERSION = 3
             autosub.CONFIGUPGRADED = True

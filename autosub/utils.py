@@ -157,26 +157,32 @@ def skip_show(show_name, season, episode):
                 return True
 
 
-def get_showid(show_name):
+def get_showid(show_name, force_search=False):
     log.debug('trying to get showid for %s' % show_name)
-    show_id = name_mapping(show_name)
-    if show_id:
-        log.debug('showid from namemapping %s' % show_id)
-        return int(show_id)
+    show_id = None
+    # Skip search in namemapping and id cache when force_search = True
+    if not force_search:
+        show_id = name_mapping(show_name)
+        if show_id:
+            log.debug('showid from namemapping %s' % show_id)
+            return int(show_id)
 
-    show_id = IdCache().get_id(show_name)
-    if show_id:
-        log.debug('showid from cache %s' % show_id)
-        if show_id == -1:
-            log.error('Showid not found for %s' % show_name)
-            return
-        return int(show_id)
+        show_id = IdCache().get_id(show_name)
+        if show_id:
+            log.debug('showid from cache %s' % show_id)
+            if show_id == -1:
+                log.error('Showid not found for %s' % show_name)
+                return
+            return int(show_id)
 
-    # Do we have enough api calls?
+    # Search on tvdb
     if check_apicalls():
-        show = tvdb_api.Tvdb()[show_name]
-        if show:
-            show_id = show['id']
+        try:
+            show = tvdb_api.Tvdb()[show_name]
+            if show:
+                show_id = show['id']
+        except Exception, e:
+            log.exception(e)
     else:
         log.warning("Out of API calls")
         return None

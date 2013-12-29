@@ -146,16 +146,6 @@ def initialize():
     # Default http timeout
     TIMEOUT = 300
 
-    if CONFIGFILE is None:
-        CONFIGFILE = "config.properties"
-
-    config.read_config(CONFIGFILE)
-
-    if CONFIGUPGRADED:
-        print "INFO: Config seems to be upgraded... writing config"
-        config.write_config()
-        print "INFO: Writing config done"
-
     MOBILEUSERAGENTS = ["midp", "240x320", "blackberry", "netfront", "nokia", "panasonic",
                         "portalmmm", "sharp", "sie-", "sonyericsson", "symbian", "windows ce",
                         "benq", "mda", "mot-", "opera mini", "philips", "pocket pc", "sagem",
@@ -163,11 +153,22 @@ def initialize():
                         "ipad", "android", "windows phone"]
     MOBILEAUTOSUB = True
 
+    # API settings
     APICALLSLASTRESET = time.time()
     APICALLSRESETINT = 86400
     APICALLSMAX = 300
     APICALLS = APICALLSMAX
 
+    # Config file settings
+    if CONFIGFILE is None:
+        CONFIGFILE = "config.properties"
+    config.read_config(CONFIGFILE)
+    if CONFIGUPGRADED:
+        print "INFO: Config seems to be upgraded... writing config"
+        config.write_config()
+        print "INFO: Writing config done"
+
+    # Logging
     init_logging()
 
 
