@@ -13,6 +13,7 @@
 		<li><a href="#notifications">Notifications</a></li>
         <li><a href="#skipshow">Skipshow</a></li>
         <li><a href="#webserver">Webserver</a></li>
+        <li><a href="#providers">Providers</a></li>
     </ul>
 	
     <div id="general">
@@ -37,6 +38,10 @@
 	
     <div id="notifications">
       #include $os.path.join($autosub.PATH.encode(), "interface/templates/notification-section.tmpl")
+    </div>
+
+    <div id="providers">
+      #include $os.path.join($autosub.PATH.encode(), "interface/templates/config-providers.tmpl")
     </div>
 	
   </div>
