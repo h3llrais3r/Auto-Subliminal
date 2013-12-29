@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Auto-Sub Mini</title>
+		<title>Auto-Subliminal Mini</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0;" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -115,23 +115,23 @@
 					<p>
 						<table border="0px" cellspacing="0px" cellpadding="0px">
 							<tr>
-								<td>NEXT SCANDISK</td>
+								<td>NEXT DISK SCAN IN</td>
 								<td>
 									#try
-									  &nbsp;@&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosub.SCANDISK.interval - ($time.time() - $autosub.SCANDISK.lastrun) ))) <br>
+									  &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosub.SCANDISK.interval - ($time.time() - $autosub.SCANDISK.lastrun) ))) <br>
 									#except
-									  &nbsp;@&nbsp;Please wait... <br>
+									  &nbsp;:&nbsp;Please wait... <br>
 									#end try
 								</td>
 							</tr>
 							
 							<tr>
-								<td>NEXT CHECKSUB</td>
+								<td>NEXT SUBTITLE CHECK IN</td>
 								<td>
 									#try
-									  &nbsp;@&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosub.CHECKSUB.interval - ($time.time() - $autosub.CHECKSUB.lastrun) ))) <br>
+									  &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosub.CHECKSUB.interval - ($time.time() - $autosub.CHECKSUB.lastrun) ))) <br>
 									#except
-									  &nbsp;@&nbsp;Please wait... <br>
+									  &nbsp;:&nbsp;Please wait... <br>
 									#end try
 								</td>
 							</tr>
@@ -144,7 +144,7 @@
 			</div>
 			  <div data-role="footer" data-theme="b">
             <div class="ui-bar" align="center">
-				$version.RELEASE_VERSION.upper() - API CALLS LEFT: $autosub.APICALLS</div>
+				$version.RELEASE_VERSION.upper() - API CALLS LEFT : $autosub.APICALLS</div>
 			</div>
 		</div>
 	</body>

@@ -7,17 +7,20 @@
 <br />
 <table>
 	<tr>
-		<td width="175px" align="left">Auto-Subliminal version</td>
+		<td align="left">Auto-Subliminal version</td>
+		<td align="center" width="25px">:</td>
 		<td align="right">$version.RELEASE_VERSION</td>
 	</tr>
 	
 	<tr>
-		<td width="175px" align="left">API calls left</td>
+		<td align="left">API calls left</td>
+		<td align="center" width="25px">:</td>
 		<td align="right">$autosub.APICALLS</td>
 	</tr>
 	
 	<tr>
-		<td width="175px" align="left">API call reset in</td>
+		<td align="left">API call reset in</td>
+		<td align="center" width="25px">:</td>
 		<td align="right">#if ($autosub.APICALLSRESETINT - ($time.time() - $autosub.APICALLSLASTRESET)) < 0
 		At next API call
 		#else
@@ -26,7 +29,7 @@
 	</tr>
 	
 	<tr>
-		<td colspan="2" align="center">&nbsp;</td>
+		<td colspan="3" align="center">&nbsp;</td>
 	</tr>
 	
 </table>

@@ -23,7 +23,7 @@ def _send_notify(message):
     http_handler = HTTPSConnection("pushalot.com")
 
     data = {'AuthorizationToken': autosub.PUSHALOTAPI,
-            'Title': "Auto-Sub",
+            'Title': "Auto-Subliminal",
             'Body': message.encode('utf-8')}
 
     try:

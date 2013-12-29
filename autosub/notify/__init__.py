@@ -1,4 +1,4 @@
-# Autosub notify library - http://code.google.com/p/auto-sub/
+# Notify library
 # Every function should have 2 calls, send_notify and test_notify
 # Send notify should get 3 argument: videofile, subtitlefile (both without path) and lang (which should be the language)
 # test_notify doesn't require any argument

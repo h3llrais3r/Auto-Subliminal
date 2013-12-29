@@ -295,7 +295,7 @@ def read_config(configfile):
         if cfg.has_option('notify', 'mailsubject'):
             autosub.MAILSUBJECT = cfg.get('notify', 'mailsubject')
         else:
-            autosub.MAILSUBJECT = u"Auto-Sub downloaded"
+            autosub.MAILSUBJECT = u"Auto-Subliminal downloaded"
 
         if cfg.has_option('notify', 'mailencryption'):
             autosub.MAILENCRYPTION = cfg.get('notify', 'mailencryption')
