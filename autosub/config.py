@@ -17,6 +17,24 @@ from autosub import version, utils
 log = logging.getLogger(__name__)
 
 
+def load_provider_config(cfg):
+    autosub.USEALLPROVIDERS = cfg.getboolean('subliminal', 'allproviders')
+    autosub.ADDIC7ED = cfg.getboolean('subliminal', 'addic7ed')
+    autosub.OPENSUBTITLES = cfg.getboolean('subliminal', 'opensubtitles')
+    autosub.PODNAPISI = cfg.getboolean('subliminal', 'podnapisi')
+    autosub.THESUBDB = cfg.getboolean('subliminal', 'thesubdb')
+    autosub.TVSUBTITLES = cfg.getboolean('subliminal', 'tvsubtitles')
+
+
+def create_provider_config(cfg):
+    cfg.set('subliminal', 'allproviders', 'True')
+    cfg.set('subliminal', 'addic7ed', 'True')
+    cfg.set('subliminal', 'opensubtitles', 'True')
+    cfg.set('subliminal', 'podnapisi', 'True')
+    cfg.set('subliminal', 'thesubdb', 'True')
+    cfg.set('subliminal', 'tvsubtitles', 'True')
+
+
 def read_config(configfile):
     """
     Read the config file and set all the variables.
@@ -422,6 +440,12 @@ def read_config(configfile):
         print "ERROR: Config version higher then this version of Auto-Subliminal supports. Update Auto-Subliminal."
         os._exit(1)
 
+    try:
+        load_provider_config(cfg)
+    except:
+        create_provider_config(cfg)
+        load_provider_config(cfg)
+
     # Settings
     autosub.SHOWID_CACHE = {}
 
@@ -605,6 +629,33 @@ def save_config_section():
     with codecs.open(autosub.CONFIGFILE, 'wb', encoding=autosub.SYSENCODING) as file:
         cfg.write(file)
 
+def save_providers_section():
+    """
+    Save stuff
+    """
+    section = 'subliminal'
+
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosub.CONFIGFILE, 'r', autosub.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        # No config yet
+        cfg = SafeConfigParser()
+        pass
+
+    if not cfg.has_section(section):
+        cfg.add_section(section)
+
+    cfg.set(section, "allproviders", str(autosub.USEALLPROVIDERS))
+    cfg.set(section, "addic7ed", str(autosub.ADDIC7ED))
+    cfg.set(section, "opensubtitles", str(autosub.OPENSUBTITLES))
+    cfg.set(section, "podnapisi", str(autosub.PODNAPISI))
+    cfg.set(section, "thesubdb", str(autosub.THESUBDB))
+    cfg.set(section, "tvsubtitles", str(autosub.TVSUBTITLES))
+
+    with codecs.open(autosub.CONFIGFILE, 'wb', encoding=autosub.SYSENCODING) as file:
+        cfg.write(file)
 
 def save_logfile_section():
     """
@@ -883,6 +934,7 @@ def write_config():
     save_skipshow_section()
     save_usernamemapping_section()
     save_notify_section()
+    save_providers_section()
 
     if restart:
         # This needs to be replaced by a restart thingy, until then, just re-read the config and tell the users to do a manual restart
@@ -946,21 +998,7 @@ def upgrade_config(from_version, to_version):
             print "INFO: New default minmatchscore"
             print "INFO: Old value minmatchscore: %d" % autosub.MINMATCHSCORE
             autosub.MINMATCHSCORE = autosub.MINMATCHSCOREDEFAULT
-            autosub.MATCHQUALITY = False
-            autosub.MATCHCODEC = False
-            autosub.MATCHRELEASEGROUP = False
             print "INFO: New value minmatchscore: %d" % autosub.MINMATCHSCORE
-            print "INFO: Replacing old user namemappings with tvdb id's"
-            for x in autosub.USERNAMEMAPPING.keys():
-                # Search for tvdb id
-                tvdb_id = utils.get_showid(x, force_search=True)
-                # Replace by tvdb id or remove namemapping
-                if tvdb_id:
-                    autosub.USERNAMEMAPPING[x] = str(tvdb_id)
-                    autosub.USERNAMEMAPPINGUPPER[x.upper()] = str(tvdb_id)
-                else:
-                    del autosub.USERNAMEMAPPING[x]
-                    del autosub.USERNAMEMAPPINGUPPER[x.upper()]
             print "INFO: Config upgraded to version 3"
             autosub.CONFIGVERSION = 3
             autosub.CONFIGUPGRADED = True

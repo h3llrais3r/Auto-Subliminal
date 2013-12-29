@@ -77,7 +77,8 @@ class Config:
                     mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi,
                     twitterkey, twittersecret, notifyen, notifynl,
                     notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi,
-                    mssdefault=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None):
+                    mssdefault=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None,
+                    allproviders=True, addic7ed=True, opensubtitles=True, podnapisi=True, thesubdb=True, tvsubtitles=True):
         # Set all internal variables
         autosub.PATH = path
         autosub.ROOTPATH = rootpath
@@ -109,6 +110,13 @@ class Config:
         if mmsreleasegroup:
             autosub.MINMATCHSCORE += 6
             autosub.MATCHRELEASEGROUP = True
+
+        autosub.USEALLPROVIDERS = allproviders
+        autosub.ADDIC7ED = addic7ed
+        autosub.OPENSUBTITLES = opensubtitles
+        autosub.PODNAPISI = podnapisi
+        autosub.THESUBDB = thesubdb
+        autosub.TVSUBTITLES = tvsubtitles
 
         autosub.SCHEDULERSCANDISK = int(scandisk)
         autosub.SCHEDULERCHECKSUB = int(checksub)
