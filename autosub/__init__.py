@@ -133,14 +133,18 @@ def initialize():
     versionnumber = version.RELEASE_VERSION.split(' ')[1]
 
     VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosub/version.py'
-    USERAGENT = 'AutoSub/' + versionnumber + release.lower()[0]
+    USERAGENT = 'Auto-Subliminal/' + versionnumber + release.lower()[0]
 
     WANTEDQUEUE = []
 
     MINMATCHSCOREDEFAULT = 35
 
-    APIKEY = "BB442E7744E9B541"
-    TIMEOUT = 300 #default http timeout
+    # Currently not used anymore (perhaps reuse it for tvdb api calls when a custom tvdb api key is needed?)
+    APIKEY = ""
+    API = "http://.../%s/" % APIKEY
+
+    # Default http timeout
+    TIMEOUT = 300
 
     if CONFIGFILE is None:
         CONFIGFILE = "config.properties"
@@ -151,8 +155,6 @@ def initialize():
         print "INFO: Config seems to be upgraded... writing config"
         config.write_config()
         print "INFO: Writing config done"
-
-    API = "http://api.bierdopje.com/%s/" % APIKEY
 
     MOBILEUSERAGENTS = ["midp", "240x320", "blackberry", "netfront", "nokia", "panasonic",
                         "portalmmm", "sharp", "sie-", "sonyericsson", "symbian", "windows ce",
