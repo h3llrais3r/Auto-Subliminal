@@ -110,8 +110,8 @@
 	<tr>
 		<td width="140px">MinMatchScore</td>
 		<td>
-		#set $temp = $autosub.MINMATCHSCORE
-		#set $temp = $temp - 35
+		#set $temp = $autosub.MINMATCHSCOREDEFAULT
+
 		Show:
 		#if $temp >= 0
 			<input type="checkbox" name="mssshow" disabled checked value=1>
@@ -122,32 +122,30 @@
 			#set $temp = 0
 		#end if
 
-		#set $temp = $temp - 2
-		Quality: 
-		#if $temp >= 0
-			<input type="checkbox" name="mmsquality" checked value=1>
-		#else
-			<input type="checkbox" name="mmsquality" value=1>
-			#set $temp = $temp + 2
-		#end if
-
-		#set $temp = $temp - 2
-		Codec: 
-		#if $temp >= 0
-			<input type="checkbox" name="mmscodec" checked="True" value=1>
-		#else
-			<input type="checkbox" name="mmscodec" value=1>
-			#set $temp = $temp + 2
-		#end if
-
-		#set $temp = $temp - 6
-		Releasegroup: 
-		#if $temp >= 0
+		Releasegroup:
+		#if $autosub.MATCHRELEASEGROUP
 			<input type="checkbox" name="mmsreleasegroup" checked value=1>
+			#set $temp = $temp + 6
 		#else
 			<input type="checkbox" name="mmsreleasegroup" value=1>
 		#end if
-		
+
+		Quality:
+		#if $autosub.MATCHQUALITY
+			<input type="checkbox" name="mmsquality" checked value=1>
+			#set $temp = $temp + 2
+		#else
+			<input type="checkbox" name="mmsquality" value=1>
+		#end if
+
+		Codec:
+		#if $autosub.MATCHCODEC
+			<input type="checkbox" name="mmscodec" checked="True" value=1>
+			#set $temp = $temp + 2
+		#else
+			<input type="checkbox" name="mmscodec" value=1>
+		#end if
+
 		</td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationMinmatchscore"><img src="$autosub.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a>
 		<div id="informationMinmatchscore" class="dropdown-menu has-tip" align="left"><ul><li>

@@ -93,15 +93,22 @@ class Config:
         autosub.SKIPHIDDENDIRS = skiphiddendirs
 
         autosub.MINMATCHSCORE = 0
+        autosub.MATCHQUALITY = False
+        autosub.MATCHCODEC = False
+        autosub.MATCHRELEASEGROUP = False
         # mssdefault is the minimal default score (which cannot be edited)
+        # save match options to file to correctly show onscreen flags
         if mssdefault:
             autosub.MINMATCHSCORE += autosub.MINMATCHSCOREDEFAULT
         if mmsquality:
             autosub.MINMATCHSCORE += 2
+            autosub.MATCHQUALITY = True
         if mmscodec:
             autosub.MINMATCHSCORE += 2
+            autosub.MATCHCODEC = True
         if mmsreleasegroup:
             autosub.MINMATCHSCORE += 6
+            autosub.MATCHRELEASEGROUP = True
 
         autosub.SCHEDULERSCANDISK = int(scandisk)
         autosub.SCHEDULERCHECKSUB = int(checksub)
