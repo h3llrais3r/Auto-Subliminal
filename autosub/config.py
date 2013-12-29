@@ -946,6 +946,9 @@ def upgrade_config(from_version, to_version):
             print "INFO: New default minmatchscore"
             print "INFO: Old value minmatchscore: %d" % autosub.MINMATCHSCORE
             autosub.MINMATCHSCORE = autosub.MINMATCHSCOREDEFAULT
+            autosub.MATCHQUALITY = False
+            autosub.MATCHCODEC = False
+            autosub.MATCHRELEASEGROUP = False
             print "INFO: New value minmatchscore: %d" % autosub.MINMATCHSCORE
             print "INFO: Replacing old user namemappings with tvdb id's"
             for x in autosub.USERNAMEMAPPING.keys():
