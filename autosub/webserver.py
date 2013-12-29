@@ -92,13 +92,13 @@ class Config:
         autosub.LAUNCHBROWSER = launchbrowser
         autosub.SKIPHIDDENDIRS = skiphiddendirs
 
-        autosub.MINMATCHSCORE = 0
+        # Set match options and minmatchscore
         autosub.MATCHQUALITY = False
         autosub.MATCHCODEC = False
         autosub.MATCHRELEASEGROUP = False
-        # mssdefault is the minimal default score (which cannot be edited)
-        # save match options to file to correctly show onscreen flags
+        autosub.MINMATCHSCORE = 0
         if mssdefault:
+            # mssdefault is the minimal default score (which cannot be edited, so no flag is needed)
             autosub.MINMATCHSCORE += autosub.MINMATCHSCOREDEFAULT
         if mmsquality:
             autosub.MINMATCHSCORE += 2
