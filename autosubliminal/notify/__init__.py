@@ -7,8 +7,8 @@
 import logging
 import os
 
-import autosub
-from autosub.notify import twitter, mail, nma, growl, prowl, pushalot
+import autosubliminal
+from autosubliminal.notify import twitter, mail, nma, growl, prowl, pushalot
 
 log = logging.getLogger(__name__)
 
@@ -49,33 +49,33 @@ def notify(lang, subtitlefile, videofile):
     subtitlefile = os.path.basename(subtitlefile)
     videofile = os.path.basename(videofile)
 
-    if lang == 'en' and autosub.NOTIFYEN:
+    if lang == 'en' and autosubliminal.NOTIFYEN:
         notify_send(lang, subtitlefile, videofile)
-    if lang == 'nl' and autosub.NOTIFYNL:
+    if lang == 'nl' and autosubliminal.NOTIFYNL:
         notify_send(lang, subtitlefile, videofile)
 
 
 def notify_send(lang, subtitlefile, videofile):
-    if autosub.NOTIFYTWITTER:
+    if autosubliminal.NOTIFYTWITTER:
         log.debug("Notify: Twitter is enabled")
         twitter.send_notify(lang, subtitlefile, videofile)
 
-    if autosub.NOTIFYMAIL:
+    if autosubliminal.NOTIFYMAIL:
         log.debug("Notify: Mail is enabled")
         mail.send_notify(lang, subtitlefile, videofile)
 
-    if autosub.NOTIFYNMA:
+    if autosubliminal.NOTIFYNMA:
         log.debug("Notify: NMA is enabled")
         nma.send_notify(lang, subtitlefile, videofile)
 
-    if autosub.NOTIFYGROWL:
+    if autosubliminal.NOTIFYGROWL:
         log.debug("Notify: Growl is enabled")
         growl.send_notify(lang, subtitlefile, videofile)
 
-    if autosub.NOTIFYPROWL:
+    if autosubliminal.NOTIFYPROWL:
         log.debug("Notify: Prowl is enabled")
         prowl.send_notify(lang, subtitlefile, videofile)
 
-    if autosub.NOTIFYPUSHALOT:
+    if autosubliminal.NOTIFYPUSHALOT:
         log.debug("Notify: Pushalot is enabled")
         pushalot.send_notify(lang, subtitlefile, videofile)

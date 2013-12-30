@@ -1,7 +1,7 @@
 import logging
 import socket
 
-import autosub
+import autosubliminal
 from library.growl import gntp
 
 
@@ -9,8 +9,8 @@ log = logging.getLogger(__name__)
 
 
 def _send_notify(message):
-    host = autosub.GROWLHOST
-    port = int(autosub.GROWLPORT)
+    host = autosubliminal.GROWLHOST
+    port = int(autosubliminal.GROWLPORT)
 
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -29,7 +29,7 @@ def _send_notify(message):
 
 
 def test_notify():
-    password = autosub.GROWLPASS
+    password = autosubliminal.GROWLPASS
 
     register = gntp.GNTPRegister()
     register.add_header('Application-Name', "Auto-Subliminal")
@@ -51,7 +51,7 @@ def test_notify():
 
 
 def send_notify(lang, subtitlefile, videofile):
-    password = autosub.GROWLPASS
+    password = autosubliminal.GROWLPASS
     message = "Just downloaded %s " % subtitlefile
 
     notice = gntp.GNTPNotice()

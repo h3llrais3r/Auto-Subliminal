@@ -1,13 +1,13 @@
-#import autosub
+#import autosubliminal
 
-#include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
+#include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/header.tmpl")
 
-#include $os.path.join($autosub.PATH.encode(), "interface/templates/menu.tmpl")
+#include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/menu.tmpl")
 
 Visit: <a href="$url" target="_blank">$url</a> <br>
 and enter pin below
 
-<form method="post" action="$autosub.WEBROOT/config/regTwitter">
+<form method="post" action="$autosubliminal.WEBROOT/config/regTwitter">
 
 <input type="text" name="token_pin">
 
@@ -17,4 +17,4 @@ and enter pin below
 
 </form>
 
-#include $os.path.join($autosub.PATH.encode(), "interface/templates/footer.tmpl")
+#include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/footer.tmpl")

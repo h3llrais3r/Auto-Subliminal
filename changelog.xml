@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<autosub>
+<autosubliminal>
 	<release>
 		<version>Beta 0.6.0</version>
 		<releasedate>01-01-2014</releasedate>
@@ -9,4 +9,4 @@
 - Code cleanup and refactoring&lt;br&gt;
  		</changelog>
 	</release>
-</autosub>
+</autosubliminal>

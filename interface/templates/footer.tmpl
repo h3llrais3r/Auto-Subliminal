@@ -1,5 +1,5 @@
-#import autosub
-#from autosub import version
+#import autosubliminal
+#from autosubliminal import version
 
 </div>
 </div>
@@ -15,16 +15,16 @@
 	<tr>
 		<td align="left">API calls left</td>
 		<td align="center" width="25px">:</td>
-		<td align="right">$autosub.APICALLS</td>
+		<td align="right">$autosubliminal.APICALLS</td>
 	</tr>
 	
 	<tr>
 		<td align="left">API call reset in</td>
 		<td align="center" width="25px">:</td>
-		<td align="right">#if ($autosub.APICALLSRESETINT - ($time.time() - $autosub.APICALLSLASTRESET)) < 0
+		<td align="right">#if ($autosubliminal.APICALLSRESETINT - ($time.time() - $autosubliminal.APICALLSLASTRESET)) < 0
 		At next API call
 		#else
-		$time.strftime('%H:%M:%S', $time.gmtime(($autosub.APICALLSRESETINT - ($time.time() - $autosub.APICALLSLASTRESET) )))
+		$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.APICALLSRESETINT - ($time.time() - $autosubliminal.APICALLSLASTRESET) )))
 		#end if</td>
 	</tr>
 	

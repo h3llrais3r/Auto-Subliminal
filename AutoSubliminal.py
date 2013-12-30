@@ -6,11 +6,11 @@ import signal
 import time
 import locale
 
-import autosub
-import autosub.db
-import autosub.runner
+import autosubliminal
+import autosubliminal.db
+import autosubliminal.runner
 
-#signal.signal(signal.SIGTERM, autosub.AutoSub.signal_handler)
+#signal.signal(signal.SIGTERM, autosubliminal.runner.signal_handler)
 
 help_message = '''
 Usage:
@@ -39,13 +39,13 @@ def main(argv=None):
     # From Sickbeard / Headphones
     try:
         locale.setlocale(locale.LC_ALL, "")
-        autosub.SYSENCODING = locale.getpreferredencoding()
+        autosubliminal.SYSENCODING = locale.getpreferredencoding()
     except (locale.Error, IOError):
         pass
 
     # For OSes that are poorly configured, like synology & slackware
-    if not autosub.SYSENCODING or autosub.SYSENCODING in ('ANSI_X3.4-1968', 'US-ASCII', 'ASCII'):
-        autosub.SYSENCODING = 'UTF-8'
+    if not autosubliminal.SYSENCODING or autosubliminal.SYSENCODING in ('ANSI_X3.4-1968', 'US-ASCII', 'ASCII'):
+        autosubliminal.SYSENCODING = 'UTF-8'
 
     if argv is None:
         argv = sys.argv
@@ -61,18 +61,18 @@ def main(argv=None):
                 raise Usage(help_message)
             if option in ("-c", "--config"):
                 if os.path.exists(value):
-                    autosub.CONFIGFILE = value
+                    autosubliminal.CONFIGFILE = value
                 else:
                     print "ERROR: Configfile does not exists."
                     os._exit(0)
             if option in ("-l", "--nolaunch"):
-                autosub.LAUNCHBROWSER = False
+                autosubliminal.LAUNCHBROWSER = False
             if option in ("-d", "--daemon"):
                 if sys.platform == "win32":
                     print "ERROR: No support for daemon mode in Windows"
                     # TODO: Service support for Windows
                 else:
-                    autosub.DAEMON = True
+                    autosubliminal.DAEMON = True
 
     except Usage, err:
         print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)
@@ -81,33 +81,33 @@ def main(argv=None):
 
     # Load configuration
     if os.path.isfile('config.properties.dev'):
-        autosub.CONFIGFILE = 'config.properties.dev'
+        autosubliminal.CONFIGFILE = 'config.properties.dev'
     print "Initializing variables and loading config"
-    autosub.initialize()
+    autosubliminal.initialize()
 
-    signal.signal(signal.SIGINT, autosub.runner.signal_handler)
+    signal.signal(signal.SIGINT, autosubliminal.runner.signal_handler)
 
-    if autosub.DAEMON:
-        autosub.runner.daemon()
+    if autosubliminal.DAEMON:
+        autosubliminal.runner.daemon()
 
     # Make sure that sqlite database is loaded after you demonize
-    autosub.db.init_db()
+    autosubliminal.db.init_db()
 
     # Change to the new work directory
-    if os.path.exists(autosub.PATH):
-        os.chdir(autosub.PATH)
+    if os.path.exists(autosubliminal.PATH):
+        os.chdir(autosubliminal.PATH)
     else:
         print "ERROR: PATH does not exist, check config."
         os._exit(1)
 
     print "Starting output to log. Bye!"
     log = logging.getLogger(__name__)
-    log.debug("Systemencoding is: %s" % autosub.SYSENCODING)
-    log.debug("Configversion is: %d" % autosub.CONFIGVERSION)
-    log.debug("Dbversion is: %d" % autosub.DBVERSION)
+    log.debug("Systemencoding is: %s" % autosubliminal.SYSENCODING)
+    log.debug("Configversion is: %d" % autosubliminal.CONFIGVERSION)
+    log.debug("Dbversion is: %d" % autosubliminal.DBVERSION)
 
     log.info("Starting threads")
-    autosub.runner.start()
+    autosubliminal.runner.start()
 
     log.info("Threads started, going into a loop to keep the main thread going")
 

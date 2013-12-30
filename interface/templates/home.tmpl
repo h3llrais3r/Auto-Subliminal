@@ -4,17 +4,17 @@
 #import re
 #from types import *
 
-#import autosub
-#from autosub.db import LastDownloads
-#from autosub.utils import convert_timestamp, convert_timestamp_table, get_attr
+#import autosubliminal
+#from autosubliminal.db import LastDownloads
+#from autosubliminal.utils import convert_timestamp, convert_timestamp_table, get_attr
 
-#include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
+#include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/header.tmpl")
 
-#include $os.path.join($autosub.PATH.encode(), "interface/templates/menu.tmpl")
+#include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/menu.tmpl")
 
-$autosub.WANTEDQUEUE.sort(key=$get_attr('title'))
+$autosubliminal.WANTEDQUEUE.sort(key=$get_attr('title'))
 
-#if $len($autosub.WANTEDQUEUE) >= 1
+#if $len($autosubliminal.WANTEDQUEUE) >= 1
 <div class="box">
 <div class="header">
 	<h1>Wanted</h1><span></span>
@@ -37,7 +37,7 @@ $autosub.WANTEDQUEUE.sort(key=$get_attr('title'))
 	</thead>
 <tbody>
 #set $counter = 0
-#for $var in $autosub.WANTEDQUEUE
+#for $var in $autosubliminal.WANTEDQUEUE
 #set $divname = "skipshow-" + str($counter)
 #set $buttonname = "skipshowbutton-" + str($counter)
 #set $buttonseason = "skipshowbuttonseason-" + str($counter)
@@ -79,10 +79,10 @@ $autosub.WANTEDQUEUE.sort(key=$get_attr('title'))
 	<td width="75px" align="center">
 #for lang in $var['lang']
 #if lang == "nl"
-	<img src="$autosub.WEBROOT/images/nl.png" alt="nl">
+	<img src="$autosubliminal.WEBROOT/images/nl.png" alt="nl">
 #end if
 #if lang == "en"
-	<img src="$autosub.WEBROOT/images/en.png" alt="en">
+	<img src="$autosubliminal.WEBROOT/images/en.png" alt="en">
 #end if
 #end for
 	</td>
@@ -98,12 +98,12 @@ $autosub.WANTEDQUEUE.sort(key=$get_attr('title'))
 #end for
 </table>
 #set $counter = 0
-#for $var in $autosub.WANTEDQUEUE
+#for $var in $autosubliminal.WANTEDQUEUE
 #set $counter = $counter + 1
 <div id="dropdown-$counter" class="dropdown-menu has-tip">
     <ul>
-        <li><a href="$autosub.WEBROOT/config/skipShow/$var['title']/$var['season']">Skip season $var['season']</a></li>
-        <li><a href="$autosub.WEBROOT/config/skipShow/$var['title']/0">Skip show</a></li>
+        <li><a href="$autosubliminal.WEBROOT/config/skipShow/$var['title']/$var['season']">Skip season $var['season']</a></li>
+        <li><a href="$autosubliminal.WEBROOT/config/skipShow/$var['title']/0">Skip show</a></li>
     </ul>
 </div>
 #end for
@@ -170,7 +170,7 @@ $autosub.WANTEDQUEUE.sort(key=$get_attr('title'))
 #end if
 
 <td width="75px" align="center">
-	#set $imageurl = $autosub.WEBROOT + "/images/" + $var['language'] + ".png"
+	#set $imageurl = $autosubliminal.WEBROOT + "/images/" + $var['language'] + ".png"
 	<img src="$imageurl" alt="$var['language']" />
 </td>
 
@@ -208,7 +208,7 @@ $autosub.WANTEDQUEUE.sort(key=$get_attr('title'))
 		<td align="center" width="25px">:</td>
 		<td align="right">
 			#try
-			  $time.strftime('%H:%M:%S', $time.gmtime(($autosub.SCANDISK.interval - ($time.time() - $autosub.SCANDISK.lastrun) ))) <br>
+			  $time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.lastrun) ))) <br>
 			#except
 			  Please wait... <br>
 			#end try
@@ -220,11 +220,11 @@ $autosub.WANTEDQUEUE.sort(key=$get_attr('title'))
 		<td align="center" width="25px">:</td>
 		<td align="right">
 			#try
-			  $time.strftime('%H:%M:%S', $time.gmtime(($autosub.CHECKSUB.interval - ($time.time() - $autosub.CHECKSUB.lastrun) ))) <br>
+			  $time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.lastrun) ))) <br>
 			#except
 			  Please wait... <br>
 			#end try
 		</td>
 	</tr>
 </table>
-#include $os.path.join($autosub.PATH.encode(), "interface/templates/footer.tmpl")
+#include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/footer.tmpl")

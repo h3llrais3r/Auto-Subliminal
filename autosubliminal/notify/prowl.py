@@ -2,7 +2,7 @@ import logging
 from httplib import HTTPSConnection
 from urllib import urlencode
 
-import autosub
+import autosubliminal
 
 
 log = logging.getLogger(__name__)
@@ -33,20 +33,20 @@ def _send_notify(message):
 def test_notify():
     message = 'Testing Prowl! Seems to work!'
 
-    data = {'apikey': autosub.PROWLAPI,
+    data = {'apikey': autosubliminal.PROWLAPI,
             'application': 'Auto-Subliminal',
             'event': 'Test Message',
             'description': message.encode("utf-8"),
-            'priority': autosub.PROWLPRIORITY}
+            'priority': autosubliminal.PROWLPRIORITY}
     return _send_notify(data)
 
 
 def send_notify(lang, subtitlefile, videofile):
     message = 'Auto-Subliminal just download %s' % subtitlefile
 
-    data = {'apikey': autosub.PROWLAPI,
+    data = {'apikey': autosubliminal.PROWLAPI,
             'application': 'Auto-Subliminal',
             'event': 'Subtitle Downloaded',
             'description': message.encode("utf-8"),
-            'priority': autosub.PROWLPRIORITY}
+            'priority': autosubliminal.PROWLPRIORITY}
     return _send_notify(data)

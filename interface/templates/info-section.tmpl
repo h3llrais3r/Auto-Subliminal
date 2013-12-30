@@ -1,32 +1,32 @@
 #import sys
 #import os
 
-#import autosub
-#from autosub import version
+#import autosubliminal
+#from autosubliminal import version
 
 <font style="font-size: large;"><b>Configuration</b></font><br /><br />
 <table>
 	<tr>
 		<td width="140px">Config file</td>
 		<td>
-			#if $os.path.split($autosub.CONFIGFILE)[0] == ''	
-				$os.path.join($autosub.PATH, $autosub.CONFIGFILE)
+			#if $os.path.split($autosubliminal.CONFIGFILE)[0] == ''
+				$os.path.join($autosubliminal.PATH, $autosubliminal.CONFIGFILE)
 			#else
-				$autosub.CONFIGFILE
+				$autosubliminal.CONFIGFILE
 			#end if
 		</td>
 	</tr>
 	<tr>
 		<td width="140px">Database file</td>
-		<td>$os.path.join($autosub.PATH, $autosub.DBFILE)</td>
+		<td>$os.path.join($autosubliminal.PATH, $autosubliminal.DBFILE)</td>
 	</tr>
 	<tr>
 		<td width="140px">Log file</td>
 		<td>
-			#if $os.path.split($autosub.LOGFILE)[0] == ''	
-				$os.path.join($autosub.PATH, $autosub.LOGFILE)
+			#if $os.path.split($autosubliminal.LOGFILE)[0] == ''
+				$os.path.join($autosubliminal.PATH, $autosubliminal.LOGFILE)
 			#else
-				$autosub.LOGFILE
+				$autosubliminal.LOGFILE
 			#end if
 		</td>
 	</tr>
