@@ -98,16 +98,17 @@ class Config:
         autosubliminal.MATCHCODEC = False
         autosubliminal.MATCHRELEASEGROUP = False
         autosubliminal.MINMATCHSCORE = 0
-        if mssdefault:
+        # Convert to int before converting to bool (bool(0) = False; bool(1) = True)
+        if bool(int(mssdefault)):
             # mssdefault is the minimal default score (which cannot be edited, so no flag is needed)
             autosubliminal.MINMATCHSCORE += autosubliminal.MINMATCHSCOREDEFAULT
-        if mmsquality:
+        if bool(int(mmsquality)):
             autosubliminal.MINMATCHSCORE += 2
             autosubliminal.MATCHQUALITY = True
-        if mmscodec:
+        if bool(int(mmscodec)):
             autosubliminal.MINMATCHSCORE += 2
             autosubliminal.MATCHCODEC = True
-        if mmsreleasegroup:
+        if bool(int(mmsreleasegroup)):
             autosubliminal.MINMATCHSCORE += 6
             autosubliminal.MATCHRELEASEGROUP = True
 

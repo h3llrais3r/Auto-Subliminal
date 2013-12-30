@@ -219,7 +219,7 @@ def read_config(configfile):
             autosubliminal.WEBSERVERPORT = int(cfg.get('webserver', 'webserverport'))
 
         else:
-            print "ERROR: Webserver IP and port are required! Now setting the default values (0.0.0.0:8083)."
+            print "ERROR: Webserver IP and port are required. Now setting the default values (0.0.0.0:8083)."
             autosubliminal.WEBSERVERIP = u"0.0.0.0"
             autosubliminal.WEBSERVERPORT = 8083
 
@@ -232,10 +232,10 @@ def read_config(configfile):
             autosubliminal.USERNAME = cfg.get('webserver', 'username')
             autosubliminal.PASSWORD = cfg.get('webserver', 'password')
         elif cfg.has_option('webserver', 'username') or cfg.has_option('webserver', 'password'):
-            print "ERROR: Both username and password are required Now starting without authentication"
+            print "ERROR: Both username and password are required. Now starting without authentication."
     else:
-        print "ERROR: The webserver section is required! Now setting the default values (0.0.0.0:8083)."
-        print "WARNING: The webserver is started without authentication"
+        print "ERROR: The webserver section is required. Now setting the default values (0.0.0.0:8083)."
+        print "WARNING: The webserver is started without authentication."
         autosubliminal.WEBSERVERIP = u'0.0.0.0'
         autosubliminal.WEBSERVERPORT = 8083
         autosubliminal.WEBROOT = u''
@@ -612,24 +612,24 @@ def save_config_section():
         cfg.add_section(section)
 
     cfg.set(section, "path", autosubliminal.PATH)
-    cfg.set(section, "downloadeng", str(autosubliminal.DOWNLOADENG))
-    cfg.set(section, "minmatchscore", str(autosubliminal.MINMATCHSCORE))
-    cfg.set(section, "matchcodec", str(autosubliminal.MATCHCODEC))
-    cfg.set(section, "matchquality", str(autosubliminal.MATCHQUALITY))
-    cfg.set(section, "matchreleasegroup", str(autosubliminal.MATCHRELEASEGROUP))
-    cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
-    cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
     cfg.set(section, "rootpath", autosubliminal.ROOTPATH)
+    cfg.set(section, "logfile", autosubliminal.LOGFILE)
+    cfg.set(section, "launchbrowser", str(autosubliminal.LAUNCHBROWSER))
     cfg.set(section, "fallbacktoeng", str(autosubliminal.FALLBACKTOENG))
+    cfg.set(section, "downloadeng", str(autosubliminal.DOWNLOADENG))
     cfg.set(section, "subeng", autosubliminal.SUBENG)
     cfg.set(section, "subnl", autosubliminal.SUBNL)
     cfg.set(section, "notifyen", str(autosubliminal.NOTIFYEN))
     cfg.set(section, "notifynl", str(autosubliminal.NOTIFYNL))
-    cfg.set(section, "logfile", autosubliminal.LOGFILE)
     cfg.set(section, "postprocesscmd", autosubliminal.POSTPROCESSCMD)
-    cfg.set(section, "configversion", str(autosubliminal.CONFIGVERSION))
-    cfg.set(section, "launchbrowser", str(autosubliminal.LAUNCHBROWSER))
+    cfg.set(section, "minmatchscore", str(autosubliminal.MINMATCHSCORE))
+    cfg.set(section, "matchcodec", str(autosubliminal.MATCHCODEC))
+    cfg.set(section, "matchquality", str(autosubliminal.MATCHQUALITY))
+    cfg.set(section, "matchreleasegroup", str(autosubliminal.MATCHRELEASEGROUP))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
+    cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
+    cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
+    cfg.set(section, "configversion", str(autosubliminal.CONFIGVERSION))
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', encoding=autosubliminal.SYSENCODING) as file:
         cfg.write(file)
@@ -654,9 +654,9 @@ def save_logfile_section():
         cfg.add_section(section)
 
     cfg.set(section, "loglevel", logging.getLevelName(int(autosubliminal.LOGLEVEL)).lower())
-    cfg.set(section, "loglevelconsole", logging.getLevelName(int(autosubliminal.LOGLEVELCONSOLE)).lower())
-    cfg.set(section, "logsize", str(autosubliminal.LOGSIZE))
     cfg.set(section, "lognum", str(autosubliminal.LOGNUM))
+    cfg.set(section, "logsize", str(autosubliminal.LOGSIZE))
+    cfg.set(section, "loglevelconsole", logging.getLevelName(int(autosubliminal.LOGLEVELCONSOLE)).lower())
 
     with open(autosubliminal.CONFIGFILE, 'wb') as file:
         cfg.write(file)
@@ -800,20 +800,20 @@ def save_notify_section():
     cfg.set(section, "mailsubject", autosubliminal.MAILSUBJECT)
     cfg.set(section, "mailencryption", autosubliminal.MAILENCRYPTION)
     cfg.set(section, "mailauth", autosubliminal.MAILAUTH)
+    cfg.set(section, "notifytwitter", str(autosubliminal.NOTIFYTWITTER))
+    cfg.set(section, "twitterkey", autosubliminal.TWITTERKEY)
+    cfg.set(section, "twittersecret", autosubliminal.TWITTERSECRET)
+    cfg.set(section, "notifypushalot", str(autosubliminal.NOTIFYPUSHALOT))
+    cfg.set(section, "pushalotapi", autosubliminal.PUSHALOTAPI)
+    cfg.set(section, "notifynma", str(autosubliminal.NOTIFYNMA))
+    cfg.set(section, "nmaapi", autosubliminal.NMAAPI)
     cfg.set(section, "notifygrowl", str(autosubliminal.NOTIFYGROWL))
     cfg.set(section, "growlhost", autosubliminal.GROWLHOST)
     cfg.set(section, "growlport", autosubliminal.GROWLPORT)
     cfg.set(section, "growlpass", autosubliminal.GROWLPASS)
-    cfg.set(section, "notifynma", str(autosubliminal.NOTIFYNMA))
-    cfg.set(section, "nmaapi", autosubliminal.NMAAPI)
-    cfg.set(section, "notifytwitter", str(autosubliminal.NOTIFYTWITTER))
-    cfg.set(section, "twitterkey", autosubliminal.TWITTERKEY)
-    cfg.set(section, "twittersecret", autosubliminal.TWITTERSECRET)
     cfg.set(section, "notifyprowl", str(autosubliminal.NOTIFYPROWL))
     cfg.set(section, "prowlapi", autosubliminal.PROWLAPI)
     cfg.set(section, "prowlpriority", str(autosubliminal.PROWLPRIORITY))
-    cfg.set(section, "notifypushalot", str(autosubliminal.NOTIFYPUSHALOT))
-    cfg.set(section, "pushalotapi", autosubliminal.PUSHALOTAPI)
 
     with open(autosubliminal.CONFIGFILE, 'wb') as file:
         cfg.write(file)
@@ -952,22 +952,22 @@ def write_config():
 
 
 def upgrade_config(from_version, to_version):
-    print "INFO: Upgrading config version from %d to %d" % (from_version, to_version)
+    print "INFO: Upgrading config version from %d to %d." % (from_version, to_version)
     upgrades = to_version - from_version
     if upgrades != 1:
-        print "INFO: More than 1 upgrade required. Starting subupgrades"
+        print "INFO: More than 1 upgrade required. Starting subupgrades."
         for x in range(from_version, upgrades + 1):
             upgrade_config((from_version - 1) + x, x + 1)
     else:
         if from_version == 1 and to_version == 2:
-            print "INFO: Upgrading minmatchscore"
+            print "INFO: Upgrading minmatchscore."
             print "INFO: Old value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
             if (autosubliminal.MINMATCHSCORE % 2) == 0:
                 autosubliminal.MINMATCHSCORE = (autosubliminal.MINMATCHSCORE * 2) + 2
             else:
                 autosubliminal.MINMATCHSCORE = (autosubliminal.MINMATCHSCORE * 2) + 1
             print "INFO: New value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
-            print "INFO: Config upgraded to version 2"
+            print "INFO: Config upgraded to version 2."
             autosubliminal.CONFIGVERSION = 2
             autosubliminal.CONFIGUPGRADED = True
 
@@ -1000,14 +1000,14 @@ def upgrade_config(from_version, to_version):
         # video.scores['hash'] = 46
         # --> perfect match -> not configurable
         if from_version == 2 and to_version == 3:
-            print "INFO: New default minmatchscore"
+            print "INFO: New default minmatchscore."
             print "INFO: Old value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
             autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
             autosubliminal.MATCHQUALITY = False
             autosubliminal.MATCHCODEC = False
             autosubliminal.MATCHRELEASEGROUP = False
             print "INFO: New value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
-            print "INFO: Replacing old user namemappings with tvdb id's"
+            print "INFO: Replacing old user namemappings with tvdb id's."
             for x in autosubliminal.USERNAMEMAPPING.keys():
                 # Search for tvdb id
                 tvdb_id = utils.get_showid(x, force_search=True)
@@ -1018,6 +1018,6 @@ def upgrade_config(from_version, to_version):
                 else:
                     del autosubliminal.USERNAMEMAPPING[x]
                     del autosubliminal.USERNAMEMAPPINGUPPER[x.upper()]
-            print "INFO: Config upgraded to version 3"
+            print "INFO: Config upgraded to version 3."
             autosubliminal.CONFIGVERSION = 3
             autosubliminal.CONFIGUPGRADED = True

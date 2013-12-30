@@ -169,9 +169,9 @@ def initialize():
         CONFIGFILE = "config.properties"
     config.read_config(CONFIGFILE)
     if CONFIGUPGRADED:
-        print "INFO: Config seems to be upgraded... writing config"
+        print "INFO: Config seems to be upgraded. Writing config."
         config.write_config()
-        print "INFO: Writing config done"
+        print "INFO: Writing config done."
 
     # Logging
     init_logging()
