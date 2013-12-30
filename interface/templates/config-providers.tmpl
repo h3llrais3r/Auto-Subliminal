@@ -1,0 +1,89 @@
+#import autosubliminal
+
+<table class="table-config">
+
+	<tr>
+		<td width="140px">All Subliminal Providers</td>
+		<td><select name="allproviders">
+            #if $autosubliminal.USEALLPROVIDERS
+              <option value="True" selected="selected">Enabled</option>
+              <option value="False">Disabled</option>
+            #else
+              <option value="True">Enabled</option>
+              <option value="False" selected="selected">Disabled</option>
+            #end if
+		    </select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationAllProviders"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationAllProviders" class="dropdown-menu has-tip" align="left"><ul><li>Use all subliminal default providers? If enabled, this ignores provider specific selections</li></ul></div></td>
+	</tr>
+
+    <tr>
+		<td width="140px">&nbsp;</td>
+    </tr>
+
+    <tr>
+		<td width="140px">addic7ed</td>
+		<td><select name="addic7ed">
+            #if $autosubliminal.ADDIC7ED
+              <option value="True" selected="selected">Enabled</option>
+              <option value="False">Disabled</option>
+            #else
+              <option value="True">Enabled</option>
+              <option value="False" selected="selected">Disabled</option>
+            #end if
+		    </select></td>
+	</tr>
+
+    <tr>
+		<td width="140px">opensubtitles</td>
+		<td><select name="opensubtitles">
+            #if $autosubliminal.OPENSUBTITLES
+              <option value="True" selected="selected">Enabled</option>
+              <option value="False">Disabled</option>
+            #else
+              <option value="True">Enabled</option>
+              <option value="False" selected="selected">Disabled</option>
+            #end if
+		    </select></td>
+	</tr>
+
+    <tr>
+		<td width="140px">podnapisi</td>
+		<td><select name="podnapisi">
+            #if $autosubliminal.PODNAPISI
+              <option value="True" selected="selected">Enabled</option>
+              <option value="False">Disabled</option>
+            #else
+              <option value="True">Enabled</option>
+              <option value="False" selected="selected">Disabled</option>
+            #end if
+		    </select></td>
+	</tr>
+
+    <tr>
+		<td width="140px">thesubdb</td>
+		<td><select name="thesubdb">
+            #if $autosubliminal.THESUBDB
+              <option value="True" selected="selected">Enabled</option>
+              <option value="False">Disabled</option>
+            #else
+              <option value="True">Enabled</option>
+              <option value="False" selected="selected">Disabled</option>
+            #end if
+		    </select></td>
+	</tr>
+
+    <tr>
+		<td width="140px">tvsubtitles</td>
+		<td><select name="tvsubtitles">
+            #if $autosubliminal.TVSUBTITLES
+              <option value="True" selected="selected">Enabled</option>
+              <option value="False">Disabled</option>
+            #else
+              <option value="True">Enabled</option>
+              <option value="False" selected="selected">Disabled</option>
+            #end if
+		    </select></td>
+	</tr>
+
+</table>
+		

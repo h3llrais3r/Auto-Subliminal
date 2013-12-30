@@ -17,6 +17,31 @@ from autosubliminal import version, utils
 log = logging.getLogger(__name__)
 
 
+def load_provider_config(cfg):
+    autosubliminal.USEALLPROVIDERS = cfg.getboolean('subliminal', 'allproviders')
+    autosubliminal.ADDIC7ED = cfg.getboolean('subliminal', 'addic7ed')
+    autosubliminal.OPENSUBTITLES = cfg.getboolean('subliminal', 'opensubtitles')
+    autosubliminal.PODNAPISI = cfg.getboolean('subliminal', 'podnapisi')
+    autosubliminal.THESUBDB = cfg.getboolean('subliminal', 'thesubdb')
+    autosubliminal.TVSUBTITLES = cfg.getboolean('subliminal', 'tvsubtitles')
+
+    if autosubliminal.USEALLPROVIDERS:
+        # have subliminal use all it's providers by handing it an empty value
+        autosubliminal.SUBLIMINALPROVIDERLIST = None
+    else:
+        autosubliminal.SUBLIMINALPROVIDERLIST = []
+        if autosubliminal.ADDIC7ED:
+           autosubliminal.SUBLIMINALPROVIDERLIST.append('addic7ed')
+        if autosubliminal.OPENSUBTITLES:
+           autosubliminal.SUBLIMINALPROVIDERLIST.append('opensubtitles')
+        if autosubliminal.PODNAPISI:
+           autosubliminal.SUBLIMINALPROVIDERLIST.append('podnapisi')
+        if autosubliminal.THESUBDB:
+           autosubliminal.SUBLIMINALPROVIDERLIST.append('thesubdb')
+        if autosubliminal.TVSUBTITLES:
+           autosubliminal.SUBLIMINALPROVIDERLIST.append('tvsubtitles')
+
+
 def read_config(configfile):
     """
     Read the config file and set all the variables.
@@ -411,9 +436,7 @@ def read_config(configfile):
             autosubliminal.APIKEY = cfg.get('dev', 'apikey')
 
     if cfg.has_section('subliminal'):
-        autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
-        if autosubliminal.SUBLIMINALPROVIDERS:
-            autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
+        load_provider_config(cfg)
 
     # Check if config needs to be upgraded
     if autosubliminal.CONFIGVERSION < version.CONFIG_VERSION:
@@ -605,6 +628,33 @@ def save_config_section():
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', encoding=autosubliminal.SYSENCODING) as file:
         cfg.write(file)
 
+def save_providers_section():
+    """
+    Save stuff
+    """
+    section = 'subliminal'
+
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        # No config yet
+        cfg = SafeConfigParser()
+        pass
+
+    if not cfg.has_section(section):
+        cfg.add_section(section)
+
+    cfg.set(section, "allproviders", str(autosubliminal.USEALLPROVIDERS))
+    cfg.set(section, "addic7ed", str(autosubliminal.ADDIC7ED))
+    cfg.set(section, "opensubtitles", str(autosubliminal.OPENSUBTITLES))
+    cfg.set(section, "podnapisi", str(autosubliminal.PODNAPISI))
+    cfg.set(section, "thesubdb", str(autosubliminal.THESUBDB))
+    cfg.set(section, "tvsubtitles", str(autosubliminal.TVSUBTITLES))
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', encoding=autosubliminal.SYSENCODING) as file:
+        cfg.write(file)
 
 def save_logfile_section():
     """
@@ -883,6 +933,7 @@ def write_config():
     save_skipshow_section()
     save_usernamemapping_section()
     save_notify_section()
+    save_providers_section()
 
     if restart:
         # This needs to be replaced by a restart thingy, until then, just re-read the config and tell the users to do a manual restart
@@ -963,4 +1014,16 @@ def upgrade_config(from_version, to_version):
                     del autosubliminal.USERNAMEMAPPINGUPPER[x.upper()]
             print "INFO: Config upgraded to version 3"
             autosubliminal.CONFIGVERSION = 3
+            autosubliminal.CONFIGUPGRADED = True
+        if from_version == 3 and to_version == 4:
+            print "INFO: New subliminal providers config"
+            autosubliminal.USEALLPROVIDERS = True
+            # with USEALLPROVIDERS = True values below won't matter, but let's initialize them anyway
+            autosubliminal.ADDIC7ED = True
+            autosubliminal.OPENSUBTITLES = True
+            autosubliminal.PODNAPISI = True
+            autosubliminal.THESUBDB = True
+            autosubliminal.TVSUBTITLES = True
+            print "INFO: Config upgraded to version 4"
+            autosubliminal.CONFIGVERSION = 4
             autosubliminal.CONFIGUPGRADED = True

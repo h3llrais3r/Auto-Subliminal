@@ -77,7 +77,8 @@ class Config:
                     mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi,
                     twitterkey, twittersecret, notifyen, notifynl,
                     notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi,
-                    mssdefault=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None):
+                    mssdefault=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None,
+                    allproviders=True, addic7ed=True, opensubtitles=True, podnapisi=True, thesubdb=True, tvsubtitles=True):
         # Set all internal variables
         autosubliminal.PATH = path
         autosubliminal.ROOTPATH = rootpath
@@ -109,6 +110,13 @@ class Config:
         if mmsreleasegroup:
             autosubliminal.MINMATCHSCORE += 6
             autosubliminal.MATCHRELEASEGROUP = True
+            
+        autosubliminal.USEALLPROVIDERS = allproviders
+        autosubliminal.ADDIC7ED = addic7ed
+        autosubliminal.OPENSUBTITLES = opensubtitles
+        autosubliminal.PODNAPISI = podnapisi
+        autosubliminal.THESUBDB = thesubdb
+        autosubliminal.TVSUBTITLES = tvsubtitles
 
         autosubliminal.SCHEDULERSCANDISK = int(scandisk)
         autosubliminal.SCHEDULERCHECKSUB = int(checksub)
