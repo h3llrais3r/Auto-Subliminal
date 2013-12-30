@@ -11,9 +11,9 @@ import tvdb_api
 
 from library import version
 
-import autosub
-from autosub.db import IdCache
-from autosub.version import RELEASE_VERSION
+import autosubliminal
+from autosubliminal.db import IdCache
+from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
 
@@ -36,7 +36,7 @@ def run_cmd(cmd):
 def connect_url(url):
     response = None
     errorcode = None
-    socket.setdefaulttimeout(autosub.TIMEOUT)
+    socket.setdefaulttimeout(autosubliminal.TIMEOUT)
     try:
         response = urllib2.urlopen(url)
         errorcode = response.getcode()
@@ -63,13 +63,13 @@ def check_version():
     4 Release lower, version lower
     """
     try:
-        req = urllib2.Request(autosub.VERSIONURL)
-        req.add_header("User-agent", autosub.USERAGENT)
-        resp = urllib2.urlopen(req, None, autosub.TIMEOUT)
+        req = urllib2.Request(autosubliminal.VERSIONURL)
+        req.add_header("User-agent", autosubliminal.USERAGENT)
+        resp = urllib2.urlopen(req, None, autosubliminal.TIMEOUT)
         respone = resp.read()
         resp.close()
     except:
-        log.error("The server returned an error for request %s" % autosub.VERSIONURL)
+        log.error("The server returned an error for request %s" % autosubliminal.VERSIONURL)
         return None
     try:
         match = re.search('(Alpha|Beta|Stable) (\d+)\.(\d+)\.(\d+)', respone)
@@ -137,18 +137,18 @@ def return_upper(text):
 
 
 def name_mapping(show_name):
-    if show_name.upper() in autosub.USERNAMEMAPPINGUPPER.keys():
+    if show_name.upper() in autosubliminal.USERNAMEMAPPINGUPPER.keys():
         log.debug("Found match in user's namemapping for %s" % show_name)
-        return autosub.USERNAMEMAPPINGUPPER[show_name.upper()]
-    elif show_name.upper() in autosub.NAMEMAPPINGUPPER.keys():
+        return autosubliminal.USERNAMEMAPPINGUPPER[show_name.upper()]
+    elif show_name.upper() in autosubliminal.NAMEMAPPINGUPPER.keys():
         log.debug("Found match for %s" % show_name)
-        return autosub.NAMEMAPPINGUPPER[show_name.upper()]
+        return autosubliminal.NAMEMAPPINGUPPER[show_name.upper()]
 
 
 def skip_show(show_name, season, episode):
-    if show_name.upper() in autosub.SKIPSHOWUPPER.keys():
+    if show_name.upper() in autosubliminal.SKIPSHOWUPPER.keys():
         log.debug("Found %s in skipshow dictonary" % show_name)
-        for seasontmp in autosub.SKIPSHOWUPPER[show_name.upper()]:
+        for seasontmp in autosubliminal.SKIPSHOWUPPER[show_name.upper()]:
             if seasontmp == '0':
                 log.debug("Variable of %s is set to 0, skipping the complete Serie" % show_name)
                 return True
@@ -199,16 +199,16 @@ def get_showid(show_name, force_search=False):
 
 def check_apicalls(use=False):
     currentime = time.time()
-    lastrun = autosub.APICALLSLASTRESET
-    interval = autosub.APICALLSRESETINT
+    lastrun = autosubliminal.APICALLSLASTRESET
+    interval = autosubliminal.APICALLSRESETINT
 
     if currentime - lastrun > interval:
-        autosub.APICALLS = autosub.APICALLSMAX
-        autosub.APICALLSLASTRESET = time.time()
+        autosubliminal.APICALLS = autosubliminal.APICALLSMAX
+        autosubliminal.APICALLSLASTRESET = time.time()
 
-    if autosub.APICALLS > 0:
+    if autosubliminal.APICALLS > 0:
         if use:
-            autosub.APICALLS -= 1
+            autosubliminal.APICALLS -= 1
         return True
     else:
         return False
@@ -217,8 +217,8 @@ def check_apicalls(use=False):
 def display_logfile(loglevel):
     max_lines = 500
     data = []
-    if os.path.isfile(autosub.LOGFILE):
-        f = codecs.open(autosub.LOGFILE, 'r', autosub.SYSENCODING)
+    if os.path.isfile(autosubliminal.LOGFILE):
+        f = codecs.open(autosubliminal.LOGFILE, 'r', autosubliminal.SYSENCODING)
         data = f.readlines()
         f.close()
 
@@ -255,7 +255,7 @@ def convert_timestamp_table(datestring):
 
 
 def check_mobile_device(req_useragent):
-    for MUA in autosub.MOBILEUSERAGENTS:
+    for MUA in autosubliminal.MOBILEUSERAGENTS:
         if MUA.lower() in req_useragent.lower():
             return True
     return False

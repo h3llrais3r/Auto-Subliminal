@@ -3,9 +3,9 @@
 #import urllib
 #import re
 
-#import autosub
-#from autosub import version
-#from autosub.db import LastDownloads
+#import autosubliminal
+#from autosubliminal import version
+#from autosubliminal.db import LastDownloads
 
 <!DOCTYPE html>
 <html>
@@ -14,9 +14,9 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0;" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" href="$autosub.WEBROOT/mobile/css/jquery.mobile-1.0.min.css">
-		<script type="text/javascript" src="$autosub.WEBROOT/mobile/scripts/jquery-1.6.4.min.js"></script>
-		<script type="text/javascript" src="$autosub.WEBROOT/mobile/scripts/jquery.mobile-1.0.min.js"></script>
+		<link rel="stylesheet" href="$autosubliminal.WEBROOT/mobile/css/jquery.mobile-1.0.min.css">
+		<script type="text/javascript" src="$autosubliminal.WEBROOT/mobile/scripts/jquery-1.6.4.min.js"></script>
+		<script type="text/javascript" src="$autosubliminal.WEBROOT/mobile/scripts/jquery.mobile-1.0.min.js"></script>
 		
 	</head>
 
@@ -25,11 +25,11 @@
 			<div data-role="header" id="header">
 					
 				<div style="position: absolute; top: 5px; left: 5px;">
-					<a href="$autosub.WEBROOT/home/runNow" data-role="button" data-icon="search" data-theme="b">RunNow</a>
+					<a href="$autosubliminal.WEBROOT/home/runNow" data-role="button" data-icon="search" data-theme="b">RunNow</a>
 				</div>
 				<h1>MINI</h1>
 				<div style="position: absolute; top: 5px; right: 5px;">
-					<a href="#" onClick="window.location='$autosub.WEBROOT/home/exitMini'" data-role="button" data-theme="b">Exit Mini</a>
+					<a href="#" onClick="window.location='$autosubliminal.WEBROOT/home/exitMini'" data-role="button" data-theme="b">Exit Mini</a>
 				</div>
 			</div>
 			<div data-role="content">
@@ -39,7 +39,7 @@
 					<h3>WANTED</h3>
 					<p>
 					
-#if $len($autosub.WANTEDQUEUE) >= 1
+#if $len($autosubliminal.WANTEDQUEUE) >= 1
 						<table class="table" width="100%">
 							<thead>
 							<tr>
@@ -49,7 +49,7 @@
 							</thead>
 
 #set $counter = 0
-#for $var in $autosub.WANTEDQUEUE
+#for $var in $autosubliminal.WANTEDQUEUE
 #set $counter = $counter + 1
 
 #set $title_escaped = $cgi.escape($var['title'], True)
@@ -60,10 +60,10 @@
 								<td align="center" width="50px">
 							#for lang in $var['lang']
 							#if lang == "nl"
-								<img src="$autosub.WEBROOT/images/nl.png" alt="nl">
+								<img src="$autosubliminal.WEBROOT/images/nl.png" alt="nl">
 							#end if
 							#if lang == "en"
-								<img src="$autosub.WEBROOT/images/en.png" alt="en">
+								<img src="$autosubliminal.WEBROOT/images/en.png" alt="en">
 							#end if
 							#end for
 								</td>
@@ -97,7 +97,7 @@
 								</b></td>
 	
 								<td align="center" width="50px">
-									#set $imageurl = $autosub.WEBROOT + "/images/" + $var['language'] + ".png"
+									#set $imageurl = $autosubliminal.WEBROOT + "/images/" + $var['language'] + ".png"
 									<img src="$imageurl" alt="$var['language']" />
 								</td>
 								</tr>
@@ -118,7 +118,7 @@
 								<td>NEXT DISK SCAN IN</td>
 								<td>
 									#try
-									  &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosub.SCANDISK.interval - ($time.time() - $autosub.SCANDISK.lastrun) ))) <br>
+									  &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.lastrun) ))) <br>
 									#except
 									  &nbsp;:&nbsp;Please wait... <br>
 									#end try
@@ -129,7 +129,7 @@
 								<td>NEXT SUBTITLE CHECK IN</td>
 								<td>
 									#try
-									  &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosub.CHECKSUB.interval - ($time.time() - $autosub.CHECKSUB.lastrun) ))) <br>
+									  &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.lastrun) ))) <br>
 									#except
 									  &nbsp;:&nbsp;Please wait... <br>
 									#end try
@@ -144,7 +144,7 @@
 			</div>
 			  <div data-role="footer" data-theme="b">
             <div class="ui-bar" align="center">
-				$version.RELEASE_VERSION.upper() - API CALLS LEFT : $autosub.APICALLS</div>
+				$version.RELEASE_VERSION.upper() - API CALLS LEFT : $autosubliminal.APICALLS</div>
 			</div>
 		</div>
 	</body>

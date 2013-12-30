@@ -5,7 +5,8 @@
 *.pyc
 
 # Log files
-*.log*
+*.log
+*.log.*
 
 # Database files
 *.db

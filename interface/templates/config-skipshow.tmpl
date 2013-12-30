@@ -1,9 +1,9 @@
 #import cgi
-#import autosub
+#import autosubliminal
 
-#include $os.path.join($autosub.PATH, "interface/templates/header.tmpl")
+#include $os.path.join($autosubliminal.PATH, "interface/templates/header.tmpl")
 
-#include $os.path.join($autosub.PATH, "interface/templates/menu.tmpl")
+#include $os.path.join($autosubliminal.PATH, "interface/templates/menu.tmpl")
 
 <form method='post' action=/config/skipShow>
 Please enter which season to skip for: $title<br>
@@ -14,4 +14,4 @@ Note: enter 0 to skip the show completely, enter 00 to skip special show.
 <input type='hidden' name='title' value="$title_escaped">
 </form>
 
-#include $os.path.join($autosub.PATH, "interface/templates/footer.tmpl")
+#include $os.path.join($autosubliminal.PATH, "interface/templates/footer.tmpl")

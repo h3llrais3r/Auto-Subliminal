@@ -2,11 +2,11 @@ import logging
 from httplib import HTTPSConnection
 from urllib import urlencode
 
-import autosub
+import autosubliminal
 
 
 log = logging.getLogger(__name__)
-pushalotapi = autosub.PUSHALOTAPI
+pushalotapi = autosubliminal.PUSHALOTAPI
 
 
 def test_notify():
@@ -22,7 +22,7 @@ def send_notify(lang, subtitlefile, videofile):
 def _send_notify(message):
     http_handler = HTTPSConnection("pushalot.com")
 
-    data = {'AuthorizationToken': autosub.PUSHALOTAPI,
+    data = {'AuthorizationToken': autosubliminal.PUSHALOTAPI,
             'Title': "Auto-Subliminal",
             'Body': message.encode('utf-8')}
 

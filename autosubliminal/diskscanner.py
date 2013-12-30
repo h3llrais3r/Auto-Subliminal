@@ -3,8 +3,8 @@ import os
 import re
 import time
 
-import autosub
-from autosub import utils, fileprocessor
+import autosubliminal
+from autosubliminal import utils, fileprocessor
 
 log = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ def walk_dir(path):
             log.debug("Found a unpack directory, skipping")
             continue
 
-        if autosub.SKIPHIDDENDIRS and os.path.split(dirname)[1].startswith(u'.'):
+        if autosubliminal.SKIPHIDDENDIRS and os.path.split(dirname)[1].startswith(u'.'):
             continue
 
         if re.search('_failed_', dirname, re.IGNORECASE):
@@ -33,15 +33,15 @@ def walk_dir(path):
 
                 # What subtitle files should we expect?
 
-                if autosub.SUBNL != "":
-                    srtfile = os.path.splitext(filename)[0] + u"." + autosub.SUBNL + u".srt"
+                if autosubliminal.SUBNL != "":
+                    srtfile = os.path.splitext(filename)[0] + u"." + autosubliminal.SUBNL + u".srt"
                 else:
                     srtfile = os.path.splitext(filename)[0] + u".srt"
 
-                srtfileeng = os.path.splitext(filename)[0] + u"." + autosub.SUBENG + u".srt"
+                srtfileeng = os.path.splitext(filename)[0] + u"." + autosubliminal.SUBENG + u".srt"
 
                 if not os.path.exists(os.path.join(dirname, srtfile)) or (
-                        not os.path.exists(os.path.join(dirname, srtfileeng)) and autosub.DOWNLOADENG):
+                        not os.path.exists(os.path.join(dirname, srtfileeng)) and autosubliminal.DOWNLOADENG):
                     log.debug("File %s is missing a subtitle" % filename)
                     lang = []
                     filename_results = fileprocessor.process_filename(os.path.splitext(filename)[0],
@@ -66,11 +66,11 @@ def walk_dir(path):
                                 if not os.path.exists(os.path.join(dirname, srtfile)):
                                     lang.append('nl')
                                 if not os.path.exists(os.path.join(dirname, srtfileeng)) and (
-                                        autosub.FALLBACKTOENG or autosub.DOWNLOADENG):
+                                        autosubliminal.FALLBACKTOENG or autosubliminal.DOWNLOADENG):
                                     lang.append('en')
 
                                 filename_results['lang'] = lang
-                                autosub.WANTEDQUEUE.append(filename_results)
+                                autosubliminal.WANTEDQUEUE.append(filename_results)
 
                             else:
                                 log.error("Could not process the filename properly filename: %s" % filename)
@@ -90,26 +90,26 @@ class DiskScanner():
     """
 
     def run(self):
-        log.debug("Starting round of local disk checking at %s" % autosub.ROOTPATH)
-        if autosub.WANTEDQUEUELOCK:
+        log.debug("Starting round of local disk checking at %s" % autosubliminal.ROOTPATH)
+        if autosubliminal.WANTEDQUEUELOCK:
             log.debug("Exiting, another threat is using the queues")
             return False
         else:
-            autosub.WANTEDQUEUELOCK = True
-        autosub.WANTEDQUEUE = []
+            autosubliminal.WANTEDQUEUELOCK = True
+        autosubliminal.WANTEDQUEUE = []
 
-        if not os.path.exists(autosub.ROOTPATH):
-            log.error("Root path does %s not exists, aborting..." % autosub.ROOTPATH)
-            autosub.WANTEDQUEUELOCK = False
+        if not os.path.exists(autosubliminal.ROOTPATH):
+            log.error("Root path does %s not exists, aborting..." % autosubliminal.ROOTPATH)
+            autosubliminal.WANTEDQUEUELOCK = False
             return True
 
         try:
-            walk_dir(autosub.ROOTPATH)
+            walk_dir(autosubliminal.ROOTPATH)
         except:
-            walk_dir(str(autosub.ROOTPATH))
+            walk_dir(str(autosubliminal.ROOTPATH))
 
         log.debug("Finished round of local disk checking")
-        autosub.WANTEDQUEUELOCK = False
+        autosubliminal.WANTEDQUEUELOCK = False
         return True
 
 

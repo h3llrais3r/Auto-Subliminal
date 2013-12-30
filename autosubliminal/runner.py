@@ -4,16 +4,15 @@ import sys
 import webbrowser
 
 import cherrypy
-import subliminal
+import autosubliminal
+from autosubliminal import scheduler, diskscanner, subchecker, webserver
 
-import autosub
-from autosub import scheduler, diskscanner, subchecker, webserver
 
 log = logging.getLogger(__name__)
 
 
 def daemon():
-    print "Auto-Subliminal: Starting as a daemon"
+    print "INFO: Starting as a daemon"
     try:
         pid = os.fork()
         if pid > 0:
@@ -21,7 +20,7 @@ def daemon():
     except OSError:
         sys.exit(1)
 
-    os.chdir(autosub.PATH)
+    os.chdir(autosubliminal.PATH)
     os.setsid()
     os.umask(0)
     try:
@@ -31,7 +30,7 @@ def daemon():
     except OSError:
         sys.exit(1)
 
-    print "Auto-Subliminal: Disabling console output for daemon."
+    print "INFO: Disabling console output for daemon"
 
     cherrypy.log.screen = False
     sys.stdin.close()
@@ -40,9 +39,9 @@ def daemon():
 
 
 def launch_browser():
-    host = autosub.WEBSERVERIP
-    port = autosub.WEBSERVERPORT
-    wr = autosub.WEBROOT
+    host = autosubliminal.WEBSERVERIP
+    port = autosubliminal.WEBSERVERPORT
+    wr = autosubliminal.WEBROOT
     if host == '0.0.0.0':
         host = 'localhost'
 
@@ -59,24 +58,24 @@ def launch_browser():
 
 def start():
     # Only use authentication in CherryPy is a username and password is set by the user
-    if autosub.USERNAME and autosub.PASSWORD:
-        users = {autosub.USERNAME: autosub.PASSWORD}
-        cherrypy.config.update({'server.socket_host': autosub.WEBSERVERIP,
-                                'server.socket_port': autosub.WEBSERVERPORT,
+    if autosubliminal.USERNAME and autosubliminal.PASSWORD:
+        users = {autosubliminal.USERNAME: autosubliminal.PASSWORD}
+        cherrypy.config.update({'server.socket_host': autosubliminal.WEBSERVERIP,
+                                'server.socket_port': autosubliminal.WEBSERVERPORT,
                                 'tools.digest_auth.on': True,
                                 'tools.digest_auth.realm': 'Auto-Subliminal website',
                                 'tools.digest_auth.users': users
         })
     else:
-        cherrypy.config.update({'server.socket_host': autosub.WEBSERVERIP,
-                                'server.socket_port': autosub.WEBSERVERPORT
+        cherrypy.config.update({'server.socket_host': autosubliminal.WEBSERVERIP,
+                                'server.socket_port': autosubliminal.WEBSERVERPORT
         })
 
     conf = {
         '/': {
             'tools.encode.encoding': 'utf-8',
             'tools.decode.encoding': 'utf-8',
-            'tools.staticdir.root': os.path.join(autosub.PATH, 'interface/media/'),
+            'tools.staticdir.root': os.path.join(autosubliminal.PATH, 'interface/media/'),
         },
         '/css': {
             'tools.staticdir.on': True,
@@ -104,11 +103,11 @@ def start():
         },
         '/favicon.ico': {
             'tools.staticfile.on': True,
-            'tools.staticfile.filename': os.path.join(autosub.PATH, 'interface/media/images/favicon.ico')
+            'tools.staticfile.filename': os.path.join(autosubliminal.PATH, 'interface/media/images/favicon.ico')
         }
     }
 
-    cherrypy.tree.mount(autosub.webserver.WebServerInit(), autosub.WEBROOT, config=conf)
+    cherrypy.tree.mount(autosubliminal.webserver.WebServerInit(), autosubliminal.WEBROOT, config=conf)
     log.info("Starting CherryPy webserver")
 
     # TODO: Let CherryPy log do another log file and not to screen
@@ -116,42 +115,38 @@ def start():
     try:
         cherrypy.server.start()
     except Exception, e:
-        log.error("Could not start webserver. Exiting")
+        log.error("Could not start webserver, exiting")
         log.exception(e)
         os._exit(1)
 
     cherrypy.server.wait()
 
-    if autosub.LAUNCHBROWSER:
+    if autosubliminal.LAUNCHBROWSER:
         launch_browser()
 
-    # Configure subliminal/dogpile cache
-    # Use MutexLock otherwise some providers will not work due to fcntl module import error in windows
-    cache_file = os.path.abspath(os.path.expanduser(autosub.SUBLIMINALCACHEFILE))
-    subliminal.cache_region.configure(autosub.DOGPILECACHEFILE,
-                                      arguments={'filename': cache_file, 'lock_factory': subliminal.MutexLock})
+    log.info("Starting thread SCANDISK")
+    autosubliminal.SCANDISK = autosubliminal.scheduler.Scheduler(autosubliminal.diskscanner.DiskScanner(),
+                                                                 autosubliminal.SCHEDULERSCANDISK, True,
+                                                                 "SCANDISK")
+    autosubliminal.SCANDISK.thread.start()
+    log.info("Thread SCANDISK started")
 
-    log.info("Starting SCANDISK thread")
-    autosub.SCANDISK = autosub.scheduler.Scheduler(autosub.diskscanner.DiskScanner(), autosub.SCHEDULERSCANDISK, True,
-                                                   "SCANDISK")
-    autosub.SCANDISK.thread.start()
-    log.info("SCANDISK thread started")
-
-    log.info("Starting CHECKSUB thread")
-    autosub.CHECKSUB = autosub.scheduler.Scheduler(autosub.subchecker.SubChecker(), autosub.SCHEDULERCHECKSUB, True,
-                                                   "CHECKSUB")
-    autosub.CHECKSUB.thread.start()
-    log.info("CHECKSUB thread started")
+    log.info("Starting thread CHECKSUB'")
+    autosubliminal.CHECKSUB = autosubliminal.scheduler.Scheduler(autosubliminal.subchecker.SubChecker(),
+                                                                 autosubliminal.SCHEDULERCHECKSUB, True,
+                                                                 "CHECKSUB")
+    autosubliminal.CHECKSUB.thread.start()
+    log.info("Thread CHECKSUB started")
 
 
 def stop():
-    log.info("Stopping SCANDISK thread")
-    autosub.SCANDISK.stop = True
-    autosub.SCANDISK.thread.join(10)
+    log.info("Stopping thread SCANDISK")
+    autosubliminal.SCANDISK.stop = True
+    autosubliminal.SCANDISK.thread.join(10)
 
-    log.info("Stopping CHECKSUB thread")
-    autosub.CHECKSUB.stop = True
-    autosub.CHECKSUB.thread.join(10)
+    log.info("Stopping thread CHECKSUB")
+    autosubliminal.CHECKSUB.stop = True
+    autosubliminal.CHECKSUB.thread.join(10)
 
     cherrypy.engine.exit()
 
@@ -159,5 +154,5 @@ def stop():
 
 
 def signal_handler(signum, frame):
-    log.debug("Got signal. Shutting down")
+    log.debug("Got signal, hutting down")
     os._exit(0)

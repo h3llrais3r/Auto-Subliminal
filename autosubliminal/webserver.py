@@ -8,14 +8,14 @@ except:
 import threading
 import time
 
-import autosub
-from autosub import config, utils, notify
-from autosub.db import IdCache, LastDownloads
+import autosubliminal
+from autosubliminal import config, utils, notify
+from autosubliminal.db import IdCache, LastDownloads
 
 
 def redirect(abspath, *args, **kwargs):
     assert abspath[0] == '/'
-    raise cherrypy.HTTPRedirect(autosub.WEBROOT + abspath, *args, **kwargs)
+    raise cherrypy.HTTPRedirect(autosubliminal.WEBROOT + abspath, *args, **kwargs)
 
 # TODO: Create webdesign
 class PageTemplate(Template):
@@ -44,29 +44,29 @@ class Config:
             tmpl = PageTemplate(file="interface/templates/message.tmpl")
             if not title:
                 raise cherrypy.HTTPError(400, "No show supplied")
-            if title.upper() in autosub.SKIPSHOWUPPER:
-                for x in autosub.SKIPSHOWUPPER[title.upper()]:
+            if title.upper() in autosubliminal.SKIPSHOWUPPER:
+                for x in autosubliminal.SKIPSHOWUPPER[title.upper()]:
                     if x == season or x == '0':
-                        tmpl.message = "Already skipped <br> <a href='" + autosub.WEBROOT + "/home'>Return home</a>"
+                        tmpl.message = "Already skipped <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
                         return str(tmpl)
                 if season == '00':
-                    season = season + ',' + ','.join(autosub.SKIPSHOWUPPER[title.upper()])
+                    season = season + ',' + ','.join(autosubliminal.SKIPSHOWUPPER[title.upper()])
                 else:
-                    season = str(int(season)) + ',' + ','.join(autosub.SKIPSHOWUPPER[title.upper()])
+                    season = str(int(season)) + ',' + ','.join(autosubliminal.SKIPSHOWUPPER[title.upper()])
             else:
                 if not season == '00':
                     season = str(int(season))
             config.save_config('skipshow', title, season)
             config.apply_skipshow()
 
-            tmpl.message = "Done<br> Remember, WantedQueue will be refresh at the next run of scanDisk <br> <a href='" + autosub.WEBROOT + "/home'>Return home</a>"
+            tmpl.message = "Done<br> Remember, WantedQueue will be refresh at the next run of scanDisk <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
             return str(tmpl)
 
     @cherrypy.expose(alias='applyConfig')
     def apply_config(self):
-        autosub.config.apply_allsettings()
+        autosubliminal.config.apply_allsettings()
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
-        tmpl.message = "Settings read & applied<br><a href='" + autosub.WEBROOT + "/config'>Return</a>"
+        tmpl.message = "Settings read & applied<br><a href='" + autosubliminal.WEBROOT + "/config'>Return</a>"
         return str(tmpl)
 
     @cherrypy.expose(alias='saveConfig')
@@ -80,82 +80,82 @@ class Config:
                     mssdefault=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None,
                     allproviders=True, addic7ed=True, opensubtitles=True, podnapisi=True, thesubdb=True, tvsubtitles=True):
         # Set all internal variables
-        autosub.PATH = path
-        autosub.ROOTPATH = rootpath
-        autosub.LOGFILE = logfile
-        autosub.FALLBACKTOENG = fallbacktoeng
-        autosub.DOWNLOADENG = downloadeng
-        autosub.SUBENG = subeng
-        autosub.SUBNL = subnl
-        autosub.NOTIFYEN = notifyen
-        autosub.NOTIFYNL = notifynl
-        autosub.POSTPROCESSCMD = postprocesscmd
-        autosub.LAUNCHBROWSER = launchbrowser
-        autosub.SKIPHIDDENDIRS = skiphiddendirs
+        autosubliminal.PATH = path
+        autosubliminal.ROOTPATH = rootpath
+        autosubliminal.LOGFILE = logfile
+        autosubliminal.FALLBACKTOENG = fallbacktoeng
+        autosubliminal.DOWNLOADENG = downloadeng
+        autosubliminal.SUBENG = subeng
+        autosubliminal.SUBNL = subnl
+        autosubliminal.NOTIFYEN = notifyen
+        autosubliminal.NOTIFYNL = notifynl
+        autosubliminal.POSTPROCESSCMD = postprocesscmd
+        autosubliminal.LAUNCHBROWSER = launchbrowser
+        autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
 
         # Set match options and minmatchscore
-        autosub.MATCHQUALITY = False
-        autosub.MATCHCODEC = False
-        autosub.MATCHRELEASEGROUP = False
-        autosub.MINMATCHSCORE = 0
+        autosubliminal.MATCHQUALITY = False
+        autosubliminal.MATCHCODEC = False
+        autosubliminal.MATCHRELEASEGROUP = False
+        autosubliminal.MINMATCHSCORE = 0
         if mssdefault:
             # mssdefault is the minimal default score (which cannot be edited, so no flag is needed)
-            autosub.MINMATCHSCORE += autosub.MINMATCHSCOREDEFAULT
+            autosubliminal.MINMATCHSCORE += autosubliminal.MINMATCHSCOREDEFAULT
         if mmsquality:
-            autosub.MINMATCHSCORE += 2
-            autosub.MATCHQUALITY = True
+            autosubliminal.MINMATCHSCORE += 2
+            autosubliminal.MATCHQUALITY = True
         if mmscodec:
-            autosub.MINMATCHSCORE += 2
-            autosub.MATCHCODEC = True
+            autosubliminal.MINMATCHSCORE += 2
+            autosubliminal.MATCHCODEC = True
         if mmsreleasegroup:
-            autosub.MINMATCHSCORE += 6
-            autosub.MATCHRELEASEGROUP = True
+            autosubliminal.MINMATCHSCORE += 6
+            autosubliminal.MATCHRELEASEGROUP = True
+            
+        autosubliminal.USEALLPROVIDERS = allproviders
+        autosubliminal.ADDIC7ED = addic7ed
+        autosubliminal.OPENSUBTITLES = opensubtitles
+        autosubliminal.PODNAPISI = podnapisi
+        autosubliminal.THESUBDB = thesubdb
+        autosubliminal.TVSUBTITLES = tvsubtitles
 
-        autosub.USEALLPROVIDERS = allproviders
-        autosub.ADDIC7ED = addic7ed
-        autosub.OPENSUBTITLES = opensubtitles
-        autosub.PODNAPISI = podnapisi
-        autosub.THESUBDB = thesubdb
-        autosub.TVSUBTITLES = tvsubtitles
-
-        autosub.SCHEDULERSCANDISK = int(scandisk)
-        autosub.SCHEDULERCHECKSUB = int(checksub)
-        autosub.LOGLEVEL = int(loglevel)
-        autosub.LOGNUM = int(lognum)
-        autosub.LOGSIZE = int(logsize)
-        autosub.LOGLEVELCONSOLE = int(loglevelconsole)
-        autosub.WEBSERVERIP = webserverip
-        autosub.WEBSERVERPORT = int(webserverport)
-        autosub.USERNAME = username
-        autosub.PASSWORD = password
-        autosub.WEBROOT = webroot
-        autosub.SKIPSHOW = config.string_to_dict(skipshow)
-        autosub.USERNAMEMAPPING = config.string_to_dict(usernamemapping)
+        autosubliminal.SCHEDULERSCANDISK = int(scandisk)
+        autosubliminal.SCHEDULERCHECKSUB = int(checksub)
+        autosubliminal.LOGLEVEL = int(loglevel)
+        autosubliminal.LOGNUM = int(lognum)
+        autosubliminal.LOGSIZE = int(logsize)
+        autosubliminal.LOGLEVELCONSOLE = int(loglevelconsole)
+        autosubliminal.WEBSERVERIP = webserverip
+        autosubliminal.WEBSERVERPORT = int(webserverport)
+        autosubliminal.USERNAME = username
+        autosubliminal.PASSWORD = password
+        autosubliminal.WEBROOT = webroot
+        autosubliminal.SKIPSHOW = config.string_to_dict(skipshow)
+        autosubliminal.USERNAMEMAPPING = config.string_to_dict(usernamemapping)
 
         # Set all internal notify variables
-        autosub.NOTIFYMAIL = notifymail
-        autosub.MAILSRV = mailsrv
-        autosub.MAILFROMADDR = mailfromaddr
-        autosub.MAILTOADDR = mailtoaddr
-        autosub.MAILUSERNAME = mailusername
-        autosub.MAILPASSWORD = mailpassword
-        autosub.MAILSUBJECT = mailsubject
-        autosub.MAILENCRYPTION = mailencryption
-        autosub.MAILAUTH = mailauth
-        autosub.NOTIFYGROWL = notifygrowl
-        autosub.GROWLHOST = growlhost
-        autosub.GROWLPORT = growlport
-        autosub.GROWLPASS = growlpass
-        autosub.NOTIFYNMA = notifynma
-        autosub.NMAAPI = nmaapi
-        autosub.NOTIFYTWITTER = notifytwitter
-        autosub.TWITTERKEY = twitterkey
-        autosub.TWITTERSECRET = twittersecret
-        autosub.NOTIFYPROWL = notifyprowl
-        autosub.PROWLAPI = prowlapi
-        autosub.PROWLPRIORITY = int(prowlpriority)
-        autosub.NOTIFYPUSHALOT = notifypushalot
-        autosub.PUSHALOTAPI = pushalotapi
+        autosubliminal.NOTIFYMAIL = notifymail
+        autosubliminal.MAILSRV = mailsrv
+        autosubliminal.MAILFROMADDR = mailfromaddr
+        autosubliminal.MAILTOADDR = mailtoaddr
+        autosubliminal.MAILUSERNAME = mailusername
+        autosubliminal.MAILPASSWORD = mailpassword
+        autosubliminal.MAILSUBJECT = mailsubject
+        autosubliminal.MAILENCRYPTION = mailencryption
+        autosubliminal.MAILAUTH = mailauth
+        autosubliminal.NOTIFYGROWL = notifygrowl
+        autosubliminal.GROWLHOST = growlhost
+        autosubliminal.GROWLPORT = growlport
+        autosubliminal.GROWLPASS = growlpass
+        autosubliminal.NOTIFYNMA = notifynma
+        autosubliminal.NMAAPI = nmaapi
+        autosubliminal.NOTIFYTWITTER = notifytwitter
+        autosubliminal.TWITTERKEY = twitterkey
+        autosubliminal.TWITTERSECRET = twittersecret
+        autosubliminal.NOTIFYPROWL = notifyprowl
+        autosubliminal.PROWLAPI = prowlapi
+        autosubliminal.PROWLPRIORITY = int(prowlpriority)
+        autosubliminal.NOTIFYPUSHALOT = notifypushalot
+        autosubliminal.PUSHALOTAPI = pushalotapi
 
         # Now save to the configfile
         message = config.write_config()
@@ -195,7 +195,7 @@ class Config:
         elif checkversion == 4:
             message = 'What are you doing here??? It is time to upgrade! Visit: <a href=https://github.com/h3llrais3r/Auto-Subliminal/releases>Github</a>'
         else:
-            message = 'Something went wrong there, is google-project reachable? Or are you running a really old release?'
+            message = 'Something went wrong there, is github reachable? Or are you running a really old release?'
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
         tmpl.message = message
         return str(tmpl)
@@ -213,7 +213,7 @@ class Config:
     @cherrypy.expose(alias='regTwitter')
     def reg_twitter(self, token_key=None, token_secret=None, token_pin=None):
         import library.oauth2 as oauth
-        import autosub.notify.twitter as notifytwitter
+        import autosubliminal.notify.twitter as notifytwitter
 
         try:
             from urlparse import parse_qsl
@@ -255,10 +255,10 @@ class Config:
                 tmpl.message = message
                 return str(tmpl)
             else:
-                autosub.TWITTERKEY = access_token['oauth_token']
-                autosub.TWITTERSECRET = access_token['oauth_token_secret']
+                autosubliminal.TWITTERKEY = access_token['oauth_token']
+                autosubliminal.TWITTERSECRET = access_token['oauth_token_secret']
 
-                message = "Twitter is now set up, remember to save your config and remember to test twitter! <br> <a href='" + autosub.WEBROOT + "/config'>Return</a>"
+                message = "Twitter is now set up, remember to save your config and remember to test twitter! <br> <a href='" + autosubliminal.WEBROOT + "/config'>Return</a>"
                 tmpl = PageTemplate(file="interface/templates/message.tmpl")
                 tmpl.message = message
                 return str(tmpl)
@@ -269,36 +269,36 @@ class Home:
     def index(self):
         useragent = cherrypy.request.headers.get("User-Agent", '')
         tmpl = PageTemplate(file="interface/templates/home.tmpl")
-        if utils.check_mobile_device(useragent) and autosub.MOBILEAUTOSUB:
+        if utils.check_mobile_device(useragent) and autosubliminal.MOBILEAUTOSUB:
             tmpl = PageTemplate(file="interface/templates/mobile/home.tmpl")
         return str(tmpl)
 
     @cherrypy.expose(alias='runNow')
     def run_now(self):
         #time.sleep is here to prevent a timing issue, where checksub is runned before scandisk
-        autosub.SCANDISK.runnow = True
+        autosubliminal.SCANDISK.runnow = True
         time.sleep(5)
-        autosub.CHECKSUB.runnow = True
+        autosubliminal.CHECKSUB.runnow = True
         useragent = cherrypy.request.headers.get("User-Agent", '')
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
-        if utils.check_mobile_device(useragent) and autosub.MOBILEAUTOSUB:
+        if utils.check_mobile_device(useragent) and autosubliminal.MOBILEAUTOSUB:
             tmpl = PageTemplate(file="interface/templates/mobile/message.tmpl")
-        tmpl.message = "Running everything! <br> <a href='" + autosub.WEBROOT + "/home'>Return</a>"
+        tmpl.message = "Running everything! <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return</a>"
         return str(tmpl)
 
     @cherrypy.expose(alias='exitMini')
     def exit_mini(self):
-        if autosub.MOBILEAUTOSUB:
-            autosub.MOBILEAUTOSUB = False
+        if autosubliminal.MOBILEAUTOSUB:
+            autosubliminal.MOBILEAUTOSUB = False
             redirect("/home")
         else:
-            autosub.MOBILEAUTOSUB = True
+            autosubliminal.MOBILEAUTOSUB = True
             redirect("/home")
 
     @cherrypy.expose
     def shutdown(self):
         tmpl = PageTemplate(file="interface/templates/stopped.tmpl")
-        threading.Timer(2, autosub.runner.stop).start()
+        threading.Timer(2, autosubliminal.runner.stop).start()
         return str(tmpl)
 
 

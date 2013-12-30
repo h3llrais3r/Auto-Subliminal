@@ -4,8 +4,8 @@ import os
 import subliminal
 import babelfish
 
-import autosub
-from autosub import utils, subdownloader
+import autosubliminal
+from autosubliminal import utils, subdownloader
 
 
 log = logging.getLogger(__name__)
@@ -27,13 +27,13 @@ class SubChecker():
             log.warning("Out of api calls")
             return True
 
-        if autosub.WANTEDQUEUELOCK:
+        if autosubliminal.WANTEDQUEUELOCK:
             log.debug("Exiting, another threat is using the queues")
             return False
         else:
-            autosub.WANTEDQUEUELOCK = True
+            autosubliminal.WANTEDQUEUELOCK = True
 
-        for index, wanted_item in enumerate(autosub.WANTEDQUEUE):
+        for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
             title = wanted_item['title']
             season = wanted_item['season']
             episode = wanted_item['episode']
@@ -45,11 +45,11 @@ class SubChecker():
                 break
 
             # This should map on the srt file names created by subliminal!
-            if autosub.SUBNL != "":
-                srtfile = os.path.splitext(originalfile)[0] + u"." + autosub.SUBNL + u".srt"
+            if autosubliminal.SUBNL != "":
+                srtfile = os.path.splitext(originalfile)[0] + u"." + autosubliminal.SUBNL + u".srt"
             else:
                 srtfile = os.path.splitext(originalfile)[0] + u".srt"
-            engsrtfile = os.path.splitext(originalfile)[0] + u"." + autosub.SUBENG + u".srt"
+            engsrtfile = os.path.splitext(originalfile)[0] + u"." + autosubliminal.SUBENG + u".srt"
 
             # Lets try to find a showid
             showid = utils.get_showid(title)
@@ -76,15 +76,15 @@ class SubChecker():
                 # Default this is true, except when no prefix is defined for nl language
                 single = False
                 if language == language_nl:
-                    if autosub.SUBNL == "":
+                    if autosubliminal.SUBNL == "":
                         single = True
 
                 # Download the best subtitle with min_score
                 videos = [video]
                 languages = [language]
                 subtitles = subliminal.download_best_subtitles(set(videos), set(languages),
-                                                               autosub.SUBLIMINALPROVIDERLIST,
-                                                               single=single, min_score=autosub.MINMATCHSCORE)
+                                                               autosubliminal.SUBLIMINALPROVIDERLIST,
+                                                               single=single, min_score=autosubliminal.MINMATCHSCORE)
 
                 #TODO: review completely if support for multiple languages is needed
                 # Check if subtitle found
@@ -108,7 +108,8 @@ class SubChecker():
 
                     subdownloader.download_subtitle(download_item)
 
-                    if lang == 'nl' and (autosub.FALLBACKTOENG and not autosub.DOWNLOADENG) and 'en' in langs:
+                    if lang == 'nl' and (
+                        autosubliminal.FALLBACKTOENG and not autosubliminal.DOWNLOADENG) and 'en' in langs:
                         log.debug(
                             'A dutch subtitle is found and fallback is true. Removing the english subtitle from the wantedlist.')
                         langs.remove('en')
@@ -124,9 +125,9 @@ class SubChecker():
         i = len(to_delete_wanted_queue) - 1
         while i >= 0:
             log.debug("Removed item from the wantedQueue at index %s" % to_delete_wanted_queue[i])
-            autosub.WANTEDQUEUE.pop(to_delete_wanted_queue[i])
+            autosubliminal.WANTEDQUEUE.pop(to_delete_wanted_queue[i])
             i -= 1
 
         log.debug("Finished round of subtitle checking")
-        autosub.WANTEDQUEUELOCK = False
+        autosubliminal.WANTEDQUEUELOCK = False
         return True

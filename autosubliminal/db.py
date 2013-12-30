@@ -2,8 +2,8 @@ import os
 import sqlite3
 import logging
 
-import autosub
-from autosub import version
+import autosubliminal
+from autosubliminal import version
 
 log = logging.getLogger(__name__)
 
@@ -24,7 +24,7 @@ class IdCache():
     def get_id(self, show_name):
         show_name = show_name
 
-        connection = sqlite3.connect(autosub.DBFILE)
+        connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self.query_get_id, [show_name.upper()])
         tvdb_id = None
@@ -39,14 +39,14 @@ class IdCache():
     def set_id(self, tvdb_id, show_name):
         show_name = show_name
 
-        connection = sqlite3.connect(autosub.DBFILE)
+        connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self.query_set_id, [tvdb_id, show_name.upper()])
         connection.commit()
         connection.close()
 
     def flush_cache(self):
-        connection = sqlite3.connect(autosub.DBFILE)
+        connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self.query_flush_cache)
         connection.commit()
@@ -60,7 +60,7 @@ class LastDownloads():
         self.query_flush = 'delete from last_downloads'
 
     def get_last_downloads(self):
-        connection = sqlite3.connect(autosub.DBFILE)
+        connection = sqlite3.connect(autosubliminal.DBFILE)
         connection.row_factory = dict_factory
         cursor = connection.cursor()
         cursor.execute(self.query_get)
@@ -74,7 +74,7 @@ class LastDownloads():
             return result_list
 
     def set_last_downloads(self, **data):
-        connection = sqlite3.connect(autosub.DBFILE)
+        connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         result_dict = data['dict']
 
@@ -96,7 +96,7 @@ class LastDownloads():
         connection.close()
 
     def flush_last_downloads(self):
-        connection = sqlite3.connect(autosub.DBFILE)
+        connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self.query_flush)
         connection.commit()
@@ -106,7 +106,7 @@ class LastDownloads():
 def create_db():
     # Create the database
     try:
-        connection = sqlite3.connect(autosub.DBFILE)
+        connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
 
         cursor.execute("CREATE TABLE id_cache (tvdb_id INTEGER, show_name TEXT);")
@@ -119,9 +119,9 @@ def create_db():
         connection.close()
 
         print "INFO: Succesfully created the sqlite database"
-        autosub.DBVERSION = version.DB_VERSION
+        autosubliminal.DBVERSION = version.DB_VERSION
     except:
-        print "ERROR: Could not create database, please check if Auto-Subliminal has write access to write the following file %s" % autosub.DBFILE
+        print "ERROR: Could not create database, please check if Auto-Subliminal has write access to write the following file %s" % autosubliminal.DBFILE
 
     return True
 
@@ -137,7 +137,7 @@ def upgrade_db(from_version, to_version):
         if from_version == 1 and to_version == 2:
             # Add codec and timestamp
             # New table, info with dbversion
-            connection = sqlite3.connect(autosub.DBFILE)
+            connection = sqlite3.connect(autosubliminal.DBFILE)
             cursor = connection.cursor()
             cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'codec')
             cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'timestamp')
@@ -147,7 +147,7 @@ def upgrade_db(from_version, to_version):
             connection.close()
         if from_version == 2 and to_version == 3:
             # Add Releasegrp
-            connection = sqlite3.connect(autosub.DBFILE)
+            connection = sqlite3.connect(autosubliminal.DBFILE)
             cursor = connection.cursor()
             cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'releasegrp')
             cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'subtitle')
@@ -156,7 +156,7 @@ def upgrade_db(from_version, to_version):
             connection.close()
         if from_version == 3 and to_version == 4:
             # Create id_cache table from scratch with tvdb_id
-            connection = sqlite3.connect(autosub.DBFILE)
+            connection = sqlite3.connect(autosubliminal.DBFILE)
             cursor = connection.cursor()
             cursor.execute("DROP TABLE id_cache;")
             cursor.execute("CREATE TABLE id_cache (tvdb_id INTEGER, show_name TEXT);")
@@ -168,7 +168,7 @@ def upgrade_db(from_version, to_version):
 def get_db_version():
     try:
         query_get_version = 'SELECT database_version FROM info'
-        connection = sqlite3.connect(autosub.DBFILE)
+        connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(query_get_version)
 
@@ -184,14 +184,14 @@ def get_db_version():
 
 def init_db():
     # Check if file is already there
-    db_file = os.path.join(autosub.PATH, autosub.DBFILE)
+    db_file = os.path.join(autosubliminal.PATH, autosubliminal.DBFILE)
     if not os.path.exists(db_file):
         create_db()
 
-    autosub.DBVERSION = get_db_version()
+    autosubliminal.DBVERSION = get_db_version()
 
-    if autosub.DBVERSION < version.DB_VERSION:
-        upgrade_db(autosub.DBVERSION, version.DB_VERSION)
-    elif autosub.DBVERSION > version.DB_VERSION:
+    if autosubliminal.DBVERSION < version.DB_VERSION:
+        upgrade_db(autosubliminal.DBVERSION, version.DB_VERSION)
+    elif autosubliminal.DBVERSION > version.DB_VERSION:
         print "INFO: Database version higher then this version of Auto-Subliminal supports. Update."
         os._exit(1)

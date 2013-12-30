@@ -2,7 +2,7 @@ import logging
 import logging.handlers
 import time
 
-from autosub import version, config
+from autosubliminal import version, config
 
 ROOTPATH = None
 FALLBACKTOENG = None
@@ -138,7 +138,7 @@ def initialize():
     release = version.RELEASE_VERSION.split(' ')[0]
     versionnumber = version.RELEASE_VERSION.split(' ')[1]
 
-    VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosub/version.py'
+    VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py'
     USERAGENT = 'Auto-Subliminal/' + versionnumber + release.lower()[0]
 
     WANTEDQUEUE = []

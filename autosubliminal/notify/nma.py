@@ -1,15 +1,15 @@
 import logging
 import library.pynma as pynma
-import autosub
+import autosubliminal
 
 log = logging.getLogger(__name__)
 
 
 def _send_notify(message):
-    nma_instance = pynma.PyNMA(str(autosub.NMAAPI))
+    nma_instance = pynma.PyNMA(str(autosubliminal.NMAAPI))
     resp = nma_instance.push('Auto-Subliminal', 'Downloaded a Subtitle', message)
     try:
-        if not resp[str(autosub.NMAAPI)][u'code'] == u'200':
+        if not resp[str(autosubliminal.NMAAPI)][u'code'] == u'200':
             log.error("Failed to send a notification")
             return False
         else:

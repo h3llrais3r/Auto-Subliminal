@@ -1,10 +1,10 @@
 #from string import capwords
 
-#import autosub
+#import autosubliminal
 
-#include $os.path.join($autosub.PATH.encode(), "interface/templates/header.tmpl")
+#include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/header.tmpl")
 
-#include $os.path.join($autosub.PATH.encode(), "interface/templates/menu.tmpl")
+#include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/menu.tmpl")
 
 <table width="100%">
 	<tr>
@@ -18,9 +18,9 @@
 $message
 #else
 There is currently no $loglevel.lower() information in your log file, make sure your loglevel is atleast: $capwords($loglevel).
-You can change the loglevel in your <a href="$autosub.WEBROOT/config/#logfile"><u>configuration</u></a>
+You can change the loglevel in your <a href="$autosubliminal.WEBROOT/config/#logfile"><u>configuration</u></a>
 #end if
 	</pre>
 </div>
 
-#include $os.path.join($autosub.PATH.encode(), "interface/templates/footer.tmpl")
+#include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/footer.tmpl")

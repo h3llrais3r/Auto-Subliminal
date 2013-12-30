@@ -5,9 +5,9 @@ import os
 import time
 import tempfile
 
-import autosub
-from autosub import utils, notify
-from autosub.db import LastDownloads
+import autosubliminal
+from autosubliminal import utils, notify
+from autosubliminal.db import LastDownloads
 
 log = logging.getLogger(__name__)
 
@@ -29,8 +29,8 @@ def download_subtitle(download_dict):
 
         notify.notify(download_dict['downlang'], destsrt, download_dict["originalFileLocationOnDisk"])
 
-        if autosub.POSTPROCESSCMD:
-            postprocesscmdconstructed = autosub.POSTPROCESSCMD + ' "' + download_dict[
+        if autosubliminal.POSTPROCESSCMD:
+            postprocesscmdconstructed = autosubliminal.POSTPROCESSCMD + ' "' + download_dict[
                 "destinationFileLocationOnDisk"] + '" "' + download_dict["originalFileLocationOnDisk"] + '"'
             log.debug("Postprocess: running %s" % postprocesscmdconstructed)
             log.info("Running PostProcess")
@@ -106,8 +106,8 @@ def download_subtitle_old(download_dict):
 
         notify.notify(download_dict['downlang'], destsrt, download_dict["originalFileLocationOnDisk"])
 
-        if autosub.POSTPROCESSCMD:
-            postprocesscmdconstructed = autosub.POSTPROCESSCMD + ' "' + download_dict[
+        if autosubliminal.POSTPROCESSCMD:
+            postprocesscmdconstructed = autosubliminal.POSTPROCESSCMD + ' "' + download_dict[
                 "destinationFileLocationOnDisk"] + '" "' + download_dict["originalFileLocationOnDisk"] + '"'
             log.debug("Postprocess: running %s" % postprocesscmdconstructed)
             log.info("Running PostProcess")
