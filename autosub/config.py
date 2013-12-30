@@ -35,6 +35,24 @@ def create_provider_config(cfg):
     cfg.set('subliminal', 'tvsubtitles', 'True')
 
 
+def load_provider_config(cfg):
+    autosub.USEALLPROVIDERS = cfg.getboolean('subliminal', 'allproviders')
+    autosub.ADDIC7ED = cfg.getboolean('subliminal', 'addic7ed')
+    autosub.OPENSUBTITLES = cfg.getboolean('subliminal', 'opensubtitles')
+    autosub.PODNAPISI = cfg.getboolean('subliminal', 'podnapisi')
+    autosub.THESUBDB = cfg.getboolean('subliminal', 'thesubdb')
+    autosub.TVSUBTITLES = cfg.getboolean('subliminal', 'tvsubtitles')
+
+
+def create_provider_config(cfg):
+    cfg.set('subliminal', 'allproviders', 'True')
+    cfg.set('subliminal', 'addic7ed', 'True')
+    cfg.set('subliminal', 'opensubtitles', 'True')
+    cfg.set('subliminal', 'podnapisi', 'True')
+    cfg.set('subliminal', 'thesubdb', 'True')
+    cfg.set('subliminal', 'tvsubtitles', 'True')
+
+
 def read_config(configfile):
     """
     Read the config file and set all the variables.
