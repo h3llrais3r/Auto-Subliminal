@@ -3,8 +3,6 @@ import os
 import sys
 import webbrowser
 
-import subliminal
-
 import cherrypy
 import autosubliminal
 from autosubliminal import scheduler, diskscanner, subchecker, webserver
@@ -14,7 +12,7 @@ log = logging.getLogger(__name__)
 
 
 def daemon():
-    print "Auto-Subliminal: Starting as a daemon"
+    print "INFO: Starting as a daemon"
     try:
         pid = os.fork()
         if pid > 0:
@@ -32,7 +30,7 @@ def daemon():
     except OSError:
         sys.exit(1)
 
-    print "Auto-Subliminal: Disabling console output for daemon."
+    print "INFO: Disabling console output for daemon"
 
     cherrypy.log.screen = False
     sys.stdin.close()
@@ -117,7 +115,7 @@ def start():
     try:
         cherrypy.server.start()
     except Exception, e:
-        log.error("Could not start webserver. Exiting")
+        log.error("Could not start webserver, exiting")
         log.exception(e)
         os._exit(1)
 
@@ -126,33 +124,27 @@ def start():
     if autosubliminal.LAUNCHBROWSER:
         launch_browser()
 
-    # Configure subliminal/dogpile cache
-    # Use MutexLock otherwise some providers will not work due to fcntl module import error in windows
-    cache_file = os.path.abspath(os.path.expanduser(autosubliminal.SUBLIMINALCACHEFILE))
-    subliminal.cache_region.configure(autosubliminal.DOGPILECACHEFILE,
-                                      arguments={'filename': cache_file, 'lock_factory': subliminal.MutexLock})
-
-    log.info("Starting SCANDISK thread")
+    log.info("Starting thread SCANDISK")
     autosubliminal.SCANDISK = autosubliminal.scheduler.Scheduler(autosubliminal.diskscanner.DiskScanner(),
                                                                  autosubliminal.SCHEDULERSCANDISK, True,
                                                                  "SCANDISK")
     autosubliminal.SCANDISK.thread.start()
-    log.info("SCANDISK thread started")
+    log.info("Thread SCANDISK started")
 
-    log.info("Starting CHECKSUB thread")
+    log.info("Starting thread CHECKSUB'")
     autosubliminal.CHECKSUB = autosubliminal.scheduler.Scheduler(autosubliminal.subchecker.SubChecker(),
                                                                  autosubliminal.SCHEDULERCHECKSUB, True,
                                                                  "CHECKSUB")
     autosubliminal.CHECKSUB.thread.start()
-    log.info("CHECKSUB thread started")
+    log.info("Thread CHECKSUB started")
 
 
 def stop():
-    log.info("Stopping SCANDISK thread")
+    log.info("Stopping thread SCANDISK")
     autosubliminal.SCANDISK.stop = True
     autosubliminal.SCANDISK.thread.join(10)
 
-    log.info("Stopping CHECKSUB thread")
+    log.info("Stopping thread CHECKSUB")
     autosubliminal.CHECKSUB.stop = True
     autosubliminal.CHECKSUB.thread.join(10)
 
@@ -162,5 +154,5 @@ def stop():
 
 
 def signal_handler(signum, frame):
-    log.debug("Got signal. Shutting down")
+    log.debug("Got signal, hutting down")
     os._exit(0)

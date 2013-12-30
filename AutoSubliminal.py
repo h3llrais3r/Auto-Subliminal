@@ -6,6 +6,8 @@ import signal
 import time
 import locale
 
+import subliminal
+
 import autosubliminal
 import autosubliminal.db
 import autosubliminal.runner
@@ -63,7 +65,7 @@ def main(argv=None):
                 if os.path.exists(value):
                     autosubliminal.CONFIGFILE = value
                 else:
-                    print "ERROR: Configfile does not exists."
+                    print "ERROR: Configfile does not exists"
                     os._exit(0)
             if option in ("-l", "--nolaunch"):
                 autosubliminal.LAUNCHBROWSER = False
@@ -82,7 +84,7 @@ def main(argv=None):
     # Load configuration
     if os.path.isfile('config.properties.dev'):
         autosubliminal.CONFIGFILE = 'config.properties.dev'
-    print "Initializing variables and loading config"
+    print "INFO: Initializing variables and loading config"
     autosubliminal.initialize()
 
     signal.signal(signal.SIGINT, autosubliminal.runner.signal_handler)
@@ -93,14 +95,21 @@ def main(argv=None):
     # Make sure that sqlite database is loaded after you demonize
     autosubliminal.db.init_db()
 
+    # Configure subliminal/dogpile cache
+    # Use MutexLock otherwise some providers will not work due to fcntl module import error in windows
+    cache_file = os.path.abspath(os.path.expanduser(autosubliminal.SUBLIMINALCACHEFILE))
+    subliminal.cache_region.configure(autosubliminal.DOGPILECACHEFILE,
+                                      arguments={'filename': cache_file, 'lock_factory': subliminal.MutexLock})
+
     # Change to the new work directory
     if os.path.exists(autosubliminal.PATH):
         os.chdir(autosubliminal.PATH)
     else:
-        print "ERROR: PATH does not exist, check config."
+        print "ERROR: PATH does not exist, check config"
         os._exit(1)
 
-    print "Starting output to log. Bye!"
+    print "INFO: Starting output to log"
+    print "INFO: Bye"
     log = logging.getLogger(__name__)
     log.debug("Systemencoding is: %s" % autosubliminal.SYSENCODING)
     log.debug("Configversion is: %d" % autosubliminal.CONFIGVERSION)
