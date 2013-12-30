@@ -406,14 +406,23 @@ def read_config(configfile):
         autosubliminal.NOTIFYPUSHALOT = False
         autosubliminal.PUSHALOTAPI = u"API key"
 
+    if cfg.has_section('subliminal'):
+        if cfg.has_option('subliminal', 'providers'):
+            autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
+            autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
+            # Only allow valid providers by checking if they are found in the entry point
+            for provider in autosubliminal.SUBLIMINALPROVIDERLIST:
+                if provider.lower() not in autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys():
+                    autosubliminal.SUBLIMINALPROVIDERLIST.remove(provider)
+        else:
+            autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
+    else:
+        # Subliminal section is missing
+        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
+
     if cfg.has_section('dev'):
         if cfg.has_option('dev', 'apikey'):
             autosubliminal.APIKEY = cfg.get('dev', 'apikey')
-
-    if cfg.has_section('subliminal'):
-        autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
-        if autosubliminal.SUBLIMINALPROVIDERS:
-            autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
 
     # Check if config needs to be upgraded
     if autosubliminal.CONFIGVERSION < version.CONFIG_VERSION:
@@ -467,6 +476,25 @@ def save_config(section=None, variable=None, value=None):
             cfg.write(file)
 
 
+def apply_subliminal():
+    """
+    Read subliminal in the config file.
+    """
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        #no config yet
+        pass
+
+    if cfg.has_section('subliminal'):
+        autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
+        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
+    else:
+        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
+
+
 def apply_namemapping():
     """
     Read namemapping in the config file.
@@ -512,8 +540,9 @@ def apply_skipshow():
 
 def apply_allsettings():
     """
-    Read namemapping and skipshow from the config file.
+    Read subliminal, namemapping and skipshow from the config file.
     """
+    apply_subliminal()
     apply_namemapping()
     apply_skipshow()
 
@@ -661,11 +690,11 @@ def save_webserver_section():
         cfg.write(file)
 
 
-def save_skipshow_section():
+def save_subliminal_section():
     """
     Save stuff
     """
-    section = 'skipshow'
+    section = 'subliminal'
 
     cfg = SafeConfigParser()
     try:
@@ -676,17 +705,16 @@ def save_skipshow_section():
         cfg = SafeConfigParser()
         pass
 
-    if cfg.has_section(section):
-        cfg.remove_section(section)
+    if not cfg.has_section(section):
         cfg.add_section(section)
-        with open(autosubliminal.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
 
-    for x in autosubliminal.SKIPSHOW:
-        save_config('skipshow', x, autosubliminal.SKIPSHOW[x])
+    cfg.set(section, "providers", str(autosubliminal.SUBLIMINALPROVIDERS))
 
-    # Set all skipshow stuff correct
-    apply_skipshow()
+    with open(autosubliminal.CONFIGFILE, 'wb') as file:
+        cfg.write(file)
+
+    # Set all subliminal stuff correct
+    apply_subliminal()
 
 
 def save_usernamemapping_section():
@@ -715,6 +743,34 @@ def save_usernamemapping_section():
 
     # Set all namemapping stuff correct
     apply_namemapping()
+
+
+def save_skipshow_section():
+    """
+    Save stuff
+    """
+    section = 'skipshow'
+
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        # No config yet
+        cfg = SafeConfigParser()
+        pass
+
+    if cfg.has_section(section):
+        cfg.remove_section(section)
+        cfg.add_section(section)
+        with open(autosubliminal.CONFIGFILE, 'wb') as file:
+            cfg.write(file)
+
+    for x in autosubliminal.SKIPSHOW:
+        save_config('skipshow', x, autosubliminal.SKIPSHOW[x])
+
+    # Set all skipshow stuff correct
+    apply_skipshow()
 
 
 def save_notify_section():
@@ -880,8 +936,9 @@ def write_config():
     save_config_section()
     save_logfile_section()
     save_webserver_section()
-    save_skipshow_section()
+    save_subliminal_section()
     save_usernamemapping_section()
+    save_skipshow_section()
     save_notify_section()
 
     if restart:

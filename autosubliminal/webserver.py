@@ -77,7 +77,8 @@ class Config:
                     mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi,
                     twitterkey, twittersecret, notifyen, notifynl,
                     notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi,
-                    mssdefault=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None):
+                    mssdefault, mmsquality, mmscodec, mmsreleasegroup,
+                    subliminalproviders):
         # Set all internal variables
         autosubliminal.PATH = path
         autosubliminal.ROOTPATH = rootpath
@@ -109,6 +110,9 @@ class Config:
         if mmsreleasegroup:
             autosubliminal.MINMATCHSCORE += 6
             autosubliminal.MATCHRELEASEGROUP = True
+
+        # Subliminal providers (convert list to comma separated string)
+        autosubliminal.SUBLIMINALPROVIDERS = ','.join([str(provider) for provider in subliminalproviders])
 
         autosubliminal.SCHEDULERSCANDISK = int(scandisk)
         autosubliminal.SCHEDULERCHECKSUB = int(checksub)

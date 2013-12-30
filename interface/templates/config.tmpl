@@ -9,10 +9,11 @@
     <ul>
         <li><a href="#general">General</a></li>
         <li><a href="#logfile">Logfile</a></li>
-		<li><a href="#namemapping">NameMapping</a></li>
-		<li><a href="#notifications">Notifications</a></li>
-        <li><a href="#skipshow">Skipshow</a></li>
         <li><a href="#webserver">Webserver</a></li>
+        <li><a href="#subliminal">Subliminal</a></li>
+		<li><a href="#namemapping">NameMapping</a></li>
+        <li><a href="#skipshow">Skipshow</a></li>
+		<li><a href="#notifications">Notifications</a></li>
     </ul>
 	
     <div id="general">
@@ -22,19 +23,23 @@
     <div id="logfile">
       #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/logfile-section.tmpl")
     </div>
-	
+
     <div id="webserver">
       #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/webserver-section.tmpl")
     </div>
-	
-    <div id="skipshow">
-      #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/skipshow-section.tmpl")
+
+    <div id="subliminal">
+      #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/subliminal-section.tmpl")
     </div>
-	
+
     <div id="namemapping">
       #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/namemapping-section.tmpl")
     </div>
-	
+
+    <div id="skipshow">
+      #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/skipshow-section.tmpl")
+    </div>
+
     <div id="notifications">
       #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/notification-section.tmpl")
     </div>

@@ -1,6 +1,7 @@
 import logging
 import logging.handlers
 import time
+import pkg_resources
 
 from autosubliminal import version, config
 
@@ -89,6 +90,7 @@ NOTIFYPUSHALOT = None
 
 DAEMON = None
 
+SUBLIMINALPROVIDERSENTRYPOINT = None
 SUBLIMINALPROVIDERS = None
 SUBLIMINALPROVIDERLIST = None
 SUBLIMINALCACHEFILE = None
@@ -120,11 +122,14 @@ def initialize():
         APICALLSLASTRESET, APICALLSRESETINT, APICALLSMAX, \
         SCHEDULERSCANDISK, SCHEDULERCHECKSUB, SCHEDULERDOWNLOADSUBS, \
         DAEMON, NOTIFYPROWL, PROWLAPI, PROWLPRIORITY, PUSHALOTAPI, NOTIFYPUSHALOT, \
-        SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERLIST, SUBLIMINALCACHEFILE, DOGPILECACHEFILE, \
+        SUBLIMINALPROVIDERSENTRYPOINT, SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERLIST, SUBLIMINALCACHEFILE, DOGPILECACHEFILE, \
         DBFILE, MOBILEUSERAGENTS, MOBILEAUTOSUB, \
         USERAGENT, VERSIONURL
 
     DBFILE = 'database.db'
+
+    SUBLIMINALPROVIDERSENTRYPOINT = pkg_resources.get_entry_info(dist='subliminal', group=None,
+                                                                 name='subliminal.providers')
 
     SUBLIMINALCACHEFILE = 'subliminal.cache.dbm'
     DOGPILECACHEFILE = 'dogpile.cache.dbm'
