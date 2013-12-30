@@ -28,6 +28,7 @@ What it uses:
  * simplejson
  * version
  * subliminal
+ * tvdb_api
 
 How to use:
 
