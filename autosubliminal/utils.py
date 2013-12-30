@@ -27,10 +27,8 @@ def run_cmd(cmd):
                                stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
-    shell = process.stdout.read()
-    shellerr = process.stderr.read()
-    process.wait()
-    return shell, shellerr
+    # Return stdout, stderr
+    return process.communicate()
 
 
 def connect_url(url):
