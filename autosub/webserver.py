@@ -290,7 +290,7 @@ class Home:
     @cherrypy.expose
     def shutdown(self):
         tmpl = PageTemplate(file="interface/templates/stopped.tmpl")
-        threading.Timer(2, autosub.autosubliminal.stop).start()
+        threading.Timer(2, autosub.runner.stop).start()
         return str(tmpl)
 
 

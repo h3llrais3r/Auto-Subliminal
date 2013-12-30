@@ -8,7 +8,7 @@ import locale
 
 import autosub
 import autosub.db
-import autosub.autosubliminal
+import autosub.runner
 
 #signal.signal(signal.SIGTERM, autosub.AutoSub.signal_handler)
 
@@ -85,10 +85,10 @@ def main(argv=None):
     print "Initializing variables and loading config"
     autosub.initialize()
 
-    signal.signal(signal.SIGINT, autosub.autosubliminal.signal_handler)
+    signal.signal(signal.SIGINT, autosub.runner.signal_handler)
 
     if autosub.DAEMON:
-        autosub.autosubliminal.daemon()
+        autosub.runner.daemon()
 
     # Make sure that sqlite database is loaded after you demonize
     autosub.db.init_db()
@@ -107,7 +107,7 @@ def main(argv=None):
     log.debug("Dbversion is: %d" % autosub.DBVERSION)
 
     log.info("Starting threads")
-    autosub.autosubliminal.start()
+    autosub.runner.start()
 
     log.info("Threads started, going into a loop to keep the main thread going")
 

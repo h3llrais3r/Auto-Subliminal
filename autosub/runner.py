@@ -3,11 +3,11 @@ import os
 import sys
 import webbrowser
 
+import cherrypy
 import subliminal
 
 import autosub
 from autosub import scheduler, diskscanner, subchecker, webserver
-import cherrypy
 
 log = logging.getLogger(__name__)
 
