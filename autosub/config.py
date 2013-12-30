@@ -25,32 +25,21 @@ def load_provider_config(cfg):
     autosub.THESUBDB = cfg.getboolean('subliminal', 'thesubdb')
     autosub.TVSUBTITLES = cfg.getboolean('subliminal', 'tvsubtitles')
 
-
-def create_provider_config(cfg):
-    cfg.set('subliminal', 'allproviders', 'True')
-    cfg.set('subliminal', 'addic7ed', 'True')
-    cfg.set('subliminal', 'opensubtitles', 'True')
-    cfg.set('subliminal', 'podnapisi', 'True')
-    cfg.set('subliminal', 'thesubdb', 'True')
-    cfg.set('subliminal', 'tvsubtitles', 'True')
-
-
-def load_provider_config(cfg):
-    autosub.USEALLPROVIDERS = cfg.getboolean('subliminal', 'allproviders')
-    autosub.ADDIC7ED = cfg.getboolean('subliminal', 'addic7ed')
-    autosub.OPENSUBTITLES = cfg.getboolean('subliminal', 'opensubtitles')
-    autosub.PODNAPISI = cfg.getboolean('subliminal', 'podnapisi')
-    autosub.THESUBDB = cfg.getboolean('subliminal', 'thesubdb')
-    autosub.TVSUBTITLES = cfg.getboolean('subliminal', 'tvsubtitles')
-
-
-def create_provider_config(cfg):
-    cfg.set('subliminal', 'allproviders', 'True')
-    cfg.set('subliminal', 'addic7ed', 'True')
-    cfg.set('subliminal', 'opensubtitles', 'True')
-    cfg.set('subliminal', 'podnapisi', 'True')
-    cfg.set('subliminal', 'thesubdb', 'True')
-    cfg.set('subliminal', 'tvsubtitles', 'True')
+    if autosub.USEALLPROVIDERS:
+        # have subliminal use all it's providers by handing it an empty value
+        autosub.SUBLIMINALPROVIDERLIST = None
+    else:
+        autosub.SUBLIMINALPROVIDERLIST = []
+        if autosub.ADDIC7ED:
+           autosub.SUBLIMINALPROVIDERLIST.append('addic7ed')
+        if autosub.OPENSUBTITLES:
+           autosub.SUBLIMINALPROVIDERLIST.append('opensubtitles')
+        if autosub.PODNAPISI:
+           autosub.SUBLIMINALPROVIDERLIST.append('podnapisi')
+        if autosub.THESUBDB:
+           autosub.SUBLIMINALPROVIDERLIST.append('thesubdb')
+        if autosub.TVSUBTITLES:
+           autosub.SUBLIMINALPROVIDERLIST.append('tvsubtitles')
 
 
 def read_config(configfile):
@@ -447,9 +436,7 @@ def read_config(configfile):
             autosub.APIKEY = cfg.get('dev', 'apikey')
 
     if cfg.has_section('subliminal'):
-        autosub.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
-        if autosub.SUBLIMINALPROVIDERS:
-            autosub.SUBLIMINALPROVIDERLIST = autosub.SUBLIMINALPROVIDERS.split(',')
+        load_provider_config(cfg)
 
     # Check if config needs to be upgraded
     if autosub.CONFIGVERSION < version.CONFIG_VERSION:
@@ -458,11 +445,7 @@ def read_config(configfile):
         print "ERROR: Config version higher then this version of Auto-Subliminal supports. Update Auto-Subliminal."
         os._exit(1)
 
-    try:
-        load_provider_config(cfg)
-    except:
-        create_provider_config(cfg)
-        load_provider_config(cfg)
+
 
     # Settings
     autosub.SHOWID_CACHE = {}
@@ -1019,4 +1002,16 @@ def upgrade_config(from_version, to_version):
             print "INFO: New value minmatchscore: %d" % autosub.MINMATCHSCORE
             print "INFO: Config upgraded to version 3"
             autosub.CONFIGVERSION = 3
+            autosub.CONFIGUPGRADED = True
+        if from_version == 3 and to_version == 4:
+            print "INFO: New subliminal providers config"
+            autosub.USEALLPROVIDERS = True
+            # with USEALLPROVIDERS = True values below won't matter, but let's initialize them anyway
+            autosub.ADDIC7ED = True
+            autosub.OPENSUBTITLES = True
+            autosub.PODNAPISI = True
+            autosub.THESUBDB = True
+            autosub.TVSUBTITLES = True
+            print "INFO: Config upgraded to version 4"
+            autosub.CONFIGVERSION = 4
             autosub.CONFIGUPGRADED = True
