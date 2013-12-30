@@ -187,7 +187,7 @@ class Config:
         elif checkversion == 4:
             message = 'What are you doing here??? It is time to upgrade! Visit: <a href=https://github.com/h3llrais3r/Auto-Subliminal/releases>Github</a>'
         else:
-            message = 'Something went wrong there, is google-project reachable? Or are you running a really old release?'
+            message = 'Something went wrong there, is github reachable? Or are you running a really old release?'
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
         tmpl.message = message
         return str(tmpl)
