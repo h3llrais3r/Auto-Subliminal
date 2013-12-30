@@ -108,7 +108,8 @@ class SubChecker():
 
                     subdownloader.download_subtitle(download_item)
 
-                    if lang == 'nl' and (autosubliminal.FALLBACKTOENG and not autosubliminal.DOWNLOADENG) and 'en' in langs:
+                    if lang == 'nl' and (
+                        autosubliminal.FALLBACKTOENG and not autosubliminal.DOWNLOADENG) and 'en' in langs:
                         log.debug(
                             'A dutch subtitle is found and fallback is true. Removing the english subtitle from the wantedlist.')
                         langs.remove('en')

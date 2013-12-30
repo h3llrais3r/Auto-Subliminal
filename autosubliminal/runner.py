@@ -3,11 +3,12 @@ import os
 import sys
 import webbrowser
 
-import cherrypy
 import subliminal
 
+import cherrypy
 import autosubliminal
 from autosubliminal import scheduler, diskscanner, subchecker, webserver
+
 
 log = logging.getLogger(__name__)
 
@@ -132,14 +133,16 @@ def start():
                                       arguments={'filename': cache_file, 'lock_factory': subliminal.MutexLock})
 
     log.info("Starting SCANDISK thread")
-    autosubliminal.SCANDISK = autosubliminal.scheduler.Scheduler(autosubliminal.diskscanner.DiskScanner(), autosubliminal.SCHEDULERSCANDISK, True,
-                                                   "SCANDISK")
+    autosubliminal.SCANDISK = autosubliminal.scheduler.Scheduler(autosubliminal.diskscanner.DiskScanner(),
+                                                                 autosubliminal.SCHEDULERSCANDISK, True,
+                                                                 "SCANDISK")
     autosubliminal.SCANDISK.thread.start()
     log.info("SCANDISK thread started")
 
     log.info("Starting CHECKSUB thread")
-    autosubliminal.CHECKSUB = autosubliminal.scheduler.Scheduler(autosubliminal.subchecker.SubChecker(), autosubliminal.SCHEDULERCHECKSUB, True,
-                                                   "CHECKSUB")
+    autosubliminal.CHECKSUB = autosubliminal.scheduler.Scheduler(autosubliminal.subchecker.SubChecker(),
+                                                                 autosubliminal.SCHEDULERCHECKSUB, True,
+                                                                 "CHECKSUB")
     autosubliminal.CHECKSUB.thread.start()
     log.info("CHECKSUB thread started")
 

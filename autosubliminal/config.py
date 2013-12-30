@@ -53,7 +53,7 @@ def read_config(configfile):
                 autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
         else:
             autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
-            
+
         if cfg.has_option('config', 'matchquality'):
             autosubliminal.MATCHQUALITY = cfg.getboolean('config', 'matchquality')
         else:
