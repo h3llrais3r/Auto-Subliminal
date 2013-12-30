@@ -179,8 +179,9 @@ def get_showid(show_name, force_search=False):
             show = tvdb_api.Tvdb()[show_name]
             if show:
                 show_id = show['id']
-        except Exception, e:
-            log.exception(e)
+        except:
+            log.error('Showid not found for %s' % show_name)
+            IdCache().set_id(-1, show_name)
     else:
         log.warning("Out of API calls")
         return None
@@ -190,9 +191,6 @@ def get_showid(show_name, force_search=False):
         IdCache().set_id(show_id, show_name)
         log.info('%r added to cache with %s' % (show_name, show_id))
         return int(show_id)
-
-    log.error('Showid not found for %s' % show_name)
-    IdCache().set_id(-1, show_name)
 
 
 def check_apicalls(use=False):
