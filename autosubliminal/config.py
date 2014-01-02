@@ -109,11 +109,12 @@ def read_config(configfile):
         else:
             autosubliminal.SCHEDULERCHECKSUB = 86400  # Run every 8 hours
 
-        if cfg.has_option("config", "rootpath"):
-            autosubliminal.ROOTPATH = cfg.get("config", "rootpath")
+        if cfg.has_option("config", "videopaths"):
+            autosubliminal.VIDEOPATHS = unicode(str(cfg.get("config", "videopaths"))).split(',')
         else:
-            print "ERROR: Required variable ROOTPATH is missing. Using current working directory instead."
-            autosubliminal.ROOTPATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
+            print "ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead."
+            autosubliminal.VIDEOPATHS = []
+            autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
 
         if cfg.has_option("config", "fallbacktoeng"):
             autosubliminal.FALLBACKTOENG = cfg.getboolean("config", "fallbacktoeng")
@@ -180,6 +181,7 @@ def read_config(configfile):
         autosubliminal.SCHEDULERCHECKSUB = 28800
         print "ERROR: Required variable ROOTPATH is missing. Using current working directory instead."
         autosubliminal.ROOTPATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
+        autosubliminal.VIDEOPATHS = [].append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
         autosubliminal.FALLBACKTOENG = True
         autosubliminal.SUBENG = u'en'
         autosubliminal.SUBNL = u""
@@ -564,6 +566,16 @@ def display_namemapping():
         s += x + " = " + str(autosubliminal.USERNAMEMAPPING[x]) + "\n"
     return s
 
+def display_videopaths():
+    """
+    Return a string containing all locations for user videos.
+    After each location an '\n' is added to create multiple rows
+    in a textarea.
+    """
+    s = ""
+    for x in autosubliminal.VIDEOPATHS:
+        s += x + "\n"
+    return s
 
 def string_to_dict(items=None):
     """
@@ -585,7 +597,6 @@ def string_to_dict(items=None):
             returnitems.append(showinfo)
     returnitems = dict(returnitems)
     return returnitems
-
 
 def save_config_section():
     """
@@ -613,7 +624,6 @@ def save_config_section():
     cfg.set(section, "matchreleasegroup", str(autosubliminal.MATCHRELEASEGROUP))
     cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
     cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
-    cfg.set(section, "rootpath", autosubliminal.ROOTPATH)
     cfg.set(section, "fallbacktoeng", str(autosubliminal.FALLBACKTOENG))
     cfg.set(section, "subeng", autosubliminal.SUBENG)
     cfg.set(section, "subnl", autosubliminal.SUBNL)
@@ -624,6 +634,11 @@ def save_config_section():
     cfg.set(section, "configversion", str(autosubliminal.CONFIGVERSION))
     cfg.set(section, "launchbrowser", str(autosubliminal.LAUNCHBROWSER))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
+    paths = ""
+    for x in autosubliminal.VIDEOPATHS:
+        if x:
+            paths += x + ","
+    cfg.set(section, "videopaths", str(paths))
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', encoding=autosubliminal.SYSENCODING) as file:
         cfg.write(file)
