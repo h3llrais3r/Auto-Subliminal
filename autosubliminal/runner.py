@@ -131,7 +131,7 @@ def start():
     autosubliminal.SCANDISK.thread.start()
     log.info("Thread SCANDISK started")
 
-    log.info("Starting thread CHECKSUB'")
+    log.info("Starting thread CHECKSUB")
     autosubliminal.CHECKSUB = autosubliminal.scheduler.Scheduler(autosubliminal.subchecker.SubChecker(),
                                                                  autosubliminal.SCHEDULERCHECKSUB, True,
                                                                  "CHECKSUB")
@@ -154,5 +154,5 @@ def stop():
 
 
 def signal_handler(signum, frame):
-    log.debug("Got signal, hutting down")
+    log.debug("Got signal, shutting down")
     os._exit(0)
