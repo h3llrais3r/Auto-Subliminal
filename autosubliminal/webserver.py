@@ -321,6 +321,22 @@ class Log:
 
         return str(tmpl)
 
+    @cherrypy.expose(alias='clearLog')
+    def clear_log(self,  loglevel=''):
+        # Clear log file (open it in write mode and pass)
+        with open(autosubliminal.LOGFILE, 'w'):
+            pass
+        # Return to default log view
+        tmpl = PageTemplate(file="interface/templates/viewlog.tmpl")
+        if loglevel == '':
+            tmpl.loglevel = 'All'
+        else:
+            tmpl.loglevel = loglevel
+        result = utils.display_logfile(loglevel)
+        tmpl.message = result
+
+        return str(tmpl)
+
 
 class Mobile:
     @cherrypy.expose
