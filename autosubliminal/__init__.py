@@ -18,6 +18,7 @@ LOGLEVEL = None
 LOGLEVELCONSOLE = None
 LOGSIZE = None
 LOGNUM = None
+LOGHTTPACCESS = None
 SKIPSHOW = None
 SKIPSHOWUPPER = None
 USERNAMEMAPPING = None
@@ -109,7 +110,7 @@ MOBILEAUTOSUB = None
 
 def initialize():
     global ROOTPATH, FALLBACKTOENG, SUBENG, LOGFILE, SUBNL, LOGLEVEL, SKIPHIDDENDIRS, \
-        SUBNL, LOGLEVEL, LOGLEVELCONSOLE, LOGSIZE, LOGNUM, SKIPSHOW, SKIPSHOWUPPER, \
+        SUBNL, LOGLEVEL, LOGLEVELCONSOLE, LOGSIZE, LOGNUM, LOGHTTPACCESS, SKIPSHOW, SKIPSHOWUPPER, \
         USERNAMEMAPPING, USERNAMEMAPPINGUPPER, NAMEMAPPING, NAMEMAPPINGUPPER, \
         SHOWID_CACHE, POSTPROCESSCMD, CONFIGFILE, WORKDIR, NOTIFYEN, NOTIFYNL, \
         MINMATCHSCORE, MINMATCHSCOREDEFAULT, MATCHQUALITY, MATCHCODEC, MATCHRELEASEGROUP, \
@@ -178,18 +179,21 @@ def initialize():
 
 
 def init_logging():
-    global LOGFILE, LOGLEVEL, LOGSIZE, LOGNUM, LOGLEVELCONSOLE, \
+    global LOGFILE, LOGLEVEL, LOGSIZE, LOGNUM, LOGLEVELCONSOLE, LOGHTTPACCESS, \
         DAEMON
 
     # initialize logging (customize the root logger so every logger outputs to this)
     log = logging.root
     log.setLevel(LOGLEVEL)
 
-    log_script = logging.handlers.RotatingFileHandler(LOGFILE, 'a', LOGSIZE, LOGNUM)
-    log_script_formatter = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
-    log_script.setFormatter(log_script_formatter)
-    log_script.setLevel(LOGLEVEL)
-    log.addHandler(log_script)
+    log_filter = _LogFilter(LOGHTTPACCESS)
+    log_formatter = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
+    log_handler = logging.handlers.RotatingFileHandler(LOGFILE, 'a', LOGSIZE, LOGNUM)
+    log_handler.addFilter(log_filter)
+    log_handler.setFormatter(log_formatter)
+    log_handler.setLevel(LOGLEVEL)
+    log.addHandler(log_handler)
+
 
     # console log handler
     if not DAEMON:
@@ -199,3 +203,15 @@ def init_logging():
         formatter = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
         console.setFormatter(formatter)
         log.addHandler(console)
+
+
+class _LogFilter(logging.Filter):
+    def __init__(self, log_http_access=None):
+        self.log_http_access = log_http_access
+
+    def filter(self, record):
+        # Filter out http access
+        if not self.log_http_access:
+            if 'cherrypy.access' in record.name:
+                return False
+        return True

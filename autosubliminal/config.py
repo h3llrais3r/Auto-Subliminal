@@ -206,6 +206,11 @@ def read_config(configfile):
         else:
             autosubliminal.LOGNUM = 3
 
+        if cfg.has_option("logfile", "loghttpaccess"):
+            autosubliminal.LOGHTTPACCESS = cfg.getboolean("logfile", "loghttpaccess")
+        else:
+            autosubliminal.LOGHTTPACCESS = False
+
     else:
         # Logfile section is missing, so set defaults for all options
         autosubliminal.LOGLEVEL = logging.INFO
@@ -657,6 +662,7 @@ def save_logfile_section():
     cfg.set(section, "lognum", str(autosubliminal.LOGNUM))
     cfg.set(section, "logsize", str(autosubliminal.LOGSIZE))
     cfg.set(section, "loglevelconsole", logging.getLevelName(int(autosubliminal.LOGLEVELCONSOLE)).lower())
+    cfg.set(section, "loghttpaccess", str(autosubliminal.LOGHTTPACCESS))
 
     with open(autosubliminal.CONFIGFILE, 'wb') as file:
         cfg.write(file)
