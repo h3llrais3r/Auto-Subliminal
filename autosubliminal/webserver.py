@@ -77,8 +77,8 @@ class Config:
                     mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi,
                     twitterkey, twittersecret, notifyen, notifynl,
                     notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi,
-                    mssdefault, mmsquality, mmscodec, mmsreleasegroup,
-                    subliminalproviders):
+                    mmsdefault=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None,
+                    subliminalproviders=None):
         # Set all internal variables
         autosubliminal.PATH = path
         autosubliminal.ROOTPATH = rootpath
@@ -98,22 +98,26 @@ class Config:
         autosubliminal.MATCHCODEC = False
         autosubliminal.MATCHRELEASEGROUP = False
         autosubliminal.MINMATCHSCORE = 0
-        # Convert to int before converting to bool (bool(0) = False; bool(1) = True)
-        if bool(int(mssdefault)):
-            # mssdefault is the minimal default score (which cannot be edited, so no flag is needed)
+        # If not checked, the value will be default None, if checked, it will contain a value
+        if mmsdefault:
+            # mmsdefault is the minimal default score (which cannot be edited, so no flag is needed)
             autosubliminal.MINMATCHSCORE += autosubliminal.MINMATCHSCOREDEFAULT
-        if bool(int(mmsquality)):
+        if mmsquality:
             autosubliminal.MINMATCHSCORE += 2
             autosubliminal.MATCHQUALITY = True
-        if bool(int(mmscodec)):
+        if mmscodec:
             autosubliminal.MINMATCHSCORE += 2
             autosubliminal.MATCHCODEC = True
-        if bool(int(mmsreleasegroup)):
+        if mmsreleasegroup:
             autosubliminal.MINMATCHSCORE += 6
             autosubliminal.MATCHRELEASEGROUP = True
 
-        # Subliminal providers (convert list to comma separated string)
-        autosubliminal.SUBLIMINALPROVIDERS = ','.join([str(provider) for provider in subliminalproviders])
+        # Subliminal providers(convert list to comma separated string if multiple are selected)
+        if subliminalproviders and not isinstance(subliminalproviders, basestring):
+            autosubliminal.SUBLIMINALPROVIDERS = ','.join([str(provider) for provider in subliminalproviders])
+        else:
+            # Just one selected or None (in this case, None will be saved and no providers will be used)
+            autosubliminal.SUBLIMINALPROVIDERS = subliminalproviders
 
         autosubliminal.SCHEDULERSCANDISK = int(scandisk)
         autosubliminal.SCHEDULERCHECKSUB = int(checksub)
