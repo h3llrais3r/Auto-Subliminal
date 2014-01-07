@@ -25,8 +25,10 @@ class PostProcessor():
         log.debug("PostProcessor output:% s" % stdout)
 
     def _constuct_process_cmd(self):
+        log.info("#" * 30)
         log.info("Running postprocessor:")
-        log.info("Command: %s" % self.cmd)
+        log.info("Command:")
+        log.info("%s" % self.cmd)
         process = [self.cmd]
         log.info("Arguments:")
 
@@ -41,4 +43,5 @@ class PostProcessor():
             for arg in self.args:
                 log.info("%s" % arg)
                 process.append(arg)
+        log.info("#" * 30)
         return process
