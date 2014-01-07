@@ -72,7 +72,7 @@ class Config:
     @cherrypy.expose(alias='saveConfig')
     def save_config(self, subeng, checksub, scandisk, skiphiddendirs, subnl, postprocesscmd, path, logfile, rootpath,
                     launchbrowser, fallbacktoeng, downloadeng, username, password, webroot, skipshow, lognum,
-                    loglevelconsole, logsize, loglevel, loghttpaccess, webserverip, webserverport, usernamemapping,
+                    loglevelconsole, logsize, loglevel, loghttpaccess, logreversed, webserverip, webserverport, usernamemapping,
                     notifymail, notifygrowl, notifynma, notifytwitter, mailsrv, mailfromaddr, mailtoaddr, mailusername,
                     mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi,
                     twitterkey, twittersecret, notifyen, notifynl,
@@ -84,6 +84,7 @@ class Config:
         autosubliminal.ROOTPATH = rootpath
         autosubliminal.LOGFILE = logfile
         autosubliminal.LOGHTTPACCESS = loghttpaccess
+        autosubliminal.LOGREVERSED = logreversed
         autosubliminal.FALLBACKTOENG = fallbacktoeng
         autosubliminal.DOWNLOADENG = downloadeng
         autosubliminal.SUBENG = subeng

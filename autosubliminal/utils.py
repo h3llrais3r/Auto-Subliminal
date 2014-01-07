@@ -17,7 +17,7 @@ from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
 
-LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2})\ (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
+LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
                         re.IGNORECASE)
 
 
@@ -222,7 +222,11 @@ def display_logfile(loglevel):
 
     num_lines = 0
 
-    for x in reversed(data):
+    # If reversed order is needed, use reversed(data)
+    if autosubliminal.LOGREVERSED:
+        data = reversed(data)
+
+    for x in data:
         try:
             matches = LOG_PARSER.search(x)
             matchdic = matches.groupdict()
@@ -231,7 +235,7 @@ def display_logfile(loglevel):
                 if num_lines >= max_lines:
                     break
                 final_data.append(x)
-        except:
+        except Exception, e:
             continue
     result = "".join(final_data)
     return result

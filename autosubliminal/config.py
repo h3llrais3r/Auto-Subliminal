@@ -211,6 +211,11 @@ def read_config(configfile):
         else:
             autosubliminal.LOGHTTPACCESS = False
 
+        if cfg.has_option("logfile", "logreversed"):
+            autosubliminal.LOGREVERSED = cfg.getboolean("logfile", "logreversed")
+        else:
+            autosubliminal.LOGREVERSED = False
+
     else:
         # Logfile section is missing, so set defaults for all options
         autosubliminal.LOGLEVEL = logging.INFO
@@ -663,6 +668,7 @@ def save_logfile_section():
     cfg.set(section, "logsize", str(autosubliminal.LOGSIZE))
     cfg.set(section, "loglevelconsole", logging.getLevelName(int(autosubliminal.LOGLEVELCONSOLE)).lower())
     cfg.set(section, "loghttpaccess", str(autosubliminal.LOGHTTPACCESS))
+    cfg.set(section, "logreversed", str(autosubliminal.LOGREVERSED))
 
     with open(autosubliminal.CONFIGFILE, 'wb') as file:
         cfg.write(file)
