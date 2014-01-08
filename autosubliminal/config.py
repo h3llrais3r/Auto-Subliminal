@@ -903,6 +903,9 @@ def check_for_restart():
         if cfg.has_option("logfile", "lognum"):
             lognum = int(cfg.get("logfile", "lognum"))
 
+        if cfg.has_option("logfile", "loghttpaccess"):
+            loghttpaccess = int(cfg.get("logfile", "loghttpaccess"))
+
     if cfg.has_section('webserver'):
         if cfg.has_option('webserver', 'webserverip') and cfg.has_option('webserver', 'webserverport'):
             webserverip = cfg.get('webserver', 'webserverip')
@@ -914,7 +917,18 @@ def check_for_restart():
             password = cfg.get('webserver', 'password')
 
     # Now compare the values, if one differs a restart is required.
-    if schedulerscandisk != autosubliminal.SCHEDULERSCANDISK or schedulerchecksub != autosubliminal.SCHEDULERCHECKSUB or loglevel != autosubliminal.LOGLEVEL or loglevelconsole != autosubliminal.LOGLEVELCONSOLE or logsize != autosubliminal.LOGSIZE or lognum != autosubliminal.LOGNUM or webserverip != autosubliminal.WEBSERVERIP or webserverport != autosubliminal.WEBSERVERPORT or username != autosubliminal.USERNAME or password != autosubliminal.PASSWORD or webroot != autosubliminal.WEBROOT:
+    if schedulerscandisk != autosubliminal.SCHEDULERSCANDISK \
+        or schedulerchecksub != autosubliminal.SCHEDULERCHECKSUB \
+        or loglevel != autosubliminal.LOGLEVEL \
+        or loglevelconsole != autosubliminal.LOGLEVELCONSOLE \
+        or logsize != autosubliminal.LOGSIZE \
+        or lognum != autosubliminal.LOGNUM \
+        or loghttpaccess != autosubliminal.LOGHTTPACCESS \
+        or webserverip != autosubliminal.WEBSERVERIP \
+        or webserverport != autosubliminal.WEBSERVERPORT \
+        or username != autosubliminal.USERNAME \
+        or password != autosubliminal.PASSWORD \
+        or webroot != autosubliminal.WEBROOT:
         return True
     else:
         return False
