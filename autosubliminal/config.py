@@ -10,6 +10,7 @@ import logging
 import codecs
 
 from ConfigParser import SafeConfigParser
+import threading
 
 import autosubliminal
 from autosubliminal import version, utils
@@ -46,7 +47,7 @@ def read_config(configfile):
             autosubliminal.DOWNLOADENG = False
 
         if cfg.has_option('config', 'minmatchscore'):
-            autosubliminal.MINMATCHSCORE = int(cfg.get('config', 'minmatchscore'))
+            autosubliminal.MINMATCHSCORE = cfg.getint('config', 'minmatchscore')
             # Force the default minmatchscore when a wrongly configured value is entered manually in the config file
             if autosubliminal.MINMATCHSCORE < autosubliminal.MINMATCHSCOREDEFAULT:
                 print "WARNING: Invalid MINMATCHSCORE found. Using the default score (%s) instead." % autosubliminal.MINMATCHSCOREDEFAULT
@@ -70,12 +71,12 @@ def read_config(configfile):
             autosubliminal.MATCHRELEASEGROUP = False
 
         if cfg.has_option('config', 'scandisk'):
-            autosubliminal.SCHEDULERSCANDISK = int(cfg.get('config', 'scandisk'))
+            autosubliminal.SCHEDULERSCANDISK = cfg.getint('config', 'scandisk')
         else:
             autosubliminal.SCHEDULERSCANDISK = 3600
 
         if cfg.has_option('config', 'checksub'):
-            autosubliminal.SCHEDULERCHECKSUB = int(cfg.get('config', 'checksub'))
+            autosubliminal.SCHEDULERCHECKSUB = cfg.getint('config', 'checksub')
             # CHECKSUB may only be runed 6 times a day, to prevent the API key from being banned
             # If you want new subtitles faster, you should decrease the CHECKSUB time
             if autosubliminal.SCHEDULERCHECKSUB < 21600:
@@ -129,7 +130,7 @@ def read_config(configfile):
             autosubliminal.POSTPROCESSCMD = cfg.get("config", "postprocesscmd")
 
         if cfg.has_option("config", "configversion"):
-            autosubliminal.CONFIGVERSION = int(cfg.get("config", "configversion"))
+            autosubliminal.CONFIGVERSION = cfg.getint("config", "configversion")
         else:
             autosubliminal.CONFIGVERSION = 1
 
@@ -197,12 +198,12 @@ def read_config(configfile):
             autosubliminal.LOGLEVELCONSOLE = logging.ERROR
 
         if cfg.has_option("logfile", "logsize"):
-            autosubliminal.LOGSIZE = int(cfg.get("logfile", "logsize"))
+            autosubliminal.LOGSIZE = cfg.getint("logfile", "logsize")
         else:
             autosubliminal.LOGSIZE = 1000000
 
         if cfg.has_option("logfile", "lognum"):
-            autosubliminal.LOGNUM = int(cfg.get("logfile", "lognum"))
+            autosubliminal.LOGNUM = cfg.getint("logfile", "lognum")
         else:
             autosubliminal.LOGNUM = 3
 
@@ -226,7 +227,7 @@ def read_config(configfile):
     if cfg.has_section('webserver'):
         if cfg.has_option('webserver', 'webserverip') and cfg.has_option('webserver', 'webserverport'):
             autosubliminal.WEBSERVERIP = cfg.get('webserver', 'webserverip')
-            autosubliminal.WEBSERVERPORT = int(cfg.get('webserver', 'webserverport'))
+            autosubliminal.WEBSERVERPORT = cfg.getint('webserver', 'webserverport')
 
         else:
             print "ERROR: Webserver IP and port are required. Now setting the default values (0.0.0.0:8083)."
@@ -377,7 +378,7 @@ def read_config(configfile):
             autosubliminal.PROWLAPI = u"API key"
 
         if cfg.has_option('notify', 'prowlpriority'):
-            autosubliminal.PROWLPRIORITY = int(cfg.get('notify', 'prowlpriority'))
+            autosubliminal.PROWLPRIORITY = cfg.getint('notify', 'prowlpriority')
         else:
             autosubliminal.PROWLPRIORITY = 0
 
@@ -862,10 +863,10 @@ def check_for_restart():
     # Check if an option excists in the config file, if so replace the default value
     if cfg.has_section('config'):
         if cfg.has_option('config', 'scandisk'):
-            schedulerscandisk = int(cfg.get('config', 'scandisk'))
+            schedulerscandisk = cfg.getint('config', 'scandisk')
 
         if cfg.has_option('config', 'checksub'):
-            schedulerchecksub = int(cfg.get('config', 'checksub'))
+            schedulerchecksub = cfg.getint('config', 'checksub')
 
     if cfg.has_option("config", "logfile"):
         logfile = cfg.get("config", "logfile")
@@ -898,18 +899,18 @@ def check_for_restart():
                 loglevelconsole = logging.CRITICAL
 
         if cfg.has_option("logfile", "logsize"):
-            logsize = int(cfg.get("logfile", "logsize"))
+            logsize = cfg.getint("logfile", "logsize")
 
         if cfg.has_option("logfile", "lognum"):
-            lognum = int(cfg.get("logfile", "lognum"))
+            lognum = cfg.getint("logfile", "lognum")
 
         if cfg.has_option("logfile", "loghttpaccess"):
-            loghttpaccess = int(cfg.get("logfile", "loghttpaccess"))
+            loghttpaccess = cfg.getboolean("logfile", "loghttpaccess")
 
     if cfg.has_section('webserver'):
         if cfg.has_option('webserver', 'webserverip') and cfg.has_option('webserver', 'webserverport'):
             webserverip = cfg.get('webserver', 'webserverip')
-            webserverport = int(cfg.get('webserver', 'webserverport'))
+            webserverport = cfg.getint('webserver', 'webserverport')
         if cfg.has_option('webserver', 'webroot'):
             webroot = cfg.get('webserver', 'webroot')
         if cfg.has_option('webserver', 'username') and cfg.has_option('webserver', 'password'):
@@ -968,13 +969,17 @@ def write_config():
     save_notify_section()
 
     if restart:
-        # This needs to be replaced by a restart thingy, until then, just re-read the config and tell the users to do a manual restart
-        read_config(autosubliminal.CONFIGFILE)
-        return "Config saved. A manual restart is needed for all changes to take effect. Auto restart will be implemented soon!<br><a href='" + autosubliminal.WEBROOT + "/config'>Return</a>"
+        # Restart the runner in the background
+        restart_thread = threading.Thread(target=autosubliminal.runner.restart)
+        restart_thread.start()
+        return "Config saved. Auto restart in progress!<br>" \
+               "If your page doesn't reload within 5 seconds," \
+               " click <a href='" + autosubliminal.WEBROOT + "/config'>here</a>" \
+               "<script type='text/javascript'>setTimeout(refresh, 5000);</script>"
     else:
         # For some reason the needs to be read again, otherwise all pages get an error
         read_config(autosubliminal.CONFIGFILE)
-        return "Config saved.<br><a href='" + autosubliminal.WEBROOT + "/config'>Return</a>"
+        return "Config saved.<br><a href='" + autosubliminal.WEBROOT + "'>Return</a>"
 
 
 def upgrade_config(from_version, to_version):
