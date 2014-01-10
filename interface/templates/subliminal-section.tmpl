@@ -1,0 +1,21 @@
+#import autosubliminal
+
+<table>
+
+	<tr>
+		<td width="140px" style="vertical-align:top;">Subliminal providers</td>
+		<td>
+		    #set $providers = $autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
+		    <select multiple="mutiple" name="subliminalproviders" size="$len(providers)">
+		    #for provider in $providers:
+                #if $provider in $autosubliminal.SUBLIMINALPROVIDERLIST:
+                    <option selected="selected" value="$provider">$provider</option>
+                #else:
+                    <option value="$provider">$provider</option>
+                #end if
+		    #end for
+		</td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationProviders"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationProviders" class="dropdown-menu has-tip" align="left"><ul><li>Which providers should be used for searching and downloading subtitles?</li></ul></div></td>
+	</tr>
+
+</table>

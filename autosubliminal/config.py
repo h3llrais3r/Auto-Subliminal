@@ -10,6 +10,7 @@ import logging
 import codecs
 
 from ConfigParser import SafeConfigParser
+import threading
 
 import autosubliminal
 from autosubliminal import version, utils
@@ -56,7 +57,7 @@ def read_config(configfile):
             autosubliminal.DOWNLOADENG = False
 
         if cfg.has_option('config', 'minmatchscore'):
-            autosubliminal.MINMATCHSCORE = int(cfg.get('config', 'minmatchscore'))
+            autosubliminal.MINMATCHSCORE = cfg.getint('config', 'minmatchscore')
             # Force the default minmatchscore when a wrongly configured value is entered manually in the config file
             if autosubliminal.MINMATCHSCORE < autosubliminal.MINMATCHSCOREDEFAULT:
                 print "WARNING: Invalid MINMATCHSCORE found. Using the default score (%s) instead." % autosubliminal.MINMATCHSCOREDEFAULT
@@ -80,12 +81,12 @@ def read_config(configfile):
             autosubliminal.MATCHRELEASEGROUP = False
 
         if cfg.has_option('config', 'scandisk'):
-            autosubliminal.SCHEDULERSCANDISK = int(cfg.get('config', 'scandisk'))
+            autosubliminal.SCHEDULERSCANDISK = cfg.getint('config', 'scandisk')
         else:
             autosubliminal.SCHEDULERSCANDISK = 3600
 
         if cfg.has_option('config', 'checksub'):
-            autosubliminal.SCHEDULERCHECKSUB = int(cfg.get('config', 'checksub'))
+            autosubliminal.SCHEDULERCHECKSUB = cfg.getint('config', 'checksub')
             # CHECKSUB may only be runed 6 times a day, to prevent the API key from being banned
             # If you want new subtitles faster, you should decrease the CHECKSUB time
             if autosubliminal.SCHEDULERCHECKSUB < 21600:
@@ -133,7 +134,7 @@ def read_config(configfile):
             autosubliminal.POSTPROCESSCMD = cfg.get("config", "postprocesscmd")
 
         if cfg.has_option("config", "configversion"):
-            autosubliminal.CONFIGVERSION = int(cfg.get("config", "configversion"))
+            autosubliminal.CONFIGVERSION = cfg.getint("config", "configversion")
         else:
             autosubliminal.CONFIGVERSION = 1
 
@@ -201,14 +202,24 @@ def read_config(configfile):
             autosubliminal.LOGLEVELCONSOLE = logging.ERROR
 
         if cfg.has_option("logfile", "logsize"):
-            autosubliminal.LOGSIZE = int(cfg.get("logfile", "logsize"))
+            autosubliminal.LOGSIZE = cfg.getint("logfile", "logsize")
         else:
             autosubliminal.LOGSIZE = 1000000
 
         if cfg.has_option("logfile", "lognum"):
-            autosubliminal.LOGNUM = int(cfg.get("logfile", "lognum"))
+            autosubliminal.LOGNUM = cfg.getint("logfile", "lognum")
         else:
             autosubliminal.LOGNUM = 3
+
+        if cfg.has_option("logfile", "loghttpaccess"):
+            autosubliminal.LOGHTTPACCESS = cfg.getboolean("logfile", "loghttpaccess")
+        else:
+            autosubliminal.LOGHTTPACCESS = False
+
+        if cfg.has_option("logfile", "logreversed"):
+            autosubliminal.LOGREVERSED = cfg.getboolean("logfile", "logreversed")
+        else:
+            autosubliminal.LOGREVERSED = False
 
     else:
         # Logfile section is missing, so set defaults for all options
@@ -220,10 +231,10 @@ def read_config(configfile):
     if cfg.has_section('webserver'):
         if cfg.has_option('webserver', 'webserverip') and cfg.has_option('webserver', 'webserverport'):
             autosubliminal.WEBSERVERIP = cfg.get('webserver', 'webserverip')
-            autosubliminal.WEBSERVERPORT = int(cfg.get('webserver', 'webserverport'))
+            autosubliminal.WEBSERVERPORT = cfg.getint('webserver', 'webserverport')
 
         else:
-            print "ERROR: Webserver IP and port are required! Now setting the default values (0.0.0.0:8083)."
+            print "ERROR: Webserver IP and port are required. Now setting the default values (0.0.0.0:8083)."
             autosubliminal.WEBSERVERIP = u"0.0.0.0"
             autosubliminal.WEBSERVERPORT = 8083
 
@@ -236,10 +247,10 @@ def read_config(configfile):
             autosubliminal.USERNAME = cfg.get('webserver', 'username')
             autosubliminal.PASSWORD = cfg.get('webserver', 'password')
         elif cfg.has_option('webserver', 'username') or cfg.has_option('webserver', 'password'):
-            print "ERROR: Both username and password are required Now starting without authentication"
+            print "ERROR: Both username and password are required. Now starting without authentication."
     else:
-        print "ERROR: The webserver section is required! Now setting the default values (0.0.0.0:8083)."
-        print "WARNING: The webserver is started without authentication"
+        print "ERROR: The webserver section is required. Now setting the default values (0.0.0.0:8083)."
+        print "WARNING: The webserver is started without authentication."
         autosubliminal.WEBSERVERIP = u'0.0.0.0'
         autosubliminal.WEBSERVERPORT = 8083
         autosubliminal.WEBROOT = u''
@@ -371,7 +382,7 @@ def read_config(configfile):
             autosubliminal.PROWLAPI = u"API key"
 
         if cfg.has_option('notify', 'prowlpriority'):
-            autosubliminal.PROWLPRIORITY = int(cfg.get('notify', 'prowlpriority'))
+            autosubliminal.PROWLPRIORITY = cfg.getint('notify', 'prowlpriority')
         else:
             autosubliminal.PROWLPRIORITY = 0
 
@@ -410,14 +421,23 @@ def read_config(configfile):
         autosubliminal.NOTIFYPUSHALOT = False
         autosubliminal.PUSHALOTAPI = u"API key"
 
+    if cfg.has_section('subliminal'):
+        if cfg.has_option('subliminal', 'providers'):
+            autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
+            autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
+            # Only allow valid providers by checking if they are found in the entry point
+            for provider in autosubliminal.SUBLIMINALPROVIDERLIST:
+                if provider.lower() not in autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys():
+                    autosubliminal.SUBLIMINALPROVIDERLIST.remove(provider)
+        else:
+            autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
+    else:
+        # Subliminal section is missing
+        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
+
     if cfg.has_section('dev'):
         if cfg.has_option('dev', 'apikey'):
             autosubliminal.APIKEY = cfg.get('dev', 'apikey')
-
-    if cfg.has_section('subliminal'):
-        autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
-        if autosubliminal.SUBLIMINALPROVIDERS:
-          autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
 
     # Check if config needs to be upgraded
     if autosubliminal.CONFIGVERSION < version.CONFIG_VERSION:
@@ -471,6 +491,25 @@ def save_config(section=None, variable=None, value=None):
             cfg.write(file)
 
 
+def apply_subliminal():
+    """
+    Read subliminal in the config file.
+    """
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        #no config yet
+        pass
+
+    if cfg.has_section('subliminal'):
+        autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
+        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
+    else:
+        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
+
+
 def apply_namemapping():
     """
     Read namemapping in the config file.
@@ -516,8 +555,9 @@ def apply_skipshow():
 
 def apply_allsettings():
     """
-    Read namemapping and skipshow from the config file.
+    Read subliminal, namemapping and skipshow from the config file.
     """
+    apply_subliminal()
     apply_namemapping()
     apply_skipshow()
 
@@ -596,28 +636,24 @@ def save_config_section():
         cfg.add_section(section)
 
     cfg.set(section, "path", autosubliminal.PATH)
-    cfg.set(section, "downloadeng", str(autosubliminal.DOWNLOADENG))
-    cfg.set(section, "minmatchscore", str(autosubliminal.MINMATCHSCORE))
-    cfg.set(section, "matchcodec", str(autosubliminal.MATCHCODEC))
-    cfg.set(section, "matchquality", str(autosubliminal.MATCHQUALITY))
-    cfg.set(section, "matchreleasegroup", str(autosubliminal.MATCHRELEASEGROUP))
-    cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
-    cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
+    cfg.set(section, "videopaths", unicode(str(autosubliminal.VIDEOPATHS)))
+    cfg.set(section, "logfile", autosubliminal.LOGFILE)
+    cfg.set(section, "launchbrowser", str(autosubliminal.LAUNCHBROWSER))
     cfg.set(section, "fallbacktoeng", str(autosubliminal.FALLBACKTOENG))
+    cfg.set(section, "downloadeng", str(autosubliminal.DOWNLOADENG))
     cfg.set(section, "subeng", autosubliminal.SUBENG)
     cfg.set(section, "subnl", autosubliminal.SUBNL)
     cfg.set(section, "notifyen", str(autosubliminal.NOTIFYEN))
     cfg.set(section, "notifynl", str(autosubliminal.NOTIFYNL))
-    cfg.set(section, "logfile", autosubliminal.LOGFILE)
     cfg.set(section, "postprocesscmd", autosubliminal.POSTPROCESSCMD)
-    cfg.set(section, "configversion", str(autosubliminal.CONFIGVERSION))
-    cfg.set(section, "launchbrowser", str(autosubliminal.LAUNCHBROWSER))
+    cfg.set(section, "minmatchscore", str(autosubliminal.MINMATCHSCORE))
+    cfg.set(section, "matchcodec", str(autosubliminal.MATCHCODEC))
+    cfg.set(section, "matchquality", str(autosubliminal.MATCHQUALITY))
+    cfg.set(section, "matchreleasegroup", str(autosubliminal.MATCHRELEASEGROUP))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
-    paths = ""
-    for x in autosubliminal.VIDEOPATHS:
-        if x:
-            paths += x + ","
-    cfg.set(section, "videopaths", str(paths))
+    cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
+    cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
+    cfg.set(section, "configversion", str(autosubliminal.CONFIGVERSION))
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', encoding=autosubliminal.SYSENCODING) as file:
         cfg.write(file)
@@ -641,9 +677,11 @@ def save_logfile_section():
         cfg.add_section(section)
 
     cfg.set(section, "loglevel", logging.getLevelName(int(autosubliminal.LOGLEVEL)).lower())
-    cfg.set(section, "loglevelconsole", logging.getLevelName(int(autosubliminal.LOGLEVELCONSOLE)).lower())
-    cfg.set(section, "logsize", str(autosubliminal.LOGSIZE))
     cfg.set(section, "lognum", str(autosubliminal.LOGNUM))
+    cfg.set(section, "logsize", str(autosubliminal.LOGSIZE))
+    cfg.set(section, "loglevelconsole", logging.getLevelName(int(autosubliminal.LOGLEVELCONSOLE)).lower())
+    cfg.set(section, "loghttpaccess", str(autosubliminal.LOGHTTPACCESS))
+    cfg.set(section, "logreversed", str(autosubliminal.LOGREVERSED))
 
     with open(autosubliminal.CONFIGFILE, 'wb') as file:
         cfg.write(file)
@@ -677,11 +715,11 @@ def save_webserver_section():
         cfg.write(file)
 
 
-def save_skipshow_section():
+def save_subliminal_section():
     """
     Save stuff
     """
-    section = 'skipshow'
+    section = 'subliminal'
 
     cfg = SafeConfigParser()
     try:
@@ -692,17 +730,16 @@ def save_skipshow_section():
         cfg = SafeConfigParser()
         pass
 
-    if cfg.has_section(section):
-        cfg.remove_section(section)
+    if not cfg.has_section(section):
         cfg.add_section(section)
-        with open(autosubliminal.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
 
-    for x in autosubliminal.SKIPSHOW:
-        save_config('skipshow', x, autosubliminal.SKIPSHOW[x])
+    cfg.set(section, "providers", str(autosubliminal.SUBLIMINALPROVIDERS))
 
-    # Set all skipshow stuff correct
-    apply_skipshow()
+    with open(autosubliminal.CONFIGFILE, 'wb') as file:
+        cfg.write(file)
+
+    # Set all subliminal stuff correct
+    apply_subliminal()
 
 
 def save_usernamemapping_section():
@@ -733,6 +770,34 @@ def save_usernamemapping_section():
     apply_namemapping()
 
 
+def save_skipshow_section():
+    """
+    Save stuff
+    """
+    section = 'skipshow'
+
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        # No config yet
+        cfg = SafeConfigParser()
+        pass
+
+    if cfg.has_section(section):
+        cfg.remove_section(section)
+        cfg.add_section(section)
+        with open(autosubliminal.CONFIGFILE, 'wb') as file:
+            cfg.write(file)
+
+    for x in autosubliminal.SKIPSHOW:
+        save_config('skipshow', x, autosubliminal.SKIPSHOW[x])
+
+    # Set all skipshow stuff correct
+    apply_skipshow()
+
+
 def save_notify_section():
     """
     Save stuff
@@ -760,20 +825,20 @@ def save_notify_section():
     cfg.set(section, "mailsubject", autosubliminal.MAILSUBJECT)
     cfg.set(section, "mailencryption", autosubliminal.MAILENCRYPTION)
     cfg.set(section, "mailauth", autosubliminal.MAILAUTH)
+    cfg.set(section, "notifytwitter", str(autosubliminal.NOTIFYTWITTER))
+    cfg.set(section, "twitterkey", autosubliminal.TWITTERKEY)
+    cfg.set(section, "twittersecret", autosubliminal.TWITTERSECRET)
+    cfg.set(section, "notifypushalot", str(autosubliminal.NOTIFYPUSHALOT))
+    cfg.set(section, "pushalotapi", autosubliminal.PUSHALOTAPI)
+    cfg.set(section, "notifynma", str(autosubliminal.NOTIFYNMA))
+    cfg.set(section, "nmaapi", autosubliminal.NMAAPI)
     cfg.set(section, "notifygrowl", str(autosubliminal.NOTIFYGROWL))
     cfg.set(section, "growlhost", autosubliminal.GROWLHOST)
     cfg.set(section, "growlport", autosubliminal.GROWLPORT)
     cfg.set(section, "growlpass", autosubliminal.GROWLPASS)
-    cfg.set(section, "notifynma", str(autosubliminal.NOTIFYNMA))
-    cfg.set(section, "nmaapi", autosubliminal.NMAAPI)
-    cfg.set(section, "notifytwitter", str(autosubliminal.NOTIFYTWITTER))
-    cfg.set(section, "twitterkey", autosubliminal.TWITTERKEY)
-    cfg.set(section, "twittersecret", autosubliminal.TWITTERSECRET)
     cfg.set(section, "notifyprowl", str(autosubliminal.NOTIFYPROWL))
     cfg.set(section, "prowlapi", autosubliminal.PROWLAPI)
     cfg.set(section, "prowlpriority", str(autosubliminal.PROWLPRIORITY))
-    cfg.set(section, "notifypushalot", str(autosubliminal.NOTIFYPUSHALOT))
-    cfg.set(section, "pushalotapi", autosubliminal.PUSHALOTAPI)
 
     with open(autosubliminal.CONFIGFILE, 'wb') as file:
         cfg.write(file)
@@ -810,10 +875,10 @@ def check_for_restart():
     # Check if an option excists in the config file, if so replace the default value
     if cfg.has_section('config'):
         if cfg.has_option('config', 'scandisk'):
-            schedulerscandisk = int(cfg.get('config', 'scandisk'))
+            schedulerscandisk = cfg.getint('config', 'scandisk')
 
         if cfg.has_option('config', 'checksub'):
-            schedulerchecksub = int(cfg.get('config', 'checksub'))
+            schedulerchecksub = cfg.getint('config', 'checksub')
 
     if cfg.has_option("config", "logfile"):
         logfile = cfg.get("config", "logfile")
@@ -846,15 +911,18 @@ def check_for_restart():
                 loglevelconsole = logging.CRITICAL
 
         if cfg.has_option("logfile", "logsize"):
-            logsize = int(cfg.get("logfile", "logsize"))
+            logsize = cfg.getint("logfile", "logsize")
 
         if cfg.has_option("logfile", "lognum"):
-            lognum = int(cfg.get("logfile", "lognum"))
+            lognum = cfg.getint("logfile", "lognum")
+
+        if cfg.has_option("logfile", "loghttpaccess"):
+            loghttpaccess = cfg.getboolean("logfile", "loghttpaccess")
 
     if cfg.has_section('webserver'):
         if cfg.has_option('webserver', 'webserverip') and cfg.has_option('webserver', 'webserverport'):
             webserverip = cfg.get('webserver', 'webserverip')
-            webserverport = int(cfg.get('webserver', 'webserverport'))
+            webserverport = cfg.getint('webserver', 'webserverport')
         if cfg.has_option('webserver', 'webroot'):
             webroot = cfg.get('webserver', 'webroot')
         if cfg.has_option('webserver', 'username') and cfg.has_option('webserver', 'password'):
@@ -862,7 +930,18 @@ def check_for_restart():
             password = cfg.get('webserver', 'password')
 
     # Now compare the values, if one differs a restart is required.
-    if schedulerscandisk != autosubliminal.SCHEDULERSCANDISK or schedulerchecksub != autosubliminal.SCHEDULERCHECKSUB or loglevel != autosubliminal.LOGLEVEL or loglevelconsole != autosubliminal.LOGLEVELCONSOLE or logsize != autosubliminal.LOGSIZE or lognum != autosubliminal.LOGNUM or webserverip != autosubliminal.WEBSERVERIP or webserverport != autosubliminal.WEBSERVERPORT or username != autosubliminal.USERNAME or password != autosubliminal.PASSWORD or webroot != autosubliminal.WEBROOT:
+    if schedulerscandisk != autosubliminal.SCHEDULERSCANDISK \
+        or schedulerchecksub != autosubliminal.SCHEDULERCHECKSUB \
+        or loglevel != autosubliminal.LOGLEVEL \
+        or loglevelconsole != autosubliminal.LOGLEVELCONSOLE \
+        or logsize != autosubliminal.LOGSIZE \
+        or lognum != autosubliminal.LOGNUM \
+        or loghttpaccess != autosubliminal.LOGHTTPACCESS \
+        or webserverip != autosubliminal.WEBSERVERIP \
+        or webserverport != autosubliminal.WEBSERVERPORT \
+        or username != autosubliminal.USERNAME \
+        or password != autosubliminal.PASSWORD \
+        or webroot != autosubliminal.WEBROOT:
         return True
     else:
         return False
@@ -896,37 +975,42 @@ def write_config():
     save_config_section()
     save_logfile_section()
     save_webserver_section()
-    save_skipshow_section()
+    save_subliminal_section()
     save_usernamemapping_section()
+    save_skipshow_section()
     save_notify_section()
 
     if restart:
-        # This needs to be replaced by a restart thingy, until then, just re-read the config and tell the users to do a manual restart
-        read_config(autosubliminal.CONFIGFILE)
-        return "Config saved. A manual restart is needed for all changes to take effect. Auto restart will be implemented soon!<br><a href='" + autosubliminal.WEBROOT + "/config'>Return</a>"
+        # Restart the runner in the background
+        restart_thread = threading.Thread(target=autosubliminal.runner.restart)
+        restart_thread.start()
+        return "Config saved. Auto restart in progress!<br>" \
+               "If your page doesn't reload within 5 seconds," \
+               " click <a href='" + autosubliminal.WEBROOT + "/config'>here</a>" \
+               "<script type='text/javascript'>setTimeout(refresh, 5000);</script>"
     else:
         # For some reason the needs to be read again, otherwise all pages get an error
         read_config(autosubliminal.CONFIGFILE)
-        return "Config saved.<br><a href='" + autosubliminal.WEBROOT + "/config'>Return</a>"
+        return "Config saved.<br><a href='" + autosubliminal.WEBROOT + "'>Return</a>"
 
 
 def upgrade_config(from_version, to_version):
-    print "INFO: Upgrading config version from %d to %d" % (from_version, to_version)
+    print "INFO: Upgrading config version from %d to %d." % (from_version, to_version)
     upgrades = to_version - from_version
     if upgrades != 1:
-        print "INFO: More than 1 upgrade required. Starting subupgrades"
+        print "INFO: More than 1 upgrade required. Starting subupgrades."
         for x in range(from_version, upgrades + 1):
             upgrade_config((from_version - 1) + x, x + 1)
     else:
         if from_version == 1 and to_version == 2:
-            print "INFO: Upgrading minmatchscore"
+            print "INFO: Upgrading minmatchscore."
             print "INFO: Old value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
             if (autosubliminal.MINMATCHSCORE % 2) == 0:
                 autosubliminal.MINMATCHSCORE = (autosubliminal.MINMATCHSCORE * 2) + 2
             else:
                 autosubliminal.MINMATCHSCORE = (autosubliminal.MINMATCHSCORE * 2) + 1
             print "INFO: New value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
-            print "INFO: Config upgraded to version 2"
+            print "INFO: Config upgraded to version 2."
             autosubliminal.CONFIGVERSION = 2
             autosubliminal.CONFIGUPGRADED = True
 
@@ -959,14 +1043,14 @@ def upgrade_config(from_version, to_version):
         # video.scores['hash'] = 46
         # --> perfect match -> not configurable
         if from_version == 2 and to_version == 3:
-            print "INFO: New default minmatchscore"
+            print "INFO: New default minmatchscore."
             print "INFO: Old value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
             autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
             autosubliminal.MATCHQUALITY = False
             autosubliminal.MATCHCODEC = False
             autosubliminal.MATCHRELEASEGROUP = False
             print "INFO: New value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
-            print "INFO: Replacing old user namemappings with tvdb id's"
+            print "INFO: Replacing old user namemappings with tvdb id's."
             for x in autosubliminal.USERNAMEMAPPING.keys():
                 # Search for tvdb id
                 tvdb_id = utils.get_showid(x, force_search=True)
@@ -977,6 +1061,6 @@ def upgrade_config(from_version, to_version):
                 else:
                     del autosubliminal.USERNAMEMAPPING[x]
                     del autosubliminal.USERNAMEMAPPINGUPPER[x.upper()]
-            print "INFO: Config upgraded to version 3"
+            print "INFO: Config upgraded to version 3."
             autosubliminal.CONFIGVERSION = 3
             autosubliminal.CONFIGUPGRADED = True

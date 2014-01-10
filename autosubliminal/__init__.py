@@ -1,6 +1,7 @@
 import logging
 import logging.handlers
 import time
+import pkg_resources
 
 from autosubliminal import version, config
 
@@ -16,6 +17,8 @@ LOGLEVEL = None
 LOGLEVELCONSOLE = None
 LOGSIZE = None
 LOGNUM = None
+LOGREVERSED = None
+LOGHTTPACCESS = None
 SKIPSHOW = None
 SKIPSHOWUPPER = None
 USERNAMEMAPPING = None
@@ -89,6 +92,8 @@ NOTIFYPUSHALOT = None
 
 DAEMON = None
 
+SUBLIMINALPROVIDERSENTRYPOINT = None
+SUBLIMINALPROVIDERS = None
 SUBLIMINALPROVIDERLIST = None
 SUBLIMINALCACHEFILE = None
 DOGPILECACHEFILE = None
@@ -106,7 +111,7 @@ MOBILEAUTOSUB = None
 
 def initialize():
     global VIDEOPATHS, FALLBACKTOENG, SUBENG, LOGFILE, SUBNL, LOGLEVEL, SKIPHIDDENDIRS, \
-        SUBNL, LOGLEVEL, LOGLEVELCONSOLE, LOGSIZE, LOGNUM, SKIPSHOW, SKIPSHOWUPPER, \
+        SUBNL, LOGLEVEL, LOGLEVELCONSOLE, LOGSIZE, LOGNUM, LOGHTTPACCESS, LOGREVERSED, SKIPSHOW, SKIPSHOWUPPER, \
         USERNAMEMAPPING, USERNAMEMAPPINGUPPER, NAMEMAPPING, NAMEMAPPINGUPPER, \
         SHOWID_CACHE, POSTPROCESSCMD, CONFIGFILE, WORKDIR, NOTIFYEN, NOTIFYNL, \
         MINMATCHSCORE, MINMATCHSCOREDEFAULT, MATCHQUALITY, MATCHCODEC, MATCHRELEASEGROUP, \
@@ -119,11 +124,14 @@ def initialize():
         APICALLSLASTRESET, APICALLSRESETINT, APICALLSMAX, \
         SCHEDULERSCANDISK, SCHEDULERCHECKSUB, SCHEDULERDOWNLOADSUBS, \
         DAEMON, NOTIFYPROWL, PROWLAPI, PROWLPRIORITY, PUSHALOTAPI, NOTIFYPUSHALOT, \
-        SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERLIST, SUBLIMINALCACHEFILE, DOGPILECACHEFILE, \
+        SUBLIMINALPROVIDERSENTRYPOINT, SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERLIST, SUBLIMINALCACHEFILE, DOGPILECACHEFILE, \
         DBFILE, MOBILEUSERAGENTS, MOBILEAUTOSUB, \
         USERAGENT, VERSIONURL
 
     DBFILE = 'database.db'
+
+    SUBLIMINALPROVIDERSENTRYPOINT = pkg_resources.get_entry_info(dist='subliminal', group=None,
+                                                                 name='subliminal.providers')
 
     SUBLIMINALCACHEFILE = 'subliminal.cache.dbm'
     DOGPILECACHEFILE = 'dogpile.cache.dbm'
@@ -163,27 +171,31 @@ def initialize():
         CONFIGFILE = "config.properties"
     config.read_config(CONFIGFILE)
     if CONFIGUPGRADED:
-        print "INFO: Config seems to be upgraded... writing config"
+        print "INFO: Config seems to be upgraded. Writing config."
         config.write_config()
-        print "INFO: Writing config done"
+        print "INFO: Writing config done."
 
     # Logging
     init_logging()
 
 
 def init_logging():
-    global LOGFILE, LOGLEVEL, LOGSIZE, LOGNUM, LOGLEVELCONSOLE, \
+    global LOGFILE, LOGLEVEL, LOGSIZE, LOGNUM, LOGLEVELCONSOLE, LOGHTTPACCESS, \
         DAEMON
 
     # initialize logging (customize the root logger so every logger outputs to this)
     log = logging.root
     log.setLevel(LOGLEVEL)
 
-    log_script = logging.handlers.RotatingFileHandler(LOGFILE, 'a', LOGSIZE, LOGNUM)
-    log_script_formatter = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
-    log_script.setFormatter(log_script_formatter)
-    log_script.setLevel(LOGLEVEL)
-    log.addHandler(log_script)
+    log_filter = _LogFilter(LOGHTTPACCESS)
+    # If the formatter is changed, also the utils.LOG_PARSER must be changed!
+    log_formatter = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
+    log_handler = logging.handlers.RotatingFileHandler(LOGFILE, 'a', LOGSIZE, LOGNUM)
+    log_handler.addFilter(log_filter)
+    log_handler.setFormatter(log_formatter)
+    log_handler.setLevel(LOGLEVEL)
+    log.addHandler(log_handler)
+
 
     # console log handler
     if not DAEMON:
@@ -193,3 +205,15 @@ def init_logging():
         formatter = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
         console.setFormatter(formatter)
         log.addHandler(console)
+
+
+class _LogFilter(logging.Filter):
+    def __init__(self, log_http_access=None):
+        self.log_http_access = log_http_access
+
+    def filter(self, record):
+        # Filter out http access
+        if not self.log_http_access:
+            if 'cherrypy.access' in record.name:
+                return False
+        return True

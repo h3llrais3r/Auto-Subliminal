@@ -2,6 +2,7 @@ import logging
 import os
 import sys
 import webbrowser
+import time
 
 import cherrypy
 import autosubliminal
@@ -56,7 +57,7 @@ def launch_browser():
             log.error('Browser launh failed')
 
 
-def start():
+def start(restart_app=False):
     # Only use authentication in CherryPy is a username and password is set by the user
     if autosubliminal.USERNAME and autosubliminal.PASSWORD:
         users = {autosubliminal.USERNAME: autosubliminal.PASSWORD}
@@ -121,7 +122,7 @@ def start():
 
     cherrypy.server.wait()
 
-    if autosubliminal.LAUNCHBROWSER:
+    if not restart_app and autosubliminal.LAUNCHBROWSER:
         launch_browser()
 
     log.info("Starting thread SCANDISK")
@@ -131,7 +132,7 @@ def start():
     autosubliminal.SCANDISK.thread.start()
     log.info("Thread SCANDISK started")
 
-    log.info("Starting thread CHECKSUB'")
+    log.info("Starting thread CHECKSUB")
     autosubliminal.CHECKSUB = autosubliminal.scheduler.Scheduler(autosubliminal.subchecker.SubChecker(),
                                                                  autosubliminal.SCHEDULERCHECKSUB, True,
                                                                  "CHECKSUB")
@@ -139,7 +140,7 @@ def start():
     log.info("Thread CHECKSUB started")
 
 
-def stop():
+def stop(restart_app=False):
     log.info("Stopping thread SCANDISK")
     autosubliminal.SCANDISK.stop = True
     autosubliminal.SCANDISK.thread.join(10)
@@ -150,9 +151,18 @@ def stop():
 
     cherrypy.engine.exit()
 
-    os._exit(0)
+    if not restart_app:
+        os._exit(0)
+
+
+def restart():
+    # Add a sleep of 1 second before actual restart to give webserver the time to show the restart message
+    time.sleep(1)
+    log.debug("Restarting threads")
+    stop(restart_app=True)
+    start(restart_app=True)
 
 
 def signal_handler(signum, frame):
-    log.debug("Got signal, hutting down")
+    log.debug("Got signal, shutting down")
     os._exit(0)

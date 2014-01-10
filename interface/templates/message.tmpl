@@ -4,6 +4,20 @@
 
 #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/menu.tmpl")
 
+<script type="text/javascript">
+    function getURL() {
+        // remove the part after the last /
+        var arr = window.location.href.split("/");
+        delete arr[arr.length - 1];
+        return arr.join("/");
+    }
+
+    function refresh() {
+        alert('refresh');
+        alert(getURL());
+        window.location.replace(getURL());
+    }
+</script>
 $message
 
 #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/footer.tmpl")

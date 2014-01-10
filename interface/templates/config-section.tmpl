@@ -114,32 +114,32 @@
 		Show:
 		## this is always True because the default value is forced at startup in case of an invalid score
 		#if True
-			<input type="checkbox" name="mssshow" disabled checked value=1>
-			<input type="hidden" name="mssdefault" value=1>
+			<input type="checkbox" name="mmsdefault" value="1" checked="checked" disabled="disabled">
+			<input type="hidden" name="mmsdefault" value="1">
 		#else
 			## this should never be possible because the default value is forced at startup in case of an invalid score
-			<input type="checkbox" name="mmsshow" value=1>
+			<input type="checkbox" name="mmsdefault" value="0">
 		#end if
 
 		Quality:
 		#if $autosubliminal.MATCHQUALITY
-			<input type="checkbox" name="mmsquality" checked value=1>
+			<input type="checkbox" name="mmsquality" value="1" checked="checked">
 		#else
-			<input type="checkbox" name="mmsquality" value=1>
+			<input type="checkbox" name="mmsquality" value="0">
 		#end if
 
 		Codec:
 		#if $autosubliminal.MATCHCODEC
-			<input type="checkbox" name="mmscodec" checked="True" value=1>
+			<input type="checkbox" name="mmscodec" value="1" checked="checked">
 		#else
-			<input type="checkbox" name="mmscodec" value=1>
+			<input type="checkbox" name="mmscodec" value="0">
 		#end if
 
 		Releasegroup:
 		#if $autosubliminal.MATCHRELEASEGROUP
-			<input type="checkbox" name="mmsreleasegroup" checked value=1>
+			<input type="checkbox" name="mmsreleasegroup" value="1" checked="checked">
 		#else
-			<input type="checkbox" name="mmsreleasegroup" value=1>
+			<input type="checkbox" name="mmsreleasegroup" value="0">
 		#end if
 
 		</td>

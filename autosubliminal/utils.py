@@ -17,7 +17,7 @@ from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
 
-LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2})\ (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
+LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
                         re.IGNORECASE)
 
 
@@ -27,10 +27,8 @@ def run_cmd(cmd):
                                stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
-    shell = process.stdout.read()
-    shellerr = process.stderr.read()
-    process.wait()
-    return shell, shellerr
+    # Return stdout, stderr
+    return process.communicate()
 
 
 def connect_url(url):
@@ -181,8 +179,9 @@ def get_showid(show_name, force_search=False):
             show = tvdb_api.Tvdb()[show_name]
             if show:
                 show_id = show['id']
-        except Exception, e:
-            log.exception(e)
+        except:
+            log.error('Showid not found for %s' % show_name)
+            IdCache().set_id(-1, show_name)
     else:
         log.warning("Out of API calls")
         return None
@@ -192,9 +191,6 @@ def get_showid(show_name, force_search=False):
         IdCache().set_id(show_id, show_name)
         log.info('%r added to cache with %s' % (show_name, show_id))
         return int(show_id)
-
-    log.error('Showid not found for %s' % show_name)
-    IdCache().set_id(-1, show_name)
 
 
 def check_apicalls(use=False):
@@ -226,7 +222,11 @@ def display_logfile(loglevel):
 
     num_lines = 0
 
-    for x in reversed(data):
+    # If reversed order is needed, use reversed(data)
+    if autosubliminal.LOGREVERSED:
+        data = reversed(data)
+
+    for x in data:
         try:
             matches = LOG_PARSER.search(x)
             matchdic = matches.groupdict()
@@ -235,7 +235,7 @@ def display_logfile(loglevel):
                 if num_lines >= max_lines:
                     break
                 final_data.append(x)
-        except:
+        except Exception, e:
             continue
     result = "".join(final_data)
     return result

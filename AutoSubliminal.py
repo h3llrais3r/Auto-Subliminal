@@ -84,7 +84,7 @@ def main(argv=None):
     # Load configuration
     if os.path.isfile('config.properties.dev'):
         autosubliminal.CONFIGFILE = 'config.properties.dev'
-    print "INFO: Initializing variables and loading config"
+    print "INFO: Initializing variables and loading config."
     autosubliminal.initialize()
 
     signal.signal(signal.SIGINT, autosubliminal.runner.signal_handler)
@@ -108,8 +108,8 @@ def main(argv=None):
         print "ERROR: PATH does not exist, check config"
         os._exit(1)
 
-    print "INFO: Starting output to log"
-    print "INFO: Bye"
+    print "INFO: Starting output to log."
+    print "INFO: Bye."
     log = logging.getLogger(__name__)
     log.debug("Systemencoding is: %s" % autosubliminal.SYSENCODING)
     log.debug("Configversion is: %d" % autosubliminal.CONFIGVERSION)

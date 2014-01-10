@@ -118,16 +118,16 @@ def create_db():
         connection.commit()
         connection.close()
 
-        print "INFO: Succesfully created the sqlite database"
+        print "INFO: Succesfully created the sqlite database."
         autosubliminal.DBVERSION = version.DB_VERSION
     except:
-        print "ERROR: Could not create database, please check if Auto-Subliminal has write access to write the following file %s" % autosubliminal.DBFILE
+        print "ERROR: Could not create database. Please check if Auto-Subliminal has write access to write the following file %s." % autosubliminal.DBFILE
 
     return True
 
 
 def upgrade_db(from_version, to_version):
-    print "INFO: Upgrading database from version %d to version %d" % (from_version, to_version)
+    print "INFO: Upgrading database from version %d to version %d." % (from_version, to_version)
     upgrades = to_version - from_version
     if upgrades != 1:
         print "INFO: More than 1 upgrade required. Starting subupgrades."

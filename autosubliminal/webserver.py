@@ -72,16 +72,19 @@ class Config:
     @cherrypy.expose(alias='saveConfig')
     def save_config(self, subeng, checksub, scandisk, skiphiddendirs, subnl, postprocesscmd, path, logfile, videopaths,
                     launchbrowser, fallbacktoeng, downloadeng, username, password, webroot, skipshow, lognum,
-                    loglevelconsole, logsize, loglevel, webserverip, webserverport, usernamemapping, notifymail,
-                    notifygrowl, notifynma, notifytwitter, mailsrv, mailfromaddr, mailtoaddr, mailusername,
+                    loglevelconsole, logsize, loglevel, loghttpaccess, logreversed, webserverip, webserverport, usernamemapping,
+                    notifymail, notifygrowl, notifynma, notifytwitter, mailsrv, mailfromaddr, mailtoaddr, mailusername,
                     mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi,
                     twitterkey, twittersecret, notifyen, notifynl,
                     notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi,
-                    mssdefault=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None):
+                    mmsdefault=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None,
+                    subliminalproviders=None):
         # Set all internal variables
         autosubliminal.PATH = path
         autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
         autosubliminal.LOGFILE = logfile
+        autosubliminal.LOGHTTPACCESS = loghttpaccess
+        autosubliminal.LOGREVERSED = logreversed
         autosubliminal.FALLBACKTOENG = fallbacktoeng
         autosubliminal.DOWNLOADENG = downloadeng
         autosubliminal.SUBENG = subeng
@@ -97,8 +100,9 @@ class Config:
         autosubliminal.MATCHCODEC = False
         autosubliminal.MATCHRELEASEGROUP = False
         autosubliminal.MINMATCHSCORE = 0
-        if mssdefault:
-            # mssdefault is the minimal default score (which cannot be edited, so no flag is needed)
+        # If not checked, the value will be default None, if checked, it will contain a value
+        if mmsdefault:
+            # mmsdefault is the minimal default score (which cannot be edited, so no flag is needed)
             autosubliminal.MINMATCHSCORE += autosubliminal.MINMATCHSCOREDEFAULT
         if mmsquality:
             autosubliminal.MINMATCHSCORE += 2
@@ -109,6 +113,13 @@ class Config:
         if mmsreleasegroup:
             autosubliminal.MINMATCHSCORE += 6
             autosubliminal.MATCHRELEASEGROUP = True
+
+        # Subliminal providers(convert list to comma separated string if multiple are selected)
+        if subliminalproviders and not isinstance(subliminalproviders, basestring):
+            autosubliminal.SUBLIMINALPROVIDERS = ','.join([str(provider) for provider in subliminalproviders])
+        else:
+            # Just one selected or None (in this case, None will be saved and no providers will be used)
+            autosubliminal.SUBLIMINALPROVIDERS = subliminalproviders
 
         autosubliminal.SCHEDULERSCANDISK = int(scandisk)
         autosubliminal.SCHEDULERCHECKSUB = int(checksub)
@@ -301,6 +312,22 @@ class Log:
 
     @cherrypy.expose(alias='viewLog')
     def view_log(self, loglevel=''):
+        tmpl = PageTemplate(file="interface/templates/viewlog.tmpl")
+        if loglevel == '':
+            tmpl.loglevel = 'All'
+        else:
+            tmpl.loglevel = loglevel
+        result = utils.display_logfile(loglevel)
+        tmpl.message = result
+
+        return str(tmpl)
+
+    @cherrypy.expose(alias='clearLog')
+    def clear_log(self,  loglevel=''):
+        # Clear log file (open it in write mode and pass)
+        with open(autosubliminal.LOGFILE, 'w'):
+            pass
+        # Return to default log view
         tmpl = PageTemplate(file="interface/templates/viewlog.tmpl")
         if loglevel == '':
             tmpl.loglevel = 'All'
