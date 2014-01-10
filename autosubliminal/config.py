@@ -17,31 +17,6 @@ from autosubliminal import version, utils
 log = logging.getLogger(__name__)
 
 
-def load_provider_config(cfg):
-    autosubliminal.USEALLPROVIDERS = cfg.getboolean('subliminal', 'allproviders')
-    autosubliminal.ADDIC7ED = cfg.getboolean('subliminal', 'addic7ed')
-    autosubliminal.OPENSUBTITLES = cfg.getboolean('subliminal', 'opensubtitles')
-    autosubliminal.PODNAPISI = cfg.getboolean('subliminal', 'podnapisi')
-    autosubliminal.THESUBDB = cfg.getboolean('subliminal', 'thesubdb')
-    autosubliminal.TVSUBTITLES = cfg.getboolean('subliminal', 'tvsubtitles')
-
-    if autosubliminal.USEALLPROVIDERS:
-        # have subliminal use all it's providers by handing it an empty value
-        autosubliminal.SUBLIMINALPROVIDERLIST = None
-    else:
-        autosubliminal.SUBLIMINALPROVIDERLIST = []
-        if autosubliminal.ADDIC7ED:
-           autosubliminal.SUBLIMINALPROVIDERLIST.append('addic7ed')
-        if autosubliminal.OPENSUBTITLES:
-           autosubliminal.SUBLIMINALPROVIDERLIST.append('opensubtitles')
-        if autosubliminal.PODNAPISI:
-           autosubliminal.SUBLIMINALPROVIDERLIST.append('podnapisi')
-        if autosubliminal.THESUBDB:
-           autosubliminal.SUBLIMINALPROVIDERLIST.append('thesubdb')
-        if autosubliminal.TVSUBTITLES:
-           autosubliminal.SUBLIMINALPROVIDERLIST.append('tvsubtitles')
-
-
 def read_config(configfile):
     """
     Read the config file and set all the variables.
@@ -62,8 +37,18 @@ def read_config(configfile):
         if cfg.has_option('config', 'path'):
             autosubliminal.PATH = cfg.get('config', 'path')
         else:
-            print "ERROR: Required ariable PATH is missing. Using current working directory instead."
+            print "ERROR: Required variable PATH is missing. Using current working directory instead."
             autosubliminal.PATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
+
+        if cfg.has_option('config', 'videopaths'):
+            autosubliminal.VIDEOPATHS = unicode(str(cfg.get("config", "videopaths"))).split(',')
+        else:
+            print "ERROR: Required variable VIDEOPATHS is missing. Reading old property ROOTPATH. Using current working directory if that one is missing as well."
+            autosubliminal.VIDEOPATHS = list()
+            if cfg.has_option('config', 'rootpath'):
+                autosubliminal.VIDEOPATHS.append(unicode(str(cfg.get('config', 'rootpath'))))
+            else:
+                autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
 
         if cfg.has_option('config', 'downloadeng'):
             autosubliminal.DOWNLOADENG = cfg.getboolean('config', 'downloadeng')
@@ -108,13 +93,6 @@ def read_config(configfile):
                 autosubliminal.SCHEDULERCHECKSUB = 21600  # Run every 6 hours
         else:
             autosubliminal.SCHEDULERCHECKSUB = 86400  # Run every 8 hours
-
-        if cfg.has_option("config", "videopaths"):
-            autosubliminal.VIDEOPATHS = unicode(str(cfg.get("config", "videopaths"))).split(',')
-        else:
-            print "ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead."
-            autosubliminal.VIDEOPATHS = []
-            autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
 
         if cfg.has_option("config", "fallbacktoeng"):
             autosubliminal.FALLBACKTOENG = cfg.getboolean("config", "fallbacktoeng")
@@ -170,8 +148,10 @@ def read_config(configfile):
     else:
         # config section is missing
         print "ERROR: Required config section is missing. Using default values instead."
-        print "ERROR: Required variable ROOTPATH is missing. Using current working directory instead."
         autosubliminal.PATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
+        print "ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead."
+        autosubliminal.VIDEOPATHS = list()
+        autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
         autosubliminal.DOWNLOADENG = False
         autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
         autosubliminal.MATCHQUALITY = False
@@ -179,9 +159,6 @@ def read_config(configfile):
         autosubliminal.MATCHRELEASEGROUP = False
         autosubliminal.SCHEDULERSCANDISK = 3600
         autosubliminal.SCHEDULERCHECKSUB = 28800
-        print "ERROR: Required variable ROOTPATH is missing. Using current working directory instead."
-        autosubliminal.ROOTPATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
-        autosubliminal.VIDEOPATHS = [].append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
         autosubliminal.FALLBACKTOENG = True
         autosubliminal.SUBENG = u'en'
         autosubliminal.SUBNL = u""
@@ -438,7 +415,9 @@ def read_config(configfile):
             autosubliminal.APIKEY = cfg.get('dev', 'apikey')
 
     if cfg.has_section('subliminal'):
-        load_provider_config(cfg)
+        autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
+        if autosubliminal.SUBLIMINALPROVIDERS:
+          autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
 
     # Check if config needs to be upgraded
     if autosubliminal.CONFIGVERSION < version.CONFIG_VERSION:
@@ -639,34 +618,6 @@ def save_config_section():
         if x:
             paths += x + ","
     cfg.set(section, "videopaths", str(paths))
-
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', encoding=autosubliminal.SYSENCODING) as file:
-        cfg.write(file)
-
-def save_providers_section():
-    """
-    Save stuff
-    """
-    section = 'subliminal'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if not cfg.has_section(section):
-        cfg.add_section(section)
-
-    cfg.set(section, "allproviders", str(autosubliminal.USEALLPROVIDERS))
-    cfg.set(section, "addic7ed", str(autosubliminal.ADDIC7ED))
-    cfg.set(section, "opensubtitles", str(autosubliminal.OPENSUBTITLES))
-    cfg.set(section, "podnapisi", str(autosubliminal.PODNAPISI))
-    cfg.set(section, "thesubdb", str(autosubliminal.THESUBDB))
-    cfg.set(section, "tvsubtitles", str(autosubliminal.TVSUBTITLES))
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', encoding=autosubliminal.SYSENCODING) as file:
         cfg.write(file)
@@ -948,7 +899,6 @@ def write_config():
     save_skipshow_section()
     save_usernamemapping_section()
     save_notify_section()
-    save_providers_section()
 
     if restart:
         # This needs to be replaced by a restart thingy, until then, just re-read the config and tell the users to do a manual restart

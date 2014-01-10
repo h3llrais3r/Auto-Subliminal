@@ -99,21 +99,23 @@ class DiskScanner():
             autosubliminal.WANTEDQUEUELOCK = True
         autosubliminal.WANTEDQUEUE = []
 
-        one_dir_exists = False
-        for videodir in autosubliminal.VIDEOPATHS:
-            if os.path.exists(videodir):
-                one_dir_exists = True
-        if not one_dir_exists:
-            log.error("None of the configured video paths (%s) exist, aborting..." % autosubliminal.VIDEOPATHS)
-            autosubliminal.WANTEDQUEUELOCK = False
-            return True
+        if autosubliminal.VIDEOPATHS:
+            one_dir_exists = False
+            for videodir in autosubliminal.VIDEOPATHS:
+                if os.path.exists(videodir):
+                    one_dir_exists = True
+            if not one_dir_exists:
+                log.error("None of the configured video paths (%s) exist, aborting..." % autosubliminal.VIDEOPATHS)
+                autosubliminal.WANTEDQUEUELOCK = False
+                return True
 
-        try:
-            for videodir in autosubliminal.VIDEOPATHS:
-                walk_dir(videodir)
-        except:
-            for videodir in autosubliminal.VIDEOPATHS:
-                walk_dir(str(videodir))
+            try:
+                for videodir in autosubliminal.VIDEOPATHS:
+                    walk_dir(videodir)
+            except:
+                for videodir in autosubliminal.VIDEOPATHS:
+                    walk_dir(str(videodir))
+
 
         log.debug("Finished round of local disk checking")
         autosubliminal.WANTEDQUEUELOCK = False
