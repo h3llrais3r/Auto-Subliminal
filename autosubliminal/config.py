@@ -1030,15 +1030,3 @@ def upgrade_config(from_version, to_version):
             print "INFO: Config upgraded to version 3"
             autosubliminal.CONFIGVERSION = 3
             autosubliminal.CONFIGUPGRADED = True
-        if from_version == 3 and to_version == 4:
-            print "INFO: New subliminal providers config"
-            autosubliminal.USEALLPROVIDERS = True
-            # with USEALLPROVIDERS = True values below won't matter, but let's initialize them anyway
-            autosubliminal.ADDIC7ED = True
-            autosubliminal.OPENSUBTITLES = True
-            autosubliminal.PODNAPISI = True
-            autosubliminal.THESUBDB = True
-            autosubliminal.TVSUBTITLES = True
-            print "INFO: Config upgraded to version 4"
-            autosubliminal.CONFIGVERSION = 4
-            autosubliminal.CONFIGUPGRADED = True

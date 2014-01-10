@@ -110,13 +110,6 @@ class Config:
         if mmsreleasegroup:
             autosubliminal.MINMATCHSCORE += 6
             autosubliminal.MATCHRELEASEGROUP = True
-            
-        autosubliminal.USEALLPROVIDERS = allproviders
-        autosubliminal.ADDIC7ED = addic7ed
-        autosubliminal.OPENSUBTITLES = opensubtitles
-        autosubliminal.PODNAPISI = podnapisi
-        autosubliminal.THESUBDB = thesubdb
-        autosubliminal.TVSUBTITLES = tvsubtitles
 
         autosubliminal.SCHEDULERSCANDISK = int(scandisk)
         autosubliminal.SCHEDULERCHECKSUB = int(checksub)
