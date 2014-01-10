@@ -636,7 +636,6 @@ def save_config_section():
         cfg.add_section(section)
 
     cfg.set(section, "path", autosubliminal.PATH)
-    cfg.set(section, "videopaths", unicode(str(autosubliminal.VIDEOPATHS)))
     cfg.set(section, "logfile", autosubliminal.LOGFILE)
     cfg.set(section, "launchbrowser", str(autosubliminal.LAUNCHBROWSER))
     cfg.set(section, "fallbacktoeng", str(autosubliminal.FALLBACKTOENG))
@@ -654,6 +653,11 @@ def save_config_section():
     cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
     cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
     cfg.set(section, "configversion", str(autosubliminal.CONFIGVERSION))
+    paths = ""
+    for x in autosubliminal.VIDEOPATHS:
+        if x:
+            paths += x + ","
+    cfg.set(section, "videopaths", str(paths))
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', encoding=autosubliminal.SYSENCODING) as file:
         cfg.write(file)
