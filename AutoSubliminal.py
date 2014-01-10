@@ -6,10 +6,7 @@ import signal
 import time
 import locale
 
-import subliminal
-
 import autosubliminal
-import autosubliminal.db
 import autosubliminal.runner
 
 #signal.signal(signal.SIGTERM, autosubliminal.runner.signal_handler)
@@ -81,25 +78,11 @@ def main(argv=None):
         print >> sys.stderr, "\t for help use --help"
         return 2
 
-    # Load configuration
+    # Initialize configuration
     if os.path.isfile('config.properties.dev'):
         autosubliminal.CONFIGFILE = 'config.properties.dev'
     print "INFO: Initializing variables and loading config."
     autosubliminal.initialize()
-
-    signal.signal(signal.SIGINT, autosubliminal.runner.signal_handler)
-
-    if autosubliminal.DAEMON:
-        autosubliminal.runner.daemon()
-
-    # Make sure that sqlite database is loaded after you demonize
-    autosubliminal.db.init_db()
-
-    # Configure subliminal/dogpile cache
-    # Use MutexLock otherwise some providers will not work due to fcntl module import error in windows
-    cache_file = os.path.abspath(os.path.expanduser(autosubliminal.SUBLIMINALCACHEFILE))
-    subliminal.cache_region.configure(autosubliminal.DOGPILECACHEFILE,
-                                      arguments={'filename': cache_file, 'lock_factory': subliminal.MutexLock})
 
     # Change to the new work directory
     if os.path.exists(autosubliminal.PATH):
@@ -108,6 +91,11 @@ def main(argv=None):
         print "ERROR: PATH does not exist, check config"
         os._exit(1)
 
+    signal.signal(signal.SIGINT, autosubliminal.runner.signal_handler)
+
+    if autosubliminal.DAEMON:
+        autosubliminal.runner.daemon()
+
     print "INFO: Starting output to log."
     print "INFO: Bye."
     log = logging.getLogger(__name__)
@@ -115,11 +103,13 @@ def main(argv=None):
     log.debug("Configversion is: %d" % autosubliminal.CONFIGVERSION)
     log.debug("Dbversion is: %d" % autosubliminal.DBVERSION)
 
+    if autosubliminal.LAUNCHBROWSER:
+        autosubliminal.runner.launch_browser()
+
     log.info("Starting threads")
     autosubliminal.runner.start()
 
     log.info("Threads started, going into a loop to keep the main thread going")
-
     while True:
         time.sleep(1)
 

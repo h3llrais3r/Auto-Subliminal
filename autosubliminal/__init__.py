@@ -1,9 +1,10 @@
-import logging
-import logging.handlers
+import os
 import time
 import pkg_resources
+import subliminal
 
-from autosubliminal import version, config
+import autosubliminal
+from autosubliminal import version, config, logger, db
 
 ROOTPATH = None
 FALLBACKTOENG = None
@@ -175,45 +176,28 @@ def initialize():
         config.write_config()
         print "INFO: Writing config done."
 
+    # Change to the new work directory
+    if os.path.exists(autosubliminal.PATH):
+        os.chdir(autosubliminal.PATH)
+    else:
+        print "ERROR: PATH does not exist, check config"
+        os._exit(1)
+
+    # Database
+    db.initialize()
+
     # Logging
-    init_logging()
+    logger.initialize()
+
+    # Subliminal settings
+    _initialize_subliminal()
 
 
-def init_logging():
-    global LOGFILE, LOGLEVEL, LOGSIZE, LOGNUM, LOGLEVELCONSOLE, LOGHTTPACCESS, \
-        DAEMON
-
-    # initialize logging (customize the root logger so every logger outputs to this)
-    log = logging.root
-    log.setLevel(LOGLEVEL)
-
-    log_filter = _LogFilter(LOGHTTPACCESS)
-    # If the formatter is changed, also the utils.LOG_PARSER must be changed!
-    log_formatter = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
-    log_handler = logging.handlers.RotatingFileHandler(LOGFILE, 'a', LOGSIZE, LOGNUM)
-    log_handler.addFilter(log_filter)
-    log_handler.setFormatter(log_formatter)
-    log_handler.setLevel(LOGLEVEL)
-    log.addHandler(log_handler)
-
-
-    # console log handler
-    if not DAEMON:
-        console = logging.StreamHandler()
-        console.setLevel(LOGLEVELCONSOLE)
-        # set a format which is simpler for console use
-        formatter = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
-        console.setFormatter(formatter)
-        log.addHandler(console)
-
-
-class _LogFilter(logging.Filter):
-    def __init__(self, log_http_access=None):
-        self.log_http_access = log_http_access
-
-    def filter(self, record):
-        # Filter out http access
-        if not self.log_http_access:
-            if 'cherrypy.access' in record.name:
-                return False
-        return True
+def _initialize_subliminal():
+    # Configure subliminal/dogpile cache
+    # Use MutexLock otherwise some providers will not work due to fcntl module import error in windows
+    # Do not reconfigure after a soft restart (without exiting main app) -> otherwise RegionAlreadyConfigured exception
+    if not subliminal.cache_region.is_configured:
+        cache_file = os.path.abspath(os.path.expanduser(autosubliminal.SUBLIMINALCACHEFILE))
+        subliminal.cache_region.configure(autosubliminal.DOGPILECACHEFILE,
+                                          arguments={'filename': cache_file, 'lock_factory': subliminal.MutexLock})

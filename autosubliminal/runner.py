@@ -57,8 +57,8 @@ def launch_browser():
             log.error('Browser launh failed')
 
 
-def start(restart_app=False):
-    # Only use authentication in CherryPy is a username and password is set by the user
+def start():
+    # Only use authentication in CherryPy if a username and password is set by the user
     if autosubliminal.USERNAME and autosubliminal.PASSWORD:
         users = {autosubliminal.USERNAME: autosubliminal.PASSWORD}
         cherrypy.config.update({'server.socket_host': autosubliminal.WEBSERVERIP,
@@ -122,9 +122,6 @@ def start(restart_app=False):
 
     cherrypy.server.wait()
 
-    if not restart_app and autosubliminal.LAUNCHBROWSER:
-        launch_browser()
-
     log.info("Starting thread SCANDISK")
     autosubliminal.SCANDISK = autosubliminal.scheduler.Scheduler(autosubliminal.diskscanner.DiskScanner(),
                                                                  autosubliminal.SCHEDULERSCANDISK, True,
@@ -140,7 +137,7 @@ def start(restart_app=False):
     log.info("Thread CHECKSUB started")
 
 
-def stop(restart_app=False):
+def stop(exit_app=True):
     log.info("Stopping thread SCANDISK")
     autosubliminal.SCANDISK.stop = True
     autosubliminal.SCANDISK.thread.join(10)
@@ -151,7 +148,7 @@ def stop(restart_app=False):
 
     cherrypy.engine.exit()
 
-    if not restart_app:
+    if exit_app:
         os._exit(0)
 
 
@@ -159,8 +156,9 @@ def restart():
     # Add a sleep of 1 second before actual restart to give webserver the time to show the restart message
     time.sleep(1)
     log.debug("Restarting threads")
-    stop(restart_app=True)
-    start(restart_app=True)
+    stop(exit_app=False)
+    autosubliminal.initialize()
+    start()
 
 
 def signal_handler(signum, frame):
