@@ -103,7 +103,7 @@ class LastDownloads():
         connection.close()
 
 
-def create_db():
+def create():
     # Create the database
     try:
         connection = sqlite3.connect(autosubliminal.DBFILE)
@@ -126,13 +126,13 @@ def create_db():
     return True
 
 
-def upgrade_db(from_version, to_version):
+def upgrade(from_version, to_version):
     print "INFO: Upgrading database from version %d to version %d." % (from_version, to_version)
     upgrades = to_version - from_version
     if upgrades != 1:
         print "INFO: More than 1 upgrade required. Starting subupgrades."
         for x in range(from_version, upgrades + 1):
-            upgrade_db((from_version - 1) + x, x + 1)
+            upgrade((from_version - 1) + x, x + 1)
     else:
         if from_version == 1 and to_version == 2:
             # Add codec and timestamp
@@ -165,7 +165,7 @@ def upgrade_db(from_version, to_version):
             connection.close()
 
 
-def get_db_version():
+def get_version():
     try:
         query_get_version = 'SELECT database_version FROM info'
         connection = sqlite3.connect(autosubliminal.DBFILE)
@@ -182,16 +182,16 @@ def get_db_version():
         return 1
 
 
-def init_db():
+def initialize():
     # Check if file is already there
     db_file = os.path.join(autosubliminal.PATH, autosubliminal.DBFILE)
     if not os.path.exists(db_file):
-        create_db()
+        create()
 
-    autosubliminal.DBVERSION = get_db_version()
+    autosubliminal.DBVERSION = get_version()
 
     if autosubliminal.DBVERSION < version.DB_VERSION:
-        upgrade_db(autosubliminal.DBVERSION, version.DB_VERSION)
+        upgrade(autosubliminal.DBVERSION, version.DB_VERSION)
     elif autosubliminal.DBVERSION > version.DB_VERSION:
         print "INFO: Database version higher then this version of Auto-Subliminal supports. Update."
         os._exit(1)

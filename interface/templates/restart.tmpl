@@ -1,0 +1,19 @@
+#import autosubliminal
+
+#include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/header.tmpl")
+
+#include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/menu.tmpl")
+
+<script type="text/javascript">
+    // needed inside the is_alive() method in restart.js
+    var webroot = '$autosubliminal.WEBROOT'
+</script>
+
+<script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/restart.js"></script>
+
+Config saved. Auto restart in progress...
+<img src="$autosubliminal.WEBROOT/images/loading.gif" height="16" width="16" id="loading_img" />
+<br><br>
+If your page doesn't reload, click <a href='$autosubliminal.WEBROOT/home'>here</a>
+
+#include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/footer.tmpl")

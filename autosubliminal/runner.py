@@ -2,9 +2,8 @@ import logging
 import os
 import sys
 import webbrowser
-import time
-
 import cherrypy
+
 import autosubliminal
 from autosubliminal import scheduler, diskscanner, subchecker, webserver
 
@@ -57,8 +56,8 @@ def launch_browser():
             log.error('Browser launh failed')
 
 
-def start(restart_app=False):
-    # Only use authentication in CherryPy is a username and password is set by the user
+def start():
+    # Only use authentication in CherryPy if a username and password is set by the user
     if autosubliminal.USERNAME and autosubliminal.PASSWORD:
         users = {autosubliminal.USERNAME: autosubliminal.PASSWORD}
         cherrypy.config.update({'server.socket_host': autosubliminal.WEBSERVERIP,
@@ -108,7 +107,7 @@ def start(restart_app=False):
         }
     }
 
-    cherrypy.tree.mount(autosubliminal.webserver.WebServerInit(), autosubliminal.WEBROOT, config=conf)
+    cherrypy.tree.mount(webserver.WebServerInit(), autosubliminal.WEBROOT, config=conf)
     log.info("Starting CherryPy webserver")
 
     # TODO: Let CherryPy log do another log file and not to screen
@@ -122,25 +121,26 @@ def start(restart_app=False):
 
     cherrypy.server.wait()
 
-    if not restart_app and autosubliminal.LAUNCHBROWSER:
-        launch_browser()
-
     log.info("Starting thread SCANDISK")
-    autosubliminal.SCANDISK = autosubliminal.scheduler.Scheduler(autosubliminal.diskscanner.DiskScanner(),
-                                                                 autosubliminal.SCHEDULERSCANDISK, True,
-                                                                 "SCANDISK")
+    autosubliminal.SCANDISK = scheduler.Scheduler(diskscanner.DiskScanner(), autosubliminal.SCHEDULERSCANDISK, True,
+                                                  "SCANDISK")
     autosubliminal.SCANDISK.thread.start()
     log.info("Thread SCANDISK started")
 
     log.info("Starting thread CHECKSUB")
-    autosubliminal.CHECKSUB = autosubliminal.scheduler.Scheduler(autosubliminal.subchecker.SubChecker(),
-                                                                 autosubliminal.SCHEDULERCHECKSUB, True,
-                                                                 "CHECKSUB")
+    autosubliminal.CHECKSUB = scheduler.Scheduler(subchecker.SubChecker(), autosubliminal.SCHEDULERCHECKSUB, True,
+                                                  "CHECKSUB")
     autosubliminal.CHECKSUB.thread.start()
     log.info("Thread CHECKSUB started")
 
+    # Mark as started
+    autosubliminal.STARTED = True
 
-def stop(restart_app=False):
+
+def stop(exit_app=True):
+    # Mark as stopped
+    autosubliminal.STARTED = False
+
     log.info("Stopping thread SCANDISK")
     autosubliminal.SCANDISK.stop = True
     autosubliminal.SCANDISK.thread.join(10)
@@ -151,16 +151,16 @@ def stop(restart_app=False):
 
     cherrypy.engine.exit()
 
-    if not restart_app:
+    if exit_app:
         os._exit(0)
 
 
 def restart():
-    # Add a sleep of 1 second before actual restart to give webserver the time to show the restart message
-    time.sleep(1)
-    log.debug("Restarting threads")
-    stop(restart_app=True)
-    start(restart_app=True)
+    log.debug("Restarting")
+    stop(exit_app=False)
+    autosubliminal.initialize()
+    start()
+    log.debug("Restarted")
 
 
 def signal_handler(signum, frame):
