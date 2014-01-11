@@ -1,12 +1,12 @@
-import cherrypy
-
 try:
     from Cheetah.Template import Template
 except:
     print "ERROR!!! Cheetah is not installed yet. Download it from: http://pypi.python.org/pypi/Cheetah/2.4.4"
 
+import json
 import threading
 import time
+import cherrypy
 
 import autosubliminal
 from autosubliminal import config, utils, notify
@@ -161,10 +161,19 @@ class Config:
         autosubliminal.PUSHALOTAPI = pushalotapi
 
         # Now save to the configfile
-        message = config.write_config()
+        restart = config.write_config()
 
-        tmpl = PageTemplate(file="interface/templates/message.tmpl")
-        tmpl.message = message
+        # Check if restart is needed
+        if restart:
+            # Restart the runner in the background
+            threading.Thread(target=autosubliminal.runner.restart).start()
+            tmpl = PageTemplate(file="interface/templates/restart.tmpl")
+        else:
+            # For some reason the needs to be read again, otherwise all pages get an error
+            config.read_config(autosubliminal.CONFIGFILE)
+            tmpl = PageTemplate(file="interface/templates/message.tmpl")
+            tmpl.message = "Config saved.<br><a href='" + autosubliminal.WEBROOT + "'>Return</a>"
+
         return str(tmpl)
 
     @cherrypy.expose(alias='flushCache')
@@ -275,6 +284,22 @@ class Home:
         if utils.check_mobile_device(useragent) and autosubliminal.MOBILEAUTOSUB:
             tmpl = PageTemplate(file="interface/templates/mobile/home.tmpl")
         return str(tmpl)
+
+    @cherrypy.expose(alias='isAlive')
+    def is_alive(self, *args, **kwargs):
+        if 'callback' in kwargs and '_' in kwargs:
+            callback, _ = kwargs['callback'], kwargs['_']
+        else:
+            return "Error: Unsupported Request. Send jsonp request with 'callback' variable in the query string."
+        cherrypy.response.headers['Cache-Control'] = "max-age=0,no-cache,no-store"
+        cherrypy.response.headers['Content-Type'] = 'text/javascript'
+        cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
+        cherrypy.response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
+
+        if autosubliminal.STARTED:
+            return callback+'('+json.dumps({"msg": "True"})+');'
+        else:
+            return callback+'('+json.dumps({"msg": "False"})+');'
 
     @cherrypy.expose(alias='runNow')
     def run_now(self):

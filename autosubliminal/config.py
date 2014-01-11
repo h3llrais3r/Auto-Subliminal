@@ -938,7 +938,7 @@ def check_for_restart():
 def write_config():
     """
     Save all settings to the config file.
-    Return message about the write.
+    Return True if restart is needed, False otherwise.
     """
     # Read config file
     cfg = SafeConfigParser()
@@ -955,9 +955,7 @@ def write_config():
         with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
             cfg.readfp(f)
 
-    # Before we save everything to the config file we need to test if
-    # the app needs to be restarted for all changes to take effect,
-    # like logfile and webserver sections
+    # Before we save everything to the config file we need to test if the app needs to be restarted
     restart = check_for_restart()
 
     save_config_section()
@@ -968,18 +966,7 @@ def write_config():
     save_skipshow_section()
     save_notify_section()
 
-    if restart:
-        # Restart the runner in the background
-        restart_thread = threading.Thread(target=autosubliminal.runner.restart)
-        restart_thread.start()
-        return "Config saved. Auto restart in progress!<br>" \
-               "If your page doesn't reload within 5 seconds," \
-               " click <a href='" + autosubliminal.WEBROOT + "/config'>here</a>" \
-               "<script type='text/javascript'>setTimeout(refresh, 5000);</script>"
-    else:
-        # For some reason the needs to be read again, otherwise all pages get an error
-        read_config(autosubliminal.CONFIGFILE)
-        return "Config saved.<br><a href='" + autosubliminal.WEBROOT + "'>Return</a>"
+    return restart
 
 
 def upgrade_config(from_version, to_version):

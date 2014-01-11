@@ -96,6 +96,9 @@ def main(argv=None):
     if autosubliminal.DAEMON:
         autosubliminal.runner.daemon()
 
+    # Set the PID
+    autosubliminal.PID = os.getpid()
+
     print "INFO: Starting output to log."
     print "INFO: Bye."
     log = logging.getLogger(__name__)
@@ -103,11 +106,12 @@ def main(argv=None):
     log.debug("Configversion is: %d" % autosubliminal.CONFIGVERSION)
     log.debug("Dbversion is: %d" % autosubliminal.DBVERSION)
 
-    if autosubliminal.LAUNCHBROWSER:
-        autosubliminal.runner.launch_browser()
-
     log.info("Starting threads")
     autosubliminal.runner.start()
+
+    # Launch browser after threads because cherrypy webserver must be started first
+    if autosubliminal.LAUNCHBROWSER:
+        autosubliminal.runner.launch_browser()
 
     log.info("Threads started, going into a loop to keep the main thread going")
     while True:
