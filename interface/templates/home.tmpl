@@ -12,7 +12,7 @@
 
 #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/menu.tmpl")
 
-$autosubliminal.WANTEDQUEUE.sort(key=$get_attr('title'))
+$autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 
 #if $len($autosubliminal.WANTEDQUEUE) >= 1
 <div class="box">
