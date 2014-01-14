@@ -11,6 +11,7 @@ log = logging.getLogger(__name__)
 
 def walk_dir(path):
     for dirname, dirnames, filenames in os.walk(os.path.join(path)):
+        log.info("Scanning video path: %s" % path)
         log.debug("Directory name: %s" % dirname)
         if re.search('_unpack_', dirname, re.IGNORECASE):
             log.debug("Found a unpack directory, skipping")
@@ -90,7 +91,7 @@ class DiskScanner():
     """
 
     def run(self):
-        log.debug("Starting round of local disk checking at %s" % autosubliminal.ROOTPATH)
+        log.debug("Starting round of local disk checking at %s" % autosubliminal.VIDEOPATHS)
         if autosubliminal.WANTEDQUEUELOCK:
             log.debug("Exiting, another threat is using the queues")
             return False
@@ -98,15 +99,21 @@ class DiskScanner():
             autosubliminal.WANTEDQUEUELOCK = True
         autosubliminal.WANTEDQUEUE = []
 
-        if not os.path.exists(autosubliminal.ROOTPATH):
-            log.error("Root path does %s not exists, aborting..." % autosubliminal.ROOTPATH)
+        one_dir_exists = False
+        for videodir in autosubliminal.VIDEOPATHS:
+            if os.path.exists(videodir):
+                one_dir_exists = True
+        if not one_dir_exists:
+            log.error("None of the configured video paths (%s) exist, aborting..." % autosubliminal.VIDEOPATHS)
             autosubliminal.WANTEDQUEUELOCK = False
             return True
 
         try:
-            walk_dir(autosubliminal.ROOTPATH)
+            for videodir in autosubliminal.VIDEOPATHS:
+                walk_dir(videodir)
         except:
-            walk_dir(str(autosubliminal.ROOTPATH))
+            for videodir in autosubliminal.VIDEOPATHS:
+                walk_dir(str(videodir))
 
         log.debug("Finished round of local disk checking")
         autosubliminal.WANTEDQUEUELOCK = False

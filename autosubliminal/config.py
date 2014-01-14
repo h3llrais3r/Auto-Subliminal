@@ -85,11 +85,12 @@ def read_config(configfile):
         else:
             autosubliminal.SCHEDULERCHECKSUB = 86400  # Run every 8 hours
 
-        if cfg.has_option("config", "rootpath"):
-            autosubliminal.ROOTPATH = cfg.get("config", "rootpath")
+        if cfg.has_option("config", "videopaths"):
+            autosubliminal.VIDEOPATHS = unicode(str(cfg.get("config", "videopaths"))).split(',')
         else:
-            print "ERROR: Required variable ROOTPATH is missing. Using current working directory instead."
-            autosubliminal.ROOTPATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
+            print "ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead."
+            autosubliminal.VIDEOPATHS = []
+            autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
 
         if cfg.has_option("config", "fallbacktoeng"):
             autosubliminal.FALLBACKTOENG = cfg.getboolean("config", "fallbacktoeng")
@@ -145,7 +146,7 @@ def read_config(configfile):
     else:
         # config section is missing
         print "ERROR: Required config section is missing. Using default values instead."
-        print "ERROR: Required variable ROOTPATH is missing. Using current working directory instead."
+        print "ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead."
         autosubliminal.PATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
         autosubliminal.DOWNLOADENG = False
         autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
@@ -154,8 +155,8 @@ def read_config(configfile):
         autosubliminal.MATCHRELEASEGROUP = False
         autosubliminal.SCHEDULERSCANDISK = 3600
         autosubliminal.SCHEDULERCHECKSUB = 28800
-        print "ERROR: Required variable ROOTPATH is missing. Using current working directory instead."
-        autosubliminal.ROOTPATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
+        print "ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead."
+        autosubliminal.VIDEOPATHS = [].append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
         autosubliminal.FALLBACKTOENG = True
         autosubliminal.SUBENG = u'en'
         autosubliminal.SUBNL = u""
@@ -582,6 +583,17 @@ def display_namemapping():
     return s
 
 
+def display_videopaths():
+    """
+    Return a string containing all locations for user videos.
+    After each location an '\n' is added to create multiple rows
+    in a textarea.
+    """
+    s = ""
+    for x in autosubliminal.VIDEOPATHS:
+        s += x + "\n"
+    return s
+
 def string_to_dict(items=None):
     """
     Return a correct dict from a string
@@ -603,7 +615,6 @@ def string_to_dict(items=None):
     returnitems = dict(returnitems)
     return returnitems
 
-
 def save_config_section():
     """
     Save stuff
@@ -622,8 +633,16 @@ def save_config_section():
     if not cfg.has_section(section):
         cfg.add_section(section)
 
+    videopaths = None
+    for x in autosubliminal.VIDEOPATHS:
+        if x:
+            if videopaths:
+                videopaths += "," + x
+            else:
+                videopaths = x
+
     cfg.set(section, "path", autosubliminal.PATH)
-    cfg.set(section, "rootpath", autosubliminal.ROOTPATH)
+    cfg.set(section, "videopaths", str(videopaths))
     cfg.set(section, "logfile", autosubliminal.LOGFILE)
     cfg.set(section, "launchbrowser", str(autosubliminal.LAUNCHBROWSER))
     cfg.set(section, "fallbacktoeng", str(autosubliminal.FALLBACKTOENG))
@@ -1018,6 +1037,7 @@ def upgrade_config(from_version, to_version):
         # video.scores['hash'] = 46
         # --> perfect match -> not configurable
         if from_version == 2 and to_version == 3:
+            print "INFO: Please configure your video paths again!"
             print "INFO: New default minmatchscore."
             print "INFO: Old value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
             autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT

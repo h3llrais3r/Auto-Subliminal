@@ -39,7 +39,7 @@ How to use:
  * A web browser should now open
  * Go to the config page, check the settings, make sure you set at least:
     * Path: Should point to the location where AutoSubliminal.py is located
-    * Rootpath: Should point to the root of your series folder
+    * Video paths: Should point to your root series folder(s)
  * Shutdown Auto-Subliminal and start it again
 
 Enjoy your subtitles!

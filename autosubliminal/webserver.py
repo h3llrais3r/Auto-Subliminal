@@ -70,7 +70,7 @@ class Config:
         return str(tmpl)
 
     @cherrypy.expose(alias='saveConfig')
-    def save_config(self, subeng, checksub, scandisk, skiphiddendirs, subnl, postprocesscmd, path, logfile, rootpath,
+    def save_config(self, subeng, checksub, scandisk, skiphiddendirs, subnl, postprocesscmd, path, logfile, videopaths,
                     launchbrowser, fallbacktoeng, downloadeng, username, password, webroot, skipshow, lognum,
                     loglevelconsole, logsize, loglevel, loghttpaccess, logreversed, webserverip, webserverport, usernamemapping,
                     notifymail, notifygrowl, notifynma, notifytwitter, mailsrv, mailfromaddr, mailtoaddr, mailusername,
@@ -81,7 +81,7 @@ class Config:
                     subliminalproviders=None):
         # Set all internal variables
         autosubliminal.PATH = path
-        autosubliminal.ROOTPATH = rootpath
+        autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
         autosubliminal.LOGFILE = logfile
         autosubliminal.LOGHTTPACCESS = loghttpaccess
         autosubliminal.LOGREVERSED = logreversed
