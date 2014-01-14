@@ -2,7 +2,7 @@
 <autosubliminal>
 	<release>
 		<version>Beta 0.6.0</version>
-		<releasedate>01-01-2014</releasedate>
+		<releasedate>14-01-2014</releasedate>
 		<changelog>Initial version:&lt;br&gt;
 - Based on the discontinued Auto-Sub Alpha 0.5.8 project (&lt;a href="http://code.google.com/p/auto-sub/"&gt;http://code.google.com/p/auto-sub/&lt;/a&gt;)&lt;br&gt;
 - Use Subliminal(&lt;a href="https://github.com/Diaoul/subliminal"&gt;https://github.com/Diaoul/subliminal&lt;/a&gt;) as subtitle provider&lt;br&gt;
