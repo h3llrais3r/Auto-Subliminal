@@ -108,11 +108,10 @@ class DiskScanner():
             autosubliminal.WANTEDQUEUELOCK = False
             return True
 
-        try:
-            for videodir in autosubliminal.VIDEOPATHS:
+        for videodir in autosubliminal.VIDEOPATHS:
+            try:
                 walk_dir(videodir)
-        except:
-            for videodir in autosubliminal.VIDEOPATHS:
+            except:
                 walk_dir(str(videodir))
 
         log.debug("Finished round of local disk checking")
