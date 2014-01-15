@@ -2,14 +2,13 @@ import logging
 import re
 import socket
 import subprocess
-from string import capwords
 import time
 import urllib2
 import codecs
 import os
-import tvdb_api
+from string import capwords
 
-from lib import version
+from lib import version, tvdb_api
 
 import autosubliminal
 from autosubliminal.db import IdCache

@@ -10,7 +10,6 @@ import logging
 import codecs
 
 from ConfigParser import SafeConfigParser
-import threading
 
 import autosubliminal
 from autosubliminal import version, utils

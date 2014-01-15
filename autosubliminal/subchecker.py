@@ -1,8 +1,7 @@
 import logging
 import os
 
-import subliminal
-import babelfish
+from lib import subliminal, babelfish
 
 import autosubliminal
 from autosubliminal import utils, subdownloader
