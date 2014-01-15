@@ -1,6 +1,6 @@
 import logging
 
-import library.pythontwitter as twitter
+import lib.pythontwitter as twitter
 import autosubliminal
 
 

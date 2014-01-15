@@ -2,7 +2,7 @@
 """
 import re
 try:
-    from library.simplejson._speedups import make_scanner as c_make_scanner
+    from lib.simplejson._speedups import make_scanner as c_make_scanner
 except ImportError:
     c_make_scanner = None
 

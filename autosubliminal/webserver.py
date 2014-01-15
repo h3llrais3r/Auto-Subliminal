@@ -224,7 +224,7 @@ class Config:
 
     @cherrypy.expose(alias='regTwitter')
     def reg_twitter(self, token_key=None, token_secret=None, token_pin=None):
-        import library.oauth2 as oauth
+        import lib.oauth2 as oauth
         import autosubliminal.notify.twitter as notifytwitter
 
         try:

@@ -43,7 +43,7 @@ try:
 except ImportError:
   try:
     # Python < 2.6
-    import library.simplejson as simplejson
+    import lib.simplejson as simplejson
   except ImportError:
     try:
       # Google App Engine
@@ -62,7 +62,7 @@ try:
 except ImportError:
   from md5 import md5
 
-import library.oauth2 as oauth
+import lib.oauth2 as oauth
 
 
 CHARACTER_LIMIT = 140

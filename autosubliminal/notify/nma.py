@@ -1,5 +1,5 @@
 import logging
-import library.pynma as pynma
+import lib.pynma as pynma
 import autosubliminal
 
 log = logging.getLogger(__name__)

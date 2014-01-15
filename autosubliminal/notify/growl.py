@@ -2,7 +2,7 @@ import logging
 import socket
 
 import autosubliminal
-from library.growl import gntp
+from lib.growl import gntp
 
 
 log = logging.getLogger(__name__)

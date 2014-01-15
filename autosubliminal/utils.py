@@ -9,7 +9,7 @@ import codecs
 import os
 import tvdb_api
 
-from library import version
+from lib import version
 
 import autosubliminal
 from autosubliminal.db import IdCache
