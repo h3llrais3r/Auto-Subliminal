@@ -1,14 +1,15 @@
 #import urllib2
 #import HTMLParser
 
-#from beautifulsoup import BeautifulStoneSoup
+#from bs4 import BeautifulSoup
 
 #import autosubliminal
 #from autosubliminal import utils
 
 #try:
+    ## TODO: change changelog.xml to changelog.html to be able to parse it with bs4
 	#set $response = utils.connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/master/changelog.xml')
-	#set $page = $BeautifulStoneSoup($response)
+	#set $page = $BeautifulSoup($response)
 	#set $result = $page.findAll("release") 
 	#set $counter = 0
 
