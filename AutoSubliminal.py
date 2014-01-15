@@ -9,6 +9,10 @@ import locale
 import autosubliminal
 import autosubliminal.runner
 
+# Insert the lib folder at the beginning of the python system path
+# This to prevent installation of the libraries and to prevent the 'lib.' prefix when importing the libraries
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
+
 #signal.signal(signal.SIGTERM, autosubliminal.runner.signal_handler)
 
 help_message = '''
