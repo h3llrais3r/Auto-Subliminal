@@ -145,7 +145,7 @@ def read_config(configfile):
     else:
         # config section is missing
         print "ERROR: Required config section is missing. Using default values instead."
-        print "ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead."
+        print "ERROR: Required variable PATH is missing. Using current working directory instead."
         autosubliminal.PATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
         autosubliminal.DOWNLOADENG = False
         autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
@@ -155,7 +155,8 @@ def read_config(configfile):
         autosubliminal.SCHEDULERSCANDISK = 3600
         autosubliminal.SCHEDULERCHECKSUB = 28800
         print "ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead."
-        autosubliminal.VIDEOPATHS = [].append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
+        autosubliminal.VIDEOPATHS = []
+        autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
         autosubliminal.FALLBACKTOENG = True
         autosubliminal.SUBENG = u'en'
         autosubliminal.SUBNL = u""
