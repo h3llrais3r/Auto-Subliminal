@@ -134,9 +134,12 @@ def initialize():
         USERAGENT, VERSIONURL, \
         STARTED, PID
 
+    # Fake some entry points to get libraries working without installation
+    _fake_entry_points()
+
     DBFILE = 'database.db'
 
-    SUBLIMINALPROVIDERSENTRYPOINT = pkg_resources.get_entry_info(dist='subliminal', group=None,
+    SUBLIMINALPROVIDERSENTRYPOINT = pkg_resources.get_entry_info(dist='fake_entry_points', group=None,
                                                                  name='subliminal.providers')
 
     SUBLIMINALCACHEFILE = 'subliminal.cache.dbm'
@@ -196,6 +199,30 @@ def initialize():
 
     # Subliminal settings
     _initialize_subliminal()
+
+
+def _fake_entry_points():
+    current_path = os.path.dirname(os.path.normpath(__file__))
+    distribution = pkg_resources.Distribution(location=os.path.dirname(current_path),
+                                              project_name='fake_entry_points', version='1.0.0')
+    entry_points = {'babelfish.language_converters': ['alpha2 = babelfish.converters.alpha2:Alpha2Converter',
+                                                      'alpha3b = babelfish.converters.alpha3b:Alpha3BConverter',
+                                                      'alpha3t = babelfish.converters.alpha3t:Alpha3TConverter',
+                                                      'name = babelfish.converters.name:NameConverter',
+                                                      'scope = babelfish.converters.scope:ScopeConverter',
+                                                      'type = babelfish.converters.type:LanguageTypeConverter',
+                                                      'opensubtitles = babelfish.converters.opensubtitles:OpenSubtitlesConverter',
+                                                      'podnapisi = subliminal.converters.podnapisi:PodnapisiConverter',
+                                                      'addic7ed = subliminal.converters.addic7ed:Addic7edConverter',
+                                                      'tvsubtitles = subliminal.converters.tvsubtitles:TVsubtitlesConverter'],
+                    'babelfish.country_converters': ['name = babelfish.converters.countryname:CountryNameConverter'],
+                    'subliminal.providers': ['thesubdb = subliminal.providers.thesubdb:TheSubDBProvider',
+                                             'opensubtitles = subliminal.providers.opensubtitles:OpenSubtitlesProvider',
+                                             'addic7ed = subliminal.providers.addic7ed:Addic7edProvider',
+                                             'podnapisi = subliminal.providers.podnapisi:PodnapisiProvider',
+                                             'tvsubtitles = subliminal.providers.tvsubtitles:TVsubtitlesProvider']}
+    distribution._ep_map = pkg_resources.EntryPoint.parse_map(entry_points, distribution)
+    pkg_resources.working_set.add(distribution)
 
 
 def _initialize_subliminal():

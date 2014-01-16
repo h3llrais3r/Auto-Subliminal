@@ -6,11 +6,7 @@ from lib import subliminal, babelfish
 import autosubliminal
 from autosubliminal import utils, subdownloader
 
-
 log = logging.getLogger(__name__)
-
-language_nl = babelfish.Language.fromietf('nl')
-language_en = babelfish.Language.fromietf('en')
 
 
 class SubChecker():
@@ -74,7 +70,7 @@ class SubChecker():
                 # Determine if language suffix is needed in srt file name (f.e. <episode_name>.nl.srt)
                 # Default this is true, except when no prefix is defined for nl language
                 single = False
-                if language == language_nl:
+                if lang == 'nl':
                     if autosubliminal.SUBNL == "":
                         single = True
 
@@ -92,9 +88,9 @@ class SubChecker():
                         title, season, episode))
 
                     # Handle the donwload/post-download stuff
-                    if language == language_nl:
+                    if lang == 'nl':
                         wanted_item['destinationFileLocationOnDisk'] = srtfile
-                    elif language == language_en:
+                    elif lang == 'en':
                         wanted_item['destinationFileLocationOnDisk'] = engsrtfile
                     download_item = wanted_item.copy()
                     #TODO: Should be replaced with the real donwnload link when subliminal provides it
