@@ -1,0 +1,25 @@
+# Mandatory (pre-installed) libraries
+cheetah=2.4.4
+
+# Mandatory (packaged) libraries
+babelfish=0.4.0
+beautifulsoup4=4.3.2
+charade=1.0.3
+cherrypy=3.2.2
+dogpile.cache=0.5.2
+dogpile.core=0.4.1
+enzyme=0.4.0
+growl=0.5
+guessit=0.6.2
+html5lib=0.999
+httplib2=<version>
+oauth2=1.0
+pynma=0.1
+pynmwp=0.1
+pysrt=0.5.0
+pythontwitter=1.0.1
+requests=2.0.1
+simplejson=2.0.9
+subliminal=0.7.3
+tvdb_api=1.9.0
+version=<version>

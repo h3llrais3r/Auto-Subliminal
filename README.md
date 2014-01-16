@@ -16,25 +16,33 @@ What it does:
 
 What it uses:
 
+ * babelfish
+ * beautifulsoup
+ * charade
  * cheetah
  * cherrypy
- * beautifulsoup
+ * dogpile.cache
+ * dogpile.core
+ * enzyme
  * growl
+ * guessit
+ * html5lib
  * httplib2
  * oauth2
  * pynma
  * pynmwp
+ * pysrt
  * pythontwitter
+ * requests
  * simplejson
- * version
  * subliminal
  * tvdb_api
+ * version
 
 How to use:
 
  * Install python
- * Install python cheetah package
- * Install Auto-Subliminal (python setup.py install) -> it will automatically install the needed packages
+ * Install python cheetah package manually or use the installer from Auto-Subliminal (python setup.py install)
  * Start the script: " python AutoSubliminal.py "
  * A web browser should now open
  * Go to the config page, check the settings, make sure you set at least:

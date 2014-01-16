@@ -1,2 +1,1 @@
-subliminal>=0.7.3
-tvdb_api>=1.9.0
+cheetah>=2.4.4
