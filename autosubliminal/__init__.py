@@ -202,7 +202,9 @@ def initialize():
 
 
 def _fake_entry_points():
-    current_path = os.path.dirname(os.path.normpath(__file__))
+    # Do not normalize the path or the entry point will be loaded under the wrong entry_key
+    # current_path = os.path.dirname(os.path.normpath(__file__))
+    current_path = os.path.dirname(__file__)
     distribution = pkg_resources.Distribution(location=os.path.dirname(current_path),
                                               project_name='fake_entry_points', version='1.0.0')
     entry_points = {'babelfish.language_converters': ['alpha2 = babelfish.converters.alpha2:Alpha2Converter',
