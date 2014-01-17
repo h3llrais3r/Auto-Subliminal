@@ -60,6 +60,7 @@ def check_version():
     3 New lower release, higher version
     4 Release lower, version lower
     """
+    log.info('Checking version...')
     try:
         req = urllib2.Request(autosubliminal.VERSIONURL)
         req.add_header("User-agent", autosubliminal.USERAGENT)
@@ -80,6 +81,9 @@ def check_version():
 
     running_release = RELEASE_VERSION.split(' ')[0]
     running_versionnumber = version.StrictVersion(RELEASE_VERSION.split(' ')[1])
+
+    log.info('Running version: %s' % RELEASE_VERSION)
+    log.info('Git version: %s' % version_online)
 
     if release == running_release: #Alpha = Alpha
         if versionnumber > running_versionnumber: #0.5.6 > 0.5.5
