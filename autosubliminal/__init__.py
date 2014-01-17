@@ -2,7 +2,7 @@ import os
 import time
 import pkg_resources
 
-from lib import subliminal
+import subliminal
 
 import autosubliminal
 from autosubliminal import version, config, logger, db
