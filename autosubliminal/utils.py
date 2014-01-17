@@ -10,7 +10,7 @@ import os
 from distutils import version
 from string import capwords
 
-from lib import tvdb_api
+from lib.tvdb_api import tvdb_api
 
 import autosubliminal
 from autosubliminal.db import IdCache
