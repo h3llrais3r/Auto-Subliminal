@@ -12,8 +12,8 @@ try:
 except:
     from cgi import parse_qsl
 
-CONSUMER_KEY = 'CRMvUogoJ5kMErtU9fiw'
-CONSUMER_SECRET = 'JqS5jJIWdokl5iijZmoBHNwRsknw7xmCxPggEsmo8'
+CONSUMER_KEY = 'Nee5dikiIioxRWJYo58LQ'
+CONSUMER_SECRET = '3dEQq6216qPaclAVTPOR6sRcCzCZ9ddChkzCnlhZ0E'
 
 REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token'
 ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token'
