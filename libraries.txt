@@ -22,4 +22,3 @@ requests=2.0.1
 simplejson=2.0.9
 subliminal=0.7.3
 tvdb_api=1.9.0
-version=<version>

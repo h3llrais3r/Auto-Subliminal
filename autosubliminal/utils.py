@@ -6,9 +6,11 @@ import time
 import urllib2
 import codecs
 import os
+
+from distutils import version
 from string import capwords
 
-from lib import version, tvdb_api
+from lib import tvdb_api
 
 import autosubliminal
 from autosubliminal.db import IdCache
