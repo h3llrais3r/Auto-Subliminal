@@ -178,11 +178,11 @@ footer #button_bar a:active {
  * 6) Sprite: Forms
  * ================================================== */
 
-input {
+input, textarea {
 	color: #54616a;
 }
 
-input, label {
+input, textarea, label {
 	font-size: 12px;
 }
 
