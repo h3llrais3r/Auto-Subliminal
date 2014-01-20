@@ -109,12 +109,12 @@ def read_config(configfile):
         if cfg.has_option("config", "notifyen"):
             autosubliminal.NOTIFYEN = cfg.getboolean("config", "notifyen")
         else:
-            autosubliminal.NOTIFYEN = True
+            autosubliminal.NOTIFYEN = False
 
         if cfg.has_option("config", "notifynl"):
             autosubliminal.NOTIFYNL = cfg.getboolean("config", "notifynl")
         else:
-            autosubliminal.NOTIFYNL = True
+            autosubliminal.NOTIFYNL = False
 
         if cfg.has_option("config", "workdir"):
             autosubliminal.PATH = cfg.get("config", "workdir")
@@ -160,8 +160,8 @@ def read_config(configfile):
         autosubliminal.FALLBACKTOENG = True
         autosubliminal.SUBENG = u'en'
         autosubliminal.SUBNL = u""
-        autosubliminal.NOTIFYEN = True
-        autosubliminal.NOTIFYNL = True
+        autosubliminal.NOTIFYEN = False
+        autosubliminal.NOTIFYNL = False
         autosubliminal.SKIPHIDDENDIRS = False
         print "ERROR: Required variable LOGFILE is missing. Using 'AutoSuliminal.log' instead."
         autosubliminal.LOGFILE = u"AutoSubliminal.log"
