@@ -1,6 +1,6 @@
 import logging
 
-import lib.pynma as pynma
+import pynma
 
 import autosubliminal
 
@@ -31,4 +31,4 @@ def send_notify(lang, subtitlefile, videofile):
     log.debug("Trying to send a notification")
     message = "Auto-Subliminal just downloaded the following subtitle: \n %s" % subtitlefile
     return _send_notify(message)
-    
+

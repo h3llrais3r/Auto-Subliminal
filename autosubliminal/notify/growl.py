@@ -1,7 +1,7 @@
 import logging
 import socket
 
-from lib.growl import gntp
+from growl import gntp
 
 import autosubliminal
 

@@ -48,4 +48,4 @@ For the videofile:\n %s
     message['Subject'] = '%s %s' % (autosubliminal.MAILSUBJECT, subtitlefile)
     message = message.as_string()
     return _send_notify(message)
-    
+

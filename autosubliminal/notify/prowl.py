@@ -4,7 +4,6 @@ from urllib import urlencode
 
 import autosubliminal
 
-
 log = logging.getLogger(__name__)
 
 

@@ -1,9 +1,8 @@
 import logging
 
-import lib.pythontwitter as twitter
+import pythontwitter
 
 import autosubliminal
-
 
 log = logging.getLogger(__name__)
 
@@ -23,7 +22,7 @@ SIGNIN_URL = 'https://api.twitter.com/oauth/authenticate'
 
 def _send_notify(message):
     try:
-        api = twitter.Api(CONSUMER_KEY, CONSUMER_SECRET, autosubliminal.TWITTERKEY, autosubliminal.TWITTERSECRET)
+        api = pythontwitter.Api(CONSUMER_KEY, CONSUMER_SECRET, autosubliminal.TWITTERKEY, autosubliminal.TWITTERSECRET)
         api.PostUpdate(message[:140])
         log.info("Tweet sent")
         return True
