@@ -224,7 +224,7 @@ class Config:
 
     @cherrypy.expose(alias='regTwitter')
     def reg_twitter(self, token_key=None, token_secret=None, token_pin=None):
-        import lib.oauth2 as oauth
+        import oauth2
         import autosubliminal.notify.twitter as notifytwitter
 
         try:
@@ -233,8 +233,8 @@ class Config:
             from cgi import parse_qsl
 
         if not token_key and not token_secret:
-            consumer = oauth.Consumer(key=notifytwitter.CONSUMER_KEY, secret=notifytwitter.CONSUMER_SECRET)
-            oauth_client = oauth.Client(consumer)
+            consumer = oauth2.Consumer(key=notifytwitter.CONSUMER_KEY, secret=notifytwitter.CONSUMER_SECRET)
+            oauth_client = oauth2.Client(consumer)
             response, content = oauth_client.request(notifytwitter.REQUEST_TOKEN_URL, 'GET')
             if response['status'] != '200':
                 message = "Something went wrong..."
@@ -253,10 +253,10 @@ class Config:
 
         if token_key and token_secret and token_pin:
 
-            token = oauth.Token(token_key, token_secret)
+            token = oauth2.Token(token_key, token_secret)
             token.set_verifier(token_pin)
-            consumer = oauth.Consumer(key=notifytwitter.CONSUMER_KEY, secret=notifytwitter.CONSUMER_SECRET)
-            oauth_client2 = oauth.Client(consumer, token)
+            consumer = oauth2.Consumer(key=notifytwitter.CONSUMER_KEY, secret=notifytwitter.CONSUMER_SECRET)
+            oauth_client2 = oauth2.Client(consumer, token)
             response, content = oauth_client2.request(notifytwitter.ACCESS_TOKEN_URL, method='POST',
                                                       body='oauth_verifier=%s' % token_pin)
             access_token = dict(parse_qsl(content))
