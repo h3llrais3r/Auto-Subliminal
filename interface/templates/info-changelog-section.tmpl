@@ -1,6 +1,3 @@
-#import urllib2
-#import HTMLParser
-
 #from bs4 import BeautifulSoup
 
 #import autosubliminal
@@ -8,18 +5,17 @@
 
 #try:
 	#set $response = utils.connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/development/changelog.html')
-	#set $page = $BeautifulSoup($response, "html5lib")
-	#set $result = $page.find_all("div", "release")
+	#set $page = $BeautifulSoup($response)
+	#set $releases = $page.find_all("div", "release")
 	#set $counter = 0
 
 	<font style="font-size: large;"><b>Changelog</b></font><br /><br />
 
 	<table>
-	#for x in $result:
-		#set $soupx = $BeautifulSoup(str(x))
-		#set $version = $soupx.find("div", "version").string
-		#set $releasedate = $soupx.find("div", "releasedate").text
-		#set $changelog = $soupx.find("div", "changelog").string
+	#for $release in $releases:
+		#set $version = $release.find("div", "version").string
+		#set $releasedate = $release.find("div", "releasedate").string
+		#set $changelog = $release.find("ul", "changelog")
 		<tr>
 			<td width="140px"><b>Version</b></td>
 			<td><b>$version</b></td>
