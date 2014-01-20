@@ -7,31 +7,30 @@
 #from autosubliminal import utils
 
 #try:
-    ## TODO: change changelog.xml to changelog.html to be able to parse it with bs4
-	#set $response = utils.connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/master/changelog.xml')
-	#set $page = $BeautifulSoup($response)
-	#set $result = $page.findAll("release") 
+	#set $response = utils.connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/development/changelog.html')
+	#set $page = $BeautifulSoup($response, "html5lib")
+	#set $result = $page.find_all("div", "release")
 	#set $counter = 0
 
 	<font style="font-size: large;"><b>Changelog</b></font><br /><br />
 
 	<table>
 	#for x in $result:
-		#set $soupx = $BeautifulStoneSoup(str(x))
-		#set $version = $soupx.find('version').string
-		#set $releasedate = $soupx.find('releasedate').text
-		#set $changelog = $soupx.find('changelog').string
+		#set $soupx = $BeautifulSoup(str(x))
+		#set $version = $soupx.find("div", "version").string
+		#set $releasedate = $soupx.find("div", "releasedate").text
+		#set $changelog = $soupx.find("div", "changelog").string
 		<tr>
 			<td width="140px"><b>Version</b></td>
 			<td><b>$version</b></td>
 		</tr>
 		<tr>
-			<td width="140px"><b>Releasedate</b></td>
+			<td width="140px"><b>Release date</b></td>
 			<td>$releasedate</td>
 		</tr>
 		<tr>
 			<td width="140px"><b>Changelog</b></td>
-			<td>$HTMLParser.HTMLParser().unescape($changelog)</td>
+			<td>$changelog</td>
 		</tr>
 		<tr>
 			<td colspan="2">&nbsp;</td>
