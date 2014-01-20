@@ -12,8 +12,8 @@ try:
 except:
     from cgi import parse_qsl
 
-CONSUMER_KEY = 'Nee5dikiIioxRWJYo58LQ'
-CONSUMER_SECRET = '3dEQq6216qPaclAVTPOR6sRcCzCZ9ddChkzCnlhZ0E'
+CONSUMER_KEY = 'bRHxdWzMWnvwq5HapVZtFA'
+CONSUMER_SECRET = 'X4U3aTdPkBdLVLgH87xhC4oRc4JpkNc6MlG1ZAtG0a8'
 
 REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token'
 ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token'
@@ -42,4 +42,4 @@ def send_notify(lang, subtitlefile, videofile):
     log.debug("Trying to send a tweet")
     message = 'Auto-Subliminal Downloaded: %s' % subtitlefile
     return _send_notify(message)
-   
+
