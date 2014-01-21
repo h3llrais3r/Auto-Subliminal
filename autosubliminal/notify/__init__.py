@@ -19,32 +19,32 @@ def notify_test(notifylib):
     Notifylib should be a string containing which library is required
     """
     if notifylib == 'twitter':
-        log.info("Notify: Sending test tweet")
+        log.info("Sending test tweet")
         return twitter.test_notify()
 
     if notifylib == 'mail':
-        log.info("Notify: Sending test mail")
+        log.info("Sending test mail")
         return mail.test_notify()
 
     if notifylib == 'nma':
-        log.info("Notify: Sending test notification to your Android device")
+        log.info("Sending test notification to your Android device")
         return nma.test_notify()
 
     if notifylib == 'growl':
-        log.info("Notify: Testing and registering growl")
+        log.info("Testing and registering growl")
         return growl.test_notify()
 
     if notifylib == 'prowl':
-        log.info("Notify: Sending test notification to prowl")
+        log.info("Sending test notification to prowl")
         return prowl.test_notify()
 
     if notifylib == 'pushalot':
-        log.info("Notify: Sending test notification to your Windows (Phone) device via Pushalot")
+        log.info("Sending test notification to your Windows (Phone) device via Pushalot")
         return pushalot.test_notify()
 
 
 def notify(lang, subtitlefile, videofile):
-    log.debug("Notify: Trying to send notifications. Language: %s Srt: %s Video: %s" % (lang, subtitlefile, videofile))
+    log.debug("Trying to send notifications. Language: %s Srt: %s Video: %s" % (lang, subtitlefile, videofile))
     # Lets strip video file and subtitle file of its path!
     subtitlefile = os.path.basename(subtitlefile)
     videofile = os.path.basename(videofile)
@@ -57,25 +57,25 @@ def notify(lang, subtitlefile, videofile):
 
 def notify_send(lang, subtitlefile, videofile):
     if autosubliminal.NOTIFYTWITTER:
-        log.debug("Notify: Twitter is enabled")
+        log.debug("Twitter is enabled")
         twitter.send_notify(lang, subtitlefile, videofile)
 
     if autosubliminal.NOTIFYMAIL:
-        log.debug("Notify: Mail is enabled")
+        log.debug("Mail is enabled")
         mail.send_notify(lang, subtitlefile, videofile)
 
     if autosubliminal.NOTIFYNMA:
-        log.debug("Notify: NMA is enabled")
+        log.debug("NMA is enabled")
         nma.send_notify(lang, subtitlefile, videofile)
 
     if autosubliminal.NOTIFYGROWL:
-        log.debug("Notify: Growl is enabled")
+        log.debug("Growl is enabled")
         growl.send_notify(lang, subtitlefile, videofile)
 
     if autosubliminal.NOTIFYPROWL:
-        log.debug("Notify: Prowl is enabled")
+        log.debug("Prowl is enabled")
         prowl.send_notify(lang, subtitlefile, videofile)
 
     if autosubliminal.NOTIFYPUSHALOT:
-        log.debug("Notify: Pushalot is enabled")
+        log.debug("Pushalot is enabled")
         pushalot.send_notify(lang, subtitlefile, videofile)
