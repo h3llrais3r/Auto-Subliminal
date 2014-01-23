@@ -15,7 +15,7 @@ def test_notify():
 
 def send_notify(language, subtitlefile, videofile, provider):
     log.debug("Trying to send a notification")
-    message = "Subtitle: \n %s \n Language: %s \n Provider: %s" % (subtitlefile, language, provider)
+    message = "Subtitle: %s \n Language: %s \n Provider: %s" % (subtitlefile, language, provider)
     return _send_notify(message)
 
 
