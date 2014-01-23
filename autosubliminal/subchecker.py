@@ -1,7 +1,8 @@
 import logging
 import os
 
-import subliminal, babelfish
+import babelfish
+import subliminal
 
 import autosubliminal
 from autosubliminal import utils, subdownloader
@@ -84,8 +85,9 @@ class SubChecker():
                 #TODO: review completely if support for multiple languages is needed
                 # Check if subtitle found
                 if subtitles:
-                    log.info("A matching subtitle has been downloaded for the series %s - Season %s Episode %s" % (
-                        title, season, episode))
+                    log.info(
+                        "A matching subtitle has been downloaded for the series %s - Season %s Episode %s from %s" % (
+                            title, season, episode, subtitles[video][0].provider_name))
 
                     # Handle the donwload/post-download stuff
                     if lang == 'nl':
@@ -100,11 +102,12 @@ class SubChecker():
                     #TODO: Should be replaced with real subtitle name from download when subliminal provides it
                     #TODO: For now, just use name of the subtitle itself (not the real downloaded name)
                     download_item['subtitle'] = os.path.split(wanted_item['destinationFileLocationOnDisk'])[1][:-4]
+                    download_item['provider'] = subtitles[video][0].provider_name
 
                     subdownloader.download_subtitle(download_item)
 
                     if lang == 'nl' and (
-                        autosubliminal.FALLBACKTOENG and not autosubliminal.DOWNLOADENG) and 'en' in langs:
+                            autosubliminal.FALLBACKTOENG and not autosubliminal.DOWNLOADENG) and 'en' in langs:
                         log.debug(
                             'A dutch subtitle is found and fallback is true. Removing the english subtitle from the wantedlist.')
                         langs.remove('en')

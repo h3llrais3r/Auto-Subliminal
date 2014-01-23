@@ -20,6 +20,18 @@ AUTHORIZATION_URL = 'https://api.twitter.com/oauth/authorize'
 SIGNIN_URL = 'https://api.twitter.com/oauth/authenticate'
 
 
+def test_notify():
+    log.debug("Trying to send a tweet")
+    message = "Test tweet by Auto-Subliminal"
+    return _send_notify(message)
+
+
+def send_notify(language, subtitlefile, videofile, provider):
+    log.debug("Trying to send a tweet")
+    message = "Subtitle: %s \n Language: %s \n Provider: %s " % (subtitlefile, language, provider)
+    return _send_notify(message)
+
+
 def _send_notify(message):
     try:
         api = pythontwitter.Api(CONSUMER_KEY, CONSUMER_SECRET, autosubliminal.TWITTERKEY, autosubliminal.TWITTERSECRET)
@@ -29,16 +41,3 @@ def _send_notify(message):
     except:
         log.error("Failed to send a tweet")
         return False
-
-
-def test_notify():
-    log.debug("Trying to send a tweet")
-    message = 'Auto-Subliminal: Testing 1-2-3'
-    return _send_notify(message)
-
-
-def send_notify(lang, subtitlefile, videofile):
-    log.debug("Trying to send a tweet")
-    message = 'Auto-Subliminal Downloaded: %s' % subtitlefile
-    return _send_notify(message)
-

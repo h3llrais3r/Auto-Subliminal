@@ -22,13 +22,13 @@ def download_subtitle(download_dict):
 
     if 'destinationFileLocationOnDisk' in download_dict.keys() and 'downloadLink' in download_dict.keys():
         log.debug("Download dict seems ok. Dumping it for debug: %r" % download_dict)
-        destsrt = download_dict['destinationFileLocationOnDisk']
 
         download_dict['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
 
         LastDownloads().set_last_downloads(dict=download_dict)
 
-        notify.notify(download_dict['downlang'], destsrt, download_dict["originalFileLocationOnDisk"])
+        notify.notify(download_dict['downlang'], download_dict['destinationFileLocationOnDisk'],
+                      download_dict["originalFileLocationOnDisk"], download_dict['provider'])
 
         if autosubliminal.POSTPROCESSCMD:
             PostProcessor(autosubliminal.POSTPROCESSCMD, download_dict).run()

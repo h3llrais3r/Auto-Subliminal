@@ -7,6 +7,27 @@ import autosubliminal
 log = logging.getLogger(__name__)
 
 
+def test_notify():
+    log.debug("Trying to send a notification")
+    message = "Test notification by Auto-Subliminal"
+    data = {'apikey': autosubliminal.PROWLAPI,
+            'application': 'Auto-Subliminal',
+            'event': 'Test',
+            'description': message.encode("utf-8"),
+            'priority': autosubliminal.PROWLPRIORITY}
+    return _send_notify(data)
+
+
+def send_notify(language, subtitlefile, videofile, provider):
+    message = "Subtitle: %s \n Language: %s \n Provider: %s " % (subtitlefile, language, provider)
+    data = {'apikey': autosubliminal.PROWLAPI,
+            'application': 'Auto-Subliminal',
+            'event': 'Subtitle download',
+            'description': message.encode("utf-8"),
+            'priority': autosubliminal.PROWLPRIORITY}
+    return _send_notify(data)
+
+
 def _send_notify(message):
     try:
         http_handler = HTTPSConnection("api.prowlapp.com")
@@ -17,35 +38,12 @@ def _send_notify(message):
     except:
         log.error(" Failed to connect to Prowl")
         return False
-
     if request_status == 200:
         log.info('Notification sent')
         return True
     elif request_status == 401:
-        log.error("Authentication failed, check your API key")
+        log.error("Failed to authenticate, check your API key")
         return False
     else:
-        log.error("Failed to sent notification")
+        log.error("Failed to send a message")
         return False
-
-
-def test_notify():
-    message = 'Testing Prowl! Seems to work!'
-
-    data = {'apikey': autosubliminal.PROWLAPI,
-            'application': 'Auto-Subliminal',
-            'event': 'Test Message',
-            'description': message.encode("utf-8"),
-            'priority': autosubliminal.PROWLPRIORITY}
-    return _send_notify(data)
-
-
-def send_notify(lang, subtitlefile, videofile):
-    message = 'Auto-Subliminal just download %s' % subtitlefile
-
-    data = {'apikey': autosubliminal.PROWLAPI,
-            'application': 'Auto-Subliminal',
-            'event': 'Subtitle Downloaded',
-            'description': message.encode("utf-8"),
-            'priority': autosubliminal.PROWLPRIORITY}
-    return _send_notify(data)
