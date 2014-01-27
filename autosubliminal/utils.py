@@ -215,34 +215,37 @@ def check_apicalls(use=False):
         return False
 
 
+def get_logfile(lognum=None):
+    logfile = autosubliminal.LOGFILE
+    if lognum:
+        logfile += "." + str(lognum)
+    if os.path.isfile(logfile):
+        return logfile
+    return None
+
+
 def display_logfile(loglevel):
-    max_lines = 500
+    # Read log file data
     data = []
-    if os.path.isfile(autosubliminal.LOGFILE):
-        f = codecs.open(autosubliminal.LOGFILE, 'r', autosubliminal.SYSENCODING)
+    logfile = get_logfile()
+    if logfile:
+        f = codecs.open(logfile, 'r', autosubliminal.SYSENCODING)
         data = f.readlines()
         f.close()
-
-    final_data = []
-
-    num_lines = 0
-
     # If reversed order is needed, use reversed(data)
     if autosubliminal.LOGREVERSED:
         data = reversed(data)
-
+    # Log data
+    log_data = []
     for x in data:
         try:
             matches = LOG_PARSER.search(x)
             matchdic = matches.groupdict()
             if (matchdic['loglevel'] == loglevel.upper()) or (loglevel == ''):
-                num_lines += 1
-                if num_lines >= max_lines:
-                    break
-                final_data.append(x)
+                log_data.append(x)
         except Exception, e:
             continue
-    result = "".join(final_data)
+    result = "".join(log_data)
     return result
 
 
