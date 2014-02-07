@@ -17,7 +17,7 @@ What it does:
 What it uses:
 
  * babelfish
- * beautifulsoup
+ * beautifulsoup4
  * charade
  * cheetah
  * cherrypy
@@ -37,7 +37,7 @@ What it uses:
  * simplejson
  * subliminal
  * tvdb_api
- * version
+ * six
 
 How to use:
 
@@ -48,6 +48,6 @@ How to use:
  * Go to the config page, check the settings, make sure you set at least:
     * Path: Should point to the location where AutoSubliminal.py is located
     * Video paths: Should point to your root series folder(s)
- * Shutdown Auto-Subliminal and start it again
+ * Restart Auto-Subliminal
 
 Enjoy your subtitles!
