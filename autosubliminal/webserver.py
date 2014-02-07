@@ -167,7 +167,7 @@ class Config:
         if restart:
             # Restart the runner in the background
             threading.Thread(target=autosubliminal.runner.restart).start()
-            tmpl = PageTemplate(file="interface/templates/restart.tmpl")
+            tmpl = PageTemplate(file="interface/templates/autorestart.tmpl")
         else:
             # For some reason the needs to be read again, otherwise all pages get an error
             config.read_config(autosubliminal.CONFIGFILE)
@@ -322,6 +322,12 @@ class Home:
         else:
             autosubliminal.MOBILEAUTOSUB = True
             redirect("/home")
+
+    @cherrypy.expose
+    def restart(self):
+        tmpl = PageTemplate(file="interface/templates/restart.tmpl")
+        threading.Thread(target=autosubliminal.runner.restart).start()
+        return str(tmpl)
 
     @cherrypy.expose
     def shutdown(self):

@@ -8,7 +8,7 @@ function is_alive() {
     $.get(is_alive_url, function(data) {
         // not yet restarted -> wait
         if (data.msg == 'False') {
-            setTimeout(is_alive, 1000);
+            setTimeout(is_alive, 2000);
         }
         // started -> reload
         else {
