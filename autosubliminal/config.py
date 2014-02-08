@@ -13,6 +13,7 @@ from ConfigParser import SafeConfigParser
 
 import autosubliminal
 from autosubliminal import version, utils
+import subliminal
 
 log = logging.getLogger(__name__)
 
@@ -424,13 +425,13 @@ def read_config(configfile):
             autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
             # Only allow valid providers by checking if they are found in the entry point
             for provider in autosubliminal.SUBLIMINALPROVIDERLIST:
-                if provider.lower() not in autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys():
+                if provider.lower() not in subliminal.provider_manager.available_providers:
                     autosubliminal.SUBLIMINALPROVIDERLIST.remove(provider)
         else:
-            autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
+            autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
     else:
         # Subliminal section is missing
-        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
+        autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
 
     if cfg.has_section('dev'):
         if cfg.has_option('dev', 'apikey'):
@@ -504,7 +505,7 @@ def apply_subliminal():
         autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
         autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
     else:
-        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
+        autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
 
 
 def apply_namemapping():
