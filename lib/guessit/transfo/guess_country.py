@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # GuessIt - A library for guessing information from filenames
-# Copyright (c) 2012 Nicolas Wack <wackou@gmail.com>
+# Copyright (c) 2013 Nicolas Wack <wackou@gmail.com>
 #
 # GuessIt is free software; you can redistribute it and/or modify it under
 # the terms of the Lesser GNU General Public License as published by
@@ -18,31 +18,41 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+from guessit.plugins import Transformer
+
 from guessit.country import Country
 from guessit import Guess
-import logging
 
-log = logging.getLogger(__name__)
 
-# list of common words which could be interpreted as countries, but which
-# are far too common to be able to say they represent a country
-country_common_words = frozenset([ 'bt', 'bb' ])
+class GuessCountry(Transformer):
+    def __init__(self):
+        Transformer.__init__(self, -170)
+        # list of common words which could be interpreted as countries, but which
+        # are far too common to be able to say they represent a country
+        self.country_common_words = frozenset(['bt', 'bb'])
 
-def process(mtree):
-    for node in mtree.unidentified_leaves():
-        if len(node.node_idx) == 2:
-            c = node.value[1:-1].lower()
-            if c in country_common_words:
-                continue
+    def supported_properties(self):
+        return ['country']
 
-            # only keep explicit groups (enclosed in parentheses/brackets)
-            if node.value[0] + node.value[-1] not in ['()', '[]', '{}']:
-                continue
+    def should_process(self, matcher):
+        return not 'nocountry' in matcher.opts
 
-            try:
-                country = Country(c, strict=True)
-            except ValueError:
-                continue
+    def process(self, mtree):
+        for node in mtree.unidentified_leaves():
+            if len(node.node_idx) == 2:
+                c = node.value[1:-1].lower()
+                if c in self.country_common_words:
+                    continue
 
-            node.guess = Guess(country=country, confidence=1.0, raw=c)
+                # only keep explicit groups (enclosed in parentheses/brackets)
+                if not node.is_explicit():
+                    continue
+
+                try:
+                    country = Country(c, strict=True)
+                except ValueError:
+                    continue
+
+                node.guess = Guess(country=country, confidence=1.0, input=node.value, span=node.span)

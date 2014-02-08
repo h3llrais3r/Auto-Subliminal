@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # GuessIt - A library for guessing information from filenames
-# Copyright (c) 2012 Nicolas Wack <wackou@gmail.com>
+# Copyright (c) 2013 Nicolas Wack <wackou@gmail.com>
 #
 # GuessIt is free software; you can redistribute it and/or modify it under
 # the terms of the Lesser GNU General Public License as published by
@@ -18,69 +18,114 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from __future__ import unicode_literals
-from guessit.transfo import SingleNodeGuesser
-from guessit.patterns import prop_multi, compute_canonical_form, _dash, _psep
-import re
-import logging
+from __future__ import absolute_import, division, print_function, unicode_literals
 
-log = logging.getLogger(__name__)
+from guessit.plugins import Transformer
 
-def get_patterns(property_name):
-    return [ p.replace(_dash, _psep) for patterns in prop_multi[property_name].values() for p in patterns  ]
-
-CODECS = get_patterns('videoCodec')
-FORMATS = get_patterns('format')
-VAPIS = get_patterns('videoApi')
-
-# RG names following a codec or format, with a potential space or dash inside the name
-GROUP_NAMES = [ r'(?P<videoCodec>' + codec + r')[ \.-](?P<releaseGroup>.+?([- \.].*?)??)[ \.]'
-                for codec in CODECS ]
-GROUP_NAMES += [ r'(?P<format>'    + fmt   + r')[ \.-](?P<releaseGroup>.+?([- \.].*?)??)[ \.]'
-                 for fmt in FORMATS ]
-GROUP_NAMES += [ r'(?P<videoApi>'  + api   + r')[ \.-](?P<releaseGroup>.+?([- \.].*?)??)[ \.]'
-                 for api in VAPIS ]
-
-GROUP_NAMES2 = [ r'\.(?P<videoCodec>' + codec + r')-(?P<releaseGroup>.*?)(-(.*?))?[ \.]'
-                 for codec in CODECS ]
-GROUP_NAMES2 += [ r'\.(?P<format>'    + fmt   + r')-(?P<releaseGroup>.*?)(-(.*?))?[ \.]'
-                  for fmt in FORMATS ]
-GROUP_NAMES2 += [ r'\.(?P<videoApi>'  + vapi  + r')-(?P<releaseGroup>.*?)(-(.*?))?[ \.]'
-                  for vapi in VAPIS ]
-
-GROUP_NAMES = [ re.compile(r, re.IGNORECASE) for r in GROUP_NAMES ]
-GROUP_NAMES2 = [ re.compile(r, re.IGNORECASE) for r in GROUP_NAMES2 ]
-
-def adjust_metadata(md):
-    return dict((property_name, compute_canonical_form(property_name, value) or value)
-                for property_name, value in md.items())
+from guessit.transfo import SingleNodeGuesser, format_guess
+from guessit.patterns.containers import PropertiesContainer
+from guessit.patterns import sep
+from guessit.guess import Guess
 
 
-def guess_release_group(string):
-    # first try to see whether we have both a known codec and a known release group
-    for rexp in GROUP_NAMES:
-        match = rexp.search(string)
-        while match:
-            metadata = match.groupdict()
-            # make sure this is an actual release group we caught
-            release_group = (compute_canonical_form('releaseGroup', metadata['releaseGroup']) or
-                             compute_canonical_form('weakReleaseGroup', metadata['releaseGroup']))
-            if release_group:
-                return adjust_metadata(metadata), (match.start(1), match.end(2))
+class GuessReleaseGroup(Transformer):
+    def __init__(self):
+        Transformer.__init__(self, -190)
+        self.container = PropertiesContainer()
+        self._allowed_groupname_pattern = r'[\w@#€£$&]'
+        self._forbidden_groupname_lambda = [lambda elt: elt in ['rip', 'by', 'for', 'par', 'pour', 'bonus'],
+                               lambda elt: self._is_number(elt),
+                               ]
+        # If the previous property in this list, the match will be considered as safe
+        # and group name can contain a separator.
+        self.previous_safe_properties = ['videoCodec', 'format', 'videoApi', 'audioCodec', 'audioProfile', 'videoProfile', 'audioChannels']
 
-            # we didn't find anything conclusive, keep searching
-            match = rexp.search(string, match.span()[0]+1)
+        self.container.sep_replace_char = '-'
+        self.container.canonical_from_pattern = False
+        self.container.enhance_patterns = True
+        self.container.register_property('releaseGroup', None, self._allowed_groupname_pattern + '+')
+        self.container.register_property('releaseGroup', None, self._allowed_groupname_pattern + '+-' + self._allowed_groupname_pattern + '+')
 
-    # pick anything as releaseGroup as long as we have a codec in front
-    # this doesn't include a potential dash ('-') ending the release group
-    # eg: [...].X264-HiS@SiLUHD-English.[...]
-    for rexp in GROUP_NAMES2:
-        match = rexp.search(string)
-        if match:
-            return adjust_metadata(match.groupdict()), (match.start(1), match.end(2))
+    def supported_properties(self):
+        return self.container.get_supported_properties()
 
-    return None, None
+    def _is_number(self, s):
+        try:
+            int(s)
+            return True
+        except ValueError:
+            return False
 
+    def validate_group_name(self, guess):
+        if guess.metadata().span[1] - guess.metadata().span[0] >= 2:
+            val = guess['releaseGroup']
 
-def process(mtree):
-    SingleNodeGuesser(guess_release_group, 0.8, log).process(mtree)
+            if '-' in guess['releaseGroup']:
+                checked_val = ""
+                for elt in val.split('-'):
+                    forbidden = False
+                    for forbidden_lambda in self._forbidden_groupname_lambda:
+                        forbidden = forbidden_lambda(elt.lower())
+                        if forbidden:
+                            break
+                    if not forbidden:
+                        if checked_val:
+                            checked_val += '-'
+                        checked_val += elt
+                    else:
+                        break
+                val = checked_val
+                if not val:
+                    return False
+                guess['releaseGroup'] = val
+
+            forbidden = False
+            for forbidden_lambda in self._forbidden_groupname_lambda:
+                forbidden = forbidden_lambda(val.lower())
+                if forbidden:
+                    break
+            if not forbidden:
+                return True
+        return False
+
+    def is_leaf_previous(self, leaf, node):
+        if leaf.span[1] <= node.span[0]:
+            for idx in range(leaf.span[1], node.span[0]):
+                if not leaf.root.value[idx] in sep:
+                    return False
+            return True
+        return False
+
+    def guess_release_group(self, string, node):
+        found = self.container.find_properties(string, 'releaseGroup')
+        guess = self.container.as_guess(found, string, self.validate_group_name, sep_replacement='-')
+        if guess:
+            explicit_group_idx = node.node_idx[:2]
+            explicit_group = node.root.node_at(explicit_group_idx)
+            for leaf in explicit_group.leaves_containing(self.previous_safe_properties):
+                if self.is_leaf_previous(leaf, node):
+                    if leaf.root.value[leaf.span[1]] == '-':
+                        guess.metadata().confidence = 1
+                    else:
+                        guess.metadata().confidence = 0.7
+                    return guess
+
+            # If previous group last leaf is identified as a safe property,
+            # consider the raw value as a groupname
+            if len(explicit_group_idx) > 0 and explicit_group_idx[-1] > 0:
+                previous_group = explicit_group_idx[:-1] + (explicit_group_idx[-1] - 1,)
+                previous_node = node.root.node_at(previous_group)
+                for leaf in previous_node.leaves_containing(self.previous_safe_properties):
+                    if self.is_leaf_previous(leaf, node):
+                        guess = Guess({'releaseGroup': node.clean_value}, confidence=1, input=node.value, span=node.span)
+                        if self.validate_group_name(guess):
+                            guess = format_guess(guess)
+                            node.guess = guess
+                            break
+
+        return None
+
+    guess_release_group.use_node = True
+
+    def process(self, mtree):
+        SingleNodeGuesser(self.guess_release_group, None, self.log).process(mtree)

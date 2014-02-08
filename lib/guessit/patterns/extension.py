@@ -3,6 +3,8 @@
 #
 # GuessIt - A library for guessing information from filenames
 # Copyright (c) 2013 Nicolas Wack <wackou@gmail.com>
+# Copyright (c) 2013 Rémi Alvergnat <toilal.dev@gmail.com>
+# Copyright (c) 2011 Ricard Marxer <ricardmp@gmail.com>
 #
 # GuessIt is free software; you can redistribute it and/or modify it under
 # the terms of the Lesser GNU General Public License as published by
@@ -20,29 +22,10 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.plugins import Transformer
+subtitle_exts = ['srt', 'idx', 'sub', 'ssa']
 
-from guessit.patterns import sep
-import re
+info_exts = ['nfo']
 
-
-class SplitOnDash(Transformer):
-    def __init__(self):
-        Transformer.__init__(self, 190)
-
-    def process(self, mtree):
-        """split into '-' separated subgroups (with required separator chars
-        around the dash)
-        """
-        for node in mtree.unidentified_leaves():
-            indices = []
-
-            pattern = re.compile(sep + '-' + sep)
-            match = pattern.search(node.value)
-            while match:
-                span = match.span()
-                indices.extend([span[0], span[1]])
-                match = pattern.search(node.value, span[1])
-
-            if indices:
-                node.partition(indices)
+video_exts = ['3g2', '3gp', '3gp2', 'asf', 'avi', 'divx', 'flv', 'm4v', 'mk2',
+              'mka', 'mkv', 'mov', 'mp4', 'mp4a', 'mpeg', 'mpg', 'ogg', 'ogm',
+              'ogv', 'qt', 'ra', 'ram', 'rm', 'ts', 'wav', 'webm', 'wma', 'wmv']

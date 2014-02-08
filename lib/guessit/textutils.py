@@ -1,24 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# Smewt - A smart collection manager
-# Copyright (c) 2008-2012 Nicolas Wack <wackou@gmail.com>
+# GuessIt - A library for guessing information from filenames
+# Copyright (c) 2013 Nicolas Wack <wackou@gmail.com>
 #
-# Smewt is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
+# GuessIt is free software; you can redistribute it and/or modify it under
+# the terms of the Lesser GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
 # (at your option) any later version.
 #
-# Smewt is distributed in the hope that it will be useful,
+# GuessIt is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+# Lesser GNU General Public License for more details.
 #
-# You should have received a copy of the GNU General Public License
+# You should have received a copy of the Lesser GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
+
 from guessit import s
 from guessit.patterns import sep
 import functools
@@ -26,6 +27,7 @@ import unicodedata
 import re
 
 # string-related functions
+
 
 def normalize_unicode(s):
     return unicodedata.normalize('NFC', s)
@@ -43,25 +45,43 @@ def strip_brackets(s):
     return s
 
 
+_dotted_rexp = re.compile(r'(?:\W|^)(([A-Za-z]\.){2,}[A-Za-z]\.?)')
+
+
 def clean_string(st):
     for c in sep:
         # do not remove certain chars
         if c in ['-', ',']:
             continue
+
+        if c == '.':
+            # we should not remove the dots for acronyms and such
+            dotted = _dotted_rexp.search(st)
+            if dotted:
+                s = dotted.group(1)
+                exclude_begin, exclude_end = dotted.span(1)
+
+                st = (st[:exclude_begin].replace(c, ' ') +
+                      st[exclude_begin:exclude_end] +
+                      st[exclude_end:].replace(c, ' '))
+                continue
+
         st = st.replace(c, ' ')
+
     parts = st.split()
     result = ' '.join(p for p in parts if p != '')
 
     # now also remove dashes on the outer part of the string
-    while result and result[0] in sep:
+    while result and result[0] in '-':
         result = result[1:]
-    while result and result[-1] in sep:
+    while result and result[-1] in '-':
         result = result[:-1]
 
     return result
 
 
 _words_rexp = re.compile('\w+', re.UNICODE)
+
 
 def find_words(s):
     return _words_rexp.findall(s.replace('_', ' '))
@@ -77,13 +97,12 @@ def reorder_title(title):
 
 
 def str_replace(string, pos, c):
-    return string[:pos] + c + string[pos+1:]
+    return string[:pos] + c + string[pos + 1:]
 
 
 def str_fill(string, region, c):
     start, end = region
     return string[:start] + c * (end - start) + string[end:]
-
 
 
 def levenshtein(a, b):
@@ -95,25 +114,25 @@ def levenshtein(a, b):
     m = len(a)
     n = len(b)
     d = []
-    for i in range(m+1):
-        d.append([0] * (n+1))
+    for i in range(m + 1):
+        d.append([0] * (n + 1))
 
-    for i in range(m+1):
+    for i in range(m + 1):
         d[i][0] = i
 
-    for j in range(n+1):
+    for j in range(n + 1):
         d[0][j] = j
 
-    for i in range(1, m+1):
-        for j in range(1, n+1):
-            if a[i-1] == b[j-1]:
+    for i in range(1, m + 1):
+        for j in range(1, n + 1):
+            if a[i - 1] == b[j - 1]:
                 cost = 0
             else:
                 cost = 1
 
-            d[i][j] = min(d[i-1][j] + 1,     # deletion
-                          d[i][j-1] + 1,     # insertion
-                          d[i-1][j-1] + cost # substitution
+            d[i][j] = min(d[i - 1][j] + 1,        # deletion
+                          d[i][j - 1] + 1,        # insertion
+                          d[i - 1][j - 1] + cost  # substitution
                           )
 
     return d[m][n]
@@ -140,7 +159,7 @@ def find_first_level_groups_span(string, enclosing):
     [(2, 5), (7, 10)]
     """
     opening, closing = enclosing
-    depth = [] # depth is a stack of indices where we opened a group
+    depth = []  # depth is a stack of indices where we opened a group
     result = []
     for i, c, in enumerate(string):
         if c == opening:
@@ -151,7 +170,7 @@ def find_first_level_groups_span(string, enclosing):
                 end = i
                 if not depth:
                     # we emptied our stack, so we have a 1st level group
-                    result.append((start, end+1))
+                    result.append((start, end + 1))
             except IndexError:
                 # we closed a group which was not opened before
                 pass
@@ -172,7 +191,7 @@ def split_on_groups(string, groups):
 
     """
     if not groups:
-        return [ string ]
+        return [string]
 
     boundaries = sorted(set(functools.reduce(lambda l, x: l + list(x), groups, [])))
     if boundaries[0] != 0:
@@ -180,10 +199,10 @@ def split_on_groups(string, groups):
     if boundaries[-1] != len(string):
         boundaries.append(len(string))
 
-    groups = [ string[start:end] for start, end in zip(boundaries[:-1],
-                                                       boundaries[1:]) ]
+    groups = [string[start:end] for start, end in zip(boundaries[:-1],
+                                                       boundaries[1:])]
 
-    return [ g for g in groups if g ] # return only non-empty groups
+    return [g for g in groups if g]  # return only non-empty groups
 
 
 def find_first_level_groups(string, enclosing, blank_sep=None):
@@ -219,6 +238,6 @@ def find_first_level_groups(string, enclosing, blank_sep=None):
     if blank_sep:
         for start, end in groups:
             string = str_replace(string, start, blank_sep)
-            string = str_replace(string, end-1, blank_sep)
+            string = str_replace(string, end - 1, blank_sep)
 
     return split_on_groups(string, groups)

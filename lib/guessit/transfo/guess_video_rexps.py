@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # GuessIt - A library for guessing information from filenames
-# Copyright (c) 2012 Nicolas Wack <wackou@gmail.com>
+# Copyright (c) 2013 Nicolas Wack <wackou@gmail.com>
 #
 # GuessIt is free software; you can redistribute it and/or modify it under
 # the terms of the Lesser GNU General Public License as published by
@@ -18,33 +18,44 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from __future__ import unicode_literals
-from guessit import Guess
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+from guessit.plugins import Transformer
+
 from guessit.transfo import SingleNodeGuesser
-from guessit.patterns import video_rexps, sep
-import re
-import logging
-
-log = logging.getLogger(__name__)
+from guessit.patterns import _psep
+from guessit.patterns.containers import PropertiesContainer
 
 
-def guess_video_rexps(string):
-    string = '-' + string + '-'
-    for rexp, confidence, span_adjust in video_rexps:
-        match = re.search(sep + rexp + sep, string, re.IGNORECASE)
-        if match:
-            metadata = match.groupdict()
-            # is this the better place to put it? (maybe, as it is at least
-            # the soonest that we can catch it)
-            if metadata.get('cdNumberTotal', -1) is None:
-                del metadata['cdNumberTotal']
-            span = (match.start() + span_adjust[0],
-                    match.end() + span_adjust[1] - 2)
-            return (Guess(metadata, confidence=confidence, raw=string[span[0]:span[1]]),
-                    span)
+class GuessVideoRexps(Transformer):
+    def __init__(self):
+        Transformer.__init__(self, 25)
 
-    return None, None
+        self.container = PropertiesContainer(canonical_from_pattern=False)
 
+        self.container.register_property('cdNumber', None, 'cd' + _psep + '(?P<cdNumber>[0-9])(?:' + _psep + 'of' + _psep + '(?P<cdNumberTotal>[0-9]))?', confidence=1.0, enhance=False, global_span=True)
+        self.container.register_property('cdNumberTotal', None, '([1-9])' + _psep + 'cds?', confidence=0.9, enhance=False)
 
-def process(mtree):
-    SingleNodeGuesser(guess_video_rexps, None, log).process(mtree)
+        self.container.register_property('edition', 'Collector Edition', 'collector', 'collector-edition', 'edition-collector')
+
+        self.container.register_property('edition', 'Special Edition', 'special', 'special-edition', 'edition-special')
+
+        self.container.register_property('edition', 'Criterion Edition', 'criterion', 'criterion-edition', 'edition-criterion')
+
+        self.container.register_property('edition', 'Deluxe Edition', 'deluxe', 'cdeluxe-edition', 'edition-deluxe')
+
+        self.container.register_property('edition', 'Director\'s cut', 'director\'?s?-cut', 'director\'?s?-cut-edition', 'edition-director\'?s?-cut')
+
+        self.container.register_property('bonusNumber', None, 'x([0-9]{1,2})', enhance=False, global_span=True)
+
+        self.container.register_property('filmNumber', None, 'f([0-9]{1,2})', enhance=False, global_span=True)
+
+    def supported_properties(self):
+        return self.container.get_supported_properties()
+
+    def guess_video_rexps(self, string):
+        found = self.container.find_properties(string)
+        return self.container.as_guess(found, string)
+
+    def process(self, mtree):
+        SingleNodeGuesser(self.guess_video_rexps, None, self.log).process(mtree)

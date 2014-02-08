@@ -20,29 +20,41 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.plugins import Transformer
+import abc
+import logging
+from abc import ABCMeta, abstractmethod
 
-from guessit.patterns import sep
-import re
 
+class Transformer(object):
+    __metaclass__ = ABCMeta
 
-class SplitOnDash(Transformer):
-    def __init__(self):
-        Transformer.__init__(self, 190)
+    def __init__(self, priority=0):
+        self.priority = priority
+        self.log = logging.getLogger(self.name)
 
-    def process(self, mtree):
-        """split into '-' separated subgroups (with required separator chars
-        around the dash)
-        """
-        for node in mtree.unidentified_leaves():
-            indices = []
+    @property
+    def name(self):
+        return self.__class__.__name__
 
-            pattern = re.compile(sep + '-' + sep)
-            match = pattern.search(node.value)
-            while match:
-                span = match.span()
-                indices.extend([span[0], span[1]])
-                match = pattern.search(node.value, span[1])
+    @property
+    def fullname(self):
+        return self.__module__ + "." + self.__class__.__name__
 
-            if indices:
-                node.partition(indices)
+    def supported_properties(self):
+        return {}
+
+    def enabled(self):
+        return True
+
+    def second_pass_options(self, mtree):
+        return (None, None)
+
+    def should_process(self, matcher):
+        return True
+
+    @abstractmethod
+    def process(self, mtree, *args, **kwargs):
+        pass
+
+    def rate_quality(self, guess, *props):
+        return 0

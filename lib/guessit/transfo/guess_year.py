@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # GuessIt - A library for guessing information from filenames
-# Copyright (c) 2012 Nicolas Wack <wackou@gmail.com>
+# Copyright (c) 2013 Nicolas Wack <wackou@gmail.com>
 #
 # GuessIt is free software; you can redistribute it and/or modify it under
 # the terms of the Lesser GNU General Public License as published by
@@ -18,33 +18,33 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from __future__ import unicode_literals
+from __future__ import absolute_import, division, print_function, unicode_literals
+
+from guessit.plugins import Transformer
+
 from guessit.transfo import SingleNodeGuesser
 from guessit.date import search_year
-import logging
-
-log = logging.getLogger(__name__)
 
 
-def guess_year(string):
-    year, span = search_year(string)
-    if year:
-        return { 'year': year }, span
-    else:
+class GuessYear(Transformer):
+    def __init__(self):
+        Transformer.__init__(self, -160)
+
+    def supported_properties(self):
+        return ['year']
+
+    def guess_year(self, string):
+        year, span = search_year(string)
+        if year:
+            return {'year': year}, span
+        else:
+            return None, None
+
+    def second_pass_options(self, mtree):
+        year_nodes = mtree.leaves_containing('year')
+        if len(year_nodes) > 1:
+            return None, {'skip_nodes': year_nodes[:len(year_nodes) - 1]}
         return None, None
 
-def guess_year_skip_first(string):
-    year, span = search_year(string)
-    if year:
-        year2, span2 = guess_year(string[span[1]:])
-        if year2:
-            return year2, (span2[0]+span[1], span2[1]+span[1])
-
-    return None, None
-
-
-def process(mtree, skip_first_year=False):
-    if skip_first_year:
-        SingleNodeGuesser(guess_year_skip_first, 1.0, log).process(mtree)
-    else:
-        SingleNodeGuesser(guess_year, 1.0, log).process(mtree)
+    def process(self, mtree, *args, **kwargs):
+        SingleNodeGuesser(self.guess_year, 1.0, self.log, *args, **kwargs).process(mtree)
