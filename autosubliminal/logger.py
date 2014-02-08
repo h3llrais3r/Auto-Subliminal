@@ -11,8 +11,7 @@ def initialize():
     log.setLevel(autosubliminal.LOGLEVEL)
 
     # Clear existing handlers (needed after soft restart) to prevent double logging
-    for tmp_handler in log.handlers:
-        log.removeHandler(tmp_handler)
+    log.handlers = []
 
     log_filter = _LogFilter(autosubliminal.LOGHTTPACCESS)
     # If the formatter is changed, also the utils.LOG_PARSER must be changed!
