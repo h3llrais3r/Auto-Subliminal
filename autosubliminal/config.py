@@ -11,9 +11,10 @@ import codecs
 
 from ConfigParser import SafeConfigParser
 
+import subliminal
+
 import autosubliminal
 from autosubliminal import version, utils
-import subliminal
 
 log = logging.getLogger(__name__)
 
@@ -54,6 +55,11 @@ def read_config(configfile):
                 autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
         else:
             autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
+
+        if cfg.has_option('config', 'matchsource'):
+            autosubliminal.MATCHSOURCE = cfg.getboolean('config', 'matchsource')
+        else:
+            autosubliminal.MATCHSOURCE = False
 
         if cfg.has_option('config', 'matchquality'):
             autosubliminal.MATCHQUALITY = cfg.getboolean('config', 'matchquality')
@@ -150,6 +156,7 @@ def read_config(configfile):
         autosubliminal.PATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
         autosubliminal.DOWNLOADENG = False
         autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
+        autosubliminal.MATCHSOURCE = False
         autosubliminal.MATCHQUALITY = False
         autosubliminal.MATCHCODEC = False
         autosubliminal.MATCHRELEASEGROUP = False
@@ -654,8 +661,9 @@ def save_config_section():
     cfg.set(section, "notifynl", str(autosubliminal.NOTIFYNL))
     cfg.set(section, "postprocesscmd", autosubliminal.POSTPROCESSCMD)
     cfg.set(section, "minmatchscore", str(autosubliminal.MINMATCHSCORE))
-    cfg.set(section, "matchcodec", str(autosubliminal.MATCHCODEC))
+    cfg.set(section, "matchsource", str(autosubliminal.MATCHSOURCE))
     cfg.set(section, "matchquality", str(autosubliminal.MATCHQUALITY))
+    cfg.set(section, "matchcodec", str(autosubliminal.MATCHCODEC))
     cfg.set(section, "matchreleasegroup", str(autosubliminal.MATCHRELEASEGROUP))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
     cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
@@ -1010,20 +1018,6 @@ def upgrade_config(from_version, to_version):
             autosubliminal.CONFIGUPGRADED = True
 
         # use subliminal scores (see examples below on how it is calculated)
-        ###########################
-        # Suliminal version > 0.7.3
-        ###########################
-        # video.scores['episode'] = 6
-        # video.scores['series'] = 24
-        # video.scores['season'] = 6
-        # video.scores['year'] = 24 -> TODO: TO BE CHECKED IF OK TO BE DEFAULT
-        # --> these 4 should always be matched by default -> not visible in GUI -> minmatchscore = 60
-        # video.scores['resolution'] = 2
-        # video.scores['release_group'] = 6
-        # video.scores['video_codec'] = 2
-        # --> these 3 are configurable -> max minmatchscore = 60 + 2 + 6 + 2 = 70
-        # video.scores['hash'] = 46
-        # --> perfect match -> not configurable
         #########################
         # Suliminal version 0.7.3
         #########################
@@ -1059,4 +1053,33 @@ def upgrade_config(from_version, to_version):
                     del autosubliminal.USERNAMEMAPPINGUPPER[x.upper()]
             print "INFO: Config upgraded to version 3."
             autosubliminal.CONFIGVERSION = 3
+            autosubliminal.CONFIGUPGRADED = True
+
+        # use subliminal scores (see examples below on how it is calculated)
+        ###########################
+        # Suliminal version >= 0.8.0
+        ###########################
+        # video.scores['episode'] = 6
+        # video.scores['series'] = 24
+        # video.scores['season'] = 6
+        # video.scores['year'] = 24 -> TODO: TO BE CHECKED IF OK TO BE DEFAULT
+        # --> these 4 should always be matched by default -> not visible in GUI -> minmatchscore = 60
+        # video.scores['format'] = 3
+        # video.scores['resolution'] = 2
+        # video.scores['release_group'] = 6
+        # video.scores['video_codec'] = 2
+        # --> these 4 are configurable -> max minmatchscore = 60 + 3 + 2 + 6 + 2 = 73
+        # video.scores['hash'] = 74
+        # --> perfect match -> not configurable
+        if from_version == 3 and to_version == 4:
+            print "INFO: New default minmatchscore."
+            print "INFO: Old value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
+            autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
+            autosubliminal.MATCHSOURCE = False
+            autosubliminal.MATCHQUALITY = False
+            autosubliminal.MATCHCODEC = False
+            autosubliminal.MATCHRELEASEGROUP = False
+            print "INFO: New value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
+            print "INFO: Config upgraded to version 4."
+            autosubliminal.CONFIGVERSION = 4
             autosubliminal.CONFIGUPGRADED = True

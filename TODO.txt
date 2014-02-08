@@ -1,8 +1,6 @@
 TO DO:
 
-- add custom logger instead of modifying the root logger
-- add match on source (only when this is provided by subliminal)
-- fix changelog parsing (use html instead of xml because it's not longer working after migrating from beautifulsoup to bs4)
+- change changelog url (still pointing to development branch)
 
 
 TO CHECK:

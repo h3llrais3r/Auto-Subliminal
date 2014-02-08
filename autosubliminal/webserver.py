@@ -77,7 +77,7 @@ class Config:
                     mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi,
                     twitterkey, twittersecret, notifyen, notifynl,
                     notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi,
-                    mmsdefault=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None,
+                    mmsdefault=None, mmssource=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None,
                     subliminalproviders=None):
         # Set all internal variables
         autosubliminal.PATH = path
@@ -96,6 +96,7 @@ class Config:
         autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
 
         # Set match options and minmatchscore
+        autosubliminal.MATCHSOURCE = False
         autosubliminal.MATCHQUALITY = False
         autosubliminal.MATCHCODEC = False
         autosubliminal.MATCHRELEASEGROUP = False
@@ -104,6 +105,9 @@ class Config:
         if mmsdefault:
             # mmsdefault is the minimal default score (which cannot be edited, so no flag is needed)
             autosubliminal.MINMATCHSCORE += autosubliminal.MINMATCHSCOREDEFAULT
+        if mmssource:
+            autosubliminal.MINMATCHSCORE += 3
+            autosubliminal.MATCHSOURCE = True
         if mmsquality:
             autosubliminal.MINMATCHSCORE += 2
             autosubliminal.MATCHQUALITY = True
