@@ -75,19 +75,17 @@ class SubChecker():
                     if autosubliminal.SUBNL == "":
                         single = True
 
-                # Download the best subtitle with min_score
+                # Download the best subtitle with min_score (without saving it in a file)
                 videos = [video]
                 languages = [language]
                 subtitles = subliminal.download_best_subtitles(set(videos), set(languages),
                                                                autosubliminal.SUBLIMINALPROVIDERLIST,
-                                                               single=single, min_score=autosubliminal.MINMATCHSCORE)
+                                                               min_score=autosubliminal.MINMATCHSCORE, single=single)
 
                 #TODO: review completely if support for multiple languages is needed
                 # Check if subtitle found
                 if subtitles:
-                    log.info(
-                        "A matching subtitle has been downloaded for the series %s - Season %s Episode %s from %s" % (
-                            title, season, episode, subtitles[video][0].provider_name))
+                    log.info("Download link: %s" % subtitles[video][0].page_link)
 
                     # Handle the donwload/post-download stuff
                     if lang == 'nl':
@@ -95,14 +93,13 @@ class SubChecker():
                     elif lang == 'en':
                         wanted_item['destinationFileLocationOnDisk'] = engsrtfile
                     download_item = wanted_item.copy()
-                    #TODO: Should be replaced with the real donwnload link when subliminal provides it
-                    #TODO: For now, just to mark it's already been downloaded
-                    download_item['downloadLink'] = 'downloaded'
+                    download_item['downloadLink'] = subtitles[video][0].page_link
                     download_item['downlang'] = lang
                     #TODO: Should be replaced with real subtitle name from download when subliminal provides it
                     #TODO: For now, just use name of the subtitle itself (not the real downloaded name)
                     download_item['subtitle'] = os.path.split(wanted_item['destinationFileLocationOnDisk'])[1][:-4]
                     download_item['provider'] = subtitles[video][0].provider_name
+                    download_item['subtitles'] = subtitles
 
                     subdownloader.download_subtitle(download_item)
 
