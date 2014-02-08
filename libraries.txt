@@ -18,6 +18,7 @@ pynma=0.1
 pynmwp=0.1
 pysrt=1.0.0
 pythontwitter=1.0.1
+pyxdg=0.25
 requests=2.0.1
 simplejson=2.0.9
 six=1.5.2
