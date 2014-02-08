@@ -22,5 +22,5 @@ pyxdg=0.25
 requests=2.0.1
 simplejson=2.0.9
 six=1.5.2
-subliminal=0.7.3
+subliminal=0.8.0-dev (h3llrais3r)
 tvdb_api=1.9.0

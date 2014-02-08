@@ -2,12 +2,11 @@
 from __future__ import unicode_literals
 import logging
 import babelfish
-import charade
 import requests
 from . import Provider
 from .. import __version__
-from ..exceptions import InvalidSubtitle, ProviderNotAvailable, ProviderError
-from ..subtitle import Subtitle, is_valid_subtitle
+from ..exceptions import InvalidSubtitle, ProviderError
+from ..subtitle import Subtitle, decode, fix_line_endings, is_valid_subtitle
 
 
 logger = logging.getLogger(__name__)
@@ -35,7 +34,7 @@ class TheSubDBProvider(Provider):
     def initialize(self):
         self.session = requests.Session()
         self.session.headers = {'User-Agent': 'SubDB/1.0 (subliminal/%s; https://github.com/Diaoul/subliminal)' %
-                                __version__}
+                                __version__.split('-')[0]}
 
     def terminate(self):
         self.session.close()
@@ -46,14 +45,9 @@ class TheSubDBProvider(Provider):
         :param params: params of the request
         :return: the response
         :rtype: :class:`requests.Response`
-        :raise: :class:`~subliminal.exceptions.ProviderNotAvailable`
 
         """
-        try:
-            r = self.session.get('http://api.thesubdb.com', params=params, timeout=10)
-        except requests.Timeout:
-            raise ProviderNotAvailable('Timeout after 10 seconds')
-        return r
+        return self.session.get('http://api.thesubdb.com', params=params, timeout=10)
 
     def query(self, hash):  # @ReservedAssignment
         params = {'action': 'search', 'hash': hash}
@@ -65,7 +59,7 @@ class TheSubDBProvider(Provider):
         elif r.status_code != 200:
             raise ProviderError('Request failed with status code %d' % r.status_code)
         return [TheSubDBSubtitle(language, hash) for language in
-                {babelfish.Language.fromalpha2(l) for l in r.content.split(',')}]
+                {babelfish.Language.fromalpha2(l) for l in r.content.decode('utf-8').split(',')}]
 
     def list_subtitles(self, video, languages):
         return [s for s in self.query(video.hashes['thesubdb']) if s.language in languages]
@@ -75,7 +69,7 @@ class TheSubDBProvider(Provider):
         r = self.get(params)
         if r.status_code != 200:
             raise ProviderError('Request failed with status code %d' % r.status_code)
-        subtitle_text = r.content.decode(charade.detect(r.content)['encoding'], 'replace')
-        if not is_valid_subtitle(subtitle_text):
+        subtitle_content = fix_line_endings(decode(r.content, subtitle.language))
+        if not is_valid_subtitle(subtitle_content):
             raise InvalidSubtitle
-        return subtitle_text
+        subtitle.content = subtitle_content

@@ -3,31 +3,33 @@ from __future__ import unicode_literals
 import logging
 import babelfish
 import bs4
-import charade
+import guessit
 import requests
 from . import Provider
 from .. import __version__
-from ..cache import region
-from ..exceptions import ProviderConfigurationError, ProviderNotAvailable, InvalidSubtitle
-from ..subtitle import Subtitle, is_valid_subtitle
+from ..cache import region, SHOW_EXPIRATION_TIME
+from ..exceptions import ConfigurationError, AuthenticationError, DownloadLimitExceeded, ProviderError, InvalidSubtitle
+from ..subtitle import Subtitle, decode, fix_line_endings, is_valid_subtitle, compute_guess_properties_matches
 from ..video import Episode
 
 
 logger = logging.getLogger(__name__)
+babelfish.language_converters.register('addic7ed = subliminal.converters.addic7ed:Addic7edConverter')
 
 
 class Addic7edSubtitle(Subtitle):
     provider_name = 'addic7ed'
 
-    def __init__(self, language, series, season, episode, title, version, hearing_impaired, download_link, referer):
-        super(Addic7edSubtitle, self).__init__(language, hearing_impaired)
+    def __init__(self, language, series, season, episode, title, year, version, hearing_impaired, download_link,
+                 page_link):
+        super(Addic7edSubtitle, self).__init__(language, hearing_impaired, page_link)
         self.series = series
         self.season = season
         self.episode = episode
         self.title = title
+        self.year = year
         self.version = version
         self.download_link = download_link
-        self.referer = referer
 
     def compute_matches(self, video):
         matches = set()
@@ -43,12 +45,25 @@ class Addic7edSubtitle(Subtitle):
         # title
         if video.title and self.title.lower() == video.title.lower():
             matches.add('title')
+        # year
+        if self.year == video.year:
+            matches.add('year')
         # release_group
         if video.release_group and self.version and video.release_group.lower() in self.version.lower():
             matches.add('release_group')
+        """
         # resolution
         if video.resolution and self.version and video.resolution in self.version.lower():
             matches.add('resolution')
+        # format
+        if video.format and self.version and video.format in self.version.lower:
+            matches.add('format')
+        """
+        # we don't have the complete filename, so we need to guess the matches separately
+        # guess resolution (screenSize in guessit)
+        matches |= compute_guess_properties_matches(video, self.version, 'screenSize')
+        # guess format
+        matches |= compute_guess_properties_matches(video, self.version, 'format')
         return matches
 
 
@@ -63,38 +78,32 @@ class Addic7edProvider(Provider):
 
     def __init__(self, username=None, password=None):
         if username is not None and password is None or username is None and password is not None:
-            raise ProviderConfigurationError('Username and password must be specified')
+            raise ConfigurationError('Username and password must be specified')
         self.username = username
         self.password = password
         self.logged_in = False
 
     def initialize(self):
         self.session = requests.Session()
-        self.session.headers = {'User-Agent': 'Subliminal/%s' % __version__}
+        self.session.headers = {'User-Agent': 'Subliminal/%s' % __version__.split('-')[0]}
         # login
         if self.username is not None and self.password is not None:
             logger.debug('Logging in')
             data = {'username': self.username, 'password': self.password, 'Submit': 'Log in'}
-            try:
-                r = self.session.post(self.server + '/dologin.php', data, timeout=10, allow_redirects=False)
-            except requests.Timeout:
-                raise ProviderNotAvailable('Timeout after 10 seconds')
+            r = self.session.post(self.server + '/dologin.php', data, timeout=10, allow_redirects=False)
             if r.status_code == 302:
                 logger.info('Logged in')
                 self.logged_in = True
             else:
-                logger.error('Failed to login')
+                raise AuthenticationError(self.username)
 
     def terminate(self):
         # logout
         if self.logged_in:
-            try:
-                r = self.session.get(self.server + '/logout.php', timeout=10)
-                logger.info('Logged out')
-            except requests.Timeout:
-                raise ProviderNotAvailable('Timeout after 10 seconds')
+            r = self.session.get(self.server + '/logout.php', timeout=10)
+            logger.info('Logged out')
             if r.status_code != 200:
-                raise ProviderNotAvailable('Request failed with status code %d' % r.status_code)
+                raise ProviderError('Request failed with status code %d' % r.status_code)
         self.session.close()
 
     def get(self, url, params=None):
@@ -104,18 +113,14 @@ class Addic7edProvider(Provider):
         :param params: params of the request
         :return: the response
         :rtype: :class:`bs4.BeautifulSoup`
-        :raise: :class:`~subliminal.exceptions.ProviderNotAvailable`
 
         """
-        try:
-            r = self.session.get(self.server + url, params=params, timeout=10)
-        except requests.Timeout:
-            raise ProviderNotAvailable('Timeout after 10 seconds')
+        r = self.session.get(self.server + url, params=params, timeout=10)
         if r.status_code != 200:
-            raise ProviderNotAvailable('Request failed with status code %d' % r.status_code)
+            raise ProviderError('Request failed with status code %d' % r.status_code)
         return bs4.BeautifulSoup(r.content, ['permissive'])
 
-    @region.cache_on_arguments()
+    @region.cache_on_arguments(expiration_time=SHOW_EXPIRATION_TIME)
     def get_show_ids(self):
         """Load the shows page with default series to show ids mapping
 
@@ -129,33 +134,47 @@ class Addic7edProvider(Provider):
             show_ids[html_show.string.lower()] = int(html_show['href'][6:])
         return show_ids
 
-    @region.cache_on_arguments()
-    def find_show_id(self, series):
-        """Find a show id from the series
+    @region.cache_on_arguments(expiration_time=SHOW_EXPIRATION_TIME)
+    def find_show_id(self, series, year=None):
+        """Find the show id from the `series` with optional `year`
 
-        Use this only if the series is not in the dict returned by :meth:`get_show_ids`
+        Use this only if the show id cannot be found with :meth:`get_show_ids`
 
-        :param string series: series of the episode
+        :param string series: series of the episode in lowercase
+        :param year: year of the series, if any
+        :type year: int or None
         :return: the show id, if any
         :rtype: int or None
 
         """
-        params = {'search': series, 'Submit': 'Search'}
+        series_year = series
+        if year is not None:
+            series_year += ' (%d)' % year
+        params = {'search': series_year, 'Submit': 'Search'}
         logger.debug('Searching series %r', params)
         suggested_shows = self.get('/search.php', params).select('span.titulo > a[href^="/show/"]')
         if not suggested_shows:
-            logger.info('Series %r not found', series)
+            logger.info('Series %r not found', series_year)
             return None
         return int(suggested_shows[0]['href'][6:])
 
-    def query(self, series, season):
+    def query(self, series, season, year=None):
         show_ids = self.get_show_ids()
-        if series.lower() in show_ids:
-            show_id = show_ids[series.lower()]
-        else:
-            show_id = self.find_show_id(series.lower())
-            if show_id is None:
-                return []
+        show_id = None
+        if year is not None:  # search with the year
+            series_year = '%s (%d)' % (series.lower(), year)
+            if series_year in show_ids:
+                show_id = show_ids[series_year]
+            else:
+                show_id = self.find_show_id(series.lower(), year)
+        if show_id is None:  # search without the year
+            year = None
+            if series.lower() in show_ids:
+                show_id = show_ids[series.lower()]
+            else:
+                show_id = self.find_show_id(series.lower())
+        if show_id is None:
+            return []
         params = {'show_id': show_id, 'season': season}
         logger.debug('Searching subtitles %r', params)
         link = '/show/{show_id}&season={season}'.format(**params)
@@ -164,31 +183,26 @@ class Addic7edProvider(Provider):
         for row in soup('tr', class_='epeven completed'):
             cells = row('td')
             if cells[5].string != 'Completed':
-                logger.debug('Skipping incomplete subtitle')
                 continue
             if not cells[3].string:
-                logger.debug('Skipping empty language')
                 continue
             subtitles.append(Addic7edSubtitle(babelfish.Language.fromaddic7ed(cells[3].string), series, season,
-                                              int(cells[1].string), cells[2].string, cells[4].string,
-                                              bool(cells[6].string), cells[9].a['href'], link))
+                                              int(cells[1].string), cells[2].string, year, cells[4].string,
+                                              bool(cells[6].string), cells[9].a['href'],
+                                              self.server + cells[2].a['href']))
         return subtitles
 
     def list_subtitles(self, video, languages):
-        return [s for s in self.query(video.series, video.season)
+        return [s for s in self.query(video.series, video.season, video.year)
                 if s.language in languages and s.episode == video.episode]
 
     def download_subtitle(self, subtitle):
-        try:
-            r = self.session.get(self.server + subtitle.download_link, timeout=10,
-                                 headers={'Referer': self.server + subtitle.referer})
-        except requests.Timeout:
-            raise ProviderNotAvailable('Timeout after 10 seconds')
+        r = self.session.get(self.server + subtitle.download_link, timeout=10, headers={'Referer': subtitle.page_link})
         if r.status_code != 200:
-            raise ProviderNotAvailable('Request failed with status code %d' % r.status_code)
+            raise ProviderError('Request failed with status code %d' % r.status_code)
         if r.headers['Content-Type'] == 'text/html':
-            raise ProviderNotAvailable('Download limit exceeded')
-        subtitle_text = r.content.decode(charade.detect(r.content)['encoding'], 'replace')
-        if not is_valid_subtitle(subtitle_text):
+            raise DownloadLimitExceeded
+        subtitle_content = fix_line_endings(decode(r.content, subtitle.language))
+        if not is_valid_subtitle(subtitle_content):
             raise InvalidSubtitle
-        return subtitle_text
+        subtitle.content = subtitle_content

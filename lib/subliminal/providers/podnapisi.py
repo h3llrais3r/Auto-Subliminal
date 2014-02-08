@@ -7,29 +7,28 @@ import xml.etree.ElementTree
 import zipfile
 import babelfish
 import bs4
-import charade
 import guessit
 import requests
 from . import Provider
 from .. import __version__
-from ..exceptions import InvalidSubtitle, ProviderNotAvailable, ProviderError
-from ..subtitle import Subtitle, is_valid_subtitle, compute_guess_matches
+from ..exceptions import InvalidSubtitle, ProviderError
+from ..subtitle import Subtitle, decode, fix_line_endings, is_valid_subtitle, compute_guess_matches
 from ..video import Episode, Movie
 
 
 logger = logging.getLogger(__name__)
+babelfish.language_converters.register('podnapisi = subliminal.converters.podnapisi:PodnapisiConverter')
 
 
 class PodnapisiSubtitle(Subtitle):
     provider_name = 'podnapisi'
 
-    def __init__(self, language, id, releases, hearing_impaired, link, series=None, season=None, episode=None,  # @ReservedAssignment
+    def __init__(self, language, id, releases, hearing_impaired, page_link, series=None, season=None, episode=None,  # @ReservedAssignment
                  title=None, year=None):
-        super(PodnapisiSubtitle, self).__init__(language, hearing_impaired)
+        super(PodnapisiSubtitle, self).__init__(language, hearing_impaired, page_link)
         self.id = id
         self.releases = releases
         self.hearing_impaired = hearing_impaired
-        self.link = link
         self.series = series
         self.season = season
         self.episode = episode
@@ -57,24 +56,24 @@ class PodnapisiSubtitle(Subtitle):
             # title
             if video.title and self.title.lower() == video.title.lower():
                 matches.add('title')
-            # year
-            if video.year and self.year == video.year:
-                matches.add('year')
             # guess
             for release in self.releases:
                 matches |= compute_guess_matches(video, guessit.guess_movie_info(release + '.mkv'))
+        # year
+        if self.year == video.year:
+            matches.add('year')
         return matches
 
 
 class PodnapisiProvider(Provider):
-    languages = {babelfish.Language.frompodnapisi(l) for l in babelfish.get_language_converter('podnapisi').codes}
+    languages = {babelfish.Language.frompodnapisi(l) for l in babelfish.language_converters['podnapisi'].codes}
     video_types = (Episode, Movie)
     server = 'http://simple.podnapisi.net'
     link_re = re.compile('^.*(?P<link>/ppodnapisi/download/i/\d+/k/.*$)')
 
     def initialize(self):
         self.session = requests.Session()
-        self.session.headers = {'User-Agent': 'Subliminal/%s' % __version__}
+        self.session.headers = {'User-Agent': 'Subliminal/%s' % __version__.split('-')[0]}
 
     def terminate(self):
         self.session.close()
@@ -87,15 +86,11 @@ class PodnapisiProvider(Provider):
         :param bool xml: whether the response content is XML or not
         :return: the response
         :rtype: :class:`xml.etree.ElementTree.Element` or :class:`bs4.BeautifulSoup`
-        :raise: :class:`~subliminal.exceptions.ProviderNotAvailable`
 
         """
-        try:
-            r = self.session.get(self.server + '/ppodnapisi' + url, params=params, timeout=10)
-        except requests.Timeout:
-            raise ProviderNotAvailable('Timeout after 10 seconds')
+        r = self.session.get(self.server + '/ppodnapisi' + url, params=params, timeout=10)
         if r.status_code != 200:
-            raise ProviderNotAvailable('Request failed with status code %d' % r.status_code)
+            raise ProviderError('Request failed with status code %d' % r.status_code)
         if is_xml:
             return xml.etree.ElementTree.fromstring(r.content)
         else:
@@ -109,10 +104,10 @@ class PodnapisiProvider(Provider):
             params['sTE'] = episode
         elif title:
             params['sK'] = title
-            if year:
-                params['sY'] = year
         else:
             raise ValueError('Missing parameters series and season and episode or title')
+        if year:
+            params['sY'] = year
         logger.debug('Searching episode %r', params)
         subtitles = []
         while True:
@@ -121,14 +116,17 @@ class PodnapisiProvider(Provider):
                 logger.debug('No subtitle found')
                 break
             if series and season and episode:
-                subtitles.extend([PodnapisiSubtitle(language, int(s.find('id').text), s.find('release').text.split(),
-                                                    'h' in (s.find('flags').text or ''), s.find('url').text[38:],
-                                                    series=series, season=season, episode=episode)
+                subtitles.extend([PodnapisiSubtitle(language, int(s.find('id').text),
+                                                    s.find('release').text.split() if s.find('release').text else [],
+                                                    'h' in (s.find('flags').text or ''), s.find('url').text,
+                                                    series=series, season=season, episode=episode,
+                                                    year=s.find('year').text)
                                   for s in root.findall('subtitle')])
             elif title:
-                subtitles.extend([PodnapisiSubtitle(language, int(s.find('id').text), s.find('release').text.split(),
-                                                    'h' in (s.find('flags').text or ''), s.find('url').text[38:],
-                                                    title=title, year=year)
+                subtitles.extend([PodnapisiSubtitle(language, int(s.find('id').text),
+                                                    s.find('release').text.split() if s.find('release').text else [],
+                                                    'h' in (s.find('flags').text or ''), s.find('url').text,
+                                                    title=title, year=s.find('year').text)
                                   for s in root.findall('subtitle')])
             if int(root.find('pagination/current').text) >= int(root.find('pagination/count').text):
                 break
@@ -138,26 +136,23 @@ class PodnapisiProvider(Provider):
     def list_subtitles(self, video, languages):
         if isinstance(video, Episode):
             return [s for l in languages for s in self.query(l, series=video.series, season=video.season,
-                                                             episode=video.episode)]
+                                                             episode=video.episode, year=video.year)]
         elif isinstance(video, Movie):
             return [s for l in languages for s in self.query(l, title=video.title, year=video.year)]
 
     def download_subtitle(self, subtitle):
-        soup = self.get(subtitle.link, is_xml=False)
+        soup = self.get(subtitle.page_link[38:], is_xml=False)
         link = soup.find('a', href=self.link_re)
         if not link:
             raise ProviderError('Cannot find the download link')
-        try:
-            r = self.session.get(self.server + self.link_re.match(link['href']).group('link'), timeout=10)
-        except requests.Timeout:
-            raise ProviderNotAvailable('Timeout after 10 seconds')
+        r = self.session.get(self.server + self.link_re.match(link['href']).group('link'), timeout=10)
         if r.status_code != 200:
-            raise ProviderNotAvailable('Request failed with status code %d' % r.status_code)
+            raise ProviderError('Request failed with status code %d' % r.status_code)
         with zipfile.ZipFile(io.BytesIO(r.content)) as zf:
             if len(zf.namelist()) > 1:
                 raise ProviderError('More than one file to unzip')
             subtitle_bytes = zf.read(zf.namelist()[0])
-        subtitle_text = subtitle_bytes.decode(charade.detect(subtitle_bytes)['encoding'], 'replace')
-        if not is_valid_subtitle(subtitle_text):
+        subtitle_content = fix_line_endings(decode(subtitle_bytes, subtitle.language))
+        if not is_valid_subtitle(subtitle_content):
             raise InvalidSubtitle
-        return subtitle_text
+        subtitle.content = subtitle_content

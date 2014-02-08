@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+from __future__ import unicode_literals, division
 import datetime
 import hashlib
 import logging
@@ -33,6 +33,7 @@ class Video(object):
     subclasses.
 
     :param string name: name or path of the video
+    :param string format: format of the video (HDTV, WEB-DL, ...)
     :param string release_group: release group of the video
     :param string resolution: screen size of the video stream (480p, 720p, 1080p or 1080i)
     :param string video_codec: codec of the video stream
@@ -45,9 +46,10 @@ class Video(object):
     """
     scores = {}
 
-    def __init__(self, name, release_group=None, resolution=None, video_codec=None, audio_codec=None, imdb_id=None,
-                 hashes=None, size=None, subtitle_languages=None):
+    def __init__(self, name, format=None, release_group=None, resolution=None, video_codec=None, audio_codec=None,
+                 imdb_id=None, hashes=None, size=None, subtitle_languages=None):
         self.name = name
+        self.format = format
         self.release_group = release_group
         self.resolution = resolution
         self.video_codec = video_codec
@@ -65,6 +67,10 @@ class Video(object):
             return Movie.fromguess(name, guess)
         raise ValueError('The guess must be an episode or a movie guess')
 
+    @classmethod
+    def fromname(cls, name):
+        return cls.fromguess(os.path.split(name)[1], guessit.guess_file_info(name, 'autodetect'))
+
     def __repr__(self):
         return '<%s [%r]>' % (self.__class__.__name__, self.name)
 
@@ -81,21 +87,23 @@ class Episode(Video):
     :param int season: season number of the episode
     :param int episode: episode number of the episode
     :param string title: title of the episode
+    :param int year: year of series
     :param int tvdb_id: TheTVDB id of the episode
 
     """
-    scores = {'title': 12, 'video_codec': 2, 'imdb_id': 35, 'audio_codec': 1, 'tvdb_id': 23, 'resolution': 2,
-              'season': 6, 'release_group': 6, 'series': 23, 'episode': 6, 'hash': 46}
+    scores = {'format': 3, 'video_codec': 2, 'tvdb_id': 48, 'title': 12, 'imdb_id': 60, 'audio_codec': 1, 'year': 24,
+              'resolution': 2, 'season': 6, 'release_group': 6, 'series': 24, 'episode': 6, 'hash': 71}
 
-    def __init__(self, name, series, season, episode, release_group=None, resolution=None, video_codec=None,
+    def __init__(self, name, series, season, episode, format=None, release_group=None, resolution=None, video_codec=None,
                  audio_codec=None, imdb_id=None, hashes=None, size=None, subtitle_languages=None, title=None,
-                 tvdb_id=None):
-        super(Episode, self).__init__(name, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
+                 year=None, tvdb_id=None):
+        super(Episode, self).__init__(name, format, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
                                       size, subtitle_languages)
         self.series = series
         self.season = season
         self.episode = episode
         self.title = title
+        self.year = year
         self.tvdb_id = tvdb_id
 
     @classmethod
@@ -104,13 +112,19 @@ class Episode(Video):
             raise ValueError('The guess must be an episode guess')
         if 'series' not in guess or 'season' not in guess or 'episodeNumber' not in guess:
             raise ValueError('Insufficient data to process the guess')
-        return cls(name, guess['series'], guess['season'], guess['episodeNumber'],
+        return cls(name, guess['series'], guess['season'], guess['episodeNumber'], format=guess.get('format'),
                    release_group=guess.get('releaseGroup'), resolution=guess.get('screenSize'),
                    video_codec=guess.get('videoCodec'), audio_codec=guess.get('audioCodec'),
-                   title=guess.get('title'))
+                   title=guess.get('title'), year=guess.get('year'))
+
+    @classmethod
+    def fromname(cls, name):
+        return cls.fromguess(os.path.split(name)[1], guessit.guess_episode_info(name))
 
     def __repr__(self):
-        return '<%s [%r, %rx%r]>' % (self.__class__.__name__, self.series, self.season, self.episode)
+        if self.year is None:
+            return '<%s [%r, %dx%d]>' % (self.__class__.__name__, self.series, self.season, self.episode)
+        return '<%s [%r, %d, %dx%d]>' % (self.__class__.__name__, self.series, self.year, self.season, self.episode)
 
 
 class Movie(Video):
@@ -122,12 +136,12 @@ class Movie(Video):
     :param int year: year of the movie
 
     """
-    scores = {'title': 13, 'video_codec': 2, 'resolution': 2, 'audio_codec': 1, 'year': 7, 'imdb_id': 31,
+    scores = {'format': 3, 'video_codec': 2, 'title': 13, 'imdb_id': 31, 'audio_codec': 1, 'year': 7, 'resolution': 2,
               'release_group': 6, 'hash': 31}
 
-    def __init__(self, name, title, release_group=None, resolution=None, video_codec=None, audio_codec=None,
+    def __init__(self, name, title, format=None, release_group=None, resolution=None, video_codec=None, audio_codec=None,
                  imdb_id=None, hashes=None, size=None, subtitle_languages=None, year=None):
-        super(Movie, self).__init__(name, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
+        super(Movie, self).__init__(name, format, release_group, resolution, video_codec, audio_codec, imdb_id, hashes,
                                     size, subtitle_languages)
         self.title = title
         self.year = year
@@ -138,14 +152,18 @@ class Movie(Video):
             raise ValueError('The guess must be a movie guess')
         if 'title' not in guess:
             raise ValueError('Insufficient data to process the guess')
-        return cls(name, guess['title'], release_group=guess.get('releaseGroup'), resolution=guess.get('screenSize'),
-                   video_codec=guess.get('videoCodec'), audio_codec=guess.get('audioCodec'),
-                   year=guess.get('year'))
+        return cls(name, guess['title'], format=guess.get('format'), release_group=guess.get('releaseGroup'),
+                   resolution=guess.get('screenSize'), video_codec=guess.get('videoCodec'),
+                   audio_codec=guess.get('audioCodec'),year=guess.get('year'))
+
+    @classmethod
+    def fromname(cls, name):
+        return cls.fromguess(os.path.split(name)[1], guessit.guess_movie_info(name))
 
     def __repr__(self):
         if self.year is None:
             return '<%s [%r]>' % (self.__class__.__name__, self.title)
-        return '<%s [%r, %r]>' % (self.__class__.__name__, self.title, self.year)
+        return '<%s [%r, %d]>' % (self.__class__.__name__, self.title, self.year)
 
 
 def scan_subtitle_languages(path):
@@ -156,7 +174,7 @@ def scan_subtitle_languages(path):
     :rtype: set
 
     """
-    language_extensions = tuple('.' + c for c in babelfish.get_language_converter('alpha2').codes)
+    language_extensions = tuple('.' + c for c in babelfish.language_converters['alpha2'].codes)
     dirpath, filename = os.path.split(path)
     subtitles = set()
     for p in os.listdir(dirpath):
@@ -249,7 +267,7 @@ def scan_video(path, subtitles=True, embedded_subtitles=True):
                             try:
                                 embedded_subtitle_languages.add(babelfish.Language.fromname(st.name))
                             except babelfish.Error:
-                                logger.error('Embedded subtitle track name %r is not a valid language', st.name)
+                                logger.debug('Embedded subtitle track name %r is not a valid language', st.name)
                                 embedded_subtitle_languages.add(babelfish.Language('und'))
                         else:
                             embedded_subtitle_languages.add(babelfish.Language('und'))
@@ -258,7 +276,7 @@ def scan_video(path, subtitles=True, embedded_subtitles=True):
             else:
                 logger.debug('MKV has no subtitle track')
     except enzyme.Error:
-        logger.error('Parsing video metadata with enzyme failed')
+        logger.exception('Parsing video metadata with enzyme failed')
     return video
 
 
@@ -278,9 +296,15 @@ def scan_videos(paths, subtitles=True, embedded_subtitles=True, age=None):
     videos = []
     # scan files
     for filepath in [p for p in paths if os.path.isfile(p)]:
-        if age and datetime.datetime.now() - datetime.datetime.fromtimestamp(os.path.getmtime(filepath)) > age:
-            logger.info('Skipping video %r: older than %r', filepath, age)
-            continue
+        if age is not None:
+            try:
+                video_age = datetime.datetime.now() - datetime.datetime.fromtimestamp(os.path.getmtime(filepath))
+            except ValueError:
+                logger.exception('Error while getting video age, skipping it')
+                continue
+            if video_age > age:
+                logger.info('Skipping video %r: older than %r', filepath, age)
+                continue
         try:
             videos.append(scan_video(filepath, subtitles, embedded_subtitles))
         except ValueError as e:
@@ -322,9 +346,15 @@ def scan_videos(paths, subtitles=True, embedded_subtitles=True, age=None):
                 if os.path.islink(filepath):
                     logger.debug('Skipping link %r in %r', filename, dirpath)
                     continue
-                if age and datetime.datetime.now() - datetime.datetime.fromtimestamp(os.path.getmtime(filepath)) > age:
-                    logger.info('Skipping video %r: older than %r', filepath, age)
-                    continue
+                if age is not None:
+                    try:
+                        video_age = datetime.datetime.now() - datetime.datetime.fromtimestamp(os.path.getmtime(filepath))
+                    except ValueError:
+                        logger.exception('Error while getting video age, skipping it')
+                        continue
+                    if video_age > age:
+                        logger.info('Skipping video %r: older than %r', filepath, age)
+                        continue
                 try:
                     video = scan_video(filepath, subtitles, embedded_subtitles)
                 except ValueError as e:
@@ -342,21 +372,21 @@ def hash_opensubtitles(video_path):
     :rtype: string
 
     """
-    bytesize = struct.calcsize(b'q')
+    bytesize = struct.calcsize(b'<q')
     with open(video_path, 'rb') as f:
         filesize = os.path.getsize(video_path)
         filehash = filesize
         if filesize < 65536 * 2:
             return None
-        for _ in range(65536 / bytesize):
+        for _ in range(65536 // bytesize):
             filebuffer = f.read(bytesize)
-            (l_value,) = struct.unpack(b'q', filebuffer)
+            (l_value,) = struct.unpack(b'<q', filebuffer)
             filehash += l_value
             filehash = filehash & 0xFFFFFFFFFFFFFFFF  # to remain as 64bit number
         f.seek(max(0, filesize - 65536), 0)
-        for _ in range(65536 / bytesize):
+        for _ in range(65536 // bytesize):
             filebuffer = f.read(bytesize)
-            (l_value,) = struct.unpack(b'q', filebuffer)
+            (l_value,) = struct.unpack(b'<q', filebuffer)
             filehash += l_value
             filehash = filehash & 0xFFFFFFFFFFFFFFFF
     returnedhash = '%016x' % filehash
@@ -378,4 +408,4 @@ def hash_thesubdb(video_path):
         data = f.read(readsize)
         f.seek(-readsize, os.SEEK_END)
         data += f.read(readsize)
-    return hashlib.md5(data).hexdigest().decode('ascii')
+    return hashlib.md5(data).hexdigest()
