@@ -12,7 +12,9 @@ from ..language import LANGUAGE_MATRIX
 
 class LanguageTypeConverter(LanguageConverter):
     FULLNAME = {'A': 'ancient', 'C': 'constructed', 'E': 'extinct', 'H': 'historical', 'L': 'living', 'S': 'special'}
-    SYMBOLS = {iso_language.alpha3: iso_language.type for iso_language in LANGUAGE_MATRIX}
+    SYMBOLS = {}
+    for iso_language in LANGUAGE_MATRIX:
+        SYMBOLS[iso_language.alpha3] = iso_language.type
     codes = set(SYMBOLS.values())
 
     def convert(self, alpha3, country=None, script=None):

@@ -11,4 +11,7 @@ from ..language import LANGUAGE_MATRIX
 
 class NameConverter(LanguageEquivalenceConverter):
     CASE_SENSITIVE = False
-    SYMBOLS = {iso_language.alpha3: iso_language.name for iso_language in LANGUAGE_MATRIX}
+    SYMBOLS = {}
+    for iso_language in LANGUAGE_MATRIX:
+        if iso_language.name:
+            SYMBOLS[iso_language.alpha3] = iso_language.name

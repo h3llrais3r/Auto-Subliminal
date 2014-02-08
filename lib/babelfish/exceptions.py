@@ -12,7 +12,12 @@ class Error(Exception):
     pass
 
 
-class LanguageConvertError(Error):
+class LanguageError(Error, AttributeError):
+    """Base class for all language exceptions in babelfish"""
+    pass
+
+
+class LanguageConvertError(LanguageError):
     """Exception raised by converters when :meth:`~babelfish.converters.LanguageConverter.convert` fails
 
     :param string alpha3: alpha3 code that failed conversion
@@ -36,7 +41,7 @@ class LanguageConvertError(Error):
         return s
 
 
-class LanguageReverseError(Error):
+class LanguageReverseError(LanguageError):
     """Exception raised by converters when :meth:`~babelfish.converters.LanguageReverseConverter.reverse` fails
 
     :param string code: code that failed reverse conversion
@@ -49,7 +54,12 @@ class LanguageReverseError(Error):
         return repr(self.code)
 
 
-class CountryConvertError(Error):
+class CountryError(Error, AttributeError):
+    """Base class for all country exceptions in babelfish"""
+    pass
+
+
+class CountryConvertError(CountryError):
     """Exception raised by converters when :meth:`~babelfish.converters.CountryConverter.convert` fails
 
     :param string alpha2: alpha2 code that failed conversion
@@ -62,7 +72,7 @@ class CountryConvertError(Error):
         return self.alpha2
 
 
-class CountryReverseError(Error):
+class CountryReverseError(CountryError):
     """Exception raised by converters when :meth:`~babelfish.converters.CountryReverseConverter.reverse` fails
 
     :param string code: code that failed reverse conversion

@@ -7,13 +7,12 @@
 from __future__ import unicode_literals
 from collections import namedtuple
 from functools import partial
-from pkg_resources import resource_stream, iter_entry_points  # @UnresolvedImport
-from .converters import CountryReverseConverter
+from pkg_resources import resource_stream  # @UnresolvedImport
+from .converters import ConverterManager
 
 
 COUNTRIES = {}
 COUNTRY_MATRIX = []
-COUNTRY_CONVERTERS = {}
 
 #: The namedtuple used in the :data:`COUNTRY_MATRIX`
 IsoCountry = namedtuple('IsoCountry', ['name', 'alpha2'])
@@ -25,6 +24,14 @@ for l in f:
     COUNTRIES[iso_country.alpha2] = iso_country.name
     COUNTRY_MATRIX.append(iso_country)
 f.close()
+
+
+class CountryConverterManager(ConverterManager):
+    """:class:`~babelfish.converters.ConverterManager` for country converters"""
+    entry_point = 'babelfish.country_converters'
+    internal_converters = ['name = babelfish.converters.countryname:CountryNameConverter']
+
+country_converters = CountryConverterManager()
 
 
 class CountryMeta(type):
@@ -65,10 +72,10 @@ class Country(CountryMeta(str('CountryBase'), (object,), {})):
         :rtype: :class:`Country`
 
         """
-        return cls(get_country_converter(converter).reverse(code))
+        return cls(country_converters[converter].reverse(code))
 
     def __getattr__(self, name):
-        return get_country_converter(name).convert(self.alpha2)
+        return country_converters[name].convert(self.alpha2)
 
     def __hash__(self):
         return hash(self.alpha2)
@@ -86,79 +93,3 @@ class Country(CountryMeta(str('CountryBase'), (object,), {})):
 
     def __str__(self):
         return self.alpha2
-
-
-def get_country_converter(name):
-    """Get a registered :class:`~babelfish.converters.CountryConverter` by `name`
-
-    If the converter was already loaded, it is returned from :data:`COUNTRY_CONVERTERS` otherwise the
-    entry point is searched for a matching converter.
-    If a matching converter is found, it is registered and then returned.
-    If no matching converter could be found, a ``KeyError`` is raised.
-
-    :param string name: name of the country converter to get
-    :return: the country converter
-    :rtype: :class:`~babelfish.converters.CountryConverter`
-    :raise: KeyError if no matching converter could be found
-
-    """
-    if name in COUNTRY_CONVERTERS:
-        return COUNTRY_CONVERTERS[name]
-    for ep in iter_entry_points('babelfish.country_converters'):
-        if ep.name == name:
-            register_country_converter(name, ep.load())
-            return COUNTRY_CONVERTERS[name]
-    raise KeyError(name)
-
-
-def register_country_converter(name, converter):
-    """Register a :class:`~babelfish.converters.CountryConverter`
-    with the given name
-
-    This will add the `name` property to the :class:`Country` class and
-    an alternative constructor `fromname` if the `converter` is a
-    :class:`~babelfish.converters.CountryReverseConverter`
-
-    :param string name: name of the converter to register
-    :param converter: converter to register
-    :type converter: :class:`~babelfish.converters.CountryConverter`
-
-    """
-    if name in COUNTRY_CONVERTERS:
-        raise ValueError('Converter %r already exists' % name)
-    COUNTRY_CONVERTERS[name] = converter()
-
-
-def unregister_country_converter(name):
-    """Unregister a :class:`~babelfish.converters.CountryConverter` by
-    name
-
-    :param string name: name of the converter to unregister
-
-    """
-    if name not in COUNTRY_CONVERTERS:
-        raise ValueError('Converter %r does not exist' % name)
-    del COUNTRY_CONVERTERS[name]
-
-
-def load_country_converters():
-    """Load converters from the entry point
-
-    Call :func:`register_country_converter` for each entry of the
-    'babelfish.country_converters' entry point
-
-    """
-    for ep in iter_entry_points('babelfish.country_converters'):
-        if ep.name not in COUNTRY_CONVERTERS:
-            register_country_converter(ep.name, ep.load())
-
-
-def clear_country_converters():
-    """Clear all country converters
-
-    Call :func:`unregister_country_converter` on each registered converter
-    in :data:`COUNTRY_CONVERTERS`
-
-    """
-    for name in set(COUNTRY_CONVERTERS.keys()):
-        unregister_country_converter(name)

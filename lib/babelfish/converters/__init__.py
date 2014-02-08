@@ -3,6 +3,7 @@
 # that can be found in the LICENSE file.
 #
 import collections
+from pkg_resources import iter_entry_points, EntryPoint
 from ..exceptions import LanguageConvertError, LanguageReverseError
 
 
@@ -200,3 +201,80 @@ class CountryReverseConverter(CountryConverter):
 
         """
         raise NotImplementedError
+
+
+class ConverterManager(object):
+    """Manager for babelfish converters behaving like a dict with lazy loading
+
+    Loading is done in this order:
+
+    * Entry point converters
+    * Registered converters
+    * Internal converters
+
+    .. attribute:: entry_point
+
+        The entry point where to look for converters
+
+    .. attribute:: internal_converters
+
+        Internal converters with entry point syntax
+
+    """
+    entry_point = ''
+    internal_converters = []
+
+    def __init__(self):
+        #: Registered converters with entry point syntax
+        self.registered_converters = []
+
+        #: Loaded converters
+        self.converters = {}
+
+    def __getitem__(self, name):
+        """Get a converter, lazy loading it if necessary"""
+        if name in self.converters:
+            return self.converters[name]
+        for ep in iter_entry_points(self.entry_point):
+            if ep.name == name:
+                self.converters[ep.name] = ep.load()()
+                return self.converters[ep.name]
+        for ep in (EntryPoint.parse(c) for c in self.registered_converters + self.internal_converters):
+            if ep.name == name:
+                self.converters[ep.name] = ep.load(require=False)()
+                return self.converters[ep.name]
+        raise KeyError(name)
+
+    def __setitem__(self, name, converter):
+        """Load a converter"""
+        self.converters[name] = converter
+
+    def __delitem__(self, name):
+        """Unload a converter"""
+        del self.converters[name]
+
+    def __iter__(self):
+        """Iterator over loaded converters"""
+        return iter(self.converters)
+
+    def register(self, entry_point):
+        """Register a converter
+
+        :param string entry_point: converter to register (entry point syntax)
+        :raise: ValueError if already registered
+
+        """
+        if entry_point in self.registered_converters:
+            raise ValueError('Already registered')
+        self.registered_converters.insert(0, entry_point)
+
+    def unregister(self, entry_point):
+        """Unregister a converter
+
+        :param string entry_point: converter to unregister (entry point syntax)
+
+        """
+        self.registered_converters.remove(entry_point)
+
+    def __contains__(self, name):
+        return name in self.converters

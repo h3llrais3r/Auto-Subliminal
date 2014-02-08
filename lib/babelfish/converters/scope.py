@@ -12,7 +12,9 @@ from ..language import LANGUAGE_MATRIX
 
 class ScopeConverter(LanguageConverter):
     FULLNAME = {'I': 'individual', 'M': 'macrolanguage', 'S': 'special'}
-    SYMBOLS = {iso_language.alpha3: iso_language.scope for iso_language in LANGUAGE_MATRIX}
+    SYMBOLS = {}
+    for iso_language in LANGUAGE_MATRIX:
+        SYMBOLS[iso_language.alpha3] = iso_language.scope
     codes = set(SYMBOLS.values())
 
     def convert(self, alpha3, country=None, script=None):

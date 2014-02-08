@@ -2,7 +2,7 @@
 cheetah=2.4.4
 
 # Mandatory (packaged) libraries
-babelfish=0.4.0
+babelfish=0.5.1
 beautifulsoup4=4.3.2
 charade=1.0.3
 cherrypy=3.2.2
@@ -16,7 +16,7 @@ httplib2=0.8
 oauth2=1.5.211
 pynma=0.1
 pynmwp=0.1
-pysrt=0.5.0
+pysrt=1.0.0
 pythontwitter=1.0.1
 requests=2.0.1
 simplejson=2.0.9

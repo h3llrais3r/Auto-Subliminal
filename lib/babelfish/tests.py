@@ -6,18 +6,108 @@
 # that can be found in the LICENSE file.
 #
 from __future__ import unicode_literals
+import re
+import sys
 from unittest import TestCase, TestSuite, TestLoader, TextTestRunner
 from pkg_resources import resource_stream  # @UnresolvedImport
-from babelfish import (LANGUAGES, Language, Country, Script, get_language_converter, get_country_converter,
-    LANGUAGE_CONVERTERS, LanguageReverseConverter, load_language_converters, clear_language_converters,
-    register_language_converter, unregister_language_converter, LanguageConvertError, LanguageReverseError,
-    CountryReverseError)
+from babelfish import (LANGUAGES, Language, Country, Script, language_converters, country_converters,
+    LanguageReverseConverter, LanguageConvertError, LanguageReverseError, CountryReverseError)
 
 
-class TestScript(TestCase):
+if sys.version_info[:2] <= (2, 6):
+    _MAX_LENGTH = 80
+
+    def safe_repr(obj, short=False):
+        try:
+            result = repr(obj)
+        except Exception:
+            result = object.__repr__(obj)
+        if not short or len(result) < _MAX_LENGTH:
+            return result
+        return result[:_MAX_LENGTH] + ' [truncated]...'
+
+    class _AssertRaisesContext(object):
+        """A context manager used to implement TestCase.assertRaises* methods."""
+
+        def __init__(self, expected, test_case, expected_regexp=None):
+            self.expected = expected
+            self.failureException = test_case.failureException
+            self.expected_regexp = expected_regexp
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc_value, tb):
+            if exc_type is None:
+                try:
+                    exc_name = self.expected.__name__
+                except AttributeError:
+                    exc_name = str(self.expected)
+                raise self.failureException(
+                    "{0} not raised".format(exc_name))
+            if not issubclass(exc_type, self.expected):
+                # let unexpected exceptions pass through
+                return False
+            self.exception = exc_value  # store for later retrieval
+            if self.expected_regexp is None:
+                return True
+
+            expected_regexp = self.expected_regexp
+            if isinstance(expected_regexp, basestring):
+                expected_regexp = re.compile(expected_regexp)
+            if not expected_regexp.search(str(exc_value)):
+                raise self.failureException('"%s" does not match "%s"' %
+                         (expected_regexp.pattern, str(exc_value)))
+            return True
+
+    class _Py26FixTestCase(object):
+        def assertIsNone(self, obj, msg=None):
+            """Same as self.assertTrue(obj is None), with a nicer default message."""
+            if obj is not None:
+                standardMsg = '%s is not None' % (safe_repr(obj),)
+                self.fail(self._formatMessage(msg, standardMsg))
+
+        def assertIsNotNone(self, obj, msg=None):
+            """Included for symmetry with assertIsNone."""
+            if obj is None:
+                standardMsg = 'unexpectedly None'
+                self.fail(self._formatMessage(msg, standardMsg))
+
+        def assertIn(self, member, container, msg=None):
+            """Just like self.assertTrue(a in b), but with a nicer default message."""
+            if member not in container:
+                standardMsg = '%s not found in %s' % (safe_repr(member),
+                                                      safe_repr(container))
+                self.fail(self._formatMessage(msg, standardMsg))
+
+        def assertNotIn(self, member, container, msg=None):
+            """Just like self.assertTrue(a not in b), but with a nicer default message."""
+            if member in container:
+                standardMsg = '%s unexpectedly found in %s' % (safe_repr(member),
+                                                            safe_repr(container))
+                self.fail(self._formatMessage(msg, standardMsg))
+
+        def assertIs(self, expr1, expr2, msg=None):
+            """Just like self.assertTrue(a is b), but with a nicer default message."""
+            if expr1 is not expr2:
+                standardMsg = '%s is not %s' % (safe_repr(expr1),
+                                                 safe_repr(expr2))
+                self.fail(self._formatMessage(msg, standardMsg))
+
+        def assertIsNot(self, expr1, expr2, msg=None):
+            """Just like self.assertTrue(a is not b), but with a nicer default message."""
+            if expr1 is expr2:
+                standardMsg = 'unexpectedly identical: %s' % (safe_repr(expr1),)
+                self.fail(self._formatMessage(msg, standardMsg))
+
+else:
+    class _Py26FixTestCase(object):
+        pass
+
+
+class TestScript(TestCase, _Py26FixTestCase):
     def test_wrong_script(self):
-        with self.assertRaises(ValueError):
-            Script('Azer')
+        self.assertRaises(ValueError, lambda: Script('Azer'))
 
     def test_eq(self):
         self.assertEqual(Script('Latn'), Script('Latn'))
@@ -29,17 +119,16 @@ class TestScript(TestCase):
         self.assertEqual(hash(Script('Hira')), hash('Hira'))
 
 
-class TestCountry(TestCase):
+class TestCountry(TestCase, _Py26FixTestCase):
     def test_wrong_country(self):
-        with self.assertRaises(ValueError):
-            Country('ZZ')
+        self.assertRaises(ValueError, lambda: Country('ZZ'))
 
     def test_eq(self):
         self.assertEqual(Country('US'), Country('US'))
 
     def test_ne(self):
         self.assertNotEqual(Country('GB'), Country('US'))
-        self.assertNotEqual(Country('US'), None)
+        self.assertIsNotNone(Country('US'))
 
     def test_hash(self):
         self.assertEqual(hash(Country('US')), hash('US'))
@@ -48,18 +137,16 @@ class TestCountry(TestCase):
         self.assertEqual(Country('US').name, 'UNITED STATES')
         self.assertEqual(Country.fromname('UNITED STATES'), Country('US'))
         self.assertEqual(Country.fromcode('UNITED STATES', 'name'), Country('US'))
-        with self.assertRaises(CountryReverseError):
-            Country.fromname('ZZZZZ')
-        self.assertEqual(len(get_country_converter('name').codes), 249)
+        self.assertRaises(CountryReverseError, lambda: Country.fromname('ZZZZZ'))
+        self.assertEqual(len(country_converters['name'].codes), 249)
 
 
-class TestLanguage(TestCase):
+class TestLanguage(TestCase, _Py26FixTestCase):
     def test_languages(self):
         self.assertEqual(len(LANGUAGES), 7874)
 
     def test_wrong_language(self):
-        with self.assertRaises(ValueError):
-            Language('zzz')
+        self.assertRaises(ValueError, lambda: Language('zzz'))
 
     def test_unknown_language(self):
         self.assertEqual(Language('zzzz', unknown='und'), Language('und'))
@@ -68,47 +155,40 @@ class TestLanguage(TestCase):
         self.assertEqual(Language('eng').alpha2, 'en')
         self.assertEqual(Language.fromalpha2('en'), Language('eng'))
         self.assertEqual(Language.fromcode('en', 'alpha2'), Language('eng'))
-        with self.assertRaises(LanguageReverseError):
-            Language.fromalpha2('zz')
-        with self.assertRaises(LanguageConvertError):
-            Language('aaa').alpha2
-        self.assertEqual(len(get_language_converter('alpha2').codes), 184)
+        self.assertRaises(LanguageReverseError, lambda: Language.fromalpha2('zz'))
+        self.assertRaises(LanguageConvertError, lambda: Language('aaa').alpha2)
+        self.assertEqual(len(language_converters['alpha2'].codes), 184)
 
     def test_converter_alpha3b(self):
         self.assertEqual(Language('fra').alpha3b, 'fre')
         self.assertEqual(Language.fromalpha3b('fre'), Language('fra'))
         self.assertEqual(Language.fromcode('fre', 'alpha3b'), Language('fra'))
-        with self.assertRaises(LanguageReverseError):
-            Language.fromalpha3b('zzz')
-        with self.assertRaises(LanguageConvertError):
-            Language('aaa').alpha3b
-        self.assertEqual(len(get_language_converter('alpha3b').codes), 418)
+        self.assertRaises(LanguageReverseError, lambda: Language.fromalpha3b('zzz'))
+        self.assertRaises(LanguageConvertError, lambda: Language('aaa').alpha3b)
+        self.assertEqual(len(language_converters['alpha3b'].codes), 418)
 
     def test_converter_alpha3t(self):
         self.assertEqual(Language('fra').alpha3t, 'fra')
         self.assertEqual(Language.fromalpha3t('fra'), Language('fra'))
         self.assertEqual(Language.fromcode('fra', 'alpha3t'), Language('fra'))
-        with self.assertRaises(LanguageReverseError):
-            Language.fromalpha3t('zzz')
-        with self.assertRaises(LanguageConvertError):
-            Language('aaa').alpha3t
-        self.assertEqual(len(get_language_converter('alpha3t').codes), 418)
+        self.assertRaises(LanguageReverseError, lambda: Language.fromalpha3t('zzz'))
+        self.assertRaises(LanguageConvertError, lambda: Language('aaa').alpha3t)
+        self.assertEqual(len(language_converters['alpha3t'].codes), 418)
 
     def test_converter_name(self):
         self.assertEqual(Language('eng').name, 'English')
         self.assertEqual(Language.fromname('English'), Language('eng'))
         self.assertEqual(Language.fromcode('English', 'name'), Language('eng'))
-        with self.assertRaises(LanguageReverseError):
-            Language.fromname('Zzzzzzzzz')
-        self.assertEqual(len(get_language_converter('name').codes), 7874)
+        self.assertRaises(LanguageReverseError, lambda: Language.fromname('Zzzzzzzzz'))
+        self.assertEqual(len(language_converters['name'].codes), 7874)
 
     def test_converter_scope(self):
-        self.assertEqual(get_language_converter('scope').codes, {'I', 'S', 'M'})
+        self.assertEqual(language_converters['scope'].codes, set(['I', 'S', 'M']))
         self.assertEqual(Language('eng').scope, 'individual')
         self.assertEqual(Language('und').scope, 'special')
 
     def test_converter_type(self):
-        self.assertEqual(get_language_converter('type').codes, {'A', 'C', 'E', 'H', 'L', 'S'})
+        self.assertEqual(language_converters['type'].codes, set(['A', 'C', 'E', 'H', 'L', 'S']))
         self.assertEqual(Language('eng').type, 'living')
         self.assertEqual(Language('und').type, 'special')
 
@@ -122,20 +202,18 @@ class TestLanguage(TestCase):
         # unofficially accepted as Serbian from Montenegro
         self.assertEqual(Language.fromopensubtitles('mne'), Language('srp', 'ME'))
         self.assertEqual(Language.fromcode('pob', 'opensubtitles'), Language('por', 'BR'))
-        with self.assertRaises(LanguageReverseError):
-            Language.fromopensubtitles('zzz')
-        with self.assertRaises(LanguageConvertError):
-            Language('aaa').opensubtitles
-        self.assertEqual(len(get_language_converter('opensubtitles').codes), 606)
+        self.assertRaises(LanguageReverseError, lambda: Language.fromopensubtitles('zzz'))
+        self.assertRaises(LanguageConvertError, lambda: Language('aaa').opensubtitles)
+        self.assertEqual(len(language_converters['opensubtitles'].codes), 606)
 
-        # test with all the languages from the opensubtitles api
+        # test with all the LANGUAGES from the opensubtitles api
         # downloaded from: http://www.opensubtitles.org/addons/export_languages.php
         f = resource_stream('babelfish', 'data/opensubtitles_languages.txt')
         f.readline()
         for l in f:
             idlang, alpha2, _, upload_enabled, web_enabled = l.decode('utf-8').strip().split('\t')
             if not int(upload_enabled) and not int(web_enabled):
-                # do not test languages that are too esoteric / not widely available
+                # do not test LANGUAGES that are too esoteric / not widely available
                 continue
             self.assertEqual(Language.fromopensubtitles(idlang).opensubtitles, idlang)
             if alpha2:
@@ -152,48 +230,50 @@ class TestLanguage(TestCase):
         language = Language.fromietf('fra-FR')
         self.assertEqual(language.alpha3, 'fra')
         self.assertEqual(language.country, Country('FR'))
-        self.assertIs(language.script, None)
+        self.assertIsNone(language.script)
 
     def test_fromietf_no_country_no_script(self):
         language = Language.fromietf('fra-FR')
         self.assertEqual(language.alpha3, 'fra')
         self.assertEqual(language.country, Country('FR'))
-        self.assertIs(language.script, None)
+        self.assertIsNone(language.script)
 
     def test_fromietf_no_country_script(self):
         language = Language.fromietf('fra-Latn')
         self.assertEqual(language.alpha3, 'fra')
-        self.assertIs(language.country, None)
+        self.assertIsNone(language.country)
         self.assertEqual(language.script, Script('Latn'))
 
     def test_fromietf_alpha2_language(self):
         language = Language.fromietf('fr-Latn')
         self.assertEqual(language.alpha3, 'fra')
-        self.assertIs(language.country, None)
+        self.assertIsNone(language.country)
         self.assertEqual(language.script, Script('Latn'))
 
     def test_fromietf_wrong_language(self):
-        with self.assertRaises(ValueError):
-            Language.fromietf('xyz-FR')
+        self.assertRaises(ValueError, lambda: Language.fromietf('xyz-FR'))
 
     def test_fromietf_wrong_country(self):
-        with self.assertRaises(ValueError):
-            Language.fromietf('fra-YZ')
+        self.assertRaises(ValueError, lambda: Language.fromietf('fra-YZ'))
 
     def test_fromietf_wrong_script(self):
-        with self.assertRaises(ValueError):
-            Language.fromietf('fra-FR-Wxyz')
+        self.assertRaises(ValueError, lambda: Language.fromietf('fra-FR-Wxyz'))
 
     def test_eq(self):
         self.assertEqual(Language('eng'), Language('eng'))
 
     def test_ne(self):
         self.assertNotEqual(Language('fra'), Language('eng'))
-        self.assertIsNot(Language('fra'), None)
+        self.assertIsNotNone(Language('fra'))
 
     def test_nonzero(self):
-        self.assertIs(bool(Language('und')), False)
-        self.assertIs(bool(Language('eng')), True)
+        self.assertFalse(bool(Language('und')))
+        self.assertTrue(bool(Language('eng')))
+
+    def test_language_hasattr(self):
+        self.assertTrue(hasattr(Language('fra'), 'alpha3'))
+        self.assertTrue(hasattr(Language('fra'), 'alpha2'))
+        self.assertFalse(hasattr(Language('bej'), 'alpha2'))
 
     def test_country(self):
         self.assertEqual(Language('por', 'BR').country, Country('BR'))
@@ -250,19 +330,15 @@ class TestLanguage(TestCase):
                 return (self.from_test[test], None)
         language = Language('fra')
         self.assertFalse(hasattr(language, 'test'))
-        register_language_converter('test', TestConverter)
+        language_converters['test'] = TestConverter()
         self.assertTrue(hasattr(language, 'test'))
-        self.assertIn('test', LANGUAGE_CONVERTERS)
+        self.assertIn('test', language_converters)
         self.assertEqual(Language('fra').test, 'test1')
         self.assertEqual(Language.fromtest('test2').alpha3, 'eng')
-        unregister_language_converter('test')
-        self.assertNotIn('test', LANGUAGE_CONVERTERS)
-        with self.assertRaises(KeyError):
-            Language.fromtest('test1')
-        with self.assertRaises(AttributeError):
-            Language('fra').test
-        clear_language_converters()
-        load_language_converters()
+        del language_converters['test']
+        self.assertNotIn('test', language_converters)
+        self.assertRaises(KeyError, lambda: Language.fromtest('test1'))
+        self.assertRaises(AttributeError, lambda: Language('fra').test)
 
 
 def suite():
