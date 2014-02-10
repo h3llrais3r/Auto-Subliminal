@@ -1,8 +1,12 @@
+import os
 import re
 import logging
 
+import guessit
+
 from autosubliminal import utils
-from autosubliminal.common import seperator, source, source_syn, quality, quality_syn, quality_fileext, codec, codec_syn, codec_fileext, releasegrp, releasegrp_syn, releasegrp_fallback, show_regex, episode_regex
+from autosubliminal.common import seperator, source, source_syn, quality, quality_syn, quality_fileext, codec, \
+    codec_syn, codec_fileext, releasegrp, releasegrp_syn, releasegrp_fallback, show_regex, episode_regex
 
 
 log = logging.getLogger(__name__)
@@ -114,7 +118,47 @@ def _return_scene_number(number):
     return unicode(number)
 
 
-def process_filename(filename, fileext):
+def process_file(dirname, filename):
+    # Guess file info
+    show_dict = _guess_file_info(os.path.join(dirname, filename))
+    # Old way (in case guessit would fail, but this should never be the case)
+    if len(show_dict) == 0:
+        show_dict = _process_filename(os.path.splitext(filename)[0], os.path.splitext(filename)[1])
+    return show_dict
+
+
+def _guess_file_info(filepath):
+    # Guess file info
+    guess = guessit.guess_file_info(filepath, 'autodetect')
+    log.debug("Dumping guess for debug: %r" % guess)
+    # Create show dict
+    show_dict = _show_dict_from_guess(guess)
+    # Check if mandatory elements could be guessed
+    if show_dict['title'] and show_dict['season'] and show_dict['episode']:
+        return show_dict
+    else:
+        log.error("Could not process %s" % filepath)
+        return {}
+
+
+def _show_dict_from_guess(guess):
+    show_dict = {'title': _property_from_guess(guess, 'series'), 'season': _property_from_guess(guess, 'season'),
+                 'episode': _property_from_guess(guess, 'episodeNumber'),
+                 'source': _property_from_guess(guess, 'format'), 'quality': _property_from_guess(guess, 'screenSize'),
+                 'codec': _property_from_guess(guess, 'videoCodec'),
+                 'releasegrp': _property_from_guess(guess, 'releaseGroup')}
+    log.debug("Dumping dict for debug %r" % show_dict)
+    return show_dict
+
+
+def _property_from_guess(guess, propertyname, defaultvalue=None):
+    propertyvalue = defaultvalue
+    if propertyname in guess.keys():
+        propertyvalue = guess[propertyname]
+    return propertyvalue
+
+
+def _process_filename(filename, fileext):
     show_info = _return_group(show_regex, filename)
     log.debug("Dumping show_info dict for debug %r" % show_info)
     title = None
@@ -123,10 +167,14 @@ def process_filename(filename, fileext):
     file_info = None
 
     if show_info:
-        if 'title' in show_info.keys(): title = _check_title(show_info['title'])
-        if 'season' in show_info.keys(): season = _return_scene_number(show_info['season'])
-        if 'episode' in show_info.keys(): episode = _return_scene_number(show_info['episode'])
-        if 'extra_info' in show_info.keys(): file_info = show_info['extra_info']
+        if 'title' in show_info.keys():
+            title = _check_title(show_info['title'])
+        if 'season' in show_info.keys():
+            season = _return_scene_number(show_info['season'])
+        if 'episode' in show_info.keys():
+            episode = _return_scene_number(show_info['episode'])
+        if 'extra_info' in show_info.keys():
+            file_info = show_info['extra_info']
 
         if file_info:
             file_info = file_info.lower()

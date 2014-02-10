@@ -45,8 +45,7 @@ def walk_dir(path):
                         not os.path.exists(os.path.join(dirname, srtfileeng)) and autosubliminal.DOWNLOADENG):
                     log.debug("File %s is missing a subtitle" % filename)
                     lang = []
-                    filename_results = fileprocessor.process_filename(os.path.splitext(filename)[0],
-                                                                      os.path.splitext(filename)[1])
+                    filename_results = fileprocessor.process_file(dirname, filename)
                     if 'title' in filename_results.keys():
                         if 'season' in filename_results.keys():
                             if 'episode' in filename_results.keys():
