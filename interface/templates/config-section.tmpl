@@ -1,4 +1,7 @@
+#import babelfish
+
 #import autosubliminal
+#from autosubliminal import config
 
 <table>
 	<tr>
@@ -9,7 +12,7 @@
 
 	<tr>
 		<td width="200px">Video paths</td>
-		<td><textarea rows="3" cols="50" name="videopaths">$autosubliminal.config.display_videopaths</textarea></td>
+		<td><textarea rows="3" cols="50" name="videopaths">$config.display_videopaths</textarea></td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationVideopaths"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationVideopaths" class="dropdown-menu has-tip" align="left"><ul><li>The folders where your videos are located.<br />Use a new line for each location!</li></ul></div></td>
 	</tr>
 
@@ -22,85 +25,89 @@
 	<tr>
 		<td width="200px">Launchbrowser</td>
 		<td><select name="launchbrowser">
-#if $autosubliminal.LAUNCHBROWSER
-  <option value="True" selected="selected">Enabled</option>
-  <option value="False">Disabled</option>
-#else
-  <option value="True">Enabled</option>
-  <option value="False" selected="selected">Disabled</option>
-#end if
+            #if $autosubliminal.LAUNCHBROWSER
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+            #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+            #end if
 		</select></td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationLauchbrowser"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationLauchbrowser" class="dropdown-menu has-tip" align="left"><ul><li>Should we start a browser every time Auto-Subliminal starts? This overwrites the commandline parameters</li></ul></div></td>
 	</tr>
 
+	<!--
 	<tr>
-		<td width="200px">Fallback to English</td>
-		<td><select name="fallbacktoeng">
-#if $autosubliminal.FALLBACKTOENG
-  <option value="True" selected="selected">Enabled</option>
-  <option value="False">Disabled</option>
-#else
-  <option value="True">Enabled</option>
-  <option value="False" selected="selected">Disabled</option>
-#end if
-</select></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationFallbacktoeng"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationFallbacktoeng" class="dropdown-menu has-tip" align="left"><ul><li>When Enabled, English subtitles are downloaded when there are no Dutch subtitles available.<br />Default is Enabled.</li></ul></div></td>
+		<td width="200px">Default language</td>
+		<td><input type="text" size="50" name="defaultlanguage" value="$autosubliminal.DEFAULTLANGUAGE" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationDefaultlanguage"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationDefaultlanguage" class="dropdown-menu has-tip" align="left"><ul><li>The default subtitle language (alpha2 code).</li></ul></div></td>
 	</tr>
-
+	-->
 	<tr>
-		<td width="200px">Download English</td>
-		<td><select name="downloadeng"> <!--value="$autosubliminal.DOWNLOADENG" />-->
-#if $autosubliminal.DOWNLOADENG
-  <option value="True" selected="selected">Enabled</option>
-  <option value="False">Disabled</option>
-#else
-  <option value="True">Enabled</option>
-  <option value="False" selected="selected">Disabled</option>
-#end if
-</select></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationDownloadeng"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationDownloadeng" class="dropdown-menu has-tip" align="left"><ul><li>When Enabled, English subtitles are always downloaded.<br />Default is Disabled.</li></ul></div></td>
-	</tr>
-
-	<tr>
-		<td width="200px">Subtitle English</td>
-		<td><input type="text" size="50" name="subeng" value="$autosubliminal.SUBENG" /></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationSubeng"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationSubeng" class="dropdown-menu has-tip" align="left"><ul><li>When Fallback to English is enabled, English subtitles are renamed to: filename.subeng.srt.<br />Default is 'en' (filename.en.srt).</li></ul></div></td>
-	</tr>
-
-	<tr>
-		<td width="200px">Subtitle Dutch</td>
-		<td><input type="text" size="50" name="subnl" value="$autosubliminal.SUBNL" /></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationSubnl"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationSubnl" class="dropdown-menu has-tip" align="left"><ul><li>When downloading Dutch subtitles, files are renamed to: filename.srt when left emtpy.<br />Default is Empty.</li></ul></div></td>
-	</tr>
-
-	<tr>
-		<td width="200px">Notify English</td>
-		<td><select name="notifyen">
-			#if $autosubliminal.NOTIFYEN
-			  <option value="True" selected="selected">Enabled</option>
-			  <option value="False">Disabled</option>
-			#else
-			  <option value="True">Enabled</option>
-			  <option value="False" selected="selected">Disabled</option>
-			#end if
+		<td width="200px">Default language</td>
+		<td><select name="defaultlanguage">
+            #for language in babelfish.LANGUAGE_MATRIX:
+                #if $language.alpha2
+                    #set $name = ($language.name[:$language.name.find('(') if $language.name.find('(') != -1 else len($language.name)]) + ' (' + $language.alpha2 + ')'
+                    #if $language.alpha2 == $autosubliminal.DEFAULTLANGUAGE
+                        <option value="$language.alpha2" selected="selected">$name</option>
+                    #else
+                        <option value="$language.alpha2">$name</option>
+                    #end if
+                #end if
+            #end for
 		</select></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationNotifyEN"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationNotifyEN" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, Auto-Subliminal will send a notification when an English subtitle has been downloaded.<br />Default is Enabled.</li></ul></div></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationDefaultlanguage"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationDefaultlanguage" class="dropdown-menu has-tip" align="left"><ul><li>The default subtitle language (alpha2 code).</li></ul></div></td>
 	</tr>
 
 	<tr>
-		<td width="200px">Notify Dutch</td>
-		<td><select name="notifynl">
-			#if $autosubliminal.NOTIFYNL
-			  <option value="True" selected="selected">Enabled</option>
-			  <option value="False">Disabled</option>
-			#else
-			  <option value="True">Enabled</option>
-			  <option value="False" selected="selected">Disabled</option>
-			#end if
+		<td width="200px">Use language suffix</td>
+		<td><select name="defaultlanguagesuffix">
+            #if $autosubliminal.DEFAULTLANGUAGESUFFIX
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+            #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+            #end if
 		</select></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationNotifyNL"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationNotifyNL" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, Auto-Subliminal will send a notification when a Dutch subtitle has been downloaded.<br />Default is Enabled.</li></ul></div></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationDefaultlanguagesuffix"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationDefaultlanguagesuffix" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, the default subtitle will be extended with the alpha2 code of the language (f.e. showname.en.srt).</li></ul></div></td>
 	</tr>
-	
+
+	<tr>
+		<td width="200px">Additional languages</td>
+		<td><input type="text" size="50" name="additionallanguages" value="$config.display_additional_languages" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationAdditionallanguages"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationAdditionallanguages" class="dropdown-menu has-tip" align="left"><ul><li>Comma separated list with the additional subtitle languages in alpha2 format.<br />If additional languages are provided, subtitles will be extended with the alpha2 code of the language (f.e. showname.en.srt).</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="200px">Notify</td>
+		<td><select name="notify">
+		    #if $autosubliminal.NOTIFY
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+            #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+            #end if
+		</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationNotify"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationNotify" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, Auto-Subliminal will send a notification when a subtitle has been downloaded.<br />Default is Disabled.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="200px">Post-Process</td>
+		<td><select name="postprocess">
+		    #if $autosubliminal.POSTPROCESS
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+            #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+            #end if
+		</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationPostprocess"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationPostprocess" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, the post processing CMD will be executed.<br />Default is Disabled.</li></ul></div></td>
+	</tr>
+
 	<tr>
 		<td width="200px">Post-process CMD</td>
 		<td><input type="text" size="50" name="postprocesscmd" value="$autosubliminal.POSTPROCESSCMD" /></td>
@@ -155,7 +162,7 @@
 		</td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationMinmatchscore"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a>
 		<div id="informationMinmatchscore" class="dropdown-menu has-tip" align="left"><ul><li>
-		What items should match before a subtitle is downloaded via the API? 
+		What items should match before a subtitle is downloaded via the API?
 		</li></ul></div></td>
 	</tr>
 
@@ -172,7 +179,7 @@
 		</select></td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationSkiphiddendirs"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationSkiphiddendirs" class="dropdown-menu has-tip" align="left"><ul><li>Should we scan hidden directories (directories that start with a dot, for example .AppleDouble)? Doesn't work for Windows style hidden directories.</li></ul></div></td>
 	</tr>
-	
+
 	<tr>
 		<td width="200px">ScanDisk</td>
 		<td><input type="text" size="50" name="scandisk" value="$autosubliminal.SCHEDULERSCANDISK" /></td>

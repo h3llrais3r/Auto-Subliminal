@@ -46,15 +46,11 @@ def notify_test(notifylib):
 def notify(language, subtitlefile, videofile, provider):
     log.debug("Trying to send notifications. Language: %s, Srt: %s, Video: %s, Provider: %s" % (
         language, subtitlefile, videofile, provider))
-
     # Lets strip video file and subtitle file of its path!
     subtitlefile = os.path.basename(subtitlefile)
     videofile = os.path.basename(videofile)
-
-    if language == 'en' and autosubliminal.NOTIFYEN:
-        notify_send(language, subtitlefile, videofile, provider)
-    if language == 'nl' and autosubliminal.NOTIFYNL:
-        notify_send(language, subtitlefile, videofile, provider)
+    # Send notification
+    notify_send(language, subtitlefile, videofile, provider)
 
 
 def notify_send(language, subtitlefile, videofile, provider):

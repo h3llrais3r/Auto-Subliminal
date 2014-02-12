@@ -32,17 +32,9 @@ def walk_dir(path):
                 if re.search('sample', filename):
                     continue
 
-                # What subtitle files should we expect?
-
-                if autosubliminal.SUBNL != "":
-                    srtfile = os.path.splitext(filename)[0] + u"." + autosubliminal.SUBNL + u".srt"
-                else:
-                    srtfile = os.path.splitext(filename)[0] + u".srt"
-
-                srtfileeng = os.path.splitext(filename)[0] + u"." + autosubliminal.SUBENG + u".srt"
-
-                if not os.path.exists(os.path.join(dirname, srtfile)) or (
-                        not os.path.exists(os.path.join(dirname, srtfileeng)) and autosubliminal.DOWNLOADENG):
+                # Check if there aren't any subtitles yet for the file
+                languages = check_missing_subtitles(dirname, filename)
+                if len(languages) > 0:
                     log.debug("File %s is missing a subtitle" % filename)
                     lang = []
                     filename_results = fileprocessor.process_file(dirname, filename)
@@ -52,7 +44,6 @@ def walk_dir(path):
                                 title = filename_results['title']
                                 season = filename_results['season']
                                 episode = filename_results['episode']
-
                                 if utils.skip_show(title, season, episode):
                                     log.debug("SkipShow returned True")
                                     log.info("Skipping %s - Season %s Episode %s" % (title, season, episode))
@@ -63,13 +54,7 @@ def walk_dir(path):
                                                                                       time.localtime(os.path.getctime(
                                                                                           filename_results[
                                                                                               'originalFileLocationOnDisk']))))
-                                if not os.path.exists(os.path.join(dirname, srtfile)):
-                                    lang.append('nl')
-                                if not os.path.exists(os.path.join(dirname, srtfileeng)) and (
-                                        autosubliminal.FALLBACKTOENG or autosubliminal.DOWNLOADENG):
-                                    lang.append('en')
-
-                                filename_results['lang'] = lang
+                                filename_results['lang'] = languages
                                 autosubliminal.WANTEDQUEUE.append(filename_results)
 
                             else:
@@ -81,6 +66,27 @@ def walk_dir(path):
                     else:
                         log.error("Could not process the filename properly filename: %s" % filename)
                         continue
+
+
+def check_missing_subtitles(dirname, filename):
+    missing_subtitles = []
+    # Check default language
+    if autosubliminal.DEFAULTLANGUAGE:
+        # Check with or without alpha2 code suffix depending on configuration
+        if autosubliminal.DEFAULTLANGUAGESUFFIX:
+            srtfile = os.path.splitext(filename)[0] + u"." + autosubliminal.DEFAULTLANGUAGE + u".srt"
+        else:
+            srtfile = os.path.splitext(filename)[0] + u".srt"
+        if not os.path.exists(os.path.join(dirname, srtfile)):
+            missing_subtitles.append(autosubliminal.DEFAULTLANGUAGE)
+        # Check additional languages
+    if autosubliminal.ADDITIONALLANGUAGES:
+        # Always check with alpha2 code suffix for additional languages
+        for language in autosubliminal.ADDITIONALLANGUAGES:
+            srtfile = os.path.splitext(filename)[0] + u"." + language + u".srt"
+            if not os.path.exists(os.path.join(dirname, srtfile)):
+                missing_subtitles.append(language)
+    return missing_subtitles
 
 
 class DiskScanner():

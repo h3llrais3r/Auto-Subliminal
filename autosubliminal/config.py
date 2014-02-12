@@ -10,6 +10,7 @@ import logging
 import codecs
 
 from ConfigParser import SafeConfigParser
+from cherrypy.lib.cptools import autovary
 
 import subliminal
 
@@ -41,11 +42,6 @@ def read_config(configfile):
         else:
             print "ERROR: Required ariable PATH is missing. Using current working directory instead."
             autosubliminal.PATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
-
-        if cfg.has_option('config', 'downloadeng'):
-            autosubliminal.DOWNLOADENG = cfg.getboolean('config', 'downloadeng')
-        else:
-            autosubliminal.DOWNLOADENG = False
 
         if cfg.has_option('config', 'minmatchscore'):
             autosubliminal.MINMATCHSCORE = cfg.getint('config', 'minmatchscore')
@@ -98,30 +94,25 @@ def read_config(configfile):
             autosubliminal.VIDEOPATHS = []
             autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
 
-        if cfg.has_option("config", "fallbacktoeng"):
-            autosubliminal.FALLBACKTOENG = cfg.getboolean("config", "fallbacktoeng")
+        if cfg.has_option("config", "defaultlanguage"):
+            autosubliminal.DEFAULTLANGUAGE = cfg.get("config", "defaultlanguage")
         else:
-            autosubliminal.FALLBACKTOENG = True
+            autosubliminal.DEFAULTLANGUAGE = u"en"
 
-        if cfg.has_option("config", "subeng"):
-            autosubliminal.SUBENG = cfg.get("config", "subeng")
+        if cfg.has_option("config", "defaultlanguagesuffix"):
+            autosubliminal.DEFAULTLANGUAGESUFFIX = cfg.getboolean("config", "defaultlanguagesuffix")
         else:
-            autosubliminal.SUBENG = 'en'
+            autosubliminal.DEFAULTLANGUAGESUFFIX = False
 
-        if cfg.has_option("config", "subnl"):
-            autosubliminal.SUBNL = cfg.get("config", "subnl")
+        if cfg.has_option("config", "additionallanguages"):
+            autosubliminal.ADDITIONALLANGUAGES = cfg.get("config", "additionallanguages").split(",")
         else:
-            autosubliminal.SUBNL = u""
+            autosubliminal.ADDITIONALLANGUAGES = []
 
-        if cfg.has_option("config", "notifyen"):
-            autosubliminal.NOTIFYEN = cfg.getboolean("config", "notifyen")
+        if cfg.has_option("config", "notify"):
+            autosubliminal.NOTIFY = cfg.getboolean("config", "notify")
         else:
-            autosubliminal.NOTIFYEN = False
-
-        if cfg.has_option("config", "notifynl"):
-            autosubliminal.NOTIFYNL = cfg.getboolean("config", "notifynl")
-        else:
-            autosubliminal.NOTIFYNL = False
+            autosubliminal.NOTIFY = False
 
         if cfg.has_option("config", "workdir"):
             autosubliminal.PATH = cfg.get("config", "workdir")
@@ -132,6 +123,11 @@ def read_config(configfile):
         else:
             print "ERROR: Required variable LOGFILE is missing. Using 'AutoSubliminal.log' instead."
             autosubliminal.LOGFILE = u"AutoSubliminal.log"
+
+        if cfg.has_option("config", "postprocess"):
+            autosubliminal.POSTPROCESS = cfg.getboolean("config", "postprocess")
+        else:
+            autosubliminal.POSTPROCESS = False
 
         if cfg.has_option("config", "postprocesscmd"):
             autosubliminal.POSTPROCESSCMD = cfg.get("config", "postprocesscmd")
@@ -154,7 +150,6 @@ def read_config(configfile):
         print "ERROR: Required config section is missing. Using default values instead."
         print "ERROR: Required variable PATH is missing. Using current working directory instead."
         autosubliminal.PATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
-        autosubliminal.DOWNLOADENG = False
         autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
         autosubliminal.MATCHSOURCE = False
         autosubliminal.MATCHQUALITY = False
@@ -165,11 +160,11 @@ def read_config(configfile):
         print "ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead."
         autosubliminal.VIDEOPATHS = []
         autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
-        autosubliminal.FALLBACKTOENG = True
-        autosubliminal.SUBENG = u'en'
-        autosubliminal.SUBNL = u""
-        autosubliminal.NOTIFYEN = False
-        autosubliminal.NOTIFYNL = False
+        autosubliminal.DEFAULTLANGUAGE = u"en"
+        autosubliminal.DEFAULTLANGUAGESUFFIX = False
+        autosubliminal.ADDITIONALLANGUAGES = []
+        autosubliminal.NOTIFY = False
+        autosubliminal.POSTPROCESS = False
         autosubliminal.SKIPHIDDENDIRS = False
         print "ERROR: Required variable LOGFILE is missing. Using 'AutoSuliminal.log' instead."
         autosubliminal.LOGFILE = u"AutoSubliminal.log"
@@ -178,7 +173,7 @@ def read_config(configfile):
     if cfg.has_section('logfile'):
         if cfg.has_option("logfile", "loglevel"):
             autosubliminal.LOGLEVEL = cfg.get("logfile", "loglevel")
-            if autosubliminal.LOGLEVEL.lower() == u'error':
+            if autosubliminal.LOGLEVEL.lower() == u"error":
                 autosubliminal.LOGLEVEL = logging.ERROR
             elif autosubliminal.LOGLEVEL.lower() == u"warning":
                 autosubliminal.LOGLEVEL = logging.WARNING
@@ -193,7 +188,7 @@ def read_config(configfile):
 
         if cfg.has_option("logfile", "loglevelconsole"):
             autosubliminal.LOGLEVELCONSOLE = cfg.get("logfile", "loglevelconsole")
-            if autosubliminal.LOGLEVELCONSOLE.lower() == u'error':
+            if autosubliminal.LOGLEVELCONSOLE.lower() == u"error":
                 autosubliminal.LOGLEVELCONSOLE = logging.ERROR
             elif autosubliminal.LOGLEVELCONSOLE.lower() == u"warning":
                 autosubliminal.LOGLEVELCONSOLE = logging.WARNING
@@ -246,7 +241,7 @@ def read_config(configfile):
         if cfg.has_option('webserver', 'webroot'):
             autosubliminal.WEBROOT = cfg.get('webserver', 'webroot')
         else:
-            autosubliminal.WEBROOT = u''
+            autosubliminal.WEBROOT = u""
 
         if cfg.has_option('webserver', 'username') and cfg.has_option('webserver', 'password'):
             autosubliminal.USERNAME = cfg.get('webserver', 'username')
@@ -256,9 +251,9 @@ def read_config(configfile):
     else:
         print "ERROR: The webserver section is required. Now setting the default values (0.0.0.0:8083)."
         print "WARNING: The webserver is started without authentication."
-        autosubliminal.WEBSERVERIP = u'0.0.0.0'
+        autosubliminal.WEBSERVERIP = u"0.0.0.0"
         autosubliminal.WEBSERVERPORT = 8083
-        autosubliminal.WEBROOT = u''
+        autosubliminal.WEBROOT = u""
 
     if cfg.has_section('skipshow'):
         # Try to read skipshow section in the config
@@ -602,6 +597,20 @@ def display_videopaths():
         s += x + "\n"
     return s
 
+
+def display_additional_languages():
+    """
+    Return a string containing all the additional languages in a comma separated list.
+    """
+    s = ""
+    for x in autosubliminal.ADDITIONALLANGUAGES:
+        if s == "":
+            s += x
+        else:
+            s += "," + x
+    return s
+
+
 def string_to_dict(items=None):
     """
     Return a correct dict from a string
@@ -622,6 +631,7 @@ def string_to_dict(items=None):
             returnitems.append(showinfo)
     returnitems = dict(returnitems)
     return returnitems
+
 
 def save_config_section():
     """
@@ -649,16 +659,23 @@ def save_config_section():
             else:
                 videopaths = x
 
+    additionallanguages = None
+    for x in autosubliminal.ADDITIONALLANGUAGES:
+        if x:
+            if additionallanguages:
+                additionallanguages += "," + x
+            else:
+                additionallanguages = x
+
     cfg.set(section, "path", autosubliminal.PATH)
     cfg.set(section, "videopaths", str(videopaths))
     cfg.set(section, "logfile", autosubliminal.LOGFILE)
     cfg.set(section, "launchbrowser", str(autosubliminal.LAUNCHBROWSER))
-    cfg.set(section, "fallbacktoeng", str(autosubliminal.FALLBACKTOENG))
-    cfg.set(section, "downloadeng", str(autosubliminal.DOWNLOADENG))
-    cfg.set(section, "subeng", autosubliminal.SUBENG)
-    cfg.set(section, "subnl", autosubliminal.SUBNL)
-    cfg.set(section, "notifyen", str(autosubliminal.NOTIFYEN))
-    cfg.set(section, "notifynl", str(autosubliminal.NOTIFYNL))
+    cfg.set(section, "defaultlanguage", autosubliminal.DEFAULTLANGUAGE)
+    cfg.set(section, "defaultlanguagesuffix", autosubliminal.DEFAULTLANGUAGESUFFIX)
+    cfg.set(section, "additionallanguages", str(additionallanguages))
+    cfg.set(section, "notify", str(autosubliminal.NOTIFY))
+    cfg.set(section, "postprocess", str(autosubliminal.POSTPROCESS))
     cfg.set(section, "postprocesscmd", autosubliminal.POSTPROCESSCMD)
     cfg.set(section, "minmatchscore", str(autosubliminal.MINMATCHSCORE))
     cfg.set(section, "matchsource", str(autosubliminal.MATCHSOURCE))

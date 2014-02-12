@@ -70,12 +70,14 @@ class Config:
         return str(tmpl)
 
     @cherrypy.expose(alias='saveConfig')
-    def save_config(self, subeng, checksub, scandisk, skiphiddendirs, subnl, postprocesscmd, path, logfile, videopaths,
-                    launchbrowser, fallbacktoeng, downloadeng, username, password, webroot, skipshow, lognum,
-                    loglevelconsole, logsize, loglevel, loghttpaccess, logreversed, webserverip, webserverport, usernamemapping,
+    def save_config(self, checksub, scandisk, defaultlanguage, defaultlanguagesuffix, additionallanguages,
+                    postprocess, postprocesscmd, path, logfile,
+                    videopaths, launchbrowser, username, password, webroot, skipshow, lognum, skiphiddendirs,
+                    loglevelconsole, logsize, loglevel, loghttpaccess, logreversed, webserverip, webserverport,
+                    usernamemapping,
                     notifymail, notifygrowl, notifynma, notifytwitter, mailsrv, mailfromaddr, mailtoaddr, mailusername,
                     mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi,
-                    twitterkey, twittersecret, notifyen, notifynl,
+                    twitterkey, twittersecret, notify,
                     notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi,
                     mmsdefault=None, mmssource=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None,
                     subliminalproviders=None):
@@ -85,12 +87,11 @@ class Config:
         autosubliminal.LOGFILE = logfile
         autosubliminal.LOGHTTPACCESS = loghttpaccess
         autosubliminal.LOGREVERSED = logreversed
-        autosubliminal.FALLBACKTOENG = fallbacktoeng
-        autosubliminal.DOWNLOADENG = downloadeng
-        autosubliminal.SUBENG = subeng
-        autosubliminal.SUBNL = subnl
-        autosubliminal.NOTIFYEN = notifyen
-        autosubliminal.NOTIFYNL = notifynl
+        autosubliminal.DEFAULTLANGUAGE = defaultlanguage
+        autosubliminal.DEFAULTLANGUAGESUFFIX = defaultlanguagesuffix
+        autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split(',')
+        autosubliminal.NOTIFY = notify
+        autosubliminal.POSTPROCESS = postprocess
         autosubliminal.POSTPROCESSCMD = postprocesscmd
         autosubliminal.LAUNCHBROWSER = launchbrowser
         autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
@@ -301,9 +302,9 @@ class Home:
         cherrypy.response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
 
         if autosubliminal.STARTED:
-            return callback+'('+json.dumps({"msg": "True"})+');'
+            return callback + '(' + json.dumps({"msg": "True"}) + ');'
         else:
-            return callback+'('+json.dumps({"msg": "False"})+');'
+            return callback + '(' + json.dumps({"msg": "False"}) + ');'
 
     @cherrypy.expose(alias='runNow')
     def run_now(self):
@@ -358,7 +359,7 @@ class Log:
         return str(tmpl)
 
     @cherrypy.expose(alias='clearLog')
-    def clear_log(self,  loglevel=''):
+    def clear_log(self, loglevel=''):
         # Clear log file (open it in write mode and pass)
         with open(autosubliminal.LOGFILE, 'w'):
             pass

@@ -3,6 +3,7 @@ import os
 
 import babelfish
 import subliminal
+import subliminal.subtitle
 
 import autosubliminal
 from autosubliminal import utils, subdownloader
@@ -40,13 +41,6 @@ class SubChecker():
                 log.warning("Out of api calls")
                 break
 
-            # This should map on the srt file names created by subliminal!
-            if autosubliminal.SUBNL != "":
-                srtfile = os.path.splitext(originalfile)[0] + u"." + autosubliminal.SUBNL + u".srt"
-            else:
-                srtfile = os.path.splitext(originalfile)[0] + u".srt"
-            engsrtfile = os.path.splitext(originalfile)[0] + u"." + autosubliminal.SUBENG + u".srt"
-
             # Lets try to find a showid
             showid = utils.get_showid(title)
 
@@ -68,50 +62,38 @@ class SubChecker():
                     log.error("Invalid language '%s' specified" % lang)
                     continue
 
-                # Determine if language suffix is needed in srt file name (f.e. <episode_name>.nl.srt)
-                # Default this is true, except when no prefix is defined for nl language
+                # Determine if language alpha2 code suffix is needed in srt file name (f.e. <episode_name>.nl.srt)
                 single = False
-                if lang == 'nl':
-                    if autosubliminal.SUBNL == "":
-                        single = True
+                if lang == autosubliminal.DEFAULTLANGUAGE and not autosubliminal.DEFAULTLANGUAGESUFFIX:
+                    single = True
 
                 # Download the best subtitle with min_score (without saving it in a file)
+                # TODO: I think the single needs a fix in subliminal because it's only needed in the save_subtitles
+                # TODO: It should not be a check for breaking the loop in the download_best_subtitles method!!
                 videos = [video]
                 languages = [language]
                 subtitles = subliminal.download_best_subtitles(set(videos), set(languages),
                                                                autosubliminal.SUBLIMINALPROVIDERLIST,
-                                                               min_score=autosubliminal.MINMATCHSCORE, single=single)
+                                                               min_score=autosubliminal.MINMATCHSCORE, single=False)
 
-                #TODO: review completely if support for multiple languages is needed
                 # Check if subtitle found
                 if subtitles:
                     log.info("Download link: %s" % subtitles[video][0].page_link)
 
                     # Handle the donwload/post-download stuff
-                    if lang == 'nl':
-                        wanted_item['destinationFileLocationOnDisk'] = srtfile
-                    elif lang == 'en':
-                        wanted_item['destinationFileLocationOnDisk'] = engsrtfile
                     download_item = wanted_item.copy()
+                    subtitle_path = subliminal.subtitle.get_subtitle_path(video.name, None if single else language)
+                    download_item['destinationFileLocationOnDisk'] = subtitle_path
                     download_item['downloadLink'] = subtitles[video][0].page_link
                     download_item['downlang'] = lang
                     #TODO: Should be replaced with real subtitle name from download when subliminal provides it
                     #TODO: For now, just use name of the subtitle itself (not the real downloaded name)
-                    download_item['subtitle'] = os.path.split(wanted_item['destinationFileLocationOnDisk'])[1][:-4]
+                    download_item['subtitle'] = os.path.split(download_item['destinationFileLocationOnDisk'])[1][:-4]
                     download_item['provider'] = subtitles[video][0].provider_name
                     download_item['subtitles'] = subtitles
+                    download_item['single'] = single
 
                     subdownloader.download_subtitle(download_item)
-
-                    if lang == 'nl' and (
-                            autosubliminal.FALLBACKTOENG and not autosubliminal.DOWNLOADENG) and 'en' in langs:
-                        log.debug(
-                            'A dutch subtitle is found and fallback is true. Removing the english subtitle from the wantedlist.')
-                        langs.remove('en')
-                        langs.remove(lang)
-                        if len(langs) == 0:
-                            to_delete_wanted_queue.append(index)
-                        break
 
                     langs.remove(lang)
                     if len(langs) == 0:
