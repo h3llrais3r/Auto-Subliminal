@@ -13,8 +13,8 @@ log = logging.getLogger(__name__)
 
 
 def walk_dir(path):
+    log.info("Scanning video path: %s" % path)
     for dirname, dirnames, filenames in os.walk(os.path.join(path)):
-        log.info("Scanning video path: %s" % path)
         log.debug("Directory name: %s" % dirname)
 
         # Check folders to be skipped
