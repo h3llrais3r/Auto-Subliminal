@@ -141,9 +141,11 @@ def _guess_file_info(filepath):
 
 
 def _show_dict_from_guess(guess):
-    show_dict = {'title': _property_from_guess(guess, 'series'), 'season': _property_from_guess(guess, 'season'),
+    show_dict = {'title': _property_from_guess(guess, 'series'),
+                 'season': _property_from_guess(guess, 'season'),
                  'episode': _property_from_guess(guess, 'episodeNumber'),
-                 'source': _property_from_guess(guess, 'format'), 'quality': _property_from_guess(guess, 'screenSize'),
+                 'source': _property_from_guess(guess, 'format'),
+                 'quality': _property_from_guess(guess, 'screenSize', 'SD'),  # No screenSize found means SD
                  'codec': _property_from_guess(guess, 'videoCodec'),
                  'releasegrp': _property_from_guess(guess, 'releaseGroup')}
     log.debug("Dumping dict for debug %r" % show_dict)
