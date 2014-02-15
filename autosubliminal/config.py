@@ -919,7 +919,7 @@ def check_for_restart():
 
     if cfg.has_section('logfile'):
         if cfg.has_option("logfile", "logfile"):
-            logfile = cfg.get("config", "logfile")
+            logfile = cfg.get("logfile", "logfile")
 
         if cfg.has_option("logfile", "loglevel"):
             loglevel = cfg.get("logfile", "loglevel")
