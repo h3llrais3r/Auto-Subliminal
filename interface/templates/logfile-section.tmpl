@@ -4,40 +4,45 @@
 
 <table>
 	<tr>
+		<td width="120px">Logfile</td>
+		<td><input type="text" size="50" name="logfile" value="$autosubliminal.LOGFILE" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationLogfile"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationLogfile" class="dropdown-menu has-tip" align="left"><ul><li>The location and the name of the logfile. When not set, AutoSubliminal.log will be used.<br />This field is required!</li></ul></div></td>
+	</tr>
+	<tr>
 		<td width="120px">Loglevel</td>
 		<td><select name="loglevel">
-  #if $logging.getLevelName(autosubliminal.LOGLEVEL).lower() == 'info'
-    <option value=$logging.INFO selected="selected">Info</option>
-    <option value=$logging.CRITICAL>Critical</option>
-    <option value=$logging.WARNING>Warning</option>
-    <option value=$logging.ERROR>Error</option>
-    <option value=$logging.DEBUG>Debug</option>
-  #elif $logging.getLevelName(autosubliminal.LOGLEVEL).lower() == 'critical'
-    <option value=$logging.INFO>Info</option>
-    <option value=$logging.CRITICAL selected="selected">Critical</option>
-    <option value=$logging.WARNING>Warning</option>
-    <option value=$logging.ERROR>Error</option>
-    <option value=$logging.DEBUG>Debug</option>
-  #elif $logging.getLevelName(autosubliminal.LOGLEVEL).lower() == 'warning'
-    <option value=$logging.INFO>Info</option>
-    <option value=$logging.CRITICAL>Critical</option>
-    <option value=$logging.WARNING selected="selected">Warning</option>
-    <option value=$logging.ERROR>Error</option>
-    <option value=$logging.DEBUG>Debug</option>
-  #elif $logging.getLevelName(autosubliminal.LOGLEVEL).lower() == 'error'
-    <option value=$logging.INFO>Info</option>
-    <option value=$logging.CRITICAL>Critical</option>
-    <option value=$logging.WARNING>Warning</option>
-    <option value=$logging.ERROR selected="selected">Error</option>
-    <option value=$logging.DEBUG>Debug</option>
-  #elif $logging.getLevelName(autosubliminal.LOGLEVEL).lower() == 'debug'
-    <option value=$logging.INFO>Info</option>
-    <option value=$logging.CRITICAL>Critical</option>
-    <option value=$logging.WARNING>Warning</option>
-    <option value=$logging.ERROR>Error</option>
-    <option value=$logging.DEBUG selected="selected">Debug</option>
-  #end if
-</select></td>
+            #if $logging.getLevelName(autosubliminal.LOGLEVEL).lower() == 'info'
+                <option value=$logging.INFO selected="selected">Info</option>
+                <option value=$logging.CRITICAL>Critical</option>
+                <option value=$logging.WARNING>Warning</option>
+                <option value=$logging.ERROR>Error</option>
+                <option value=$logging.DEBUG>Debug</option>
+            #elif $logging.getLevelName(autosubliminal.LOGLEVEL).lower() == 'critical'
+                <option value=$logging.INFO>Info</option>
+                <option value=$logging.CRITICAL selected="selected">Critical</option>
+                <option value=$logging.WARNING>Warning</option>
+                <option value=$logging.ERROR>Error</option>
+                <option value=$logging.DEBUG>Debug</option>
+            #elif $logging.getLevelName(autosubliminal.LOGLEVEL).lower() == 'warning'
+                <option value=$logging.INFO>Info</option>
+                <option value=$logging.CRITICAL>Critical</option>
+                <option value=$logging.WARNING selected="selected">Warning</option>
+                <option value=$logging.ERROR>Error</option>
+                <option value=$logging.DEBUG>Debug</option>
+            #elif $logging.getLevelName(autosubliminal.LOGLEVEL).lower() == 'error'
+                <option value=$logging.INFO>Info</option>
+                <option value=$logging.CRITICAL>Critical</option>
+                <option value=$logging.WARNING>Warning</option>
+                <option value=$logging.ERROR selected="selected">Error</option>
+                <option value=$logging.DEBUG>Debug</option>
+            #elif $logging.getLevelName(autosubliminal.LOGLEVEL).lower() == 'debug'
+                <option value=$logging.INFO>Info</option>
+                <option value=$logging.CRITICAL>Critical</option>
+                <option value=$logging.WARNING>Warning</option>
+                <option value=$logging.ERROR>Error</option>
+                <option value=$logging.DEBUG selected="selected">Debug</option>
+            #end if
+        </select></td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationLoglevel"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationLoglevel" class="dropdown-menu has-tip" align="left"><ul><li>Set the loglevel</li></ul></div></td>
 	</tr>
 

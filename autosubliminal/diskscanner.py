@@ -3,6 +3,9 @@ import os
 import re
 import time
 
+import subliminal
+import subliminal.video
+
 import autosubliminal
 from autosubliminal import utils, fileprocessor
 
@@ -13,27 +16,27 @@ def walk_dir(path):
     for dirname, dirnames, filenames in os.walk(os.path.join(path)):
         log.info("Scanning video path: %s" % path)
         log.debug("Directory name: %s" % dirname)
+
+        # Check folders to be skipped
+        if autosubliminal.SKIPHIDDENDIRS and os.path.split(dirname)[1].startswith(u'.'):
+            continue
         if re.search('_unpack_', dirname, re.IGNORECASE):
             log.debug("Found a unpack directory, skipping")
             continue
-
-        if autosubliminal.SKIPHIDDENDIRS and os.path.split(dirname)[1].startswith(u'.'):
-            continue
-
         if re.search('_failed_', dirname, re.IGNORECASE):
             log.debug("Found a failed directory, skipping")
             continue
 
         for filename in filenames:
-            splitname = filename.split(".")
-            ext = splitname[len(splitname) - 1]
+            root, ext = os.path.splitext(filename)
 
-            if ext in ('avi', 'mkv', 'wmv', 'ts', 'mp4'):
+            if ext and ext in subliminal.video.VIDEO_EXTENSIONS:
+                # Skip 'sample' videos
                 if re.search('sample', filename):
                     continue
 
-                # Check if there aren't any subtitles yet for the file
-                languages = check_missing_subtitles(dirname, filename)
+                # Check if there are missing subtitle languages for the video file
+                languages = check_missing_subtitle_languages(dirname, filename)
                 if len(languages) > 0:
                     log.debug("File %s is missing a subtitle" % filename)
                     lang = []
@@ -48,7 +51,7 @@ def walk_dir(path):
                                     log.debug("SkipShow returned True")
                                     log.info("Skipping %s - Season %s Episode %s" % (title, season, episode))
                                     continue
-                                log.info("Dutch subtitle wanted for %s and added to wantedQueue" % filename)
+                                log.info("Subtitle(s) wanted for %s and added to wantedQueue" % filename)
                                 filename_results['originalFileLocationOnDisk'] = os.path.join(dirname, filename)
                                 filename_results['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S',
                                                                                       time.localtime(os.path.getctime(
@@ -68,7 +71,7 @@ def walk_dir(path):
                         continue
 
 
-def check_missing_subtitles(dirname, filename):
+def check_missing_subtitle_languages(dirname, filename):
     missing_subtitles = []
     # Check default language
     if autosubliminal.DEFAULTLANGUAGE:
@@ -79,7 +82,7 @@ def check_missing_subtitles(dirname, filename):
             srtfile = os.path.splitext(filename)[0] + u".srt"
         if not os.path.exists(os.path.join(dirname, srtfile)):
             missing_subtitles.append(autosubliminal.DEFAULTLANGUAGE)
-        # Check additional languages
+    # Check additional languages
     if autosubliminal.ADDITIONALLANGUAGES:
         # Always check with alpha2 code suffix for additional languages
         for language in autosubliminal.ADDITIONALLANGUAGES:

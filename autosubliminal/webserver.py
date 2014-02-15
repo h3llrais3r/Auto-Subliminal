@@ -175,7 +175,7 @@ class Config:
             tmpl = PageTemplate(file="interface/templates/autorestart.tmpl")
         else:
             # For some reason the needs to be read again, otherwise all pages get an error
-            config.read_config(autosubliminal.CONFIGFILE)
+            config.read_config()
             tmpl = PageTemplate(file="interface/templates/message.tmpl")
             tmpl.message = "Config saved.<br><a href='" + autosubliminal.WEBROOT + "'>Return</a>"
 
@@ -286,7 +286,7 @@ class Home:
     def index(self):
         useragent = cherrypy.request.headers.get("User-Agent", '')
         tmpl = PageTemplate(file="interface/templates/home.tmpl")
-        if utils.check_mobile_device(useragent) and autosubliminal.MOBILEAUTOSUB:
+        if autosubliminal.MOBILE and utils.check_mobile_device(useragent):
             tmpl = PageTemplate(file="interface/templates/mobile/home.tmpl")
         return str(tmpl)
 
@@ -314,18 +314,18 @@ class Home:
         autosubliminal.CHECKSUB.runnow = True
         useragent = cherrypy.request.headers.get("User-Agent", '')
         tmpl = PageTemplate(file="interface/templates/message.tmpl")
-        if utils.check_mobile_device(useragent) and autosubliminal.MOBILEAUTOSUB:
+        if autosubliminal.MOBILE and utils.check_mobile_device(useragent):
             tmpl = PageTemplate(file="interface/templates/mobile/message.tmpl")
         tmpl.message = "Running everything! <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return</a>"
         return str(tmpl)
 
     @cherrypy.expose(alias='exitMini')
     def exit_mini(self):
-        if autosubliminal.MOBILEAUTOSUB:
-            autosubliminal.MOBILEAUTOSUB = False
+        if autosubliminal.MOBILE:
+            autosubliminal.MOBILE = False
             redirect("/home")
         else:
-            autosubliminal.MOBILEAUTOSUB = True
+            autosubliminal.MOBILE = True
             redirect("/home")
 
     @cherrypy.expose

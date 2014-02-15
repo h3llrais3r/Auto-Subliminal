@@ -5,7 +5,7 @@
 <table>
 
 	<tr>
-		<td width="140px" style="vertical-align:top;">Subliminal providers</td>
+		<td width="180px" style="vertical-align:top;">Subliminal providers</td>
 		<td>
 		    #set $providers = $subliminal.provider_manager.available_providers
 		    <select multiple="mutiple" name="subliminalproviders" size="$len(providers)">
@@ -19,5 +19,173 @@
 		</td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationProviders"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationProviders" class="dropdown-menu has-tip" align="left"><ul><li>Which providers should be used for searching and downloading subtitles?</li></ul></div></td>
 	</tr>
+
+	<!-- TODO: still need some work
+	<tr>
+		<td width="180px" style="vertical-align:top;">Subliminal score matching</td>
+		<td>
+		    <table>
+		        <tr>
+		            <td>
+                        Audio Codec (value = 1):
+                    </td>
+                    <td>
+                        #if True
+                            <input type="checkbox" name="mmsaudiocodec" value="1" checked="checked">
+                        #else
+                            <input type="checkbox" name="mmsaudiocodec" value="0">
+                        #end if
+		            </td>
+		        </tr>
+		        <tr>
+		            <td>
+		                Video Codec (value = 2):
+		            </td>
+		            <td>
+                        #if True
+                            <input type="checkbox" name="mmsvideocodec" value="1" checked="checked">
+                        #else
+                            <input type="checkbox" name="mmsvideocodec" value="0">
+                        #end if
+		            </td>
+		        </tr>
+		        <tr>
+		            <td>
+		                Format (value = 2):
+		            </td>
+		            <td>
+                        #if True
+                            <input type="checkbox" name="mmsresolution" value="1" checked="checked">
+                        #else
+                            <input type="checkbox" name="mmsresolution" value="0">
+                        #end if
+		            </td>
+		        </tr>
+		        <tr>
+		            <td>
+		                Format (value = 3):
+		            </td>
+		            <td>
+                        #if True
+                            <input type="checkbox" name="mmsformat" value="1" checked="checked">
+                        #else
+                            <input type="checkbox" name="mmsformat" value="0">
+                        #end if
+		            </td>
+		        </tr>
+		        <tr>
+		            <td>
+		                Release Group (value = 6):
+		            </td>
+		            <td>
+                        #if True
+                            <input type="checkbox" name="mmsreleasegroup" value="1" checked="checked">
+                        #else
+                            <input type="checkbox" name="mmsreleasegroup" value="0">
+                        #end if
+		            </td>
+		        </tr>
+		        <tr>
+		            <td>
+		                Season (value = 6):
+		            </td>
+		            <td>
+                        #if True
+                            <input type="checkbox" name="mmsseason" value="1" checked="checked">
+                        #else
+                            <input type="checkbox" name="mmsseason" value="0">
+                        #end if
+		            </td>
+		        </tr>
+		        <tr>
+		            <td>
+		                Episode (value = 6):
+		            </td>
+		            <td>
+                        #if True
+                            <input type="checkbox" name="mmsepisode" value="1" checked="checked">
+                        #else
+                            <input type="checkbox" name="mmsepisode" value="0">
+                        #end if
+		            </td>
+		        </tr>
+		        <tr>
+		            <td>
+		                Title (value = 12):
+		            </td>
+		            <td>
+                        #if True
+                            <input type="checkbox" name="mmstitle" value="1" checked="checked">
+                        #else
+                            <input type="checkbox" name="mmstitle" value="0">
+                        #end if
+		            </td>
+		        </tr>
+		        <tr>
+		            <td>
+		                Year (value = 24):
+		            </td>
+		            <td>
+                        #if True
+                            <input type="checkbox" name="mmsyear" value="1" checked="checked">
+                        #else
+                            <input type="checkbox" name="mmsyear" value="0">
+                        #end if
+		            </td>
+		        </tr>
+		        <tr>
+		            <td>
+		                Series (value = 24):
+		            </td>
+		            <td>
+                        #if True
+                            <input type="checkbox" name="mmsseries" value="1" checked="checked">
+                        #else
+                            <input type="checkbox" name="mmsseries" value="0">
+                        #end if
+		            </td>
+		        </tr>
+		        <tr>
+		            <td>
+		                TVDB ID (value = 48):
+		            </td>
+		            <td>
+                        #if True
+                            <input type="checkbox" name="mmstvdbid" value="1" checked="checked">
+                        #else
+                            <input type="checkbox" name="mmstvdbid" value="0">
+                        #end if
+		            </td>
+		        </tr>
+		        <tr>
+		            <td>
+		                IMDB ID (value = 60):
+		            </td>
+		            <td>
+                        #if True
+                            <input type="checkbox" name="mmsimdbid" value="1" checked="checked">
+                        #else
+                            <input type="checkbox" name="mmsimdbid" value="0">
+                        #end if
+		            </td>
+		        </tr>
+		        <tr>
+		            <td>
+		                Hash (value = 74):
+		            </td>
+		            <td>
+                        #if True
+                            <input type="checkbox" name="mmshash" value="1" checked="checked">
+                        #else
+                            <input type="checkbox" name="mmshash" value="0">
+                        #end if
+		            </td>
+		        </tr>
+
+		    </table>
+		</td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationProviders"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationProviders" class="dropdown-menu has-tip" align="left"><ul><li>Which providers should be used for searching and downloading subtitles?</li></ul></div></td>
+	</tr>
+	-->
 
 </table>

@@ -2,7 +2,6 @@ import logging
 
 from autosubliminal import utils
 
-
 log = logging.getLogger(__name__)
 
 

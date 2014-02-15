@@ -17,33 +17,6 @@
 	</tr>
 
 	<tr>
-		<td width="200px">Logfile</td>
-		<td><input type="text" size="50" name="logfile" value="$autosubliminal.LOGFILE" /></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationLogfile"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationLogfile" class="dropdown-menu has-tip" align="left"><ul><li>The location and the name of the logfile. When not set, AutoSubliminal.log will be used.<br />This field is required!</li></ul></div></td>
-	</tr>
-
-	<tr>
-		<td width="200px">Launchbrowser</td>
-		<td><select name="launchbrowser">
-            #if $autosubliminal.LAUNCHBROWSER
-                <option value="True" selected="selected">Enabled</option>
-                <option value="False">Disabled</option>
-            #else
-                <option value="True">Enabled</option>
-                <option value="False" selected="selected">Disabled</option>
-            #end if
-		</select></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationLauchbrowser"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationLauchbrowser" class="dropdown-menu has-tip" align="left"><ul><li>Should we start a browser every time Auto-Subliminal starts? This overwrites the commandline parameters</li></ul></div></td>
-	</tr>
-
-	<!--
-	<tr>
-		<td width="200px">Default language</td>
-		<td><input type="text" size="50" name="defaultlanguage" value="$autosubliminal.DEFAULTLANGUAGE" /></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationDefaultlanguage"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationDefaultlanguage" class="dropdown-menu has-tip" align="left"><ul><li>The default subtitle language (alpha2 code).</li></ul></div></td>
-	</tr>
-	-->
-	<tr>
 		<td width="200px">Default language</td>
 		<td><select name="defaultlanguage">
             #for language in babelfish.LANGUAGE_MATRIX:
@@ -78,40 +51,6 @@
 		<td width="200px">Additional languages</td>
 		<td><input type="text" size="50" name="additionallanguages" value="$config.display_additional_languages" /></td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationAdditionallanguages"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationAdditionallanguages" class="dropdown-menu has-tip" align="left"><ul><li>Comma separated list with the additional subtitle languages in alpha2 format.<br />If additional languages are provided, subtitles will be extended with the alpha2 code of the language (f.e. showname.en.srt).</li></ul></div></td>
-	</tr>
-
-	<tr>
-		<td width="200px">Notify</td>
-		<td><select name="notify">
-		    #if $autosubliminal.NOTIFY
-                <option value="True" selected="selected">Enabled</option>
-                <option value="False">Disabled</option>
-            #else
-                <option value="True">Enabled</option>
-                <option value="False" selected="selected">Disabled</option>
-            #end if
-		</select></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationNotify"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationNotify" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, Auto-Subliminal will send a notification when a subtitle has been downloaded.<br />Default is Disabled.</li></ul></div></td>
-	</tr>
-
-	<tr>
-		<td width="200px">Post-Process</td>
-		<td><select name="postprocess">
-		    #if $autosubliminal.POSTPROCESS
-                <option value="True" selected="selected">Enabled</option>
-                <option value="False">Disabled</option>
-            #else
-                <option value="True">Enabled</option>
-                <option value="False" selected="selected">Disabled</option>
-            #end if
-		</select></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationPostprocess"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationPostprocess" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, the post processing CMD will be executed.<br />Default is Disabled.</li></ul></div></td>
-	</tr>
-
-	<tr>
-		<td width="200px">Post-process CMD</td>
-		<td><input type="text" size="50" name="postprocesscmd" value="$autosubliminal.POSTPROCESSCMD" /></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationPostprocesscmd"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationPostprocesscmd" class="dropdown-menu has-tip" align="left"><ul><li>Auto-Subliminal will run this command after downloading a subtitle.</li></ul></div></td>
 	</tr>
 
 	<tr>
@@ -167,17 +106,37 @@
 	</tr>
 
 	<tr>
-		<td width="200px">Skip hidden directories</td>
-		<td><select name="skiphiddendirs">
-		#if $autosubliminal.SKIPHIDDENDIRS
-			<option value="True" selected="selected">Enabled</option>
-			<option value="False">Disabled</option>
-		#else
-			<option value="True">Enabled</option>
-			<option value="False" selected="selected">Disabled</option>
-		#end if
+		<td width="200px">Notify</td>
+		<td><select name="notify">
+		    #if $autosubliminal.NOTIFY
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+            #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+            #end if
 		</select></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationSkiphiddendirs"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationSkiphiddendirs" class="dropdown-menu has-tip" align="left"><ul><li>Should we scan hidden directories (directories that start with a dot, for example .AppleDouble)? Doesn't work for Windows style hidden directories.</li></ul></div></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationNotify"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationNotify" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, Auto-Subliminal will send a notification when a subtitle has been downloaded.<br />Default is Disabled.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="200px">Post-Process</td>
+		<td><select name="postprocess">
+		    #if $autosubliminal.POSTPROCESS
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+            #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+            #end if
+		</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationPostprocess"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationPostprocess" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, the post processing CMD will be executed.<br />Default is Disabled.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="200px">Post-process CMD</td>
+		<td><input type="text" size="50" name="postprocesscmd" value="$autosubliminal.POSTPROCESSCMD" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationPostprocesscmd"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationPostprocesscmd" class="dropdown-menu has-tip" align="left"><ul><li>Auto-Subliminal will run this command after downloading a subtitle.</li></ul></div></td>
 	</tr>
 
 	<tr>
@@ -190,6 +149,20 @@
 		<td width="200px">CheckSub</td>
 		<td><input type="text" size="50" name="checksub" value="$autosubliminal.SCHEDULERCHECKSUB" /></td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationChecksub"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationChecksub" class="dropdown-menu has-tip" align="left"><ul><li>Change the interval of the CheckSub thread, it checks if there is a match on the bierdopje API. Cannot not be set lower then 21600.<br />Time is in seconds, default is 28800 seconds.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="200px">Skip hidden directories</td>
+		<td><select name="skiphiddendirs">
+		#if $autosubliminal.SKIPHIDDENDIRS
+			<option value="True" selected="selected">Enabled</option>
+			<option value="False">Disabled</option>
+		#else
+			<option value="True">Enabled</option>
+			<option value="False" selected="selected">Disabled</option>
+		#end if
+		</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationSkiphiddendirs"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationSkiphiddendirs" class="dropdown-menu has-tip" align="left"><ul><li>Should we scan hidden directories (directories that start with a dot, for example .AppleDouble)? Doesn't work for Windows style hidden directories.</li></ul></div></td>
 	</tr>
 	
 </table>

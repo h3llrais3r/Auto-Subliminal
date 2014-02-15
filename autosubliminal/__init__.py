@@ -4,70 +4,95 @@ import pkg_resources
 
 import subliminal
 
-import autosubliminal
 from autosubliminal import version, config, logger, db
 
-LOGFILE = None
-DEFAULTLANGUAGE = None
-DEFAULTLANGUAGESUFFIX = False
-ADDITIONALLANGUAGES = None
-NOTIFY = None
-POSTPROCESS = None
-POSTPROCESSCMD = None
-SKIPHIDDENDIRS = None
-LOGLEVEL = None
-LOGLEVELCONSOLE = None
-LOGSIZE = None
-LOGNUM = None
-LOGREVERSED = None
-LOGHTTPACCESS = None
-SKIPSHOW = None
-SKIPSHOWUPPER = None
-USERNAMEMAPPING = None
-USERNAMEMAPPINGUPPER = None
-NAMEMAPPING = None
-NAMEMAPPINGUPPER = None
-SHOWID_CACHE = None
+# Config
 CONFIGFILE = None
-WORKDIR = None
-PATH = None
-VIDEOPATHS = None
-MINMATCHSCORE = None
-MINMATCHSCOREDEFAULT = None
-MATCHSOURCE = None
-MATCHQUALITY = None
-MATCHCODEC = None
-MATCHRELEASEGROUP = None
 CONFIGVERSION = None
 CONFIGUPGRADED = None
 
+# System
+VERSIONURL = None
+USERAGENT = None
+SYSENCODING = None
+TIMEOUT = None
 WANTEDQUEUE = None
-WANTEDQUEUELOCK = False
-LASTESTDOWNLOAD = None
+WANTEDQUEUELOCK = None
 
+# Db
+DBFILE = None
+DBVERSION = None
+
+# Startup
+DAEMON = None
+STARTED = None
+PID = None
+
+# Mobile
+MOBILE = None
+MOBILEUSERAGENTS = None
+
+# API
 APIKEY = None
 API = None
 APICALLS = None
 APICALLSLASTRESET = None
 APICALLSRESETINT = None
 APICALLSMAX = None
-TIMEOUT = None
 
-SCHEDULERSCANDISK = None
-SCHEDULERCHECKSUB = None
-SCHEDULERDOWNLOADSUBS = None
-
+# General config section
+PATH = None
+VIDEOPATHS = None
+DEFAULTLANGUAGE = None
+DEFAULTLANGUAGESUFFIX = None
+ADDITIONALLANGUAGES = None
+MINMATCHSCORE = None
+MINMATCHSCOREDEFAULT = None
+MATCHSOURCE = None
+MATCHQUALITY = None
+MATCHCODEC = None
+MATCHRELEASEGROUP = None
+NOTIFY = None
+POSTPROCESS = None
+POSTPROCESSCMD = None
 SCANDISK = None
 CHECKSUB = None
-DOWNLOADSUBS = None
+SCHEDULERSCANDISK = None
+SCHEDULERCHECKSUB = None
+SKIPHIDDENDIRS = None
 
+# Logfile config section
+LOGFILE = None
+LOGLEVEL = None
+LOGSIZE = None
+LOGNUM = None
+LOGREVERSED = None
+LOGHTTPACCESS = None
+LOGLEVELCONSOLE = None
+
+# Webserver config section
 WEBSERVERIP = None
 WEBSERVERPORT = None
-LAUNCHBROWSER = True
+WEBROOT = None
 USERNAME = None
 PASSWORD = None
-WEBROOT = None
+LAUNCHBROWSER = None
 
+# Subliminal config section
+SUBLIMINALPROVIDERS = None
+SUBLIMINALPROVIDERLIST = None
+
+# Namemapping config section
+USERNAMEMAPPING = None
+USERNAMEMAPPINGUPPER = None
+NAMEMAPPING = None
+NAMEMAPPINGUPPER = None
+
+# Skipshow config section
+SKIPSHOW = None
+SKIPSHOWUPPER = None
+
+# Notifications config section
 NOTIFYMAIL = None
 MAILSRV = None
 MAILFROMADDR = None
@@ -77,117 +102,102 @@ MAILPASSWORD = None
 MAILSUBJECT = None
 MAILAUTH = None
 MAILENCRYPTION = None
+NOTIFYTWITTER = None
+TWITTERKEY = None
+TWITTERSECRET = None
+NOTIFYPUSHALOT = None
+PUSHALOTAPI = None
+NOTIFYNMA = None
+NMAAPI = None
 NOTIFYGROWL = None
 GROWLHOST = None
 GROWLPORT = None
 GROWLPASS = None
-NOTIFYTWITTER = None
-TWITTERKEY = None
-TWITTERSECRET = None
-NOTIFYNMA = None
-NMAAPI = None
 NOTIFYPROWL = None
 PROWLAPI = None
 PROWLPRIORITY = None
-PUSHALOTAPI = None
-NOTIFYPUSHALOT = None
-
-DAEMON = None
-
-SUBLIMINALPROVIDERS = None
-SUBLIMINALPROVIDERLIST = None
-SUBLIMINALCACHEFILE = None
-DOGPILECACHEFILE = None
-
-DBFILE = None
-DBVERSION = None
-
-VERSIONURL = None
-USERAGENT = None
-
-SYSENCODING = None
-MOBILEUSERAGENTS = None
-MOBILEAUTOSUB = None
-
-STARTED = False
-PID = None
 
 
 def initialize():
-    global VIDEOPATHS, DEFAULTLANGUAGE, DEFAULTLANGUAGESUFFIX, ADDITIONALLANGUAGES, LOGFILE, LOGLEVEL, SKIPHIDDENDIRS, \
-        LOGLEVEL, LOGLEVELCONSOLE, LOGSIZE, LOGNUM, LOGHTTPACCESS, LOGREVERSED, SKIPSHOW, SKIPSHOWUPPER, \
+    global CONFIGFILE, CONFIGVERSION, CONFIGUPGRADED, \
+        VERSIONURL, USERAGENT, SYSENCODING, TIMEOUT, WANTEDQUEUE, WANTEDQUEUELOCK, \
+        DBFILE, DBVERSION, \
+        DAEMON, STARTED, PID, \
+        MOBILE, MOBILEUSERAGENTS, \
+        APIKEY, API, APICALLS, APICALLSLASTRESET, APICALLSRESETINT, APICALLSMAX, \
+        PATH, VIDEOPATHS, DEFAULTLANGUAGE, DEFAULTLANGUAGESUFFIX, ADDITIONALLANGUAGES, MINMATCHSCORE, \
+        MINMATCHSCOREDEFAULT, MATCHSOURCE, MATCHQUALITY, MATCHCODEC, MATCHRELEASEGROUP, NOTIFY, POSTPROCESS, \
+        POSTPROCESSCMD, SCANDISK, CHECKSUB, SCHEDULERSCANDISK, SCHEDULERCHECKSUB, SKIPHIDDENDIRS, \
+        LOGFILE, LOGLEVEL, LOGSIZE, LOGNUM, LOGREVERSED, LOGHTTPACCESS, LOGLEVELCONSOLE, \
+        WEBSERVERIP, WEBSERVERPORT, WEBROOT, USERNAME, PASSWORD, LAUNCHBROWSER, \
+        SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERLIST, \
         USERNAMEMAPPING, USERNAMEMAPPINGUPPER, NAMEMAPPING, NAMEMAPPINGUPPER, \
-        SHOWID_CACHE, POSTPROCESS, POSTPROCESSCMD, CONFIGFILE, WORKDIR, NOTIFY, \
-        MINMATCHSCORE, MINMATCHSCOREDEFAULT, MATCHSOURCE, MATCHQUALITY, MATCHCODEC, MATCHRELEASEGROUP, \
-        MAILSRV, MAILFROMADDR, MAILTOADDR, MAILUSERNAME, CONFIGVERSION, CONFIGUPGRADED, \
-        MAILPASSWORD, MAILSUBJECT, MAILENCRYPTION, \
-        GROWLHOST, GROWLPORT, GROWLPASS, \
-        TWITTERKEY, TWITTERSECRET, NMAAPI, NOTIFYMAIL, NOTIFYGROWL, NOTIFYTWITTER, NOTIFYNMA, \
-        WANTEDQUEUE, \
-        APIKEY, API, TIMEOUT, APICALLS, \
-        APICALLSLASTRESET, APICALLSRESETINT, APICALLSMAX, \
-        SCHEDULERSCANDISK, SCHEDULERCHECKSUB, SCHEDULERDOWNLOADSUBS, \
-        DAEMON, NOTIFYPROWL, PROWLAPI, PROWLPRIORITY, PUSHALOTAPI, NOTIFYPUSHALOT, \
-        SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERLIST, SUBLIMINALCACHEFILE, DOGPILECACHEFILE, \
-        DBFILE, MOBILEUSERAGENTS, MOBILEAUTOSUB, \
-        USERAGENT, VERSIONURL, \
-        STARTED, PID
+        SKIPSHOW, SKIPSHOWUPPER, \
+        NOTIFYMAIL, MAILSRV, MAILFROMADDR, MAILTOADDR, MAILUSERNAME, MAILPASSWORD, MAILSUBJECT, MAILAUTH, \
+        MAILENCRYPTION, NOTIFYTWITTER, TWITTERKEY, TWITTERSECRET, NOTIFYPUSHALOT, PUSHALOTAPI, NOTIFYNMA, NMAAPI, \
+        NOTIFYGROWL, GROWLHOST, GROWLPORT, GROWLPASS, NOTIFYPROWL, PROWLAPI, PROWLPRIORITY
 
     # Fake some entry points to get libraries working without installation
     _fake_entry_points()
 
-    DBFILE = 'database.db'
-
-    SUBLIMINALCACHEFILE = 'subliminal.cache.dbm'
-    DOGPILECACHEFILE = 'dogpile.cache.dbm'
-
+    # Version settings
     release = version.RELEASE_VERSION.split(' ')[0]
     versionnumber = version.RELEASE_VERSION.split(' ')[1]
-
     VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py'
     USERAGENT = 'Auto-Subliminal/' + versionnumber + release.lower()[0]
-
-    WANTEDQUEUE = []
-
-    MINMATCHSCOREDEFAULT = 60
-
-    # Currently not used anymore (perhaps reuse it for tvdb api calls when a custom tvdb api key is needed?)
-    APIKEY = ""
-    API = "http://.../%s/" % APIKEY
 
     # Default http timeout
     TIMEOUT = 300
 
+    # Wanted queue settings
+    WANTEDQUEUE = []
+    WANTEDQUEUELOCK = False
+
+    # Startup settings
+    STARTED = False
+
+    # Mobile settings
+    MOBILE = True
     MOBILEUSERAGENTS = ["midp", "240x320", "blackberry", "netfront", "nokia", "panasonic",
                         "portalmmm", "sharp", "sie-", "sonyericsson", "symbian", "windows ce",
                         "benq", "mda", "mot-", "opera mini", "philips", "pocket pc", "sagem",
                         "samsung", "sda", "sgh-", "vodafone", "xda", "palm", "iphone", "ipod",
                         "ipad", "android", "windows phone"]
-    MOBILEAUTOSUB = True
 
     # API settings
+    # Currently not used anymore (perhaps reuse it for tvdb api calls when a custom tvdb api key is needed?)
+    APIKEY = ""
+    API = "http://.../%s/" % APIKEY
     APICALLSLASTRESET = time.time()
     APICALLSRESETINT = 86400
     APICALLSMAX = 300
     APICALLS = APICALLSMAX
 
+    # Score settings
+    MINMATCHSCOREDEFAULT = 60
+
+    # Webserver settings
+    LAUNCHBROWSER = True
+
     # Config file settings
+    CONFIGUPGRADED = False
     if CONFIGFILE is None:
         CONFIGFILE = "config.properties"
-    config.read_config(CONFIGFILE)
+    config.read_config()
     if CONFIGUPGRADED:
         print "INFO: Config seems to be upgraded. Writing config."
         config.write_config()
         print "INFO: Writing config done."
 
     # Change to the new work directory
-    if os.path.exists(autosubliminal.PATH):
-        os.chdir(autosubliminal.PATH)
+    if os.path.exists(PATH):
+        os.chdir(PATH)
     else:
         print "ERROR: PATH does not exist, check config"
         os._exit(1)
 
     # Database
+    DBFILE = 'database.db'
     db.initialize()
 
     # Logging
@@ -214,6 +224,6 @@ def _initialize_subliminal():
     # Use MutexLock otherwise some providers will not work due to fcntl module import error in windows
     # Do not reconfigure after a soft restart (without exiting main app) -> otherwise RegionAlreadyConfigured exception
     if not subliminal.cache_region.is_configured:
-        cache_file = os.path.abspath(os.path.expanduser(autosubliminal.SUBLIMINALCACHEFILE))
-        subliminal.cache_region.configure(autosubliminal.DOGPILECACHEFILE,
+        cache_file = os.path.abspath(os.path.expanduser('subliminal.cache.dbm'))
+        subliminal.cache_region.configure(backend='dogpile.cache.dbm',
                                           arguments={'filename': cache_file, 'lock_factory': subliminal.MutexLock})

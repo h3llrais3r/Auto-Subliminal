@@ -7,7 +7,6 @@ import cherrypy
 import autosubliminal
 from autosubliminal import scheduler, diskscanner, subchecker, webserver
 
-
 log = logging.getLogger(__name__)
 
 

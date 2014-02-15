@@ -8,7 +8,6 @@ from autosubliminal import utils
 from autosubliminal.common import seperator, source, source_syn, quality, quality_syn, quality_fileext, codec, \
     codec_syn, codec_fileext, releasegrp, releasegrp_syn, releasegrp_fallback, show_regex, episode_regex
 
-
 log = logging.getLogger(__name__)
 
 
