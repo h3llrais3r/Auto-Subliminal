@@ -145,7 +145,7 @@ def _show_dict_from_guess(guess):
                  'season': _property_from_guess(guess, 'season'),
                  'episode': _property_from_guess(guess, 'episodeNumber'),
                  'source': _property_from_guess(guess, 'format'),
-                 'quality': _property_from_guess(guess, 'screenSize', 'SD'),  # No screenSize found means SD
+                 'quality': _property_from_guess(guess, 'screenSize', u'SD'),  # No screenSize found means SD
                  'codec': _property_from_guess(guess, 'videoCodec'),
                  'releasegrp': _property_from_guess(guess, 'releaseGroup')}
     log.debug("Dumping dict for debug %r" % show_dict)
