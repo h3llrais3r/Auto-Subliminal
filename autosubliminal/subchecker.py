@@ -49,10 +49,9 @@ class SubChecker():
                 continue
 
             # Scan the video (disable scan for subtitles)
-            # With subtitle scan enabled, enzyme looks inside for embedded subtitles (f.e. Grimm.S03E04.720p.WEB-DL.DD5.1.H.264-ECI)
-            # When an 'UND' subtitle language is found, no other subtitles will be downloaded
-            # The video will be filtered out in those cases in subliminal.download_best_subtitles
-            # TODO: check if this is still the case with a newer version of subliminal
+            # With subtitle scan enabled, enzyme looks inside for embedded subtitles
+            # When an 'UND' subtitle language is found (f.e. Grimm.S03E04.720p.WEB-DL.DD5.1.H.264-ECI),
+            # no other subtitles will be downloaded when using subliminal.download_best_subtitles(..., single=True)
             video = subliminal.scan_video(originalfile, subtitles=False, embedded_subtitles=False)
 
             # Check sub for each language
@@ -68,8 +67,6 @@ class SubChecker():
                     single = True
 
                 # Download the best subtitle with min_score (without saving it in a file)
-                # TODO: I think the single needs a fix in subliminal because it's only needed in the save_subtitles
-                # TODO: It should not be a check for breaking the loop in the download_best_subtitles method!!
                 videos = [video]
                 languages = [language]
                 subtitles = subliminal.download_best_subtitles(set(videos), set(languages),
