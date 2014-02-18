@@ -79,6 +79,7 @@ class Config:
                     mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi,
                     twitterkey, twittersecret, notify,
                     notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi,
+                    hearingimpaired,
                     mmsdefault=None, mmssource=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None,
                     subliminalproviders=None):
         # Set all internal variables
@@ -90,6 +91,7 @@ class Config:
         autosubliminal.DEFAULTLANGUAGE = defaultlanguage
         autosubliminal.DEFAULTLANGUAGESUFFIX = defaultlanguagesuffix
         autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split(',')
+        autosubliminal.HEARINGIMPAIRED = hearingimpaired
         autosubliminal.NOTIFY = notify
         autosubliminal.POSTPROCESS = postprocess
         autosubliminal.POSTPROCESSCMD = postprocesscmd

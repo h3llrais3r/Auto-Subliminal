@@ -70,8 +70,10 @@ class SubChecker():
                 videos = [video]
                 languages = [language]
                 subtitles = subliminal.download_best_subtitles(set(videos), set(languages),
-                                                               autosubliminal.SUBLIMINALPROVIDERLIST,
-                                                               min_score=autosubliminal.MINMATCHSCORE, single=False)
+                                                               providers=autosubliminal.SUBLIMINALPROVIDERLIST,
+                                                               min_score=autosubliminal.MINMATCHSCORE,
+                                                               hearing_impaired=autosubliminal.HEARINGIMPAIRED,
+                                                               single=False)
 
                 # Check if subtitle found
                 if subtitles:
