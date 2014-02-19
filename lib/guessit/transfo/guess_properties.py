@@ -127,8 +127,8 @@ class GuessProperties(Transformer):
                                         })
 
         # http://blog.mediacoderhq.com/h264-profiles-and-levels/
-        _videoProfiles = {'BS':('BS',),
-                          'EP':('EP', 'XP'),
+        _videoProfiles = {'BP':('BP',),
+                          'XP':('XP', 'EP'),
                           'MP':('MP',),
                           'HP':('HP', 'HiP'),
                           '10bit':('10.?bit', 'Hi10P'),
@@ -144,8 +144,8 @@ class GuessProperties(Transformer):
                     self.container.register_property('videoProfile', profile, '(' + profile_regexp + '-)' + prop.pattern)
 
 
-        register_quality('videoProfile', {'BS': -20,
-                                          'EP': -10,
+        register_quality('videoProfile', {'BP': -20,
+                                          'XP': -10,
                                           'MP': 0,
                                           'HP': 10,
                                           '10bit': 15,
