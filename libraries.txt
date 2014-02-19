@@ -5,6 +5,7 @@ cheetah=2.4.4
 babelfish=0.5.1
 beautifulsoup4=4.3.2
 charade=1.0.3
+chardet=2.2.1
 cherrypy=3.2.2
 dogpile.cache=0.5.2
 dogpile.core=0.4.1
