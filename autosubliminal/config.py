@@ -73,11 +73,6 @@ def read_config():
         else:
             autosubliminal.ADDITIONALLANGUAGES = []
 
-        if cfg.has_option("config", "hearingimpaired"):
-            autosubliminal.HEARINGIMPAIRED = cfg.getboolean("config", "hearingimpaired")
-        else:
-            autosubliminal.HEARINGIMPAIRED = False
-
         if cfg.has_option('config', 'minmatchscore'):
             autosubliminal.MINMATCHSCORE = cfg.getint('config', 'minmatchscore')
             # Force the default minmatchscore when a wrongly configured value is entered manually in the config file
@@ -156,7 +151,6 @@ def read_config():
         autosubliminal.DEFAULTLANGUAGE = u"en"
         autosubliminal.DEFAULTLANGUAGESUFFIX = False
         autosubliminal.ADDITIONALLANGUAGES = []
-        autosubliminal.HEARINGIMPAIRED = False
         autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
         autosubliminal.MATCHSOURCE = False
         autosubliminal.MATCHQUALITY = False
@@ -271,6 +265,11 @@ def read_config():
         autosubliminal.LAUNCHBROWSER = True
 
     if cfg.has_section('subliminal'):
+        if cfg.has_option("subliminal", "hearingimpaired"):
+            autosubliminal.HEARINGIMPAIRED = cfg.getboolean("subliminal", "hearingimpaired")
+        else:
+            autosubliminal.HEARINGIMPAIRED = False
+
         if cfg.has_option('subliminal', 'providers'):
             autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
             autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
@@ -282,6 +281,7 @@ def read_config():
             autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
     else:
         # Subliminal section is missing
+        autosubliminal.HEARINGIMPAIRED = False
         autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
 
     if cfg.has_section('notify'):
@@ -681,7 +681,6 @@ def save_config_section():
     cfg.set(section, "defaultlanguage", autosubliminal.DEFAULTLANGUAGE)
     cfg.set(section, "defaultlanguagesuffix", autosubliminal.DEFAULTLANGUAGESUFFIX)
     cfg.set(section, "additionallanguages", str(additionallanguages))
-    cfg.set(section, "hearingimpaired", str(autosubliminal.HEARINGIMPAIRED))
     cfg.set(section, "minmatchscore", str(autosubliminal.MINMATCHSCORE))
     cfg.set(section, "matchsource", str(autosubliminal.MATCHSOURCE))
     cfg.set(section, "matchquality", str(autosubliminal.MATCHQUALITY))
@@ -776,6 +775,7 @@ def save_subliminal_section():
     if not cfg.has_section(section):
         cfg.add_section(section)
 
+    cfg.set(section, "hearingimpaired", str(autosubliminal.HEARINGIMPAIRED))
     cfg.set(section, "providers", str(autosubliminal.SUBLIMINALPROVIDERS))
 
     with open(autosubliminal.CONFIGFILE, 'wb') as file:

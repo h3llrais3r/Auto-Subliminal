@@ -5,6 +5,20 @@
 <table>
 
 	<tr>
+		<td width="200px">Download hearing impaired</td>
+		<td><select name="hearingimpaired">
+            #if $autosubliminal.HEARINGIMPAIRED
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+            #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+            #end if
+		</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationHearingimpaired"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationHearingimpaired" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, also 'hearing impaired' subtitles can be downloaded.<br />Default is Disabled.</li></ul></div></td>
+	</tr>
+
+	<tr>
 		<td width="180px" style="vertical-align:top;">Subliminal providers</td>
 		<td>
 		    #set $providers = $subliminal.provider_manager.available_providers

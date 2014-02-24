@@ -91,7 +91,6 @@ class Config:
         autosubliminal.DEFAULTLANGUAGE = defaultlanguage
         autosubliminal.DEFAULTLANGUAGESUFFIX = defaultlanguagesuffix
         autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split(',')
-        autosubliminal.HEARINGIMPAIRED = hearingimpaired
         autosubliminal.NOTIFY = notify
         autosubliminal.POSTPROCESS = postprocess
         autosubliminal.POSTPROCESSCMD = postprocesscmd
@@ -120,6 +119,8 @@ class Config:
         if mmsreleasegroup:
             autosubliminal.MINMATCHSCORE += 6
             autosubliminal.MATCHRELEASEGROUP = True
+
+        autosubliminal.HEARINGIMPAIRED = hearingimpaired
 
         # Subliminal providers(convert list to comma separated string if multiple are selected)
         if subliminalproviders and not isinstance(subliminalproviders, basestring):
