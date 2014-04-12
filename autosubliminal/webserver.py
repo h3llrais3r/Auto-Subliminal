@@ -79,7 +79,7 @@ class Config:
                     mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi,
                     twitterkey, twittersecret, notify,
                     notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi,
-                    hearingimpaired,
+                    includehearingimpaired,
                     mmsdefault=None, mmssource=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None,
                     subliminalproviders=None):
         # Set all internal variables
@@ -120,14 +120,14 @@ class Config:
             autosubliminal.MINMATCHSCORE += 6
             autosubliminal.MATCHRELEASEGROUP = True
 
-        autosubliminal.HEARINGIMPAIRED = hearingimpaired
-
         # Subliminal providers(convert list to comma separated string if multiple are selected)
         if subliminalproviders and not isinstance(subliminalproviders, basestring):
             autosubliminal.SUBLIMINALPROVIDERS = ','.join([str(provider) for provider in subliminalproviders])
         else:
             # Just one selected or None (in this case, None will be saved and no providers will be used)
             autosubliminal.SUBLIMINALPROVIDERS = subliminalproviders
+
+        autosubliminal.INCLUDEHEARINGIMPAIRED = includehearingimpaired
 
         autosubliminal.SCHEDULERSCANDISK = int(scandisk)
         autosubliminal.SCHEDULERCHECKSUB = int(checksub)

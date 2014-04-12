@@ -265,11 +265,6 @@ def read_config():
         autosubliminal.LAUNCHBROWSER = True
 
     if cfg.has_section('subliminal'):
-        if cfg.has_option("subliminal", "hearingimpaired"):
-            autosubliminal.HEARINGIMPAIRED = cfg.getboolean("subliminal", "hearingimpaired")
-        else:
-            autosubliminal.HEARINGIMPAIRED = False
-
         if cfg.has_option('subliminal', 'providers'):
             autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
             autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
@@ -279,10 +274,15 @@ def read_config():
                     autosubliminal.SUBLIMINALPROVIDERLIST.remove(provider)
         else:
             autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
+
+        if cfg.has_option("subliminal", "includehearingimpaired"):
+            autosubliminal.INCLUDEHEARINGIMPAIRED = cfg.getboolean("subliminal", "includehearingimpaired")
+        else:
+            autosubliminal.INCLUDEHEARINGIMPAIRED = None
     else:
         # Subliminal section is missing
-        autosubliminal.HEARINGIMPAIRED = False
         autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
+        autosubliminal.INCLUDEHEARINGIMPAIRED = None
 
     if cfg.has_section('notify'):
         # Mail
@@ -775,8 +775,8 @@ def save_subliminal_section():
     if not cfg.has_section(section):
         cfg.add_section(section)
 
-    cfg.set(section, "hearingimpaired", str(autosubliminal.HEARINGIMPAIRED))
     cfg.set(section, "providers", str(autosubliminal.SUBLIMINALPROVIDERS))
+    cfg.set(section, "includehearingimpaired", str(autosubliminal.INCLUDEHEARINGIMPAIRED))
 
     with open(autosubliminal.CONFIGFILE, 'wb') as file:
         cfg.write(file)
