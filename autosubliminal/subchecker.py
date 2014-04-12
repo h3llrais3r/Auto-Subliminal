@@ -1,5 +1,7 @@
+import collections
 import logging
 import os
+import operator
 
 import babelfish
 import subliminal
@@ -66,13 +68,19 @@ class SubChecker():
                 if lang == autosubliminal.DEFAULTLANGUAGE and not autosubliminal.DEFAULTLANGUAGESUFFIX:
                     single = True
 
+                # If hearing_impaired is True, we ALSO want the hearing_impaired subs in our results -> pass None
+                # I hearing_impaired is False, we DO NOT want the hearing_impaired subs in our results -> pass False
+                include_hearing_impaired = autosubliminal.INCLUDEHEARINGIMPAIRED
+                if include_hearing_impaired:
+                    include_hearing_impaired = None
+
                 # Download the best subtitle with min_score (without saving it in a file)
                 videos = [video]
                 languages = [language]
                 subtitles = subliminal.download_best_subtitles(set(videos), set(languages),
                                                                providers=autosubliminal.SUBLIMINALPROVIDERLIST,
                                                                min_score=autosubliminal.MINMATCHSCORE,
-                                                               hearing_impaired=autosubliminal.HEARINGIMPAIRED,
+                                                               hearing_impaired=include_hearing_impaired,
                                                                single=False)
 
                 # Check if subtitle found
@@ -107,3 +115,46 @@ class SubChecker():
         log.debug("Finished round of subtitle checking")
         autosubliminal.WANTEDQUEUELOCK = False
         return True
+
+    # This is a copy from the subliminal.api.download_best_subtitles() method
+    # Adapted to optimize the matching
+    def check_subtitles(self, video, language, providers=None, min_score=0, hearing_impaired=False):
+        """Check the subtitles for `video` with the given `language` using the specified `providers`
+
+        :param video: video to download subtitles for
+        :type video: :class:`subliminal.video.Video`
+        :param language: language of subtitles to download
+        :type language: :class:`babelfish.Language`
+        :param providers: providers to use for the search, if not all
+        :type providers: list of string or None
+        :param int min_score: minimum score for subtitles to download
+        :param bool hearing_impaired: download hearing impaired subtitles
+
+        """
+        downloaded_subtitles = collections.defaultdict(list)
+        with subliminal.ProviderPool(providers) as pp:
+            # list
+            log.info('Listing subtitles for %r', video)
+            video_subtitles = pp.list_subtitles(video, set(language))
+            log.info('Found %d subtitles total', len(video_subtitles))
+
+            # download
+            downloaded_languages = set()
+            # TODO: find a way to enrich the score/matches
+            # TODO: (f.e. if WEB-DL is found, resolution should be 720p if nothing is specified)
+            for subtitle, score in sorted([(s, s.compute_score(video)) for s in video_subtitles],
+                                          key=operator.itemgetter(1), reverse=True):
+                if score < min_score:
+                    log.info('No subtitle with score >= %d', min_score)
+                    break
+                if subtitle.hearing_impaired != hearing_impaired:
+                    log.debug('Skipping subtitle: hearing impaired != %r', hearing_impaired)
+                    continue
+                if subtitle.language in downloaded_languages:
+                    log.debug('Skipping subtitle: %r already downloaded', subtitle.language)
+                    continue
+                log.info('Downloading subtitle %r with score %d', subtitle, score)
+                if pp.download_subtitle(subtitle):
+                    downloaded_languages.add(subtitle.language)
+                    downloaded_subtitles[video].append(subtitle)
+        return downloaded_subtitles
