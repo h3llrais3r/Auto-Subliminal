@@ -56,7 +56,7 @@ class IdCache():
 class LastDownloads():
     def __init__(self):
         self.query_get = 'select * from last_downloads order by timestamp desc'
-        self.query_set = 'insert into last_downloads values (NULL,?,?,?,?,?,?,?,?,?,?)'
+        self.query_set = 'insert into last_downloads values (NULL,?,?,?,?,?,?,?,?,?,?,?)'
         self.query_flush = 'delete from last_downloads'
 
     def get_last_downloads(self):
@@ -91,7 +91,8 @@ class LastDownloads():
             result_dict['codec'],
             result_dict['timestamp'],
             result_dict['releasegrp'],
-            result_dict['subtitle']])
+            result_dict['subtitle'],
+            result_dict['provider']])
         connection.commit()
         connection.close()
 
@@ -161,6 +162,14 @@ def upgrade(from_version, to_version):
             cursor.execute("DROP TABLE id_cache;")
             cursor.execute("CREATE TABLE id_cache (tvdb_id INTEGER, show_name TEXT);")
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (4, 3))
+            connection.commit()
+            connection.close()
+        if from_version == 4 and to_version == 5:
+            # Add provider column to last_downloads table
+            connection = sqlite3.connect(autosubliminal.DBFILE)
+            cursor = connection.cursor()
+            cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'provider')
+            cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (5, 4))
             connection.commit()
             connection.close()
 

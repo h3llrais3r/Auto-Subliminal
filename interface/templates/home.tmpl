@@ -186,9 +186,16 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
     <ul>
         <li>
         #if $var['subtitle'] == None
-        	N/A
+        	Subtitle: N/A
         #else
-        	$var['subtitle']
+        	Subtitle: $var['subtitle']
+        #end if
+        </li>
+        <li>
+        #if $var['provider'] == None
+        	Provider: N/A
+        #else
+        	Provider: $var['provider']
         #end if
         </li>
     </ul>
