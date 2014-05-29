@@ -3,7 +3,7 @@
 <table>
 
     <tr>
-		<td width="200px">PostProcessing</td>
+		<td width="200px">Post-process</td>
 		<td><select name="postprocess">
 		    #if $autosubliminal.POSTPROCESS
                 <option value="True" selected="selected">Enabled</option>
@@ -17,8 +17,22 @@
 	</tr>
 
 	<tr>
-		<td width="200px">Post-process CMD</td>
-		<td><input type="text" size="50" name="postprocesscmd" value="$autosubliminal.POSTPROCESSCMD" /></td>
+		<td width="200px">UTF-8 encoding</td>
+		<td><select name="postprocessutf8encoding">
+		    #if $autosubliminal.POSTPROCESSUTF8ENCODING
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+            #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+            #end if
+		</select></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationPostprocessutf8encoding"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationPostprocessutf8encoding" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, the post processing CMD and arguments will be encoded in UTF-8.<br />This means that the post processing script will need to decode the arguments from UTF-8.<br />Default is Disabled.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="200px">Post-process command</td>
+		<td><input type="text" size="75" name="postprocesscmd" value="$autosubliminal.POSTPROCESSCMD" /></td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationPostprocesscmd"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationPostprocesscmd" class="dropdown-menu has-tip" align="left"><ul><li>Auto-Subliminal will run this command after downloading a subtitle.</li></ul></div></td>
 	</tr>
 

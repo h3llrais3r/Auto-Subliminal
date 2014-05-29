@@ -1,4 +1,5 @@
 import logging
+import sys
 
 from autosubliminal import utils
 
@@ -11,10 +12,11 @@ class PostProcessor():
     Additionally, some optional arguments and the encoding (for command and arguments) can be passed.
     """
 
-    def __init__(self, cmd, download_dict, args=None, encoding=None):
+    def __init__(self, utf8encoding, cmd, download_dict, args=None):
+        # Set utf-8 encoding if needed, otherwise use default encoding (normally ascii)
+        self.encoding = 'utf-8' if utf8encoding else sys.getdefaultencoding()
         self.cmd = cmd
         self.args = args
-        self.encoding = encoding
         self.download_dict = download_dict
 
     def run(self):

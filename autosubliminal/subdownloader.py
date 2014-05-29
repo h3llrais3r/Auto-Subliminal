@@ -25,7 +25,7 @@ def download_subtitle(download_dict):
                           download_dict["originalFileLocationOnDisk"], download_dict['provider'])
             # Post processing
         if autosubliminal.POSTPROCESS and autosubliminal.POSTPROCESSCMD:
-            PostProcessor(autosubliminal.POSTPROCESSCMD, download_dict, encoding='utf-8').run()
+            PostProcessor(autosubliminal.POSTPROCESSUTF8ENCODING, autosubliminal.POSTPROCESSCMD, download_dict).run()
         return True
     else:
         log.error("No downloadLink or locationOnDisk found at download_item, skipping")

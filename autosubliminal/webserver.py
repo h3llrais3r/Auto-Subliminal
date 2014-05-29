@@ -85,7 +85,7 @@ class Config:
                     notifynma, nmaapi,
                     notifygrowl, growlhost, growlport, growlpass,
                     notifyprowl, prowlapi, prowlpriority,
-                    postprocess, postprocesscmd,
+                    postprocess, postprocessutf8encoding, postprocesscmd,
                     mmsdefault=None, mmssource=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None,
                     subliminalproviders=None):
         # Set general variables
@@ -182,6 +182,7 @@ class Config:
 
         # Set postprocessing variables
         autosubliminal.POSTPROCESS = postprocess
+        autosubliminal.POSTPROCESSUTF8ENCODING = postprocessutf8encoding
         autosubliminal.POSTPROCESSCMD = postprocesscmd
 
         # Now save to the configfile

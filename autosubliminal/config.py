@@ -143,7 +143,6 @@ def read_config():
         autosubliminal.MATCHQUALITY = False
         autosubliminal.MATCHCODEC = False
         autosubliminal.MATCHRELEASEGROUP = False
-        autosubliminal.POSTPROCESS = False
         autosubliminal.SCHEDULERSCANDISK = 3600
         autosubliminal.SCHEDULERCHECKSUB = 28800
         autosubliminal.SKIPHIDDENDIRS = False
@@ -448,11 +447,19 @@ def read_config():
         else:
             autosubliminal.POSTPROCESS = False
 
+        if cfg.has_option("postprocessing", "postprocessutf8encoding"):
+            autosubliminal.POSTPROCESSUTF8ENCODING = cfg.getboolean("postprocessing", "postprocessutf8encoding")
+        else:
+            autosubliminal.POSTPROCESSUTF8ENCODING = False
+
         if cfg.has_option("postprocessing", "postprocesscmd"):
             autosubliminal.POSTPROCESSCMD = cfg.get("postprocessing", "postprocesscmd")
+        else:
+            autosubliminal.POSTPROCESSCMD = None
 
     else:
         autosubliminal.POSTPROCESS = False
+        autosubliminal.POSTPORCESSUTF8ENCODING = False
         autosubliminal.POSTPROCESSCMD = None
 
     if cfg.has_section('dev'):
@@ -749,7 +756,7 @@ def save_webserver_section():
         cfg.add_section(section)
 
     cfg.set(section, "webserverip", str(autosubliminal.WEBSERVERIP))
-    cfg.set(section, 'webserverport', str(autosubliminal.WEBSERVERPORT))
+    cfg.set(section, "webserverport", str(autosubliminal.WEBSERVERPORT))
     cfg.set(section, "webroot", autosubliminal.WEBROOT)
     cfg.set(section, "username", autosubliminal.USERNAME)
     cfg.set(section, "password", autosubliminal.PASSWORD)
@@ -809,7 +816,7 @@ def save_usernamemapping_section():
             cfg.write(file)
 
     for x in autosubliminal.USERNAMEMAPPING:
-        save_config('namemapping', x, autosubliminal.USERNAMEMAPPING[x])
+        save_config("namemapping", x, autosubliminal.USERNAMEMAPPING[x])
 
     # Set all namemapping stuff correct
     apply_namemapping()
@@ -837,7 +844,7 @@ def save_skipshow_section():
             cfg.write(file)
 
     for x in autosubliminal.SKIPSHOW:
-        save_config('skipshow', x, autosubliminal.SKIPSHOW[x])
+        save_config("skipshow", x, autosubliminal.SKIPSHOW[x])
 
     # Set all skipshow stuff correct
     apply_skipshow()
@@ -864,7 +871,7 @@ def save_notify_section():
     cfg.set(section, "notify", str(autosubliminal.NOTIFY))
     cfg.set(section, "notifymail", str(autosubliminal.NOTIFYMAIL))
     cfg.set(section, "mailsrv", autosubliminal.MAILSRV)
-    cfg.set(section, 'mailfromaddr', autosubliminal.MAILFROMADDR)
+    cfg.set(section, "mailfromaddr", autosubliminal.MAILFROMADDR)
     cfg.set(section, "mailtoaddr", autosubliminal.MAILTOADDR)
     cfg.set(section, "mailusername", autosubliminal.MAILUSERNAME)
     cfg.set(section, "mailpassword", autosubliminal.MAILPASSWORD)
@@ -909,6 +916,7 @@ def save_postprocessing_section():
         cfg.add_section(section)
 
     cfg.set(section, "postprocess", str(autosubliminal.POSTPROCESS))
+    cfg.set(section, "postprocessutf8encoding", str(autosubliminal.POSTPROCESSUTF8ENCODING))
     cfg.set(section, "postprocesscmd", autosubliminal.POSTPROCESSCMD)
 
     with open(autosubliminal.CONFIGFILE, 'wb') as file:
