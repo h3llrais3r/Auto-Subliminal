@@ -102,11 +102,6 @@ def read_config():
         else:
             autosubliminal.MATCHRELEASEGROUP = False
 
-        if cfg.has_option("config", "notify"):
-            autosubliminal.NOTIFY = cfg.getboolean("config", "notify")
-        else:
-            autosubliminal.NOTIFY = False
-
         if cfg.has_option('config', 'scandisk'):
             autosubliminal.SCHEDULERSCANDISK = cfg.getint('config', 'scandisk')
         else:
@@ -148,7 +143,6 @@ def read_config():
         autosubliminal.MATCHQUALITY = False
         autosubliminal.MATCHCODEC = False
         autosubliminal.MATCHRELEASEGROUP = False
-        autosubliminal.NOTIFY = False
         autosubliminal.POSTPROCESS = False
         autosubliminal.SCHEDULERSCANDISK = 3600
         autosubliminal.SCHEDULERCHECKSUB = 28800
@@ -297,6 +291,11 @@ def read_config():
         autosubliminal.SKIPSHOWUPPER = {}
 
     if cfg.has_section('notify'):
+        if cfg.has_option("notify", "notify"):
+            autosubliminal.NOTIFY = cfg.getboolean("notify", "notify")
+        else:
+            autosubliminal.NOTIFY = False
+
         # Mail
         if cfg.has_option('notify', 'notifymail'):
             autosubliminal.NOTIFYMAIL = cfg.getboolean('notify', 'notifymail')
@@ -420,6 +419,7 @@ def read_config():
 
     else:
         # Notify section is missing
+        autosubliminal.NOTIFY = False
         autosubliminal.NOTIFYMAIL = False
         autosubliminal.MAILSRV = u"smtp.gmail.com:587"
         autosubliminal.MAILFROMADDR = u"example@gmail.com"
@@ -691,7 +691,6 @@ def save_config_section():
     cfg.set(section, "matchquality", str(autosubliminal.MATCHQUALITY))
     cfg.set(section, "matchcodec", str(autosubliminal.MATCHCODEC))
     cfg.set(section, "matchreleasegroup", str(autosubliminal.MATCHRELEASEGROUP))
-    cfg.set(section, "notify", str(autosubliminal.NOTIFY))
     cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
     cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
@@ -862,6 +861,7 @@ def save_notify_section():
     if not cfg.has_section(section):
         cfg.add_section(section)
 
+    cfg.set(section, "notify", str(autosubliminal.NOTIFY))
     cfg.set(section, "notifymail", str(autosubliminal.NOTIFYMAIL))
     cfg.set(section, "mailsrv", autosubliminal.MAILSRV)
     cfg.set(section, 'mailfromaddr', autosubliminal.MAILFROMADDR)

@@ -94,7 +94,6 @@ class Config:
         autosubliminal.DEFAULTLANGUAGE = defaultlanguage
         autosubliminal.DEFAULTLANGUAGESUFFIX = defaultlanguagesuffix
         autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split(',')
-        autosubliminal.NOTIFY = notify
         autosubliminal.SCHEDULERSCANDISK = int(scandisk)
         autosubliminal.SCHEDULERCHECKSUB = int(checksub)
         autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
@@ -156,6 +155,7 @@ class Config:
         autosubliminal.SKIPSHOW = config.string_to_dict(skipshow)
 
         # Set notify variables
+        autosubliminal.NOTIFY = notify
         autosubliminal.NOTIFYMAIL = notifymail
         autosubliminal.MAILSRV = mailsrv
         autosubliminal.MAILFROMADDR = mailfromaddr
