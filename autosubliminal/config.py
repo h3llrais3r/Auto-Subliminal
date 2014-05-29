@@ -107,14 +107,6 @@ def read_config():
         else:
             autosubliminal.NOTIFY = False
 
-        if cfg.has_option("config", "postprocess"):
-            autosubliminal.POSTPROCESS = cfg.getboolean("config", "postprocess")
-        else:
-            autosubliminal.POSTPROCESS = False
-
-        if cfg.has_option("config", "postprocesscmd"):
-            autosubliminal.POSTPROCESSCMD = cfg.get("config", "postprocesscmd")
-
         if cfg.has_option('config', 'scandisk'):
             autosubliminal.SCHEDULERSCANDISK = cfg.getint('config', 'scandisk')
         else:
@@ -284,6 +276,26 @@ def read_config():
         autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
         autosubliminal.INCLUDEHEARINGIMPAIRED = None
 
+    if cfg.has_section('namemapping'):
+        autosubliminal.USERNAMEMAPPING = dict(cfg.items('namemapping'))
+        autosubliminal.USERNAMEMAPPINGUPPER = {}
+        for x in autosubliminal.USERNAMEMAPPING.keys():
+            autosubliminal.USERNAMEMAPPINGUPPER[x.upper()] = autosubliminal.USERNAMEMAPPING[x]
+    else:
+        autosubliminal.USERNAMEMAPPING = {}
+        autosubliminal.USERNAMEMAPPINGUPPER = {}
+
+    if cfg.has_section('skipshow'):
+        # Try to read skipshow section in the config
+        autosubliminal.SKIPSHOW = dict(cfg.items('skipshow'))
+        # The following 4 lines convert the skipshow to uppercase. And also convert the variables to a list
+        autosubliminal.SKIPSHOWUPPER = {}
+        for x in autosubliminal.SKIPSHOW:
+            autosubliminal.SKIPSHOWUPPER[x.upper()] = autosubliminal.SKIPSHOW[x].split(',')
+    else:
+        autosubliminal.SKIPSHOW = {}
+        autosubliminal.SKIPSHOWUPPER = {}
+
     if cfg.has_section('notify'):
         # Mail
         if cfg.has_option('notify', 'notifymail'):
@@ -430,25 +442,18 @@ def read_config():
         autosubliminal.NOTIFYPROWL = False
         autosubliminal.PROWLAPI = u"API key"
 
-    if cfg.has_section('namemapping'):
-        autosubliminal.USERNAMEMAPPING = dict(cfg.items('namemapping'))
-        autosubliminal.USERNAMEMAPPINGUPPER = {}
-        for x in autosubliminal.USERNAMEMAPPING.keys():
-            autosubliminal.USERNAMEMAPPINGUPPER[x.upper()] = autosubliminal.USERNAMEMAPPING[x]
-    else:
-        autosubliminal.USERNAMEMAPPING = {}
-        autosubliminal.USERNAMEMAPPINGUPPER = {}
+    if cfg.has_section('postprocessing'):
+        if cfg.has_option("postprocessing", "postprocess"):
+            autosubliminal.POSTPROCESS = cfg.getboolean("postprocessing", "postprocess")
+        else:
+            autosubliminal.POSTPROCESS = False
 
-    if cfg.has_section('skipshow'):
-        # Try to read skipshow section in the config
-        autosubliminal.SKIPSHOW = dict(cfg.items('skipshow'))
-        # The following 4 lines convert the skipshow to uppercase. And also convert the variables to a list
-        autosubliminal.SKIPSHOWUPPER = {}
-        for x in autosubliminal.SKIPSHOW:
-            autosubliminal.SKIPSHOWUPPER[x.upper()] = autosubliminal.SKIPSHOW[x].split(',')
+        if cfg.has_option("postprocessing", "postprocesscmd"):
+            autosubliminal.POSTPROCESSCMD = cfg.get("postprocessing", "postprocesscmd")
+
     else:
-        autosubliminal.SKIPSHOW = {}
-        autosubliminal.SKIPSHOWUPPER = {}
+        autosubliminal.POSTPROCESS = False
+        autosubliminal.POSTPROCESSCMD = None
 
     if cfg.has_section('dev'):
         if cfg.has_option('dev', 'apikey'):
@@ -687,8 +692,6 @@ def save_config_section():
     cfg.set(section, "matchcodec", str(autosubliminal.MATCHCODEC))
     cfg.set(section, "matchreleasegroup", str(autosubliminal.MATCHRELEASEGROUP))
     cfg.set(section, "notify", str(autosubliminal.NOTIFY))
-    cfg.set(section, "postprocess", str(autosubliminal.POSTPROCESS))
-    cfg.set(section, "postprocesscmd", autosubliminal.POSTPROCESSCMD)
     cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
     cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
@@ -887,6 +890,31 @@ def save_notify_section():
         cfg.write(file)
 
 
+def save_postprocessing_section():
+    """
+    Save stuff
+    """
+    section = 'postprocessing'
+
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        # No config yet
+        cfg = SafeConfigParser()
+        pass
+
+    if not cfg.has_section(section):
+        cfg.add_section(section)
+
+    cfg.set(section, "postprocess", str(autosubliminal.POSTPROCESS))
+    cfg.set(section, "postprocesscmd", autosubliminal.POSTPROCESSCMD)
+
+    with open(autosubliminal.CONFIGFILE, 'wb') as file:
+        cfg.write(file)
+
+
 def check_for_restart():
     """
     Check if internal variables are different from the config file.
@@ -1021,6 +1049,7 @@ def write_config():
     save_usernamemapping_section()
     save_skipshow_section()
     save_notify_section()
+    save_postprocessing_section()
 
     return restart
 

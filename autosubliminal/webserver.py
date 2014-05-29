@@ -70,31 +70,33 @@ class Config:
         return str(tmpl)
 
     @cherrypy.expose(alias='saveConfig')
-    def save_config(self, checksub, scandisk, defaultlanguage, defaultlanguagesuffix, additionallanguages,
-                    postprocess, postprocesscmd, path, logfile,
-                    videopaths, launchbrowser, username, password, webroot, skipshow, lognum, skiphiddendirs,
-                    loglevelconsole, logsize, loglevel, loghttpaccess, logreversed, webserverip, webserverport,
-                    usernamemapping,
-                    notifymail, notifygrowl, notifynma, notifytwitter, mailsrv, mailfromaddr, mailtoaddr, mailusername,
-                    mailpassword, mailsubject, mailencryption, mailauth, growlhost, growlport, growlpass, nmaapi,
-                    twitterkey, twittersecret, notify,
-                    notifyprowl, prowlapi, prowlpriority, notifypushalot, pushalotapi,
+    def save_config(self, path, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, scandisk,
+                    checksub, skiphiddendirs,
+                    logfile, loglevel, lognum, logsize, loghttpaccess, logreversed, loglevelconsole,
+                    webserverip, webserverport, webroot, username, password, launchbrowser,
                     includehearingimpaired,
+                    usernamemapping,
+                    skipshow,
+                    notify,
+                    notifymail, mailsrv, mailfromaddr, mailtoaddr, mailusername, mailpassword, mailsubject,
+                    mailencryption, mailauth,
+                    notifytwitter, twitterkey, twittersecret,
+                    notifypushalot, pushalotapi,
+                    notifynma, nmaapi,
+                    notifygrowl, growlhost, growlport, growlpass,
+                    notifyprowl, prowlapi, prowlpriority,
+                    postprocess, postprocesscmd,
                     mmsdefault=None, mmssource=None, mmsquality=None, mmscodec=None, mmsreleasegroup=None,
                     subliminalproviders=None):
-        # Set all internal variables
+        # Set general variables
         autosubliminal.PATH = path
         autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
-        autosubliminal.LOGFILE = logfile
-        autosubliminal.LOGHTTPACCESS = loghttpaccess
-        autosubliminal.LOGREVERSED = logreversed
         autosubliminal.DEFAULTLANGUAGE = defaultlanguage
         autosubliminal.DEFAULTLANGUAGESUFFIX = defaultlanguagesuffix
         autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split(',')
         autosubliminal.NOTIFY = notify
-        autosubliminal.POSTPROCESS = postprocess
-        autosubliminal.POSTPROCESSCMD = postprocesscmd
-        autosubliminal.LAUNCHBROWSER = launchbrowser
+        autosubliminal.SCHEDULERSCANDISK = int(scandisk)
+        autosubliminal.SCHEDULERCHECKSUB = int(checksub)
         autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
 
         # Set match options and minmatchscore
@@ -120,6 +122,24 @@ class Config:
             autosubliminal.MINMATCHSCORE += 6
             autosubliminal.MATCHRELEASEGROUP = True
 
+        # Set logfile variables
+        autosubliminal.LOGFILE = logfile
+        autosubliminal.LOGLEVEL = int(loglevel)
+        autosubliminal.LOGNUM = int(lognum)
+        autosubliminal.LOGSIZE = int(logsize)
+        autosubliminal.LOGHTTPACCESS = loghttpaccess
+        autosubliminal.LOGREVERSED = logreversed
+        autosubliminal.LOGLEVELCONSOLE = int(loglevelconsole)
+
+        # Set webserver variables
+        autosubliminal.WEBSERVERIP = webserverip
+        autosubliminal.WEBSERVERPORT = int(webserverport)
+        autosubliminal.WEBROOT = webroot
+        autosubliminal.USERNAME = username
+        autosubliminal.PASSWORD = password
+        autosubliminal.LAUNCHBROWSER = launchbrowser
+
+        # Set subliminal variables
         # Subliminal providers(convert list to comma separated string if multiple are selected)
         if subliminalproviders and not isinstance(subliminalproviders, basestring):
             autosubliminal.SUBLIMINALPROVIDERS = ','.join([str(provider) for provider in subliminalproviders])
@@ -129,21 +149,13 @@ class Config:
 
         autosubliminal.INCLUDEHEARINGIMPAIRED = includehearingimpaired
 
-        autosubliminal.SCHEDULERSCANDISK = int(scandisk)
-        autosubliminal.SCHEDULERCHECKSUB = int(checksub)
-        autosubliminal.LOGLEVEL = int(loglevel)
-        autosubliminal.LOGNUM = int(lognum)
-        autosubliminal.LOGSIZE = int(logsize)
-        autosubliminal.LOGLEVELCONSOLE = int(loglevelconsole)
-        autosubliminal.WEBSERVERIP = webserverip
-        autosubliminal.WEBSERVERPORT = int(webserverport)
-        autosubliminal.USERNAME = username
-        autosubliminal.PASSWORD = password
-        autosubliminal.WEBROOT = webroot
-        autosubliminal.SKIPSHOW = config.string_to_dict(skipshow)
+        # Set usernamemapping variables
         autosubliminal.USERNAMEMAPPING = config.string_to_dict(usernamemapping)
 
-        # Set all internal notify variables
+        # Set skipshow variables
+        autosubliminal.SKIPSHOW = config.string_to_dict(skipshow)
+
+        # Set notify variables
         autosubliminal.NOTIFYMAIL = notifymail
         autosubliminal.MAILSRV = mailsrv
         autosubliminal.MAILFROMADDR = mailfromaddr
@@ -153,20 +165,24 @@ class Config:
         autosubliminal.MAILSUBJECT = mailsubject
         autosubliminal.MAILENCRYPTION = mailencryption
         autosubliminal.MAILAUTH = mailauth
+        autosubliminal.NOTIFYTWITTER = notifytwitter
+        autosubliminal.TWITTERKEY = twitterkey
+        autosubliminal.TWITTERSECRET = twittersecret
+        autosubliminal.NOTIFYPUSHALOT = notifypushalot
+        autosubliminal.PUSHALOTAPI = pushalotapi
+        autosubliminal.NOTIFYNMA = notifynma
+        autosubliminal.NMAAPI = nmaapi
         autosubliminal.NOTIFYGROWL = notifygrowl
         autosubliminal.GROWLHOST = growlhost
         autosubliminal.GROWLPORT = growlport
         autosubliminal.GROWLPASS = growlpass
-        autosubliminal.NOTIFYNMA = notifynma
-        autosubliminal.NMAAPI = nmaapi
-        autosubliminal.NOTIFYTWITTER = notifytwitter
-        autosubliminal.TWITTERKEY = twitterkey
-        autosubliminal.TWITTERSECRET = twittersecret
         autosubliminal.NOTIFYPROWL = notifyprowl
         autosubliminal.PROWLAPI = prowlapi
         autosubliminal.PROWLPRIORITY = int(prowlpriority)
-        autosubliminal.NOTIFYPUSHALOT = notifypushalot
-        autosubliminal.PUSHALOTAPI = pushalotapi
+
+        # Set postprocessing variables
+        autosubliminal.POSTPROCESS = postprocess
+        autosubliminal.POSTPROCESSCMD = postprocesscmd
 
         # Now save to the configfile
         restart = config.write_config()
