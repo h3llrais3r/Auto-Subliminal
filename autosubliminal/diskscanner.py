@@ -119,8 +119,9 @@ class DiskScanner():
         for videodir in autosubliminal.VIDEOPATHS:
             try:
                 walk_dir(videodir)
-            except:
-                walk_dir(str(videodir))
+            except Exception, e:
+                log.error("Could not scan the video path (%s), skipping..." % videodir)
+                log.exception(e)
 
         log.debug("Finished round of local disk checking")
         autosubliminal.WANTEDQUEUELOCK = False
