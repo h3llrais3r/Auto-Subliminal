@@ -20,11 +20,11 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.plugins import Transformer
-
-from guessit.transfo import SingleNodeGuesser
-from guessit.language import search_language
-from guessit.textutils import clean_string
+from guessit.language import search_language, subtitle_prefixes, subtitle_suffixes
+from guessit.patterns.extension import subtitle_exts
+from guessit.textutils import clean_string, find_words
+from guessit.plugins.transformers import Transformer
+from guessit.matcher import GuessFinder
 
 
 class GuessLanguage(Transformer):
@@ -32,9 +32,9 @@ class GuessLanguage(Transformer):
         Transformer.__init__(self, 30)
 
     def supported_properties(self):
-        return ['language']
+        return ['language', 'subtitleLanguage']
 
-    def guess_language(self, string):
+    def guess_language(self, string, node=None, options=None):
         guess = search_language(string)
         return guess
 
@@ -73,7 +73,7 @@ class GuessLanguage(Transformer):
         return node.span[0] in title_ends.keys() and (node.span[1] in unidentified_starts.keys() or node.span[1] + 1 in property_starts.keys()) or\
                 node.span[1] in title_starts.keys() and (node.span[0] == 0 or node.span[0] in unidentified_ends.keys() or node.span[0] in property_ends.keys())
 
-    def second_pass_options(self, mtree):
+    def second_pass_options(self, mtree, options=None):
         m = mtree.matched()
         to_skip_language_nodes = []
 
@@ -89,17 +89,20 @@ class GuessLanguage(Transformer):
                     # if filetype is subtitle and the language appears last, just before
                     # the extension, then it is likely a subtitle language
                     parts = clean_string(lang_node.root.value).split()
-                    if m['type'] in ['moviesubtitle', 'episodesubtitle'] and (parts.index(lang_node.value) == len(parts) - 2):
+                    if (m.get('type') in ['moviesubtitle', 'episodesubtitle'] and
+                        (parts.index(lang_node.value) == len(parts) - 2)):
                         continue
 
                     to_skip_language_nodes.append(lang_node)
                 elif not lang in langs:
                     langs[lang] = lang_node
                 else:
-                    # The same language was found. Keep the more confident one, and add others to skip for 2nd pass.
+                    # The same language was found. Keep the more confident one,
+                    # and add others to skip for 2nd pass.
                     existing_lang_node = langs[lang]
                     to_skip = None
-                    if existing_lang_node.guess.confidence('language') >= lang_node.guess.confidence('language'):
+                    if (existing_lang_node.guess.confidence('language') >=
+                        lang_node.guess.confidence('language')):
                         # lang_node is to remove
                         to_skip = lang_node
                     else:
@@ -109,12 +112,58 @@ class GuessLanguage(Transformer):
                     to_skip_language_nodes.append(to_skip)
 
         if to_skip_language_nodes:
-            return None, {'skip_nodes': to_skip_language_nodes}
-        return None, None
+            return {'skip_nodes': to_skip_language_nodes}
+        return None
 
-    def should_process(self, matcher):
-        return not 'nolanguage' in matcher.opts
+    def should_process(self, mtree, options=None):
+        options = options or {}
+        return 'nolanguage' not in options
 
-    def process(self, mtree, *args, **kwargs):
-        SingleNodeGuesser(self.guess_language, None, self.log, *args, **kwargs).process(mtree)
-        # Note: 'language' is promoted to 'subtitleLanguage' in the post_process transfo
+    def process(self, mtree, options=None):
+        GuessFinder(self.guess_language, None, self.log, options).process_nodes(mtree.unidentified_leaves())
+
+    def promote_subtitle(self, node):
+        node.guess.set('subtitleLanguage', node.guess['language'],
+                       confidence=node.guess.confidence('language'))
+        del node.guess['language']
+
+    def post_process(self, mtree, options=None):
+        # 1- try to promote language to subtitle language where it makes sense
+        for node in mtree.nodes():
+            if 'language' not in node.guess:
+                continue
+
+            # - if we matched a language in a file with a sub extension and that
+            #   the group is the last group of the filename, it is probably the
+            #   language of the subtitle
+            #   (eg: 'xxx.english.srt')
+            if (mtree.node_at((-1,)).value.lower() in subtitle_exts and
+                node == mtree.leaves()[-2]):
+                self.promote_subtitle(node)
+
+            # - if we find in the same explicit group
+            # a subtitle prefix before the language,
+            # or a subtitle suffix after the language,
+            # then upgrade the language
+            explicit_group = mtree.node_at(node.node_idx[:2])
+            group_str = explicit_group.value.lower()
+
+            for sub_prefix in subtitle_prefixes:
+                if (sub_prefix in find_words(group_str) and
+                    0 <= group_str.find(sub_prefix) < (node.span[0] - explicit_group.span[0])):
+                    self.promote_subtitle(node)
+
+            for sub_suffix in subtitle_suffixes:
+                if (sub_suffix in find_words(group_str) and
+                    (node.span[0] - explicit_group.span[0]) < group_str.find(sub_suffix)):
+                    self.promote_subtitle(node)
+
+            # - if a language is in an explicit group just preceded by "st",
+            #   it is a subtitle language (eg: '...st[fr-eng]...')
+            try:
+                idx = node.node_idx
+                previous = mtree.node_at((idx[0], idx[1] - 1)).leaves()[-1]
+                if previous.value.lower()[-2:] == 'st':
+                    self.promote_subtitle(node)
+            except IndexError:
+                pass

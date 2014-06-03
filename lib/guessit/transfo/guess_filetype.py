@@ -20,17 +20,16 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.plugins import Transformer
-from guessit.plugins.transformers import get_transformer
-
-from guessit import Guess
-from guessit.patterns.extension import subtitle_exts, info_exts, video_exts
-from guessit.date import valid_year
-from guessit.textutils import clean_string
+import mimetypes
 import os.path
 import re
-import mimetypes
-from guessit.transfo import TransfoException
+
+from guessit.guess import Guess
+from guessit.patterns.extension import subtitle_exts, info_exts, video_exts
+from guessit.transfo import TransformerException
+from guessit.plugins.transformers import Transformer, get_transformer
+from guessit.matcher import log_found_guess, found_guess
+from guessit.textutils import clean_string
 
 
 class GuessFiletype(Transformer):
@@ -45,50 +44,49 @@ class GuessFiletype(Transformer):
     MOVIES = [m.lower() for m in MOVIES]
     SERIES = [s.lower() for s in SERIES]
 
-    def guess_filetype(self, mtree, filetype):
+    def guess_filetype(self, mtree, options=None):
+        options = options or {}
+
         # put the filetype inside a dummy container to be able to have the
         # following functions work correctly as closures
         # this is a workaround for python 2 which doesn't have the
-        # 'nonlocal' keyword (python 3 does have it)
-        filetype_container = [filetype]
+        # 'nonlocal' keyword which we could use here in the upgrade_* functions
+        # (python 3 does have it)
+        filetype_container = [mtree.guess.get('type')]
         other = {}
         filename = mtree.string
 
         def upgrade_episode():
-            if filetype_container[0] == 'video':
-                filetype_container[0] = 'episode'
-            elif filetype_container[0] == 'subtitle':
+            if filetype_container[0] == 'subtitle':
                 filetype_container[0] = 'episodesubtitle'
             elif filetype_container[0] == 'info':
                 filetype_container[0] = 'episodeinfo'
+            elif not filetype_container[0]:
+                filetype_container[0] = 'episode'
 
         def upgrade_movie():
-            if filetype_container[0] == 'video':
-                filetype_container[0] = 'movie'
-            elif filetype_container[0] == 'subtitle':
+            if filetype_container[0] == 'subtitle':
                 filetype_container[0] = 'moviesubtitle'
             elif filetype_container[0] == 'info':
                 filetype_container[0] = 'movieinfo'
+            elif not filetype_container[0]:
+                filetype_container[0] = 'movie'
 
         def upgrade_subtitle():
-            if 'movie' in filetype_container[0]:
+            if filetype_container[0] == 'movie':
                 filetype_container[0] = 'moviesubtitle'
-            elif 'episode' in filetype_container[0]:
+            elif filetype_container[0] == 'episode':
                 filetype_container[0] = 'episodesubtitle'
-            else:
+            elif not filetype_container[0]:
                 filetype_container[0] = 'subtitle'
 
         def upgrade_info():
-            if 'movie' in filetype_container[0]:
+            if filetype_container[0] == 'movie':
                 filetype_container[0] = 'movieinfo'
-            elif 'episode' in filetype_container[0]:
+            elif filetype_container[0] == 'episode':
                 filetype_container[0] = 'episodeinfo'
-            else:
+            elif not filetype_container[0]:
                 filetype_container[0] = 'info'
-
-        def upgrade(type='unknown'):
-            if filetype_container[0] == 'autodetect':
-                filetype_container[0] = type
 
         # look at the extension first
         fileext = os.path.splitext(filename)[1][1:].lower()
@@ -99,23 +97,25 @@ class GuessFiletype(Transformer):
             upgrade_info()
             other = {'container': fileext}
         elif fileext in video_exts:
-            upgrade(type='video')
             other = {'container': fileext}
         else:
-            upgrade(type='unknown')
-            other = {'extension': fileext}
+            if fileext and not options.get('name_only'):
+                other = {'extension': fileext}
 
         # check whether we are in a 'Movies', 'Tv Shows', ... folder
         folder_rexps = [
                         (r'Movies?', upgrade_movie),
+                        (r'Films?', upgrade_movie),
                         (r'Tv[ _-]?Shows?', upgrade_episode),
-                        (r'Series', upgrade_episode)
+                        (r'Series?', upgrade_episode),
+                        (r'Episodes?', upgrade_episode),
                         ]
         for frexp, upgrade_func in folder_rexps:
             frexp = re.compile(frexp, re.IGNORECASE)
             for pathgroup in mtree.children:
                 if frexp.match(pathgroup.value):
                     upgrade_func()
+                    return filetype_container[0], other
 
         # check for a few specific cases which will unintentionally make the
         # following heuristics confused (eg: OSS 117 will look like an episode,
@@ -125,76 +125,75 @@ class GuessFiletype(Transformer):
             if m in fname:
                 self.log.debug('Found in exception list of movies -> type = movie')
                 upgrade_movie()
+                return filetype_container[0], other
         for s in self.SERIES:
             if s in fname:
                 self.log.debug('Found in exception list of series -> type = episode')
                 upgrade_episode()
+                return filetype_container[0], other
 
         # now look whether there are some specific hints for episode vs movie
-        if filetype_container[0] in ('video', 'subtitle', 'info'):
-            # if we have an episode_rexp (eg: s02e13), it is an episode
-            episode_transformer = get_transformer('guess_episodes_rexps')
-            if episode_transformer:
-                for rexp, _, _ in episode_transformer.episode_rexps:
-                    match = re.search(rexp, filename, re.IGNORECASE)
-                    if match:
-                        self.log.debug('Found matching regexp: "%s" (string = "%s") -> type = episode', rexp, match.group())
-                        upgrade_episode()
-                        break
-
-            # if we have a 3-4 digit number that's not a year, maybe an episode
-            match = re.search(r'[^0-9]([0-9]{3,4})[^0-9]', filename)
-            if match:
-                fullnumber = int(match.group()[1:-1])
-                # season = fullnumber // 100
-                epnumber = fullnumber % 100
-                possible = True
-
-                # check for validity
-                if epnumber > 40:
-                    possible = False
-                if valid_year(fullnumber):
-                    possible = False
-
-                if possible:
-                    self.log.debug('Found possible episode number: %s (from string "%s") -> type = episode', epnumber, match.group())
-                    upgrade_episode()
-
-            properties_transformer = get_transformer('guess_properties')
-
-            if properties_transformer:
-                # if we have certain properties characteristic of episodes, it is an ep
-                found = properties_transformer.container.find_properties(filename, 'episodeFormat')
-                guess = properties_transformer.container.as_guess(found, filename)
-                if guess:
-                    self.log.debug('Found characteristic property of episodes: %s"', guess)
-                    upgrade_episode()
-
-                found = properties_transformer.container.find_properties(filename, 'format')
-                guess = properties_transformer.container.as_guess(found, filename, lambda g: g['format'] == 'DVB')
-                if guess:
-                    self.log.debug('Found characteristic property of episodes: %s', guess)
-                    upgrade_episode()
-
-            # origin-specific type
-            if 'tvu.org.ru' in filename:
-                self.log.debug('Found characteristic property of episodes: %s', 'tvu.org.ru')
+        # if we have an episode_rexp (eg: s02e13), it is an episode
+        episode_transformer = get_transformer('guess_episodes_rexps')
+        if episode_transformer:
+            guess = episode_transformer.guess_episodes_rexps(filename)
+            if guess:
+                self.log.debug('Found guess_episodes_rexps: %s -> type = episode', guess)
                 upgrade_episode()
+                return filetype_container[0], other
 
+        properties_transformer = get_transformer('guess_properties')
+        if properties_transformer:
+            # if we have certain properties characteristic of episodes, it is an ep
+            found = properties_transformer.container.find_properties(filename, mtree, 'episodeFormat')
+            guess = properties_transformer.container.as_guess(found, filename)
+            if guess:
+                self.log.debug('Found characteristic property of episodes: %s"', guess)
+                upgrade_episode()
+                return filetype_container[0], other
+
+            found = properties_transformer.container.find_properties(filename, mtree, 'format')
+            guess = properties_transformer.container.as_guess(found, filename)
+            if guess and guess['format'] in ('HDTV', 'WEBRip', 'WEB-DL', 'DVB'):
+                # Use weak episodes only if TV or WEB source
+                weak_episode_transformer = get_transformer('guess_weak_episodes_rexps')
+                if weak_episode_transformer:
+                    guess = weak_episode_transformer.guess_weak_episodes_rexps(filename)
+                    if guess:
+                        self.log.debug('Found guess_weak_episodes_rexps: %s -> type = episode', guess)
+                        upgrade_episode()
+                        return filetype_container[0], other
+
+        website_transformer = get_transformer('guess_website')
+        if website_transformer:
+            found = website_transformer.container.find_properties(filename, mtree, 'website')
+            guess = website_transformer.container.as_guess(found, filename)
+            if guess:
+                for namepart in ('tv', 'serie', 'episode'):
+                    if namepart in guess['website']:
+                        # origin-specific type
+                        self.log.debug('Found characteristic property of episodes: %s', guess)
+                        upgrade_episode()
+                        return filetype_container[0], other
+
+        if filetype_container[0] in ('subtitle', 'info') or (not filetype_container[0] and fileext in video_exts):
             # if no episode info found, assume it's a movie
             self.log.debug('Nothing characteristic found, assuming type = movie')
             upgrade_movie()
 
-        filetype = filetype_container[0]
-        return filetype, other
+        if not filetype_container[0]:
+            self.log.debug('Nothing characteristic found, assuming type = unknown')
+            filetype_container[0] = 'unknown'
 
-    def process(self, mtree, filetype='autodetect'):
+        return filetype_container[0], other
+
+    def process(self, mtree, options=None):
         """guess the file type now (will be useful later)
         """
-        filetype, other = self.guess_filetype(mtree, filetype)
+        filetype, other = self.guess_filetype(mtree, options)
 
         mtree.guess.set('type', filetype, confidence=1.0)
-        self.log.debug('Found with confidence %.2f: %s' % (1.0, mtree.guess))
+        log_found_guess(mtree.guess)
 
         filetype_info = Guess(other, confidence=1.0)
         # guess the mimetype of the filename
@@ -205,8 +204,10 @@ class GuessFiletype(Transformer):
             filetype_info.update({'mimetype': mime}, confidence=1.0)
 
         node_ext = mtree.node_at((-1,))
-        node_ext.guess = filetype_info
-        self.log.debug('Found with confidence %.2f: %s' % (1.0, node_ext.guess))
+        found_guess(node_ext, filetype_info)
 
         if mtree.guess.get('type') in [None, 'unknown']:
-            raise TransfoException(__name__, 'Unknown file type')
+            if options.get('name_only'):
+                mtree.guess.set('type', 'movie', confidence=0.6)
+            else:
+                raise TransformerException(__name__, 'Unknown file type')

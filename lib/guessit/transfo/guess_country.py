@@ -20,8 +20,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.plugins import Transformer
-
+from guessit.plugins.transformers import Transformer
 from guessit.country import Country
 from guessit import Guess
 
@@ -36,10 +35,11 @@ class GuessCountry(Transformer):
     def supported_properties(self):
         return ['country']
 
-    def should_process(self, matcher):
-        return not 'nocountry' in matcher.opts
+    def should_process(self, mtree, options=None):
+        options = options or {}
+        return 'nocountry' not in options.keys()
 
-    def process(self, mtree):
+    def process(self, mtree, options=None):
         for node in mtree.unidentified_leaves():
             if len(node.node_idx) == 2:
                 c = node.value[1:-1].lower()
@@ -56,3 +56,14 @@ class GuessCountry(Transformer):
                     continue
 
                 node.guess = Guess(country=country, confidence=1.0, input=node.value, span=node.span)
+
+    def post_process(self, mtree, options=None, *args, **kwargs):
+        # if country is in the guessed properties, make it part of the series name
+        series_leaves = mtree.leaves_containing('series')
+        country_leaves = mtree.leaves_containing('country')
+
+        if series_leaves and country_leaves:
+            country_leaf = country_leaves[0]
+            for serie_leaf in series_leaves:
+                serie_leaf.guess['series'] += ' (%s)' % country_leaf.guess['country'].alpha2.upper()
+            #result['series'] += ' (%s)' % result['country'].alpha2.upper()

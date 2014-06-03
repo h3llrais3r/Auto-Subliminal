@@ -20,10 +20,9 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.patterns import sep
-from guessit import UnicodeMixin, base_text_type, u, s
+from guessit import UnicodeMixin, base_text_type, u
 from guessit.textutils import find_words
-from babelfish import Language, LANGUAGES, COUNTRIES
+from babelfish import Language
 import babelfish
 import re
 import logging
@@ -58,22 +57,22 @@ class GuessitConverter(babelfish.LanguageReverseConverter):
     _with_country_regexp2 = re.compile('(.*)-(.*)')
 
     def __init__(self):
-        self.codes = set()
         self.guessit_exceptions = {}
-
-        self.alpha3b = babelfish.language_converters['alpha3b']
-        self.alpha2 = babelfish.language_converters['alpha2']
-        self.name = babelfish.language_converters['name']
-
-        self.codes |= LANGUAGES | self.alpha3b.codes | self.alpha2.codes | self.name.codes
-
         for (alpha3, country), synlist in SYN.items():
             for syn in synlist:
                 self.guessit_exceptions[syn.lower()] = (alpha3, country, None)
-                self.codes.add(syn)
 
-    def convert(self, alpha3, country=None):
-        return str(babelfish.Language(alpha3, country))
+    @property
+    def codes(self):
+        return (babelfish.language_converters['alpha3b'].codes |
+                babelfish.language_converters['alpha2'].codes |
+                babelfish.language_converters['name'].codes |
+                babelfish.language_converters['opensubtitles'].codes |
+                babelfish.country_converters['name'].codes |
+                frozenset(self.guessit_exceptions.keys()))
+
+    def convert(self, alpha3, country=None, script=None):
+        return str(babelfish.Language(alpha3, country, script))
 
     def reverse(self, name):
         with_country = (GuessitConverter._with_country_regexp.match(name) or
@@ -105,8 +104,6 @@ class GuessitConverter(babelfish.LanguageReverseConverter):
         raise babelfish.LanguageReverseError(name)
 
 
-ALL_NAMES = frozenset(c.lower() for c in GuessitConverter().codes)
-
 babelfish.language_converters['guessit'] = GuessitConverter()
 
 COUNTRIES_SYN = {'ES': ['españa'],
@@ -120,17 +117,17 @@ COUNTRIES_SYN = {'ES': ['españa'],
 
 class GuessitCountryConverter(babelfish.CountryReverseConverter):
     def __init__(self):
-        self.codes = set()
         self.guessit_exceptions = {}
-
-        self.name = babelfish.country_converters['name']
-
-        self.codes |= set(COUNTRIES.keys()) | self.name.codes
 
         for alpha2, synlist in COUNTRIES_SYN.items():
             for syn in synlist:
                 self.guessit_exceptions[syn.lower()] = alpha2
-                self.codes.add(syn)
+
+    @property
+    def codes(self):
+        return (babelfish.country_converters['name'].codes |
+                frozenset(babelfish.COUNTRIES.values()) |
+                frozenset(self.guessit_exceptions.keys()))
 
     def convert(self, alpha2):
         return str(babelfish.Country(alpha2))
@@ -177,23 +174,17 @@ class Language(UnicodeMixin):
     >>> Language('fr')
     Language(French)
 
-    >>> s(Language('eng').english_name)
-    'english'
-
-    >>> s(Language('pt(br)').country.english_name)
-    'Brazil'
-
-    >>> s(Language('Español (Latinoamérica)').country.english_name)
-    'Latin America'
-
-    >>> Language('Spanish (Latin America)') == Language('Español (Latinoamérica)')
+    >>> (Language('eng').english_name) == 'English'
     True
 
-    >>> s(Language('zz', strict=False).english_name)
-    'Undetermined'
+    >>> (Language('pt(br)').country.name) == 'BRAZIL'
+    True
 
-    >>> s(Language('pt(br)').opensubtitles)
-    'pob'
+    >>> (Language('zz', strict=False).english_name) == 'Undetermined'
+    True
+
+    >>> (Language('pt(br)').opensubtitles) == 'pob'
+    True
     """
 
     def __init__(self, language, country=None, strict=False):
@@ -309,30 +300,39 @@ LNG_COMMON_WORDS = frozenset([
 
 subtitle_prefixes = ['sub', 'subs', 'st', 'vost', 'subforced', 'fansub', 'hardsub']
 subtitle_suffixes = ['subforced', 'fansub', 'hardsub']
-
-_possible_languages_hashed = {}
-for valid_name in set(ALL_NAMES) - LNG_COMMON_WORDS:
-    _possible_languages_hashed[valid_name] = ('language', valid_name)
-    for subtitle_prefix in subtitle_prefixes:
-        _possible_languages_hashed[subtitle_prefix + valid_name] = ('subtitleLanguage', valid_name)
-    for subtitle_suffix in subtitle_suffixes:
-        _possible_languages_hashed[valid_name + subtitle_suffix] = ('subtitleLanguage', valid_name)
+lang_prefixes = ['true']
 
 
 def find_possible_languages(string):
     """Find possible languages in the string
 
-    :return: list of tuple (property, language, word)
+    :return: list of tuple (property, Language, lang_word, word)
     """
-    found_words = set(find_words(string))
+    words = find_words(string)
 
     valid_words = []
-    for word in found_words:
-        lword = word.lower()
-        result = _possible_languages_hashed.get(lword)
-        if result:
-            valid_words.append((result[0], result[1], word))
-
+    for word in words:
+        lang_word = word.lower()
+        key = 'language'
+        for prefix in subtitle_prefixes:
+            if lang_word.startswith(prefix):
+                lang_word = lang_word[len(prefix):]
+                key = 'subtitleLanguage'
+        for suffix in subtitle_suffixes:
+            if lang_word.endswith(suffix):
+                lang_word = lang_word[:len(suffix)]
+                key = 'subtitleLanguage'
+        for prefix in lang_prefixes:
+            if lang_word.startswith(prefix):
+                lang_word = lang_word[len(prefix):]
+        if not lang_word in LNG_COMMON_WORDS:
+            try:
+                lang = Language(lang_word)
+                # Keep language with alpha2 equilavent. Others are probably an uncommon language.
+                if lang == 'mul' or hasattr(lang, 'alpha2'):
+                    valid_words.append((key, lang, lang_word, word))
+            except babelfish.Error:
+                pass
     return valid_words
 
 
@@ -343,11 +343,11 @@ def search_language(string, lang_filter=None):
     you can specify a list of allowed languages using the lang_filter argument,
     as in lang_filter = [ 'fr', 'eng', 'spanish' ]
 
-    >>> search_language('movie [en].avi')
-    (Language(English), (7, 9), 0.8)
+    >>> search_language('movie [en].avi')['language']
+    Language(English)
 
     >>> search_language('the zen fat cat and the gay mad men got a new fan', lang_filter = ['en', 'fr', 'es'])
-    (None, None, None)
+
     """
 
     if lang_filter:
@@ -355,16 +355,11 @@ def search_language(string, lang_filter=None):
 
     confidence = 1.0  # for all of them
 
-    for prop, lang, word in find_possible_languages(string):
+    for prop, language, lang, word in find_possible_languages(string):
         pos = string.find(word)
         end = pos + len(word)
 
-        language = Language(lang)
         if lang_filter and language not in lang_filter:
-            continue
-
-        if language != 'mul' and not hasattr(language, 'alpha2'):
-            # Found language has no alpha2 equilavent. It's probably an uncommon language.
             continue
 
         # only allow those languages that have a 2-letter code, those that
@@ -390,7 +385,7 @@ def search_language(string, lang_filter=None):
     return None
 
 
-def guess_language(text):
+def guess_language(text):  # pragma: no cover
     """Guess the language in which a body of text is written.
 
     This uses the external guess-language python module, and will fail and return

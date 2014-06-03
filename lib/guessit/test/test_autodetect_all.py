@@ -20,30 +20,27 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.plugins.transformers import Transformer
-from guessit.matcher import GuessFinder
-from guessit.date import search_year
+from guessit.test.guessittest import *
+
+IGNORE_EPISODES = []
+IGNORE_MOVIES = []
 
 
-class GuessYear(Transformer):
-    def __init__(self):
-        Transformer.__init__(self, -160)
+class TestAutoDetectAll(TestGuessit):
+    def testAutoMatcher(self):
+        self.checkMinimumFieldsCorrect(filename='autodetect.yaml',
+                                       remove_type=False)
 
-    def supported_properties(self):
-        return ['year']
+    def testAutoMatcherMovies(self):
+        self.checkMinimumFieldsCorrect(filename='movies.yaml',
+                                       exclude_files=IGNORE_MOVIES)
 
-    def guess_year(self, string, node=None, options=None):
-        year, span = search_year(string)
-        if year:
-            return {'year': year}, span
-        else:
-            return None, None
+    def testAutoMatcherEpisodes(self):
+        self.checkMinimumFieldsCorrect(filename='episodes.yaml',
+                                       exclude_files=IGNORE_EPISODES)
 
-    def second_pass_options(self, mtree, options=None):
-        year_nodes = mtree.leaves_containing('year')
-        if len(year_nodes) > 1:
-            return {'skip_nodes': year_nodes[:len(year_nodes) - 1]}
-        return None
 
-    def process(self, mtree, options=None):
-        GuessFinder(self.guess_year, 1.0, self.log, options).process_nodes(mtree.unidentified_leaves())
+suite = allTests(TestAutoDetectAll)
+
+if __name__ == '__main__':
+    TextTestRunner(verbosity=2).run(suite)

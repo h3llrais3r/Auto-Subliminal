@@ -20,8 +20,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.plugins import Transformer
-
+from guessit.plugins.transformers import Transformer
 from guessit.patterns import sep
 import re
 
@@ -30,7 +29,7 @@ class SplitOnDash(Transformer):
     def __init__(self):
         Transformer.__init__(self, 190)
 
-    def process(self, mtree):
+    def process(self, mtree, options=None):
         """split into '-' separated subgroups (with required separator chars
         around the dash)
         """

@@ -19,31 +19,22 @@
 #
 
 from __future__ import absolute_import, division, print_function, unicode_literals
+from guessit.test import (test_api, test_autodetect, test_autodetect_all, test_doctests,
+                          test_episode, test_hashes, test_language, test_main,
+                          test_matchtree, test_movie, test_quality, test_utils)
+from unittest import TextTestRunner
 
-from guessit.plugins.transformers import Transformer
-from guessit.matcher import GuessFinder
-from guessit.date import search_year
+
+import logging
+
+def main():
+    for suite in [test_api.suite, test_autodetect.suite,
+                  test_autodetect_all.suite, test_doctests.suite,
+                  test_episode.suite, test_hashes.suite, test_language.suite,
+                  test_main.suite, test_matchtree.suite, test_movie.suite,
+                  test_quality.suite, test_utils.suite]:
+        TextTestRunner(verbosity=2).run(suite)
 
 
-class GuessYear(Transformer):
-    def __init__(self):
-        Transformer.__init__(self, -160)
-
-    def supported_properties(self):
-        return ['year']
-
-    def guess_year(self, string, node=None, options=None):
-        year, span = search_year(string)
-        if year:
-            return {'year': year}, span
-        else:
-            return None, None
-
-    def second_pass_options(self, mtree, options=None):
-        year_nodes = mtree.leaves_containing('year')
-        if len(year_nodes) > 1:
-            return {'skip_nodes': year_nodes[:len(year_nodes) - 1]}
-        return None
-
-    def process(self, mtree, options=None):
-        GuessFinder(self.guess_year, 1.0, self.log, options).process_nodes(mtree.unidentified_leaves())
+if __name__ == '__main__':
+    main()

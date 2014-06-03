@@ -20,30 +20,26 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.plugins.transformers import Transformer
-from guessit.matcher import GuessFinder
-from guessit.date import search_year
+from guessit.test.guessittest import *
 
 
-class GuessYear(Transformer):
-    def __init__(self):
-        Transformer.__init__(self, -160)
+class TestAutoDetect(TestGuessit):
+    def testEmpty(self):
+        result = guessit.guess_file_info('')
+        self.assertEqual(result, {})
 
-    def supported_properties(self):
-        return ['year']
+        result = guessit.guess_file_info('___-__')
+        self.assertEqual(result, {})
 
-    def guess_year(self, string, node=None, options=None):
-        year, span = search_year(string)
-        if year:
-            return {'year': year}, span
-        else:
-            return None, None
+        result = guessit.guess_file_info('__-.avc')
+        self.assertEqual(result, {'type': 'unknown', 'extension': 'avc'})
 
-    def second_pass_options(self, mtree, options=None):
-        year_nodes = mtree.leaves_containing('year')
-        if len(year_nodes) > 1:
-            return {'skip_nodes': year_nodes[:len(year_nodes) - 1]}
-        return None
+    def testAutoDetect(self):
+        self.checkMinimumFieldsCorrect(filename='autodetect.yaml',
+                                       remove_type=False)
 
-    def process(self, mtree, options=None):
-        GuessFinder(self.guess_year, 1.0, self.log, options).process_nodes(mtree.unidentified_leaves())
+
+suite = allTests(TestAutoDetect)
+
+if __name__ == '__main__':
+    TextTestRunner(verbosity=2).run(suite)

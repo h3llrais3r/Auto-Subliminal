@@ -20,18 +20,17 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.plugins import Transformer
-
+from guessit.plugins.transformers import Transformer
 from guessit.textutils import find_first_level_groups
 from guessit.patterns import group_delimiters
-import functools
+from functools import reduce
 
 
 class SplitExplicitGroups(Transformer):
     def __init__(self):
         Transformer.__init__(self, 245)
 
-    def process(self, mtree):
+    def process(self, mtree, options=None):
         """split each of those into explicit groups (separated by parentheses or square brackets)
 
         :return: return the string split into explicit groups, that is, those either
@@ -41,7 +40,7 @@ class SplitExplicitGroups(Transformer):
             groups = find_first_level_groups(c.value, group_delimiters[0])
             for delimiters in group_delimiters:
                 flatten = lambda l, x: l + find_first_level_groups(x, delimiters)
-                groups = functools.reduce(flatten, groups, [])
+                groups = reduce(flatten, groups, [])
 
             # do not do this at this moment, it is not strong enough and can break other
             # patterns, such as dates, etc...

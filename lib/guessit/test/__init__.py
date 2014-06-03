@@ -20,30 +20,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.plugins.transformers import Transformer
-from guessit.matcher import GuessFinder
-from guessit.date import search_year
-
-
-class GuessYear(Transformer):
-    def __init__(self):
-        Transformer.__init__(self, -160)
-
-    def supported_properties(self):
-        return ['year']
-
-    def guess_year(self, string, node=None, options=None):
-        year, span = search_year(string)
-        if year:
-            return {'year': year}, span
-        else:
-            return None, None
-
-    def second_pass_options(self, mtree, options=None):
-        year_nodes = mtree.leaves_containing('year')
-        if len(year_nodes) > 1:
-            return {'skip_nodes': year_nodes[:len(year_nodes) - 1]}
-        return None
-
-    def process(self, mtree, options=None):
-        GuessFinder(self.guess_year, 1.0, self.log, options).process_nodes(mtree.unidentified_leaves())
+import logging
+from guessit.slogging import setupLogging
+setupLogging()
+logging.disable(logging.INFO)

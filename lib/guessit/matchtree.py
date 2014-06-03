@@ -20,11 +20,12 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit import UnicodeMixin, base_text_type, Guess
+import guessit  # @UnusedImport needed for doctests
+from guessit import UnicodeMixin, base_text_type
 from guessit.textutils import clean_string, str_fill
 from guessit.patterns import group_delimiters
 from guessit.guess import (merge_similar_guesses, merge_all,
-                           choose_int, choose_string)
+                           choose_int, choose_string, Guess)
 import copy
 import logging
 
@@ -48,13 +49,13 @@ class BaseMatchTree(UnicodeMixin):
     BaseMatchTrees are displayed in the following way:
 
         >>> path = 'Movies/Dark City (1998)/Dark.City.(1998).DC.BDRip.720p.DTS.X264-CHD.mkv'
-        >>> print guessit.IterativeMatcher(path).match_tree
+        >>> print(guessit.IterativeMatcher(path).match_tree)
         000000 1111111111111111 2222222222222222222222222222222222222222222 333
         000000 0000000000111111 0000000000111111222222222222222222222222222 000
-                         011112           011112000000000000000000000000111
-                                                000000000000000000011112
-                                                0000000000111122222
-                                                0000111112    01112
+                         011112           011112000011111222222222222222222 000
+                                                         011112222222222222
+                                                              0000011112222
+                                                              01112    0111
         Movies/__________(____)/Dark.City.(____).DC._____.____.___.____-___.___
                tttttttttt yyyy             yyyy     fffff ssss aaa vvvv rrr ccc
         Movies/Dark City (1998)/Dark.City.(1998).DC.BDRip.720p.DTS.X264-CHD.mkv
@@ -68,7 +69,7 @@ class BaseMatchTree(UnicodeMixin):
     The lines before that indicate the indices of the groups in the tree.
 
     For instance, the part of the filename 'BDRip' is the leaf with index
-    ``(2, 2, 0, 0, 0, 1)`` (read from top to bottom), and its meaning is 'format'
+    ``(2, 2, 1)`` (read from top to bottom), and its meaning is 'format'
     (as shown by the ``f``'s on the last-but-one line).
     """
 
@@ -130,6 +131,7 @@ class BaseMatchTree(UnicodeMixin):
         """Add a new child node to this node with the given span."""
         child = MatchTree(self.string, span=span, parent=self)
         self.children.append(child)
+        return child
 
     def get_partition_spans(self, indices):
         """Return the list of absolute spans for the regions of the original
@@ -187,7 +189,7 @@ class BaseMatchTree(UnicodeMixin):
 
         try:
             return self.children[idx[0]].node_at(idx[1:])
-        except:
+        except IndexError:
             raise ValueError('Non-existent node index: %s' % (idx,))
 
     def nodes(self):
@@ -207,10 +209,63 @@ class BaseMatchTree(UnicodeMixin):
                 for leaf in child._leaves():
                     yield leaf
 
+    def group_node(self):
+        return self._other_group_node(0)
+
+    def previous_group_node(self):
+        return self._other_group_node(-1)
+
+    def next_group_node(self):
+        return self._other_group_node(+1)
+
+    def _other_group_node(self, offset):
+        if len(self.node_idx) > 1:
+            group_idx = self.node_idx[:2]
+            if group_idx[1] + offset >= 0:
+                other_group_idx = (group_idx[0], group_idx[1] + offset)
+                try:
+                    other_group_node = self.root.node_at(other_group_idx)
+                    return other_group_node
+                except ValueError:
+                    pass
+        return None
+
     def leaves(self):
         """Return a list of all the nodes that are leaves."""
         return list(self._leaves())
 
+    def previous_leaf(self, leaf):
+        """Return previous leaf for this node"""
+        return self._other_leaf(leaf, -1)
+
+    def next_leaf(self, leaf):
+        """Return next leaf for this node"""
+        return self._other_leaf(leaf, +1)
+
+    def _other_leaf(self, leaf, offset):
+        leaves = self.leaves()
+        index = leaves.index(leaf) + offset
+        if index > 0 and index < len(leaves):
+            return leaves[index]
+        return None
+
+    def previous_leaves(self, leaf):
+        """Return previous leaves for this node"""
+        leaves = self.leaves()
+        index = leaves.index(leaf)
+        if index > 0 and index < len(leaves):
+            previous_leaves = leaves[:index]
+            previous_leaves.reverse()
+            return previous_leaves
+        return []
+
+    def next_leaves(self, leaf):
+        """Return next leaves for this node"""
+        leaves = self.leaves()
+        index = leaves.index(leaf)
+        if index > 0 and index < len(leaves):
+            return leaves[index + 1:len(leaves)]
+        return []
 
     def to_string(self):
         """Return a readable string representation of this tree.
@@ -236,7 +291,10 @@ class BaseMatchTree(UnicodeMixin):
                     'language': 'l',
                     'country': 'C',
                     'videoCodec': 'v',
+                    'videoProfile': 'v',
                     'audioCodec': 'a',
+                    'audioProfile': 'a',
+                    'audioChannels': 'a',
                     'website': 'w',
                     'container': 'c',
                     'series': 'T',
@@ -244,7 +302,8 @@ class BaseMatchTree(UnicodeMixin):
                     'date': 'd',
                     'year': 'y',
                     'releaseGroup': 'r',
-                    'screenSize': 's'
+                    'screenSize': 's',
+                    'other': 'o'
                     }
 
             if result is None:
@@ -274,7 +333,7 @@ class BaseMatchTree(UnicodeMixin):
 
         lines.append(self.string)
 
-        return '\n'.join(lines)
+        return '\n'.join(l.rstrip() for l in lines)
 
     def __unicode__(self):
         return self.to_string()
@@ -373,7 +432,7 @@ class MatchTree(BaseMatchTree):
             # 2- merge the rest, potentially discarding information not properly
             #    merged before
             result = merge_all(parts,
-                               append=['language', 'subtitleLanguage', 'other'])
+                               append=['language', 'subtitleLanguage', 'other', 'special'])
 
             log.debug('Final result: ' + result.nice_string())
             self._matched_result = result

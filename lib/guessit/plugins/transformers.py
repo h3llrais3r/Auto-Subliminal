@@ -24,6 +24,37 @@ from stevedore import ExtensionManager
 from pkg_resources import EntryPoint
 
 from stevedore.extension import Extension
+from logging import getLogger
+
+log = getLogger(__name__)
+
+
+class Transformer(object):  # pragma: no cover
+    def __init__(self, priority=0):
+        self.priority = priority
+        self.log = getLogger(self.name)
+
+    @property
+    def name(self):
+        return self.__class__.__name__
+
+    def supported_properties(self):
+        return {}
+
+    def second_pass_options(self, mtree, options=None):
+        return None
+
+    def should_process(self, mtree, options=None):
+        return True
+
+    def process(self, mtree, options=None):
+        pass
+
+    def post_process(self, mtree, options=None):
+        pass
+
+    def rate_quality(self, guess, *props):
+        return 0
 
 
 class CustomTransformerExtensionManager(ExtensionManager):
@@ -47,8 +78,6 @@ class CustomTransformerExtensionManager(ExtensionManager):
            - properties before language (eg: he-aac vs hebrew)
            - release_group before properties (eg: XviD-?? vs xvid)
         """
-        if extensions is None:
-            extensions = self.extensions
         extensions.sort(key=lambda ext: -ext.obj.priority)
         return extensions
 
@@ -108,7 +137,7 @@ class DefaultTransformerExtensionManager(CustomTransformerExtensionManager):
                                     'split_on_dash = guessit.transfo.split_on_dash:SplitOnDash',
                                     'guess_episode_info_from_position = guessit.transfo.guess_episode_info_from_position:GuessEpisodeInfoFromPosition',
                                     'guess_movie_title_from_position = guessit.transfo.guess_movie_title_from_position:GuessMovieTitleFromPosition',
-                                    'post_process = guessit.transfo.post_process:PostProcess']
+                                    'guess_episode_special = guessit.transfo.guess_episode_special:GuessEpisodeSpecial']
 
     def _find_entry_points(self, namespace):
         entry_points = {}

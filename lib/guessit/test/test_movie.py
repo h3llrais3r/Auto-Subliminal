@@ -20,30 +20,16 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.plugins.transformers import Transformer
-from guessit.matcher import GuessFinder
-from guessit.date import search_year
+from guessit.test.guessittest import *
 
 
-class GuessYear(Transformer):
-    def __init__(self):
-        Transformer.__init__(self, -160)
+class TestMovie(TestGuessit):
+    def testMovies(self):
+        self.checkMinimumFieldsCorrect(filetype='movie',
+                                       filename='movies.yaml')
 
-    def supported_properties(self):
-        return ['year']
 
-    def guess_year(self, string, node=None, options=None):
-        year, span = search_year(string)
-        if year:
-            return {'year': year}, span
-        else:
-            return None, None
+suite = allTests(TestMovie)
 
-    def second_pass_options(self, mtree, options=None):
-        year_nodes = mtree.leaves_containing('year')
-        if len(year_nodes) > 1:
-            return {'skip_nodes': year_nodes[:len(year_nodes) - 1]}
-        return None
-
-    def process(self, mtree, options=None):
-        GuessFinder(self.guess_year, 1.0, self.log, options).process_nodes(mtree.unidentified_leaves())
+if __name__ == '__main__':
+    TextTestRunner(verbosity=2).run(suite)

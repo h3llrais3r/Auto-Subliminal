@@ -20,22 +20,21 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.plugins import Transformer
-
-from guessit.transfo import SingleNodeGuesser
+from guessit.plugins.transformers import Transformer
+from guessit.matcher import GuessFinder
 import re
 
 
 class GuessIdnumber(Transformer):
     def __init__(self):
         Transformer.__init__(self, -180)
-        
+
     def supported_properties(self):
         return ['idNumber']
 
     _idnum = re.compile(r'(?P<idNumber>[a-zA-Z0-9-]{20,})')  # 1.0, (0, 0))
 
-    def guess_idnumber(self, string):
+    def guess_idnumber(self, string, node=None, options=None):
         match = self._idnum.search(string)
         if match is not None:
             result = match.groupdict()
@@ -66,5 +65,5 @@ class GuessIdnumber(Transformer):
 
         return None, None
 
-    def process(self, mtree):
-        SingleNodeGuesser(self.guess_idnumber, 0.4, self.log).process(mtree)
+    def process(self, mtree, options=None):
+        GuessFinder(self.guess_idnumber, 0.4, self.log, options).process_nodes(mtree.unidentified_leaves())

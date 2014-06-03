@@ -20,10 +20,10 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit.plugins import Transformer
-from guessit.patterns.containers import PropertiesContainer
-from guessit.quality import QualitiesContainer
-from guessit.transfo import SingleNodeGuesser
+from guessit.containers import PropertiesContainer, WeakValidator, LeavesValidator, QualitiesContainer
+from guessit.patterns.extension import subtitle_exts, video_exts, info_exts
+from guessit.plugins.transformers import Transformer
+from guessit.matcher import GuessFinder
 
 
 class GuessProperties(Transformer):
@@ -35,13 +35,15 @@ class GuessProperties(Transformer):
 
         def register_property(propname, props):
             """props a dict of {value: [patterns]}"""
-            for value, patterns in props.items():
+            for canonical_form, patterns in props.items():
                 if isinstance(patterns, tuple):
                     patterns2, kwargs = patterns
-                    self.container.register_property(propname, value, *patterns2, **kwargs)
+                    kwargs = dict(kwargs)
+                    kwargs['canonical_form'] = canonical_form
+                    self.container.register_property(propname, *patterns2, **kwargs)
 
                 else:
-                    self.container.register_property(propname, value, *patterns)
+                    self.container.register_property(propname, *patterns, canonical_form=canonical_form)
 
         def register_quality(propname, quality_dict):
             """props a dict of {canonical_form: quality}"""
@@ -58,9 +60,10 @@ class GuessProperties(Transformer):
                                      'Workprint': ['WORKPRINT', 'WP'],
                                      'Telecine': ['TELECINE', 'TC'],
                                      'PPV': ['PPV', 'PPV-Rip'],  # Pay Per View
-                                     'DVD': ['DVD', 'DVD-Rip', 'VIDEO-TS'],
+                                     'TV': ['SD-TV', 'SD-TV-Rip', 'Rip-SD-TV', 'TV-Rip', 'Rip-TV'],
                                      'DVB': ['DVB-Rip', 'DVB', 'PD-TV'],
-                                     'HDTV': ['HD-TV'],
+                                     'DVD': ['DVD', 'DVD-Rip', 'VIDEO-TS'],
+                                     'HDTV': ['HD-TV', 'TV-RIP-HD', 'HD-TV-RIP'],
                                      'VOD': ['VOD', 'VOD-Rip'],
                                      'WEBRip': ['WEB-Rip'],
                                      'WEB-DL': ['WEB-DL'],
@@ -73,7 +76,8 @@ class GuessProperties(Transformer):
                                     'Telesync': -80,
                                     'Workprint': -70,
                                     'Telecine': -60,
-                                    'Pay-Per-View': -50,
+                                    'PPV': -50,
+                                    'TV': -30,
                                     'DVB': -20,
                                     'DVD': 0,
                                     'HDTV': 20,
@@ -84,16 +88,15 @@ class GuessProperties(Transformer):
                                     'BluRay': 100
                                     })
 
-
         register_property('screenSize', {'360p': ['(?:\d{3,}(?:\\|\/|x|\*))?360(?:i|p?x?)'],
                                          '368p': ['(?:\d{3,}(?:\\|\/|x|\*))?368(?:i|p?x?)'],
                                          '480p': ['(?:\d{3,}(?:\\|\/|x|\*))?480(?:i|p?x?)'],
-                                         '480p': (['hr'], {'confidence':0.2}),
+                                         '480p': (['hr'], {'confidence': 0.2}),
                                          '576p': ['(?:\d{3,}(?:\\|\/|x|\*))?576(?:i|p?x?)'],
                                          '720p': ['(?:\d{3,}(?:\\|\/|x|\*))?720(?:i|p?x?)'],
                                          '900p': ['(?:\d{3,}(?:\\|\/|x|\*))?900(?:i|p?x?)'],
-                                         '1080i': ['(?:\d{3,}(?:\\|\/|x|\*))?1080i(?:i|p?x?)'],
-                                         '1080p': ['(?:\d{3,}(?:\\|\/|x|\*))?1080(?:i|p?x?)'],
+                                         '1080i': ['(?:\d{3,}(?:\\|\/|x|\*))?1080i'],
+                                         '1080p': ['(?:\d{3,}(?:\\|\/|x|\*))?1080(?:p?x?)'],
                                          '4K': ['(?:\d{3,}(?:\\|\/|x|\*))?2160(?:i|p?x?)']
                                          })
 
@@ -127,22 +130,14 @@ class GuessProperties(Transformer):
                                         })
 
         # http://blog.mediacoderhq.com/h264-profiles-and-levels/
-        _videoProfiles = {'BP':('BP',),
-                          'XP':('XP', 'EP'),
-                          'MP':('MP',),
-                          'HP':('HP', 'HiP'),
-                          '10bit':('10.?bit', 'Hi10P'),
-                          'Hi422P':('Hi422P',),
-                          'Hi444PP':('Hi444PP'),
-                          }
-
-        for profile, profile_regexps in _videoProfiles.items():
-            for profile_regexp in profile_regexps:
-                # container.register_property('videoProfile', profile, profile_regexp)
-                for prop in self.container.get_properties('videoCodec'):
-                    self.container.register_property('videoProfile', profile, prop.pattern + '(-' + profile_regexp + ')')
-                    self.container.register_property('videoProfile', profile, '(' + profile_regexp + '-)' + prop.pattern)
-
+        # http://fr.wikipedia.org/wiki/H.264
+        self.container.register_property('videoProfile', 'BP', validator=LeavesValidator(lambdas=[lambda node: 'videoCodec' in node.guess]))
+        self.container.register_property('videoProfile', 'XP', 'EP', canonical_form='XP', validator=LeavesValidator(lambdas=[lambda node: 'videoCodec' in node.guess]))
+        self.container.register_property('videoProfile', 'MP', validator=LeavesValidator(lambdas=[lambda node: 'videoCodec' in node.guess]))
+        self.container.register_property('videoProfile', 'HP', 'HiP', canonical_form='HP', validator=LeavesValidator(lambdas=[lambda node: 'videoCodec' in node.guess]))
+        self.container.register_property('videoProfile', '10.?bit', 'Hi10P', canonical_form='10bit', validator=LeavesValidator(lambdas=[lambda node: 'videoCodec' in node.guess]))
+        self.container.register_property('videoProfile', 'Hi422P', validator=LeavesValidator(lambdas=[lambda node: 'videoCodec' in node.guess]))
+        self.container.register_property('videoProfile', 'Hi444PP', validator=LeavesValidator(lambdas=[lambda node: 'videoCodec' in node.guess]))
 
         register_quality('videoProfile', {'BP': -20,
                                           'XP': -10,
@@ -152,7 +147,6 @@ class GuessProperties(Transformer):
                                           'Hi422P': 25,
                                           'Hi444PP': 35
                                           })
-
 
         # has nothing to do here (or on filenames for that matter), but some
         # releases use it and it helps to identify release groups, so we adapt
@@ -172,26 +166,15 @@ class GuessProperties(Transformer):
                                         'AAC': 35,
                                         'AC3': 40,
                                         'Flac': 45,
-                                        'DTS': 100,
-                                        'TrueHD': 120
+                                        'DTS': 60,
+                                        'TrueHD': 70
                                         })
 
-        _audioProfiles = {'DTS': {'HD': ('HD',),
-                                  'HDMA': ('HD-MA',),
-                                  },
-                            'AAC': {'HE': ('HE',),
-                                    'LC': ('LC',),
-                                    },
-                             'AC3': {'HQ': ('HQ',),
-                                    }
-                           }
-
-        for audioCodec, codecProfiles in _audioProfiles.items():
-            for profile, profile_regexps in codecProfiles.items():
-                for profile_regexp in profile_regexps:
-                    for prop in self.container.get_properties('audioCodec', audioCodec):
-                        self.container.register_property('audioProfile', profile, prop.pattern + '(-' + profile_regexp + ')')
-                        self.container.register_property('audioProfile', profile, '(' + profile_regexp + '-)' + prop.pattern)
+        self.container.register_property('audioProfile', 'HD', validator=LeavesValidator(lambdas=[lambda node: node.guess.get('audioCodec') == 'DTS']))
+        self.container.register_property('audioProfile', 'HD-MA', canonical_form='HDMA', validator=LeavesValidator(lambdas=[lambda node: node.guess.get('audioCodec') == 'DTS']))
+        self.container.register_property('audioProfile', 'HE', validator=LeavesValidator(lambdas=[lambda node: node.guess.get('audioCodec') == 'AAC']))
+        self.container.register_property('audioProfile', 'LC', validator=LeavesValidator(lambdas=[lambda node: node.guess.get('audioCodec') == 'AAC']))
+        self.container.register_property('audioProfile', 'HQ', validator=LeavesValidator(lambdas=[lambda node: node.guess.get('audioCodec') == 'AC3']))
 
         register_quality('audioProfile', {'HD': 20,
                                           'HDMA': 50,
@@ -212,7 +195,7 @@ class GuessProperties(Transformer):
                                            '1.0': -100
                                            })
 
-        self.container.register_property('episodeFormat', 'Minisode', r'Minisodes?')
+        self.container.register_property('episodeFormat', r'Minisodes?', canonical_form='Minisode')
 
         register_property('other', {'AudioFix': ['Audio-Fix', 'Audio-Fixed'],
                                     'SyncFix': ['Sync-Fix', 'Sync-Fixed'],
@@ -220,21 +203,28 @@ class GuessProperties(Transformer):
                                     'WideScreen': ['ws', 'wide-screen'],
                                     })
 
-        self.container.register_properties('other', 'Proper', 'Repack', 'R5', 'Screener', '3D', 'Fix', 'HD', 'HQ', 'DDC')
-        self.container.register_properties('other', 'Limited', 'Complete', 'Classic', 'Final', 'Unrated', 'LiNE', weak=True)
+        self.container.register_property('other', 'Real', 'Fix', canonical_form="Proper", validator=WeakValidator())
+        self.container.register_property('other', 'Proper', 'Repack', 'Rerip', canonical_form="Proper")
+
+        self.container.register_canonical_properties('other', 'R5', 'Screener', '3D', 'HD', 'HQ', 'DDC')
+        self.container.register_canonical_properties('other', 'Limited', 'Complete', 'Classic', 'Unrated', 'LiNE', 'Bonus', 'Trailer', validator=WeakValidator())
 
         for prop in self.container.get_properties('format'):
-            self.container.register_property('other', 'Screener', prop.pattern + '(-?Scr(?:eener)?)')
+            self.container.register_property('other', prop.pattern + '(-?Scr(?:eener)?)', canonical_form='Screener')
 
-    def guess_properties(self, string):
-        found = self.container.find_properties(string)
+        for exts in (subtitle_exts, info_exts, video_exts):
+            for container in exts:
+                self.container.register_property('container', container, confidence=0.3)
+
+    def guess_properties(self, string, node=None, options=None):
+        found = self.container.find_properties(string, node)
         return self.container.as_guess(found, string)
 
     def supported_properties(self):
         return self.container.get_supported_properties()
 
-    def process(self, mtree):
-        SingleNodeGuesser(self.guess_properties, 1.0, self.log).process(mtree)
+    def process(self, mtree, options=None):
+        GuessFinder(self.guess_properties, 1.0, self.log, options).process_nodes(mtree.unidentified_leaves())
 
     def rate_quality(self, guess, *props):
-        return self.qualities.rate_quality(guess)
+        return self.qualities.rate_quality(guess, *props)

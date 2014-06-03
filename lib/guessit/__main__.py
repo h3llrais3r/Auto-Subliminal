@@ -19,29 +19,50 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-from __future__ import absolute_import, division, print_function, \
-    unicode_literals
-
+from __future__ import absolute_import, division, print_function, unicode_literals
 import logging
-from optparse import OptionParser
 import os
 
-from guessit import PY2, u, slogging, guess_file_info
+from guessit import PY2, u, guess_file_info
+from guessit.options import option_parser
 
 
-def detect_filename(filename, filetype, info=['filename'], advanced=False):
+def guess_file(filename, info='filename', options=None, **kwargs):
+    options = options or {}
     filename = u(filename)
 
     print('For:', filename)
-    print('GuessIt found:', guess_file_info(filename, filetype, info).nice_string(advanced))
+    guess = guess_file_info(filename, info, options, **kwargs)
+    if options.get('yaml'):
+        try:
+            import yaml
+            for k, v in guess.items():
+                if isinstance(v, list) and len(v) == 1:
+                    guess[k] = v[0]
+            ystr = yaml.safe_dump({filename: dict(guess)}, default_flow_style=False)
+            i = 0
+            for yline in ystr.splitlines():
+                if i == 0:
+                    print("? " + yline[:-1])
+                elif i == 1:
+                    print(":" + yline[1:])
+                else:
+                    print(yline)
+                i = i + 1
+            return
+        except ImportError:  # pragma: no cover
+            print('PyYAML not found. Using default output.')
+    print('GuessIt found:', guess.nice_string(options.get('advanced')))
 
 
 def _supported_properties():
     from guessit.plugins import transformers
 
     all_properties = {}
+    transformers_properties = []
     for transformer in transformers.all_transformers():
         supported_properties = transformer.supported_properties()
+        transformers_properties.append((transformer, supported_properties))
 
         if isinstance(supported_properties, dict):
             for property_name, possible_values in supported_properties.items():
@@ -58,30 +79,46 @@ def _supported_properties():
                     current_possible_values = []
                     all_properties[property_name] = current_possible_values
 
-    return all_properties
+    return (all_properties, transformers_properties)
 
 
-def display_properties(values):
+def display_transformers():
+    print('GuessIt transformers:')
+    _, transformers_properties = _supported_properties()
+    for transformer, _ in transformers_properties:
+        print('[@] %s (%s)' % (transformer.name, transformer.priority))
+
+
+def display_properties(values, transformers):
     print('GuessIt properties:')
-    all_properties = _supported_properties()
-    properties_list = []
-    properties_list.extend(all_properties.keys())
-    properties_list.sort()
-    for property_name in properties_list:
-        property_values = all_properties.get(property_name)
-        print('[+] %s' % (property_name,))
-        if property_values and values:
-            _display_property_values(property_name)
+    all_properties, transformers_properties = _supported_properties()
+    if transformers:
+        for transformer, properties_list in transformers_properties:
+            print('[@] %s (%s)' % (transformer.name, transformer.priority))
+            for property_name in properties_list:
+                property_values = all_properties.get(property_name)
+                print('  [+] %s' % (property_name,))
+                if property_values and values:
+                    _display_property_values(property_name, indent=4)
+    else:
+        properties_list = []
+        properties_list.extend(all_properties.keys())
+        properties_list.sort()
+        for property_name in properties_list:
+            property_values = all_properties.get(property_name)
+            print('  [+] %s' % (property_name,))
+            if property_values and values:
+                _display_property_values(property_name, indent=4)
 
 
-def _display_property_values(property_name):
-    all_properties = _supported_properties()
+def _display_property_values(property_name, indent=2):
+    all_properties, _ = _supported_properties()
     property_values = all_properties.get(property_name)
     for property_value in property_values:
-        print('  [!] %s' % (property_value,))
+        print(indent * ' ' + '[!] %s' % (property_value,))
 
 
-def run_demo(episodes=True, movies=True, advanced=False):
+def run_demo(episodes=True, movies=True, options=None):
     # NOTE: tests should not be added here but rather in the tests/ folder
     #       this is just intended as a quick example
     if episodes:
@@ -98,7 +135,7 @@ def run_demo(episodes=True, movies=True, advanced=False):
 
         for f in testeps:
             print('-' * 80)
-            detect_filename(f, filetype='episode', advanced=advanced)
+            guess_file(f, options=options, type='episode')
 
     if movies:
         testmovies = ['Movies/Fear and Loathing in Las Vegas (1998)/Fear.and.Loathing.in.Las.Vegas.720p.HDDVD.DTS.x264-ESiR.mkv',
@@ -124,13 +161,15 @@ def run_demo(episodes=True, movies=True, advanced=False):
 
         for f in testmovies:
             print('-' * 80)
-            detect_filename(f, filetype='movie', advanced=advanced)
+            guess_file(f, options=options, type='movie')
 
 
-def main():
-    slogging.setupLogging()
+def main(args=None, setup_logging=True):
+    if setup_logging:
+        from guessit import slogging
+        slogging.setupLogging()
 
-    if PY2:
+    if PY2:  # pragma: no cover
         import codecs
         import locale
         import sys
@@ -145,46 +184,34 @@ def main():
         # Wrap sys.stdout into a StreamWriter to allow writing unicode.
         sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
 
-    parser = OptionParser(usage='usage: %prog [options] file1 [file2...]')
-    parser.add_option('-v', '--verbose', action='store_true', dest='verbose', default=False,
-                      help='display debug output')
-    parser.add_option('-p', '--properties', dest='properties', action='store_true', default=False,
-                  help='Display properties that can be guessed.')
-    parser.add_option('-l', '--values', dest='values', action='store_true', default=False,
-              help='Display property values that can be guessed.')
-    parser.add_option('-i', '--info', dest='info', default='filename',
-                      help='the desired information type: filename, hash_mpc or a hash from python\'s '
-                           'hashlib module, such as hash_md5, hash_sha1, ...; or a list of any of '
-                           'them, comma-separated')
-    parser.add_option('-t', '--type', dest='filetype', default='autodetect',
-                      help='the suggested file type: movie, episode or autodetect')
-    parser.add_option('-a', '--advanced', dest='advanced', action='store_true', default=False,
-                      help='display advanced information for filename guesses, as json output')
-    parser.add_option('-d', '--demo', action='store_true', dest='demo', default=False,
-                      help='run a few builtin tests instead of analyzing a file')
-
-    options, args = parser.parse_args()
+    if args:
+        options, args = option_parser.parse_args(args)
+    else:  # pragma: no cover
+        options, args = option_parser.parse_args()
     if options.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
     help_required = True
     if options.properties or options.values:
-        display_properties(options.values)
+        display_properties(options.values, options.transformers)
+        help_required = False
+    elif options.transformers:
+        display_transformers()
         help_required = False
     if options.demo:
-        run_demo(episodes=True, movies=True, advanced=options.advanced)
+        run_demo(episodes=True, movies=True, options=vars(options))
         help_required = False
     else:
         if args:
             help_required = False
             for filename in args:
-                detect_filename(filename,
-                                filetype=options.filetype,
+                guess_file(filename,
                                 info=options.info.split(','),
-                                advanced=options.advanced)
+                                options=vars(options)
+                                )
 
-    if help_required:
-        parser.print_help()
+    if help_required:  # pragma: no cover
+        option_parser.print_help()
 
 if __name__ == '__main__':
     main()

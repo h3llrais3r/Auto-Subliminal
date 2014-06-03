@@ -20,7 +20,7 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit import UnicodeMixin, u, base_text_type
+from guessit import UnicodeMixin, s, u, base_text_type
 import json
 import datetime
 import logging
@@ -42,15 +42,14 @@ class GuessMetadata(object):
     :param span: The input string
     :type span: tuple (int, int)
     :param prop: The found property definition
-    :type prop: :class `guessit.patterns.containers._Property`
+    :type prop: :class `guessit.containers._Property`
     """
-    def __init__(self, parent=None, confidence=None, input=None, span=None, prop=None, weak=None, *args, **kwargs):
+    def __init__(self, parent=None, confidence=None, input=None, span=None, prop=None, *args, **kwargs):
         self.parent = parent
         if confidence is None and self.parent is None:
             self._confidence = 1.0
         else:
             self._confidence = confidence
-        self._weak = weak
         self._input = input
         self._span = span
         self._prop = prop
@@ -67,19 +66,6 @@ class GuessMetadata(object):
     @confidence.setter
     def confidence(self, confidence):
         self._confidence = confidence
-
-    @property
-    def weak(self):
-        """If weak, a property value is a common name that could belong to a title
-
-        :rtype: boolean
-        :return: String used to find this guess value
-        """
-        return self._weak if not self._weak is None else self.parent.weak if self.parent else None
-
-    @weak.setter
-    def weak(self, weak):
-        self._weak = weak
 
     @property
     def input(self):
@@ -251,10 +237,7 @@ class Guess(UnicodeMixin, dict):
             if prop in self and self.metadata(prop).confidence >= other.metadata(prop).confidence:
                 continue
             self[prop] = other[prop]
-            try:
-                self._metadata[prop] = other._metadata[prop]
-            except KeyError:
-                pass
+            self._metadata[prop] = other.metadata(prop)
 
 
 def choose_int(g1, g2):
@@ -405,18 +388,21 @@ def merge_all(guesses, append=None):
     instead of being merged.
 
     >>> s(merge_all([ Guess({'season': 2}, confidence=0.6),
-    ...               Guess({'episodeNumber': 13}, confidence=0.8) ]))
-    {'season': 2, 'episodeNumber': 13}
+    ...               Guess({'episodeNumber': 13}, confidence=0.8) ])
+    ... ) == {'season': 2, 'episodeNumber': 13}
+    True
+
 
     >>> s(merge_all([ Guess({'episodeNumber': 27}, confidence=0.02),
-    ...               Guess({'season': 1}, confidence=0.2) ]))
-    {'season': 1}
+    ...               Guess({'season': 1}, confidence=0.2) ])
+    ... ) == {'season': 1}
+    True
 
     >>> s(merge_all([ Guess({'other': 'PROPER'}, confidence=0.8),
     ...               Guess({'releaseGroup': '2HD'}, confidence=0.8) ],
-    ...             append=['other']))
-    {'releaseGroup': '2HD', 'other': ['PROPER']}
-
+    ...             append=['other'])
+    ... ) == {'releaseGroup': '2HD', 'other': ['PROPER']}
+    True
 
     """
     result = Guess()
@@ -436,8 +422,7 @@ def merge_all(guesses, append=None):
                            confidence=g.metadata(prop).confidence,
                            input=g.metadata(prop).input,
                            span=g.metadata(prop).span,
-                           prop=g.metadata(prop).prop,
-                           weak=g.metadata(prop).weak)
+                           prop=g.metadata(prop).prop)
 
                 del g[prop]
 

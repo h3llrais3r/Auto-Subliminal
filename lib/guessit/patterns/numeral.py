@@ -22,7 +22,7 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 import re
 
-digital_numeral = '[0-9]{1,3}'
+digital_numeral = '\d{1,3}'
 
 roman_numeral = "(?=[MCDLXVI]+)M{0,4}(?:CM|CD|D?C{0,3})(?:XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3})"
 
@@ -101,7 +101,10 @@ def __parse_word(value):
     raise ValueError
 
 
-def parse_numeral(value):
+_clean_re = re.compile('[^\d]*(\d+)[^\d]*')
+
+
+def parse_numeral(value, int_enabled=True, roman_enabled=True, word_enabled=True, clean=True):
     """Parse a numeric value into integer.
 
     input can be an integer as a string, a roman numeral or a word
@@ -109,21 +112,39 @@ def parse_numeral(value):
     :param value: Value to parse. Can be an integer, roman numeral or word.
     :type value: string
 
-    :return: Numeric value
+    :return: Numeric value, or None if value can't be parsed
     :rtype: int
-
-    :raise ValueError: If value can't be parsed
     """
-    try:
-        return int(value)
-    except ValueError:
-        pass
-    try:
-        return __parse_roman(value)
-    except ValueError:
-        pass
-    try:
-        return __parse_word(value)
-    except ValueError:
-        pass
-    raise ValueError(value)
+    if int_enabled:
+        try:
+            if clean:
+                match = _clean_re.match(value)
+                if match:
+                    clean_value = match.group(1)
+                    return int(clean_value)
+            return int(value)
+        except ValueError:
+            pass
+    if roman_enabled:
+        try:
+            if clean:
+                for word in value.split():
+                    try:
+                        return __parse_roman(word)
+                    except ValueError:
+                        pass
+            return __parse_roman(value)
+        except ValueError:
+            pass
+    if word_enabled:
+        try:
+            if clean:
+                for word in value.split():
+                    try:
+                        return __parse_word(word)
+                    except ValueError:
+                        pass
+            return __parse_word(value)
+        except ValueError:
+            pass
+    raise ValueError('Invalid numeral: ' + value)
