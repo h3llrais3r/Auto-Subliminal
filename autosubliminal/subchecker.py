@@ -54,7 +54,12 @@ class SubChecker():
             # With subtitle scan enabled, enzyme looks inside for embedded subtitles
             # When an 'UND' subtitle language is found (f.e. Grimm.S03E04.720p.WEB-DL.DD5.1.H.264-ECI),
             # no other subtitles will be downloaded when using subliminal.download_best_subtitles(..., single=True)
-            video = subliminal.scan_video(originalfile, subtitles=False, embedded_subtitles=False)
+            try:
+                video = subliminal.scan_video(originalfile, subtitles=False, embedded_subtitles=False)
+            except Exception, e:
+                log.error("Error while scanning video. Skipping %s" % originalfile)
+                log.error("Exception: %s" % e.message)
+                continue
 
             # Check sub for each language
             for lang in langs[:]:
