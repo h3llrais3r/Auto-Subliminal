@@ -128,7 +128,7 @@ def process_file(dirname, filename):
 
 def _guess_file_info(filepath):
     # Guess file info
-    guess = guessit.guess_file_info(filepath, 'autodetect')
+    guess = guessit.guess_file_info(filepath)
     log.debug("Dumping guess for debug: %r" % guess)
     # Create show dict
     show_dict = _show_dict_from_guess(guess)
