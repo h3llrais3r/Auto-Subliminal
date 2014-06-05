@@ -77,13 +77,9 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 #end if
 
 	<td width="75px" align="center">
-#for lang in $var['lang']
-#if lang == "nl"
-	<img src="$autosubliminal.WEBROOT/images/nl.png" alt="nl">
-#end if
-#if lang == "en"
-	<img src="$autosubliminal.WEBROOT/images/en.png" alt="en">
-#end if
+#for $lang in $var['lang']
+	#set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
+	<img src="$imageurl" alt="$lang" />
 #end for
 	</td>
 
@@ -170,7 +166,7 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 #end if
 
 <td width="75px" align="center">
-	#set $imageurl = $autosubliminal.WEBROOT + "/images/" + $var['language'] + ".png"
+	#set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $var['language'] + ".png"
 	<img src="$imageurl" alt="$var['language']" />
 </td>
 
