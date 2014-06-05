@@ -63,6 +63,7 @@ background: black url(../images/blockdefault.gif) center center repeat-x;
 
 .tabcontent li{
 display: inline;
+white-space: nowrap;
 }
 
 .tabcontent li a{

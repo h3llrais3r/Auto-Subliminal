@@ -7,21 +7,21 @@
 <br />
 <table>
 	<tr>
-		<td align="left">Auto-Subliminal version</td>
+		<td align="left" width="150px">Auto-Subliminal version</td>
 		<td align="center" width="25px">:</td>
-		<td align="right">$version.RELEASE_VERSION</td>
+		<td align="right" width="70px">$version.RELEASE_VERSION</td>
 	</tr>
 	
 	<tr>
-		<td align="left">API calls left</td>
+		<td align="left" width="150px">API calls left</td>
 		<td align="center" width="25px">:</td>
-		<td align="right">$autosubliminal.APICALLS</td>
+		<td align="right" width="70px">$autosubliminal.APICALLS</td>
 	</tr>
 	
 	<tr>
-		<td align="left">API call reset in</td>
+		<td align="left" width="150px">API call reset in</td>
 		<td align="center" width="25px">:</td>
-		<td align="right">#if ($autosubliminal.APICALLSRESETINT - ($time.time() - $autosubliminal.APICALLSLASTRESET)) < 0
+		<td align="right" width="70px">#if ($autosubliminal.APICALLSRESETINT - ($time.time() - $autosubliminal.APICALLSLASTRESET)) < 0
 		At next API call
 		#else
 		$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.APICALLSRESETINT - ($time.time() - $autosubliminal.APICALLSLASTRESET) )))

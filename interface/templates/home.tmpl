@@ -211,9 +211,9 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 <br>
 <table>
 	<tr>
-		<td align="left">Next disk scan in</td>
+		<td align="left" width="140px">Next disk scan in</td>
 		<td align="center" width="25px">:</td>
-		<td align="right">
+		<td align="right" width="70px">
 			#try
 			  $time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.lastrun) ))) <br>
 			#except
