@@ -12,9 +12,12 @@
 
 #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/menu.tmpl")
 
+<script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/manualsearch.js"></script>
+
 $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 
 #if $len($autosubliminal.WANTEDQUEUE) >= 1
+
 <div class="box">
 <div class="header">
 	<h1>Wanted</h1><span></span>
@@ -36,55 +39,69 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 		</tr>
 	</thead>
 <tbody>
+
 #set $counter = 0
-#for $var in $autosubliminal.WANTEDQUEUE
+#for $index, $item in enumerate($autosubliminal.WANTEDQUEUE)
+
 #set $divname = "skipshow-" + str($counter)
 #set $buttonname = "skipshowbutton-" + str($counter)
 #set $buttonseason = "skipshowbuttonseason-" + str($counter)
 #set $buttonall = "skipshowbuttonall-" + str($counter)
 #set $counter = $counter + 1
 
-#set $title_escaped = $cgi.escape($var['title'], True)
+#set $title_escaped = $cgi.escape($item['title'], True)
 
 <tr>
-	<td><b><a href='#' data-dropdown="#dropdown-$counter">$var['title']</a></b></td>
-	<td width="75px" align="center">$var['season']</td>
-	<td width="75px" align="center">$var['episode']</td>
+	<td><b><a href='#' data-dropdown="#dropdown-skip-$counter">$item['title']</a></b></td>
+	<td width="75px" align="center">$item['season']</td>
+	<td width="75px" align="center">$item['episode']</td>
 
-#if $type($var['source']) == UnicodeType:
-	<td width="75px" align="center">$var['source'].upper()</td>
+#if $type($item['source']) == UnicodeType:
+	<td width="75px" align="center">$item['source'].upper()</td>
 #else
 	<td width="75px" align="center">Unknown</td>
 #end if
 
-
-#if $type($var['quality']) == UnicodeType:
-	<td width="75px" align="center">$var['quality'].upper()</td>
+#if $type($item['quality']) == UnicodeType:
+	<td width="75px" align="center">$item['quality'].upper()</td>
 #else
 	<td width="75px" align="center">Unknown</td>
 #end if
 
-#if $type($var['codec']) == UnicodeType:
-	<td width="75px" align="center">$var['codec'].upper()</td>
+#if $type($item['codec']) == UnicodeType:
+	<td width="75px" align="center">$item['codec'].upper()</td>
 #else
 	<td width="75px" align="center">Unknown</td>
 #end if
 
-#if $type($var['releasegrp']) == UnicodeType:
-	<td width="75px" align="center">$var['releasegrp'].upper()</td>
+#if $type($item['releasegrp']) == UnicodeType:
+	<td width="75px" align="center">$item['releasegrp'].upper()</td>
 #else
 	<td width="75px" align="center">Unknown</td>
 #end if
 
 	<td width="75px" align="center">
-#for $lang in $var['lang']
+#for $lang in $item['lang']
 	#set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
-	<img src="$imageurl" alt="$lang" />
+	<img src="$imageurl" alt="$lang" data-dropdown="#dropdown-manualsearch-$counter" />
+	<div id="dropdown-manualsearch-$counter" class="dropdown-menu has-tip anchor-right">
+        <ul>
+            <li>
+                <p>
+                    <a class="manualsearchlink" href="$autosubliminal.WEBROOT/home/search/$index/$lang">Manual search</a>
+                    <img id="img-loading-manualsearch" src="$autosubliminal.WEBROOT/images/loading.gif" height="16" width="16" style="display: none;" />
+                </p>
+            </li>
+            <li>
+                <div id="div-manualsearch" style="width: 750px;"></div>
+            </li>
+        </ul>
+    </div>
 #end for
 	</td>
 
-#if $type($var['timestamp']) == UnicodeType:
-	<td width="150px" align="center" sorttable_customkey="$convert_timestamp_table($var['timestamp'])">$convert_timestamp($var['timestamp'])</td>
+#if $type($item['timestamp']) == UnicodeType:
+	<td width="150px" align="center" sorttable_customkey="$convert_timestamp_table($item['timestamp'])">$convert_timestamp($item['timestamp'])</td>
 #else
 	<td width="150px" align="center">Unknown</td>
 #end if
@@ -93,23 +110,28 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 
 #end for
 </table>
+
+<div id="dropdown-manualsearch-overview">
+</div>
+
 #set $counter = 0
-#for $var in $autosubliminal.WANTEDQUEUE
+#for $item in $autosubliminal.WANTEDQUEUE
 #set $counter = $counter + 1
-<div id="dropdown-$counter" class="dropdown-menu has-tip">
+<div id="dropdown-skip-$counter" class="dropdown-menu has-tip">
     <ul>
-        <li><a href="$autosubliminal.WEBROOT/config/skipShow/$var['title']/$var['season']">Skip season $var['season']</a></li>
-        <li><a href="$autosubliminal.WEBROOT/config/skipShow/$var['title']/0">Skip show</a></li>
+        <li><a href="$autosubliminal.WEBROOT/config/skipShow/$item['title']/$item['season']">Skip season $item['season']</a></li>
+        <li><a href="$autosubliminal.WEBROOT/config/skipShow/$item['title']/0">Skip show</a></li>
     </ul>
 </div>
 #end for
 
 </div>
 </div>
-<i>Click showname in wanted list to skip it</i>
+<i>Click 'Show name' in wanted list to skip it</i>
+<br>
+<i>Click 'Language' icon in wanted list to search manually</i>
 #end if
 <p>
-
 
 #set $lastdownload = LastDownloads().get_last_downloads()
 
@@ -135,63 +157,63 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 </tr>
 </thead>
 
-#for $var in $lastdownload
+#for $item in $lastdownload
 <tr>
-	<td><b><a href='#' data-dropdown="#dropdown-lastDown-$var['id']">$var['show_name']</a></b></td>
-	<td width="75px" align="center">$var['season']</td>
-	<td width="75px" align="center">$var['episode']</td>
+	<td><b><a href='#' data-dropdown="#dropdown-lastDown-$item['id']">$item['show_name']</a></b></td>
+	<td width="75px" align="center">$item['season']</td>
+	<td width="75px" align="center">$item['episode']</td>
 
-#if $type($var['source']) == UnicodeType:
-	<td width="75px" align="center">$var['source'].upper()</td>
+#if $type($item['source']) == UnicodeType:
+	<td width="75px" align="center">$item['source'].upper()</td>
 #else
 	<td width="75px" align="center">Unknown</td>
 #end if
 
-#if $type($var['quality']) == UnicodeType:
-	<td width="75px" align="center">$var['quality'].upper()</td>
+#if $type($item['quality']) == UnicodeType:
+	<td width="75px" align="center">$item['quality'].upper()</td>
 #else
 	<td width="75px" align="center">Unknown</td>
 #end if
 
-#if $type($var['codec']) == UnicodeType:
-	<td width="75px" align="center">$var['codec'].upper()</td>
+#if $type($item['codec']) == UnicodeType:
+	<td width="75px" align="center">$item['codec'].upper()</td>
 #else
 	<td width="75px" align="center">Unknown</td>
 #end if
 
-#if $type($var['releasegrp']) == UnicodeType:
-	<td width="75px" align="center">$var['releasegrp'].upper()</td>
+#if $type($item['releasegrp']) == UnicodeType:
+	<td width="75px" align="center">$item['releasegrp'].upper()</td>
 #else
 	<td width="75px" align="center">Unknown</td>
 #end if
 
 <td width="75px" align="center">
-	#set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $var['language'] + ".png"
-	<img src="$imageurl" alt="$var['language']" />
+	#set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $item['language'] + ".png"
+	<img src="$imageurl" alt="$item['language']" />
 </td>
 
-#if $type($var['timestamp']) == UnicodeType:
-	<td width="150px" align="center" sorttable_customkey="$convert_timestamp_table($var['timestamp'])">$convert_timestamp($var['timestamp'])</td>
+#if $type($item['timestamp']) == UnicodeType:
+	<td width="150px" align="center" sorttable_customkey="$convert_timestamp_table($item['timestamp'])">$convert_timestamp($item['timestamp'])</td>
 #else
 	<td width="150px" align="center">Unknown</td>
 #end if
 
 </tr>
 
-<div id="dropdown-lastDown-$var['id']" class="dropdown-menu has-tip">
+<div id="dropdown-lastDown-$item['id']" class="dropdown-menu has-tip">
     <ul>
         <li>
-        #if $var['subtitle'] == None
+        #if $item['subtitle'] == None
         	Subtitle: N/A
         #else
-        	Subtitle: $var['subtitle']
+        	Subtitle: $item['subtitle']
         #end if
         </li>
         <li>
-        #if $var['provider'] == None
+        #if $item['provider'] == None
         	Provider: N/A
         #else
-        	Provider: $var['provider']
+        	Provider: $item['provider']
         #end if
         </li>
     </ul>

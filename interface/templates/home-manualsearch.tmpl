@@ -1,0 +1,38 @@
+#import autosubliminal
+
+<script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/manualsave.js"></script>
+
+<div class="header">
+	<h1>Found subtitles</h1><span></span>
+</div>
+
+<div class="content no-padding">
+
+<table class="table">
+	<thead>
+		<tr>
+			<th style="width: 50px;">Score</th>
+			<th style="width: 100px;">Provider</th>
+			<th style="width: 525px;">Preview</th>
+			<th style="width: 75px;">Save</th>
+		</tr>
+	</thead>
+    <tbody>
+
+#for $index, $sub in enumerate($subs)
+
+        <tr>
+            <td align="center">$sub.score</td>
+            <td align="center">$sub.provider_name</td>
+            <td align="left"><div style="height:100px; width: 525px; overflow:scroll;">$sub.content_preview</div></td>
+            <td align="center"><a class="manualsavelink" href="$autosubliminal.WEBROOT/home/save/$sub.wanted_item_index/$index"><img src="$autosubliminal.WEBROOT/images/save.png" /></a></td>
+        </tr>
+
+#end for
+
+    </tbody>
+</table>
+
+<div id="div-saveerror" class="error"></div>
+
+</div>

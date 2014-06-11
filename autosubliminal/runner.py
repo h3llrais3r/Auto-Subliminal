@@ -5,7 +5,10 @@ import webbrowser
 import cherrypy
 
 import autosubliminal
-from autosubliminal import scheduler, diskscanner, subchecker, webserver
+from autosubliminal import webserver
+from autosubliminal.diskscanner import DiskScanner
+from autosubliminal.scheduler import Scheduler
+from autosubliminal.subchecker import SubChecker
 
 log = logging.getLogger(__name__)
 
@@ -121,14 +124,12 @@ def start():
     cherrypy.server.wait()
 
     log.info("Starting thread SCANDISK")
-    autosubliminal.SCANDISK = scheduler.Scheduler(diskscanner.DiskScanner(), autosubliminal.SCHEDULERSCANDISK, True,
-                                                  "SCANDISK")
+    autosubliminal.SCANDISK = Scheduler(DiskScanner(), autosubliminal.SCHEDULERSCANDISK, True, "SCANDISK")
     autosubliminal.SCANDISK.thread.start()
     log.info("Thread SCANDISK started")
 
     log.info("Starting thread CHECKSUB")
-    autosubliminal.CHECKSUB = scheduler.Scheduler(subchecker.SubChecker(), autosubliminal.SCHEDULERCHECKSUB, True,
-                                                  "CHECKSUB")
+    autosubliminal.CHECKSUB = Scheduler(SubChecker(), autosubliminal.SCHEDULERCHECKSUB, True, "CHECKSUB")
     autosubliminal.CHECKSUB.thread.start()
     log.info("Thread CHECKSUB started")
 

@@ -5,17 +5,19 @@ except:
 
 import json
 import threading
+import operator
 import time
 import cherrypy
 
 import autosubliminal
-from autosubliminal import config, utils, notify
+from autosubliminal import config, utils, subchecker, notify
 from autosubliminal.db import IdCache, LastDownloads
 
 
 def redirect(abspath, *args, **kwargs):
     assert abspath[0] == '/'
     raise cherrypy.HTTPRedirect(autosubliminal.WEBROOT + abspath, *args, **kwargs)
+
 
 # TODO: Create webdesign
 class PageTemplate(Template):
@@ -193,6 +195,7 @@ class Config:
             # Restart the runner in the background
             threading.Thread(target=autosubliminal.runner.restart).start()
             tmpl = PageTemplate(file="interface/templates/autorestart.tmpl")
+
         else:
             # For some reason the needs to be read again, otherwise all pages get an error
             config.read_config()
@@ -339,26 +342,47 @@ class Home:
         tmpl.message = "Running everything! <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return</a>"
         return str(tmpl)
 
-    @cherrypy.expose(alias='exitMini')
-    def exit_mini(self):
-        if autosubliminal.MOBILE:
-            autosubliminal.MOBILE = False
-            redirect("/home")
+    @cherrypy.expose(alias='search')
+    def search_subtitle(self, wanted_item_index, lang):
+        subs = subchecker.search_subtitle(wanted_item_index, lang)
+        # Send response in html (store subs under subs key)
+        tmpl = PageTemplate(file="interface/templates/home-manualsearch.tmpl", searchList=[{'subs': subs}])
+        return str(tmpl)
+
+    @cherrypy.expose(alias='save')
+    def save_subtitle(self, wanted_item_index, subtitle_index):
+        # Set json response type
+        cherrypy.response.headers['Content-Type'] = 'application/json'
+        saved = subchecker.save_subtitle(wanted_item_index, subtitle_index)
+        if saved:
+            return json.dumps({'result': saved, 'redirect': '/home'})
         else:
-            autosubliminal.MOBILE = True
-            redirect("/home")
+            # Stay on page and show message
+            return json.dumps({'result': saved, 'message': 'Unable to save the subtitle! Please check the log file!'})
 
-    @cherrypy.expose
-    def restart(self):
-        tmpl = PageTemplate(file="interface/templates/restart.tmpl")
-        threading.Thread(target=autosubliminal.runner.restart).start()
-        return str(tmpl)
 
-    @cherrypy.expose
-    def shutdown(self):
-        tmpl = PageTemplate(file="interface/templates/stopped.tmpl")
-        threading.Timer(2, autosubliminal.runner.stop).start()
-        return str(tmpl)
+@cherrypy.expose(alias='exitMini')
+def exit_mini(self):
+    if autosubliminal.MOBILE:
+        autosubliminal.MOBILE = False
+        redirect("/home")
+    else:
+        autosubliminal.MOBILE = True
+        redirect("/home")
+
+
+@cherrypy.expose
+def restart(self):
+    tmpl = PageTemplate(file="interface/templates/restart.tmpl")
+    threading.Thread(target=autosubliminal.runner.restart).start()
+    return str(tmpl)
+
+
+@cherrypy.expose
+def shutdown(self):
+    tmpl = PageTemplate(file="interface/templates/stopped.tmpl")
+    threading.Timer(2, autosubliminal.runner.stop).start()
+    return str(tmpl)
 
 
 class Log:

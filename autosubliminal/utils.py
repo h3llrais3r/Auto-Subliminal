@@ -86,18 +86,18 @@ def check_version():
     log.info('Running version: %s' % RELEASE_VERSION)
     log.info('Git version: %s' % version_online)
 
-    if release == running_release: #Alpha = Alpha
-        if versionnumber > running_versionnumber: #0.5.6 > 0.5.5
+    if release == running_release:  # Alpha = Alpha
+        if versionnumber > running_versionnumber:  # 0.5.6 > 0.5.5
             return 1
-        else: #0.5.6 = 0.5.6
+        else:  # 0.5.6 = 0.5.6
             return 0
-    elif release > running_release: #Beta > Alpha
-        if versionnumber == running_versionnumber: #0.5.5 = 0.5.5
+    elif release > running_release:  # Beta > Alpha
+        if versionnumber == running_versionnumber:  # 0.5.5 = 0.5.5
             return 2
-        elif versionnumber > running_versionnumber: #0.5.6 > 0.5.5
+        elif versionnumber > running_versionnumber:  # 0.5.6 > 0.5.5
             return 4
-    elif release < running_release: #Alpha < Beta
-        if versionnumber > running_versionnumber: #0.5.6 > 0.5.5
+    elif release < running_release:  # Alpha < Beta
+        if versionnumber > running_versionnumber:  # 0.5.6 > 0.5.5
             return 3
 
 
@@ -267,6 +267,23 @@ def check_mobile_device(req_useragent):
         if MUA.lower() in req_useragent.lower():
             return True
     return False
+
+
+def get_wanted_queue_lock():
+    if autosubliminal.WANTEDQUEUELOCK:
+        log.warning("Skipping, cannot get a wanted queue lock because another threat is using the queues")
+        return False
+    else:
+        autosubliminal.WANTEDQUEUELOCK = True
+        return True
+
+
+def release_wanted_queue_lock():
+    if autosubliminal.WANTEDQUEUELOCK:
+        log.debug("Releasing wanted queue lock")
+        autosubliminal.WANTEDQUEUELOCK = False
+    else:
+        log.warning("Trying to release a wanted queue lock while there is no lock")
 
 
 # Thanks to: http://stackoverflow.com/questions/1088392/sorting-a-python-list-by-key-while-checking-for-string-or-float

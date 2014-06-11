@@ -1,4 +1,4 @@
-// Javascript needed reload of the homepage after a restart
+// Javascript needed to reload the homepage after a restart
 
 var base_url = window.location.protocol + '//' + window.location.host + webroot;
 var is_alive_url = webroot + '/home/is_alive';

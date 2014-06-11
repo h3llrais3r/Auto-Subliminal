@@ -4,12 +4,53 @@ import re
 import time
 
 import subliminal
-import subliminal.video
 
 import autosubliminal
 from autosubliminal import utils, fileprocessor
 
 log = logging.getLogger(__name__)
+
+
+class DiskScanner():
+    """
+    Scan the specified path for episodes without Dutch or (if wanted) English subtitles.
+    If found add these Dutch or English subtitles to the WANTEDQUEUE.
+    """
+
+    def __init__(self):
+        pass
+
+    def run(self):
+        log.debug("Starting round of local disk checking at %s" % autosubliminal.VIDEOPATHS)
+        autosubliminal.WANTEDQUEUE = []
+
+        # Get wanted queue lock
+        if not utils.get_wanted_queue_lock():
+            return False
+
+        # Check if a directory exists to scan
+        one_dir_exists = False
+        for videodir in autosubliminal.VIDEOPATHS:
+            if os.path.exists(videodir):
+                one_dir_exists = True
+        if not one_dir_exists:
+            # Release wanted queue lock
+            log.error("None of the configured video paths (%s) exist, aborting..." % autosubliminal.VIDEOPATHS)
+            utils.release_wanted_queue_lock()
+            return True
+
+        for videodir in autosubliminal.VIDEOPATHS:
+            try:
+                walk_dir(videodir)
+            except Exception, e:
+                log.error("Could not scan the video path (%s), skipping..." % videodir)
+                log.exception(e)
+
+        # Release wanted queue lock
+        log.debug("Finished round of local disk checking")
+        utils.release_wanted_queue_lock()
+
+        return True
 
 
 def walk_dir(path):
@@ -39,26 +80,25 @@ def walk_dir(path):
                 languages = check_missing_subtitle_languages(dirname, filename)
                 if len(languages) > 0:
                     log.debug("File %s is missing a subtitle" % filename)
-                    lang = []
-                    filename_results = fileprocessor.process_file(dirname, filename)
-                    if 'title' in filename_results.keys():
-                        if 'season' in filename_results.keys():
-                            if 'episode' in filename_results.keys():
-                                title = filename_results['title']
-                                season = filename_results['season']
-                                episode = filename_results['episode']
+                    wanted_item = fileprocessor.process_file(dirname, filename)
+                    if 'title' in wanted_item.keys():
+                        if 'season' in wanted_item.keys():
+                            if 'episode' in wanted_item.keys():
+                                title = wanted_item['title']
+                                season = wanted_item['season']
+                                episode = wanted_item['episode']
                                 if utils.skip_show(title, season, episode):
                                     log.debug("SkipShow returned True")
                                     log.info("Skipping %s - Season %s Episode %s" % (title, season, episode))
                                     continue
                                 log.info("Subtitle(s) wanted for %s and added to wantedQueue" % filename)
-                                filename_results['originalFileLocationOnDisk'] = os.path.join(dirname, filename)
-                                filename_results['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S',
+                                wanted_item['originalFileLocationOnDisk'] = os.path.join(dirname, filename)
+                                wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S',
                                                                                       time.localtime(os.path.getctime(
-                                                                                          filename_results[
+                                                                                          wanted_item[
                                                                                               'originalFileLocationOnDisk']))))
-                                filename_results['lang'] = languages
-                                autosubliminal.WANTEDQUEUE.append(filename_results)
+                                wanted_item['lang'] = languages
+                                autosubliminal.WANTEDQUEUE.append(wanted_item)
 
                             else:
                                 log.error("Could not process the filename properly filename: %s" % filename)
@@ -90,41 +130,3 @@ def check_missing_subtitle_languages(dirname, filename):
             if not os.path.exists(os.path.join(dirname, srtfile)):
                 missing_subtitles.append(language)
     return missing_subtitles
-
-
-class DiskScanner():
-    """
-    Scan the specified path for episodes without Dutch or (if wanted) English subtitles.
-    If found add these Dutch or English subtitles to the WANTEDQUEUE.
-    """
-
-    def run(self):
-        log.debug("Starting round of local disk checking at %s" % autosubliminal.VIDEOPATHS)
-        if autosubliminal.WANTEDQUEUELOCK:
-            log.debug("Exiting, another threat is using the queues")
-            return False
-        else:
-            autosubliminal.WANTEDQUEUELOCK = True
-        autosubliminal.WANTEDQUEUE = []
-
-        one_dir_exists = False
-        for videodir in autosubliminal.VIDEOPATHS:
-            if os.path.exists(videodir):
-                one_dir_exists = True
-        if not one_dir_exists:
-            log.error("None of the configured video paths (%s) exist, aborting..." % autosubliminal.VIDEOPATHS)
-            autosubliminal.WANTEDQUEUELOCK = False
-            return True
-
-        for videodir in autosubliminal.VIDEOPATHS:
-            try:
-                walk_dir(videodir)
-            except Exception, e:
-                log.error("Could not scan the video path (%s), skipping..." % videodir)
-                log.exception(e)
-
-        log.debug("Finished round of local disk checking")
-        autosubliminal.WANTEDQUEUELOCK = False
-        return True
-
-
