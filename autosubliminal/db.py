@@ -73,26 +73,25 @@ class LastDownloads():
         else:
             return result_list
 
-    def set_last_downloads(self, **data):
+    def set_last_downloads(self, download_item):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        result_dict = data['dict']
 
-        if not 'source' in result_dict.keys():
-            result_dict['source'] = None
+        if not 'source' in download_item.keys():
+            download_item['source'] = None
 
         cursor.execute(self.query_set, [
-            result_dict['title'],
-            result_dict['season'],
-            result_dict['episode'],
-            result_dict['quality'],
-            result_dict['source'],
-            result_dict['downlang'],
-            result_dict['codec'],
-            result_dict['timestamp'],
-            result_dict['releasegrp'],
-            result_dict['subtitle'],
-            result_dict['provider']])
+            download_item['title'],
+            download_item['season'],
+            download_item['episode'],
+            download_item['quality'],
+            download_item['source'],
+            download_item['downlang'],
+            download_item['codec'],
+            download_item['timestamp'],
+            download_item['releasegrp'],
+            download_item['subtitle'],
+            download_item['provider']])
         connection.commit()
         connection.close()
 

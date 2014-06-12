@@ -18,8 +18,8 @@ def test_notify():
     return _send_notify(data)
 
 
-def send_notify(language, subtitlefile, videofile, provider):
-    message = "Subtitle: %s \n Language: %s \n Provider: %s " % (subtitlefile, language, provider)
+def send_notify(video, subtitle, language, provider):
+    message = "Subtitle: %s \n Language: %s \n Provider: %s " % (subtitle, language, provider)
     data = {'apikey': autosubliminal.PROWLAPI,
             'application': 'Auto-Subliminal',
             'event': 'Subtitle download',

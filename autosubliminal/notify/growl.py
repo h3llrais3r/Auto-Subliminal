@@ -20,7 +20,7 @@ def test_notify():
         register.set_password(password)
     if not _send_notify(register.encode()):
         return False
-        # Notify
+    # Notify
     notice = gntp.GNTPNotice()
     notice.add_header('Application-Name', "Auto-Subliminal")
     notice.add_header('Notification-Name', "Test")
@@ -31,10 +31,10 @@ def test_notify():
     return _send_notify(notice.encode())
 
 
-def send_notify(language, subtitlefile, videofile, provider):
+def send_notify(video, subtitle, language, provider):
     log.debug("Trying to send a notification")
     password = autosubliminal.GROWLPASS
-    message = "Subtitle: %s \n Language: %s \n Provider: %s " % (subtitlefile, language, provider)
+    message = "Subtitle: %s \n Language: %s \n Provider: %s " % (subtitle, language, provider)
     # Notify
     notice = gntp.GNTPNotice()
     notice.add_header('Application-Name', "Auto-Subliminal")

@@ -4,35 +4,44 @@ import time
 import subliminal
 
 import autosubliminal
-from autosubliminal import notify
 from autosubliminal.db import LastDownloads
+from autosubliminal.notify import Notifier
 from autosubliminal.postprocessor import PostProcessor
 
 log = logging.getLogger(__name__)
 
 
-def save_subtitle(download_item):
-    keys = download_item.keys()
+class SubDownloader():
+    """
+    Handles the downloaded subtitle.
+    It stores the subtitle at the right location with the right name and handle the notifications and post processing.
+    """
 
-    # Handle downloaded subtitle
-    if 'subtitles' in keys and 'single' in keys and 'destinationFileLocationOnDisk' in keys:
-        log.debug("Download dict seems ok. Dumping it for debug: %r" % download_item)
+    def __init__(self, download_item):
+        log.debug("Download item: %r" % download_item)
+        self.dowload_item = download_item
+        self.keys = download_item.keys()
 
-        # Save the subtitle
-        subliminal.save_subtitles(download_item['subtitles'], download_item['single'])
-        download_item['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        LastDownloads().set_last_downloads(dict=download_item)
+    def run(self):
 
-        # Notify
-        if autosubliminal.NOTIFY:
-            notify.notify(download_item['downlang'], download_item['destinationFileLocationOnDisk'],
-                          download_item["originalFileLocationOnDisk"], download_item['provider'])
+        # Handle download_item
+        if 'subtitles' in self.keys and 'single' in self.keys:
 
-        # Post processing
-        if autosubliminal.POSTPROCESS and autosubliminal.POSTPROCESSCMD:
-            PostProcessor(autosubliminal.POSTPROCESSUTF8ENCODING, autosubliminal.POSTPROCESSCMD, download_item).run()
+            # Save the subtitle
+            subliminal.save_subtitles(self.dowload_item['subtitles'], self.dowload_item['single'])
+            self.dowload_item['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
+            LastDownloads().set_last_downloads(self.dowload_item)
 
-        return True
-    else:
-        log.error("No subtitles or single or destinationFileLocationOnDisk found at download_item, skipping")
-        return False
+            # Notify
+            if autosubliminal.NOTIFY:
+                Notifier(self.dowload_item).notify()
+
+            # Post processing
+            if autosubliminal.POSTPROCESS and autosubliminal.POSTPROCESSCMD:
+                PostProcessor(autosubliminal.POSTPROCESSUTF8ENCODING, autosubliminal.POSTPROCESSCMD,
+                              self.dowload_item).run()
+
+            return True
+        else:
+            log.error("Download item is not complete, skipping")
+            return False

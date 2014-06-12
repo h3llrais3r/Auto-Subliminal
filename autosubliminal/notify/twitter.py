@@ -26,9 +26,9 @@ def test_notify():
     return _send_notify(message)
 
 
-def send_notify(language, subtitlefile, videofile, provider):
+def send_notify(video, subtitle, language, provider):
     log.debug("Trying to send a tweet")
-    message = "Subtitle: %s \n Language: %s \n Provider: %s " % (subtitlefile, language, provider)
+    message = "Subtitle: %s \n Language: %s \n Provider: %s " % (subtitle, language, provider)
     return _send_notify(message)
 
 

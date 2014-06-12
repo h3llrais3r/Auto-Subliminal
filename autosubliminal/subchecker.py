@@ -6,14 +6,15 @@ import babelfish
 import subliminal
 
 import autosubliminal
-from autosubliminal import utils, subdownloader
+from autosubliminal import utils
+from autosubliminal.subdownloader import SubDownloader
 
 log = logging.getLogger(__name__)
 
 
 class SubChecker():
     """
-    Check for subtitles of episodes that are in the WANTEDQUEUE.
+    Sub checker. It checks for subtitles of episodes that are in the WANTEDQUEUE.
     """
 
     def __init__(self):
@@ -48,7 +49,7 @@ class SubChecker():
                 # Save when the best subtitle is found
                 if subtitles:
                     download_item = _construct_download_item(wanted_item, subtitles, language, single)
-                    subdownloader.save_subtitle(download_item)
+                    SubDownloader(download_item).run()
 
                     # Remove from wanted queue if needed (if no additional languages are still needed)
                     langs.remove(lang)
@@ -153,7 +154,7 @@ def save_subtitle(wanted_item_index, subtitle_index):
 
     # Save subtitle
     download_item = _construct_download_item(wanted_item, wanted_subtitles, language, single)
-    downloaded = subdownloader.save_subtitle(download_item)
+    downloaded = SubDownloader(download_item).run()
 
     # Remove from wanted queue is downloaded
     if downloaded:
