@@ -12,7 +12,7 @@
 
 #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/menu.tmpl")
 
-<script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/manualsearch.js"></script>
+<script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/home.js"></script>
 
 $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 
@@ -40,19 +40,18 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 	</thead>
 <tbody>
 
-#set $counter = 0
 #for $index, $item in enumerate($autosubliminal.WANTEDQUEUE)
 
-#set $divname = "skipshow-" + str($counter)
-#set $buttonname = "skipshowbutton-" + str($counter)
-#set $buttonseason = "skipshowbuttonseason-" + str($counter)
-#set $buttonall = "skipshowbuttonall-" + str($counter)
-#set $counter = $counter + 1
-
-#set $title_escaped = $cgi.escape($item['title'], True)
-
 <tr>
-	<td><b><a href='#' data-dropdown="#dropdown-skip-$counter">$item['title']</a></b></td>
+	<td>
+        <b><a href="#" data-dropdown="#dropdown-skip-$index">$item['title']</a></b>
+        <div id="dropdown-skip-$index" class="dropdown-menu has-tip">
+            <ul>
+                <li><a href="$autosubliminal.WEBROOT/config/skipShow/$item['title']/$item['season']">Skip season $item['season']</a></li>
+                <li><a href="$autosubliminal.WEBROOT/config/skipShow/$item['title']/0">Skip show</a></li>
+            </ul>
+        </div>
+    </td>
 	<td width="75px" align="center">$item['season']</td>
 	<td width="75px" align="center">$item['episode']</td>
 
@@ -83,8 +82,8 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 	<td width="75px" align="center">
 #for $lang in $item['lang']
 	#set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
-	<img src="$imageurl" alt="$lang" data-dropdown="#dropdown-manualsearch-$counter" />
-	<div id="dropdown-manualsearch-$counter" class="dropdown-menu has-tip anchor-right">
+	<a href="#"><img src="$imageurl" alt="$lang" data-dropdown="#dropdown-manualsearch-$index" /></a>
+	<div id="dropdown-manualsearch-$index" class="dropdown-menu has-tip anchor-right">
         <ul>
             <li>
                 <p>
@@ -93,7 +92,7 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
                 </p>
             </li>
             <li>
-                <div id="div-manualsearch" style="width: 750px;"></div>
+                <div id="div-manualsearch-$index" style="width: 750px;"></div>
             </li>
         </ul>
     </div>
@@ -111,25 +110,13 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 #end for
 </table>
 
-<div id="dropdown-manualsearch-overview">
-</div>
-
-#set $counter = 0
-#for $item in $autosubliminal.WANTEDQUEUE
-#set $counter = $counter + 1
-<div id="dropdown-skip-$counter" class="dropdown-menu has-tip">
-    <ul>
-        <li><a href="$autosubliminal.WEBROOT/config/skipShow/$item['title']/$item['season']">Skip season $item['season']</a></li>
-        <li><a href="$autosubliminal.WEBROOT/config/skipShow/$item['title']/0">Skip show</a></li>
-    </ul>
-</div>
-#end for
+<div id="dropdown-manualsearch-overview"></div>
 
 </div>
 </div>
 <i>Click 'Show name' in wanted list to skip it</i>
 <br>
-<i>Click 'Language' icon in wanted list to search manually</i>
+<i>Click 'Language' icon in wanted list to search it manually</i>
 #end if
 <p>
 
@@ -159,7 +146,27 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 
 #for $item in $lastdownload
 <tr>
-	<td><b><a href='#' data-dropdown="#dropdown-lastDown-$item['id']">$item['show_name']</a></b></td>
+	<td>
+        <b><a href='#' data-dropdown="#dropdown-lastDown-$item['id']">$item['show_name']</a></b>
+        <div id="dropdown-lastDown-$item['id']" class="dropdown-menu has-tip">
+            <ul>
+                <li>
+                #if $item['subtitle'] == None
+                    Subtitle: N/A
+                #else
+                    Subtitle: $item['subtitle']
+                #end if
+                </li>
+                <li>
+                #if $item['provider'] == None
+                    Provider: N/A
+                #else
+                    Provider: $item['provider']
+                #end if
+                </li>
+            </ul>
+        </div>
+    </td>
 	<td width="75px" align="center">$item['season']</td>
 	<td width="75px" align="center">$item['episode']</td>
 
@@ -199,25 +206,6 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 #end if
 
 </tr>
-
-<div id="dropdown-lastDown-$item['id']" class="dropdown-menu has-tip">
-    <ul>
-        <li>
-        #if $item['subtitle'] == None
-        	Subtitle: N/A
-        #else
-        	Subtitle: $item['subtitle']
-        #end if
-        </li>
-        <li>
-        #if $item['provider'] == None
-        	Provider: N/A
-        #else
-        	Provider: $item['provider']
-        #end if
-        </li>
-    </ul>
-</div>
 
 #end for
 

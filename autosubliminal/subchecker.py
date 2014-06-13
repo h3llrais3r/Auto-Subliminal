@@ -8,6 +8,11 @@ import subliminal
 import autosubliminal
 from autosubliminal import utils
 from autosubliminal.subdownloader import SubDownloader
+from subliminal.providers.addic7ed import Addic7edSubtitle
+from subliminal.providers.opensubtitles import OpenSubtitlesSubtitle
+from subliminal.providers.podnapisi import PodnapisiSubtitle
+from subliminal.providers.thesubdb import TheSubDBSubtitle
+from subliminal.providers.tvsubtitles import TVsubtitlesSubtitle
 
 log = logging.getLogger(__name__)
 
@@ -101,7 +106,8 @@ def search_subtitle(wanted_item_index, lang):
                 if subtitle.content:
                     # Create new sub dict for showing result
                     sub = {'score': score, 'provider_name': subtitle.provider_name, 'content': subtitle.content,
-                           'language': language, 'single': single, 'wanted_item_index': wanted_item_index}
+                           'language': language, 'single': single, 'page_link': subtitle.page_link,
+                           'releases': _get_releases(subtitle), 'wanted_item_index': wanted_item_index}
                     # Get content preview (the first 28 lines and last 30 lines of the subtitle)
                     content_split = subtitle.content.splitlines(False)
                     if len(content_split) < 58:
@@ -254,3 +260,20 @@ def _construct_download_item(wanted_item, subtitles, language, single):
     download_item['single'] = single
 
     return download_item
+
+
+def _get_releases(subtitle):
+    releases = []
+    if isinstance(subtitle, Addic7edSubtitle):
+        releases.extend(subtitle.version)
+    elif isinstance(subtitle, OpenSubtitlesSubtitle):
+        releases.extend(subtitle.movie_release_name)
+    elif isinstance(subtitle, PodnapisiSubtitle):
+        releases.extend(subtitle.releases)
+    elif isinstance(subtitle, TheSubDBSubtitle):
+        # No release present
+        releases.extend([])
+    elif isinstance(subtitle, TVsubtitlesSubtitle):
+        releases.extend(subtitle.release)
+    #return "<br>".join(x for x in releases)
+    return releases

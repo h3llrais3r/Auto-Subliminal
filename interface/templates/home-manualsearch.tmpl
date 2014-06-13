@@ -1,6 +1,7 @@
 #import autosubliminal
 
-<script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/manualsave.js"></script>
+<script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/hoverIntent.js"></script>
+<script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/home-manualsearch.js"></script>
 
 <div class="header">
 	<h1>Found subtitles</h1><span></span>
@@ -14,7 +15,7 @@
 			<th style="width: 50px;">Score</th>
 			<th style="width: 100px;">Provider</th>
 			<th style="width: 525px;">Preview</th>
-			<th style="width: 75px;">Save</th>
+			<th style="width: 75px;">Actions</th>
 		</tr>
 	</thead>
     <tbody>
@@ -23,9 +24,30 @@
 
         <tr>
             <td align="center">$sub.score</td>
-            <td align="center">$sub.provider_name</td>
-            <td align="left"><div style="height:100px; width: 525px; overflow:scroll;">$sub.content_preview</div></td>
-            <td align="center"><a class="manualsavelink" href="$autosubliminal.WEBROOT/home/save/$sub.wanted_item_index/$index"><img src="$autosubliminal.WEBROOT/images/save.png" /></a></td>
+            <td align="center"><p style="cursor: pointer" class="manualsearchprovidertext">$sub.provider_name</p>
+                <div id="dropdown-provider-$index" class="dropdown-menu has-tip">
+                    <ul>
+                        <li><b>Supported releases:</b></li>
+                        #for $release in $sub.releases
+                        <li>
+                            $release
+                        </li>
+                        #end for
+                    </ul>
+                </div>
+            </td>
+            <td align="left"><div style="height:90px; width: 525px; overflow:scroll;">$sub.content_preview</div></td>
+            <td align="center">
+                <a class="manualsearchvisitlink" href="$sub.page_link">
+                    <img src="$autosubliminal.WEBROOT/images/forward.png" alt="Visit website" title="Visit website" />
+                </a>
+                <br>
+                &nbsp;
+                <br>
+                <a class="manualsearchsavelink" href="$autosubliminal.WEBROOT/home/save/$sub.wanted_item_index/$index">
+                    <img src="$autosubliminal.WEBROOT/images/save.png" alt="Save subtitle" title="Save subtitle" />
+                </a>
+            </td>
         </tr>
 
 #end for
