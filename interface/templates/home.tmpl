@@ -44,10 +44,11 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 
 <tr>
 	<td>
-        <b><a class="shownamelink" href="#" data-dropdown="#dropdown-skip-$index">$item['title']</a></b>
+        <b><a href="#" data-dropdown="#dropdown-skip-$index" title="Click to skip">$item['title']</a></b>
+        <a href="#"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" data-dropdown="#dropdown-filename-$index" /></a>
         <div id="dropdown-filename-$index" class="dropdown-menu has-tip">
             <ul>
-                <li>$item['originalFileLocationOnDisk']</li>
+                <li>$os.path.basename($item['originalFileLocationOnDisk'])</li>
             </ul>
         </div>
         <div id="dropdown-skip-$index" class="dropdown-menu has-tip">
@@ -87,13 +88,13 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 	<td width="75px" align="center">
 #for $lang in $item['lang']
 	#set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
-	<a href="#"><img src="$imageurl" alt="$lang" title="$lang" data-dropdown="#dropdown-manualsearch-$index" /></a>
+	<a href="#"><img src="$imageurl" alt="$lang" title="Click to search manually" data-dropdown="#dropdown-manualsearch-$index" /></a>
 	<div id="dropdown-manualsearch-$index" class="dropdown-menu has-tip anchor-right">
         <ul>
             <li>
                 <p>
                     <a class="manualsearchlink" href="$autosubliminal.WEBROOT/home/search/$index/$lang">Manual search</a>
-                    <img id="img-loading-manualsearch" src="$autosubliminal.WEBROOT/images/loading.gif" height="16" width="16" style="display: none;" />
+                    <img id="img-loading-manualsearch" src="$autosubliminal.WEBROOT/images/loading.gif" style="display: none;" />
                 </p>
             </li>
             <li>

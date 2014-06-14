@@ -7,13 +7,13 @@
 	<tr>
 		<td width="200px">Path</td>
 		<td><input type="text" size="50" name="path" value="$autosubliminal.PATH" /></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationPath"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationPath" class="dropdown-menu has-tip" align="left"><ul><li>The folder where the Auto-Subliminal files are located.<br />This field is required!</li></ul></div></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationPath"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationPath" class="dropdown-menu has-tip" align="left"><ul><li>The folder where the Auto-Subliminal files are located.<br />This field is required!</li></ul></div></td>
 	</tr>
 
 	<tr>
 		<td width="200px">Video paths</td>
 		<td><textarea rows="3" cols="50" name="videopaths">$config.display_videopaths</textarea></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationVideopaths"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationVideopaths" class="dropdown-menu has-tip" align="left"><ul><li>The folders where your videos are located.<br />Use a new line for each location!</li></ul></div></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationVideopaths"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationVideopaths" class="dropdown-menu has-tip" align="left"><ul><li>The folders where your videos are located.<br />Use a new line for each location!</li></ul></div></td>
 	</tr>
 
 	<tr>
@@ -30,7 +30,7 @@
                 #end if
             #end for
 		</select></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationDefaultlanguage"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationDefaultlanguage" class="dropdown-menu has-tip" align="left"><ul><li>The default subtitle language (alpha2 code).</li></ul></div></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationDefaultlanguage"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationDefaultlanguage" class="dropdown-menu has-tip" align="left"><ul><li>The default subtitle language (alpha2 code).</li></ul></div></td>
 	</tr>
 
 	<tr>
@@ -44,13 +44,13 @@
                 <option value="False" selected="selected">Disabled</option>
             #end if
 		</select></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationDefaultlanguagesuffix"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationDefaultlanguagesuffix" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, the default subtitle will be extended with the alpha2 code of the language (f.e. showname.en.srt).</li></ul></div></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationDefaultlanguagesuffix"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationDefaultlanguagesuffix" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, the default subtitle will be extended with the alpha2 code of the language (f.e. showname.en.srt).</li></ul></div></td>
 	</tr>
 
 	<tr>
 		<td width="200px">Additional languages</td>
 		<td><input type="text" size="50" name="additionallanguages" value="$config.display_additional_languages" /></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationAdditionallanguages"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationAdditionallanguages" class="dropdown-menu has-tip" align="left"><ul><li>Comma separated list with the additional subtitle languages in alpha2 format.<br />If additional languages are provided, subtitles will be extended with the alpha2 code of the language (f.e. showname.en.srt).</li></ul></div></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationAdditionallanguages"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationAdditionallanguages" class="dropdown-menu has-tip" align="left"><ul><li>Comma separated list with the additional subtitle languages in alpha2 format.<br />If additional languages are provided, subtitles will be extended with the alpha2 code of the language (f.e. showname.en.srt).</li></ul></div></td>
 	</tr>
 
 	<tr>
@@ -99,7 +99,7 @@
 		#end if
 
 		</td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationMinmatchscore"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationMinmatchscore"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a>
 		<div id="informationMinmatchscore" class="dropdown-menu has-tip" align="left"><ul><li>
 		What items should match before a subtitle is downloaded via the API?
 		</li></ul></div></td>
@@ -108,13 +108,13 @@
 	<tr>
 		<td width="200px">ScanDisk</td>
 		<td><input type="text" size="50" name="scandisk" value="$autosubliminal.SCHEDULERSCANDISK" /></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationScandisk"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationScandisk" class="dropdown-menu has-tip" align="left"><ul><li>Change the interval of the ScanDisk thread, it scans the disk for missing subtitle files.<br />Time is in seconds, default is 3600 seconds.</li></ul></div></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationScandisk"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationScandisk" class="dropdown-menu has-tip" align="left"><ul><li>Change the interval of the ScanDisk thread, it scans the disk for missing subtitle files.<br />Time is in seconds, default is 3600 seconds.</li></ul></div></td>
 	</tr>
 
 	<tr>
 		<td width="200px">CheckSub</td>
 		<td><input type="text" size="50" name="checksub" value="$autosubliminal.SCHEDULERCHECKSUB" /></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationChecksub"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationChecksub" class="dropdown-menu has-tip" align="left"><ul><li>Change the interval of the CheckSub thread, it checks if there is a match on the bierdopje API. Cannot not be set lower then 21600.<br />Time is in seconds, default is 28800 seconds.</li></ul></div></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationChecksub"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationChecksub" class="dropdown-menu has-tip" align="left"><ul><li>Change the interval of the CheckSub thread, it checks if there is a match on the bierdopje API. Cannot not be set lower then 21600.<br />Time is in seconds, default is 28800 seconds.</li></ul></div></td>
 	</tr>
 
 	<tr>
@@ -128,7 +128,7 @@
 			<option value="False" selected="selected">Disabled</option>
 		#end if
 		</select></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationSkiphiddendirs"><img src="$autosubliminal.WEBROOT/images/info.gif" width="20px" height="20px" alt="" /></a><div id="informationSkiphiddendirs" class="dropdown-menu has-tip" align="left"><ul><li>Should we scan hidden directories (directories that start with a dot, for example .AppleDouble)? Doesn't work for Windows style hidden directories.</li></ul></div></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationSkiphiddendirs"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationSkiphiddendirs" class="dropdown-menu has-tip" align="left"><ul><li>Should we scan hidden directories (directories that start with a dot, for example .AppleDouble)? Doesn't work for Windows style hidden directories.</li></ul></div></td>
 	</tr>
 	
 </table>

@@ -1,16 +1,6 @@
 // Javascript needed to handle a manual search
 
 $(function () {
-    // When a show name link is hovered
-    $(".shownamelink").hoverIntent(function (event) {
-            // show the file name as tooltip
-            $(this).closest("td").children("div").first().show();
-        },
-        function (event) {
-            // hide the file name as tooltip
-           $(this).closest("td").children("div").first().hide();
-        });
-
     // When a manual search link is clicked
     $(".manualsearchlink").click(function (event) {
         // prevent default behaviour
