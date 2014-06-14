@@ -7,7 +7,7 @@ $(function () {
         event.preventDefault();
         // define variables
         var url = $(this).attr("href");
-        window.open(url,'_blank');
+        window.open(url, '_blank');
         return false;
     });
 
