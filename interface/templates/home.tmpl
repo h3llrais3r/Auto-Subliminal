@@ -45,8 +45,8 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 <tr>
 	<td>
         <b><a href="#" data-dropdown="#dropdown-skip-$index" title="Click to skip">$item['title']</a></b>
-        <a href="#"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" data-dropdown="#dropdown-filename-$index" /></a>
-        <div id="dropdown-filename-$index" class="dropdown-menu has-tip">
+        <a href="#"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" data-dropdown="#dropdown-wantedinfo-$index" /></a>
+        <div id="dropdown-wantedinfo-$index" class="dropdown-menu has-tip">
             <ul>
                 <li>$os.path.basename($item['originalFileLocationOnDisk'])</li>
             </ul>
@@ -153,8 +153,12 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
 #for $item in $lastdownload
 <tr>
 	<td>
-        <b><a href='#' data-dropdown="#dropdown-lastDown-$item['id']">$item['show_name']</a></b>
-        <div id="dropdown-lastDown-$item['id']" class="dropdown-menu has-tip">
+        <!-- Use this for a dropdown when clicking on the show name
+        <b><a href='#' data-dropdown="#dropdown-lastdown-$item['id']">$item['show_name']</a></b>
+        -->
+        <b>$item['show_name']</b>
+        <a href="#"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" data-dropdown="#dropdown-lastdowninfo-$item['id']" /></a>
+        <div id="dropdown-lastdowninfo-$item['id']" class="dropdown-menu has-tip">
             <ul>
                 <li>
                 #if $item['subtitle'] == None
