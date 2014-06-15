@@ -146,8 +146,18 @@ def save_subtitle(wanted_item_index, subtitle_index):
     if not utils.get_wanted_queue_lock():
         return False
 
+    # Get wanted item
+    wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+    found_subtitles = wanted_item['found_subtitles']
+    subtitles = found_subtitles['subtitles']
+    language = found_subtitles['language']
+    single = found_subtitles['single']
+
+    # Get selected subtitle
+    wanted_subtitles = _get_selected_subtitle(subtitles, subtitle_index)
+
     # Save subtitle (skip notify and post_process)
-    download_item = _construct_download_item(wanted_item_index, subtitle_index)
+    download_item = _construct_download_item(wanted_item, wanted_subtitles, language, single)
     downloaded = SubDownloader(download_item).save()
 
     # Release wanted queue lock
@@ -163,8 +173,18 @@ def post_process(wanted_item_index, subtitle_index):
     if not utils.get_wanted_queue_lock():
         return False
 
+    # Get wanted item
+    wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+    found_subtitles = wanted_item['found_subtitles']
+    subtitles = found_subtitles['subtitles']
+    language = found_subtitles['language']
+    single = found_subtitles['single']
+
+    # Get selected subtitle
+    wanted_subtitles = _get_selected_subtitle(subtitles, subtitle_index)
+
     # Post process only
-    download_item = _construct_download_item(wanted_item_index, subtitle_index)
+    download_item = _construct_download_item(wanted_item, wanted_subtitles, language, single)
     processed = SubDownloader(download_item).post_process()
 
     # Remove from wanted queue is downloaded
@@ -245,20 +265,21 @@ def _search_subtitles(video, lang, min_score, best_only):
     return subtitles, lang, single
 
 
-def _construct_download_item(wanted_item_index, subtitle_index):
-    log.debug("Constructing the download item")
-
-    wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
-    found_subtitles = wanted_item['found_subtitles']
-    subtitles = found_subtitles['subtitles']
-    language = found_subtitles['language']
-    single = found_subtitles['single']
+def _get_selected_subtitle(subtitles, subtitle_index):
+    log.debug("Getting selected subtitle")
 
     # Create new subtitles dict with only the wanted subtitle
     video = next(iter(subtitles.keys()))  # video is always the first key in the subtitles dict
     wanted_subtitle = subtitles[video][int(subtitle_index)]
     wanted_subtitles = subtitles.copy()
     wanted_subtitles[video] = [wanted_subtitle]
+
+    return wanted_subtitles
+
+
+def _construct_download_item(wanted_item, subtitles, language, single):
+    log.debug("Constructing the download item")
+    video = next(iter(subtitles.keys()))  # video is always the first key in the subtitles dict
 
     # Get the subtitle, subtitles should only contain 1 subtitle
     subtitle = subtitles[video][0]
