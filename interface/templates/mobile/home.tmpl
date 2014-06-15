@@ -11,7 +11,7 @@
 <html>
 	<head>
 		<title>Auto-Subliminal Mini</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0;" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<link rel="stylesheet" href="$autosubliminal.WEBROOT/mobile/css/jquery.mobile-1.0.min.css">
@@ -47,25 +47,16 @@
 								<th>LANG</th>
 							</tr>
 							</thead>
-
-#set $counter = 0
-#for $var in $autosubliminal.WANTEDQUEUE
-#set $counter = $counter + 1
-
-#set $title_escaped = $cgi.escape($var['title'], True)
+#for $item in $autosubliminal.WANTEDQUEUE
 							<tr>
 								<td><b>
-									<div style="position: relative; float: left; width: 60%;">$var['title'].upper()</div> <div style="position: relative; float: right;">S$var['season'] E$var['episode']</div>
+									<div style="position: relative; float: left; width: 60%;">$item['title'].upper()</div> <div style="position: relative; float: right;">S$item['season'] E$item['episode']</div>
 								</b></td>
 								<td align="center" width="50px">
-							#for lang in $var['lang']
-							#if lang == "nl"
-								<img src="$autosubliminal.WEBROOT/images/nl.png" alt="nl">
-							#end if
-							#if lang == "en"
-								<img src="$autosubliminal.WEBROOT/images/en.png" alt="en">
-							#end if
-							#end for
+                                #for lang in $item['lang']
+                                #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
+								    <img src="$imageurl" alt="$lang">
+                                #end for
 								</td>
 							</tr>						
 #end for
@@ -77,11 +68,8 @@
 					<div data-role="collapsible">
 					<h3>DOWNLOADED</h3>
 					<p>
-					
 #set $lastdownload = LastDownloads().get_last_downloads()
-
 #if $len($lastdownload) >= 1
-    
 						<table class="table">
 							<thead>
 							<tr>
@@ -89,24 +77,21 @@
 								<th>LANG</th>
 							</tr>
 							</thead>
-
-#for $var in $lastdownload
+#for $item in $lastdownload
 							<tr>
 								<td><b>
-									<div style="position: relative; float: left; width: 60%;">$var['show_name'].upper()</div> <div style="position: relative; float: right;">S$var['season'] E$var['episode']</div>
+									<div style="position: relative; float: left; width: 60%;">$item['show_name'].upper()</div> <div style="position: relative; float: right;">S$item['season'] E$item['episode']</div>
 								</b></td>
 	
 								<td align="center" width="50px">
-									#set $imageurl = $autosubliminal.WEBROOT + "/images/" + $var['language'] + ".png"
-									<img src="$imageurl" alt="$var['language']" />
+                                #set $lang = $item['language']
+                                #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
+								    <img src="$imageurl" alt="$lang">
 								</td>
 								</tr>
-
 #end for
 							</table>
-
 #end if
-					
 					</p>
 					</div>
 
@@ -117,22 +102,22 @@
 							<tr>
 								<td>NEXT DISK SCAN IN</td>
 								<td>
-									#try
-									  &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.lastrun) ))) <br>
-									#except
-									  &nbsp;:&nbsp;Please wait... <br>
-									#end try
+                                #try
+                                    &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.lastrun) ))) <br>
+                                #except
+                                    &nbsp;:&nbsp;Please wait... <br>
+                                #end try
 								</td>
 							</tr>
 							
 							<tr>
 								<td>NEXT SUBTITLE CHECK IN</td>
 								<td>
-									#try
-									  &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.lastrun) ))) <br>
-									#except
-									  &nbsp;:&nbsp;Please wait... <br>
-									#end try
+                                #try
+                                    &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.lastrun) ))) <br>
+                                #except
+                                    &nbsp;:&nbsp;Please wait... <br>
+                                #end try
 								</td>
 							</tr>
 						</table>
