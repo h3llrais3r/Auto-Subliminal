@@ -82,3 +82,19 @@
 	background: #FF0000;
     text-decoration: none;
 }
+
+.warning {
+	padding: 0 10px;
+	border: 1px solid #C8C8C8;
+	border-radius: 0 0 3px 3px;
+	background: #ffA500;
+    text-decoration: none;
+}
+
+.info {
+	padding: 0 10px;
+	border: 1px solid #C8C8C8;
+	border-radius: 0 0 3px 3px;
+	background: #008000;
+    text-decoration: none;
+}

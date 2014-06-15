@@ -41,14 +41,21 @@
             <td align="left"><div style="height:90px; width: 525px; overflow:scroll;">$sub.content_preview</div></td>
             <td align="center">
                 <a class="manualsearchvisitlink" href="$sub.page_link">
-                    <img src="$autosubliminal.WEBROOT/images/forward.png" alt="Visit website" title="Click to visit website" />
+                    <img src="$autosubliminal.WEBROOT/images/visit.png" alt="Visit website" title="Click to visit website" />
                 </a>
-                <br>
-                &nbsp;
                 <br>
                 <a class="manualsearchsavelink" href="$autosubliminal.WEBROOT/home/saveSubtitle/$sub.wanted_item_index/$index">
                     <img src="$autosubliminal.WEBROOT/images/save.png" alt="Save subtitle" title="Click to save subtitle" />
                 </a>
+                <br>
+                <a class="manualsearchplaylink" href="$autosubliminal.WEBROOT/home/playVideo/$sub.wanted_item_index">
+                    <img src="$autosubliminal.WEBROOT/images/play.png" alt="Play video" title="Click to play video" />
+                </a>
+                <br>
+                <a class="manualsearchpostprocesslink" href="$autosubliminal.WEBROOT/home/postProcess/$sub.wanted_item_index/$index">
+                    <img src="$autosubliminal.WEBROOT/images/postprocess.png" alt="Post process" title="Click to execute post processing" />
+                </a>
+                <br>
             </td>
         </tr>
 
@@ -60,5 +67,6 @@
 #end if
 
 <div id="div-error" class="error">$errormessage</div>
+<div id="div-info" class="info">$infomessage</div>
 
 </div>

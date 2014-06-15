@@ -20,8 +20,47 @@ $(function () {
         // call the saveurl
         $.get(saveurl, function (data) {
             if (data['result']) {
+                // show info message
+                $("#div-info").append(data['infomessage']);
+            } else {
+                // show error message
+                $("#div-error").append(data['errormessage']);
+            }
+        });
+        return false;
+    });
+
+    // When a manual search play link is clicked
+    $(".manualsearchplaylink").click(function (event) {
+        // prevent default behaviour
+        event.preventDefault();
+        // define variables
+        var playurl = $(this).attr("href");
+        // call the playurl
+        $.get(playurl, function (data) {
+            if (data['result']) {
+                // do nothing, just play the video
+            } else {
+                // show error message
+                $("#div-error").append(data['errormessage']);
+            }
+        });
+        return false;
+    });
+
+    // When a manual search postprocess link is clicked
+    $(".manualsearchpostprocesslink").click(function (event) {
+        // prevent default behaviour
+        event.preventDefault();
+        // define variables
+        var postprocessurl = $(this).attr("href");
+        // call the postprocessurl
+        $.get(postprocessurl, function (data) {
+            if (data['result']) {
+                // redirect
                 window.location.href = data['redirect'];
             } else {
+                // show error message
                 $("#div-error").append(data['errormessage']);
             }
         });

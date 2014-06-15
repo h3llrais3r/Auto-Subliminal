@@ -24,7 +24,9 @@ class PostProcessor():
         stdout, stderr = utils.run_cmd(process_cmd)
         if stderr:
             log.error("PostProcessor failed: %s" % stderr)
+            return False
         log.debug("PostProcessor output:% s" % stdout)
+        return True
 
     def _constuct_process_cmd(self):
         log.info("#" * 30)

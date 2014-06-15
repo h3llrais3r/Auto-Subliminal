@@ -373,7 +373,7 @@ class Home():
         subs, errormessage = subchecker.search_subtitle(wanted_item_index, lang)
         # Send response in html (store subs under subs key)
         tmpl = PageTemplate(file="interface/templates/home-manualsearch.tmpl",
-                            searchList=[{'subs': subs, 'errormessage': errormessage}])
+                            searchList=[{'subs': subs, 'infomessage': '', 'errormessage': errormessage}])
         return str(tmpl)
 
     @cherrypy.expose(alias='saveSubtitle')
@@ -382,11 +382,36 @@ class Home():
         cherrypy.response.headers['Content-Type'] = 'application/json'
         saved = subchecker.save_subtitle(wanted_item_index, subtitle_index)
         if saved:
-            return json.dumps({'result': saved, 'redirect': '/home'})
+            return json.dumps({'result': saved, 'infomessage': 'Subtitle saved!', 'errormessage': ''})
         else:
             # Stay on page and show message
             return json.dumps(
-                {'result': saved, 'errormessage': 'Unable to save the subtitle! Please check the log file!'})
+                {'result': saved, 'infomessage': '',
+                 'errormessage': 'Unable to save the subtitle! Please check the log file!'})
+
+    @cherrypy.expose(alias='playVideo')
+    def play_video(self, wanted_item_index):
+        # Set json response type
+        cherrypy.response.headers['Content-Type'] = 'application/json'
+        # Get wanted item
+        wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+        # Play video with default player
+        video = wanted_item['originalFileLocationOnDisk']
+        stdout, stderr = utils.run_cmd(video)
+        return json.dumps({'result': False, 'infomessage': '', 'errormessage': stderr})
+
+    @cherrypy.expose(alias='postProcess')
+    def post_process(self, wanted_item_index, subtitle_index):
+        # Set json response type
+        cherrypy.response.headers['Content-Type'] = 'application/json'
+        processed = subchecker.post_process(wanted_item_index, subtitle_index)
+        if processed:
+            return json.dumps({'result': processed, 'infomessage:': '', 'errormessage': '', 'redirect': '/home'})
+        else:
+            # Stay on page and show message
+            return json.dumps(
+                {'result': processed, 'infomessage': '',
+                 'errormessage': 'Unable to handle post processing! Please check the log file!'})
 
 
 class Log():
@@ -414,7 +439,7 @@ class Log():
         # Clear log file (open it in write mode and pass)
         with open(autosubliminal.LOGFILE, 'w'):
             pass
-        # Return to default log view
+            # Return to default log view
         tmpl = PageTemplate(file="interface/templates/viewlog.tmpl")
         if loglevel == '':
             tmpl.loglevel = 'All'
