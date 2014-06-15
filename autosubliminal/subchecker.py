@@ -265,7 +265,7 @@ def _construct_download_item(wanted_item, subtitles, language, single):
 def _get_releases(subtitle):
     releases = []
     if isinstance(subtitle, Addic7edSubtitle):
-        releases.extend(subtitle.version)
+        releases.extend([subtitle.version])
     elif isinstance(subtitle, OpenSubtitlesSubtitle):
         releases.extend(subtitle.movie_release_name)
     elif isinstance(subtitle, PodnapisiSubtitle):
@@ -274,6 +274,6 @@ def _get_releases(subtitle):
         # No release present
         releases.extend([])
     elif isinstance(subtitle, TVsubtitlesSubtitle):
-        releases.extend(subtitle.release)
+        releases.extend([subtitle.release])
     #return "<br>".join(x for x in releases)
     return releases
