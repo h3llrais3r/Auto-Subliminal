@@ -154,7 +154,7 @@ def save_subtitle(wanted_item_index, subtitle_index):
     single = found_subtitles['single']
 
     # Get selected subtitle
-    wanted_subtitles = _get_selected_subtitle(subtitles, subtitle_index)
+    wanted_subtitles = _get_wanted_subtitle(subtitles, subtitle_index)
 
     # Save subtitle (skip notify and post_process)
     download_item = _construct_download_item(wanted_item, wanted_subtitles, language, single)
@@ -175,21 +175,13 @@ def delete_subtitle(wanted_item_index):
 
     # Get wanted item
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
-    found_subtitles = wanted_item['found_subtitles']
-    subtitles = found_subtitles['subtitles']
-    language = found_subtitles['language']
-    single = found_subtitles['single']
 
-    # Get subtitle
-    video = next(iter(subtitles.keys()))  # video is always the first key in the subtitles dict
-    subtitle_path = subliminal.subtitle.get_subtitle_path(video.name, None if single else language)
-
-    # Remove subtitle
-    deleted = True
+    # Delete subtitle
+    deleted = False
     try:
-        os.remove(subtitle_path)
+        os.remove(_get_subtitle_path(wanted_item))
+        deleted = True
     except Exception, e:
-        deleted = False
         log.error("Unable to delete subtitle: %s" % e)
 
     # Release wanted queue lock
@@ -212,16 +204,22 @@ def post_process(wanted_item_index, subtitle_index):
     language = found_subtitles['language']
     single = found_subtitles['single']
 
-    # Get selected subtitle
-    wanted_subtitles = _get_selected_subtitle(subtitles, subtitle_index)
+    # Only execute post processing when a subtitle is present
+    processed = False
+    subtitle_path = _get_subtitle_path(wanted_item)
+    if os.path.exists(subtitle_path):
+        # Get selected subtitle
+        wanted_subtitles = _get_wanted_subtitle(subtitles, subtitle_index)
 
-    # Post process only
-    download_item = _construct_download_item(wanted_item, wanted_subtitles, language, single)
-    processed = SubDownloader(download_item).post_process()
+        # Post process only
+        download_item = _construct_download_item(wanted_item, wanted_subtitles, language, single)
+        processed = SubDownloader(download_item).post_process()
 
-    # Remove from wanted queue is downloaded
-    if processed:
-        autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
+        # Remove from wanted queue is downloaded
+        if processed:
+            autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
+    else:
+        log.warning("No subtitle downloaded, skipping post processing")
 
     # Release wanted queue lock
     utils.release_wanted_queue_lock()
@@ -242,7 +240,7 @@ def _scan_wanted_item_for_video(wanted_item):
     # Lets try to find a showid, skip when not found
     showid = utils.get_showid(title)
     if not showid:
-        log.warning("No showid found. Skipping %s" % originalfile)
+        log.warning("No showid found, skipping %s" % originalfile)
         return
 
     # Scan the video (disable scan for subtitles)
@@ -252,7 +250,7 @@ def _scan_wanted_item_for_video(wanted_item):
     try:
         video = subliminal.scan_video(originalfile, subtitles=False, embedded_subtitles=False)
     except Exception, e:
-        log.error("Error while scanning video. Skipping %s" % originalfile)
+        log.error("Error while scanning video, skipping %s" % originalfile)
         log.error("Exception: %s" % e.message)
         return
 
@@ -297,9 +295,7 @@ def _search_subtitles(video, lang, min_score, best_only):
     return subtitles, lang, single
 
 
-def _get_selected_subtitle(subtitles, subtitle_index):
-    log.debug("Getting selected subtitle")
-
+def _get_wanted_subtitle(subtitles, subtitle_index):
     # Create new subtitles dict with only the wanted subtitle
     video = next(iter(subtitles.keys()))  # video is always the first key in the subtitles dict
     wanted_subtitle = subtitles[video][int(subtitle_index)]
@@ -309,13 +305,24 @@ def _get_selected_subtitle(subtitles, subtitle_index):
     return wanted_subtitles
 
 
+def _get_subtitle_path(wanted_item):
+    found_subtitles = wanted_item['found_subtitles']
+    subtitles = found_subtitles['subtitles']
+    language = found_subtitles['language']
+    single = found_subtitles['single']
+
+    # Get subtitle path
+    video = next(iter(subtitles.keys()))  # video is always the first key in the subtitles dict
+    return subliminal.subtitle.get_subtitle_path(video.name, None if single else language)
+
+
 def _construct_download_item(wanted_item, subtitles, language, single):
     log.debug("Constructing the download item")
     video = next(iter(subtitles.keys()))  # video is always the first key in the subtitles dict
 
     # Get the subtitle, subtitles should only contain 1 subtitle
     subtitle = subtitles[video][0]
-    log.info("Download from: %s" % subtitle.page_link)
+    log.info("Downloading from: %s" % subtitle.page_link)
 
     # Construct the download item
     download_item = wanted_item.copy()
