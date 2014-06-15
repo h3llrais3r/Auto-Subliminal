@@ -22,7 +22,7 @@ $(function () {
             if (data['result']) {
                 window.location.href = data['redirect'];
             } else {
-                $("#div-saveerror").append(data['message']);
+                $("#div-error").append(data['errormessage']);
             }
         });
         return false;

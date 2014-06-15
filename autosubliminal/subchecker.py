@@ -82,10 +82,11 @@ def search_subtitle(wanted_item_index, lang):
     # Check api calls
     if not utils.check_apicalls():
         log.warning("Out of api calls")
+        return subs, "Skipping! Out of api calls!"
 
     # Get wanted queue lock
     if not utils.get_wanted_queue_lock():
-        return
+        return subs, "Skipping! Cannot get a wanted queue lock because another threat is using the queues!"
 
     # Get wanted_item
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
@@ -135,7 +136,7 @@ def search_subtitle(wanted_item_index, lang):
     # Release wanted queue lock
     utils.release_wanted_queue_lock()
 
-    return subs
+    return subs, None
 
 
 def save_subtitle(wanted_item_index, subtitle_index):

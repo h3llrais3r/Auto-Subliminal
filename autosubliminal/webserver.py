@@ -344,9 +344,10 @@ class Home:
 
     @cherrypy.expose(alias='search')
     def search_subtitle(self, wanted_item_index, lang):
-        subs = subchecker.search_subtitle(wanted_item_index, lang)
+        subs, errormessage = subchecker.search_subtitle(wanted_item_index, lang)
         # Send response in html (store subs under subs key)
-        tmpl = PageTemplate(file="interface/templates/home-manualsearch.tmpl", searchList=[{'subs': subs}])
+        tmpl = PageTemplate(file="interface/templates/home-manualsearch.tmpl",
+                            searchList=[{'subs': subs, 'errormessage': errormessage}])
         return str(tmpl)
 
     @cherrypy.expose(alias='save')
@@ -358,7 +359,8 @@ class Home:
             return json.dumps({'result': saved, 'redirect': '/home'})
         else:
             # Stay on page and show message
-            return json.dumps({'result': saved, 'message': 'Unable to save the subtitle! Please check the log file!'})
+            return json.dumps(
+                {'result': saved, 'errormessage': 'Unable to save the subtitle! Please check the log file!'})
 
 
 @cherrypy.expose(alias='exitMini')

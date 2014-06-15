@@ -3,6 +3,8 @@
 <script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/hoverIntent.js"></script>
 <script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/home-manualsearch.js"></script>
 
+#if $len($subs) >= 1
+
 <div class="header">
 	<h1>Found subtitles</h1><span></span>
 </div>
@@ -55,6 +57,8 @@
     </tbody>
 </table>
 
-<div id="div-saveerror" class="error"></div>
+#end if
+
+<div id="div-error" class="error">$errormessage</div>
 
 </div>
