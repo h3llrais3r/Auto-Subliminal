@@ -362,29 +362,26 @@ class Home:
             return json.dumps(
                 {'result': saved, 'errormessage': 'Unable to save the subtitle! Please check the log file!'})
 
+    @cherrypy.expose(alias='exitMini')
+    def exit_mini(self):
+        if autosubliminal.MOBILE:
+            autosubliminal.MOBILE = False
+            redirect("/home")
+        else:
+            autosubliminal.MOBILE = True
+            redirect("/home")
 
-@cherrypy.expose(alias='exitMini')
-def exit_mini(self):
-    if autosubliminal.MOBILE:
-        autosubliminal.MOBILE = False
-        redirect("/home")
-    else:
-        autosubliminal.MOBILE = True
-        redirect("/home")
+    @cherrypy.expose
+    def restart(self):
+        tmpl = PageTemplate(file="interface/templates/restart.tmpl")
+        threading.Thread(target=autosubliminal.runner.restart).start()
+        return str(tmpl)
 
-
-@cherrypy.expose
-def restart(self):
-    tmpl = PageTemplate(file="interface/templates/restart.tmpl")
-    threading.Thread(target=autosubliminal.runner.restart).start()
-    return str(tmpl)
-
-
-@cherrypy.expose
-def shutdown(self):
-    tmpl = PageTemplate(file="interface/templates/stopped.tmpl")
-    threading.Timer(2, autosubliminal.runner.stop).start()
-    return str(tmpl)
+    @cherrypy.expose
+    def shutdown(self):
+        tmpl = PageTemplate(file="interface/templates/stopped.tmpl")
+        threading.Timer(2, autosubliminal.runner.stop).start()
+        return str(tmpl)
 
 
 class Log:
@@ -433,20 +430,20 @@ class WebServerInit():
     def index(self):
         redirect("/home")
 
-    home = Home()
-    config = Config()
-    log = Log()
-    mobile = Mobile()
-
-    def error_page_401(self, status, message, traceback, version):
+    def error_page_401(status, message, traceback, version):
         return "Error %s - Well, I'm very sorry but you don't have access to this resource!" % status
 
-    def error_page_404(self, status, message, traceback, version):
+    def error_page_404(status, message, traceback, version):
         return "Error %s - Well, I'm very sorry but this page could not be found!" % status
 
-    def error_page_500(self, status, message, traceback, version):
+    def error_page_500(status, message, traceback, version):
         return "Error %s - Please refresh! If this error doesn't go away (after a few minutes), seek help!" % status
 
     _cp_config = {'error_page.401': error_page_401,
                   'error_page.404': error_page_404,
                   'error_page.500': error_page_500}
+
+    home = Home()
+    config = Config()
+    log = Log()
+    mobile = Mobile()

@@ -5,10 +5,10 @@ import webbrowser
 import cherrypy
 
 import autosubliminal
-from autosubliminal import webserver
 from autosubliminal.diskscanner import DiskScanner
 from autosubliminal.scheduler import Scheduler
 from autosubliminal.subchecker import SubChecker
+from autosubliminal.webserver import WebServerInit
 
 log = logging.getLogger(__name__)
 
@@ -109,7 +109,7 @@ def start():
         }
     }
 
-    cherrypy.tree.mount(webserver.WebServerInit(), autosubliminal.WEBROOT, config=conf)
+    cherrypy.tree.mount(WebServerInit(), autosubliminal.WEBROOT, config=conf)
     log.info("Starting CherryPy webserver")
 
     # TODO: Let CherryPy log do another log file and not to screen
