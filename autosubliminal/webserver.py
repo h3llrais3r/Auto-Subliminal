@@ -5,7 +5,6 @@ except:
 
 import json
 import threading
-import operator
 import time
 import cherrypy
 
@@ -25,7 +24,10 @@ class PageTemplate(Template):
     pass
 
 
-class Config:
+class Config():
+    def __init__(self):
+        pass
+
     @cherrypy.expose
     def index(self):
         tmpl = PageTemplate(file="interface/templates/config.tmpl")
@@ -192,7 +194,7 @@ class Config:
 
         # Check if restart is needed
         if restart:
-            # Restart the runner in the background
+            # Restart the runner in the background (do not import runner due to circular imports with webserver)
             threading.Thread(target=autosubliminal.runner.restart).start()
             tmpl = PageTemplate(file="interface/templates/autorestart.tmpl")
 
@@ -212,7 +214,7 @@ class Config:
         tmpl.message = message
         return str(tmpl)
 
-    @cherrypy.expose(alias='flushLastdown')
+    @cherrypy.expose(alias='flushLastDownloads')
     def flush_last_downloads(self):
         LastDownloads().flush_last_downloads()
         message = 'Last downloaded subtitle database flushed'
@@ -304,13 +306,28 @@ class Config:
                 return str(tmpl)
 
 
-class Home:
+class Home():
+    def __init__(self):
+        pass
+
     @cherrypy.expose
     def index(self):
         useragent = cherrypy.request.headers.get("User-Agent", '')
         tmpl = PageTemplate(file="interface/templates/home.tmpl")
         if autosubliminal.MOBILE and utils.check_mobile_device(useragent):
             tmpl = PageTemplate(file="interface/templates/mobile/home.tmpl")
+        return str(tmpl)
+
+    @cherrypy.expose
+    def restart(self):
+        tmpl = PageTemplate(file="interface/templates/restart.tmpl")
+        threading.Thread(target=autosubliminal.runner.restart).start()
+        return str(tmpl)
+
+    @cherrypy.expose
+    def shutdown(self):
+        tmpl = PageTemplate(file="interface/templates/stopped.tmpl")
+        threading.Timer(2, autosubliminal.runner.stop).start()
         return str(tmpl)
 
     @cherrypy.expose(alias='isAlive')
@@ -329,6 +346,15 @@ class Home:
         else:
             return callback + '(' + json.dumps({"msg": "False"}) + ');'
 
+    @cherrypy.expose(alias='exitMini')
+    def exit_mini(self):
+        if autosubliminal.MOBILE:
+            autosubliminal.MOBILE = False
+            redirect("/home")
+        else:
+            autosubliminal.MOBILE = True
+            redirect("/home")
+
     @cherrypy.expose(alias='runNow')
     def run_now(self):
         #time.sleep is here to prevent a timing issue, where checksub is runned before scandisk
@@ -342,7 +368,7 @@ class Home:
         tmpl.message = "Running everything! <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return</a>"
         return str(tmpl)
 
-    @cherrypy.expose(alias='search')
+    @cherrypy.expose(alias='searchSubtitle')
     def search_subtitle(self, wanted_item_index, lang):
         subs, errormessage = subchecker.search_subtitle(wanted_item_index, lang)
         # Send response in html (store subs under subs key)
@@ -350,7 +376,7 @@ class Home:
                             searchList=[{'subs': subs, 'errormessage': errormessage}])
         return str(tmpl)
 
-    @cherrypy.expose(alias='save')
+    @cherrypy.expose(alias='saveSubtitle')
     def save_subtitle(self, wanted_item_index, subtitle_index):
         # Set json response type
         cherrypy.response.headers['Content-Type'] = 'application/json'
@@ -362,29 +388,11 @@ class Home:
             return json.dumps(
                 {'result': saved, 'errormessage': 'Unable to save the subtitle! Please check the log file!'})
 
-    @cherrypy.expose(alias='exitMini')
-    def exit_mini(self):
-        if autosubliminal.MOBILE:
-            autosubliminal.MOBILE = False
-            redirect("/home")
-        else:
-            autosubliminal.MOBILE = True
-            redirect("/home")
 
-    @cherrypy.expose
-    def restart(self):
-        tmpl = PageTemplate(file="interface/templates/restart.tmpl")
-        threading.Thread(target=autosubliminal.runner.restart).start()
-        return str(tmpl)
+class Log():
+    def __init__(self):
+        pass
 
-    @cherrypy.expose
-    def shutdown(self):
-        tmpl = PageTemplate(file="interface/templates/stopped.tmpl")
-        threading.Timer(2, autosubliminal.runner.stop).start()
-        return str(tmpl)
-
-
-class Log:
     @cherrypy.expose
     def index(self, loglevel=''):
         redirect("/log/viewLog")
@@ -418,7 +426,10 @@ class Log:
         return str(tmpl)
 
 
-class Mobile:
+class Mobile():
+    def __init__(self):
+        pass
+
     @cherrypy.expose
     def index(self):
         tmpl = PageTemplate(file="interface/templates/mobile/home.tmpl")
@@ -426,16 +437,22 @@ class Mobile:
 
 
 class WebServerInit():
+    def __init__(self):
+        pass
+
     @cherrypy.expose
     def index(self):
         redirect("/home")
 
+    # Do not add self as first parameter or the method will not longer work
     def error_page_401(status, message, traceback, version):
         return "Error %s - Well, I'm very sorry but you don't have access to this resource!" % status
 
+    # Do not add self as first parameter or the method will not longer work
     def error_page_404(status, message, traceback, version):
         return "Error %s - Well, I'm very sorry but this page could not be found!" % status
 
+    # Do not add self as first parameter or the method will not longer work
     def error_page_500(status, message, traceback, version):
         return "Error %s - Please refresh! If this error doesn't go away (after a few minutes), seek help!" % status
 
