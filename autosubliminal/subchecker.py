@@ -166,6 +166,38 @@ def save_subtitle(wanted_item_index, subtitle_index):
     return downloaded
 
 
+def delete_subtitle(wanted_item_index):
+    log.debug("Deleting an individual subtitle")
+
+    # Get wanted queue lock
+    if not utils.get_wanted_queue_lock():
+        return False
+
+    # Get wanted item
+    wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+    found_subtitles = wanted_item['found_subtitles']
+    subtitles = found_subtitles['subtitles']
+    language = found_subtitles['language']
+    single = found_subtitles['single']
+
+    # Get subtitle
+    video = next(iter(subtitles.keys()))  # video is always the first key in the subtitles dict
+    subtitle_path = subliminal.subtitle.get_subtitle_path(video.name, None if single else language)
+
+    # Remove subtitle
+    deleted = True
+    try:
+        os.remove(subtitle_path)
+    except Exception, e:
+        deleted = False
+        log.error("Unable to delete subtitle: %s" % e)
+
+    # Release wanted queue lock
+    utils.release_wanted_queue_lock()
+
+    return deleted
+
+
 def post_process(wanted_item_index, subtitle_index):
     log.debug("Post processing for an individual subtitle")
 
@@ -312,5 +344,4 @@ def _get_releases(subtitle):
         releases.extend([])
     elif isinstance(subtitle, TVsubtitlesSubtitle):
         releases.extend([subtitle.release])
-    #return "<br>".join(x for x in releases)
     return releases

@@ -370,6 +370,7 @@ class Home():
 
     @cherrypy.expose(alias='searchSubtitle')
     def search_subtitle(self, wanted_item_index, lang):
+        # Search subtitle
         subs, errormessage = subchecker.search_subtitle(wanted_item_index, lang)
         # Send response in html (store subs under subs key)
         tmpl = PageTemplate(file="interface/templates/home-manualsearch.tmpl",
@@ -380,14 +381,27 @@ class Home():
     def save_subtitle(self, wanted_item_index, subtitle_index):
         # Set json response type
         cherrypy.response.headers['Content-Type'] = 'application/json'
+        # Save subtitle
         saved = subchecker.save_subtitle(wanted_item_index, subtitle_index)
         if saved:
-            return json.dumps({'result': saved, 'infomessage': 'Subtitle saved!', 'errormessage': ''})
+            return json.dumps({'result': saved, 'infomessage': 'Subtitle saved.', 'errormessage': ''})
         else:
-            # Stay on page and show message
             return json.dumps(
                 {'result': saved, 'infomessage': '',
                  'errormessage': 'Unable to save the subtitle! Please check the log file!'})
+
+    @cherrypy.expose(alias='deleteSubtitle')
+    def delete_subtitle(self, wanted_item_index):
+        # Set json response type
+        cherrypy.response.headers['Content-Type'] = 'application/json'
+        # Delete subtitle
+        removed = subchecker.delete_subtitle(wanted_item_index)
+        if removed:
+            return json.dumps({'result': removed, 'infomessage': 'Subtitle deleted.', 'errormessage': ''})
+        else:
+            return json.dumps(
+                {'result': removed, 'infomessage': '',
+                 'errormessage': 'Unable to delete the subtitle! Please check the log file!'})
 
     @cherrypy.expose(alias='playVideo')
     def play_video(self, wanted_item_index):
@@ -397,18 +411,23 @@ class Home():
         wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
         # Play video with default player
         video = wanted_item['originalFileLocationOnDisk']
-        stdout, stderr = utils.run_cmd(video)
-        return json.dumps({'result': False, 'infomessage': '', 'errormessage': stderr})
+        try:
+            utils.run_cmd(video, False)
+            return json.dumps({'result': True, 'infomessage': 'Playing video.', 'errormessage': ''})
+        except Exception, e:
+            return json.dumps(
+                {'result': False, 'infomessage': '',
+                 'errormessage': 'Cannot play the video! Please check the log file!'})
 
     @cherrypy.expose(alias='postProcess')
     def post_process(self, wanted_item_index, subtitle_index):
         # Set json response type
         cherrypy.response.headers['Content-Type'] = 'application/json'
+        # Post process
         processed = subchecker.post_process(wanted_item_index, subtitle_index)
         if processed:
             return json.dumps({'result': processed, 'infomessage:': '', 'errormessage': '', 'redirect': '/home'})
         else:
-            # Stay on page and show message
             return json.dumps(
                 {'result': processed, 'infomessage': '',
                  'errormessage': 'Unable to handle post processing! Please check the log file!'})

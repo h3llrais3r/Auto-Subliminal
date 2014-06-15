@@ -16,9 +16,30 @@ $(function () {
         // prevent default behaviour
         event.preventDefault();
         // define variables
-        var saveurl = $(this).attr("href");
-        // call the saveurl
-        $.get(saveurl, function (data) {
+        var url = $(this).attr("href");
+        // call the url
+        $.get(url, function (data) {
+            emptyMessages();
+            if (data['result']) {
+                // show info message
+                $("#div-info").append(data['infomessage']);
+            } else {
+                // show error message
+                $("#div-error").append(data['errormessage']);
+            }
+        });
+        return false;
+    });
+
+    // When a manual search delete link is clicked
+    $(".manualsearchdeletelink").click(function (event) {
+        // prevent default behaviour
+        event.preventDefault();
+        // define variables
+        var url = $(this).attr("href");
+        // call the url
+        $.get(url, function (data) {
+            emptyMessages();
             if (data['result']) {
                 // show info message
                 $("#div-info").append(data['infomessage']);
@@ -35,11 +56,13 @@ $(function () {
         // prevent default behaviour
         event.preventDefault();
         // define variables
-        var playurl = $(this).attr("href");
-        // call the playurl
-        $.get(playurl, function (data) {
+        var url = $(this).attr("href");
+        // call the url
+        $.get(url, function (data) {
+            emptyMessages();
             if (data['result']) {
-                // do nothing, just play the video
+                // show info message
+                $("#div-info").append(data['infomessage']);
             } else {
                 // show error message
                 $("#div-error").append(data['errormessage']);
@@ -53,9 +76,10 @@ $(function () {
         // prevent default behaviour
         event.preventDefault();
         // define variables
-        var postprocessurl = $(this).attr("href");
-        // call the postprocessurl
-        $.get(postprocessurl, function (data) {
+        var url = $(this).attr("href");
+        // call the url
+        $.get(url, function (data) {
+            emptyMessages();
             if (data['result']) {
                 // redirect
                 window.location.href = data['redirect'];
@@ -77,3 +101,8 @@ $(function () {
             $(this).next("div").hide();
         });
 });
+
+function emptyMessages() {
+    $("#div-info").empty();
+    $("#div-error").empty();
+}

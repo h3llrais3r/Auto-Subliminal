@@ -22,14 +22,16 @@ LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d
                         re.IGNORECASE)
 
 
-def run_cmd(cmd):
+def run_cmd(cmd, communicate=True):
     process = subprocess.Popen(cmd,
                                shell=True,
                                stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.PIPE)
-    # Return stdout, stderr
-    return process.communicate()
+
+    if communicate:
+        # Return stdout, stderr
+        return process.communicate()
 
 
 def connect_url(url):
@@ -232,10 +234,10 @@ def display_logfile(loglevel):
         f = codecs.open(logfile, 'r', autosubliminal.SYSENCODING)
         data = f.readlines()
         f.close()
-    # If reversed order is needed, use reversed(data)
+        # If reversed order is needed, use reversed(data)
     if autosubliminal.LOGREVERSED:
         data = reversed(data)
-    # Log data
+        # Log data
     log_data = []
     for x in data:
         try:
