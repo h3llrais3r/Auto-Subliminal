@@ -1,0 +1,15 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\playvideo]
+@="URL:PlayVideo Protocol"
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\playvideo\DefaultIcon]
+@="\"C:\\Program Files\\Python27\\DLLs\\py.ico\""
+
+[HKEY_CLASSES_ROOT\playvideo\shell]
+
+[HKEY_CLASSES_ROOT\playvideo\shell\open]
+
+[HKEY_CLASSES_ROOT\playvideo\shell\open\command]
+@="\"C:\\Program Files\\Python27\\pythonw.exe\" \"C:\\Tools\\GitHub\\Auto-Subliminal\\playvideo\\playvideo.py\" \"%1\""

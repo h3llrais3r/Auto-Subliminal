@@ -1,6 +1,8 @@
 import logging
 import os
 import operator
+import urllib
+import urlparse
 
 import babelfish
 import subliminal
@@ -108,7 +110,8 @@ def search_subtitle(wanted_item_index, lang):
                     # Create new sub dict for showing result
                     sub = {'score': score, 'provider_name': subtitle.provider_name, 'content': subtitle.content,
                            'language': language, 'single': single, 'page_link': subtitle.page_link,
-                           'releases': _get_releases(subtitle), 'wanted_item_index': wanted_item_index}
+                           'releases': _get_releases(subtitle), 'wanted_item_index': wanted_item_index,
+                           'playvideo_url': _construct_playvideo_url(wanted_item)}
                     # Get content preview (the first 28 lines and last 30 lines of the subtitle)
                     content_split = subtitle.content.splitlines(False)
                     if len(content_split) < 58:
@@ -352,3 +355,10 @@ def _get_releases(subtitle):
     elif isinstance(subtitle, TVsubtitlesSubtitle):
         releases.extend([subtitle.release])
     return releases
+
+
+def _construct_playvideo_url(wanted_item):
+    play_protocol = 'playvideo://'
+    # Encode path for special characters -> need to decode again before accessing the path (see playvideo.py)
+    path = wanted_item['originalFileLocationOnDisk'].encode('utf-8')
+    return play_protocol + path
