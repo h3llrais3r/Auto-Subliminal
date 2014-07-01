@@ -1,8 +1,6 @@
 import logging
 import os
 import operator
-import urllib
-import urlparse
 
 import babelfish
 import subliminal
@@ -103,14 +101,16 @@ def search_subtitle(wanted_item_index, lang):
             wanted_item['found_subtitles'] = {'subtitles': subtitles, 'language': language, 'single': single}
 
             # Order subtitles by score and create new dict
-            for subtitle, score in sorted([(s, s.compute_score(video)) for s in subtitles[video]],
-                                          key=operator.itemgetter(1), reverse=True):
+            for index, subtitle, score in sorted(
+                    [(index, s, s.compute_score(video)) for index, s in enumerate(subtitles[video])],
+                    key=operator.itemgetter(2), reverse=True):
                 # Only add subtitle when content is found
                 if subtitle.content:
                     # Create new sub dict for showing result
-                    sub = {'score': score, 'provider_name': subtitle.provider_name, 'content': subtitle.content,
-                           'language': language, 'single': single, 'page_link': subtitle.page_link,
-                           'releases': _get_releases(subtitle), 'wanted_item_index': wanted_item_index,
+                    sub = {'subtitle_index': index, 'score': score, 'provider_name': subtitle.provider_name,
+                           'content': subtitle.content, 'language': language, 'single': single,
+                           'page_link': subtitle.page_link, 'releases': _get_releases(subtitle),
+                           'wanted_item_index': wanted_item_index,
                            'playvideo_url': _construct_playvideo_url(wanted_item)}
                     # Get content preview (the first 28 lines and last 30 lines of the subtitle)
                     content_split = subtitle.content.splitlines(False)
