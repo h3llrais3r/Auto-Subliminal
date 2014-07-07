@@ -51,6 +51,9 @@ $autosubliminal.WANTEDQUEUE.sort(key=$get_attr('timestamp'))
                 <li>$os.path.basename($item['originalFileLocationOnDisk'])</li>
             </ul>
         </div>
+#if not $item['showid']:
+        <a href="#"><img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Skipping because no show id is found. Try to flush the cache to solve the problem." data-dropdown="#dropdown-wantedwarning-$index" /></a>
+#end if
         <div id="dropdown-skip-$index" class="dropdown-menu has-tip">
             <ul>
                 <li><a href="$autosubliminal.WEBROOT/config/skipShow/$item['title']/$item['season']">Skip season $item['season']</a></li>

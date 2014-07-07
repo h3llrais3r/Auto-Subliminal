@@ -242,6 +242,7 @@ def _scan_wanted_item_for_video(wanted_item):
 
     # Lets try to find a showid, skip when not found
     showid = utils.get_showid(title)
+    wanted_item['showid'] = showid
     if not showid:
         log.warning("No showid found, skipping %s" % originalfile)
         return
