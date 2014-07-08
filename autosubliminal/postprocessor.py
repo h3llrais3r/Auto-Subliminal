@@ -57,7 +57,6 @@ class PostProcessor():
         return process
 
     def _encode(self, value):
-        log.debug("Encoding value in %s" % self.encoding)
         if self.encoding:
             return value.encode(self.encoding)
         return value
