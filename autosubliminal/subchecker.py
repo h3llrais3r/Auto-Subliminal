@@ -26,7 +26,7 @@ class SubChecker():
         pass
 
     def run(self):
-        log.debug("Starting round of subtitle checking")
+        log.info("Starting round of subtitle checking")
         to_delete_wanted_queue = []
 
         # Check api calls
@@ -69,14 +69,14 @@ class SubChecker():
             i -= 1
 
         # Release wanted queue lock
-        log.debug("Finished round of subtitle checking")
+        log.info("Finished round of subtitle checking")
         utils.release_wanted_queue_lock()
 
         return True
 
 
 def search_subtitle(wanted_item_index, lang):
-    log.debug("Searching for an individual subtitle")
+    log.info("Searching for an individual subtitle")
     subs = []
 
     # Check api calls
@@ -143,7 +143,7 @@ def search_subtitle(wanted_item_index, lang):
 
 
 def save_subtitle(wanted_item_index, subtitle_index):
-    log.debug("Saving an individual subtitle")
+    log.info("Saving an individual subtitle")
 
     # Get wanted queue lock
     if not utils.get_wanted_queue_lock():
@@ -170,7 +170,7 @@ def save_subtitle(wanted_item_index, subtitle_index):
 
 
 def delete_subtitle(wanted_item_index):
-    log.debug("Deleting an individual subtitle")
+    log.info("Deleting an individual subtitle")
 
     # Get wanted queue lock
     if not utils.get_wanted_queue_lock():
@@ -194,7 +194,7 @@ def delete_subtitle(wanted_item_index):
 
 
 def post_process(wanted_item_index, subtitle_index):
-    log.debug("Post processing for an individual subtitle")
+    log.info("Post processing an individual subtitle")
 
     # Get wanted queue lock
     if not utils.get_wanted_queue_lock():
@@ -292,6 +292,7 @@ def _search_subtitles(video, lang, min_score, best_only):
 
 
 def _get_wanted_subtitle(subtitles, subtitle_index):
+    log.debug("Getting wanted subtitle")
     # Create new subtitles dict with only the wanted subtitle
     video = next(iter(subtitles.keys()))  # video is always the first key in the subtitles dict
     wanted_subtitle = subtitles[video][int(subtitle_index)]
@@ -302,6 +303,7 @@ def _get_wanted_subtitle(subtitles, subtitle_index):
 
 
 def _get_subtitle_path(wanted_item):
+    log.debug("Getting subtitle path")
     found_subtitles = wanted_item['found_subtitles']
     subtitles = found_subtitles['subtitles']
     language = found_subtitles['language']
@@ -309,7 +311,9 @@ def _get_subtitle_path(wanted_item):
 
     # Get subtitle path
     video = next(iter(subtitles.keys()))  # video is always the first key in the subtitles dict
-    return subliminal.subtitle.get_subtitle_path(video.name, None if single else language)
+    path = subliminal.subtitle.get_subtitle_path(video.name, None if single else language)
+    log.debug("Subtitle path: %s" % path)
+    return path
 
 
 def _construct_download_item(wanted_item, subtitles, language, single):
@@ -318,7 +322,7 @@ def _construct_download_item(wanted_item, subtitles, language, single):
 
     # Get the subtitle, subtitles should only contain 1 subtitle
     subtitle = subtitles[video][0]
-    log.info("Downloading from: %s" % subtitle.page_link)
+    log.debug("Download page link: %s" % subtitle.page_link)
 
     # Construct the download item
     download_item = wanted_item.copy()
@@ -335,6 +339,7 @@ def _construct_download_item(wanted_item, subtitles, language, single):
 
 
 def _get_releases(subtitle):
+    log.debug("Getting supported releases")
     releases = []
     if isinstance(subtitle, Addic7edSubtitle):
         releases.extend([subtitle.version])
@@ -351,6 +356,7 @@ def _get_releases(subtitle):
 
 
 def _construct_playvideo_url(wanted_item):
+    log.debug("Constructing 'playvideo://' url")
     play_protocol = 'playvideo://'
     # Encode path for special characters -> need to decode again before accessing the path (see playvideo.py)
     path = wanted_item['originalFileLocationOnDisk'].encode('utf-8')

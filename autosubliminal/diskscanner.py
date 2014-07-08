@@ -21,7 +21,7 @@ class DiskScanner():
         pass
 
     def run(self):
-        log.debug("Starting round of local disk checking at %s" % autosubliminal.VIDEOPATHS)
+        log.info("Starting round of local disk checking at %s" % autosubliminal.VIDEOPATHS)
         autosubliminal.WANTEDQUEUE = []
 
         # Get wanted queue lock
@@ -47,7 +47,7 @@ class DiskScanner():
                 log.exception(e)
 
         # Release wanted queue lock
-        log.debug("Finished round of local disk checking")
+        log.info("Finished round of local disk checking")
         utils.release_wanted_queue_lock()
 
         return True
@@ -56,7 +56,7 @@ class DiskScanner():
 def walk_dir(path):
     log.info("Scanning video path: %s" % path)
     for dirname, dirnames, filenames in os.walk(os.path.join(path)):
-        log.debug("Directory name: %s" % dirname)
+        log.debug("Directory: %s" % dirname)
 
         # Check folders to be skipped
         if autosubliminal.SKIPHIDDENDIRS and os.path.split(dirname)[1].startswith(u'.'):
@@ -69,6 +69,7 @@ def walk_dir(path):
             continue
 
         for filename in filenames:
+            log.debug("File: %s" % filename)
             root, ext = os.path.splitext(filename)
 
             if ext and ext in subliminal.video.VIDEO_EXTENSIONS:
@@ -79,7 +80,7 @@ def walk_dir(path):
                 # Check if there are missing subtitle languages for the video file
                 languages = check_missing_subtitle_languages(dirname, filename)
                 if len(languages) > 0:
-                    log.debug("File %s is missing a subtitle" % filename)
+                    log.debug("File is missing a subtitle")
                     wanted_item = fileprocessor.process_file(dirname, filename)
                     if 'title' in wanted_item.keys():
                         if 'season' in wanted_item.keys():
@@ -88,7 +89,6 @@ def walk_dir(path):
                                 season = wanted_item['season']
                                 episode = wanted_item['episode']
                                 if utils.skip_show(title, season, episode):
-                                    log.debug("SkipShow returned True")
                                     log.info("Skipping %s - Season %s Episode %s" % (title, season, episode))
                                     continue
                                 log.info("Subtitle(s) wanted for %s and added to wantedQueue" % filename)
@@ -113,6 +113,7 @@ def walk_dir(path):
 
 
 def check_missing_subtitle_languages(dirname, filename):
+    log.debug("Checking for missing subtitle")
     missing_subtitles = []
     # Check default language
     if autosubliminal.DEFAULTLANGUAGE:

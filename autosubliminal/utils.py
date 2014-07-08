@@ -23,6 +23,7 @@ LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d
 
 
 def run_cmd(cmd, communicate=True):
+    log.debug("Running cmd: %s" % cmd)
     process = subprocess.Popen(cmd,
                                shell=True,
                                stdin=subprocess.PIPE,
@@ -35,6 +36,7 @@ def run_cmd(cmd, communicate=True):
 
 
 def connect_url(url):
+    log.debug("Connecting to url: %s" % url)
     response = None
     errorcode = None
     socket.setdefaulttimeout(autosubliminal.TIMEOUT)
@@ -63,7 +65,7 @@ def check_version():
     3 New lower release, higher version
     4 Release lower, version lower
     """
-    log.info('Checking version...')
+    log.info('Checking version')
     try:
         req = urllib2.Request(autosubliminal.VERSIONURL)
         req.add_header("User-agent", autosubliminal.USERAGENT)
@@ -163,20 +165,20 @@ def skip_show(show_name, season, episode):
 
 
 def get_showid(show_name, force_search=False):
-    log.debug('trying to get showid for %s' % show_name)
+    log.debug("Getting showid for %s" % show_name)
     show_id = None
     # Skip search in namemapping and id cache when force_search = True
     if not force_search:
         show_id = name_mapping(show_name)
         if show_id:
-            log.debug('showid from namemapping %s' % show_id)
+            log.debug("showid from namemapping %s" % show_id)
             return int(show_id)
 
         show_id = IdCache().get_id(show_name)
         if show_id:
-            log.debug('showid from cache %s' % show_id)
+            log.debug("showid from cache %s" % show_id)
             if show_id == -1:
-                log.error('Showid not found for %s' % show_name)
+                log.error("Showid not found for %s" % show_name)
                 return
             return int(show_id)
 
@@ -187,20 +189,21 @@ def get_showid(show_name, force_search=False):
             if show:
                 show_id = show['id']
         except:
-            log.error('Showid not found for %s' % show_name)
+            log.error("Showid not found for %s" % show_name)
             IdCache().set_id(-1, show_name)
     else:
         log.warning("Out of API calls")
         return None
 
     if show_id:
-        log.debug('Showid from api %s' % show_id)
+        log.debug("Showid from api %s" % show_id)
         IdCache().set_id(show_id, show_name)
-        log.info('%r added to cache with %s' % (show_name, show_id))
+        log.info("%r added to cache with %s" % (show_name, show_id))
         return int(show_id)
 
 
 def check_apicalls(use=False):
+    log.debug("Checking api calls")
     currentime = time.time()
     lastrun = autosubliminal.APICALLSLASTRESET
     interval = autosubliminal.APICALLSRESETINT
@@ -276,6 +279,7 @@ def get_wanted_queue_lock():
         log.warning("Skipping, cannot get a wanted queue lock because another threat is using the queues")
         return False
     else:
+        log.debug("Getting wanted queue lock")
         autosubliminal.WANTEDQUEUELOCK = True
         return True
 

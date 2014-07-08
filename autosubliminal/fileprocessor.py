@@ -118,6 +118,7 @@ def _return_scene_number(number):
 
 
 def process_file(dirname, filename):
+    log.info("Processing file: %s" % filename)
     # Guess file info
     show_dict = _guess_file_info(os.path.join(dirname, filename))
     # Old way (in case guessit would fail, but this should never be the case)
@@ -127,6 +128,7 @@ def process_file(dirname, filename):
 
 
 def _guess_file_info(filepath):
+    log.debug("Guessing file info")
     # Guess file info
     guess = guessit.guess_file_info(filepath)
     log.debug("Dumping guess for debug: %r" % guess)
@@ -136,11 +138,12 @@ def _guess_file_info(filepath):
     if show_dict['title'] and show_dict['season'] and show_dict['episode']:
         return show_dict
     else:
-        log.error("Could not process %s" % filepath)
+        log.error("Could not guess file info for %s" % filepath)
         return {}
 
 
 def _show_dict_from_guess(guess):
+    log.debug("Getting show dict from guess")
     show_dict = {'title': _property_from_guess(guess, 'series'),
                  'season': _property_from_guess(guess, 'season'),
                  'episode': _property_from_guess(guess, 'episodeNumber'),
@@ -148,7 +151,7 @@ def _show_dict_from_guess(guess):
                  'quality': _property_from_guess(guess, 'screenSize', u'SD'),  # No screenSize found means SD
                  'codec': _property_from_guess(guess, 'videoCodec'),
                  'releasegrp': _property_from_guess(guess, 'releaseGroup')}
-    log.debug("Dumping dict for debug %r" % show_dict)
+    log.debug("Dumping show dict for debug %r" % show_dict)
     return show_dict
 
 
@@ -160,8 +163,9 @@ def _property_from_guess(guess, propertyname, defaultvalue=None):
 
 
 def _process_filename(filename, fileext):
+    log.debug("Processing file the old way")
     show_info = _return_group(show_regex, filename)
-    log.debug("Dumping show_info dict for debug %r" % show_info)
+    log.debug("Dumping show info dict for debug %r" % show_info)
     title = None
     season = None
     episode = None
@@ -188,7 +192,7 @@ def _process_filename(filename, fileext):
     if title and season and episode:
         show_dict = {'title': title, 'season': season, 'episode': episode, 'source': source, 'quality': quality,
                      'codec': codec, 'releasegrp': releasegrp}
-        log.debug("Dumping dict for debug %r" % show_dict)
+        log.debug("Dumping show dict for debug %r" % show_dict)
         return show_dict
     else:
         log.error("Could not process %s" % filename)

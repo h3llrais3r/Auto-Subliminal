@@ -27,6 +27,8 @@ class SubDownloader():
         Save the subtitle with further handling
         """
 
+        log.info("Running sub downloader")
+
         # Check download_item
         if 'subtitles' in self.keys and 'single' in self.keys:
 
@@ -56,6 +58,8 @@ class SubDownloader():
         Save the subtitle without further handling
         """
 
+        log.info("Saving subtitle")
+
         # Check download_item
         if 'subtitles' in self.keys and 'single' in self.keys:
             # Save the subtitle
@@ -70,7 +74,7 @@ class SubDownloader():
         Execute post process logic only
         """
 
-        result = True
+        log.debug("Post procesing subtitle")
 
         # Add download_item to last downloads
         self.dowload_item['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -81,6 +85,7 @@ class SubDownloader():
             Notifier(self.dowload_item).notify()
 
         # Post processing
+        result = True
         if autosubliminal.POSTPROCESS and autosubliminal.POSTPROCESSCMD:
             result = PostProcessor(autosubliminal.POSTPROCESSUTF8ENCODING, autosubliminal.POSTPROCESSCMD,
                                    self.dowload_item).run()
