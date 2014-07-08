@@ -17,9 +17,9 @@ def dict_factory(cursor, row):
 
 class IdCache():
     def __init__(self):
-        self.query_get_id = 'select tvdb_id from id_cache where show_name = ?'
-        self.query_set_id = 'insert into id_cache values (?,?)'
-        self.query_flush_cache = 'delete from id_cache'
+        self.query_get_id = "select tvdb_id from id_cache where show_name = ?"
+        self.query_set_id = "insert into id_cache values (?,?)"
+        self.query_flush_cache = "delete from id_cache"
 
     def get_id(self, show_name):
         show_name = show_name
@@ -55,9 +55,9 @@ class IdCache():
 
 class LastDownloads():
     def __init__(self):
-        self.query_get = 'select * from last_downloads order by timestamp desc'
-        self.query_set = 'insert into last_downloads values (NULL,?,?,?,?,?,?,?,?,?,?,?)'
-        self.query_flush = 'delete from last_downloads'
+        self.query_get = "select * from last_downloads order by timestamp desc;"
+        self.query_set = "insert into last_downloads values (NULL,?,?,?,?,?,?,?,?,?,?,?);"
+        self.query_flush = "delete from last_downloads;"
 
     def get_last_downloads(self):
         connection = sqlite3.connect(autosubliminal.DBFILE)
@@ -109,13 +109,22 @@ def create():
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
 
-        cursor.execute("CREATE TABLE id_cache (tvdb_id INTEGER, show_name TEXT);")
-        cursor.execute(
-            "CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, show_name TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, releasegrp TEXT, subtitle TEXT);")
-        cursor.execute("CREATE TABLE info (database_version NUMERIC);")
+        query = "CREATE TABLE id_cache (tvdb_id INTEGER, show_name TEXT);"
+        cursor.execute(query)
         connection.commit()
-        cursor.execute("INSERT INTO info VALUES (%d)" % version.DB_VERSION)
+
+        query = "CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, show_name TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, releasegrp TEXT, subtitle TEXT, provider TEXT);"
+        cursor.execute(query)
         connection.commit()
+
+        query = "CREATE TABLE info (database_version NUMERIC);"
+        cursor.execute(query)
+        connection.commit()
+
+        query = "INSERT INTO info VALUES (%d)" % version.DB_VERSION
+        cursor.execute(query)
+        connection.commit()
+
         connection.close()
 
         print "INFO: Succesfully created the sqlite database."
