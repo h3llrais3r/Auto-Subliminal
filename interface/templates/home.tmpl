@@ -50,7 +50,7 @@
             </ul>
         </div>
 #if not $item['showid']:
-        <a href="#"><img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Skipping because no show id is found. Try to flush the cache to solve the problem." data-dropdown="#dropdown-wantedwarning-$index" /></a>
+        <a href="#"><img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Show id could not be found! Please check the log file!" data-dropdown="#dropdown-wantedwarning-$index" /></a>
 #end if
         <div id="dropdown-skip-$index" class="dropdown-menu has-tip">
             <ul>
