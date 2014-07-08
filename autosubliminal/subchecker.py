@@ -231,20 +231,12 @@ def post_process(wanted_item_index, subtitle_index):
 
 
 def _scan_wanted_item_for_video(wanted_item):
-    log.debug("Scanning the wanted item for a video")
-    title = wanted_item['title']
     originalfile = wanted_item['originalFileLocationOnDisk']
+    log.debug("Scanning the wanted item for a video: %s" % originalfile)
 
     # Check api calls
     if not utils.check_apicalls(use=True):
         log.warning("Out of api calls")
-        return
-
-    # Lets try to find a showid, skip when not found
-    showid = utils.get_showid(title)
-    wanted_item['showid'] = showid
-    if not showid:
-        log.warning("No showid found, skipping %s" % originalfile)
         return
 
     # Scan the video (disable scan for subtitles)

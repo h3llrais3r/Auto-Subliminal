@@ -98,7 +98,7 @@ def walk_dir(path):
                                                                                           wanted_item[
                                                                                               'originalFileLocationOnDisk']))))
                                 wanted_item['lang'] = languages
-                                wanted_item['showid'] = None
+                                wanted_item['showid'] = utils.get_showid(title)
                                 autosubliminal.WANTEDQUEUE.append(wanted_item)
 
                             else:
