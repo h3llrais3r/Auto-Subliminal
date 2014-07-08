@@ -1,9 +1,2 @@
-TO DO:
-
-- change changelog url (still pointing to development branch)
-
-
-TO CHECK:
+TODO:
 - check if we need to request our own TVDB API key (and perhaps use an API CALL CHECK for it to prevent excessive usage)
-- check if Cheetah and setuptools must be added to requirements in readme.md
-- check if the used libraries can be put in our own lib folder so an install with setup.py is not longer needed

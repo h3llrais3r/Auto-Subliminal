@@ -12,13 +12,15 @@ What it does:
  * If no SRT found it will attempt to download one by using Subliminal
  * Subliminal will attempt to match the correct version of the subtitle with the file located on the disk
  * Once every day it will do a full rescan of your local content
- * If no dutch version can be found it can (based on a setting) download the english version instead
+ * Support to search/save/delete a subtitle individually
+ * Support to play a video remotely (need to register a custom protocol handler on your remote machine)
 
-What it uses:
+What it uses (see libraries.txt for versions):
 
  * babelfish
  * beautifulsoup4
  * charade
+ * chardet
  * cheetah
  * cherrypy
  * dogpile.cache
@@ -33,8 +35,10 @@ What it uses:
  * pynmwp
  * pysrt
  * pythontwitter
+ * pyxdg
  * requests
  * simplejson
+ * stevedore
  * subliminal
  * tvdb_api
  * six
