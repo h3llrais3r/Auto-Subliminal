@@ -33,6 +33,11 @@ class DiskScanner():
         for videodir in autosubliminal.VIDEOPATHS:
             if os.path.exists(videodir):
                 one_dir_exists = True
+            else:
+                # In case of a network path, it's possible that the path is not directly found -> sleep and check again
+                time.sleep(5)
+                if os.path.exists(videodir):
+                    one_dir_exists = True
         if not one_dir_exists:
             # Release wanted queue lock
             log.error("None of the configured video paths (%s) exist, aborting..." % autosubliminal.VIDEOPATHS)
