@@ -247,7 +247,7 @@ def _scan_wanted_item_for_video(wanted_item):
         video = subliminal.scan_video(originalfile, subtitles=False, embedded_subtitles=False)
     except Exception, e:
         log.error("Error while scanning video, skipping %s" % originalfile)
-        log.error("Exception: %s" % e.message)
+        log.error("Exception: %s" % e)
         return
 
     return video
