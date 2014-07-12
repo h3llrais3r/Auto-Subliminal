@@ -36,7 +36,7 @@
 				<div data-role="collapsible-set" data-theme="b" data-content-theme="b">
 
 					<div data-role="collapsible" data-collapsed="false">
-					<h3>WANTED</h3>
+					<h3>WANTED ($len($autosubliminal.WANTEDQUEUE))</h3>
 					<p>
 					
 #if $len($autosubliminal.WANTEDQUEUE) >= 1
@@ -64,11 +64,11 @@
 #end if					
 					</p>
 					</div>
-					
-					<div data-role="collapsible">
-					<h3>DOWNLOADED</h3>
-					<p>
+
 #set $lastdownload = LastDownloads().get_last_downloads()
+					<div data-role="collapsible">
+					<h3>DOWNLOADED ($len($lastdownload))</h3>
+					<p>
 #if $len($lastdownload) >= 1
 						<table class="table">
 							<thead>
