@@ -347,7 +347,7 @@ def _get_releases(subtitle):
     if isinstance(subtitle, Addic7edSubtitle):
         releases.extend([subtitle.version])
     elif isinstance(subtitle, OpenSubtitlesSubtitle):
-        releases.extend(subtitle.movie_release_name)
+        releases.extend([subtitle.movie_release_name])
     elif isinstance(subtitle, PodnapisiSubtitle):
         releases.extend(subtitle.releases)
     elif isinstance(subtitle, TheSubDBSubtitle):
