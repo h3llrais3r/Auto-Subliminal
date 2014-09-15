@@ -22,7 +22,6 @@ class DiskScanner():
 
     def run(self):
         log.info("Starting round of local disk checking at %s" % autosubliminal.VIDEOPATHS)
-        autosubliminal.WANTEDQUEUE = []
 
         # Get wanted queue lock
         if not utils.get_wanted_queue_lock():
@@ -44,6 +43,8 @@ class DiskScanner():
             utils.release_wanted_queue_lock()
             return True
 
+        # Reset the wanted queue before walking through paths and adding the wanted items
+        autosubliminal.WANTEDQUEUE = []
         for videodir in autosubliminal.VIDEOPATHS:
             try:
                 walk_dir(videodir)
