@@ -139,6 +139,9 @@ def search_subtitle(wanted_item_index, lang):
     # Release wanted queue lock
     utils.release_wanted_queue_lock()
 
+    if not len(subs):
+        return subs, "No subtitles could be found or downloaded!"
+
     return subs, None
 
 
