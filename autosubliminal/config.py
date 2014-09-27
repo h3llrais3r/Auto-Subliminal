@@ -264,6 +264,12 @@ def read_config():
             autosubliminal.INCLUDEHEARINGIMPAIRED = cfg.getboolean("subliminal", "includehearingimpaired")
         else:
             autosubliminal.INCLUDEHEARINGIMPAIRED = None
+
+        if cfg.has_option('subliminal', 'addic7edusername') and cfg.has_option('subliminal', 'addic7edpassword'):
+            autosubliminal.ADDIC7EDUSERNAME = cfg.get('subliminal', 'addic7edusername')
+            autosubliminal.ADDIC7EDPASSWORD = cfg.get('subliminal', 'addic7edpassword')
+            autosubliminal.SUBLIMINALPROVIDERCONFIGS = {
+                'addic7ed': {'username': autosubliminal.ADDIC7EDUSERNAME, 'password': autosubliminal.ADDIC7EDPASSWORD}}
     else:
         # Subliminal section is missing
         autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
@@ -786,6 +792,8 @@ def save_subliminal_section():
 
     cfg.set(section, "providers", str(autosubliminal.SUBLIMINALPROVIDERS))
     cfg.set(section, "includehearingimpaired", str(autosubliminal.INCLUDEHEARINGIMPAIRED))
+    cfg.set(section, "addic7edusername", str(autosubliminal.ADDIC7EDUSERNAME))
+    cfg.set(section, "addic7edpassword", str(autosubliminal.ADDIC7EDPASSWORD))
 
     with open(autosubliminal.CONFIGFILE, 'wb') as file:
         cfg.write(file)

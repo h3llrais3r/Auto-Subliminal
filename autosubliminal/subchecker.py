@@ -283,6 +283,7 @@ def _search_subtitles(video, lang, min_score, best_only):
         # Download the best subtitle with min_score (without saving it in to file)
         subtitles = subliminal.download_best_subtitles(videos, languages,
                                                        providers=autosubliminal.SUBLIMINALPROVIDERLIST,
+                                                       provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS,
                                                        min_score=min_score,
                                                        hearing_impaired=include_hearing_impaired,
                                                        single=True)

@@ -2,7 +2,13 @@
 
 #import autosubliminal
 
+<b>WARNING</b>: All passwords are stored in plaintext!<br />
+
 <table>
+
+    <tr>
+        <td colspan="3"><hr></td>
+    </tr>
 
 	<tr>
 		<td width="180px" style="vertical-align:top;">Subliminal providers</td>
@@ -16,6 +22,7 @@
                     <option value="$provider">$provider</option>
                 #end if
 		    #end for
+            </select>
 		</td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationProviders"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationProviders" class="dropdown-menu has-tip" align="left"><ul><li>Which providers should be used for searching and downloading subtitles?</li></ul></div></td>
 	</tr>
@@ -32,6 +39,29 @@
             #end if
 		</select></td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationIncludeHearingimpaired"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationIncludeHearingimpaired" class="dropdown-menu has-tip" align="left"><ul><li>When enabled, also 'hearing impaired' subtitles can be downloaded.<br />Default is Disabled.</li></ul></div></td>
+	</tr>
+
+    <tr>
+        <td colspan="2"><hr></td>
+    </tr>
+
+    <tr>
+		<td width="200px" colspan="2"><b>Addic7ed provider</b></td>
+    </tr>
+
+    <tr>
+        <td>&nbsp;</td>
+    </tr>
+
+    <tr>
+		<td width="200px">Username</td>
+        <td><input type="text" name="addic7edusername" value="$autosubliminal.ADDIC7EDUSERNAME" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationAddic7edUsername"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationAddic7edUsername" class="dropdown-menu has-tip" align="left"><ul><li>Username for your Addic7ed account.</li></ul></div></td>
+	</tr>
+    <tr>
+		<td width="200px">Password</td>
+        <td><input type="password" name="addic7edpassword" value="$autosubliminal.ADDIC7EDPASSWORD" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationAddic7edPassword"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationAddic7edPassword" class="dropdown-menu has-tip" align="left"><ul><li>Password for your Addic7ed account.</li></ul></div></td>
 	</tr>
 
 	<!-- TODO: still need some work

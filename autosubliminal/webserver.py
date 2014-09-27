@@ -78,7 +78,7 @@ class Config():
                     checksub, skiphiddendirs,
                     logfile, loglevel, lognum, logsize, loghttpaccess, logreversed, loglevelconsole,
                     webserverip, webserverport, webroot, username, password, launchbrowser,
-                    includehearingimpaired,
+                    includehearingimpaired, addic7edusername, addic7edpassword,
                     usernamemapping,
                     skipshow,
                     notify,
@@ -149,8 +149,9 @@ class Config():
         else:
             # Just one selected or None (in this case, None will be saved and no providers will be used)
             autosubliminal.SUBLIMINALPROVIDERS = subliminalproviders
-
         autosubliminal.INCLUDEHEARINGIMPAIRED = includehearingimpaired
+        autosubliminal.ADDIC7EDUSERNAME = addic7edusername
+        autosubliminal.ADDIC7EDPASSWORD = addic7edpassword
 
         # Set usernamemapping variables
         autosubliminal.USERNAMEMAPPING = config.string_to_dict(usernamemapping)
