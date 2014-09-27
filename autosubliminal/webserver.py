@@ -66,13 +66,6 @@ class Config():
             tmpl.message = "Done<br> Remember, WantedQueue will be refresh at the next run of scanDisk <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
             return str(tmpl)
 
-    @cherrypy.expose(alias='applyConfig')
-    def apply_config(self):
-        autosubliminal.config.apply_allsettings()
-        tmpl = PageTemplate(file="interface/templates/message.tmpl")
-        tmpl.message = "Settings read & applied<br><a href='" + autosubliminal.WEBROOT + "/config'>Return</a>"
-        return str(tmpl)
-
     @cherrypy.expose(alias='saveConfig')
     def save_config(self, path, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, scandisk,
                     checksub, skiphiddendirs,

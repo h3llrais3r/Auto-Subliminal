@@ -577,15 +577,6 @@ def apply_skipshow():
         autosubliminal.SKIPSHOWUPPER[x.upper()] = autosubliminal.SKIPSHOW[x].split(',')
 
 
-def apply_allsettings():
-    """
-    Read subliminal, namemapping and skipshow from the config file.
-    """
-    apply_subliminal()
-    apply_namemapping()
-    apply_skipshow()
-
-
 def display_videopaths():
     """
     Return a string containing all locations for user videos.
