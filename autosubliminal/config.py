@@ -263,7 +263,7 @@ def read_config():
         if cfg.has_option("subliminal", "includehearingimpaired"):
             autosubliminal.INCLUDEHEARINGIMPAIRED = cfg.getboolean("subliminal", "includehearingimpaired")
         else:
-            autosubliminal.INCLUDEHEARINGIMPAIRED = None
+            autosubliminal.INCLUDEHEARINGIMPAIRED = False
 
         if cfg.has_option('subliminal', 'addic7edusername') and cfg.has_option('subliminal', 'addic7edpassword'):
             autosubliminal.ADDIC7EDUSERNAME = cfg.get('subliminal', 'addic7edusername')
@@ -273,7 +273,7 @@ def read_config():
     else:
         # Subliminal section is missing
         autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
-        autosubliminal.INCLUDEHEARINGIMPAIRED = None
+        autosubliminal.INCLUDEHEARINGIMPAIRED = False
 
     if cfg.has_section('namemapping'):
         autosubliminal.USERNAMEMAPPING = dict(cfg.items('namemapping'))
@@ -460,13 +460,10 @@ def read_config():
 
         if cfg.has_option("postprocessing", "postprocesscmd"):
             autosubliminal.POSTPROCESSCMD = cfg.get("postprocessing", "postprocesscmd")
-        else:
-            autosubliminal.POSTPROCESSCMD = None
 
     else:
         autosubliminal.POSTPROCESS = False
         autosubliminal.POSTPORCESSUTF8ENCODING = False
-        autosubliminal.POSTPROCESSCMD = None
 
     if cfg.has_section('dev'):
         if cfg.has_option('dev', 'apikey'):
