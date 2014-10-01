@@ -150,10 +150,8 @@ def initialize():
     _fake_entry_points()
 
     # Version settings
-    release = version.RELEASE_VERSION.split(' ')[0]
-    versionnumber = version.RELEASE_VERSION.split(' ')[1]
     VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py'
-    USERAGENT = 'Auto-Subliminal/' + versionnumber + release.lower()[0]
+    USERAGENT = 'Auto-Subliminal/' + version.RELEASE_VERSION
 
     # Default http timeout
     TIMEOUT = 300

@@ -61,9 +61,6 @@ def check_version():
     Return values:
     0 Same version
     1 New version
-    2 New (higher) release, same version
-    3 New lower release, higher version
-    4 Release lower, version lower
     """
     log.info('Checking version')
     try:
@@ -76,33 +73,21 @@ def check_version():
         log.error("The server returned an error for request %s" % autosubliminal.VERSIONURL)
         return None
     try:
-        match = re.search('(Alpha|Beta|Stable) (\d+)\.(\d+)\.(\d+)', respone)
-        version_online = match.group(0)
+        match = re.search('(\d+)\.(\d+)\.(\d+)', respone)
+        git_version = match.group(0)
     except:
         return None
 
-    release = version_online.split(' ')[0]
-    versionnumber = version.StrictVersion(version_online.split(' ')[1])
+    running_version = version.StrictVersion(RELEASE_VERSION)
+    online_version = version.StrictVersion(git_version)
 
-    running_release = RELEASE_VERSION.split(' ')[0]
-    running_versionnumber = version.StrictVersion(RELEASE_VERSION.split(' ')[1])
+    log.info('Running version: %s' % running_version)
+    log.info('Git version: %s' % online_version)
 
-    log.info('Running version: %s' % RELEASE_VERSION)
-    log.info('Git version: %s' % version_online)
-
-    if release == running_release:  # Alpha = Alpha
-        if versionnumber > running_versionnumber:  # 0.5.6 > 0.5.5
-            return 1
-        else:  # 0.5.6 = 0.5.6
-            return 0
-    elif release > running_release:  # Beta > Alpha
-        if versionnumber == running_versionnumber:  # 0.5.5 = 0.5.5
-            return 2
-        elif versionnumber > running_versionnumber:  # 0.5.6 > 0.5.5
-            return 4
-    elif release < running_release:  # Alpha < Beta
-        if versionnumber > running_versionnumber:  # 0.5.6 > 0.5.5
-            return 3
+    if running_version < online_version:
+        return 1
+    else:
+        return 0
 
 
 def clean_series_name(series_name):
