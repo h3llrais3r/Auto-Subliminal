@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 
 setup(name='Auto-Subliminal',
-    version='0.6.0',
+    version='1.0.0',
     license='GPL v3',
     description='Auto-Subliminal, the automated subliminal subtitle downloader',
     long_description=open('README.md').read(),
