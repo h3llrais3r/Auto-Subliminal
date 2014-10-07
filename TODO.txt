@@ -12,6 +12,5 @@ TODO:
     - adapt (split) postprocessing for episode and movie
     - adapt (split) name mapping for episode and movie
     - adapt (split) skip show for episode and movie
-- cleanup old file parsing logic in fileprocessor
 - check if we need to request our own TVDB API key (and perhaps use an API CALL CHECK for it to prevent excessive usage)
 - check if we need to request our own IMDB API key (and perhaps use an API CALL CHECK for it to prevent excessive usage)
