@@ -35,6 +35,7 @@ What it uses (see libraries.txt for versions):
  * pynmwp
  * pysrt
  * pythontwitter
+ * python-dateutil
  * pyxdg
  * requests
  * simplejson
