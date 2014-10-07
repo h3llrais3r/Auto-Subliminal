@@ -14,6 +14,7 @@ growl=0.5
 guessit=0.9.3
 html5lib=0.999
 httplib2=0.8
+imdbpy=5.0
 oauth2=1.5.211
 pynma=0.1
 pynmwp=0.1

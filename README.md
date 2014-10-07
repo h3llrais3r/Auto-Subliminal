@@ -30,6 +30,7 @@ What it uses (see libraries.txt for versions):
  * guessit
  * html5lib
  * httplib2
+ * imdbpy
  * oauth2
  * pynma
  * pynmwp
