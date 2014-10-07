@@ -268,8 +268,10 @@ def read_config():
         if cfg.has_option('subliminal', 'addic7edusername') and cfg.has_option('subliminal', 'addic7edpassword'):
             autosubliminal.ADDIC7EDUSERNAME = cfg.get('subliminal', 'addic7edusername')
             autosubliminal.ADDIC7EDPASSWORD = cfg.get('subliminal', 'addic7edpassword')
-            autosubliminal.SUBLIMINALPROVIDERCONFIGS = {
-                'addic7ed': {'username': autosubliminal.ADDIC7EDUSERNAME, 'password': autosubliminal.ADDIC7EDPASSWORD}}
+            if autosubliminal.ADDIC7EDUSERNAME and autosubliminal.ADDIC7EDPASSWORD:
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS = {
+                    'addic7ed': {'username': autosubliminal.ADDIC7EDUSERNAME,
+                                 'password': autosubliminal.ADDIC7EDPASSWORD}}
     else:
         # Subliminal section is missing
         autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
