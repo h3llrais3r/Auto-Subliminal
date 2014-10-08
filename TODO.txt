@@ -1,6 +1,5 @@
 TODO:
 - add support for movie subtitles
-    - use imdbpy to get imdb id for a movie
     - add imdb id to database, wanted_item and download_item
     - adapt IdCache (or split in ImdbIdCache and TvdbIdCache)
     - store imdb id in cache and db

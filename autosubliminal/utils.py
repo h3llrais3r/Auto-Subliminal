@@ -10,6 +10,7 @@ import os
 from distutils import version
 from string import capwords
 
+import imdb
 from tvdb_api import tvdb_api
 
 import autosubliminal
@@ -185,6 +186,26 @@ def get_showid(show_name, force_search=False):
         IdCache().set_id(show_id, show_name)
         log.info("%r added to cache with %s" % (show_name, show_id))
         return int(show_id)
+
+
+def get_imdb_info(title, year=None, force_search=False):
+    log.debug("Getting imdb info for %s" % title)
+    handler = imdb.IMDb()
+    imdb_movies = handler.search_movie(title)
+    # Find the first movie that matches the title (and year if present)
+    for movie in imdb_movies:
+        data = movie.data
+        if data['kind'] == 'movie' and data['title'] == title:
+            # If a year is present, it should also be the same
+            if year:
+                if data['year'] == year:
+                    return movie.movieID, data['year']
+                else:
+                    continue
+            # If no year is present, take the first match
+            else:
+                return movie.movieID, data['year']
+    return None
 
 
 def check_apicalls(use=False):
