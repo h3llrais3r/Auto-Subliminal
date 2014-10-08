@@ -42,7 +42,11 @@
 
 <tr>
 	<td>
+#if $item['type'] == 'episode':
         <b><a href="#" data-dropdown="#dropdown-skip-$index" title="Click to skip">$item['title']</a></b>
+#else if $item['type'] == 'movie':
+        <b><a href="#" data-dropdown="#dropdown-skip-$index" title="Click to skip">$item['title'] ($item['year'])</a></b>
+#end if
         <a href="#"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" data-dropdown="#dropdown-wantedinfo-$index" /></a>
         <div id="dropdown-wantedinfo-$index" class="dropdown-menu has-tip">
             <ul>
