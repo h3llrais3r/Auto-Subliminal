@@ -25,7 +25,7 @@
 <table class="table sortable">
 	<thead>
 		<tr>
-			<th>Show name</th>
+			<th>Show/Movie name</th>
 			<th>Season</th>
 			<th>Episode</th>
 			<th>Source</th>
@@ -49,8 +49,10 @@
                 <li>$os.path.basename($item['originalFileLocationOnDisk'])</li>
             </ul>
         </div>
-#if not $item['showid']:
+#if $item['type'] == 'episode' and not $item['showid']:
         <a href="#"><img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Show id could not be found! Please check the log file!" data-dropdown="#dropdown-wantedwarning-$index" /></a>
+#else if $item['type'] == 'movie' and not $item['imdbid']:
+        <a href="#"><img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Imdb id could not be found! Please check the log file!" data-dropdown="#dropdown-wantedwarning-$index" /></a>
 #end if
         <div id="dropdown-skip-$index" class="dropdown-menu has-tip">
             <ul>
