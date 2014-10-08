@@ -13,8 +13,8 @@ log = logging.getLogger(__name__)
 
 class DiskScanner():
     """
-    Scan the specified path for episodes without Dutch or (if wanted) English subtitles.
-    If found add these Dutch or English subtitles to the WANTEDQUEUE.
+    Scan the specified path for episodes and movies with missing subtitles.
+    If found, add these episodes and movies to the WANTEDQUEUE.
     """
 
     def __init__(self):
@@ -88,33 +88,43 @@ def walk_dir(path):
                 if len(languages) > 0:
                     log.debug("File is missing a subtitle")
                     wanted_item = fileprocessor.process_file(dirname, filename)
-                    if 'title' in wanted_item.keys():
-                        if 'season' in wanted_item.keys():
-                            if 'episode' in wanted_item.keys():
-                                title = wanted_item['title']
-                                season = wanted_item['season']
-                                episode = wanted_item['episode']
-                                if utils.skip_show(title, season, episode):
-                                    log.info("Skipping %s - Season %s Episode %s" % (title, season, episode))
-                                    continue
-                                log.info("Subtitle(s) wanted for %s and added to wantedQueue" % filename)
-                                wanted_item['originalFileLocationOnDisk'] = os.path.join(dirname, filename)
-                                wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S',
-                                                                                      time.localtime(os.path.getctime(
-                                                                                          wanted_item[
-                                                                                              'originalFileLocationOnDisk']))))
-                                wanted_item['lang'] = languages
-                                wanted_item['showid'] = utils.get_showid(title)
-                                autosubliminal.WANTEDQUEUE.append(wanted_item)
+                    if wanted_item:
 
-                            else:
-                                log.error("Could not process the filename properly filename: %s" % filename)
+                        # Episode wanted
+                        if wanted_item['type'] == 'episode':
+                            title = wanted_item['title']
+                            season = wanted_item['season']
+                            episode = wanted_item['episode']
+                            if utils.skip_show(title, season, episode):
+                                log.info("Skipping %s - Season %s Episode %s" % (title, season, episode))
                                 continue
+                            log.info("Subtitle(s) wanted for %s and added to wantedQueue" % filename)
+                            wanted_item['originalFileLocationOnDisk'] = os.path.join(dirname, filename)
+                            wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
+                                os.path.getctime(wanted_item['originalFileLocationOnDisk']))))
+                            wanted_item['lang'] = languages
+                            # TODO: refactor showid to tvdbid
+                            wanted_item['showid'] = utils.get_showid(title)
+                            autosubliminal.WANTEDQUEUE.append(wanted_item)
+
+                        # Movie wanted
+                        elif wanted_item['type'] == 'movie':
+                            title = wanted_item['title']
+                            year = wanted_item['year']
+                            # TODO: implement skip_movie logic
+                            log.info("Subtitle(s) wanted for %s and added to wantedQueue" % filename)
+                            wanted_item['originalFileLocationOnDisk'] = os.path.join(dirname, filename)
+                            wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
+                                os.path.getctime(wanted_item['originalFileLocationOnDisk']))))
+                            wanted_item['lang'] = languages
+                            # TODO: replace showid by imdbid
+                            wanted_item['showid'] = None
+                            autosubliminal.WANTEDQUEUE.append(wanted_item)
                         else:
-                            log.error("Could not process the filename properly filename: %s" % filename)
+                            log.error("Could not process the filename: %s" % filename)
                             continue
                     else:
-                        log.error("Could not process the filename properly filename: %s" % filename)
+                        log.error("Could not process the filename: %s" % filename)
                         continue
 
 
@@ -130,7 +140,7 @@ def check_missing_subtitle_languages(dirname, filename):
             srtfile = os.path.splitext(filename)[0] + u".srt"
         if not os.path.exists(os.path.join(dirname, srtfile)):
             missing_subtitles.append(autosubliminal.DEFAULTLANGUAGE)
-    # Check additional languages
+            # Check additional languages
     if autosubliminal.ADDITIONALLANGUAGES:
         # Always check with alpha2 code suffix for additional languages
         for language in autosubliminal.ADDITIONALLANGUAGES:
