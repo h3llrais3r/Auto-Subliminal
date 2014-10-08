@@ -1,6 +1,6 @@
 TODO:
 - add support for movie subtitles
-    - add imdb id to database, wanted_item and download_item
+    - add imdb id to database and download_item
     - adapt IdCache (or split in ImdbIdCache and TvdbIdCache)
     - store imdb id in cache and db
     - add year to database, wanted_item and download_item

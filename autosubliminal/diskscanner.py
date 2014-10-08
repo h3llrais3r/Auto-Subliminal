@@ -117,8 +117,7 @@ def walk_dir(path):
                             wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
                                 os.path.getctime(wanted_item['originalFileLocationOnDisk']))))
                             wanted_item['lang'] = languages
-                            # TODO: replace showid by imdbid
-                            wanted_item['showid'] = None
+                            wanted_item['imdbid'], wanted_item['year'] = utils.get_imdb_info(title, year)
                             autosubliminal.WANTEDQUEUE.append(wanted_item)
                         else:
                             log.error("Could not process the filename: %s" % filename)
