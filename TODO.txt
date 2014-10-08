@@ -6,7 +6,6 @@ TODO:
     - store imdb id in cache and db
     - add year to database, wanted_item and download_item
     - add year to home screen (wanted and last downloaded subtitles)
-    - adapt (split) fileprocessor for episode an movie
     - adapt (split) diskscanner for episode and movie
     - adapt (split) minmatchscore for episode and movie
     - adapt (split) postprocessing for episode and movie

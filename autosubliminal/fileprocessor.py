@@ -3,38 +3,75 @@ import logging
 
 import guessit
 
-
 log = logging.getLogger(__name__)
 
 
 def process_file(dirname, filename):
+    """
+    Process a file with guessit and construct the wanted_item dict.
+    Items used in wanted_item for type = 'episode':
+    - 'type'
+    - 'title'
+    - 'season'
+    - 'episode'
+    - 'source'
+    - 'quality'
+    - 'codec'
+    - 'releasegrp'
+    Items used in wanted_item for type = 'movie':
+    - 'type'
+    - 'title'
+    - 'year'
+    - 'source'
+    - 'quality'
+    - 'codec'
+    - 'releasegrp'
+    """
+
+    # Guess
     log.info("Processing file: %s" % filename)
     filepath = os.path.join(dirname, filename)
-    # Guess file info
-    log.debug("Guessing file info")
-    guess = guessit.guess_file_info(filepath)
-    log.debug("Guess: %r" % guess)
-    # Create show dict
-    show_dict = _show_dict_from_guess(guess)
-    # Check if mandatory elements could be guessed
-    if show_dict['title'] and show_dict['season'] and show_dict['episode']:
-        return show_dict
-    else:
-        log.error("Could not guess file info for %s" % filepath)
+    try:
+        log.debug("Guessing file info")
+        guess = guessit.guess_file_info(filepath)
+        log.debug("Guess: %r" % guess)
+    except Exception, e:
+        log.error("Could not guess file info for: %s" % filepath)
+        log.error(e)
         return {}
 
+    # Create and return dict from guess
+    return _dict_from_guess(guess)
 
-def _show_dict_from_guess(guess):
-    log.debug("Getting show dict from guess")
-    show_dict = {'title': _property_from_guess(guess, 'series'),
-                 'season': _property_from_guess(guess, 'season'),
-                 'episode': _property_from_guess(guess, 'episodeNumber'),
-                 'source': _property_from_guess(guess, 'format'),
-                 'quality': _property_from_guess(guess, 'screenSize', u'SD'),  # No screenSize found means SD
-                 'codec': _property_from_guess(guess, 'videoCodec'),
-                 'releasegrp': _property_from_guess(guess, 'releaseGroup')}
-    log.debug("Dumping show dict for debug %r" % show_dict)
-    return show_dict
+
+def _dict_from_guess(guess):
+    """
+    Create a wanted_item dict from a guess:
+    - The same dict is used for both episode and movie
+    - The 'series' is used as 'title' for an episode
+    - If no 'series' is found, it will be a movie, so take the 'title' of the movie as 'title'
+    - If no 'screenSize' is found, it will default to 'SD' quality
+    """
+    log.debug("Getting dict from guess")
+    result_dict = {'type': _property_from_guess(guess, 'type'),
+                   'title': _property_from_guess(guess, 'series', _property_from_guess(guess, 'title')),
+                   'season': _property_from_guess(guess, 'season'),
+                   'episode': _property_from_guess(guess, 'episodeNumber'),
+                   'year': _property_from_guess(guess, 'year'),
+                   'source': _property_from_guess(guess, 'format'),
+                   'quality': _property_from_guess(guess, 'screenSize', u'SD'), # No screenSize found means SD
+                   'codec': _property_from_guess(guess, 'videoCodec'),
+                   'releasegrp': _property_from_guess(guess, 'releaseGroup')}
+    log.debug("Dict from guess: %r" % result_dict)
+
+    # Check if mandatory elements are available in the guess
+    if result_dict['type'] == 'movie' and result_dict['title']:
+        return result_dict
+    elif result_dict['type'] == 'episode' and result_dict['title'] and result_dict['season'] and result_dict['episode']:
+        return result_dict
+    else:
+        log.error("Could not guess all the mandatory elements")
+        return {}
 
 
 def _property_from_guess(guess, propertyname, defaultvalue=None):
