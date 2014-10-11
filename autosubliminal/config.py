@@ -289,13 +289,24 @@ def read_config():
     if cfg.has_section('skipshow'):
         # Try to read skipshow section in the config
         autosubliminal.SKIPSHOW = dict(cfg.items('skipshow'))
-        # The following 4 lines convert the skipshow to uppercase. And also convert the variables to a list
+        # The following lines convert the skipshow to uppercase and also convert the variables to a list.
         autosubliminal.SKIPSHOWUPPER = {}
         for x in autosubliminal.SKIPSHOW:
             autosubliminal.SKIPSHOWUPPER[x.upper()] = autosubliminal.SKIPSHOW[x].split(',')
     else:
         autosubliminal.SKIPSHOW = {}
         autosubliminal.SKIPSHOWUPPER = {}
+
+    if cfg.has_section('skipmovie'):
+        # Try to read skipmovie section in the config
+        autosubliminal.SKIPMOVIE = dict(cfg.items('skipmovie'))
+        # The following lines convert the skipmovie to uppercase and also convert the variables to a list.
+        autosubliminal.SKIPMOVIEUPPER = {}
+        for x in autosubliminal.SKIPMOVIE:
+            autosubliminal.SKIPMOVIEUPPER[x.upper()] = autosubliminal.SKIPMOVIE[x]
+    else:
+        autosubliminal.SKIPMOVIE = {}
+        autosubliminal.SKIPMOVIEUPPER = {}
 
     if cfg.has_section('notify'):
         if cfg.has_option("notify", "notify"):
@@ -579,6 +590,27 @@ def apply_skipshow():
         autosubliminal.SKIPSHOWUPPER[x.upper()] = autosubliminal.SKIPSHOW[x].split(',')
 
 
+def apply_skipmovie():
+    """
+    Read skipmovie in the config file.
+    """
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        #no config yet
+        pass
+
+    if cfg.has_section('skipmovie'):
+        autosubliminal.SKIPMOVIE = dict(cfg.items('skipmovie'))
+    else:
+        autosubliminal.SKIPMOVIE = {}
+    autosubliminal.SKIPMOVIEUPPER = {}
+    for x in autosubliminal.SKIPMOVIE:
+        autosubliminal.SKIPMOVIEUPPER[x.upper()] = autosubliminal.SKIPMOVIE[x]
+
+
 def display_videopaths():
     """
     Return a string containing all locations for user videos.
@@ -625,6 +657,18 @@ def display_skipshow():
     s = ""
     for x in autosubliminal.SKIPSHOW:
         s += x + " = " + str(autosubliminal.SKIPSHOW[x]) + "\n"
+    return s
+
+
+def display_skipmovie():
+    """
+    Return a string containing all info from skipmovie.
+    After each movie skip info an '\n' is added to create multiple rows
+    in a textarea.
+    """
+    s = ""
+    for x in autosubliminal.SKIPMOVIE:
+        s += x + " = " + str(autosubliminal.SKIPMOVIE[x]) + "\n"
     return s
 
 
@@ -848,6 +892,34 @@ def save_skipshow_section():
     apply_skipshow()
 
 
+def save_skipmovie_section():
+    """
+    Save stuff
+    """
+    section = 'skipmovie'
+
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        # No config yet
+        cfg = SafeConfigParser()
+        pass
+
+    if cfg.has_section(section):
+        cfg.remove_section(section)
+        cfg.add_section(section)
+        with open(autosubliminal.CONFIGFILE, 'wb') as file:
+            cfg.write(file)
+
+    for x in autosubliminal.SKIPMOVIE:
+        save_config("skipmovie", x, autosubliminal.SKIPMOVIE[x])
+
+    # Set all skipmovie stuff correct
+    apply_skipmovie()
+
+
 def save_notify_section():
     """
     Save stuff
@@ -1054,6 +1126,7 @@ def write_config():
     save_subliminal_section()
     save_usernamemapping_section()
     save_skipshow_section()
+    save_skipmovie_section()
     save_notify_section()
     save_postprocessing_section()
 

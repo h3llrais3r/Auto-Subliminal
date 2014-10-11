@@ -63,8 +63,26 @@ class Config():
             config.save_config('skipshow', title, season)
             config.apply_skipshow()
 
-            tmpl.message = "Done<br> Remember, WantedQueue will be refresh at the next run of scanDisk <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
+            tmpl.message = "Done<br> Remember, WantedQueue will be refreshed at the next run of scanDisk <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
             return str(tmpl)
+
+    @cherrypy.expose(alias='skipMovie')
+    def skip_movie(self, title, year):
+        tmpl = PageTemplate(file="interface/templates/message.tmpl")
+        if not title:
+            raise cherrypy.HTTPError(400, "No title supplied")
+        movie = title
+        if year:
+            movie += " (" + year + ")"
+        if movie.upper() in autosubliminal.SKIPMOVIEUPPER:
+            tmpl.message = "Already skipped <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
+            return str(tmpl)
+        else:
+            config.save_config('skipmovie', movie, '0')
+            config.apply_skipmovie()
+
+        tmpl.message = "Done<br> Remember, WantedQueue will be refreshed at the next run of scanDisk <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
+        return str(tmpl)
 
     @cherrypy.expose(alias='saveConfig')
     def save_config(self, path, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, scandisk,
@@ -74,6 +92,7 @@ class Config():
                     includehearingimpaired, addic7edusername, addic7edpassword,
                     usernamemapping,
                     skipshow,
+                    skipmovie,
                     notify,
                     notifymail, mailsrv, mailfromaddr, mailtoaddr, mailusername, mailpassword, mailsubject,
                     mailencryption, mailauth,
@@ -151,6 +170,9 @@ class Config():
 
         # Set skipshow variables
         autosubliminal.SKIPSHOW = config.string_to_dict(skipshow)
+
+        # Set skipmovie variables
+        autosubliminal.SKIPMOVIE = config.string_to_dict(skipmovie)
 
         # Set notify variables
         autosubliminal.NOTIFY = notify

@@ -43,9 +43,9 @@
 <tr>
 	<td>
 #if $item['type'] == 'episode':
-        <b><a href="#" data-dropdown="#dropdown-skip-$index" title="Click to skip">$item['title']</a></b>
+        <b><a href="#" data-dropdown="#dropdown-skipshow-$index" title="Click to skip">$item['title']</a></b>
 #else if $item['type'] == 'movie':
-        <b><a href="#" data-dropdown="#dropdown-skip-$index" title="Click to skip">$item['title'] ($item['year'])</a></b>
+        <b><a href="#" data-dropdown="#dropdown-skipmovie-$index" title="Click to skip">$item['title'] ($item['year'])</a></b>
 #end if
         <a href="#"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" data-dropdown="#dropdown-wantedinfo-$index" /></a>
         <div id="dropdown-wantedinfo-$index" class="dropdown-menu has-tip">
@@ -53,17 +53,26 @@
                 <li>$os.path.basename($item['originalFileLocationOnDisk'])</li>
             </ul>
         </div>
-#if $item['type'] == 'episode' and not $item['showid']:
+#if $item['type'] == 'episode':
+#if not $item['showid']:
         <a href="#"><img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Show id could not be found! Please check the log file!" data-dropdown="#dropdown-wantedwarning-$index" /></a>
-#else if $item['type'] == 'movie' and not $item['imdbid']:
-        <a href="#"><img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Imdb id could not be found! Please check the log file!" data-dropdown="#dropdown-wantedwarning-$index" /></a>
 #end if
-        <div id="dropdown-skip-$index" class="dropdown-menu has-tip">
+        <div id="dropdown-skipshow-$index" class="dropdown-menu has-tip">
             <ul>
                 <li><a href="$autosubliminal.WEBROOT/config/skipShow/$item['title']/$item['season']">Skip season $item['season']</a></li>
                 <li><a href="$autosubliminal.WEBROOT/config/skipShow/$item['title']/0">Skip show</a></li>
             </ul>
         </div>
+#else if $item['type'] == 'movie':
+#if not $item['imdbid']:
+        <a href="#"><img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Imdb id could not be found! Please check the log file!" data-dropdown="#dropdown-wantedwarning-$index" /></a>
+#end if
+        <div id="dropdown-skipmovie-$index" class="dropdown-menu has-tip">
+            <ul>
+                <li><a href="$autosubliminal.WEBROOT/config/skipMovie/$item['title']/$item['year']">Skip movie</a></li>
+            </ul>
+        </div>
+#end if
     </td>
 	<td width="75px" align="center">$item['season']</td>
 	<td width="75px" align="center">$item['episode']</td>

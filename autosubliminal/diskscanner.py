@@ -111,7 +111,9 @@ def walk_dir(path):
                         elif wanted_item['type'] == 'movie':
                             title = wanted_item['title']
                             year = wanted_item['year']
-                            # TODO: implement skip_movie logic
+                            if utils.skip_movie(title, year):
+                                log.info("Skipping %s (%s)" % (title, year))
+                                continue
                             log.info("Subtitle(s) wanted for %s and added to wantedQueue" % filename)
                             wanted_item['originalFileLocationOnDisk'] = os.path.join(dirname, filename)
                             wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
