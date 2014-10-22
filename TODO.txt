@@ -3,8 +3,6 @@ TODO:
     - add imdb id to database and download_item
     - adapt IdCache (or split in ImdbIdCache and TvdbIdCache)
     - store imdb id in cache and db
-    - add year to database and download_item
-    - add year to home screen (last downloaded subtitles)
     - adapt (split) minmatchscore for episode and movie
     - adapt (split) postprocessing for episode and movie
     - adapt (split) name mapping for episode and movie

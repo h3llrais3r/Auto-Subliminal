@@ -56,7 +56,7 @@ class IdCache():
 class LastDownloads():
     def __init__(self):
         self.query_get = "select * from last_downloads order by timestamp desc;"
-        self.query_set = "insert into last_downloads values (NULL,?,?,?,?,?,?,?,?,?,?,?);"
+        self.query_set = "insert into last_downloads values (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?);"
         self.query_flush = "delete from last_downloads;"
 
     def get_last_downloads(self):
@@ -81,7 +81,9 @@ class LastDownloads():
             download_item['source'] = None
 
         cursor.execute(self.query_set, [
+            download_item['type'],
             download_item['title'],
+            download_item['year'],
             download_item['season'],
             download_item['episode'],
             download_item['quality'],
@@ -113,7 +115,7 @@ def create():
         cursor.execute(query)
         connection.commit()
 
-        query = "CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, show_name TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, releasegrp TEXT, subtitle TEXT, provider TEXT);"
+        query = "CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, releasegrp TEXT, subtitle TEXT, provider TEXT);"
         cursor.execute(query)
         connection.commit()
 
@@ -178,6 +180,19 @@ def upgrade(from_version, to_version):
             cursor = connection.cursor()
             cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'provider')
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (5, 4))
+            connection.commit()
+            connection.close()
+        if from_version == 5 and to_version == 6:
+            # Recreate last_downloads
+            connection = sqlite3.connect(autosubliminal.DBFILE)
+            cursor = connection.cursor()
+            cursor.execute("CREATE TABLE tmp_last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, releasegrp TEXT, subtitle TEXT, provider TEXT)")
+            cursor.execute("INSERT INTO tmp_last_downloads SELECT id, 'episode', show_name, '', season, episode, quality, source, language, codec, timestamp, releasegrp, subtitle, provider FROM last_downloads")
+            cursor.execute("DROP TABLE last_downloads")
+            cursor.execute("CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, releasegrp TEXT, subtitle TEXT, provider TEXT)")
+            cursor.execute("INSERT INTO last_downloads SELECT * from tmp_last_downloads")
+            cursor.execute("DROP TABLE tmp_last_downloads")
+            cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (6, 5))
             connection.commit()
             connection.close()
 

@@ -43,7 +43,7 @@
 						<table class="table" width="100%">
 							<thead>
 							<tr>
-								<th>SHOW NAME</th>
+								<th>SHOW/MOVIE NAME</th>
 								<th>LANG</th>
 							</tr>
 							</thead>
@@ -73,14 +73,14 @@
 						<table class="table">
 							<thead>
 							<tr>
-								<th>SHOW NAME</th>
+								<th>SHOW/MOVIE NAME</th>
 								<th>LANG</th>
 							</tr>
 							</thead>
 #for $item in $lastdownload
 							<tr>
 								<td><b>
-									<div style="position: relative; float: left; width: 60%;">$item['show_name'].upper()</div> <div style="position: relative; float: right;">S$item['season'] E$item['episode']</div>
+									<div style="position: relative; float: left; width: 60%;">$item['title'].upper()</div> <div style="position: relative; float: right;">S$item['season'] E$item['episode']</div>
 								</b></td>
 	
 								<td align="center" width="50px">

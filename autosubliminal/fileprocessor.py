@@ -12,6 +12,7 @@ def process_file(dirname, filename):
     Items used in wanted_item for type = 'episode':
     - 'type'
     - 'title'
+    - 'year'
     - 'season'
     - 'episode'
     - 'source'
@@ -49,17 +50,17 @@ def _dict_from_guess(guess):
     Create a wanted_item dict from a guess:
     - The same dict is used for both episode and movie
     - The 'series' is used as 'title' for an episode
-    - If no 'series' is found, it will be a movie, so take the 'title' of the movie as 'title'
+    - If no 'series' is found as 'title', it will be a movie, so take the 'title' of the movie as 'title'
     - If no 'screenSize' is found, it will default to 'SD' quality
     """
     log.debug("Getting dict from guess")
     result_dict = {'type': _property_from_guess(guess, 'type'),
                    'title': _property_from_guess(guess, 'series', _property_from_guess(guess, 'title')),
+                   'year': _property_from_guess(guess, 'year'),
                    'season': _property_from_guess(guess, 'season'),
                    'episode': _property_from_guess(guess, 'episodeNumber'),
-                   'year': _property_from_guess(guess, 'year'),
                    'source': _property_from_guess(guess, 'format'),
-                   'quality': _property_from_guess(guess, 'screenSize', u'SD'), # No screenSize found means SD
+                   'quality': _property_from_guess(guess, 'screenSize', u'SD'),
                    'codec': _property_from_guess(guess, 'videoCodec'),
                    'releasegrp': _property_from_guess(guess, 'releaseGroup')}
     log.debug("Dict from guess: %r" % result_dict)

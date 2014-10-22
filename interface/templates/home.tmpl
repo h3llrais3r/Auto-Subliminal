@@ -154,7 +154,7 @@
 <table class="table sortable">
 <thead>
 <tr>
-	<th>Show name</th>
+	<th>Show/Movie name</th>
 	<th>Season</th>
 	<th>Episode</th>
 	<th>Source</th>
@@ -170,9 +170,13 @@
 <tr>
 	<td>
         <!-- Use this for a dropdown when clicking on the show name
-        <b><a href='#' data-dropdown="#dropdown-lastdown-$item['id']">$item['show_name']</a></b>
+        <b><a href='#' data-dropdown="#dropdown-lastdown-$item['id']">$item['title']</a></b>
         -->
-        <b>$item['show_name']</b>
+#if $item['type'] == 'episode':
+        <b>$item['title']</b>
+#else if $item['type'] == 'movie':
+        <b>$item['title'] ($item['year']</b>
+#end if
         <a href="#"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" data-dropdown="#dropdown-lastdowninfo-$item['id']" /></a>
         <div id="dropdown-lastdowninfo-$item['id']" class="dropdown-menu has-tip">
             <ul>
