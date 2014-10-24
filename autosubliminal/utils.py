@@ -270,6 +270,15 @@ def display_logfile(loglevel):
     return result
 
 
+def display_name(item_dict, uppercase=False):
+    name = item_dict['title']
+    if item_dict['year']:
+        name += " (" + str(item_dict['year']) + ")"
+    if uppercase:
+        name = name.upper()
+    return name
+
+
 def convert_timestamp(datestring):
     date_object = time.strptime(datestring, "%Y-%m-%d %H:%M:%S")
     return "%02i-%02i-%i %02i:%02i:%02i " % (

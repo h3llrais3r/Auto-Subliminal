@@ -6,6 +6,7 @@
 #import autosubliminal
 #from autosubliminal import version
 #from autosubliminal.db import LastDownloads
+#from autosubliminal.utils import display_name
 
 <!DOCTYPE html>
 <html>
@@ -50,8 +51,11 @@
 #for $item in $autosubliminal.WANTEDQUEUE
 							<tr>
 								<td><b>
-									<div style="position: relative; float: left; width: 60%;">$item['title'].upper()</div> <div style="position: relative; float: right;">S$item['season'] E$item['episode']</div>
-								</b></td>
+                                    <div style="position: relative; float: left; width: 60%;">$display_name($item, True)</div>
+#if $item['type'] == 'episode':
+									<div style="position: relative; float: right;">S$item['season'] E$item['episode']</div>
+#end if
+                                </b></td>
 								<td align="center" width="50px">
                                 #for lang in $item['lang']
                                 #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
@@ -80,7 +84,10 @@
 #for $item in $lastdownload
 							<tr>
 								<td><b>
-									<div style="position: relative; float: left; width: 60%;">$item['title'].upper()</div> <div style="position: relative; float: right;">S$item['season'] E$item['episode']</div>
+									<div style="position: relative; float: left; width: 60%;">$display_name($item, True)</div>
+#if $item['type'] == 'episode':
+                                    <div style="position: relative; float: right;">S$item['season'] E$item['episode']</div>
+#end if
 								</b></td>
 	
 								<td align="center" width="50px">

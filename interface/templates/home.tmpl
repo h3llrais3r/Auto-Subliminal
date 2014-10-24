@@ -6,7 +6,7 @@
 
 #import autosubliminal
 #from autosubliminal.db import LastDownloads
-#from autosubliminal.utils import convert_timestamp, convert_timestamp_table, get_attr
+#from autosubliminal.utils import convert_timestamp, convert_timestamp_table, display_name
 
 #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/header.tmpl")
 
@@ -43,9 +43,9 @@
 <tr>
 	<td>
 #if $item['type'] == 'episode':
-        <b><a href="#" data-dropdown="#dropdown-skipshow-$index" title="Click to skip">$item['title']</a></b>
+        <b><a href="#" data-dropdown="#dropdown-skipshow-$index" title="Click to skip">$display_name($item)</a></b>
 #else if $item['type'] == 'movie':
-        <b><a href="#" data-dropdown="#dropdown-skipmovie-$index" title="Click to skip">$item['title'] ($item['year'])</a></b>
+        <b><a href="#" data-dropdown="#dropdown-skipmovie-$index" title="Click to skip">$display_name($item)</a></b>
 #end if
         <a href="#"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" data-dropdown="#dropdown-wantedinfo-$index" /></a>
         <div id="dropdown-wantedinfo-$index" class="dropdown-menu has-tip">
@@ -172,11 +172,7 @@
         <!-- Use this for a dropdown when clicking on the show name
         <b><a href='#' data-dropdown="#dropdown-lastdown-$item['id']">$item['title']</a></b>
         -->
-#if $item['type'] == 'episode':
-        <b>$item['title']</b>
-#else if $item['type'] == 'movie':
-        <b>$item['title'] ($item['year']</b>
-#end if
+        <b>$display_name($item)</b>
         <a href="#"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" data-dropdown="#dropdown-lastdowninfo-$item['id']" /></a>
         <div id="dropdown-lastdowninfo-$item['id']" class="dropdown-menu has-tip">
             <ul>
