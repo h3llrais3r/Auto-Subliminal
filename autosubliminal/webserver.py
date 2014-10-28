@@ -10,7 +10,7 @@ import cherrypy
 
 import autosubliminal
 from autosubliminal import config, utils, subchecker, notify
-from autosubliminal.db import IdCache, LastDownloads, ImdbIdCache
+from autosubliminal.db import TvdbIdCache, LastDownloads, ImdbIdCache
 
 
 def redirect(abspath, *args, **kwargs):
@@ -224,7 +224,7 @@ class Config():
 
     @cherrypy.expose(alias='flushCache')
     def flush_cache(self):
-        IdCache().flush_cache()
+        TvdbIdCache().flush_cache()
         ImdbIdCache().flush_cache()
         message = 'Id Cache flushed'
         tmpl = PageTemplate(file="interface/templates/message.tmpl")

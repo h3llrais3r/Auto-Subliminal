@@ -15,30 +15,24 @@ def dict_factory(cursor, row):
     return d
 
 
-class IdCache():
+class TvdbIdCache():
     def __init__(self):
-        self.query_get_id = "select tvdb_id from id_cache where show_name = ?"
-        self.query_set_id = "insert into id_cache values (?,?)"
-        self.query_flush_cache = "delete from id_cache"
+        self.query_get_id = "select tvdb_id from tvdb_id_cache where show_name = ?"
+        self.query_set_id = "insert into tvdb_id_cache values (?,?)"
+        self.query_flush_cache = "delete from tvdb_id_cache"
 
     def get_id(self, show_name):
-        show_name = show_name
-
+        tvdb_id = None
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self.query_get_id, [show_name.upper()])
-        tvdb_id = None
-
         for row in cursor:
             tvdb_id = row[0]
-
         connection.close()
         if tvdb_id:
             return int(tvdb_id)
 
     def set_id(self, tvdb_id, show_name):
-        show_name = show_name
-
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self.query_set_id, [tvdb_id, show_name.upper()])
@@ -141,7 +135,7 @@ def create():
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
 
-        query = "CREATE TABLE id_cache (tvdb_id INTEGER, show_name TEXT);"
+        query = "CREATE TABLE tvdb_id_cache (tvdb_id INTEGER, show_name TEXT);"
         cursor.execute(query)
         connection.commit()
 
@@ -228,6 +222,10 @@ def upgrade(from_version, to_version):
             cursor.execute("DROP TABLE tmp_last_downloads")
             # Create imdb_id_cache
             cursor.execute("CREATE TABLE imdb_id_cache (imdb_id TEXT, title TEXT, year TEXT)")
+            # Create tvdb_id_cache
+            cursor.execute("CREATE TABLE tvdb_id_cache (tvdb_id TEXT, show_name TEXT)")
+            # Drop id_cache
+            cursor.execute("DROP TABLE id_cache")
             # Update database version
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (6, 5))
             connection.commit()

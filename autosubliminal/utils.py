@@ -14,7 +14,7 @@ import imdb
 from tvdb_api import tvdb_api
 
 import autosubliminal
-from autosubliminal.db import IdCache, ImdbIdCache
+from autosubliminal.db import TvdbIdCache, ImdbIdCache
 from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
@@ -170,7 +170,7 @@ def get_showid(show_name, force_search=False):
             log.debug("showid from namemapping %s" % show_id)
             return int(show_id)
 
-        show_id = IdCache().get_id(show_name)
+        show_id = TvdbIdCache().get_id(show_name)
         if show_id:
             log.debug("showid from cache %s" % show_id)
             if show_id == -1:
@@ -186,14 +186,14 @@ def get_showid(show_name, force_search=False):
                 show_id = show['id']
         except:
             log.error("Showid not found for %s" % show_name)
-            IdCache().set_id(-1, show_name)
+            TvdbIdCache().set_id(-1, show_name)
     else:
         log.warning("Out of API calls")
         return None
 
     if show_id:
         log.debug("Showid from api %s" % show_id)
-        IdCache().set_id(show_id, show_name)
+        TvdbIdCache().set_id(show_id, show_name)
         log.info("%s added to cache with %s" % (show_name, show_id))
         return int(show_id)
 
