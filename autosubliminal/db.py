@@ -53,6 +53,36 @@ class IdCache():
         connection.close()
 
 
+class ImdbIdCache():
+    def __init__(self):
+        self.query_get_id = "select imdb_id from imdb_id_cache where title = ? and year = ?"
+        self.query_set_id = "insert into imdb_id_cache values (?,?,?)"
+        self.query_flush_cache = "delete from imdb_id_cache"
+
+    def get_id(self, title, year):
+        imdb_id = None
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self.query_get_id, [title.upper(), year])
+        for row in cursor:
+            imdb_id = row[0]
+        connection.close()
+        return imdb_id
+
+    def set_id(self, imdb_id, title, year):
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self.query_set_id, [imdb_id, title.upper(), year])
+        connection.commit()
+        connection.close()
+
+    def flush_cache(self):
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self.query_flush_cache)
+        connection.commit()
+        connection.close()
+
 class LastDownloads():
     def __init__(self):
         self.query_get = "select * from last_downloads order by timestamp desc;"
@@ -112,6 +142,10 @@ def create():
         cursor = connection.cursor()
 
         query = "CREATE TABLE id_cache (tvdb_id INTEGER, show_name TEXT);"
+        cursor.execute(query)
+        connection.commit()
+
+        query = "CREATE TABLE imdb_id_cache (imdb_id TEXT, title TEXT, year TEXT);"
         cursor.execute(query)
         connection.commit()
 
@@ -183,15 +217,18 @@ def upgrade(from_version, to_version):
             connection.commit()
             connection.close()
         if from_version == 5 and to_version == 6:
-            # Recreate last_downloads
             connection = sqlite3.connect(autosubliminal.DBFILE)
             cursor = connection.cursor()
+            # Recreate last_downloads
             cursor.execute("CREATE TABLE tmp_last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, releasegrp TEXT, subtitle TEXT, provider TEXT)")
             cursor.execute("INSERT INTO tmp_last_downloads SELECT id, 'episode', show_name, '', season, episode, quality, source, language, codec, timestamp, releasegrp, subtitle, provider FROM last_downloads")
             cursor.execute("DROP TABLE last_downloads")
             cursor.execute("CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, releasegrp TEXT, subtitle TEXT, provider TEXT)")
             cursor.execute("INSERT INTO last_downloads SELECT * from tmp_last_downloads")
             cursor.execute("DROP TABLE tmp_last_downloads")
+            # Create imdb_id_cache
+            cursor.execute("CREATE TABLE imdb_id_cache (imdb_id TEXT, title TEXT, year TEXT)")
+            # Update database version
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (6, 5))
             connection.commit()
             connection.close()
