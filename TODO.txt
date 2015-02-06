@@ -2,5 +2,3 @@ TODO:
 - add support for movie subtitles
     - adapt (split) minmatchscore for episode and movie
     - adapt (split) postprocessing for episode and movie
-- check if we need to request our own TVDB API key (and perhaps use an API CALL CHECK for it to prevent excessive usage)
-- check if we need to request our own IMDB API key (and perhaps use an API CALL CHECK for it to prevent excessive usage)
