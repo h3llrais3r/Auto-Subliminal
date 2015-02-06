@@ -29,11 +29,6 @@ class SubChecker():
         log.info("Starting round of subtitle checking")
         to_delete_wanted_queue = []
 
-        # Check api calls
-        if not utils.check_apicalls():
-            log.warning("Out of api calls")
-            return True
-
         # Get wanted queue lock
         if not utils.get_wanted_queue_lock():
             return False
@@ -78,11 +73,6 @@ class SubChecker():
 def search_subtitle(wanted_item_index, lang):
     log.info("Searching for an individual subtitle")
     subs = []
-
-    # Check api calls
-    if not utils.check_apicalls():
-        log.warning("Out of api calls")
-        return subs, "Skipping! Out of api calls!"
 
     # Get wanted queue lock
     if not utils.get_wanted_queue_lock():
@@ -236,11 +226,6 @@ def post_process(wanted_item_index, subtitle_index):
 def _scan_wanted_item_for_video(wanted_item):
     originalfile = wanted_item['originalFileLocationOnDisk']
     log.debug("Scanning the wanted item for a video: %s" % originalfile)
-
-    # Check api calls
-    if not utils.check_apicalls(use=True):
-        log.warning("Out of api calls")
-        return
 
     # Scan the video (disable scan for subtitles)
     # With subtitle scan enabled, enzyme looks inside for embedded subtitles

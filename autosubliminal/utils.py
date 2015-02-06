@@ -191,17 +191,13 @@ def get_showid(show_name, force_search=False):
             return int(show_id)
 
     # Search on tvdb
-    if check_apicalls():
-        try:
-            show = tvdb_api.Tvdb()[show_name]
-            if show:
-                show_id = show['id']
-        except:
-            log.error("Showid not found for %s" % show_name)
-            TvdbIdCache().set_id(-1, show_name)
-    else:
-        log.warning("Out of API calls")
-        return None
+    try:
+        show = tvdb_api.Tvdb()[show_name]
+        if show:
+            show_id = show['id']
+    except:
+        log.error("Showid not found for %s" % show_name)
+        TvdbIdCache().set_id(-1, show_name)
 
     if show_id:
         log.debug("Showid from api %s" % show_id)
