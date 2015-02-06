@@ -129,13 +129,25 @@ def return_upper(text):
         pass
 
 
-def name_mapping(show_name):
-    if show_name.upper() in autosubliminal.USERNAMEMAPPINGUPPER.keys():
-        log.debug("Found match in user's namemapping for %s" % show_name)
-        return autosubliminal.USERNAMEMAPPINGUPPER[show_name.upper()]
-    elif show_name.upper() in autosubliminal.NAMEMAPPINGUPPER.keys():
+def show_name_mapping(show_name):
+    if show_name.upper() in autosubliminal.USERSHOWNAMEMAPPINGUPPER.keys():
+        log.debug("Found match in usershownamemapping for %s" % show_name)
+        return autosubliminal.USERSHOWNAMEMAPPINGUPPER[show_name.upper()]
+    elif show_name.upper() in autosubliminal.SHOWNAMEMAPPINGUPPER.keys():
         log.debug("Found match for %s" % show_name)
-        return autosubliminal.NAMEMAPPINGUPPER[show_name.upper()]
+        return autosubliminal.SHOWNAMEMAPPINGUPPER[show_name.upper()]
+
+
+def movie_name_mapping(title, year):
+    movie = title
+    if year:
+        movie += " (" + str(year) + ")"
+    if movie.upper() in autosubliminal.USERMOVIENAMEMAPPINGUPPER.keys():
+        log.debug("Found match in usermovienamemapping for %s" % movie)
+        return autosubliminal.USERMOVIENAMEMAPPINGUPPER[movie.upper()]
+    elif movie.upper() in autosubliminal.MOVIENAMEMAPPINGUPPER.keys():
+        log.debug("Found match for %s" % movie)
+        return autosubliminal.MOVIENAMEMAPPINGUPPER[movie.upper()]
 
 
 def skip_show(show_name, season, episode):
@@ -163,16 +175,16 @@ def skip_movie(title, year):
 def get_showid(show_name, force_search=False):
     log.debug("Getting showid for %s" % show_name)
     show_id = None
-    # Skip search in namemapping and id cache when force_search = True
+    # Skip search in shownamemapping and id cache when force_search = True
     if not force_search:
-        show_id = name_mapping(show_name)
+        show_id = show_name_mapping(show_name)
         if show_id:
-            log.debug("showid from namemapping %s" % show_id)
+            log.debug("Showid from shownamemapping %s" % show_id)
             return int(show_id)
 
         show_id = TvdbIdCache().get_id(show_name)
         if show_id:
-            log.debug("showid from cache %s" % show_id)
+            log.debug("Getting showid from cache %s" % show_id)
             if show_id == -1:
                 log.error("Showid not found for %s" % show_name)
                 return
@@ -204,9 +216,13 @@ def get_imdb_info(title, year=None, force_search=False):
     if year:
         name += " (" + str(year) + ")"
     log.debug("Getting imdb info for %s" % name)
-    # Skip search in namemapping and id cache when force_search = True
+    # Skip search in movienamemapping and id cache when force_search = True
     if not force_search:
-        # TODO: include namemapping
+        imdb_id = movie_name_mapping(title, year)
+        if imdb_id:
+            log.debug("Imdb id from movienamemapping %s" % imdb_id)
+            return imdb_id, year
+
         imdb_id = ImdbIdCache().get_id(title, year)
         if imdb_id:
             log.debug("Getting imdb id from cache %s" % imdb_id)
@@ -223,7 +239,7 @@ def get_imdb_info(title, year=None, force_search=False):
             if year:
                 if data['year'] == year:
                     imdb_id = movie.movieID
-                    log.debug("Imdb id from api %s" % imdb_id)
+                    log.debug("Getting imdb id from api %s" % imdb_id)
                     ImdbIdCache().set_id(imdb_id, title, year)
                     log.info("%s added to cache with %s" % (name, imdb_id))
                     break
@@ -232,7 +248,7 @@ def get_imdb_info(title, year=None, force_search=False):
             # If no year is present, take the first match
             else:
                 imdb_id = movie.movieID
-                log.debug("Imdb id from api %s" % imdb_id)
+                log.debug("Getting imdb id from api %s" % imdb_id)
                 ImdbIdCache.set_id(imdb_id, title, year)
                 log.info("%s added to cache with %s" % (name, imdb_id))
                 year = data['year']

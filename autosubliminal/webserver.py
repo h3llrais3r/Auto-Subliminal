@@ -90,7 +90,7 @@ class Config():
                     logfile, loglevel, lognum, logsize, loghttpaccess, logreversed, loglevelconsole,
                     webserverip, webserverport, webroot, username, password, launchbrowser,
                     includehearingimpaired, addic7edusername, addic7edpassword,
-                    usernamemapping,
+                    usershownamemapping, usermovienamemapping,
                     skipshow,
                     skipmovie,
                     notify,
@@ -166,7 +166,8 @@ class Config():
         autosubliminal.ADDIC7EDPASSWORD = addic7edpassword
 
         # Set usernamemapping variables
-        autosubliminal.USERNAMEMAPPING = config.string_to_dict(usernamemapping)
+        autosubliminal.USERSHOWNAMEMAPPING = config.string_to_dict(usershownamemapping)
+        autosubliminal.USERMOVIENAMEMAPPING = config.string_to_dict(usermovienamemapping)
 
         # Set skipshow variables
         autosubliminal.SKIPSHOW = config.string_to_dict(skipshow)

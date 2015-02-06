@@ -1,16 +1,39 @@
 #import autosubliminal
 
-<textarea rows="10" cols="75" name="usernamemapping">$autosubliminal.config.display_namemapping</textarea> <br />
+<b>Show name mapping</b><br /><br />
+
+<textarea rows="10" cols="75" name="usershownamemapping">$autosubliminal.config.display_shownamemapping</textarea> <br />
 
 <table>
 	<tr>
 		<td width="140px">Information</td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationNamemappingInfo"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationNamemappingInfo" class="dropdown-menu has-tip" align="left"><ul><li>Required. It allows the user to match the local Serie name to the TVDB serie number.</li></ul></div></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationShowNamemappingInfo"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationShowNamemappingInfo" class="dropdown-menu has-tip" align="left"><ul><li>Required. It allows the user to match the local Serie name to the TVDB ID.</li></ul></div></td>
 	</tr>
 
 	<tr>
 		<td width="140px">Example</td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationNamemappingExample"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationNamemappingExample" class="dropdown-menu has-tip" align="left"><ul><li>Serie name = 12345<br />
-Serie Name 2 = 123456<br /></li></ul></div></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationShowNamemappingExample"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationShowNamemappingExample" class="dropdown-menu has-tip" align="left"><ul><li>Serie name = 12345<br />
+Serie name 2 = 123456<br /></li></ul></div></td>
+	</tr>
+</table>
+
+<tr>
+    <td colspan="2"><hr></td>
+</tr>
+
+<b>Movie name mapping</b><br /><br />
+
+<textarea rows="10" cols="75" name="usermovienamemapping">$autosubliminal.config.display_movienamemapping</textarea> <br />
+
+<table>
+	<tr>
+		<td width="140px">Information</td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationMovieNamemappingInfo"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationMovieNamemappingInfo" class="dropdown-menu has-tip" align="left"><ul><li>Required. It allows the user to match the local movie name and year to the IMDB ID.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="140px">Example</td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationMovieNamemappingExample"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationMovieNamemappingExample" class="dropdown-menu has-tip" align="left"><ul><li>Movie title (year) = 12345<br />
+Movie title 2 (year) = 123456<br /></li></ul></div></td>
 	</tr>
 </table>
