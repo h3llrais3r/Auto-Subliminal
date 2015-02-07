@@ -73,35 +73,6 @@ def read_config():
         else:
             autosubliminal.ADDITIONALLANGUAGES = []
 
-        if cfg.has_option('config', 'minmatchscore'):
-            autosubliminal.MINMATCHSCORE = cfg.getint('config', 'minmatchscore')
-            # Force the default minmatchscore when a wrongly configured value is entered manually in the config file
-            if autosubliminal.MINMATCHSCORE < autosubliminal.MINMATCHSCOREDEFAULT:
-                print "WARNING: Invalid MINMATCHSCORE found. Using the default score (%s) instead." % autosubliminal.MINMATCHSCOREDEFAULT
-                autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
-        else:
-            autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
-
-        if cfg.has_option('config', 'matchsource'):
-            autosubliminal.MATCHSOURCE = cfg.getboolean('config', 'matchsource')
-        else:
-            autosubliminal.MATCHSOURCE = False
-
-        if cfg.has_option('config', 'matchquality'):
-            autosubliminal.MATCHQUALITY = cfg.getboolean('config', 'matchquality')
-        else:
-            autosubliminal.MATCHQUALITY = False
-
-        if cfg.has_option('config', 'matchcodec'):
-            autosubliminal.MATCHCODEC = cfg.getboolean('config', 'matchcodec')
-        else:
-            autosubliminal.MATCHCODEC = False
-
-        if cfg.has_option('config', 'matchreleasegroup'):
-            autosubliminal.MATCHRELEASEGROUP = cfg.getboolean('config', 'matchreleasegroup')
-        else:
-            autosubliminal.MATCHRELEASEGROUP = False
-
         if cfg.has_option('config', 'scandisk'):
             autosubliminal.SCHEDULERSCANDISK = cfg.getint('config', 'scandisk')
         else:
@@ -138,11 +109,6 @@ def read_config():
         autosubliminal.DEFAULTLANGUAGE = u"en"
         autosubliminal.DEFAULTLANGUAGESUFFIX = False
         autosubliminal.ADDITIONALLANGUAGES = []
-        autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
-        autosubliminal.MATCHSOURCE = False
-        autosubliminal.MATCHQUALITY = False
-        autosubliminal.MATCHCODEC = False
-        autosubliminal.MATCHRELEASEGROUP = False
         autosubliminal.SCHEDULERSCANDISK = 3600
         autosubliminal.SCHEDULERCHECKSUB = 28800
         autosubliminal.SKIPHIDDENDIRS = False
@@ -250,6 +216,35 @@ def read_config():
         autosubliminal.LAUNCHBROWSER = True
 
     if cfg.has_section('subliminal'):
+        if cfg.has_option('subliminal', 'minmatchscore'):
+            autosubliminal.MINMATCHSCORE = cfg.getint('subliminal', 'minmatchscore')
+            # Force the default minmatchscore when a wrongly configured value is entered manually in the config file
+            if autosubliminal.MINMATCHSCORE < autosubliminal.MINMATCHSCOREDEFAULT:
+                print "WARNING: Invalid MINMATCHSCORE found. Using the default score (%s) instead." % autosubliminal.MINMATCHSCOREDEFAULT
+                autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
+        else:
+            autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
+
+        if cfg.has_option('subliminal', 'matchsource'):
+            autosubliminal.MATCHSOURCE = cfg.getboolean('subliminal', 'matchsource')
+        else:
+            autosubliminal.MATCHSOURCE = False
+
+        if cfg.has_option('subliminal', 'matchquality'):
+            autosubliminal.MATCHQUALITY = cfg.getboolean('subliminal', 'matchquality')
+        else:
+            autosubliminal.MATCHQUALITY = False
+
+        if cfg.has_option('subliminal', 'matchcodec'):
+            autosubliminal.MATCHCODEC = cfg.getboolean('subliminal', 'matchcodec')
+        else:
+            autosubliminal.MATCHCODEC = False
+
+        if cfg.has_option('subliminal', 'matchreleasegroup'):
+            autosubliminal.MATCHRELEASEGROUP = cfg.getboolean('subliminal', 'matchreleasegroup')
+        else:
+            autosubliminal.MATCHRELEASEGROUP = False
+
         if cfg.has_option('subliminal', 'providers'):
             autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
             autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
@@ -274,6 +269,11 @@ def read_config():
                                  'password': autosubliminal.ADDIC7EDPASSWORD}}
     else:
         # Subliminal section is missing
+        autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
+        autosubliminal.MATCHSOURCE = False
+        autosubliminal.MATCHQUALITY = False
+        autosubliminal.MATCHCODEC = False
+        autosubliminal.MATCHRELEASEGROUP = False
         autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
         autosubliminal.INCLUDEHEARINGIMPAIRED = False
 
@@ -792,11 +792,6 @@ def save_config_section():
     cfg.set(section, "defaultlanguage", autosubliminal.DEFAULTLANGUAGE)
     cfg.set(section, "defaultlanguagesuffix", autosubliminal.DEFAULTLANGUAGESUFFIX)
     cfg.set(section, "additionallanguages", str(additionallanguages))
-    cfg.set(section, "minmatchscore", str(autosubliminal.MINMATCHSCORE))
-    cfg.set(section, "matchsource", str(autosubliminal.MATCHSOURCE))
-    cfg.set(section, "matchquality", str(autosubliminal.MATCHQUALITY))
-    cfg.set(section, "matchcodec", str(autosubliminal.MATCHCODEC))
-    cfg.set(section, "matchreleasegroup", str(autosubliminal.MATCHRELEASEGROUP))
     cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
     cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
@@ -883,6 +878,11 @@ def save_subliminal_section():
     if not cfg.has_section(section):
         cfg.add_section(section)
 
+    cfg.set(section, "minmatchscore", str(autosubliminal.MINMATCHSCORE))
+    cfg.set(section, "matchsource", str(autosubliminal.MATCHSOURCE))
+    cfg.set(section, "matchquality", str(autosubliminal.MATCHQUALITY))
+    cfg.set(section, "matchcodec", str(autosubliminal.MATCHCODEC))
+    cfg.set(section, "matchreleasegroup", str(autosubliminal.MATCHRELEASEGROUP))
     cfg.set(section, "providers", str(autosubliminal.SUBLIMINALPROVIDERS))
     cfg.set(section, "includehearingimpaired", str(autosubliminal.INCLUDEHEARINGIMPAIRED))
     cfg.set(section, "addic7edusername", str(autosubliminal.ADDIC7EDUSERNAME))

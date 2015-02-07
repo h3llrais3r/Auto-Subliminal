@@ -54,58 +54,6 @@
 	</tr>
 
 	<tr>
-		<td width="200px">MinMatchScore</td>
-		<td>
-
-		<!--
-		Show:
-		## this is always True because the default value is forced at startup in case of an invalid score
-		#if True
-			<input type="checkbox" name="mmsdefault" value="1" checked="checked" disabled="disabled">
-			<input type="hidden" name="mmsdefault" value="1">
-		#else
-			## this should never be possible because the default value is forced at startup in case of an invalid score
-			<input type="checkbox" name="mmsdefault" value="0">
-		#end if
-		-->
-		<input type="hidden" name="mmsdefault" value="1">
-
-		Source:
-		#if $autosubliminal.MATCHSOURCE
-			<input type="checkbox" name="mmssource" value="1" checked="checked">
-		#else
-			<input type="checkbox" name="mmssource" value="0">
-		#end if
-
-		Quality:
-		#if $autosubliminal.MATCHQUALITY
-			<input type="checkbox" name="mmsquality" value="1" checked="checked">
-		#else
-			<input type="checkbox" name="mmsquality" value="0">
-		#end if
-
-		Codec:
-		#if $autosubliminal.MATCHCODEC
-			<input type="checkbox" name="mmscodec" value="1" checked="checked">
-		#else
-			<input type="checkbox" name="mmscodec" value="0">
-		#end if
-
-		Group:
-		#if $autosubliminal.MATCHRELEASEGROUP
-			<input type="checkbox" name="mmsreleasegroup" value="1" checked="checked">
-		#else
-			<input type="checkbox" name="mmsreleasegroup" value="0">
-		#end if
-
-		</td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationMinmatchscore"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a>
-		<div id="informationMinmatchscore" class="dropdown-menu has-tip" align="left"><ul><li>
-		What items should match before a subtitle is downloaded via the API?
-		</li></ul></div></td>
-	</tr>
-
-	<tr>
 		<td width="200px">ScanDisk</td>
 		<td><input type="text" size="50" name="scandisk" value="$autosubliminal.SCHEDULERSCANDISK" /></td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationScandisk"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationScandisk" class="dropdown-menu has-tip" align="left"><ul><li>Change the interval of the ScanDisk thread, it scans the disk for missing subtitle files.<br />Time is in seconds, default is 3600 seconds.</li></ul></div></td>

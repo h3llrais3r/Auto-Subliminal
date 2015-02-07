@@ -2,13 +2,63 @@
 
 #import autosubliminal
 
-<b>WARNING</b>: All passwords are stored in plaintext!<br />
-
 <table>
 
     <tr>
-        <td colspan="3"><hr></td>
+		<td width="200px" colspan="2"><b>General</b><br /><br /></td>
     </tr>
+
+    <tr>
+		<td width="200px">MinMatchScore</td>
+		<td>
+
+		<!--
+		Show:
+		## this is always True because the default value is forced at startup in case of an invalid score
+		#if True
+			<input type="checkbox" name="mmsdefault" value="1" checked="checked" disabled="disabled">
+			<input type="hidden" name="mmsdefault" value="1">
+		#else
+			## this should never be possible because the default value is forced at startup in case of an invalid score
+			<input type="checkbox" name="mmsdefault" value="0">
+		#end if
+		-->
+		<input type="hidden" name="mmsdefault" value="1">
+
+		Source:
+		#if $autosubliminal.MATCHSOURCE
+			<input type="checkbox" name="mmssource" value="1" checked="checked">
+		#else
+			<input type="checkbox" name="mmssource" value="0">
+		#end if
+
+		Quality:
+		#if $autosubliminal.MATCHQUALITY
+			<input type="checkbox" name="mmsquality" value="1" checked="checked">
+		#else
+			<input type="checkbox" name="mmsquality" value="0">
+		#end if
+
+		Codec:
+		#if $autosubliminal.MATCHCODEC
+			<input type="checkbox" name="mmscodec" value="1" checked="checked">
+		#else
+			<input type="checkbox" name="mmscodec" value="0">
+		#end if
+
+		Group:
+		#if $autosubliminal.MATCHRELEASEGROUP
+			<input type="checkbox" name="mmsreleasegroup" value="1" checked="checked">
+		#else
+			<input type="checkbox" name="mmsreleasegroup" value="0">
+		#end if
+
+		</td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationMinmatchscore"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a>
+		<div id="informationMinmatchscore" class="dropdown-menu has-tip" align="left"><ul><li>
+		What items should match before a subtitle is downloaded via the API?
+		</li></ul></div></td>
+	</tr>
 
 	<tr>
 		<td width="180px" style="vertical-align:top;">Subliminal providers</td>
@@ -50,7 +100,7 @@
     </tr>
 
     <tr>
-        <td>&nbsp;</td>
+        <td colspan="2"><b>WARNING</b>: Password is stored in plaintext!<br /><br /></td>
     </tr>
 
     <tr>

@@ -115,7 +115,25 @@ class Config():
         autosubliminal.SCHEDULERCHECKSUB = int(checksub)
         autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
 
-        # Set match options and minmatchscore
+        # Set logfile variables
+        autosubliminal.LOGFILE = logfile
+        autosubliminal.LOGLEVEL = int(loglevel)
+        autosubliminal.LOGNUM = int(lognum)
+        autosubliminal.LOGSIZE = int(logsize)
+        autosubliminal.LOGHTTPACCESS = loghttpaccess
+        autosubliminal.LOGREVERSED = logreversed
+        autosubliminal.LOGLEVELCONSOLE = int(loglevelconsole)
+
+        # Set webserver variables
+        autosubliminal.WEBSERVERIP = webserverip
+        autosubliminal.WEBSERVERPORT = int(webserverport)
+        autosubliminal.WEBROOT = webroot
+        autosubliminal.USERNAME = username
+        autosubliminal.PASSWORD = password
+        autosubliminal.LAUNCHBROWSER = launchbrowser
+
+        # Set subliminal variables
+        # Match options and minmatchscore
         autosubliminal.MATCHSOURCE = False
         autosubliminal.MATCHQUALITY = False
         autosubliminal.MATCHCODEC = False
@@ -137,32 +155,15 @@ class Config():
         if mmsreleasegroup:
             autosubliminal.MINMATCHSCORE += 6
             autosubliminal.MATCHRELEASEGROUP = True
-
-        # Set logfile variables
-        autosubliminal.LOGFILE = logfile
-        autosubliminal.LOGLEVEL = int(loglevel)
-        autosubliminal.LOGNUM = int(lognum)
-        autosubliminal.LOGSIZE = int(logsize)
-        autosubliminal.LOGHTTPACCESS = loghttpaccess
-        autosubliminal.LOGREVERSED = logreversed
-        autosubliminal.LOGLEVELCONSOLE = int(loglevelconsole)
-
-        # Set webserver variables
-        autosubliminal.WEBSERVERIP = webserverip
-        autosubliminal.WEBSERVERPORT = int(webserverport)
-        autosubliminal.WEBROOT = webroot
-        autosubliminal.USERNAME = username
-        autosubliminal.PASSWORD = password
-        autosubliminal.LAUNCHBROWSER = launchbrowser
-
-        # Set subliminal variables
-        # Subliminal providers(convert list to comma separated string if multiple are selected)
+        # Subliminal providers (convert list to comma separated string if multiple are selected)
         if subliminalproviders and not isinstance(subliminalproviders, basestring):
             autosubliminal.SUBLIMINALPROVIDERS = ','.join([str(provider) for provider in subliminalproviders])
         else:
             # Just one selected or None (in this case, None will be saved and no providers will be used)
             autosubliminal.SUBLIMINALPROVIDERS = subliminalproviders
+        # Hearing impaired
         autosubliminal.INCLUDEHEARINGIMPAIRED = includehearingimpaired
+        # Addic7ed provider
         autosubliminal.ADDIC7EDUSERNAME = addic7edusername
         autosubliminal.ADDIC7EDPASSWORD = addic7edpassword
 
@@ -170,10 +171,8 @@ class Config():
         autosubliminal.USERSHOWNAMEMAPPING = config.string_to_dict(usershownamemapping)
         autosubliminal.USERMOVIENAMEMAPPING = config.string_to_dict(usermovienamemapping)
 
-        # Set skipshow variables
+        # Set skip variables
         autosubliminal.SKIPSHOW = config.string_to_dict(skipshow)
-
-        # Set skipmovie variables
         autosubliminal.SKIPMOVIE = config.string_to_dict(skipmovie)
 
         # Set notify variables
