@@ -287,7 +287,7 @@ def _search_subtitles(video, lang, best_only):
         subtitles = subliminal.list_subtitles(videos, languages, providers=autosubliminal.SUBLIMINALPROVIDERLIST)
         subliminal.download_subtitles(subtitles[video])
 
-    return subtitles, lang, single
+    return subtitles, language, single
 
 
 def _get_wanted_subtitle(subtitles, subtitle_index):
@@ -328,7 +328,7 @@ def _construct_download_item(wanted_item, subtitles, language, single):
     subtitle_path = subliminal.subtitle.get_subtitle_path(video.name, None if single else language)
     download_item['destinationFileLocationOnDisk'] = subtitle_path
     download_item['downloadLink'] = subtitle.page_link
-    download_item['downlang'] = language
+    download_item['downlang'] = language.alpha2
     download_item['subtitle'] = os.path.split(download_item['destinationFileLocationOnDisk'])[1][:-4]
     download_item['provider'] = subtitle.provider_name
     download_item['subtitles'] = subtitles
