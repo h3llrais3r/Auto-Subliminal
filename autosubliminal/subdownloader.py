@@ -86,8 +86,7 @@ class SubDownloader():
 
         # Post processing
         result = True
-        if autosubliminal.POSTPROCESS and autosubliminal.POSTPROCESSCMD:
-            result = PostProcessor(autosubliminal.POSTPROCESSUTF8ENCODING, autosubliminal.POSTPROCESSCMD,
-                                   self.dowload_item).run()
+        if autosubliminal.POSTPROCESS:
+            result = PostProcessor(self.dowload_item).run()
 
         return result

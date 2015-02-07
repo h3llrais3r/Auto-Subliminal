@@ -480,8 +480,17 @@ def read_config():
         else:
             autosubliminal.POSTPROCESSUTF8ENCODING = False
 
-        if cfg.has_option("postprocessing", "postprocesscmd"):
-            autosubliminal.POSTPROCESSCMD = cfg.get("postprocessing", "postprocesscmd")
+        if cfg.has_option("postprocessing", "showpostprocesscmd"):
+            autosubliminal.SHOWPOSTPROCESSCMD = cfg.get("postprocessing", "showpostprocesscmd")
+
+        if cfg.has_option("postprocessing", "showpostprocesscmdargs"):
+            autosubliminal.SHOWPOSTPROCESSCMDARGS = cfg.get("postprocessing", "showpostprocesscmdargs")
+
+        if cfg.has_option("postprocessing", "moviepostprocesscmd"):
+            autosubliminal.MOVIEPOSTPROCESSCMD = cfg.get("postprocessing", "moviepostprocesscmd")
+
+        if cfg.has_option("postprocessing", "moviepostprocesscmdargs"):
+            autosubliminal.MOVIEPOSTPROCESSCMDARGS = cfg.get("postprocessing", "moviepostprocesscmdargs")
 
     else:
         autosubliminal.POSTPROCESS = False
@@ -1065,7 +1074,10 @@ def save_postprocessing_section():
 
     cfg.set(section, "postprocess", str(autosubliminal.POSTPROCESS))
     cfg.set(section, "postprocessutf8encoding", str(autosubliminal.POSTPROCESSUTF8ENCODING))
-    cfg.set(section, "postprocesscmd", autosubliminal.POSTPROCESSCMD)
+    cfg.set(section, "showpostprocesscmd", autosubliminal.SHOWPOSTPROCESSCMD)
+    cfg.set(section, "showpostprocesscmdargs", autosubliminal.SHOWPOSTPROCESSCMDARGS)
+    cfg.set(section, "moviepostprocesscmd", autosubliminal.MOVIEPOSTPROCESSCMD)
+    cfg.set(section, "moviepostprocesscmdargs", autosubliminal.MOVIEPOSTPROCESSCMDARGS)
 
     with open(autosubliminal.CONFIGFILE, 'wb') as file:
         cfg.write(file)

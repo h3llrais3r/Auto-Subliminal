@@ -1,6 +1,7 @@
 import logging
 import sys
 
+import autosubliminal
 from autosubliminal import utils
 
 log = logging.getLogger(__name__)
@@ -9,17 +10,25 @@ log = logging.getLogger(__name__)
 class PostProcessor():
     """
     Post Processor. It launches the specified command and retrieves the arguments from the download_dict.
-    Additionally, some optional arguments and the encoding (for command and arguments) can be passed.
+    Additionally, arguments and the encoding (for command and arguments) can be specified.
     """
 
-    def __init__(self, utf8encoding, cmd, download_dict, args=None):
+    def __init__(self, download_dict):
         # Set utf-8 encoding if needed, otherwise use default encoding (normally ascii)
-        self.encoding = 'utf-8' if utf8encoding else sys.getdefaultencoding()
-        self.cmd = cmd
-        self.args = args
         self.download_dict = download_dict
+        self.encoding = 'utf-8' if autosubliminal.POSTPROCESSUTF8ENCODING else sys.getdefaultencoding()
+        if download_dict['type'] == 'episode':
+            self.cmd = autosubliminal.SHOWPOSTPROCESSCMD
+            self.args = autosubliminal.SHOWPOSTPROCESSCMDARGS
+        elif download_dict['type'] == 'movie':
+            self.cmd = autosubliminal.MOVIEPOSTPROCESSCMD
+            self.args = autosubliminal.MOVIEPOSTPROCESSCMDARGS
 
     def run(self):
+        if not self.cmd:
+            log.debug("No post processor command specified, skipping")
+            return True
+
         log.info("Running post processor")
         process_cmd = self._constuct_process_cmd()
         stdout, stderr = utils.run_cmd(process_cmd)

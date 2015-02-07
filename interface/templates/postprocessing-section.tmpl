@@ -3,7 +3,11 @@
 <table>
 
     <tr>
-		<td width="200px">Post-process</td>
+	    <td colspan="2"><b>General</b><br /><br /></td>
+	</tr>
+
+    <tr>
+		<td width="275px">Post-process</td>
 		<td><select name="postprocess">
 		    #if $autosubliminal.POSTPROCESS
                 <option value="True" selected="selected">Enabled</option>
@@ -17,7 +21,7 @@
 	</tr>
 
 	<tr>
-		<td width="200px">UTF-8 encoding</td>
+		<td width="275px">UTF-8 encoding</td>
 		<td><select name="postprocessutf8encoding">
 		    #if $autosubliminal.POSTPROCESSUTF8ENCODING
                 <option value="True" selected="selected">Enabled</option>
@@ -31,9 +35,43 @@
 	</tr>
 
 	<tr>
-		<td width="200px">Post-process command</td>
-		<td><input type="text" size="75" name="postprocesscmd" value="$autosubliminal.POSTPROCESSCMD" /></td>
-		<td width="25px" align="right"><a href='#' data-dropdown="#informationPostprocesscmd"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationPostprocesscmd" class="dropdown-menu has-tip" align="left"><ul><li>Auto-Subliminal will run this command after downloading a subtitle.</li></ul></div></td>
+        <td colspan="2"><hr></td>
+    </tr>
+
+	<tr>
+	    <td colspan="2"><b>Show</b><br /><br /></td>
+	</tr>
+
+	<tr>
+		<td width="275px">Post-process command</td>
+		<td><input type="text" size="75" name="showpostprocesscmd" value="$autosubliminal.SHOWPOSTPROCESSCMD" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationShowpostprocesscmd"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationShowpostprocesscmd" class="dropdown-menu has-tip" align="left"><ul><li>Auto-Subliminal will run this command after downloading a subtitle for a show.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="275px">Post-process command arguments</td>
+		<td><input type="text" size="75" name="showpostprocesscmdargs" value="$autosubliminal.SHOWPOSTPROCESSCMDARGS" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationShowpostprocesscmdargs"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationShowpostprocesscmdargs" class="dropdown-menu has-tip" align="left"><ul><li>Auto-Subliminal will pass these arguments to the command above after downloading a subtitle for a show.</li></ul></div></td>
+	</tr>
+
+	<tr>
+        <td colspan="2"><hr></td>
+    </tr>
+
+	<tr>
+	    <td colspan="2"><b>Movie</b><br /><br /></td>
+	</tr>
+
+	<tr>
+		<td width="275px">Post-process command</td>
+		<td><input type="text" size="75" name="moviepostprocesscmd" value="$autosubliminal.MOVIEPOSTPROCESSCMD" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationMoviepostprocesscmd"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationMoviepostprocesscmd" class="dropdown-menu has-tip" align="left"><ul><li>Auto-Subliminal will run this command after downloading a subtitle for a movie.</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="275px">Post-process command arguments</td>
+		<td><input type="text" size="75" name="moviepostprocesscmdargs" value="$autosubliminal.MOVIEPOSTPROCESSCMDARGS" /></td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationMoviepostprocesscmdargs"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationMoviepostprocesscmdargs" class="dropdown-menu has-tip" align="left"><ul><li>Auto-Subliminal will pass these arguments to the command above after downloading a subtitle for a movie.</li></ul></div></td>
 	</tr>
 
 </table>
