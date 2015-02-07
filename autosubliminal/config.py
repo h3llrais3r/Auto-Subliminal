@@ -225,6 +225,15 @@ def read_config():
         else:
             autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
 
+        if cfg.has_option('subliminal', 'movieminmatchscore'):
+            autosubliminal.MOVIEMINMATCHSCORE = cfg.getint('subliminal', 'movieminmatchscore')
+            # Force the default movieminmatchscore when a wrongly configured value is entered manually in the config file
+            if autosubliminal.MOVIEMINMATCHSCORE < autosubliminal.MOVIEMINMATCHSCOREDEFAULT:
+                print "WARNING: Invalid MOVIEMINMATCHSCORE found. Using the default score (%s) instead." % autosubliminal.MOVIEMINMATCHSCOREDEFAULT
+                autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
+        else:
+            autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
+
         if cfg.has_option('subliminal', 'matchsource'):
             autosubliminal.MATCHSOURCE = cfg.getboolean('subliminal', 'matchsource')
         else:
@@ -270,6 +279,7 @@ def read_config():
     else:
         # Subliminal section is missing
         autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
+        autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
         autosubliminal.MATCHSOURCE = False
         autosubliminal.MATCHQUALITY = False
         autosubliminal.MATCHCODEC = False
@@ -879,6 +889,7 @@ def save_subliminal_section():
         cfg.add_section(section)
 
     cfg.set(section, "showminmatchscore", str(autosubliminal.SHOWMINMATCHSCORE))
+    cfg.set(section, "movieminmatchscore", str(autosubliminal.MOVIEMINMATCHSCORE))
     cfg.set(section, "matchsource", str(autosubliminal.MATCHSOURCE))
     cfg.set(section, "matchquality", str(autosubliminal.MATCHQUALITY))
     cfg.set(section, "matchcodec", str(autosubliminal.MATCHCODEC))

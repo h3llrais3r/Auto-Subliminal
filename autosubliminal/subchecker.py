@@ -13,6 +13,7 @@ from subliminal.providers.opensubtitles import OpenSubtitlesSubtitle
 from subliminal.providers.podnapisi import PodnapisiSubtitle
 from subliminal.providers.thesubdb import TheSubDBSubtitle
 from subliminal.providers.tvsubtitles import TVsubtitlesSubtitle
+from subliminal.video import Episode, Movie
 
 log = logging.getLogger(__name__)
 
@@ -44,7 +45,7 @@ class SubChecker():
             langs = wanted_item['lang']
             for lang in langs[:]:
                 # Search the best subtitle with the minimal score
-                subtitles, language, single = _search_subtitles(video, lang, autosubliminal.SHOWMINMATCHSCORE, True)
+                subtitles, language, single = _search_subtitles(video, lang, True)
 
                 # Save when the best subtitle is found
                 if subtitles:
@@ -85,7 +86,7 @@ def search_subtitle(wanted_item_index, lang):
     video = _scan_wanted_item_for_video(wanted_item)
     if video:
         # Search the subtitles with the default minimal score (to get all the possibilities to select from)
-        subtitles, language, single = _search_subtitles(video, lang, autosubliminal.SHOWMINMATCHSCOREDEFAULT, False)
+        subtitles, language, single = _search_subtitles(video, lang, False)
         if subtitles:
             # Add found subtitles to wanted_item
             wanted_item['found_subtitles'] = {'subtitles': subtitles, 'language': language, 'single': single}
@@ -241,7 +242,7 @@ def _scan_wanted_item_for_video(wanted_item):
     return video
 
 
-def _search_subtitles(video, lang, min_score, best_only):
+def _search_subtitles(video, lang, best_only):
     log.debug("Searching for subtitles")
 
     # Determine language
@@ -260,6 +261,15 @@ def _search_subtitles(video, lang, min_score, best_only):
     include_hearing_impaired = autosubliminal.INCLUDEHEARINGIMPAIRED
     if include_hearing_impaired:
         include_hearing_impaired = None
+
+    # Get min match score
+    if isinstance(video, Episode):
+        min_score = autosubliminal.SHOWMINMATCHSCORE
+    elif isinstance(video, Movie):
+        min_score = autosubliminal.MOVIEMINMATCHSCORE
+    else:
+        log.error("Invalid video found '%s'" % video)
+        return
 
     # Search for subtitles
     videos = {video}

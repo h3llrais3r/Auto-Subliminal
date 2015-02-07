@@ -5,25 +5,15 @@
 <table>
 
     <tr>
-		<td width="200px" colspan="2"><b>General</b><br /><br /></td>
+		<td width="225px" colspan="2"><b>General</b><br /><br /></td>
     </tr>
 
     <tr>
-		<td width="200px">ShowMinMatchScore</td>
+		<td width="225px">MinMatchScore (show and movie)</td>
 		<td>
 
-		<!--
-		Show:
-		## this is always True because the default value is forced at startup in case of an invalid score
-		#if True
-			<input type="checkbox" name="showmmsdefault" value="1" checked="checked" disabled="disabled">
-			<input type="hidden" name="showmmsdefault" value="1">
-		#else
-			## this should never be possible because the default value is forced at startup in case of an invalid score
-			<input type="checkbox" name="showmmsdefault" value="0">
-		#end if
-		-->
 		<input type="hidden" name="showmmsdefault" value="1">
+		<input type="hidden" name="moviemmsdefault" value="1">
 
 		Source:
 		#if $autosubliminal.MATCHSOURCE
@@ -78,7 +68,7 @@
 	</tr>
 
 	<tr>
-		<td width="200px">Include hearing impaired subs</td>
+		<td width="225px">Include hearing impaired subs</td>
 		<td><select name="includehearingimpaired">
             #if $autosubliminal.INCLUDEHEARINGIMPAIRED
                 <option value="True" selected="selected">Enabled</option>
@@ -96,7 +86,7 @@
     </tr>
 
     <tr>
-		<td width="200px" colspan="2"><b>Addic7ed provider</b></td>
+		<td width="225px" colspan="2"><b>Addic7ed provider</b></td>
     </tr>
 
     <tr>
@@ -104,12 +94,12 @@
     </tr>
 
     <tr>
-		<td width="200px">Username</td>
+		<td width="225px">Username</td>
         <td><input type="text" name="addic7edusername" value="$autosubliminal.ADDIC7EDUSERNAME" /></td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationAddic7edUsername"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationAddic7edUsername" class="dropdown-menu has-tip" align="left"><ul><li>Username for your Addic7ed account.</li></ul></div></td>
 	</tr>
     <tr>
-		<td width="200px">Password</td>
+		<td width="225px">Password</td>
         <td><input type="password" name="addic7edpassword" value="$autosubliminal.ADDIC7EDPASSWORD" /></td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationAddic7edPassword"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a><div id="informationAddic7edPassword" class="dropdown-menu has-tip" align="left"><ul><li>Password for your Addic7ed account.</li></ul></div></td>
 	</tr>
