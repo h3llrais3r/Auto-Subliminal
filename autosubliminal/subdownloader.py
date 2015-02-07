@@ -44,9 +44,8 @@ class SubDownloader():
                 Notifier(self.dowload_item).notify()
 
             # Post processing
-            if autosubliminal.POSTPROCESS and autosubliminal.POSTPROCESSCMD:
-                PostProcessor(autosubliminal.POSTPROCESSUTF8ENCODING, autosubliminal.POSTPROCESSCMD,
-                              self.dowload_item).run()
+            if autosubliminal.POSTPROCESS:
+                PostProcessor(self.dowload_item).run()
 
             return True
         else:
