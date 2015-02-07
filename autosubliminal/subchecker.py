@@ -44,7 +44,7 @@ class SubChecker():
             langs = wanted_item['lang']
             for lang in langs[:]:
                 # Search the best subtitle with the minimal score
-                subtitles, language, single = _search_subtitles(video, lang, autosubliminal.MINMATCHSCORE, True)
+                subtitles, language, single = _search_subtitles(video, lang, autosubliminal.SHOWMINMATCHSCORE, True)
 
                 # Save when the best subtitle is found
                 if subtitles:
@@ -85,7 +85,7 @@ def search_subtitle(wanted_item_index, lang):
     video = _scan_wanted_item_for_video(wanted_item)
     if video:
         # Search the subtitles with the default minimal score (to get all the possibilities to select from)
-        subtitles, language, single = _search_subtitles(video, lang, autosubliminal.MINMATCHSCOREDEFAULT, False)
+        subtitles, language, single = _search_subtitles(video, lang, autosubliminal.SHOWMINMATCHSCOREDEFAULT, False)
         if subtitles:
             # Add found subtitles to wanted_item
             wanted_item['found_subtitles'] = {'subtitles': subtitles, 'language': language, 'single': single}

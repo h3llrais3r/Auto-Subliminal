@@ -216,14 +216,14 @@ def read_config():
         autosubliminal.LAUNCHBROWSER = True
 
     if cfg.has_section('subliminal'):
-        if cfg.has_option('subliminal', 'minmatchscore'):
-            autosubliminal.MINMATCHSCORE = cfg.getint('subliminal', 'minmatchscore')
-            # Force the default minmatchscore when a wrongly configured value is entered manually in the config file
-            if autosubliminal.MINMATCHSCORE < autosubliminal.MINMATCHSCOREDEFAULT:
-                print "WARNING: Invalid MINMATCHSCORE found. Using the default score (%s) instead." % autosubliminal.MINMATCHSCOREDEFAULT
-                autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
+        if cfg.has_option('subliminal', 'showminmatchscore'):
+            autosubliminal.SHOWMINMATCHSCORE = cfg.getint('subliminal', 'showminmatchscore')
+            # Force the default showminmatchscore when a wrongly configured value is entered manually in the config file
+            if autosubliminal.SHOWMINMATCHSCORE < autosubliminal.SHOWMINMATCHSCOREDEFAULT:
+                print "WARNING: Invalid SHOWMINMATCHSCORE found. Using the default score (%s) instead." % autosubliminal.SHOWMINMATCHSCOREDEFAULT
+                autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
         else:
-            autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
+            autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
 
         if cfg.has_option('subliminal', 'matchsource'):
             autosubliminal.MATCHSOURCE = cfg.getboolean('subliminal', 'matchsource')
@@ -269,7 +269,7 @@ def read_config():
                                  'password': autosubliminal.ADDIC7EDPASSWORD}}
     else:
         # Subliminal section is missing
-        autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
+        autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
         autosubliminal.MATCHSOURCE = False
         autosubliminal.MATCHQUALITY = False
         autosubliminal.MATCHCODEC = False
@@ -878,7 +878,7 @@ def save_subliminal_section():
     if not cfg.has_section(section):
         cfg.add_section(section)
 
-    cfg.set(section, "minmatchscore", str(autosubliminal.MINMATCHSCORE))
+    cfg.set(section, "showminmatchscore", str(autosubliminal.SHOWMINMATCHSCORE))
     cfg.set(section, "matchsource", str(autosubliminal.MATCHSOURCE))
     cfg.set(section, "matchquality", str(autosubliminal.MATCHQUALITY))
     cfg.set(section, "matchcodec", str(autosubliminal.MATCHCODEC))
@@ -1233,13 +1233,13 @@ def upgrade_config(from_version, to_version):
             upgrade_config((from_version - 1) + x, x + 1)
     else:
         if from_version == 1 and to_version == 2:
-            print "INFO: Upgrading minmatchscore."
-            print "INFO: Old value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
-            if (autosubliminal.MINMATCHSCORE % 2) == 0:
-                autosubliminal.MINMATCHSCORE = (autosubliminal.MINMATCHSCORE * 2) + 2
+            print "INFO: Upgrading showminmatchscore."
+            print "INFO: Old value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
+            if (autosubliminal.SHOWMINMATCHSCORE % 2) == 0:
+                autosubliminal.SHOWMINMATCHSCORE = (autosubliminal.SHOWMINMATCHSCORE * 2) + 2
             else:
-                autosubliminal.MINMATCHSCORE = (autosubliminal.MINMATCHSCORE * 2) + 1
-            print "INFO: New value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
+                autosubliminal.SHOWMINMATCHSCORE = (autosubliminal.SHOWMINMATCHSCORE * 2) + 1
+            print "INFO: New value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
             print "INFO: Config upgraded to version 2."
             autosubliminal.CONFIGVERSION = 2
             autosubliminal.CONFIGUPGRADED = True
@@ -1251,22 +1251,22 @@ def upgrade_config(from_version, to_version):
         # video.scores['episode'] = 6
         # video.scores['series'] = 23
         # video.scores['season'] = 6
-        # --> these 3 should always be matched by default -> not visible in GUI -> minmatchscore = 35
+        # --> these 3 should always be matched by default -> not visible in GUI -> showminmatchscore = 35
         # video.scores['resolution'] = 2
         # video.scores['release_group'] = 6
         # video.scores['video_codec'] = 2
-        # --> these 3 are configurable -> max minmatchscore = 35 + 2 + 6 + 2 = 45
+        # --> these 3 are configurable -> max showminmatchscore = 35 + 2 + 6 + 2 = 45
         # video.scores['hash'] = 46
         # --> perfect match -> not configurable
         if from_version == 2 and to_version == 3:
             print "INFO: Please configure your video paths again!"
-            print "INFO: New default minmatchscore."
-            print "INFO: Old value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
-            autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
+            print "INFO: New default showminmatchscore."
+            print "INFO: Old value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
+            autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
             autosubliminal.MATCHQUALITY = False
             autosubliminal.MATCHCODEC = False
             autosubliminal.MATCHRELEASEGROUP = False
-            print "INFO: New value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
+            print "INFO: New value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
             print "INFO: Replacing old user namemappings with tvdb id's."
             for x in autosubliminal.USERSHOWNAMEMAPPING.keys():
                 # Search for tvdb id
@@ -1290,24 +1290,24 @@ def upgrade_config(from_version, to_version):
         # video.scores['series'] = 24
         # video.scores['season'] = 6
         # video.scores['year'] = 24
-        # --> these 4 should always be matched by default -> not visible in GUI -> minmatchscore = 60
+        # --> these 4 should always be matched by default -> not visible in GUI -> showminmatchscore = 60
         # video.scores['format'] = 3
         # video.scores['resolution'] = 2
         # video.scores['release_group'] = 6
         # video.scores['video_codec'] = 2
-        # --> these 4 are configurable -> max minmatchscore = 60 + 3 + 2 + 6 + 2 = 73
+        # --> these 4 are configurable -> max showminmatchscore = 60 + 3 + 2 + 6 + 2 = 73
         # video.scores['hash'] = 74
         # --> perfect match -> not configurable
         if from_version == 3 and to_version == 4:
             print "INFO: Multi subtitle language support. Please configure your default and additional languages!"
-            print "INFO: New default minmatchscore."
-            print "INFO: Old value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
-            autosubliminal.MINMATCHSCORE = autosubliminal.MINMATCHSCOREDEFAULT
+            print "INFO: New default showminmatchscore."
+            print "INFO: Old value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
+            autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
             autosubliminal.MATCHSOURCE = False
             autosubliminal.MATCHQUALITY = False
             autosubliminal.MATCHCODEC = False
             autosubliminal.MATCHRELEASEGROUP = False
-            print "INFO: New value minmatchscore: %d" % autosubliminal.MINMATCHSCORE
+            print "INFO: New value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
             print "INFO: Config upgraded to version 4."
             autosubliminal.CONFIGVERSION = 4
             autosubliminal.CONFIGUPGRADED = True
