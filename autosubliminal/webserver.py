@@ -230,7 +230,7 @@ class Config():
             # For some reason the needs to be read again, otherwise all pages get an error
             config.read_config()
             tmpl = PageTemplate(file="interface/templates/message.tmpl")
-            tmpl.message = "Config saved.<br><a href='" + autosubliminal.WEBROOT + "'>Return</a>"
+            tmpl.message = "Config saved.<br><a href='" + autosubliminal.WEBROOT + "/config'>Return</a>"
 
         return str(tmpl)
 

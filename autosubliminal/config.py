@@ -1116,7 +1116,7 @@ def check_for_restart():
     loglevelconsole = logging.ERROR
     logsize = 1000000
     lognum = 1
-    loghttpaccess = False
+    loghttpaccess = u'False'
     webserverip = u'0.0.0.0'
     webserverport = 8083
     webroot = u''
@@ -1155,7 +1155,7 @@ def check_for_restart():
             logsize = cfg.getint("logfile", "logsize")
 
         if cfg.has_option("logfile", "loghttpaccess"):
-            loghttpaccess = cfg.getboolean("logfile", "loghttpaccess")
+            loghttpaccess = cfg.get("logfile", "loghttpaccess")
 
         if cfg.has_option("logfile", "loglevelconsole"):
             loglevelconsole = cfg.get("logfile", "loglevelconsole")
