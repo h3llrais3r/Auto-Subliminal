@@ -800,7 +800,7 @@ def save_config_section():
     cfg.set(section, "path", autosubliminal.PATH)
     cfg.set(section, "videopaths", str(videopaths))
     cfg.set(section, "defaultlanguage", autosubliminal.DEFAULTLANGUAGE)
-    cfg.set(section, "defaultlanguagesuffix", autosubliminal.DEFAULTLANGUAGESUFFIX)
+    cfg.set(section, "defaultlanguagesuffix", str(autosubliminal.DEFAULTLANGUAGESUFFIX))
     cfg.set(section, "additionallanguages", str(additionallanguages))
     cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
     cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
