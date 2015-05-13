@@ -103,8 +103,11 @@ class Config():
                     notifyprowl, prowlapi, prowlpriority,
                     postprocess, postprocessutf8encoding, showpostprocesscmd, showpostprocesscmdargs,
                     moviepostprocesscmd, moviepostprocesscmdargs,
-                    showmmsdefault=None, moviemmsdefault=None, mmssource=None, mmsquality=None, mmscodec=None,
-                    mmsreleasegroup=None, subliminalproviders=None):
+                    showmmsdefault=None, showmmssource=None, showmmsquality=None, showmmscodec=None,
+                    showmmsreleasegroup=None,
+                    moviemmsdefault=None, moviemmssource=None, moviemmsquality=None, moviemmscodec=None,
+                    moviemmsreleasegroup=None,
+                    subliminalproviders=None):
         # Set general variables
         autosubliminal.PATH = path
         autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
@@ -134,35 +137,49 @@ class Config():
 
         # Set subliminal variables
         # Match options and showminmatchscore
-        autosubliminal.MATCHSOURCE = False
-        autosubliminal.MATCHQUALITY = False
-        autosubliminal.MATCHCODEC = False
-        autosubliminal.MATCHRELEASEGROUP = False
+        autosubliminal.SHOWMATCHSOURCE = False
+        autosubliminal.SHOWMATCHQUALITY = False
+        autosubliminal.SHOWMATCHCODEC = False
+        autosubliminal.SHOWMATCHRELEASEGROUP = False
         autosubliminal.SHOWMINMATCHSCORE = 0
-        autosubliminal.MOVIEMINMATCHSCORE = 0
         # If not checked, the value will be default None, if checked, it will contain a value
         if showmmsdefault:
             # showmmsdefault is the minimal default score for a show (which cannot be edited, so no flag is needed)
             autosubliminal.SHOWMINMATCHSCORE += autosubliminal.SHOWMINMATCHSCOREDEFAULT
+        if showmmssource:
+            autosubliminal.SHOWMINMATCHSCORE += 3
+            autosubliminal.SHOWMATCHSOURCE = True
+        if showmmsquality:
+            autosubliminal.SHOWMINMATCHSCORE += 2
+            autosubliminal.SHOWMATCHQUALITY = True
+        if showmmscodec:
+            autosubliminal.SHOWMINMATCHSCORE += 2
+            autosubliminal.SHOWMATCHCODEC = True
+        if showmmsreleasegroup:
+            autosubliminal.SHOWMINMATCHSCORE += 6
+            autosubliminal.SHOWMATCHRELEASEGROUP = True
+        # Match options and movieminmatchscore
+        autosubliminal.MOVIEMATCHSOURCE = False
+        autosubliminal.MOVIEMATCHQUALITY = False
+        autosubliminal.MOVIEMATCHCODEC = False
+        autosubliminal.MOVIEMATCHRELEASEGROUP = False
+        autosubliminal.MOVIEMINMATCHSCORE = 0
+        # If not checked, the value will be default None, if checked, it will contain a value
         if moviemmsdefault:
             # moviemmsdefault is the minimal default score for a movie (which cannot be edited, so no flag is needed)
             autosubliminal.MOVIEMINMATCHSCORE += autosubliminal.MOVIEMINMATCHSCOREDEFAULT
-        if mmssource:
-            autosubliminal.SHOWMINMATCHSCORE += 3
+        if moviemmssource:
             autosubliminal.MOVIEMINMATCHSCORE += 3
-            autosubliminal.MATCHSOURCE = True
-        if mmsquality:
-            autosubliminal.SHOWMINMATCHSCORE += 2
+            autosubliminal.MOVIEMATCHSOURCE = True
+        if moviemmsquality:
             autosubliminal.MOVIEMINMATCHSCORE += 2
-            autosubliminal.MATCHQUALITY = True
-        if mmscodec:
-            autosubliminal.SHOWMINMATCHSCORE += 2
+            autosubliminal.MOVIEMATCHQUALITY = True
+        if moviemmscodec:
             autosubliminal.MOVIEMINMATCHSCORE += 2
-            autosubliminal.MATCHCODEC = True
-        if mmsreleasegroup:
-            autosubliminal.SHOWMINMATCHSCORE += 6
+            autosubliminal.MOVIEMATCHCODEC = True
+        if moviemmsreleasegroup:
             autosubliminal.MOVIEMINMATCHSCORE += 6
-            autosubliminal.MATCHRELEASEGROUP = True
+            autosubliminal.MOVIEMATCHRELEASEGROUP = True
         # Subliminal providers (convert list to comma separated string if multiple are selected)
         if subliminalproviders and not isinstance(subliminalproviders, basestring):
             autosubliminal.SUBLIMINALPROVIDERS = ','.join([str(provider) for provider in subliminalproviders])

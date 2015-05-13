@@ -9,44 +9,84 @@
     </tr>
 
     <tr>
-		<td width="225px">MinMatchScore (show and movie)</td>
+		<td width="225px">Show MinMatchScore</td>
 		<td>
 
 		<input type="hidden" name="showmmsdefault" value="1">
-		<input type="hidden" name="moviemmsdefault" value="1">
 
 		Source:
-		#if $autosubliminal.MATCHSOURCE
-			<input type="checkbox" name="mmssource" value="1" checked="checked">
+		#if $autosubliminal.SHOWMATCHSOURCE
+			<input type="checkbox" name="showmmssource" value="1" checked="checked">
 		#else
-			<input type="checkbox" name="mmssource" value="0">
+			<input type="checkbox" name="showmmssource" value="0">
 		#end if
 
 		Quality:
-		#if $autosubliminal.MATCHQUALITY
-			<input type="checkbox" name="mmsquality" value="1" checked="checked">
+		#if $autosubliminal.SHOWMATCHQUALITY
+			<input type="checkbox" name="showmmsquality" value="1" checked="checked">
 		#else
-			<input type="checkbox" name="mmsquality" value="0">
+			<input type="checkbox" name="showmmsquality" value="0">
 		#end if
 
 		Codec:
-		#if $autosubliminal.MATCHCODEC
-			<input type="checkbox" name="mmscodec" value="1" checked="checked">
+		#if $autosubliminal.SHOWMATCHCODEC
+			<input type="checkbox" name="showmmscodec" value="1" checked="checked">
 		#else
-			<input type="checkbox" name="mmscodec" value="0">
+			<input type="checkbox" name="showmmscodec" value="0">
 		#end if
 
 		Group:
-		#if $autosubliminal.MATCHRELEASEGROUP
-			<input type="checkbox" name="mmsreleasegroup" value="1" checked="checked">
+		#if $autosubliminal.SHOWMATCHRELEASEGROUP
+			<input type="checkbox" name="showmmsreleasegroup" value="1" checked="checked">
 		#else
-			<input type="checkbox" name="mmsreleasegroup" value="0">
+			<input type="checkbox" name="showmmsreleasegroup" value="0">
 		#end if
 
 		</td>
 		<td width="25px" align="right"><a href='#' data-dropdown="#informationShowminmatchscore"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a>
 		<div id="informationShowminmatchscore" class="dropdown-menu has-tip" align="left"><ul><li>
-		What items should match before a subtitle is downloaded via the API?
+		What items should match before a show subtitle is downloaded via the API?
+		</li></ul></div></td>
+	</tr>
+
+	<tr>
+		<td width="225px">Movie MinMatchScore</td>
+		<td>
+
+		<input type="hidden" name="moviemmsdefault" value="1">
+
+		Source:
+		#if $autosubliminal.MOVIEMATCHSOURCE
+			<input type="checkbox" name="moviemmssource" value="1" checked="checked">
+		#else
+			<input type="checkbox" name="moviemmssource" value="0">
+		#end if
+
+		Quality:
+		#if $autosubliminal.MOVIEMATCHQUALITY
+			<input type="checkbox" name="moviemmsquality" value="1" checked="checked">
+		#else
+			<input type="checkbox" name="moviemmsquality" value="0">
+		#end if
+
+		Codec:
+		#if $autosubliminal.MOVIEMATCHCODEC
+			<input type="checkbox" name="moviemmscodec" value="1" checked="checked">
+		#else
+			<input type="checkbox" name="moviemmscodec" value="0">
+		#end if
+
+		Group:
+		#if $autosubliminal.MOVIEMATCHRELEASEGROUP
+			<input type="checkbox" name="moviemmsreleasegroup" value="1" checked="checked">
+		#else
+			<input type="checkbox" name="moviemmsreleasegroup" value="0">
+		#end if
+
+		</td>
+		<td width="25px" align="right"><a href='#' data-dropdown="#informationMovieminmatchscore"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" /></a>
+		<div id="informationMovieminmatchscore" class="dropdown-menu has-tip" align="left"><ul><li>
+		What items should match before a movie subtitle is downloaded via the API?
 		</li></ul></div></td>
 	</tr>
 

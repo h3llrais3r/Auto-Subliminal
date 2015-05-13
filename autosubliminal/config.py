@@ -225,6 +225,26 @@ def read_config():
         else:
             autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
 
+        if cfg.has_option('subliminal', 'showmatchsource'):
+            autosubliminal.SHOWMATCHSOURCE = cfg.getboolean('subliminal', 'showmatchsource')
+        else:
+            autosubliminal.SHOWMATCHSOURCE = False
+
+        if cfg.has_option('subliminal', 'showmatchquality'):
+            autosubliminal.SHOWMATCHQUALITY = cfg.getboolean('subliminal', 'showmatchquality')
+        else:
+            autosubliminal.SHOWMATCHQUALITY = False
+
+        if cfg.has_option('subliminal', 'showmatchcodec'):
+            autosubliminal.SHOWMATCHCODEC = cfg.getboolean('subliminal', 'showmatchcodec')
+        else:
+            autosubliminal.SHOWMATCHCODEC = False
+
+        if cfg.has_option('subliminal', 'showmatchreleasegroup'):
+            autosubliminal.SHOWMATCHRELEASEGROUP = cfg.getboolean('subliminal', 'showmatchreleasegroup')
+        else:
+            autosubliminal.SHOWMATCHRELEASEGROUP = False
+
         if cfg.has_option('subliminal', 'movieminmatchscore'):
             autosubliminal.MOVIEMINMATCHSCORE = cfg.getint('subliminal', 'movieminmatchscore')
             # Force the default movieminmatchscore when a wrongly configured value is entered manually in the config file
@@ -234,25 +254,25 @@ def read_config():
         else:
             autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
 
-        if cfg.has_option('subliminal', 'matchsource'):
-            autosubliminal.MATCHSOURCE = cfg.getboolean('subliminal', 'matchsource')
+        if cfg.has_option('subliminal', 'moviematchsource'):
+            autosubliminal.MOVIEMATCHSOURCE = cfg.getboolean('subliminal', 'moviematchsource')
         else:
-            autosubliminal.MATCHSOURCE = False
+            autosubliminal.MOVIEMATCHSOURCE = False
 
-        if cfg.has_option('subliminal', 'matchquality'):
-            autosubliminal.MATCHQUALITY = cfg.getboolean('subliminal', 'matchquality')
+        if cfg.has_option('subliminal', 'moviematchquality'):
+            autosubliminal.MOVIEMATCHQUALITY = cfg.getboolean('subliminal', 'moviematchquality')
         else:
-            autosubliminal.MATCHQUALITY = False
+            autosubliminal.MOVIEMATCHQUALITY = False
 
-        if cfg.has_option('subliminal', 'matchcodec'):
-            autosubliminal.MATCHCODEC = cfg.getboolean('subliminal', 'matchcodec')
+        if cfg.has_option('subliminal', 'moviematchcodec'):
+            autosubliminal.MOVIEMATCHCODEC = cfg.getboolean('subliminal', 'moviematchcodec')
         else:
-            autosubliminal.MATCHCODEC = False
+            autosubliminal.MOVIEMATCHCODEC = False
 
-        if cfg.has_option('subliminal', 'matchreleasegroup'):
-            autosubliminal.MATCHRELEASEGROUP = cfg.getboolean('subliminal', 'matchreleasegroup')
+        if cfg.has_option('subliminal', 'moviematchreleasegroup'):
+            autosubliminal.MOVIEMATCHRELEASEGROUP = cfg.getboolean('subliminal', 'moviematchreleasegroup')
         else:
-            autosubliminal.MATCHRELEASEGROUP = False
+            autosubliminal.MOVIEMATCHRELEASEGROUP = False
 
         if cfg.has_option('subliminal', 'providers'):
             autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
@@ -889,11 +909,15 @@ def save_subliminal_section():
         cfg.add_section(section)
 
     cfg.set(section, "showminmatchscore", str(autosubliminal.SHOWMINMATCHSCORE))
+    cfg.set(section, "showmatchsource", str(autosubliminal.SHOWMATCHSOURCE))
+    cfg.set(section, "showmatchquality", str(autosubliminal.SHOWMATCHQUALITY))
+    cfg.set(section, "showmatchcodec", str(autosubliminal.SHOWMATCHCODEC))
+    cfg.set(section, "showmatchreleasegroup", str(autosubliminal.SHOWMATCHRELEASEGROUP))
     cfg.set(section, "movieminmatchscore", str(autosubliminal.MOVIEMINMATCHSCORE))
-    cfg.set(section, "matchsource", str(autosubliminal.MATCHSOURCE))
-    cfg.set(section, "matchquality", str(autosubliminal.MATCHQUALITY))
-    cfg.set(section, "matchcodec", str(autosubliminal.MATCHCODEC))
-    cfg.set(section, "matchreleasegroup", str(autosubliminal.MATCHRELEASEGROUP))
+    cfg.set(section, "moviematchsource", str(autosubliminal.MOVIEMATCHSOURCE))
+    cfg.set(section, "moviematchquality", str(autosubliminal.MOVIEMATCHQUALITY))
+    cfg.set(section, "moviematchcodec", str(autosubliminal.MOVIEMATCHCODEC))
+    cfg.set(section, "moviematchreleasegroup", str(autosubliminal.MOVIEMATCHRELEASEGROUP))
     cfg.set(section, "providers", str(autosubliminal.SUBLIMINALPROVIDERS))
     cfg.set(section, "includehearingimpaired", str(autosubliminal.INCLUDEHEARINGIMPAIRED))
     cfg.set(section, "addic7edusername", str(autosubliminal.ADDIC7EDUSERNAME))
@@ -1274,9 +1298,9 @@ def upgrade_config(from_version, to_version):
             print "INFO: New default showminmatchscore."
             print "INFO: Old value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
             autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
-            autosubliminal.MATCHQUALITY = False
-            autosubliminal.MATCHCODEC = False
-            autosubliminal.MATCHRELEASEGROUP = False
+            autosubliminal.SHOWMATCHQUALITY = False
+            autosubliminal.SHOWMATCHCODEC = False
+            autosubliminal.SHOWMATCHRELEASEGROUP = False
             print "INFO: New value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
             print "INFO: Replacing old user namemappings with tvdb id's."
             for x in autosubliminal.USERSHOWNAMEMAPPING.keys():
@@ -1314,11 +1338,29 @@ def upgrade_config(from_version, to_version):
             print "INFO: New default showminmatchscore."
             print "INFO: Old value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
             autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
-            autosubliminal.MATCHSOURCE = False
-            autosubliminal.MATCHQUALITY = False
-            autosubliminal.MATCHCODEC = False
-            autosubliminal.MATCHRELEASEGROUP = False
+            autosubliminal.SHOWMATCHSOURCE = False
+            autosubliminal.SHOWMATCHQUALITY = False
+            autosubliminal.SHOWMATCHCODEC = False
+            autosubliminal.SHOWMATCHRELEASEGROUP = False
             print "INFO: New value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
             print "INFO: Config upgraded to version 4."
             autosubliminal.CONFIGVERSION = 4
+            autosubliminal.CONFIGUPGRADED = True
+
+        if from_version == 4 and to_version == 5:
+            print "INFO: Movie support. Please reconfigure your min match scores!"
+            autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
+            autosubliminal.SHOWMATCHSOURCE = False
+            autosubliminal.SHOWMATCHQUALITY = False
+            autosubliminal.SHOWMATCHCODEC = False
+            autosubliminal.SHOWMATCHRELEASEGROUP = False
+            print "INFO: Default value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
+            autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
+            autosubliminal.MOVIEMATCHSOURCE = False
+            autosubliminal.MOVIEMATCHQUALITY = False
+            autosubliminal.MOVIEMATCHCODEC = False
+            autosubliminal.MOVIEMATCHRELEASEGROUP = False
+            print "INFO: Default value movieminmatchscore: %d" % autosubliminal.MOVIEMINMATCHSCORE
+            print "INFO: Config upgraded to version 5."
+            autosubliminal.CONFIGVERSION = 5
             autosubliminal.CONFIGUPGRADED = True
