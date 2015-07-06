@@ -3,6 +3,8 @@ import os
 import re
 import time
 
+from operator import itemgetter
+
 import subliminal
 
 import autosubliminal
@@ -74,6 +76,7 @@ def walk_dir(path):
             log.debug("Found a failed directory, skipping")
             continue
 
+        # Populate WANTEDQUEUE
         for filename in filenames:
             log.debug("File: %s" % filename)
             root, ext = os.path.splitext(filename)
@@ -100,8 +103,9 @@ def walk_dir(path):
                                 continue
                             log.info("Subtitle(s) wanted for %s and added to wantedQueue" % filename)
                             wanted_item['originalFileLocationOnDisk'] = os.path.join(dirname, filename)
+                            wanted_item['time'] = os.path.getctime(wanted_item['originalFileLocationOnDisk'])
                             wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
-                                os.path.getctime(wanted_item['originalFileLocationOnDisk']))))
+                                wanted_item['time'])))
                             wanted_item['lang'] = languages
                             # TODO: refactor showid to tvdbid
                             wanted_item['showid'] = utils.get_showid(title)
@@ -116,8 +120,9 @@ def walk_dir(path):
                                 continue
                             log.info("Subtitle(s) wanted for %s and added to wantedQueue" % filename)
                             wanted_item['originalFileLocationOnDisk'] = os.path.join(dirname, filename)
+                            wanted_item['time'] = os.path.getctime(wanted_item['originalFileLocationOnDisk'])
                             wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
-                                os.path.getctime(wanted_item['originalFileLocationOnDisk']))))
+                                wanted_item['time'])))
                             wanted_item['lang'] = languages
                             wanted_item['imdbid'], wanted_item['year'] = utils.get_imdb_info(title, year)
                             autosubliminal.WANTEDQUEUE.append(wanted_item)
@@ -127,6 +132,9 @@ def walk_dir(path):
                     else:
                         log.error("Could not process the filename: %s" % filename)
                         continue
+
+    # Sort WANTEDQUEUE
+    autosubliminal.WANTEDQUEUE = sorted(autosubliminal.WANTEDQUEUE, key=itemgetter('time'), reverse=True)
 
 
 def check_missing_subtitle_languages(dirname, filename):
@@ -141,7 +149,7 @@ def check_missing_subtitle_languages(dirname, filename):
             srtfile = os.path.splitext(filename)[0] + u".srt"
         if not os.path.exists(os.path.join(dirname, srtfile)):
             missing_subtitles.append(autosubliminal.DEFAULTLANGUAGE)
-            # Check additional languages
+    # Check additional languages
     if autosubliminal.ADDITIONALLANGUAGES:
         # Always check with alpha2 code suffix for additional languages
         for language in autosubliminal.ADDITIONALLANGUAGES:
