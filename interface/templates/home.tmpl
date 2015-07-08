@@ -6,7 +6,7 @@
 
 #import autosubliminal
 #from autosubliminal.db import LastDownloads
-#from autosubliminal.utils import convert_timestamp, convert_timestamp_table, display_name
+#from autosubliminal.utils import convert_timestamp, convert_timestamp_table, display_name, get_file_size
 
 #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/header.tmpl")
 
@@ -50,7 +50,8 @@
         <a href="#"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" data-dropdown="#dropdown-wantedinfo-$index" /></a>
         <div id="dropdown-wantedinfo-$index" class="dropdown-menu has-tip">
             <ul>
-                <li>$os.path.basename($item['originalFileLocationOnDisk'])</li>
+                <li>File name: $os.path.basename($item['originalFileLocationOnDisk'])</li>
+                <li>File size: $get_file_size($item['originalFileLocationOnDisk'])</li>
             </ul>
         </div>
 #if $item['type'] == 'episode':
