@@ -243,11 +243,11 @@ def get_imdb_info(title, year=None, force_search=False):
                     continue
             # If no year is present, take the first match
             else:
+                year = data['year']
                 imdb_id = movie.movieID
                 log.debug("Getting imdb id from api %s" % imdb_id)
                 ImdbIdCache.set_id(imdb_id, title, year)
                 log.info("%s added to cache with %s" % (name, imdb_id))
-                year = data['year']
     if not imdb_id:
         log.error("Imdb id not found for %s (%s)" % title, year)
     return imdb_id, year
