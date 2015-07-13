@@ -1,3 +1,1 @@
 TODO:
-- add support for movie subtitles
-    - adapt (split) minmatchscore for episode and movie
