@@ -1,12 +1,4 @@
-#import time
-#import cgi
-#import urllib
-#import re
-#from types import *
-
 #import autosubliminal
-#from autosubliminal.db import LastDownloads
-#from autosubliminal.utils import convert_timestamp, convert_timestamp_table, display_name, get_file_size
 
 #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/header.tmpl")
 
@@ -21,31 +13,5 @@
 #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/home-lastdownloads.tmpl")
 
 <br>
-
-<table>
-	<tr>
-		<td align="left" width="140px">Next disk scan in</td>
-		<td align="center" width="25px">:</td>
-		<td align="right" width="90px">
-			#try
-			  $time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.lastrun) ))) <br>
-			#except
-			  Please wait... <br>
-			#end try
-		</td>
-	</tr>
-	
-	<tr>
-		<td align="left" width="140px">Next subtitle check in</td>
-		<td align="center" width="25px">:</td>
-		<td align="right" width="90px">
-			#try
-			  $time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.lastrun) ))) <br>
-			#except
-			  Please wait... <br>
-			#end try
-		</td>
-	</tr>
-</table>
 
 #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/footer.tmpl")
