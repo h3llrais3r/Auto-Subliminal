@@ -12,7 +12,7 @@
 *.dbm
 
 # Config files
-config.properties
+config*.properties
 
 # Installation files
 build/
