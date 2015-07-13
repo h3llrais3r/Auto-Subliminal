@@ -344,6 +344,17 @@ def get_wanted_queue_lock():
         return True
 
 
+def count_wanted_items(itemtype=None):
+    size = 0
+    if not itemtype:
+        size = len(autosubliminal.WANTEDQUEUE)
+    else:
+        for item in autosubliminal.WANTEDQUEUE:
+            if item['type'] == itemtype:
+                size += 1
+    return size
+
+
 def release_wanted_queue_lock():
     if autosubliminal.WANTEDQUEUELOCK:
         log.debug("Releasing wanted queue lock")

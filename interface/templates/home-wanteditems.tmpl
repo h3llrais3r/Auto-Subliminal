@@ -1,13 +1,17 @@
 #from types import *
 
 #import autosubliminal
-#from autosubliminal.utils import convert_timestamp, convert_timestamp_table, display_name, get_file_size
+#from autosubliminal.utils import convert_timestamp, convert_timestamp_table, display_name, get_file_size, count_wanted_items
 
 #if $len($autosubliminal.WANTEDQUEUE) >= 1
 
+#set total = $count_wanted_items()
+#set $total_shows = $count_wanted_items('episode')
+#set $total_movies = $count_wanted_items('movie')
+
 <div class="box">
 <div class="header">
-	<h1>Wanted ($len($autosubliminal.WANTEDQUEUE))</h1><span></span>
+	<h1>Wanted ($total) - Shows ($total_shows) - Movies ($total_movies)</h1><span></span>
 </div>
 <div class="content no-padding">
 
