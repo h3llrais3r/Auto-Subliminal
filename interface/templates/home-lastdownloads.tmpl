@@ -1,0 +1,105 @@
+#from types import *
+
+#import autosubliminal
+#from autosubliminal.db import LastDownloads
+#from autosubliminal.utils import convert_timestamp, convert_timestamp_table, display_name
+
+#set $lastdownloads = LastDownloads().get_last_downloads()
+
+#if $len($lastdownloads) >= 1
+
+<div class="box">
+<div class="header">
+	<h1>Latest downloaded subtitles ($len($lastdownloads))</h1><span></span>
+</div>
+<div class="content no-padding">
+<table class="table sortable">
+<thead>
+<tr>
+	<th>Show/Movie name</th>
+	<th>Season</th>
+	<th>Episode</th>
+	<th>Source</th>
+	<th>Quality</th>
+	<th>Codec</th>
+	<th>Group</th>
+	<th>Language</th>
+	<th>Time</th>
+</tr>
+</thead>
+
+#for $item in $lastdownloads
+<tr>
+	<td>
+        <!-- Use this for a dropdown when clicking on the show name
+        <b><a href='#' data-dropdown="#dropdown-lastdown-$item['id']">$item['title']</a></b>
+        -->
+        <b>$display_name($item)</b>
+        <a href="#"><img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info" data-dropdown="#dropdown-lastdowninfo-$item['id']" /></a>
+        <div id="dropdown-lastdowninfo-$item['id']" class="dropdown-menu has-tip">
+            <ul>
+                <li>
+                #if $item['subtitle'] == None
+                    Subtitle: N/A
+                #else
+                    Subtitle: $item['subtitle']
+                #end if
+                </li>
+                <li>
+                #if $item['provider'] == None
+                    Provider: N/A
+                #else
+                    Provider: $item['provider']
+                #end if
+                </li>
+            </ul>
+        </div>
+    </td>
+	<td width="75px" align="center">$item['season']</td>
+	<td width="75px" align="center">$item['episode']</td>
+
+#if $type($item['source']) == UnicodeType:
+	<td width="75px" align="center">$item['source'].upper()</td>
+#else
+	<td width="75px" align="center">Unknown</td>
+#end if
+
+#if $type($item['quality']) == UnicodeType:
+	<td width="75px" align="center">$item['quality'].upper()</td>
+#else
+	<td width="75px" align="center">Unknown</td>
+#end if
+
+#if $type($item['codec']) == UnicodeType:
+	<td width="75px" align="center">$item['codec'].upper()</td>
+#else
+	<td width="75px" align="center">Unknown</td>
+#end if
+
+#if $type($item['releasegrp']) == UnicodeType:
+	<td width="75px" align="center">$item['releasegrp'].upper()</td>
+#else
+	<td width="75px" align="center">Unknown</td>
+#end if
+
+<td width="75px" align="center">
+	#set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $item['language'] + ".png"
+	<img src="$imageurl" alt="$item['language']" />
+</td>
+
+#if $type($item['timestamp']) == UnicodeType:
+	<td width="150px" align="center" sorttable_customkey="$convert_timestamp_table($item['timestamp'])">$convert_timestamp($item['timestamp'])</td>
+#else
+	<td width="150px" align="center">Unknown</td>
+#end if
+
+</tr>
+
+#end for
+
+</table>
+
+</div>
+</div>
+
+#end if
