@@ -2,9 +2,10 @@ import os
 import time
 import pkg_resources
 
-import subliminal
-
 from autosubliminal import version, config, logger, db
+from subliminal.api import provider_manager
+from subliminal.cache import region
+from subliminal.cli import MutexLock
 
 # Config
 CONFIGFILE = None
@@ -82,6 +83,7 @@ MOVIEMATCHSOURCE = None
 MOVIEMATCHQUALITY = None
 MOVIEMATCHCODEC = None
 MOVIEMATCHRELEASEGROUP = None
+SUBLIMINALPROVIDERSENTRYPOINT = None
 SUBLIMINALPROVIDERS = None
 SUBLIMINALPROVIDERLIST = None
 SUBLIMINALPROVIDERCONFIGS = None
@@ -156,11 +158,11 @@ def initialize():
         LOGFILE, LOGLEVEL, LOGSIZE, LOGNUM, LOGREVERSED, LOGHTTPACCESS, LOGLEVELCONSOLE, \
         WEBSERVERIP, WEBSERVERPORT, WEBROOT, USERNAME, PASSWORD, LAUNCHBROWSER, \
         SHOWMINMATCHSCORE, SHOWMINMATCHSCOREDEFAULT, SHOWMATCHSOURCE, SHOWMATCHQUALITY, SHOWMATCHCODEC, \
-        SHOWMATCHRELEASEGROUP,\
+        SHOWMATCHRELEASEGROUP, \
         MOVIEMINMATCHSCORE, MOVIEMINMATCHSCOREDEFAULT, MOVIEMATCHSOURCE, MOVIEMATCHQUALITY, MOVIEMATCHCODEC, \
         MOVIEMATCHRELEASEGROUP, \
-        SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERLIST, SUBLIMINALPROVIDERCONFIGS, INCLUDEHEARINGIMPAIRED, \
-        ADDIC7EDUSERNAME, ADDIC7EDPASSWORD, \
+        SUBLIMINALPROVIDERSENTRYPOINT, SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERLIST, SUBLIMINALPROVIDERCONFIGS, \
+        INCLUDEHEARINGIMPAIRED, ADDIC7EDUSERNAME, ADDIC7EDPASSWORD, \
         USERSHOWNAMEMAPPING, USERSHOWNAMEMAPPINGUPPER, SHOWNAMEMAPPING, SHOWNAMEMAPPINGUPPER, \
         USERMOVIENAMEMAPPING, USERMOVIENAMEMAPPINGUPPER, MOVIENAMEMAPPING, MOVIENAMEMAPPINGUPPER, \
         SKIPSHOW, SKIPSHOWUPPER, \
@@ -173,6 +175,10 @@ def initialize():
 
     # Fake some entry points to get libraries working without installation
     _fake_entry_points()
+
+    # Get fake subliminal providers entry point
+    SUBLIMINALPROVIDERSENTRYPOINT = pkg_resources.get_entry_info(dist='fake_entry_points', group=None,
+                                                                 name='subliminal.providers')
 
     # Version settings
     VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py'
@@ -206,8 +212,8 @@ def initialize():
     APICALLS = APICALLSMAX
 
     # Score settings
-    SHOWMINMATCHSCOREDEFAULT = 60
-    MOVIEMINMATCHSCOREDEFAULT = 20
+    SHOWMINMATCHSCOREDEFAULT = 110
+    MOVIEMINMATCHSCOREDEFAULT = 35
 
     # Webserver settings
     LAUNCHBROWSER = True
@@ -247,7 +253,20 @@ def _fake_entry_points():
     distribution = pkg_resources.Distribution(location=os.path.dirname(current_path),
                                               project_name='fake_entry_points', version='1.0.0')
     # Add entry points here if needed
-    entry_points = {}
+    # Add subliminal entry points (since subliminal 1.0)
+    entry_points = {
+        'subliminal.providers': [
+            'addic7ed = subliminal.providers.addic7ed:Addic7edProvider',
+            'opensubtitles = subliminal.providers.opensubtitles:OpenSubtitlesProvider',
+            'podnapisi = subliminal.providers.podnapisi:PodnapisiProvider',
+            'thesubdb = subliminal.providers.thesubdb:TheSubDBProvider',
+            'tvsubtitles = subliminal.providers.tvsubtitles:TVsubtitlesProvider'
+        ],
+        'babelfish.language_converters': [
+            'addic7ed = subliminal.converters.addic7ed:Addic7edConverter',
+            'tvsubtitles = subliminal.converters.tvsubtitles:TVsubtitlesConverter'
+        ]
+    }
     distribution._ep_map = pkg_resources.EntryPoint.parse_map(entry_points, distribution)
     pkg_resources.working_set.add(distribution)
 
@@ -256,7 +275,11 @@ def _initialize_subliminal():
     # Configure subliminal/dogpile cache
     # Use MutexLock otherwise some providers will not work due to fcntl module import error in windows
     # Do not reconfigure after a soft restart (without exiting main app) -> otherwise RegionAlreadyConfigured exception
-    if not subliminal.cache_region.is_configured:
+    if not region.is_configured:
         cache_file = os.path.abspath(os.path.expanduser('subliminal.cache.dbm'))
-        subliminal.cache_region.configure(backend='dogpile.cache.dbm',
-                                          arguments={'filename': cache_file, 'lock_factory': subliminal.MutexLock})
+        region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexLock})
+
+    # Clear subliminal providers from provider manager entry point cache because they were empty at startup
+    # Entry point is set by our own fake_entry_points, so they need to be reloaded
+    provider_manager.ENTRY_POINT_CACHE.pop('subliminal.providers')
+    provider_manager.__init__('subliminal.providers')

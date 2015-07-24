@@ -30,10 +30,11 @@ class SubDownloader():
         log.info("Running sub downloader")
 
         # Check download_item
-        if 'subtitles' in self.keys and 'single' in self.keys:
+        if 'video' in self.keys and 'subtitles' in self.keys and 'single' in self.keys:
 
             # Save the subtitle
-            subliminal.save_subtitles(self.dowload_item['subtitles'], self.dowload_item['single'])
+            video = self.dowload_item['video']
+            subliminal.save_subtitles(video, self.dowload_item['subtitles'][video], self.dowload_item['single'])
 
             # Add download_item to last downloads
             self.dowload_item['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')

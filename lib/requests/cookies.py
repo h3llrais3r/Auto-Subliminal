@@ -6,6 +6,7 @@ Compatibility code to be able to use `cookielib.CookieJar` with requests.
 requests.utils imports from here, so be careful with imports.
 """
 
+import copy
 import time
 import collections
 from .compat import cookielib, urlparse, urlunparse, Morsel
@@ -157,26 +158,28 @@ class CookieConflictError(RuntimeError):
 
 
 class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
-    """Compatibility class; is a cookielib.CookieJar, but exposes a dict interface.
+    """Compatibility class; is a cookielib.CookieJar, but exposes a dict
+    interface.
 
     This is the CookieJar we create by default for requests and sessions that
     don't specify one, since some clients may expect response.cookies and
     session.cookies to support dict operations.
 
-    Don't use the dict interface internally; it's just for compatibility with
-    with external client code. All `requests` code should work out of the box
-    with externally provided instances of CookieJar, e.g., LWPCookieJar and
-    FileCookieJar.
-
-    Caution: dictionary operations that are normally O(1) may be O(n).
+    Requests does not use the dict interface internally; it's just for
+    compatibility with external client code. All requests code should work
+    out of the box with externally provided instances of ``CookieJar``, e.g.
+    ``LWPCookieJar`` and ``FileCookieJar``.
 
     Unlike a regular CookieJar, this class is pickleable.
-    """
 
+    .. warning:: dictionary operations that are normally O(1) may be O(n).
+    """
     def get(self, name, default=None, domain=None, path=None):
         """Dict-like get() that also supports optional domain and path args in
         order to resolve naming collisions from using one cookie jar over
-        multiple domains. Caution: operation is O(n), not O(1)."""
+        multiple domains.
+
+        .. warning:: operation is O(n), not O(1)."""
         try:
             return self._find_no_duplicates(name, domain, path)
         except KeyError:
@@ -198,30 +201,40 @@ class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
         self.set_cookie(c)
         return c
 
-    def keys(self):
-        """Dict-like keys() that returns a list of names of cookies from the jar.
-        See values() and items()."""
-        keys = []
+    def iterkeys(self):
+        """Dict-like iterkeys() that returns an iterator of names of cookies
+        from the jar. See itervalues() and iteritems()."""
         for cookie in iter(self):
-            keys.append(cookie.name)
-        return keys
+            yield cookie.name
+
+    def keys(self):
+        """Dict-like keys() that returns a list of names of cookies from the
+        jar. See values() and items()."""
+        return list(self.iterkeys())
+
+    def itervalues(self):
+        """Dict-like itervalues() that returns an iterator of values of cookies
+        from the jar. See iterkeys() and iteritems()."""
+        for cookie in iter(self):
+            yield cookie.value
 
     def values(self):
-        """Dict-like values() that returns a list of values of cookies from the jar.
-        See keys() and items()."""
-        values = []
+        """Dict-like values() that returns a list of values of cookies from the
+        jar. See keys() and items()."""
+        return list(self.itervalues())
+
+    def iteritems(self):
+        """Dict-like iteritems() that returns an iterator of name-value tuples
+        from the jar. See iterkeys() and itervalues()."""
         for cookie in iter(self):
-            values.append(cookie.value)
-        return values
+            yield cookie.name, cookie.value
 
     def items(self):
-        """Dict-like items() that returns a list of name-value tuples from the jar.
-        See keys() and values(). Allows client-code to call "dict(RequestsCookieJar)
-        and get a vanilla python dict of key value pairs."""
-        items = []
-        for cookie in iter(self):
-            items.append((cookie.name, cookie.value))
-        return items
+        """Dict-like items() that returns a list of name-value tuples from the
+        jar. See keys() and values(). Allows client-code to call
+        ``dict(RequestsCookieJar)`` and get a vanilla python dict of key value
+        pairs."""
+        return list(self.iteritems())
 
     def list_domains(self):
         """Utility method to list all the domains in the jar."""
@@ -250,8 +263,9 @@ class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
         return False  # there is only one domain in jar
 
     def get_dict(self, domain=None, path=None):
-        """Takes as an argument an optional domain and path and returns a plain old
-        Python dict of name-value pairs of cookies that meet the requirements."""
+        """Takes as an argument an optional domain and path and returns a plain
+        old Python dict of name-value pairs of cookies that meet the
+        requirements."""
         dictionary = {}
         for cookie in iter(self):
             if (domain is None or cookie.domain == domain) and (path is None
@@ -260,21 +274,24 @@ class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
         return dictionary
 
     def __getitem__(self, name):
-        """Dict-like __getitem__() for compatibility with client code. Throws exception
-        if there are more than one cookie with name. In that case, use the more
-        explicit get() method instead. Caution: operation is O(n), not O(1)."""
+        """Dict-like __getitem__() for compatibility with client code. Throws
+        exception if there are more than one cookie with name. In that case,
+        use the more explicit get() method instead.
+
+        .. warning:: operation is O(n), not O(1)."""
 
         return self._find_no_duplicates(name)
 
     def __setitem__(self, name, value):
-        """Dict-like __setitem__ for compatibility with client code. Throws exception
-        if there is already a cookie of that name in the jar. In that case, use the more
-        explicit set() method instead."""
+        """Dict-like __setitem__ for compatibility with client code. Throws
+        exception if there is already a cookie of that name in the jar. In that
+        case, use the more explicit set() method instead."""
 
         self.set(name, value)
 
     def __delitem__(self, name):
-        """Deletes a cookie given a name. Wraps cookielib.CookieJar's remove_cookie_by_name()."""
+        """Deletes a cookie given a name. Wraps ``cookielib.CookieJar``'s
+        ``remove_cookie_by_name()``."""
         remove_cookie_by_name(self, name)
 
     def set_cookie(self, cookie, *args, **kwargs):
@@ -286,15 +303,16 @@ class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
         """Updates this jar with cookies from another CookieJar or dict-like"""
         if isinstance(other, cookielib.CookieJar):
             for cookie in other:
-                self.set_cookie(cookie)
+                self.set_cookie(copy.copy(cookie))
         else:
             super(RequestsCookieJar, self).update(other)
 
     def _find(self, name, domain=None, path=None):
-        """Requests uses this method internally to get cookie values. Takes as args name
-        and optional domain and path. Returns a cookie.value. If there are conflicting cookies,
-        _find arbitrarily chooses one. See _find_no_duplicates if you want an exception thrown
-        if there are conflicting cookies."""
+        """Requests uses this method internally to get cookie values. Takes as
+        args name and optional domain and path. Returns a cookie.value. If
+        there are conflicting cookies, _find arbitrarily chooses one. See
+        _find_no_duplicates if you want an exception thrown if there are
+        conflicting cookies."""
         for cookie in iter(self):
             if cookie.name == name:
                 if domain is None or cookie.domain == domain:
@@ -304,10 +322,11 @@ class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
         raise KeyError('name=%r, domain=%r, path=%r' % (name, domain, path))
 
     def _find_no_duplicates(self, name, domain=None, path=None):
-        """__get_item__ and get call _find_no_duplicates -- never used in Requests internally.
-        Takes as args name and optional domain and path. Returns a cookie.value.
-        Throws KeyError if cookie is not found and CookieConflictError if there are
-        multiple cookies that match name and optionally domain and path."""
+        """Both ``__get_item__`` and ``get`` call this function: it's never
+        used elsewhere in Requests. Takes as args name and optional domain and
+        path. Returns a cookie.value. Throws KeyError if cookie is not found
+        and CookieConflictError if there are multiple cookies that match name
+        and optionally domain and path."""
         toReturn = None
         for cookie in iter(self):
             if cookie.name == name:
@@ -339,6 +358,21 @@ class RequestsCookieJar(cookielib.CookieJar, collections.MutableMapping):
         new_cj = RequestsCookieJar()
         new_cj.update(self)
         return new_cj
+
+
+def _copy_cookie_jar(jar):
+    if jar is None:
+        return None
+
+    if hasattr(jar, 'copy'):
+        # We're dealing with an instane of RequestsCookieJar
+        return jar.copy()
+    # We're dealing with a generic CookieJar instance
+    new_jar = copy.copy(jar)
+    new_jar.clear()
+    for cookie in jar:
+        new_jar.set_cookie(copy.copy(cookie))
+    return new_jar
 
 
 def create_cookie(name, value, **kwargs):
@@ -378,29 +412,29 @@ def create_cookie(name, value, **kwargs):
 
 def morsel_to_cookie(morsel):
     """Convert a Morsel object into a Cookie containing the one k/v pair."""
+
     expires = None
-    if morsel["max-age"]:
-        expires = time.time() + morsel["max-age"]
+    if morsel['max-age']:
+        expires = time.time() + morsel['max-age']
     elif morsel['expires']:
-        expires = morsel['expires']
-        if type(expires) == type(""):
-            time_template = "%a, %d-%b-%Y %H:%M:%S GMT"
-            expires = time.mktime(time.strptime(expires, time_template))
-    c = create_cookie(
-        name=morsel.key,
-        value=morsel.value,
-        version=morsel['version'] or 0,
-        port=None,
-        domain=morsel['domain'],
-        path=morsel['path'],
-        secure=bool(morsel['secure']),
-        expires=expires,
-        discard=False,
+        time_template = '%a, %d-%b-%Y %H:%M:%S GMT'
+        expires = time.mktime(
+            time.strptime(morsel['expires'], time_template)) - time.timezone
+    return create_cookie(
         comment=morsel['comment'],
         comment_url=bool(morsel['comment']),
+        discard=False,
+        domain=morsel['domain'],
+        expires=expires,
+        name=morsel.key,
+        path=morsel['path'],
+        port=None,
         rest={'HttpOnly': morsel['httponly']},
-        rfc2109=False,)
-    return c
+        rfc2109=False,
+        secure=bool(morsel['secure']),
+        value=morsel.value,
+        version=morsel['version'] or 0,
+    )
 
 
 def cookiejar_from_dict(cookie_dict, cookiejar=None, overwrite=True):
@@ -431,7 +465,7 @@ def merge_cookies(cookiejar, cookies):
     """
     if not isinstance(cookiejar, cookielib.CookieJar):
         raise ValueError('You can only merge into CookieJar')
-    
+
     if isinstance(cookies, dict):
         cookiejar = cookiejar_from_dict(
             cookies, cookiejar=cookiejar, overwrite=False)

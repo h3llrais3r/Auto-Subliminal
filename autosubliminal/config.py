@@ -6,8 +6,6 @@ import codecs
 
 from ConfigParser import SafeConfigParser
 
-import subliminal
-
 import autosubliminal
 from autosubliminal import version, utils
 
@@ -279,10 +277,10 @@ def read_config():
             autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
             # Only allow valid providers by checking if they are found in the entry point
             for provider in autosubliminal.SUBLIMINALPROVIDERLIST:
-                if provider.lower() not in subliminal.provider_manager.available_providers:
+                if provider.lower() not in autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys():
                     autosubliminal.SUBLIMINALPROVIDERLIST.remove(provider)
         else:
-            autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
+            autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
 
         if cfg.has_option("subliminal", "includehearingimpaired"):
             autosubliminal.INCLUDEHEARINGIMPAIRED = cfg.getboolean("subliminal", "includehearingimpaired")
@@ -304,7 +302,7 @@ def read_config():
         autosubliminal.MATCHQUALITY = False
         autosubliminal.MATCHCODEC = False
         autosubliminal.MATCHRELEASEGROUP = False
-        autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
+        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
         autosubliminal.INCLUDEHEARINGIMPAIRED = False
 
     if cfg.has_section('shownamemapping'):
@@ -601,7 +599,7 @@ def apply_subliminal():
         autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
         autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
     else:
-        autosubliminal.SUBLIMINALPROVIDERLIST = subliminal.provider_manager.available_providers
+        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
 
 
 def apply_shownamemapping():
@@ -1318,9 +1316,9 @@ def upgrade_config(from_version, to_version):
             autosubliminal.CONFIGUPGRADED = True
 
         # use subliminal scores (see examples below on how it is calculated)
-        ###########################
-        # Suliminal version >= 0.8.0
-        ###########################
+        #########################
+        # Suliminal version 0.8.0
+        #########################
         # video.scores['episode'] = 6
         # video.scores['series'] = 24
         # video.scores['season'] = 6
@@ -1347,6 +1345,36 @@ def upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 4
             autosubliminal.CONFIGUPGRADED = True
 
+        ############################
+        # Suliminal version >= 1.0.0
+        ############################
+        # use subliminal episode scores (see examples below on how it is calculated)
+        ############################################################################
+        # video.scores['series'] = 44
+        # video.scores['year'] = 44
+        # video.scores['season'] = 11
+        # video.scores['episode'] = 11
+        # --> these 4 should always be matched by default -> not visible in GUI -> showminmatchscore = 110
+        # video.scores['release_group'] = 11
+        # video.scores['format'] = 6
+        # video.scores['resolution'] = 4
+        # video.scores['video_codec'] = 4
+        # --> these 4 are configurable -> max showminmatchscore = 110 + 11 + 6 + 4 + 4 = 135
+        # video.scores['hash'] = 137
+        # --> perfect match -> not configurable
+        #
+        # use subliminal movie scores (see examples below on how it is calculated)
+        ##########################################################################
+        # video.scores['title'] = 23
+        # video.scores['year'] = 12
+        # --> these 2 should always be matched by default -> not visible in GUI -> showminmatchscore = 35
+        # video.scores['release_group'] = 11
+        # video.scores['format'] = 6
+        # video.scores['resolution'] = 4
+        # video.scores['video_codec'] = 4
+        # --> these 4 are configurable -> max showminmatchscore = 35 + 11 + 6 + 4 + 4 = 60
+        # video.scores['hash'] = 62
+        # --> perfect match -> not configurable
         if from_version == 4 and to_version == 5:
             print "INFO: Movie support. Please reconfigure your min match scores!"
             autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT

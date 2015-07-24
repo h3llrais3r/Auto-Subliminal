@@ -147,16 +147,16 @@ class Config():
             # showmmsdefault is the minimal default score for a show (which cannot be edited, so no flag is needed)
             autosubliminal.SHOWMINMATCHSCORE += autosubliminal.SHOWMINMATCHSCOREDEFAULT
         if showmmssource:
-            autosubliminal.SHOWMINMATCHSCORE += 3
+            autosubliminal.SHOWMINMATCHSCORE += 6
             autosubliminal.SHOWMATCHSOURCE = True
         if showmmsquality:
-            autosubliminal.SHOWMINMATCHSCORE += 2
+            autosubliminal.SHOWMINMATCHSCORE += 4
             autosubliminal.SHOWMATCHQUALITY = True
         if showmmscodec:
-            autosubliminal.SHOWMINMATCHSCORE += 2
+            autosubliminal.SHOWMINMATCHSCORE += 4
             autosubliminal.SHOWMATCHCODEC = True
         if showmmsreleasegroup:
-            autosubliminal.SHOWMINMATCHSCORE += 6
+            autosubliminal.SHOWMINMATCHSCORE += 11
             autosubliminal.SHOWMATCHRELEASEGROUP = True
         # Match options and movieminmatchscore
         autosubliminal.MOVIEMATCHSOURCE = False
@@ -169,16 +169,16 @@ class Config():
             # moviemmsdefault is the minimal default score for a movie (which cannot be edited, so no flag is needed)
             autosubliminal.MOVIEMINMATCHSCORE += autosubliminal.MOVIEMINMATCHSCOREDEFAULT
         if moviemmssource:
-            autosubliminal.MOVIEMINMATCHSCORE += 3
+            autosubliminal.MOVIEMINMATCHSCORE += 6
             autosubliminal.MOVIEMATCHSOURCE = True
         if moviemmsquality:
-            autosubliminal.MOVIEMINMATCHSCORE += 2
+            autosubliminal.MOVIEMINMATCHSCORE += 4
             autosubliminal.MOVIEMATCHQUALITY = True
         if moviemmscodec:
-            autosubliminal.MOVIEMINMATCHSCORE += 2
+            autosubliminal.MOVIEMINMATCHSCORE += 4
             autosubliminal.MOVIEMATCHCODEC = True
         if moviemmsreleasegroup:
-            autosubliminal.MOVIEMINMATCHSCORE += 6
+            autosubliminal.MOVIEMINMATCHSCORE += 11
             autosubliminal.MOVIEMATCHRELEASEGROUP = True
         # Subliminal providers (convert list to comma separated string if multiple are selected)
         if subliminalproviders and not isinstance(subliminalproviders, basestring):

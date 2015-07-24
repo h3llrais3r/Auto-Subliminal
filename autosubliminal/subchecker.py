@@ -47,8 +47,8 @@ class SubChecker():
                 # Search the best subtitle with the minimal score
                 subtitles, language, single = _search_subtitles(video, lang, True)
 
-                # Save when the best subtitle is found
-                if subtitles:
+                # Save when a subtitle is found for the video
+                if subtitles[video]:
                     download_item = _construct_download_item(wanted_item, subtitles, language, single)
                     SubDownloader(download_item).run()
 
@@ -277,11 +277,11 @@ def _search_subtitles(video, lang, best_only):
     if best_only:
         # Download the best subtitle with min_score (without saving it in to file)
         subtitles = subliminal.download_best_subtitles(videos, languages,
-                                                       providers=autosubliminal.SUBLIMINALPROVIDERLIST,
-                                                       provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS,
                                                        min_score=min_score,
                                                        hearing_impaired=include_hearing_impaired,
-                                                       single=True)
+                                                       only_one=True,
+                                                       providers=autosubliminal.SUBLIMINALPROVIDERLIST,
+                                                       provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
     else:
         # Download all subtitles with default min score (without saving it to file)
         subtitles = subliminal.list_subtitles(videos, languages, providers=autosubliminal.SUBLIMINALPROVIDERLIST)
@@ -333,6 +333,7 @@ def _construct_download_item(wanted_item, subtitles, language, single):
     download_item['provider'] = subtitle.provider_name
     download_item['subtitles'] = subtitles
     download_item['single'] = single
+    download_item['video'] = video
 
     return download_item
 
