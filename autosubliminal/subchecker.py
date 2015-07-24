@@ -87,7 +87,7 @@ def search_subtitle(wanted_item_index, lang):
     if video:
         # Search the subtitles with the default minimal score (to get all the possibilities to select from)
         subtitles, language, single = _search_subtitles(video, lang, False)
-        if subtitles:
+        if subtitles[video]:
             # Add found subtitles to wanted_item
             wanted_item['found_subtitles'] = {'subtitles': subtitles, 'language': language, 'single': single}
 
