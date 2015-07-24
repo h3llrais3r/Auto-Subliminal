@@ -23,6 +23,7 @@ What it uses (see libraries.txt for versions):
  * chardet
  * cheetah
  * cherrypy
+ * click
  * dogpile.cache
  * dogpile.core
  * enzyme
@@ -32,6 +33,7 @@ What it uses (see libraries.txt for versions):
  * httplib2
  * imdbpy
  * oauth2
+ * pbr
  * pynma
  * pynmwp
  * pysrt
@@ -40,10 +42,10 @@ What it uses (see libraries.txt for versions):
  * pyxdg
  * requests
  * simplejson
+ * six
  * stevedore
  * subliminal
  * tvdb_api
- * six
 
 How to use:
 
