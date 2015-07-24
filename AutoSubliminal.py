@@ -10,9 +10,6 @@ import locale
 # This to prevent installation of the libraries and to prevent the 'lib.' prefix when importing the libraries
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
 
-import autosubliminal
-import autosubliminal.runner
-
 #signal.signal(signal.SIGTERM, autosubliminal.runner.signal_handler)
 
 help_message = '''
@@ -39,6 +36,8 @@ class Usage(Exception):
 
 
 def main(argv=None):
+    import autosubliminal
+
     # From Sickbeard / Headphones
     try:
         locale.setlocale(locale.LC_ALL, "")
@@ -95,6 +94,8 @@ def main(argv=None):
         print "ERROR: PATH does not exist, check config"
         os._exit(1)
 
+    # Setup runner
+    import autosubliminal.runner
     signal.signal(signal.SIGINT, autosubliminal.runner.signal_handler)
 
     if autosubliminal.DAEMON:

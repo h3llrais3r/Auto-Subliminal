@@ -3,9 +3,6 @@ import time
 import pkg_resources
 
 from autosubliminal import version, config, logger, db
-from subliminal.api import provider_manager
-from subliminal.cache import region
-from subliminal.cli import MutexLock
 
 # Config
 CONFIGFILE = None
@@ -272,14 +269,21 @@ def _fake_entry_points():
 
 
 def _initialize_subliminal():
+    """
+    Initialize subliminal.
+    This must always be done AFTER the registration of our fake_entry_points.
+    Therefore the imports must be done here, otherwise the 'subliminal.providers' entry point is already initialized
+    before we could register it ourselves.
+    -> see subliminal.api.provider_manager
+    """
+
+    # Imports
+    from subliminal.cache import region
+    from subliminal.cli import MutexLock
+
     # Configure subliminal/dogpile cache
     # Use MutexLock otherwise some providers will not work due to fcntl module import error in windows
     # Do not reconfigure after a soft restart (without exiting main app) -> otherwise RegionAlreadyConfigured exception
     if not region.is_configured:
         cache_file = os.path.abspath(os.path.expanduser('subliminal.cache.dbm'))
         region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexLock})
-
-    # Clear subliminal providers from provider manager entry point cache because they were empty at startup
-    # Entry point is set by our own fake_entry_points, so they need to be reloaded
-    provider_manager.ENTRY_POINT_CACHE.pop('subliminal.providers')
-    provider_manager.__init__('subliminal.providers')
