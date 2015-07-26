@@ -4,7 +4,7 @@ import os
 import traceback
 
 
-class Scheduler:
+class Scheduler(object):
     def __init__(self, process, interval, runnow, name):
         self.lastrun = time.time()
         self.process = process

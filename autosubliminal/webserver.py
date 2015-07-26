@@ -24,7 +24,7 @@ class PageTemplate(Template):
     pass
 
 
-class Config():
+class Config(object):
     def __init__(self):
         pass
 
@@ -346,7 +346,7 @@ class Config():
                 return str(tmpl)
 
 
-class Home():
+class Home(object):
     def __init__(self):
         pass
 
@@ -473,7 +473,7 @@ class Home():
                  'errormessage': 'Unable to handle post processing! Please check the log file!'})
 
 
-class Log():
+class Log(object):
     def __init__(self):
         pass
 
@@ -510,7 +510,7 @@ class Log():
         return str(tmpl)
 
 
-class Mobile():
+class Mobile(object):
     def __init__(self):
         pass
 
@@ -520,7 +520,7 @@ class Mobile():
         return str(tmpl)
 
 
-class WebServerInit():
+class WebServerInit(object):
     def __init__(self):
         pass
 

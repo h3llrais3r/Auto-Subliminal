@@ -13,7 +13,7 @@ from autosubliminal import utils, fileprocessor
 log = logging.getLogger(__name__)
 
 
-class DiskScanner():
+class DiskScanner(object):
     """
     Scan the specified path for episodes and movies with missing subtitles.
     If found, add these episodes and movies to the WANTEDQUEUE.

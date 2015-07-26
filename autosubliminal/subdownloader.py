@@ -11,7 +11,7 @@ from autosubliminal.postprocessor import PostProcessor
 log = logging.getLogger(__name__)
 
 
-class SubDownloader():
+class SubDownloader(object):
     """
     Handles the downloaded subtitle.
     It stores the subtitle at the right location with the right name and handle the notifications and post processing.

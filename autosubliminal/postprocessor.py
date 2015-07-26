@@ -7,7 +7,7 @@ from autosubliminal import utils
 log = logging.getLogger(__name__)
 
 
-class PostProcessor():
+class PostProcessor(object):
     """
     Post Processor. It launches the specified command and retrieves the arguments from the download_dict.
     Additionally, arguments and the encoding (for command and arguments) can be specified.

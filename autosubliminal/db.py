@@ -15,7 +15,7 @@ def dict_factory(cursor, row):
     return d
 
 
-class TvdbIdCache():
+class TvdbIdCache(object):
     def __init__(self):
         self.query_get_id = "select tvdb_id from tvdb_id_cache where show_name = ?"
         self.query_set_id = "insert into tvdb_id_cache values (?,?)"
@@ -47,7 +47,7 @@ class TvdbIdCache():
         connection.close()
 
 
-class ImdbIdCache():
+class ImdbIdCache(object):
     def __init__(self):
         self.query_get_id = "select imdb_id from imdb_id_cache where title = ? and year = ?"
         self.query_set_id = "insert into imdb_id_cache values (?,?,?)"
@@ -77,7 +77,8 @@ class ImdbIdCache():
         connection.commit()
         connection.close()
 
-class LastDownloads():
+
+class LastDownloads(object):
     def __init__(self):
         self.query_get = "select * from last_downloads order by timestamp desc;"
         self.query_set = "insert into last_downloads values (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?);"

@@ -18,7 +18,7 @@ from subliminal.video import Episode, Movie
 log = logging.getLogger(__name__)
 
 
-class SubChecker():
+class SubChecker(object):
     """
     Sub checker. It checks for subtitles of episodes that are in the WANTEDQUEUE.
     """

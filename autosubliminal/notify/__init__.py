@@ -13,7 +13,7 @@ from autosubliminal.notify import twitter, mail, nma, growl, prowl, pushalot
 log = logging.getLogger(__name__)
 
 
-class Notifier():
+class Notifier(object):
     def __init__(self, download_item):
         self.video = os.path.basename(download_item["originalFileLocationOnDisk"])  # Strip path
         self.subtitle = os.path.basename(download_item['destinationFileLocationOnDisk'])  # Strip path
