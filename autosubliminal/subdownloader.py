@@ -19,7 +19,7 @@ class SubDownloader(object):
 
     def __init__(self, download_item):
         log.debug("Download item: %r" % download_item)
-        self.dowload_item = download_item
+        self.download_item = download_item
         self.keys = download_item.keys()
 
     def run(self):
@@ -33,20 +33,20 @@ class SubDownloader(object):
         if 'video' in self.keys and 'subtitles' in self.keys and 'single' in self.keys:
 
             # Save the subtitle
-            video = self.dowload_item['video']
-            subliminal.save_subtitles(video, self.dowload_item['subtitles'][video], self.dowload_item['single'])
+            video = self.download_item['video']
+            subliminal.save_subtitles(video, self.download_item['subtitles'][video], self.download_item['single'])
 
             # Add download_item to last downloads
-            self.dowload_item['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
-            LastDownloads().set_last_downloads(self.dowload_item)
+            self.download_item['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
+            LastDownloads().set_last_downloads(self.download_item)
 
             # Notify
             if autosubliminal.NOTIFY:
-                Notifier(self.dowload_item).notify()
+                Notifier(self.download_item).notify()
 
             # Post processing
             if autosubliminal.POSTPROCESS:
-                PostProcessor(self.dowload_item).run()
+                PostProcessor(self.download_item).run()
 
             return True
         else:
@@ -63,7 +63,7 @@ class SubDownloader(object):
         # Check download_item
         if 'subtitles' in self.keys and 'single' in self.keys:
             # Save the subtitle
-            subliminal.save_subtitles(self.dowload_item['subtitles'], self.dowload_item['single'])
+            subliminal.save_subtitles(self.download_item['subtitles'], self.download_item['single'])
             return True
         else:
             log.error("Download item is not complete, skipping")
@@ -77,16 +77,16 @@ class SubDownloader(object):
         log.debug("Post procesing subtitle")
 
         # Add download_item to last downloads
-        self.dowload_item['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
-        LastDownloads().set_last_downloads(self.dowload_item)
+        self.download_item['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
+        LastDownloads().set_last_downloads(self.download_item)
 
         # Notify
         if autosubliminal.NOTIFY:
-            Notifier(self.dowload_item).notify()
+            Notifier(self.download_item).notify()
 
         # Post processing
         result = True
         if autosubliminal.POSTPROCESS:
-            result = PostProcessor(self.dowload_item).run()
+            result = PostProcessor(self.download_item).run()
 
         return result
