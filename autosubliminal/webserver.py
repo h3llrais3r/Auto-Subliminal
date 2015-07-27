@@ -460,17 +460,21 @@ class Home(object):
                  'errormessage': 'Cannot play the video! Please check the log file!'})
 
     @cherrypy.expose(alias='postProcess')
-    def post_process(self, wanted_item_index, subtitle_index):
+    def post_process(self, wanted_item_index, subtitle_index=None):
         # Set json response type
         cherrypy.response.headers['Content-Type'] = 'application/json'
         # Post process
-        processed = subchecker.post_process(wanted_item_index, subtitle_index)
-        if processed:
-            return json.dumps({'result': processed, 'infomessage:': '', 'errormessage': '', 'redirect': '/home'})
+        if subtitle_index:
+            processed = subchecker.post_process(wanted_item_index, subtitle_index)
+            if processed:
+                return json.dumps({'result': processed, 'infomessage:': '', 'errormessage': '', 'redirect': '/home'})
+            else:
+                return json.dumps(
+                    {'result': processed, 'infomessage': '',
+                     'errormessage': 'Unable to handle post processing! Please check the log file!'})
         else:
-            return json.dumps(
-                {'result': processed, 'infomessage': '',
-                 'errormessage': 'Unable to handle post processing! Please check the log file!'})
+            subchecker.post_process_no_subtitle(wanted_item_index)
+            redirect("/home")
 
 
 class Log(object):

@@ -4,16 +4,17 @@ import operator
 
 import babelfish
 import subliminal
-
-import autosubliminal
-from autosubliminal import utils
-from autosubliminal.subdownloader import SubDownloader
 from subliminal.providers.addic7ed import Addic7edSubtitle
 from subliminal.providers.opensubtitles import OpenSubtitlesSubtitle
 from subliminal.providers.podnapisi import PodnapisiSubtitle
 from subliminal.providers.thesubdb import TheSubDBSubtitle
 from subliminal.providers.tvsubtitles import TVsubtitlesSubtitle
 from subliminal.video import Episode, Movie
+
+import autosubliminal
+from autosubliminal import utils
+from autosubliminal.postprocessor import PostProcessor
+from autosubliminal.subdownloader import SubDownloader
 
 log = logging.getLogger(__name__)
 
@@ -217,6 +218,29 @@ def post_process(wanted_item_index, subtitle_index):
             autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
     else:
         log.warning("No subtitle downloaded, skipping post processing")
+
+    # Release wanted queue lock
+    utils.release_wanted_queue_lock()
+
+    return processed
+
+
+def post_process_no_subtitle(wanted_item_index):
+    log.info("Post processing without subtitle")
+
+    # Get wanted queue lock
+    if not utils.get_wanted_queue_lock():
+        return False
+
+    # Get wanted item
+    wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+
+    # Post process only
+    processed = PostProcessor(wanted_item).run()
+
+    # Remove from wanted queue is downloaded
+    if processed:
+        autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
 
     # Release wanted queue lock
     utils.release_wanted_queue_lock()

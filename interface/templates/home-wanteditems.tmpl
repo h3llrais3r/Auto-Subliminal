@@ -53,8 +53,9 @@
 #end if
         <div id="dropdown-skipshow-$index" class="dropdown-menu has-tip">
             <ul>
-                <li><a href="$autosubliminal.WEBROOT/config/skipShow/$item['title']/$item['season']">Skip season $item['season']</a></li>
+                <li><a href="$autosubliminal.WEBROOT/home/postProcess/$index">Skip and post process show</a></li>
                 <li><a href="$autosubliminal.WEBROOT/config/skipShow/$item['title']/0">Skip show</a></li>
+                <li><a href="$autosubliminal.WEBROOT/config/skipShow/$item['title']/$item['season']">Skip season $item['season']</a></li>
             </ul>
         </div>
 #else if $item['type'] == 'movie':
@@ -63,6 +64,7 @@
 #end if
         <div id="dropdown-skipmovie-$index" class="dropdown-menu has-tip">
             <ul>
+                <li><a href="$autosubliminal.WEBROOT/home/postProcess/$index">Skip and post process movie</a></li>
                 <li><a href="$autosubliminal.WEBROOT/config/skipMovie/$item['title']/$item['year']">Skip movie</a></li>
             </ul>
         </div>
