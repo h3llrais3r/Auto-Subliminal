@@ -83,7 +83,7 @@ def walk_dir(path):
 
             if ext and ext in subliminal.video.VIDEO_EXTENSIONS:
                 # Skip 'sample' videos
-                if re.search('sample', filename):
+                if re.search('sample', filename, re.IGNORECASE):
                     continue
 
                 # Check if there are missing subtitle languages for the video file
