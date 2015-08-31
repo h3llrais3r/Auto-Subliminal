@@ -34,7 +34,9 @@ def process_file(dirname, filename):
     filepath = os.path.join(dirname, filename)
     try:
         log.debug("Guessing file info")
-        guess = guessit.guess_file_info(filepath)
+        # Pass only filename for now
+        # TODO: Revert to 'filepath' when guessit 0.11 is available
+        guess = guessit.guess_file_info(filename)
         log.debug("Guess: %r" % guess)
     except Exception, e:
         log.error("Could not guess file info for: %s" % filepath)
