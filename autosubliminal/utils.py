@@ -321,7 +321,7 @@ def convert_timestamp(datestring):
 
 
 def convert_timestamp_table(datestring):
-    #used for the sorted table
+    # used for the sorted table
     date_object = time.strptime(datestring, "%Y-%m-%d %H:%M:%S")
     return "%04i%02i%02i%02i%02i%02i" % (
         date_object[0], date_object[1], date_object[2], date_object[3], date_object[4], date_object[5])
@@ -364,7 +364,12 @@ def release_wanted_queue_lock():
 
 
 def get_file_size(path):
-    byte_size = os.path.getsize(path)
+    try:
+        byte_size = os.path.getsize(path)
+    except Exception, e:
+        # If size cannot be retrieved, it's most likely because the path doesn't exist anymore
+        # Occurs when displaying gui when a sub check is running and files are already moved by a postprocessor script
+        byte_size = 0
     return humanize_bytes(byte_size, 2)
 
 
