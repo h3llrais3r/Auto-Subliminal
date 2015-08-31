@@ -88,14 +88,15 @@ def search_subtitle(wanted_item_index, lang):
     if video:
         # Search the subtitles with the default minimal score (to get all the possibilities to select from)
         subtitles, language, single = _search_subtitles(video, lang, False)
+        # Check if subtitles are found for the video
         if subtitles[video]:
             # Add found subtitles to wanted_item
             wanted_item['found_subtitles'] = {'subtitles': subtitles, 'language': language, 'single': single}
-
             # Order subtitles by score and create new dict
-            for index, subtitle, score in sorted(
-                    [(index, s, s.compute_score(video)) for index, s in enumerate(subtitles[video])],
-                    key=operator.itemgetter(2), reverse=True):
+            # Use subliminal scoring (scores=None)
+            for index, subtitle, score in sorted([(index, s, subliminal.compute_score(
+                    s.get_matches(video, hearing_impaired=utils.include_hearing_impaired()), video, scores=None))
+                    for index, s in enumerate(subtitles[video])], key=operator.itemgetter(2), reverse=True):
                 # Only add subtitle when content is found
                 if subtitle.content:
                     # Create new sub dict for showing result
@@ -280,12 +281,6 @@ def _search_subtitles(video, lang, best_only):
     if lang == autosubliminal.DEFAULTLANGUAGE and not autosubliminal.DEFAULTLANGUAGESUFFIX:
         single = True
 
-    # If hearing_impaired is True, we ALSO want the hearing_impaired subs in our results -> pass None
-    # I hearing_impaired is False, we DO NOT want the hearing_impaired subs in our results -> pass False
-    include_hearing_impaired = autosubliminal.INCLUDEHEARINGIMPAIRED
-    if include_hearing_impaired:
-        include_hearing_impaired = None
-
     # Get min match score
     if isinstance(video, Episode):
         min_score = autosubliminal.SHOWMINMATCHSCORE
@@ -302,7 +297,7 @@ def _search_subtitles(video, lang, best_only):
         # Download the best subtitle with min_score (without saving it in to file)
         subtitles = subliminal.download_best_subtitles(videos, languages,
                                                        min_score=min_score,
-                                                       hearing_impaired=include_hearing_impaired,
+                                                       hearing_impaired=utils.include_hearing_impaired(),
                                                        only_one=True,
                                                        providers=autosubliminal.SUBLIMINALPROVIDERLIST,
                                                        provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
