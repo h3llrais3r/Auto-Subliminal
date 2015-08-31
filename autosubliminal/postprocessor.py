@@ -20,10 +20,14 @@ class PostProcessor(object):
         self.encoding = 'utf-8' if autosubliminal.POSTPROCESSUTF8ENCODING else sys.getdefaultencoding()
         if wanted_item['type'] == 'episode':
             self.cmd = autosubliminal.SHOWPOSTPROCESSCMD
-            self.args = autosubliminal.SHOWPOSTPROCESSCMDARGS.split('|')
+            self.args = None
+            if autosubliminal.SHOWPOSTPROCESSCMDARGS:
+                self.args = autosubliminal.SHOWPOSTPROCESSCMDARGS.split('|')
         elif wanted_item['type'] == 'movie':
             self.cmd = autosubliminal.MOVIEPOSTPROCESSCMD
-            self.args = autosubliminal.MOVIEPOSTPROCESSCMDARGS.split('|')
+            self.args = None
+            if autosubliminal.MOVIEPOSTPROCESSCMDARGS:
+                self.args = autosubliminal.MOVIEPOSTPROCESSCMDARGS.split('|')
 
     def run(self):
         if not self.cmd:
@@ -51,7 +55,6 @@ class PostProcessor(object):
             for arg in self.args:
                 log.debug("%s" % arg)
                 process.append(self._encode(arg))
-        log.debug("#" * 30)
 
         # Add encoding argument
         log.debug("%s" % self.encoding)
@@ -68,6 +71,7 @@ class PostProcessor(object):
         if subtitle:
             log.debug("%s" % subtitle)
             process.append(self._encode(subtitle))
+        log.debug("#" * 30)
 
         return process
 
