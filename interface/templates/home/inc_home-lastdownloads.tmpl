@@ -1,0 +1,123 @@
+#from types import *
+
+#import autosubliminal
+#from autosubliminal.db import LastDownloads
+#from autosubliminal.utils import convert_timestamp, convert_timestamp_table, display_name
+
+#set $lastdownloads = LastDownloads().get_last_downloads()
+
+#if $len($lastdownloads) >= 1
+
+<div class="container-fluid">
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <span class="h3 weighted">Last downloaded subtitles</span>
+        </div>
+
+        <div class="panel-body">
+
+            <table id="lastdownloads" class="table table-condensed table-striped table-hover tablesorter ui-table-reflow">
+
+                <thead>
+                <tr>
+                    <th>Show/Movie name</th>
+                    <th>Season</th>
+                    <th>Episode</th>
+                    <th>Source</th>
+                    <th>Quality</th>
+                    <th>Codec</th>
+                    <th>Group</th>
+                    <th>Language</th>
+                    <th>Time</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                #for $item in $lastdownloads
+                <tr>
+                    <td>
+                        <span class="video-name">$display_name($item)</span>
+                        <span class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                            </a>
+                            <ul class="dropdown-menu has-tip info-list">
+                                <li>
+                                    <span class="info-list-label">Subtitle:</span>
+                                    <span>
+                                        #if $item['subtitle'] == None
+                                        N/A
+                                        #else
+                                        $item['subtitle']
+                                        #end if
+                                    </span>
+                                </li>
+                                <li>
+                                    <span class="info-list-label">Provider:</span>
+                                    <span>
+                                        #if $item['provider'] == None
+                                        N/A
+                                        #else
+                                        $item['provider']
+                                        #end if
+                                    </span>
+                                </li>
+                            </ul>
+                        </span>
+                    </td>
+                    <td>$item['season']</td>
+                    <td>$item['episode']</td>
+                    <td>
+                        #if $type($item['source']) == UnicodeType:
+                        $item['source'].upper()
+                        #else
+                        Unknown
+                        #end if
+                    </td>
+                    <td>
+                        #if $type($item['quality']) == UnicodeType:
+                        $item['quality'].upper()
+                        #else
+                        Unknown
+                        #end if
+                    </td>
+                    <td>
+                        #if $type($item['codec']) == UnicodeType:
+                        $item['codec'].upper()
+                        #else
+                        Unknown
+                        #end if
+                    </td>
+                    <td>
+                        #if $type($item['releasegrp']) == UnicodeType:
+                        $item['releasegrp'].upper()
+                        #else
+                        Unknown
+                        #end if
+                    </td>
+                    <td>
+                        #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $item['language'] + ".png"
+                        <img src="$imageurl" alt="$item['language']" title="$item['language']">
+                    </td>
+                    <td>
+                        #if $type($item['timestamp']) == UnicodeType:
+                        $convert_timestamp($item['timestamp'])
+                        #else
+                        Unknown
+                        #end if
+                    </td>
+                </tr>
+                #end for
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+#end if

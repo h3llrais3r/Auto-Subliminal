@@ -1,0 +1,83 @@
+#import cherrypy
+#import autosubliminal
+#import autosubliminal.utils
+
+#set useragent = cherrypy.request.headers.get("User-Agent", '')
+
+<!-- Menu -->
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand no-padding" href="$autosubliminal.WEBROOT/home/" title="Auto-Subliminal homepage">
+                <img src="$autosubliminal.WEBROOT/images/autosubliminal.png" alt="Auto-Subliminal" title="Auto-Subliminal">
+            </a>
+        </div>
+        <!-- Buttons -->
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- Home -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-hover="dropdown" data-delay="500" data-close-others="true" href="$autosubliminal.WEBROOT/home/">
+                        Home
+                    </a>
+                </li>
+                <!-- Config -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" data-close-others="true" href="$autosubliminal.WEBROOT/config/">
+                        Config<b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-inverse">
+                        <li><a href="$autosubliminal.WEBROOT/config">Settings</a></li>
+                        <li><a href="$autosubliminal.WEBROOT/config/info">Info</a></li>
+                        <li><a href="$autosubliminal.WEBROOT/config/checkVersion">Check Version</a></li>
+                        <li class="divider"></li>
+                        <li><a href="$autosubliminal.WEBROOT/config/flushCache">Flush Cache</a></li>
+                        <li><a href="$autosubliminal.WEBROOT/config/flushLastDownloads">Flush Downloaded</a></li>
+                    </ul>
+                </li>
+                <!-- Log -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" data-close-others="true" href="$autosubliminal.WEBROOT/log/">
+                        Log<b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-inverse">
+                        <li><a href="$autosubliminal.WEBROOT/log/viewLog">All</a></li>
+                        <li><a href="$autosubliminal.WEBROOT/log/viewLog/debug">Debug</a></li>
+                        <li><a href="$autosubliminal.WEBROOT/log/viewLog/info">Info</a></li>
+                        <li><a href="$autosubliminal.WEBROOT/log/viewLog/warning">Warning</a></li>
+                        <li><a href="$autosubliminal.WEBROOT/log/viewLog/error">Error</a></li>
+                        <li><a href="$autosubliminal.WEBROOT/log/viewLog/critical">Critical</a></li>
+                        <li class="divider"></li>
+                        <li><a href="$autosubliminal.WEBROOT/log/clearLog">Clear log</a></li>
+                    </ul>
+                </li>
+                <!-- System -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" data-close-others="true" href="$autosubliminal.WEBROOT/system/">
+                        System<b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-inverse">
+                        <li><a href="$autosubliminal.WEBROOT/system/runNow">Run Now</a></li>
+                        <li><a href="$autosubliminal.WEBROOT/system/restart">Restart</a></li>
+                        <li><a href="$autosubliminal.WEBROOT/system/shutdown">Shutdown</a></li>
+                        #if $autosubliminal.utils.check_mobile_device($useragent) == True
+                        <li class="divider"></li>
+                        <li><a href="$autosubliminal.WEBROOT/system/exitMobile">Mobile Interface</a></li>
+                        #end if
+                        <li class="divider"></li>
+                        <li>
+                            <a href="$autosubliminal.GITHUBURL/issues" target="_blank">Report issue</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

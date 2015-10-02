@@ -1,0 +1,87 @@
+#import sys
+#import os
+
+#import autosubliminal
+#from autosubliminal import version
+
+<div class="form-horizontal">
+
+    <div class="form-group section-title">
+        <div class="col-xs-12 col-md-6">
+            <span class="badge">General</span>
+        </div>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Auto-Subliminal version</label></span>
+        <span class="col-xs-8 col-md-10">$version.RELEASE_VERSION</span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Python version</label></span>
+        <span class="col-xs-8 col-md-10">$sys.version</span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Python location</label></span>
+        <span class="col-xs-8 col-md-10">$os.path.dirname($sys.executable)</span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Config file</label></span>
+        <span class="col-xs-8 col-md-10">
+            #if $os.path.split($autosubliminal.CONFIGFILE)[0] == ''
+            $os.path.join($autosubliminal.PATH, $autosubliminal.CONFIGFILE)
+            #else
+            $autosubliminal.CONFIGFILE
+            #end if
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Database file</label></span>
+        <span class="col-xs-8 col-md-10">$os.path.join($autosubliminal.PATH, $autosubliminal.DBFILE)</span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Log file</label></span>
+        <span class="col-xs-8 col-md-10">
+            #if $os.path.split($autosubliminal.LOGFILE)[0] == ''
+            $os.path.join($autosubliminal.PATH, $autosubliminal.LOGFILE)
+            #else
+            $autosubliminal.LOGFILE
+            #end if
+        </span>
+    </div>
+
+    <hr>
+
+    <div class="form-group section-title">
+        <div class="col-xs-12 col-md-6">
+            <span class="badge">Links</span>
+        </div>
+    </div>
+
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Source</label></span>
+        <span class="col-xs-8 col-md-10 wrapped">
+            <a href="$autosubliminal.GITHUBURL" target="_blank">$autosubliminal.GITHUBURL</a>
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Issues</label></span>
+        <span class="col-xs-8 col-md-10 wrapped">
+            <a href="$autosubliminal.GITHUBURL/issues" target="_blank">$autosubliminal.GITHUBURL/issues</a>
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Wiki</label></span>
+        <span class="col-xs-8 col-md-10 wrapped">
+            <a href="$autosubliminal.GITHUBURL/wiki" target="_blank">$autosubliminal.GITHUBURL/wiki</a>
+        </span>
+    </div>
+
+</div>

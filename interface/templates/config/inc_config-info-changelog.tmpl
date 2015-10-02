@@ -1,0 +1,56 @@
+#from bs4 import BeautifulSoup
+
+#import autosubliminal
+#from autosubliminal import utils
+
+#try
+#set $response = utils.connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/master/changelog.html')
+#set $page = $BeautifulSoup($response)
+#set $releases = $page.find_all("div", "release")
+#set $counter = 0
+
+<div class="form-horizontal">
+
+    <div class="form-group section-title">
+        <div class="col-xs-12 col-md-6">
+            <span class="badge">Current version</span>
+        </div>
+    </div>
+
+    #for $index, $release in enumerate($releases):
+    #set $version = $release.find("div", "version").string
+    #set $releasedate = $release.find("div", "releasedate").string
+    #set $changelog = $release.find("ul", "changelog")
+
+    #if $index == 1
+    <hr>
+    <div class="form-group section-title">
+        <div class="col-xs-12 col-md-6">
+            <span class="badge">Previous version(s)</span>
+        </div>
+    </div>
+    #end if
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Version</label></span>
+        <span class="col-xs-8 col-md-10">$version</span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Release date</label></span>
+        <span class="col-xs-8 col-md-10">$releasedate</span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Changelog</label></span>
+        <span class="col-xs-8 col-md-10 wrapped">$changelog</span>
+    </div>
+
+    #set $counter = $counter + 1
+    #end for
+
+</div>
+
+#except
+Changelog cannot be found right now, please try again later.
+#end try

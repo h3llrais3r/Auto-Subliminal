@@ -1,0 +1,33 @@
+#import autosubliminal
+
+#from string import capwords
+
+#from autosubliminal.templates.PageTemplate import PageTemplate
+#extends PageTemplate
+
+#block bodyContent
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="container-fluid">
+                <div class="row">
+                    <span class="h3 weighted">Log File</span>
+                    <span class="panel-title badge pull-right">$capwords($loglevel)</span>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+	        <pre class="pre-scrollable-x">
+#if $message
+$message
+#else
+There is currently no $loglevel.lower() information in your log file, make sure your loglevel is at least: $capwords($loglevel).
+You can change the loglevel in your <a href="$autosubliminal.WEBROOT/config/#logging">configuration</a>.
+#end if
+	        </pre>
+        </div>
+    </div>
+</div>
+
+#end block bodyContent

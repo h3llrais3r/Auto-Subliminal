@@ -1,0 +1,198 @@
+#import babelfish
+
+#import autosubliminal
+#from autosubliminal import config
+
+<div class="form-horizontal">
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="path">Path
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            The folder where the Auto-Subliminal files are located.<br>
+                            This field is required!
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.PATH" id="path" name="path" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="videopaths">Video paths
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            The folders where your videos are located.<br>
+                            Use a new line for each location!
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <textarea id="videopaths" name="videopaths" class="form-control input-sm">$config.display_videopaths</textarea>
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="defaultlanguage">Default language
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The default subtitle language (alpha2 code).</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <select id="defaultlanguage" name="defaultlanguage" class="form-control input-sm">
+                #for language in babelfish.LANGUAGE_MATRIX:
+                #if $language.alpha2
+                #set $name = ($language.name[:$language.name.find('(') if $language.name.find('(') != -1 else len($language.name)]) + ' (' + $language.alpha2 + ')'
+                #if $language.alpha2 == $autosubliminal.DEFAULTLANGUAGE
+                <option value="$language.alpha2" selected="selected">$name</option>
+                #else
+                <option value="$language.alpha2">$name</option>
+                #end if
+                #end if
+                #end for
+            </select>
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="defaultlanguagesuffix">Use language suffix
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>When enabled, the default subtitle will be extended with the alpha2 code of the language (f.e. showname.en.srt).</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <select id="defaultlanguagesuffix" name="defaultlanguagesuffix" class="form-control input-sm">
+                #if $autosubliminal.DEFAULTLANGUAGESUFFIX
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+                #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+                #end if
+            </select>
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="additionallanguages">Additional languages
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            Comma separated list with the additional subtitle languages in alpha2 format.<br>
+                            If additional languages are provided, subtitles will be extended with the alpha2 code of the language (f.e. showname.en.srt).
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" id="additionallanguages" name="additionallanguages" value="$config.display_additional_languages" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="scandisk">ScanDisk
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            Change the interval of the ScanDisk thread, it scans the disk for missing subtitle files.<br>
+                            Time is in seconds, default is 3600 seconds.
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" id="scandisk" name="scandisk" value="$autosubliminal.SCHEDULERSCANDISK" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="checksub">CheckSub
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            Change the interval of the CheckSub thread, it checks if there is a match on the configured subliminal providers.<br>
+                            Cannot not be set lower then 21600.<br>
+                            Time is in seconds, default is 28800 seconds.
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" id="checksub" name="checksub" value="$autosubliminal.SCHEDULERCHECKSUB" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="skiphiddendirs">Skip hidden directories
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            Should we scan hidden directories (directories that start with a dot, for example .config)?<br>
+                            Doesn't work for Windows style hidden directories.
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <select id="skiphiddendirs" name="skiphiddendirs" class="form-control input-sm">
+                #if $autosubliminal.SKIPHIDDENDIRS
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+                #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+                #end if
+            </select>
+        </span>
+    </div>
+
+</div>

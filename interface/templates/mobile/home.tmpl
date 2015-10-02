@@ -1,143 +1,139 @@
+<!DOCTYPE html>
+
 #import time
-#import cgi
-#import urllib
-#import re
 
 #import autosubliminal
 #from autosubliminal import version
 #from autosubliminal.db import LastDownloads
 #from autosubliminal.utils import display_name
 
-<!DOCTYPE html>
 <html>
-	<head>
-		<title>Auto-Subliminal Mini</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" href="$autosubliminal.WEBROOT/mobile/css/jquery.mobile-1.0.min.css">
-		<script type="text/javascript" src="$autosubliminal.WEBROOT/mobile/scripts/jquery-1.6.4.min.js"></script>
-		<script type="text/javascript" src="$autosubliminal.WEBROOT/mobile/scripts/jquery.mobile-1.0.min.js"></script>
-		
-	</head>
 
-	<body>
-		<div data-role="page" data-add-back-btn="false">
-			<div data-role="header" id="header">
-					
-				<div style="position: absolute; top: 5px; left: 5px;">
-					<a href="$autosubliminal.WEBROOT/home/runNow" data-role="button" data-icon="search" data-theme="b">RunNow</a>
-				</div>
-				<h1>MINI</h1>
-				<div style="position: absolute; top: 5px; right: 5px;">
-					<a href="#" onClick="window.location='$autosubliminal.WEBROOT/home/exitMini'" data-role="button" data-theme="b">Exit Mini</a>
-				</div>
-			</div>
-			<div data-role="content">
-				<div data-role="collapsible-set" data-theme="b" data-content-theme="b">
+<head>
+    <title>Auto-Subliminal Mobile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Jquery mobile themes -->
+    <link rel="stylesheet" href="$autosubliminal.WEBROOT/css/jquery.mobile-1.4.5.css" media="screen">
+    <link rel="stylesheet" href="$autosubliminal.WEBROOT/css/jquery.mobile.theme-1.4.5.css" media="screen">
+    <!-- Jquery mobile javascript -->
+    <script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/jquery-1.11.3.js"></script>
+    <script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/jquery.mobile-1.4.5.js"></script>
+</head>
 
-					<div data-role="collapsible" data-collapsed="false">
-					<h3>WANTED ($len($autosubliminal.WANTEDQUEUE))</h3>
-					<p>
-					
-#if $len($autosubliminal.WANTEDQUEUE) >= 1
-						<table class="table" width="100%">
-							<thead>
-							<tr>
-								<th>SHOW/MOVIE NAME</th>
-								<th>LANG</th>
-							</tr>
-							</thead>
-#for $item in $autosubliminal.WANTEDQUEUE
-							<tr>
-								<td><b>
-                                    <div style="position: relative; float: left; width: 60%;">$display_name($item, True)</div>
-#if $item['type'] == 'episode':
-									<div style="position: relative; float: right;">S$item['season'] E$item['episode']</div>
-#end if
-                                </b></td>
-								<td align="center" width="50px">
-                                #for lang in $item['lang']
-                                #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
-								    <img src="$imageurl" alt="$lang">
-                                #end for
-								</td>
-							</tr>						
-#end for
-						</table>
-#end if					
-					</p>
-					</div>
+<body>
 
-#set $lastdownload = LastDownloads().get_last_downloads()
-					<div data-role="collapsible">
-					<h3>DOWNLOADED ($len($lastdownload))</h3>
-					<p>
-#if $len($lastdownload) >= 1
-						<table class="table">
-							<thead>
-							<tr>
-								<th>SHOW/MOVIE NAME</th>
-								<th>LANG</th>
-							</tr>
-							</thead>
-#for $item in $lastdownload
-							<tr>
-								<td><b>
-									<div style="position: relative; float: left; width: 60%;">$display_name($item, True)</div>
-#if $item['type'] == 'episode':
-                                    <div style="position: relative; float: right;">S$item['season'] E$item['episode']</div>
-#end if
-								</b></td>
-	
-								<td align="center" width="50px">
-                                #set $lang = $item['language']
-                                #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
-								    <img src="$imageurl" alt="$lang">
-								</td>
-								</tr>
-#end for
-							</table>
-#end if
-					</p>
-					</div>
+<div data-role="page" data-add-back-btn="false">
 
-					<div data-role="collapsible" align="center">
-					<h3>INFORMATION</h3>
-					<p>
-						<table border="0px" cellspacing="0px" cellpadding="0px">
-							<tr>
-								<td>NEXT DISK SCAN IN</td>
-								<td>
-                                #try
-                                    &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.lastrun) ))) <br>
-                                #except
-                                    &nbsp;:&nbsp;Please wait... <br>
-                                #end try
-								</td>
-							</tr>
-							
-							<tr>
-								<td>NEXT SUBTITLE CHECK IN</td>
-								<td>
-                                #try
-                                    &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.lastrun) ))) <br>
-                                #except
-                                    &nbsp;:&nbsp;Please wait... <br>
-                                #end try
-								</td>
-							</tr>
-						</table>
-					
-					</p>
-					</div>
-					
-				</div>
-			</div>
-			  <div data-role="footer" data-theme="b">
-            <div class="ui-bar" align="center">
-				$version.RELEASE_VERSION.upper()</div>
-			</div>
-		</div>
-	</body>
+    <div data-role="header" id="header">
+        <a href="$autosubliminal.WEBROOT/system/runNow" data-role="button" data-icon="search" data-theme="b">Run now</a>
+        <h1>Mobile</h1>
+        <a href="#" onClick="window.location='$autosubliminal.WEBROOT/system/exitMobile'" data-role="button" data-theme="b">Exit Mobile</a>
+    </div>
+
+    <div data-role="content">
+        <div data-role="collapsible-set" data-theme="b" data-content-theme="b">
+
+            <div data-role="collapsible" data-collapsed="false">
+                <h3>Wanted ($len($autosubliminal.WANTEDQUEUE))</h3>
+                #if $len($autosubliminal.WANTEDQUEUE) >= 1
+                <table class="ui-table">
+                    <thead>
+                    <tr>
+                        <th>Show/Movie name</th>
+                        <th>Lang</th>
+                    </tr>
+                    </thead>
+                    #for $item in $autosubliminal.WANTEDQUEUE
+                    <tr>
+                        <td>
+                            <span>$display_name($item, False)</span>
+                            #if $item['type'] == 'episode':
+                            <span>S$item['season'] E$item['episode']</span>
+                            #end if
+                        </td>
+                        <td>
+                            #for lang in $item['lang']
+                            #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
+                            <img src="$imageurl" alt="$lang" title="$lang">
+                            #end for
+                        </td>
+                    </tr>
+                    #end for
+                </table>
+                #end if
+            </div>
+
+            #set $lastdownloads = LastDownloads().get_last_downloads()
+            <div data-role="collapsible">
+                <h3>Last downloads ($len($lastdownloads))</h3>
+                #if $len($lastdownloads) >= 1
+                <table class="ui-table">
+                    <thead>
+                    <tr>
+                        <th>Show/Movie</th>
+                        <th>Lang</th>
+                    </tr>
+                    </thead>
+                    #for $item in $lastdownloads
+                    <tr>
+                        <td>
+                            <span>$display_name($item, False)</span>
+                            #if $item['type'] == 'episode':
+                            <span>S$item['season'] E$item['episode']</span>
+                            #end if
+                        </td>
+                        <td>
+                            #set $lang = $item['language']
+                            #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
+                            <img src="$imageurl" alt="$lang" title="$lang">
+                        </td>
+                    </tr>
+                    #end for
+                </table>
+                #end if
+            </div>
+
+            <div data-role="collapsible">
+                <h3>Information</h3>
+                <table class="ui-table">
+                    <tr>
+                        <td>Next disc scan in</td>
+                        <td>
+                            #try
+                            &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.lastrun) )))
+                            <br>
+                            #except
+                            &nbsp;:&nbsp;Please wait... <br>
+                            #end try
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Next subtitle check in</td>
+                        <td>
+                            #try
+                            &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.lastrun) )))
+                            <br>
+                            #except
+                            &nbsp;:&nbsp;Please wait... <br>
+                            #end try
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <div data-role="footer" data-theme="b">
+        <div class="ui-bar ui-title">
+            Auto-Subliminal version : $version.RELEASE_VERSION.upper()
+        </div>
+    </div>
+
+</div>
+
+</body>
+
 </html>

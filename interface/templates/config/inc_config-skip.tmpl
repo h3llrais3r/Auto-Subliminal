@@ -1,0 +1,58 @@
+#import autosubliminal
+
+<div class="form-horizontal">
+
+    <div class="form-group section-title">
+        <div class="col-xs-8 col-md-4">
+            <span class="badge">Show</span>
+        </div>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="skipshow">Skip show
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            Serie Name = 0 (this will skip the show 'Serie Name' completely<br>
+                            Another Serie name = 1,5,6 (this will skip the show 'Another Serie Name' season 1, 5 and 6<br>
+                            Show Name = 00,6,7 (this will skip the show 'Show Name' season 00 (specials), 6 and 7. <br>
+                            00 is different then 0, 0 skips a show, 00 skips specials (season 0)
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <textarea rows="5" id="skipshow" name="skipshow" class="form-control input-sm">$autosubliminal.config.display_skipshow</textarea>
+        </span>
+    </div>
+
+    <div class="form-group section-title">
+        <div class="col-xs-8 col-md-4">
+            <span class="badge">Movie</span>
+        </div>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="skipmovie">Skip movie
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>Title (Year) = 0</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <textarea rows="5" id="skipmovie" name="skipmovie" class="form-control input-sm">$autosubliminal.config.display_skipmovie</textarea>
+        </span>
+    </div>
+
+</div>

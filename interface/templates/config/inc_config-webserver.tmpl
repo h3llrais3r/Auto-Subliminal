@@ -1,0 +1,130 @@
+#import autosubliminal
+
+<div class="form-horizontal">
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="webserverip">Webserverip
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>To allow hosts to connect to any ip number assign to the machine use '0.0.0.0'</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.WEBSERVERIP" id="webserverip" name="webserverip" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="webserverport">Webserverport
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>Set port</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.WEBSERVERPORT" id="webserverport" name="webserverport" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="webroot">Webroot
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            Set Webroot for reverse proxying.<br>
+                            Example: to proxy it to http://localhost/autosubliminal/ webroot needs to be: /autosubliminal
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.WEBROOT" id="webroot" name="webroot" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="username">Username
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            If a username and password are set, the webserver requires authentication.<br>
+                            Otherwise no authentication is set or required.
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.USERNAME" id="username" name="username" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="password">Password
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>Set password</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="password" value="$autosubliminal.PASSWORD" id="password" name="password" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="launchbrowser">Launchbrowser
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            Should we start a browser every time Auto-Subliminal starts?<br>
+                            This overwrites the commandline parameters
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <select id="launchbrowser" name="launchbrowser" class="form-control input-sm">
+                #if $autosubliminal.LAUNCHBROWSER
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+                #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+                #end if
+            </select>
+        </span>
+    </div>
+
+</div>

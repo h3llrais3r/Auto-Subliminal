@@ -10,6 +10,7 @@ CONFIGVERSION = None
 CONFIGUPGRADED = None
 
 # System
+GITHUBURL = None
 VERSIONURL = None
 USERAGENT = None
 SYSENCODING = None
@@ -145,7 +146,7 @@ MOVIEPOSTPROCESSCMDARGS = None
 
 def initialize():
     global CONFIGFILE, CONFIGVERSION, CONFIGUPGRADED, \
-        VERSIONURL, USERAGENT, SYSENCODING, TIMEOUT, WANTEDQUEUE, WANTEDQUEUELOCK, \
+        GITHUBURL, VERSIONURL, USERAGENT, SYSENCODING, TIMEOUT, WANTEDQUEUE, WANTEDQUEUELOCK, \
         DBFILE, DBVERSION, \
         DAEMON, STARTED, PID, \
         MOBILE, MOBILEUSERAGENTS, \
@@ -178,8 +179,9 @@ def initialize():
                                                                  name='subliminal.providers')
 
     # Version settings
-    VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py'
-    USERAGENT = 'Auto-Subliminal/' + version.RELEASE_VERSION
+    GITHUBURL = "https://github.com/h3llrais3r/Auto-Subliminal"
+    VERSIONURL = "https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py"
+    USERAGENT = "Auto-Subliminal/" + version.RELEASE_VERSION
 
     # Default http timeout
     TIMEOUT = 300

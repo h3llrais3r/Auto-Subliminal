@@ -1,0 +1,45 @@
+#import cgi
+#import autosubliminal
+
+#from autosubliminal.templates.PageTemplate import PageTemplate
+#extends PageTemplate
+
+#block bodyContent
+
+<div class="container-fluid">
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <span class="panel-title badge">Skip show</span>
+        </div>
+
+        <div class="panel-body">
+            <form method="post" action="$autosubliminal.WEBROOT/home/skipShow">
+                <div class="form-group narrow">
+                    <span><label>Enter the season you want to skip for show '$title'</label></span>
+                </div>
+                <div class="form-group narrow">
+                    <span class="col-xs-4 col-md-2">
+                        <input type="text" name="season" class="form-control input-sm">
+                    </span>
+                    <span class="col-xs-2 col-md-1">
+                        <input type="submit" value="ok" class="btn btn-sm btn-default">
+                    </span>
+                </div>
+                #set $title_escaped = $cgi.escape($title, True)
+                <input type="hidden" name="title" value="$title_escaped">
+            </form>
+        </div>
+
+        <div class="panel-footer">
+            <div class="note">
+                Enter 0 to skip the show completely, enter 00 to skip special show.
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+#end block bodyContent

@@ -1,0 +1,648 @@
+#import autosubliminal
+
+<div class="form-horizontal">
+
+    <div class="form-group narrow">
+        <div class="col-xs-12 col-md-6">
+            <span class="alert-warning">WARNING: Password is stored in plaintext!</span>
+        </div>
+    </div>
+
+    <div class="form-group narrow">
+        <div class="col-xs-12 col-md-6">
+            <span class="alert-info">INFORMATION: You first need to save before you can test a notification.</span>
+        </div>
+    </div>
+
+    <div class="form-group section-title">
+        <div class="col-xs-12 col-md-6">
+            <span class="badge">General</span>
+        </div>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="notify">Notify
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            When enabled, Auto-Subliminal will send a notification when a subtitle has been downloaded.<br>
+                            Default is Disabled.
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <select id="notify" name="notify" class="form-control input-sm">
+                #if $autosubliminal.NOTIFY
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+                #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+                #end if
+            </select>
+        </span>
+    </div>
+
+    <div class="form-group section-title">
+        <div class="col-xs-12 col-md-6">
+            <span class="badge">Mail</span>
+            <img class="img-notifier" src="$autosubliminal.WEBROOT/images/notifiers/email.png" alt="mail" title="mail">
+        </div>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="notifymail">Notify
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            When enabled Auto-Subliminal will send an email notification.<br>
+                            Default is Disabled.
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <select id="notifymail" name="notifymail" class="form-control input-sm">
+                #if $autosubliminal.NOTIFYMAIL
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+                #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+                #end if
+            </select>
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="mailsrv">Server
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The address of the mail server.</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.MAILSRV" id="mailsrv" name="mailsrv" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="mailfromaddr">From
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The address from which the notification will be sent.</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="email" value="$autosubliminal.MAILFROMADDR" id="mailfromaddr" name="mailfromaddr" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="mailtoaddr">From
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The address to which the notification will be sent.</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="email" value="$autosubliminal.MAILTOADDR" id="mailtoaddr" name="mailtoaddr" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="mailusername">Username
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The username on the server.</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.MAILUSERNAME" id="mailusername" name="mailusername" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="mailpassword">Password
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The password for the username on the server.</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="password" value="$autosubliminal.MAILPASSWORD" id="mailpassword" name="mailpassword" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="mailsubject">Subject
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            The subject of the mail.<br>
+                            The downloaded subtitle will be added at the end of the subject.
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.MAILSUBJECT" id="mailsubject" name="mailsubject" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="mailencryption">Encryption
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The encryption method.</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.MAILENCRYPTION" id="mailencryption" name="mailencryption" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="mailauth">Authentication
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            The authentication mechanism.<br>
+                            Don't change this if you don't know what you are doing!
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.MAILAUTH" id="mailauth" name="mailauth" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"></span>
+        <span class="col-xs-8 col-md-4">
+            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/testNotify/mail'">
+        </span>
+    </div>
+
+    <div class="form-group section-title">
+        <div class="col-xs-12 col-md-6">
+            <span class="badge">Twitter</span>
+            <a href="https://twitter.com/" target="_blank">
+                <img class="img-notifier" src="$autosubliminal.WEBROOT/images/notifiers/twitter.png" alt="twitter" title="twitter">
+            </a>
+        </div>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="notifytwitter">Notify
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            When enabled Auto-Subliminal will send a Twitter notification.<br>
+                            Default is Disabled.
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <select id="notifytwitter" name="notifytwitter" class="form-control input-sm">
+                #if $autosubliminal.NOTIFYTWITTER
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+                #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+                #end if
+            </select>
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="twitterkey">Key
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The key for Twitter.</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.TWITTERKEY" id="twitterkey" name="twitterkey" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="twittersecret">Secret
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The secret code for Twitter.</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.TWITTERSECRET" id="twittersecret" name="twittersecret" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"></span>
+        <span class="col-xs-8 col-md-4">
+            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/testNotify/twitter'">
+            <input type="button" value="Register" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/regTwitter'">
+        </span>
+    </div>
+
+    <div class="form-group section-title">
+        <div class="col-xs-12 col-md-6">
+            <span class="badge">Pushalot</span>
+            <a href="https://pushalot.com/" target="_blank">
+                <img class="img-notifier" src="$autosubliminal.WEBROOT/images/notifiers/pushalot.png" alt="pushalot" title="pushalot">
+            </a>
+        </div>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="notifypushalot">Notify
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            When enabled Auto-Subliminal will send a Pushalot notification.<br>
+                            Default is Disabled.
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <select id="notifypushalot" name="notifypushalot" class="form-control input-sm">
+                #if $autosubliminal.NOTIFYPUSHALOT
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+                #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+                #end if
+            </select>
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="pushalotapi">API
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The API key for Pushalot.</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.PUSHALOTAPI" id="pushalotapi" name="pushalotapi" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"></span>
+        <span class="col-xs-8 col-md-4">
+            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/testNotify/pushalot'">
+        </span>
+    </div>
+
+    <div class="form-group section-title">
+        <div class="col-xs-12 col-md-6">
+            <span class="badge">Notify My Android</span>
+            <a href="https://www.notifymyandroid.com/" target="_blank">
+                <img class="img-notifier" src="$autosubliminal.WEBROOT/images/notifiers/nma.png" alt="nma" title="nma">
+            </a>
+        </div>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="notifynma">Notify
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            When enabled Auto-Subliminal will send a Notify My Android notification<br>
+                            Default is Disabled.
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <select id="notifynma" name="notifynma" class="form-control input-sm">
+                #if $autosubliminal.NOTIFYNMA
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+                #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+                #end if
+            </select>
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="nmaapi">API
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The API key for NMA.</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.NMAAPI" id="nmaapi" name="nmaapi" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"></span>
+        <span class="col-xs-8 col-md-4">
+            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/testNotify/nma'">
+        </span>
+    </div>
+
+    <div class="form-group section-title">
+        <div class="col-xs-12 col-md-6">
+            <span class="badge">Growl</span>
+            <a href="http://www.growl.info/" target="_blank">
+                <img class="img-notifier" src="$autosubliminal.WEBROOT/images/notifiers/growl.png" alt="growl" title="growl">
+            </a>
+        </div>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="notifygrowl">Notify
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            When enabled Auto-Subliminal will send a Growl notification.<br>
+                            Default is Disabled.
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <select id="notifygrowl" name="notifygrowl" class="form-control input-sm">
+                #if $autosubliminal.NOTIFYGROWL
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+                #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+                #end if
+            </select>
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="growlhost">Host
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The address of the growl host server.</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.GROWLHOST" id="growlhost" name="growlhost" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="growlport">Port
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The port of the growl server.</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.GROWLPORT" id="growlport" name="growlport" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="growlpass">Password
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>The password on the growl server.</li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="password" value="$autosubliminal.GROWLPASS" id="growlpass" name="growlpass" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"></span>
+        <span class="col-xs-8 col-md-4">
+            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/testNotify/growl'">
+        </span>
+    </div>
+
+    <div class="form-group section-title">
+        <div class="col-xs-12 col-md-6">
+            <span class="badge">Prowl</span>
+            <a href="http://www.prowlapp.com/" target="_blank">
+                <img class="img-notifier" src="$autosubliminal.WEBROOT/images/notifiers/prowl.png" alt="prowl" title="prowl">
+            </a>
+        </div>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="notifyprowl">Notify
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            When enabled Auto-Subliminal will send a Prowl notification.<br>
+                            Default is Disabled.
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <select id="notifyprowl" name="notifyprowl" class="form-control input-sm">
+                #if $autosubliminal.NOTIFYPROWL
+                <option value="True" selected="selected">Enabled</option>
+                <option value="False">Disabled</option>
+                #else
+                <option value="True">Enabled</option>
+                <option value="False" selected="selected">Disabled</option>
+                #end if
+            </select>
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="prowlapi">API
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            The API key for prowl.<br>
+                            Your api key can be find by visiting: https://prowlapp.com/api_settings.php
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" value="$autosubliminal.PROWLAPI" id="prowlapi" name="prowlapi" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="prowlpriority">Priority
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            The priority for the notification.<br>
+                            Default is Normal
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            #set priormapper = {-2 : 'Very Low', -1 : 'Moderate', 0 : 'Normal', 1 : 'High', 2 : 'Emergency'}
+            <select id="prowlpriority" name="prowlpriority" class="form-control input-sm">
+                #for $prior in $range(-2, 3, 1):
+                #if $prior == $autosubliminal.PROWLPRIORITY
+                <option value="$prior" selected="selected">$priormapper[$prior]</option>
+                #else
+                <option value="$prior">$priormapper[$prior]</option>
+                #end if
+                #end for
+            </select>
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"></span>
+        <span class="col-xs-8 col-md-4">
+            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/testNotify/prowl'">
+        </span>
+    </div>
+
+</div>

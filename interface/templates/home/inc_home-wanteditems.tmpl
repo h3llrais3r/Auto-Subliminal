@@ -1,0 +1,168 @@
+#from types import *
+
+#import autosubliminal
+#from autosubliminal.utils import convert_timestamp, convert_timestamp_table, display_name, get_file_size, count_wanted_items
+
+#if $len($autosubliminal.WANTEDQUEUE) >= 1
+
+#set total = $count_wanted_items()
+#set $total_shows = $count_wanted_items('episode')
+#set $total_movies = $count_wanted_items('movie')
+
+<div class="container-fluid">
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <span class="h3 weighted">Wanted ($total) - Shows ($total_shows) - Movies ($total_movies)</span>
+        </div>
+
+        <div class="panel-body">
+
+            <table id="wanteditems" class="table table-condensed table-striped table-hover tablesorter ui-table-reflow">
+
+                <thead>
+                <tr>
+                    <th>Show/Movie name</th>
+                    <th>Season</th>
+                    <th>Episode</th>
+                    <th>Source</th>
+                    <th>Quality</th>
+                    <th>Codec</th>
+                    <th>Group</th>
+                    <th>Language</th>
+                    <th>Time</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                #for $index, $item in enumerate($autosubliminal.WANTEDQUEUE)
+                <tr>
+                    <td>
+                        <span class="dropdown">
+                            #if $item['type'] == 'episode':
+                            <a class="dropdown-toggle video-name" data-toggle="dropdown" title="Click to skip" href="#">$display_name($item)</a>
+                            <ul class="dropdown-menu has-tip">
+                                <li>
+                                    <a href="$autosubliminal.WEBROOT/home/postProcess/$index">Skip and post process show</a>
+                                </li>
+                                <li>
+                                    <a href="$autosubliminal.WEBROOT/home/skipShow/$item['title']">Skip show</a>
+                                </li>
+                                <li>
+                                    <a href="$autosubliminal.WEBROOT/home/skipShow/$item['title']/$item['season']">Skip season $item['season']</a>
+                                </li>
+                            </ul>
+                            #else if $item['type'] == 'movie':
+                            <a class="dropdown-toggle" data-toggle="dropdown" title="Click to skip" href="#">$display_name($item)</a>
+                            <ul class="dropdown-menu has-tip">
+                                <li>
+                                    <a href="$autosubliminal.WEBROOT/home/postProcess/$index">Skip and post process movie</a>
+                                </li>
+                                <li>
+                                    <a href="$autosubliminal.WEBROOT/home/skipMovie/$item['title']/$item['year']">Skip movie</a>
+                                </li>
+                            </ul>
+                            #end if
+                        </span>
+                        <span class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                            </a>
+                            <ul class="dropdown-menu has-tip info-list">
+                                <li>
+                                    <span class="info-list-label">File name:</span>
+                                    <span>$os.path.basename($item['originalFileLocationOnDisk'])</span>
+                                </li>
+                                <li>
+                                    <span class="info-list-label">File size:</span>
+                                    <span>$get_file_size($item['originalFileLocationOnDisk'])</span>
+                                </li>
+                            </ul>
+                        </span>
+                        #if $item['type'] == 'episode':
+                        #if not $item['showid']:
+                        <a href="#">
+                            <img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Show id could not be found! Please check the log file!">
+                        </a>
+                        #end if
+                        #else if $item['type'] == 'movie':
+                        #if not $item['imdbid']:
+                        <a href="#">
+                            <img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Imdb id could not be found! Please check the log file!">
+                        </a>
+                        #end if
+                        #end if
+                    </td>
+                    <td>$item['season']</td>
+                    <td>$item['episode']</td>
+                    #if $type($item['source']) == UnicodeType:
+                    <td>$item['source'].upper()</td>
+                    #else
+                    <td>Unknown</td>
+                    #end if
+                    #if $type($item['quality']) == UnicodeType:
+                    <td>$item['quality'].upper()</td>
+                    #else
+                    <td>Unknown</td>
+                    #end if
+                    #if $type($item['codec']) == UnicodeType:
+                    <td>$item['codec'].upper()</td>
+                    #else
+                    <td>Unknown</td>
+                    #end if
+                    #if $type($item['releasegrp']) == UnicodeType:
+                    <td>$item['releasegrp'].upper()</td>
+                    #else
+                    <td>Unknown</td>
+                    #end if
+                    <td>
+                        #for $lang in $item['lang']
+                        #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
+                        <span class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <img src="$imageurl" alt="$lang" title="Click to search manually">
+                            </a>
+                            <ul class="dropdown-menu pull-right no-padding">
+                                <li>
+                                    <div class="panel panel-default container-manualsearch">
+                                        <div class="panel-heading">
+                                            <a class="container-manualsearch-link" href="$autosubliminal.WEBROOT/home/searchSubtitle/$index/$lang">
+                                                Manual search
+                                            </a>
+                                            <img class="invisible" src="$autosubliminal.WEBROOT/images/loading.gif" alt="loading" title="loading">
+                                        </div>
+                                        <div class="panel-body"/>
+                                    </div>
+                                </li>
+                            </ul>
+                        </span>
+                        #end for
+                    </td>
+                    <td>
+                        #if $type($item['timestamp']) == UnicodeType:
+                        $convert_timestamp($item['timestamp'])
+                        #else
+                        Unknown
+                        #end if
+                    </td>
+                </tr>
+                #end for
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <div class="panel-footer">
+            <div class="note">
+                <div>Click 'Show/Movie name' in wanted list to skip it</div>
+                <div>Click 'Language' icon in wanted list to search it manually</div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+#end if

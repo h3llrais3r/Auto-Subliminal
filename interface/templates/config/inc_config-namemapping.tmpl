@@ -1,0 +1,63 @@
+#import autosubliminal
+
+<div class="form-horizontal">
+
+    <div class="form-group section-title">
+        <div class="col-xs-8 col-md-4">
+            <span class="badge">Show</span>
+        </div>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="usershownamemapping">Show name mapping
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            Match the local show name to the TVDB ID.<br>
+                            Example:<br>
+                            Show name = 12345<br>
+                            Show name 2 = 123456<br>
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <textarea rows="5" id="usershownamemapping" name="usershownamemapping" class="form-control input-sm">$autosubliminal.config.display_shownamemapping</textarea>
+        </span>
+    </div>
+
+    <div class="form-group section-title">
+        <div class="col-xs-8 col-md-4">
+            <span class="badge">Movie</span>
+        </div>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2">
+            <label for="usermovienamemapping">Movie name mapping
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            Match the local movie name to the IMDB ID.<br>
+                            Example:<br>
+                            Movie title (year) = 12345<br>
+                            Movie title 2 (year) = 123456<br>
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <textarea rows="5" id="usermovienamemapping" name="usermovienamemapping" class="form-control input-sm">$autosubliminal.config.display_movienamemapping</textarea>
+        </span>
+    </div>
+
+</div>

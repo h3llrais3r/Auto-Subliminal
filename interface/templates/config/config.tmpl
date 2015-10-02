@@ -1,0 +1,88 @@
+#import autosubliminal
+
+#from autosubliminal.templates.PageTemplate import PageTemplate
+#extends PageTemplate
+
+#block bodyContent
+
+<div class="container-fluid">
+
+    <form method="post" action="$autosubliminal.WEBROOT/config/saveConfig">
+
+        <div class="panel panel-default">
+
+            <!-- Nav tabs -->
+            <div class="panel-heading no-border-bottom no-padding-bottom">
+                <ul id="configtabs" class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#general" role="tab" data-toggle="tab" aria-controls="general">General</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#logging" role="tab" data-toggle="tab" aria-controls="logging">Logging</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#webserver" role="tab" data-toggle="tab" aria-controls="webserver">Webserver</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#subliminal" role="tab" data-toggle="tab" aria-controls="subliminal">Subliminal</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#namemapping" role="tab" data-toggle="tab" aria-controls="namemapping">NameMapping</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#skip" role="tab" data-toggle="tab" aria-controls="skip">Skip</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#notifications" role="tab" data-toggle="tab" aria-controls="notifications">Notifications</a>
+                    </li>
+                    <li role="presentation">
+                        <a href="#postprocessing" role="tab" data-toggle="tab" aria-controls="postprocessing">PostProcessing</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Tab panes -->
+            <div class="panel-body">
+                <div class="tab-content">
+                    <div id="general" role="tabpanel" class="tab-pane active">
+                        #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/config/inc_config-general.tmpl")
+                    </div>
+                    <div id="logging" role="tabpanel" class="tab-pane">
+                        #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/config/inc_config-logging.tmpl")
+                    </div>
+                    <div id="webserver" role="tabpanel" class="tab-pane">
+                        #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/config/inc_config-webserver.tmpl")
+                    </div>
+                    <div id="subliminal" role="tabpanel" class="tab-pane">
+                        #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/config/inc_config-subliminal.tmpl")
+                    </div>
+                    <div id="namemapping" role="tabpanel" class="tab-pane">
+                        #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/config/inc_config-namemapping.tmpl")
+                    </div>
+                    <div id="skip" role="tabpanel" class="tab-pane">
+                        #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/config/inc_config-skip.tmpl")
+                    </div>
+                    <div id="notifications" role="tabpanel" class="tab-pane">
+                        #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/config/inc_config-notification.tmpl")
+                    </div>
+                    <div id="postprocessing" role="tabpanel" class="tab-pane">
+                        #include $os.path.join($autosubliminal.PATH.encode(), "interface/templates/config/inc_config-postprocessing.tmpl")
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <input type="submit" value="Save" class="btn btn-sm btn-default">
+
+    </form>
+
+</div>
+
+#end block bodyContent
+
+#block footerContent
+
+<script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/config.js"></script>
+
+#end block footerContent
