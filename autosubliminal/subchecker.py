@@ -96,7 +96,8 @@ def search_subtitle(wanted_item_index, lang):
             # Use subliminal scoring (scores=None)
             for index, subtitle, score in sorted([(index, s, subliminal.compute_score(
                     s.get_matches(video, hearing_impaired=utils.include_hearing_impaired()), video, scores=None))
-                    for index, s in enumerate(subtitles[video])], key=operator.itemgetter(2), reverse=True):
+                                                  for index, s in enumerate(subtitles[video])],
+                                                 key=operator.itemgetter(2), reverse=True):
                 # Only add subtitle when content is found
                 if subtitle.content:
                     # Create new sub dict for showing result
@@ -177,11 +178,41 @@ def delete_subtitle(wanted_item_index):
 
     # Delete subtitle
     deleted = False
+    subtitle_path = _get_subtitle_path(wanted_item)
     try:
-        os.remove(_get_subtitle_path(wanted_item))
+        os.remove(subtitle_path)
         deleted = True
     except Exception, e:
-        log.error("Unable to delete subtitle: %s" % e)
+        log.error("Unable to delete subtitle: %s" % subtitle_path)
+        log.error("Exception: %s" % e)
+
+    # Release wanted queue lock
+    utils.release_wanted_queue_lock()
+
+    return deleted
+
+
+def delete_video(wanted_item_index):
+    log.info("Deleting an individual video file")
+
+    # Get wanted queue lock
+    if not utils.get_wanted_queue_lock():
+        return False
+
+    # Remove wanted item for queue
+    wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+    autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
+
+    # Physically delete the file
+    video_path = wanted_item['originalFileLocationOnDisk']
+    deleted = False
+    try:
+        os.remove(video_path)
+        log.info("Deleted file: %s" % video_path)
+        deleted = True
+    except Exception, e:
+        log.error("Unable to delete file: %s" % video_path)
+        log.error("Exception: %s" % e)
 
     # Release wanted queue lock
     utils.release_wanted_queue_lock()

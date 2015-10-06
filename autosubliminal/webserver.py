@@ -76,6 +76,25 @@ class Home(object):
         tmpl.message = "Done<br> Remember, WantedQueue will be refreshed at the next run of scanDisk <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
         return str(tmpl)
 
+    @cherrypy.expose(alias='deleteVideo')
+    def delete_video(self, wanted_item_index, confirmed=False):
+        if not confirmed:
+            # Get wanted item
+            wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+            tmpl = Template(file="interface/templates/home/home-deleteVideo.tmpl")
+            tmpl.wanted_item_index = wanted_item_index
+            tmpl.video = wanted_item['originalFileLocationOnDisk']
+            return str(tmpl)
+        else:
+            # Delete video
+            deleted = subchecker.delete_video(wanted_item_index)
+            tmpl = Template(file="interface/templates/general/message.tmpl")
+            if deleted:
+                tmpl.message = "Video physically deleted from filesystem <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
+            else:
+                tmpl.message = "Video could not be deleted, please check the log file for more info <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
+            return str(tmpl)
+
     @cherrypy.expose(alias='searchSubtitle')
     def search_subtitle(self, wanted_item_index, lang):
         # Search subtitle

@@ -47,6 +47,9 @@
                                     <a href="$autosubliminal.WEBROOT/home/postProcess/$index">Skip and post process show</a>
                                 </li>
                                 <li>
+                                    <a href="$autosubliminal.WEBROOT/home/deleteVideo/$index">Skip and delete show</a>
+                                </li>
+                                <li>
                                     <a href="$autosubliminal.WEBROOT/home/skipShow/$item['title']">Skip show</a>
                                 </li>
                                 <li>
@@ -54,10 +57,13 @@
                                 </li>
                             </ul>
                             #else if $item['type'] == 'movie':
-                            <a class="dropdown-toggle" data-toggle="dropdown" title="Click to skip" href="#">$display_name($item)</a>
+                            <a class="dropdown-toggle video-name" data-toggle="dropdown" title="Click to skip" href="#">$display_name($item)</a>
                             <ul class="dropdown-menu has-tip">
                                 <li>
                                     <a href="$autosubliminal.WEBROOT/home/postProcess/$index">Skip and post process movie</a>
+                                </li>
+                                <li>
+                                    <a href="$autosubliminal.WEBROOT/home/deleteVideo/$index">Skip and delete movie</a>
                                 </li>
                                 <li>
                                     <a href="$autosubliminal.WEBROOT/home/skipMovie/$item['title']/$item['year']">Skip movie</a>

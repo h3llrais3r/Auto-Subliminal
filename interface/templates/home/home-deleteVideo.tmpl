@@ -1,4 +1,3 @@
-#import cgi
 #import autosubliminal
 
 #from autosubliminal.templates.PageTemplate import PageTemplate
@@ -11,31 +10,31 @@
     <div class="panel panel-default">
 
         <div class="panel-heading">
-            <span class="panel-title badge">Skip show</span>
+            <span class="panel-title badge">Delete video</span>
         </div>
 
         <div class="panel-body">
-            <form method="post" action="$autosubliminal.WEBROOT/home/skipShow">
+            <form method="post" action="$autosubliminal.WEBROOT/home/deleteVideo">
                 <div class="form-group narrow">
-                    <span><label>Enter the season you want to skip for show '$title'</label></span>
+                    <span><label>Are you sure you want to delete the following video file</label></span>
+                </div>
+                <div class="form-group">
+                   <span class="text-muted"><dfn>$video</dfn></span>
                 </div>
                 <div class="form-group narrow">
                     <span class="col-xs-6 col-md-2">
-                        <input type="text" name="season" class="form-control input-sm">
-                    </span>
-                    <span class="col-xs-6 col-md-2">
-                        <input type="submit" value="Skip" class="btn btn-sm btn-default">
+                        <input type="submit" value="Delete" class="btn btn-sm btn-default">
                         <input type="button" value="Cancel" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/home'">
                     </span>
                 </div>
-                #set $title_escaped = $cgi.escape($title, True)
-                <input type="hidden" name="title" value="$title_escaped">
+                <input type="hidden" name="wanted_item_index" value="$wanted_item_index">
+                <input type="hidden" name="confirmed" value="True">
             </form>
         </div>
 
         <div class="panel-footer">
             <div class="note">
-                Enter 0 to skip the show completely, enter 00 to skip special show.
+                Deleting the video will make it impossible to recover afterwards.
             </div>
         </div>
 
