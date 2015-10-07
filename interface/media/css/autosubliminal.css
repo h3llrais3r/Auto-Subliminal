@@ -112,7 +112,7 @@ table.tablesorter, table {
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
     background-color: #eee;
     border: 1px solid #ddd;
-    padding: 5px 21px 5px 4px;
+    padding: 5px 17px 5px 4px;
 }
 
 table.tablesorter thead tr .header {
