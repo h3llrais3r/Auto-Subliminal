@@ -7,7 +7,7 @@
 
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-3">
-            <label for="path">Path
+            <label for="path">Root path
                 <span class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
@@ -15,7 +15,7 @@
                     <ul class="dropdown-menu has-tip info-list">
                         <li>
                             The folder where the Auto-Subliminal files are located.<br>
-                            This field is required!
+                            This field is required.
                         </li>
                     </ul>
                 </span>
@@ -36,7 +36,7 @@
                     <ul class="dropdown-menu has-tip info-list">
                         <li>
                             The folders where your videos are located.<br>
-                            Use a new line for each location!
+                            Use a new line for each location.
                         </li>
                     </ul>
                 </span>
@@ -125,15 +125,15 @@
 
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-3">
-            <label for="scandisk">ScanDisk
+            <label for="scandisk">Disk scan interval
                 <span class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
                     </a>
                     <ul class="dropdown-menu has-tip info-list">
                         <li>
-                            Change the interval of the ScanDisk thread, it scans the disk for missing subtitle files.<br>
-                            Time is in seconds, default is 3600 seconds.
+                            Disk scan interval of the ScanDisk thread. It scans the disk for missing subtitle files.<br>
+                            Time is in seconds. Default value is 3600 seconds.
                         </li>
                     </ul>
                 </span>
@@ -146,16 +146,16 @@
 
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-3">
-            <label for="checksub">CheckSub
+            <label for="checksub">Subtitle check interval
                 <span class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                         <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
                     </a>
                     <ul class="dropdown-menu has-tip info-list">
                         <li>
-                            Change the interval of the CheckSub thread, it checks if there is a match on the configured subliminal providers.<br>
-                            Cannot not be set lower then 21600.<br>
-                            Time is in seconds, default is 28800 seconds.
+                            Subtitle check interval of the CheckSub thread. It checks if there is a match on the configured subliminal providers.<br>
+                            Time is in seconds. Default value is 28800 seconds.<br>
+                            Cannot not be set lower then 21600.
                         </li>
                     </ul>
                 </span>
@@ -175,7 +175,7 @@
                     </a>
                     <ul class="dropdown-menu has-tip info-list">
                         <li>
-                            Should we scan hidden directories (directories that start with a dot, for example .config)?<br>
+                            When enabled, also hidden directories (directories that start with a dot, f.e. .config) are scanned.<br>
                             Doesn't work for Windows style hidden directories.
                         </li>
                     </ul>
