@@ -14,22 +14,22 @@
 
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-2"><label>Auto-Subliminal version</label></span>
-        <span class="col-xs-8 col-md-10">$version.RELEASE_VERSION</span>
+        <span class="col-xs-8 col-md-10 wrapped">$version.RELEASE_VERSION</span>
     </div>
 
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-2"><label>Python version</label></span>
-        <span class="col-xs-8 col-md-10">$sys.version</span>
+        <span class="col-xs-8 col-md-10 wrapped">$sys.version</span>
     </div>
 
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-2"><label>Python location</label></span>
-        <span class="col-xs-8 col-md-10">$os.path.dirname($sys.executable)</span>
+        <span class="col-xs-8 col-md-10 wrapped">$os.path.dirname($sys.executable)</span>
     </div>
 
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-2"><label>Config file</label></span>
-        <span class="col-xs-8 col-md-10">
+        <span class="col-xs-8 col-md-10 wrapped">
             #if $os.path.split($autosubliminal.CONFIGFILE)[0] == ''
             $os.path.join($autosubliminal.PATH, $autosubliminal.CONFIGFILE)
             #else
@@ -40,12 +40,12 @@
 
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-2"><label>Database file</label></span>
-        <span class="col-xs-8 col-md-10">$os.path.join($autosubliminal.PATH, $autosubliminal.DBFILE)</span>
+        <span class="col-xs-8 col-md-10 wrapped">$os.path.join($autosubliminal.PATH, $autosubliminal.DBFILE)</span>
     </div>
 
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-2"><label>Log file</label></span>
-        <span class="col-xs-8 col-md-10">
+        <span class="col-xs-8 col-md-10 wrapped">
             #if $os.path.split($autosubliminal.LOGFILE)[0] == ''
             $os.path.join($autosubliminal.PATH, $autosubliminal.LOGFILE)
             #else

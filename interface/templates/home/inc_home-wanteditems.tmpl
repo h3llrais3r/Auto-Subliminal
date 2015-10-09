@@ -1,7 +1,7 @@
 #from types import *
 
 #import autosubliminal
-#from autosubliminal.utils import convert_timestamp, convert_timestamp_table, display_name, get_file_size, count_wanted_items
+#from autosubliminal.utils import convert_timestamp, display_name, get_file_size, count_wanted_items
 
 #if $len($autosubliminal.WANTEDQUEUE) >= 1
 
@@ -30,7 +30,7 @@
                     <th>Quality</th>
                     <th>Codec</th>
                     <th>Group</th>
-                    <th>Language</th>
+                    <th>Lang</th>
                     <th>Time</th>
                 </tr>
                 </thead>
@@ -102,26 +102,34 @@
                     </td>
                     <td>$item['season']</td>
                     <td>$item['episode']</td>
-                    #if $type($item['source']) == UnicodeType:
-                    <td>$item['source'].upper()</td>
-                    #else
-                    <td>Unknown</td>
-                    #end if
-                    #if $type($item['quality']) == UnicodeType:
-                    <td>$item['quality'].upper()</td>
-                    #else
-                    <td>Unknown</td>
-                    #end if
-                    #if $type($item['codec']) == UnicodeType:
-                    <td>$item['codec'].upper()</td>
-                    #else
-                    <td>Unknown</td>
-                    #end if
-                    #if $type($item['releasegrp']) == UnicodeType:
-                    <td>$item['releasegrp'].upper()</td>
-                    #else
-                    <td>Unknown</td>
-                    #end if
+                    <td class="wrapped">
+                        #if $type($item['source']) == UnicodeType:
+                        $item['source'].upper()
+                        #else
+                        Unknown
+                        #end if
+                    </td>
+                    <td class="wrapped">
+                        #if $type($item['quality']) == UnicodeType:
+                        $item['quality'].upper()
+                        #else
+                        Unknown
+                        #end if
+                    </td>
+                    <td class="wrapped">
+                        #if $type($item['codec']) == UnicodeType:
+                        $item['codec'].upper()
+                        #else
+                        Unknown
+                        #end if
+                    </td>
+                    <td class="wrapped">
+                        #if $type($item['releasegrp']) == UnicodeType:
+                        $item['releasegrp'].upper()
+                        #else
+                        Unknown
+                        #end if
+                    </td>
                     <td>
                         #for $lang in $item['lang']
                         #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
