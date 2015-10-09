@@ -289,3 +289,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     word-wrap: break-word;
     word-break: break-all;
 }
+
+.datetime {
+    min-width: 90px;
+}

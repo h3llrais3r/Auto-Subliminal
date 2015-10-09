@@ -101,7 +101,7 @@
                         #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $item['language'] + ".png"
                         <img src="$imageurl" alt="$item['language']" title="$item['language']">
                     </td>
-                    <td>
+                    <td class="datetime">
                         #if $type($item['timestamp']) == UnicodeType:
                         $convert_timestamp($item['timestamp'])
                         #else
