@@ -316,16 +316,9 @@ def display_name(item_dict, uppercase=False):
 
 def convert_timestamp(datestring):
     date_object = time.strptime(datestring, "%Y-%m-%d %H:%M:%S")
-    # Use non-breaking hyphen (#8209;) in timestamp
+    # Use non-breaking hyphen (&#8209;) in timestamp
     return "%02i&#8209;%02i&#8209;%i %02i:%02i:%02i " % (
-        date_object[2], date_object[1], date_object[0], date_object[3], date_object[4], date_object[5],)
-
-
-def convert_timestamp_table(datestring):
-    # used for the sorted table
-    date_object = time.strptime(datestring, "%Y-%m-%d %H:%M:%S")
-    return "%04i%02i%02i%02i%02i%02i" % (
-        date_object[0], date_object[1], date_object[2], date_object[3], date_object[4], date_object[5])
+        date_object[2], date_object[1], date_object[0], date_object[3], date_object[4], date_object[5])
 
 
 def check_mobile_device(req_useragent):
