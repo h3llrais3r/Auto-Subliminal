@@ -68,13 +68,13 @@ def check_version():
         req = urllib2.Request(autosubliminal.VERSIONURL)
         req.add_header("User-agent", autosubliminal.USERAGENT)
         resp = urllib2.urlopen(req, None, autosubliminal.TIMEOUT)
-        respone = resp.read()
+        response = resp.read()
         resp.close()
     except:
         log.error("The server returned an error for request %s" % autosubliminal.VERSIONURL)
         return None
     try:
-        match = re.search('(\d+)\.(\d+)\.(\d+)', respone)
+        match = re.search('(\d+)\.(\d+)\.(\d+)', response)
         git_version = match.group(0)
     except:
         return None
