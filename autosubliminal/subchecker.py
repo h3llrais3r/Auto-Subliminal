@@ -166,6 +166,26 @@ def save_subtitle(wanted_item_index, subtitle_index):
     return downloaded
 
 
+def force_id_search(wanted_item_index):
+    log.info("Force id search")
+
+    # Get wanted queue lock
+    if not utils.get_wanted_queue_lock():
+        return
+
+    # Force id search
+    wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+    title = wanted_item['title']
+    year = wanted_item['year']
+    if wanted_item['type'] == 'episode':
+        wanted_item['showid'] = utils.get_show_id(title, True)
+    elif wanted_item['type'] == 'movie':
+        wanted_item['imdbid'], wanted_item['year'] = utils.get_imdb_info(title, year, True)
+
+    # Release wanted queue lock
+    utils.release_wanted_queue_lock()
+
+
 def delete_subtitle(wanted_item_index):
     log.info("Deleting an individual subtitle")
 

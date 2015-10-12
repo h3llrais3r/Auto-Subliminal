@@ -30,6 +30,11 @@ class Home(object):
             tmpl = Template(file="interface/templates/mobile/home.tmpl")
         return str(tmpl)
 
+    @cherrypy.expose(alias='searchId')
+    def force_id_search(self, wanted_item_index):
+        subchecker.force_id_search(wanted_item_index)
+        redirect("/home")
+
     @cherrypy.expose(alias='skipShow')
     def skip_show(self, title, season=None):
         if not season:

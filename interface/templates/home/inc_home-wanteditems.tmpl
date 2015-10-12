@@ -88,15 +88,29 @@
                         </span>
                         #if $item['type'] == 'episode':
                         #if not $item['showid']:
-                        <a href="#">
-                            <img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Show id could not be found! Please check the log file!">
-                        </a>
+                        <span class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Show id could not be found!">
+                            </a>
+                            <ul class="dropdown-menu has-tip info-list">
+                                <li>
+                                    <a href="$autosubliminal.WEBROOT/home/searchId/$index">Search show id</a>
+                                </li>
+                            </ul>
+                        </span>
                         #end if
                         #else if $item['type'] == 'movie':
                         #if not $item['imdbid']:
-                        <a href="#">
-                            <img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Imdb id could not be found! Please check the log file!">
-                        </a>
+                        <span class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Imdb id could not be found!">
+                            </a>
+                            <ul class="dropdown-menu has-tip info-list">
+                                <li>
+                                    <a href="$autosubliminal.WEBROOT/home/searchId/$index">Search imdb id</a>
+                                </li>
+                            </ul>
+                        </span>
                         #end if
                         #end if
                     </td>
