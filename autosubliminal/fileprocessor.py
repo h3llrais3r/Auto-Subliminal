@@ -31,15 +31,13 @@ def process_file(dirname, filename):
 
     # Guess
     log.info("Processing file: %s" % filename)
-    filepath = os.path.join(dirname, filename)
+    file_path = os.path.join(dirname, filename)
     try:
         log.debug("Guessing file info")
-        # Pass only filename for now
-        # TODO: Revert to 'filepath' when guessit 0.11 is available
-        guess = guessit.guess_file_info(filename)
+        guess = guessit.guess_file_info(file_path)
         log.debug("Guess: %r" % guess)
     except Exception, e:
-        log.error("Could not guess file info for: %s" % filepath)
+        log.error("Could not guess file info for: %s" % file_path)
         log.error(e)
         return {}
 
