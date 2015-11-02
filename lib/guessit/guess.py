@@ -20,12 +20,14 @@
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
-from guessit import UnicodeMixin, s, u, base_text_type
-from babelfish import Language, Country
-from guessit.textutils import common_words
 import json
 import datetime
 import logging
+
+from guessit import UnicodeMixin, s, u, base_text_type
+from babelfish import Language, Country
+from guessit.textutils import common_words
+
 
 log = logging.getLogger(__name__)
 
@@ -282,13 +284,13 @@ def choose_int(g1, g2):
     properties when they are integers."""
     v1, c1 = g1  # value, confidence
     v2, c2 = g2
-    if (v1 == v2):
-        return (v1, 1 - (1 - c1) * (1 - c2))
+    if v1 == v2:
+        return v1, 1 - (1 - c1) * (1 - c2)
     else:
-        if c1 > c2:
-            return (v1, c1 - c2)
+        if c1 >= c2:
+            return v1, c1 - c2 / 2
         else:
-            return (v2, c2 - c1)
+            return v2, c2 - c1 / 2
 
 
 def choose_string(g1, g2):
@@ -306,7 +308,7 @@ def choose_string(g1, g2):
     prepended to it.
 
     >>> s(choose_string(('Hello', 0.75), ('World', 0.5)))
-    ('Hello', 0.25)
+    ('Hello', 0.5)
 
     >>> s(choose_string(('Hello', 0.5), ('hello', 0.5)))
     ('Hello', 0.75)
@@ -352,10 +354,10 @@ def choose_string(g1, g2):
 
     # in case of conflict, return the one with highest confidence
     else:
-        if c1 > c2:
-            return v1, c1 - c2
+        if c1 >= c2:
+            return v1, c1 - c2 / 2
         else:
-            return v2, c2 - c1
+            return v2, c2 - c1 / 2
 
 
 def _merge_similar_guesses_nocheck(guesses, prop, choose):
@@ -472,8 +474,8 @@ def merge_all(guesses, append=None):
 
     # delete very unlikely values
     for p in list(result.keys()):
-        if result.confidence(p) < 0.05:
-            del result[p]
+       if result.confidence(p) < 0.05:
+           del result[p]
 
     # make sure our appendable properties contain unique values
     for prop in append:
@@ -507,7 +509,7 @@ def smart_merge(guesses):
     for string_part in ('title', 'series', 'container', 'format',
                         'releaseGroup', 'website', 'audioCodec',
                         'videoCodec', 'screenSize', 'episodeFormat',
-                        'audioChannels', 'idNumber'):
+                        'audioChannels', 'idNumber', 'container'):
         merge_similar_guesses(guesses, string_part, choose_string)
 
     # 2- merge the rest, potentially discarding information not properly
