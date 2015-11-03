@@ -9,18 +9,19 @@ import subliminal
 
 import autosubliminal
 from autosubliminal import utils, fileprocessor
+from autosubliminal.scheduler import Process
 
 log = logging.getLogger(__name__)
 
 
-class DiskScanner(object):
+class DiskScanner(Process):
     """
     Scan the specified path for episodes and movies with missing subtitles.
     If found, add these episodes and movies to the WANTEDQUEUE.
     """
 
     def __init__(self):
-        pass
+        super(DiskScanner, self).__init__()
 
     def run(self):
         log.info("Starting round of local disk checking at %s" % autosubliminal.VIDEOPATHS)

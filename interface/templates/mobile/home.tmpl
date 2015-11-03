@@ -102,7 +102,7 @@
                         <td>Next disc scan in</td>
                         <td>
                             #try
-                            &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.lastrun) )))
+                            &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.last_run) )))
                             <br>
                             #except
                             &nbsp;:&nbsp;Please wait... <br>
@@ -113,7 +113,7 @@
                         <td>Next subtitle check in</td>
                         <td>
                             #try
-                            &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.lastrun) )))
+                            &nbsp;:&nbsp;$time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.last_run) )))
                             <br>
                             #except
                             &nbsp;:&nbsp;Please wait... <br>

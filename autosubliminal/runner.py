@@ -67,11 +67,11 @@ def start():
                                 'tools.digest_auth.on': True,
                                 'tools.digest_auth.realm': 'Auto-Subliminal website',
                                 'tools.digest_auth.users': users
-        })
+                                })
     else:
         cherrypy.config.update({'server.socket_host': autosubliminal.WEBSERVERIP,
                                 'server.socket_port': autosubliminal.WEBSERVERPORT
-        })
+                                })
 
     conf = {
         '/': {
@@ -109,29 +109,20 @@ def start():
         }
     }
 
-    cherrypy.tree.mount(WebServerInit(), autosubliminal.WEBROOT, config=conf)
+    # Start cherrypy server
     log.info("Starting CherryPy webserver")
-
-    # TODO: Let CherryPy log do another log file and not to screen
-    # TODO: CherryPy settings, etc...
+    cherrypy.tree.mount(WebServerInit(), autosubliminal.WEBROOT, config=conf)
     try:
         cherrypy.server.start()
     except Exception, e:
         log.error("Could not start webserver, exiting")
         log.exception(e)
         os._exit(1)
-
     cherrypy.server.wait()
 
-    log.info("Starting thread SCANDISK")
-    autosubliminal.SCANDISK = Scheduler(DiskScanner(), autosubliminal.SCHEDULERSCANDISK, True, "SCANDISK")
-    autosubliminal.SCANDISK.thread.start()
-    log.info("Thread SCANDISK started")
-
-    log.info("Starting thread CHECKSUB")
-    autosubliminal.CHECKSUB = Scheduler(SubChecker(), autosubliminal.SCHEDULERCHECKSUB, True, "CHECKSUB")
-    autosubliminal.CHECKSUB.thread.start()
-    log.info("Thread CHECKSUB started")
+    # Schedule threads
+    autosubliminal.SCANDISK = Scheduler("SCANDISK", DiskScanner(), autosubliminal.SCHEDULERSCANDISK, True)
+    autosubliminal.CHECKSUB = Scheduler("CHECKSUB", SubChecker(), autosubliminal.SCHEDULERCHECKSUB)
 
     # Mark as started
     autosubliminal.STARTED = True
@@ -141,14 +132,12 @@ def stop(exit_app=True):
     # Mark as stopped
     autosubliminal.STARTED = False
 
-    log.info("Stopping thread SCANDISK")
-    autosubliminal.SCANDISK.stop = True
-    autosubliminal.SCANDISK.thread.join(10)
+    # Stop threads
+    autosubliminal.SCANDISK.stop()
+    autosubliminal.CHECKSUB.stop()
 
-    log.info("Stopping thread CHECKSUB")
-    autosubliminal.CHECKSUB.stop = True
-    autosubliminal.CHECKSUB.thread.join(10)
-
+    # Stop cherrypy server
+    log.info("Stopping CherryPy webserver")
     cherrypy.engine.exit()
 
     if exit_app:
@@ -156,11 +145,11 @@ def stop(exit_app=True):
 
 
 def restart():
-    log.debug("Restarting")
+    log.info("Restarting")
     stop(exit_app=False)
     autosubliminal.initialize()
     start()
-    log.debug("Restarted")
+    log.info("Restarted")
 
 
 def signal_handler(signum, frame):

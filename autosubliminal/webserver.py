@@ -481,10 +481,9 @@ class System(object):
 
     @cherrypy.expose(alias='runNow')
     def run_now(self):
-        # time.sleep is here to prevent a timing issue, where checksub is runned before scandisk
-        autosubliminal.SCANDISK.runnow = True
-        time.sleep(5)
-        autosubliminal.CHECKSUB.runnow = True
+        # Run threads now (use delay to be sure that checksub is run after scandisk)
+        autosubliminal.SCANDISK.run()
+        autosubliminal.CHECKSUB.run(delay=0.5)
         useragent = cherrypy.request.headers.get("User-Agent", '')
         tmpl = Template(file="interface/templates/general/message.tmpl")
         if autosubliminal.MOBILE and utils.check_mobile_device(useragent):

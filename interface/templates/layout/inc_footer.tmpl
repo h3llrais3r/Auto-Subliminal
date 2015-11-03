@@ -9,7 +9,7 @@
     <span class="separator">|</span>
     <span>Next disk scan in :
         #try
-            $time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.lastrun) )))
+            $time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.last_run) )))
         #except
             Please wait...
         #end try
@@ -18,7 +18,7 @@
     <span>
         Next subtitle check in :
         #try
-            $time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.lastrun) )))
+            $time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.last_run) )))
         #except
             Please wait...
         #end try

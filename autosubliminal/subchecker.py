@@ -14,18 +14,19 @@ from subliminal.video import Episode, Movie
 import autosubliminal
 from autosubliminal import utils
 from autosubliminal.postprocessor import PostProcessor
+from autosubliminal.scheduler import Process
 from autosubliminal.subdownloader import SubDownloader
 
 log = logging.getLogger(__name__)
 
 
-class SubChecker(object):
+class SubChecker(Process):
     """
     Sub checker. It checks for subtitles of episodes that are in the WANTEDQUEUE.
     """
 
     def __init__(self):
-        pass
+        super(SubChecker, self).__init__()
 
     def run(self):
         log.info("Starting round of subtitle checking")

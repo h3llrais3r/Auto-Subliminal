@@ -329,7 +329,7 @@ def check_mobile_device(req_useragent):
 
 def get_wanted_queue_lock():
     if autosubliminal.WANTEDQUEUELOCK:
-        log.warning("Skipping, cannot get a wanted queue lock because another threat is using the queues")
+        log.info("Skipping, cannot get a wanted queue lock because another thread is using the queues")
         return False
     else:
         log.debug("Getting wanted queue lock")
@@ -353,7 +353,7 @@ def release_wanted_queue_lock():
         log.debug("Releasing wanted queue lock")
         autosubliminal.WANTEDQUEUELOCK = False
     else:
-        log.warning("Trying to release a wanted queue lock while there is no lock")
+        log.info("Trying to release a wanted queue lock while there is no lock")
 
 
 def get_file_size(path):
