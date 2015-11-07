@@ -1,6 +1,6 @@
 #import autosubliminal
 
-#from autosubliminal.utils import print_timestamp
+#from autosubliminal.utils import print_timestamp, humanize_bytes, get_free_space
 #from autosubliminal.templates.PageTemplate import PageTemplate
 #extends PageTemplate
 
@@ -16,7 +16,9 @@
 
         <div class="panel-body">
 
-            <table id="statusoverview" class="table table-condensed table-striped table-hover tablesorter ui-table-reflow">
+            <span class="row h4 weighted">Scheduler</span>
+
+            <table id="scheduler" class="table table-condensed table-striped table-hover tablesorter ui-table-reflow">
 
                 <thead>
                 <tr>
@@ -32,6 +34,35 @@
                     <td class="main-column">$item.name</td>
                     <td>$print_timestamp($item.last_run)</td>
                     <td>$item.process.running</td>
+                </tr>
+                #end for
+                </tbody>
+
+            </table>
+
+            <span class="row h4 weighted">Disk space</span>
+
+            <table id="diskspace" class="table table-condensed table-striped table-hover tablesorter ui-table-reflow">
+
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Free space</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td class="main-column">Auto-Subliminal path</td>
+                    <td>$autosubliminal.PATH</td>
+                    <td>$humanize_bytes($get_free_space($autosubliminal.PATH))</td>
+                </tr>
+                #for $path in $autosubliminal.VIDEOPATHS
+                <tr>
+                    <td class="main-column">Video path</td>
+                    <td>$path</td>
+                    <td>$humanize_bytes($get_free_space($path))</td>
                 </tr>
                 #end for
                 </tbody>

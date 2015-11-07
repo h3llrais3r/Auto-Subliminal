@@ -1,11 +1,13 @@
+import codecs
+import ctypes
 import logging
+import os
+import platform
 import re
 import socket
 import subprocess
 import time
 import urllib2
-import codecs
-import os
 
 from distutils import version
 from string import capwords
@@ -430,3 +432,15 @@ def humanize_bytes(bytes, precision=1):
         if bytes >= factor:
             break
     return '%.*f %s' % (precision, bytes / factor, suffix)
+
+
+# Thanks to http://stackoverflow.com/questions/51658/cross-platform-space-remaining-on-volume-using-python
+def get_free_space(directory):
+    """Return folder/drive free space."""
+    if platform.system() == 'Windows':
+        free_bytes = ctypes.c_ulonglong(0)
+        ctypes.windll.kernel32.GetDiskFreeSpaceExW(ctypes.c_wchar_p(directory), None, None, ctypes.pointer(free_bytes))
+        return free_bytes.value
+    else:
+        st = os.statvfs(directory)
+        return st.f_bavail * st.f_frsize4
