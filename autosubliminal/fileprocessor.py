@@ -86,10 +86,10 @@ def _property_from_guess(guess, property_name, default_value=None):
 
 
 def _split_release_group(release_group):
-    # Remove release group provider (part between []) if present (f.e. KILLERS[rarbg])
-    match = re.search(release_group_regex, release_group)
-    if match:
-        # Return first parenthesized group (=release group without [] part)
-        return match.group(1)
-    else:
-        return release_group
+    if release_group:
+        # Remove release group provider (part between []) if present (f.e. KILLERS[rarbg])
+        match = re.search(release_group_regex, release_group)
+        if match:
+            # Return first parenthesized group (=release group without [] part)
+            return match.group(1)
+    return release_group
