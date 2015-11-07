@@ -58,9 +58,13 @@
                     <td>$autosubliminal.PATH</td>
                     <td>$humanize_bytes($get_free_space($autosubliminal.PATH))</td>
                 </tr>
-                #for $path in $autosubliminal.VIDEOPATHS
+                #for $index, $path in enumerate($autosubliminal.VIDEOPATHS)
                 <tr>
-                    <td class="main-column">Video path</td>
+                    #set $path_suffix = ''
+                    #if $len($autosubliminal.VIDEOPATHS) > 1
+                    #set $path_suffix = $index + 1
+                    #end if
+                    <td class="main-column">Video path $path_suffix</td>
                     <td>$path</td>
                     <td>$humanize_bytes($get_free_space($path))</td>
                 </tr>
