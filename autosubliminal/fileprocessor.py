@@ -1,9 +1,12 @@
 import os
+import re
 import logging
 
 import guessit
 
 log = logging.getLogger(__name__)
+
+release_group_regex = "(.*)\[.*?\]"
 
 
 def process_file(dirname, filename):
@@ -62,7 +65,7 @@ def _dict_from_guess(guess):
                    'source': _property_from_guess(guess, 'format'),
                    'quality': _property_from_guess(guess, 'screenSize', u'SD'),
                    'codec': _property_from_guess(guess, 'videoCodec'),
-                   'releasegrp': _property_from_guess(guess, 'releaseGroup')}
+                   'releasegrp': _split_release_group(_property_from_guess(guess, 'releaseGroup'))}
     log.debug("Dict from guess: %r" % result_dict)
 
     # Check if mandatory elements are available in the guess
@@ -75,8 +78,18 @@ def _dict_from_guess(guess):
         return {}
 
 
-def _property_from_guess(guess, propertyname, defaultvalue=None):
-    propertyvalue = defaultvalue
-    if propertyname in guess.keys():
-        propertyvalue = guess[propertyname]
-    return propertyvalue
+def _property_from_guess(guess, property_name, default_value=None):
+    property_value = default_value
+    if property_name in guess.keys():
+        property_value = guess[property_name]
+    return property_value
+
+
+def _split_release_group(release_group):
+    # Remove release group provider (part between []) if present (f.e. KILLERS[rarbg])
+    match = re.search(release_group_regex, release_group)
+    if match:
+        # Return first parenthesized group (=release group without [] part)
+        return match.group(1)
+    else:
+        return release_group
