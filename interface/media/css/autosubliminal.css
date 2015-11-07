@@ -276,7 +276,7 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     padding: 0 5px;
 }
 
-.video-name {
+.main-column {
     font-weight: bold;
     text-decoration: none !important;
 }

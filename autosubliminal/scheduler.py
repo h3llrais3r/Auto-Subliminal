@@ -4,6 +4,8 @@ import threading
 import os
 import traceback
 
+import autosubliminal
+
 log = logging.getLogger(__name__)
 
 
@@ -21,7 +23,8 @@ class Scheduler(object):
         log.info("Starting thread %s" % self.name)
         if initial_run:
             self._run_process(time.time())
-        self.thread.start()
+        # Start thread
+        self._start_thread()
 
     def _start_scheduler(self):
         while True:
@@ -56,6 +59,27 @@ class Scheduler(object):
         except:
             print traceback.format_exc()
             os._exit(1)
+
+    def _start_thread(self):
+        self.thread.start()
+        # Add thread to list of threads
+        thread_name = self.name
+        while thread_name in autosubliminal.THREADS.keys():
+            # Add suffix in case of multiple threads with same name (but this shouldn't occur)
+            suffix = 1
+            suffix_index = thread_name.rfind('-')
+            if suffix_index > 0:
+                thread_name_suffix = thread_name[suffix_index + 1:]
+                try:
+                    suffix = int(thread_name_suffix)
+                    suffix += 1
+                    thread_name = thread_name[:suffix_index] + "-" + str(suffix)
+                except:
+                    thread_name = thread_name + "-" + str(suffix)
+            else:
+                thread_name = thread_name + "-" + str(suffix)
+        self.name = thread_name
+        autosubliminal.THREADS[thread_name] = self
 
     def stop(self):
         log.info("Stopping thread %s" % self.name)

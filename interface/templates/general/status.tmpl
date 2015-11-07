@@ -27,16 +27,13 @@
                 </thead>
 
                 <tbody>
+                #for $item in $autosubliminal.THREADS.values()
                 <tr>
-                    <td>$autosubliminal.SCANDISK.name</td>
-                    <td>$print_timestamp($autosubliminal.SCANDISK.last_run)</td>
-                    <td>$autosubliminal.SCANDISK.process.running</td>
+                    <td class="main-column">$item.name</td>
+                    <td>$print_timestamp($item.last_run)</td>
+                    <td>$item.process.running</td>
                 </tr>
-                <tr>
-                    <td>$autosubliminal.CHECKSUB.name</td>
-                    <td>$print_timestamp($autosubliminal.CHECKSUB.last_run)</td>
-                    <td>$autosubliminal.CHECKSUB.process.running</td>
-                </tr>
+                #end for
                 </tbody>
 
             </table>

@@ -41,7 +41,7 @@
                     <td>
                         <span class="dropdown">
                             #if $item['type'] == 'episode':
-                            <a class="dropdown-toggle video-name" data-toggle="dropdown" title="Click to skip" href="#">$display_name($item)</a>
+                            <a class="dropdown-toggle main-column" data-toggle="dropdown" title="Click to skip" href="#">$display_name($item)</a>
                             <ul class="dropdown-menu has-tip">
                                 <li>
                                     <a href="$autosubliminal.WEBROOT/home/postProcess/$index">Skip and post process show</a>
@@ -57,7 +57,7 @@
                                 </li>
                             </ul>
                             #else if $item['type'] == 'movie':
-                            <a class="dropdown-toggle video-name" data-toggle="dropdown" title="Click to skip" href="#">$display_name($item)</a>
+                            <a class="dropdown-toggle main-column" data-toggle="dropdown" title="Click to skip" href="#">$display_name($item)</a>
                             <ul class="dropdown-menu has-tip">
                                 <li>
                                     <a href="$autosubliminal.WEBROOT/home/postProcess/$index">Skip and post process movie</a>
