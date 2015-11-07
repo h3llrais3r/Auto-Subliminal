@@ -2,26 +2,20 @@
 
 #import autosubliminal
 #from autosubliminal import version
+#from autosubliminal.utils import print_timestamp
 
 <!-- Footer -->
 <div class="navbar navbar-fixed-bottom panel-footer text-center">
     <span>Auto-Subliminal version : $version.RELEASE_VERSION</span>
     <span class="separator">|</span>
-    <span>Next disk scan in :
-        #try
-            $time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.last_run) )))
-        #except
-            Please wait...
-        #end try
+    <span>
+        Next disk scan in :
+        $print_timestamp($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.last_run), '%H:%M:%S', 'Please wait...')
     </span>
     <span class="separator">|</span>
     <span>
         Next subtitle check in :
-        #try
-            $time.strftime('%H:%M:%S', $time.gmtime(($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.last_run) )))
-        #except
-            Please wait...
-        #end try
+        $print_timestamp($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.last_run), '%H:%M:%S', 'Please wait...')
     </span>
 </div>
 

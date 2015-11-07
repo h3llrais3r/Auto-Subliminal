@@ -505,6 +505,11 @@ class System(object):
         threading.Timer(2, autosubliminal.runner.stop).start()
         return str(tmpl)
 
+    @cherrypy.expose
+    def status(self):
+        tmpl = Template(file="interface/templates/general/status.tmpl")
+        return str(tmpl)
+
     @cherrypy.expose(alias='exitMobile')
     def exit_mobile(self):
         if autosubliminal.MOBILE:

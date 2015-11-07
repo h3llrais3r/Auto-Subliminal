@@ -1,0 +1,56 @@
+#import autosubliminal
+
+#from autosubliminal.utils import print_timestamp
+#from autosubliminal.templates.PageTemplate import PageTemplate
+#extends PageTemplate
+
+#block bodyContent
+
+<div class="container">
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <span class="h3 weighted">Status</span>
+        </div>
+
+        <div class="panel-body">
+
+            <table id="statusoverview" class="table table-condensed table-striped table-hover tablesorter ui-table-reflow">
+
+                <thead>
+                <tr>
+                    <th>Thread name</th>
+                    <th>Last run</th>
+                    <th>Running</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+                    <td>$autosubliminal.SCANDISK.name</td>
+                    <td>$print_timestamp($autosubliminal.SCANDISK.last_run)</td>
+                    <td>$autosubliminal.SCANDISK.process.running</td>
+                </tr>
+                <tr>
+                    <td>$autosubliminal.CHECKSUB.name</td>
+                    <td>$print_timestamp($autosubliminal.CHECKSUB.last_run)</td>
+                    <td>$autosubliminal.CHECKSUB.process.running</td>
+                </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+#end block bodyContent
+
+#block footerContent
+
+<script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/status.js"></script>
+
+#end block footerContent

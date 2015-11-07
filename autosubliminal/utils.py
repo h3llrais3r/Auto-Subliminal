@@ -320,6 +320,13 @@ def convert_timestamp(datestring):
         date_object[2], date_object[1], date_object[0], date_object[3], date_object[4], date_object[5])
 
 
+def print_timestamp(time_float, format='%d-%m-%Y %H:%M:%S', default_value='N/A'):
+    if time_float > 0.0:
+        return time.strftime(format, time.gmtime(time_float))
+    else:
+        return default_value
+
+
 def check_mobile_device(req_useragent):
     for MUA in autosubliminal.MOBILEUSERAGENTS:
         if MUA.lower() in req_useragent.lower():
