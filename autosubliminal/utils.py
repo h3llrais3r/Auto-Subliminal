@@ -5,6 +5,7 @@ import os
 import platform
 import re
 import socket
+import stat
 import subprocess
 import time
 import urllib2
@@ -444,3 +445,8 @@ def get_free_space(directory):
     else:
         st = os.statvfs(directory)
         return st.f_bavail * st.f_frsize4
+
+
+def set_rw_and_remove(operation, name, exc):
+    os.chmod(name, stat.S_IWRITE)
+    os.remove(name)

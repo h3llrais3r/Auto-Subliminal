@@ -82,7 +82,7 @@ class Home(object):
         return str(tmpl)
 
     @cherrypy.expose(alias='deleteVideo')
-    def delete_video(self, wanted_item_index, confirmed=False):
+    def delete_video(self, wanted_item_index, confirmed=False, cleanup=False):
         if not confirmed:
             # Get wanted item
             wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
@@ -92,7 +92,7 @@ class Home(object):
             return str(tmpl)
         else:
             # Delete video
-            deleted = subchecker.delete_video(wanted_item_index)
+            deleted = subchecker.delete_video(wanted_item_index, cleanup)
             tmpl = Template(file="interface/templates/general/message.tmpl")
             if deleted:
                 tmpl.message = "Video physically deleted from filesystem <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"

@@ -1,6 +1,7 @@
 import logging
 import os
 import operator
+import shutil
 
 import babelfish
 import subliminal
@@ -213,7 +214,7 @@ def delete_subtitle(wanted_item_index):
     return deleted
 
 
-def delete_video(wanted_item_index):
+def delete_video(wanted_item_index, cleanup):
     log.info("Deleting an individual video file")
 
     # Get wanted queue lock
@@ -224,16 +225,42 @@ def delete_video(wanted_item_index):
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
     autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
 
-    # Physically delete the file
-    video_path = wanted_item['originalFileLocationOnDisk']
+    # Physically delete the video file (and optionally leftovers)
     deleted = False
-    try:
-        os.remove(video_path)
-        log.info("Deleted file: %s" % video_path)
-        deleted = True
-    except Exception, e:
-        log.error("Unable to delete file: %s" % video_path)
-        log.error("Exception: %s" % e)
+    video_path = wanted_item['originalFileLocationOnDisk']
+    # Delete with cleanup
+    if cleanup:
+        norm_video_path = os.path.normcase(os.path.normpath(video_path))
+        norm_video_folder = os.path.dirname(norm_video_path)
+        for root_folder in autosubliminal.VIDEOPATHS:
+            # Get root folder
+            norm_root_folder = os.path.normcase(os.path.normpath(root_folder))
+            if os.path.commonprefix([norm_root_folder, norm_video_path]) == norm_root_folder:
+                # Check if video is located in subfolder underneath root folder
+                if norm_video_folder != norm_root_folder:
+                    while norm_video_folder != norm_root_folder:
+                        folder_to_clean = norm_video_folder
+                        # Move 1 folder up and check again
+                        norm_video_folder = os.path.dirname(norm_video_folder)
+                    try:
+                        # Remove the folder of the video inside the root folder
+                        shutil.rmtree(folder_to_clean, onerror=utils.set_rw_and_remove)
+                        log.info("Deleted video folder: %s" % folder_to_clean)
+                        deleted = True
+                        # Break for loop
+                        break
+                    except Exception, e:
+                        log.error("Unable to delete video folder: %s" % folder_to_clean)
+                        log.error("Exception: %s" % e)
+    # Delete video file only
+    if not deleted:
+        try:
+            os.remove(video_path)
+            log.info("Deleted file: %s" % video_path)
+            deleted = True
+        except Exception, e:
+            log.error("Unable to delete file: %s" % video_path)
+            log.error("Exception: %s" % e)
 
     # Release wanted queue lock
     utils.release_wanted_queue_lock()
