@@ -231,19 +231,19 @@ def delete_video(wanted_item_index, cleanup):
     # Delete with cleanup
     if cleanup:
         norm_video_path = os.path.normcase(os.path.normpath(video_path))
-        norm_video_folder = os.path.dirname(norm_video_path)
+        norm_video_folder = os.path.dirname(norm_video_path).rstrip(os.sep)
         for root_folder in autosubliminal.VIDEOPATHS:
             # Get root folder
-            norm_root_folder = os.path.normcase(os.path.normpath(root_folder))
+            norm_root_folder = os.path.normcase(os.path.normpath(root_folder)).rstrip(os.sep)
+            # Check if video is located in subfolder underneath root folder
             if os.path.commonprefix([norm_root_folder, norm_video_path]) == norm_root_folder:
-                # Check if video is located in subfolder underneath root folder
                 if norm_video_folder != norm_root_folder:
+                    # Move up until the first subfolder underneath the root folder to cleanup
                     while norm_video_folder != norm_root_folder:
                         folder_to_clean = norm_video_folder
-                        # Move 1 folder up and check again
                         norm_video_folder = os.path.dirname(norm_video_folder)
                     try:
-                        # Remove the folder of the video inside the root folder
+                        # Remove the folder of the video underneath the root folder
                         shutil.rmtree(folder_to_clean, onerror=utils.set_rw_and_remove)
                         log.info("Deleted video folder: %s" % folder_to_clean)
                         deleted = True
