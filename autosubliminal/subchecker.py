@@ -241,7 +241,7 @@ def delete_video(wanted_item_index, cleanup):
                     # Move up until the first subfolder underneath the root folder to cleanup
                     while norm_video_folder != norm_root_folder:
                         folder_to_clean = norm_video_folder
-                        norm_video_folder = os.path.dirname(norm_video_folder)
+                        norm_video_folder = os.path.dirname(norm_video_folder).rstrip(os.sep)
                     try:
                         # Remove the folder of the video underneath the root folder
                         shutil.rmtree(folder_to_clean, onerror=utils.set_rw_and_remove)
