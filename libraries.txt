@@ -2,7 +2,7 @@
 cheetah=2.4.4
 
 # Mandatory (packaged) libraries
-babelfish=0.5.4
+babelfish=0.5.5
 beautifulsoup4=4.4.0
 charade=1.0.3
 chardet=2.3.0
