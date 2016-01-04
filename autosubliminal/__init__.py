@@ -255,7 +255,7 @@ def _fake_entry_points():
     # current_path = os.path.dirname(os.path.normpath(__file__))
     current_path = os.path.dirname(__file__)
     distribution = pkg_resources.Distribution(location=os.path.dirname(current_path),
-                                              project_name='fake_entry_points', version='1.0.0')
+                                              project_name='fake_entry_points', version='1.1.1')
     # Add entry points here if needed
     # Add subliminal entry points (since subliminal 1.0)
     entry_points = {
@@ -263,11 +263,13 @@ def _fake_entry_points():
             'addic7ed = subliminal.providers.addic7ed:Addic7edProvider',
             'opensubtitles = subliminal.providers.opensubtitles:OpenSubtitlesProvider',
             'podnapisi = subliminal.providers.podnapisi:PodnapisiProvider',
+            'subscenter = subliminal.providers.subscenter:SubsCenterProvider',
             'thesubdb = subliminal.providers.thesubdb:TheSubDBProvider',
             'tvsubtitles = subliminal.providers.tvsubtitles:TVsubtitlesProvider'
         ],
         'babelfish.language_converters': [
             'addic7ed = subliminal.converters.addic7ed:Addic7edConverter',
+            'thesubdb = subliminal.converters.thesubdb:TheSubDBConverter',
             'tvsubtitles = subliminal.converters.tvsubtitles:TVsubtitlesConverter'
         ]
     }
