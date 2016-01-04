@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 import logging
 
-from babelfish import Language
+from babelfish import Language, language_converters
 from requests import Session
 
 from . import Provider, get_version
@@ -22,7 +21,7 @@ class TheSubDBSubtitle(Subtitle):
 
     @property
     def id(self):
-        return self.hash
+        return self.hash + '-' + str(self.language)
 
     def get_matches(self, video, hearing_impaired=False):
         matches = super(TheSubDBSubtitle, self).get_matches(video, hearing_impaired=hearing_impaired)
@@ -35,7 +34,7 @@ class TheSubDBSubtitle(Subtitle):
 
 
 class TheSubDBProvider(Provider):
-    languages = {Language.fromalpha2(l) for l in ['en', 'es', 'fr', 'it', 'nl', 'pl', 'pt', 'ro', 'sv', 'tr']}
+    languages = {Language.fromthesubdb(l) for l in language_converters['thesubdb'].codes}
     required_hash = 'thesubdb'
     server_url = 'http://api.thesubdb.com/'
 
@@ -62,10 +61,10 @@ class TheSubDBProvider(Provider):
         # loop over languages
         subtitles = []
         for language_code in r.text.split(','):
-            language = Language.fromalpha2(language_code)
+            language = Language.fromthesubdb(language_code)
 
             subtitle = TheSubDBSubtitle(language, hash)
-            logger.info('Found subtitle %r', subtitle)
+            logger.debug('Found subtitle %r', subtitle)
             subtitles.append(subtitle)
 
         return subtitles
@@ -74,7 +73,7 @@ class TheSubDBProvider(Provider):
         return [s for s in self.query(video.hashes['thesubdb']) if s.language in languages]
 
     def download_subtitle(self, subtitle):
-        logger.info('Downloading subtitle %r')
+        logger.info('Downloading subtitle %r', subtitle)
         params = {'action': 'download', 'hash': subtitle.hash, 'language': subtitle.language.alpha2}
         r = self.session.get(self.server_url, params=params, timeout=10)
         r.raise_for_status()

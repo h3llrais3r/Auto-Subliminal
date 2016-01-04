@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 from collections import defaultdict
 import io
 import logging
@@ -189,7 +188,7 @@ class ProviderPool(object):
         for subtitle, score in scored_subtitles:
             # check score
             if score < min_score:
-                logger.info('Score %d is below min_score (%d)', (score, min_score))
+                logger.info('Score %d is below min_score (%d)', score, min_score)
                 break
 
             # check downloaded languages
@@ -339,7 +338,7 @@ def download_best_subtitles(videos, languages, min_score=0, hearing_impaired=Fal
     checked_videos = []
     for video in videos:
         if not check_video(video, languages=languages, undefined=only_one):
-            logger.info('Skipping video %r')
+            logger.info('Skipping video %r', video)
             continue
         checked_videos.append(video)
 

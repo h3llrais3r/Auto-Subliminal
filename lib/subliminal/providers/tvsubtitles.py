@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 import io
 import logging
 import re
@@ -12,7 +11,7 @@ from . import ParserBeautifulSoup, Provider, get_version
 from .. import __version__
 from ..cache import EPISODE_EXPIRATION_TIME, SHOW_EXPIRATION_TIME, region
 from ..exceptions import ProviderError
-from ..subtitle import Subtitle, fix_line_ending, guess_matches, guess_properties
+from ..subtitle import Subtitle, fix_line_ending, guess_matches, guess_properties, sanitized_string_equal
 from ..video import Episode
 
 logger = logging.getLogger(__name__)
@@ -42,7 +41,7 @@ class TVsubtitlesSubtitle(Subtitle):
         matches = super(TVsubtitlesSubtitle, self).get_matches(video, hearing_impaired=hearing_impaired)
 
         # series
-        if video.series and self.series.lower() == video.series.lower():
+        if video.series and sanitized_string_equal(self.series, video.series):
             matches.add('series')
         # season
         if video.season and self.season == video.season:
@@ -84,7 +83,7 @@ class TVsubtitlesProvider(Provider):
     def search_show_id(self, series, year=None):
         """Search the show id from the `series` and `year`.
 
-        :param string series: series of the episode.
+        :param str series: series of the episode.
         :param year: year of the series, if any.
         :type year: int or None
         :return: the show id, if any.
@@ -180,7 +179,7 @@ class TVsubtitlesProvider(Provider):
 
             subtitle = TVsubtitlesSubtitle(language, page_link, subtitle_id, series, season, episode, year, rip,
                                            release)
-            logger.info('Found subtitle %s', subtitle)
+            logger.debug('Found subtitle %s', subtitle)
             subtitles.append(subtitle)
 
         return subtitles

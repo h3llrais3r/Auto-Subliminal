@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals, division
+from __future__ import division
 from datetime import datetime, timedelta
 import hashlib
 import logging
@@ -235,10 +235,13 @@ class Movie(Video):
         return '<%s [%r, %d]>' % (self.__class__.__name__, self.title, self.year)
 
 
-def search_external_subtitles(path):
+def search_external_subtitles(path, directory=None):
     """Search for external subtitles from a video `path` and their associated language.
 
+    Unless `directory` is provided, search will be made in the same directory as the video file.
+
     :param str path: path to the video.
+    :param str directory: directory to search for subtitles.
     :return: found subtitles with their languages.
     :rtype: dict
 
@@ -247,12 +250,7 @@ def search_external_subtitles(path):
     dirpath = dirpath or '.'
     fileroot, fileext = os.path.splitext(filename)
     subtitles = {}
-    for p in os.listdir(dirpath):
-        # skip badly encoded filenames
-        if isinstance(p, bytes):  # pragma: no cover
-            logger.error('Skipping badly encoded filename %r in %r', p.decode('utf-8', errors='replace'), dirpath)
-            continue
-
+    for p in os.listdir(directory or dirpath):
         # keep only valid subtitle filenames
         if not p.startswith(fileroot) or not p.endswith(SUBTITLE_EXTENSIONS):
             continue
@@ -277,12 +275,13 @@ def search_external_subtitles(path):
     return subtitles
 
 
-def scan_video(path, subtitles=True, embedded_subtitles=True):
+def scan_video(path, subtitles=True, embedded_subtitles=True, subtitles_dir=None):
     """Scan a video and its subtitle languages from a video `path`.
 
     :param str path: existing path to the video.
     :param bool subtitles: scan for subtitles with the same name.
     :param bool embedded_subtitles: scan for embedded subtitles.
+    :param str subtitles_dir: directory to search for subtitles.
     :return: the scanned video.
     :rtype: :class:`Video`
 
@@ -307,13 +306,14 @@ def scan_video(path, subtitles=True, embedded_subtitles=True):
         logger.debug('Size is %d', video.size)
         video.hashes['opensubtitles'] = hash_opensubtitles(path)
         video.hashes['thesubdb'] = hash_thesubdb(path)
+        video.hashes['napiprojekt'] = hash_napiprojekt(path)
         logger.debug('Computed hashes %r', video.hashes)
     else:
         logger.warning('Size is lower than 10MB: hashes not computed')
 
     # external subtitles
     if subtitles:
-        video.subtitle_languages |= set(search_external_subtitles(path).values())
+        video.subtitle_languages |= set(search_external_subtitles(path, directory=subtitles_dir).values())
 
     # video metadata with enzyme
     try:
@@ -386,18 +386,19 @@ def scan_video(path, subtitles=True, embedded_subtitles=True):
             else:
                 logger.debug('MKV has no subtitle track')
 
-    except EnzymeError:
+    except:
         logger.exception('Parsing video metadata with enzyme failed')
 
     return video
 
 
-def scan_videos(path, subtitles=True, embedded_subtitles=True):
+def scan_videos(path, subtitles=True, embedded_subtitles=True, subtitles_dir=None):
     """Scan `path` for videos and their subtitles.
 
     :param str path: existing directory path to scan.
     :param bool subtitles: scan for subtitles with the same name.
     :param bool embedded_subtitles: scan for embedded subtitles.
+    :param str subtitles_dir: directory to search for subtitles.
     :return: the scanned videos.
     :rtype: list of :class:`Video`
 
@@ -413,31 +414,16 @@ def scan_videos(path, subtitles=True, embedded_subtitles=True):
     # walk the path
     videos = []
     for dirpath, dirnames, filenames in os.walk(path):
-        # skip badly encoded directory names
-        if isinstance(dirpath, bytes):  # pragma: no cover
-            logger.error('Skipping badly encoded directory %r', dirpath.decode('utf-8', errors='replace'))
-            continue
-
         logger.debug('Walking directory %s', dirpath)
 
         # remove badly encoded and hidden dirnames
         for dirname in list(dirnames):
-            if isinstance(dirname, bytes):  # pragma: no cover
-                logger.error('Skipping badly encoded dirname %r in %r', dirname.decode('utf-8', errors='replace'),
-                             dirpath)
-                dirnames.remove(dirname)
-            elif dirname.startswith('.'):
+            if dirname.startswith('.'):
                 logger.debug('Skipping hidden dirname %r in %r', dirname, dirpath)
                 dirnames.remove(dirname)
 
         # scan for videos
         for filename in filenames:
-            # skip badly encoded filenames
-            if isinstance(filename, bytes):  # pragma: no cover
-                logger.error('Skipping badly encoded filename %r in %r', filename.decode('utf-8', errors='replace'),
-                             dirpath)
-                continue
-
             # filter on videos
             if not filename.endswith(VIDEO_EXTENSIONS):
                 continue
@@ -457,7 +443,8 @@ def scan_videos(path, subtitles=True, embedded_subtitles=True):
 
             # scan video
             try:
-                video = scan_video(filepath, subtitles=subtitles, embedded_subtitles=embedded_subtitles)
+                video = scan_video(filepath, subtitles=subtitles, embedded_subtitles=embedded_subtitles,
+                                   subtitles_dir=subtitles_dir)
             except ValueError:  # pragma: no cover
                 logger.exception('Error scanning video')
                 continue
@@ -513,4 +500,18 @@ def hash_thesubdb(video_path):
         f.seek(-readsize, os.SEEK_END)
         data += f.read(readsize)
 
+    return hashlib.md5(data).hexdigest()
+
+
+def hash_napiprojekt(video_path):
+    """Compute a hash using NapiProjekt's algorithm.
+
+    :param str video_path: path of the video.
+    :return: the hash.
+    :rtype: str
+
+    """
+    readsize = 1024 * 1024 * 10
+    with open(video_path, 'rb') as f:
+        data = f.read(readsize)
     return hashlib.md5(data).hexdigest()
