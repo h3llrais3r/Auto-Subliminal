@@ -330,6 +330,13 @@ def print_timestamp(time_float, format='%d-%m-%Y %H:%M:%S', default_value='N/A')
         return default_value
 
 
+def print_next_scheduler_run(scheduler):
+    if scheduler.process.is_running():
+        return "Running..."
+    else:
+        return print_timestamp(scheduler.interval - (time.time() - scheduler.last_run), '%H:%M:%S')
+
+
 def check_mobile_device(req_useragent):
     for MUA in autosubliminal.MOBILEUSERAGENTS:
         if MUA.lower() in req_useragent.lower():

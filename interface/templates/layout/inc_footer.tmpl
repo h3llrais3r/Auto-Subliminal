@@ -2,7 +2,7 @@
 
 #import autosubliminal
 #from autosubliminal import version
-#from autosubliminal.utils import print_timestamp
+#from autosubliminal.utils import print_next_scheduler_run
 
 <!-- Footer -->
 <div class="navbar navbar-fixed-bottom panel-footer text-center">
@@ -10,12 +10,12 @@
     <span class="separator">|</span>
     <span>
         Next disk scan in :
-        $print_timestamp($autosubliminal.SCANDISK.interval - ($time.time() - $autosubliminal.SCANDISK.last_run), '%H:%M:%S', 'Please wait...')
+        $print_next_scheduler_run($autosubliminal.SCANDISK)
     </span>
     <span class="separator">|</span>
     <span>
         Next subtitle check in :
-        $print_timestamp($autosubliminal.CHECKSUB.interval - ($time.time() - $autosubliminal.CHECKSUB.last_run), '%H:%M:%S', 'Please wait...')
+        $print_next_scheduler_run($autosubliminal.CHECKSUB)
     </span>
 </div>
 
