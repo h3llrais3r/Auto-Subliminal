@@ -190,7 +190,8 @@ class Config(object):
                     checksub, skiphiddendirs,
                     logfile, loglevel, lognum, logsize, loghttpaccess, logreversed, loglevelconsole,
                     webserverip, webserverport, webroot, username, password, launchbrowser,
-                    includehearingimpaired, addic7edusername, addic7edpassword,
+                    includehearingimpaired, addic7edusername, addic7edpassword, opensubtitlesusername,
+                    opensubtitlespassword,
                     usershownamemapping, usermovienamemapping,
                     skipshow,
                     skipmovie,
@@ -292,6 +293,9 @@ class Config(object):
         # Addic7ed provider
         autosubliminal.ADDIC7EDUSERNAME = addic7edusername
         autosubliminal.ADDIC7EDPASSWORD = addic7edpassword
+        # OpenSubtitles provider
+        autosubliminal.OPENSUBTITLESUSERNAME = opensubtitlesusername
+        autosubliminal.OPENSUBTITLESPASSWORD = opensubtitlespassword
 
         # Set usernamemapping variables
         autosubliminal.USERSHOWNAMEMAPPING = config.string_to_dict(usershownamemapping)

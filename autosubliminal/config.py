@@ -294,6 +294,15 @@ def read_config():
                 autosubliminal.SUBLIMINALPROVIDERCONFIGS = {
                     'addic7ed': {'username': autosubliminal.ADDIC7EDUSERNAME,
                                  'password': autosubliminal.ADDIC7EDPASSWORD}}
+
+        if cfg.has_option('subliminal', 'opensubtitlesusername') and cfg.has_option('subliminal',
+                                                                                    'opensubtitlespassword'):
+            autosubliminal.OPENSUBTITLESUSERNAME = cfg.get('subliminal', 'opensubtitlesusername')
+            autosubliminal.OPENSUBTITLESPASSWORD = cfg.get('subliminal', 'opensubtitlespassword')
+            if autosubliminal.OPENSUBTITLESUSERNAME and autosubliminal.OPENSUBTITLESPASSWORD:
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS = {
+                    'opensubtitles': {'username': autosubliminal.OPENSUBTITLESUSERNAME,
+                                      'password': autosubliminal.OPENSUBTITLESPASSWORD}}
     else:
         # Subliminal section is missing
         autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
@@ -592,7 +601,7 @@ def apply_subliminal():
         with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
             cfg.readfp(f)
     except:
-        #no config yet
+        # no config yet
         pass
 
     if cfg.has_section('subliminal'):
@@ -653,7 +662,7 @@ def apply_skipshow():
         with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
             cfg.readfp(f)
     except:
-        #no config yet
+        # no config yet
         pass
 
     if cfg.has_section('skipshow'):
@@ -674,7 +683,7 @@ def apply_skipmovie():
         with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
             cfg.readfp(f)
     except:
-        #no config yet
+        # no config yet
         pass
 
     if cfg.has_section('skipmovie'):
@@ -920,6 +929,8 @@ def save_subliminal_section():
     cfg.set(section, "includehearingimpaired", str(autosubliminal.INCLUDEHEARINGIMPAIRED))
     cfg.set(section, "addic7edusername", str(autosubliminal.ADDIC7EDUSERNAME))
     cfg.set(section, "addic7edpassword", str(autosubliminal.ADDIC7EDPASSWORD))
+    cfg.set(section, "opensubtitlesusername", str(autosubliminal.OPENSUBTITLESUSERNAME))
+    cfg.set(section, "opensubtitlespassword", str(autosubliminal.OPENSUBTITLESPASSWORD))
 
     with open(autosubliminal.CONFIGFILE, 'wb') as file:
         cfg.write(file)
@@ -1204,17 +1215,17 @@ def check_for_restart():
 
     # Now compare the values, if one differs a restart is required.
     if schedulerscandisk != autosubliminal.SCHEDULERSCANDISK \
-        or schedulerchecksub != autosubliminal.SCHEDULERCHECKSUB \
-        or loglevel != autosubliminal.LOGLEVEL \
-        or logsize != autosubliminal.LOGSIZE \
-        or lognum != autosubliminal.LOGNUM \
-        or loghttpaccess != autosubliminal.LOGHTTPACCESS \
-        or loglevelconsole != autosubliminal.LOGLEVELCONSOLE \
-        or webserverip != autosubliminal.WEBSERVERIP \
-        or webserverport != autosubliminal.WEBSERVERPORT \
-        or webroot != autosubliminal.WEBROOT \
-        or username != autosubliminal.USERNAME \
-        or password != autosubliminal.PASSWORD:
+            or schedulerchecksub != autosubliminal.SCHEDULERCHECKSUB \
+            or loglevel != autosubliminal.LOGLEVEL \
+            or logsize != autosubliminal.LOGSIZE \
+            or lognum != autosubliminal.LOGNUM \
+            or loghttpaccess != autosubliminal.LOGHTTPACCESS \
+            or loglevelconsole != autosubliminal.LOGLEVELCONSOLE \
+            or webserverip != autosubliminal.WEBSERVERIP \
+            or webserverport != autosubliminal.WEBSERVERPORT \
+            or webroot != autosubliminal.WEBROOT \
+            or username != autosubliminal.USERNAME \
+            or password != autosubliminal.PASSWORD:
         return True
     else:
         return False
