@@ -252,7 +252,7 @@ def get_imdb_info(title, year=None, force_search=False):
                 ImdbIdCache.set_id(imdb_id, title, year)
                 log.info("%s added to cache with %s" % (name, imdb_id))
     if not imdb_id:
-        log.error("Imdb id not found for %s (%s)" % title, year)
+        log.error("Imdb id not found for %s (%s)" % (title, year))
     return imdb_id, year
 
 
