@@ -95,6 +95,3 @@ class Scheduler(object):
 class Process(object):
     def __init__(self):
         self.running = False
-
-    def is_running(self):
-        return self.running
