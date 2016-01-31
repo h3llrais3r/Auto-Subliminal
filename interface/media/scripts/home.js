@@ -2,24 +2,34 @@
  * Javascript needed on the home page
  */
 
-// Enable tablesorter for wanteditems table
+// Enable tablesorter and tablesorterPager for wanteditems table
 $(document).ready(function () {
-    $("#wanteditems").tablesorter({
-        // Sort default by time desc
-        sortList: [[8, 1]],
-        // date format 'pt'
-        dateFormat: 'pt'
-    });
+    $("#wanteditems")
+        .tablesorter({
+            // Sort default by time desc
+            sortList: [[8, 1]],
+            // date format 'pt'
+            dateFormat: 'pt'
+        })
+        .tablesorterPager({
+            container: $("#wanteditemspager"),
+            output: '{startRow:input} to {endRow} ({totalRows})'
+        });
 });
 
-// Enable tablesorter for lastdownloads table
+// Enable tablesorter and tablesorterPager for lastdownloads table
 $(document).ready(function () {
-    $("#lastdownloads").tablesorter({
-        // Sort default by time desc
-        sortList: [[8, 1]],
-        // date format 'pt'
-        dateFormat: 'pt'
-    });
+    $("#lastdownloads")
+        .tablesorter({
+            // Sort default by time desc
+            sortList: [[8, 1]],
+            // date format 'pt'
+            dateFormat: 'pt'
+        })
+        .tablesorterPager({
+            container: $("#lastdownloadspager"),
+            output: '{startRow:input} to {endRow} ({totalRows})'
+        });
 });
 
 // Activate the container-manualsearch-link

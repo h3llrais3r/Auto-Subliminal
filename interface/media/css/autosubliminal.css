@@ -139,11 +139,15 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     background-color: #ddd;
 }
 
+/* Copied from tablesorter reflow widget. */
+/* https://mottie.github.io/tablesorter/docs/example-widget-reflow.html#required_css */
+
 /* REQUIRED CSS: change your reflow breakpoint here (35em below) */
 @media ( max-width: 48em ) {
 
     /* uncomment out the line below if you don't want the sortable headers to show */
     /* table.ui-table-reflow thead { display: none; } */
+
     /* css for reflow & reflow2 widgets */
     .ui-table-reflow td,
     .ui-table-reflow th {
