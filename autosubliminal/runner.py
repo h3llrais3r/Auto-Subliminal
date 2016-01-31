@@ -85,6 +85,12 @@ def start():
             'tools.expires.on': True,
             'tools.expires.secs': 3600 * 24 * 7
         },
+        '/fonts': {
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': "fonts",
+            'tools.expires.on': True,
+            'tools.expires.secs': 3600 * 24 * 7
+        },
         '/images': {
             'tools.staticdir.on': True,
             'tools.staticdir.dir': "images",
