@@ -91,6 +91,11 @@ def read_config():
         else:
             autosubliminal.SKIPHIDDENDIRS = False
 
+        if cfg.has_option("config", "maxdbresults"):
+            autosubliminal.MAXDBRESULTS = cfg.getint("config", "maxdbresults")
+        else:
+            autosubliminal.MAXDBRESULTS = 0
+
         if cfg.has_option("config", "configversion"):
             autosubliminal.CONFIGVERSION = cfg.getint("config", "configversion")
         else:
@@ -110,6 +115,7 @@ def read_config():
         autosubliminal.SCHEDULERSCANDISK = 3600
         autosubliminal.SCHEDULERCHECKSUB = 28800
         autosubliminal.SKIPHIDDENDIRS = False
+        autosubliminal.MAXDBRESULTS = 0
         autosubliminal.CONFIGVERSION = version.CONFIG_VERSION
 
     if cfg.has_section('logfile'):
@@ -832,6 +838,7 @@ def save_config_section():
     cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
     cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
+    cfg.set(section, "maxdbresults", str(autosubliminal.MAXDBRESULTS))
     cfg.set(section, "configversion", str(autosubliminal.CONFIGVERSION))
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', encoding=autosubliminal.SYSENCODING) as file:

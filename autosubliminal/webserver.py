@@ -187,7 +187,7 @@ class Config(object):
 
     @cherrypy.expose(alias='saveConfig')
     def save_config(self, path, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, scandisk,
-                    checksub, skiphiddendirs,
+                    checksub, skiphiddendirs, maxdbresults,
                     logfile, loglevel, lognum, logsize, loghttpaccess, logreversed, loglevelconsole,
                     webserverip, webserverport, webroot, username, password, launchbrowser,
                     includehearingimpaired, addic7edusername, addic7edpassword, opensubtitlesusername,
@@ -219,6 +219,7 @@ class Config(object):
         autosubliminal.SCHEDULERSCANDISK = int(scandisk)
         autosubliminal.SCHEDULERCHECKSUB = int(checksub)
         autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
+        autosubliminal.MAXDBRESULTS = int(maxdbresults)
 
         # Set logfile variables
         autosubliminal.LOGFILE = logfile

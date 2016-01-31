@@ -92,9 +92,9 @@ class LastDownloads(object):
         result_list = cursor.fetchall()
         connection.close()
 
-        # Return the last 20 items
-        if len(result_list) > 19:
-            return result_list[0:20]
+        # Return the max number of results or all (autosubliminal.MAXDBRESULTS = 0)
+        if 0 < autosubliminal.MAXDBRESULTS < len(result_list):
+            return result_list[0:autosubliminal.MAXDBRESULTS]
         else:
             return result_list
 
