@@ -6,10 +6,20 @@
 $(document).ready(function () {
     $("#wanteditems")
         .tablesorter({
+            // Enable filter
+            widgets: ["filter"],
+            widgetOptions: {
+                // No column filters
+                filter_columnFilters: false,
+                // External filter selector (will match any column)
+                filter_external: '#wanteditemsfilter',
+                // Search faster (default 300)
+                filter_searchDelay: 50
+            },
+            // Use date format 'ddmmyyyy'
+            dateFormat: 'ddmmyyyy',
             // Sort default by time desc
-            sortList: [[8, 1]],
-            // date format 'pt'
-            dateFormat: 'pt'
+            sortList: [[8, 1]]
         })
         .tablesorterPager({
             container: $("#wanteditemspager"),
@@ -21,10 +31,20 @@ $(document).ready(function () {
 $(document).ready(function () {
     $("#lastdownloads")
         .tablesorter({
+            // Enable filter
+            widgets: ["filter"],
+            widgetOptions: {
+                // No column filters
+                filter_columnFilters: false,
+                // External filter selector (will match any column)
+                filter_external: '#lastdownloadsfilter',
+                // Search faster (default 300)
+                filter_searchDelay: 50
+            },
+            // Use date format 'ddmmyyyy'
+            dateFormat: 'ddmmyyyy',
             // Sort default by time desc
-            sortList: [[8, 1]],
-            // date format 'pt'
-            dateFormat: 'pt'
+            sortList: [[8, 1]]
         })
         .tablesorterPager({
             container: $("#lastdownloadspager"),
