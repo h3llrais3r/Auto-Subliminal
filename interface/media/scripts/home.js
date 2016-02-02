@@ -6,7 +6,7 @@
 $(document).ready(function () {
     $("#wanteditems")
         .tablesorter({
-            // Enable filter
+            // Enable widgets
             widgets: ['reflow', 'filter'],
             widgetOptions: {
                 // No column filters
@@ -28,7 +28,7 @@ $(document).ready(function () {
         })
         .tablesorterPager({
             container: $("#wanteditemspager"),
-            output: '{startRow:input} to {endRow} ({totalRows})'
+            output: '{startRow} to {endRow} ({totalRows})'
         });
 });
 
@@ -36,7 +36,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     $("#lastdownloads")
         .tablesorter({
-            // Enable filter
+            // Enable widgets
             widgets: ['reflow', 'filter'],
             widgetOptions: {
                 // No column filters
@@ -58,7 +58,7 @@ $(document).ready(function () {
         })
         .tablesorterPager({
             container: $("#lastdownloadspager"),
-            output: '{startRow:input} to {endRow} ({totalRows})'
+            output: '{startRow} to {endRow} ({totalRows})'
         });
 });
 
