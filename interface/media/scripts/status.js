@@ -5,16 +5,20 @@
 // Enable tablesorter for scheduler table
 $(document).ready(function () {
     $("#scheduler").tablesorter({
+        // Enable widgets
+        widgets: ['reflow'],
         // Sort default by thread name asc
         sortList: [[0, 0]],
-        // Use date format 'pt'
-        dateFormat: 'pt'
+        // Use date format 'ddmmyyyy'
+        dateFormat: 'ddmmyyyy'
     });
 });
 
 // Enable tablesorter for diskspace table
 $(document).ready(function () {
     $("#diskspace").tablesorter({
+        // Enable widgets
+        widgets: ['reflow'],
         // Sort default by folder name asc
         sortList: [[0, 0]]
     });
