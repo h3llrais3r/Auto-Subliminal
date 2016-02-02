@@ -18,6 +18,11 @@ $(document).ready(function () {
             },
             // Use date format 'ddmmyyyy'
             dateFormat: 'ddmmyyyy',
+            // Force text sorter in first column (this is needed due to img in table cell)
+            // See https://github.com/Mottie/tablesorter/issues/1149
+            headers: {
+                0: {sorter: 'text'}
+            },
             // Sort default by time desc
             sortList: [[8, 1]]
         })
@@ -43,6 +48,11 @@ $(document).ready(function () {
             },
             // Use date format 'ddmmyyyy'
             dateFormat: 'ddmmyyyy',
+            // Force text sorter in first column (this is needed due to img in table cell)
+            // See https://github.com/Mottie/tablesorter/issues/1149
+            headers: {
+                0: {sorter: 'text'}
+            },
             // Sort default by time desc
             sortList: [[8, 1]]
         })
