@@ -7,7 +7,7 @@ $(document).ready(function () {
     $("#wanteditems")
         .tablesorter({
             // Enable filter
-            widgets: ["filter"],
+            widgets: ['reflow', 'filter'],
             widgetOptions: {
                 // No column filters
                 filter_columnFilters: false,
@@ -32,7 +32,7 @@ $(document).ready(function () {
     $("#lastdownloads")
         .tablesorter({
             // Enable filter
-            widgets: ["filter"],
+            widgets: ['reflow', 'filter'],
             widgetOptions: {
                 // No column filters
                 filter_columnFilters: false,
