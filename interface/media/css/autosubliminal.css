@@ -137,21 +137,48 @@ table.tablesorter tbody td {
     border: 1px dotted #eee;
 }
 
-/* Copied from tablesorter default theme. Needed to get the filtering working. */
+.tablesorter-pager select {
+    border-radius: 3px;
+}
+
+/* Copied from https://github.com/Mottie/tablesorter/blob/master/addons/pager/jquery.tablesorter.pager.css */
+/***********************************************************************************************************/
+
+/*** css used when "updateArrows" option is true ***/
+/* the pager itself gets a disabled class when the number of rows is less than the size */
+.tablesorter-pager.disabled {
+    display: none;
+}
+
+/* hide or fade out pager arrows when the first or last row is visible */
+.tablesorter-pager .disabled {
+    /* visibility: hidden */
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+    cursor: default;
+}
+
+/* End copy */
+
+/* Copied from https://github.com/Mottie/tablesorter/blob/master/css/theme.default.css */
+/***************************************************************************************/
+
+/* Needed to get the filtering working. */
 /* rows hidden by filtering (needed for child rows) */
 .tablesorter .filtered {
     display: none;
 }
 
-/* Copied from tablesorter reflow widget. */
-/* https://mottie.github.io/tablesorter/docs/example-widget-reflow.html#required_css */
+/* End copy */
+
+/* Copied from https://mottie.github.io/tablesorter/docs/example-widget-reflow.html#required_css */
+/*************************************************************************************************/
 
 /* REQUIRED CSS: change your reflow breakpoint here (35em below) */
 @media ( max-width: 48em ) {
 
     /* uncomment out the line below if you don't want the sortable headers to show */
     /* table.ui-table-reflow thead { display: none; } */
-
     /* css for reflow & reflow2 widgets */
     .ui-table-reflow td,
     .ui-table-reflow th {
@@ -194,12 +221,15 @@ table.tablesorter tbody td {
         margin: -.4em 1em -.4em -.4em;
     }
 }
+
 /* end media query */
 
 /* reflow2 widget */
 .ui-table-reflow .ui-table-cell-label {
     display: none;
 }
+
+/* End copy */
 
 /******************
  *FORMGROUP STYLING
