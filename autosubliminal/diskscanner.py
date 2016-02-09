@@ -3,6 +3,8 @@ import os
 import re
 import time
 
+from babelfish import Error as BabelfishError, Language
+from enzyme.mkv import MKV
 from operator import itemgetter
 
 import subliminal
@@ -141,20 +143,63 @@ def walk_dir(path):
 def check_missing_subtitle_languages(dirname, filename):
     log.debug("Checking for missing subtitle")
     missing_subtitles = []
+    # Check embedded subtitles
+    embedded_subtitles = []
+    if autosubliminal.SCANEMBEDDEDSUBS:
+        embedded_subtitles = _get_embedded_subtitles(dirname, filename)
     # Check default language
     if autosubliminal.DEFAULTLANGUAGE:
+        default_language = Language.fromietf(autosubliminal.DEFAULTLANGUAGE)
         # Check with or without alpha2 code suffix depending on configuration
         if autosubliminal.DEFAULTLANGUAGESUFFIX:
             srtfile = os.path.splitext(filename)[0] + u"." + autosubliminal.DEFAULTLANGUAGE + u".srt"
         else:
             srtfile = os.path.splitext(filename)[0] + u".srt"
-        if not os.path.exists(os.path.join(dirname, srtfile)):
+        if not os.path.exists(os.path.join(dirname, srtfile)) and default_language not in embedded_subtitles:
             missing_subtitles.append(autosubliminal.DEFAULTLANGUAGE)
     # Check additional languages
     if autosubliminal.ADDITIONALLANGUAGES:
         # Always check with alpha2 code suffix for additional languages
         for language in autosubliminal.ADDITIONALLANGUAGES:
+            additional_language = Language.fromietf(language)
             srtfile = os.path.splitext(filename)[0] + u"." + language + u".srt"
-            if not os.path.exists(os.path.join(dirname, srtfile)):
+            if not os.path.exists(os.path.join(dirname, srtfile)) and additional_language not in embedded_subtitles:
                 missing_subtitles.append(language)
     return missing_subtitles
+
+
+def _get_embedded_subtitles(dirname, filename):
+    """
+    Based on subliminal.video.scan_video(...) but only keep the check for embedded subtitles
+    """
+    log.debug("Checking for embedded subtitle")
+    embedded_subtitle_languages = set()
+    try:
+        path = os.path.join(dirname, filename)
+        if filename.endswith('.mkv'):
+            with open(path, 'rb') as f:
+                mkv = MKV(f)
+
+            # subtitle tracks
+            if mkv.subtitle_tracks:
+                for st in mkv.subtitle_tracks:
+                    if st.language:
+                        try:
+                            embedded_subtitle_languages.add(Language.fromalpha3b(st.language))
+                        except BabelfishError:
+                            log.error('Embedded subtitle track language %r is not a valid language', st.language)
+                            embedded_subtitle_languages.add(Language('und'))
+                    elif st.name:
+                        try:
+                            embedded_subtitle_languages.add(Language.fromname(st.name))
+                        except BabelfishError:
+                            log.debug('Embedded subtitle track name %r is not a valid language', st.name)
+                            embedded_subtitle_languages.add(Language('und'))
+                    else:
+                        embedded_subtitle_languages.add(Language('und'))
+                log.debug('Found embedded subtitles %r with enzyme', embedded_subtitle_languages)
+            else:
+                log.debug('MKV has no subtitle track')
+    except:
+        log.exception('Parsing video metadata with enzyme failed')
+    return embedded_subtitle_languages

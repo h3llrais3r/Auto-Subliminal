@@ -86,6 +86,11 @@ def read_config():
         else:
             autosubliminal.SCHEDULERCHECKSUB = 86400  # Run every 8 hours
 
+        if cfg.has_option("config", "scanembeddedsubs"):
+            autosubliminal.SCANEMBEDDEDSUBS = cfg.getboolean("config", "scanembeddedsubs")
+        else:
+            autosubliminal.SCANEMBEDDEDSUBS = False
+
         if cfg.has_option("config", "skiphiddendirs"):
             autosubliminal.SKIPHIDDENDIRS = cfg.getboolean("config", "skiphiddendirs")
         else:
@@ -114,6 +119,7 @@ def read_config():
         autosubliminal.ADDITIONALLANGUAGES = []
         autosubliminal.SCHEDULERSCANDISK = 3600
         autosubliminal.SCHEDULERCHECKSUB = 28800
+        autosubliminal.SCANEMBEDDEDSUBS = False
         autosubliminal.SKIPHIDDENDIRS = False
         autosubliminal.MAXDBRESULTS = 0
         autosubliminal.CONFIGVERSION = version.CONFIG_VERSION
@@ -837,6 +843,7 @@ def save_config_section():
     cfg.set(section, "additionallanguages", str(additionallanguages))
     cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
     cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
+    cfg.set(section, "scanembeddedsubs", str(autosubliminal.SCANEMBEDDEDSUBS))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
     cfg.set(section, "maxdbresults", str(autosubliminal.MAXDBRESULTS))
     cfg.set(section, "configversion", str(autosubliminal.CONFIGVERSION))
