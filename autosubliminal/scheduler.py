@@ -55,6 +55,9 @@ class Scheduler(object):
                 if self.force_run:
                     self.force_run = False
                     self.delay = 0
+            else:
+                # increase delay with 1 second each time the process cannot yet run
+                self.delay += 1
             self.process.running = False
         except:
             print traceback.format_exc()
