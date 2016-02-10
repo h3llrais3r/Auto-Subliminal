@@ -491,11 +491,13 @@ class System(object):
         autosubliminal.SCANDISK.run()
         autosubliminal.CHECKSUB.run(delay=0.5)
         useragent = cherrypy.request.headers.get("User-Agent", '')
-        tmpl = Template(file="interface/templates/general/message.tmpl")
         if autosubliminal.MOBILE and utils.check_mobile_device(useragent):
             tmpl = Template(file="interface/templates/mobile/message.tmpl")
-        tmpl.message = "Running everything! <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return</a>"
-        return str(tmpl)
+            tmpl.message = "Running everything <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return</a>"
+            return str(tmpl)
+        else:
+            utils.add_noty_message("Running everything...")
+            redirect("/home")
 
     @cherrypy.expose
     def restart(self):
