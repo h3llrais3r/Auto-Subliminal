@@ -15,6 +15,7 @@ VERSIONURL = None
 USERAGENT = None
 SYSENCODING = None
 TIMEOUT = None
+MESSAGEQUEUE = None
 WANTEDQUEUE = None
 WANTEDQUEUELOCK = None
 THREADS = None
@@ -151,7 +152,7 @@ MOVIEPOSTPROCESSCMDARGS = None
 
 def initialize():
     global CONFIGFILE, CONFIGVERSION, CONFIGUPGRADED, \
-        GITHUBURL, VERSIONURL, USERAGENT, SYSENCODING, TIMEOUT, WANTEDQUEUE, WANTEDQUEUELOCK, \
+        GITHUBURL, VERSIONURL, USERAGENT, SYSENCODING, TIMEOUT, MESSAGEQUEUE, WANTEDQUEUE, WANTEDQUEUELOCK, \
         THREADS, SCANDISK, CHECKSUB, \
         DBFILE, DBVERSION, \
         DAEMON, STARTED, PID, \
@@ -191,6 +192,10 @@ def initialize():
 
     # Default http timeout
     TIMEOUT = 300
+
+    # Message queue (list of message dicts with 'message' and 'severity' key)
+    # Possible values for 'severity' are: 'info', 'warning', 'error'
+    MESSAGEQUEUE = []
 
     # Wanted queue settings
     WANTEDQUEUE = []

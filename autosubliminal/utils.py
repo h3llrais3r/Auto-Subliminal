@@ -26,6 +26,18 @@ LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d
                         re.IGNORECASE)
 
 
+def add_noty_message(message, severity='information'):
+    """
+    Add a noty message with a specific severity.
+    Possible values for severity are (to be in sync with noty jquery plugin):
+    - information
+    - warning
+    - error
+    """
+    message_dict = {'message': message, 'severity': severity}
+    autosubliminal.MESSAGEQUEUE.append(message_dict)
+
+
 def run_cmd(cmd, communicate=True):
     log.debug("Running cmd: %s" % cmd)
     process = subprocess.Popen(cmd,

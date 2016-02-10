@@ -541,6 +541,16 @@ class System(object):
         else:
             return callback + '(' + json.dumps({"msg": "False"}) + ');'
 
+    @cherrypy.expose(alias='getMessage')
+    def get_message(self, *args, **kwargs):
+        # Set json response type
+        cherrypy.response.headers['Content-Type'] = 'application/json'
+
+        if len(autosubliminal.MESSAGEQUEUE) > 0:
+            return json.dumps(autosubliminal.MESSAGEQUEUE.pop())
+        else:
+            return json.dumps({})
+
 
 class Mobile(object):
     def __init__(self):
