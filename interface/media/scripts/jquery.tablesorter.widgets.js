@@ -8,7 +8,7 @@
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
 (function(factory) {
 	if (typeof define === 'function' && define.amd) {
-		define(['../../../../../../Users/ADMIN/Desktop/jquery.mobile-1.4.5'], factory);
+		define(['jquery'], factory);
 	} else if (typeof module === 'object' && typeof module.exports === 'object') {
 		module.exports = factory(require('jquery'));
 	} else {
