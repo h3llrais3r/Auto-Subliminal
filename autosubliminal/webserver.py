@@ -549,7 +549,7 @@ class System(object):
         cherrypy.response.headers['Content-Type'] = 'application/json'
 
         if len(autosubliminal.MESSAGEQUEUE) > 0:
-            return json.dumps(autosubliminal.MESSAGEQUEUE.pop())
+            return json.dumps(autosubliminal.MESSAGEQUEUE.pop(0))
         else:
             return json.dumps({})
 
