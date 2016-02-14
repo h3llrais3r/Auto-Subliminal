@@ -32,6 +32,9 @@ class DiskScanner(Process):
         if not utils.get_wanted_queue_lock():
             return False
 
+        # Show info message
+        utils.add_notification_message("Scanning disk...")
+
         # Check if a directory exists to scan
         one_dir_exists = False
         for videodir in autosubliminal.VIDEOPATHS:

@@ -37,6 +37,9 @@ class SubChecker(Process):
         if not utils.get_wanted_queue_lock():
             return False
 
+        # Show info message
+        utils.add_notification_message("Checking subtitles...")
+
         # Process all items in wanted queue
         for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
             # Scan wanted_item for video, skip when no video could be determined
