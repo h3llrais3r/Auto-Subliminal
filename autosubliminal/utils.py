@@ -26,15 +26,16 @@ LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d
                         re.IGNORECASE)
 
 
-def add_noty_message(message, severity='information'):
+def add_notification_message(message, message_type='info'):
     """
-    Add a noty message with a specific severity.
-    Possible values for severity are (to be in sync with noty jquery plugin):
-    - information
-    - warning
-    - error
+    Add a notification message with a specific message type.
+    Possible values for message type are (to be in sync with PNotify jquery plugin):
+    - info (blue)
+    - success (green)
+    - notice (orange)
+    - error (red)
     """
-    message_dict = {'message': message, 'severity': severity}
+    message_dict = {'message': message, 'message_type': message_type}
     autosubliminal.MESSAGEQUEUE.append(message_dict)
 
 

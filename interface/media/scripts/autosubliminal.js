@@ -43,32 +43,34 @@ $(document).ready(function () {
     });
 });
 
-// Function to check if a message is available to show
+// Function to check if a notification message is available to show
 function get_message() {
     $.get(get_message_url, function (data) {
         if (!jQuery.isEmptyObject(data)) {
-            _show_message(data['message'], data['severity'])
+            _show_message(data['message'], data['message_type'])
         }
         //TODO: What with this timeout? Keep it or not because it generates a lot of calls to the backend...
         setTimeout(get_message, 3000);
     });
 }
 
-// Function to show the noty message
-function _show_message(noty_message, noty_type) {
-    noty({
-        layout: 'bottomRight',
-        theme: 'bootstrapTheme',
-        type: noty_type,
-        text: noty_message,
-        dismissQueue: true,
-        animation: {
-            open: {height: 'toggle'},
-            close: {height: 'toggle'},
-            easing: 'swing',
-            speed: 500
-        },
-        timeout: 5000 // show message for 5s
+// Function to show the notification message
+function _show_message(message, message_type) {
+    // Use desktop notifications
+    PNotify.desktop.permission();
+    // Also configure for normal notifications when desktop notifications are not allowed
+    var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 0, "firstpos2": 0};
+    new PNotify({
+        title: '',
+        text: message,
+        type: message_type,
+        styling: "bootstrap3",
+        delay: 5000,
+        addclass: "stack-bottomright",
+        stack: stack_bottomright,
+        desktop: {
+            desktop: true
+        }
     });
 }
 

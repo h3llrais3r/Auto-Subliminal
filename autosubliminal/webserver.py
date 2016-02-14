@@ -496,7 +496,7 @@ class System(object):
             tmpl.message = "Running everything <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return</a>"
             return str(tmpl)
         else:
-            utils.add_noty_message("Running everything...")
+            utils.add_notification_message("Running everything...")
             redirect("/home")
 
     @cherrypy.expose
