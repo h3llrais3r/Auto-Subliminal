@@ -18,6 +18,13 @@ def redirect(abspath, *args, **kwargs):
     raise cherrypy.HTTPRedirect(autosubliminal.WEBROOT + abspath, *args, **kwargs)
 
 
+def redirect_referer(abspath, *args, **kwargs):
+    referer = cherrypy.request.headers.get('Referer')
+    if referer:
+        raise cherrypy.HTTPRedirect(referer, *args, **kwargs)
+    else:
+        redirect(abspath)
+
 class Home(object):
     def __init__(self):
         pass
