@@ -510,7 +510,7 @@ var init = function(root){
                 if (that.animating !== "in") {
                     return;
                 }
-                if (that.elem.is(":visible")) {
+                if (that.elem.css("opacity") != "0" || that.elem.is(":visible")) {
                     if (this) {
                         this.call();
                     }
