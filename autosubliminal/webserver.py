@@ -349,13 +349,13 @@ class Config(object):
             # Restart the runner in the background (do not import runner due to circular imports with webserver)
             threading.Thread(target=autosubliminal.runner.restart).start()
             tmpl = Template(file="interface/templates/system/restart.tmpl")
-            tmpl.message = "Config saved. Auto restart in progress..."
+            tmpl.message = "Saved config. Auto restart in progress..."
 
         else:
             # For some reason the needs to be read again, otherwise all pages get an error
             config.read_config()
-            tmpl = Template(file="interface/templates/general/message.tmpl")
-            tmpl.message = "Config saved.<br><a href='" + autosubliminal.WEBROOT + "/config'>Return</a>"
+            tmpl = Template(file="interface/templates/config/config.tmpl")
+            utils.add_notification_message("Saved config")
 
         return str(tmpl)
 
