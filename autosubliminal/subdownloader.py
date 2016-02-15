@@ -1,9 +1,11 @@
 import logging
+import os
 import time
 
 import subliminal
 
 import autosubliminal
+from autosubliminal import utils
 from autosubliminal.db import LastDownloads
 from autosubliminal.notify import Notifier
 from autosubliminal.postprocessor import PostProcessor
@@ -47,6 +49,13 @@ class SubDownloader(object):
             # Post processing
             if autosubliminal.POSTPROCESS:
                 PostProcessor(self.download_item).run()
+
+            # Show success message
+            language = self.download_item['downlang']
+            name = utils.display_name(self.download_item)
+            provider = self.download_item['provider']
+            utils.add_notification_message(
+                "Downloaded '" + language + "' subtitle for '" + name + "' from '" + provider + "'", 'success')
 
             return True
         else:

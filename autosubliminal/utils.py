@@ -321,12 +321,19 @@ def display_logfile(loglevel):
     return result
 
 
-def display_name(item_dict, uppercase=False):
-    name = item_dict['title']
+def display_title(item_dict, uppercase=False):
+    title = item_dict['title']
     if item_dict['year']:
-        name += " (" + str(item_dict['year']) + ")"
+        title += " (" + str(item_dict['year']) + ")"
     if uppercase:
-        name = name.upper()
+        title = title.upper()
+    return title
+
+
+def display_name(item_dict, uppercase=False):
+    name = display_title(item_dict, uppercase)
+    if item_dict['type'] == "episode":
+        name += " S" + format(item_dict['season'], '02') + "E" + format(item_dict['episode'], '02')
     return name
 
 

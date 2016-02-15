@@ -1,7 +1,7 @@
 #from types import *
 
 #import autosubliminal
-#from autosubliminal.utils import convert_timestamp, display_name, get_file_size, count_wanted_items
+#from autosubliminal.utils import convert_timestamp, display_title, get_file_size, count_wanted_items
 
 #if $len($autosubliminal.WANTEDQUEUE) >= 1
 
@@ -53,8 +53,8 @@
                 <tr>
                     <td>
                         <span class="dropdown">
+                            <a class="dropdown-toggle main-column" data-toggle="dropdown" title="Click to skip" href="#">$display_title($item)</a>
                             #if $item['type'] == 'episode':
-                            <a class="dropdown-toggle main-column" data-toggle="dropdown" title="Click to skip" href="#">$display_name($item)</a>
                             <ul class="dropdown-menu has-tip">
                                 <li>
                                     <a href="$autosubliminal.WEBROOT/home/postProcess/$index">Skip and post process show</a>
@@ -70,7 +70,6 @@
                                 </li>
                             </ul>
                             #else if $item['type'] == 'movie':
-                            <a class="dropdown-toggle main-column" data-toggle="dropdown" title="Click to skip" href="#">$display_name($item)</a>
                             <ul class="dropdown-menu has-tip">
                                 <li>
                                     <a href="$autosubliminal.WEBROOT/home/postProcess/$index">Skip and post process movie</a>
