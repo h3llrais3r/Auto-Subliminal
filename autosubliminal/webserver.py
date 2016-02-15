@@ -348,7 +348,7 @@ class Config(object):
         if restart:
             # Restart the runner in the background (do not import runner due to circular imports with webserver)
             threading.Thread(target=autosubliminal.runner.restart).start()
-            tmpl = Template(file="interface/templates/general/restart.tmpl")
+            tmpl = Template(file="interface/templates/system/restart.tmpl")
             tmpl.message = "Config saved. Auto restart in progress..."
 
         else:
@@ -501,7 +501,7 @@ class System(object):
 
     @cherrypy.expose
     def restart(self):
-        tmpl = Template(file="interface/templates/general/restart.tmpl")
+        tmpl = Template(file="interface/templates/system/restart.tmpl")
         tmpl.message = "Auto-Subliminal is restarting..."
         threading.Thread(target=autosubliminal.runner.restart).start()
         return str(tmpl)
@@ -515,7 +515,7 @@ class System(object):
 
     @cherrypy.expose
     def status(self):
-        tmpl = Template(file="interface/templates/general/status.tmpl")
+        tmpl = Template(file="interface/templates/system/status.tmpl")
         return str(tmpl)
 
     @cherrypy.expose(alias='exitMobile')
