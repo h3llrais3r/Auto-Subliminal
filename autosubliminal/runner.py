@@ -103,12 +103,6 @@ def start():
             'tools.expires.on': True,
             'tools.expires.secs': 3600 * 24 * 7
         },
-        '/mobile': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': "mobile",
-            'tools.expires.on': True,
-            'tools.expires.secs': 3600 * 24 * 7
-        },
         '/favicon.ico': {
             'tools.staticfile.on': True,
             'tools.staticfile.filename': os.path.join(autosubliminal.PATH, 'interface/media/images/favicon.ico')
