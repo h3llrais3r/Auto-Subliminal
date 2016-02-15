@@ -359,21 +359,6 @@ class Config(object):
 
         return str(tmpl)
 
-    @cherrypy.expose(alias='flushCache')
-    def flush_cache(self):
-        TvdbIdCache().flush_cache()
-        ImdbIdCache().flush_cache()
-        tmpl = Template(file="interface/templates/general/message.tmpl")
-        tmpl.message = "Id Cache flushed"
-        return str(tmpl)
-
-    @cherrypy.expose(alias='flushLastDownloads')
-    def flush_last_downloads(self):
-        LastDownloads().flush_last_downloads()
-        tmpl = Template(file="interface/templates/general/message.tmpl")
-        tmpl.message = "Last downloaded subtitle database flushed"
-        return str(tmpl)
-
     @cherrypy.expose(alias='checkVersion')
     def check_version(self):
         check_version = utils.check_version()
@@ -512,6 +497,19 @@ class System(object):
         tmpl.message = "Auto-Subliminal is shutting down..."
         threading.Timer(2, autosubliminal.runner.stop).start()
         return str(tmpl)
+
+    @cherrypy.expose(alias='flushCache')
+    def flush_cache(self):
+        TvdbIdCache().flush_cache()
+        ImdbIdCache().flush_cache()
+        utils.add_notification_message("Flushed id cache database")
+        redirect("/home")
+
+    @cherrypy.expose(alias='flushLastDownloads')
+    def flush_last_downloads(self):
+        LastDownloads().flush_last_downloads()
+        utils.add_notification_message("Flushed last downloads database")
+        redirect("/home")
 
     @cherrypy.expose
     def status(self):
