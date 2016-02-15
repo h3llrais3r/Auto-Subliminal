@@ -2,7 +2,9 @@
  * Javascript for general Auto-Subliminal stuff
  */
 
-var get_message_url = webroot + "/system/getMessage";
+/* ======
+ * Navbar
+ *======= */
 
 // Handle navbar active navigation button (no submit)
 $(".navbar .nav a").on("click", function () {
@@ -17,7 +19,11 @@ $(document).ready(function () {
         .closest('li').addClass('active');
 });
 
-// Handle countdown until scandisk next run date
+/* =========
+ * Countdown
+ * ========= */
+
+// Enable countdown until scandisk next run date
 $(document).ready(function () {
     scandisknextrundate = new Date();
     scandisknextrundate.setTime($("#scandisk-nextrun-time-ms").val());
@@ -30,7 +36,7 @@ $(document).ready(function () {
     });
 });
 
-// Handle countdown until checksub next run date
+// Enable countdown until checksub next run date
 $(document).ready(function () {
     checksubnextrundate = new Date();
     checksubnextrundate.setTime($("#checksub-nextrun-time-ms").val());
@@ -43,34 +49,46 @@ $(document).ready(function () {
     });
 });
 
-// Function to check if a notification message is available to show
+/* =============
+ * Notifications
+ * ============= */
+
+// Define the get_message_url variable
+var get_message_url = webroot + "/system/getMessage";
+
+// Define the function to check if a notification message is available to show
 function get_message() {
     $.get(get_message_url, function (data) {
         if (!jQuery.isEmptyObject(data)) {
             _show_message(data['message'], data['message_type'])
         }
-        //TODO: What with this timeout? Keep it or not because it generates a lot of calls to the backend...
         setTimeout(get_message, 3000);
     });
 }
 
-// Function to show the notification message
+// Notification options - PNotify options
+// By default we will use desktop notifications, but we also provide settings for fallback to browser notifications
+var stack_bottomright = {
+    "dir1": "up",
+    "dir2": "left",
+    "firstpos1": 10,
+    "firstpos2": 10,
+    "spacing1": 10,
+    "spacing2": 10
+};
+PNotify.prototype.options.stack = stack_bottomright;
+PNotify.prototype.options.addclass = "stack-bottomright";
+PNotify.prototype.options.styling = "bootstrap3";
+PNotify.prototype.options.delay = 5000;
+PNotify.prototype.options.desktop.desktop = true; // Use desktop notifications
+PNotify.desktop.permission(); // Check for permission for desktop notifications
+
+// Define the function to show a notification message
 function _show_message(message, message_type) {
-    // Use desktop notifications
-    PNotify.desktop.permission();
-    // Also configure for normal notifications when desktop notifications are not allowed
-    var stack_bottomright = {"dir1": "up", "dir2": "left", "firstpos1": 0, "firstpos2": 0};
     new PNotify({
-        title: '',
+        title: 'Auto-Subliminal',
         text: message,
-        type: message_type,
-        styling: "bootstrap3",
-        delay: 5000,
-        addclass: "stack-bottomright",
-        stack: stack_bottomright,
-        desktop: {
-            desktop: true
-        }
+        type: message_type
     });
 }
 
