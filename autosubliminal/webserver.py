@@ -194,7 +194,7 @@ class Config(object):
 
     @cherrypy.expose(alias='saveConfig')
     def save_config(self, path, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, scandisk,
-                    checksub, scanembeddedsubs, skiphiddendirs, maxdbresults,
+                    checksub, checkversion, scanembeddedsubs, skiphiddendirs, maxdbresults,
                     logfile, loglevel, lognum, logsize, loghttpaccess, logreversed, loglevelconsole,
                     webserverip, webserverport, webroot, username, password, launchbrowser,
                     includehearingimpaired, addic7edusername, addic7edpassword, opensubtitlesusername,
@@ -225,6 +225,7 @@ class Config(object):
         autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split(',')
         autosubliminal.SCHEDULERSCANDISK = int(scandisk)
         autosubliminal.SCHEDULERCHECKSUB = int(checksub)
+        autosubliminal.SCHEDULERCHECKVERSION = int(checkversion)
         autosubliminal.SCANEMBEDDEDSUBS = scanembeddedsubs
         autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
         autosubliminal.MAXDBRESULTS = int(maxdbresults)
@@ -368,16 +369,8 @@ class Config(object):
 
     @cherrypy.expose(alias='checkVersion')
     def check_version(self):
-        check_version = utils.check_version()
-        if check_version == 0:
-            message = "You are running the latest version!"
-        elif check_version == 1:
-            message = "A new version is available! Visit: <a href=" + autosubliminal.GITHUBURL + "/releases>Github</a>"
-        else:
-            message = "Something went wrong there, is github reachable? Or are you running a really old release?"
-        tmpl = Template(file="interface/templates/general/message.tmpl")
-        tmpl.message = message
-        return str(tmpl)
+        autosubliminal.CHECKVERSION.run()
+        redirect_referer("/home")
 
     @cherrypy.expose(alias='testNotify')
     def test_notify(self, notifylib):

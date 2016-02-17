@@ -8,6 +8,7 @@ import autosubliminal
 from autosubliminal.diskscanner import DiskScanner
 from autosubliminal.scheduler import Scheduler
 from autosubliminal.subchecker import SubChecker
+from autosubliminal.versionchecker import VersionChecker
 from autosubliminal.webserver import WebServerInit
 
 log = logging.getLogger(__name__)
@@ -123,6 +124,7 @@ def start():
     # Schedule threads
     autosubliminal.SCANDISK = Scheduler("SCANDISK", DiskScanner(), autosubliminal.SCHEDULERSCANDISK, True)
     autosubliminal.CHECKSUB = Scheduler("CHECKSUB", SubChecker(), autosubliminal.SCHEDULERCHECKSUB)
+    autosubliminal.CHECKVERSION = Scheduler("CHECKVERSION", VersionChecker(), autosubliminal.SCHEDULERCHECKVERSION)
 
     # Mark as started
     autosubliminal.STARTED = True

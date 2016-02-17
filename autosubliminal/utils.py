@@ -1,5 +1,6 @@
 import codecs
 import ctypes
+import imdb
 import logging
 import os
 import platform
@@ -10,15 +11,11 @@ import subprocess
 import time
 import urllib2
 
-from distutils import version
 from string import capwords
-
-import imdb
 from tvdb_api import tvdb_api
 
 import autosubliminal
 from autosubliminal.db import TvdbIdCache, ImdbIdCache
-from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
 
@@ -26,7 +23,7 @@ LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d
                         re.IGNORECASE)
 
 
-def add_notification_message(message, message_type='info'):
+def add_notification_message(message, message_type='info', sticky=False):
     """
     Add a notification message with a specific message type.
     Possible values for message type are (to be in sync with PNotify jquery plugin):
@@ -34,8 +31,9 @@ def add_notification_message(message, message_type='info'):
     - success (green)
     - notice (orange)
     - error (red)
+    Sticky indicates that it will be shown at a fixed inline location and it will not fade.
     """
-    message_dict = {'message': message, 'message_type': message_type}
+    message_dict = {'message': message, 'message_type': message_type, 'sticky': sticky}
     autosubliminal.MESSAGEQUEUE.append(message_dict)
 
 
@@ -69,42 +67,6 @@ def connect_url(url):
         log.error("HTTP Code: %s: NOT OK!" % errorcode)
 
     return response
-
-
-def check_version():
-    """
-    Check version
-
-    Return values:
-    0 Same version
-    1 New version
-    """
-    log.info('Checking version')
-    try:
-        req = urllib2.Request(autosubliminal.VERSIONURL)
-        req.add_header("User-agent", autosubliminal.USERAGENT)
-        resp = urllib2.urlopen(req, None, autosubliminal.TIMEOUT)
-        response = resp.read()
-        resp.close()
-    except:
-        log.error("The server returned an error for request %s" % autosubliminal.VERSIONURL)
-        return None
-    try:
-        match = re.search('(\d+)\.(\d+)\.(\d+)', response)
-        git_version = match.group(0)
-    except:
-        return None
-
-    running_version = version.StrictVersion(RELEASE_VERSION)
-    online_version = version.StrictVersion(git_version)
-
-    log.info('Running version: %s' % running_version)
-    log.info('Git version: %s' % online_version)
-
-    if running_version < online_version:
-        return 1
-    else:
-        return 0
 
 
 def clean_series_name(series_name):

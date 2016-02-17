@@ -74,7 +74,7 @@ def read_config():
         if cfg.has_option('config', 'scandisk'):
             autosubliminal.SCHEDULERSCANDISK = cfg.getint('config', 'scandisk')
         else:
-            autosubliminal.SCHEDULERSCANDISK = 3600
+            autosubliminal.SCHEDULERSCANDISK = 3600  # Run every hour
 
         if cfg.has_option('config', 'checksub'):
             autosubliminal.SCHEDULERCHECKSUB = cfg.getint('config', 'checksub')
@@ -84,7 +84,12 @@ def read_config():
                 print "WARNING: checksub variable is lower then 21600. This is not allowed, this is to prevent our API-key from being banned."
                 autosubliminal.SCHEDULERCHECKSUB = 21600  # Run every 6 hours
         else:
-            autosubliminal.SCHEDULERCHECKSUB = 86400  # Run every 8 hours
+            autosubliminal.SCHEDULERCHECKSUB = 86400  # Run every 24 hours
+
+        if cfg.has_option('config', 'checkversion'):
+            autosubliminal.SCHEDULERCHECKVERSION = cfg.getint('config', 'checkversion')
+        else:
+            autosubliminal.SCHEDULERCHECKVERSION = 43200  # Run every 12 hours
 
         if cfg.has_option("config", "scanembeddedsubs"):
             autosubliminal.SCANEMBEDDEDSUBS = cfg.getboolean("config", "scanembeddedsubs")
@@ -118,7 +123,8 @@ def read_config():
         autosubliminal.DEFAULTLANGUAGESUFFIX = False
         autosubliminal.ADDITIONALLANGUAGES = []
         autosubliminal.SCHEDULERSCANDISK = 3600
-        autosubliminal.SCHEDULERCHECKSUB = 28800
+        autosubliminal.SCHEDULERCHECKSUB = 86400
+        autosubliminal.SCHEDULERCHECKVERSION = 43200
         autosubliminal.SCANEMBEDDEDSUBS = False
         autosubliminal.SKIPHIDDENDIRS = False
         autosubliminal.MAXDBRESULTS = 0
@@ -843,6 +849,7 @@ def save_config_section():
     cfg.set(section, "additionallanguages", str(additionallanguages))
     cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
     cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
+    cfg.set(section, "checkversion", str(autosubliminal.SCHEDULERCHECKVERSION))
     cfg.set(section, "scanembeddedsubs", str(autosubliminal.SCANEMBEDDEDSUBS))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
     cfg.set(section, "maxdbresults", str(autosubliminal.MAXDBRESULTS))
@@ -1159,6 +1166,7 @@ def check_for_restart():
     # Set the default values
     schedulerscandisk = 3600
     schedulerchecksub = 86400
+    schedulercheckversion = 43200
     loglevel = logging.INFO
     loglevelconsole = logging.ERROR
     logsize = 1000000
@@ -1177,6 +1185,9 @@ def check_for_restart():
 
         if cfg.has_option('config', 'checksub'):
             schedulerchecksub = cfg.getint('config', 'checksub')
+
+        if cfg.has_option('config', 'checkversion'):
+            schedulercheckversion = cfg.getint('config', 'checkversion')
 
     if cfg.has_section('logfile'):
         if cfg.has_option("logfile", "logfile"):
@@ -1230,6 +1241,7 @@ def check_for_restart():
     # Now compare the values, if one differs a restart is required.
     if schedulerscandisk != autosubliminal.SCHEDULERSCANDISK \
             or schedulerchecksub != autosubliminal.SCHEDULERCHECKSUB \
+            or schedulercheckversion != autosubliminal.SCHEDULERCHECKVERSION \
             or loglevel != autosubliminal.LOGLEVEL \
             or logsize != autosubliminal.LOGSIZE \
             or lognum != autosubliminal.LOGNUM \

@@ -154,7 +154,7 @@
                     <ul class="dropdown-menu has-tip info-list">
                         <li>
                             Subtitle check interval of the CheckSub thread. It checks if there is a match on the configured subliminal providers.<br>
-                            Time is in seconds. Default value is 28800 seconds.<br>
+                            Time is in seconds. Default value is 86400 seconds.<br>
                             Cannot not be set lower then 21600.
                         </li>
                     </ul>
@@ -163,6 +163,27 @@
         </span>
         <span class="col-xs-8 col-md-4">
             <input type="text" id="checksub" name="checksub" value="$autosubliminal.SCHEDULERCHECKSUB" class="form-control input-sm">
+        </span>
+    </div>
+
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-3">
+            <label for="checksub">Version check interval
+                <span class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                    </a>
+                    <ul class="dropdown-menu has-tip info-list">
+                        <li>
+                            Version check interval of the VersionCheck thread. It checks if there is a new version available.<br>
+                            Time is in seconds. Default value is 43200 seconds.
+                        </li>
+                    </ul>
+                </span>
+            </label>
+        </span>
+        <span class="col-xs-8 col-md-4">
+            <input type="text" id="checkversion" name="checkversion" value="$autosubliminal.SCHEDULERCHECKVERSION" class="form-control input-sm">
         </span>
     </div>
 
