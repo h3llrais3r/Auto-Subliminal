@@ -10,6 +10,13 @@ html, body {
     background-color: #eee;
 }
 
+/***************
+ *NAVBAR STYLING
+ ***************/
+nav {
+    min-width: 380px; /* Make sure the navbar does not become higher when screensize is too low */
+}
+
 /******************
  *JUMBOTRON STYLING
  ******************/
@@ -17,6 +24,7 @@ html, body {
 .jumbotron-global {
     background-color: #eee;
     margin-bottom: 0px;
+    padding-top: 48px; /*Keep same bootstrap jumbotron padding when resizing screensize < 768px */
 }
 
 .jumbotron-body {
@@ -345,7 +353,7 @@ table.tablesorter tbody td {
 }
 
 .sticky-notification {
-    padding: 10px 0px 10px 0px;
+    padding: 8px 0px 5px 0px;
 }
 
 .weighted {
