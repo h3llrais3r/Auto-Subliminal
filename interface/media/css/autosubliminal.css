@@ -7,7 +7,7 @@
  ******************/
 
 html, body {
-    background-color: #eee;
+    background-color: #eeeeee;
 }
 
 /***************
@@ -22,17 +22,17 @@ nav {
  ******************/
 
 .jumbotron-global {
-    background-color: #eee;
+    background-color: #eeeeee;
     margin-bottom: 0px;
     padding-top: 48px; /*Keep same bootstrap jumbotron padding when resizing screensize < 768px */
 }
 
 .jumbotron-body {
-    background-color: #eee;
+    background-color: #eeeeee;
 }
 
 .jumbotron-footer {
-    background-color: #eee;
+    background-color: #eeeeee;
 }
 
 /*****************
@@ -56,21 +56,21 @@ nav {
 }
 
 .dropdown-menu-inverse {
-    background-color: #222;
+    background-color: #222222;
     border-color: #080808;
 }
 
 .dropdown-menu-inverse > li > a {
-    color: #999;
+    color: #999999;
 }
 
 .dropdown-menu-inverse > li > a:hover {
-    color: #fff;
-    background-color: #000;
+    color: #FFFFFF;
+    background-color: #000000;
 }
 
 .dropdown-menu-inverse > .divider {
-    background-color: #000;
+    background-color: #000000;
 }
 
 .dropdown-menu.has-tip {
@@ -95,7 +95,7 @@ nav {
     content: '';
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-bottom: 6px solid #FFF;
+    border-bottom: 6px solid #FFFFFF;
     display: inline-block;
 }
 
@@ -126,12 +126,12 @@ nav {
  ********************/
 
 table.tablesorter, table {
-    border: 1px solid #ddd;
+    border: 1px solid #dddddd;
 }
 
 table.tablesorter thead tr th, table.tablesorter tfoot tr th {
-    background-color: #eee;
-    border: 1px solid #ddd;
+    background-color: #eeeeee;
+    border: 1px solid #dddddd;
     padding: 5px 17px 5px 4px;
 }
 
@@ -145,16 +145,16 @@ table.tablesorter thead tr .tablesorter-header {
 
 table.tablesorter thead tr .tablesorter-headerAsc {
     background-image: url(../images/tablesorter/asc.gif);
-    background-color: #ddd;
+    background-color: #dddddd;
 }
 
 table.tablesorter thead tr .tablesorter-headerDesc {
     background-image: url(../images/tablesorter/desc.gif);
-    background-color: #ddd;
+    background-color: #dddddd;
 }
 
 table.tablesorter tbody td {
-    border: 1px dotted #eee;
+    border: 1px dotted #eeeeee;
 }
 
 .tablesorter-pager select {
@@ -170,7 +170,7 @@ table.tablesorter tbody td {
 }
 
 .tablesorter-default tr.even > td {
-    background-color: #ffffff; /*Adapted colors to by inline with my style*/
+    background-color: #FFFFFF; /*Adapted colors to by inline with my style*/
 }
 
 /* Needed to get the filtering working. */
