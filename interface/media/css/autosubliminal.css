@@ -161,25 +161,6 @@ table.tablesorter tbody td {
     border-radius: 3px;
 }
 
-/* Copied from https://github.com/Mottie/tablesorter/blob/master/addons/pager/jquery.tablesorter.pager.css */
-/***********************************************************************************************************/
-
-/*** css used when "updateArrows" option is true ***/
-/* the pager itself gets a disabled class when the number of rows is less than the size */
-.tablesorter-pager.disabled {
-    display: none;
-}
-
-/* hide or fade out pager arrows when the first or last row is visible */
-.tablesorter-pager .disabled {
-    /* visibility: hidden */
-    opacity: 0.5;
-    filter: alpha(opacity=50);
-    cursor: default;
-}
-
-/* End copy */
-
 /* Copied from https://github.com/Mottie/tablesorter/blob/master/css/theme.default.css */
 /***************************************************************************************/
 
