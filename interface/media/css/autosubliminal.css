@@ -164,6 +164,15 @@ table.tablesorter tbody td {
 /* Copied from https://github.com/Mottie/tablesorter/blob/master/css/theme.default.css */
 /***************************************************************************************/
 
+/* Zebra Widget - row alternating colors */
+.tablesorter-default tr.odd > td {
+    background-color: #f9f9f9; /*Adapted colors to by inline with my style*/
+}
+
+.tablesorter-default tr.even > td {
+    background-color: #ffffff; /*Adapted colors to by inline with my style*/
+}
+
 /* Needed to get the filtering working. */
 /* rows hidden by filtering (needed for child rows) */
 .tablesorter .filtered {
