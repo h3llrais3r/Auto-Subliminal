@@ -28,7 +28,7 @@ $(document).ready(function () {
         })
         .tablesorterPager({
             container: $("#wanteditemspager"),
-            output: '{startRow} to {endRow} ({totalRows})'
+            output: '{startRow} to {endRow} ({filteredRows})'
         });
 });
 
@@ -58,7 +58,7 @@ $(document).ready(function () {
         })
         .tablesorterPager({
             container: $("#lastdownloadspager"),
-            output: '{startRow} to {endRow} ({totalRows})'
+            output: '{startRow} to {endRow} ({filteredRows})'
         });
 });
 
