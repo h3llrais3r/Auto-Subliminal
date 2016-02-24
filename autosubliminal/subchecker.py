@@ -23,13 +23,13 @@ log = logging.getLogger(__name__)
 
 class SubChecker(Process):
     """
-    Sub checker. It checks for subtitles of episodes that are in the WANTEDQUEUE.
+    Sub checker. Check for subtitles of episodes and movies that are in the WANTEDQUEUE.
     """
 
     def __init__(self):
         super(SubChecker, self).__init__()
 
-    def run(self):
+    def run(self, force_run):
         log.info("Starting round of subtitle checking")
         to_delete_wanted_queue = []
 
@@ -37,8 +37,9 @@ class SubChecker(Process):
         if not utils.get_wanted_queue_lock():
             return False
 
-        # Show info message
-        utils.add_notification_message("Checking subtitles...")
+        # Show info message (only when run was forced manually)
+        if force_run:
+            utils.add_notification_message("Checking subtitles...")
 
         # Process all items in wanted queue
         for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):

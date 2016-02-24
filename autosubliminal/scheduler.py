@@ -1,3 +1,4 @@
+import abc
 import logging
 import time
 import threading
@@ -49,7 +50,7 @@ class Scheduler(object):
         try:
             self.process.running = True
             log.debug("Running thread process")
-            if self.process.run():
+            if self.process.run(self.force_run):
                 # Update process properties if process has run
                 self.last_run = current_time
                 if self.force_run:
@@ -98,3 +99,7 @@ class Scheduler(object):
 class Process(object):
     def __init__(self):
         self.running = False
+
+    @abc.abstractmethod
+    def run(self, force_run):
+        pass

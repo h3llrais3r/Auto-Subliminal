@@ -14,25 +14,17 @@ log = logging.getLogger(__name__)
 
 class VersionChecker(Process):
     """
-    Version checker.
+    Version checker. Check if you are running the latest version.
     """
 
     def __init__(self):
         super(VersionChecker, self).__init__()
         self.latest = False
 
-    def run(self):
-        return self.check_version()
-
-    def check_version(self):
-        """
-        Check version
-
-        Return values:
-        0 Same version
-        1 New version
-        """
+    def run(self, force_run):
         log.info('Checking version')
+
+        # Getting versions
         try:
             req = urllib2.Request(autosubliminal.VERSIONURL)
             req.add_header("User-agent", autosubliminal.USERAGENT)
@@ -51,10 +43,10 @@ class VersionChecker(Process):
 
         running_version = version.StrictVersion(RELEASE_VERSION)
         online_version = version.StrictVersion(git_version)
-
         log.info('Running version: %s' % running_version)
         log.info('Git version: %s' % online_version)
 
+        # Comparing versions
         if running_version < online_version:
             self.latest = False
             utils.add_notification_message(
@@ -62,6 +54,8 @@ class VersionChecker(Process):
                 "notice", True)
         else:
             self.latest = True
-            utils.add_notification_message("You are running the latest version")
+            # Show info message (only when run was forced manually)
+            if force_run:
+                utils.add_notification_message("You are running the latest version")
 
         return True

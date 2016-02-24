@@ -18,22 +18,23 @@ log = logging.getLogger(__name__)
 
 class DiskScanner(Process):
     """
-    Scan the specified path for episodes and movies with missing subtitles.
+    Disk scanner. Scan the specified path for episodes and movies with missing subtitles.
     If found, add these episodes and movies to the WANTEDQUEUE.
     """
 
     def __init__(self):
         super(DiskScanner, self).__init__()
 
-    def run(self):
+    def run(self, force_run):
         log.info("Starting round of local disk checking at %s" % autosubliminal.VIDEOPATHS)
 
         # Get wanted queue lock
         if not utils.get_wanted_queue_lock():
             return False
 
-        # Show info message
-        utils.add_notification_message("Scanning disk...")
+        # Show info message (only when run was forced manually)
+        if force_run:
+            utils.add_notification_message("Scanning disk...")
 
         # Check if a directory exists to scan
         one_dir_exists = False
