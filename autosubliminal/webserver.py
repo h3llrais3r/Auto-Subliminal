@@ -25,6 +25,7 @@ def redirect_referer(abspath, *args, **kwargs):
     else:
         redirect(abspath)
 
+
 class Home(object):
     def __init__(self):
         pass
@@ -194,7 +195,7 @@ class Config(object):
 
     @cherrypy.expose(alias='saveConfig')
     def save_config(self, path, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, scandisk,
-                    checksub, checkversion, scanembeddedsubs, skiphiddendirs, maxdbresults,
+                    checksub, checkversion, checkversionautoupdate, scanembeddedsubs, skiphiddendirs, maxdbresults,
                     logfile, loglevel, lognum, logsize, loghttpaccess, logreversed, loglevelconsole,
                     webserverip, webserverport, webroot, username, password, launchbrowser,
                     includehearingimpaired, addic7edusername, addic7edpassword, opensubtitlesusername,
@@ -226,6 +227,7 @@ class Config(object):
         autosubliminal.SCHEDULERSCANDISK = int(scandisk)
         autosubliminal.SCHEDULERCHECKSUB = int(checksub)
         autosubliminal.SCHEDULERCHECKVERSION = int(checkversion)
+        autosubliminal.CHECKVERSIONAUTOUPDATE = checkversionautoupdate
         autosubliminal.SCANEMBEDDEDSUBS = scanembeddedsubs
         autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
         autosubliminal.MAXDBRESULTS = int(maxdbresults)
@@ -370,6 +372,11 @@ class Config(object):
     @cherrypy.expose(alias='checkVersion')
     def check_version(self):
         autosubliminal.CHECKVERSION.run()
+        redirect_referer("/home")
+
+    @cherrypy.expose(alias='updateVersion')
+    def update_version(self):
+        autosubliminal.CHECKVERSION.process.update()
         redirect_referer("/home")
 
     @cherrypy.expose(alias='testNotify')

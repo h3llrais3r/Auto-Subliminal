@@ -91,6 +91,11 @@ def read_config():
         else:
             autosubliminal.SCHEDULERCHECKVERSION = 43200  # Run every 12 hours
 
+        if cfg.has_option("config", "checkversionautoupdate"):
+            autosubliminal.CHECKVERSIONAUTOUPDATE = cfg.getboolean("config", "checkversionautoupdate")
+        else:
+            autosubliminal.CHECKVERSIONAUTOUPDATE = False
+
         if cfg.has_option("config", "scanembeddedsubs"):
             autosubliminal.SCANEMBEDDEDSUBS = cfg.getboolean("config", "scanembeddedsubs")
         else:
@@ -125,6 +130,7 @@ def read_config():
         autosubliminal.SCHEDULERSCANDISK = 3600
         autosubliminal.SCHEDULERCHECKSUB = 86400
         autosubliminal.SCHEDULERCHECKVERSION = 43200
+        autosubliminal.CHECKVERSIONAUTOUPDATE = False
         autosubliminal.SCANEMBEDDEDSUBS = False
         autosubliminal.SKIPHIDDENDIRS = False
         autosubliminal.MAXDBRESULTS = 0
@@ -850,6 +856,7 @@ def save_config_section():
     cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
     cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
     cfg.set(section, "checkversion", str(autosubliminal.SCHEDULERCHECKVERSION))
+    cfg.set(section, "checkversionautoupdate", str(autosubliminal.CHECKVERSIONAUTOUPDATE))
     cfg.set(section, "scanembeddedsubs", str(autosubliminal.SCANEMBEDDEDSUBS))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
     cfg.set(section, "maxdbresults", str(autosubliminal.MAXDBRESULTS))
