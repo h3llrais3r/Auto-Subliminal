@@ -161,14 +161,15 @@ class GitUpdater(BaseUpdater):
 
         # Get number of commits ahead and behind (option --count not supported git < 1.7.2)
         try:
-            self.num_commits_ahead, self.num_commits_behind = self.repo.git.execute(
-                'git rev-list --count --left-right HEAD...@{upstream}').split('\t')
+            ahead, behind = self.repo.git.execute('git rev-list --count --left-right HEAD...@{upstream}').split('\t')
+            self.num_commits_ahead = int(ahead)
+            self.num_commits_behind = int(behind)
         except:
             # Count it ourselves when option --count is not supported
             try:
                 output = self.repo.git.execute('git rev-list --left-right HEAD...@{upstream}')
-                self.num_commits_ahead = output.count('<')
-                self.num_commits_behind = output.count('>')
+                self.num_commits_ahead = int(output.count('<'))
+                self.num_commits_behind = int(output.count('>'))
             except:
                 log.error("Could not get the difference in commits between local and remote branch")
                 return False
