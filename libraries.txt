@@ -12,6 +12,7 @@ dogpile.cache=0.5.6
 dogpile.core=0.4.1
 enzyme=0.4.1
 gitpython=1.0.2
+gitdb=0.6.4
 growl=0.5
 guessit=1.0.2
 html5lib=0.999
