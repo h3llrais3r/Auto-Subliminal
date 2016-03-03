@@ -198,7 +198,7 @@ class GitUpdater(BaseUpdater):
         return True
 
     def update(self):
-        if self.num_commits_behind > 0:
+        if self.update_allowed:
             try:
                 self.repo.remote(name='origin').pull()
                 log.info("Updated to the latest version")
