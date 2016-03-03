@@ -137,6 +137,7 @@ def stop(exit_app=True):
     # Stop threads
     autosubliminal.SCANDISK.stop()
     autosubliminal.CHECKSUB.stop()
+    autosubliminal.CHECKVERSION.stop()
 
     # Stop cherrypy server
     log.info("Stopping CherryPy webserver")
