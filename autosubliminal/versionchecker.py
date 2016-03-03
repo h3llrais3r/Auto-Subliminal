@@ -1,6 +1,7 @@
 import abc
 import logging
 import re
+import threading
 import traceback
 import urllib2
 
@@ -35,9 +36,10 @@ class VersionChecker(Process):
     def run(self, force_run):
         log.info("Checking version")
         self.updater.check_version(force_run)
-        # Only update when: no force run, update is allowed and auto update is enabled
+        # Only update and restart when: no force run, update is allowed and auto update is enabled
         if not force_run and self.updater.update_allowed and autosubliminal.CHECKVERSIONAUTOUPDATE:
             self.updater.update()
+            threading.Thread(target=autosubliminal.runner.restart).start()
         # Always return 'True' because we don't want to retry it until the next scheduled run
         return True
 

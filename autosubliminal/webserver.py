@@ -377,7 +377,7 @@ class Config(object):
     @cherrypy.expose(alias='updateVersion')
     def update_version(self):
         autosubliminal.CHECKVERSION.process.update()
-        redirect_referer("/home")
+        redirect("/system/restart")
 
     @cherrypy.expose(alias='testNotify')
     def test_notify(self, notifylib):
