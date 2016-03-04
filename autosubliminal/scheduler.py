@@ -83,24 +83,24 @@ class Scheduler(object):
 
     def _start_thread(self):
         self._thread.start()
-        # Add thread to list of threads
-        thread_name = self.name
-        while thread_name in autosubliminal.THREADS.keys():
-            # Add suffix in case of multiple threads with same name (but this shouldn't occur)
+        # Add scheduler to list of schedulers
+        scheduler_name = self.name
+        while scheduler_name in autosubliminal.SCHEDULERS.keys():
+            # Add suffix in case of multiple schedulers with same name (but this shouldn't occur)
             suffix = 1
-            suffix_index = thread_name.rfind('-')
+            suffix_index = scheduler_name.rfind('-')
             if suffix_index > 0:
-                thread_name_suffix = thread_name[suffix_index + 1:]
+                thread_name_suffix = scheduler_name[suffix_index + 1:]
                 try:
                     suffix = int(thread_name_suffix)
                     suffix += 1
-                    thread_name = thread_name[:suffix_index] + "-" + str(suffix)
+                    scheduler_name = scheduler_name[:suffix_index] + "-" + str(suffix)
                 except:
-                    thread_name = thread_name + "-" + str(suffix)
+                    scheduler_name = scheduler_name + "-" + str(suffix)
             else:
-                thread_name = thread_name + "-" + str(suffix)
-        self.name = thread_name
-        autosubliminal.THREADS[thread_name] = self
+                scheduler_name = scheduler_name + "-" + str(suffix)
+        self.name = scheduler_name
+        autosubliminal.SCHEDULERS[scheduler_name] = self
 
     def stop(self):
         log.info("Stopping thread %s" % self.name)

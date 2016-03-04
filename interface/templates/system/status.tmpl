@@ -29,11 +29,11 @@
                 </thead>
 
                 <tbody>
-                #for $item in $autosubliminal.THREADS.values()
+                #for $scheduler in $autosubliminal.SCHEDULERS.values()
                 <tr>
-                    <td class="main-column">$item.name</td>
-                    <td>$print_timestamp($item.last_run)</td>
-                    <td>$item.running</td>
+                    <td class="main-column">$scheduler.name</td>
+                    <td>$print_timestamp($scheduler.last_run)</td>
+                    <td>$scheduler.running</td>
                 </tr>
                 #end for
                 </tbody>
