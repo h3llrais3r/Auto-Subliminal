@@ -12,3 +12,13 @@ class Choices(object):
 
     def list(self):
         return [Choices.DISABLED, Choices.ENABLED]
+
+
+class InstallModes(object):
+    """
+    InstallModes. Currently limited to SOURCE or GIT.
+    """
+    InstallMode = namedtuple('InstallMode', ['mode'])
+
+    SOURCE = InstallMode('SOURCE')
+    GIT = InstallMode('GIT')

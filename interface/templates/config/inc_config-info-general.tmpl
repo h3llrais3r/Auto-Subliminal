@@ -3,6 +3,7 @@
 
 #import autosubliminal
 #from autosubliminal import version
+#from autosubliminal.enums import InstallModes
 
 <div class="form-horizontal">
 
@@ -13,9 +14,16 @@
     </div>
 
     <div class="form-group narrow">
-        <span class="col-xs-4 col-md-2"><label>Auto-Subliminal version</label></span>
+        <span class="col-xs-4 col-md-2"><label>Version</label></span>
         <span class="col-xs-8 col-md-10 wrapped">$version.RELEASE_VERSION</span>
     </div>
+
+    #if $autosubliminal.CHECKVERSION.process.install_mode == InstallModes.GIT:
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Git version</label></span>
+        <span class="col-xs-8 col-md-10 wrapped">$autosubliminal.CHECKVERSION.process.get_current_version()</span>
+    </div>
+    #end if
 
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-2"><label>Python version</label></span>
