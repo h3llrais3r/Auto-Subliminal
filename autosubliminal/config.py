@@ -72,24 +72,24 @@ def read_config():
             autosubliminal.ADDITIONALLANGUAGES = []
 
         if cfg.has_option('config', 'scandisk'):
-            autosubliminal.SCHEDULERSCANDISK = cfg.getint('config', 'scandisk')
+            autosubliminal.SCANDISKINTERVAL = cfg.getint('config', 'scandisk')
         else:
-            autosubliminal.SCHEDULERSCANDISK = 3600  # Run every hour
+            autosubliminal.SCANDISKINTERVAL = 3600  # Run every hour
 
         if cfg.has_option('config', 'checksub'):
-            autosubliminal.SCHEDULERCHECKSUB = cfg.getint('config', 'checksub')
+            autosubliminal.CHECKSUBINTERVAL = cfg.getint('config', 'checksub')
             # CHECKSUB may only be runed 6 times a day, to prevent the API key from being banned
             # If you want new subtitles faster, you should decrease the CHECKSUB time
-            if autosubliminal.SCHEDULERCHECKSUB < 21600:
+            if autosubliminal.CHECKSUBINTERVAL < 21600:
                 print "WARNING: checksub variable is lower then 21600. This is not allowed, this is to prevent our API-key from being banned."
-                autosubliminal.SCHEDULERCHECKSUB = 21600  # Run every 6 hours
+                autosubliminal.CHECKSUBINTERVAL = 21600  # Run every 6 hours
         else:
-            autosubliminal.SCHEDULERCHECKSUB = 86400  # Run every 24 hours
+            autosubliminal.CHECKSUBINTERVAL = 86400  # Run every 24 hours
 
         if cfg.has_option('config', 'checkversion'):
-            autosubliminal.SCHEDULERCHECKVERSION = cfg.getint('config', 'checkversion')
+            autosubliminal.CHECKVERSIONINTERVAL = cfg.getint('config', 'checkversion')
         else:
-            autosubliminal.SCHEDULERCHECKVERSION = 43200  # Run every 12 hours
+            autosubliminal.CHECKVERSIONINTERVAL = 43200  # Run every 12 hours
 
         if cfg.has_option("config", "checkversionautoupdate"):
             autosubliminal.CHECKVERSIONAUTOUPDATE = cfg.getboolean("config", "checkversionautoupdate")
@@ -127,9 +127,9 @@ def read_config():
         autosubliminal.DEFAULTLANGUAGE = u"en"
         autosubliminal.DEFAULTLANGUAGESUFFIX = False
         autosubliminal.ADDITIONALLANGUAGES = []
-        autosubliminal.SCHEDULERSCANDISK = 3600
-        autosubliminal.SCHEDULERCHECKSUB = 86400
-        autosubliminal.SCHEDULERCHECKVERSION = 43200
+        autosubliminal.SCANDISKINTERVAL = 3600
+        autosubliminal.CHECKSUBINTERVAL = 86400
+        autosubliminal.CHECKVERSIONINTERVAL = 43200
         autosubliminal.CHECKVERSIONAUTOUPDATE = False
         autosubliminal.SCANEMBEDDEDSUBS = False
         autosubliminal.SKIPHIDDENDIRS = False
@@ -853,9 +853,9 @@ def save_config_section():
     cfg.set(section, "defaultlanguage", autosubliminal.DEFAULTLANGUAGE)
     cfg.set(section, "defaultlanguagesuffix", str(autosubliminal.DEFAULTLANGUAGESUFFIX))
     cfg.set(section, "additionallanguages", str(additionallanguages))
-    cfg.set(section, "scandisk", str(autosubliminal.SCHEDULERSCANDISK))
-    cfg.set(section, "checksub", str(autosubliminal.SCHEDULERCHECKSUB))
-    cfg.set(section, "checkversion", str(autosubliminal.SCHEDULERCHECKVERSION))
+    cfg.set(section, "scandisk", str(autosubliminal.SCANDISKINTERVAL))
+    cfg.set(section, "checksub", str(autosubliminal.CHECKSUBINTERVAL))
+    cfg.set(section, "checkversion", str(autosubliminal.CHECKVERSIONINTERVAL))
     cfg.set(section, "checkversionautoupdate", str(autosubliminal.CHECKVERSIONAUTOUPDATE))
     cfg.set(section, "scanembeddedsubs", str(autosubliminal.SCANEMBEDDEDSUBS))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
@@ -1171,9 +1171,9 @@ def check_for_restart():
         pass
 
     # Set the default values
-    schedulerscandisk = 3600
-    schedulerchecksub = 86400
-    schedulercheckversion = 43200
+    SCANDISKINTERVAL = 3600
+    CHECKSUBINTERVAL = 86400
+    CHECKVERSIONINTERVAL = 43200
     loglevel = logging.INFO
     loglevelconsole = logging.ERROR
     logsize = 1000000
@@ -1188,13 +1188,13 @@ def check_for_restart():
     # Check if an option excists in the config file, if so replace the default value
     if cfg.has_section('config'):
         if cfg.has_option('config', 'scandisk'):
-            schedulerscandisk = cfg.getint('config', 'scandisk')
+            SCANDISKINTERVAL = cfg.getint('config', 'scandisk')
 
         if cfg.has_option('config', 'checksub'):
-            schedulerchecksub = cfg.getint('config', 'checksub')
+            CHECKSUBINTERVAL = cfg.getint('config', 'checksub')
 
         if cfg.has_option('config', 'checkversion'):
-            schedulercheckversion = cfg.getint('config', 'checkversion')
+            CHECKVERSIONINTERVAL = cfg.getint('config', 'checkversion')
 
     if cfg.has_section('logfile'):
         if cfg.has_option("logfile", "logfile"):
@@ -1246,9 +1246,9 @@ def check_for_restart():
             password = cfg.get('webserver', 'password')
 
     # Now compare the values, if one differs a restart is required.
-    if schedulerscandisk != autosubliminal.SCHEDULERSCANDISK \
-            or schedulerchecksub != autosubliminal.SCHEDULERCHECKSUB \
-            or schedulercheckversion != autosubliminal.SCHEDULERCHECKVERSION \
+    if SCANDISKINTERVAL != autosubliminal.SCANDISKINTERVAL \
+            or CHECKSUBINTERVAL != autosubliminal.CHECKSUBINTERVAL \
+            or CHECKVERSIONINTERVAL != autosubliminal.CHECKVERSIONINTERVAL \
             or loglevel != autosubliminal.LOGLEVEL \
             or logsize != autosubliminal.LOGSIZE \
             or lognum != autosubliminal.LOGNUM \

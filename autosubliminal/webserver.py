@@ -224,9 +224,9 @@ class Config(object):
         autosubliminal.DEFAULTLANGUAGE = defaultlanguage
         autosubliminal.DEFAULTLANGUAGESUFFIX = defaultlanguagesuffix
         autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split(',')
-        autosubliminal.SCHEDULERSCANDISK = int(scandisk)
-        autosubliminal.SCHEDULERCHECKSUB = int(checksub)
-        autosubliminal.SCHEDULERCHECKVERSION = int(checkversion)
+        autosubliminal.SCANDISKINTERVAL = int(scandisk)
+        autosubliminal.CHECKSUBINTERVAL = int(checksub)
+        autosubliminal.CHECKVERSIONINTERVAL = int(checkversion)
         autosubliminal.CHECKVERSIONAUTOUPDATE = checkversionautoupdate
         autosubliminal.SCANEMBEDDEDSUBS = scanembeddedsubs
         autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
