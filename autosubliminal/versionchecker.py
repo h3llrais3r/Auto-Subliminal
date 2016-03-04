@@ -18,67 +18,75 @@ log = logging.getLogger(__name__)
 
 class VersionChecker(Process):
     """
-    Version checker. Check if you are running the latest version.
+    Version checker. Check the running version and update if needed.
     """
 
     def __init__(self):
         super(VersionChecker, self).__init__()
-        self._set_updater()
+        self._set_version_manager()
 
-    def _set_updater(self):
+    def _set_version_manager(self):
         try:
             Repo(autosubliminal.PATH)
-            self.updater = GitUpdater()
+            self.manager = GitVersionManager()
         except:
             log.debug("Could not initialize git, falling back to source version check")
-            self.updater = SourceUpdater()
+            self.manager = SourceVersionManager()
 
     def run(self, force_run):
         log.info("Checking version")
-        self.updater.check_version(force_run)
+        self.manager.check_version(force_run)
         # Only update and restart when: no force run, update is allowed and auto update is enabled
-        if not force_run and self.updater.update_allowed and autosubliminal.CHECKVERSIONAUTOUPDATE:
-            self.updater.update()
+        if not force_run and self.manager.update_allowed and autosubliminal.CHECKVERSIONAUTOUPDATE:
+            self.manager.update_version()
             threading.Thread(target=autosubliminal.runner.restart).start()
         # Always return 'True' because we don't want to retry it until the next scheduled run
         return True
 
     def update(self):
         log.info("Updating version")
-        self.updater.update()
+        self.manager.update_version()
 
 
-class BaseUpdater(object):
+class BaseVersionManager(object):
     """
-    Base class for all updater classes.
+    Base class for all version manager classes.
     """
 
     def __init__(self):
         self.update_allowed = False
 
     @abc.abstractmethod
+    def get_current_version(self):
+        pass
+
+    @abc.abstractmethod
     def check_version(self, force_run=False):
         pass
 
     @abc.abstractmethod
-    def update(self):
+    def update_version(self):
         pass
 
 
-class SourceUpdater(BaseUpdater):
+class SourceVersionManager(BaseVersionManager):
     """
-    Source updater. Used when you have installed the application from source by downloading it manually from Github.
+    Source version manager. Used when you have installed from source by downloading it manually from Github.
     """
 
     def __init__(self):
-        super(SourceUpdater, self).__init__()
+        super(SourceVersionManager, self).__init__()
+        self.current_version = version.StrictVersion(RELEASE_VERSION)
+
+    def get_current_version(self):
+        return self.current_version
 
     def check_version(self, force_run=False):
         # Reset update_allowed flag
         self.update_allowed = False
 
         # Local version
-        local_version = version.StrictVersion(RELEASE_VERSION)
+        local_version = self.current_version
         log.debug("Local version: %s" % local_version)
 
         # Remote github version
@@ -119,41 +127,40 @@ class SourceUpdater(BaseUpdater):
 
         return True
 
-    def update(self):
+    def update_version(self):
         log.info("Update version not supported")
 
 
-class GitUpdater(BaseUpdater):
+class GitVersionManager(BaseVersionManager):
     """
-    Git updater. Used when you have installed the application from source via Git scm.
+    Git version manager. Used when you have installed from source via Git scm.
     """
 
     def __init__(self):
-        super(GitUpdater, self).__init__()
+        super(GitVersionManager, self).__init__()
         self.repo = Repo(autosubliminal.PATH)
-        self.branch = self.repo.active_branch
+        self.current_branch = self.repo.active_branch
+        self.current_commit = self.repo.head.commit
         self.num_commits_ahead = 0
         self.num_commits_behind = 0
+
+    def get_current_version(self):
+        return self.current_commit
 
     def check_version(self, force_run=False):
         # Reset update_allowed flag
         self.update_allowed = False
 
         # Local git version
-        try:
-            local_commit = self.repo.head.commit
-            log.debug("Local branch: %s" % self.branch)
-            log.debug("Local commit: %s" % local_commit)
-            if self.repo.is_dirty():
-                log.warning("Local branch is dirty")
-        except:
-            log.error("Could not get local git version")
-            return False
+        log.debug("Local branch: %s" % self.current_branch)
+        log.debug("Local commit: %s" % self.current_commit)
+        if self.repo.is_dirty():
+            log.warning("Local branch is dirty")
 
         # Remote git version
         try:
             remote_url = self.repo.remote(name='origin').url
-            remote_fetch_info = self.repo.remote().fetch(refspec=self.branch)[0]  # Only fetch current branch
+            remote_fetch_info = self.repo.remote().fetch(refspec=self.current_branch)[0]  # Only fetch current branch
             remote_commit = remote_fetch_info.commit
             log.debug("Remote url: %s" % remote_url)
             log.debug("Remote commit: %s" % remote_commit)
@@ -197,7 +204,7 @@ class GitUpdater(BaseUpdater):
 
         return True
 
-    def update(self):
+    def update_version(self):
         if self.update_allowed:
             try:
                 self.repo.remote(name='origin').pull()
