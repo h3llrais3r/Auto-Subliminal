@@ -313,14 +313,14 @@ def print_timestamp(time_float, format='%d-%m-%Y %H:%M:%S', default_value='N/A')
 
 
 def print_next_scheduler_run(scheduler):
-    if scheduler.process.running:
+    if scheduler.running:
         return "Running..."
     else:
         return print_timestamp(scheduler.interval - (time.time() - scheduler.last_run), '%H:%M:%S')
 
 
 def get_next_scheduler_run_in_ms(scheduler):
-    if scheduler.process.running:
+    if scheduler.running:
         return 0
     else:
         return (scheduler.last_run + scheduler.interval) * 1000
