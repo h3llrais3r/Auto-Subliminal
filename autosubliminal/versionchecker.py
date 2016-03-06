@@ -10,7 +10,7 @@ from git import Repo
 
 import autosubliminal
 from autosubliminal import utils
-from autosubliminal.enums import InstallMode
+from autosubliminal.enums import InstallType
 from autosubliminal.scheduler import Process
 from autosubliminal.version import RELEASE_VERSION
 
@@ -27,11 +27,11 @@ class VersionChecker(Process):
         try:
             Repo(autosubliminal.PATH)
             self.manager = GitVersionManager()
-            self.install_mode = InstallMode.GIT
+            self.install_type = InstallType.GIT
         except:
             log.debug("Could not initialize git, falling back to source version check")
             self.manager = SourceVersionManager()
-            self.install_mode = InstallMode.SOURCE
+            self.install_type = InstallType.SOURCE
 
     def run(self, force_run):
         log.info("Checking version")
@@ -50,9 +50,6 @@ class VersionChecker(Process):
     def get_current_version(self):
         # Get string representation of current version
         return str(self.manager.get_current_version())
-
-    def get_install_mode(self):
-        return self.install_mode
 
 
 class BaseVersionManager(object):

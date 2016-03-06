@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class InstallMode(Enum):
+class InstallType(Enum):
     """
     Install mode enum.
     """
