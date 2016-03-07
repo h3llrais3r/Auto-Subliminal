@@ -5,6 +5,11 @@
 #from autosubliminal import version
 #from autosubliminal.enums import InstallType
 
+#set current_branch = $autosubliminal.CHECKVERSION.process.get_current_branch()
+#set current_branch_url = $autosubliminal.CHECKVERSION.process.get_current_branch_url()
+#set current_version = $autosubliminal.CHECKVERSION.process.get_current_version()
+#set current_version_url = $autosubliminal.CHECKVERSION.process.get_current_version_url()
+
 <div class="form-horizontal">
 
     <div class="form-group section-title">
@@ -13,15 +18,42 @@
         </div>
     </div>
 
+
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-2"><label>Version</label></span>
-        <span class="col-xs-8 col-md-10 wrapped">$version.RELEASE_VERSION</span>
+        <span class="col-xs-8 col-md-10 wrapped">
+            #if $autosubliminal.CHECKVERSION.process.install_type == InstallType.SOURCE:
+            #if $current_version_url:
+            <a href="$current_version_url" target="_blank">$current_version</a>
+            #else
+            $current_version
+            #end if
+            #else
+            $version.RELEASE_VERSION
+            #end if
+        </span>
     </div>
 
     #if $autosubliminal.CHECKVERSION.process.install_type == InstallType.GIT:
     <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>Git branch</label></span>
+        <span class="col-xs-8 col-md-10 wrapped">
+            #if $current_branch_url:
+            <a href="$current_branch_url" target="_blank">$current_branch</a>
+            #else
+            $current_branch
+            #end if
+        </span>
+    </div>
+    <div class="form-group narrow">
         <span class="col-xs-4 col-md-2"><label>Git version</label></span>
-        <span class="col-xs-8 col-md-10 wrapped">$autosubliminal.CHECKVERSION.process.get_current_version()</span>
+        <span class="col-xs-8 col-md-10 wrapped">
+            #if $current_version_url:
+            <a href="$current_version_url" target="_blank">$current_version</a>
+            #else
+            $current_version
+            #end if
+        </span>
     </div>
     #end if
 

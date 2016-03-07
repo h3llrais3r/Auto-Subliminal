@@ -47,9 +47,18 @@ class VersionChecker(Process):
         log.info("Updating version")
         self.manager.update_version()
 
+    def get_current_branch(self):
+        return str(self.manager.get_current_branch())
+
+    def get_current_branch_url(self):
+        return self.manager.get_current_branch_url()
+
     def get_current_version(self):
         # Get string representation of current version
         return str(self.manager.get_current_version())
+
+    def get_current_version_url(self):
+        return self.manager.get_current_version_url()
 
 
 class BaseVersionManager(object):
@@ -61,7 +70,19 @@ class BaseVersionManager(object):
         self.update_allowed = False
 
     @abc.abstractmethod
+    def get_current_branch(self):
+        pass
+
+    @abc.abstractmethod
+    def get_current_branch_url(self):
+        pass
+
+    @abc.abstractmethod
     def get_current_version(self):
+        pass
+
+    @abc.abstractmethod
+    def get_current_version_url(self):
         pass
 
     @abc.abstractmethod
@@ -80,17 +101,26 @@ class SourceVersionManager(BaseVersionManager):
 
     def __init__(self):
         super(SourceVersionManager, self).__init__()
-        self.current_version = version.StrictVersion(RELEASE_VERSION)
+        self.current_strict_version = version.StrictVersion(RELEASE_VERSION)
+
+    def get_current_branch(self):
+        return "master"
+
+    def get_current_branch_url(self):
+        return autosubliminal.GITHUBURL + "/tree/" + self.get_current_branch()
 
     def get_current_version(self):
-        return self.current_version
+        return RELEASE_VERSION
+
+    def get_current_version_url(self):
+        return autosubliminal.GITHUBURL + "/releases/tag/" + self.get_current_version()
 
     def check_version(self, force_run=False):
         # Reset update_allowed flag
         self.update_allowed = False
 
         # Local version
-        local_version = self.current_version
+        local_version = self.current_strict_version
         log.debug("Local version: %s" % local_version)
 
         # Remote github version
@@ -148,8 +178,17 @@ class GitVersionManager(BaseVersionManager):
         self.num_commits_ahead = 0
         self.num_commits_behind = 0
 
+    def get_current_branch(self):
+        return self.current_branch
+
+    def get_current_branch_url(self):
+        return autosubliminal.GITHUBURL + "/tree/" + str(self.get_current_branch())
+
     def get_current_version(self):
         return self.current_commit
+
+    def get_current_version_url(self):
+        return autosubliminal.GITHUBURL + "/commit/" + str(self.get_current_version())
 
     def check_version(self, force_run=False):
         # Reset update_allowed flag
