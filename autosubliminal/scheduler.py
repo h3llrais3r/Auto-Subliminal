@@ -35,16 +35,38 @@ class Scheduler(object):
         self._delay = 0
         self._force_run = False
         self._force_stop = False
-        self._thread = threading.Thread(target=self._start_scheduler, name=self.name)
+        # Register scheduler
+        self._register_scheduler()
         # Run before starting thread will block caller thread until process is executed the first time
         if initial_run:
             log.debug("Starting initial run before starting thread %s" % self.name)
             self._run_process(time.time())
         # Start thread
         log.info("Starting thread %s" % self.name)
-        self._start_thread()
+        self._thread = threading.Thread(target=self._schedule_process, name=self.name)
+        self._thread.start()
 
-    def _start_scheduler(self):
+    def _register_scheduler(self):
+        # Add scheduler to dict of schedulers
+        scheduler_name = self.name
+        while scheduler_name in autosubliminal.SCHEDULERS.keys():
+            # Add suffix in case of multiple schedulers with same name (but this shouldn't occur)
+            suffix = 1
+            suffix_index = scheduler_name.rfind('-')
+            if suffix_index > 0:
+                thread_name_suffix = scheduler_name[suffix_index + 1:]
+                try:
+                    suffix = int(thread_name_suffix)
+                    suffix += 1
+                    scheduler_name = scheduler_name[:suffix_index] + "-" + str(suffix)
+                except:
+                    scheduler_name = scheduler_name + "-" + str(suffix)
+            else:
+                scheduler_name = scheduler_name + "-" + str(suffix)
+        self.name = scheduler_name
+        autosubliminal.SCHEDULERS[scheduler_name] = self
+
+    def _schedule_process(self):
         while True:
             # Check for stop
             if self._force_stop:
@@ -65,7 +87,7 @@ class Scheduler(object):
 
     def _run_process(self, current_time):
         try:
-            self.process._running = True
+            self.process.running = True
             log.debug("Running thread process")
             if self.process.run(self._force_run):
                 # Update process properties if process has run
@@ -76,31 +98,10 @@ class Scheduler(object):
             else:
                 # increase delay with 1 second each time the process cannot yet run
                 self._delay += 1
-            self.process._running = False
+            self.process.running = False
         except:
             print traceback.format_exc()
             os._exit(1)
-
-    def _start_thread(self):
-        self._thread.start()
-        # Add scheduler to dict of schedulers
-        scheduler_name = self.name
-        while scheduler_name in autosubliminal.SCHEDULERS.keys():
-            # Add suffix in case of multiple schedulers with same name (but this shouldn't occur)
-            suffix = 1
-            suffix_index = scheduler_name.rfind('-')
-            if suffix_index > 0:
-                thread_name_suffix = scheduler_name[suffix_index + 1:]
-                try:
-                    suffix = int(thread_name_suffix)
-                    suffix += 1
-                    scheduler_name = scheduler_name[:suffix_index] + "-" + str(suffix)
-                except:
-                    scheduler_name = scheduler_name + "-" + str(suffix)
-            else:
-                scheduler_name = scheduler_name + "-" + str(suffix)
-        self.name = scheduler_name
-        autosubliminal.SCHEDULERS[scheduler_name] = self
 
     def stop(self):
         log.info("Stopping thread %s" % self.name)
