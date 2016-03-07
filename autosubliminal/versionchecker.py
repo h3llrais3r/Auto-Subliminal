@@ -35,16 +35,32 @@ class VersionChecker(Process):
 
     def run(self, force_run):
         log.info("Checking version")
+
+        # Block version check (and update) in no force run mode when another process is using the wanted queue
+        # We do not want to auto update the version while the application is busy with another process
+        if not force_run and not utils.get_wanted_queue_lock():
+            return False
+
+        # Check version
         self.manager.check_version(force_run)
+
         # Only update and restart when: no force run, update is allowed and auto update is enabled
         if not force_run and self.manager.update_allowed and autosubliminal.CHECKVERSIONAUTOUPDATE:
-            self.manager.update_version()
+            self.update()
             threading.Thread(target=autosubliminal.runner.restart).start()
+
         # Always return 'True' because we don't want to retry it until the next scheduled run
         return True
 
     def update(self):
         log.info("Updating version")
+
+        # Block update when another process is using the wanted queue
+        # We do not want to update the version while the application is busy with another process
+        if not utils.get_wanted_queue_lock():
+            return False
+
+        # Update version
         self.manager.update_version()
 
     def get_current_branch(self):
