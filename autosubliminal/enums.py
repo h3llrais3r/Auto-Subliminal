@@ -3,7 +3,7 @@ from enum import Enum
 
 class InstallType(Enum):
     """
-    Install mode enum.
+    Install type enum.
     """
     SOURCE = 1
     GIT = 2

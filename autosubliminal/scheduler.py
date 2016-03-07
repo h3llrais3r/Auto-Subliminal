@@ -83,7 +83,7 @@ class Scheduler(object):
 
     def _start_thread(self):
         self._thread.start()
-        # Add scheduler to list of schedulers
+        # Add scheduler to dict of schedulers
         scheduler_name = self.name
         while scheduler_name in autosubliminal.SCHEDULERS.keys():
             # Add suffix in case of multiple schedulers with same name (but this shouldn't occur)
