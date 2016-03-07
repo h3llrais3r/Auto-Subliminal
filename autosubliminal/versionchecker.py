@@ -49,6 +49,9 @@ class VersionChecker(Process):
             self.update()
             threading.Thread(target=autosubliminal.runner.restart).start()
 
+        # Release wanted queue lock
+        utils.release_wanted_queue_lock()
+
         # Always return 'True' because we don't want to retry it until the next scheduled run
         return True
 
