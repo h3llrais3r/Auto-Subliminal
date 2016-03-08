@@ -14,19 +14,14 @@ class Scheduler(object):
     """
     Scheduler class.
 
-    :param name: Name of the scheduler
+    :param name: Name of the thread to schedule
     :type name: str
     :param process: process to schedule 
-    :type process: Process
-    :param interval: interval in seconds between schedules
+    :type process: ScheduledProcess
+    :param interval: interval in seconds between scheduled runs
     :type interval: int
     :param initial_run: indicates if the process should run initially before starting the thread
     :type initial_run: bool
-    :type last_run: int
-    :type _delay: int
-    :type _force_run: bool
-    :type _force_stop: bool
-    :type _thread: threading.Thread
     """
 
     def __init__(self, name, process, interval, initial_run=False):
@@ -37,12 +32,15 @@ class Scheduler(object):
         self._delay = 0
         self._force_run = False
         self._force_stop = False
+
         # Register scheduler
         self._register_scheduler()
+
         # Run before starting thread will block caller thread until process is executed the first time
         if initial_run:
             log.debug("Starting initial run before starting thread %s" % self.name)
             self._run_process(time.time())
+
         # Start thread
         log.info("Starting thread %s" % self.name)
         self._thread = threading.Thread(target=self._schedule_process, name=self.name)
@@ -56,9 +54,9 @@ class Scheduler(object):
             suffix = 1
             suffix_index = scheduler_name.rfind('-')
             if suffix_index > 0:
-                thread_name_suffix = scheduler_name[suffix_index + 1:]
+                scheduler_name_suffix = scheduler_name[suffix_index + 1:]
                 try:
-                    suffix = int(thread_name_suffix)
+                    suffix = int(scheduler_name_suffix)
                     suffix += 1
                     scheduler_name = scheduler_name[:suffix_index] + "-" + str(suffix)
                 except:
@@ -73,6 +71,7 @@ class Scheduler(object):
             # Check for stop
             if self._force_stop:
                 break
+
             # Check if we need to run the process
             run_needed = False
             current_time = time.time()
@@ -83,8 +82,11 @@ class Scheduler(object):
                     time.sleep(self._delay)
             if current_time - self.last_run > self.interval:
                 run_needed = True
+
+            # Run if needed
             if run_needed:
                 self._run_process(current_time)
+
             time.sleep(1)
 
     def _run_process(self, current_time):
@@ -120,9 +122,9 @@ class Scheduler(object):
         return self.process.running
 
 
-class Process(object):
+class ScheduledProcess(object):
     """
-    Base class for all scheduler processes.
+    Base class for all scheduled processes.
     """
     __metaclass__ = abc.ABCMeta
 

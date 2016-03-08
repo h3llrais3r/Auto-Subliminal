@@ -11,12 +11,12 @@ import subliminal
 
 import autosubliminal
 from autosubliminal import utils, fileprocessor
-from autosubliminal.scheduler import Process
+from autosubliminal.scheduler import ScheduledProcess
 
 log = logging.getLogger(__name__)
 
 
-class DiskScanner(Process):
+class DiskScanner(ScheduledProcess):
     """
     Disk scanner. Scan the specified path for episodes and movies with missing subtitles.
     If found, add these episodes and movies to the WANTEDQUEUE.

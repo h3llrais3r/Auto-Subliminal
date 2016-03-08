@@ -11,13 +11,13 @@ from git import Repo
 import autosubliminal
 from autosubliminal import utils
 from autosubliminal.enums import InstallType
-from autosubliminal.scheduler import Process
+from autosubliminal.scheduler import ScheduledProcess
 from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
 
 
-class VersionChecker(Process):
+class VersionChecker(ScheduledProcess):
     """
     Version checker. Check the running version and update if needed.
     """
