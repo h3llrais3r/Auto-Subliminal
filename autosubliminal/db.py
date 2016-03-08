@@ -17,15 +17,15 @@ def dict_factory(cursor, row):
 
 class TvdbIdCache(object):
     def __init__(self):
-        self.query_get_id = "select tvdb_id from tvdb_id_cache where show_name = ?"
-        self.query_set_id = "insert into tvdb_id_cache values (?,?)"
-        self.query_flush_cache = "delete from tvdb_id_cache"
+        self._query_get_id = "select tvdb_id from tvdb_id_cache where show_name = ?"
+        self._query_set_id = "insert into tvdb_id_cache values (?,?)"
+        self._query_flush_cache = "delete from tvdb_id_cache"
 
     def get_id(self, show_name):
         tvdb_id = None
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self.query_get_id, [show_name.upper()])
+        cursor.execute(self._query_get_id, [show_name.upper()])
         for row in cursor:
             tvdb_id = row[0]
         connection.close()
@@ -35,29 +35,29 @@ class TvdbIdCache(object):
     def set_id(self, tvdb_id, show_name):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self.query_set_id, [tvdb_id, show_name.upper()])
+        cursor.execute(self._query_set_id, [tvdb_id, show_name.upper()])
         connection.commit()
         connection.close()
 
     def flush_cache(self):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self.query_flush_cache)
+        cursor.execute(self._query_flush_cache)
         connection.commit()
         connection.close()
 
 
 class ImdbIdCache(object):
     def __init__(self):
-        self.query_get_id = "select imdb_id from imdb_id_cache where title = ? and year = ?"
-        self.query_set_id = "insert into imdb_id_cache values (?,?,?)"
-        self.query_flush_cache = "delete from imdb_id_cache"
+        self._query_get_id = "select imdb_id from imdb_id_cache where title = ? and year = ?"
+        self._query_set_id = "insert into imdb_id_cache values (?,?,?)"
+        self._query_flush_cache = "delete from imdb_id_cache"
 
     def get_id(self, title, year):
         imdb_id = None
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self.query_get_id, [title.upper(), year])
+        cursor.execute(self._query_get_id, [title.upper(), year])
         for row in cursor:
             imdb_id = row[0]
         connection.close()
@@ -66,29 +66,29 @@ class ImdbIdCache(object):
     def set_id(self, imdb_id, title, year):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self.query_set_id, [imdb_id, title.upper(), year])
+        cursor.execute(self._query_set_id, [imdb_id, title.upper(), year])
         connection.commit()
         connection.close()
 
     def flush_cache(self):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self.query_flush_cache)
+        cursor.execute(self._query_flush_cache)
         connection.commit()
         connection.close()
 
 
 class LastDownloads(object):
     def __init__(self):
-        self.query_get = "select * from last_downloads order by timestamp desc;"
-        self.query_set = "insert into last_downloads values (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?);"
-        self.query_flush = "delete from last_downloads;"
+        self._query_get = "select * from last_downloads order by timestamp desc;"
+        self._query_set = "insert into last_downloads values (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+        self._query_flush = "delete from last_downloads;"
 
     def get_last_downloads(self):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         connection.row_factory = dict_factory
         cursor = connection.cursor()
-        cursor.execute(self.query_get)
+        cursor.execute(self._query_get)
         result_list = cursor.fetchall()
         connection.close()
 
@@ -105,7 +105,7 @@ class LastDownloads(object):
         if not 'source' in download_item.keys():
             download_item['source'] = None
 
-        cursor.execute(self.query_set, [
+        cursor.execute(self._query_set, [
             download_item['type'],
             download_item['title'],
             download_item['year'],
@@ -125,7 +125,7 @@ class LastDownloads(object):
     def flush_last_downloads(self):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self.query_flush)
+        cursor.execute(self._query_flush)
         connection.commit()
         connection.close()
 
