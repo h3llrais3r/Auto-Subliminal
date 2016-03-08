@@ -102,7 +102,7 @@ class LastDownloads(object):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
 
-        if not 'source' in download_item.keys():
+        if 'source' not in download_item.keys():
             download_item['source'] = None
 
         cursor.execute(self._query_set, [
