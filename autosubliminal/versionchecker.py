@@ -68,8 +68,7 @@ class VersionChecker(Process):
 
     @property
     def current_branch(self):
-        # Get string representation of current branch
-        return str(self.manager.current_branch)
+        return self.manager.current_branch
 
     @property
     def current_branch_url(self):
@@ -77,8 +76,7 @@ class VersionChecker(Process):
 
     @property
     def current_version(self):
-        # Get string representation of current version
-        return str(self.manager.current_version)
+        return self.manager.current_version
 
     @property
     def current_version_url(self):
@@ -209,19 +207,21 @@ class GitVersionManager(BaseVersionManager):
 
     @property
     def current_branch(self):
-        return self.current_git_branch
+        # Get string representation of current git branch
+        return str(self.current_git_branch)
 
     @property
     def current_branch_url(self):
-        return autosubliminal.GITHUBURL + "/tree/" + str(self.current_branch)
+        return autosubliminal.GITHUBURL + "/tree/" + self.current_branch
 
     @property
     def current_version(self):
-        return self.current_git_commit
+        # Get string representation of current git commit
+        return str(self.current_git_commit)
 
     @property
     def current_version_url(self):
-        return autosubliminal.GITHUBURL + "/commit/" + str(self.current_version)
+        return autosubliminal.GITHUBURL + "/commit/" + self.current_version
 
     def check_version(self, force_run=False):
         # Reset update_allowed flag
