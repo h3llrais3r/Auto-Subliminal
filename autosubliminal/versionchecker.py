@@ -66,42 +66,48 @@ class VersionChecker(Process):
         # Update version
         self.manager.update_version()
 
-    def get_current_branch(self):
-        return str(self.manager.get_current_branch())
+    @property
+    def current_branch(self):
+        # Get string representation of current branch
+        return str(self.manager.current_branch)
 
-    def get_current_branch_url(self):
-        return self.manager.get_current_branch_url()
+    @property
+    def current_branch_url(self):
+        return self.manager.current_branch_url
 
-    def get_current_version(self):
+    @property
+    def current_version(self):
         # Get string representation of current version
-        return str(self.manager.get_current_version())
+        return str(self.manager.current_version)
 
-    def get_current_version_url(self):
-        return self.manager.get_current_version_url()
+    @property
+    def current_version_url(self):
+        return self.manager.current_version_url
 
 
 class BaseVersionManager(object):
     """
     Base class for all version manager classes.
     """
+    __metaclass__ = abc.ABCMeta
 
     def __init__(self):
         self.update_allowed = False
 
-    @abc.abstractmethod
-    def get_current_branch(self):
+    @abc.abstractproperty
+    def current_branch(self):
         pass
 
-    @abc.abstractmethod
-    def get_current_branch_url(self):
+    @abc.abstractproperty
+    def current_branch_url(self):
         pass
 
-    @abc.abstractmethod
-    def get_current_version(self):
+    @abc.abstractproperty
+    def current_version(self):
         pass
 
-    @abc.abstractmethod
-    def get_current_version_url(self):
+    @abc.abstractproperty
+    def current_version_url(self):
         pass
 
     @abc.abstractmethod
@@ -122,17 +128,21 @@ class SourceVersionManager(BaseVersionManager):
         super(SourceVersionManager, self).__init__()
         self.current_strict_version = version.StrictVersion(RELEASE_VERSION)
 
-    def get_current_branch(self):
+    @property
+    def current_branch(self):
         return "master"
 
-    def get_current_branch_url(self):
-        return autosubliminal.GITHUBURL + "/tree/" + self.get_current_branch()
+    @property
+    def current_branch_url(self):
+        return autosubliminal.GITHUBURL + "/tree/" + self.current_branch
 
-    def get_current_version(self):
+    @property
+    def current_version(self):
         return RELEASE_VERSION
 
-    def get_current_version_url(self):
-        return autosubliminal.GITHUBURL + "/releases/tag/" + self.get_current_version()
+    @property
+    def current_version_url(self):
+        return autosubliminal.GITHUBURL + "/releases/tag/" + self.current_version
 
     def check_version(self, force_run=False):
         # Reset update_allowed flag
@@ -192,37 +202,41 @@ class GitVersionManager(BaseVersionManager):
     def __init__(self):
         super(GitVersionManager, self).__init__()
         self.repo = Repo(autosubliminal.PATH)
-        self.current_branch = self.repo.active_branch
-        self.current_commit = self.repo.head.commit
+        self.current_git_branch = self.repo.active_branch
+        self.current_git_commit = self.repo.head.commit
         self.num_commits_ahead = 0
         self.num_commits_behind = 0
 
-    def get_current_branch(self):
-        return self.current_branch
+    @property
+    def current_branch(self):
+        return self.current_git_branch
 
-    def get_current_branch_url(self):
-        return autosubliminal.GITHUBURL + "/tree/" + str(self.get_current_branch())
+    @property
+    def current_branch_url(self):
+        return autosubliminal.GITHUBURL + "/tree/" + str(self.current_branch)
 
-    def get_current_version(self):
-        return self.current_commit
+    @property
+    def current_version(self):
+        return self.current_git_commit
 
-    def get_current_version_url(self):
-        return autosubliminal.GITHUBURL + "/commit/" + str(self.get_current_version())
+    @property
+    def current_version_url(self):
+        return autosubliminal.GITHUBURL + "/commit/" + str(self.current_version)
 
     def check_version(self, force_run=False):
         # Reset update_allowed flag
         self.update_allowed = False
 
         # Local git version
-        log.debug("Local branch: %s" % self.current_branch)
-        log.debug("Local commit: %s" % self.current_commit)
+        log.debug("Local branch: %s" % self.current_git_branch)
+        log.debug("Local commit: %s" % self.current_git_commit)
         if self.repo.is_dirty():
             log.warning("Local branch is dirty")
 
         # Remote git version
         try:
             remote_url = self.repo.remote(name='origin').url
-            remote_fetch_info = self.repo.remote().fetch(refspec=self.current_branch)[0]  # Only fetch current branch
+            remote_fetch_info = self.repo.remote().fetch(refspec=self.current_git_branch)[0]
             remote_commit = remote_fetch_info.commit
             log.debug("Remote url: %s" % remote_url)
             log.debug("Remote commit: %s" % remote_commit)
