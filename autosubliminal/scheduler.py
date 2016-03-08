@@ -12,6 +12,8 @@ log = logging.getLogger(__name__)
 
 class Scheduler(object):
     """
+    Scheduler class.
+
     :param name: Name of the scheduler
     :type name: str
     :param process: process to schedule 
@@ -120,8 +122,9 @@ class Scheduler(object):
 
 class Process(object):
     """
-    :type running: bool
+    Base class for all scheduler processes.
     """
+    __metaclass__ = abc.ABCMeta
 
     def __init__(self):
         self.running = False
