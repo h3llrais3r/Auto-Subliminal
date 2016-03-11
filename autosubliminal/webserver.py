@@ -369,16 +369,6 @@ class Config(object):
 
         return str(tmpl)
 
-    @cherrypy.expose(alias='checkVersion')
-    def check_version(self):
-        autosubliminal.CHECKVERSION.run()
-        redirect_referer("/home")
-
-    @cherrypy.expose(alias='updateVersion')
-    def update_version(self):
-        autosubliminal.CHECKVERSION.process.update()
-        redirect("/system/restart")
-
     @cherrypy.expose(alias='testNotify')
     def test_notify(self, notifylib):
         if notify.notify_test(notifylib):
@@ -477,6 +467,16 @@ class System(object):
     def __init__(self):
         pass
 
+    @cherrypy.expose(alias='checkVersion')
+    def check_version(self):
+        autosubliminal.CHECKVERSION.run()
+        redirect_referer("/home")
+
+    @cherrypy.expose(alias='updateVersion')
+    def update_version(self):
+        autosubliminal.CHECKVERSION.process.update()
+        redirect("/system/restart")
+
     @cherrypy.expose(alias='runNow')
     def run_now(self):
         # Run threads now (use delay to be sure that checksub is run after scandisk)
@@ -505,6 +505,11 @@ class System(object):
         threading.Timer(2, autosubliminal.runner.stop).start()
         return str(tmpl)
 
+    @cherrypy.expose
+    def status(self):
+        tmpl = Template(file="interface/templates/system/status.tmpl")
+        return str(tmpl)
+
     @cherrypy.expose(alias='flushCache')
     def flush_cache(self):
         TvdbIdCache().flush_cache()
@@ -517,11 +522,6 @@ class System(object):
         LastDownloads().flush_last_downloads()
         utils.add_notification_message("Flushed last downloads database")
         redirect("/home")
-
-    @cherrypy.expose
-    def status(self):
-        tmpl = Template(file="interface/templates/system/status.tmpl")
-        return str(tmpl)
 
     @cherrypy.expose(alias='exitMobile')
     def exit_mobile(self):

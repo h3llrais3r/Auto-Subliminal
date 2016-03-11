@@ -269,7 +269,7 @@ class GitVersionManager(BaseVersionManager):
         elif self.num_commits_behind > 0:
             log.info("New version found")
             utils.add_notification_message(
-                "New version found! <a href=" + autosubliminal.WEBROOT + "/config/updateVersion>Update</a>",
+                "New version found! <a href=" + autosubliminal.WEBROOT + "/system/updateVersion>Update</a>",
                 "notice", True)
             self.update_allowed = True
         else:

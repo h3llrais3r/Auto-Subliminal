@@ -36,7 +36,6 @@
                     <ul class="dropdown-menu dropdown-menu-inverse">
                         <li><a href="$autosubliminal.WEBROOT/config">Settings</a></li>
                         <li><a href="$autosubliminal.WEBROOT/config/info">Info</a></li>
-                        <li><a href="$autosubliminal.WEBROOT/config/checkVersion">Check Version</a></li>
                     </ul>
                 </li>
                 <!-- Log -->
@@ -61,14 +60,16 @@
                         System<b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-inverse">
+                        <li><a href="$autosubliminal.WEBROOT/system/checkVersion">Check Version</a></li>
+                        <li class="divider"></li>
                         <li><a href="$autosubliminal.WEBROOT/system/runNow">Run Now</a></li>
                         <li><a href="$autosubliminal.WEBROOT/system/restart">Restart</a></li>
                         <li><a href="$autosubliminal.WEBROOT/system/shutdown">Shutdown</a></li>
                         <li class="divider"></li>
+                        <li><a href="$autosubliminal.WEBROOT/system/status">Status</a></li>
+                        <li class="divider"></li>
                         <li><a href="$autosubliminal.WEBROOT/system/flushCache">Flush Cache</a></li>
                         <li><a href="$autosubliminal.WEBROOT/system/flushLastDownloads">Flush Downloaded</a></li>
-                        <li class="divider"></li>
-                        <li><a href="$autosubliminal.WEBROOT/system/status">Status</a></li>
                         #if $autosubliminal.utils.check_mobile_device($useragent) == True
                         <li class="divider"></li>
                         <li><a href="$autosubliminal.WEBROOT/system/exitMobile">Mobile Interface</a></li>
