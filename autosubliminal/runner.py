@@ -9,7 +9,7 @@ from autosubliminal.diskscanner import DiskScanner
 from autosubliminal.scheduler import Scheduler
 from autosubliminal.subchecker import SubChecker
 from autosubliminal.versionchecker import VersionChecker
-from autosubliminal.webserver import WebServerInit
+from autosubliminal.webserver import WebServerRoot
 
 log = logging.getLogger(__name__)
 
@@ -112,7 +112,7 @@ def start():
 
     # Start cherrypy server
     log.info("Starting CherryPy webserver")
-    cherrypy.tree.mount(WebServerInit(), autosubliminal.WEBROOT, config=conf)
+    cherrypy.tree.mount(WebServerRoot(), autosubliminal.WEBROOT, config=conf)
     try:
         cherrypy.server.start()
     except Exception, e:

@@ -674,9 +674,14 @@ class Mobile(object):
         return str(tmpl)
 
 
-class WebServerInit(object):
+class WebServerRoot(object):
     def __init__(self):
-        pass
+        # Create root tree (name of attribute defines name of path: f.e. home -> /home)
+        self.home = Home()
+        self.config = Config()
+        self.log = Log()
+        self.system = System()
+        self.mobile = Mobile()
 
     @cherrypy.expose
     def index(self):
@@ -697,9 +702,3 @@ class WebServerInit(object):
     _cp_config = {'error_page.401': error_page_401,
                   'error_page.404': error_page_404,
                   'error_page.500': error_page_500}
-
-    home = Home()
-    config = Config()
-    log = Log()
-    system = System()
-    mobile = Mobile()
