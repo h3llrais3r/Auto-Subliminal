@@ -181,177 +181,19 @@ class Home(object):
 
 class Config(object):
     def __init__(self):
-        pass
+        # Create config sub tree (name of attribute defines name of path: f.e. general -> /config/general)
+        self.general = self._ConfigGeneral()
+        self.logging = self._ConfigLogging()
+        self.webserver = self._ConfigWebServer()
+        self.subliminal = self._ConfigSubliminal()
+        self.namemapping = self._ConfigNameMapping()
+        self.skip = self._ConfigSkip()
+        self.notification = self._ConfigNotification()
+        self.postprocessing = self._ConfigPostProcessing()
 
-    @cherrypy.expose
-    def index(self):
-        tmpl = Template(file="interface/templates/config/config.tmpl")
-        return str(tmpl)
-
-    @cherrypy.expose
-    def info(self):
-        tmpl = Template(file="interface/templates/config/config-info.tmpl")
-        return str(tmpl)
-
-    @cherrypy.expose(alias='saveConfig')
-    def save_config(self, path, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, scandisk,
-                    checksub, checkversion, checkversionautoupdate, scanembeddedsubs, skiphiddendirs, maxdbresults,
-                    logfile, loglevel, lognum, logsize, loghttpaccess, logreversed, loglevelconsole,
-                    webserverip, webserverport, webroot, username, password, launchbrowser,
-                    includehearingimpaired, addic7edusername, addic7edpassword, opensubtitlesusername,
-                    opensubtitlespassword,
-                    usershownamemapping, usermovienamemapping,
-                    skipshow,
-                    skipmovie,
-                    notify,
-                    notifymail, mailsrv, mailfromaddr, mailtoaddr, mailusername, mailpassword, mailsubject,
-                    mailencryption, mailauth,
-                    notifytwitter, twitterkey, twittersecret,
-                    notifypushalot, pushalotapi,
-                    notifynma, nmaapi,
-                    notifygrowl, growlhost, growlport, growlpass,
-                    notifyprowl, prowlapi, prowlpriority,
-                    postprocess, postprocessutf8encoding, showpostprocesscmd, showpostprocesscmdargs,
-                    moviepostprocesscmd, moviepostprocesscmdargs,
-                    showmmsdefault=None, showmmssource=None, showmmsquality=None, showmmscodec=None,
-                    showmmsreleasegroup=None,
-                    moviemmsdefault=None, moviemmssource=None, moviemmsquality=None, moviemmscodec=None,
-                    moviemmsreleasegroup=None,
-                    subliminalproviders=None):
-        # Set general variables
-        autosubliminal.PATH = path
-        autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
-        autosubliminal.DEFAULTLANGUAGE = defaultlanguage
-        autosubliminal.DEFAULTLANGUAGESUFFIX = defaultlanguagesuffix
-        autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split(',')
-        autosubliminal.SCANDISKINTERVAL = int(scandisk)
-        autosubliminal.CHECKSUBINTERVAL = int(checksub)
-        autosubliminal.CHECKVERSIONINTERVAL = int(checkversion)
-        autosubliminal.CHECKVERSIONAUTOUPDATE = checkversionautoupdate
-        autosubliminal.SCANEMBEDDEDSUBS = scanembeddedsubs
-        autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
-        autosubliminal.MAXDBRESULTS = int(maxdbresults)
-
-        # Set logfile variables
-        autosubliminal.LOGFILE = logfile
-        autosubliminal.LOGLEVEL = int(loglevel)
-        autosubliminal.LOGNUM = int(lognum)
-        autosubliminal.LOGSIZE = int(logsize)
-        autosubliminal.LOGHTTPACCESS = loghttpaccess
-        autosubliminal.LOGREVERSED = logreversed
-        autosubliminal.LOGLEVELCONSOLE = int(loglevelconsole)
-
-        # Set webserver variables
-        autosubliminal.WEBSERVERIP = webserverip
-        autosubliminal.WEBSERVERPORT = int(webserverport)
-        autosubliminal.WEBROOT = webroot
-        autosubliminal.USERNAME = username
-        autosubliminal.PASSWORD = password
-        autosubliminal.LAUNCHBROWSER = launchbrowser
-
-        # Set subliminal variables
-        # Match options and showminmatchscore
-        autosubliminal.SHOWMATCHSOURCE = False
-        autosubliminal.SHOWMATCHQUALITY = False
-        autosubliminal.SHOWMATCHCODEC = False
-        autosubliminal.SHOWMATCHRELEASEGROUP = False
-        autosubliminal.SHOWMINMATCHSCORE = 0
-        # If not checked, the value will be default None, if checked, it will contain a value
-        if showmmsdefault:
-            # showmmsdefault is the minimal default score for a show (which cannot be edited, so no flag is needed)
-            autosubliminal.SHOWMINMATCHSCORE += autosubliminal.SHOWMINMATCHSCOREDEFAULT
-        if showmmssource:
-            autosubliminal.SHOWMINMATCHSCORE += 6
-            autosubliminal.SHOWMATCHSOURCE = True
-        if showmmsquality:
-            autosubliminal.SHOWMINMATCHSCORE += 4
-            autosubliminal.SHOWMATCHQUALITY = True
-        if showmmscodec:
-            autosubliminal.SHOWMINMATCHSCORE += 4
-            autosubliminal.SHOWMATCHCODEC = True
-        if showmmsreleasegroup:
-            autosubliminal.SHOWMINMATCHSCORE += 11
-            autosubliminal.SHOWMATCHRELEASEGROUP = True
-        # Match options and movieminmatchscore
-        autosubliminal.MOVIEMATCHSOURCE = False
-        autosubliminal.MOVIEMATCHQUALITY = False
-        autosubliminal.MOVIEMATCHCODEC = False
-        autosubliminal.MOVIEMATCHRELEASEGROUP = False
-        autosubliminal.MOVIEMINMATCHSCORE = 0
-        # If not checked, the value will be default None, if checked, it will contain a value
-        if moviemmsdefault:
-            # moviemmsdefault is the minimal default score for a movie (which cannot be edited, so no flag is needed)
-            autosubliminal.MOVIEMINMATCHSCORE += autosubliminal.MOVIEMINMATCHSCOREDEFAULT
-        if moviemmssource:
-            autosubliminal.MOVIEMINMATCHSCORE += 6
-            autosubliminal.MOVIEMATCHSOURCE = True
-        if moviemmsquality:
-            autosubliminal.MOVIEMINMATCHSCORE += 4
-            autosubliminal.MOVIEMATCHQUALITY = True
-        if moviemmscodec:
-            autosubliminal.MOVIEMINMATCHSCORE += 4
-            autosubliminal.MOVIEMATCHCODEC = True
-        if moviemmsreleasegroup:
-            autosubliminal.MOVIEMINMATCHSCORE += 11
-            autosubliminal.MOVIEMATCHRELEASEGROUP = True
-        # Subliminal providers (convert list to comma separated string if multiple are selected)
-        if subliminalproviders and not isinstance(subliminalproviders, basestring):
-            autosubliminal.SUBLIMINALPROVIDERS = ','.join([str(provider) for provider in subliminalproviders])
-        else:
-            # Just one selected or None (in this case, None will be saved and no providers will be used)
-            autosubliminal.SUBLIMINALPROVIDERS = subliminalproviders
-        # Hearing impaired
-        autosubliminal.INCLUDEHEARINGIMPAIRED = includehearingimpaired
-        # Addic7ed provider
-        autosubliminal.ADDIC7EDUSERNAME = addic7edusername
-        autosubliminal.ADDIC7EDPASSWORD = addic7edpassword
-        # OpenSubtitles provider
-        autosubliminal.OPENSUBTITLESUSERNAME = opensubtitlesusername
-        autosubliminal.OPENSUBTITLESPASSWORD = opensubtitlespassword
-
-        # Set usernamemapping variables
-        autosubliminal.USERSHOWNAMEMAPPING = config.string_to_dict(usershownamemapping)
-        autosubliminal.USERMOVIENAMEMAPPING = config.string_to_dict(usermovienamemapping)
-
-        # Set skip variables
-        autosubliminal.SKIPSHOW = config.string_to_dict(skipshow)
-        autosubliminal.SKIPMOVIE = config.string_to_dict(skipmovie)
-
-        # Set notify variables
-        autosubliminal.NOTIFY = notify
-        autosubliminal.NOTIFYMAIL = notifymail
-        autosubliminal.MAILSRV = mailsrv
-        autosubliminal.MAILFROMADDR = mailfromaddr
-        autosubliminal.MAILTOADDR = mailtoaddr
-        autosubliminal.MAILUSERNAME = mailusername
-        autosubliminal.MAILPASSWORD = mailpassword
-        autosubliminal.MAILSUBJECT = mailsubject
-        autosubliminal.MAILENCRYPTION = mailencryption
-        autosubliminal.MAILAUTH = mailauth
-        autosubliminal.NOTIFYTWITTER = notifytwitter
-        autosubliminal.TWITTERKEY = twitterkey
-        autosubliminal.TWITTERSECRET = twittersecret
-        autosubliminal.NOTIFYPUSHALOT = notifypushalot
-        autosubliminal.PUSHALOTAPI = pushalotapi
-        autosubliminal.NOTIFYNMA = notifynma
-        autosubliminal.NMAAPI = nmaapi
-        autosubliminal.NOTIFYGROWL = notifygrowl
-        autosubliminal.GROWLHOST = growlhost
-        autosubliminal.GROWLPORT = growlport
-        autosubliminal.GROWLPASS = growlpass
-        autosubliminal.NOTIFYPROWL = notifyprowl
-        autosubliminal.PROWLAPI = prowlapi
-        autosubliminal.PROWLPRIORITY = int(prowlpriority)
-
-        # Set postprocessing variables
-        autosubliminal.POSTPROCESS = postprocess
-        autosubliminal.POSTPROCESSUTF8ENCODING = postprocessutf8encoding
-        autosubliminal.SHOWPOSTPROCESSCMD = showpostprocesscmd
-        autosubliminal.SHOWPOSTPROCESSCMDARGS = showpostprocesscmdargs
-        autosubliminal.MOVIEPOSTPROCESSCMD = moviepostprocesscmd
-        autosubliminal.MOVIEPOSTPROCESSCMDARGS = moviepostprocesscmdargs
-
-        # Now save to the configfile
+    @staticmethod
+    def save_and_restart_if_needed(return_tmpl):
+        # Save to the configfile
         restart = config.write_config()
 
         # Check if restart is needed
@@ -362,12 +204,275 @@ class Config(object):
             tmpl.message = "Saved config. Auto restart in progress..."
 
         else:
-            # For some reason the needs to be read again, otherwise all pages get an error
+            # For some reason the config needs to be read again, otherwise all pages get an error
             config.read_config()
-            tmpl = Template(file="interface/templates/config/config.tmpl")
+            tmpl = return_tmpl
             utils.add_notification_message("Saved config")
 
         return str(tmpl)
+
+    @cherrypy.expose
+    def index(self):
+        # Redirect to general settings by default
+        redirect("/config/general")
+
+    @cherrypy.expose(alias='info')
+    def info(self):
+        tmpl = Template(file="interface/templates/config/config-info.tmpl")
+        return str(tmpl)
+
+    class _ConfigGeneral(object):
+        def __init__(self):
+            self.tmpl = Template(file="interface/templates/config/config-general.tmpl")
+
+        @cherrypy.expose
+        def index(self):
+            return str(self.tmpl)
+
+        @cherrypy.expose(alias='save')
+        def save(self, path, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, scandisk,
+                 checksub, checkversion, checkversionautoupdate, scanembeddedsubs, skiphiddendirs,
+                 maxdbresults):
+            # Set general variables
+            autosubliminal.PATH = path
+            autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
+            autosubliminal.DEFAULTLANGUAGE = defaultlanguage
+            autosubliminal.DEFAULTLANGUAGESUFFIX = defaultlanguagesuffix
+            autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split(',')
+            autosubliminal.SCANDISKINTERVAL = int(scandisk)
+            autosubliminal.CHECKSUBINTERVAL = int(checksub)
+            autosubliminal.CHECKVERSIONINTERVAL = int(checkversion)
+            autosubliminal.CHECKVERSIONAUTOUPDATE = checkversionautoupdate
+            autosubliminal.SCANEMBEDDEDSUBS = scanembeddedsubs
+            autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
+            autosubliminal.MAXDBRESULTS = int(maxdbresults)
+
+            # Now save to the configfile and restart if needed
+            return Config.save_and_restart_if_needed(self.tmpl)
+
+    class _ConfigLogging(object):
+        def __init__(self):
+            self.tmpl = Template(file="interface/templates/config/config-logging.tmpl")
+
+        @cherrypy.expose
+        def index(self):
+            return str(self.tmpl)
+
+        @cherrypy.expose(alias='save')
+        def save(self, logfile, loglevel, lognum, logsize, loghttpaccess, logreversed, loglevelconsole, ):
+            # Set logfile variables
+            autosubliminal.LOGFILE = logfile
+            autosubliminal.LOGLEVEL = int(loglevel)
+            autosubliminal.LOGNUM = int(lognum)
+            autosubliminal.LOGSIZE = int(logsize)
+            autosubliminal.LOGHTTPACCESS = loghttpaccess
+            autosubliminal.LOGREVERSED = logreversed
+            autosubliminal.LOGLEVELCONSOLE = int(loglevelconsole)
+
+            # Now save to the configfile and restart if needed
+            return Config.save_and_restart_if_needed(self.tmpl)
+
+    class _ConfigWebServer(object):
+        def __init__(self):
+            self.tmpl = Template(file="interface/templates/config/config-webserver.tmpl")
+
+        @cherrypy.expose
+        def index(self):
+            return str(self.tmpl)
+
+        @cherrypy.expose(alias='save')
+        def save(self, webserverip, webserverport, webroot, username, password, launchbrowser):
+            # Set webserver variables
+            autosubliminal.WEBSERVERIP = webserverip
+            autosubliminal.WEBSERVERPORT = int(webserverport)
+            autosubliminal.WEBROOT = webroot
+            autosubliminal.USERNAME = username
+            autosubliminal.PASSWORD = password
+            autosubliminal.LAUNCHBROWSER = launchbrowser
+
+            # Now save to the configfile and restart if needed
+            return Config.save_and_restart_if_needed(self.tmpl)
+
+    class _ConfigSubliminal(object):
+        def __init__(self):
+            self.tmpl = Template(file="interface/templates/config/config-subliminal.tmpl")
+
+        @cherrypy.expose
+        def index(self):
+            return str(self.tmpl)
+
+        @cherrypy.expose(alias='save')
+        def save(self, includehearingimpaired, addic7edusername, addic7edpassword, opensubtitlesusername,
+                 opensubtitlespassword,
+                 showmmsdefault=None, showmmssource=None, showmmsquality=None, showmmscodec=None,
+                 showmmsreleasegroup=None,
+                 moviemmsdefault=None, moviemmssource=None, moviemmsquality=None, moviemmscodec=None,
+                 moviemmsreleasegroup=None,
+                 subliminalproviders=None):
+            # Set subliminal variables
+            # Match options and showminmatchscore
+            autosubliminal.SHOWMATCHSOURCE = False
+            autosubliminal.SHOWMATCHQUALITY = False
+            autosubliminal.SHOWMATCHCODEC = False
+            autosubliminal.SHOWMATCHRELEASEGROUP = False
+            autosubliminal.SHOWMINMATCHSCORE = 0
+            # If not checked, the value will be default None, if checked, it will contain a value
+            if showmmsdefault:
+                # showmmsdefault is the minimal default score for a show (which cannot be edited, so no flag is needed)
+                autosubliminal.SHOWMINMATCHSCORE += autosubliminal.SHOWMINMATCHSCOREDEFAULT
+            if showmmssource:
+                autosubliminal.SHOWMINMATCHSCORE += 6
+                autosubliminal.SHOWMATCHSOURCE = True
+            if showmmsquality:
+                autosubliminal.SHOWMINMATCHSCORE += 4
+                autosubliminal.SHOWMATCHQUALITY = True
+            if showmmscodec:
+                autosubliminal.SHOWMINMATCHSCORE += 4
+                autosubliminal.SHOWMATCHCODEC = True
+            if showmmsreleasegroup:
+                autosubliminal.SHOWMINMATCHSCORE += 11
+                autosubliminal.SHOWMATCHRELEASEGROUP = True
+            # Match options and movieminmatchscore
+            autosubliminal.MOVIEMATCHSOURCE = False
+            autosubliminal.MOVIEMATCHQUALITY = False
+            autosubliminal.MOVIEMATCHCODEC = False
+            autosubliminal.MOVIEMATCHRELEASEGROUP = False
+            autosubliminal.MOVIEMINMATCHSCORE = 0
+            # If not checked, the value will be default None, if checked, it will contain a value
+            if moviemmsdefault:
+                # moviemmsdefault is the minimal default score for a movie (which cannot be edited, so no flag is needed)
+                autosubliminal.MOVIEMINMATCHSCORE += autosubliminal.MOVIEMINMATCHSCOREDEFAULT
+            if moviemmssource:
+                autosubliminal.MOVIEMINMATCHSCORE += 6
+                autosubliminal.MOVIEMATCHSOURCE = True
+            if moviemmsquality:
+                autosubliminal.MOVIEMINMATCHSCORE += 4
+                autosubliminal.MOVIEMATCHQUALITY = True
+            if moviemmscodec:
+                autosubliminal.MOVIEMINMATCHSCORE += 4
+                autosubliminal.MOVIEMATCHCODEC = True
+            if moviemmsreleasegroup:
+                autosubliminal.MOVIEMINMATCHSCORE += 11
+                autosubliminal.MOVIEMATCHRELEASEGROUP = True
+            # Subliminal providers (convert list to comma separated string if multiple are selected)
+            if subliminalproviders and not isinstance(subliminalproviders, basestring):
+                autosubliminal.SUBLIMINALPROVIDERS = ','.join([str(provider) for provider in subliminalproviders])
+            else:
+                # Just one selected or None (in this case, None will be saved and no providers will be used)
+                autosubliminal.SUBLIMINALPROVIDERS = subliminalproviders
+            # Hearing impaired
+            autosubliminal.INCLUDEHEARINGIMPAIRED = includehearingimpaired
+            # Addic7ed provider
+            autosubliminal.ADDIC7EDUSERNAME = addic7edusername
+            autosubliminal.ADDIC7EDPASSWORD = addic7edpassword
+            # OpenSubtitles provider
+            autosubliminal.OPENSUBTITLESUSERNAME = opensubtitlesusername
+            autosubliminal.OPENSUBTITLESPASSWORD = opensubtitlespassword
+
+            # Now save to the configfile and restart if needed
+            return Config.save_and_restart_if_needed(self.tmpl)
+
+    class _ConfigNameMapping(object):
+        def __init__(self):
+            self.tmpl = Template(file="interface/templates/config/config-namemapping.tmpl")
+
+        @cherrypy.expose
+        def index(self):
+            return str(self.tmpl)
+
+        @cherrypy.expose(alias='save')
+        def save(self, usershownamemapping, usermovienamemapping):
+            # Set usernamemapping variables
+            autosubliminal.USERSHOWNAMEMAPPING = config.string_to_dict(usershownamemapping)
+            autosubliminal.USERMOVIENAMEMAPPING = config.string_to_dict(usermovienamemapping)
+
+            # Now save to the configfile and restart if needed
+            return Config.save_and_restart_if_needed(self.tmpl)
+
+    class _ConfigSkip(object):
+        def __init__(self):
+            self.tmpl = Template(file="interface/templates/config/config-skip.tmpl")
+
+        @cherrypy.expose
+        def index(self):
+            return str(self.tmpl)
+
+        @cherrypy.expose(alias='save')
+        def save(self, skipshow, skipmovie):
+            # Set skip variables
+            autosubliminal.SKIPSHOW = config.string_to_dict(skipshow)
+            autosubliminal.SKIPMOVIE = config.string_to_dict(skipmovie)
+
+            # Now save to the configfile and restart if needed
+            return Config.save_and_restart_if_needed(self.tmpl)
+
+    class _ConfigNotification(object):
+        def __init__(self):
+            self.tmpl = Template(file="interface/templates/config/config-notification.tmpl")
+
+        @cherrypy.expose
+        def index(self):
+            return str(self.tmpl)
+
+        @cherrypy.expose(alias='save')
+        def save(self, notify,
+                 notifymail, mailsrv, mailfromaddr, mailtoaddr, mailusername, mailpassword, mailsubject,
+                 mailencryption, mailauth,
+                 notifytwitter, twitterkey, twittersecret,
+                 notifypushalot, pushalotapi,
+                 notifynma, nmaapi,
+                 notifygrowl, growlhost, growlport, growlpass,
+                 notifyprowl, prowlapi, prowlpriority):
+            # Set notify variables
+            autosubliminal.NOTIFY = notify
+            autosubliminal.NOTIFYMAIL = notifymail
+            autosubliminal.MAILSRV = mailsrv
+            autosubliminal.MAILFROMADDR = mailfromaddr
+            autosubliminal.MAILTOADDR = mailtoaddr
+            autosubliminal.MAILUSERNAME = mailusername
+            autosubliminal.MAILPASSWORD = mailpassword
+            autosubliminal.MAILSUBJECT = mailsubject
+            autosubliminal.MAILENCRYPTION = mailencryption
+            autosubliminal.MAILAUTH = mailauth
+            autosubliminal.NOTIFYTWITTER = notifytwitter
+            autosubliminal.TWITTERKEY = twitterkey
+            autosubliminal.TWITTERSECRET = twittersecret
+            autosubliminal.NOTIFYPUSHALOT = notifypushalot
+            autosubliminal.PUSHALOTAPI = pushalotapi
+            autosubliminal.NOTIFYNMA = notifynma
+            autosubliminal.NMAAPI = nmaapi
+            autosubliminal.NOTIFYGROWL = notifygrowl
+            autosubliminal.GROWLHOST = growlhost
+            autosubliminal.GROWLPORT = growlport
+            autosubliminal.GROWLPASS = growlpass
+            autosubliminal.NOTIFYPROWL = notifyprowl
+            autosubliminal.PROWLAPI = prowlapi
+            autosubliminal.PROWLPRIORITY = int(prowlpriority)
+
+            # Now save to the configfile and restart if needed
+            return Config.save_and_restart_if_needed(self.tmpl)
+
+    class _ConfigPostProcessing(object):
+        def __init__(self):
+            self.tmpl = Template(file="interface/templates/config/config-postprocessing.tmpl")
+
+        @cherrypy.expose
+        def index(self):
+            return str(self.tmpl)
+
+        @cherrypy.expose(alias='save')
+        def save(self, postprocess, postprocessutf8encoding, showpostprocesscmd, showpostprocesscmdargs,
+                 moviepostprocesscmd, moviepostprocesscmdargs):
+            # Set postprocessing variables
+            autosubliminal.POSTPROCESS = postprocess
+            autosubliminal.POSTPROCESSUTF8ENCODING = postprocessutf8encoding
+            autosubliminal.SHOWPOSTPROCESSCMD = showpostprocesscmd
+            autosubliminal.SHOWPOSTPROCESSCMDARGS = showpostprocesscmdargs
+            autosubliminal.MOVIEPOSTPROCESSCMD = moviepostprocesscmd
+            autosubliminal.MOVIEPOSTPROCESSCMDARGS = moviepostprocesscmdargs
+
+            # Now save to the configfile and restart if needed
+            return Config.save_and_restart_if_needed(self.tmpl)
 
     @cherrypy.expose(alias='testNotify')
     def test_notify(self, notifylib):
@@ -432,7 +537,7 @@ class Log(object):
         pass
 
     @cherrypy.expose
-    def index(self, loglevel=''):
+    def index(self, loglevel=""):
         redirect("/log/viewLog")
 
     @cherrypy.expose(alias='viewLog')

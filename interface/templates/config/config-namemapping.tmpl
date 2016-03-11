@@ -1,0 +1,96 @@
+#import autosubliminal
+
+#from autosubliminal.templates.PageTemplate import PageTemplate
+#extends PageTemplate
+
+#block bodyContent
+
+<div class="container">
+
+    <form method="post" action="$autosubliminal.WEBROOT/config/namemapping/save">
+
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                <span class="h3 weighted">NameMapping settings</span>
+            </div>
+
+            <div class="panel-body">
+
+                <div class="form-horizontal">
+
+                    <div class="form-group section-title">
+                        <div class="col-xs-8 col-md-4">
+                            <span class="badge">Show</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group narrow">
+                        <span class="col-xs-4 col-md-3">
+                            <label for="usershownamemapping">Show name mapping
+                                <span class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            The local show name mapping to the TVDB ID.<br>
+                                            Examples:<br>
+                                            Show name = 12345<br>
+                                            Show name 2 = 123456<br>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </label>
+                        </span>
+                        <span class="col-xs-8 col-md-4">
+                            <textarea rows="5" id="usershownamemapping" name="usershownamemapping" class="form-control input-sm">$autosubliminal.config.display_shownamemapping</textarea>
+                        </span>
+                    </div>
+
+                    <div class="form-group section-title">
+                        <div class="col-xs-8 col-md-4">
+                            <span class="badge">Movie</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group narrow">
+                        <span class="col-xs-4 col-md-3">
+                            <label for="usermovienamemapping">Movie name mapping
+                                <span class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            The local movie name mapping to the IMDB ID.<br>
+                                            Examples:<br>
+                                            Movie title (year) = 12345<br>
+                                            Movie title 2 (year) = 123456<br>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </label>
+                        </span>
+                        <span class="col-xs-8 col-md-4">
+                            <textarea rows="5" id="usermovienamemapping" name="usermovienamemapping" class="form-control input-sm">$autosubliminal.config.display_movienamemapping</textarea>
+                        </span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <input type="submit" value="Save" class="btn btn-sm btn-default">
+
+    </form>
+
+</div>
+
+#end block bodyContent
+
+#block footerContent
+
+#end block footerContent
