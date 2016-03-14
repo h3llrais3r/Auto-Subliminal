@@ -273,7 +273,7 @@ class GitVersionManager(BaseVersionManager):
                 "notice", True)
             self.update_allowed = True
         else:
-            log.info("version up to date")
+            log.info("Version up to date")
             # Show info message (only when run was forced manually)
             if force_run:
                 utils.add_notification_message("You are running the latest version")
