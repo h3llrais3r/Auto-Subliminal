@@ -478,6 +478,7 @@ class Config(object):
                  mailencryption, mailauth,
                  notifytwitter, twitterkey, twittersecret,
                  notifypushalot, pushalotapi,
+                 notifypushover, pushoverkey, pushoverapi, pushoverdevices,
                  notifynma, nmaapi,
                  notifygrowl, growlhost, growlport, growlpass,
                  notifyprowl, prowlapi, prowlpriority):
@@ -497,6 +498,10 @@ class Config(object):
             autosubliminal.TWITTERSECRET = twittersecret
             autosubliminal.NOTIFYPUSHALOT = notifypushalot
             autosubliminal.PUSHALOTAPI = pushalotapi
+            autosubliminal.NOTIFYPUSHOVER = notifypushover
+            autosubliminal.PUSHOVERKEY = pushoverkey
+            autosubliminal.PUSHOVERAPI = pushoverapi
+            autosubliminal.PUSHOVERDEVICES = pushoverdevices
             autosubliminal.NOTIFYNMA = notifynma
             autosubliminal.NMAAPI = nmaapi
             autosubliminal.NOTIFYGROWL = notifygrowl

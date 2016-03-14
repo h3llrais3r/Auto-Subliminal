@@ -394,6 +394,106 @@
 
                     <div class="form-group section-title">
                         <div class="col-xs-12 col-md-6">
+                            <span class="badge">Pushover</span>
+                            <a href="https://pushover.net/" target="_blank">
+                                <img class="img-notifier" src="$autosubliminal.WEBROOT/images/notifiers/pushover.png" alt="pushover" title="pushover">
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="form-group narrow">
+                        <span class="col-xs-4 col-md-3">
+                            <label for="notifypushover">Notify
+                                <span class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>When enabled, a Pushover notification will be sent when a subtitle has been downloaded.</li>
+                                    </ul>
+                                </span>
+                            </label>
+                        </span>
+                        <span class="col-xs-8 col-md-4">
+                            <select id="notifypushover" name="notifypushover" class="form-control input-sm">
+                                #if $autosubliminal.NOTIFYPUSHOVER
+                                <option value="True" selected="selected">Enabled</option>
+                                <option value="False">Disabled</option>
+                                #else
+                                <option value="True">Enabled</option>
+                                <option value="False" selected="selected">Disabled</option>
+                                #end if
+                            </select>
+                        </span>
+                    </div>
+
+                    <div class="form-group narrow">
+                        <span class="col-xs-4 col-md-3">
+                            <label for="pushoverkey">User key
+                                <span class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The user key for Pushover.</li>
+                                    </ul>
+                                </span>
+                            </label>
+                        </span>
+                        <span class="col-xs-8 col-md-4">
+                            <input type="text" value="$autosubliminal.PUSHOVERKEY" id="pushoverkey" name="pushoverkey" class="form-control input-sm">
+                        </span>
+                    </div>
+
+                    <div class="form-group narrow">
+                        <span class="col-xs-4 col-md-3">
+                            <label for="pushoverapi">API key
+                                <span class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The API key for Pushover.</li>
+                                    </ul>
+                                </span>
+                            </label>
+                        </span>
+                        <span class="col-xs-8 col-md-4">
+                            <input type="text" value="$autosubliminal.PUSHOVERAPI" id="pushoverapi" name="pushoverapi" class="form-control input-sm">
+                        </span>
+                    </div>
+
+                    <div class="form-group narrow">
+                        <span class="col-xs-4 col-md-3">
+                            <label for="pushoverdevices">Devices
+                                <span class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            The devices (comma separated list) used for Pushover notifications.<br>
+                                            If not provided, notifications will be sent to all your Pushover devices.
+                                        </li>
+                                    </ul>
+                                </span>
+                            </label>
+                        </span>
+                        <span class="col-xs-8 col-md-4">
+                            <input type="text" value="$autosubliminal.PUSHOVERDEVICES" id="pushoverdevices" name="pushoverdevices" class="form-control input-sm">
+                        </span>
+                    </div>
+
+                    <div class="form-group narrow">
+                        <span class="col-xs-4 col-md-3"></span>
+                        <span class="col-xs-8 col-md-4">
+                            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/notification/test/pushover'">
+                            <input type="button" value="Register" class="btn btn-sm btn-default" onClick="parent.location='https://pushover.net/apps/build'">
+                        </span>
+                    </div>
+
+                    <div class="form-group section-title">
+                        <div class="col-xs-12 col-md-6">
                             <span class="badge">Notify My Android</span>
                             <a href="https://www.notifymyandroid.com/" target="_blank">
                                 <img class="img-notifier" src="$autosubliminal.WEBROOT/images/notifiers/nma.png" alt="nma" title="nma">

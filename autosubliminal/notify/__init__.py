@@ -8,7 +8,7 @@ import logging
 import os
 
 import autosubliminal
-from autosubliminal.notify import twitter, mail, nma, growl, prowl, pushalot
+from autosubliminal.notify import twitter, mail, nma, growl, prowl, pushalot, pushover
 
 log = logging.getLogger(__name__)
 
@@ -63,6 +63,14 @@ def notify_test(notify_lib):
         log.info("Sending test mail")
         return mail.test_notify()
 
+    if notify_lib == 'pushalot':
+        log.info("Sending test notification to your Windows (Phone) device via Pushalot")
+        return pushalot.test_notify()
+
+    if notify_lib == 'pushover':
+        log.info("Sending test notification to your Android or IOS device via Pushover")
+        return pushover.test_notify()
+
     if notify_lib == 'nma':
         log.info("Sending test notification to your Android device")
         return nma.test_notify()
@@ -74,7 +82,3 @@ def notify_test(notify_lib):
     if notify_lib == 'prowl':
         log.info("Sending test notification to prowl")
         return prowl.test_notify()
-
-    if notify_lib == 'pushalot':
-        log.info("Sending test notification to your Windows (Phone) device via Pushalot")
-        return pushalot.test_notify()

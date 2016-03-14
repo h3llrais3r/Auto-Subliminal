@@ -457,6 +457,27 @@ def read_config():
         else:
             autosubliminal.PUSHALOTAPI = u"API key"
 
+        # Pushover - Android and IOS notifier
+        if cfg.has_option('notify', 'notifypushover'):
+            autosubliminal.NOTIFYPUSHOVER = cfg.getboolean('notify', 'notifypushover')
+        else:
+            autosubliminal.NOTIFYPUSHOVER = False
+
+        if cfg.has_option('notify', 'pushoverkey'):
+            autosubliminal.PUSHOVERKEY = cfg.get('notify', 'pushoverkey')
+        else:
+            autosubliminal.PUSHOVERKEY = u"user key"
+
+        if cfg.has_option('notify', 'pushoverapi'):
+            autosubliminal.PUSHOVERAPI = cfg.get('notify', 'pushoverapi')
+        else:
+            autosubliminal.PUSHOVERAPI = u"API key"
+
+        if cfg.has_option('notify', 'pushoverdevices'):
+            autosubliminal.PUSHOVERDEVICES = cfg.get('notify', 'pushoverdevices')
+        else:
+            autosubliminal.PUSHOVERDEVICES = u""
+
         # Notify My Android
         if cfg.has_option('notify', 'notifynma'):
             autosubliminal.NOTIFYNMA = cfg.getboolean('notify', 'notifynma')
@@ -521,6 +542,10 @@ def read_config():
         autosubliminal.TWITTERSECRET = u"token secret"
         autosubliminal.NOTIFYPUSHALOT = False
         autosubliminal.PUSHALOTAPI = u"API key"
+        autosubliminal.NOTIFYPUSHOVER = False
+        autosubliminal.PUSHOVERKEY = u"user key"
+        autosubliminal.PUSHOVERAPI = u"API key"
+        autosubliminal.PUSHOVERDEVICES = u""
         autosubliminal.NOTIFYNMA = False
         autosubliminal.NMAAPI = u"API key"
         autosubliminal.NOTIFYGROWL = False
@@ -1112,6 +1137,10 @@ def save_notify_section():
     cfg.set(section, "twittersecret", autosubliminal.TWITTERSECRET)
     cfg.set(section, "notifypushalot", str(autosubliminal.NOTIFYPUSHALOT))
     cfg.set(section, "pushalotapi", autosubliminal.PUSHALOTAPI)
+    cfg.set(section, "notifypushover", str(autosubliminal.NOTIFYPUSHOVER))
+    cfg.set(section, "pushoverkey", autosubliminal.PUSHOVERKEY)
+    cfg.set(section, "pushoverapi", autosubliminal.PUSHOVERAPI)
+    cfg.set(section, "pushoverdevices", autosubliminal.PUSHOVERDEVICES)
     cfg.set(section, "notifynma", str(autosubliminal.NOTIFYNMA))
     cfg.set(section, "nmaapi", autosubliminal.NMAAPI)
     cfg.set(section, "notifygrowl", str(autosubliminal.NOTIFYGROWL))
