@@ -192,7 +192,7 @@ class Config(object):
         self.postprocessing = self._ConfigPostProcessing()
 
     @staticmethod
-    def save_and_restart_if_needed(return_tmpl):
+    def save_and_restart_if_needed(return_tmpl_file):
         # Save to the configfile
         restart = config.write_config()
 
@@ -206,7 +206,7 @@ class Config(object):
         else:
             # For some reason the config needs to be read again, otherwise all pages get an error
             config.read_config()
-            tmpl = return_tmpl
+            tmpl = Template(file=return_tmpl_file)
             utils.add_notification_message("Saved config")
 
         return str(tmpl)
@@ -223,16 +223,15 @@ class Config(object):
 
     class _ConfigGeneral(object):
         def __init__(self):
-            self.tmpl = Template(file="interface/templates/config/config-general.tmpl")
+            self.tmpl_file = "interface/templates/config/config-general.tmpl"
 
         @cherrypy.expose
         def index(self):
-            return str(self.tmpl)
+            return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
         def save(self, path, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, scandisk,
-                 checksub, checkversion, checkversionautoupdate, scanembeddedsubs, skiphiddendirs,
-                 maxdbresults):
+                 checksub, checkversion, checkversionautoupdate, scanembeddedsubs, skiphiddendirs, maxdbresults):
             # Set general variables
             autosubliminal.PATH = path
             autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
@@ -248,18 +247,18 @@ class Config(object):
             autosubliminal.MAXDBRESULTS = int(maxdbresults)
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl)
+            return Config.save_and_restart_if_needed(self.tmpl_file)
 
     class _ConfigLogging(object):
         def __init__(self):
-            self.tmpl = Template(file="interface/templates/config/config-logging.tmpl")
+            self.tmpl_file = "interface/templates/config/config-logging.tmpl"
 
         @cherrypy.expose
         def index(self):
-            return str(self.tmpl)
+            return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
-        def save(self, logfile, loglevel, lognum, logsize, loghttpaccess, logreversed, loglevelconsole, ):
+        def save(self, logfile, loglevel, lognum, logsize, loghttpaccess, logreversed, loglevelconsole):
             # Set logfile variables
             autosubliminal.LOGFILE = logfile
             autosubliminal.LOGLEVEL = int(loglevel)
@@ -270,15 +269,15 @@ class Config(object):
             autosubliminal.LOGLEVELCONSOLE = int(loglevelconsole)
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl)
+            return Config.save_and_restart_if_needed(self.tmpl_file)
 
     class _ConfigWebServer(object):
         def __init__(self):
-            self.tmpl = Template(file="interface/templates/config/config-webserver.tmpl")
+            self.tmpl_file = "interface/templates/config/config-webserver.tmpl"
 
         @cherrypy.expose
         def index(self):
-            return str(self.tmpl)
+            return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
         def save(self, webserverip, webserverport, webroot, username, password, launchbrowser):
@@ -291,15 +290,15 @@ class Config(object):
             autosubliminal.LAUNCHBROWSER = launchbrowser
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl)
+            return Config.save_and_restart_if_needed(self.tmpl_file)
 
     class _ConfigSubliminal(object):
         def __init__(self):
-            self.tmpl = Template(file="interface/templates/config/config-subliminal.tmpl")
+            self.tmpl_file = "interface/templates/config/config-subliminal.tmpl"
 
         @cherrypy.expose
         def index(self):
-            return str(self.tmpl)
+            return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
         def save(self, includehearingimpaired, addic7edusername, addic7edpassword, opensubtitlesusername,
@@ -318,7 +317,7 @@ class Config(object):
             autosubliminal.SHOWMINMATCHSCORE = 0
             # If not checked, the value will be default None, if checked, it will contain a value
             if showmmsdefault:
-                # showmmsdefault is the minimal default score for a show (which cannot be edited, so no flag is needed)
+                # showmmsdefault is the minimal default score for a show (not editable, so no flag is needed)
                 autosubliminal.SHOWMINMATCHSCORE += autosubliminal.SHOWMINMATCHSCOREDEFAULT
             if showmmssource:
                 autosubliminal.SHOWMINMATCHSCORE += 6
@@ -340,7 +339,7 @@ class Config(object):
             autosubliminal.MOVIEMINMATCHSCORE = 0
             # If not checked, the value will be default None, if checked, it will contain a value
             if moviemmsdefault:
-                # moviemmsdefault is the minimal default score for a movie (which cannot be edited, so no flag is needed)
+                # moviemmsdefault is the minimal default score for a movie (not editable, so no flag is needed)
                 autosubliminal.MOVIEMINMATCHSCORE += autosubliminal.MOVIEMINMATCHSCOREDEFAULT
             if moviemmssource:
                 autosubliminal.MOVIEMINMATCHSCORE += 6
@@ -370,15 +369,15 @@ class Config(object):
             autosubliminal.OPENSUBTITLESPASSWORD = opensubtitlespassword
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl)
+            return Config.save_and_restart_if_needed(self.tmpl_file)
 
     class _ConfigNameMapping(object):
         def __init__(self):
-            self.tmpl = Template(file="interface/templates/config/config-namemapping.tmpl")
+            self.tmpl_file = "interface/templates/config/config-namemapping.tmpl"
 
         @cherrypy.expose
         def index(self):
-            return str(self.tmpl)
+            return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
         def save(self, usershownamemapping, usermovienamemapping):
@@ -387,15 +386,15 @@ class Config(object):
             autosubliminal.USERMOVIENAMEMAPPING = config.string_to_dict(usermovienamemapping)
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl)
+            return Config.save_and_restart_if_needed(self.tmpl_file)
 
     class _ConfigSkip(object):
         def __init__(self):
-            self.tmpl = Template(file="interface/templates/config/config-skip.tmpl")
+            self.tmpl_file = "interface/templates/config/config-skip.tmpl"
 
         @cherrypy.expose
         def index(self):
-            return str(self.tmpl)
+            return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
         def save(self, skipshow, skipmovie):
@@ -404,15 +403,15 @@ class Config(object):
             autosubliminal.SKIPMOVIE = config.string_to_dict(skipmovie)
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl)
+            return Config.save_and_restart_if_needed(self.tmpl_file)
 
     class _ConfigNotification(object):
         def __init__(self):
-            self.tmpl = Template(file="interface/templates/config/config-notification.tmpl")
+            self.tmpl_file = "interface/templates/config/config-notification.tmpl"
 
         @cherrypy.expose
         def index(self):
-            return str(self.tmpl)
+            return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='test')
         def test(self, notify_lib):
@@ -513,15 +512,15 @@ class Config(object):
             autosubliminal.PROWLPRIORITY = int(prowlpriority)
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl)
+            return Config.save_and_restart_if_needed(self.tmpl_file)
 
     class _ConfigPostProcessing(object):
         def __init__(self):
-            self.tmpl = Template(file="interface/templates/config/config-postprocessing.tmpl")
+            self.tmpl_file = "interface/templates/config/config-postprocessing.tmpl"
 
         @cherrypy.expose
         def index(self):
-            return str(self.tmpl)
+            return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
         def save(self, postprocess, postprocessutf8encoding, showpostprocesscmd, showpostprocesscmdargs,
@@ -535,7 +534,7 @@ class Config(object):
             autosubliminal.MOVIEPOSTPROCESSCMDARGS = moviepostprocesscmdargs
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl)
+            return Config.save_and_restart_if_needed(self.tmpl_file)
 
 
 class Log(object):
