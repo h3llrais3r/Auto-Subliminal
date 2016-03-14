@@ -50,31 +50,31 @@ class Notifier(object):
             pushalot.send_notify(self.video, self.subtitle, self.language, self.provider)
 
 
-def notify_test(notifylib):
+def notify_test(notify_lib):
     """
     Simple function to send a test message. 
-    Notifylib should be a string containing which library is required
+    Notify_lib should be a string containing which library is required
     """
-    if notifylib == 'twitter':
+    if notify_lib == 'twitter':
         log.info("Sending test tweet")
         return twitter.test_notify()
 
-    if notifylib == 'mail':
+    if notify_lib == 'mail':
         log.info("Sending test mail")
         return mail.test_notify()
 
-    if notifylib == 'nma':
+    if notify_lib == 'nma':
         log.info("Sending test notification to your Android device")
         return nma.test_notify()
 
-    if notifylib == 'growl':
+    if notify_lib == 'growl':
         log.info("Testing and registering growl")
         return growl.test_notify()
 
-    if notifylib == 'prowl':
+    if notify_lib == 'prowl':
         log.info("Sending test notification to prowl")
         return prowl.test_notify()
 
-    if notifylib == 'pushalot':
+    if notify_lib == 'pushalot':
         log.info("Sending test notification to your Windows (Phone) device via Pushalot")
         return pushalot.test_notify()
