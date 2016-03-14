@@ -118,6 +118,13 @@ class Scheduler(object):
         self._delay = delay
 
     @property
+    def next_run(self):
+        if self.last_run:
+            return self.last_run + self.interval
+        else:
+            return 0
+
+    @property
     def running(self):
         return self.process.running
 

@@ -24,6 +24,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Last run</th>
+                    <th>Next run</th>
                     <th>Running</th>
                 </tr>
                 </thead>
@@ -33,6 +34,7 @@
                 <tr>
                     <td class="main-column">$scheduler.name</td>
                     <td>$print_timestamp($scheduler.last_run)</td>
+                    <td>$print_timestamp($scheduler.next_run)</td>
                     <td>$scheduler.running</td>
                 </tr>
                 #end for
