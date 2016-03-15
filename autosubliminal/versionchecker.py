@@ -44,13 +44,13 @@ class VersionChecker(ScheduledProcess):
         # Check version
         self.manager.check_version(force_run)
 
+        # Release wanted queue lock
+        utils.release_wanted_queue_lock()
+
         # Only update and restart when: no force run, update is allowed and auto update is enabled
         if not force_run and self.manager.update_allowed and autosubliminal.CHECKVERSIONAUTOUPDATE:
             self.update()
             threading.Thread(target=autosubliminal.runner.restart).start()
-
-        # Release wanted queue lock
-        utils.release_wanted_queue_lock()
 
         # Always return 'True' because we don't want to retry it until the next scheduled run
         return True
@@ -65,6 +65,11 @@ class VersionChecker(ScheduledProcess):
 
         # Update version
         self.manager.update_version()
+
+        # Release wanted queue lock
+        utils.release_wanted_queue_lock()
+
+        return True
 
     @property
     def current_branch(self):
