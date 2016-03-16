@@ -480,7 +480,8 @@ class Config(object):
                  notifypushover, pushoverkey, pushoverapi, pushoverdevices,
                  notifynma, nmaapi,
                  notifygrowl, growlhost, growlport, growlpass,
-                 notifyprowl, prowlapi, prowlpriority):
+                 notifyprowl, prowlapi, prowlpriority,
+                 notifypushbullet, pushbulletapi):
             # Set notify variables
             autosubliminal.NOTIFY = notify
             autosubliminal.NOTIFYMAIL = notifymail
@@ -510,6 +511,8 @@ class Config(object):
             autosubliminal.NOTIFYPROWL = notifyprowl
             autosubliminal.PROWLAPI = prowlapi
             autosubliminal.PROWLPRIORITY = int(prowlpriority)
+            autosubliminal.NOTIFYPUSHBULLET = notifypushbullet
+            autosubliminal.PUSHBULLETAPI = pushbulletapi
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.tmpl_file)

@@ -8,7 +8,7 @@ import logging
 import os
 
 import autosubliminal
-from autosubliminal.notify import twitter, mail, nma, growl, prowl, pushalot, pushover
+from autosubliminal.notify import twitter, mail, nma, growl, prowl, pushalot, pushbullet, pushover
 
 log = logging.getLogger(__name__)
 
@@ -53,6 +53,10 @@ class Notifier(object):
             log.debug("Prowl is enabled")
             prowl.send_notify(self.video, self.subtitle, self.language, self.provider)
 
+        if autosubliminal.NOTIFYPUSHBULLET:
+            log.debug("Pushbullet is enabled")
+            pushbullet.send_notify(self.video, self.subtitle, self.language, self.provider)
+
 
 def notify_test(notify_lib):
     """
@@ -80,9 +84,13 @@ def notify_test(notify_lib):
         return nma.test_notify()
 
     if notify_lib == 'growl':
-        log.info("Testing and registering growl")
+        log.info("Testing and registering Growl")
         return growl.test_notify()
 
     if notify_lib == 'prowl':
-        log.info("Sending test notification to prowl")
+        log.info("Sending test notification to Prowl")
         return prowl.test_notify()
+
+    if notify_lib == 'pushbullet':
+        log.info("Sending test notification to Pushbullet")
+        return pushbullet.test_notify()

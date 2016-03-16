@@ -526,6 +526,17 @@ def read_config():
         else:
             autosubliminal.PROWLPRIORITY = 0
 
+        # Pushbullet
+        if cfg.has_option('notify', 'notifypushbullet'):
+            autosubliminal.NOTIFYPUSHBULLET = cfg.getboolean('notify', 'notifypushbullet')
+        else:
+            autosubliminal.NOTIFYPUSHBULLET = False
+
+        if cfg.has_option('notify', 'pushbulletapi'):
+            autosubliminal.PUSHBULLETAPI = cfg.get('notify', 'pushbulletapi')
+        else:
+            autosubliminal.PUSHBULLETAPI = u"API key"
+
     else:
         # Notify section is missing
         autosubliminal.NOTIFY = False
@@ -554,6 +565,8 @@ def read_config():
         autosubliminal.GROWLPASS = u"mysecretpassword"
         autosubliminal.NOTIFYPROWL = False
         autosubliminal.PROWLAPI = u"API key"
+        autosubliminal.NOTIFYPUSHBULLET = False
+        autosubliminal.PUSHBULLETAPI = u"API key"
 
     if cfg.has_section('postprocessing'):
         if cfg.has_option("postprocessing", "postprocess"):
@@ -1150,6 +1163,8 @@ def save_notify_section():
     cfg.set(section, "notifyprowl", str(autosubliminal.NOTIFYPROWL))
     cfg.set(section, "prowlapi", autosubliminal.PROWLAPI)
     cfg.set(section, "prowlpriority", str(autosubliminal.PROWLPRIORITY))
+    cfg.set(section, "notifypushbullet", str(autosubliminal.NOTIFYPUSHBULLET))
+    cfg.set(section, "pushbulletapi", autosubliminal.PUSHBULLETAPI)
 
     with open(autosubliminal.CONFIGFILE, 'wb') as file:
         cfg.write(file)
