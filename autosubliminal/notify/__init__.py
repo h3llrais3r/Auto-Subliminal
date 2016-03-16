@@ -25,13 +25,21 @@ class Notifier(object):
             self.video, self.subtitle, self.language, self.provider))
 
         # Send notification
+        if autosubliminal.NOTIFYMAIL:
+            log.debug("Mail is enabled")
+            mail.send_notify(self.video, self.subtitle, self.language, self.provider)
+
         if autosubliminal.NOTIFYTWITTER:
             log.debug("Twitter is enabled")
             twitter.send_notify(self.video, self.subtitle, self.language, self.provider)
 
-        if autosubliminal.NOTIFYMAIL:
-            log.debug("Mail is enabled")
-            mail.send_notify(self.video, self.subtitle, self.language, self.provider)
+        if autosubliminal.NOTIFYPUSHALOT:
+            log.debug("Pushalot is enabled")
+            pushalot.send_notify(self.video, self.subtitle, self.language, self.provider)
+
+        if autosubliminal.NOTIFYPUSHOVER:
+            log.debug("Pushover is enabled")
+            pushover.send_notify(self.video, self.subtitle, self.language, self.provider)
 
         if autosubliminal.NOTIFYNMA:
             log.debug("NMA is enabled")
@@ -45,23 +53,19 @@ class Notifier(object):
             log.debug("Prowl is enabled")
             prowl.send_notify(self.video, self.subtitle, self.language, self.provider)
 
-        if autosubliminal.NOTIFYPUSHALOT:
-            log.debug("Pushalot is enabled")
-            pushalot.send_notify(self.video, self.subtitle, self.language, self.provider)
-
 
 def notify_test(notify_lib):
     """
     Simple function to send a test message. 
     Notify_lib should be a string containing which library is required
     """
-    if notify_lib == 'twitter':
-        log.info("Sending test tweet")
-        return twitter.test_notify()
-
     if notify_lib == 'mail':
         log.info("Sending test mail")
         return mail.test_notify()
+
+    if notify_lib == 'twitter':
+        log.info("Sending test tweet")
+        return twitter.test_notify()
 
     if notify_lib == 'pushalot':
         log.info("Sending test notification to your Windows (Phone) device via Pushalot")
