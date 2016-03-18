@@ -424,7 +424,7 @@ class Config(object):
         @cherrypy.expose(alias='regTwitter')
         def reg_twitter(self, token_key=None, token_secret=None, token_pin=None):
             import oauth2
-            import autosubliminal.notify.twitter as notifytwitter
+            import autosubliminal.notifiers.twitter as notifytwitter
 
             try:
                 from urlparse import parse_qsl
