@@ -6,7 +6,7 @@ import subliminal
 import autosubliminal
 from autosubliminal import utils
 from autosubliminal.db import LastDownloads
-from autosubliminal.notify import Notifier
+from autosubliminal.notifiers import Notifier
 from autosubliminal.postprocessor import PostProcessor
 
 log = logging.getLogger(__name__)
@@ -91,7 +91,7 @@ class SubDownloader(object):
 
         # Notify
         if autosubliminal.NOTIFY:
-            Notifier(self._download_item).notify()
+            Notifier(self._download_item).notify_download()
 
         # Post processing
         result = True

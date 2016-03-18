@@ -9,8 +9,8 @@ import time
 import cherrypy
 
 import autosubliminal
-from autosubliminal import config, utils, subchecker, notify
-from autosubliminal.db import TvdbIdCache, LastDownloads, ImdbIdCache
+from autosubliminal import config, notifiers, subchecker, utils
+from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache
 
 
 def redirect(abspath, *args, **kwargs):
@@ -207,7 +207,7 @@ class Config(object):
             # For some reason the config needs to be read again, otherwise all pages get an error
             config.read_config()
             tmpl = Template(file=return_tmpl_file)
-            utils.add_notification_message("Saved config")
+            utils.add_notification_message("Config saved")
 
         return str(tmpl)
 
@@ -415,13 +415,11 @@ class Config(object):
 
         @cherrypy.expose(alias='test')
         def test(self, notify_lib):
-            if notify.notify_test(notify_lib):
-                message = "Sent a test message!"
+            if notifiers.test_notifier(notify_lib):
+                utils.add_notification_message("Test notification (%s) sent" % notify_lib)
             else:
-                message = "Failed to send a test message"
-            tmpl = Template(file="interface/templates/general/message.tmpl")
-            tmpl.message = message
-            return str(tmpl)
+                utils.add_notification_message("Test notification (%s) failed" % notify_lib, "error")
+            redirect("/config/notification")
 
         @cherrypy.expose(alias='regTwitter')
         def reg_twitter(self, token_key=None, token_secret=None, token_pin=None):
