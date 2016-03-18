@@ -1215,14 +1215,14 @@ def check_for_restart():
         pass
 
     # Set the default values
-    SCANDISKINTERVAL = 3600
-    CHECKSUBINTERVAL = 86400
-    CHECKVERSIONINTERVAL = 43200
+    scandiskinterval = 3600
+    checksubinterval = 86400
+    checkversioninterval = 43200
     loglevel = logging.INFO
     loglevelconsole = logging.ERROR
     logsize = 1000000
     lognum = 1
-    loghttpaccess = u'False'
+    loghttpaccess = False
     webserverip = u'0.0.0.0'
     webserverport = 8083
     webroot = u''
@@ -1232,13 +1232,13 @@ def check_for_restart():
     # Check if an option excists in the config file, if so replace the default value
     if cfg.has_section('config'):
         if cfg.has_option('config', 'scandisk'):
-            SCANDISKINTERVAL = cfg.getint('config', 'scandisk')
+            scandiskinterval = cfg.getint('config', 'scandisk')
 
         if cfg.has_option('config', 'checksub'):
-            CHECKSUBINTERVAL = cfg.getint('config', 'checksub')
+            checksubinterval = cfg.getint('config', 'checksub')
 
         if cfg.has_option('config', 'checkversion'):
-            CHECKVERSIONINTERVAL = cfg.getint('config', 'checkversion')
+            checkversioninterval = cfg.getint('config', 'checkversion')
 
     if cfg.has_section('logfile'):
         if cfg.has_option("logfile", "logfile"):
@@ -1264,7 +1264,7 @@ def check_for_restart():
             logsize = cfg.getint("logfile", "logsize")
 
         if cfg.has_option("logfile", "loghttpaccess"):
-            loghttpaccess = cfg.get("logfile", "loghttpaccess")
+            loghttpaccess = cfg.getboolean("logfile", "loghttpaccess")
 
         if cfg.has_option("logfile", "loglevelconsole"):
             loglevelconsole = cfg.get("logfile", "loglevelconsole")
@@ -1290,9 +1290,9 @@ def check_for_restart():
             password = cfg.get('webserver', 'password')
 
     # Now compare the values, if one differs a restart is required.
-    if SCANDISKINTERVAL != autosubliminal.SCANDISKINTERVAL \
-            or CHECKSUBINTERVAL != autosubliminal.CHECKSUBINTERVAL \
-            or CHECKVERSIONINTERVAL != autosubliminal.CHECKVERSIONINTERVAL \
+    if scandiskinterval != autosubliminal.SCANDISKINTERVAL \
+            or checksubinterval != autosubliminal.CHECKSUBINTERVAL \
+            or checkversioninterval != autosubliminal.CHECKVERSIONINTERVAL \
             or loglevel != autosubliminal.LOGLEVEL \
             or logsize != autosubliminal.LOGSIZE \
             or lognum != autosubliminal.LOGNUM \
