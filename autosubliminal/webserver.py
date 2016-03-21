@@ -202,14 +202,13 @@ class Config(object):
             threading.Thread(target=autosubliminal.runner.restart).start()
             tmpl = Template(file="interface/templates/system/restart.tmpl")
             tmpl.message = "Saved config. Auto restart in progress..."
+            return str(tmpl)
 
         else:
             # For some reason the config needs to be read again, otherwise all pages get an error
             config.read_config()
-            tmpl = Template(file=return_tmpl_file)
             utils.add_notification_message("Config saved")
-
-        return str(tmpl)
+            redirect_referer("/config")
 
     @cherrypy.expose
     def index(self):
