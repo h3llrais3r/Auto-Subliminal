@@ -53,20 +53,22 @@ def run_cmd(cmd, communicate=True):
 def connect_url(url):
     log.debug("Connecting to url: %s" % url)
     response = None
-    errorcode = None
-    socket.setdefaulttimeout(autosubliminal.TIMEOUT)
     try:
-        response = urllib2.urlopen(url)
-        errorcode = response.getcode()
+        response = urllib2.urlopen(url, None, autosubliminal.TIMEOUT)
+        log.debug("Connection successful")
     except urllib2.HTTPError, e:
-        errorcode = e.getcode()
-
-    if errorcode == 200:
-        log.debug("API: HTTP Code: 200: OK!")
-    else:
-        log.error("HTTP Code: %s: NOT OK!" % errorcode)
+        http_code = e.code
+        log.debug("Could not connect to url: http response code %s" % http_code)
+    except Exception, e:
+        log.debug("Could not connect to url: %s" % e.message)
 
     return response
+
+
+def wait_for_internet_connection():
+    while not connect_url(autosubliminal.VERSIONURL):
+        log.debug("Waiting for internet connection")
+        time.sleep(2)
 
 
 def clean_series_name(series_name):

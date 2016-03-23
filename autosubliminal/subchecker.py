@@ -33,6 +33,9 @@ class SubChecker(ScheduledProcess):
         log.info("Starting round of subtitle checking")
         to_delete_wanted_queue = []
 
+        # Wait for internet connection
+        utils.wait_for_internet_connection()
+
         # Get wanted queue lock
         if not utils.get_wanted_queue_lock():
             return False
