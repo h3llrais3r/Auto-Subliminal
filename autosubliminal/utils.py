@@ -66,9 +66,10 @@ def connect_url(url):
 
 
 def wait_for_internet_connection():
+    log.debug("Checking internet connection")
     while not connect_url(autosubliminal.VERSIONURL):
         log.debug("Waiting for internet connection")
-        time.sleep(2)
+        time.sleep(5)
 
 
 def clean_series_name(series_name):
