@@ -310,7 +310,7 @@ def convert_timestamp(datestring):
 
 def print_timestamp(time_float, format='%d-%m-%Y %H:%M:%S', default_value='N/A'):
     if time_float > 0.0:
-        return time.strftime(format, time.gmtime(time_float))
+        return time.strftime(format, time.localtime(time_float))
     else:
         return default_value
 
