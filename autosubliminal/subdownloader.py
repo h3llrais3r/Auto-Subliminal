@@ -43,7 +43,7 @@ class SubDownloader(object):
 
             # Notify
             if autosubliminal.NOTIFY:
-                Notifier(self._download_item).notify()
+                Notifier(self._download_item).notify_download()
 
             # Post processing
             if autosubliminal.POSTPROCESS:
