@@ -36,15 +36,16 @@ class Scheduler(object):
         # Register scheduler
         self._register_scheduler()
 
-        # Run before starting thread will block caller thread until process is executed the first time
-        if initial_run:
-            log.debug("Starting initial run before starting thread %s" % self.name)
-            self._run_process(time.time())
-
         # Start thread
         log.info("Starting thread %s" % self.name)
         self._thread = threading.Thread(target=self._schedule_process, name=self.name)
         self._thread.start()
+
+        # Initial run will block caller thread until process is executed the first time
+        if initial_run:
+            log.debug("Waiting for initial run of thread %s" % self.name)
+            while not self.last_run:
+                time.sleep(1)
 
     def _register_scheduler(self):
         # Add scheduler to dict of schedulers
