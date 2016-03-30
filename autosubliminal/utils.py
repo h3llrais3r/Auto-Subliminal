@@ -5,9 +5,9 @@ import logging
 import os
 import platform
 import re
-import socket
 import stat
 import subprocess
+import threading
 import time
 import urllib2
 
@@ -18,6 +18,8 @@ import autosubliminal
 from autosubliminal.db import TvdbIdCache, ImdbIdCache
 
 log = logging.getLogger(__name__)
+
+lock = threading.Lock()
 
 LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
                         re.IGNORECASE)
@@ -337,13 +339,23 @@ def check_mobile_device(req_useragent):
 
 
 def get_wanted_queue_lock():
-    if autosubliminal.WANTEDQUEUELOCK:
-        log.info("Skipping, cannot get a wanted queue lock because another thread is using the queues")
-        return False
-    else:
-        log.debug("Getting wanted queue lock")
-        autosubliminal.WANTEDQUEUELOCK = True
-        return True
+    with lock:
+        if autosubliminal.WANTEDQUEUELOCK:
+            log.info("Skipping, cannot get a wanted queue lock because another thread is using the queues")
+            return False
+        else:
+            log.debug("Getting wanted queue lock")
+            autosubliminal.WANTEDQUEUELOCK = True
+            return True
+
+
+def release_wanted_queue_lock():
+    with lock:
+        if autosubliminal.WANTEDQUEUELOCK:
+            log.debug("Releasing wanted queue lock")
+            autosubliminal.WANTEDQUEUELOCK = False
+        else:
+            log.info("Trying to release a wanted queue lock while there is no lock")
 
 
 def count_wanted_items(itemtype=None):
@@ -355,14 +367,6 @@ def count_wanted_items(itemtype=None):
             if item['type'] == itemtype:
                 size += 1
     return size
-
-
-def release_wanted_queue_lock():
-    if autosubliminal.WANTEDQUEUELOCK:
-        log.debug("Releasing wanted queue lock")
-        autosubliminal.WANTEDQUEUELOCK = False
-    else:
-        log.info("Trying to release a wanted queue lock while there is no lock")
 
 
 def get_file_size(path):
