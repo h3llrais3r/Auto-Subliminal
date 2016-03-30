@@ -15,7 +15,7 @@ def initialize():
 
     log_filter = _LogFilter(autosubliminal.LOGHTTPACCESS)
     # If the formatter is changed, also the utils.LOG_PARSER must be changed!
-    log_formatter = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
+    log_formatter = logging.Formatter('%(asctime)s %(levelname)-8s [%(name)s] %(message)s')
     log_handler = logging.handlers.RotatingFileHandler(autosubliminal.LOGFILE, 'a', autosubliminal.LOGSIZE,
                                                        autosubliminal.LOGNUM)
     log_handler.addFilter(log_filter)
