@@ -1,7 +1,6 @@
 import abc
 import logging
 import re
-import threading
 import traceback
 import urllib2
 
@@ -9,7 +8,7 @@ from distutils import version
 from git import Repo
 
 import autosubliminal
-from autosubliminal import utils
+from autosubliminal import scheduler, utils
 from autosubliminal.enums import InstallType
 from autosubliminal.scheduler import ScheduledProcess
 from autosubliminal.version import RELEASE_VERSION
@@ -53,7 +52,7 @@ class VersionChecker(ScheduledProcess):
         # Only update and restart when: no force run, update is allowed and auto update is enabled
         if not force_run and self.manager.update_allowed and autosubliminal.CHECKVERSIONAUTOUPDATE:
             self.update()
-            threading.Thread(target=autosubliminal.runner.restart).start()
+            scheduler.restart_app()
 
         # Always return 'True' because we don't want to retry it until the next scheduled run
         return True

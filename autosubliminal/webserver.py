@@ -4,11 +4,10 @@ except:
     print "ERROR!!! Cheetah is not installed yet. Download it from: http://pypi.python.org/pypi/Cheetah/2.4.4"
 
 import json
-import threading
 import cherrypy
 
 import autosubliminal
-from autosubliminal import config, notifiers, subchecker, utils
+from autosubliminal import config, notifiers, scheduler, subchecker, utils
 from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache
 
 
@@ -189,8 +188,8 @@ class Config(object):
 
         # Check if restart is needed
         if restart:
-            # Restart the runner in the background (do not import runner due to circular imports with webserver)
-            threading.Thread(target=autosubliminal.runner.restart).start()
+            # Restart the runner in the background
+            scheduler.restart_app()
             tmpl = Template(file="interface/templates/system/restart.tmpl")
             tmpl.message = "Saved config. Auto restart in progress..."
             return str(tmpl)
@@ -596,16 +595,16 @@ class System(object):
 
     @cherrypy.expose
     def restart(self):
+        scheduler.restart_app()
         tmpl = Template(file="interface/templates/system/restart.tmpl")
         tmpl.message = "Auto-Subliminal is restarting..."
-        threading.Thread(target=autosubliminal.runner.restart).start()
         return str(tmpl)
 
     @cherrypy.expose
     def shutdown(self):
+        scheduler.shutdown_app()
         tmpl = Template(file="interface/templates/general/message.tmpl")
         tmpl.message = "Auto-Subliminal is shutting down..."
-        threading.Timer(2, autosubliminal.runner.stop).start()
         return str(tmpl)
 
     @cherrypy.expose
