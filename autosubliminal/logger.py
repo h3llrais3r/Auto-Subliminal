@@ -14,8 +14,7 @@ def initialize():
     log.handlers = []
 
     log_filter = _LogFilter(autosubliminal.LOGHTTPACCESS)
-    # If the formatter is changed, also the utils.LOG_PARSER must be changed!
-    log_formatter = logging.Formatter('%(asctime)s %(levelname)-8s [%(threadName)s] [%(name)s] %(message)s')
+    log_formatter = _LogFormatter(autosubliminal.LOGDETAILEDFORMAT)
     log_handler = logging.handlers.RotatingFileHandler(autosubliminal.LOGFILE, 'a', autosubliminal.LOGSIZE,
                                                        autosubliminal.LOGNUM)
     log_handler.addFilter(log_filter)
@@ -28,9 +27,26 @@ def initialize():
         console = logging.StreamHandler()
         console.setLevel(autosubliminal.LOGLEVELCONSOLE)
         # set a format which is simpler for console use
-        formatter = logging.Formatter('%(asctime)s %(levelname)s  %(message)s')
+        formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         console.setFormatter(formatter)
         log.addHandler(console)
+
+
+class _LogFormatter(logging.Formatter):
+    def __init__(self, detailed_format=False):
+        self.detailed_format = detailed_format
+        # If the format is changed, also the utils.LOG_PARSER must be changed!
+        self._custom_fmt = '%(asctime)s %(levelname)-8s '
+        if detailed_format:
+            self._custom_fmt += '%(customDetails)s '  # Add customer details
+        self._custom_fmt += '%(message)s'
+        super(_LogFormatter, self).__init__(self._custom_fmt)
+
+    def format(self, record):
+        # Add custom field(s) to the record to use it in the detailed format
+        if self.detailed_format:
+            record.customDetails = '[%s :: %s]' % (record.threadName, record.name)
+        return super(_LogFormatter, self).format(record)
 
 
 class _LogFilter(logging.Filter):

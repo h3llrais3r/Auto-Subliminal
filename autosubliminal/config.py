@@ -173,6 +173,11 @@ def read_config():
         else:
             autosubliminal.LOGHTTPACCESS = False
 
+        if cfg.has_option("logfile", "logdetailedformat"):
+            autosubliminal.LOGDETAILEDFORMAT = cfg.getboolean("logfile", "logdetailedformat")
+        else:
+            autosubliminal.LOGDETAILEDFORMAT = False
+
         if cfg.has_option("logfile", "logreversed"):
             autosubliminal.LOGREVERSED = cfg.getboolean("logfile", "logreversed")
         else:
@@ -201,6 +206,7 @@ def read_config():
         autosubliminal.LOGNUM = 1
         autosubliminal.LOGSIZE = 1000000
         autosubliminal.LOGHTTPACCESS = False
+        autosubliminal.LOGDETAILEDFORMAT = False
         autosubliminal.LOGREVERSED = False
         autosubliminal.LOGLEVELCONSOLE = logging.ERROR
 
@@ -927,6 +933,7 @@ def save_logfile_section():
     cfg.set(section, "lognum", str(autosubliminal.LOGNUM))
     cfg.set(section, "logsize", str(autosubliminal.LOGSIZE))
     cfg.set(section, "loghttpaccess", str(autosubliminal.LOGHTTPACCESS))
+    cfg.set(section, "logdetailedformat", str(autosubliminal.LOGDETAILEDFORMAT))
     cfg.set(section, "logreversed", str(autosubliminal.LOGREVERSED))
     cfg.set(section, "loglevelconsole", logging.getLevelName(int(autosubliminal.LOGLEVELCONSOLE)).lower())
 
@@ -1223,6 +1230,7 @@ def check_for_restart():
     logsize = 1000000
     lognum = 1
     loghttpaccess = False
+    logdetailedformat = False
     webserverip = u'0.0.0.0'
     webserverport = 8083
     webroot = u''
@@ -1266,6 +1274,9 @@ def check_for_restart():
         if cfg.has_option("logfile", "loghttpaccess"):
             loghttpaccess = cfg.getboolean("logfile", "loghttpaccess")
 
+        if cfg.has_option("logfile", "logdetailedformat"):
+            logdetailedformat = cfg.getboolean("logfile", "logdetailedformat")
+
         if cfg.has_option("logfile", "loglevelconsole"):
             loglevelconsole = cfg.get("logfile", "loglevelconsole")
             if loglevelconsole.lower() == 'error':
@@ -1297,6 +1308,7 @@ def check_for_restart():
             or logsize != autosubliminal.LOGSIZE \
             or lognum != autosubliminal.LOGNUM \
             or loghttpaccess != autosubliminal.LOGHTTPACCESS \
+            or logdetailedformat != autosubliminal.LOGDETAILEDFORMAT \
             or loglevelconsole != autosubliminal.LOGLEVELCONSOLE \
             or webserverip != autosubliminal.WEBSERVERIP \
             or webserverport != autosubliminal.WEBSERVERPORT \

@@ -248,13 +248,15 @@ class Config(object):
             return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
-        def save(self, logfile, loglevel, lognum, logsize, loghttpaccess, logreversed, loglevelconsole):
+        def save(self, logfile, loglevel, lognum, logsize, loghttpaccess, logdetailedformat, logreversed,
+                 loglevelconsole):
             # Set logfile variables
             autosubliminal.LOGFILE = logfile
             autosubliminal.LOGLEVEL = int(loglevel)
             autosubliminal.LOGNUM = int(lognum)
             autosubliminal.LOGSIZE = int(logsize)
             autosubliminal.LOGHTTPACCESS = loghttpaccess
+            autosubliminal.LOGDETAILEDFORMAT = logdetailedformat
             autosubliminal.LOGREVERSED = logreversed
             autosubliminal.LOGLEVELCONSOLE = int(loglevelconsole)
 
