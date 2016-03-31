@@ -131,6 +131,9 @@ def start():
 
 
 def stop(exit_app=True):
+    if exit_app:
+        log.info("Shutting down")
+
     # Mark as stopped
     autosubliminal.STARTED = False
 
@@ -144,6 +147,7 @@ def stop(exit_app=True):
     cherrypy.engine.exit()
 
     if exit_app:
+        log.info("Exiting")
         os._exit(0)
 
 
