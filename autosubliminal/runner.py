@@ -122,9 +122,9 @@ def start():
     cherrypy.server.wait()
 
     # Schedule threads
-    autosubliminal.SCANDISK = Scheduler("SCANDISK", DiskScanner(), autosubliminal.SCANDISKINTERVAL, True)
-    autosubliminal.CHECKSUB = Scheduler("CHECKSUB", SubChecker(), autosubliminal.CHECKSUBINTERVAL)
-    autosubliminal.CHECKVERSION = Scheduler("CHECKVERSION", VersionChecker(), autosubliminal.CHECKVERSIONINTERVAL)
+    autosubliminal.SCANDISK = Scheduler("DiskScanner", DiskScanner(), autosubliminal.SCANDISKINTERVAL, True)
+    autosubliminal.CHECKSUB = Scheduler("SubChecker", SubChecker(), autosubliminal.CHECKSUBINTERVAL)
+    autosubliminal.CHECKVERSION = Scheduler("VersionChecker", VersionChecker(), autosubliminal.CHECKVERSIONINTERVAL)
 
     # Mark as started
     autosubliminal.STARTED = True
