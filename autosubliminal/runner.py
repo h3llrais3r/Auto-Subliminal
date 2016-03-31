@@ -1,8 +1,9 @@
+import cherrypy
 import logging
 import os
 import sys
 import webbrowser
-import cherrypy
+import signal
 
 import autosubliminal
 from autosubliminal.diskscanner import DiskScanner
@@ -160,5 +161,7 @@ def restart():
 
 
 def signal_handler(signum, frame):
-    log.debug("Got signal, shutting down")
-    os._exit(0)
+    log.debug("Received signal: %s" % signum)
+    if signum == signal.SIGINT:
+        log.info("Received interrupt signal, shutting down")
+        os._exit(0)
