@@ -28,7 +28,7 @@ class PushbulletNotifier(BaseNotifier):
     def enabled(self):
         return autosubliminal.NOTIFYPUSHBULLET
 
-    def _send_message(self, message):
+    def _send_message(self, message, **kwargs):
         try:
             pb = Pushbullet(autosubliminal.PUSHBULLETAPI)
             pb.push_note(title=self.application_title, body=message.encode('utf-8'))

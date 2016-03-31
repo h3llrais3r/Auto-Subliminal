@@ -29,11 +29,25 @@ class MailNotifier(BaseNotifier):
     def enabled(self):
         return autosubliminal.NOTIFYMAIL
 
-    def _send_message(self, message):
+    # Override of generic _get_message method
+    def _get_message(self, **kwargs):
+        # Prepend extra info to default message
+        message = self.application_title + "\n\n"
+        if 'video' in kwargs.keys():
+            message += "Video: %s\n" % kwargs['video']
+        message += super(MailNotifier, self)._get_message(**kwargs)
+        return message
+
+    def _send_message(self, message, **kwargs):
         mail_message = MIMEText(message)
         mail_message['From'] = email.utils.formataddr((autosubliminal.MAILFROMADDR, autosubliminal.MAILFROMADDR))
         mail_message['To'] = email.utils.formataddr(('Recipient', autosubliminal.MAILTOADDR))
-        mail_message['Subject'] = autosubliminal.MAILSUBJECT if autosubliminal.MAILSUBJECT else self.application_title
+        subject = autosubliminal.MAILSUBJECT if autosubliminal.MAILSUBJECT else self.application_title
+        # Add subtitle from kwargs to subject if available
+        if 'subtitle' in kwargs.keys():
+            subject += " - " + kwargs['subtitle']
+        mail_message['Subject'] = subject
+        # Convert message to string
         mail_message = mail_message.as_string()
         try:
             server = smtplib.SMTP(autosubliminal.MAILSRV)

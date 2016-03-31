@@ -28,7 +28,7 @@ class PushoverNotifier(BaseNotifier):
     def enabled(self):
         return autosubliminal.NOTIFYPUSHOVER
 
-    def _send_message(self, message):
+    def _send_message(self, message, **kwargs):
         data = {'token': autosubliminal.PUSHOVERAPI,
                 'user': autosubliminal.PUSHOVERKEY,
                 'title': self.application_title,

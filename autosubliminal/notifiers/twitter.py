@@ -41,7 +41,12 @@ class TwitterNotifier(BaseNotifier):
     def enabled(self):
         return autosubliminal.NOTIFYTWITTER
 
-    def _send_message(self, message):
+    # Override of generic _get_message method
+    def _get_message(self, **kwargs):
+        # Prepend application title to default message
+        return self.application_title + "\n" + super(TwitterNotifier, self)._get_message(**kwargs)
+
+    def _send_message(self, message, **kwargs):
         try:
             twitter_api = pythontwitter.Api(consumer_key=CONSUMER_KEY,
                                             consumer_secret=CONSUMER_SECRET,

@@ -29,14 +29,10 @@ class GrowlNotifier(BaseNotifier):
     def enabled(self):
         return autosubliminal.NOTIFYGROWL
 
-    # Override of generic notify_download method
-    def notify_download(self, video, subtitle, language, provider):
-        if self.enabled:
-            log.debug("Sending a %s notification" % self.name)
-            message = "Subtitle: %s \n Language: %s \n Provider: %s " % (subtitle, language, provider)
-            return self._send_message(self._create_notice(message).encode())
-        else:
-            return False
+    # Override of generic _get_message method
+    def _get_message(self, **kwargs):
+        message = super(GrowlNotifier, self)._get_message(**kwargs)
+        return self._create_notice(message).encode()
 
     # Override of generic test method
     def test(self):
@@ -51,7 +47,7 @@ class GrowlNotifier(BaseNotifier):
         register = gntp.GNTPRegister()
         register.add_header('Application-Name', self.application)
         register.add_notification('Test', True)
-        register.add_notification('Subtitle download', True)
+        register.add_notification(self.title, True)
         if autosubliminal.GROWLPASS:
             register.set_password(autosubliminal.GROWLPASS)
         return register
@@ -66,7 +62,7 @@ class GrowlNotifier(BaseNotifier):
             notice.set_password(autosubliminal.GROWLPASS)
         return notice
 
-    def _send_message(self, message):
+    def _send_message(self, message, **kwargs):
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             s.connect((autosubliminal.GROWLHOST, int(autosubliminal.GROWLPORT)))

@@ -28,7 +28,7 @@ class PushalotNotifier(BaseNotifier):
     def enabled(self):
         return autosubliminal.NOTIFYPUSHALOT
 
-    def _send_message(self, message):
+    def _send_message(self, message, **kwargs):
         data = {'AuthorizationToken': autosubliminal.PUSHALOTAPI,
                 'Title': self.application_title,
                 'Body': message.encode('utf-8')}

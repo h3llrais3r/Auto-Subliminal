@@ -25,12 +25,25 @@ class BaseNotifier(object):
     def enabled(self):
         pass
 
-    def notify_download(self, video, subtitle, language, provider):
+    def _get_message(self, **kwargs):
+        """
+        Default message.
+        """
+        message = ""
+        if 'subtitle' in kwargs.keys():
+            message += "Subtitle: %s\n" % kwargs['subtitle']
+        if 'language' in kwargs.keys():
+            message += "Language: %s\n" % kwargs['language']
+        if 'provider' in kwargs.keys():
+            message += "Provider: %s\n" % kwargs['provider']
+        return message
+
+    def notify_download(self, **kwargs):
         # Only notify when enabled
         if self.enabled:
             self.log.debug("Sending a %s notification" % self.name)
-            message = "Subtitle: %s \n Language: %s \n Provider: %s" % (subtitle, language, provider)
-            return self._send_message(message)
+            message = self._get_message(**kwargs)
+            return self._send_message(message, **kwargs)
         else:
             return False
 
@@ -39,5 +52,5 @@ class BaseNotifier(object):
         return self._send_message(self.test_message)
 
     @abc.abstractmethod
-    def _send_message(self, message):
+    def _send_message(self, message, **kwargs):
         pass

@@ -28,7 +28,7 @@ class NmaNotifier(BaseNotifier):
     def enabled(self):
         return autosubliminal.NOTIFYNMA
 
-    def _send_message(self, message):
+    def _send_message(self, message, **kwargs):
         try:
             nma_instance = pynma.PyNMA(str(autosubliminal.NMAAPI))
             resp = nma_instance.push(application=self.application, event=self.title, description=message)

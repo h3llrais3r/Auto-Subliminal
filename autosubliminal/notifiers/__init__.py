@@ -26,18 +26,19 @@ class Notifier(object):
     """
 
     def __init__(self, download_item):
-        self.video = os.path.basename(download_item["originalFileLocationOnDisk"])  # Strip path
-        self.subtitle = os.path.basename(download_item['destinationFileLocationOnDisk'])  # Strip path
-        self.language = download_item['downlang']
-        self.provider = download_item['provider']
+        self._notifier_dict = {'video': os.path.basename(download_item["originalFileLocationOnDisk"]),
+                               'subtitle': os.path.basename(download_item['destinationFileLocationOnDisk']),
+                               'language': download_item['downlang'],
+                               'provider': download_item['provider']}
 
     def notify_download(self):
         log.debug("Sending download notifications. Video: %s, Subtitle: %s, Language: %s, Provider: %s" % (
-            self.video, self.subtitle, self.language, self.provider))
+            self._notifier_dict['video'], self._notifier_dict['subtitle'], self._notifier_dict['language'],
+            self._notifier_dict['provider']))
 
         notified = False
         for notifier in _notifiers.values():
-            notified |= notifier.notify_download(self.video, self.subtitle, self.language, self.provider)
+            notified |= notifier.notify_download(**self._notifier_dict)
 
         return notified
 

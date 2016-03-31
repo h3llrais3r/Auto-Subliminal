@@ -28,7 +28,7 @@ class ProwlNotifier(BaseNotifier):
     def enabled(self):
         return autosubliminal.NOTIFYPROWL
 
-    def _send_message(self, message):
+    def _send_message(self, message, **kwargs):
         data = {'apikey': autosubliminal.PROWLAPI,
                 'application': self.application,
                 'event': self.title,
