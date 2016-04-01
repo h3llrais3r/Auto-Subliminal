@@ -1218,7 +1218,6 @@ def check_for_restart():
     Check if internal variables are different from the config file.
     Only check the variables the require a restart to take effect
     """
-    # TODO: This function is very ugly and should be rewritten comletely. This is not a way to check it!
     cfg = SafeConfigParser()
     try:
         with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
