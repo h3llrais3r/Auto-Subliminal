@@ -48,7 +48,7 @@
                     #for $item in $autosubliminal.WANTEDQUEUE
                     <tr>
                         <td>
-                            <span>$display_name($item, False)</span>
+                            <span>$display_name($item)</span>
                         </td>
                         <td>
                             #for lang in $item['lang']
@@ -76,7 +76,7 @@
                     #for $item in $lastdownloads
                     <tr>
                         <td>
-                            <span>$display_name($item, False)</span>
+                            <span>$display_name($item)</span>
                         </td>
                         <td>
                             #set $lang = $item['language']
