@@ -220,7 +220,8 @@ class Config(object):
 
         @cherrypy.expose(alias='save')
         def save(self, path, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, scandisk,
-                 checksub, checkversion, checkversionautoupdate, scanembeddedsubs, skiphiddendirs, maxdbresults):
+                 checksub, checkversion, checkversionautoupdate, scanembeddedsubs, skiphiddendirs, minvideofilesize,
+                 maxdbresults):
             # Set general variables
             autosubliminal.PATH = path
             autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
@@ -233,6 +234,7 @@ class Config(object):
             autosubliminal.CHECKVERSIONAUTOUPDATE = checkversionautoupdate
             autosubliminal.SCANEMBEDDEDSUBS = scanembeddedsubs
             autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
+            autosubliminal.MINVIDEOFILESIZE = int(minvideofilesize)
             autosubliminal.MAXDBRESULTS = int(maxdbresults)
 
             # Now save to the configfile and restart if needed

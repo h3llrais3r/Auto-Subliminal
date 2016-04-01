@@ -1,8 +1,11 @@
+import logging
 import os
 import re
-import logging
 
 import guessit
+
+import autosubliminal
+from autosubliminal import utils
 
 log = logging.getLogger(__name__)
 
@@ -35,6 +38,17 @@ def process_file(dirname, filename):
     # Guess
     log.info("Processing file: %s" % filename)
     file_path = os.path.join(dirname, filename)
+
+    # Check file size if required
+    if autosubliminal.MINVIDEOFILESIZE:
+        file_size = os.path.getsize(file_path)
+        # MINVIDEOFILESIZE is size in MB
+        if file_size < autosubliminal.MINVIDEOFILESIZE * 1024 * 1024:
+            log.warning("File size (%s) is lower than %sMB, skipping" % (
+                utils.humanize_bytes(file_size), autosubliminal.MINVIDEOFILESIZE))
+            return
+
+    # Guess
     try:
         log.debug("Guessing file info")
         guess = guessit.guess_file_info(file_path)
@@ -42,7 +56,7 @@ def process_file(dirname, filename):
     except Exception, e:
         log.error("Could not guess file info for: %s" % file_path)
         log.error(e)
-        return {}
+        return
 
     # Create and return dict from guess
     return _dict_from_guess(guess)

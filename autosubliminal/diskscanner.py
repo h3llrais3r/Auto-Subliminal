@@ -136,9 +136,6 @@ def walk_dir(path):
                         else:
                             log.error("Could not process the filename: %s" % filename)
                             continue
-                    else:
-                        log.error("Could not process the filename: %s" % filename)
-                        continue
 
     # Sort WANTEDQUEUE
     autosubliminal.WANTEDQUEUE = sorted(autosubliminal.WANTEDQUEUE, key=itemgetter('time'), reverse=True)
