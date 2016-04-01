@@ -1,7 +1,7 @@
 #from types import *
 
 #import autosubliminal
-#from autosubliminal.utils import convert_timestamp, display_title, get_file_size, count_wanted_items
+#from autosubliminal.utils import convert_timestamp, display_item, display_title, get_file_size, count_wanted_items
 
 #set total = $count_wanted_items()
 #set $total_shows = $count_wanted_items('episode')
@@ -127,32 +127,16 @@
                     <td>$item['season']</td>
                     <td>$item['episode']</td>
                     <td class="wrapped">
-                        #if $type($item['source']) == UnicodeType:
-                        $item['source'].upper()
-                        #else
-                        Unknown
-                        #end if
+                        $display_item($item, 'source', 'N/A', True)
                     </td>
                     <td class="wrapped">
-                        #if $type($item['quality']) == UnicodeType:
-                        $item['quality'].upper()
-                        #else
-                        Unknown
-                        #end if
+                        $display_item($item, 'quality', 'N/A', True)
                     </td>
                     <td class="wrapped">
-                        #if $type($item['codec']) == UnicodeType:
-                        $item['codec'].upper()
-                        #else
-                        Unknown
-                        #end if
+                        $display_item($item, 'codec', 'N/A', True)
                     </td>
                     <td class="wrapped">
-                        #if $type($item['releasegrp']) == UnicodeType:
-                        $item['releasegrp'].upper()
-                        #else
-                        Unknown
-                        #end if
+                        $display_item($item, 'releasegrp', 'N/A', True)
                     </td>
                     <td>
                         #for $lang in $item['lang']

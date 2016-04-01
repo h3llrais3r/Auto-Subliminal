@@ -100,16 +100,28 @@ def clean_series_name(series_name):
         log.debug("There is no SerieName to clean")
 
 
-def return_upper(text):
+def safe_string(obj, default_value=None):
     """
-    Return the text converted to uppercase.
-    When not possible return nothing.
+    Return the object converted to string.
+    When not possible return the default value.
     """
     try:
-        text = text.upper()
+        text = str(obj)
         return text
     except:
-        pass
+        return default_value
+
+
+def safe_uppercase(obj, default_value=None):
+    """
+    Return the object converted to uppercase.
+    When not possible return the default value.
+    """
+    try:
+        text = obj.upper()
+        return text
+    except:
+        return default_value
 
 
 def show_name_mapping(show_name):
@@ -288,19 +300,33 @@ def display_logfile(loglevel):
     return result
 
 
-def display_title(item_dict, uppercase=False):
-    title = item_dict['title']
-    if item_dict['year']:
-        title += " (" + str(item_dict['year']) + ")"
+def display_item(item_dict, key, default_value='N/A', uppercase=False):
+    item = item_dict.get(key, default_value) or default_value
+    item = safe_string(item, default_value)
     if uppercase:
-        title = title.upper()
+        item = safe_uppercase(item, default_value)
+    return item
+
+
+def display_title(item_dict, default_value='N/A', uppercase=False):
+    title = display_item(item_dict, 'title', default_value, uppercase)
+    year = display_item(item_dict, 'year', default_value, uppercase)
+    if not title == default_value and not year == default_value:
+        title += " (" + year + ")"
+    if uppercase:
+        title = safe_uppercase(title, default_value)
     return title
 
 
-def display_name(item_dict, uppercase=False):
-    name = display_title(item_dict, uppercase)
-    if item_dict['type'] == "episode":
-        name += " S" + format(item_dict['season'], '02') + "E" + format(item_dict['episode'], '02')
+def display_name(item_dict, default_value='N/A', uppercase=False):
+    name = display_title(item_dict, default_value, uppercase)
+    if 'type' in item_dict.keys() and item_dict['type'] == "episode":
+        season = display_item(item_dict, 'season', default_value, uppercase)
+        episode = display_item(item_dict, 'episode', default_value, uppercase)
+        if not season == default_value and not episode == default_value:
+            name += " S" + season.zfill(2) + "E" + episode.zfill(2)
+    if uppercase:
+        name = safe_uppercase(name, default_value)
     return name
 
 

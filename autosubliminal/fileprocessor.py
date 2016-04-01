@@ -35,11 +35,10 @@ def process_file(dirname, filename):
     - 'releasegrp'
     """
 
-    # Guess
     log.info("Processing file: %s" % filename)
     file_path = os.path.join(dirname, filename)
 
-    # Check file size if required
+    # Check minimal video file size if needed
     if autosubliminal.MINVIDEOFILESIZE:
         file_size = os.path.getsize(file_path)
         # MINVIDEOFILESIZE is size in MB
@@ -76,10 +75,10 @@ def _dict_from_guess(guess):
                    'year': _property_from_guess(guess, 'year'),
                    'season': _property_from_guess(guess, 'season'),
                    'episode': _property_from_guess(guess, 'episodeNumber'),
-                   'source': _property_from_guess(guess, 'format'),
+                   'source': _property_from_guess(guess, 'format', u'N/A'),
                    'quality': _property_from_guess(guess, 'screenSize', u'SD'),
-                   'codec': _property_from_guess(guess, 'videoCodec'),
-                   'releasegrp': _split_release_group(_property_from_guess(guess, 'releaseGroup'))}
+                   'codec': _property_from_guess(guess, 'videoCodec', u'N/A'),
+                   'releasegrp': _split_release_group(_property_from_guess(guess, 'releaseGroup', u'N/A'))}
     log.debug("Dict from guess: %r" % result_dict)
 
     # Check if mandatory elements are available in the guess
