@@ -341,7 +341,7 @@ def check_mobile_device(req_useragent):
 def get_wanted_queue_lock():
     with lock:
         if autosubliminal.WANTEDQUEUELOCK:
-            log.info("Skipping, cannot get a wanted queue lock because another thread is using the queues")
+            log.info("Cannot get a wanted queue lock because another thread is using the queues, skipping")
             return False
         else:
             log.debug("Getting wanted queue lock")
