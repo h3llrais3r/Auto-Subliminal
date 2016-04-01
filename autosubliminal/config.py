@@ -1409,7 +1409,7 @@ def upgrade_config(from_version, to_version):
             print "INFO: Replacing old user namemappings with tvdb id's."
             for x in autosubliminal.USERSHOWNAMEMAPPING.keys():
                 # Search for tvdb id
-                tvdb_id = utils.get_show_id(x, force_search=True)
+                tvdb_id = utils.get_tvdb_id(x, force_search=True)
                 # Replace by tvdb id or remove namemapping
                 if tvdb_id:
                     autosubliminal.USERSHOWNAMEMAPPING[x] = str(tvdb_id)

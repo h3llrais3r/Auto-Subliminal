@@ -97,14 +97,14 @@
                             </ul>
                         </span>
                         #if $item['type'] == 'episode':
-                        #if not $item['showid']:
+                        #if not $item['tvdbid']:
                         <span class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                <img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Show id could not be found!">
+                                <img src="$autosubliminal.WEBROOT/images/warning.png" alt="warning" title="Tvdb id could not be found!">
                             </a>
                             <ul class="dropdown-menu has-tip info-list">
                                 <li>
-                                    <a href="$autosubliminal.WEBROOT/home/searchId/$index">Search show id</a>
+                                    <a href="$autosubliminal.WEBROOT/home/searchId/$index">Search tvdb id</a>
                                 </li>
                             </ul>
                         </span>

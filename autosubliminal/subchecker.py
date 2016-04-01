@@ -187,7 +187,7 @@ def force_id_search(wanted_item_index):
     title = wanted_item['title']
     year = wanted_item['year']
     if wanted_item['type'] == 'episode':
-        wanted_item['showid'] = utils.get_show_id(title, True)
+        wanted_item['tvdbid'] = utils.get_tvdb_id(title, True)
     elif wanted_item['type'] == 'movie':
         wanted_item['imdbid'], wanted_item['year'] = utils.get_imdb_info(title, year, True)
 

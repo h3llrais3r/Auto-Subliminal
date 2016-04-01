@@ -114,8 +114,7 @@ def walk_dir(path):
                             wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
                                 wanted_item['time'])))
                             wanted_item['lang'] = languages
-                            # TODO: refactor showid to tvdbid
-                            wanted_item['showid'] = utils.get_show_id(title)
+                            wanted_item['tvdbid'] = utils.get_tvdb_id(title)
                             autosubliminal.WANTEDQUEUE.append(wanted_item)
 
                         # Movie wanted

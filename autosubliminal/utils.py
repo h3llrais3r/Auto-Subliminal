@@ -155,38 +155,38 @@ def skip_movie(title, year):
         return True
 
 
-def get_show_id(show_name, force_search=False):
-    log.debug("Getting show id for %s" % show_name)
-    show_id = None
+def get_tvdb_id(show_name, force_search=False):
+    log.debug("Getting tvdb id for %s" % show_name)
+    tvdb_id = None
     # Skip search in shownamemapping and id cache when force_search = True
     if not force_search:
-        show_id = show_name_mapping(show_name)
-        if show_id:
-            log.debug("Show id from shownamemapping %s" % show_id)
-            return int(show_id)
+        tvdb_id = show_name_mapping(show_name)
+        if tvdb_id:
+            log.debug("Tvdb id from shownamemapping %s" % tvdb_id)
+            return int(tvdb_id)
 
-        show_id = TvdbIdCache().get_id(show_name)
-        if show_id:
-            log.debug("Getting show id from cache %s" % show_id)
-            if show_id == -1:
-                log.error("Show id not found in cache for %s" % show_name)
+        tvdb_id = TvdbIdCache().get_id(show_name)
+        if tvdb_id:
+            log.debug("Getting tvdb id from cache %s" % tvdb_id)
+            if tvdb_id == -1:
+                log.error("Tvdb id not found in cache for %s" % show_name)
                 return
-            return int(show_id)
+            return int(tvdb_id)
 
     # Search on tvdb
     try:
         show = tvdb_api.Tvdb()[show_name]
         if show:
-            show_id = show['id']
+            tvdb_id = show['id']
     except:
-        log.error("Show id not found for %s" % show_name)
+        log.error("Tvdb id not found for %s" % show_name)
         TvdbIdCache().set_id(-1, show_name)
 
-    if show_id:
-        log.debug("Show id from api %s" % show_id)
-        TvdbIdCache().set_id(show_id, show_name)
-        log.info("%s added to cache with %s" % (show_name, show_id))
-        return int(show_id)
+    if tvdb_id:
+        log.debug("Tvdb id from api %s" % tvdb_id)
+        TvdbIdCache().set_id(tvdb_id, show_name)
+        log.info("%s added to cache with %s" % (show_name, tvdb_id))
+        return int(tvdb_id)
 
 
 def get_imdb_info(title, year=None, force_search=False):
