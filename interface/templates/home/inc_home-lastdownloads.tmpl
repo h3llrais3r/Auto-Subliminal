@@ -97,11 +97,7 @@
                         <img src="$imageurl" alt="$item['language']" title="$item['language']">
                     </td>
                     <td class="datetime">
-                        #if $type($item['timestamp']) == UnicodeType:
                         $convert_timestamp($item['timestamp'])
-                        #else
-                        Unknown
-                        #end if
                     </td>
                 </tr>
                 #end for

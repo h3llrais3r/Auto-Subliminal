@@ -5,7 +5,7 @@
 #import autosubliminal
 #from autosubliminal import version
 #from autosubliminal.db import LastDownloads
-#from autosubliminal.utils import display_name, print_next_scheduler_run
+#from autosubliminal.utils import display_name, display_next_scheduler_run
 
 <html>
 
@@ -95,14 +95,14 @@
                     <tr>
                         <td>Next disc scan in</td>
                         <td>
-                            $print_next_scheduler_run($autosubliminal.SCANDISK)
+                            $display_next_scheduler_run($autosubliminal.SCANDISK)
                             <br>
                         </td>
                     </tr>
                     <tr>
                         <td>Next subtitle check in</td>
                         <td>
-                            $print_next_scheduler_run($autosubliminal.CHECKSUB)
+                            $display_next_scheduler_run($autosubliminal.CHECKSUB)
                             <br>
                         </td>
                     </tr>

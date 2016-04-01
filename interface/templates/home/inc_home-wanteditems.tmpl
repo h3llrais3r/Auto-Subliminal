@@ -162,11 +162,7 @@
                         #end for
                     </td>
                     <td class="datetime">
-                        #if $type($item['timestamp']) == UnicodeType:
                         $convert_timestamp($item['timestamp'])
-                        #else
-                        Unknown
-                        #end if
                     </td>
                 </tr>
                 #end for

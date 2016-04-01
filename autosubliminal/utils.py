@@ -330,24 +330,18 @@ def display_name(item_dict, default_value='N/A', uppercase=False):
     return name
 
 
-def convert_timestamp(datestring):
-    date_object = time.strptime(datestring, "%Y-%m-%d %H:%M:%S")
-    return "%02i-%02i-%i %02i:%02i:%02i " % (
-        date_object[2], date_object[1], date_object[0], date_object[3], date_object[4], date_object[5])
-
-
-def print_timestamp(time_float, format='%d-%m-%Y %H:%M:%S', default_value='N/A'):
+def display_timestamp(time_float, format='%d-%m-%Y %H:%M:%S', default_value='N/A'):
     if time_float > 0.0:
         return time.strftime(format, time.localtime(time_float))
     else:
         return default_value
 
 
-def print_next_scheduler_run(scheduler):
+def display_next_scheduler_run(scheduler):
     if scheduler.running:
         return "Running..."
     else:
-        return print_timestamp(scheduler.interval - (time.time() - scheduler.last_run), '%H:%M:%S')
+        return display_timestamp(scheduler.interval - (time.time() - scheduler.last_run), '%H:%M:%S')
 
 
 def get_next_scheduler_run_in_ms(scheduler):
@@ -355,6 +349,10 @@ def get_next_scheduler_run_in_ms(scheduler):
         return 0
     else:
         return (scheduler.last_run + scheduler.interval) * 1000
+
+
+def convert_timestamp(timestamp_string, format_from='%Y-%m-%d %H:%M:%S', format_to='%d-%m-%Y %H:%M:%S'):
+    return time.strftime(format_to, time.strptime(timestamp_string, format_from))
 
 
 def check_mobile_device(req_useragent):

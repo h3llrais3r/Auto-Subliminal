@@ -1,6 +1,6 @@
 #import autosubliminal
 
-#from autosubliminal.utils import print_timestamp, humanize_bytes, get_free_space
+#from autosubliminal.utils import display_timestamp, get_free_space, humanize_bytes
 #from autosubliminal.templates.PageTemplate import PageTemplate
 #extends PageTemplate
 
@@ -33,8 +33,8 @@
                 #for $scheduler in $autosubliminal.SCHEDULERS.values()
                 <tr>
                     <td class="main-column">$scheduler.name</td>
-                    <td>$print_timestamp($scheduler.last_run)</td>
-                    <td>$print_timestamp($scheduler.next_run)</td>
+                    <td>$display_timestamp($scheduler.last_run)</td>
+                    <td>$display_timestamp($scheduler.next_run)</td>
                     <td>$scheduler.running</td>
                 </tr>
                 #end for
