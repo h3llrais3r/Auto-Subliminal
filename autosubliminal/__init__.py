@@ -28,6 +28,8 @@ DBFILE = None
 DBVERSION = None
 
 # Startup
+EXECUTABLE = None
+ARGS = None
 DAEMON = None
 STARTED = None
 PID = None

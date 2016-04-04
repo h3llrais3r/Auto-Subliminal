@@ -38,6 +38,10 @@ class Usage(Exception):
 def main(argv=None):
     import autosubliminal
 
+    # Set startup parameters
+    autosubliminal.EXECUTABLE = os.path.normpath(os.path.realpath(__file__))
+    autosubliminal.ARGS = sys.argv[1:]
+
     # From Sickbeard / Headphones
     try:
         locale.setlocale(locale.LC_ALL, "")
@@ -72,7 +76,6 @@ def main(argv=None):
             if option in ("-d", "--daemon"):
                 if sys.platform == "win32":
                     print "ERROR: No support for daemon mode in Windows"
-                    # TODO: Service support for Windows
                 else:
                     autosubliminal.DAEMON = True
 

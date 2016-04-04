@@ -1,9 +1,11 @@
 import cherrypy
 import logging
 import os
-import sys
-import webbrowser
 import signal
+import subprocess
+import sys
+
+import webbrowser
 
 import autosubliminal
 from autosubliminal.diskscanner import DiskScanner
@@ -131,14 +133,14 @@ def start():
     autosubliminal.STARTED = True
 
 
-def stop(exit_app=True):
-    if exit_app:
-        log.info("Shutting down")
+def stop(exit=True):
+    log.info("Stopping")
 
     # Mark as stopped
     autosubliminal.STARTED = False
 
     # Stop threads
+    log.info("Stopping scheduler threads")
     autosubliminal.SCANDISK.stop()
     autosubliminal.CHECKSUB.stop()
     autosubliminal.CHECKVERSION.stop()
@@ -147,17 +149,37 @@ def stop(exit_app=True):
     log.info("Stopping CherryPy webserver")
     cherrypy.engine.exit()
 
-    if exit_app:
-        log.info("Exiting")
-        os._exit(0)
+    # Shutdown the logger to make sure the logfile is released before restarting
+    logging.shutdown()
+
+    if exit:
+        shutdown()
 
 
-def restart():
+def restart(kill=False):
     log.info("Restarting")
-    stop(exit_app=False)
-    autosubliminal.initialize()
-    start()
-    log.info("Restarted")
+    if kill:
+        # Kill current process and restart a new one with the same args
+        # Get executable and args
+        popen_list = [sys.executable, autosubliminal.EXECUTABLE]
+        popen_list += autosubliminal.ARGS
+        # Stop without exit
+        stop(exit=False)
+        # Start new process
+        subprocess.Popen(popen_list, cwd=os.getcwd())
+        # Shutdown
+        shutdown()
+    else:
+        # Stop without killing current process and restart
+        stop(exit=False)
+        autosubliminal.initialize()
+        start()
+        log.info("Restarted")
+
+
+def shutdown():
+    log.info("Shutting down")
+    os._exit(0)
 
 
 def signal_handler(signum, frame):
