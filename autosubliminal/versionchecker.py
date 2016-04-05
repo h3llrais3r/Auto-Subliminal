@@ -47,7 +47,8 @@ class VersionChecker(ScheduledProcess):
         self.manager.check_version(force_run)
 
         # Release wanted queue lock
-        utils.release_wanted_queue_lock()
+        if not force_run:
+            utils.release_wanted_queue_lock()
 
         # Only update and restart when: no force run, update is allowed and auto update is enabled
         if not force_run and self.manager.update_allowed and autosubliminal.CHECKVERSIONAUTOUPDATE:
