@@ -226,14 +226,14 @@ class Config(object):
             autosubliminal.PATH = path
             autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
             autosubliminal.DEFAULTLANGUAGE = defaultlanguage
-            autosubliminal.DEFAULTLANGUAGESUFFIX = defaultlanguagesuffix
+            autosubliminal.DEFAULTLANGUAGESUFFIX = utils.getboolean(defaultlanguagesuffix)
             autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split(',')
             autosubliminal.SCANDISKINTERVAL = int(scandisk)
             autosubliminal.CHECKSUBINTERVAL = int(checksub)
             autosubliminal.CHECKVERSIONINTERVAL = int(checkversion)
-            autosubliminal.CHECKVERSIONAUTOUPDATE = checkversionautoupdate
-            autosubliminal.SCANEMBEDDEDSUBS = scanembeddedsubs
-            autosubliminal.SKIPHIDDENDIRS = skiphiddendirs
+            autosubliminal.CHECKVERSIONAUTOUPDATE = utils.getboolean(checkversionautoupdate)
+            autosubliminal.SCANEMBEDDEDSUBS = utils.getboolean(scanembeddedsubs)
+            autosubliminal.SKIPHIDDENDIRS = utils.getboolean(skiphiddendirs)
             autosubliminal.MINVIDEOFILESIZE = int(minvideofilesize)
             autosubliminal.MAXDBRESULTS = int(maxdbresults)
 
@@ -256,9 +256,9 @@ class Config(object):
             autosubliminal.LOGLEVEL = int(loglevel)
             autosubliminal.LOGNUM = int(lognum)
             autosubliminal.LOGSIZE = int(logsize)
-            autosubliminal.LOGHTTPACCESS = loghttpaccess
-            autosubliminal.LOGDETAILEDFORMAT = logdetailedformat
-            autosubliminal.LOGREVERSED = logreversed
+            autosubliminal.LOGHTTPACCESS = utils.getboolean(loghttpaccess)
+            autosubliminal.LOGDETAILEDFORMAT = utils.getboolean(logdetailedformat)
+            autosubliminal.LOGREVERSED = utils.getboolean(logreversed)
             autosubliminal.LOGLEVELCONSOLE = int(loglevelconsole)
 
             # Now save to the configfile and restart if needed
@@ -280,7 +280,7 @@ class Config(object):
             autosubliminal.WEBROOT = webroot
             autosubliminal.USERNAME = username
             autosubliminal.PASSWORD = password
-            autosubliminal.LAUNCHBROWSER = launchbrowser
+            autosubliminal.LAUNCHBROWSER = utils.getboolean(launchbrowser)
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.tmpl_file)
@@ -353,7 +353,7 @@ class Config(object):
                 # Just one selected or None (in this case, None will be saved and no providers will be used)
                 autosubliminal.SUBLIMINALPROVIDERS = subliminalproviders
             # Hearing impaired
-            autosubliminal.INCLUDEHEARINGIMPAIRED = includehearingimpaired
+            autosubliminal.INCLUDEHEARINGIMPAIRED = utils.getboolean(includehearingimpaired)
             # Addic7ed provider
             autosubliminal.ADDIC7EDUSERNAME = addic7edusername
             autosubliminal.ADDIC7EDPASSWORD = addic7edpassword
@@ -474,8 +474,8 @@ class Config(object):
                  notifyprowl, prowlapi, prowlpriority,
                  notifypushbullet, pushbulletapi):
             # Set notify variables
-            autosubliminal.NOTIFY = notify
-            autosubliminal.NOTIFYMAIL = notifymail
+            autosubliminal.NOTIFY = utils.getboolean(notify)
+            autosubliminal.NOTIFYMAIL = utils.getboolean(notifymail)
             autosubliminal.MAILSRV = mailsrv
             autosubliminal.MAILFROMADDR = mailfromaddr
             autosubliminal.MAILTOADDR = mailtoaddr
@@ -484,25 +484,25 @@ class Config(object):
             autosubliminal.MAILSUBJECT = mailsubject
             autosubliminal.MAILENCRYPTION = mailencryption
             autosubliminal.MAILAUTH = mailauth
-            autosubliminal.NOTIFYTWITTER = notifytwitter
+            autosubliminal.NOTIFYTWITTER = utils.getboolean(notifytwitter)
             autosubliminal.TWITTERKEY = twitterkey
             autosubliminal.TWITTERSECRET = twittersecret
-            autosubliminal.NOTIFYPUSHALOT = notifypushalot
+            autosubliminal.NOTIFYPUSHALOT = utils.getboolean(notifypushalot)
             autosubliminal.PUSHALOTAPI = pushalotapi
-            autosubliminal.NOTIFYPUSHOVER = notifypushover
+            autosubliminal.NOTIFYPUSHOVER = utils.getboolean(notifypushover)
             autosubliminal.PUSHOVERKEY = pushoverkey
             autosubliminal.PUSHOVERAPI = pushoverapi
             autosubliminal.PUSHOVERDEVICES = pushoverdevices
-            autosubliminal.NOTIFYNMA = notifynma
+            autosubliminal.NOTIFYNMA = utils.getboolean(notifynma)
             autosubliminal.NMAAPI = nmaapi
-            autosubliminal.NOTIFYGROWL = notifygrowl
+            autosubliminal.NOTIFYGROWL = utils.getboolean(notifygrowl)
             autosubliminal.GROWLHOST = growlhost
             autosubliminal.GROWLPORT = growlport
             autosubliminal.GROWLPASS = growlpass
-            autosubliminal.NOTIFYPROWL = notifyprowl
+            autosubliminal.NOTIFYPROWL = utils.getboolean(notifyprowl)
             autosubliminal.PROWLAPI = prowlapi
             autosubliminal.PROWLPRIORITY = int(prowlpriority)
-            autosubliminal.NOTIFYPUSHBULLET = notifypushbullet
+            autosubliminal.NOTIFYPUSHBULLET = utils.getboolean(notifypushbullet)
             autosubliminal.PUSHBULLETAPI = pushbulletapi
 
             # Now save to the configfile and restart if needed
@@ -520,8 +520,8 @@ class Config(object):
         def save(self, postprocess, postprocessutf8encoding, showpostprocesscmd, showpostprocesscmdargs,
                  moviepostprocesscmd, moviepostprocesscmdargs):
             # Set postprocessing variables
-            autosubliminal.POSTPROCESS = postprocess
-            autosubliminal.POSTPROCESSUTF8ENCODING = postprocessutf8encoding
+            autosubliminal.POSTPROCESS = utils.getboolean(postprocess)
+            autosubliminal.POSTPROCESSUTF8ENCODING = utils.getboolean(postprocessutf8encoding)
             autosubliminal.SHOWPOSTPROCESSCMD = showpostprocesscmd
             autosubliminal.SHOWPOSTPROCESSCMDARGS = showpostprocesscmdargs
             autosubliminal.MOVIEPOSTPROCESSCMD = moviepostprocesscmd

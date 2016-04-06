@@ -19,7 +19,11 @@ from autosubliminal.db import TvdbIdCache, ImdbIdCache
 
 log = logging.getLogger(__name__)
 
-lock = threading.Lock()
+_lock = threading.Lock()
+
+# Copied from ConfigParser
+_boolean_states = {'1': True, 'yes': True, 'true': True, 'on': True,
+                   '0': False, 'no': False, 'false': False, 'off': False}
 
 LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
                         re.IGNORECASE)
@@ -98,6 +102,14 @@ def clean_series_name(series_name):
         return capwords(series_name.strip())
     except TypeError:
         log.debug("There is no SerieName to clean")
+
+
+# Based on ConfigParser.getboolean
+def getboolean(value):
+    v = str(value)
+    if v.lower() not in _boolean_states:
+        raise ValueError, 'Not a boolean: %s' % v
+    return _boolean_states[v.lower()]
 
 
 def safe_string(obj, default_value=None):
@@ -363,7 +375,7 @@ def check_mobile_device(req_useragent):
 
 
 def get_wanted_queue_lock():
-    with lock:
+    with _lock:
         if autosubliminal.WANTEDQUEUELOCK:
             log.info("Cannot get wanted queue lock, skipping")
             return False
@@ -374,7 +386,7 @@ def get_wanted_queue_lock():
 
 
 def release_wanted_queue_lock():
-    with lock:
+    with _lock:
         if autosubliminal.WANTEDQUEUELOCK:
             log.info("Releasing wanted queue lock")
             autosubliminal.WANTEDQUEUELOCK = False
