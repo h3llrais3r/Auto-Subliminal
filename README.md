@@ -8,8 +8,8 @@ It makes use of Subliminal (https://github.com/Diaoul/subliminal) for checking a
 
 What it does:
 
- * Easy and straightforward script that scans your TV contents
- * If no SRT found it will attempt to download one by using Subliminal
+ * Easy and straightforward script that scans your TV and MOVIE contents
+ * If no SUBTITLE is found (externally or internally) it will attempt to download one by using Subliminal
  * Subliminal will attempt to match the correct version of the subtitle with the file located on the disk
  * Once every day it will do a full rescan of your local content
  * Support to search/save/delete a subtitle individually
@@ -26,7 +26,10 @@ What it uses (see libraries.txt for versions):
  * click
  * dogpile.cache
  * dogpile.core
+ * enum34
  * enzyme
+ * gitpython
+ * gitdb
  * growl
  * guessit
  * html5lib
@@ -34,6 +37,7 @@ What it uses (see libraries.txt for versions):
  * imdbpy
  * oauth2
  * pbr
+ * pushbullet
  * pynma
  * pynmwp
  * pysrt
@@ -43,9 +47,11 @@ What it uses (see libraries.txt for versions):
  * requests
  * simplejson
  * six
+ * smmap
  * stevedore
  * subliminal
  * tvdb_api
+ * websocket-client
 
 How to use:
 
@@ -55,7 +61,7 @@ How to use:
  * A web browser should now open
  * Go to the config page, check the settings, make sure you set at least:
     * Path: Should point to the location where AutoSubliminal.py is located
-    * Video paths: Should point to your root series folder(s)
+    * Video paths: Should point to your root series and/or movies folder(s)
  * Restart Auto-Subliminal
 
 Enjoy your subtitles!
