@@ -149,11 +149,9 @@ def stop(exit=True):
     log.info("Stopping CherryPy webserver")
     cherrypy.engine.exit()
 
-    # Shutdown the logger to make sure the logfile is released before restarting
-    logging.shutdown()
-
     if exit:
-        shutdown()
+        # Exit current process
+        os._exit(0)
 
 
 def restart(kill=False):
@@ -165,21 +163,19 @@ def restart(kill=False):
         popen_list += autosubliminal.ARGS
         # Stop without exit
         stop(exit=False)
+        log.info("Killing current process and starting a new one")
+        # Shutdown the logger to make sure the logfile is released before restarting
+        logging.shutdown()
         # Start new process
         subprocess.Popen(popen_list, cwd=os.getcwd())
-        # Shutdown
-        shutdown()
+        # Exit current process
+        os._exit(0)
     else:
         # Stop without killing current process and restart
         stop(exit=False)
         autosubliminal.initialize()
         start()
         log.info("Restarted")
-
-
-def shutdown():
-    log.info("Shutting down")
-    os._exit(0)
 
 
 def signal_handler(signum, frame):
