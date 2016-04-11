@@ -10,8 +10,6 @@ import locale
 # This to prevent installation of the libraries and to prevent the 'lib.' prefix when importing the libraries
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
 
-#signal.signal(signal.SIGTERM, autosubliminal.runner.signal_handler)
-
 help_message = '''
 Usage:
     -h (--help)     Prints this message
@@ -111,9 +109,10 @@ def main(argv=None):
     print "INFO: Starting output to log."
     print "INFO: Bye."
     log = logging.getLogger(__name__)
-    log.debug("Systemencoding is: %s" % autosubliminal.SYSENCODING)
-    log.debug("Configversion is: %d" % autosubliminal.CONFIGVERSION)
-    log.debug("Dbversion is: %d" % autosubliminal.DBVERSION)
+    log.info("New PID: %s" % autosubliminal.PID)
+    log.info("System encoding: %s" % autosubliminal.SYSENCODING)
+    log.info("Config version: %d" % autosubliminal.CONFIGVERSION)
+    log.info("Db version: %d" % autosubliminal.DBVERSION)
 
     log.info("Starting application runner")
     autosubliminal.runner.start()
