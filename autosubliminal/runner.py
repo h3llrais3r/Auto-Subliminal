@@ -162,8 +162,9 @@ def restart(exit=False):
         popen_list += autosubliminal.ARGS
         # Stop without exit
         stop(exit=False)
-        log.info("Exiting PID: %s" % autosubliminal.PID)
-        log.info("Restart command and arguments: %s" % popen_list)
+        log.info("Exiting application with PID: %s" % autosubliminal.PID)
+        log.info("Restarting application with command and arguments: %s" % popen_list)
+        log.info("#" * 50)
         # Shutdown the logger to make sure the logfile is released before starting a new process
         logging.shutdown()
         # Start new process

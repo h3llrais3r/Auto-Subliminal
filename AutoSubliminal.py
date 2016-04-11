@@ -109,7 +109,7 @@ def main(argv=None):
     print "INFO: Starting output to log."
     print "INFO: Bye."
     log = logging.getLogger(__name__)
-    log.info("New PID: %s" % autosubliminal.PID)
+    log.info("Running application with PID: %s" % autosubliminal.PID)
     log.info("System encoding: %s" % autosubliminal.SYSENCODING)
     log.info("Config version: %d" % autosubliminal.CONFIGVERSION)
     log.info("Db version: %d" % autosubliminal.DBVERSION)
