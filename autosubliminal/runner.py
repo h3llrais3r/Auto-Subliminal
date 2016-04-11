@@ -162,13 +162,14 @@ def restart(exit=False):
         popen_list += autosubliminal.ARGS
         # Stop without exit
         stop(exit=False)
-        log.debug("Restart command and arguments: %s" % popen_list)
+        log.info("Exiting PID: %s" % autosubliminal.PID)
+        log.info("Restart command and arguments: %s" % popen_list)
         # Shutdown the logger to make sure the logfile is released before starting a new process
         logging.shutdown()
         # Start new process
         subprocess.Popen(popen_list, cwd=os.getcwd())
         # Exit current process
-        _exit()
+        _exit(shutdown_logger=False)
     else:
         # Stop without killing current process and restart
         stop(exit=False)
@@ -184,9 +185,10 @@ def signal_handler(signum, frame):
         _exit()
 
 
-def _exit(code=0):
-    log.info("Exiting PID: %s" % autosubliminal.PID)
-    # Shutdown the logger to make sure the logfile is released before exiting
-    logging.shutdown()
+def _exit(shutdown_logger=True, code=0):
+    if shutdown_logger:
+        log.info("Exiting PID: %s" % autosubliminal.PID)
+        # Shutdown the logger to make sure the logfile is released before exiting
+        logging.shutdown()
     # Exit process
     os._exit(code)
