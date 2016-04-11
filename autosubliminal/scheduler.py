@@ -144,11 +144,11 @@ class ScheduledProcess(object):
         pass
 
 
-def restart_app(kill=False):
+def restart_app(exit=False):
     """
     Scheduler function to restart the application.
     """
-    threading.Thread(target=autosubliminal.runner.restart, kwargs={'kill': kill}, name="AppRestarter").start()
+    threading.Thread(target=autosubliminal.runner.restart, kwargs={'exit': exit}, name="AppRestarter").start()
 
 
 def shutdown_app():
