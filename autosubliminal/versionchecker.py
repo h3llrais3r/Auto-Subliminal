@@ -53,8 +53,8 @@ class VersionChecker(ScheduledProcess):
         # Only update and restart when: no force run, update is allowed and auto update is enabled
         if not force_run and self.manager.update_allowed and autosubliminal.CHECKVERSIONAUTOUPDATE:
             self.update()
-            # Restart the app with kill of current process to have a clean restart
-            scheduler.restart_app(kill=True)
+            # Restart the app with exit of current process to have a clean restart
+            scheduler.restart_app(exit=True)
 
         # Always return 'True' because we don't want to retry it until the next scheduled run
         return True
