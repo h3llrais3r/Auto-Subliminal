@@ -201,6 +201,9 @@ def initialize():
     SUBLIMINALPROVIDERSENTRYPOINT = pkg_resources.get_entry_info(dist='fake_entry_points', group=None,
                                                                  name='subliminal.providers')
 
+    # Subliminal settings
+    _initialize_subliminal()
+
     # Version settings
     GITHUBURL = "https://github.com/h3llrais3r/Auto-Subliminal"
     VERSIONURL = "https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py"
@@ -270,9 +273,6 @@ def initialize():
 
     # Logging
     logger.initialize()
-
-    # Subliminal settings
-    _initialize_subliminal()
 
 
 def _fake_entry_points():
