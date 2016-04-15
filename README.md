@@ -35,6 +35,7 @@ What it uses (see libraries.txt for versions):
  * html5lib
  * httplib2
  * imdbpy
+ * langdetect
  * oauth2
  * pbr
  * pushbullet
