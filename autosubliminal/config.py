@@ -106,6 +106,11 @@ def read_config():
         else:
             autosubliminal.SKIPHIDDENDIRS = False
 
+        if cfg.has_option("config", "detectinvalidsublanguage"):
+            autosubliminal.DETECTINVALIDSUBLANGUAGE = cfg.getboolean("config", "detectinvalidsublanguage")
+        else:
+            autosubliminal.DETECTINVALIDSUBLANGUAGE = False
+
         if cfg.has_option("config", "minvideofilesize"):
             autosubliminal.MINVIDEOFILESIZE = cfg.getint("config", "minvideofilesize")
         else:
@@ -138,6 +143,7 @@ def read_config():
         autosubliminal.CHECKVERSIONAUTOUPDATE = False
         autosubliminal.SCANEMBEDDEDSUBS = False
         autosubliminal.SKIPHIDDENDIRS = False
+        autosubliminal.DETECTINVALIDSUBLANGUAGE = False
         autosubliminal.MINVIDEOFILESIZE = 0
         autosubliminal.MAXDBRESULTS = 0
         autosubliminal.CONFIGVERSION = version.CONFIG_VERSION
@@ -909,6 +915,7 @@ def save_config_section():
     cfg.set(section, "checkversionautoupdate", str(autosubliminal.CHECKVERSIONAUTOUPDATE))
     cfg.set(section, "scanembeddedsubs", str(autosubliminal.SCANEMBEDDEDSUBS))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
+    cfg.set(section, "detectinvalidsublanguage", str(autosubliminal.DETECTINVALIDSUBLANGUAGE))
     cfg.set(section, "minvideofilesize", str(autosubliminal.MINVIDEOFILESIZE))
     cfg.set(section, "maxdbresults", str(autosubliminal.MAXDBRESULTS))
     cfg.set(section, "configversion", str(autosubliminal.CONFIGVERSION))

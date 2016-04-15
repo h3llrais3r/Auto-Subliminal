@@ -58,6 +58,8 @@ CHECKVERSIONINTERVAL = None
 CHECKVERSIONAUTOUPDATE = None
 SCANEMBEDDEDSUBS = None
 SKIPHIDDENDIRS = None
+DETECTINVALIDSUBLANGUAGE = None
+MINDETECTEDLANGUAGEPROBABILITY = None
 MINVIDEOFILESIZE = None
 MAXDBRESULTS = None
 
@@ -173,7 +175,7 @@ def initialize():
         APIKEY, API, APICALLS, APICALLSLASTRESET, APICALLSRESETINT, APICALLSMAX, \
         PATH, VIDEOPATHS, DEFAULTLANGUAGE, DEFAULTLANGUAGESUFFIX, ADDITIONALLANGUAGES, \
         SCANDISKINTERVAL, CHECKSUBINTERVAL, CHECKVERSIONINTERVAL, CHECKVERSIONAUTOUPDATE, SCANEMBEDDEDSUBS, \
-        SKIPHIDDENDIRS, MINVIDEOFILESIZE, MAXDBRESULTS, \
+        SKIPHIDDENDIRS, DETECTINVALIDSUBLANGUAGE, MINDETECTEDLANGUAGEPROBABILITY, MINVIDEOFILESIZE, MAXDBRESULTS, \
         LOGFILE, LOGLEVEL, LOGSIZE, LOGNUM, LOGHTTPACCESS, LOGDETAILEDFORMAT, LOGREVERSED, LOGLEVELCONSOLE, \
         WEBSERVERIP, WEBSERVERPORT, WEBROOT, USERNAME, PASSWORD, LAUNCHBROWSER, \
         SHOWMINMATCHSCORE, SHOWMINMATCHSCOREDEFAULT, SHOWMATCHSOURCE, SHOWMATCHQUALITY, SHOWMATCHCODEC, \
@@ -203,6 +205,9 @@ def initialize():
 
     # Subliminal settings
     _initialize_subliminal()
+
+    # Langdetect settings
+    MINDETECTEDLANGUAGEPROBABILITY = _init_langdetect()
 
     # Version settings
     GITHUBURL = "https://github.com/h3llrais3r/Auto-Subliminal"
@@ -321,3 +326,21 @@ def _initialize_subliminal():
     if not region.is_configured:
         cache_file = os.path.abspath(os.path.expanduser('subliminal.cache.dbm'))
         region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexLock})
+
+
+def _init_langdetect():
+    # Imports
+    import langdetect.detector_factory
+    from langdetect.detector_factory import DetectorFactory
+
+    # Init factory (to load the profiles at startup)
+    langdetect.detector_factory.init_factory()
+
+    # Language detection algorithm is non-deterministic, we might get different results every time you run it.
+    # To enforce consistent results, call following code before the first language detection
+    DetectorFactory.seed = 0
+
+    # Set a default probability in order to accept the language detection (hardcoded for now)
+    min_probability = 0.9
+
+    return min_probability

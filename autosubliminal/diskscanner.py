@@ -2,12 +2,13 @@ import logging
 import os
 import re
 import time
-
-from babelfish import Error as BabelfishError, Language
-from enzyme.mkv import MKV
 from operator import itemgetter
 
+import langdetect
+import pysrt
 import subliminal
+from babelfish import Error as BabelfishError, Language
+from enzyme.mkv import MKV
 
 import autosubliminal
 from autosubliminal import utils, fileprocessor
@@ -148,22 +149,32 @@ def check_missing_subtitle_languages(dirname, filename):
     if autosubliminal.SCANEMBEDDEDSUBS:
         embedded_subtitles = _get_embedded_subtitles(dirname, filename)
     # Check default language
+    detect_language = False
     if autosubliminal.DEFAULTLANGUAGE:
         default_language = Language.fromietf(autosubliminal.DEFAULTLANGUAGE)
         # Check with or without alpha2 code suffix depending on configuration
         if autosubliminal.DEFAULTLANGUAGESUFFIX:
-            srtfile = os.path.splitext(filename)[0] + u"." + autosubliminal.DEFAULTLANGUAGE + u".srt"
+            srt_file = os.path.splitext(filename)[0] + u"." + autosubliminal.DEFAULTLANGUAGE + u".srt"
         else:
-            srtfile = os.path.splitext(filename)[0] + u".srt"
-        if not os.path.exists(os.path.join(dirname, srtfile)) and default_language not in embedded_subtitles:
+            srt_file = os.path.splitext(filename)[0] + u".srt"
+            detect_language = autosubliminal.DETECTINVALIDSUBLANGUAGE
+        srt_path = os.path.join(dirname, srt_file)
+        sub_exists = os.path.exists(srt_path)
+        if not sub_exists and default_language not in embedded_subtitles:
             missing_subtitles.append(autosubliminal.DEFAULTLANGUAGE)
+        elif sub_exists and detect_language:
+            detected_language = _detect_subtitle_language(srt_path)
+            if detected_language and detected_language != default_language:
+                # Remove the subtitle with an invalid detected language in order to search for a new one
+                if _delete_subtitle_file(srt_path, detected_language):
+                    missing_subtitles.append(autosubliminal.DEFAULTLANGUAGE)
     # Check additional languages
     if autosubliminal.ADDITIONALLANGUAGES:
         # Always check with alpha2 code suffix for additional languages
         for language in autosubliminal.ADDITIONALLANGUAGES:
             additional_language = Language.fromietf(language)
-            srtfile = os.path.splitext(filename)[0] + u"." + language + u".srt"
-            if not os.path.exists(os.path.join(dirname, srtfile)) and additional_language not in embedded_subtitles:
+            srt_file = os.path.splitext(filename)[0] + u"." + language + u".srt"
+            if not os.path.exists(os.path.join(dirname, srt_file)) and additional_language not in embedded_subtitles:
                 missing_subtitles.append(language)
     return missing_subtitles
 
@@ -203,3 +214,42 @@ def _get_embedded_subtitles(dirname, filename):
     except:
         log.exception('Parsing video metadata with enzyme failed')
     return embedded_subtitle_languages
+
+
+def _detect_subtitle_language(srt_path):
+    log.debug("Detecting subtitle language")
+    # Load srt file (try first iso-8859-1 with fallback to utf-8)
+    try:
+        subtitle = pysrt.open(path=srt_path, encoding='iso-8859-1')
+    except:
+        try:
+            subtitle = pysrt.open(path=srt_path, encoding='utf-8')
+        except:
+            # If we can't read it, we can't detect, so return
+            return
+    # Read first 5 subtitle lines to determine the language
+    if len(subtitle) >= 5:
+        text = ""
+        for sub in subtitle[0:5]:
+            text += sub.text
+        # Detect the language with highest probability and return it if it's more than the required minimum probability
+        detected_languages = langdetect.detect_langs(text)
+        log.debug("Detected languages: %s", detected_languages)
+        if len(detected_languages) > 0:
+            best_detected_language = detected_languages[0]
+            language_probability = best_detected_language.prob
+            if language_probability >= autosubliminal.MINDETECTEDLANGUAGEPROBABILITY:
+                log.debug("Detected language with accepted probability : %s", best_detected_language)
+                return Language.fromietf(best_detected_language.lang)
+    return
+
+
+def _delete_subtitle_file(subtitle_path, language):
+    try:
+        os.remove(subtitle_path)
+        log.warning("Deleted subtitle with invalid detected language: %s [%s]" % (subtitle_path, language))
+        return True
+    except Exception, e:
+        log.error("Unable to delete subtitle with invalid detected language: %s [%s]" % (subtitle_path, language))
+        log.error("Exception: %s" % e)
+        return False
