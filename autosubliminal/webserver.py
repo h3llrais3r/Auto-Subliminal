@@ -580,7 +580,10 @@ class System(object):
     @cherrypy.expose(alias='updateVersion')
     def update_version(self):
         autosubliminal.CHECKVERSION.process.update()
-        redirect("/system/restart")
+        scheduler.restart_app(exit=True)
+        tmpl = Template(file="interface/templates/system/restart.tmpl")
+        tmpl.message = "Auto-Subliminal is restarting..."
+        return str(tmpl)
 
     @cherrypy.expose(alias='runNow')
     def run_now(self):
