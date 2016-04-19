@@ -1,3 +1,4 @@
+import cgi
 import codecs
 import ctypes
 import imdb
@@ -308,7 +309,7 @@ def display_logfile(loglevel):
                 log_data.append(x)
         except Exception, e:
             continue
-    result = "".join(log_data)
+    result = cgi.escape("".join(log_data))
     return result
 
 
