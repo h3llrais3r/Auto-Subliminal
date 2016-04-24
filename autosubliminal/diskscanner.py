@@ -165,9 +165,12 @@ def check_missing_subtitle_languages(dirname, filename):
         elif sub_exists and detect_language:
             detected_language = _detect_subtitle_language(srt_path)
             if detected_language and detected_language != default_language:
+                log.warning("Detected an invalid subtitle language: %s" % detected_language)
                 # Remove the subtitle with an invalid detected language in order to search for a new one
                 if _delete_subtitle_file(srt_path, detected_language):
                     missing_subtitles.append(autosubliminal.DEFAULTLANGUAGE)
+            else:
+                log.debug("No invalid subtitle language detected")
     # Check additional languages
     if autosubliminal.ADDITIONALLANGUAGES:
         # Always check with alpha2 code suffix for additional languages
@@ -234,22 +237,25 @@ def _detect_subtitle_language(srt_path):
             text += sub.text
         # Detect the language with highest probability and return it if it's more than the required minimum probability
         detected_languages = langdetect.detect_langs(text)
-        log.debug("Detected languages: %s", detected_languages)
+        log.debug("Detected subtitle language(s): %s", detected_languages)
         if len(detected_languages) > 0:
-            best_detected_language = detected_languages[0]
-            language_probability = best_detected_language.prob
-            if language_probability >= autosubliminal.MINDETECTEDLANGUAGEPROBABILITY:
-                log.debug("Detected language with accepted probability : %s", best_detected_language)
-                return Language.fromietf(best_detected_language.lang)
+            # Get first detected language (list is sorted according to probability, highest first)
+            detected_language = detected_languages[0]
+            language_probability = detected_language.prob
+            if language_probability >= autosubliminal.DETECTEDLANGUAGEPROBABILITY:
+                log.debug("Probability of detected subtitle language accepted: %s" % detected_language)
+                return Language.fromietf(detected_language.lang)
+            else:
+                log.debug("Probability of detected subtitle language too low: %s" % detected_language)
     return
 
 
 def _delete_subtitle_file(subtitle_path, language):
     try:
+        log.warning("Deleting subtitle with invalid language: %s [%s]" % (subtitle_path, language))
         os.remove(subtitle_path)
-        log.warning("Deleted subtitle with invalid detected language: %s [%s]" % (subtitle_path, language))
         return True
     except Exception, e:
-        log.error("Unable to delete subtitle with invalid detected language: %s [%s]" % (subtitle_path, language))
+        log.error("Unable to delete subtitle with invalid language: %s [%s]" % (subtitle_path, language))
         log.error("Exception: %s" % e)
         return False

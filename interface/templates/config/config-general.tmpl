@@ -320,6 +320,27 @@
 
                     <div class="form-group narrow">
                         <span class="col-xs-4 col-md-3">
+                            <label for="detectedlanguageprobability">Language detection probability
+                                <span class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            The minimum required probability (value between 0 and 1) for the invalid language detection functionality.<br>
+                                            The probability must be at least this value before the language is accepted as the detected language of the subtitle.<br>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </label>
+                        </span>
+                        <span class="col-xs-8 col-md-4">
+                            <input type="text" id="detectedlanguageprobability" name="detectedlanguageprobability" value="$autosubliminal.DETECTEDLANGUAGEPROBABILITY" class="form-control input-sm">
+                        </span>
+                    </div>
+
+                    <div class="form-group narrow">
+                        <span class="col-xs-4 col-md-3">
                             <label for="minvideofilesize">Min video file size
                                 <span class="dropdown">
                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">

@@ -111,6 +111,11 @@ def read_config():
         else:
             autosubliminal.DETECTINVALIDSUBLANGUAGE = False
 
+        if cfg.has_option("config", "detectedlanguageprobability"):
+            autosubliminal.DETECTEDLANGUAGEPROBABILITY = cfg.getfloat("config", "detectedlanguageprobability")
+        else:
+            autosubliminal.DETECTEDLANGUAGEPROBABILITY = 0.9
+
         if cfg.has_option("config", "minvideofilesize"):
             autosubliminal.MINVIDEOFILESIZE = cfg.getint("config", "minvideofilesize")
         else:
@@ -144,6 +149,7 @@ def read_config():
         autosubliminal.SCANEMBEDDEDSUBS = False
         autosubliminal.SKIPHIDDENDIRS = False
         autosubliminal.DETECTINVALIDSUBLANGUAGE = False
+        autosubliminal.DETECTEDLANGUAGEPROBABILITY = 0.9
         autosubliminal.MINVIDEOFILESIZE = 0
         autosubliminal.MAXDBRESULTS = 0
         autosubliminal.CONFIGVERSION = version.CONFIG_VERSION
@@ -916,6 +922,7 @@ def save_config_section():
     cfg.set(section, "scanembeddedsubs", str(autosubliminal.SCANEMBEDDEDSUBS))
     cfg.set(section, "skiphiddendirs", str(autosubliminal.SKIPHIDDENDIRS))
     cfg.set(section, "detectinvalidsublanguage", str(autosubliminal.DETECTINVALIDSUBLANGUAGE))
+    cfg.set(section, "detectedlanguageprobability", str(autosubliminal.DETECTEDLANGUAGEPROBABILITY))
     cfg.set(section, "minvideofilesize", str(autosubliminal.MINVIDEOFILESIZE))
     cfg.set(section, "maxdbresults", str(autosubliminal.MAXDBRESULTS))
     cfg.set(section, "configversion", str(autosubliminal.CONFIGVERSION))

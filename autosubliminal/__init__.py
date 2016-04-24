@@ -59,7 +59,7 @@ CHECKVERSIONAUTOUPDATE = None
 SCANEMBEDDEDSUBS = None
 SKIPHIDDENDIRS = None
 DETECTINVALIDSUBLANGUAGE = None
-MINDETECTEDLANGUAGEPROBABILITY = None
+DETECTEDLANGUAGEPROBABILITY = None
 MINVIDEOFILESIZE = None
 MAXDBRESULTS = None
 
@@ -175,7 +175,7 @@ def initialize():
         APIKEY, API, APICALLS, APICALLSLASTRESET, APICALLSRESETINT, APICALLSMAX, \
         PATH, VIDEOPATHS, DEFAULTLANGUAGE, DEFAULTLANGUAGESUFFIX, ADDITIONALLANGUAGES, \
         SCANDISKINTERVAL, CHECKSUBINTERVAL, CHECKVERSIONINTERVAL, CHECKVERSIONAUTOUPDATE, SCANEMBEDDEDSUBS, \
-        SKIPHIDDENDIRS, DETECTINVALIDSUBLANGUAGE, MINDETECTEDLANGUAGEPROBABILITY, MINVIDEOFILESIZE, MAXDBRESULTS, \
+        SKIPHIDDENDIRS, DETECTINVALIDSUBLANGUAGE, DETECTEDLANGUAGEPROBABILITY, MINVIDEOFILESIZE, MAXDBRESULTS, \
         LOGFILE, LOGLEVEL, LOGSIZE, LOGNUM, LOGHTTPACCESS, LOGDETAILEDFORMAT, LOGREVERSED, LOGLEVELCONSOLE, \
         WEBSERVERIP, WEBSERVERPORT, WEBROOT, USERNAME, PASSWORD, LAUNCHBROWSER, \
         SHOWMINMATCHSCORE, SHOWMINMATCHSCOREDEFAULT, SHOWMATCHSOURCE, SHOWMATCHQUALITY, SHOWMATCHCODEC, \
@@ -207,7 +207,7 @@ def initialize():
     _initialize_subliminal()
 
     # Langdetect settings
-    MINDETECTEDLANGUAGEPROBABILITY = _init_langdetect()
+    _init_langdetect()
 
     # Version settings
     GITHUBURL = "https://github.com/h3llrais3r/Auto-Subliminal"
@@ -339,8 +339,3 @@ def _init_langdetect():
     # Language detection algorithm is non-deterministic, we might get different results every time you run it.
     # To enforce consistent results, call following code before the first language detection
     DetectorFactory.seed = 0
-
-    # Set a default probability in order to accept the language detection (hardcoded for now)
-    min_probability = 0.9
-
-    return min_probability
