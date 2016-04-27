@@ -11,20 +11,20 @@ $(document).ready(function () {
             widgetOptions: {
                 // No column filters
                 filter_columnFilters: false,
-                // External filter selector (will match any column)
-                filter_external: '#wanteditemsfilter',
+                // External filter selector
+                filter_external: '.wanteditemsfilter',
                 // Search faster (default 300)
                 filter_searchDelay: 50
             },
             // Use date format 'ddmmyyyy'
             dateFormat: 'ddmmyyyy',
-            // Force text sorter in first column (this is needed due to img in table cell)
+            // Force text sorter in show/movie name column (this is needed due to img in table cell)
             // See https://github.com/Mottie/tablesorter/issues/1149
             headers: {
-                0: {sorter: 'text'}
+                1: {sorter: 'text'}
             },
             // Sort default by time desc
-            sortList: [[8, 1]]
+            sortList: [[9, 1]]
         })
         .tablesorterPager({
             container: $("#wanteditemspager"),
@@ -41,20 +41,20 @@ $(document).ready(function () {
             widgetOptions: {
                 // No column filters
                 filter_columnFilters: false,
-                // External filter selector (will match any column)
-                filter_external: '#lastdownloadsfilter',
+                // External filter selector
+                filter_external: '.lastdownloadsfilter',
                 // Search faster (default 300)
                 filter_searchDelay: 50
             },
             // Use date format 'ddmmyyyy'
             dateFormat: 'ddmmyyyy',
-            // Force text sorter in first column (this is needed due to img in table cell)
+            // Force text sorter in show/movie name column (this is needed due to img in table cell)
             // See https://github.com/Mottie/tablesorter/issues/1149
             headers: {
-                0: {sorter: 'text'}
+                1: {sorter: 'text'}
             },
             // Sort default by time desc
-            sortList: [[8, 1]]
+            sortList: [[9, 1]]
         })
         .tablesorterPager({
             container: $("#lastdownloadspager"),

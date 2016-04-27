@@ -293,15 +293,6 @@ table.tablesorter tbody td {
     min-width: 90px;
 }
 
-.filter {
-    text-align: right;
-}
-
-.filter input {
-    display: inline-block;
-    width: auto;
-}
-
 .img-notifier {
     height: 24px;
     width: 25px;
@@ -344,6 +335,26 @@ table.tablesorter tbody td {
 
 .sticky-notification {
     padding: 8px 0px 5px 0px;
+}
+
+.table-filter {
+    text-align: center;
+}
+
+/* Align table-filter on larger screens (same width as switch in bootstrap from xs to md)*/
+@media (min-width: 992px) {
+    .table-filter.left {
+        text-align: left;
+    }
+
+    .table-filter.right {
+        text-align: right;
+    }
+}
+
+.table-filter input, .table-filter select {
+    display: inline-block;
+    width: auto;
 }
 
 .weighted {

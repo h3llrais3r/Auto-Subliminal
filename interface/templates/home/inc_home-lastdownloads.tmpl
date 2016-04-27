@@ -18,13 +18,21 @@
 
             <div class="form-inline">
                 <div class="row">
-                    <div class="col-xs-12 col-md-12">
-                        <div class="filter">
-                            <label for="lastdownloadsfilter">
-                                Search:
-                                <input id="lastdownloadsfilter" class="search form-control input-sm" type="search" data-column="all">
-                            </label>
-                        </div>
+                    <div class="col-xs-12 col-md-6 table-filter left">
+                        <label for="lastdownloadstypefilter">
+                            Video type:
+                            <select id="lastdownloadstypefilter" class="lastdownloadsfilter form-control input-sm" type="search" data-column="0">
+                                <option value="">All</option>
+                                <option value="episode">Shows</option>
+                                <option value="movie">Movies</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="col-xs-12 col-md-6 table-filter right">
+                        <label for="lastdownloadssearchfilter">
+                            Search:
+                            <input id="lastdownloadssearchfilter" class="lastdownloadsfilter form-control input-sm" type="search" data-column="all">
+                        </label>
                     </div>
                 </div>
             </div>
@@ -33,6 +41,7 @@
 
                 <thead>
                 <tr>
+                    <th class="hidden">Type</th>
                     <th>Show/Movie name</th>
                     <th>Season</th>
                     <th>Episode</th>
@@ -48,6 +57,7 @@
                 <tbody>
                 #for $item in $lastdownloads
                 <tr>
+                    <td class="hidden">$item['type']</td>
                     <td>
                         <span class="main-column">$display_title($item)</span>
                         <span class="dropdown">

@@ -19,13 +19,21 @@
 
             <div class="form-inline">
                 <div class="row">
-                    <div class="col-xs-12 col-md-12">
-                        <div class="filter">
-                            <label for="wanteditemsfilter">
-                                Search:
-                                <input id="wanteditemsfilter" class="search form-control input-sm" type="search" data-column="all">
-                            </label>
-                        </div>
+                    <div class="col-xs-12 col-md-6 table-filter left">
+                        <label for="wanteditemstypefilter">
+                            Video type:
+                            <select id="wanteditemstypefilter" class="wanteditemsfilter form-control input-sm" type="search" data-column="0">
+                                <option value="">All</option>
+                                <option value="episode">Shows</option>
+                                <option value="movie">Movies</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="col-xs-12 col-md-6 table-filter right">
+                        <label for="wanteditemssearchfilter">
+                            Search:
+                            <input id="wanteditemssearchfilter" class="wanteditemsfilter form-control input-sm" type="search" data-column="all">
+                        </label>
                     </div>
                 </div>
             </div>
@@ -34,6 +42,7 @@
 
                 <thead>
                 <tr>
+                    <th class="hidden">Type</th>
                     <th>Show/Movie name</th>
                     <th>Season</th>
                     <th>Episode</th>
@@ -49,6 +58,7 @@
                 <tbody>
                 #for $index, $item in enumerate($autosubliminal.WANTEDQUEUE)
                 <tr>
+                    <td class="hidden">$item['type']</td>
                     <td>
                         <span class="dropdown">
                             <a class="dropdown-toggle main-column" data-toggle="dropdown" title="Click to skip" href="#">$display_title($item)</a>
