@@ -1,7 +1,7 @@
 Auto-Subliminal
 ===============
 
-[![Travis CI build status](https://travis-ci.org/h3llrais3r/Auto-Subliminal.svg?branch=develop)](https://travis-ci.org/h3llrais3r/Auto-Subliminal)
+[![Travis CI build status](https://travis-ci.org/h3llrais3r/Auto-Subliminal.svg?branch=development)](https://travis-ci.org/h3llrais3r/Auto-Subliminal)
 [![License](https://img.shields.io/github/license/h3llrais3r/Auto-Subliminal.svg)](https://github.com/h3llrais3r/Auto-Subliminal/blob/master/LICENSE)
 
 Thank you for choosing Auto-Subliminal! The automated python subtitle downloader.
