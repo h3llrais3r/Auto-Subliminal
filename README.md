@@ -9,8 +9,8 @@ Thank you for choosing Auto-Subliminal! The automated python subtitle downloader
 This is a modified version of the discontinued Auto-Sub Alpha 0.5.8 project (https://code.google.com/p/auto-sub/).
 It makes use of Subliminal (https://github.com/Diaoul/subliminal) for checking and downloading subtitles.
 
-What it does:
--------------
+What it does
+------------
 
  * Easy and straightforward script that scans your TV and MOVIE contents
  * If no SUBTITLE is found (externally or internally) it will attempt to download one by using Subliminal
@@ -19,8 +19,8 @@ What it does:
  * Support to search/save/delete a subtitle individually
  * Support to play a video remotely (need to register a custom protocol handler on your remote machine)
 
-What it uses (see libraries.txt for versions):
-----------------------------------------------
+What it uses (see libraries.txt for versions)
+---------------------------------------------
 
  * babelfish
  * beautifulsoup4
@@ -59,8 +59,8 @@ What it uses (see libraries.txt for versions):
  * tvdb_api
  * websocket-client
 
-How to use:
------------
+How to use
+----------
 
  * Install python
  * Install python cheetah package manually or use the installer from Auto-Subliminal (python setup.py install)
