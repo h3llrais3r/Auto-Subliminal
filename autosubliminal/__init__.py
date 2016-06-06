@@ -94,11 +94,11 @@ MOVIEMATCHSOURCE = None
 MOVIEMATCHQUALITY = None
 MOVIEMATCHCODEC = None
 MOVIEMATCHRELEASEGROUP = None
-SUBLIMINALPROVIDERSENTRYPOINT = None
+SUBLIMINALPROVIDERMANAGER = None
 SUBLIMINALPROVIDERS = None
 SUBLIMINALPROVIDERLIST = None
 SUBLIMINALPROVIDERCONFIGS = None
-INCLUDEHEARINGIMPAIRED = None
+PREFERHEARINGIMPAIRED = None
 ADDIC7EDUSERNAME = None
 ADDIC7EDPASSWORD = None
 OPENSUBTITLESUSERNAME = None
@@ -182,8 +182,8 @@ def initialize():
         SHOWMATCHRELEASEGROUP, \
         MOVIEMINMATCHSCORE, MOVIEMINMATCHSCOREDEFAULT, MOVIEMATCHSOURCE, MOVIEMATCHQUALITY, MOVIEMATCHCODEC, \
         MOVIEMATCHRELEASEGROUP, \
-        SUBLIMINALPROVIDERSENTRYPOINT, SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERLIST, SUBLIMINALPROVIDERCONFIGS, \
-        INCLUDEHEARINGIMPAIRED, ADDIC7EDUSERNAME, ADDIC7EDPASSWORD, OPENSUBTITLESUSERNAME, OPENSUBTITLESPASSWORD, \
+        SUBLIMINALPROVIDERMANAGER, SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERLIST, SUBLIMINALPROVIDERCONFIGS, \
+        PREFERHEARINGIMPAIRED, ADDIC7EDUSERNAME, ADDIC7EDPASSWORD, OPENSUBTITLESUSERNAME, OPENSUBTITLESPASSWORD, \
         USERSHOWNAMEMAPPING, USERSHOWNAMEMAPPINGUPPER, SHOWNAMEMAPPING, SHOWNAMEMAPPINGUPPER, \
         USERMOVIENAMEMAPPING, USERMOVIENAMEMAPPINGUPPER, MOVIENAMEMAPPING, MOVIENAMEMAPPINGUPPER, \
         SKIPSHOW, SKIPSHOWUPPER, \
@@ -199,12 +199,8 @@ def initialize():
     # Fake some entry points to get libraries working without installation
     _fake_entry_points()
 
-    # Get fake subliminal providers entry point
-    SUBLIMINALPROVIDERSENTRYPOINT = pkg_resources.get_entry_info(dist='fake_entry_points', group=None,
-                                                                 name='subliminal.providers')
-
     # Subliminal settings
-    _initialize_subliminal()
+    SUBLIMINALPROVIDERMANAGER = _initialize_subliminal()
 
     # Langdetect settings
     _init_langdetect()
@@ -249,8 +245,8 @@ def initialize():
     APICALLS = APICALLSMAX
 
     # Score settings
-    SHOWMINMATCHSCOREDEFAULT = 110
-    MOVIEMINMATCHSCOREDEFAULT = 35
+    SHOWMINMATCHSCOREDEFAULT = 330
+    MOVIEMINMATCHSCOREDEFAULT = 90
 
     # Webserver settings
     LAUNCHBROWSER = True
@@ -281,28 +277,19 @@ def initialize():
 
 
 def _fake_entry_points():
+    """
+    Fake some entry points to get libraries working without installation.
+    After setup, entry points can be retrieved by:
+        pkg_resources.get_entry_info(dist='fake_entry_points', group=None, name='entry_point_namespace')
+    """
+
     # Do not normalize the path or the entry point will be loaded under the wrong entry_key
     # current_path = os.path.dirname(os.path.normpath(__file__))
     current_path = os.path.dirname(__file__)
-    distribution = pkg_resources.Distribution(location=os.path.dirname(current_path),
-                                              project_name='fake_entry_points', version='1.1.1')
-    # Add entry points here if needed
-    # Add subliminal entry points (since subliminal 1.0)
-    entry_points = {
-        'subliminal.providers': [
-            'addic7ed = subliminal.providers.addic7ed:Addic7edProvider',
-            'opensubtitles = subliminal.providers.opensubtitles:OpenSubtitlesProvider',
-            'podnapisi = subliminal.providers.podnapisi:PodnapisiProvider',
-            'subscenter = subliminal.providers.subscenter:SubsCenterProvider',
-            'thesubdb = subliminal.providers.thesubdb:TheSubDBProvider',
-            'tvsubtitles = subliminal.providers.tvsubtitles:TVsubtitlesProvider'
-        ],
-        'babelfish.language_converters': [
-            'addic7ed = subliminal.converters.addic7ed:Addic7edConverter',
-            'thesubdb = subliminal.converters.thesubdb:TheSubDBConverter',
-            'tvsubtitles = subliminal.converters.tvsubtitles:TVsubtitlesConverter'
-        ]
-    }
+    distribution = pkg_resources.Distribution(location=os.path.dirname(current_path), project_name='fake_entry_points',
+                                              version=version.RELEASE_VERSION)
+    # Add entry points here if needed (currently none)
+    entry_points = {}
     distribution._ep_map = pkg_resources.EntryPoint.parse_map(entry_points, distribution)
     pkg_resources.working_set.add(distribution)
 
@@ -319,6 +306,7 @@ def _initialize_subliminal():
     # Imports
     from subliminal.cache import region
     from subliminal.cli import MutexLock
+    from subliminal.extensions import provider_manager
 
     # Configure subliminal/dogpile cache
     # Use MutexLock otherwise some providers will not work due to fcntl module import error in windows
@@ -326,6 +314,9 @@ def _initialize_subliminal():
     if not region.is_configured:
         cache_file = os.path.abspath(os.path.expanduser('subliminal.cache.dbm'))
         region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexLock})
+
+    # Return the provider manager with all providers
+    return provider_manager
 
 
 def _init_langdetect():

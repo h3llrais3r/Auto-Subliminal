@@ -6,8 +6,11 @@ import shutil
 import babelfish
 import subliminal
 from subliminal.providers.addic7ed import Addic7edSubtitle
+from subliminal.providers.legendastv import LegendasTVSubtitle
 from subliminal.providers.opensubtitles import OpenSubtitlesSubtitle
 from subliminal.providers.podnapisi import PodnapisiSubtitle
+from subliminal.providers.shooter import ShooterSubtitle
+from subliminal.providers.subscenter import SubsCenterSubtitle
 from subliminal.providers.thesubdb import TheSubDBSubtitle
 from subliminal.providers.tvsubtitles import TVsubtitlesSubtitle
 from subliminal.video import Episode, Movie
@@ -102,11 +105,10 @@ def search_subtitle(wanted_item_index, lang):
             # Add found subtitles to wanted_item
             wanted_item['found_subtitles'] = {'subtitles': subtitles, 'language': language, 'single': single}
             # Order subtitles by score and create new dict
-            # Use subliminal scoring (scores=None)
-            for index, subtitle, score in sorted([(index, s, subliminal.compute_score(
-                    s.get_matches(video, hearing_impaired=utils.include_hearing_impaired()), video, scores=None))
-                                                  for index, s in enumerate(subtitles[video])],
-                                                 key=operator.itemgetter(2), reverse=True):
+            # Use subliminal default compute_score
+            for index, subtitle, score in sorted(
+                    [(index, s, subliminal.compute_score(s, video, autosubliminal.PREFERHEARINGIMPAIRED))
+                     for index, s in enumerate(subtitles[video])], key=operator.itemgetter(2), reverse=True):
                 # Only add subtitle when content is found
                 if subtitle.content:
                     # Create new sub dict for showing result
@@ -336,17 +338,14 @@ def post_process_no_subtitle(wanted_item_index):
 
 
 def _scan_wanted_item_for_video(wanted_item):
-    originalfile = wanted_item['originalFileLocationOnDisk']
-    log.debug("Scanning the wanted item for a video: %s" % originalfile)
+    original_file = wanted_item['originalFileLocationOnDisk']
+    log.debug("Scanning the wanted item for a video: %s" % original_file)
 
-    # Scan the video (disable scan for subtitles)
-    # With subtitle scan enabled, enzyme looks inside for embedded subtitles
-    # When an 'UND' subtitle language is found (f.e. Grimm.S03E04.720p.WEB-DL.DD5.1.H.264-ECI),
-    # no other subtitles will be downloaded when using subliminal.download_best_subtitles(..., single=True)
+    # Scan the video
     try:
-        video = subliminal.scan_video(originalfile, subtitles=False, embedded_subtitles=False)
+        video = subliminal.scan_video(original_file)
     except Exception, e:
-        log.error("Error while scanning video, skipping %s" % originalfile)
+        log.error("Error while scanning video, skipping %s" % original_file)
         log.error("Exception: %s" % e)
         return
 
@@ -383,7 +382,7 @@ def _search_subtitles(video, lang, best_only):
         # Download the best subtitle with min_score (without saving it in to file)
         subtitles = subliminal.download_best_subtitles(videos, languages,
                                                        min_score=min_score,
-                                                       hearing_impaired=utils.include_hearing_impaired(),
+                                                       hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
                                                        only_one=True,
                                                        providers=autosubliminal.SUBLIMINALPROVIDERLIST,
                                                        provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
@@ -448,9 +447,16 @@ def _get_releases(subtitle):
     releases = []
     if isinstance(subtitle, Addic7edSubtitle):
         releases.extend([subtitle.version])
+    elif isinstance(subtitle, LegendasTVSubtitle):
+        releases.extend([subtitle.archive])
     elif isinstance(subtitle, OpenSubtitlesSubtitle):
         releases.extend([subtitle.movie_release_name])
     elif isinstance(subtitle, PodnapisiSubtitle):
+        releases.extend(subtitle.releases)
+    elif isinstance(subtitle, ShooterSubtitle):
+        # No release present
+        releases.extend([])
+    elif isinstance(subtitle, SubsCenterSubtitle):
         releases.extend(subtitle.releases)
     elif isinstance(subtitle, TheSubDBSubtitle):
         # No release present

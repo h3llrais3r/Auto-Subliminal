@@ -296,7 +296,7 @@ class Config(object):
             return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
-        def save(self, includehearingimpaired, addic7edusername, addic7edpassword, opensubtitlesusername,
+        def save(self, preferhearingimpaired, addic7edusername, addic7edpassword, opensubtitlesusername,
                  opensubtitlespassword,
                  showmmsdefault=None, showmmssource=None, showmmsquality=None, showmmscodec=None,
                  showmmsreleasegroup=None,
@@ -315,16 +315,16 @@ class Config(object):
                 # showmmsdefault is the minimal default score for a show (not editable, so no flag is needed)
                 autosubliminal.SHOWMINMATCHSCORE += autosubliminal.SHOWMINMATCHSCOREDEFAULT
             if showmmssource:
-                autosubliminal.SHOWMINMATCHSCORE += 6
+                autosubliminal.SHOWMINMATCHSCORE += 7
                 autosubliminal.SHOWMATCHSOURCE = True
             if showmmsquality:
-                autosubliminal.SHOWMINMATCHSCORE += 4
+                autosubliminal.SHOWMINMATCHSCORE += 2
                 autosubliminal.SHOWMATCHQUALITY = True
             if showmmscodec:
-                autosubliminal.SHOWMINMATCHSCORE += 4
+                autosubliminal.SHOWMINMATCHSCORE += 2
                 autosubliminal.SHOWMATCHCODEC = True
             if showmmsreleasegroup:
-                autosubliminal.SHOWMINMATCHSCORE += 11
+                autosubliminal.SHOWMINMATCHSCORE += 15
                 autosubliminal.SHOWMATCHRELEASEGROUP = True
             # Match options and movieminmatchscore
             autosubliminal.MOVIEMATCHSOURCE = False
@@ -337,16 +337,16 @@ class Config(object):
                 # moviemmsdefault is the minimal default score for a movie (not editable, so no flag is needed)
                 autosubliminal.MOVIEMINMATCHSCORE += autosubliminal.MOVIEMINMATCHSCOREDEFAULT
             if moviemmssource:
-                autosubliminal.MOVIEMINMATCHSCORE += 6
+                autosubliminal.MOVIEMINMATCHSCORE += 7
                 autosubliminal.MOVIEMATCHSOURCE = True
             if moviemmsquality:
-                autosubliminal.MOVIEMINMATCHSCORE += 4
+                autosubliminal.MOVIEMINMATCHSCORE += 2
                 autosubliminal.MOVIEMATCHQUALITY = True
             if moviemmscodec:
-                autosubliminal.MOVIEMINMATCHSCORE += 4
+                autosubliminal.MOVIEMINMATCHSCORE += 2
                 autosubliminal.MOVIEMATCHCODEC = True
             if moviemmsreleasegroup:
-                autosubliminal.MOVIEMINMATCHSCORE += 11
+                autosubliminal.MOVIEMINMATCHSCORE += 15
                 autosubliminal.MOVIEMATCHRELEASEGROUP = True
             # Subliminal providers (convert list to comma separated string if multiple are selected)
             if subliminalproviders and not isinstance(subliminalproviders, basestring):
@@ -355,7 +355,7 @@ class Config(object):
                 # Just one selected or None (in this case, None will be saved and no providers will be used)
                 autosubliminal.SUBLIMINALPROVIDERS = subliminalproviders
             # Hearing impaired
-            autosubliminal.INCLUDEHEARINGIMPAIRED = utils.getboolean(includehearingimpaired)
+            autosubliminal.PREFERHEARINGIMPAIRED = utils.getboolean(preferhearingimpaired)
             # Addic7ed provider
             autosubliminal.ADDIC7EDUSERNAME = addic7edusername
             autosubliminal.ADDIC7EDPASSWORD = addic7edpassword

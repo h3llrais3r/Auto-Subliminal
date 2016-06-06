@@ -323,17 +323,17 @@ def read_config():
         if cfg.has_option('subliminal', 'providers'):
             autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
             autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
-            # Only allow valid providers by checking if they are found in the entry point
+            # Only allow valid providers by checking if they are found in the provider manager
             for provider in autosubliminal.SUBLIMINALPROVIDERLIST:
-                if provider.lower() not in autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys():
+                if provider.lower() not in autosubliminal.SUBLIMINALPROVIDERMANAGER.names():
                     autosubliminal.SUBLIMINALPROVIDERLIST.remove(provider)
         else:
-            autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
+            autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
 
-        if cfg.has_option("subliminal", "includehearingimpaired"):
-            autosubliminal.INCLUDEHEARINGIMPAIRED = cfg.getboolean("subliminal", "includehearingimpaired")
+        if cfg.has_option("subliminal", "preferhearingimpaired"):
+            autosubliminal.PREFERHEARINGIMPAIRED = cfg.getboolean("subliminal", "preferhearingimpaired")
         else:
-            autosubliminal.INCLUDEHEARINGIMPAIRED = False
+            autosubliminal.PREFERHEARINGIMPAIRED = False
 
         if cfg.has_option('subliminal', 'addic7edusername') and cfg.has_option('subliminal', 'addic7edpassword'):
             autosubliminal.ADDIC7EDUSERNAME = cfg.get('subliminal', 'addic7edusername')
@@ -359,8 +359,8 @@ def read_config():
         autosubliminal.MATCHQUALITY = False
         autosubliminal.MATCHCODEC = False
         autosubliminal.MATCHRELEASEGROUP = False
-        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
-        autosubliminal.INCLUDEHEARINGIMPAIRED = False
+        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
+        autosubliminal.PREFERHEARINGIMPAIRED = False
 
     if cfg.has_section('shownamemapping'):
         autosubliminal.USERSHOWNAMEMAPPING = dict(cfg.items('shownamemapping'))
@@ -694,7 +694,7 @@ def apply_subliminal():
         autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
         autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
     else:
-        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
+        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
 
 
 def apply_shownamemapping():
@@ -1020,7 +1020,7 @@ def save_subliminal_section():
     cfg.set(section, "moviematchcodec", str(autosubliminal.MOVIEMATCHCODEC))
     cfg.set(section, "moviematchreleasegroup", str(autosubliminal.MOVIEMATCHRELEASEGROUP))
     cfg.set(section, "providers", str(autosubliminal.SUBLIMINALPROVIDERS))
-    cfg.set(section, "includehearingimpaired", str(autosubliminal.INCLUDEHEARINGIMPAIRED))
+    cfg.set(section, "preferhearingimpaired", str(autosubliminal.PREFERHEARINGIMPAIRED))
     cfg.set(section, "addic7edusername", str(autosubliminal.ADDIC7EDUSERNAME))
     cfg.set(section, "addic7edpassword", str(autosubliminal.ADDIC7EDPASSWORD))
     cfg.set(section, "opensubtitlesusername", str(autosubliminal.OPENSUBTITLESUSERNAME))
@@ -1511,4 +1511,62 @@ def upgrade_config(from_version, to_version):
             print "INFO: Default value movieminmatchscore: %d" % autosubliminal.MOVIEMINMATCHSCORE
             print "INFO: Config upgraded to version 5."
             autosubliminal.CONFIGVERSION = 5
+            autosubliminal.CONFIGUPGRADED = True
+
+        ############################
+        # Suliminal version >= 2.0.0
+        ############################
+        # use subliminal episode scores (see examples below on how it is calculated)
+        ############################################################################
+        # 'hash': 359
+        # --> perfect match -> not configurable
+        # 'series': 180
+        # 'year': 90
+        # 'season': 30
+        # 'episode': 30
+        # --> these 4 should always be matched by default -> not visible in GUI -> showminmatchscore = 330
+        # 'release_group': 15
+        # 'format': 7
+        # 'resolution': 2
+        # 'video_codec': 2
+        # --> these 4 are configurable -> max showminmatchscore = 330 + 15 + 7 + 2 + 2 = 356
+        # 'audio_codec': 3
+        # --> not used
+        # 'hearing_impaired': 1
+        # --> used for score increasing if wanted
+        #
+        # use subliminal movie scores (see examples below on how it is calculated)
+        ##########################################################################
+        # 'hash': 119
+        # --> perfect match -> not configurable
+        # 'title': 60
+        # 'year': 30
+        # --> these 2 should always be matched by default -> not visible in GUI -> showminmatchscore = 90
+        # 'release_group': 15
+        # 'format': 7
+        # 'resolution': 2
+        # 'video_codec': 2
+        # --> these 4 are configurable -> max showminmatchscore = 90 + 15 + 7 + 2 + 2 = 116
+        # 'audio_codec': 3
+        # --> not used
+        # 'hearing_impaired': 1
+        # --> used for score increasing if wanted
+        if from_version == 5 and to_version == 6:
+            print "INFO: Upgrading scoring calculation. Please reconfigure your min match scores!"
+            autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
+            autosubliminal.SHOWMATCHSOURCE = False
+            autosubliminal.SHOWMATCHQUALITY = False
+            autosubliminal.SHOWMATCHCODEC = False
+            autosubliminal.SHOWMATCHRELEASEGROUP = False
+            print "INFO: Default value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
+            autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
+            autosubliminal.MOVIEMATCHSOURCE = False
+            autosubliminal.MOVIEMATCHQUALITY = False
+            autosubliminal.MOVIEMATCHCODEC = False
+            autosubliminal.MOVIEMATCHRELEASEGROUP = False
+            print "INFO: Default value movieminmatchscore: %d" % autosubliminal.MOVIEMINMATCHSCORE
+            print "INFO: Hearing impaired logic changed. Please check your config!"
+            autosubliminal.PREFERHEARINGIMPAIRED = False
+            print "INFO: Config upgraded to version 6."
+            autosubliminal.CONFIGVERSION = 6
             autosubliminal.CONFIGUPGRADED = True

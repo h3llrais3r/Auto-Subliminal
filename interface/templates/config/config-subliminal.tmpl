@@ -160,7 +160,7 @@
                             </label>
                         </span>
                         <span class="col-xs-8 col-md-4">
-                            #set $providers = $autosubliminal.SUBLIMINALPROVIDERSENTRYPOINT.keys()
+                            #set $providers = $autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
                             <select multiple="mutiple" id="subliminalproviders" name="subliminalproviders" size="$len(providers)" class="form-control input-sm">
                                 #for provider in $providers:
                                 #if $provider in $autosubliminal.SUBLIMINALPROVIDERLIST:
@@ -175,20 +175,20 @@
 
                     <div class="form-group narrow">
                         <span class="col-xs-4 col-md-3">
-                            <label for="includehearingimpaired">Include hearing impaired subs
+                            <label for="preferhearingimpaired">Prefer hearing impaired subs
                                 <span class="dropdown">
                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                         <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
                                     </a>
                                     <ul class="dropdown-menu has-tip info-list">
-                                        <li>When enabled, also 'hearing impaired' subtitles can be downloaded.</li>
+                                        <li>When enabled, 'hearing impaired' subtitles will be preferred over 'regular' subtitles.</li>
                                     </ul>
                                 </span>
                             </label>
                         </span>
                         <span class="col-xs-8 col-md-4">
-                            <select id="includehearingimpaired" name="includehearingimpaired" class="form-control input-sm">
-                                #if $autosubliminal.INCLUDEHEARINGIMPAIRED
+                            <select id="preferhearingimpaired" name="preferhearingimpaired" class="form-control input-sm">
+                                #if $autosubliminal.PREFERHEARINGIMPAIRED
                                 <option value="True" selected="selected">Enabled</option>
                                 <option value="False">Disabled</option>
                                 #else

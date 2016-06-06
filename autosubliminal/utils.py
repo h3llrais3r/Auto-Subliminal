@@ -416,15 +416,6 @@ def get_file_size(path):
     return humanize_bytes(byte_size, 2)
 
 
-def include_hearing_impaired():
-    # If hearing_impaired is True, we ALSO want the hearing_impaired subs in our results -> pass None
-    # I hearing_impaired is False, we DO NOT want the hearing_impaired subs in our results -> pass False
-    include_hearing_impaired = autosubliminal.INCLUDEHEARINGIMPAIRED
-    if include_hearing_impaired:
-        include_hearing_impaired = None
-    return include_hearing_impaired
-
-
 # Thanks to: http://stackoverflow.com/questions/1088392/sorting-a-python-list-by-key-while-checking-for-string-or-float
 def get_attr(name):
     def inner_func(o):
