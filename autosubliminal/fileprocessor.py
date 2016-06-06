@@ -2,7 +2,7 @@ import logging
 import os
 import re
 
-import guessit
+from guessit import guessit
 
 import autosubliminal
 from autosubliminal import utils
@@ -50,7 +50,7 @@ def process_file(dirname, filename):
     # Guess
     try:
         log.debug("Guessing file info")
-        guess = guessit.guess_file_info(file_path)
+        guess = guessit(file_path)
         log.debug("Guess: %r" % guess)
     except Exception, e:
         log.error("Could not guess file info for: %s" % file_path)
@@ -65,20 +65,18 @@ def _dict_from_guess(guess):
     """
     Create a wanted_item dict from a guess:
     - The same dict is used for both episode and movie
-    - The 'series' is used as 'title' for an episode
-    - If no 'series' is found as 'title', it will be a movie, so take the 'title' of the movie as 'title'
     - If no 'screenSize' is found, it will default to 'SD' quality
     """
     log.debug("Getting dict from guess")
     result_dict = {'type': _property_from_guess(guess, 'type'),
-                   'title': _property_from_guess(guess, 'series', _property_from_guess(guess, 'title')),
+                   'title': _property_from_guess(guess, 'title'),
                    'year': _property_from_guess(guess, 'year'),
                    'season': _property_from_guess(guess, 'season'),
-                   'episode': _property_from_guess(guess, 'episodeNumber'),
+                   'episode': _property_from_guess(guess, 'episode'),
                    'source': _property_from_guess(guess, 'format', u'N/A'),
-                   'quality': _property_from_guess(guess, 'screenSize', u'SD'),
-                   'codec': _property_from_guess(guess, 'videoCodec', u'N/A'),
-                   'releasegrp': _split_release_group(_property_from_guess(guess, 'releaseGroup', u'N/A'))}
+                   'quality': _property_from_guess(guess, 'screen_size', u'SD'),
+                   'codec': _property_from_guess(guess, 'video_codec', u'N/A'),
+                   'releasegrp': _split_release_group(_property_from_guess(guess, 'release_group', u'N/A'))}
     log.debug("Dict from guess: %r" % result_dict)
 
     # Check if mandatory elements are available in the guess
