@@ -1552,19 +1552,29 @@ def upgrade_config(from_version, to_version):
         # 'hearing_impaired': 1
         # --> used for score increasing if wanted
         if from_version == 5 and to_version == 6:
-            print "INFO: Upgrading scoring calculation. Please reconfigure your min match scores!"
+            print "INFO: Upgrading scoring calculation. Please check/reconfigure your min match scores!"
             autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
-            autosubliminal.SHOWMATCHSOURCE = False
-            autosubliminal.SHOWMATCHQUALITY = False
-            autosubliminal.SHOWMATCHCODEC = False
-            autosubliminal.SHOWMATCHRELEASEGROUP = False
             print "INFO: Default value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
+            if autosubliminal.SHOWMATCHSOURCE:
+                autosubliminal.SHOWMINMATCHSCORE += 7
+            if autosubliminal.SHOWMATCHQUALITY:
+                autosubliminal.SHOWMINMATCHSCORE += 2
+            if autosubliminal.SHOWMATCHCODEC:
+                autosubliminal.SHOWMINMATCHSCORE += 2
+            if autosubliminal.SHOWMATCHRELEASEGROUP:
+                autosubliminal.SHOWMINMATCHSCORE += 15
+            print "INFO: New calculated value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
             autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
-            autosubliminal.MOVIEMATCHSOURCE = False
-            autosubliminal.MOVIEMATCHQUALITY = False
-            autosubliminal.MOVIEMATCHCODEC = False
-            autosubliminal.MOVIEMATCHRELEASEGROUP = False
             print "INFO: Default value movieminmatchscore: %d" % autosubliminal.MOVIEMINMATCHSCORE
+            if autosubliminal.MOVIEMATCHSOURCE:
+                autosubliminal.MOVIEMINMATCHSCORE += 7
+            if autosubliminal.MOVIEMATCHQUALITY:
+                autosubliminal.MOVIEMINMATCHSCORE += 2
+            if autosubliminal.MOVIEMATCHCODEC:
+                autosubliminal.MOVIEMINMATCHSCORE += 2
+            if autosubliminal.MOVIEMATCHRELEASEGROUP:
+                autosubliminal.MOVIEMINMATCHSCORE += 15
+            print "INFO: New calculated value movieminmatchscore: %d" % autosubliminal.MOVIEMINMATCHSCORE
             print "INFO: Hearing impaired logic changed. Please check your config!"
             autosubliminal.PREFERHEARINGIMPAIRED = False
             print "INFO: Config upgraded to version 6."
