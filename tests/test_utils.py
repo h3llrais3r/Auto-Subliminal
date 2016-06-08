@@ -135,6 +135,7 @@ def test_display_name():
 def test_display_timestamp():
     timestamp_float = time.mktime(time.strptime("01012016 0:00:00", "%d%m%Y %H:%M:%S")) - 1
     assert display_timestamp(timestamp_float) == "31-12-2015 23:59:59"
+    assert display_timestamp(0.0) == "N/A"
 
 
 def test_convert_timestamp():
