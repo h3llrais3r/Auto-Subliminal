@@ -18,4 +18,7 @@ config.properties*
 build/
 dist/
 Auto_Subliminal.egg-info/
-.eggs
+.eggs/
+
+# Cache files
+.cache/
