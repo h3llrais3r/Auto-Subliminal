@@ -1,7 +1,6 @@
 import cgi
 import codecs
 import ctypes
-import imdb
 import logging
 import os
 import platform
@@ -11,8 +10,9 @@ import subprocess
 import threading
 import time
 import urllib2
-
 from string import capwords
+
+import imdb
 from tvdb_api import tvdb_api
 
 import autosubliminal
@@ -322,8 +322,8 @@ def display_item(item_dict, key, default_value='N/A', uppercase=False):
 
 
 def display_title(item_dict, default_value='N/A', uppercase=False):
-    title = display_item(item_dict, 'title', default_value, uppercase)
-    year = display_item(item_dict, 'year', default_value, uppercase)
+    title = display_item(item_dict, 'title', default_value, False)
+    year = display_item(item_dict, 'year', default_value, False)
     if not title == default_value and not year == default_value:
         title += " (" + year + ")"
     if uppercase:
@@ -332,10 +332,10 @@ def display_title(item_dict, default_value='N/A', uppercase=False):
 
 
 def display_name(item_dict, default_value='N/A', uppercase=False):
-    name = display_title(item_dict, default_value, uppercase)
+    name = display_title(item_dict, default_value, False)
     if 'type' in item_dict.keys() and item_dict['type'] == "episode":
-        season = display_item(item_dict, 'season', default_value, uppercase)
-        episode = display_item(item_dict, 'episode', default_value, uppercase)
+        season = display_item(item_dict, 'season', default_value, False)
+        episode = display_item(item_dict, 'episode', default_value, False)
         if not season == default_value and not episode == default_value:
             name += " S" + season.zfill(2) + "E" + episode.zfill(2)
     if uppercase:
@@ -463,7 +463,8 @@ def humanize_bytes(bytes, precision=1):
     for factor, suffix in abbrevs:
         if bytes >= factor:
             break
-    return '%.*f %s' % (precision, bytes / factor, suffix)
+    # Python 2.x uses integer division by default, so convert to float first
+    return '%.*f %s' % (precision, float(bytes) / factor, suffix)
 
 
 # Thanks to http://stackoverflow.com/questions/51658/cross-platform-space-remaining-on-volume-using-python
