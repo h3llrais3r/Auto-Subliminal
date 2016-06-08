@@ -22,3 +22,6 @@ Auto_Subliminal.egg-info/
 
 # Cache files
 .cache/
+
+#Coverage files
+.coverage
