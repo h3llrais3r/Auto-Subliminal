@@ -10,7 +10,6 @@ import subprocess
 import threading
 import time
 import urllib2
-from string import capwords
 
 import imdb
 from tvdb_api import tvdb_api

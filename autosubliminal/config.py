@@ -179,12 +179,12 @@ def read_config():
         if cfg.has_option("logfile", "lognum"):
             autosubliminal.LOGNUM = cfg.getint("logfile", "lognum")
         else:
-            autosubliminal.LOGNUM = 3
+            autosubliminal.LOGNUM = 0
 
         if cfg.has_option("logfile", "logsize"):
             autosubliminal.LOGSIZE = cfg.getint("logfile", "logsize")
         else:
-            autosubliminal.LOGSIZE = 1000000
+            autosubliminal.LOGSIZE = 0
 
         if cfg.has_option("logfile", "loghttpaccess"):
             autosubliminal.LOGHTTPACCESS = cfg.getboolean("logfile", "loghttpaccess")
@@ -221,8 +221,8 @@ def read_config():
         print "ERROR: Required variable LOGFILE is missing. Using 'AutoSuliminal.log' instead."
         autosubliminal.LOGFILE = u"AutoSubliminal.log"
         autosubliminal.LOGLEVEL = logging.INFO
-        autosubliminal.LOGNUM = 1
-        autosubliminal.LOGSIZE = 1000000
+        autosubliminal.LOGNUM = 0
+        autosubliminal.LOGSIZE = 0
         autosubliminal.LOGHTTPACCESS = False
         autosubliminal.LOGDETAILEDFORMAT = False
         autosubliminal.LOGREVERSED = False
@@ -1247,8 +1247,8 @@ def check_for_restart():
     checkversioninterval = 43200
     loglevel = logging.INFO
     loglevelconsole = logging.ERROR
-    logsize = 1000000
-    lognum = 1
+    logsize = 0
+    lognum = 0
     loghttpaccess = False
     logdetailedformat = False
     webserverip = u'0.0.0.0'
@@ -1580,3 +1580,14 @@ def upgrade_config(from_version, to_version):
             print "INFO: Config upgraded to version 6."
             autosubliminal.CONFIGVERSION = 6
             autosubliminal.CONFIGUPGRADED = True
+            utils.add_notification_message("Config upgraded. Please check or reconfigure you subliminal configuration.",
+                                           "warning", True)
+        if from_version == 6 and to_version == 7:
+            print "INFO: Upgrading log config. Please check/reconfigure your config!"
+            autosubliminal.LOGNUM = 0
+            autosubliminal.LOGSIZE = 0
+            print "INFO: Config upgraded to version 7."
+            autosubliminal.CONFIGVERSION = 7
+            autosubliminal.CONFIGUPGRADED = True
+            utils.add_notification_message("Config upgraded. Please check or reconfigure your logging configuration.",
+                                           "warning", True)
