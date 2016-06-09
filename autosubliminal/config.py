@@ -1581,7 +1581,7 @@ def upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 6
             autosubliminal.CONFIGUPGRADED = True
             utils.add_notification_message("Config upgraded. Please check or reconfigure you subliminal configuration.",
-                                           "warning", True)
+                                           "notice", True)
         if from_version == 6 and to_version == 7:
             print "INFO: Upgrading log config. Please check/reconfigure your config!"
             autosubliminal.LOGNUM = 0
@@ -1590,4 +1590,4 @@ def upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 7
             autosubliminal.CONFIGUPGRADED = True
             utils.add_notification_message("Config upgraded. Please check or reconfigure your logging configuration.",
-                                           "warning", True)
+                                           "notice", True)
