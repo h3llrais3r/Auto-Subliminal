@@ -79,32 +79,6 @@ def wait_for_internet_connection():
         time.sleep(5)
 
 
-def clean_series_name(series_name):
-    """Clean up series name by removing any . and _
-    characters, along with any trailing hyphens.
-
-    Is basically equivalent to replacing all _ and . with a
-    space, but handles decimal numbers in string, for example:
-
-    >>> clean_series_name("an.example.1.0.test")
-    'an example 1.0 test'
-    >>> clean_series_name("an_example_1.0_test")
-    'an example 1.0 test'
-
-    Stolen from dbr's tvnamer
-    """
-    try:
-        series_name = re.sub("(\D)\.(?!\s)(\D)", "\\1 \\2", series_name)
-        series_name = re.sub("(\d)\.(\d{4})", "\\1 \\2", series_name)  # if it ends in a year then don't keep the dot
-        series_name = re.sub("(\D)\.(?!\s)", "\\1 ", series_name)
-        series_name = re.sub("\.(?!\s)(\D)", " \\1", series_name)
-        series_name = series_name.replace("_", " ")
-        series_name = re.sub("-$", "", series_name)
-        return capwords(series_name.strip())
-    except TypeError:
-        log.debug("There is no SerieName to clean")
-
-
 # Based on ConfigParser.getboolean
 def getboolean(value):
     v = str(value)
@@ -458,6 +432,8 @@ def humanize_bytes(bytes, precision=1):
         (1 << 10L, 'kB'),
         (1, 'bytes')
     )
+    if bytes == 0:
+        return '0 bytes'
     if bytes == 1:
         return '1 byte'
     for factor, suffix in abbrevs:

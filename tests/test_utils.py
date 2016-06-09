@@ -1,9 +1,14 @@
+import os
+import tempfile
 import time
 
+import pytest
+
 import autosubliminal
-from autosubliminal.utils import getboolean, safe_string, safe_uppercase, show_name_mapping, movie_name_mapping, \
-    skip_show, skip_movie, display_item, display_title, display_name, display_timestamp, convert_timestamp, \
-    humanize_bytes, get_wanted_queue_lock, release_wanted_queue_lock
+from autosubliminal.utils import getboolean, safe_string, safe_uppercase, display_logfile, show_name_mapping, \
+    movie_name_mapping, skip_show, skip_movie, display_item, display_title, display_name, display_timestamp, \
+    convert_timestamp, humanize_bytes, get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, \
+    get_file_size, set_rw_and_remove
 
 string_value = "test"
 num_value = 1
@@ -22,6 +27,8 @@ def test_getboolean():
     assert not getboolean("no")
     assert not getboolean("false")
     assert not getboolean("off")
+    with pytest.raises(ValueError):
+        getboolean("test")
 
 
 def test_save_string():
@@ -48,6 +55,23 @@ def test_safe_uppercase():
     assert safe_uppercase(list_value, "N/A") == "N/A"
     assert safe_uppercase(dict_value) is None
     assert safe_uppercase(dict_value, "N/A") == "N/A"
+
+
+def test_display_logfile():
+    try:
+        text = '2016-06-06 20:32:15,509 INFO     [MainThread :: __main__] Running application with PID: 9944'
+        fd, autosubliminal.LOGFILE = tempfile.mkstemp(text=True)
+        file = open(autosubliminal.LOGFILE, 'w')
+        file.write(text)
+        file.close()
+        os.close(fd)
+        assert display_logfile(loglevel='') == text
+        assert display_logfile(loglevel='INFO') == text
+        autosubliminal.LOGREVERSED = True
+        assert display_logfile(loglevel='INFO') == text
+        assert display_logfile(loglevel='ERROR') == ""
+    finally:
+        os.remove(autosubliminal.LOGFILE)
 
 
 def test_show_name_mapping():
@@ -143,6 +167,7 @@ def test_convert_timestamp():
 
 
 def test_humanize_bytes():
+    assert humanize_bytes(0) == "0 bytes"
     assert humanize_bytes(1) == "1 byte"
     assert humanize_bytes(1024) == "1.0 kB"
     assert humanize_bytes(1024 * 123) == "123.0 kB"
@@ -162,3 +187,38 @@ def test_wanted_queue_lock():
     assert not autosubliminal.WANTEDQUEUELOCK
     release_wanted_queue_lock()
     assert not autosubliminal.WANTEDQUEUELOCK
+
+
+def test_count_wanted_items():
+    autosubliminal.WANTEDQUEUE = [{'type': 'movie', 'title': 'title1'}, {'type': 'episode', 'title': 'title2'}]
+    assert count_wanted_items() == 2
+    assert count_wanted_items(itemtype='movie') == 1
+    assert count_wanted_items(itemtype='episode') == 1
+    assert count_wanted_items(itemtype='video') == 0
+
+
+def test_get_file_size():
+    try:
+        fd, file_path = tempfile.mkstemp(text=True)
+        file = open(file_path, 'w')
+        file.write("test")
+        file.close()
+        os.close(fd)
+        size = get_file_size(file_path).split(' ')[0]
+        assert float(size) > 0
+    finally:
+        os.remove(file_path)
+
+
+def test_set_rw_and_remove():
+    try:
+        fd, file_path = tempfile.mkstemp(text=True)
+        file = open(file_path, 'w')
+        file.write("test")
+        file.close()
+        os.close(fd)
+        set_rw_and_remove(None, file_path, None)
+        assert not os.path.exists(file_path)
+    finally:
+        if os.path.exists(file_path):
+            os.remove(file_path)
