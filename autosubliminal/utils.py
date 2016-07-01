@@ -11,11 +11,7 @@ import threading
 import time
 import urllib2
 
-import imdb
-from tvdb_api import tvdb_api
-
 import autosubliminal
-from autosubliminal.db import TvdbIdCache, ImdbIdCache
 
 log = logging.getLogger(__name__)
 
@@ -151,87 +147,6 @@ def skip_movie(title, year):
         log.debug("Found %s in skipmovie dictionary" % movie)
         log.debug("Skipping movie %s" % movie)
         return True
-
-
-def get_tvdb_id(show_name, force_search=False):
-    log.debug("Getting tvdb id for %s" % show_name)
-    tvdb_id = None
-    # Skip search in shownamemapping and id cache when force_search = True
-    if not force_search:
-        tvdb_id = show_name_mapping(show_name)
-        if tvdb_id:
-            log.debug("Tvdb id from shownamemapping %s" % tvdb_id)
-            return int(tvdb_id)
-
-        tvdb_id = TvdbIdCache().get_id(show_name)
-        if tvdb_id:
-            log.debug("Getting tvdb id from cache %s" % tvdb_id)
-            if tvdb_id == -1:
-                log.error("Tvdb id not found in cache for %s" % show_name)
-                return
-            return int(tvdb_id)
-
-    # Search on tvdb
-    try:
-        show = tvdb_api.Tvdb()[show_name]
-        if show:
-            tvdb_id = show['id']
-    except:
-        log.error("Tvdb id not found for %s" % show_name)
-        TvdbIdCache().set_id(-1, show_name)
-
-    if tvdb_id:
-        log.debug("Tvdb id from api %s" % tvdb_id)
-        TvdbIdCache().set_id(tvdb_id, show_name)
-        log.info("%s added to cache with %s" % (show_name, tvdb_id))
-        return int(tvdb_id)
-
-
-def get_imdb_info(title, year=None, force_search=False):
-    imdb_id = None
-    name = title
-    if year:
-        name += " (" + str(year) + ")"
-    log.debug("Getting imdb info for %s" % name)
-    # Skip search in movienamemapping and id cache when force_search = True
-    if not force_search:
-        imdb_id = movie_name_mapping(title, year)
-        if imdb_id:
-            log.debug("Imdb id from movienamemapping %s" % imdb_id)
-            return imdb_id, year
-
-        imdb_id = ImdbIdCache().get_id(title, year)
-        if imdb_id:
-            log.debug("Getting imdb id from cache %s" % imdb_id)
-            return imdb_id, year
-
-    # Search on imdb
-    handler = imdb.IMDb()
-    imdb_movies = handler.search_movie(title)
-    # Find the first movie that matches the title (and year if present)
-    for movie in imdb_movies:
-        data = movie.data
-        if data['kind'] == 'movie' and data['title'] == title:
-            # If a year is present, it should also be the same
-            if year:
-                if data['year'] == year:
-                    imdb_id = movie.movieID
-                    log.debug("Getting imdb id from api %s" % imdb_id)
-                    ImdbIdCache().set_id(imdb_id, title, year)
-                    log.info("%s added to cache with %s" % (name, imdb_id))
-                    break
-                else:
-                    continue
-            # If no year is present, take the first match
-            else:
-                year = data['year']
-                imdb_id = movie.movieID
-                log.debug("Getting imdb id from api %s" % imdb_id)
-                ImdbIdCache.set_id(imdb_id, title, year)
-                log.info("%s added to cache with %s" % (name, imdb_id))
-    if not imdb_id:
-        log.error("Imdb id not found for %s (%s)" % (title, year))
-    return imdb_id, year
 
 
 def check_apicalls(use=False):

@@ -17,6 +17,7 @@ from subliminal.video import Episode, Movie
 
 import autosubliminal
 from autosubliminal import utils
+from autosubliminal.indexer import MovieIndexer, ShowIndexer
 from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.scheduler import ScheduledProcess
 from autosubliminal.subdownloader import SubDownloader
@@ -189,9 +190,9 @@ def force_id_search(wanted_item_index):
     title = wanted_item['title']
     year = wanted_item['year']
     if wanted_item['type'] == 'episode':
-        wanted_item['tvdbid'] = utils.get_tvdb_id(title, True)
+        wanted_item['tvdbid'] = ShowIndexer().get_tvdb_id(title, force_search=True)
     elif wanted_item['type'] == 'movie':
-        wanted_item['imdbid'], wanted_item['year'] = utils.get_imdb_info(title, year, True)
+        wanted_item['imdbid'], wanted_item['year'] = MovieIndexer().get_imdb_id_and_year(title, year, True)
 
     # Release wanted queue lock
     utils.release_wanted_queue_lock()

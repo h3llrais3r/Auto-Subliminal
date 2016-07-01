@@ -12,6 +12,7 @@ from enzyme.mkv import MKV
 
 import autosubliminal
 from autosubliminal import utils, fileprocessor
+from autosubliminal.indexer import MovieIndexer, ShowIndexer
 from autosubliminal.scheduler import ScheduledProcess
 
 log = logging.getLogger(__name__)
@@ -115,7 +116,7 @@ def walk_dir(path):
                             wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
                                 wanted_item['time'])))
                             wanted_item['lang'] = languages
-                            wanted_item['tvdbid'] = utils.get_tvdb_id(title)
+                            wanted_item['tvdbid'] = ShowIndexer().get_tvdb_id(title)
                             autosubliminal.WANTEDQUEUE.append(wanted_item)
 
                         # Movie wanted
@@ -131,7 +132,7 @@ def walk_dir(path):
                             wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
                                 wanted_item['time'])))
                             wanted_item['lang'] = languages
-                            wanted_item['imdbid'], wanted_item['year'] = utils.get_imdb_info(title, year)
+                            wanted_item['imdbid'], wanted_item['year'] = MovieIndexer().get_imdb_id_and_year(title, year)
                             autosubliminal.WANTEDQUEUE.append(wanted_item)
                         else:
                             log.error("Could not process the filename: %s" % filename)
