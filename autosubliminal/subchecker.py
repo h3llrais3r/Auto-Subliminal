@@ -100,6 +100,7 @@ def search_subtitle(wanted_item_index, lang):
     video = _scan_wanted_item_for_video(wanted_item)
     if video:
         # Search the subtitles with the default minimal score (to get all the possibilities to select from)
+        default_min_score = _get_min_match_score(video, True)
         subtitles, language, single = _search_subtitles(video, lang, False)
         # Check if subtitles are found for the video
         if subtitles[video]:
@@ -110,6 +111,10 @@ def search_subtitle(wanted_item_index, lang):
             for index, subtitle, score in sorted(
                     [(index, s, subliminal.compute_score(s, video, autosubliminal.PREFERHEARINGIMPAIRED))
                      for index, s in enumerate(subtitles[video])], key=operator.itemgetter(2), reverse=True):
+                # Filter out subtitles that do not match the default score
+                if score < default_min_score:
+                    log.info("Skipping subtitles with score below %d" % default_min_score)
+                    break
                 # Only add subtitle when content is found
                 if subtitle.content:
                     # Create new sub dict for showing result
@@ -367,22 +372,13 @@ def _search_subtitles(video, lang, best_only):
     if lang == autosubliminal.DEFAULTLANGUAGE and not autosubliminal.DEFAULTLANGUAGESUFFIX:
         single = True
 
-    # Get min match score
-    if isinstance(video, Episode):
-        min_score = autosubliminal.SHOWMINMATCHSCORE
-    elif isinstance(video, Movie):
-        min_score = autosubliminal.MOVIEMINMATCHSCORE
-    else:
-        log.error("Invalid video found '%s'" % video)
-        return
-
     # Search for subtitles
     videos = {video}
     languages = {language}
     if best_only:
         # Download the best subtitle with min_score (without saving it in to file)
         subtitles = subliminal.download_best_subtitles(videos, languages,
-                                                       min_score=min_score,
+                                                       min_score=_get_min_match_score(video),
                                                        hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
                                                        only_one=True,
                                                        providers=autosubliminal.SUBLIMINALPROVIDERLIST,
@@ -441,6 +437,27 @@ def _construct_download_item(wanted_item, subtitles, language, single):
     download_item['video'] = video
 
     return download_item
+
+
+def _get_min_match_score(video, default_score=False):
+    log.debug("Getting min match score")
+    min_score = 0
+    if isinstance(video, Episode):
+        if default_score:
+            min_score = autosubliminal.SHOWMINMATCHSCOREDEFAULT
+        else:
+            min_score = autosubliminal.SHOWMINMATCHSCORE
+        log.debug("Episode min match score: %s" % min_score)
+    elif isinstance(video, Movie):
+        if default_score:
+            min_score = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
+        else:
+            min_score = autosubliminal.MOVIEMINMATCHSCORE
+        log.debug("Movie min match score: %s" % min_score)
+    else:
+        log.error("Invalid video found '%s'" % video)
+        log.debug("Unknown min match score: %s" % min_score)
+    return min_score
 
 
 def _get_releases(subtitle):
