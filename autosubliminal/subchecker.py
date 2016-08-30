@@ -56,8 +56,8 @@ class SubChecker(ScheduledProcess):
                 continue
 
             # Check subtitles for each language
-            langs = wanted_item['lang']
-            for lang in langs[:]:
+            languages = wanted_item['languages']
+            for lang in languages[:]:
                 # Search the best subtitle with the minimal score
                 subtitles, language, single = _search_subtitles(video, lang, True)
 
@@ -67,8 +67,8 @@ class SubChecker(ScheduledProcess):
                     SubDownloader(download_item).run()
 
                     # Remove from wanted queue if needed (if no additional languages are still needed)
-                    langs.remove(lang)
-                    if len(langs) == 0:
+                    languages.remove(lang)
+                    if len(languages) == 0:
                         to_delete_wanted_queue.append(index)
 
         # Cleanup wanted queue

@@ -115,7 +115,7 @@ def walk_dir(path):
                             wanted_item['time'] = os.path.getctime(wanted_item['originalFileLocationOnDisk'])
                             wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
                                 wanted_item['time'])))
-                            wanted_item['lang'] = languages
+                            wanted_item['languages'] = languages
                             wanted_item['tvdbid'] = ShowIndexer().get_tvdb_id(title)
                             autosubliminal.WANTEDQUEUE.append(wanted_item)
 
@@ -131,7 +131,7 @@ def walk_dir(path):
                             wanted_item['time'] = os.path.getctime(wanted_item['originalFileLocationOnDisk'])
                             wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
                                 wanted_item['time'])))
-                            wanted_item['lang'] = languages
+                            wanted_item['languages'] = languages
                             wanted_item['imdbid'], wanted_item['year'] = MovieIndexer().get_imdb_id_and_year(title, year)
                             autosubliminal.WANTEDQUEUE.append(wanted_item)
                         else:
