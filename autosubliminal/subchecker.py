@@ -242,7 +242,7 @@ def delete_video(wanted_item_index, cleanup):
 
     # Physically delete the video file (and optionally leftovers)
     deleted = False
-    video_path = wanted_item['originalFileLocationOnDisk']
+    video_path = wanted_item['videopath']
     # Delete with cleanup
     if cleanup:
         norm_video_path = os.path.normcase(os.path.normpath(video_path))
@@ -344,14 +344,14 @@ def post_process_no_subtitle(wanted_item_index):
 
 
 def _scan_wanted_item_for_video(wanted_item):
-    original_file = wanted_item['originalFileLocationOnDisk']
-    log.debug("Scanning the wanted item for a video: %s" % original_file)
+    video_path = wanted_item['videopath']
+    log.debug("Scanning the wanted item for a video: %s" % video_path)
 
     # Scan the video
     try:
-        video = subliminal.scan_video(original_file)
+        video = subliminal.scan_video(video_path)
     except Exception, e:
-        log.error("Error while scanning video, skipping %s" % original_file)
+        log.error("Error while scanning video, skipping %s" % video_path)
         log.error("Exception: %s" % e)
         return
 
@@ -488,5 +488,5 @@ def _construct_playvideo_url(wanted_item):
     log.debug("Constructing 'playvideo://' url")
     play_protocol = 'playvideo://'
     # Encode path for special characters -> need to decode again before accessing the path (see playvideo.py)
-    path = wanted_item['originalFileLocationOnDisk'].encode('utf-8')
-    return play_protocol + path
+    video_path = wanted_item['videopath'].encode('utf-8')
+    return play_protocol + video_path

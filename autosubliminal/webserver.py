@@ -94,7 +94,7 @@ class Home(object):
             wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
             tmpl = Template(file="interface/templates/home/home-deleteVideo.tmpl")
             tmpl.wanted_item_index = wanted_item_index
-            tmpl.video = wanted_item['originalFileLocationOnDisk']
+            tmpl.video = wanted_item['videopath']
             return str(tmpl)
         else:
             # Delete video
@@ -145,7 +145,7 @@ class Home(object):
         # Get wanted item
         wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
         # Play video with default player
-        video = wanted_item['originalFileLocationOnDisk']
+        video = wanted_item['videopath']
         try:
             utils.run_cmd(video, False)
             return {'result': True, 'infomessage': 'Playing video.', 'errormessage': ''}

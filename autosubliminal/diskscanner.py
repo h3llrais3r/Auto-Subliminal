@@ -111,8 +111,8 @@ def walk_dir(path):
                                 log.info("Skipping %s - Season %s Episode %s" % (title, season, episode))
                                 continue
                             log.info("Subtitle(s) wanted for %s and added to wantedQueue" % filename)
-                            wanted_item['originalFileLocationOnDisk'] = os.path.join(dirname, filename)
-                            wanted_item['time'] = os.path.getctime(wanted_item['originalFileLocationOnDisk'])
+                            wanted_item['videopath'] = os.path.join(dirname, filename)
+                            wanted_item['time'] = os.path.getctime(wanted_item['videopath'])
                             wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
                                 wanted_item['time'])))
                             wanted_item['languages'] = languages
@@ -127,8 +127,8 @@ def walk_dir(path):
                                 log.info("Skipping %s (%s)" % (title, year))
                                 continue
                             log.info("Subtitle(s) wanted for %s and added to wantedQueue" % filename)
-                            wanted_item['originalFileLocationOnDisk'] = os.path.join(dirname, filename)
-                            wanted_item['time'] = os.path.getctime(wanted_item['originalFileLocationOnDisk'])
+                            wanted_item['videopath'] = os.path.join(dirname, filename)
+                            wanted_item['time'] = os.path.getctime(wanted_item['videopath'])
                             wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
                                 wanted_item['time'])))
                             wanted_item['languages'] = languages

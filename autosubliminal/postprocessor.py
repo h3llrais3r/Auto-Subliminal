@@ -61,7 +61,7 @@ class PostProcessor(object):
         process.append(self._encoding)
 
         # Add video argument from the wanted_item
-        video = self._wanted_item['originalFileLocationOnDisk']
+        video = self._wanted_item['videopath']
         log.debug("%s" % video)
         process.append(self._encode(video))
         # Add subtitle argument from the wanted_item (can be empty if no subtitle was downloaded)
