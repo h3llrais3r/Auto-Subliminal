@@ -112,9 +112,8 @@ def walk_dir(path):
                                 continue
                             log.info("Subtitle(s) wanted for %s and added to wantedQueue" % filename)
                             wanted_item['videopath'] = os.path.join(dirname, filename)
-                            wanted_item['time'] = os.path.getctime(wanted_item['videopath'])
                             wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
-                                wanted_item['time'])))
+                                os.path.getctime(wanted_item['videopath']))))
                             wanted_item['languages'] = languages
                             wanted_item['tvdbid'] = ShowIndexer().get_tvdb_id(title)
                             autosubliminal.WANTEDQUEUE.append(wanted_item)
@@ -128,9 +127,8 @@ def walk_dir(path):
                                 continue
                             log.info("Subtitle(s) wanted for %s and added to wantedQueue" % filename)
                             wanted_item['videopath'] = os.path.join(dirname, filename)
-                            wanted_item['time'] = os.path.getctime(wanted_item['videopath'])
                             wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
-                                wanted_item['time'])))
+                                os.path.getctime(wanted_item['videopath']))))
                             wanted_item['languages'] = languages
                             wanted_item['imdbid'], wanted_item['year'] = MovieIndexer().get_imdb_id_and_year(title, year)
                             autosubliminal.WANTEDQUEUE.append(wanted_item)
@@ -139,7 +137,7 @@ def walk_dir(path):
                             continue
 
     # Sort WANTEDQUEUE
-    autosubliminal.WANTEDQUEUE = sorted(autosubliminal.WANTEDQUEUE, key=itemgetter('time'), reverse=True)
+    autosubliminal.WANTEDQUEUE = sorted(autosubliminal.WANTEDQUEUE, key=itemgetter('timestamp'), reverse=True)
 
 
 def check_missing_subtitle_languages(dirname, filename):
