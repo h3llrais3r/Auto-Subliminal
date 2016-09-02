@@ -17,6 +17,7 @@ from subliminal.video import Episode, Movie
 
 import autosubliminal
 from autosubliminal import utils
+from autosubliminal.db import WantedItems
 from autosubliminal.indexer import MovieIndexer, ShowIndexer
 from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.scheduler import ScheduledProcess
@@ -49,6 +50,7 @@ class SubChecker(ScheduledProcess):
             utils.add_notification_message("Checking subtitles...")
 
         # Process all items in wanted queue
+        db = WantedItems()
         for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
             # Scan wanted_item for video, skip when no video could be determined
             video = _scan_wanted_item_for_video(wanted_item)
@@ -66,16 +68,23 @@ class SubChecker(ScheduledProcess):
                     download_item = _construct_download_item(wanted_item, subtitles, language, single)
                     SubDownloader(download_item).run()
 
-                    # Remove from wanted queue if needed (if no additional languages are still needed)
+                    # Remove downloaded language from wanted languages
                     languages.remove(lang)
+
+                    # Mark wanted item as delete (if no other subtitles are needed) or update the wanted languages in db
                     if len(languages) == 0:
                         to_delete_wanted_queue.append(index)
+                    else:
+                        wanted_item['languages'] = languages
+                        db.update_wanted_item(wanted_item)
 
-        # Cleanup wanted queue
+        # Cleanup wanted item(s)
         i = len(to_delete_wanted_queue) - 1
         while i >= 0:
+            wanted_item_to_delete = autosubliminal.WANTEDQUEUE.pop(to_delete_wanted_queue[i])
             log.debug("Removed item from the wanted queue at index %s" % to_delete_wanted_queue[i])
-            autosubliminal.WANTEDQUEUE.pop(to_delete_wanted_queue[i])
+            db.delete_wanted_item(wanted_item_to_delete)
+            log.debug("Removed %s from wanted_items database", wanted_item_to_delete['videopath'])
             i -= 1
 
         # Release wanted queue lock
@@ -236,9 +245,12 @@ def delete_video(wanted_item_index, cleanup):
     if not utils.get_wanted_queue_lock():
         return False
 
-    # Remove wanted item for queue
+    # Remove wanted item
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
     autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
+    log.debug("Removed item from the wanted queue at index %s" % int(wanted_item_index))
+    WantedItems().delete_wanted_item(wanted_item)
+    log.debug("Removed %s from wanted_items database", wanted_item['videopath'])
 
     # Physically delete the video file (and optionally leftovers)
     deleted = False
@@ -308,9 +320,13 @@ def post_process(wanted_item_index, subtitle_index):
         download_item = _construct_download_item(wanted_item, wanted_subtitles, language, single)
         processed = SubDownloader(download_item).post_process()
 
-        # Remove from wanted queue is downloaded
+        # Remove wanted item if processed
         if processed:
             autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
+            log.debug("Removed item from the wanted queue at index %s" % int(wanted_item_index))
+            WantedItems().delete_wanted_item(wanted_item)
+            log.debug("Removed %s from wanted_items database", wanted_item['videopath'])
+
     else:
         log.warning("No subtitle downloaded, skipping post processing")
 
@@ -333,9 +349,12 @@ def post_process_no_subtitle(wanted_item_index):
     # Post process only
     processed = PostProcessor(wanted_item).run()
 
-    # Remove from wanted queue is downloaded
+    # Remove wanted item if downloaded
     if processed:
         autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
+        log.debug("Removed item from the wanted queue at index %s" % int(wanted_item_index))
+        WantedItems().delete_wanted_item(wanted_item)
+        log.debug("Removed %s from wanted_items database", wanted_item['videopath'])
 
     # Release wanted queue lock
     utils.release_wanted_queue_lock()

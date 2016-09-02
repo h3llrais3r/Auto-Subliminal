@@ -15,6 +15,18 @@ def dict_factory(cursor, row):
     return d
 
 
+def dict_factory_wanted_items(cursor, row):
+    d = {}
+    for idx, col in enumerate(cursor.description):
+        # Languages should be returned as a list (so let's split the comma separated string)
+        if col[0] == 'languages':
+            d[col[0]] = row[idx].split(',')
+        else:
+            # Use default value from database
+            d[col[0]] = row[idx]
+    return d
+
+
 class TvdbIdCache(object):
     def __init__(self):
         self._query_get_id = "select tvdb_id from tvdb_id_cache where show_name = ?"
@@ -74,6 +86,106 @@ class ImdbIdCache(object):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self._query_flush_cache)
+        connection.commit()
+        connection.close()
+
+
+class WantedItems(object):
+    def __init__(self):
+        self._query_get_all = "select * from wanted_items order by timestamp desc;"
+        self._query_get = "select * from wanted_items where videopath=?";
+        self._query_set = "insert into wanted_items values (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?);"
+        self._query_update = "update wanted_items set videopath=?, timestamp=?, languages=?, type=?, title=?, year=?, season=?, episode=?, quality=?, source=?, codec=?, releasegrp=?, tvdbid=?, imdbid=? where id=?;"
+        self._query_delete = "delete from wanted_items where videopath=?;"
+        self._query_flush = "delete from wanted_items;"
+
+    def get_wanted_items(self):
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        connection.row_factory = dict_factory_wanted_items
+        cursor = connection.cursor()
+        cursor.execute(self._query_get_all)
+        result_list = cursor.fetchall()
+        connection.close()
+        return result_list
+
+    def get_wanted_item(self, video_path):
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        connection.row_factory = dict_factory_wanted_items
+        cursor = connection.cursor()
+        cursor.execute(self._query_get, [video_path])
+        wanted_item = cursor.fetchone()
+        connection.close()
+        return wanted_item
+
+    def set_wanted_item(self, wanted_item):
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+
+        # Can be unavailable in dict
+        if 'tvdbid' not in wanted_item.keys():
+            wanted_item['tvdbid'] = None
+        if 'imdbid' not in wanted_item.keys():
+            wanted_item['imdbid'] = None
+
+        cursor.execute(self._query_set, [
+            wanted_item['videopath'],
+            wanted_item['timestamp'],
+            # Store languages as comma separated string
+            ','.join(wanted_item['languages']),
+            wanted_item['type'],
+            wanted_item['title'],
+            wanted_item['year'],
+            wanted_item['season'],
+            wanted_item['episode'],
+            wanted_item['quality'],
+            wanted_item['source'],
+            wanted_item['codec'],
+            wanted_item['releasegrp'],
+            wanted_item['tvdbid'],
+            wanted_item['imdbid']])
+        connection.commit()
+        connection.close()
+
+    def delete_wanted_item(self, wanted_item):
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_delete, [wanted_item['videopath']])
+        connection.commit()
+        connection.close()
+
+    def update_wanted_item(self, wanted_item):
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+
+        # Can be unavailable in dict
+        if 'tvdbid' not in wanted_item.keys():
+            wanted_item['tvdbid'] = None
+        if 'imdbid' not in wanted_item.keys():
+            wanted_item['imdbid'] = None
+
+        cursor.execute(self._query_update, [
+            wanted_item['videopath'],
+            wanted_item['timestamp'],
+            ','.join(wanted_item['languages']),
+            wanted_item['type'],
+            wanted_item['title'],
+            wanted_item['year'],
+            wanted_item['season'],
+            wanted_item['episode'],
+            wanted_item['quality'],
+            wanted_item['source'],
+            wanted_item['codec'],
+            wanted_item['releasegrp'],
+            wanted_item['tvdbid'],
+            wanted_item['imdbid'],
+            wanted_item['id']])
+        connection.commit()
+        connection.close()
+
+    def flush_last_downloads(self):
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_flush)
         connection.commit()
         connection.close()
 
@@ -141,6 +253,10 @@ def create():
         connection.commit()
 
         query = "CREATE TABLE imdb_id_cache (imdb_id TEXT, title TEXT, year TEXT);"
+        cursor.execute(query)
+        connection.commit()
+
+        query = "CREATE TABLE wanted_items (id INTEGER PRIMARY KEY, videopath TEXT, timestamp DATETIME, languages TEXT, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, codec TEXT, releasegrp TEXT, tvdbid TEXT, imdbid TEXT);"
         cursor.execute(query)
         connection.commit()
 
@@ -219,7 +335,7 @@ def upgrade(from_version, to_version):
             cursor.execute("INSERT INTO tmp_last_downloads SELECT id, 'episode', show_name, '', season, episode, quality, source, language, codec, timestamp, releasegrp, subtitle, provider FROM last_downloads")
             cursor.execute("DROP TABLE last_downloads")
             cursor.execute("CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, releasegrp TEXT, subtitle TEXT, provider TEXT)")
-            cursor.execute("INSERT INTO last_downloads SELECT * from tmp_last_downloads")
+            cursor.execute("INSERT INTO last_downloads SELECT * FROM tmp_last_downloads")
             cursor.execute("DROP TABLE tmp_last_downloads")
             # Create imdb_id_cache
             cursor.execute("CREATE TABLE imdb_id_cache (imdb_id TEXT, title TEXT, year TEXT)")
@@ -229,6 +345,15 @@ def upgrade(from_version, to_version):
             cursor.execute("DROP TABLE id_cache")
             # Update database version
             cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (6, 5))
+            connection.commit()
+            connection.close()
+        if from_version == 6 and to_version == 7:
+            connection = sqlite3.connect(autosubliminal.DBFILE)
+            cursor = connection.cursor()
+            # Create wanted_items
+            cursor.execute("CREATE TABLE wanted_items (id INTEGER PRIMARY KEY, videopath TEXT, timestamp DATETIME, languages TEXT, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, quality TEXT, source TEXT, codec TEXT, releasegrp TEXT, tvdbid TEXT, imdbid TEXT)")
+            # Update database version
+            cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (7, 6))
             connection.commit()
             connection.close()
 
