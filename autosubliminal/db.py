@@ -182,7 +182,7 @@ class WantedItems(object):
         connection.commit()
         connection.close()
 
-    def flush_last_downloads(self):
+    def flush_wanted_items(self):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self._query_flush)

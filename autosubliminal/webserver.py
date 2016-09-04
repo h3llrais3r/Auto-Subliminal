@@ -8,7 +8,7 @@ import cherrypy
 
 import autosubliminal
 from autosubliminal import config, notifiers, scheduler, subchecker, utils
-from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache
+from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache, WantedItems
 
 
 def redirect(abspath, *args, **kwargs):
@@ -624,6 +624,18 @@ class System(object):
         TvdbIdCache().flush_cache()
         ImdbIdCache().flush_cache()
         utils.add_notification_message("Flushed id cache database")
+        redirect("/home")
+
+    @cherrypy.expose(alias='flushWantedItems')
+    def flush_cache(self):
+        if utils.get_wanted_queue_lock():
+            # Flush db and wanted queue
+            WantedItems().flush_wanted_items()
+            autosubliminal.WANTEDQUEUE = []
+            utils.release_wanted_queue_lock()
+            utils.add_notification_message("Flushed wanted items database. Please launch system 'run now'.")
+        else:
+            utils.add_notification_message("Cannot flush wanted items database when wanted queue is in use", 'notice')
         redirect("/home")
 
     @cherrypy.expose(alias='flushLastDownloads')
