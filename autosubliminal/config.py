@@ -192,6 +192,11 @@ def read_config():
         else:
             autosubliminal.LOGHTTPACCESS = False
 
+        if cfg.has_option("logfile", "logexternallibs"):
+            autosubliminal.LOGEXTERNALLIBS = cfg.getboolean("logfile", "logexternallibs")
+        else:
+            autosubliminal.LOGEXTERNALLIBS = False
+
         if cfg.has_option("logfile", "logdetailedformat"):
             autosubliminal.LOGDETAILEDFORMAT = cfg.getboolean("logfile", "logdetailedformat")
         else:
@@ -225,6 +230,7 @@ def read_config():
         autosubliminal.LOGNUM = 0
         autosubliminal.LOGSIZE = 0
         autosubliminal.LOGHTTPACCESS = False
+        autosubliminal.LOGEXTERNALLIBS = False
         autosubliminal.LOGDETAILEDFORMAT = False
         autosubliminal.LOGREVERSED = False
         autosubliminal.LOGLEVELCONSOLE = logging.ERROR
@@ -963,6 +969,7 @@ def save_logfile_section():
     cfg.set(section, "lognum", str(autosubliminal.LOGNUM))
     cfg.set(section, "logsize", str(autosubliminal.LOGSIZE))
     cfg.set(section, "loghttpaccess", str(autosubliminal.LOGHTTPACCESS))
+    cfg.set(section, "logexternallibs", str(autosubliminal.LOGEXTERNALLIBS))
     cfg.set(section, "logdetailedformat", str(autosubliminal.LOGDETAILEDFORMAT))
     cfg.set(section, "logreversed", str(autosubliminal.LOGREVERSED))
     cfg.set(section, "loglevelconsole", logging.getLevelName(int(autosubliminal.LOGLEVELCONSOLE)).lower())
@@ -1260,6 +1267,7 @@ def check_for_restart():
     logsize = 0
     lognum = 0
     loghttpaccess = False
+    logexternallibs = False
     logdetailedformat = False
     webserverip = u'0.0.0.0'
     webserverport = 8083
@@ -1338,6 +1346,7 @@ def check_for_restart():
             or logsize != autosubliminal.LOGSIZE \
             or lognum != autosubliminal.LOGNUM \
             or loghttpaccess != autosubliminal.LOGHTTPACCESS \
+            or logexternallibs != autosubliminal.LOGEXTERNALLIBS \
             or logdetailedformat != autosubliminal.LOGDETAILEDFORMAT \
             or loglevelconsole != autosubliminal.LOGLEVELCONSOLE \
             or webserverip != autosubliminal.WEBSERVERIP \

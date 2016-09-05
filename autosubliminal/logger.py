@@ -15,7 +15,7 @@ def initialize():
     # Clear existing handlers (needed after soft restart) to prevent double logging
     log.handlers = []
 
-    log_filter = _LogFilter(autosubliminal.LOGHTTPACCESS)
+    log_filter = _LogFilter(autosubliminal.LOGHTTPACCESS, autosubliminal.LOGEXTERNALLIBS)
     log_formatter = _LogFormatter(autosubliminal.LOGDETAILEDFORMAT)
     log_handler = CustomRotatingFileHandler(autosubliminal.LOGFILE, 'a', autosubliminal.LOGSIZE * 1024 * 1024,
                                             autosubliminal.LOGNUM)
@@ -52,15 +52,18 @@ class _LogFormatter(logging.Formatter):
 
 
 class _LogFilter(logging.Filter):
-    def __init__(self, log_http_access=None):
+    def __init__(self, log_http_access=None, log_external_libs=None):
         self.log_http_access = log_http_access
+        self.log_external_libs = log_external_libs
         super(_LogFilter, self).__init__()
 
     def filter(self, record):
         # Filter out http access
-        if not self.log_http_access:
-            if 'cherrypy.access' in record.name:
-                return False
+        if not self.log_http_access and 'cherrypy.access' in record.name:
+            return False
+        # Filter out external libs (= without own package name)
+        if not self.log_external_libs and not 'autosubliminal.' in record.name:
+            return False
         return True
 
 
@@ -134,7 +137,7 @@ class CustomRotatingFileHandler(BaseRotatingHandler):
                 # clear base log file
                 with file(self.baseFilename, 'w'):
                     pass
-                #######################################
+                    #######################################
 
         if not self.delay:
             self.stream = self._open()
