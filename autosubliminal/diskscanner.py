@@ -55,14 +55,30 @@ class DiskScanner(ScheduledProcess):
             utils.release_wanted_queue_lock()
             return True
 
-        # Reset the wanted queue before walking through paths and adding the wanted items
-        autosubliminal.WANTEDQUEUE = []
+        # Walk through paths to search for wanted items
+        new_wanted_items = []
+        db = WantedItems()
+        old_wanted_items = db.get_wanted_items()
         for videodir in autosubliminal.VIDEOPATHS:
             try:
-                walk_dir(videodir)
+                new_wanted_items.extend(walk_dir(videodir))
             except Exception, e:
                 log.error("Could not scan the video path (%s), skipping..." % videodir)
                 log.exception(e)
+
+        # Cleanup wanted items that have been removed from disk manually but are still stored in the db
+        log.debug("Checking for non existing wanted items in wanted_items database")
+        for item in old_wanted_items:
+            if item not in new_wanted_items:
+                db.delete_wanted_item(item)
+                log.debug("Deleted non existing wanted item: %s" % item['videopath'])
+
+        # Populate WANTEDQUEUE with all items from wanted_items database
+        log.info("Subtitle(s) wanted for:")
+        autosubliminal.WANTEDQUEUE = []
+        for item in db.get_wanted_items():
+            log.info("%s", item['videopath'])
+            autosubliminal.WANTEDQUEUE.append(item)
 
         # Release wanted queue lock
         log.info("Finished round of local disk checking")
@@ -73,6 +89,7 @@ class DiskScanner(ScheduledProcess):
 
 def walk_dir(path):
     log.info("Scanning video path: %s" % path)
+    wanted_items = []
     db = WantedItems()
 
     # Check all folders and files
@@ -104,6 +121,7 @@ def walk_dir(path):
                 wanted_item = db.get_wanted_item(os.path.join(dirname, filename))
                 if wanted_item:
                     log.debug("Video is already in wanted_items database, no need to scan it again")
+                    wanted_items.append(wanted_item)
                     continue
 
                 # Check if there are missing subtitle languages for the video file
@@ -146,6 +164,7 @@ def walk_dir(path):
                         # Store in wanted_items database
                         db.set_wanted_item(wanted_item)
                         log.debug("Video stored in wanted items database")
+                        wanted_items.append(wanted_item)
 
                     else:
                         log.error("Could not process the filename: %s" % filename)
@@ -154,11 +173,7 @@ def walk_dir(path):
                 else:
                     log.debug("Video has no missing subtitles")
 
-    # Populate WANTEDQUEUE with all items from wanted_items database
-    log.info("Subtitle(s) wanted for:")
-    for item in db.get_wanted_items():
-        log.info("%s", item['videopath'])
-        autosubliminal.WANTEDQUEUE.append(item)
+    return wanted_items
 
 
 def check_missing_subtitle_languages(dirname, filename):
