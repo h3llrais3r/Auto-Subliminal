@@ -24,11 +24,11 @@ def initialize():
     log_handler.setLevel(autosubliminal.LOGLEVEL)
     log.addHandler(log_handler)
 
-    # console log handler
+    # Console log handler
     if not autosubliminal.DAEMON:
         console = logging.StreamHandler()
         console.setLevel(autosubliminal.LOGLEVELCONSOLE)
-        # set a format which is simpler for console use
+        # Set a format which is simpler for console use
         formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
         console.setFormatter(formatter)
         log.addHandler(console)
@@ -40,7 +40,8 @@ class _LogFormatter(logging.Formatter):
         # If the format is changed, also the utils.LOG_PARSER must be changed!
         self._custom_fmt = '%(asctime)s %(levelname)-8s '
         if detailed_format:
-            self._custom_fmt += '%(customDetails)s '  # Add customer details
+            # Add custom details
+            self._custom_fmt += '%(customDetails)s '
         self._custom_fmt += '%(message)s'
         super(_LogFormatter, self).__init__(self._custom_fmt)
 
@@ -62,6 +63,7 @@ class _LogFilter(logging.Filter):
         if not self.log_http_access and 'cherrypy.access' in record.name:
             return False
         # Filter out external libs (= without own package name)
+        # REMARK: this only works when the detailed log format is enabled
         if not self.log_external_libs and not 'autosubliminal.' in record.name:
             return False
         return True
