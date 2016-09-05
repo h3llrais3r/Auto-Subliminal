@@ -133,7 +133,7 @@ def read_config():
             autosubliminal.CONFIGVERSION = 1
 
     else:
-        # config section is missing
+        # Config section is missing
         print "ERROR: Required config section is missing. Using default values instead."
         print "ERROR: Required variable PATH is missing. Using current working directory instead."
         autosubliminal.PATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
@@ -218,7 +218,7 @@ def read_config():
             autosubliminal.LOGLEVELCONSOLE = logging.ERROR
 
     else:
-        # Logfile section is missing, so set defaults for all options
+        # Logfile section is missing
         print "ERROR: Required variable LOGFILE is missing. Using 'AutoSuliminal.log' instead."
         autosubliminal.LOGFILE = u"AutoSubliminal.log"
         autosubliminal.LOGLEVEL = logging.INFO
@@ -255,6 +255,7 @@ def read_config():
         else:
             autosubliminal.LAUNCHBROWSER = True
     else:
+        # Webserver section is missing
         print "ERROR: The webserver section is required. Now setting the default values (0.0.0.0:8083)."
         print "WARNING: The webserver is started without authentication."
         autosubliminal.WEBSERVERIP = u"0.0.0.0"
@@ -369,6 +370,7 @@ def read_config():
         for x in autosubliminal.USERSHOWNAMEMAPPING.keys():
             autosubliminal.USERSHOWNAMEMAPPINGUPPER[x.upper()] = autosubliminal.USERSHOWNAMEMAPPING[x]
     else:
+        # Shownamemapping section is missing
         autosubliminal.USERSHOWNAMEMAPPING = {}
         autosubliminal.USERSHOWNAMEMAPPINGUPPER = {}
 
@@ -378,28 +380,27 @@ def read_config():
         for x in autosubliminal.USERMOVIENAMEMAPPING.keys():
             autosubliminal.USERMOVIENAMEMAPPINGUPPER[x.upper()] = autosubliminal.USERMOVIENAMEMAPPING[x]
     else:
+        # Movienamemapping section is missing
         autosubliminal.USERMOVIENAMEMAPPING = {}
         autosubliminal.USERMOVIENAMEMAPPINGUPPER = {}
 
     if cfg.has_section('skipshow'):
-        # Try to read skipshow section in the config
         autosubliminal.SKIPSHOW = dict(cfg.items('skipshow'))
-        # The following lines convert the skipshow to uppercase and also convert the variables to a list.
         autosubliminal.SKIPSHOWUPPER = {}
         for x in autosubliminal.SKIPSHOW:
             autosubliminal.SKIPSHOWUPPER[x.upper()] = autosubliminal.SKIPSHOW[x].split(',')
     else:
+        # Skipshow section is missing
         autosubliminal.SKIPSHOW = {}
         autosubliminal.SKIPSHOWUPPER = {}
 
     if cfg.has_section('skipmovie'):
-        # Try to read skipmovie section in the config
         autosubliminal.SKIPMOVIE = dict(cfg.items('skipmovie'))
-        # The following lines convert the skipmovie to uppercase and also convert the variables to a list.
         autosubliminal.SKIPMOVIEUPPER = {}
         for x in autosubliminal.SKIPMOVIE:
             autosubliminal.SKIPMOVIEUPPER[x.upper()] = autosubliminal.SKIPMOVIE[x]
     else:
+        # Skipmovie section is missing
         autosubliminal.SKIPMOVIE = {}
         autosubliminal.SKIPMOVIEUPPER = {}
 
@@ -599,6 +600,11 @@ def read_config():
         else:
             autosubliminal.POSTPROCESS = False
 
+        if cfg.has_option("postprocessing", "postprocessindividual"):
+            autosubliminal.POSTPROCESSINDIVIDUAL = cfg.getboolean("postprocessing", "postprocessindividual")
+        else:
+            autosubliminal.POSTPROCESSINDIVIDUAL = False
+
         if cfg.has_option("postprocessing", "postprocessutf8encoding"):
             autosubliminal.POSTPROCESSUTF8ENCODING = cfg.getboolean("postprocessing", "postprocessutf8encoding")
         else:
@@ -617,7 +623,9 @@ def read_config():
             autosubliminal.MOVIEPOSTPROCESSCMDARGS = cfg.get("postprocessing", "moviepostprocesscmdargs")
 
     else:
+        # Postprocessing section is missing
         autosubliminal.POSTPROCESS = False
+        autosubliminal.POSTPROCESSINDIVIDUAL = False
         autosubliminal.POSTPORCESSUTF8ENCODING = False
 
     if cfg.has_section('dev'):
@@ -1218,6 +1226,7 @@ def save_postprocessing_section():
         cfg.add_section(section)
 
     cfg.set(section, "postprocess", str(autosubliminal.POSTPROCESS))
+    cfg.set(section, "postprocessindividual", str(autosubliminal.POSTPROCESSINDIVIDUAL))
     cfg.set(section, "postprocessutf8encoding", str(autosubliminal.POSTPROCESSUTF8ENCODING))
     cfg.set(section, "showpostprocesscmd", autosubliminal.SHOWPOSTPROCESSCMD)
     cfg.set(section, "showpostprocesscmdargs", autosubliminal.SHOWPOSTPROCESSCMDARGS)

@@ -30,24 +30,13 @@ class SubDownloader(object):
 
         log.info("Running sub downloader")
 
-        # Check download_item
-        if 'video' in self._keys and 'subtitles' in self._keys and 'single' in self._keys:
+        # Save the subtitle
+        if self.save():
+            # Mark as downloaded
+            self.mark_downloaded()
 
-            # Save the subtitle
-            video = self._download_item['video']
-            subliminal.save_subtitles(video, self._download_item['subtitles'][video], self._download_item['single'])
-
-            # Add download_item to last downloads
-            self._download_item['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
-            LastDownloads().set_last_downloads(self._download_item)
-
-            # Notify
-            if autosubliminal.NOTIFY:
-                Notifier(self._download_item).notify_download()
-
-            # Post processing
-            if autosubliminal.POSTPROCESS:
-                PostProcessor(self._download_item).run()
+            # Post process
+            self.post_process()
 
             # Show success message
             language = self._download_item['downlang']
@@ -56,14 +45,9 @@ class SubDownloader(object):
             utils.add_notification_message(
                 "Downloaded '" + language + "' subtitle for '" + name + "' from '" + provider + "'", 'success')
 
-            return True
-        else:
-            log.error("Download item is not complete, skipping")
-            return False
-
     def save(self):
         """
-        Save the subtitle without further handling
+        Save the subtitle
         """
 
         log.info("Saving subtitle")
@@ -78,12 +62,12 @@ class SubDownloader(object):
             log.error("Download item is not complete, skipping")
             return False
 
-    def post_process(self):
+    def mark_downloaded(self):
         """
-        Execute post process logic only
+        Mark the subtitle as downloaded
         """
 
-        log.debug("Post processing subtitle")
+        log.debug("Marking subtitle as downloaded")
 
         # Add download_item to last downloads
         self._download_item['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -93,9 +77,27 @@ class SubDownloader(object):
         if autosubliminal.NOTIFY:
             Notifier(self._download_item).notify_download()
 
-        # Post processing
-        result = True
-        if autosubliminal.POSTPROCESS:
-            result = PostProcessor(self._download_item).run()
+        return True
 
-        return result
+    def post_process(self):
+        """
+        Post process the subtitle
+        """
+
+        log.debug("Post processing subtitle")
+
+        if autosubliminal.POSTPROCESS:
+
+            # Individual processing: process after each subtitle download
+            if autosubliminal.POSTPROCESSINDIVIDUAL:
+                PostProcessor(self._download_item).run()
+
+            # Global processing: only process when all subtitles are downloaded
+            else:
+                wanted_languages = self._download_item['languages'][:]
+                downloaded_language = self._download_item['downlang']
+                wanted_languages.remove(downloaded_language)
+                if len(wanted_languages) == 0:
+                    PostProcessor(self._download_item).run()
+
+        return True

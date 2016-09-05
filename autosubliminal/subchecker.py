@@ -63,20 +63,22 @@ class SubChecker(ScheduledProcess):
                 # Search the best subtitle with the minimal score
                 subtitles, language, single = _search_subtitles(video, lang, True)
 
-                # Save when a subtitle is found for the video
+                # Subtitle is found for the video
                 if subtitles[video]:
+                    # Handle download
                     download_item = _construct_download_item(wanted_item, subtitles, language, single)
                     SubDownloader(download_item).run()
 
                     # Remove downloaded language from wanted languages
                     languages.remove(lang)
 
-                    # Mark wanted item as delete (if no other subtitles are needed) or update the wanted languages in db
-                    if len(languages) == 0:
-                        to_delete_wanted_queue.append(index)
-                    else:
-                        wanted_item['languages'] = languages
+                    # Update wanted item if there are still wanted languages
+                    if len(languages) > 0:
                         db.update_wanted_item(wanted_item)
+
+                    # Mark wanted item as deleted if there are no more wanted languages
+                    else:
+                        to_delete_wanted_queue.append(index)
 
         # Cleanup wanted item(s)
         i = len(to_delete_wanted_queue) - 1
@@ -316,12 +318,22 @@ def post_process(wanted_item_index, subtitle_index):
         # Get selected subtitle
         wanted_subtitles = _get_wanted_subtitle(subtitles, subtitle_index)
 
-        # Post process only
+        # Handle download
         download_item = _construct_download_item(wanted_item, wanted_subtitles, language, single)
-        processed = SubDownloader(download_item).post_process()
+        downloader = SubDownloader(download_item)
+        downloader.mark_downloaded()
+        processed = downloader.post_process()
 
-        # Remove wanted item if processed
-        if processed:
+        # Remove downloaded language from wanted languages
+        wanted_item['languages'].remove(language)
+
+        # Update wanted item if there are still wanted languages
+        if len(wanted_item['languages']) > 0:
+            WantedItems().update_wanted_item(wanted_item)
+
+        # Remove wanted item if there are no more wanted languages
+        else:
+            # Remove wanted item
             autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
             log.debug("Removed item from the wanted queue at index %s" % int(wanted_item_index))
             WantedItems().delete_wanted_item(wanted_item)
@@ -346,10 +358,10 @@ def post_process_no_subtitle(wanted_item_index):
     # Get wanted item
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
 
-    # Post process only
+    # Post process only (no need to check for individual or not because we are forcing post processing)
     processed = PostProcessor(wanted_item).run()
 
-    # Remove wanted item if downloaded
+    # Remove wanted item if processed
     if processed:
         autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
         log.debug("Removed item from the wanted queue at index %s" % int(wanted_item_index))

@@ -519,10 +519,11 @@ class Config(object):
             return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
-        def save(self, postprocess, postprocessutf8encoding, showpostprocesscmd, showpostprocesscmdargs,
-                 moviepostprocesscmd, moviepostprocesscmdargs):
+        def save(self, postprocess, postprocessindividual, postprocessutf8encoding, showpostprocesscmd,
+                 showpostprocesscmdargs, moviepostprocesscmd, moviepostprocesscmdargs):
             # Set postprocessing variables
             autosubliminal.POSTPROCESS = utils.getboolean(postprocess)
+            autosubliminal.POSTPROCESSINDIVIDUAL = utils.getboolean(postprocessindividual)
             autosubliminal.POSTPROCESSUTF8ENCODING = utils.getboolean(postprocessutf8encoding)
             autosubliminal.SHOWPOSTPROCESSCMD = showpostprocesscmd
             autosubliminal.SHOWPOSTPROCESSCMDARGS = showpostprocesscmdargs
