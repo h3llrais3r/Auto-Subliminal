@@ -38,9 +38,9 @@ class PostProcessor(object):
         process_cmd = self._construct_process_cmd()
         stdout, stderr = utils.run_cmd(process_cmd)
         if stderr:
-            log.error("Post processor failed: %s" % stderr)
+            log.error("Post processor failed:\n%s" % utils.safe_trim(stderr))
             return False
-        log.debug("Post processor output:% s" % stdout)
+        log.debug("Post processor output:\n%s" % utils.safe_trim(stdout))
         return True
 
     def _construct_process_cmd(self):

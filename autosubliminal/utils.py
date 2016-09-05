@@ -106,6 +106,18 @@ def safe_uppercase(obj, default_value=None):
         return default_value
 
 
+def safe_trim(obj, default_value=None):
+    """
+    Return the object trimmed with leading and trailing spaces, tabs and newlines.
+    When not possible return the default value.
+    """
+    try:
+        text = obj.strip(' \n\r\t')
+        return text
+    except:
+        return default_value
+
+
 def show_name_mapping(show_name):
     if show_name.upper() in autosubliminal.USERSHOWNAMEMAPPINGUPPER.keys():
         log.debug("Found match in usershownamemapping for %s" % show_name)
