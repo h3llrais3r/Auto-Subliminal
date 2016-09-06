@@ -51,7 +51,7 @@ class DiskScanner(ScheduledProcess):
                     one_dir_exists = True
         if not one_dir_exists:
             # Release wanted queue lock
-            log.error("None of the configured video paths (%s) exist, aborting..." % autosubliminal.VIDEOPATHS)
+            log.error("None of the configured video paths (%s) exists, aborting..." % autosubliminal.VIDEOPATHS)
             utils.release_wanted_queue_lock()
             return True
 
@@ -74,10 +74,10 @@ class DiskScanner(ScheduledProcess):
                 log.debug("Deleted non existing wanted item: %s" % item['videopath'])
 
         # Populate WANTEDQUEUE with all items from wanted_items database
-        log.info("Subtitle(s) wanted for:")
+        log.info("Listing video's with missing subtitles:")
         autosubliminal.WANTEDQUEUE = []
         for item in db.get_wanted_items():
-            log.info("%s", item['videopath'])
+            log.info("%s %s" % (item['videopath'], item['languages']))
             autosubliminal.WANTEDQUEUE.append(item)
 
         # Release wanted queue lock
@@ -117,61 +117,54 @@ def walk_dir(path):
                     continue
                 log.debug("Video file found: %s" % filename)
 
-                # Check if video is already processed before and stored in wanted_items database
+                # Check if video file has already been processed before, so we don't need to process it again
                 wanted_item = db.get_wanted_item(os.path.join(dirname, filename))
                 if wanted_item:
-                    log.debug("Video is already in wanted_items database, no need to scan it again")
-                    wanted_items.append(wanted_item)
-                    continue
+                    log.debug("Video found in wanted_items database, no need to scan it again")
+                else:
+                    log.debug("Video not found in wanted_items database, start scanning it")
 
-                # Check if there are missing subtitle languages for the video file
-                log.debug("Video not yet scanned, starting it now")
-                languages = check_missing_subtitle_languages(dirname, filename)
-                if len(languages) > 0:
+                    # Check for missing subtitles
+                    languages = check_missing_subtitle_languages(dirname, filename)
 
-                    # Process the video file
-                    wanted_item = fileprocessor.process_file(dirname, filename)
-                    if wanted_item:
-
-                        # Populate common wanted_item data
-                        wanted_item['videopath'] = os.path.join(dirname, filename)
-                        wanted_item['timestamp'] = unicode(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(
-                            os.path.getctime(wanted_item['videopath']))))
-                        wanted_item['languages'] = languages
-
-                        # Populate episode data
-                        if wanted_item['type'] == 'episode':
-                            log.debug("Video processed as episode")
-                            title = wanted_item['title']
-                            season = wanted_item['season']
-                            episode = wanted_item['episode']
-                            if utils.skip_show(title, season, episode):
-                                log.info("Skipping %s - Season %s Episode %s" % (title, season, episode))
-                                continue
-                            wanted_item['tvdbid'] = ShowIndexer().get_tvdb_id(title)
-
-                        # Populate movie data
-                        elif wanted_item['type'] == 'movie':
-                            log.debug("Video processed as movie")
-                            title = wanted_item['title']
-                            year = wanted_item['year']
-                            if utils.skip_movie(title, year):
-                                log.info("Skipping %s (%s)" % (title, year))
-                                continue
-                            wanted_item['imdbid'], wanted_item['year'] = MovieIndexer().get_imdb_id_and_year(title,
-                                                                                                             year)
-
-                        # Store in wanted_items database
-                        db.set_wanted_item(wanted_item)
-                        log.debug("Video stored in wanted items database")
-                        wanted_items.append(wanted_item)
-
+                    # Process the video file if there are missing subtitles
+                    if len(languages) > 0:
+                        wanted_item = fileprocessor.process_file(dirname, filename)
+                        if wanted_item:
+                            # Add wanted languages and store in wanted_items database
+                            wanted_item['languages'] = languages
+                            db.set_wanted_item(wanted_item)
+                        else:
+                            log.error("Could not process the file: %s" % filename)
+                            continue
                     else:
-                        log.error("Could not process the filename: %s" % filename)
+                        log.debug("Video has no missing subtitles")
                         continue
 
-                else:
-                    log.debug("Video has no missing subtitles")
+                # Check if we need to skip it and delete it from the database
+                log.debug("Checking if the video needs to be skipped")
+                if wanted_item:
+                    # Skip episode check
+                    if wanted_item['type'] == 'episode':
+                        title = wanted_item['title']
+                        season = wanted_item['season']
+                        episode = wanted_item['episode']
+                        if utils.skip_show(title, season, episode):
+                            db.delete_wanted_item(wanted_item)
+                            log.info("Skipping %s - Season %s Episode %s" % (title, season, episode))
+                            continue
+                    # Skip movie check
+                    elif wanted_item['type'] == 'movie':
+                        title = wanted_item['title']
+                        year = wanted_item['year']
+                        if utils.skip_movie(title, year):
+                            db.delete_wanted_item(wanted_item)
+                            log.info("Skipping %s (%s)" % (title, year))
+                            continue
+
+                # Add it to list of wanted items
+                log.debug("Video added to list of wanted items")
+                wanted_items.append(wanted_item)
 
     return wanted_items
 
@@ -179,10 +172,12 @@ def walk_dir(path):
 def check_missing_subtitle_languages(dirname, filename):
     log.debug("Checking for missing subtitle(s)")
     missing_subtitles = []
+
     # Check embedded subtitles
     embedded_subtitles = []
     if autosubliminal.SCANEMBEDDEDSUBS:
         embedded_subtitles = _get_embedded_subtitles(dirname, filename)
+
     # Check default language
     detect_language = False
     if autosubliminal.DEFAULTLANGUAGE:
@@ -210,6 +205,7 @@ def check_missing_subtitle_languages(dirname, filename):
                     missing_subtitles.append(autosubliminal.DEFAULTLANGUAGE)
             else:
                 log.debug("No invalid default language detected")
+
     # Check additional languages
     if autosubliminal.ADDITIONALLANGUAGES:
         log.debug("Checking for missing additional language(s)")
@@ -220,6 +216,7 @@ def check_missing_subtitle_languages(dirname, filename):
             if not os.path.exists(os.path.join(dirname, srt_file)) and additional_language not in embedded_subtitles:
                 log.debug("Video is missing the additional language '%s'", language)
                 missing_subtitles.append(language)
+
     return missing_subtitles
 
 
@@ -228,6 +225,7 @@ def _get_embedded_subtitles(dirname, filename):
     Based on subliminal.video.scan_video(...) but only keep the check for embedded subtitles
     """
     log.debug("Checking for embedded subtitle(s)")
+
     embedded_subtitle_languages = set()
     try:
         path = os.path.join(dirname, filename)
@@ -248,7 +246,7 @@ def _get_embedded_subtitles(dirname, filename):
                         try:
                             embedded_subtitle_languages.add(Language.fromname(st.name))
                         except BabelfishError:
-                            log.debug('Embedded subtitle track name %r is not a valid language', st.name)
+                            log.error('Embedded subtitle track name %r is not a valid language', st.name)
                             embedded_subtitle_languages.add(Language('und'))
                     else:
                         embedded_subtitle_languages.add(Language('und'))
@@ -264,6 +262,7 @@ def _get_embedded_subtitles(dirname, filename):
 
 def _detect_subtitle_language(srt_path):
     log.debug("Detecting subtitle language")
+
     # Load srt file (try first iso-8859-1 with fallback to utf-8)
     try:
         subtitle = pysrt.open(path=srt_path, encoding='iso-8859-1')
@@ -272,12 +271,14 @@ def _detect_subtitle_language(srt_path):
             subtitle = pysrt.open(path=srt_path, encoding='utf-8')
         except:
             # If we can't read it, we can't detect, so return
-            return
+            return None
+
     # Read first 5 subtitle lines to determine the language
     if len(subtitle) >= 5:
         text = ""
         for sub in subtitle[0:5]:
             text += sub.text
+
         # Detect the language with highest probability and return it if it's more than the required minimum probability
         detected_languages = langdetect.detect_langs(text)
         log.debug("Detected subtitle language(s): %s", detected_languages)
@@ -290,7 +291,7 @@ def _detect_subtitle_language(srt_path):
                 return Language.fromietf(detected_language.lang)
             else:
                 log.debug("Probability of detected subtitle language too low: %s" % detected_language)
-    return
+    return None
 
 
 def _delete_subtitle_file(subtitle_path, language):
