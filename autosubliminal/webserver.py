@@ -53,7 +53,7 @@ class Home(object):
             if title.upper() in autosubliminal.SKIPSHOWUPPER:
                 for x in autosubliminal.SKIPSHOWUPPER[title.upper()]:
                     if x == season or x == '0':
-                        utils.add_notification_message("Already skipped %s season %s" % (title, season))
+                        utils.add_notification_message("Already skipped show %s season %s" % (title, season))
                         redirect("/home")
                 if season == '00':
                     season = season + ',' + ','.join(autosubliminal.SKIPSHOWUPPER[title.upper()])
@@ -65,7 +65,7 @@ class Home(object):
             config.save_config('skipshow', title, season)
             config.apply_skipshow()
 
-            utils.add_notification_message("Skipped %s season %s" % (title, season))
+            utils.add_notification_message("Skipped show %s season %s" % (title, season))
             redirect("/home")
 
     @cherrypy.expose(alias='skipMovie')
@@ -76,13 +76,13 @@ class Home(object):
         if year:
             movie += " (" + year + ")"
         if movie.upper() in autosubliminal.SKIPMOVIEUPPER:
-            utils.add_notification_message("Already skipped %s" % movie)
+            utils.add_notification_message("Already skipped movie %s" % movie)
             redirect("/home")
         else:
             config.save_config('skipmovie', movie, '0')
             config.apply_skipmovie()
 
-        utils.add_notification_message("Skipped %s" % movie)
+        utils.add_notification_message("Skipped movie %s" % movie)
         redirect("/home")
 
     @cherrypy.expose(alias='deleteVideo')
