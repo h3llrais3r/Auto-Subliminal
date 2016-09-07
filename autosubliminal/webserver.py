@@ -48,14 +48,13 @@ class Home(object):
             tmpl.title = title
             return str(tmpl)
         else:
-            tmpl = Template(file="interface/templates/general/message.tmpl")
             if not title:
                 raise cherrypy.HTTPError(400, "No show supplied")
             if title.upper() in autosubliminal.SKIPSHOWUPPER:
                 for x in autosubliminal.SKIPSHOWUPPER[title.upper()]:
                     if x == season or x == '0':
-                        tmpl.message = "Already skipped <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
-                        return str(tmpl)
+                        utils.add_notification_message("Already skipped %s season %s" % (title, season))
+                        redirect("/home")
                 if season == '00':
                     season = season + ',' + ','.join(autosubliminal.SKIPSHOWUPPER[title.upper()])
                 else:
@@ -66,26 +65,25 @@ class Home(object):
             config.save_config('skipshow', title, season)
             config.apply_skipshow()
 
-            tmpl.message = "Done<br> Remember, WantedQueue will be refreshed at the next run of scanDisk <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
-            return str(tmpl)
+            utils.add_notification_message("Skipped %s season %s" % (title, season))
+            redirect("/home")
 
     @cherrypy.expose(alias='skipMovie')
     def skip_movie(self, title, year):
-        tmpl = Template(file="interface/templates/general/message.tmpl")
         if not title:
             raise cherrypy.HTTPError(400, "No title supplied")
         movie = title
         if year:
             movie += " (" + year + ")"
         if movie.upper() in autosubliminal.SKIPMOVIEUPPER:
-            tmpl.message = "Already skipped <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
-            return str(tmpl)
+            utils.add_notification_message("Already skipped %s" % movie)
+            redirect("/home")
         else:
             config.save_config('skipmovie', movie, '0')
             config.apply_skipmovie()
 
-        tmpl.message = "Done<br> Remember, WantedQueue will be refreshed at the next run of scanDisk <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
-        return str(tmpl)
+        utils.add_notification_message("Skipped %s" % movie)
+        redirect("/home")
 
     @cherrypy.expose(alias='deleteVideo')
     def delete_video(self, wanted_item_index, confirmed=False, cleanup=False):
@@ -99,12 +97,11 @@ class Home(object):
         else:
             # Delete video
             deleted = subchecker.delete_video(wanted_item_index, cleanup)
-            tmpl = Template(file="interface/templates/general/message.tmpl")
             if deleted:
-                tmpl.message = "Video physically deleted from filesystem <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
+                utils.add_notification_message("Video deleted from filesystem")
             else:
-                tmpl.message = "Video could not be deleted, please check the log file for more info <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return home</a>"
-            return str(tmpl)
+                utils.add_notification_message("Video could not be deleted! Please check the log file.", "error")
+            redirect("/home")
 
     @cherrypy.expose(alias='searchSubtitle')
     def search_subtitle(self, wanted_item_index, lang):
@@ -637,7 +634,7 @@ class System(object):
             utils.release_wanted_queue_lock()
             utils.add_notification_message("Flushed wanted items database. Please launch system 'run now'.")
         else:
-            utils.add_notification_message("Cannot flush wanted items database when wanted queue is in use", 'notice')
+            utils.add_notification_message("Cannot flush wanted items database when wanted queue is in use", "notice")
         redirect("/home")
 
     @cherrypy.expose(alias='flushLastDownloads')
