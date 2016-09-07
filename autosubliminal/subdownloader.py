@@ -50,7 +50,7 @@ class SubDownloader(object):
         Save the subtitle
         """
 
-        log.info("Saving subtitle")
+        log.debug("Saving subtitle")
 
         # Check download_item
         if 'video' in self._keys and 'subtitles' in self._keys and 'single' in self._keys:
