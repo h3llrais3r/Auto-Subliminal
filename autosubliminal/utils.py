@@ -278,10 +278,10 @@ def check_mobile_device(req_useragent):
 def get_wanted_queue_lock():
     with _lock:
         if autosubliminal.WANTEDQUEUELOCK:
-            log.info("Cannot get wanted queue lock, skipping")
+            log.debug("Cannot get wanted queue lock, skipping")
             return False
         else:
-            log.info("Getting wanted queue lock")
+            log.debug("Getting wanted queue lock")
             autosubliminal.WANTEDQUEUELOCK = True
             return True
 
@@ -289,7 +289,7 @@ def get_wanted_queue_lock():
 def release_wanted_queue_lock():
     with _lock:
         if autosubliminal.WANTEDQUEUELOCK:
-            log.info("Releasing wanted queue lock")
+            log.debug("Releasing wanted queue lock")
             autosubliminal.WANTEDQUEUELOCK = False
         else:
             log.warning("Trying to release a wanted queue lock while there is no lock")
