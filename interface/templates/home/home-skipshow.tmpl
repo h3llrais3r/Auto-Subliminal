@@ -28,6 +28,7 @@
                         <input type="button" value="Cancel" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/home'">
                     </span>
                 </div>
+                <input type="hidden" name="wanted_item_index" value="$wanted_item_index">
                 #set $title_escaped = $cgi.escape($title, True)
                 <input type="hidden" name="title" value="$title_escaped">
             </form>
@@ -35,7 +36,7 @@
 
         <div class="panel-footer">
             <div class="note">
-                Enter 0 to skip the show completely, enter 00 to skip special show.
+                Enter 00 to skip the show completely, enter 0 to skip special show.
             </div>
         </div>
 

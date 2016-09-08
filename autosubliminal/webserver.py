@@ -42,34 +42,46 @@ class Home(object):
         redirect("/home")
 
     @cherrypy.expose(alias='skipShow')
-    def skip_show(self, title, season=None):
+    def skip_show(self, wanted_item_index, title, season=None):
         if not season:
             tmpl = Template(file="interface/templates/home/home-skipshow.tmpl")
+            tmpl.wanted_item_index = wanted_item_index
             tmpl.title = title
             return str(tmpl)
         else:
+            if not wanted_item_index:
+                raise cherrypy.HTTPError(400, "No wanted_item index supplied")
             if not title:
                 raise cherrypy.HTTPError(400, "No show supplied")
+            config_season = season
             if title.upper() in autosubliminal.SKIPSHOWUPPER:
                 for x in autosubliminal.SKIPSHOWUPPER[title.upper()]:
-                    if x == season or x == '0':
+                    if x == season or x == '00':
                         utils.add_notification_message("Already skipped show %s season %s" % (title, season))
                         redirect("/home")
                 if season == '00':
-                    season = season + ',' + ','.join(autosubliminal.SKIPSHOWUPPER[title.upper()])
+                    config_season = '00'
                 else:
-                    season = str(int(season)) + ',' + ','.join(autosubliminal.SKIPSHOWUPPER[title.upper()])
+                    config_season = str(int(season)) + ',' + ','.join(autosubliminal.SKIPSHOWUPPER[title.upper()])
             else:
                 if not season == '00':
                     season = str(int(season))
-            config.save_config('skipshow', title, season)
-            config.apply_skipshow()
+            if subchecker.skip_show(wanted_item_index, season):
+                config.save_config('skipshow', title, config_season)
+                config.apply_skipshow()
+                if season == '00':
+                    utils.add_notification_message("Skipped show %s all seasons" % title)
+                else:
+                    utils.add_notification_message("Skipped show %s season %s" % (title, season))
+            else:
+                utils.add_notification_message("Could not skip show! Please check the log file.", "error")
 
-            utils.add_notification_message("Skipped show %s season %s" % (title, season))
             redirect("/home")
 
     @cherrypy.expose(alias='skipMovie')
-    def skip_movie(self, title, year):
+    def skip_movie(self, wanted_item_index, title, year):
+        if not wanted_item_index:
+            raise cherrypy.HTTPError(400, "No wanted_item index supplied")
         if not title:
             raise cherrypy.HTTPError(400, "No title supplied")
         movie = title
@@ -79,10 +91,13 @@ class Home(object):
             utils.add_notification_message("Already skipped movie %s" % movie)
             redirect("/home")
         else:
-            config.save_config('skipmovie', movie, '0')
-            config.apply_skipmovie()
+            if subchecker.skip_movie(wanted_item_index):
+                config.save_config('skipmovie', movie, '00')
+                config.apply_skipmovie()
+                utils.add_notification_message("Skipped movie %s" % movie)
+            else:
+                utils.add_notification_message("Could not skip movie! Please check the log file.", "error")
 
-        utils.add_notification_message("Skipped movie %s" % movie)
         redirect("/home")
 
     @cherrypy.expose(alias='deleteVideo')

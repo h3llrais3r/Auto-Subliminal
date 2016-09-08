@@ -119,17 +119,21 @@ def test_movie_name_mapping():
 
 
 def test_skip_show():
-    autosubliminal.SKIPSHOWUPPER = {"SHOW1": "1", "SHOW2": "0"}
-    assert not skip_show("show1", 0, 1)
-    assert skip_show("show1", 1, 1)
-    assert skip_show("show2", 0, 1)  # 0 means skip all
-    assert skip_show("show2", 1, 1)  # 0 means skip all, so also 1 is skipped
-    assert not skip_show("show3", 0, 1)
-    assert not skip_show("show3", 1, 1)
+    autosubliminal.SKIPSHOWUPPER = {"SHOW1": "0", "SHOW2": "1", "SHOW3": "0,1", "SHOW4": "00"}
+    assert skip_show("show1", 0, 1)  # 0 means skip specials
+    assert not skip_show("show1", 1, 1)
+    assert not skip_show("show2", 0, 1)
+    assert skip_show("show2", 1, 1)
+    assert skip_show("show3", 0, 1)  # 00 means skip all, so also 0 is skipped
+    assert skip_show("show3", 1, 1)  # 00 means skip all, so also 1 is skipped
+    assert skip_show("show4", 0, 1)
+    assert skip_show("show4", 1, 1)
+    assert not skip_show("show5", 0, 1)
+    assert not skip_show("show5", 1, 1)
 
 
 def test_skip_movie():
-    autosubliminal.SKIPMOVIEUPPER = {"MOVIE1": "0", "MOVIE2 (2016)": "0"}
+    autosubliminal.SKIPMOVIEUPPER = {"MOVIE1": "00", "MOVIE2 (2016)": "00"}
     assert skip_movie("movie1", None)
     assert not skip_movie("movie1", 2016)
     assert not skip_movie("movie2", None)

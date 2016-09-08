@@ -142,9 +142,9 @@ def movie_name_mapping(title, year):
 def skip_show(show_name, season, episode):
     if show_name.upper() in autosubliminal.SKIPSHOWUPPER.keys():
         log.debug("Found %s in skipshow dictionary" % show_name)
-        for seasontmp in autosubliminal.SKIPSHOWUPPER[show_name.upper()]:
-            if seasontmp == '0':
-                log.debug("Variable of %s is set to 0, skipping the complete Serie" % show_name)
+        for seasontmp in autosubliminal.SKIPSHOWUPPER[show_name.upper()].split(','):
+            if seasontmp == '00':
+                log.debug("Variable of %s is set to 00, skipping the complete Serie" % show_name)
                 return True
             elif int(seasontmp) == int(season):
                 log.debug("Season matches variable of %s, skipping season" % show_name)

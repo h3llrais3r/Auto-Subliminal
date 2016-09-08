@@ -1610,3 +1610,17 @@ def upgrade_config(from_version, to_version):
             autosubliminal.CONFIGUPGRADED = True
             utils.add_notification_message("Config upgraded. Please check or reconfigure your logging configuration.",
                                            "notice", True)
+        if from_version == 7 and to_version == 8:
+            print "INFO: Upgrading skip config. Please check/reconfigure your config!"
+            # '00' means now skip all, '0' means skip season 0
+            for x in autosubliminal.SKIPSHOW.keys():
+                seasons = autosubliminal.SKIPSHOW[x].split(',')
+                replace = {'0': '00', '00': '0'}
+                autosubliminal.SKIPSHOW[x] = ','.join([replace[r] if r in replace.keys() else r for r in seasons])
+            for x in autosubliminal.SKIPMOVIE.keys():
+                autosubliminal.SKIPMOVIE[x] = '00'
+            print "INFO: Config upgraded to version 8."
+            autosubliminal.CONFIGVERSION = 8
+            autosubliminal.CONFIGUPGRADED = True
+            utils.add_notification_message("Config upgraded. Please check or reconfigure your skip configuration.",
+                                           "notice", True)

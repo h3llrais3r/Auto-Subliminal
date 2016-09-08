@@ -71,10 +71,10 @@
                                     <a href="$autosubliminal.WEBROOT/home/deleteVideo/$index">Skip and delete show</a>
                                 </li>
                                 <li>
-                                    <a href="$autosubliminal.WEBROOT/home/skipShow/$item['title']">Skip show</a>
+                                    <a href="$autosubliminal.WEBROOT/home/skipShow/$index/$item['title']">Skip show</a>
                                 </li>
                                 <li>
-                                    <a href="$autosubliminal.WEBROOT/home/skipShow/$item['title']/$item['season']">Skip season $item['season']</a>
+                                    <a href="$autosubliminal.WEBROOT/home/skipShow/$index/$item['title']/$item['season']">Skip season $item['season']</a>
                                 </li>
                             </ul>
                             #else if $item['type'] == 'movie':
@@ -86,7 +86,7 @@
                                     <a href="$autosubliminal.WEBROOT/home/deleteVideo/$index">Skip and delete movie</a>
                                 </li>
                                 <li>
-                                    <a href="$autosubliminal.WEBROOT/home/skipMovie/$item['title']/$item['year']">Skip movie</a>
+                                    <a href="$autosubliminal.WEBROOT/home/skipMovie/$index/$item['title']/$item['year']">Skip movie</a>
                                 </li>
                             </ul>
                             #end if

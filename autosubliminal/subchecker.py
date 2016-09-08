@@ -301,6 +301,62 @@ def delete_video(wanted_item_index, cleanup):
     return deleted
 
 
+def skip_show(wanted_item_index, season):
+    log.info("Skipping a show")
+
+    # Get wanted queue lock
+    if not utils.get_wanted_queue_lock():
+        return False
+
+    # Get wanted item
+    wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+    show = wanted_item['title']
+
+    # Remove all wanted items for the same show and season
+    to_delete_wanted_queue = []
+    for index, item in enumerate(autosubliminal.WANTEDQUEUE):
+        if item['title'] == show:
+            # Skip show all seasons
+            if season == '00':
+                to_delete_wanted_queue.append(index)
+            # Skip season (and specials = season 0)
+            elif season == item['season']:
+                to_delete_wanted_queue.append(index)
+    # Start at the end to delete to prevent index out of range error
+    i = len(to_delete_wanted_queue) - 1
+    while i >= 0:
+        wanted_item_to_delete = autosubliminal.WANTEDQUEUE.pop(to_delete_wanted_queue[i])
+        WantedItems().delete_wanted_item(wanted_item_to_delete)
+        i -= 1
+    log.info("Skipped show %s season %s", show, season)
+
+    # Release wanted queue lock
+    utils.release_wanted_queue_lock()
+
+    return True
+
+
+def skip_movie(wanted_item_index):
+    log.info("Skipping a movie")
+
+    # Get wanted queue lock
+    if not utils.get_wanted_queue_lock():
+        return False
+
+    # Remove wanted item from queue and db
+    wanted_item = autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
+    WantedItems().delete_wanted_item(wanted_item)
+    movie = wanted_item['title']
+    if wanted_item['year']:
+        movie += " (" + wanted_item['year'] + ")"
+    log.info("Skipped movie %s", movie)
+
+    # Release wanted queue lock
+    utils.release_wanted_queue_lock()
+
+    return True
+
+
 def post_process(wanted_item_index, subtitle_index):
     log.info("Post processing an individual subtitle")
 
