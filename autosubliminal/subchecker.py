@@ -52,6 +52,8 @@ class SubChecker(ScheduledProcess):
         # Process all items in wanted queue
         db = WantedItems()
         for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
+            log.info("Searching subtitles for video: %s" % wanted_item['videopath'])
+
             # Scan wanted_item for video, skip when no video could be determined
             video = _scan_wanted_item_for_video(wanted_item)
             if not video:
@@ -106,6 +108,7 @@ def search_subtitle(wanted_item_index, lang):
 
     # Get wanted_item
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+    log.info("Searching subtitles for video: %s" % wanted_item['videopath'])
 
     # Scan wanted_item for video
     video = _scan_wanted_item_for_video(wanted_item)
@@ -436,7 +439,7 @@ def post_process_no_subtitle(wanted_item_index):
 
 def _scan_wanted_item_for_video(wanted_item):
     video_path = wanted_item['videopath']
-    log.info("Scanning video: %s" % video_path)
+    log.info("Scanning video")
 
     # Scan the video
     try:
@@ -478,7 +481,7 @@ def _search_subtitles(video, lang, best_only):
         if subtitles[video]:
             log.info("Found the best subtitle with the required min match score for video")
         else:
-            log.info("No subtitle found for video with required min match score")
+            log.info("No subtitle found with the required min match score for video")
     else:
         log.debug("Searching for all subtitles for video")
         # Download all subtitles (without saving it to file)
