@@ -478,7 +478,7 @@ def _search_subtitles(video, lang, best_only):
         if subtitles[video]:
             log.info("Found the best subtitle with the required min match score for video")
         else:
-            log.info("No subtitle found for video")
+            log.info("No subtitle found for video with required min match score")
     else:
         log.debug("Searching for all subtitles for video")
         # Download all subtitles (without saving it to file)
