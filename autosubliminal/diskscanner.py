@@ -29,11 +29,11 @@ class DiskScanner(ScheduledProcess):
         super(DiskScanner, self).__init__()
 
     def run(self, force_run):
-        log.info("Starting round of local disk checking at %s" % autosubliminal.VIDEOPATHS)
-
         # Get wanted queue lock
         if not utils.get_wanted_queue_lock():
             return False
+
+        log.info("Starting round of local disk checking at %s" % autosubliminal.VIDEOPATHS)
 
         # Show info message (only when run was forced manually)
         if force_run:

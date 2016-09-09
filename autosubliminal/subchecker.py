@@ -35,15 +35,15 @@ class SubChecker(ScheduledProcess):
         super(SubChecker, self).__init__()
 
     def run(self, force_run):
-        log.info("Starting round of subtitle checking")
-        to_delete_wanted_queue = []
+        # Get wanted queue lock
+        if not utils.get_wanted_queue_lock():
+            return False
 
         # Wait for internet connection
         utils.wait_for_internet_connection()
 
-        # Get wanted queue lock
-        if not utils.get_wanted_queue_lock():
-            return False
+        log.info("Starting round of subtitle checking")
+        to_delete_wanted_queue = []
 
         # Show info message (only when run was forced manually)
         if force_run:

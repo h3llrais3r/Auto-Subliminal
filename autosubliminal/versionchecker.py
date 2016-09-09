@@ -33,15 +33,15 @@ class VersionChecker(ScheduledProcess):
             self.install_type = InstallType.SOURCE
 
     def run(self, force_run):
-        log.info("Checking version")
-
-        # Wait for internet connection
-        utils.wait_for_internet_connection()
-
         # Block version check (and update) in no force run mode when another process is using the wanted queue
         # We do not want to auto update the version while the application is busy with another process
         if not force_run and not utils.get_wanted_queue_lock():
             return False
+
+        # Wait for internet connection
+        utils.wait_for_internet_connection()
+
+        log.info("Checking version")
 
         # Check version
         self.manager.check_version(force_run)
