@@ -59,9 +59,9 @@ hello.py::
 
     class HelloWorld:
         \"""Sample request handler class.\"""
+        @cherrypy.expose
         def index(self):
             return "Hello world!"
-        index.exposed = True
 
     cherrypy.tree.mount(HelloWorld())
     # CherryPy autoreload must be disabled for the flup server to work
@@ -113,6 +113,7 @@ Please see `Lighttpd FastCGI Docs
 an explanation of the possible configuration options.
 """
 
+import os
 import sys
 import time
 import warnings
@@ -165,9 +166,10 @@ class ServerAdapter(object):
         if not self.httpserver:
             raise ValueError("No HTTP server has been created.")
 
-        # Start the httpserver in a new thread.
-        if isinstance(self.bind_addr, tuple):
-            wait_for_free_port(*self.bind_addr)
+        if not os.environ.get('LISTEN_PID', None):
+            # Start the httpserver in a new thread.
+            if isinstance(self.bind_addr, tuple):
+                wait_for_free_port(*self.bind_addr)
 
         import threading
         t = threading.Thread(target=self._start_http_thread)
@@ -227,9 +229,12 @@ class ServerAdapter(object):
             time.sleep(.1)
 
         # Wait for port to be occupied
-        if isinstance(self.bind_addr, tuple):
-            host, port = self.bind_addr
-            wait_for_occupied_port(host, port)
+        if not os.environ.get('LISTEN_PID', None):
+            # Wait for port to be occupied if not running via socket-activation
+            # (for socket-activation the port will be managed by systemd )
+            if isinstance(self.bind_addr, tuple):
+                host, port = self.bind_addr
+                wait_for_occupied_port(host, port)
 
     def stop(self):
         """Stop the HTTP server."""

@@ -106,19 +106,24 @@ send an e-mail containing the error::
                  'Error in your web app',
                  _cperror.format_exc())
 
+    @cherrypy.config(**{'request.error_response': handle_error})
     class Root:
-        _cp_config = {'request.error_response': handle_error}
-
+        pass
 
 Note that you have to explicitly set
 :attr:`response.body <cherrypy._cprequest.Response.body>`
 and not simply return an error message as a result.
 """
 
+import contextlib
 from cgi import escape as _escape
 from sys import exc_info as _exc_info
 from traceback import format_exception as _format_exception
-from cherrypy._cpcompat import basestring, bytestr, iteritems, ntob
+from xml.sax import saxutils
+
+import six
+
+from cherrypy._cpcompat import text_or_bytes, iteritems, ntob
 from cherrypy._cpcompat import tonative, urljoin as _urljoin
 from cherrypy.lib import httputil as _httputil
 
@@ -206,7 +211,7 @@ class HTTPRedirect(CherryPyException):
         import cherrypy
         request = cherrypy.serving.request
 
-        if isinstance(urls, basestring):
+        if isinstance(urls, text_or_bytes):
             urls = [urls]
 
         abs_urls = []
@@ -266,7 +271,6 @@ class HTTPRedirect(CherryPyException):
                 307: "This resource has moved temporarily to ",
             }[status]
             msg += '<a href=%s>%s</a>.'
-            from xml.sax import saxutils
             msgs = [msg % (saxutils.quoteattr(u), u) for u in self.urls]
             response.body = ntob("<br />\n".join(msgs), 'utf-8')
             # Previous code may have set C-L, so we have to reset it
@@ -293,7 +297,7 @@ class HTTPRedirect(CherryPyException):
         elif status == 305:
             # Use Proxy.
             # self.urls[0] should be the URI of the proxy.
-            response.headers['Location'] = self.urls[0]
+            response.headers['Location'] = ntob(self.urls[0], 'utf-8')
             response.body = None
             # Previous code may have set C-L, so we have to reset it.
             response.headers.pop('Content-Length', None)
@@ -410,6 +414,15 @@ class HTTPError(CherryPyException):
         """Use this exception as a request.handler (raise self)."""
         raise self
 
+    @classmethod
+    @contextlib.contextmanager
+    def handle(cls, exception, status=500, message=''):
+        """Translate exception into an HTTPError."""
+        try:
+            yield
+        except exception as exc:
+            raise cls(status, message or str(exc))
+
 
 class NotFound(HTTPError):
 
@@ -509,12 +522,12 @@ def get_error_page(status, **kwargs):
                 if cherrypy.lib.is_iterator(result):
                     from cherrypy.lib.encoding import UTF8StreamEncoder
                     return UTF8StreamEncoder(result)
-                elif isinstance(result, cherrypy._cpcompat.unicodestr):
+                elif isinstance(result, six.text_type):
                     return result.encode('utf-8')
                 else:
-                    if not isinstance(result, cherrypy._cpcompat.bytestr):
+                    if not isinstance(result, bytes):
                         raise ValueError('error page function did not '
-                            'return a bytestring, unicodestring or an '
+                            'return a bytestring, six.text_typeing or an '
                             'iterator - returned object of type %s.'
                             % (type(result).__name__))
                     return result
@@ -599,7 +612,7 @@ def bare_error(extrabody=None):
 
     body = ntob("Unrecoverable error in the server.")
     if extrabody is not None:
-        if not isinstance(extrabody, bytestr):
+        if not isinstance(extrabody, bytes):
             extrabody = extrabody.encode('utf-8')
         body += ntob("\n") + extrabody
 

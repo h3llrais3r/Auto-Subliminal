@@ -7,13 +7,18 @@ FuManChu will personally hang you up by your thumbs and submit you
 to a public caning.
 """
 
+import functools
+import email.utils
 from binascii import b2a_base64
-from cherrypy._cpcompat import BaseHTTPRequestHandler, HTTPDate, ntob, ntou
-from cherrypy._cpcompat import basestring, bytestr, iteritems, nativestr
-from cherrypy._cpcompat import reversed, sorted, unicodestr, unquote_qs
+
+import six
+
+from cherrypy._cpcompat import BaseHTTPRequestHandler, ntob, ntou
+from cherrypy._cpcompat import text_or_bytes, iteritems
+from cherrypy._cpcompat import reversed, sorted, unquote_qs
 response_codes = BaseHTTPRequestHandler.responses.copy()
 
-# From https://bitbucket.org/cherrypy/cherrypy/issue/361
+# From https://github.com/cherrypy/cherrypy/issues/361
 response_codes[500] = ('Internal Server Error',
                        'The server encountered an unexpected condition '
                        'which prevented it from fulfilling the request.')
@@ -23,7 +28,10 @@ response_codes[503] = ('Service Unavailable',
                        'maintenance of the server.')
 
 import re
-import urllib
+from cgi import parse_header
+
+
+HTTPDate = functools.partial(email.utils.formatdate, usegmt=True)
 
 
 def urljoin(*atoms):
@@ -141,32 +149,17 @@ class HeaderElement(object):
     def __unicode__(self):
         return ntou(self.__str__())
 
+    @staticmethod
     def parse(elementstr):
         """Transform 'token;key=val' to ('token', {'key': 'val'})."""
-        # Split the element into a value and parameters. The 'value' may
-        # be of the form, "token=token", but we don't split that here.
-        atoms = [x.strip() for x in elementstr.split(";") if x.strip()]
-        if not atoms:
-            initial_value = ''
-        else:
-            initial_value = atoms.pop(0).strip()
-        params = {}
-        for atom in atoms:
-            atom = [x.strip() for x in atom.split("=", 1) if x.strip()]
-            key = atom.pop(0)
-            if atom:
-                val = atom[0]
-            else:
-                val = ""
-            params[key] = val
+        initial_value, params = parse_header(elementstr)
         return initial_value, params
-    parse = staticmethod(parse)
 
+    @classmethod
     def from_str(cls, elementstr):
         """Construct an instance from a string of the form 'token;key=val'."""
         ival, params = cls.parse(elementstr)
         return cls(ival, params)
-    from_str = classmethod(from_str)
 
 
 q_separator = re.compile(r'; *q *=')
@@ -183,6 +176,7 @@ class AcceptElement(HeaderElement):
     have been the other way around, but it's too late to fix now.
     """
 
+    @classmethod
     def from_str(cls, elementstr):
         qvalue = None
         # The first "q" parameter (if any) separates the initial
@@ -198,14 +192,14 @@ class AcceptElement(HeaderElement):
         if qvalue is not None:
             params["q"] = qvalue
         return cls(media_type, params)
-    from_str = classmethod(from_str)
 
+    @property
     def qvalue(self):
+        "The qvalue, or priority, of this value."
         val = self.params.get("q", "1")
         if isinstance(val, HeaderElement):
             val = val.value
         return float(val)
-    qvalue = property(qvalue, doc="The qvalue, or priority, of this value.")
 
     def __cmp__(self, other):
         diff = cmp(self.qvalue, other.qvalue)
@@ -396,12 +390,12 @@ class CaseInsensitiveDict(dict):
         for k in E.keys():
             self[str(k).title()] = E[k]
 
+    @classmethod
     def fromkeys(cls, seq, value=None):
         newdict = cls()
         for k in seq:
             newdict[str(k).title()] = value
         return newdict
-    fromkeys = classmethod(fromkeys)
 
     def setdefault(self, key, x=None):
         key = str(key).title()
@@ -420,7 +414,7 @@ class CaseInsensitiveDict(dict):
 # A CRLF is allowed in the definition of TEXT only as part of a header
 # field continuation. It is expected that the folding LWS will be
 # replaced with a single SP before interpretation of the TEXT value."
-if nativestr == bytestr:
+if str == bytes:
     header_translate_table = ''.join([chr(i) for i in xrange(256)])
     header_translate_deletechars = ''.join(
         [chr(i) for i in xrange(32)]) + chr(127)
@@ -463,19 +457,20 @@ class HeaderMap(CaseInsensitiveDict):
         """Transform self into a list of (name, value) tuples."""
         return list(self.encode_header_items(self.items()))
 
+    @classmethod
     def encode_header_items(cls, header_items):
         """
         Prepare the sequence of name, value tuples into a form suitable for
         transmitting on the wire for HTTP.
         """
         for k, v in header_items:
-            if isinstance(k, unicodestr):
+            if isinstance(k, six.text_type):
                 k = cls.encode(k)
 
-            if not isinstance(v, basestring):
+            if not isinstance(v, text_or_bytes):
                 v = str(v)
 
-            if isinstance(v, unicodestr):
+            if isinstance(v, six.text_type):
                 v = cls.encode(v)
 
             # See header_translate_* constants above.
@@ -486,8 +481,8 @@ class HeaderMap(CaseInsensitiveDict):
                             header_translate_deletechars)
 
             yield (k, v)
-    encode_header_items = classmethod(encode_header_items)
 
+    @classmethod
     def encode(cls, v):
         """Return the given header name or value, encoded for HTTP output."""
         for enc in cls.encodings:
@@ -508,7 +503,6 @@ class HeaderMap(CaseInsensitiveDict):
         raise ValueError("Could not encode header part %r using "
                          "any of the encodings %r." %
                          (v, cls.encodings))
-    encode = classmethod(encode)
 
 
 class Host(object):

@@ -4,13 +4,13 @@ You need to edit your config file to use sessions. Here's an example::
 
     [/]
     tools.sessions.on = True
-    tools.sessions.storage_type = "file"
+    tools.sessions.storage_class = cherrypy.lib.sessions.FileSession
     tools.sessions.storage_path = "/home/site/sessions"
     tools.sessions.timeout = 60
 
 This sets the session to be stored in files in the directory
 /home/site/sessions, and the session timeout to 60 minutes. If you omit
-``storage_type`` the sessions will be saved in RAM.
+``storage_class``, the sessions will be saved in RAM.
 ``tools.sessions.on`` is the only required line for working sessions,
 the rest are optional.
 
@@ -94,10 +94,9 @@ import datetime
 import os
 import time
 import threading
-import types
 
 import cherrypy
-from cherrypy._cpcompat import copyitems, pickle, random20, unicodestr
+from cherrypy._cpcompat import copyitems, pickle, random20
 from cherrypy.lib import httputil
 from cherrypy.lib import lockfile
 from cherrypy.lib import locking
@@ -182,7 +181,7 @@ class Session(object):
                     cherrypy.log('Expired or malicious session %r; '
                                  'making a new one' % id, 'TOOLS.SESSIONS')
                 # Expired or malicious session. Make a new one.
-                # See https://bitbucket.org/cherrypy/cherrypy/issue/709.
+                # See https://github.com/cherrypy/cherrypy/issues/709.
                 self.id = None
                 self.missing = True
                 self._regenerate()
@@ -474,6 +473,7 @@ class FileSession(Session):
             raise ValueError("Lock timeout must be numeric seconds or "
                 "a timedelta instance.")
 
+    @classmethod
     def setup(cls, **kwargs):
         """Set up the storage system for file-based sessions.
 
@@ -485,7 +485,6 @@ class FileSession(Session):
 
         for k, v in kwargs.items():
             setattr(cls, k, v)
-    setup = classmethod(setup)
 
     def _get_file_path(self):
         f = os.path.join(self.storage_path, self.SESSION_PREFIX + self.id)
@@ -591,93 +590,6 @@ class FileSession(Session):
                         and not fname.endswith(self.LOCK_SUFFIX))])
 
 
-class PostgresqlSession(Session):
-
-    """ Implementation of the PostgreSQL backend for sessions. It assumes
-        a table like this::
-
-            create table session (
-                id varchar(40),
-                data text,
-                expiration_time timestamp
-            )
-
-    You must provide your own get_db function.
-    """
-
-    pickle_protocol = pickle.HIGHEST_PROTOCOL
-
-    def __init__(self, id=None, **kwargs):
-        Session.__init__(self, id, **kwargs)
-        self.cursor = self.db.cursor()
-
-    def setup(cls, **kwargs):
-        """Set up the storage system for Postgres-based sessions.
-
-        This should only be called once per process; this will be done
-        automatically when using sessions.init (as the built-in Tool does).
-        """
-        for k, v in kwargs.items():
-            setattr(cls, k, v)
-
-        self.db = self.get_db()
-    setup = classmethod(setup)
-
-    def __del__(self):
-        if self.cursor:
-            self.cursor.close()
-        self.db.commit()
-
-    def _exists(self):
-        # Select session data from table
-        self.cursor.execute('select data, expiration_time from session '
-                            'where id=%s', (self.id,))
-        rows = self.cursor.fetchall()
-        return bool(rows)
-
-    def _load(self):
-        # Select session data from table
-        self.cursor.execute('select data, expiration_time from session '
-                            'where id=%s', (self.id,))
-        rows = self.cursor.fetchall()
-        if not rows:
-            return None
-
-        pickled_data, expiration_time = rows[0]
-        data = pickle.loads(pickled_data)
-        return data, expiration_time
-
-    def _save(self, expiration_time):
-        pickled_data = pickle.dumps(self._data, self.pickle_protocol)
-        self.cursor.execute('update session set data = %s, '
-                            'expiration_time = %s where id = %s',
-                            (pickled_data, expiration_time, self.id))
-
-    def _delete(self):
-        self.cursor.execute('delete from session where id=%s', (self.id,))
-
-    def acquire_lock(self):
-        """Acquire an exclusive lock on the currently-loaded session data."""
-        # We use the "for update" clause to lock the row
-        self.locked = True
-        self.cursor.execute('select id from session where id=%s for update',
-                            (self.id,))
-        if self.debug:
-            cherrypy.log('Lock acquired.', 'TOOLS.SESSIONS')
-
-    def release_lock(self):
-        """Release the lock on the currently-loaded session data."""
-        # We just close the cursor and that will remove the lock
-        #   introduced by the "for update" clause
-        self.cursor.close()
-        self.locked = False
-
-    def clean_up(self):
-        """Clean up expired sessions."""
-        self.cursor.execute('delete from session where expiration_time < %s',
-                            (self.now(),))
-
-
 class MemcachedSession(Session):
 
     # The most popular memcached client for Python isn't thread-safe.
@@ -689,6 +601,7 @@ class MemcachedSession(Session):
 
     servers = ['127.0.0.1:11211']
 
+    @classmethod
     def setup(cls, **kwargs):
         """Set up the storage system for memcached-based sessions.
 
@@ -700,21 +613,6 @@ class MemcachedSession(Session):
 
         import memcache
         cls.cache = memcache.Client(cls.servers)
-    setup = classmethod(setup)
-
-    def _get_id(self):
-        return self._id
-
-    def _set_id(self, value):
-        # This encode() call is where we differ from the superclass.
-        # Memcache keys MUST be byte strings, not unicode.
-        if isinstance(value, unicodestr):
-            value = value.encode('utf-8')
-
-        self._id = value
-        for o in self.id_observers:
-            o(value)
-    id = property(_get_id, _set_id, doc="The current session ID.")
 
     def _exists(self):
         self.mc_lock.acquire()
@@ -801,13 +699,20 @@ close.failsafe = True
 close.priority = 90
 
 
-def init(storage_type='ram', path=None, path_header=None, name='session_id',
+def init(storage_type=None, path=None, path_header=None, name='session_id',
          timeout=60, domain=None, secure=False, clean_freq=5,
-         persistent=True, httponly=False, debug=False, **kwargs):
+         persistent=True, httponly=False, debug=False,
+         # Py27 compat
+         # *, storage_class=RamSession,
+         **kwargs):
     """Initialize session object (using cookies).
 
+    storage_class
+        The Session subclass to use. Defaults to RamSession.
+
     storage_type
-        One of 'ram', 'file', 'postgresql', 'memcached'. This will be
+        (deprecated)
+        One of 'ram', 'file', memcached'. This will be
         used to look up the corresponding class in cherrypy.lib.sessions
         globals. For example, 'file' will use the FileSession class.
 
@@ -851,6 +756,9 @@ def init(storage_type='ram', path=None, path_header=None, name='session_id',
     you're using for more information.
     """
 
+    # Py27 compat
+    storage_class = kwargs.pop('storage_class', RamSession)
+
     request = cherrypy.serving.request
 
     # Guard against running twice
@@ -866,10 +774,17 @@ def init(storage_type='ram', path=None, path_header=None, name='session_id',
             cherrypy.log('ID obtained from request.cookie: %r' % id,
                          'TOOLS.SESSIONS')
 
-    # Find the storage class and call setup (first time only).
-    storage_class = storage_type.title() + 'Session'
-    storage_class = globals()[storage_class]
-    if not hasattr(cherrypy, "session"):
+    first_time = not hasattr(cherrypy, "session")
+
+    if storage_type:
+        if first_time:
+            msg = "storage_type is deprecated. Supply storage_class instead"
+            cherrypy.log(msg)
+        storage_class = storage_type.title() + 'Session'
+        storage_class = globals()[storage_class]
+
+    # call setup first time only
+    if first_time:
         if hasattr(storage_class, "setup"):
             storage_class.setup(**kwargs)
 

@@ -1,8 +1,11 @@
 import struct
 import time
+import io
+
+import six
 
 import cherrypy
-from cherrypy._cpcompat import basestring, BytesIO, ntob, unicodestr
+from cherrypy._cpcompat import text_or_bytes, ntob
 from cherrypy.lib import file_generator
 from cherrypy.lib import is_closable_iterator
 from cherrypy.lib import set_vary_header
@@ -46,7 +49,7 @@ class UTF8StreamEncoder:
 
     def __next__(self):
         res = next(self._iterator)
-        if isinstance(res, unicodestr):
+        if isinstance(res, six.text_type):
             res = res.encode('utf-8')
         return res
 
@@ -95,7 +98,7 @@ class ResponseEncoder:
 
         def encoder(body):
             for chunk in body:
-                if isinstance(chunk, unicodestr):
+                if isinstance(chunk, six.text_type):
                     chunk = chunk.encode(encoding, self.errors)
                 yield chunk
         self.body = encoder(self.body)
@@ -108,7 +111,7 @@ class ResponseEncoder:
         self.attempted_charsets.add(encoding)
         body = []
         for chunk in self.body:
-            if isinstance(chunk, unicodestr):
+            if isinstance(chunk, six.text_type):
                 try:
                     chunk = chunk.encode(encoding, self.errors)
                 except (LookupError, UnicodeError):
@@ -216,7 +219,7 @@ class ResponseEncoder:
         response = cherrypy.serving.response
         self.body = self.oldhandler(*args, **kwargs)
 
-        if isinstance(self.body, basestring):
+        if isinstance(self.body, text_or_bytes):
             # strings get wrapped in a list because iterating over a single
             # item list is much faster than iterating over every character
             # in a long string.
@@ -301,7 +304,7 @@ def compress(body, compress_level):
 def decompress(body):
     import gzip
 
-    zbuf = BytesIO()
+    zbuf = io.BytesIO()
     zbuf.write(body)
     zbuf.seek(0)
     zfile = gzip.GzipFile(mode='rb', fileobj=zbuf)
