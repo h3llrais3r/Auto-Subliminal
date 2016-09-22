@@ -73,8 +73,8 @@ def start():
                                 'tools.digest_auth.users': users
                                 })
     else:
-        cherrypy.config.update({'server.socket_host': autosubliminal.WEBSERVERIP,
-                                'server.socket_port': autosubliminal.WEBSERVERPORT
+        cherrypy.config.update({'server.socket_host': str(autosubliminal.WEBSERVERIP),
+                                'server.socket_port': int(autosubliminal.WEBSERVERPORT)
                                 })
 
     conf = {
@@ -117,12 +117,11 @@ def start():
     log.info("Starting CherryPy webserver")
     cherrypy.tree.mount(WebServerRoot(), autosubliminal.WEBROOT, config=conf)
     try:
-        cherrypy.server.start()
+        cherrypy.engine.start()
     except Exception, e:
         log.error("Could not start webserver, exiting")
         log.exception(e)
         _exit(1)
-    cherrypy.server.wait()
 
     # Schedule threads
     autosubliminal.SCANDISK = Scheduler("DiskScanner", DiskScanner(), autosubliminal.SCANDISKINTERVAL, True)
