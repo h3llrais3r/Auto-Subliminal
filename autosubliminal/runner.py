@@ -63,18 +63,21 @@ def launch_browser():
 
 
 def start():
-    # Only use authentication in CherryPy if a username and password is set by the user
+    # Configure server
+    cherrypy.config.update({'server.socket_host': str(autosubliminal.WEBSERVERIP),
+                            'server.socket_port': int(autosubliminal.WEBSERVERPORT)
+                            })
+    # Disable engine plugins (no need for autoreload and timeout_monitor plugin)
+    cherrypy.config.update({'engine.autoreload.on': False,
+                            'engine.timeout_monitor.on': False
+                            })
+    # Configure authentication in if a username and password is set by the user
     if autosubliminal.USERNAME and autosubliminal.PASSWORD:
-        users = {autosubliminal.USERNAME: autosubliminal.PASSWORD}
-        cherrypy.config.update({'server.socket_host': autosubliminal.WEBSERVERIP,
-                                'server.socket_port': autosubliminal.WEBSERVERPORT,
-                                'tools.digest_auth.on': True,
-                                'tools.digest_auth.realm': 'Auto-Subliminal website',
-                                'tools.digest_auth.users': users
-                                })
-    else:
-        cherrypy.config.update({'server.socket_host': str(autosubliminal.WEBSERVERIP),
-                                'server.socket_port': int(autosubliminal.WEBSERVERPORT)
+        users = {str(autosubliminal.USERNAME): str(autosubliminal.PASSWORD)}
+        cherrypy.config.update({'tools.auth_digest.on': True,
+                                'tools.auth_digest.realm': 'Auto-Subliminal website',
+                                'tools.auth_digest.get_ha1': cherrypy.lib.auth_digest.get_ha1_dict_plain(users),
+                                'tools.auth_digest.key': 'yek.tsegid_htua.lanimilbuS-otuA'  # Can be any random string
                                 })
 
     conf = {
