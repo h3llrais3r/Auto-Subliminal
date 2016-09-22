@@ -394,7 +394,7 @@ def read_config():
         autosubliminal.SKIPSHOW = dict(cfg.items('skipshow'))
         autosubliminal.SKIPSHOWUPPER = {}
         for x in autosubliminal.SKIPSHOW:
-            autosubliminal.SKIPSHOWUPPER[x.upper()] = autosubliminal.SKIPSHOW[x].split(',')
+            autosubliminal.SKIPSHOWUPPER[x.upper()] = autosubliminal.SKIPSHOW[x]
     else:
         # Skipshow section is missing
         autosubliminal.SKIPSHOW = {}
@@ -772,7 +772,7 @@ def apply_skipshow():
         autosubliminal.SKIPSHOW = {}
     autosubliminal.SKIPSHOWUPPER = {}
     for x in autosubliminal.SKIPSHOW:
-        autosubliminal.SKIPSHOWUPPER[x.upper()] = autosubliminal.SKIPSHOW[x].split(',')
+        autosubliminal.SKIPSHOWUPPER[x.upper()] = autosubliminal.SKIPSHOW[x]
 
 
 def apply_skipmovie():

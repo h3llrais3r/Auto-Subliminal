@@ -55,14 +55,16 @@ class Home(object):
                 raise cherrypy.HTTPError(400, "No show supplied")
             config_season = season
             if title.upper() in autosubliminal.SKIPSHOWUPPER:
-                for x in autosubliminal.SKIPSHOWUPPER[title.upper()]:
+                for x in autosubliminal.SKIPSHOWUPPER[title.upper()].split(','):
                     if x == season or x == '00':
                         utils.add_notification_message("Already skipped show %s season %s" % (title, season))
                         redirect("/home")
                 if season == '00':
                     config_season = '00'
                 else:
-                    config_season = str(int(season)) + ',' + ','.join(autosubliminal.SKIPSHOWUPPER[title.upper()])
+                    seasons = autosubliminal.SKIPSHOWUPPER[title.upper()].split(',')
+                    seasons.append(str(int(season)))
+                    config_season = ','.join(sorted(seasons))
             else:
                 if not season == '00':
                     season = str(int(season))
