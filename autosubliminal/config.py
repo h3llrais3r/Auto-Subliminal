@@ -8,7 +8,7 @@ from ConfigParser import SafeConfigParser
 
 import autosubliminal
 from autosubliminal import utils, version
-from autosubliminal.indexer import MovieIndexer, ShowIndexer
+from autosubliminal.indexer import ShowIndexer
 
 log = logging.getLogger(__name__)
 
