@@ -101,6 +101,19 @@ function get_message() {
     });
 }
 
+// Set the websocket_message_url variable
+var websocket_message_url = "ws://" + window.location.host + "/" + webroot + "/system/message"
+
+// Function to get a message through websocket
+function get_message_through_websocket(text_message) {
+    data = text_message.data;
+    // console.log('Received websocket message: ' + data);
+    if (!jQuery.isEmptyObject(data)) {
+        data_json = jQuery.parseJSON(data);
+        _show_message(data_json['message'], data_json['message_type'], data_json['sticky']);
+    }
+}
+
 // Function to show a notification message
 function _show_message(message, message_type, sticky) {
     // Sticky location - use stack_context
@@ -128,7 +141,12 @@ function _show_message(message, message_type, sticky) {
     }
 }
 
-// Activate the get_message notification function
+// Activate the message notification system (choose between polling or websocket)
 $(document).ready(function () {
-    get_message();
+    // Use poling mechanism
+    // get_message();
+    // Use websocket mechanism
+    ws = new WebSocket(websocket_message_url);
+    ws.onmessage = get_message_through_websocket;
+    // console.log("Websocket ready to receive messages");
 });

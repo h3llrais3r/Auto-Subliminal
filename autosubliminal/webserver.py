@@ -694,6 +694,13 @@ class System(object):
         else:
             return {}
 
+    @cherrypy.expose
+    def message(self):
+        # Handle message via websocket (no logic needed for now)
+        # You can access the websocket handler class instance through:
+        # handler = cherrypy.request.ws_handler
+        pass
+
 
 class Mobile(object):
     def __init__(self):

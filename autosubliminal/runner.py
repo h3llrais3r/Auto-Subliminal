@@ -4,8 +4,10 @@ import os
 import signal
 import subprocess
 import sys
-
 import webbrowser
+
+from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool
+from ws4py.websocket import WebSocket
 
 import autosubliminal
 from autosubliminal.diskscanner import DiskScanner
@@ -15,6 +17,17 @@ from autosubliminal.versionchecker import VersionChecker
 from autosubliminal.webserver import WebServerRoot
 
 log = logging.getLogger(__name__)
+
+
+class NotificationWebSocket(WebSocket):
+    """
+    WebSocket class for handling notification messages.
+    For now, we only send messages and do not read them.
+    In case we should receive a message, we just print it.
+    """
+
+    def received_message(self, message):
+        print "Unsupported notifications message received on websocket server: " + message.data
 
 
 def daemon():
@@ -113,8 +126,16 @@ def start():
         '/favicon.ico': {
             'tools.staticfile.on': True,
             'tools.staticfile.filename': os.path.join(autosubliminal.PATH, 'interface/media/images/favicon.ico')
+        },
+        '/system/message': {
+            'tools.websocket.on': True,
+            'tools.websocket.handler_cls': NotificationWebSocket
         }
     }
+
+    # Enable websocket plugin
+    WebSocketPlugin(cherrypy.engine).subscribe()
+    cherrypy.tools.websocket = WebSocketTool()
 
     # Start cherrypy server
     log.info("Starting CherryPy webserver")
