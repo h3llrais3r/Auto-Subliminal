@@ -1,7 +1,6 @@
 import cgi
 import codecs
 import ctypes
-import json
 import logging
 import os
 import platform
@@ -11,8 +10,6 @@ import subprocess
 import threading
 import time
 import urllib2
-
-import cherrypy
 
 import autosubliminal
 
@@ -39,10 +36,8 @@ def add_notification_message(message, message_type='info', sticky=False):
     Sticky indicates that it will be shown at a fixed inline location and it will not fade.
     """
     message_dict = {'message': message, 'message_type': message_type, 'sticky': sticky}
-    # Add message to dict (in case we use the polling mechanism to read them)
+    # Add message to dict
     autosubliminal.MESSAGEQUEUE.append(message_dict)
-    # Publish message via websocket broadcast (in case we use the websocket mechanism to read them)
-    cherrypy.engine.publish('websocket-broadcast', json.dumps(message_dict))
 
 
 def run_cmd(cmd, communicate=True):

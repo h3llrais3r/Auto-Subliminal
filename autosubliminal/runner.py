@@ -1,4 +1,3 @@
-import cherrypy
 import logging
 import os
 import signal
@@ -6,8 +5,8 @@ import subprocess
 import sys
 import webbrowser
 
+import cherrypy
 from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool
-from ws4py.websocket import WebSocket
 
 import autosubliminal
 from autosubliminal.diskscanner import DiskScanner
@@ -15,19 +14,9 @@ from autosubliminal.scheduler import Scheduler
 from autosubliminal.subchecker import SubChecker
 from autosubliminal.versionchecker import VersionChecker
 from autosubliminal.webserver import WebServerRoot
+from autosubliminal.websocket import WebSocketBroadCaster, WebSocketHandler
 
 log = logging.getLogger(__name__)
-
-
-class NotificationWebSocket(WebSocket):
-    """
-    WebSocket class for handling notification messages.
-    For now, we only send messages and do not read them.
-    In case we should receive a message, we just print it.
-    """
-
-    def received_message(self, message):
-        print "Unsupported notifications message received on websocket server: " + message.data
 
 
 def daemon():
@@ -72,7 +61,7 @@ def launch_browser():
         try:
             webbrowser.open(url, 1, 1)
         except:
-            log.error('Browser launh failed')
+            log.error("Browser launch failed")
 
 
 def start():
@@ -129,7 +118,7 @@ def start():
         },
         '/system/message': {
             'tools.websocket.on': True,
-            'tools.websocket.handler_cls': NotificationWebSocket
+            'tools.websocket.handler_cls': WebSocketHandler
         }
     }
 
@@ -147,10 +136,13 @@ def start():
         log.exception(e)
         _exit(1)
 
+    # Start permanent threads
+    autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
+
     # Schedule threads
-    autosubliminal.SCANDISK = Scheduler("DiskScanner", DiskScanner(), autosubliminal.SCANDISKINTERVAL, True)
-    autosubliminal.CHECKSUB = Scheduler("SubChecker", SubChecker(), autosubliminal.CHECKSUBINTERVAL)
-    autosubliminal.CHECKVERSION = Scheduler("VersionChecker", VersionChecker(), autosubliminal.CHECKVERSIONINTERVAL)
+    autosubliminal.SCANDISK = Scheduler('DiskScanner', DiskScanner(), autosubliminal.SCANDISKINTERVAL, True)
+    autosubliminal.CHECKSUB = Scheduler('SubChecker', SubChecker(), autosubliminal.CHECKSUBINTERVAL)
+    autosubliminal.CHECKVERSION = Scheduler('VersionChecker', VersionChecker(), autosubliminal.CHECKVERSIONINTERVAL)
 
     # Mark as started
     autosubliminal.STARTED = True
@@ -162,11 +154,14 @@ def stop(exit=True):
     # Mark as stopped
     autosubliminal.STARTED = False
 
-    # Stop threads
-    log.info("Stopping scheduler threads")
+    # Stop scheduled threads
+    log.info("Stopping threads")
     autosubliminal.SCANDISK.stop()
     autosubliminal.CHECKSUB.stop()
     autosubliminal.CHECKVERSION.stop()
+
+    # Stop permanent threads
+    autosubliminal.WEBSOCKETBROADCASTER.stop()
 
     # Stop cherrypy server
     log.info("Stopping CherryPy webserver")
