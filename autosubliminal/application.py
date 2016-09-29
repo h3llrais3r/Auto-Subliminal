@@ -6,6 +6,7 @@ import sys
 import webbrowser
 
 import cherrypy
+from ws4py.manager import WebSocketManager
 from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool
 
 import autosubliminal
@@ -64,15 +65,45 @@ def launch_browser():
             log.error("Browser launch failed")
 
 
-def start():
+def start_server(restarting=False):
+    # stop server when restarting
+    if restarting:
+        # Stop server
+        log.info("Stopping CherryPy webserver")
+        cherrypy.engine.stop()
+
     # Configure server
+    _configure_server(restarting)
+
+    # (Re-)Mount application
+    if restarting:
+        # Remove previous mount (in case webroot should change)
+        del cherrypy.tree.apps[cherrypy.tree.apps.keys()[0]]
+    cherrypy.tree.mount(WebServerRoot(), autosubliminal.WEBROOT, config=_get_application_configuration())
+
+    # Start cherrypy server
+    log.info("Starting CherryPy webserver")
+    try:
+        cherrypy.engine.start()
+    except Exception, e:
+        log.error("Could not start webserver, exiting")
+        log.exception(e)
+        _exit(1)
+
+
+def _configure_server(restarting=False):
+    global websocket_plugin
+
+    # Configure server url
     cherrypy.config.update({'server.socket_host': str(autosubliminal.WEBSERVERIP),
                             'server.socket_port': int(autosubliminal.WEBSERVERPORT)
                             })
+
     # Disable engine plugins (no need for autoreload and timeout_monitor plugin)
     cherrypy.config.update({'engine.autoreload.on': False,
                             'engine.timeout_monitor.on': False
                             })
+
     # Configure authentication in if a username and password is set by the user
     if autosubliminal.USERNAME and autosubliminal.PASSWORD:
         users = {str(autosubliminal.USERNAME): str(autosubliminal.PASSWORD)}
@@ -82,6 +113,20 @@ def start():
                                 'tools.auth_digest.key': 'yek.tsegid_htua.lanimilbuS-otuA'  # Can be any random string
                                 })
 
+    # Enable websocket plugin
+    if not restarting:
+        websocket_plugin = WebSocketPlugin(cherrypy.engine)
+        websocket_plugin.subscribe()
+        cherrypy.tools.websocket = WebSocketTool()
+    else:
+        # When restarting we need to create a new websocket manager thread (you cannot start the same thread twice!)
+        websocket_plugin.manager = WebSocketManager()
+        # When restarting we need to clear the httpserver to force the creation of a new one (needed for ip/port change)
+        cherrypy.server.httpserver = None
+
+
+def _get_application_configuration():
+    # Configure application
     conf = {
         '/': {
             'tools.encode.encoding': 'utf-8',
@@ -122,19 +167,12 @@ def start():
         }
     }
 
-    # Enable websocket plugin
-    WebSocketPlugin(cherrypy.engine).subscribe()
-    cherrypy.tools.websocket = WebSocketTool()
+    # Return config
+    return conf
 
-    # Start cherrypy server
-    log.info("Starting CherryPy webserver")
-    cherrypy.tree.mount(WebServerRoot(), autosubliminal.WEBROOT, config=conf)
-    try:
-        cherrypy.engine.start()
-    except Exception, e:
-        log.error("Could not start webserver, exiting")
-        log.exception(e)
-        _exit(1)
+
+def start():
+    log.info("Starting")
 
     # Start permanent threads
     autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
@@ -163,11 +201,12 @@ def stop(exit=True):
     # Stop permanent threads
     autosubliminal.WEBSOCKETBROADCASTER.stop()
 
-    # Stop cherrypy server
-    log.info("Stopping CherryPy webserver")
-    cherrypy.engine.exit()
-
     if exit:
+        # Stop cherrypy server before exiting
+        log.info("Stopping CherryPy webserver")
+        cherrypy.engine.exit()
+
+        # Exit
         _exit()
 
 
@@ -193,6 +232,7 @@ def restart(exit=False):
         # Stop without killing current process and restart
         stop(exit=False)
         autosubliminal.initialize()
+        start_server(True)
         start()
         log.info("Restarted")
 

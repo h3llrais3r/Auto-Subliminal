@@ -117,7 +117,8 @@ def main(argv=None):
     log.info("Config version: %d" % autosubliminal.CONFIGVERSION)
     log.info("Db version: %d" % autosubliminal.DBVERSION)
 
-    log.info("Starting application")
+    # Start server and application
+    autosubliminal.application.start_server()
     autosubliminal.application.start()
 
     # Launch browser after threads because cherrypy webserver must be started first
