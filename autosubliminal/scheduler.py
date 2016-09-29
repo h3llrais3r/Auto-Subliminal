@@ -142,19 +142,3 @@ class ScheduledProcess(object):
     @abc.abstractmethod
     def run(self, force_run):
         pass
-
-
-def restart_app(exit=False):
-    """
-    Scheduler function to restart the application.
-    """
-    threading.Thread(target=autosubliminal.runner.restart, kwargs={'exit': exit}, name="AppRestarter").start()
-
-
-def shutdown_app():
-    """
-    Scheduler function to shutdown the application.
-    """
-    timer = threading.Timer(2, autosubliminal.runner.stop)
-    timer.name = "AppKiller"
-    timer.start()

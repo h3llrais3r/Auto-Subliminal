@@ -8,7 +8,7 @@ from distutils import version
 from git import Repo
 
 import autosubliminal
-from autosubliminal import scheduler, utils
+from autosubliminal import runner, utils
 from autosubliminal.enums import InstallType
 from autosubliminal.scheduler import ScheduledProcess
 from autosubliminal.version import RELEASE_VERSION
@@ -54,7 +54,7 @@ class VersionChecker(ScheduledProcess):
         if not force_run and self.manager.update_allowed and autosubliminal.CHECKVERSIONAUTOUPDATE:
             self.update()
             # Restart the app with exit of current process to have a clean restart
-            scheduler.restart_app(exit=True)
+            runner.restart_app(exit=True)
 
         # Always return 'True' because we don't want to retry it until the next scheduled run
         return True

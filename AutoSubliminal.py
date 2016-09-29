@@ -1,10 +1,10 @@
-import logging
-import sys
 import getopt
+import locale
+import logging
 import os
 import signal
+import sys
 import time
-import locale
 
 # Insert the lib folder at the beginning of the python system path
 # This to prevent installation of the libraries and to prevent the 'lib.' prefix when importing the libraries
@@ -96,12 +96,15 @@ def main(argv=None):
         print "ERROR: PATH does not exist, check config"
         os._exit(1)
 
-    # Setup runner
-    import autosubliminal.runner
-    signal.signal(signal.SIGINT, autosubliminal.runner.signal_handler)
+    # Setup application
+    import autosubliminal.application
 
+    # Setup signal hanlder
+    signal.signal(signal.SIGINT, autosubliminal.application.signal_handler)
+
+    # Setup daemon
     if autosubliminal.DAEMON:
-        autosubliminal.runner.daemon()
+        autosubliminal.application.daemon()
 
     # Set the PID
     autosubliminal.PID = os.getpid()
@@ -114,14 +117,14 @@ def main(argv=None):
     log.info("Config version: %d" % autosubliminal.CONFIGVERSION)
     log.info("Db version: %d" % autosubliminal.DBVERSION)
 
-    log.info("Starting application runner")
-    autosubliminal.runner.start()
+    log.info("Starting application")
+    autosubliminal.application.start()
 
     # Launch browser after threads because cherrypy webserver must be started first
     if autosubliminal.LAUNCHBROWSER:
-        autosubliminal.runner.launch_browser()
+        autosubliminal.application.launch_browser()
 
-    log.info("Application runner started, going into a loop to keep the main thread going")
+    log.info("Application started, going into a loop to keep the main thread going")
     while True:
         time.sleep(1)
 

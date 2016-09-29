@@ -7,7 +7,7 @@ import json
 import cherrypy
 
 import autosubliminal
-from autosubliminal import config, notifiers, scheduler, subchecker, utils
+from autosubliminal import config, notifiers, runner, subchecker, utils
 from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache, WantedItems
 
 
@@ -203,7 +203,7 @@ class Config(object):
         # Check if restart is needed
         if restart:
             # Restart the runner in the background
-            scheduler.restart_app()
+            runner.restart_app()
             tmpl = Template(file="interface/templates/system/restart.tmpl")
             tmpl.message = "Saved config. Auto restart in progress..."
             return str(tmpl)
@@ -597,7 +597,7 @@ class System(object):
     @cherrypy.expose(alias='updateVersion')
     def update_version(self):
         autosubliminal.CHECKVERSION.process.update()
-        scheduler.restart_app(exit=True)
+        runner.restart_app(exit=True)
         tmpl = Template(file="interface/templates/system/restart.tmpl")
         tmpl.message = "Auto-Subliminal is restarting..."
         return str(tmpl)
@@ -618,14 +618,14 @@ class System(object):
 
     @cherrypy.expose
     def restart(self):
-        scheduler.restart_app()
+        runner.restart_app()
         tmpl = Template(file="interface/templates/system/restart.tmpl")
         tmpl.message = "Auto-Subliminal is restarting..."
         return str(tmpl)
 
     @cherrypy.expose
     def shutdown(self):
-        scheduler.shutdown_app()
+        runner.shutdown_app()
         tmpl = Template(file="interface/templates/general/message.tmpl")
         tmpl.message = "Auto-Subliminal is shutting down..."
         return str(tmpl)
