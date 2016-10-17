@@ -13,7 +13,7 @@ from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache
 
 def redirect(abspath, *args, **kwargs):
     assert abspath[0] == '/'
-    raise cherrypy.HTTPRedirect(autosubliminal.WEBROOT + abspath, *args, **kwargs)
+    raise cherrypy.HTTPRedirect(str(autosubliminal.WEBROOT) + abspath, *args, **kwargs)
 
 
 def redirect_referer(abspath, *args, **kwargs):

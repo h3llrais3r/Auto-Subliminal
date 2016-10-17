@@ -115,7 +115,7 @@ def start():
 
     # Start cherrypy server
     log.info("Starting CherryPy webserver")
-    cherrypy.tree.mount(WebServerRoot(), autosubliminal.WEBROOT, config=conf)
+    cherrypy.tree.mount(WebServerRoot(), str(autosubliminal.WEBROOT), config=conf)
     try:
         cherrypy.server.start()
     except Exception, e:
