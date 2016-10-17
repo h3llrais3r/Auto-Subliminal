@@ -412,7 +412,7 @@ def read_config():
 
     if cfg.has_section('notify'):
         if cfg.has_option("notify", "notify"):
-            autosubliminal.NOTIFY = cfg.getboolean("notify", "notify")
+            autosubliminal.NOTIFY = cfg.getboolean('notify', 'notify')
         else:
             autosubliminal.NOTIFY = False
 
