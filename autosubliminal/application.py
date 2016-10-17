@@ -79,7 +79,7 @@ def start_server(restarting=False):
     if restarting:
         # Remove previous mount (in case webroot should change)
         del cherrypy.tree.apps[cherrypy.tree.apps.keys()[0]]
-    cherrypy.tree.mount(WebServerRoot(), autosubliminal.WEBROOT, config=_get_application_configuration())
+    cherrypy.tree.mount(WebServerRoot(), str(autosubliminal.WEBROOT), config=_get_application_configuration())
 
     # Start cherrypy server
     log.info("Starting CherryPy webserver")
