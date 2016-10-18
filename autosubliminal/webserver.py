@@ -311,7 +311,7 @@ class Config(object):
             return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
-        def save(self, preferhearingimpaired, addic7edusername, addic7edpassword, opensubtitlesusername,
+        def save(self, refinevideo, preferhearingimpaired, addic7edusername, addic7edpassword, opensubtitlesusername,
                  opensubtitlespassword,
                  showmmsdefault=None, showmmssource=None, showmmsquality=None, showmmscodec=None,
                  showmmsreleasegroup=None,
@@ -369,6 +369,8 @@ class Config(object):
             else:
                 # Just one selected or None (in this case, None will be saved and no providers will be used)
                 autosubliminal.SUBLIMINALPROVIDERS = subliminalproviders
+            # Refine video
+            autosubliminal.REFINEVIDEO = utils.getboolean(refinevideo)
             # Hearing impaired
             autosubliminal.PREFERHEARINGIMPAIRED = utils.getboolean(preferhearingimpaired)
             # Addic7ed provider

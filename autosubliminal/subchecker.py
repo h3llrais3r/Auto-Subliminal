@@ -444,6 +444,8 @@ def _scan_wanted_item_for_video(wanted_item):
     # Scan the video
     try:
         video = subliminal.scan_video(video_path)
+        if autosubliminal.REFINEVIDEO:
+            subliminal.refine(video)
     except Exception, e:
         log.error("Error while scanning video, skipping %s" % video_path)
         log.error("Exception: %s" % e)

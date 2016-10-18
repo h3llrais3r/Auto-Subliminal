@@ -175,6 +175,35 @@
 
                     <div class="form-group narrow">
                         <span class="col-xs-4 col-md-3">
+                            <label for="refinevideo">Refine video
+                                <span class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                        <img src="$autosubliminal.WEBROOT/images/info.png" alt="info" title="Click for more info">
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            When enabled, subliminal will enable 'refiners' to enrich the video meta-data before searching for subtitles.<br>
+                                            This can result in a higher score matching and thus a higher automatic subtitle download.
+                                        </li>
+                                    </ul>
+                                </span>
+                            </label>
+                        </span>
+                        <span class="col-xs-8 col-md-4">
+                            <select id="refinevideo" name="refinevideo" class="form-control input-sm">
+                                #if $autosubliminal.REFINEVIDEO
+                                <option value="True" selected="selected">Enabled</option>
+                                <option value="False">Disabled</option>
+                                #else
+                                <option value="True">Enabled</option>
+                                <option value="False" selected="selected">Disabled</option>
+                                #end if
+                            </select>
+                        </span>
+                    </div>
+
+                    <div class="form-group narrow">
+                        <span class="col-xs-4 col-md-3">
                             <label for="preferhearingimpaired">Prefer hearing impaired subs
                                 <span class="dropdown">
                                     <a class="dropdown-toggle" data-toggle="dropdown" href="#">
