@@ -135,7 +135,6 @@ def walk_dir(path):
                             wanted_item['languages'] = languages
                             db.set_wanted_item(wanted_item)
                         else:
-                            log.error("Could not process the file: %s" % filename)
                             continue
                     else:
                         log.debug("Video has no missing subtitles")
