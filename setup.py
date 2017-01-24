@@ -13,7 +13,7 @@ setup_requirements = ['pytest-runner'] if {'pytest', 'test', 'ptr'}.intersection
 
 install_requirements = open('requirements.txt').readlines()
 
-test_requirements = ['pytest']
+test_requirements = ['pytest', 'pytest-pep8', 'pytest-flakes']
 
 dev_requirements = []
 
