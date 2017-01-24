@@ -196,7 +196,7 @@ class Config(object):
         self.postprocessing = self._ConfigPostProcessing()
 
     @staticmethod
-    def save_and_restart_if_needed(return_tmpl_file):
+    def save_and_restart_if_needed():
         # Save to the configfile
         restart = config.write_config()
 
@@ -254,7 +254,7 @@ class Config(object):
             autosubliminal.MAXDBRESULTS = int(maxdbresults)
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl_file)
+            return Config.save_and_restart_if_needed()
 
     class _ConfigLogging(object):
         def __init__(self):
@@ -279,7 +279,7 @@ class Config(object):
             autosubliminal.LOGLEVELCONSOLE = int(loglevelconsole)
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl_file)
+            return Config.save_and_restart_if_needed()
 
     class _ConfigWebServer(object):
         def __init__(self):
@@ -300,7 +300,7 @@ class Config(object):
             autosubliminal.LAUNCHBROWSER = utils.getboolean(launchbrowser)
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl_file)
+            return Config.save_and_restart_if_needed()
 
     class _ConfigSubliminal(object):
         def __init__(self):
@@ -381,7 +381,7 @@ class Config(object):
             autosubliminal.OPENSUBTITLESPASSWORD = opensubtitlespassword
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl_file)
+            return Config.save_and_restart_if_needed()
 
     class _ConfigNameMapping(object):
         def __init__(self):
@@ -398,7 +398,7 @@ class Config(object):
             autosubliminal.USERMOVIENAMEMAPPING = config.string_to_dict(usermovienamemapping)
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl_file)
+            return Config.save_and_restart_if_needed()
 
     class _ConfigSkip(object):
         def __init__(self):
@@ -415,7 +415,7 @@ class Config(object):
             autosubliminal.SKIPMOVIE = config.string_to_dict(skipmovie)
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl_file)
+            return Config.save_and_restart_if_needed()
 
     class _ConfigNotification(object):
         def __init__(self):
@@ -477,8 +477,8 @@ class Config(object):
                     autosubliminal.TWITTERKEY = access_token['oauth_token']
                     autosubliminal.TWITTERSECRET = access_token['oauth_token_secret']
                     tmpl = Template(file="interface/templates/general/message.tmpl")
-                    tmpl.message = "Twitter is now set up, remember to save your config and remember to test twitter! " \
-                                   "<br> <a href='" + autosubliminal.WEBROOT + "/config'>Return</a>"
+                    tmpl.message = "Twitter is now set up, remember to save your config and remember to test twitter!" \
+                                   "<br><a href='" + autosubliminal.WEBROOT + "/config'>Return</a>"
                     return str(tmpl)
 
         @cherrypy.expose(alias='save')
@@ -525,7 +525,7 @@ class Config(object):
             autosubliminal.PUSHBULLETAPI = pushbulletapi
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl_file)
+            return Config.save_and_restart_if_needed()
 
     class _ConfigPostProcessing(object):
         def __init__(self):
@@ -548,7 +548,7 @@ class Config(object):
             autosubliminal.MOVIEPOSTPROCESSCMDARGS = moviepostprocesscmdargs
 
             # Now save to the configfile and restart if needed
-            return Config.save_and_restart_if_needed(self.tmpl_file)
+            return Config.save_and_restart_if_needed()
 
 
 class Log(object):
@@ -645,7 +645,7 @@ class System(object):
         redirect("/home")
 
     @cherrypy.expose(alias='flushWantedItems')
-    def flush_cache(self):
+    def flush_wanted_items(self):
         if utils.get_wanted_queue_lock():
             # Flush db and wanted queue
             WantedItems().flush_wanted_items()
@@ -673,8 +673,8 @@ class System(object):
 
     @cherrypy.expose(alias='isAlive')
     def is_alive(self, *args, **kwargs):
-        if 'callback' in kwargs and '_' in kwargs:
-            callback, _ = kwargs['callback'], kwargs['_']
+        if 'callback' in kwargs:
+            callback = kwargs['callback']
         else:
             return "Error: Unsupported Request. Send jsonp request with 'callback' variable in the query string."
         cherrypy.response.headers['Cache-Control'] = "max-age=0,no-cache,no-store"

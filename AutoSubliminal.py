@@ -16,7 +16,7 @@ Usage:
     -c (--config=)  Forces Auto-Subliminal to use a configfile other than ./config.properties
     -d (--daemon)   Run Auto-Subliminal in the background
     -l (--nolaunch) Stop Auto-Subliminal from launching a webbrowser
-    
+
 Example:
     python AutoSubliminal.py
     python AutoSubliminal.py -d
@@ -24,7 +24,7 @@ Example:
     python AutoSubliminal.py -c/home/user/config.properties
     python AutoSubliminal.py --config=/home/user/config.properties
     python AutoSubliminal.py --config=/home/user/config.properties --daemon
-    
+
 '''
 
 

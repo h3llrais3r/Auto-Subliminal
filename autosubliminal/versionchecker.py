@@ -181,13 +181,14 @@ class SourceVersionManager(BaseVersionManager):
         if local_version > remote_version:
             log.info("Unknown version found")
             utils.add_notification_message(
-                "Unknown version found! Check <a href="
-                + autosubliminal.GITHUBURL + "/releases>Github</a> and reinstall!",
+                "Unknown version found! "
+                "Check <a href=" + autosubliminal.GITHUBURL + "/releases>Github</a> and reinstall!",
                 "error", True)
         elif local_version < remote_version:
             log.info("New version found")
             utils.add_notification_message(
-                "New version found! Check <a href=" + autosubliminal.GITHUBURL + "/releases>Github</a> and update!",
+                "New version found! "
+                "Check <a href=" + autosubliminal.GITHUBURL + "/releases>Github</a> and update!",
                 "notice", True)
         else:
             log.info("Version up to date")

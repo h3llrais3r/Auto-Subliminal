@@ -7,11 +7,6 @@ from autosubliminal.notifiers.generic import BaseNotifier
 
 log = logging.getLogger(__name__)
 
-try:
-    from urlparse import parse_qsl
-except:
-    from cgi import parse_qsl
-
 CONSUMER_KEY = 'bRHxdWzMWnvwq5HapVZtFA'
 CONSUMER_SECRET = 'X4U3aTdPkBdLVLgH87xhC4oRc4JpkNc6MlG1ZAtG0a8'
 

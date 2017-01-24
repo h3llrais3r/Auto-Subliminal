@@ -82,7 +82,8 @@ def read_config():
             # CHECKSUB may only be runed 6 times a day, to prevent the API key from being banned
             # If you want new subtitles faster, you should decrease the CHECKSUB time
             if autosubliminal.CHECKSUBINTERVAL < 21600:
-                print "WARNING: checksub variable is lower then 21600. This is not allowed, this is to prevent our API-key from being banned."
+                print "WARNING: checksub variable is lower then 21600."
+                print "WARNING: This is not allowed, this is to prevent our API-key from being banned."
                 autosubliminal.CHECKSUBINTERVAL = 21600  # Run every 6 hours
         else:
             autosubliminal.CHECKSUBINTERVAL = 86400  # Run every 24 hours
@@ -274,7 +275,8 @@ def read_config():
             autosubliminal.SHOWMINMATCHSCORE = cfg.getint('subliminal', 'showminmatchscore')
             # Force the default showminmatchscore when a wrongly configured value is entered manually in the config file
             if autosubliminal.SHOWMINMATCHSCORE < autosubliminal.SHOWMINMATCHSCOREDEFAULT:
-                print "WARNING: Invalid SHOWMINMATCHSCORE found. Using the default score (%s) instead." % autosubliminal.SHOWMINMATCHSCOREDEFAULT
+                print "WARNING: Invalid SHOWMINMATCHSCORE found."
+                print "WARNING: Using the default score (%s) instead." % autosubliminal.SHOWMINMATCHSCOREDEFAULT
                 autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
         else:
             autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
@@ -301,9 +303,10 @@ def read_config():
 
         if cfg.has_option('subliminal', 'movieminmatchscore'):
             autosubliminal.MOVIEMINMATCHSCORE = cfg.getint('subliminal', 'movieminmatchscore')
-            # Force the default movieminmatchscore when a wrongly configured value is entered manually in the config file
+            # Force the default movieminmatchscore when an invalid value is entered manually in the config file
             if autosubliminal.MOVIEMINMATCHSCORE < autosubliminal.MOVIEMINMATCHSCOREDEFAULT:
-                print "WARNING: Invalid MOVIEMINMATCHSCORE found. Using the default score (%s) instead." % autosubliminal.MOVIEMINMATCHSCOREDEFAULT
+                print "WARNING: Invalid MOVIEMINMATCHSCORE found."
+                print "WARNING: Using the default score (%s) instead." % autosubliminal.MOVIEMINMATCHSCOREDEFAULT
                 autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
         else:
             autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
@@ -671,7 +674,7 @@ def read_config():
 def save_config(section=None, variable=None, value=None):
     """
     Add a variable and value to section in the config file.
-    
+
     Keyword arguments:
     section -- Section to with the variable - value pair will be added
     variable -- Option that will be added to the config file
@@ -1349,6 +1352,7 @@ def check_for_restart():
     if scandiskinterval != autosubliminal.SCANDISKINTERVAL \
             or checksubinterval != autosubliminal.CHECKSUBINTERVAL \
             or checkversioninterval != autosubliminal.CHECKVERSIONINTERVAL \
+            or logfile != autosubliminal.LOGFILE \
             or loglevel != autosubliminal.LOGLEVEL \
             or logsize != autosubliminal.LOGSIZE \
             or lognum != autosubliminal.LOGNUM \

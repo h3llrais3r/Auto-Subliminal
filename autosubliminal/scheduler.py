@@ -16,7 +16,7 @@ class Scheduler(object):
 
     :param name: Name of the thread to schedule
     :type name: str
-    :param process: process to schedule 
+    :param process: process to schedule
     :type process: ScheduledProcess
     :param interval: interval in seconds between scheduled runs
     :type interval: int

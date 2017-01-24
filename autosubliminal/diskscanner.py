@@ -2,7 +2,6 @@ import logging
 import os
 import re
 import time
-from operator import itemgetter
 
 import langdetect
 import pysrt
@@ -13,7 +12,6 @@ from enzyme.mkv import MKV
 import autosubliminal
 from autosubliminal import utils, fileprocessor
 from autosubliminal.db import WantedItems
-from autosubliminal.indexer import MovieIndexer, ShowIndexer
 from autosubliminal.scheduler import ScheduledProcess
 
 log = logging.getLogger(__name__)

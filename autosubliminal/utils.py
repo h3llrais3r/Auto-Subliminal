@@ -79,7 +79,7 @@ def wait_for_internet_connection():
 def getboolean(value):
     v = str(value)
     if v.lower() not in _boolean_states:
-        raise ValueError, 'Not a boolean: %s' % v
+        raise ValueError('Not a boolean: %s' % v)
     return _boolean_states[v.lower()]
 
 
@@ -208,7 +208,7 @@ def display_logfile(loglevel):
             matchdic = matches.groupdict()
             if (matchdic['loglevel'] == loglevel.upper()) or (loglevel == ''):
                 log_data.append(x)
-        except Exception, e:
+        except:
             continue
     result = cgi.escape("".join(log_data))
     return result
@@ -310,7 +310,7 @@ def count_wanted_items(itemtype=None):
 def get_file_size(path):
     try:
         byte_size = os.path.getsize(path)
-    except Exception, e:
+    except:
         # If size cannot be retrieved, it's most likely because the path doesn't exist anymore
         # Occurs when displaying gui when a sub check is running and files are already moved by a postprocessor script
         byte_size = 0

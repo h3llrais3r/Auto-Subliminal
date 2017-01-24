@@ -99,8 +99,8 @@ def _dict_from_guess(guess):
         log.debug("Video guessed as movie")
         return result_dict
     # Season and episode are numbers, so need to check explicitly for not None (0 results in False in Python)
-    elif result_dict['type'] == 'episode' and result_dict['title'] and result_dict['season'] is not None and \
-                    result_dict['episode'] is not None:
+    elif result_dict['type'] == 'episode' and result_dict['title'] and result_dict['season'] is not None \
+            and result_dict['episode'] is not None:
         log.debug("Video guessed as episode")
         return result_dict
     else:

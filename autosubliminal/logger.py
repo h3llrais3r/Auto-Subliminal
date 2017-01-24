@@ -64,7 +64,7 @@ class _LogFilter(logging.Filter):
             return False
         # Filter out external libs (= without own package name)
         # REMARK: this only works when the detailed log format is enabled
-        if not self.log_external_libs and not 'autosubliminal.' in record.name:
+        if not self.log_external_libs and 'autosubliminal.' not in record.name:
             return False
         return True
 
