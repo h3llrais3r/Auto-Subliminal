@@ -109,6 +109,42 @@ nav {
     right: 10px;
 }
 
+/*********************
+ * FA-CHECKBOX STYLING
+ *********************/
+
+/* Usage: */
+/*
+<span class="fa-checkbox">
+    <input type="checkbox" id="mycheckbox" checked>
+    <label for="mycheckbox">check me</label>
+</span>
+*/
+
+/* Hide the checkbox itself */
+.fa-checkbox input[type=checkbox] {
+    display: none;
+}
+
+/* Label styling */
+.fa-checkbox input[type=checkbox] + label {
+    font-weight: normal;
+}
+
+/* Unchecked icon styling */
+.fa-checkbox input[type=checkbox] + label:before {
+    font-family: FontAwesome;
+    display: inline-block;
+    content: "\f096";
+    letter-spacing: 7px;
+}
+
+/* Checked icon styling */
+.fa-checkbox input[type=checkbox]:checked + label:before {
+    content: "\f046";
+    letter-spacing: 5px;
+}
+
 /*****************
  * PNOTIFY STYLING
  *****************/
