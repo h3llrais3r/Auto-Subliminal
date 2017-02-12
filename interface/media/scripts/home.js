@@ -68,14 +68,14 @@ $(".container-manualsearch-link").click(function (event) {
     event.preventDefault();
     // define variables
     var searchUrl = $(this).attr("href");
-    var loadingImg = $(this).next("img");
+    var loadingIcon = $(this).next("i");
     var contentDiv = $(this).parent("div").next("div");
-    // show the loading image
-    loadingImg.removeClass("invisible").addClass("visible");
+    // show the loading icon
+    loadingIcon.removeClass("invisible").addClass("visible");
     // call the searchUrl
     $.get(searchUrl, function (data) {
-        // hide the loading image
-        loadingImg.removeClass("visible").addClass("invisible");
+        // hide the loading icon
+        loadingIcon.removeClass("visible").addClass("invisible");
         // output result (empty before storing new data)
         contentDiv.empty();
         contentDiv.append(data);
