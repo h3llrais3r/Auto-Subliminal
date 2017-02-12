@@ -19,7 +19,7 @@ dev_requirements = []
 
 # setup
 setup(name='Auto-Subliminal',
-      version='2.1.2',
+      version='2.2.0',
       license='GPL v3',
       description='Auto-Subliminal, the automated subliminal subtitle downloader',
       long_description=open('README.md').read(),
