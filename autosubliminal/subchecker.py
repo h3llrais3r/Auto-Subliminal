@@ -104,7 +104,7 @@ def search_subtitle(wanted_item_index, lang):
 
     # Get wanted queue lock
     if not utils.get_wanted_queue_lock():
-        return subs, "Skipping! Cannot get a wanted queue lock because another threat is using the queues!"
+        return subs, "Skipping! Cannot get a wanted queue lock because another thread is using the queues!"
 
     # Get wanted_item
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
