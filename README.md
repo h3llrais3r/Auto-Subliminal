@@ -23,6 +23,7 @@ What it does
 What it uses (see libraries.txt for versions)
 ---------------------------------------------
 
+ * appdirs
  * babelfish
  * beautifulsoup4
  * charade
@@ -34,6 +35,7 @@ What it uses (see libraries.txt for versions)
  * dogpile.core
  * enum34
  * enzyme
+ * futures
  * gitpython
  * gitdb
  * growl
@@ -50,7 +52,10 @@ What it uses (see libraries.txt for versions)
  * pysrt
  * pythontwitter
  * python-dateutil
+ * pytz
  * pyxdg
+ * rarfile
+ * rebulk
  * requests
  * simplejson
  * six
@@ -59,6 +64,7 @@ What it uses (see libraries.txt for versions)
  * subliminal
  * tvdb_api
  * websocket-client
+ * ws4py
 
 How to use
 ----------
@@ -67,9 +73,11 @@ How to use
  * Install python cheetah package manually or use the installer from Auto-Subliminal (python setup.py install)
  * Start the script: " python AutoSubliminal.py "
  * A web browser should now open
- * Go to the config page, check the settings, make sure you set at least:
-    * Path: Should point to the location where AutoSubliminal.py is located
-    * Video paths: Should point to your root series and/or movies folder(s)
+ * Go to the config menu, check the settings and make sure you set at least:
+    * Root path: The location where AutoSubliminal.py is located
+    * Video paths: The root folder(s) of your series and/or movies
+    * Default language: Your primary subtitle language
+    * Subliminal settings: Your minimal match score and used providers
  * Restart Auto-Subliminal
 
 Enjoy your subtitles!
