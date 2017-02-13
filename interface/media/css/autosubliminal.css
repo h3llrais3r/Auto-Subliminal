@@ -73,8 +73,8 @@ nav {
 }
 
 .dropdown-menu-inverse > li > a:hover {
-    color: #FFFFFF;
-    background-color: #000000;
+    background-color: #FFFFFF;
+    color: #000000;
 }
 
 .dropdown-menu-inverse > .divider {
