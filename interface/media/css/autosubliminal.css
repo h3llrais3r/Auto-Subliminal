@@ -2,32 +2,32 @@
  * Auto-Subliminal css.
  */
 
-/******************
- *HTML BODY STYLING
- ******************/
+/*********************
+ * HTML BODY STYLING *
+ *********************/
 
 html, body {
     background-color: #eeeeee;
 }
 
-/*****************
- *TEXTAREA STYLING
- *****************/
+/********************
+ * TEXTAREA STYLING *
+ ********************/
 
 textarea {
     resize: vertical;
 }
 
-/***************
- *NAVBAR STYLING
- ***************/
+/******************
+ * NAVBAR STYLING *
+ ******************/
 nav {
     min-width: 380px; /* Make sure the navbar does not become higher when screensize is too low */
 }
 
-/******************
- *JUMBOTRON STYLING
- ******************/
+/*********************
+ * JUMBOTRON STYLING *
+ *********************/
 
 .jumbotron-global {
     background-color: #eeeeee;
@@ -43,9 +43,9 @@ nav {
     background-color: #eeeeee;
 }
 
-/*****************
- *DROPDOWN STYLING
- *****************/
+/********************
+ * DROPDOWN STYLING *
+ ********************/
 
 .dropdown-hoverintent {
     cursor: pointer;
@@ -117,9 +117,24 @@ nav {
     right: 10px;
 }
 
-/*********************
- * FA-CHECKBOX STYLING
- *********************/
+/*****************
+ * MODAL STYLING *
+ *****************/
+
+.modal-dialog {
+    position: absolute;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    -ms-transform: translate(-50%, -50%) !important;
+    -webkit-transform: translate(-50%, -50%) !important;
+    width: 500px;
+    height: 250px;
+}
+
+/***********************
+ * FA-CHECKBOX STYLING *
+ ***********************/
 
 /* Usage: */
 /*
@@ -153,9 +168,9 @@ nav {
     letter-spacing: 5px;
 }
 
-/*****************
- * PNOTIFY STYLING
- *****************/
+/*******************
+ * PNOTIFY STYLING *
+ *******************/
 
 .ui-pnotify.stack-context {
     position: static;
@@ -165,9 +180,9 @@ nav {
     text-wrap: none;
 }
 
-/********************
- *TABLESORTER STYLING
- ********************/
+/***********************
+ * TABLESORTER STYLING *
+ ***********************/
 
 table.tablesorter, table {
     border: 1px solid #dddddd;
@@ -285,9 +300,9 @@ table.tablesorter tbody td {
 
 /* End copy */
 
-/******************
- *FORMGROUP STYLING
- ******************/
+/*********************
+ * FORMGROUP STYLING *
+ *********************/
 
 .form-group.narrow {
     margin-top: 5px;
@@ -303,9 +318,9 @@ table.tablesorter tbody td {
     padding-top: 0px;
 }
 
-/**********************
- * MANUALSEARCH STYLING
- **********************/
+/************************
+ * MANUALSEARCH STYLING *
+ ************************/
 
 .container-manualsearch {
     width: 750px;
@@ -328,9 +343,9 @@ table.tablesorter tbody td {
     white-space: nowrap;
 }
 
-/****************
- *GENERAL STYLING
- ****************/
+/*******************
+ * GENERAL STYLING *
+ *******************/
 
 .datetime {
     min-width: 90px;

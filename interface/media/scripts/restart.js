@@ -12,14 +12,16 @@ function is_alive() {
         if (data.msg == "False") {
             setTimeout(is_alive, 2000);
         }
-        // started -> reload
+        // started -> remove modal and reload
         else {
+            $("#restartModal").modal('hide');
             window.location = base_url + "/home";
         }
     }, "jsonp");
 }
 
-// Activate the is_alive function
+// Activate the modal and is_alive function
 $(document).ready(function () {
+    $('#restartModal').modal('show');
     is_alive();
 });
