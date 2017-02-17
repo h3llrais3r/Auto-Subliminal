@@ -251,6 +251,12 @@ def read_config():
         else:
             autosubliminal.WEBROOT = u""
 
+        if not cfg.has_option('webserver', 'username'):
+            autosubliminal.USERNAME = u""
+
+        if not cfg.has_option('webserver', 'password'):
+            autosubliminal.PASSWORD = u""
+
         if cfg.has_option('webserver', 'username') and cfg.has_option('webserver', 'password'):
             autosubliminal.USERNAME = cfg.get('webserver', 'username')
             autosubliminal.PASSWORD = cfg.get('webserver', 'password')
@@ -268,6 +274,8 @@ def read_config():
         autosubliminal.WEBSERVERIP = u"0.0.0.0"
         autosubliminal.WEBSERVERPORT = 8083
         autosubliminal.WEBROOT = u""
+        autosubliminal.USERNAME = u""
+        autosubliminal.PASSWORD = u""
         autosubliminal.LAUNCHBROWSER = True
 
     if cfg.has_section('subliminal'):
@@ -341,7 +349,7 @@ def read_config():
         else:
             autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
 
-        if cfg.has_option("subliminal", "REFINEVIDEO"):
+        if cfg.has_option("subliminal", "refinevideo"):
             autosubliminal.REFINEVIDEO = cfg.getboolean("subliminal", "refinevideo")
         else:
             autosubliminal.REFINEVIDEO = False
@@ -358,6 +366,9 @@ def read_config():
                 autosubliminal.SUBLIMINALPROVIDERCONFIGS = {
                     'addic7ed': {'username': autosubliminal.ADDIC7EDUSERNAME,
                                  'password': autosubliminal.ADDIC7EDPASSWORD}}
+        else:
+            autosubliminal.ADDIC7EDUSERNAME = u""
+            autosubliminal.ADDIC7EDPASSWORD = u""
 
         if cfg.has_option('subliminal', 'opensubtitlesusername') and cfg.has_option('subliminal',
                                                                                     'opensubtitlespassword'):
@@ -367,17 +378,28 @@ def read_config():
                 autosubliminal.SUBLIMINALPROVIDERCONFIGS = {
                     'opensubtitles': {'username': autosubliminal.OPENSUBTITLESUSERNAME,
                                       'password': autosubliminal.OPENSUBTITLESPASSWORD}}
+        else:
+            autosubliminal.OPENSUBTITLESUSERNAME = u""
+            autosubliminal.OPENSUBTITLESPASSWORD = u""
     else:
         # Subliminal section is missing
         autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
+        autosubliminal.SHOWMATCHSOURCE = False
+        autosubliminal.SHOWMATCHQUALITY = False
+        autosubliminal.SHOWMATCHCODEC = False
+        autosubliminal.SHOWMATCHRELEASEGROUP = False
         autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
-        autosubliminal.MATCHSOURCE = False
-        autosubliminal.MATCHQUALITY = False
-        autosubliminal.MATCHCODEC = False
-        autosubliminal.MATCHRELEASEGROUP = False
+        autosubliminal.MOVIEMATCHSOURCE = False
+        autosubliminal.MOVIEMATCHQUALITY = False
+        autosubliminal.MOVIEMATCHCODEC = False
+        autosubliminal.MOVIEMATCHRELEASEGROUP = False
         autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
         autosubliminal.REFINEVIDEO = False
         autosubliminal.PREFERHEARINGIMPAIRED = False
+        autosubliminal.ADDIC7EDUSERNAME = u""
+        autosubliminal.ADDIC7EDPASSWORD = u""
+        autosubliminal.OPENSUBTITLESUSERNAME = u""
+        autosubliminal.OPENSUBTITLESPASSWORD = u""
 
     if cfg.has_section('shownamemapping'):
         autosubliminal.USERSHOWNAMEMAPPING = dict(cfg.items('shownamemapping'))
@@ -589,6 +611,7 @@ def read_config():
         autosubliminal.MAILPASSWORD = u"mysecretpassword"
         autosubliminal.MAILSUBJECT = u"Subs info"
         autosubliminal.MAILENCRYPTION = u"TLS"
+        autosubliminal.MAILAUTH = u""
         autosubliminal.NOTIFYTWITTER = False
         autosubliminal.TWITTERKEY = u"token key"
         autosubliminal.TWITTERSECRET = u"token secret"
@@ -606,6 +629,7 @@ def read_config():
         autosubliminal.GROWLPASS = u"mysecretpassword"
         autosubliminal.NOTIFYPROWL = False
         autosubliminal.PROWLAPI = u"API key"
+        autosubliminal.PROWLPRIORITY = 0
         autosubliminal.NOTIFYPUSHBULLET = False
         autosubliminal.PUSHBULLETAPI = u"API key"
 
@@ -627,21 +651,33 @@ def read_config():
 
         if cfg.has_option("postprocessing", "showpostprocesscmd"):
             autosubliminal.SHOWPOSTPROCESSCMD = cfg.get("postprocessing", "showpostprocesscmd")
+        else:
+            autosubliminal.SHOWPOSTPROCESSCMD = u""
 
         if cfg.has_option("postprocessing", "showpostprocesscmdargs"):
             autosubliminal.SHOWPOSTPROCESSCMDARGS = cfg.get("postprocessing", "showpostprocesscmdargs")
+        else:
+            autosubliminal.SHOWPOSTPROCESSCMDARGS = u""
 
         if cfg.has_option("postprocessing", "moviepostprocesscmd"):
             autosubliminal.MOVIEPOSTPROCESSCMD = cfg.get("postprocessing", "moviepostprocesscmd")
+        else:
+            autosubliminal.MOVIEPOSTPROCESSCMD = u""
 
         if cfg.has_option("postprocessing", "moviepostprocesscmdargs"):
             autosubliminal.MOVIEPOSTPROCESSCMDARGS = cfg.get("postprocessing", "moviepostprocesscmdargs")
+        else:
+            autosubliminal.MOVIEPOSTPROCESSCMDARGS = u""
 
     else:
         # Postprocessing section is missing
         autosubliminal.POSTPROCESS = False
         autosubliminal.POSTPROCESSINDIVIDUAL = False
-        autosubliminal.POSTPORCESSUTF8ENCODING = False
+        autosubliminal.POSTPROCESSUTF8ENCODING = False
+        autosubliminal.SHOWPOSTPROCESSCMD = u""
+        autosubliminal.SHOWPOSTPROCESSCMDARGS = u""
+        autosubliminal.MOVIEPOSTPROCESSCMD = u""
+        autosubliminal.MOVIEPOSTPROCESSCMDARGS = u""
 
     if cfg.has_section('dev'):
         if cfg.has_option('dev', 'apikey'):
@@ -1045,7 +1081,7 @@ def save_subliminal_section():
     cfg.set(section, "moviematchcodec", str(autosubliminal.MOVIEMATCHCODEC))
     cfg.set(section, "moviematchreleasegroup", str(autosubliminal.MOVIEMATCHRELEASEGROUP))
     cfg.set(section, "providers", str(autosubliminal.SUBLIMINALPROVIDERS))
-    cfg.set(section, "REFINEVIDEO", str(autosubliminal.REFINEVIDEO))
+    cfg.set(section, "refinevideo", str(autosubliminal.REFINEVIDEO))
     cfg.set(section, "preferhearingimpaired", str(autosubliminal.PREFERHEARINGIMPAIRED))
     cfg.set(section, "addic7edusername", str(autosubliminal.ADDIC7EDUSERNAME))
     cfg.set(section, "addic7edpassword", str(autosubliminal.ADDIC7EDPASSWORD))
@@ -1272,6 +1308,7 @@ def check_for_restart():
     scandiskinterval = 3600
     checksubinterval = 86400
     checkversioninterval = 43200
+    logfile = u'AutoSubliminal.log'
     loglevel = logging.INFO
     loglevelconsole = logging.ERROR
     logsize = 0
