@@ -1,5 +1,6 @@
 #import sys
 #import os
+#import platform
 
 #import autosubliminal
 #from autosubliminal import version
@@ -18,6 +19,12 @@
         </div>
     </div>
 
+    <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>OS</label></span>
+        <span class="col-xs-8 col-md-10 wrapped">
+            $platform.platform()
+        </span>
+    </div>
 
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-2"><label>Version</label></span>
