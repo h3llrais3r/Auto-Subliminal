@@ -219,11 +219,6 @@ class Config(object):
         # Redirect to general settings by default
         redirect("/config/general")
 
-    @cherrypy.expose(alias='info')
-    def info(self):
-        tmpl = Template(file="interface/templates/config/config-info.tmpl")
-        return str(tmpl)
-
     class _ConfigGeneral(object):
         def __init__(self):
             self.tmpl_file = "interface/templates/config/config-general.tmpl"
@@ -591,19 +586,6 @@ class System(object):
     def __init__(self):
         pass
 
-    @cherrypy.expose(alias='checkVersion')
-    def check_version(self):
-        autosubliminal.CHECKVERSION.run()
-        redirect_referer("/home")
-
-    @cherrypy.expose(alias='updateVersion')
-    def update_version(self):
-        autosubliminal.CHECKVERSION.process.update()
-        runner.restart_app(exit=True)
-        tmpl = Template(file="interface/templates/system/restart.tmpl")
-        tmpl.message = "Auto-Subliminal is restarting..."
-        return str(tmpl)
-
     @cherrypy.expose(alias='runNow')
     def run_now(self):
         # Run threads now (use delay to be sure that checksub is run after scandisk)
@@ -632,9 +614,27 @@ class System(object):
         tmpl.message = "Auto-Subliminal is shutting down..."
         return str(tmpl)
 
+    @cherrypy.expose(alias='info')
+    def info(self):
+        tmpl = Template(file="interface/templates/system/system-info.tmpl")
+        return str(tmpl)
+
     @cherrypy.expose
     def status(self):
-        tmpl = Template(file="interface/templates/system/status.tmpl")
+        tmpl = Template(file="interface/templates/system/system-status.tmpl")
+        return str(tmpl)
+
+    @cherrypy.expose(alias='checkVersion')
+    def check_version(self):
+        autosubliminal.CHECKVERSION.run()
+        redirect_referer("/home")
+
+    @cherrypy.expose(alias='updateVersion')
+    def update_version(self):
+        autosubliminal.CHECKVERSION.process.update()
+        runner.restart_app(exit=True)
+        tmpl = Template(file="interface/templates/system/restart.tmpl")
+        tmpl.message = "Auto-Subliminal is restarting..."
         return str(tmpl)
 
     @cherrypy.expose(alias='flushCache')
