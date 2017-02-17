@@ -204,7 +204,7 @@ class Config(object):
         if restart:
             # Restart the runner in the background
             runner.restart_app()
-            tmpl = Template(file="interface/templates/system/restart.tmpl")
+            tmpl = Template(file="interface/templates/system/system-restart.tmpl")
             tmpl.message = "Saved config. Auto restart in progress..."
             return str(tmpl)
 
@@ -603,7 +603,7 @@ class System(object):
     @cherrypy.expose
     def restart(self):
         runner.restart_app()
-        tmpl = Template(file="interface/templates/system/restart.tmpl")
+        tmpl = Template(file="interface/templates/system/system-restart.tmpl")
         tmpl.message = "Auto-Subliminal is restarting..."
         return str(tmpl)
 
@@ -633,7 +633,7 @@ class System(object):
     def update_version(self):
         autosubliminal.CHECKVERSION.process.update()
         runner.restart_app(exit=True)
-        tmpl = Template(file="interface/templates/system/restart.tmpl")
+        tmpl = Template(file="interface/templates/system/system-restart.tmpl")
         tmpl.message = "Auto-Subliminal is restarting..."
         return str(tmpl)
 
