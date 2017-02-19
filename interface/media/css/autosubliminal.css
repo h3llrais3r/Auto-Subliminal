@@ -52,6 +52,14 @@ nav {
  * DROPDOWN STYLING *
  ********************/
 
+.dropdown-toggle:hover, .dropdown-toggle:active, .dropdown-toggle:focus {
+    text-decoration: none; /* Remove underline after icon on hover, active and focus */
+}
+
+/*************************
+ * DROPDOWN MENU STYLING *
+ *************************/
+
 .dropdown-hoverintent {
     cursor: pointer;
 }
