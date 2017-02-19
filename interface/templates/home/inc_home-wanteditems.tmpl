@@ -118,6 +118,10 @@
                                 </li>
                             </ul>
                         </span>
+                        #else:
+                        <a href="$autosubliminal.DEREFERURL$autosubliminal.TVDBURL$item['tvdbid']" target="_blank">
+                             <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
+                        </a>
                         #end if
                         #else if $item['type'] == 'movie':
                         #if not $item['imdbid']:
@@ -131,6 +135,10 @@
                                 </li>
                             </ul>
                         </span>
+                        #else:
+                        <a href="$autosubliminal.DEREFERURL$autosubliminal.IMDBURL$item['imdbid']" target="_blank" onclick="derefer(this.href);return false;">
+                             <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
+                        </a>
                         #end if
                         #end if
                     </td>

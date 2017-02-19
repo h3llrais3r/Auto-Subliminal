@@ -10,6 +10,9 @@ CONFIGVERSION = None
 CONFIGUPGRADED = None
 
 # System
+DEREFERURL = None
+TVDBURL = None
+IMDBURL = None
 GITHUBURL = None
 VERSIONURL = None
 USERAGENT = None
@@ -171,8 +174,8 @@ MOVIEPOSTPROCESSCMDARGS = None
 
 def initialize():
     global CONFIGFILE, CONFIGVERSION, CONFIGUPGRADED, \
-        GITHUBURL, VERSIONURL, USERAGENT, SYSENCODING, TIMEOUT, MESSAGEQUEUE, WANTEDQUEUE, WANTEDQUEUELOCK, \
-        WEBSOCKETBROADCASTER, SCHEDULERS, SCANDISK, CHECKSUB, CHECKVERSION, \
+        DEREFERURL, TVDBURL, IMDBURL, GITHUBURL, VERSIONURL, USERAGENT, SYSENCODING, TIMEOUT, MESSAGEQUEUE, WANTEDQUEUE, \
+        WANTEDQUEUELOCK, WEBSOCKETBROADCASTER, SCHEDULERS, SCANDISK, CHECKSUB, CHECKVERSION, \
         DBFILE, DBVERSION, \
         DAEMON, STARTED, PID, \
         MOBILE, MOBILEUSERAGENTS, \
@@ -211,7 +214,10 @@ def initialize():
     # Langdetect settings
     _init_langdetect()
 
-    # Version settings
+    # System settings
+    DEREFERURL = "http://www.dereferer.org/?"
+    TVDBURL = "http://thetvdb.com/?tab=series&id="
+    IMDBURL = "http://www.imdb.com/title/tt"
     GITHUBURL = "https://github.com/h3llrais3r/Auto-Subliminal"
     VERSIONURL = "https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py"
     USERAGENT = "Auto-Subliminal/" + version.RELEASE_VERSION
