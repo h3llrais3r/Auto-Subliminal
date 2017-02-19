@@ -341,8 +341,8 @@ table.tablesorter tbody td {
     margin: 0px;
 }
 
-.container-manualsearch .subtitle-action:hover {
-    text-decoration: none; /* Remove underline after icon when hovering */
+.container-manualsearch .subtitle-action:hover, .container-manualsearch .subtitle-action:active, .container-manualsearch .subtitle-action:focus {
+    text-decoration: none; /* Remove underline after icon on hover, active and focus */
 }
 
 .container-manualsearch .subtitle-preview {
