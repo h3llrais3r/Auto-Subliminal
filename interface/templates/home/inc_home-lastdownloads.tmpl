@@ -18,21 +18,22 @@
 
             <div class="form-inline">
                 <div class="row">
-                    <div class="col-xs-12 col-md-6 table-filter left">
-                        <label for="lastdownloadstypefilter">
-                            Video type:
+                    <div class="col-xs-12 col-sm-6 col-md-6 table-filter left">
+                        <div class="input-group">
+                            <span class="input-group-addon table-filter-label">Video type</span>
                             <select id="lastdownloadstypefilter" class="lastdownloadsfilter form-control input-sm" type="search" data-column="0">
                                 <option value="">All</option>
                                 <option value="episode">Shows</option>
                                 <option value="movie">Movies</option>
                             </select>
-                        </label>
+                        </div>
                     </div>
-                    <div class="col-xs-12 col-md-6 table-filter right">
-                        <label for="lastdownloadssearchfilter">
-                            Search:
+                    <div class="col-xs-12 col-sm-6 col-md-6 table-filter right">
+                        <div class="input-group">
+                            <span class="input-group-addon table-filter-label">Search</span>
                             <input id="lastdownloadssearchfilter" class="lastdownloadsfilter form-control input-sm" type="search" data-column="all">
-                        </label>
+                            <span class="input-group-addon lastdownloadsfilterreset"><i class="fa fa-times" aria-hidden="true"></i></span>
+                        </div>
                     </div>
                 </div>
             </div>

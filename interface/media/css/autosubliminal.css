@@ -410,10 +410,11 @@ table.tablesorter tbody td {
 
 .table-filter {
     text-align: center;
+    margin-bottom: 5px;
 }
 
-/* Align table-filter on larger screens (same width as switch in bootstrap from xs to md) */
-@media (min-width: 992px) {
+/* Align table-filter on larger screens (same width as switch in bootstrap from xs to sm) */
+@media (min-width: 768px) {
     .table-filter.left {
         text-align: left;
     }
@@ -426,6 +427,10 @@ table.tablesorter tbody td {
 .table-filter input, .table-filter select {
     display: inline-block;
     width: auto;
+}
+
+.table-filter .table-filter-label {
+    font-weight: bold;
 }
 
 .weighted {

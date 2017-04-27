@@ -16,7 +16,9 @@ $(document).ready(function () {
                 // Search faster (default 300)
                 filter_searchDelay: 50,
                 // Save filters
-                filter_saveFilters: true
+                filter_saveFilters: true,
+                // Reset filter selector
+                filter_reset: '.wanteditemsfilterreset'
             },
             // Use date format 'ddmmyyyy'
             dateFormat: 'ddmmyyyy',
@@ -34,6 +36,11 @@ $(document).ready(function () {
         });
 });
 
+$(".wanteditemsfilterreset").click(function () {
+    $(this).prev("input").val("").focus();
+    $.tablesorter.storage($("#wanteditems"), "tablesorter-filters", "");
+});
+
 // Enable tablesorter and tablesorterPager for lastdownloads table
 $(document).ready(function () {
     $("#lastdownloads")
@@ -48,7 +55,9 @@ $(document).ready(function () {
                 // Search faster (default 300)
                 filter_searchDelay: 50,
                 // Save filters
-                filter_saveFilters: true
+                filter_saveFilters: true,
+                // Reset filter selector
+                filter_reset: '.lastdownloadsfilterreset'
             },
             // Use date format 'ddmmyyyy'
             dateFormat: 'ddmmyyyy',
@@ -64,6 +73,11 @@ $(document).ready(function () {
             container: $("#lastdownloadspager"),
             output: '{startRow} to {endRow} ({filteredRows})'
         });
+});
+// Handle filter reset
+$(".lastdownloadsfilterreset").click(function () {
+    $(this).prev("input").val("").focus();
+    $.tablesorter.storage($("#lastdownloads"), "tablesorter-filters", "");
 });
 
 // Activate the container-manualsearch-link
