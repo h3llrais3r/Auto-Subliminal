@@ -14,7 +14,9 @@ $(document).ready(function () {
                 // External filter selector
                 filter_external: '.wanteditemsfilter',
                 // Search faster (default 300)
-                filter_searchDelay: 50
+                filter_searchDelay: 50,
+                // Save filters
+                filter_saveFilters: true
             },
             // Use date format 'ddmmyyyy'
             dateFormat: 'ddmmyyyy',
@@ -44,7 +46,9 @@ $(document).ready(function () {
                 // External filter selector
                 filter_external: '.lastdownloadsfilter',
                 // Search faster (default 300)
-                filter_searchDelay: 50
+                filter_searchDelay: 50,
+                // Save filters
+                filter_saveFilters: true
             },
             // Use date format 'ddmmyyyy'
             dateFormat: 'ddmmyyyy',
