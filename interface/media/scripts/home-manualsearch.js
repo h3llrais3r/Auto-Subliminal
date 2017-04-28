@@ -70,14 +70,21 @@ $(".manualsearchpostprocesslink").click(function (event) {
     // prevent default behaviour
     event.preventDefault();
     // define variables
+    var postProcessLink = $(this);
     var url = $(this).attr("href");
+    // toggle postprocessing icon
+    postProcessLink.find("i").toggleClass("hidden");
     // call the url
     $.get(url, function (data) {
         emptyMessages();
         if (data['result']) {
+            // toggle postprocessing icon
+            postProcessLink.find("i").toggleClass("hidden");
             // redirect
             window.location.href = data['redirect'];
         } else {
+            // toggle postprocessing icon
+            postProcessLink.find("i").toggleClass("hidden");
             // show error message
             $("#div-error").append(data['errormessage']);
         }
