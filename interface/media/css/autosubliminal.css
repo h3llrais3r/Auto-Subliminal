@@ -370,6 +370,7 @@ table.tablesorter tbody td {
 }
 
 .main-column {
+    color: inherit;
     font-weight: bold;
     text-decoration: none !important;
 }
