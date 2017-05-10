@@ -100,3 +100,40 @@ $(".container-manualsearch-link").click(function (event) {
     });
     return false;
 });
+
+// Activate the update-wanted-item-link
+$(".update-wanted-item-link").click(function (event) {
+    // prevent default behaviour
+    event.preventDefault();
+    // define variables
+    var link = $(this);
+    var updateUrl = link.attr("href");
+    var updatePanel = $(this).closest(".panel-body");
+    var updateObj = {
+        'title': updatePanel.find("input.update-wanted-item-title").val(),
+        'year': updatePanel.find("input.update-wanted-item-year").val(),
+        'season': updatePanel.find("input.update-wanted-item-season").val(),
+        'episode': updatePanel.find("input.update-wanted-item-episode").val(),
+        'source': updatePanel.find("input.update-wanted-item-source").val(),
+        'quality': updatePanel.find("input.update-wanted-item-quality").val(),
+        'codec': updatePanel.find("input.update-wanted-item-codec").val(),
+        'releasegrp': updatePanel.find("input.update-wanted-item-releasegrp").val()
+    };
+    // call the updateUrl
+    $.post(updateUrl, updateObj, function (data) {
+        if (data.item != null && data.title != null) {
+            // Close the dropdown
+            link.closest('.dropdown').find('.dropdown-toggle').dropdown("toggle");
+            // Update wanted item
+            var wantedItem = link.closest(".wanted-item");
+            wantedItem.find(".wanted-item-title").text(data.title); // display_title
+            wantedItem.find(".wanted-item-season").text(data.item.season);
+            wantedItem.find(".wanted-item-episode").text(data.item.episode);
+            wantedItem.find(".wanted-item-source").text(data.item.source);
+            wantedItem.find(".wanted-item-quality").text(data.item.quality);
+            wantedItem.find(".wanted-item-codec").text(data.item.codec);
+            wantedItem.find(".wanted-item-releasegrp").text(data.item.releasegrp);
+        }
+    });
+    return false;
+});

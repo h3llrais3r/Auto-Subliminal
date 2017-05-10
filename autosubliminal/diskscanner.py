@@ -76,6 +76,7 @@ class DiskScanner(ScheduledProcess):
         autosubliminal.WANTEDQUEUE = []
         for item in db.get_wanted_items():
             log.info("%s %s" % (item['videopath'], item['languages']))
+            item['default_keys'] = item.keys()
             autosubliminal.WANTEDQUEUE.append(item)
 
         # Release wanted queue lock

@@ -71,7 +71,7 @@ nav {
     font-style: italic;
 }
 
-.dropdown-menu.info-list > li > .info-list-label {
+.dropdown-menu.info-list .info-list-label {
     font-weight: bold;
     font-style: normal;
 }

@@ -36,6 +36,19 @@ class Home(object):
             tmpl = Template(file="interface/templates/mobile/home.tmpl")
         return str(tmpl)
 
+    @cherrypy.expose(alias='updateWantedItem')
+    @cherrypy.tools.json_out()
+    def update_wanted_item(self, wanted_item_index, **kwargs):
+        # Get wanted item
+        wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+        # Update all keys that are passed
+        for key in kwargs.keys() if wanted_item else None:
+            if key in wanted_item.keys():
+                wanted_item[key] = kwargs[key]
+        # Only return wanted_items with default keys (to prevent json parse errors)
+        default_wanted_item = dict((k, wanted_item[k]) for k in wanted_item['default_keys'] if k in wanted_item)
+        return {'item': default_wanted_item, 'title': utils.display_title(wanted_item)}
+
     @cherrypy.expose(alias='searchId')
     def force_id_search(self, wanted_item_index):
         subchecker.force_id_search(wanted_item_index)
