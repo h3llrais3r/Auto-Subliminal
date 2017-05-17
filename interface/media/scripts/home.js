@@ -25,6 +25,7 @@ $(document).ready(function () {
             // Force text sorter in show/movie name column (this is needed due to img in table cell)
             // See https://github.com/Mottie/tablesorter/issues/1149
             headers: {
+                0: {sorter: 'false'},
                 1: {sorter: 'text'}
             },
             // Sort default by time desc
