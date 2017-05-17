@@ -69,21 +69,13 @@
                                 <li>
                                     <span class="info-list-label">Subtitle:</span>
                                     <span>
-                                        #if $item['subtitle'] == None
-                                        N/A
-                                        #else
-                                        $item['subtitle']
-                                        #end if
+                                        $display_item($item, 'subtitle', 'N/A', False)
                                     </span>
                                 </li>
                                 <li>
                                     <span class="info-list-label">Provider:</span>
                                     <span>
-                                        #if $item['provider'] == None
-                                        N/A
-                                        #else
-                                        $item['provider']
-                                        #end if
+                                        $display_item($item, 'provider', 'N/A', False)
                                     </span>
                                 </li>
                             </ul>
