@@ -88,10 +88,10 @@ def _dict_from_guess(guess):
                    'year': _property_from_guess(guess, 'year'),
                    'season': _property_from_guess(guess, 'season'),
                    'episode': _property_from_guess(guess, 'episode'),
-                   'source': _property_from_guess(guess, 'format', u'N/A'),
-                   'quality': _property_from_guess(guess, 'screen_size', u'SD'),
-                   'codec': _property_from_guess(guess, 'video_codec', u'N/A'),
-                   'releasegrp': _split_release_group(_property_from_guess(guess, 'release_group', u'N/A'))}
+                   'source': _property_from_guess(guess, 'format'),
+                   'quality': _property_from_guess(guess, 'screen_size'),
+                   'codec': _property_from_guess(guess, 'video_codec'),
+                   'releasegrp': _split_release_group(_property_from_guess(guess, 'release_group'))}
     log.debug("Dict from guess: %r" % result_dict)
 
     # Check if mandatory elements are available in the guess

@@ -45,9 +45,15 @@ class Home(object):
         for key in kwargs.keys() if wanted_item else None:
             if key in wanted_item.keys():
                 wanted_item[key] = kwargs[key]
-        # Only return wanted_items with default keys (to prevent json parse errors)
-        default_wanted_item = dict((k, wanted_item[k]) for k in wanted_item['default_keys'] if k in wanted_item)
-        return {'item': default_wanted_item, 'title': utils.display_title(wanted_item)}
+        # Only return updatable fields
+        return {'title': utils.display_title(wanted_item),
+                'year': utils.display_item(wanted_item, 'year', default_value=''),
+                'season': utils.display_item(wanted_item, 'season', default_value=''),
+                'episode': utils.display_item(wanted_item, 'episode', default_value=''),
+                'source': utils.display_item(wanted_item, 'source', uppercase=True),
+                'quality': utils.display_item(wanted_item, 'quality', uppercase=True),
+                'codec': utils.display_item(wanted_item, 'codec', uppercase=True),
+                'releasegrp': utils.display_item(wanted_item, 'releasegrp', uppercase=True)}
 
     @cherrypy.expose(alias='searchId')
     def force_id_search(self, wanted_item_index):

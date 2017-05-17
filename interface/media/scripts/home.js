@@ -122,18 +122,18 @@ $(".update-wanted-item-link").click(function (event) {
     };
     // call the updateUrl
     $.post(updateUrl, updateObj, function (data) {
-        if (data.item != null && data.title != null) {
+        if (data) {
             // Close the dropdown
             link.closest('.dropdown').find('.dropdown-toggle').dropdown("toggle");
             // Update wanted item
             var wantedItem = link.closest(".wanted-item");
-            wantedItem.find(".wanted-item-title").text(data.title); // display_title
-            wantedItem.find(".wanted-item-season").text(data.item.season);
-            wantedItem.find(".wanted-item-episode").text(data.item.episode);
-            wantedItem.find(".wanted-item-source").text(data.item.source);
-            wantedItem.find(".wanted-item-quality").text(data.item.quality);
-            wantedItem.find(".wanted-item-codec").text(data.item.codec);
-            wantedItem.find(".wanted-item-releasegrp").text(data.item.releasegrp);
+            wantedItem.find(".wanted-item-title").text(data.title);
+            wantedItem.find(".wanted-item-season").text(data.season);
+            wantedItem.find(".wanted-item-episode").text(data.episode);
+            wantedItem.find(".wanted-item-source").text(data.source);
+            wantedItem.find(".wanted-item-quality").text(data.quality);
+            wantedItem.find(".wanted-item-codec").text(data.codec);
+            wantedItem.find(".wanted-item-releasegrp").text(data.releasegrp);
         }
     });
     return false;
