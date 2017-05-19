@@ -103,6 +103,7 @@ SUBLIMINALPROVIDERMANAGER = None
 SUBLIMINALPROVIDERS = None
 SUBLIMINALPROVIDERLIST = None
 SUBLIMINALPROVIDERCONFIGS = None
+MANUALREFINEVIDEO = None
 REFINEVIDEO = None
 PREFERHEARINGIMPAIRED = None
 ADDIC7EDUSERNAME = None
@@ -191,7 +192,7 @@ def initialize():
         MOVIEMINMATCHSCORE, MOVIEMINMATCHSCOREDEFAULT, MOVIEMATCHSOURCE, MOVIEMATCHQUALITY, MOVIEMATCHCODEC, \
         MOVIEMATCHRELEASEGROUP, \
         SUBLIMINALPROVIDERMANAGER, SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERLIST, SUBLIMINALPROVIDERCONFIGS, \
-        REFINEVIDEO, PREFERHEARINGIMPAIRED, \
+        MANUALREFINEVIDEO, REFINEVIDEO, PREFERHEARINGIMPAIRED, \
         ADDIC7EDUSERNAME, ADDIC7EDPASSWORD, OPENSUBTITLESUSERNAME, OPENSUBTITLESPASSWORD, \
         USERSHOWNAMEMAPPING, USERSHOWNAMEMAPPINGUPPER, SHOWNAMEMAPPING, SHOWNAMEMAPPINGUPPER, \
         USERMOVIENAMEMAPPING, USERMOVIENAMEMAPPINGUPPER, MOVIENAMEMAPPING, MOVIENAMEMAPPINGUPPER, \
@@ -318,7 +319,7 @@ def _initialize_subliminal():
     # Imports
     from subliminal.cache import region
     from subliminal.cli import MutexLock
-    from subliminal.extensions import provider_manager
+    from subliminal.extensions import provider_manager, refiner_manager
 
     # Configure subliminal/dogpile cache
     # Use MutexLock otherwise some providers will not work due to fcntl module import error in windows
@@ -326,6 +327,11 @@ def _initialize_subliminal():
     if not region.is_configured:
         cache_file = os.path.abspath(os.path.expanduser('subliminal.cache.dbm'))
         region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexLock})
+
+    # Add our manual refiner to list of subliminal refiners
+    refiner = 'manual = autosubliminal.refiners.manual:refine'
+    if refiner not in refiner_manager.registered_extensions:
+        refiner_manager.register(refiner)
 
     # Return the provider manager with all providers
     return provider_manager

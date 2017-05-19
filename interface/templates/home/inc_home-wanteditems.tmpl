@@ -142,6 +142,7 @@
                         </a>
                         #end if
                         #end if
+                        #if $autosubliminal.MANUALREFINEVIDEO:
                         <span class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                 <i class="fa fa-pencil" aria-hidden="true" title="Click to manually update show/movie details"></i>
@@ -191,6 +192,7 @@
                                 </li>
                             </ul>
                         </span>
+                        #end if
                     </td>
                     <td class="wanted-item-season">$item['season']</td>
                     <td class="wanted-item-episode">$item['episode']</td>

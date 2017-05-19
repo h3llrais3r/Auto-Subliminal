@@ -111,7 +111,7 @@ def search_subtitle(wanted_item_index, lang):
     log.info("Searching subtitles for video: %s" % wanted_item['videopath'])
 
     # Scan wanted_item for video
-    video = _scan_wanted_item_for_video(wanted_item)
+    video = _scan_wanted_item_for_video(wanted_item, True)
     if video:
         # Search the subtitles with the default minimal score (to get all the possibilities to select from)
         default_min_score = _get_min_match_score(video, True)
@@ -437,14 +437,19 @@ def post_process_no_subtitle(wanted_item_index):
     return processed
 
 
-def _scan_wanted_item_for_video(wanted_item):
+def _scan_wanted_item_for_video(wanted_item, is_manual=False):
     video_path = wanted_item['videopath']
     log.info("Scanning video")
 
     # Scan the video
     try:
         video = subliminal.scan_video(video_path)
+        if is_manual and autosubliminal.MANUALREFINEVIDEO:
+            # Use our manual refiner only for manual search if enabled
+            refiner = ('manual',)
+            subliminal.refine(video, episode_refiners=refiner, movie_refiners=refiner, wanted_item=wanted_item)
         if autosubliminal.REFINEVIDEO:
+            # Use build-in refiners
             subliminal.refine(video)
     except Exception, e:
         log.error("Error while scanning video, skipping %s" % video_path)
