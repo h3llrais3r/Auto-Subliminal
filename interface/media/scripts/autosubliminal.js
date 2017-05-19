@@ -2,9 +2,15 @@
  * Javascript for general Auto-Subliminal stuff
  */
 
+/* ================
+ * Global variables
+ * ================ */
+
+var base_url = window.location.protocol + "//" + window.location.host + webroot;
+
 /* ======
  * Navbar
- *======= */
+ * ====== */
 
 // Handle navbar active navigation button (no submit)
 $(".navbar .nav a").on("click", function () {
@@ -21,7 +27,7 @@ $(document).ready(function () {
 
 /* ========
  * Checkbox
- *========= */
+ * ======== */
 
 // Usage (hidden field reflects the values of the checkbox):
 // <input type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-size="small">

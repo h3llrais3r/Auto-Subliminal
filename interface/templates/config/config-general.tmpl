@@ -10,7 +10,7 @@
 
 <div class="container">
 
-    <form method="post" action="$autosubliminal.WEBROOT/config/general/save">
+    <form>
 
         <div class="panel panel-default">
 
@@ -388,7 +388,7 @@
 
         </div>
 
-        <input type="submit" value="Save" class="btn btn-sm btn-default">
+        <a href="$autosubliminal.WEBROOT/config/general/save" class="btn btn-sm btn-default btn-save">Save</a>
 
     </form>
 
@@ -397,5 +397,7 @@
 #end block bodyContent
 
 #block footerContent
+
+<script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/config.js"></script>
 
 #end block footerContent

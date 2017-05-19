@@ -2,7 +2,6 @@
  * Javascript needed on the restart page
  */
 
-var base_url = window.location.protocol + "//" + window.location.host + webroot;
 var is_alive_url = webroot + "/system/isAlive";
 
 // Function to check if the system is alive

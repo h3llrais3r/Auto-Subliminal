@@ -223,15 +223,13 @@ class Config(object):
         if restart:
             # Restart the runner in the background
             runner.restart_app()
-            tmpl = Template(file="interface/templates/system/system-restart.tmpl")
-            tmpl.message = "Saved config. Auto restart in progress..."
-            return str(tmpl)
+            return {'restart': True}
 
         else:
             # For some reason the config needs to be read again, otherwise all pages get an error
             config.read_config()
             utils.add_notification_message("Config saved")
-            redirect_referer("/config")
+            return {}
 
     @cherrypy.expose
     def index(self):
@@ -247,6 +245,7 @@ class Config(object):
             return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
+        @cherrypy.tools.json_out()
         def save(self, path, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, scandisk,
                  checksub, checkversion, checkversionautoupdate, scanembeddedsubs, skiphiddendirs,
                  detectinvalidsublanguage, detectedlanguageprobability, minvideofilesize, maxdbresults):
@@ -279,6 +278,7 @@ class Config(object):
             return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
+        @cherrypy.tools.json_out()
         def save(self, logfile, loglevel, lognum, logsize, loghttpaccess, logexternallibs, logdetailedformat,
                  logreversed, loglevelconsole):
             # Set logfile variables
@@ -304,6 +304,7 @@ class Config(object):
             return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
+        @cherrypy.tools.json_out()
         def save(self, webserverip, webserverport, webroot, username, password, launchbrowser):
             # Set webserver variables
             autosubliminal.WEBSERVERIP = webserverip
@@ -325,6 +326,7 @@ class Config(object):
             return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
+        @cherrypy.tools.json_out()
         def save(self, manualrefinevideo, refinevideo, preferhearingimpaired, addic7edusername, addic7edpassword,
                  opensubtitlesusername, opensubtitlespassword,
                  showmmsdefault=None, showmmssource=None, showmmsquality=None, showmmscodec=None,
@@ -407,6 +409,7 @@ class Config(object):
             return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
+        @cherrypy.tools.json_out()
         def save(self, usershownamemapping, usermovienamemapping):
             # Set usernamemapping variables
             autosubliminal.USERSHOWNAMEMAPPING = config.string_to_dict(usershownamemapping)
@@ -424,6 +427,7 @@ class Config(object):
             return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
+        @cherrypy.tools.json_out()
         def save(self, skipshow, skipmovie):
             # Set skip variables
             autosubliminal.SKIPSHOW = config.string_to_dict(skipshow)
@@ -441,12 +445,13 @@ class Config(object):
             return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='test')
+        @cherrypy.tools.json_out()
         def test(self, notify_lib):
             if notifiers.test_notifier(notify_lib):
                 utils.add_notification_message("Test notification (%s) sent" % notify_lib)
             else:
                 utils.add_notification_message("Test notification (%s) failed" % notify_lib, "error")
-            redirect("/config/notification")
+            return {}
 
         @cherrypy.expose(alias='regTwitter')
         def reg_twitter(self, token_key=None, token_secret=None, token_pin=None):
@@ -497,6 +502,7 @@ class Config(object):
                     return str(tmpl)
 
         @cherrypy.expose(alias='save')
+        @cherrypy.tools.json_out()
         def save(self, notify,
                  notifymail, mailsrv, mailfromaddr, mailtoaddr, mailusername, mailpassword, mailsubject,
                  mailencryption, mailauth,
@@ -551,6 +557,7 @@ class Config(object):
             return str(Template(file=self.tmpl_file))
 
         @cherrypy.expose(alias='save')
+        @cherrypy.tools.json_out()
         def save(self, postprocess, postprocessindividual, postprocessutf8encoding, showpostprocesscmd,
                  showpostprocesscmdargs, moviepostprocesscmd, moviepostprocesscmdargs):
             # Set postprocessing variables

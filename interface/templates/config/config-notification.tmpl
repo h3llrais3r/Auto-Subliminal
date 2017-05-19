@@ -5,9 +5,11 @@
 
 #block bodyContent
 
+#set saveUrl = $autosubliminal.WEBROOT + "/config/notification/save"
+
 <div class="container">
 
-    <form method="post" action="$autosubliminal.WEBROOT/config/notification/save">
+    <form>
 
         <div class="panel panel-default">
 
@@ -66,7 +68,7 @@
                     <div class="form-group narrow">
                         <span class="col-xs-4 col-md-3"></span>
                         <span class="col-xs-8 col-md-4">
-                            <input type="submit" value="Save" class="btn btn-sm btn-default">
+                            <a href="$saveUrl" class="btn btn-sm btn-default btn-save">Save</a>
                         </span>
                     </div>
 
@@ -256,8 +258,8 @@
                     <div class="form-group narrow">
                         <span class="col-xs-4 col-md-3"></span>
                         <span class="col-xs-8 col-md-4">
-                            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/notification/test/mail'">
-                            <input type="submit" value="Save" class="btn btn-sm btn-default">
+                            <a href="$autosubliminal.WEBROOT/config/notification/test/mail" class="btn btn-sm btn-default btn-test">Test</a>
+                            <a href="$saveUrl" class="btn btn-sm btn-default btn-save">Save</a>
                         </span>
                     </div>
 
@@ -335,8 +337,8 @@
                     <div class="form-group narrow">
                         <span class="col-xs-4 col-md-3"></span>
                         <span class="col-xs-8 col-md-4">
-                            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/notification/test/twitter'">
-                            <input type="submit" value="Save" class="btn btn-sm btn-default">
+                            <a href="$autosubliminal.WEBROOT/config/notification/test/twitter" class="btn btn-sm btn-default btn-test">Test</a>
+                            <a href="$saveUrl" class="btn btn-sm btn-default btn-save">Save</a>
                             <input type="button" value="Register" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/notification/regTwitter'">
                         </span>
                     </div>
@@ -397,8 +399,8 @@
                     <div class="form-group narrow">
                         <span class="col-xs-4 col-md-3"></span>
                         <span class="col-xs-8 col-md-4">
-                            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/notification/test/pushalot'">
-                            <input type="submit" value="Save" class="btn btn-sm btn-default">
+                            <a href="$autosubliminal.WEBROOT/config/notification/test/pushalot" class="btn btn-sm btn-default btn-test">Test</a>
+                            <a href="$saveUrl" class="btn btn-sm btn-default btn-save">Save</a>
                         </span>
                     </div>
 
@@ -497,8 +499,8 @@
                     <div class="form-group narrow">
                         <span class="col-xs-4 col-md-3"></span>
                         <span class="col-xs-8 col-md-4">
-                            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/notification/test/pushover'">
-                            <input type="submit" value="Save" class="btn btn-sm btn-default">
+                            <a href="$autosubliminal.WEBROOT/config/notification/test/pushover" class="btn btn-sm btn-default btn-test">Test</a>
+                            <a href="$saveUrl" class="btn btn-sm btn-default btn-save">Save</a>
                         </span>
                     </div>
 
@@ -558,8 +560,8 @@
                     <div class="form-group narrow">
                         <span class="col-xs-4 col-md-3"></span>
                         <span class="col-xs-8 col-md-4">
-                            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/notification/test/nma'">
-                            <input type="submit" value="Save" class="btn btn-sm btn-default">
+                            <a href="$autosubliminal.WEBROOT/config/notification/test/nma" class="btn btn-sm btn-default btn-test">Test</a>
+                            <a href="$saveUrl" class="btn btn-sm btn-default btn-save">Save</a>
                         </span>
                     </div>
 
@@ -655,8 +657,8 @@
                     <div class="form-group narrow">
                         <span class="col-xs-4 col-md-3"></span>
                         <span class="col-xs-8 col-md-4">
-                            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/notification/test/growl'">
-                            <input type="submit" value="Save" class="btn btn-sm btn-default">
+                            <a href="$autosubliminal.WEBROOT/config/notification/test/growl" class="btn btn-sm btn-default btn-test">Test</a>
+                            <a href="$saveUrl" class="btn btn-sm btn-default btn-save">Save</a>
                         </span>
                     </div>
 
@@ -746,8 +748,8 @@
                     <div class="form-group narrow">
                         <span class="col-xs-4 col-md-3"></span>
                         <span class="col-xs-8 col-md-4">
-                            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/notification/test/prowl'">
-                            <input type="submit" value="Save" class="btn btn-sm btn-default">
+                            <a href="$autosubliminal.WEBROOT/config/notification/test/prowl" class="btn btn-sm btn-default btn-test">Test</a>
+                            <a href="$saveUrl" class="btn btn-sm btn-default btn-save">Save</a>
                         </span>
                     </div>
 
@@ -810,8 +812,8 @@
                     <div class="form-group narrow">
                         <span class="col-xs-4 col-md-3"></span>
                         <span class="col-xs-8 col-md-4">
-                            <input type="button" value="Test" class="btn btn-sm btn-default" onClick="parent.location='$autosubliminal.WEBROOT/config/notification/test/pushbullet'">
-                            <input type="submit" value="Save" class="btn btn-sm btn-default">
+                            <a href="$autosubliminal.WEBROOT/config/notification/test/pushbullet" class="btn btn-sm btn-default btn-test">Test</a>
+                            <a href="$saveUrl" class="btn btn-sm btn-default btn-save">Save</a>
                         </span>
                     </div>
 
@@ -821,7 +823,7 @@
 
         </div>
 
-        <input type="submit" value="Save" class="btn btn-sm btn-default">
+        <a href="$saveUrl" class="btn btn-sm btn-default btn-save">Save</a>
 
     </form>
 
@@ -830,5 +832,7 @@
 #end block bodyContent
 
 #block footerContent
+
+<script type="text/javascript" src="$autosubliminal.WEBROOT/scripts/config.js"></script>
 
 #end block footerContent
