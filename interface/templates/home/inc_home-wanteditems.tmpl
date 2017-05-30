@@ -62,7 +62,7 @@
                     <td class="hidden">$item['type']</td>
                     <td>
                         <span class="dropdown">
-                            <a class="dropdown-toggle wanted-item-title main-column" data-toggle="dropdown" title="Click to skip" href="#">$display_title($item)</a>
+                            <a class="dropdown-toggle wanted-item-title main-column" data-toggle="dropdown" title="Click to skip">$display_title($item)</a>
                             #if $item['type'] == 'episode':
                             <ul class="dropdown-menu has-tip">
                                 <li>
@@ -93,7 +93,7 @@
                             #end if
                         </span>
                         <span class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <a class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
                             </a>
                             <ul class="dropdown-menu has-tip info-list">
@@ -110,7 +110,7 @@
                         #if $item['type'] == 'episode':
                         #if not $item['tvdbid']:
                         <span class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <a class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-exclamation-triangle" aria-hidden="true" title="Tvdb id could not be found!"></i>
                             </a>
                             <ul class="dropdown-menu has-tip info-list">
@@ -127,7 +127,7 @@
                         #else if $item['type'] == 'movie':
                         #if not $item['imdbid']:
                         <span class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <a class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-exclamation-triangle" aria-hidden="true" title="Imdb id could not be found!"></i>
                             </a>
                             <ul class="dropdown-menu has-tip info-list">
@@ -144,7 +144,7 @@
                         #end if
                         #if $autosubliminal.MANUALREFINEVIDEO:
                         <span class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <a class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="fa fa-pencil" aria-hidden="true" title="Click to manually update show/movie details"></i>
                             </a>
                             <ul class="dropdown-menu has-tip info-list">
@@ -212,7 +212,7 @@
                         #for $lang in $item['languages']
                         #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
                         <span class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <a class="dropdown-toggle" data-toggle="dropdown">
                                 <img src="$imageurl" alt="$lang" title="Click to search manually">
                             </a>
                             <ul class="dropdown-menu pull-right no-padding">
