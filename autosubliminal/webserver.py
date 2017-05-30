@@ -46,7 +46,8 @@ class Home(object):
             if key in wanted_item.keys():
                 wanted_item[key] = kwargs[key]
         # Only return updatable fields
-        return {'title': utils.display_title(wanted_item),
+        return {'displaytitle': utils.display_title(wanted_item),
+                'title': utils.display_item(wanted_item, 'title', default_value=''),
                 'year': utils.display_item(wanted_item, 'year', default_value=''),
                 'season': utils.display_item(wanted_item, 'season', default_value=''),
                 'episode': utils.display_item(wanted_item, 'episode', default_value=''),
@@ -54,6 +55,25 @@ class Home(object):
                 'quality': utils.display_item(wanted_item, 'quality', uppercase=True),
                 'codec': utils.display_item(wanted_item, 'codec', uppercase=True),
                 'releasegrp': utils.display_item(wanted_item, 'releasegrp', uppercase=True)}
+
+    @cherrypy.expose(alias='resetWantedItem')
+    @cherrypy.tools.json_out()
+    def reset_wanted_item(self, wanted_item_index, **kwargs):
+        # Get wanted item
+        wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+        wanted_item_db = WantedItems().get_wanted_item(wanted_item['videopath'])
+        for key in wanted_item.keys():
+            wanted_item[key] = wanted_item_db[key]
+        # Only return updatable fields
+        return {'displaytitle': utils.display_title(wanted_item),
+                'title': utils.display_item(wanted_item, 'title', default_value=''),
+                'year': utils.display_item(wanted_item, 'year', default_value=''),
+                'season': utils.display_item(wanted_item, 'season', default_value=''),
+                'episode': utils.display_item(wanted_item, 'episode', default_value=''),
+                'source': utils.display_item(wanted_item, 'source'),
+                'quality': utils.display_item(wanted_item, 'quality'),
+                'codec': utils.display_item(wanted_item, 'codec'),
+                'releasegrp': utils.display_item(wanted_item, 'releasegrp')}
 
     @cherrypy.expose(alias='searchId')
     def force_id_search(self, wanted_item_index):

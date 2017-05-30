@@ -127,7 +127,43 @@ $(".update-wanted-item-link").click(function (event) {
             link.closest('.dropdown').find('.dropdown-toggle').dropdown("toggle");
             // Update wanted item
             var wantedItem = link.closest(".wanted-item");
-            wantedItem.find(".wanted-item-title").text(data.title);
+            wantedItem.find(".wanted-item-title").text(data.displaytitle);
+            wantedItem.find(".wanted-item-season").text(data.season);
+            wantedItem.find(".wanted-item-episode").text(data.episode);
+            wantedItem.find(".wanted-item-source").text(data.source);
+            wantedItem.find(".wanted-item-quality").text(data.quality);
+            wantedItem.find(".wanted-item-codec").text(data.codec);
+            wantedItem.find(".wanted-item-releasegrp").text(data.releasegrp);
+        }
+    });
+    return false;
+});
+
+// Activate the reset-wanted-item-link
+$(".reset-wanted-item-link").click(function (event) {
+    // prevent default behaviour
+    event.preventDefault();
+    // define variables
+    var link = $(this);
+    var resetUrl = link.attr("href");
+    var updatePanel = $(this).closest(".panel-body");
+    // call the resetUrl
+    $.get(resetUrl, function (data) {
+        if (data) {
+            // Close the dropdown
+            link.closest('.dropdown').find('.dropdown-toggle').dropdown("toggle");
+            // Update update panel
+            updatePanel.find("input.update-wanted-item-title").val(data.title);
+            updatePanel.find("input.update-wanted-item-year").val(data.year);
+            updatePanel.find("input.update-wanted-item-season").val(data.season);
+            updatePanel.find("input.update-wanted-item-episode").val(data.episode);
+            updatePanel.find("input.update-wanted-item-source").val(data.source);
+            updatePanel.find("input.update-wanted-item-quality").val(data.quality);
+            updatePanel.find("input.update-wanted-item-codec").val(data.codec);
+            updatePanel.find("input.update-wanted-item-releasegrp").val(data.releasegrp);
+            // Update wanted item
+            var wantedItem = link.closest(".wanted-item");
+            wantedItem.find(".wanted-item-title").text(data.displaytitle);
             wantedItem.find(".wanted-item-season").text(data.season);
             wantedItem.find(".wanted-item-episode").text(data.episode);
             wantedItem.find(".wanted-item-source").text(data.source);
