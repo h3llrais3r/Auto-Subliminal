@@ -52,6 +52,10 @@ nav {
  * DROPDOWN STYLING *
  ********************/
 
+.dropdown-toggle {
+    cursor: pointer;
+}
+
 .dropdown-toggle:hover, .dropdown-toggle:active, .dropdown-toggle:focus {
     text-decoration: none; /* Remove underline after icon on hover, active and focus */
 }
@@ -226,9 +230,9 @@ table.tablesorter thead tr .tablesorter-headerDesc {
 }
 
 table.tablesorter thead tr .sorter-false {
-	background-image: none;
-	cursor: default;
-	padding: 4px;
+    background-image: none;
+    cursor: default;
+    padding: 4px;
 }
 
 table.tablesorter tbody td {
@@ -376,7 +380,7 @@ table.tablesorter tbody td {
 }
 
 .main-column {
-    color: inherit;
+    /*color: inherit;*/
     font-weight: bold;
     text-decoration: none !important;
 }
