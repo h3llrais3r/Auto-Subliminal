@@ -671,6 +671,16 @@ class System(object):
         tmpl = Template(file="interface/templates/system/system-status.tmpl")
         return str(tmpl)
 
+    @cherrypy.expose(alias='scanDisk')
+    def scan_disk(self):
+        autosubliminal.SCANDISK.run()
+        redirect_referer("/home")
+
+    @cherrypy.expose(alias='checkSub')
+    def check_sub(self):
+        autosubliminal.CHECKSUB.run()
+        redirect_referer("/home")
+
     @cherrypy.expose(alias='checkVersion')
     def check_version(self):
         autosubliminal.CHECKVERSION.run()
