@@ -48,6 +48,14 @@ nav {
     background-color: #eeeeee;
 }
 
+/*********************
+ * ICON LINK STYLING *
+ *********************/
+
+a:hover, a:active, a:focus, a:visited > .fa {
+    text-decoration: none; /* Remove underline after icon on hover, active, focus and visited */
+}
+
 /********************
  * DROPDOWN STYLING *
  ********************/
@@ -56,8 +64,8 @@ nav {
     cursor: pointer;
 }
 
-.dropdown-toggle:hover, .dropdown-toggle:active, .dropdown-toggle:focus {
-    text-decoration: none; /* Remove underline after icon on hover, active and focus */
+.dropdown-toggle:hover, .dropdown-toggle:active, .dropdown-toggle:focus, .dropdown-toggle:visited {
+    text-decoration: none; /* Remove underline after icon on hover, active, focus and visited */
 }
 
 /*************************
@@ -351,8 +359,8 @@ table.tablesorter tbody td {
     margin: 0px;
 }
 
-.container-manualsearch .subtitle-action:hover, .container-manualsearch .subtitle-action:active, .container-manualsearch .subtitle-action:focus {
-    text-decoration: none; /* Remove underline after icon on hover, active and focus */
+.container-manualsearch .subtitle-action:hover, .container-manualsearch .subtitle-action:active, .container-manualsearch .subtitle-action:focus, .container-manualsearch .subtitle-action:visited {
+    text-decoration: none; /* Remove underline after icon on hover, active, focus and visited */
 }
 
 .container-manualsearch .subtitle-preview {
