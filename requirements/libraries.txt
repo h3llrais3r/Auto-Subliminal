@@ -30,7 +30,7 @@ pynma==1.0
 pynmwp==0.1
 pysrt==1.0.1
 pythontwitter==1.0.1
-python-dateutil==2.4.2
+python-dateutil==2.6.1
 pytz==2016.4
 pyxdg==0.25
 rarfile==2.7
