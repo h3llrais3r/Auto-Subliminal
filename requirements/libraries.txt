@@ -5,6 +5,7 @@ cheetah>=2.4.4
 appdirs==1.4.0
 babelfish==0.5.5
 beautifulsoup4==4.4.0
+certifi==2017.11.5
 charade==1.0.3
 chardet==2.3.0
 cherrypy==8.1.0
