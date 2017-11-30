@@ -75,21 +75,24 @@ class ShowIndexer(Indexer):
                 continue
 
     def get_tvdb_id(self, title, year=None, force_search=False, store_id=True):
-        log.debug("Getting tvdb id for %s" % title)
         tvdb_id = None
+        name = title
+        if year:
+            name += " (" + str(year) + ")"
+        log.debug("Getting tvdb id for %s" % name)
         # If not force_search, first check shownamemapping and tvdb id cache
         if not force_search:
             # Check shownamemapping
-            tvdb_id = utils.show_name_mapping(title)
+            tvdb_id = utils.show_name_mapping(name)
             if tvdb_id:
                 log.debug("Tvdb id from shownamemapping %s" % tvdb_id)
                 return int(tvdb_id)
             # Check tvdb id cache
-            tvdb_id = TvdbIdCache().get_id(title)
+            tvdb_id = TvdbIdCache().get_id(name)
             if tvdb_id:
                 log.debug("Getting tvdb id from cache %s" % tvdb_id)
                 if tvdb_id == -1:
-                    log.error("Tvdb id not found in cache for %s" % title)
+                    log.error("Tvdb id not found in cache for %s" % name)
                     return
                 return int(tvdb_id)
         # Search on tvdb
@@ -98,15 +101,15 @@ class ShowIndexer(Indexer):
             if show:
                 tvdb_id = show.id
         except Exception, e:
-            log.error("Tvdb id not found for %s" % title)
+            log.error("Tvdb id not found for %s" % name)
             log.error(e)
             if store_id:
-                TvdbIdCache().set_id(-1, title)
+                TvdbIdCache().set_id(-1, name)
         if tvdb_id:
             log.debug("Tvdb id from api %s" % tvdb_id)
             if store_id:
-                TvdbIdCache().set_id(tvdb_id, title)
-                log.info("%s added to cache with %s" % (title, tvdb_id))
+                TvdbIdCache().set_id(tvdb_id, name)
+                log.info("%s added to cache with %s" % (name, tvdb_id))
             return int(tvdb_id)
 
 

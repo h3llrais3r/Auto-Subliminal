@@ -136,7 +136,7 @@ def _enrich_dict(result_dict, file_path):
 
     # Enrich with episode data
     if result_dict['type'] == 'episode':
-        result_dict['tvdbid'] = autosubliminal.SHOWINDEXER.get_tvdb_id(result_dict['title'])
+        result_dict['tvdbid'] = autosubliminal.SHOWINDEXER.get_tvdb_id(result_dict['title'], result_dict['year'])
 
     # Enrich with movie data
     elif result_dict['type'] == 'movie':
