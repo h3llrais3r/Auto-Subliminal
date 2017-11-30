@@ -8,7 +8,6 @@ from ConfigParser import SafeConfigParser
 
 import autosubliminal
 from autosubliminal import utils, version
-from autosubliminal.indexer import ShowIndexer
 
 log = logging.getLogger(__name__)
 
@@ -1497,7 +1496,7 @@ def upgrade_config(from_version, to_version):
             print "INFO: Replacing old user namemappings with tvdb id's."
             for x in autosubliminal.USERSHOWNAMEMAPPING.keys():
                 # Search for tvdb id
-                tvdb_id = ShowIndexer().get_tvdb_id(x, force_search=True)
+                tvdb_id = autosubliminal.SHOWINDEXER.get_tvdb_id(x, force_search=True)
                 # Replace by tvdb id or remove namemapping
                 if tvdb_id:
                     autosubliminal.USERSHOWNAMEMAPPING[x] = str(tvdb_id)

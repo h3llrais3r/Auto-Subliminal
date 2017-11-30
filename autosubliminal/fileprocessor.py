@@ -2,7 +2,6 @@ import logging
 import os
 import re
 import time
-from autosubliminal.indexer import ShowIndexer, MovieIndexer
 
 from guessit import guessit
 
@@ -137,11 +136,12 @@ def _enrich_dict(result_dict, file_path):
 
     # Enrich with episode data
     if result_dict['type'] == 'episode':
-        result_dict['tvdbid'] = ShowIndexer().get_tvdb_id(result_dict['title'])
+        result_dict['tvdbid'] = autosubliminal.SHOWINDEXER.get_tvdb_id(result_dict['title'])
 
     # Enrich with movie data
     elif result_dict['type'] == 'movie':
-        result_dict['imdbid'], result_dict['year'] = MovieIndexer().get_imdb_id_and_year(result_dict['title'],
-                                                                                         result_dict['year'])
+        result_dict['imdbid'], result_dict['year'] = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(
+            result_dict['title'],
+            result_dict['year'])
 
     log.debug("Enriched dict: %r" % result_dict)

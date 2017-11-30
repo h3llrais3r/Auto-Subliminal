@@ -3,6 +3,7 @@ import time
 import pkg_resources
 
 from autosubliminal import version, config, logger, db
+from autosubliminal.indexer import ShowIndexer, MovieIndexer
 
 # Config
 CONFIGFILE = None
@@ -26,6 +27,10 @@ SCHEDULERS = None
 SCANDISK = None
 CHECKSUB = None
 CHECKVERSION = None
+
+# Indexers
+SHOWINDEXER = None
+MOVIEINDEXER = None
 
 # Db
 DBFILE = None
@@ -177,6 +182,7 @@ def initialize():
     global CONFIGFILE, CONFIGVERSION, CONFIGUPGRADED, \
         DEREFERURL, TVDBURL, IMDBURL, GITHUBURL, VERSIONURL, USERAGENT, SYSENCODING, TIMEOUT, MESSAGEQUEUE, \
         WANTEDQUEUE, WANTEDQUEUELOCK, WEBSOCKETBROADCASTER, SCHEDULERS, SCANDISK, CHECKSUB, CHECKVERSION, \
+        SHOWINDEXER, MOVIEINDEXER, \
         DBFILE, DBVERSION, \
         DAEMON, STARTED, PID, \
         MOBILE, MOBILEUSERAGENTS, \
@@ -236,6 +242,10 @@ def initialize():
 
     # Scheduler settings
     SCHEDULERS = {}
+
+    # Indexer settings
+    SHOWINDEXER = ShowIndexer()
+    MOVIEINDEXER = MovieIndexer()
 
     # Startup settings
     STARTED = False
