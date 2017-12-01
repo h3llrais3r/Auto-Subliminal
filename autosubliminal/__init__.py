@@ -47,14 +47,6 @@ PID = None
 MOBILE = None
 MOBILEUSERAGENTS = None
 
-# API
-APIKEY = None
-API = None
-APICALLS = None
-APICALLSLASTRESET = None
-APICALLSRESETINT = None
-APICALLSMAX = None
-
 # General config section
 PATH = None
 VIDEOPATHS = None
@@ -186,7 +178,6 @@ def initialize():
         DBFILE, DBVERSION, \
         DAEMON, STARTED, PID, \
         MOBILE, MOBILEUSERAGENTS, \
-        APIKEY, API, APICALLS, APICALLSLASTRESET, APICALLSRESETINT, APICALLSMAX, \
         PATH, VIDEOPATHS, DEFAULTLANGUAGE, DEFAULTLANGUAGESUFFIX, ADDITIONALLANGUAGES, \
         SCANDISKINTERVAL, CHECKSUBINTERVAL, CHECKVERSIONINTERVAL, CHECKVERSIONAUTOUPDATE, SCANEMBEDDEDSUBS, \
         SKIPHIDDENDIRS, DETECTINVALIDSUBLANGUAGE, DETECTEDLANGUAGEPROBABILITY, MINVIDEOFILESIZE, MAXDBRESULTS, \
@@ -257,15 +248,6 @@ def initialize():
                         "benq", "mda", "mot-", "opera mini", "philips", "pocket pc", "sagem",
                         "samsung", "sda", "sgh-", "vodafone", "xda", "palm", "iphone", "ipod",
                         "ipad", "android", "windows phone"]
-
-    # API settings
-    # Currently not used anymore (perhaps reuse it for tvdb api calls when a custom tvdb api key is needed?)
-    APIKEY = ""
-    API = "http://.../%s/" % APIKEY
-    APICALLSLASTRESET = time.time()
-    APICALLSRESETINT = 86400
-    APICALLSMAX = 300
-    APICALLS = APICALLSMAX
 
     # Score settings
     SHOWMINMATCHSCOREDEFAULT = 330

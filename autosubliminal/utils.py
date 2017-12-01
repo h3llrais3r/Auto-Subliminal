@@ -162,24 +162,6 @@ def skip_movie(title, year):
         return True
 
 
-def check_apicalls(use=False):
-    log.debug("Checking api calls")
-    currentime = time.time()
-    lastrun = autosubliminal.APICALLSLASTRESET
-    interval = autosubliminal.APICALLSRESETINT
-
-    if currentime - lastrun > interval:
-        autosubliminal.APICALLS = autosubliminal.APICALLSMAX
-        autosubliminal.APICALLSLASTRESET = time.time()
-
-    if autosubliminal.APICALLS > 0:
-        if use:
-            autosubliminal.APICALLS -= 1
-        return True
-    else:
-        return False
-
-
 def get_logfile(lognum=None):
     logfile = autosubliminal.LOGFILE
     if lognum:

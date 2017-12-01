@@ -686,7 +686,7 @@ def read_config():
 
     if cfg.has_section('dev'):
         if cfg.has_option('dev', 'apikey'):
-            autosubliminal.APIKEY = cfg.get('dev', 'apikey')
+            pass
 
     # Check if config needs to be upgraded
     if autosubliminal.CONFIGVERSION < version.CONFIG_VERSION:
