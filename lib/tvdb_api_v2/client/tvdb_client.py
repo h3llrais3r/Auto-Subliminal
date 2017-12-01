@@ -27,8 +27,8 @@ class TvdbClient(object):
     # AuthenticationApi #
     #####################
 
-    def authenticate(self):
-        """Authenticate and return the authorization token.
+    def login(self):
+        """Login and return the authentication token.
 
         :return: The authentication token.
         :rtype: str
@@ -38,7 +38,7 @@ class TvdbClient(object):
         return token.token
 
     def refresh_token(self):
-        """Refresh the authorization token.
+        """Refresh the authentication token.
 
         :return: The authentication token.
         :rtype: str
@@ -48,7 +48,7 @@ class TvdbClient(object):
         return token.token
 
     def clear_token(self):
-        """Clear the authorization token."""
+        """Clear the authentication token."""
         # Use with None otherwise a KeyError is raised
         self.configuration.api_key.pop('Authorization', None)
 
