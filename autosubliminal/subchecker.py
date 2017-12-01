@@ -213,8 +213,10 @@ def force_id_search(wanted_item_index):
     year = wanted_item['year']
     if wanted_item['type'] == 'episode':
         wanted_item['tvdbid'] = autosubliminal.SHOWINDEXER.get_tvdb_id(title, year, force_search=True)
+        WantedItems().update_wanted_item(wanted_item)
     elif wanted_item['type'] == 'movie':
         wanted_item['imdbid'], wanted_item['year'] = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(title, year, True)
+        WantedItems().update_wanted_item(wanted_item)
 
     # Release wanted queue lock
     utils.release_wanted_queue_lock()
