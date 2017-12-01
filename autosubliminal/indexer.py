@@ -1,5 +1,7 @@
 import abc
 import logging
+
+from functools import wraps
 from time import time
 
 from imdb import IMDb
@@ -10,6 +12,22 @@ from autosubliminal import utils
 from autosubliminal.db import ImdbIdCache, TvdbIdCache
 
 log = logging.getLogger(__name__)
+
+
+def authenticate(func):
+    """Decorator for :class:ShowIndexer methods that require authentication"""
+
+    @wraps(func)
+    def wrapper(self, *args, **kwargs):
+        if not self._token or self._token_expired:
+            self._token = self._client.login()
+            self._token_generation_time = time()
+        elif self._token_needs_refresh:
+            self._token = self._client.refresh_token()
+            self._token_generation_time = time()
+        return func(self, *args, **kwargs)
+
+    return wrapper
 
 
 class Indexer(object):
@@ -31,9 +49,9 @@ class ShowIndexer(Indexer):
     def __init__(self):
         self._client = TvdbClient(api_key=autosubliminal.TVDBAPIKEY)
         # Currently, the token expires after 24 hours, see https://api.thetvdb.com/swagger
-        # Let's refresh it every 12h at our side
+        # Let's refresh it every 2h at our side
         self._token_expiration_interval = 24 * 60 * 60
-        self._token_refresh_interval = 12 * 60 * 60
+        self._token_refresh_interval = 2 * 60 * 60
         self._token_generation_time = None
         self._token = None
 
@@ -47,22 +65,13 @@ class ShowIndexer(Indexer):
         """Check if authentication has expired."""
         return time() >= self._token_generation_time + self._token_expiration_interval
 
-    def _authenticate(self):
-        """Authenticate or refresh token."""
-        if not self._token or self._token_expired:
-            self._token = self._client.authenticate()
-            self._token_generation_time = time()
-        elif self._token_needs_refresh:
-            self._token = self._client.refresh_token()
-            self._token_generation_time = time()
-
+    @authenticate
     def _query_api(self, title, year=None):
         name = title
         if year:
             name += " (" + str(year) + ")"
         log.info("Querying tvdb api for %s" % name)
         # Return a tvdb_api_v2.models.series_search.SeriesSearch object
-        self._authenticate()
         series_search = self._client.search_series_by_name(name)
         for series_search_data in series_search.data:
             if series_search_data.series_name.lower() == name.lower():
