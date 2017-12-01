@@ -12,8 +12,6 @@ CONFIGUPGRADED = None
 
 # System
 DEREFERURL = None
-TVDBURL = None
-IMDBURL = None
 GITHUBURL = None
 VERSIONURL = None
 USERAGENT = None
@@ -29,6 +27,9 @@ CHECKSUB = None
 CHECKVERSION = None
 
 # Indexers
+TVDBAPIKEY = None
+TVDBURL = None
+IMDBURL = None
 SHOWINDEXER = None
 MOVIEINDEXER = None
 
@@ -172,9 +173,9 @@ MOVIEPOSTPROCESSCMDARGS = None
 
 def initialize():
     global CONFIGFILE, CONFIGVERSION, CONFIGUPGRADED, \
-        DEREFERURL, TVDBURL, IMDBURL, GITHUBURL, VERSIONURL, USERAGENT, SYSENCODING, TIMEOUT, MESSAGEQUEUE, \
+        DEREFERURL, GITHUBURL, VERSIONURL, USERAGENT, SYSENCODING, TIMEOUT, MESSAGEQUEUE, \
         WANTEDQUEUE, WANTEDQUEUELOCK, WEBSOCKETBROADCASTER, SCHEDULERS, SCANDISK, CHECKSUB, CHECKVERSION, \
-        SHOWINDEXER, MOVIEINDEXER, \
+        TVDBAPIKEY, TVDBURL, IMDBURL, SHOWINDEXER, MOVIEINDEXER, \
         DBFILE, DBVERSION, \
         DAEMON, STARTED, PID, \
         MOBILE, MOBILEUSERAGENTS, \
@@ -213,12 +214,10 @@ def initialize():
     _init_langdetect()
 
     # System settings
-    DEREFERURL = "http://www.dereferer.org/?"
-    TVDBURL = "http://thetvdb.com/?tab=series&id="
-    IMDBURL = "http://www.imdb.com/title/tt"
-    GITHUBURL = "https://github.com/h3llrais3r/Auto-Subliminal"
-    VERSIONURL = "https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py"
-    USERAGENT = "Auto-Subliminal/" + version.RELEASE_VERSION
+    DEREFERURL = 'http://www.dereferer.org/?'
+    GITHUBURL = 'https://github.com/h3llrais3r/Auto-Subliminal'
+    VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py'
+    USERAGENT = 'Auto-Subliminal/' + version.RELEASE_VERSION
 
     # Default http timeout
     TIMEOUT = 300
@@ -235,6 +234,9 @@ def initialize():
     SCHEDULERS = {}
 
     # Indexer settings
+    TVDBAPIKEY = '76F2D5362F45C5EC'
+    TVDBURL = 'http://thetvdb.com/?tab=series&id='
+    IMDBURL = 'http://www.imdb.com/title/tt'
     SHOWINDEXER = ShowIndexer()
     MOVIEINDEXER = MovieIndexer()
 

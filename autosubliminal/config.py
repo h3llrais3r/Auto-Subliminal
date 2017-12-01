@@ -686,7 +686,7 @@ def read_config():
 
     if cfg.has_section('dev'):
         if cfg.has_option('dev', 'apikey'):
-            pass
+            autosubliminal.TVDBAPIKEY = cfg.get('dev', 'tvdbapikey')
 
     # Check if config needs to be upgraded
     if autosubliminal.CONFIGVERSION < version.CONFIG_VERSION:

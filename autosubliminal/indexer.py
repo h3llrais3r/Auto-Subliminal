@@ -5,6 +5,7 @@ from time import time
 from imdb import IMDb
 from tvdb_api_v2.client import TvdbClient
 
+import autosubliminal
 from autosubliminal import utils
 from autosubliminal.db import ImdbIdCache, TvdbIdCache
 
@@ -28,7 +29,7 @@ class ShowIndexer(Indexer):
     """
 
     def __init__(self):
-        self._client = TvdbClient()
+        self._client = TvdbClient(api_key=autosubliminal.TVDBAPIKEY)
         # Currently, the token expires after 24 hours, see https://api.thetvdb.com/swagger
         # Let's refresh it every 12h at our side
         self._token_expiration_interval = 24 * 60 * 60
