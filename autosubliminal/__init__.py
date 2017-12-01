@@ -1,5 +1,4 @@
 import os
-import time
 import pkg_resources
 
 from autosubliminal import version, config, logger, db
