@@ -245,11 +245,11 @@ def initialize():
 
     # Mobile settings
     MOBILE = True
-    MOBILEUSERAGENTS = ["midp", "240x320", "blackberry", "netfront", "nokia", "panasonic",
-                        "portalmmm", "sharp", "sie-", "sonyericsson", "symbian", "windows ce",
-                        "benq", "mda", "mot-", "opera mini", "philips", "pocket pc", "sagem",
-                        "samsung", "sda", "sgh-", "vodafone", "xda", "palm", "iphone", "ipod",
-                        "ipad", "android", "windows phone"]
+    MOBILEUSERAGENTS = ['midp', '240x320', 'blackberry', 'netfront', 'nokia', 'panasonic',
+                        'portalmmm', 'sharp', 'sie-', 'sonyericsson', 'symbian', 'windows ce',
+                        'benq', 'mda', 'mot-', 'opera mini', 'philips', 'pocket pc', 'sagem',
+                        'samsung', 'sda', 'sgh-', 'vodafone', 'xda', 'palm', 'iphone', 'ipod',
+                        'ipad', 'android', 'windows phone']
 
     # Score settings
     SHOWMINMATCHSCOREDEFAULT = 330
@@ -261,7 +261,7 @@ def initialize():
     # Config file settings
     CONFIGUPGRADED = False
     if CONFIGFILE is None:
-        CONFIGFILE = "config.properties"
+        CONFIGFILE = 'config.properties'
     config.read_config()
     if CONFIGUPGRADED:
         print "INFO: Config seems to be upgraded. Writing config."
