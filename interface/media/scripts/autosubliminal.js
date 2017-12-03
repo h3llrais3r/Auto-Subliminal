@@ -114,40 +114,43 @@ PNotify.prototype.options.delay = 5000;
 PNotify.prototype.options.desktop.desktop = true; // Use desktop notifications
 PNotify.desktop.permission(); // Check for permission for desktop notifications
 
-// Set the get_message_url variable
-var get_message_url = webroot + "/system/getMessage";
-
-// Function to check if a notification message is available to show
-function get_message() {
-    $.get(get_message_url, function (data) {
-        if (!jQuery.isEmptyObject(data)) {
-            _show_message(data['message'], data['message_type'], data['sticky'])
-        }
-        setTimeout(get_message, 3000);
-    });
-}
+/* ==========
+ * Websockets
+ * ========== */
 
 // Set the websocket_message_url variable
 var websocket_message_url = "ws://" + window.location.host + "/" + webroot + "/system/message"
 
 // Function to get a message through websocket
-function get_message_through_websocket(text_message) {
-    data = text_message.data;
+function get_message_through_websocket(message) {
+    data = message.data;
     // console.log('Received websocket message: ' + data);
     if (!jQuery.isEmptyObject(data)) {
         data_json = jQuery.parseJSON(data);
-        _show_message(data_json['message'], data_json['message_type'], data_json['sticky']);
+        _handle_message_data(data_json);
+    }
+}
+
+function _handle_message_data(message) {
+    if (message['message_type'] == 'notification') {
+        var notification = message['notification'];
+        _show_notification(notification['notification_message'], notification['notification_type'], notification['sticky']);
+    } else if (message['message_type'] == 'event') {
+        var event = data_json['event'];
+        _handle_event(event['event_type']);
+    } else {
+        console.error('Unsupported message: ' + message)
     }
 }
 
 // Function to show a notification message
-function _show_message(message, message_type, sticky) {
+function _show_notification(message, type, sticky) {
     // Sticky location - use stack_context
     if (sticky) {
         new PNotify({
             title: false, // Remove title
             text: message,
-            type: message_type,
+            type: type,
             hide: false, // Disable fading
             width: "350px",
             addclass: "stack-context",
@@ -162,16 +165,24 @@ function _show_message(message, message_type, sticky) {
         new PNotify({
             title: 'Auto-Subliminal',
             text: message,
-            type: message_type
+            type: type
         });
     }
 }
 
-// Activate the message notification system (choose between polling or websocket)
+function _handle_event(event_type) {
+    if (event_type == 'HOME_PAGE_RELOAD') {
+        // only reload when we are actually on the home page
+        if (window.location.pathname.indexOf('/home') > 0) {
+            window.location.reload();
+        }
+    } else {
+        console.error('Unsupported event: ' + event_type);
+    }
+}
+
+// Activate the websocket message system
 $(document).ready(function () {
-    // Use poling mechanism
-    // get_message();
-    // Use websocket mechanism
     ws = new WebSocket(websocket_message_url);
     ws.onmessage = get_message_through_websocket;
     // console.log("Websocket ready to receive messages");

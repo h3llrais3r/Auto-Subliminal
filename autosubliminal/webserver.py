@@ -744,15 +744,6 @@ class System(object):
         else:
             return callback + '(' + json.dumps({"msg": "False"}) + ');'
 
-    @cherrypy.expose(alias='getMessage')
-    @cherrypy.tools.json_out()
-    def get_message(self, *args, **kwargs):
-        # Get message
-        if len(autosubliminal.MESSAGEQUEUE) > 0:
-            return autosubliminal.MESSAGEQUEUE.pop(0)
-        else:
-            return {}
-
     @cherrypy.expose
     def message(self):
         # Handle message via websocket (no logic needed for now)

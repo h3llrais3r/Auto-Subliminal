@@ -25,18 +25,31 @@ LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d
                         re.IGNORECASE)
 
 
-def add_notification_message(message, message_type='info', sticky=False):
+def add_event_message(event_type):
     """
-    Add a notification message with a specific message type.
-    Possible values for message type are (to be in sync with PNotify jquery plugin):
+    Add an event message. The event type decides the event to handle.
+    Possible values for event type are:
+    - HOME_PAGE_RELOAD
+    """
+    event = {'event_type': event_type}
+    message_dict = {'message_type': 'event', 'event': event}
+    autosubliminal.MESSAGEQUEUE.append(message_dict)
+
+
+def add_notification_message(notification_message, notification_type='info', sticky=False):
+    """
+    Add a notification message with a specific notification type.
+    Possible values for notification type are (to be in sync with PNotify jquery plugin):
     - info (blue)
     - success (green)
     - notice (orange)
     - error (red)
     Sticky indicates that it will be shown at a fixed inline location and it will not fade.
     """
-    message_dict = {'message': message, 'message_type': message_type, 'sticky': sticky}
-    # Add message to dict
+    notification = {'notification_message': notification_message,
+                    'notification_type': notification_type,
+                    'sticky': sticky}
+    message_dict = {'message_type': 'notification', 'notification': notification}
     autosubliminal.MESSAGEQUEUE.append(message_dict)
 
 
