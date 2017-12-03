@@ -173,7 +173,7 @@ function _show_notification(message, type, sticky) {
 function _handle_event(event_type) {
     if (event_type == 'HOME_PAGE_RELOAD') {
         // only reload when we are actually on the home page
-        if (window.location.pathname.indexOf('/home') > 0) {
+        if (window.location.pathname.indexOf('/home') >= 0) {
             window.location.reload();
         }
     } else {
