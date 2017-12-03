@@ -109,12 +109,13 @@
             </table>
 
             <div id="lastdownloadspager" class="pager">
-                <img src="/images/tablesorter/first.png" class="first"/>
-                <img src="/images/tablesorter/prev.png" class="prev"/>
+                #set $image_base_url = $autosubliminal.WEBROOT + "/images/tablesorter"
+                <img src="$image_base_url/first.png" class="first"/>
+                <img src="$image_base_url/prev.png" class="prev"/>
                 <span class="pagedisplay"></span>
                 <!-- this can be any element, including an input -->
-                <img src="/images/tablesorter/next.png" class="next"/>
-                <img src="/images/tablesorter/last.png" class="last"/>
+                <img src="$image_base_url/next.png" class="next"/>
+                <img src="$image_base_url/last.png" class="last"/>
                 <select class="pagesize" title="Select page size">
                     <option value="10">10</option>
                     <option value="20">20</option>
