@@ -367,9 +367,9 @@ def read_config():
             autosubliminal.ADDIC7EDUSERNAME = cfg.get('subliminal', 'addic7edusername')
             autosubliminal.ADDIC7EDPASSWORD = cfg.get('subliminal', 'addic7edpassword')
             if autosubliminal.ADDIC7EDUSERNAME and autosubliminal.ADDIC7EDPASSWORD:
-                autosubliminal.SUBLIMINALPROVIDERCONFIGS = {
-                    'addic7ed': {'username': autosubliminal.ADDIC7EDUSERNAME,
-                                 'password': autosubliminal.ADDIC7EDPASSWORD}}
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'] = {
+                    'username': autosubliminal.ADDIC7EDUSERNAME,
+                    'password': autosubliminal.ADDIC7EDPASSWORD}
         else:
             autosubliminal.ADDIC7EDUSERNAME = u""
             autosubliminal.ADDIC7EDPASSWORD = u""
@@ -379,9 +379,9 @@ def read_config():
             autosubliminal.OPENSUBTITLESUSERNAME = cfg.get('subliminal', 'opensubtitlesusername')
             autosubliminal.OPENSUBTITLESPASSWORD = cfg.get('subliminal', 'opensubtitlespassword')
             if autosubliminal.OPENSUBTITLESUSERNAME and autosubliminal.OPENSUBTITLESPASSWORD:
-                autosubliminal.SUBLIMINALPROVIDERCONFIGS = {
-                    'opensubtitles': {'username': autosubliminal.OPENSUBTITLESUSERNAME,
-                                      'password': autosubliminal.OPENSUBTITLESPASSWORD}}
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles'] = {
+                    'username': autosubliminal.OPENSUBTITLESUSERNAME,
+                    'password': autosubliminal.OPENSUBTITLESPASSWORD}
         else:
             autosubliminal.OPENSUBTITLESUSERNAME = u""
             autosubliminal.OPENSUBTITLESPASSWORD = u""

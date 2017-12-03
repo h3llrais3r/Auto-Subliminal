@@ -208,6 +208,7 @@ def initialize():
 
     # Subliminal settings
     SUBLIMINALPROVIDERMANAGER = _initialize_subliminal()
+    SUBLIMINALPROVIDERCONFIGS = {}
 
     # Langdetect settings
     _init_langdetect()
