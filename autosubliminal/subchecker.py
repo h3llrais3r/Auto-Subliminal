@@ -496,7 +496,9 @@ def _search_subtitles(video, lang, best_only):
     else:
         log.debug("Searching for all subtitles for video")
         # Download all subtitles (without saving it to file)
-        subtitles = subliminal.list_subtitles(videos, languages, providers=autosubliminal.SUBLIMINALPROVIDERLIST)
+        subtitles = subliminal.list_subtitles(videos, languages,
+                                              providers=autosubliminal.SUBLIMINALPROVIDERLIST,
+                                              provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
         subliminal.download_subtitles(subtitles[video])
         if subtitles[video]:
             log.info("Found %s subtitles for video" % len(subtitles[video]))
