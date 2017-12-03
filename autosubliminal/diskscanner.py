@@ -82,6 +82,8 @@ class DiskScanner(ScheduledProcess):
         log.info("Finished round of local disk checking")
         utils.release_wanted_queue_lock()
 
+        utils.add_event_message('HOME_PAGE_RELOAD')
+
         return True
 
 
