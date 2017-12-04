@@ -83,7 +83,7 @@ class DiskScanner(ScheduledProcess):
         utils.release_wanted_queue_lock()
 
         # Send home page reload event
-        utils.add_event_message('HOME_PAGE_RELOAD')
+        utils.add_event_message("HOME_PAGE_RELOAD")
 
         return True
 

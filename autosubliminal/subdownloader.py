@@ -43,7 +43,7 @@ class SubDownloader(object):
             name = utils.display_name(self._download_item)
             provider = self._download_item['provider']
             utils.add_notification_message(
-                "Downloaded '" + language + "' subtitle for '" + name + "' from '" + provider + "'", 'success')
+                "Downloaded '" + language + "' subtitle for '" + name + "' from '" + provider + "'", "success")
 
     def save(self):
         """
