@@ -52,6 +52,7 @@ class SubChecker(ScheduledProcess):
         # Process all items in wanted queue
         db = WantedItems()
         provider_pool = _get_provider_pool()
+        autosubliminal.SUBLIMINALDISCARDEDPROVIDERS = None
         for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
             log.info("Searching subtitles for video: %s" % wanted_item['videopath'])
 
@@ -91,6 +92,9 @@ class SubChecker(ScheduledProcess):
             db.delete_wanted_item(wanted_item_to_delete)
             log.debug("Removed %s from wanted_items database", wanted_item_to_delete['videopath'])
             i -= 1
+
+        # Store discarded providers of the last run
+        autosubliminal.SUBLIMINALDISCARDEDPROVIDERS = ','.join(provider_pool.discarded_providers)
 
         # Release wanted queue lock
         log.info("Finished round of subtitle checking")

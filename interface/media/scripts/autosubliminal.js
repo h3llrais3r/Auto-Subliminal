@@ -152,8 +152,8 @@ function _show_notification(message, type, sticky) {
             text: message,
             type: type,
             hide: false, // Disable fading
-            width: "350px",
-            addclass: "stack-context",
+            width: "auto",
+            addclass: "container stack-context",
             stack: stack_context,
             desktop: {
                 desktop: false // Disable desktop
