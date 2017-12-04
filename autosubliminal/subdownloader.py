@@ -56,7 +56,7 @@ class SubDownloader(object):
         if 'video' in self._keys and 'subtitles' in self._keys and 'single' in self._keys:
             # Save the subtitle
             video = self._download_item['video']
-            subliminal.save_subtitles(video, self._download_item['subtitles'][video], self._download_item['single'])
+            subliminal.save_subtitles(video, self._download_item['subtitles'], self._download_item['single'])
             return True
         else:
             log.error("Download item is not complete, skipping")

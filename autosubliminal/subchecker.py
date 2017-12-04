@@ -5,6 +5,7 @@ import shutil
 
 import babelfish
 import subliminal
+from subliminal.core import ProviderPool
 from subliminal.providers.addic7ed import Addic7edSubtitle
 from subliminal.providers.legendastv import LegendasTVSubtitle
 from subliminal.providers.opensubtitles import OpenSubtitlesSubtitle
@@ -50,6 +51,7 @@ class SubChecker(ScheduledProcess):
 
         # Process all items in wanted queue
         db = WantedItems()
+        provider_pool = _get_provider_pool()
         for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
             log.info("Searching subtitles for video: %s" % wanted_item['videopath'])
 
@@ -62,10 +64,10 @@ class SubChecker(ScheduledProcess):
             languages = wanted_item['languages']
             for lang in languages[:]:
                 # Search the best subtitle with the minimal score
-                subtitles, language, single = _search_subtitles(video, lang, True)
+                subtitles, language, single = _search_subtitles(video, lang, True, provider_pool)
 
                 # Subtitle is found for the video
-                if subtitles[video]:
+                if subtitles:
                     # Handle download
                     download_item = _construct_download_item(wanted_item, subtitles, language, single)
                     SubDownloader(download_item).run()
@@ -117,10 +119,10 @@ def search_subtitle(wanted_item_index, lang):
     if video:
         # Search the subtitles with the default minimal score (to get all the possibilities to select from)
         default_min_score = _get_min_match_score(video, True)
-        subtitles, language, single = _search_subtitles(video, lang, False)
+        subtitles, language, single = _search_subtitles(video, lang, False, _get_provider_pool())
 
         # Check if subtitles are found for the video
-        if subtitles[video]:
+        if subtitles:
             # Add found subtitles to wanted_item
             wanted_item['found_subtitles'] = {'subtitles': subtitles, 'language': language, 'single': single}
 
@@ -128,7 +130,7 @@ def search_subtitle(wanted_item_index, lang):
             # Use subliminal default compute_score
             for index, subtitle, score in sorted(
                     [(index, s, subliminal.compute_score(s, video, autosubliminal.PREFERHEARINGIMPAIRED))
-                     for index, s in enumerate(subtitles[video])], key=operator.itemgetter(2), reverse=True):
+                     for index, s in enumerate(subtitles)], key=operator.itemgetter(2), reverse=True):
 
                 # Filter out subtitles that do not match the default score
                 if score < default_min_score:
@@ -190,11 +192,11 @@ def save_subtitle(wanted_item_index, subtitle_index):
     language = found_subtitles['language']
     single = found_subtitles['single']
 
-    # Get selected subtitle
-    wanted_subtitles = _get_wanted_subtitle(subtitles, subtitle_index)
+    # Get wanted subtitle
+    wanted_subtitle = _get_wanted_subtitle(subtitles, subtitle_index)
 
     # Save subtitle (skip notify and post_process)
-    download_item = _construct_download_item(wanted_item, wanted_subtitles, language, single)
+    download_item = _construct_download_item(wanted_item, [wanted_subtitle], language, single)
     downloaded = SubDownloader(download_item).save()
 
     # Release wanted queue lock
@@ -382,11 +384,11 @@ def post_process(wanted_item_index, subtitle_index):
     processed = False
     subtitle_path = _get_subtitle_path(wanted_item)
     if os.path.exists(subtitle_path):
-        # Get selected subtitle
-        wanted_subtitles = _get_wanted_subtitle(subtitles, subtitle_index)
+        # Get wanted subtitle
+        wanted_subtitle = _get_wanted_subtitle(subtitles, subtitle_index)
 
         # Handle download
-        download_item = _construct_download_item(wanted_item, wanted_subtitles, language, single)
+        download_item = _construct_download_item(wanted_item, [wanted_subtitle], language, single)
         downloader = SubDownloader(download_item)
         downloader.mark_downloaded()
         processed = downloader.post_process()
@@ -460,10 +462,13 @@ def _scan_wanted_item_for_video(wanted_item, is_manual=False):
         log.error("Exception: %s" % e)
         return
 
+    # Add video to wanted item
+    wanted_item['video'] = video
+
     return video
 
 
-def _search_subtitles(video, lang, best_only):
+def _search_subtitles(video, lang, best_only, provider_pool):
     log.info("Searching for %s subtitles" % lang)
 
     # Determine language
@@ -478,45 +483,43 @@ def _search_subtitles(video, lang, best_only):
         single = True
 
     # Search for subtitles
-    videos = {video}
     languages = {language}
     if best_only:
         log.debug("Searching for best subtitle")
         # Download the best subtitle with min_score (without saving it in to file)
-        subtitles = subliminal.download_best_subtitles(videos, languages,
-                                                       min_score=_get_min_match_score(video),
-                                                       hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
-                                                       only_one=True,
-                                                       providers=autosubliminal.SUBLIMINALPROVIDERLIST,
-                                                       provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
-        if subtitles[video]:
+        subtitles = provider_pool.download_best_subtitles(provider_pool.list_subtitles(video, languages),
+                                                          video,
+                                                          languages,
+                                                          min_score=_get_min_match_score(video),
+                                                          hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
+                                                          only_one=True)
+        if subtitles:
             log.info("Found the best subtitle with the required min match score for video")
         else:
             log.info("No subtitle found with the required min match score for video")
     else:
         log.debug("Searching for all subtitles for video")
         # Download all subtitles (without saving it to file)
-        subtitles = subliminal.list_subtitles(videos, languages,
-                                              providers=autosubliminal.SUBLIMINALPROVIDERLIST,
-                                              provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
-        subliminal.download_subtitles(subtitles[video])
-        if subtitles[video]:
-            log.info("Found %s subtitles for video" % len(subtitles[video]))
+        subtitles = provider_pool.list_subtitles(video, languages)
+        if subtitles:
+            log.info("Found %s subtitles for video" % len(subtitles))
+            for subtitle in subtitles:
+                provider_pool.download_subtitle(subtitle)
         else:
             log.info("No subtitles found for video")
 
     return subtitles, language, single
 
 
+def _get_provider_pool():
+    # create a new provider pool with our settings
+    return ProviderPool(providers=autosubliminal.SUBLIMINALPROVIDERLIST,
+                        provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
+
+
 def _get_wanted_subtitle(subtitles, subtitle_index):
     log.debug("Getting wanted subtitle")
-    # Create new subtitles dict with only the wanted subtitle
-    video = next(iter(subtitles.keys()))  # video is always the first key in the subtitles dict
-    wanted_subtitle = subtitles[video][int(subtitle_index)]
-    wanted_subtitles = subtitles.copy()
-    wanted_subtitles[video] = [wanted_subtitle]
-
-    return wanted_subtitles
+    return subtitles[int(subtitle_index)]
 
 
 def _get_subtitle_path(wanted_item):
@@ -527,23 +530,21 @@ def _get_subtitle_path(wanted_item):
     single = found_subtitles['single']
 
     # Get subtitle path
-    video = next(iter(subtitles.keys()))  # video is always the first key in the subtitles dict
-    path = subliminal.subtitle.get_subtitle_path(video.name, None if single else language)
+    path = subliminal.subtitle.get_subtitle_path(wanted_item['video'].name, None if single else language)
     log.debug("Subtitle path: %s" % path)
     return path
 
 
 def _construct_download_item(wanted_item, subtitles, language, single):
     log.debug("Constructing the download item")
-    video = next(iter(subtitles.keys()))  # video is always the first key in the subtitles dict
 
     # Get the subtitle, subtitles should only contain 1 subtitle
-    subtitle = subtitles[video][0]
+    subtitle = subtitles[0]
     log.debug("Download page link: %s" % subtitle.page_link)
 
     # Construct the download item
     download_item = wanted_item.copy()
-    subtitle_path = subliminal.subtitle.get_subtitle_path(video.name, None if single else language)
+    subtitle_path = subliminal.subtitle.get_subtitle_path(download_item['video'].name, None if single else language)
     download_item['destinationFileLocationOnDisk'] = subtitle_path
     download_item['downloadLink'] = subtitle.page_link
     download_item['downlang'] = language.alpha2
@@ -551,7 +552,6 @@ def _construct_download_item(wanted_item, subtitles, language, single):
     download_item['provider'] = subtitle.provider_name
     download_item['subtitles'] = subtitles
     download_item['single'] = single
-    download_item['video'] = video
 
     return download_item
 
