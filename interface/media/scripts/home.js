@@ -180,7 +180,7 @@ $(document).ready(function () {
     if ($("#discarded-providers").text()) {
         new PNotify({
             title: false, // Remove title
-            text: "Discarded providers during the last subtitle check: <b>" + $("#discarded-providers").text() + "</b>",
+            text: "Discarded providers during the previous subtitle check: <b>" + $("#discarded-providers").text() + "</b>",
             type: "notice",
             hide: false, // Disable fading
             width: "auto",
