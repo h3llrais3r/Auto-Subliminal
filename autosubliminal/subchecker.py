@@ -49,10 +49,13 @@ class SubChecker(ScheduledProcess):
         if force_run:
             utils.add_notification_message("Checking subtitles...")
 
+        # Setup provider pool
+        provider_pool = _get_provider_pool()
+        log.info("Searching subtitles with providers: %s" % ', '.join(provider_pool.providers))
+        autosubliminal.SUBLIMINALDISCARDEDPROVIDERS = None
+
         # Process all items in wanted queue
         db = WantedItems()
-        provider_pool = _get_provider_pool()
-        autosubliminal.SUBLIMINALDISCARDEDPROVIDERS = None
         for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
             log.info("Searching subtitles for video: %s" % wanted_item['videopath'])
 
@@ -93,12 +96,14 @@ class SubChecker(ScheduledProcess):
             log.debug("Removed %s from wanted_items database", wanted_item_to_delete['videopath'])
             i -= 1
 
-        # Store discarded providers of the last run
-        autosubliminal.SUBLIMINALDISCARDEDPROVIDERS = ','.join(provider_pool.discarded_providers)
-
         # Release wanted queue lock
         log.info("Finished round of subtitle checking")
         utils.release_wanted_queue_lock()
+
+        # Store discarded providers of the last run
+        autosubliminal.SUBLIMINALDISCARDEDPROVIDERS = ', '.join(provider_pool.discarded_providers)
+        if autosubliminal.SUBLIMINALDISCARDEDPROVIDERS:
+            log.warning("Discarded providers during previous round: %s" % autosubliminal.SUBLIMINALDISCARDEDPROVIDERS)
 
         # Send home page reload event
         utils.add_event_message("HOME_PAGE_RELOAD")
