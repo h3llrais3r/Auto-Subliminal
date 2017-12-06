@@ -116,7 +116,7 @@ class ShowIndexer(Indexer):
             if store_id:
                 TvdbIdCache().set_id(-1, name)
         if tvdb_id:
-            log.debug("Tvdb id from api %s" % tvdb_id)
+            log.debug("Tvdb id from api: %s" % tvdb_id)
             if store_id:
                 TvdbIdCache().set_id(tvdb_id, name)
                 log.info("%s added to cache with %s" % (name, tvdb_id))
@@ -171,7 +171,7 @@ class MovieIndexer(Indexer):
             if movie:
                 imdb_id = movie.movieID
                 year = movie.data['year'] if not year else year
-                log.debug("Getting imdb id from api %s" % imdb_id)
+                log.debug("Imdb id from api: %s" % imdb_id)
                 if store_id:
                     ImdbIdCache().set_id(imdb_id, title, year)
                     log.info("%s added to cache with %s" % (name, imdb_id))
