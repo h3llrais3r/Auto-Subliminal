@@ -534,7 +534,6 @@ def _get_wanted_subtitle(subtitles, subtitle_index):
 def _get_subtitle_path(wanted_item):
     log.debug("Getting subtitle path")
     found_subtitles = wanted_item['found_subtitles']
-    subtitles = found_subtitles['subtitles']
     language = found_subtitles['language']
     single = found_subtitles['single']
 
