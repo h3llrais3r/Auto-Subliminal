@@ -348,6 +348,11 @@ def read_config():
         else:
             autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
 
+        if cfg.has_option("subliminal", "subtitleutf8encoding"):
+            autosubliminal.SUBTITLEUTF8ENCODING = cfg.getboolean("subliminal", "subtitleutf8encoding")
+        else:
+            autosubliminal.SUBTITLEUTF8ENCODING = False
+
         if cfg.has_option("subliminal", "manualrefinevideo"):
             autosubliminal.MANUALREFINEVIDEO = cfg.getboolean("subliminal", "manualrefinevideo")
         else:
@@ -398,6 +403,7 @@ def read_config():
         autosubliminal.MOVIEMATCHCODEC = False
         autosubliminal.MOVIEMATCHRELEASEGROUP = False
         autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
+        autosubliminal.SUBTITLEUTF8ENCODING = False
         autosubliminal.MANUALREFINEVIDEO = False
         autosubliminal.REFINEVIDEO = False
         autosubliminal.PREFERHEARINGIMPAIRED = False
@@ -1086,6 +1092,7 @@ def save_subliminal_section():
     cfg.set(section, "moviematchcodec", str(autosubliminal.MOVIEMATCHCODEC))
     cfg.set(section, "moviematchreleasegroup", str(autosubliminal.MOVIEMATCHRELEASEGROUP))
     cfg.set(section, "providers", str(autosubliminal.SUBLIMINALPROVIDERS))
+    cfg.set(section, "subtitleutf8encoding", str(autosubliminal.SUBTITLEUTF8ENCODING))
     cfg.set(section, "manualrefinevideo", str(autosubliminal.MANUALREFINEVIDEO))
     cfg.set(section, "refinevideo", str(autosubliminal.REFINEVIDEO))
     cfg.set(section, "preferhearingimpaired", str(autosubliminal.PREFERHEARINGIMPAIRED))

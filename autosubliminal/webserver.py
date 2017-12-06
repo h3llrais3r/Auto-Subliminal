@@ -347,8 +347,8 @@ class Config(object):
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
-        def save(self, manualrefinevideo, refinevideo, preferhearingimpaired, addic7edusername, addic7edpassword,
-                 opensubtitlesusername, opensubtitlespassword,
+        def save(self, subtitleutf8encoding, manualrefinevideo, refinevideo, preferhearingimpaired,
+                 addic7edusername, addic7edpassword, opensubtitlesusername, opensubtitlespassword,
                  showmmsdefault=None, showmmssource=None, showmmsquality=None, showmmscodec=None,
                  showmmsreleasegroup=None,
                  moviemmsdefault=None, moviemmssource=None, moviemmsquality=None, moviemmscodec=None,
@@ -405,6 +405,8 @@ class Config(object):
             else:
                 # Just one selected or None (in this case, None will be saved and no providers will be used)
                 autosubliminal.SUBLIMINALPROVIDERS = subliminalproviders
+            # Subtitle utf8 encoding
+            autosubliminal.SUBTITLEUTF8ENCODING = utils.getboolean(subtitleutf8encoding)
             # Refine video
             autosubliminal.MANUALREFINEVIDEO = utils.getboolean(manualrefinevideo)
             autosubliminal.REFINEVIDEO = utils.getboolean(refinevideo)
