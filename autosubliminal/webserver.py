@@ -241,8 +241,6 @@ class Config(object):
 
         # Check if restart is needed
         if restart:
-            # Restart the runner in the background
-            runner.restart_app()
             return {'restart': True}
 
         else:
