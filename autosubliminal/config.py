@@ -1372,6 +1372,9 @@ def check_for_restart():
         if cfg.has_option("logfile", "loghttpaccess"):
             loghttpaccess = cfg.getboolean("logfile", "loghttpaccess")
 
+        if cfg.has_option("logfile", "logexternallibs"):
+            logexternallibs = cfg.getboolean("logfile", "logexternallibs")
+
         if cfg.has_option("logfile", "logdetailedformat"):
             logdetailedformat = cfg.getboolean("logfile", "logdetailedformat")
 
