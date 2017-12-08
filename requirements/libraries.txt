@@ -40,7 +40,7 @@ simplejson==2.0.9
 six==1.11.0
 smmap==0.9.0
 stevedore==1.28.0
-subliminal==2.0.5
+git+https://github.com/Diaoul/subliminal.git@7bbc7a1cfc5e8f9e556998a69b655daa07c231c4#egg=subliminal
 tvdb_api==1.9
 tvdb_api_v2==1.0.0
 urllib3==1.22
