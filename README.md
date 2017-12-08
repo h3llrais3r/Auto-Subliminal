@@ -64,6 +64,7 @@ What it uses (see libraries.txt for versions)
  * stevedore
  * subliminal
  * tvdb_api
+ * tvdb_api_v2
  * websocket-client
  * ws4py
 
