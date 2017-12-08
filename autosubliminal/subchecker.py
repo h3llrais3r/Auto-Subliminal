@@ -8,10 +8,10 @@ import subliminal
 from subliminal.core import ProviderPool
 from subliminal.providers.addic7ed import Addic7edSubtitle
 from subliminal.providers.legendastv import LegendasTVSubtitle
+from subliminal.providers.napiprojekt import NapiProjektSubtitle
 from subliminal.providers.opensubtitles import OpenSubtitlesSubtitle
 from subliminal.providers.podnapisi import PodnapisiSubtitle
 from subliminal.providers.shooter import ShooterSubtitle
-from subliminal.providers.subscenter import SubsCenterSubtitle
 from subliminal.providers.thesubdb import TheSubDBSubtitle
 from subliminal.providers.tvsubtitles import TVsubtitlesSubtitle
 from subliminal.video import Episode, Movie
@@ -591,6 +591,8 @@ def _get_releases(subtitle):
         releases.extend([subtitle.version])
     elif isinstance(subtitle, LegendasTVSubtitle):
         releases.extend([subtitle.archive])
+    elif isinstance(subtitle, NapiProjektSubtitle):
+        releases.extend([subtitle.content])
     elif isinstance(subtitle, OpenSubtitlesSubtitle):
         releases.extend([subtitle.movie_release_name])
     elif isinstance(subtitle, PodnapisiSubtitle):
@@ -598,8 +600,6 @@ def _get_releases(subtitle):
     elif isinstance(subtitle, ShooterSubtitle):
         # No release present
         releases.extend([])
-    elif isinstance(subtitle, SubsCenterSubtitle):
-        releases.extend(subtitle.releases)
     elif isinstance(subtitle, TheSubDBSubtitle):
         # No release present
         releases.extend([])
