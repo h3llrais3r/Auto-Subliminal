@@ -39,7 +39,7 @@ requests==2.7.0
 simplejson==2.0.9
 six==1.11.0
 smmap==0.9.0
-stevedore==1.6.0
+stevedore==1.28.0
 subliminal==2.0.5
 tvdb_api==1.9
 tvdb_api_v2==1.0.0
