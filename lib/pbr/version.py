@@ -22,8 +22,6 @@ import itertools
 import operator
 import sys
 
-import pkg_resources
-
 
 def _is_int(string):
     try:
@@ -142,6 +140,14 @@ class SemanticVersion(object):
             ever released - we're treating that as a critical bug that we ever
             made them and have stopped doing that.
         """
+
+        try:
+            return klass._from_pip_string_unsafe(version_string)
+        except IndexError:
+            raise ValueError("Invalid version %r" % version_string)
+
+    @classmethod
+    def _from_pip_string_unsafe(klass, version_string):
         # Versions need to start numerically, ignore if not
         if not version_string[:1].isdigit():
             raise ValueError("Invalid version %r" % version_string)
@@ -372,10 +378,10 @@ class SemanticVersion(object):
         extended the releaselevel field to have alphadev, betadev and
         candidatedev values. When they are present the dev count is used
         to provide the serial.
-         - a/b/rc take precedence.
-         - if there is no pre-release version the dev version is used.
-         - serial is taken from the dev/a/b/c component.
-         - final non-dev versions never get serials.
+        - a/b/rc take precedence.
+        - if there is no pre-release version the dev version is used.
+        - serial is taken from the dev/a/b/c component.
+        - final non-dev versions never get serials.
         """
         segments = [self._major, self._minor, self._patch]
         if self._prerelease_type:
@@ -427,6 +433,9 @@ class VersionInfo(object):
         record associated with the package, and if there is no such record
         falls back to the logic sdist would use.
         """
+        # Lazy import because pkg_resources is costly to import so defer until
+        # we absolutely need it.
+        import pkg_resources
         try:
             requirement = pkg_resources.Requirement.parse(self.package)
             provider = pkg_resources.get_provider(requirement)

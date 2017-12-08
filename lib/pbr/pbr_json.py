@@ -1,4 +1,4 @@
-# Copyright 2011 OpenStack LLC.
+# Copyright 2011 OpenStack Foundation
 # Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
 # All Rights Reserved.
 #
@@ -20,6 +20,8 @@ from pbr import git
 
 
 def write_pbr_json(cmd, basename, filename):
+    if not hasattr(cmd.distribution, 'pbr') or not cmd.distribution.pbr:
+        return
     git_dir = git._run_git_functions()
     if not git_dir:
         return
@@ -29,4 +31,4 @@ def write_pbr_json(cmd, basename, filename):
     if git_version is not None:
         values['git_version'] = git_version
         values['is_release'] = is_release
-        cmd.write_file('pbr', filename, json.dumps(values))
+        cmd.write_file('pbr', filename, json.dumps(values, sort_keys=True))

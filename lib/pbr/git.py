@@ -1,4 +1,4 @@
-# Copyright 2011 OpenStack LLC.
+# Copyright 2011 OpenStack Foundation
 # Copyright 2012-2013 Hewlett-Packard Development Company, L.P.
 # All Rights Reserved.
 #
@@ -18,14 +18,17 @@ from __future__ import unicode_literals
 
 import distutils.errors
 from distutils import log
+import errno
 import io
 import os
 import re
 import subprocess
+import time
 
 import pkg_resources
 
 from pbr import options
+from pbr import version
 
 
 def _run_shell_command(cmd, throw_on_error=False, buffer=True, env=None):
@@ -63,7 +66,13 @@ def _run_git_command(cmd, git_dir, **kwargs):
 
 
 def _get_git_directory():
-    return _run_shell_command(['git', 'rev-parse', '--git-dir'])
+    try:
+        return _run_shell_command(['git', 'rev-parse', '--git-dir'])
+    except OSError as e:
+        if e.errno == errno.ENOENT:
+            # git not installed.
+            return ''
+        raise
 
 
 def _git_is_installed():
@@ -134,6 +143,26 @@ def get_git_short_sha(git_dir=None):
     return None
 
 
+def _clean_changelog_message(msg):
+    """Cleans any instances of invalid sphinx wording.
+
+    This escapes/removes any instances of invalid characters
+    that can be interpreted by sphinx as a warning or error
+    when translating the Changelog into an HTML file for
+    documentation building within projects.
+
+    * Escapes '_' which is interpreted as a link
+    * Escapes '*' which is interpreted as a new line
+    * Escapes '`' which is interpreted as a literal
+    """
+
+    msg = msg.replace('*', '\*')
+    msg = msg.replace('_', '\_')
+    msg = msg.replace('`', '\`')
+
+    return msg
+
+
 def _iter_changelog(changelog):
     """Convert a oneline log iterator to formatted strings.
 
@@ -157,11 +186,12 @@ def _iter_changelog(changelog):
         if not msg.startswith("Merge "):
             if msg.endswith("."):
                 msg = msg[:-1]
+            msg = _clean_changelog_message(msg)
             yield current_release, "* %(msg)s\n" % dict(msg=msg)
         first_line = False
 
 
-def _iter_log_oneline(git_dir=None, option_dict=None):
+def _iter_log_oneline(git_dir=None):
     """Iterate over --oneline log entries if possible.
 
     This parses the output into a structured form but does not apply
@@ -171,17 +201,19 @@ def _iter_log_oneline(git_dir=None, option_dict=None):
     :return: An iterator of (hash, tags_set, 1st_line) tuples, or None if
         changelog generation is disabled / not available.
     """
-    if not option_dict:
-        option_dict = {}
-    should_skip = options.get_boolean_option(option_dict, 'skip_changelog',
-                                             'SKIP_WRITE_GIT_CHANGELOG')
-    if should_skip:
-        return
     if git_dir is None:
         git_dir = _get_git_directory()
     if not git_dir:
-        return
+        return []
     return _iter_log_inner(git_dir)
+
+
+def _is_valid_version(candidate):
+    try:
+        version.SemanticVersion.from_pip_string(candidate)
+        return True
+    except ValueError:
+        return False
 
 
 def _iter_log_inner(git_dir):
@@ -194,48 +226,64 @@ def _iter_log_inner(git_dir):
     :return: An iterator of (hash, tags_set, 1st_line) tuples.
     """
     log.info('[pbr] Generating ChangeLog')
-    log_cmd = ['log', '--oneline', '--decorate']
+    log_cmd = ['log', '--decorate=full', '--format=%h%x00%s%x00%d']
     changelog = _run_git_command(log_cmd, git_dir)
     for line in changelog.split('\n'):
-        line_parts = line.split()
-        if len(line_parts) < 2:
+        line_parts = line.split('\x00')
+        if len(line_parts) != 3:
             continue
-        # Tags are in a list contained in ()'s. If a commit
-        # subject that is tagged happens to have ()'s in it
-        # this will fail
-        if line_parts[1].startswith('(') and ')' in line:
-            msg = line.split(')')[1].strip()
-        else:
-            msg = " ".join(line_parts[1:])
+        sha, msg, refname = line_parts
+        tags = set()
 
-        if "tag:" in line:
-            tags = set([
-                tag.split(",")[0]
-                for tag in line.split(")")[0].split("tag: ")[1:]])
-        else:
-            tags = set()
+        # refname can be:
+        #  <empty>
+        #  HEAD, tag: refs/tags/1.4.0, refs/remotes/origin/master, \
+        #    refs/heads/master
+        #  refs/tags/1.3.4
+        if "refs/tags/" in refname:
+            refname = refname.strip()[1:-1]  # remove wrapping ()'s
+            # If we start with "tag: refs/tags/1.2b1, tag: refs/tags/1.2"
+            # The first split gives us "['', '1.2b1, tag:', '1.2']"
+            # Which is why we do the second split below on the comma
+            for tag_string in refname.split("refs/tags/")[1:]:
+                # git tag does not allow : or " " in tag names, so we split
+                # on ", " which is the separator between elements
+                candidate = tag_string.split(", ")[0]
+                if _is_valid_version(candidate):
+                    tags.add(candidate)
 
-        yield line_parts[0], tags, msg
+        yield sha, tags, msg
 
 
 def write_git_changelog(git_dir=None, dest_dir=os.path.curdir,
-                        option_dict=dict(), changelog=None):
+                        option_dict=None, changelog=None):
     """Write a changelog based on the git changelog."""
+    start = time.time()
+    if not option_dict:
+        option_dict = {}
+    should_skip = options.get_boolean_option(option_dict, 'skip_changelog',
+                                             'SKIP_WRITE_GIT_CHANGELOG')
+    if should_skip:
+        return
     if not changelog:
-        changelog = _iter_log_oneline(git_dir=git_dir, option_dict=option_dict)
+        changelog = _iter_log_oneline(git_dir=git_dir)
         if changelog:
             changelog = _iter_changelog(changelog)
     if not changelog:
         return
-    log.info('[pbr] Writing ChangeLog')
     new_changelog = os.path.join(dest_dir, 'ChangeLog')
     # If there's already a ChangeLog and it's not writable, just use it
     if (os.path.exists(new_changelog)
             and not os.access(new_changelog, os.W_OK)):
+        log.info('[pbr] ChangeLog not written (file already'
+                 ' exists and it is not writeable)')
         return
+    log.info('[pbr] Writing ChangeLog')
     with io.open(new_changelog, "w", encoding="utf-8") as changelog_file:
         for release, content in changelog:
             changelog_file.write(content)
+    stop = time.time()
+    log.info('[pbr] ChangeLog complete (%0.1fs)' % (stop - start))
 
 
 def generate_authors(git_dir=None, dest_dir='.', option_dict=dict()):
@@ -244,6 +292,7 @@ def generate_authors(git_dir=None, dest_dir='.', option_dict=dict()):
                                              'SKIP_GENERATE_AUTHORS')
     if should_skip:
         return
+    start = time.time()
     old_authors = os.path.join(dest_dir, 'AUTHORS.in')
     new_authors = os.path.join(dest_dir, 'AUTHORS')
     # If there's already an AUTHORS file and it's not writable, just use it
@@ -278,3 +327,5 @@ def generate_authors(git_dir=None, dest_dir='.', option_dict=dict()):
                     new_authors_fh.write(old_authors_fh.read())
             new_authors_fh.write(('\n'.join(authors) + '\n')
                                  .encode('utf-8'))
+    stop = time.time()
+    log.info('[pbr] AUTHORS complete (%0.1fs)' % (stop - start))

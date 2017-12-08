@@ -69,13 +69,13 @@ import traceback
 from collections import defaultdict
 
 import distutils.ccompiler
+import pkg_resources
 
 from distutils import log
-from distutils.errors import (DistutilsOptionError, DistutilsModuleError,
-                              DistutilsFileError)
+from distutils import errors
 from setuptools.command.egg_info import manifest_maker
-from setuptools.dist import Distribution
-from setuptools.extension import Extension
+from setuptools import dist as st_dist
+from setuptools import extension
 
 try:
     import ConfigParser as configparser
@@ -104,7 +104,7 @@ D1_D2_SETUP_ARGS = {
     "description": ("metadata", "summary"),
     "keywords": ("metadata",),
     "long_description": ("metadata", "description"),
-    "download-url": ("metadata",),
+    "download_url": ("metadata",),
     "classifiers": ("metadata", "classifier"),
     "platforms": ("metadata", "platform"),  # **
     "license": ("metadata",),
@@ -187,28 +187,34 @@ def resolve_name(name):
     return ret
 
 
-def cfg_to_args(path='setup.cfg'):
-    """ Distutils2 to distutils1 compatibility util.
+def cfg_to_args(path='setup.cfg', script_args=()):
+    """Distutils2 to distutils1 compatibility util.
 
-        This method uses an existing setup.cfg to generate a dictionary of
-        keywords that can be used by distutils.core.setup(kwargs**).
+    This method uses an existing setup.cfg to generate a dictionary of
+    keywords that can be used by distutils.core.setup(kwargs**).
 
-        :param file:
-            The setup.cfg path.
-        :raises DistutilsFileError:
-            When the setup.cfg file is not found.
-
+    :param file:
+        The setup.cfg path.
+    :parm script_args:
+        List of commands setup.py was called with.
+    :raises DistutilsFileError:
+        When the setup.cfg file is not found.
     """
 
     # The method source code really starts here.
-    parser = configparser.SafeConfigParser()
+    if sys.version_info >= (3, 2):
+            parser = configparser.ConfigParser()
+    else:
+            parser = configparser.SafeConfigParser()
     if not os.path.exists(path):
-        raise DistutilsFileError("file '%s' does not exist" %
-                                 os.path.abspath(path))
+        raise errors.DistutilsFileError("file '%s' does not exist" %
+                                        os.path.abspath(path))
     parser.read(path)
     config = {}
     for section in parser.sections():
-        config[section] = dict(parser.items(section))
+        config[section] = dict()
+        for k, value in parser.items(section):
+            config[section][k.replace('-', '_')] = value
 
     # Run setup_hooks, if configured
     setup_hooks = has_get_option(config, 'global', 'setup_hooks')
@@ -242,7 +248,7 @@ def cfg_to_args(path='setup.cfg'):
         # Run the pbr hook
         pbr.hooks.setup_hook(config)
 
-        kwargs = setup_cfg_to_setup_kwargs(config)
+        kwargs = setup_cfg_to_setup_kwargs(config, script_args)
 
         # Set default config overrides
         kwargs['include_package_data'] = True
@@ -273,14 +279,14 @@ def cfg_to_args(path='setup.cfg'):
     return kwargs
 
 
-def setup_cfg_to_setup_kwargs(config):
+def setup_cfg_to_setup_kwargs(config, script_args=()):
     """Processes the setup.cfg options and converts them to arguments accepted
     by setuptools' setup() function.
     """
 
     kwargs = {}
 
-    # Temporarily holds install_reqires and extra_requires while we
+    # Temporarily holds install_requires and extra_requires while we
     # parse env_markers.
     all_requirements = {}
 
@@ -334,7 +340,7 @@ def setup_cfg_to_setup_kwargs(config):
                 # Split install_requires into package,env_marker tuples
                 # These will be re-assembled later
                 install_requires = []
-                requirement_pattern = '(?P<package>[^;]*);?(?P<env_marker>.*)$'
+                requirement_pattern = '(?P<package>[^;]*);?(?P<env_marker>[^#]*?)(?:\s*#.*)?$'
                 for requirement in in_cfg_value:
                     m = re.match(requirement_pattern, requirement)
                     requirement_package = m.group('package').strip()
@@ -360,7 +366,7 @@ def setup_cfg_to_setup_kwargs(config):
                         else:
                             prev = data_files[key.strip()] = value.split()
                     elif firstline:
-                        raise DistutilsOptionError(
+                        raise errors.DistutilsOptionError(
                             'malformed package_data first line %r (misses '
                             '"=")' % line)
                     else:
@@ -373,7 +379,7 @@ def setup_cfg_to_setup_kwargs(config):
                 in_cfg_value = data_files
             elif arg == 'cmdclass':
                 cmdclass = {}
-                dist = Distribution()
+                dist = st_dist.Distribution()
                 for cls_name in in_cfg_value:
                     cls = resolve_name(cls_name)
                     cmd = cls(dist)
@@ -394,7 +400,7 @@ def setup_cfg_to_setup_kwargs(config):
     # -> {'fred': ['bar'], 'fred:marker':['foo']}
 
     if 'extras' in config:
-        requirement_pattern = '(?P<package>[^:]*):?(?P<env_marker>.*)$'
+        requirement_pattern = '(?P<package>[^:]*):?(?P<env_marker>[^#]*?)(?:\s*#.*)?$'
         extras = config['extras']
         for extra in extras:
             extra_requirements = []
@@ -419,6 +425,22 @@ def setup_cfg_to_setup_kwargs(config):
         for requirement, env_marker in all_requirements[req_group]:
             if env_marker:
                 extras_key = '%s:(%s)' % (req_group, env_marker)
+                # We do not want to poison wheel creation with locally
+                # evaluated markers.  sdists always re-create the egg_info
+                # and as such do not need guarded, and pip will never call
+                # multiple setup.py commands at once.
+                if 'bdist_wheel' not in script_args:
+                    try:
+                        if pkg_resources.evaluate_marker('(%s)' % env_marker):
+                            extras_key = req_group
+                    except SyntaxError:
+                        log.error(
+                            "Marker evaluation failed, see the following "
+                            "error.  For more information see: "
+                            "http://docs.openstack.org/"
+                            "developer/pbr/compatibility.html#evaluate-marker"
+                        )
+                        raise
             else:
                 extras_key = req_group
             extras_require.setdefault(extras_key, []).append(requirement)
@@ -511,8 +533,8 @@ def get_extension_modules(config):
             if ext_args:
                 if 'name' not in ext_args:
                     ext_args['name'] = labels[1]
-                ext_modules.append(Extension(ext_args.pop('name'),
-                                             **ext_args))
+                ext_modules.append(extension.Extension(ext_args.pop('name'),
+                                                       **ext_args))
     return ext_modules
 
 
@@ -531,12 +553,28 @@ def get_entry_points(config):
 
 
 def wrap_commands(kwargs):
-    dist = Distribution()
+    dist = st_dist.Distribution()
 
     # This should suffice to get the same config values and command classes
     # that the actual Distribution will see (not counting cmdclass, which is
     # handled below)
     dist.parse_config_files()
+
+    # Setuptools doesn't patch get_command_list, and as such we do not get
+    # extra commands from entry_points.  As we need to be compatable we deal
+    # with this here.
+    for ep in pkg_resources.iter_entry_points('distutils.commands'):
+        if ep.name not in dist.cmdclass:
+            if hasattr(ep, 'resolve'):
+                cmdclass = ep.resolve()
+            else:
+                # Old setuptools does not have ep.resolve, and load with
+                # arguments is depricated in 11+.  Use resolve, 12+, if we
+                # can, otherwise fall back to load.
+                # Setuptools 11 will throw a deprication warning, as it
+                # uses _load instead of resolve.
+                cmdclass = ep.load(False)
+            dist.cmdclass[ep.name] = cmdclass
 
     for cmd, _ in dist.get_command_list():
         hooks = {}
@@ -591,13 +629,13 @@ def run_command_hooks(cmd_obj, hook_kind):
                 hook_obj = resolve_name(hook)
             except ImportError:
                 err = sys.exc_info()[1] # For py3k
-                raise DistutilsModuleError('cannot find hook %s: %s' %
-                                           (hook,err))
+                raise errors.DistutilsModuleError('cannot find hook %s: %s' %
+                                                  (hook,err))
         else:
             hook_obj = hook
 
         if not hasattr(hook_obj, '__call__'):
-            raise DistutilsOptionError('hook %r is not callable' % hook)
+            raise errors.DistutilsOptionError('hook %r is not callable' % hook)
 
         log.info('running %s %s for command %s',
                  hook_kind, hook, cmd_obj.get_command_name())
@@ -614,8 +652,6 @@ def run_command_hooks(cmd_obj, hook_kind):
 def has_get_option(config, section, option):
     if section in config and option in config[section]:
         return config[section][option]
-    elif section in config and option.replace('_', '-') in config[section]:
-        return config[section][option.replace('_', '-')]
     else:
         return False
 
