@@ -27,6 +27,7 @@ What it uses (see libraries.txt for versions)
  * appdirs
  * babelfish
  * beautifulsoup4
+ * certifi
  * charade
  * chardet
  * cheetah
@@ -65,6 +66,7 @@ What it uses (see libraries.txt for versions)
  * subliminal
  * tvdb_api
  * tvdb_api_v2
+ * urllib3
  * websocket-client
  * ws4py
 
