@@ -27,7 +27,7 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "bootstrap-hover-dropdown": "^2.2.1",
-    "bootstrap-toggle": "^2.2.0",
+    "bootstrap-toggle": "^2.2.2",
     "font-awesome": "^4.7.0",
     "jquery": "^1.12.4",
     "jquery-countdown": "^2.2.0",
