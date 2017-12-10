@@ -220,7 +220,9 @@ table.tablesorter thead tr th, table.tablesorter tfoot tr th {
 }
 
 table.tablesorter thead tr .tablesorter-header {
-    background-image: url(../images/tablesorter/bg.gif);
+    /* black (unsorted) double arrow (with spacing!) */
+    background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+    /* background-image: url(../images/vendor/tablesorter/black-unsorted.gif); */
     background-repeat: no-repeat;
     background-position: center right;
     vertical-align: middle;
@@ -228,12 +230,16 @@ table.tablesorter thead tr .tablesorter-header {
 }
 
 table.tablesorter thead tr .tablesorter-headerAsc {
-    background-image: url(../images/tablesorter/asc.gif);
+    /* black asc arrow (with spacing!) */
+    background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+    /* background-image: url(../images/vendor/tablesorter/black-asc.gif); */
     background-color: #dddddd;
 }
 
 table.tablesorter thead tr .tablesorter-headerDesc {
-    background-image: url(../images/tablesorter/desc.gif);
+    /* black desc arrow (with spacing!) */
+    background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+    /* background-image: url(../images/vendor/tablesorter/black-desc.gif); */
     background-color: #dddddd;
 }
 

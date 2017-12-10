@@ -1,0 +1,50 @@
+{
+  "name": "Auto-Subliminal",
+  "description": "Auto-Subliminal, the automated subliminal subtitle downloader",
+  "author": "h3llrais3r",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h3llrais3r/Auto-Subliminal.git"
+  },
+  "homepage": "https://github.com/h3llrais3r/Auto-Subliminal#readme",
+  "bugs": {
+    "url": "https://github.com/h3llrais3r/Auto-Subliminal/issues"
+  },
+  "keywords": [
+    "subtitle",
+    "subtitles",
+    "video",
+    "movie",
+    "episode",
+    "tv",
+    "show"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "gulp build"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "bootstrap-hover-dropdown": "^2.2.1",
+    "bootstrap-toggle": "^2.2.0",
+    "font-awesome": "^4.7.0",
+    "jquery": "^1.12.4",
+    "jquery-countdown": "^2.2.0",
+    "jquery-hoverintent": "^1.9.0",
+    "jquery-mobile": "^1.4.1",
+    "jquery-ui-dist": "^1.12.1",
+    "pnotify": "^3.2.1",
+    "tablesorter": "^2.29.0"
+  },
+  "devDependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-clean-css": "^3.9.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-copy": "^1.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^3.0.0",
+    "gulp-util": "^3.0.8"
+  }
+}

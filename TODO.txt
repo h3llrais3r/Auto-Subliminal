@@ -1,1 +1,6 @@
 TODO:
+- fix restart after webroot change (not sure how to do this because the old webroot needs time to shutdown before the new one can take over)
+- do a git clean after version update??? See https://github.com/pymedusa/Medusa/pull/2932/commits/7e3f22f732d35e29c773f5f999b8617e57274ffb
+- check mobile ui (and move related static data: images, css, js,... to separate folder)
+- add developer option to use unminified javascript (also minify our javascript in 1 file?)
+- remove jquery-ui (most likely not used)
