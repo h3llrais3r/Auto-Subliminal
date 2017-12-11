@@ -158,17 +158,17 @@ gulp.task('minify:vendor_mobile_css', ['bundle:vendor_mobile_css'], function () 
 
 var cleanup_sources = [
     'dist',
-    'interface/media/scripts/vendor.js',
-    'interface/media/scripts/vendor.min.js',
-    'interface/media/css/vendor.css',
-    'interface/media/css/vendor.min.css',
-    'interface/media/images/vendor',
-    'interface/media/fonts',
-    'interface/media/scripts/mobile/vendor.mobile.js',
-    'interface/media/scripts/mobile/vendor.mobile.min.js',
-    'interface/media/css/mobile/vendor.mobile.css',
-    'interface/media/css/mobile/vendor.mobile.min.css',
-    'interface/media/css/mobile/images'
+    'interface/static/js/vendor.js',
+    'interface/static/js/vendor.min.js',
+    'interface/static/css/vendor.css',
+    'interface/static/css/vendor.min.css',
+    'interface/static/images/vendor',
+    'interface/static/fonts',
+    'interface/static/js/mobile/vendor.mobile.js',
+    'interface/static/js/mobile/vendor.mobile.min.js',
+    'interface/static/css/mobile/vendor.mobile.css',
+    'interface/static/css/mobile/vendor.mobile.min.css',
+    'interface/static/css/mobile/images'
 ];
 
 gulp.task('clean', function () {
@@ -183,12 +183,12 @@ gulp.task('clean', function () {
 
 gulp.task('copy:vendor_js', ['minify:vendor_js'], function () {
     return gulp.src(['dist/vendor.js', 'dist/vendor.min.js'])
-        .pipe(gulp.dest('interface/media/scripts'));
+        .pipe(gulp.dest('interface/static/js'));
 });
 
 gulp.task('copy:vendor_css', ['minify:vendor_css'], function () {
     return gulp.src(['dist/vendor.css', 'dist/vendor.min.css'])
-        .pipe(gulp.dest('interface/media/css'));
+        .pipe(gulp.dest('interface/static/css'));
 });
 
 gulp.task('copy:vendor_images', function () {
@@ -197,31 +197,31 @@ gulp.task('copy:vendor_images', function () {
             //gulp_util.log(JSON.stringify(path));
             // copy images in specific subfolder
             if (path.base.indexOf('tablesorter') != -1) {
-                return 'interface/media/images/vendor/tablesorter';
+                return 'interface/static/images/vendor/tablesorter';
             } else {
-                return 'interface/media/images/vendor';
+                return 'interface/static/images/vendor';
             }
         }));
 });
 
 gulp.task('copy:vendor_fonts', function () {
     return gulp.src(vendor.fonts)
-        .pipe(gulp.dest('interface/media/fonts'));
+        .pipe(gulp.dest('interface/static/fonts'));
 });
 
 gulp.task('copy:vendor_mobile_js', ['minify:vendor_mobile_js'], function () {
     return gulp.src(['dist/vendor.mobile.js', 'dist/vendor.mobile.min.js'])
-        .pipe(gulp.dest('interface/media/scripts/mobile'));
+        .pipe(gulp.dest('interface/static/js/mobile'));
 });
 
 gulp.task('copy:vendor_mobile_css', ['minify:vendor_mobile_css'], function () {
     return gulp.src(['dist/vendor.mobile.css', 'dist/vendor.mobile.min.css'])
-        .pipe(gulp.dest('interface/media/css/mobile'));
+        .pipe(gulp.dest('interface/static/css/mobile'));
 });
 
 gulp.task('copy:vendor_mobile_images', function () {
     return gulp.src(vendor.mobile.images)
-        .pipe(gulp.dest('interface/media/css/mobile/images'));
+        .pipe(gulp.dest('interface/static/css/mobile/images'));
 });
 
 /************

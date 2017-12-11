@@ -131,7 +131,7 @@ def _get_application_configuration():
         '/': {
             'tools.encode.encoding': 'utf-8',
             'tools.decode.encoding': 'utf-8',
-            'tools.staticdir.root': os.path.join(autosubliminal.PATH, 'interface/media/'),
+            'tools.staticdir.root': os.path.join(autosubliminal.PATH, 'interface/static/'),
         },
         '/css': {
             'tools.staticdir.on': True,
@@ -151,15 +151,15 @@ def _get_application_configuration():
             'tools.expires.on': True,
             'tools.expires.secs': 3600 * 24 * 7
         },
-        '/scripts': {
+        '/js': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "scripts",
+            'tools.staticdir.dir': "js",
             'tools.expires.on': True,
             'tools.expires.secs': 3600 * 24 * 7
         },
         '/favicon.ico': {
             'tools.staticfile.on': True,
-            'tools.staticfile.filename': os.path.join(autosubliminal.PATH, 'interface/media/images/favicon.ico')
+            'tools.staticfile.filename': os.path.join(autosubliminal.PATH, 'interface/static/images/favicon.ico')
         },
         '/system/message': {
             'tools.websocket.on': True,
