@@ -1,5 +1,7 @@
 Installation
 ============
+Install from source in Python system installation with requirements:
+
     python setup.py install
 
 Installation in virtualenv for dev/test
@@ -10,7 +12,7 @@ Installation in virtualenv for dev/test
 
 - activate virtual environment 'name'
 
-- install with test dependencies (run from where setup.py is located):
+- install with test dependencies in editable mode (run from where setup.py is located):
 
         pip install -e .[test]
         
@@ -20,12 +22,16 @@ Configure PyCharm to use virtualenv in terminal
 ===============================================
 Go to Settings, Tools, Terminal -> add /K <path-to-your-activate.bat> to Shell path
 
-Installation of new python libraries in lib folder
-==================================================
+Installation of new python library
+==================================
+    pip install <library>
+
+Installation of new python library in lib folder
+================================================
     pip install <library> -t lib
 
-Installation of new python libraries from github in lib folder
-==============================================================
+Installation of new python library from github in lib folder
+============================================================
     pip install git+<github_url>@<branch>#egg=<folder> -t lib
 
 Example branch:
