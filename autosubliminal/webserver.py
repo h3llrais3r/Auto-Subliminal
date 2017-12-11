@@ -31,9 +31,9 @@ class Home(object):
     @cherrypy.expose
     def index(self):
         useragent = cherrypy.request.headers.get("User-Agent", '')
-        tmpl = Template(file="interface/templates/home/home.tmpl")
+        tmpl = Template(file="web/templates/home/home.tmpl")
         if autosubliminal.MOBILE and utils.check_mobile_device(useragent):
-            tmpl = Template(file="interface/templates/mobile/home.tmpl")
+            tmpl = Template(file="web/templates/mobile/home.tmpl")
         return str(tmpl)
 
     @cherrypy.expose(alias='updateWantedItem')
@@ -83,7 +83,7 @@ class Home(object):
     @cherrypy.expose(alias='skipShow')
     def skip_show(self, wanted_item_index, title, season=None):
         if not season:
-            tmpl = Template(file="interface/templates/home/home-skipshow.tmpl")
+            tmpl = Template(file="web/templates/home/home-skipshow.tmpl")
             tmpl.wanted_item_index = wanted_item_index
             tmpl.title = title
             return str(tmpl)
@@ -146,7 +146,7 @@ class Home(object):
         if not confirmed:
             # Get wanted item
             wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
-            tmpl = Template(file="interface/templates/home/home-deleteVideo.tmpl")
+            tmpl = Template(file="web/templates/home/home-deleteVideo.tmpl")
             tmpl.wanted_item_index = wanted_item_index
             tmpl.video = wanted_item['videopath']
             return str(tmpl)
@@ -164,7 +164,7 @@ class Home(object):
         # Search subtitle
         subs, errormessage = subchecker.search_subtitle(wanted_item_index, lang)
         # Send response in html (store subs under subs key)
-        tmpl = Template(file="interface/templates/home/home-manualsearch.tmpl")
+        tmpl = Template(file="web/templates/home/home-manualsearch.tmpl")
         tmpl.subs = subs
         tmpl.infomessage = ""
         tmpl.errormessage = errormessage
@@ -256,7 +256,7 @@ class Config(object):
 
     class _ConfigGeneral(object):
         def __init__(self):
-            self.tmpl_file = "interface/templates/config/config-general.tmpl"
+            self.tmpl_file = "web/templates/config/config-general.tmpl"
 
         @cherrypy.expose
         def index(self):
@@ -289,7 +289,7 @@ class Config(object):
 
     class _ConfigLogging(object):
         def __init__(self):
-            self.tmpl_file = "interface/templates/config/config-logging.tmpl"
+            self.tmpl_file = "web/templates/config/config-logging.tmpl"
 
         @cherrypy.expose
         def index(self):
@@ -315,7 +315,7 @@ class Config(object):
 
     class _ConfigWebServer(object):
         def __init__(self):
-            self.tmpl_file = "interface/templates/config/config-webserver.tmpl"
+            self.tmpl_file = "web/templates/config/config-webserver.tmpl"
 
         @cherrypy.expose
         def index(self):
@@ -337,7 +337,7 @@ class Config(object):
 
     class _ConfigSubliminal(object):
         def __init__(self):
-            self.tmpl_file = "interface/templates/config/config-subliminal.tmpl"
+            self.tmpl_file = "web/templates/config/config-subliminal.tmpl"
 
         @cherrypy.expose
         def index(self):
@@ -422,7 +422,7 @@ class Config(object):
 
     class _ConfigNameMapping(object):
         def __init__(self):
-            self.tmpl_file = "interface/templates/config/config-namemapping.tmpl"
+            self.tmpl_file = "web/templates/config/config-namemapping.tmpl"
 
         @cherrypy.expose
         def index(self):
@@ -440,7 +440,7 @@ class Config(object):
 
     class _ConfigSkip(object):
         def __init__(self):
-            self.tmpl_file = "interface/templates/config/config-skip.tmpl"
+            self.tmpl_file = "web/templates/config/config-skip.tmpl"
 
         @cherrypy.expose
         def index(self):
@@ -458,7 +458,7 @@ class Config(object):
 
     class _ConfigNotification(object):
         def __init__(self):
-            self.tmpl_file = "interface/templates/config/config-notification.tmpl"
+            self.tmpl_file = "web/templates/config/config-notification.tmpl"
 
         @cherrypy.expose
         def index(self):
@@ -488,12 +488,12 @@ class Config(object):
                 oauth_client = oauth2.Client(consumer)
                 response, content = oauth_client.request(notifytwitter.REQUEST_TOKEN_URL, 'GET')
                 if response['status'] != '200':
-                    tmpl = Template(file="interface/templates/general/message.tmpl")
+                    tmpl = Template(file="web/templates/general/message.tmpl")
                     tmpl.message = "Something went wrong..."
                     return str(tmpl)
                 else:
                     request_token = dict(parse_qsl(content))
-                    tmpl = Template(file="interface/templates/config/config-regtwitter.tmpl")
+                    tmpl = Template(file="web/templates/config/config-regtwitter.tmpl")
                     tmpl.url = notifytwitter.AUTHORIZATION_URL + "?oauth_token=" + request_token['oauth_token']
                     token_key = request_token['oauth_token']
                     token_secret = request_token['oauth_token_secret']
@@ -510,13 +510,13 @@ class Config(object):
                                                           body='oauth_verifier=%s' % token_pin)
                 access_token = dict(parse_qsl(content))
                 if response['status'] != '200':
-                    tmpl = Template(file="interface/templates/general/message.tmpl")
+                    tmpl = Template(file="web/templates/general/message.tmpl")
                     tmpl.message = "Something went wrong..."
                     return str(tmpl)
                 else:
                     autosubliminal.TWITTERKEY = access_token['oauth_token']
                     autosubliminal.TWITTERSECRET = access_token['oauth_token_secret']
-                    tmpl = Template(file="interface/templates/general/message.tmpl")
+                    tmpl = Template(file="web/templates/general/message.tmpl")
                     tmpl.message = "Twitter is now set up, remember to save your config and remember to test twitter!" \
                                    "<br><a href='" + autosubliminal.WEBROOT + "/config'>Return</a>"
                     return str(tmpl)
@@ -570,7 +570,7 @@ class Config(object):
 
     class _ConfigPostProcessing(object):
         def __init__(self):
-            self.tmpl_file = "interface/templates/config/config-postprocessing.tmpl"
+            self.tmpl_file = "web/templates/config/config-postprocessing.tmpl"
 
         @cherrypy.expose
         def index(self):
@@ -603,7 +603,7 @@ class Log(object):
 
     @cherrypy.expose(alias='viewLog')
     def view_log(self, loglevel=""):
-        tmpl = Template(file="interface/templates/log/log.tmpl")
+        tmpl = Template(file="web/templates/log/log.tmpl")
         if loglevel == "":
             tmpl.loglevel = "All"
         else:
@@ -619,7 +619,7 @@ class Log(object):
         with open(autosubliminal.LOGFILE, 'w'):
             pass
             # Return to default log view
-        tmpl = Template(file="interface/templates/log/log.tmpl")
+        tmpl = Template(file="web/templates/log/log.tmpl")
         if loglevel == "":
             tmpl.loglevel = "All"
         else:
@@ -640,7 +640,7 @@ class System(object):
         autosubliminal.CHECKSUB.run(delay=0.5)
         useragent = cherrypy.request.headers.get("User-Agent", '')
         if autosubliminal.MOBILE and utils.check_mobile_device(useragent):
-            tmpl = Template(file="interface/templates/mobile/message.tmpl")
+            tmpl = Template(file="web/templates/mobile/message.tmpl")
             tmpl.message = "Running everything <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return</a>"
             return str(tmpl)
         else:
@@ -650,25 +650,25 @@ class System(object):
     @cherrypy.expose
     def restart(self):
         runner.restart_app()
-        tmpl = Template(file="interface/templates/system/system-restart.tmpl")
+        tmpl = Template(file="web/templates/system/system-restart.tmpl")
         tmpl.message = "Auto-Subliminal is restarting..."
         return str(tmpl)
 
     @cherrypy.expose
     def shutdown(self):
         runner.shutdown_app()
-        tmpl = Template(file="interface/templates/general/message.tmpl")
+        tmpl = Template(file="web/templates/general/message.tmpl")
         tmpl.message = "Auto-Subliminal is shutting down..."
         return str(tmpl)
 
     @cherrypy.expose(alias='info')
     def info(self):
-        tmpl = Template(file="interface/templates/system/system-info.tmpl")
+        tmpl = Template(file="web/templates/system/system-info.tmpl")
         return str(tmpl)
 
     @cherrypy.expose
     def status(self):
-        tmpl = Template(file="interface/templates/system/system-status.tmpl")
+        tmpl = Template(file="web/templates/system/system-status.tmpl")
         return str(tmpl)
 
     @cherrypy.expose(alias='scanDisk')
@@ -690,7 +690,7 @@ class System(object):
     def update_version(self):
         autosubliminal.CHECKVERSION.process.update()
         runner.restart_app(exit=True)
-        tmpl = Template(file="interface/templates/system/system-restart.tmpl")
+        tmpl = Template(file="web/templates/system/system-restart.tmpl")
         tmpl.message = "Auto-Subliminal is restarting..."
         return str(tmpl)
 
@@ -758,7 +758,7 @@ class Mobile(object):
 
     @cherrypy.expose
     def index(self):
-        tmpl = Template(file="interface/templates/mobile/home.tmpl")
+        tmpl = Template(file="web/templates/mobile/home.tmpl")
         return str(tmpl)
 
 

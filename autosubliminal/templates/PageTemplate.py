@@ -175,7 +175,7 @@ class PageTemplate(Template):
 <head>
 
 ''')
-        self._handleCheetahInclude(VFN(VFSL([locals()]+SL+[globals(), builtin],"os.path",True),"join",False)(VFN(VFSL([locals()]+SL+[globals(), builtin],"autosubliminal.PATH",True),"encode",False)(), "interface/templates/layout/inc_header.tmpl"), trans=trans, includeFrom="file", raw=False)
+        self._handleCheetahInclude(VFN(VFSL([locals()]+SL+[globals(), builtin],"os.path",True),"join",False)(VFN(VFSL([locals()]+SL+[globals(), builtin],"autosubliminal.PATH",True),"encode",False)(), "web/templates/layout/inc_header.tmpl"), trans=trans, includeFrom="file", raw=False)
         write(u'''
 ''')
         self.headerContent(trans=trans)
@@ -185,7 +185,7 @@ class PageTemplate(Template):
 <body>
 
 ''')
-        self._handleCheetahInclude(VFN(VFSL([locals()]+SL+[globals(), builtin],"os.path",True),"join",False)(VFN(VFSL([locals()]+SL+[globals(), builtin],"autosubliminal.PATH",True),"encode",False)(), "interface/templates/layout/inc_menu.tmpl"), trans=trans, includeFrom="file", raw=False)
+        self._handleCheetahInclude(VFN(VFSL([locals()]+SL+[globals(), builtin],"os.path",True),"join",False)(VFN(VFSL([locals()]+SL+[globals(), builtin],"autosubliminal.PATH",True),"encode",False)(), "web/templates/layout/inc_menu.tmpl"), trans=trans, includeFrom="file", raw=False)
         write(u'''
 <div class="jumbotron jumbotron-global">
 
@@ -201,7 +201,7 @@ class PageTemplate(Template):
     <div class="jumbotron-footer">
 
 ''')
-        self._handleCheetahInclude(VFN(VFSL([locals()]+SL+[globals(), builtin],"os.path",True),"join",False)(VFN(VFSL([locals()]+SL+[globals(), builtin],"autosubliminal.PATH",True),"encode",False)(), "interface/templates/layout/inc_footer.tmpl"), trans=trans, includeFrom="file", raw=False)
+        self._handleCheetahInclude(VFN(VFSL([locals()]+SL+[globals(), builtin],"os.path",True),"join",False)(VFN(VFSL([locals()]+SL+[globals(), builtin],"autosubliminal.PATH",True),"encode",False)(), "web/templates/layout/inc_footer.tmpl"), trans=trans, includeFrom="file", raw=False)
         write(u'''
 ''')
         self.footerContent(trans=trans)
