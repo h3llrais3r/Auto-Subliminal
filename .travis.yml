@@ -14,7 +14,7 @@ install:
 
 # build command(s)
 script:
-  - coverage run --source=autosubliminal setup.py test
+  - coverage run --branch --source=autosubliminal setup.py test
   - coverage report
 
 # after success command(s)
