@@ -4,6 +4,9 @@
 # Compiled files
 *.pyc
 
+# Todo's
+TODO.txt
+
 # Log files
 *.log*
 
