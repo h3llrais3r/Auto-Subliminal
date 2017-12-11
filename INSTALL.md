@@ -41,3 +41,15 @@ Export installed libraries to file
     pip freeze > requirements/libraries.txt
 
 This does not work for libraries exported in other folder (f.e. lib)
+
+Install javascript library
+==========================
+Install javascript library via npm:
+
+    npm install --save <library_name>
+
+Adapt gulpfile.js to include needed files of the library (javascript, css, images, fonts, ...)
+
+Run gulp build task to include the new library in the vendor files:
+
+    npm run build
