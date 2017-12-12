@@ -9,13 +9,9 @@ python:
 # command(s) to install dependencies
 install:
   - pip install --upgrade pip
+  - pip install --upgrade tox
   - pip install -r requirements.txt
-  - pip install coveralls
 
 # build command(s)
 script:
-  - coverage run --branch --source=autosubliminal setup.py test
-  - coverage report
-
-# after success command(s)
-after_success: coveralls
+  - tox

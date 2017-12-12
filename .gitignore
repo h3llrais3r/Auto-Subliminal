@@ -29,3 +29,6 @@ node_modules/
 
 #Coverage files
 .coverage
+
+#Tox files
+.tox

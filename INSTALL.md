@@ -12,9 +12,9 @@ Installation in virtualenv for dev/test
 
 - activate virtual environment 'name'
 
-- install with test dependencies in editable mode (run from where setup.py is located):
+- install with dev dependencies in editable mode (run from where setup.py is located):
 
-        pip install -e .[test]
+        pip install -e .[dev]
         
 - use virtual environment as runtime in PyCharm (or your editor)
 
