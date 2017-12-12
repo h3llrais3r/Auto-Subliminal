@@ -1,10 +1,7 @@
-try:
-    from Cheetah.Template import Template
-except:
-    print "ERROR!!! Cheetah is not installed yet. Download it from: http://pypi.python.org/pypi/Cheetah/2.4.4"
-
 import json
+
 import cherrypy
+from Cheetah.Template import Template
 
 import autosubliminal
 from autosubliminal import config, notifiers, runner, subchecker, utils
