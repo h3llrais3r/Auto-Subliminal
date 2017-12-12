@@ -5,7 +5,7 @@
 
 #try
 #set $response = utils.connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/master/changelog.html')
-#set $page = $BeautifulSoup($response)
+#set $page = $BeautifulSoup($response, 'html5lib')
 #set $releases = $page.find_all("div", "release")
 #set $counter = 0
 
