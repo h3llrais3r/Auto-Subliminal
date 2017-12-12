@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import io
 import os
 import sys
 from setuptools import setup, find_packages
@@ -9,7 +10,7 @@ from setuptools import setup, find_packages
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
 
 # root path
-root_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+root_path = os.path.abspath(os.path.dirname(__file__))
 
 # requirements
 setup_requirements = ['pytest-runner'] if {'pytest', 'test', 'ptr'}.intersection(sys.argv) else []
@@ -21,12 +22,18 @@ test_requirements = ['pytest', 'pytest-pep8', 'pytest-flakes']
 dev_requirements = ['Cheetah', 'tox']
 dev_requirements.extend(test_requirements)
 
+
+# read function
+def read(file_name):
+    return io.open(os.path.join(root_path, file_name), 'r').read()
+
+
 # setup
 setup(name='Auto-Subliminal',
       version='2.2.1',
       license='GPL v3',
       description='Auto-Subliminal, the automated subliminal subtitle downloader',
-      long_description=open(os.path.join(root_path, 'README.md')).read(),
+      long_description=read('README.md'),
       keywords='subtitle subtitles video movie episode tv show',
       url='https://github.com/h3llrais3r/Auto-Subliminal',
       author='h3llrais3r',
