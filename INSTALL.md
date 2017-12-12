@@ -4,17 +4,17 @@ Install from source in Python system installation with requirements:
 
     python setup.py install
 
-Installation in virtualenv for dev/test
-=======================================
+Installation in virtualenv for development
+==========================================
 - create virtual environment: 
 
         virtualenv 'name'
 
 - activate virtual environment 'name'
 
-- install with dev dependencies in editable mode (run from where setup.py is located):
+- install with dev requirements (run from where setup.py is located):
 
-        pip install -e .[dev]
+        pip install -r dev-requirements.txt
         
 - use virtual environment as runtime in PyCharm (or your editor)
 

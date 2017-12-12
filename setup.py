@@ -20,12 +20,11 @@ install_requirements = []
 test_requirements = ['pytest', 'pytest-pep8', 'pytest-flakes']
 
 dev_requirements = ['Cheetah', 'tox']
-dev_requirements.extend(test_requirements)
 
 
 # read function
-def read(file_name):
-    return io.open(os.path.join(root_path, file_name), 'r').read()
+def read(*paths):
+    return io.open(os.path.join(root_path, *paths), 'r').read()
 
 
 # setup
