@@ -13,4 +13,4 @@ install:
 
 # build command(s)
 script:
-  - tox -v
+  - tox -v --recreate
