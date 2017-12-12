@@ -15,6 +15,9 @@ from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
 
+# Pattern to search for the RELEASE_VERSION (version must be compliant with version.StrictVersion of distutils)
+VERSION_PATTERN = r'^RELEASE_VERSION\s*=\s*[\'\"]((\d+)\.(\d+)(\.(\d+))?([ab](\d+))?)[\'\"]$'
+
 
 class VersionChecker(ScheduledProcess):
     """
@@ -170,8 +173,8 @@ class SourceVersionManager(BaseVersionManager):
             log.error("Could not get remote version from %s" % autosubliminal.VERSIONURL)
             return False
         try:
-            match = re.search('(\d+)\.(\d+)\.(\d+)', response)
-            remote_version = version.StrictVersion(match.group(0))
+            match = re.search(VERSION_PATTERN, response, re.MULTILINE)
+            remote_version = version.StrictVersion(match.group(1))
             log.debug("Remote version: %s" % remote_version)
         except:
             log.error("Could not parse version from %s" % autosubliminal.VERSIONURL)
