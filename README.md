@@ -74,7 +74,6 @@ How to use
 ----------
 
  * Install python
- * Install python cheetah package manually or use the installer from Auto-Subliminal (python setup.py install)
  * Start the script: " python AutoSubliminal.py "
  * A web browser should now open
  * Go to the config menu, check the settings and make sure you set at least:
