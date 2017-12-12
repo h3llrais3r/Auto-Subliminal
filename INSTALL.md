@@ -14,7 +14,7 @@ Installation in virtualenv for development
 
 - install with dev requirements (run from where setup.py is located):
 
-        pip install -r dev-requirements.txt
+        pip install -r requirements-dev.txt
         
 - use virtual environment as runtime in PyCharm (or your editor)
 

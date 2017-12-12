@@ -1,1 +1,2 @@
+# Install in editable mode
 -e .
