@@ -11,7 +11,7 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib'
 # requirements
 setup_requirements = ['pytest-runner'] if {'pytest', 'test', 'ptr'}.intersection(sys.argv) else []
 
-install_requirements = open('requirements.txt').readlines()
+install_requirements = []
 
 test_requirements = ['pytest', 'pytest-pep8', 'pytest-flakes']
 
