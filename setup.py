@@ -8,6 +8,9 @@ from setuptools import setup, find_packages
 # integrated libraries - add them to the system path (needed for running tests)
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
 
+# root path
+root_path = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+
 # requirements
 setup_requirements = ['pytest-runner'] if {'pytest', 'test', 'ptr'}.intersection(sys.argv) else []
 
@@ -23,7 +26,7 @@ setup(name='Auto-Subliminal',
       version='2.2.1',
       license='GPL v3',
       description='Auto-Subliminal, the automated subliminal subtitle downloader',
-      long_description=open('README.md').read(),
+      long_description=open(os.path.join(root_path, 'readme.md')).read(),
       keywords='subtitle subtitles video movie episode tv show',
       url='https://github.com/h3llrais3r/Auto-Subliminal',
       author='h3llrais3r',
