@@ -5,6 +5,8 @@
 
 #block bodyContent
 
+<div id="discarded-providers" class="hidden">$autosubliminal.SUBLIMINALDISCARDEDPROVIDERS</div>
+
 #include $os.path.join($autosubliminal.PATH.encode(), "web/templates/home/inc_home-wanteditems.tmpl")
 
 #include $os.path.join($autosubliminal.PATH.encode(), "web/templates/home/inc_home-lastdownloads.tmpl")
@@ -12,8 +14,6 @@
 #end block bodyContent
 
 #block footerContent
-
-<div id="discarded-providers" class="hidden">$autosubliminal.SUBLIMINALDISCARDEDPROVIDERS</div>
 
 <script type="text/javascript" src="$autosubliminal.WEBROOT/js/home.js"></script>
 
