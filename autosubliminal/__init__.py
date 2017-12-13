@@ -26,7 +26,7 @@ CHECKSUB = None
 CHECKVERSION = None
 
 # Developer
-DEVELOPER=None
+DEVELOPER = None
 
 # Indexers
 TVDBAPIKEY = None
