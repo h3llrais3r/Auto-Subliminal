@@ -22,7 +22,8 @@
 </div>
 
 <!-- Vendor javascript -->
-<script type="text/javascript" src="$autosubliminal.WEBROOT/js/vendor.js"></script>
+#set $vendor_js = $autosubliminal.DEVELOPER and "vendor.js" or "vendor.min.js"
+<script type="text/javascript" src="$autosubliminal.WEBROOT/js/$vendor_js"></script>
 
 <!-- Auto-Subliminal javascript (applies to all pages) -->
 <script type="text/javascript" src="$autosubliminal.WEBROOT/js/autosubliminal.js"></script>

@@ -6,7 +6,8 @@
 <title>Auto-Subliminal</title>
 
 <!-- Vendor theme -->
-<link rel="stylesheet" href="$autosubliminal.WEBROOT/css/vendor.css" media="screen">
+#set $vendor_css = $autosubliminal.DEVELOPER and "vendor.css" or "vendor.min.css"
+<link rel="stylesheet" href="$autosubliminal.WEBROOT/css/$vendor_css" media="screen">
 
 <!-- Auto-Subliminal theme -->
 <link rel="stylesheet" href="$autosubliminal.WEBROOT/css/autosubliminal.css" media="screen">

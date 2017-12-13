@@ -690,9 +690,13 @@ def read_config():
         autosubliminal.MOVIEPOSTPROCESSCMD = u""
         autosubliminal.MOVIEPOSTPROCESSCMDARGS = u""
 
+    # Dev section: only overwrite default values if specified
     if cfg.has_section('dev'):
         if cfg.has_option('dev', 'apikey'):
             autosubliminal.TVDBAPIKEY = cfg.get('dev', 'tvdbapikey')
+
+        if cfg.has_option('dev', 'developer'):
+            autosubliminal.DEVELOPER = cfg.getboolean('dev', 'developer')
 
     # Check if config needs to be upgraded
     if autosubliminal.CONFIGVERSION < version.CONFIG_VERSION:
