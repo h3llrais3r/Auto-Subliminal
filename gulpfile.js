@@ -16,8 +16,6 @@ var vendor = {
     js: [
         // jquery
         'node_modules/jquery/dist/jquery.js',
-        // jquery ui
-        'node_modules/jquery-ui-dist/jquery-ui.js', // IS THIS NEEDED? PERHAPS FOR MOBILE?
         // jquery countdown
         'node_modules/jquery-countdown/dist/jquery.countdown.js',
         // jquery hoverintent
