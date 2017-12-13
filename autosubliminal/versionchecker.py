@@ -236,6 +236,10 @@ class GitVersionManager(BaseVersionManager):
     def current_version_url(self):
         return autosubliminal.GITHUBURL + "/commit/" + self.current_version
 
+    def clean(self):
+        # call git clean to remove all untracked files (only in source and lib folders)
+        self.repo.git.execute('git clean -xdf autosubliminal lib web')
+
     def check_version(self, force_run=False):
         # Reset update_allowed flag
         self.update_allowed = False
@@ -296,7 +300,10 @@ class GitVersionManager(BaseVersionManager):
     def update_version(self):
         if self.update_allowed:
             try:
+                # Do a git clean before and after the update to remove all untracked files
+                self.clean()
                 self.repo.remote(name='origin').pull()
+                self.clean()
                 log.info("Updated to the latest version")
                 utils.add_notification_message("Updated to the latest version")
             except:
