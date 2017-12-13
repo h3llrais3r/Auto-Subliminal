@@ -174,7 +174,12 @@ function _handle_event(event_type) {
     if (event_type == 'HOME_PAGE_RELOAD') {
         // only reload when we are actually on the home page
         if (window.location.pathname.indexOf('/home') >= 0) {
-            window.location.reload();
+            // add delay of 1s to be sure it's not triggered immediately after a page redirect (or load)
+            // when redirecting and loading really fast after each other,
+            // it's possible that your websocket is not initialized in time and your websocket message is lost
+            setTimeout(function () {
+                window.location.reload();
+            }, 1000);
         }
     } else {
         console.error('Unsupported event: ' + event_type);
