@@ -12,9 +12,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Vendor mobile theme -->
-    <link rel="stylesheet" href="$autosubliminal.WEBROOT/css/mobile/vendor.mobile.css" media="screen">
+    #set $vendor_mobile_css = $autosubliminal.DEVELOPER and "vendor.mobile.css" or "vendor.mobile.min.css"
+    <link rel="stylesheet" href="$autosubliminal.WEBROOT/css/mobile/$vendor_mobile_css" media="screen">
     <!-- Vendor mobile javascript -->
-    <script type="text/javascript" src="$autosubliminal.WEBROOT/js/mobile/vendor.mobile.js"></script>
+    #set $vendor_mobile_js = $autosubliminal.DEVELOPER and "vendor.mobile.js" or "vendor.mobile.min.js"
+    <script type="text/javascript" src="$autosubliminal.WEBROOT/js/mobile/$vendor_mobile_js"></script>
 </head>
 
 <body>
