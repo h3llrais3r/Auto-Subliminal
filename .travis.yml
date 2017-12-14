@@ -18,5 +18,5 @@ script:
   - coverage report
 
 # after success command(s)
-after_succes:
+after_success:
   - coveralls
