@@ -10,7 +10,7 @@ cherrypy==8.1.0
 click==4.1
 dogpile.cache==0.6.2
 dogpile.core==0.4.1
-enum34==1.1.2
+enum34==1.1.6
 enzyme==0.4.1
 futures==3.2.0
 gitpython==1.0.2
