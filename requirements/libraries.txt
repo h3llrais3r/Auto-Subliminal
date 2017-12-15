@@ -16,7 +16,7 @@ futures==3.2.0
 gitpython==1.0.2
 gitdb==0.6.4
 growl==0.5
-guessit==2.0.5
+guessit==2.1.4
 html5lib==0.999
 httplib2==0.8
 imdbpy==5.0

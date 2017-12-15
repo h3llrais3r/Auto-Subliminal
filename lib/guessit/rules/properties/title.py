@@ -3,18 +3,17 @@
 """
 title property
 """
-import re
 
 from rebulk import Rebulk, Rule, AppendMatch, RemoveMatch, AppendTags
 from rebulk.formatters import formatters
-from rebulk.pattern import RePattern
-from rebulk.utils import find_all
 
 from .film import FilmTitleRule
 from .language import SubtitlePrefixLanguageRule, SubtitleSuffixLanguageRule, SubtitleExtensionRule
-from ..common.formatters import cleanup, reorder_title
+from ..common import seps, title_seps
 from ..common.comparators import marker_sorted
-from ..common import seps, title_seps, dash
+from ..common.expected import build_expected_function
+from ..common.formatters import cleanup, reorder_title
+from ..common.validators import seps_surround
 
 
 def title():
@@ -25,30 +24,11 @@ def title():
     """
     rebulk = Rebulk().rules(TitleFromPosition, PreferTitleWithYear)
 
-    def expected_title(input_string, context):
-        """
-        Expected title functional pattern.
-        :param input_string:
-        :type input_string:
-        :param context:
-        :type context:
-        :return:
-        :rtype:
-        """
-        ret = []
-        for search in context.get('expected_title'):
-            if search.startswith('re:'):
-                search = search[3:]
-                search = search.replace(' ', '-')
-                matches = RePattern(search, abbreviations=[dash], flags=re.IGNORECASE).matches(input_string, context)
-                for match in matches:
-                    ret.append(match.span)
-            else:
-                for start in find_all(input_string, search, ignore_case=True):
-                    ret.append((start, start+len(search)))
-        return ret
+    expected_title = build_expected_function('expected_title')
 
-    rebulk.functional(expected_title, name='title', tags=['expected'],
+    rebulk.functional(expected_title, name='title', tags=['expected', 'title'],
+                      validator=seps_surround,
+                      formatter=formatters(cleanup, reorder_title),
                       conflict_solver=lambda match, other: other,
                       disabled=lambda context: not context.get('expected_title'))
 
@@ -110,9 +90,11 @@ class TitleBaseRule(Rule):
 
     def is_ignored(self, match):
         """
-        Ignore matches when scanning for title (hole)
+        Ignore matches when scanning for title (hole).
+
+        Full word language and countries won't be ignored if they are uppercase.
         """
-        return match.name in ['language', 'country', 'episode_details']
+        return not (len(match) > 3 and match.raw.isupper()) and match.name in ['language', 'country', 'episode_details']
 
     def should_keep(self, match, to_keep, matches, filepart, hole, starting):
         """
@@ -132,8 +114,12 @@ class TitleBaseRule(Rule):
         :return:
         :rtype:
         """
-        # Keep language if other languages exists in the filepart.
         if match.name in ['language', 'country']:
+            # Keep language if exactly matching the hole.
+            if len(hole.value) == len(match.raw):
+                return True
+
+            # Keep language if other languages exists in the filepart.
             outside_matches = filepart.crop(hole)
             other_languages = []
             for outside in outside_matches:
@@ -156,7 +142,7 @@ class TitleBaseRule(Rule):
         :return:
         """
         if context.get('type') == 'episode' and match.name == 'episode_details':
-            return False
+            return match.start >= hole.start and match.end <= hole.end
         return True
 
     def check_titles_in_filepart(self, filepart, matches, context):
@@ -220,7 +206,8 @@ class TitleBaseRule(Rule):
                 if self.should_remove(match, matches, filepart, hole, context):
                     to_remove.append(match)
             for keep_match in to_keep:
-                to_remove.remove(keep_match)
+                if keep_match in to_remove:
+                    to_remove.remove(keep_match)
 
             if hole and hole.value:
                 hole.name = self.match_name
