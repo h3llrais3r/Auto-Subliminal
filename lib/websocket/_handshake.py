@@ -19,24 +19,22 @@ Copyright (C) 2010 Hiroki Ohtani(liris)
     Boston, MA  02110-1335  USA
 
 """
+import hashlib
+import hmac
+import os
 
 import six
+
+from ._cookiejar import SimpleCookieJar
+from ._exceptions import *
+from ._http import *
+from ._logging import *
+from ._socket import *
+
 if six.PY3:
     from base64 import encodebytes as base64encode
 else:
     from base64 import encodestring as base64encode
-
-import uuid
-import hashlib
-import hmac
-import os
-import sys
-
-from ._logging import *
-from ._url import *
-from ._socket import*
-from ._http import *
-from ._exceptions import *
 
 __all__ = ["handshake_response", "handshake"]
 
@@ -49,12 +47,16 @@ else:
 # websocket supported version.
 VERSION = 13
 
+CookieJar = SimpleCookieJar()
+
 
 class handshake_response(object):
+
     def __init__(self, status, headers, subprotocol):
         self.status = status
         self.headers = headers
         self.subprotocol = subprotocol
+        CookieJar.add(headers.get("set-cookie"))
 
 
 def handshake(sock, hostname, port, resource, **options):
@@ -73,11 +75,12 @@ def handshake(sock, hostname, port, resource, **options):
 
 
 def _get_handshake_headers(resource, host, port, options):
-    headers = []
-    headers.append("GET %s HTTP/1.1" % resource)
-    headers.append("Upgrade: websocket")
-    headers.append("Connection: Upgrade")
-    if port == 80:
+    headers = [
+        "GET %s HTTP/1.1" % resource,
+        "Upgrade: websocket",
+        "Connection: Upgrade"
+    ]
+    if port == 80 or port == 443:
         hostport = host
     else:
         hostport = "%s:%d" % (host, port)
@@ -106,7 +109,10 @@ def _get_handshake_headers(resource, host, port, options):
             header = map(": ".join, header.items())
         headers.extend(header)
 
-    cookie = options.get("cookie", None)
+    server_cookie = CookieJar.get(host)
+    client_cookie = options.get("cookie", None)
+
+    cookie = "; ".join(filter(None, [server_cookie, client_cookie]))
 
     if cookie:
         headers.append("Cookie: %s" % cookie)
@@ -126,7 +132,7 @@ def _get_resp_headers(sock, success_status=101):
 _HEADERS_TO_CHECK = {
     "upgrade": "websocket",
     "connection": "upgrade",
-    }
+}
 
 
 def _validate(headers, key, subprotocols):
