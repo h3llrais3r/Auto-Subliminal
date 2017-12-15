@@ -1,5 +1,5 @@
 # Mandatory (packaged) libraries
-appdirs==1.4.0
+appdirs==1.4.3
 babelfish==0.5.5
 beautifulsoup4==4.4.0
 certifi==2017.11.5
