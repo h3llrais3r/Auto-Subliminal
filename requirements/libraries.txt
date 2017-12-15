@@ -12,7 +12,7 @@ dogpile.cache==0.6.2
 dogpile.core==0.4.1
 enum34==1.1.2
 enzyme==0.4.1
-futures==3.0.4
+futures==3.2.0
 gitpython==1.0.2
 gitdb==0.6.4
 growl==0.5
