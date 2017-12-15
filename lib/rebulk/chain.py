@@ -4,8 +4,10 @@
 Chain patterns and handle repetiting capture group
 """
 # pylint: disable=super-init-not-called
+import itertools
+
 from .loose import call, set_defaults
-from .match import Match
+from .match import Match, Matches
 from .pattern import Pattern, filter_match_kwargs
 from .remodule import re
 
@@ -22,7 +24,7 @@ class Chain(Pattern):
     Definition of a pattern chain to search for.
     """
 
-    def __init__(self, rebulk, **kwargs):
+    def __init__(self, rebulk, chain_breaker=None, **kwargs):
         call(super(Chain, self).__init__, **kwargs)
         self._kwargs = kwargs
         self._match_kwargs = filter_match_kwargs(kwargs)
@@ -30,6 +32,10 @@ class Chain(Pattern):
         self._regex_defaults = {}
         self._string_defaults = {}
         self._functional_defaults = {}
+        if callable(chain_breaker):
+            self.chain_breaker = chain_breaker
+        else:
+            self.chain_breaker = None
         self.rebulk = rebulk
         self.parts = []
 
@@ -159,36 +165,90 @@ class Chain(Pattern):
         return self.rebulk
 
     def _match(self, pattern, input_string, context=None):
+        # pylint: disable=too-many-locals,too-many-nested-blocks
         chain_matches = []
         chain_input_string = input_string
         offset = 0
         while offset < len(input_string):
+            chain_found = False
             current_chain_matches = []
             valid_chain = True
             is_chain_start = True
             for chain_part in self.parts:
                 try:
-                    chain_part_matches = Chain._match_chain_part(is_chain_start, chain_part, chain_input_string,
-                                                                 context)
-                    if chain_part_matches:
-                        Chain._fix_matches_offset(chain_part_matches, input_string, offset)
-                        offset = chain_part_matches[-1].raw_end
-                        chain_input_string = input_string[offset:]
-                        if not chain_part.is_hidden:
-                            current_chain_matches.extend(chain_part_matches)
+                    chain_part_matches, raw_chain_part_matches = Chain._match_chain_part(is_chain_start, chain_part,
+                                                                                         chain_input_string,
+                                                                                         context)
+
+                    Chain._fix_matches_offset(chain_part_matches, input_string, offset)
+                    Chain._fix_matches_offset(raw_chain_part_matches, input_string, offset)
+
+                    if raw_chain_part_matches:
+                        grouped_matches_dict = dict()
+                        for match_index, match in itertools.groupby(chain_part_matches,
+                                                                    lambda m: m.match_index):
+                            grouped_matches_dict[match_index] = list(match)
+
+                        grouped_raw_matches_dict = dict()
+                        for match_index, raw_match in itertools.groupby(raw_chain_part_matches,
+                                                                        lambda m: m.match_index):
+                            grouped_raw_matches_dict[match_index] = list(raw_match)
+
+                        for match_index, grouped_raw_matches in grouped_raw_matches_dict.items():
+                            chain_found = True
+                            offset = grouped_raw_matches[-1].raw_end
+                            chain_input_string = input_string[offset:]
+                            if not chain_part.is_hidden:
+                                grouped_matches = grouped_matches_dict.get(match_index, [])
+                                if self._chain_breaker_eval(current_chain_matches + grouped_matches):
+                                    current_chain_matches.extend(grouped_matches)
+
                 except _InvalidChainException:
                     valid_chain = False
                     if current_chain_matches:
                         offset = current_chain_matches[0].raw_end
                     break
                 is_chain_start = False
-            if not current_chain_matches:
+            if not chain_found:
                 break
-            if valid_chain:
+            if current_chain_matches and valid_chain:
                 match = self._build_chain_match(current_chain_matches, input_string)
                 chain_matches.append(match)
 
         return chain_matches
+
+    def _match_parent(self, match, yield_parent):
+        """
+        Handle a parent match
+        :param match:
+        :type match:
+        :param yield_parent:
+        :type yield_parent:
+        :return:
+        :rtype:
+        """
+        ret = super(Chain, self)._match_parent(match, yield_parent)
+        original_children = Matches(match.children)
+        original_end = match.end
+        while not ret and match.children:
+            last_pattern = match.children[-1].pattern
+            last_pattern_children = [child for child in match.children if child.pattern == last_pattern]
+            last_pattern_groups_iter = itertools.groupby(last_pattern_children, lambda child: child.match_index)
+            last_pattern_groups = {}
+            for index, matches in last_pattern_groups_iter:
+                last_pattern_groups[index] = list(matches)
+
+            for index in reversed(list(last_pattern_groups)):
+                last_matches = list(last_pattern_groups[index])
+                for last_match in last_matches:
+                    match.children.remove(last_match)
+                match.end = match.children[-1].end if match.children else match.start
+                ret = super(Chain, self)._match_parent(match, yield_parent)
+                if ret:
+                    return True
+        match.children = original_children
+        match.end = original_end
+        return ret
 
     def _build_chain_match(self, current_chain_matches, input_string):
         start = None
@@ -205,7 +265,11 @@ class Chain(Pattern):
                     match.children.append(child)
             if chain_match not in match.children:
                 match.children.append(chain_match)
+                chain_match.parent = match
         return match
+
+    def _chain_breaker_eval(self, matches):
+        return not self.chain_breaker or not self.chain_breaker(Matches(matches))
 
     @staticmethod
     def _fix_matches_offset(chain_part_matches, input_string, offset):
@@ -219,11 +283,15 @@ class Chain(Pattern):
 
     @staticmethod
     def _match_chain_part(is_chain_start, chain_part, chain_input_string, context):
-        chain_part_matches = chain_part.pattern.matches(chain_input_string, context)
+        chain_part_matches, raw_chain_part_matches = chain_part.pattern.matches(chain_input_string, context,
+                                                                                with_raw_matches=True)
         chain_part_matches = Chain._truncate_chain_part_matches(is_chain_start, chain_part_matches, chain_part,
                                                                 chain_input_string)
-        Chain._validate_chain_part_matches(chain_part_matches, chain_part)
-        return chain_part_matches
+        raw_chain_part_matches = Chain._truncate_chain_part_matches(is_chain_start, raw_chain_part_matches, chain_part,
+                                                                    chain_input_string)
+
+        Chain._validate_chain_part_matches(raw_chain_part_matches, chain_part)
+        return chain_part_matches, raw_chain_part_matches
 
     @staticmethod
     def _truncate_chain_part_matches(is_chain_start, chain_part_matches, chain_part, chain_input_string):
@@ -232,24 +300,27 @@ class Chain(Pattern):
 
         if not is_chain_start:
             separator = chain_input_string[0:chain_part_matches[0].initiator.raw_start]
-            if len(separator) > 0:
+            if separator:
                 return []
 
         j = 1
         for i in range(0, len(chain_part_matches) - 1):
             separator = chain_input_string[chain_part_matches[i].initiator.raw_end:
                                            chain_part_matches[i + 1].initiator.raw_start]
-            if len(separator) > 0:
+            if separator:
                 break
             j += 1
         truncated = chain_part_matches[:j]
         if chain_part.repeater_end is not None:
-            return truncated[:chain_part.repeater_end]
+            truncated = [m for m in truncated if m.match_index < chain_part.repeater_end]
         return truncated
 
     @staticmethod
     def _validate_chain_part_matches(chain_part_matches, chain_part):
-        if len(chain_part_matches) < chain_part.repeater_start:
+        max_match_index = -1
+        if chain_part_matches:
+            max_match_index = max([m.match_index for m in chain_part_matches])
+        if max_match_index + 1 < chain_part.repeater_start:
             raise _InvalidChainException
 
     @property
