@@ -9,8 +9,8 @@ on how to use these modules.
 '''
 
 # The IANA (nee Olson) database is updated several times a year.
-OLSON_VERSION = '2016d'
-VERSION = '2016.4'  # Switching to pip compatible version numbering.
+OLSON_VERSION = '2017c'
+VERSION = '2017.3'  # Switching to pip compatible version numbering.
 __version__ = VERSION
 
 OLSEN_VERSION = OLSON_VERSION # Old releases had this misspelling
@@ -24,11 +24,6 @@ __all__ = [
     ]
 
 import sys, datetime, os.path, gettext
-
-try:
-    from pkg_resources import resource_stream
-except ImportError:
-    resource_stream = None
 
 from pytz.exceptions import AmbiguousTimeError
 from pytz.exceptions import InvalidTimeError
@@ -57,8 +52,11 @@ except NameError: # Python 3.x
             ...
         UnicodeEncodeError: ...
         """
-        s.encode('US-ASCII') # Raise an exception if not ASCII
-        return s # But return the original string - not a byte string.
+        if type(s) == bytes:
+            s = s.decode('ASCII')
+        else:
+            s.encode('ASCII') # Raise an exception if not ASCII
+        return s # But the string - not a byte string.
 
 else: # Python 2.x
 
@@ -73,7 +71,7 @@ else: # Python 2.x
             ...
         UnicodeEncodeError: ...
         """
-        return s.encode('US-ASCII')
+        return s.encode('ASCII')
 
 
 def open_resource(name):
@@ -81,18 +79,31 @@ def open_resource(name):
 
     Uses the pkg_resources module if available and no standard file
     found at the calculated location.
+
+    It is possible to specify different location for zoneinfo
+    subdir by using the PYTZ_TZDATADIR environment variable.
     """
     name_parts = name.lstrip('/').split('/')
     for part in name_parts:
         if part == os.path.pardir or os.path.sep in part:
             raise ValueError('Bad path segment: %r' % part)
-    filename = os.path.join(os.path.dirname(__file__),
-                            'zoneinfo', *name_parts)
-    if not os.path.exists(filename) and resource_stream is not None:
-        # http://bugs.launchpad.net/bugs/383171 - we avoid using this
-        # unless absolutely necessary to help when a broken version of
-        # pkg_resources is installed.
-        return resource_stream(__name__, 'zoneinfo/' + name)
+    zoneinfo_dir = os.environ.get('PYTZ_TZDATADIR', None)
+    if zoneinfo_dir != None:
+        filename = os.path.join(zoneinfo_dir, *name_parts)
+    else:
+        filename = os.path.join(os.path.dirname(__file__),
+                                'zoneinfo', *name_parts)
+        if not os.path.exists(filename):
+            # http://bugs.launchpad.net/bugs/383171 - we avoid using this
+            # unless absolutely necessary to help when a broken version of
+            # pkg_resources is installed.
+            try:
+                from pkg_resources import resource_stream
+            except ImportError:
+                resource_stream = None
+
+            if resource_stream is not None:
+                return resource_stream(__name__, 'zoneinfo/' + name)
     return open(filename, 'rb')
 
 
@@ -404,9 +415,11 @@ class _FixedOffset(datetime.tzinfo):
 
     def normalize(self, dt, is_dst=False):
         '''Correct the timezone information on the given datetime'''
+        if dt.tzinfo is self:
+            return dt
         if dt.tzinfo is None:
             raise ValueError('Naive time - no tzinfo set')
-        return dt.replace(tzinfo=self)
+        return dt.astimezone(self)
 
 
 def FixedOffset(offset, _tzinfos = {}):
@@ -673,6 +686,7 @@ all_timezones = \
  'America/Porto_Acre',
  'America/Porto_Velho',
  'America/Puerto_Rico',
+ 'America/Punta_Arenas',
  'America/Rainy_River',
  'America/Rankin_Inlet',
  'America/Recife',
@@ -728,6 +742,7 @@ all_timezones = \
  'Asia/Aqtobe',
  'Asia/Ashgabat',
  'Asia/Ashkhabad',
+ 'Asia/Atyrau',
  'Asia/Baghdad',
  'Asia/Bahrain',
  'Asia/Baku',
@@ -748,6 +763,7 @@ all_timezones = \
  'Asia/Dili',
  'Asia/Dubai',
  'Asia/Dushanbe',
+ 'Asia/Famagusta',
  'Asia/Gaza',
  'Asia/Harbin',
  'Asia/Hebron',
@@ -813,6 +829,7 @@ all_timezones = \
  'Asia/Vientiane',
  'Asia/Vladivostok',
  'Asia/Yakutsk',
+ 'Asia/Yangon',
  'Asia/Yekaterinburg',
  'Asia/Yerevan',
  'Atlantic/Azores',
@@ -858,7 +875,6 @@ all_timezones = \
  'CST6CDT',
  'Canada/Atlantic',
  'Canada/Central',
- 'Canada/East-Saskatchewan',
  'Canada/Eastern',
  'Canada/Mountain',
  'Canada/Newfoundland',
@@ -952,6 +968,7 @@ all_timezones = \
  'Europe/Samara',
  'Europe/San_Marino',
  'Europe/Sarajevo',
+ 'Europe/Saratov',
  'Europe/Simferopol',
  'Europe/Skopje',
  'Europe/Sofia',
@@ -1249,6 +1266,7 @@ common_timezones = \
  'America/Port_of_Spain',
  'America/Porto_Velho',
  'America/Puerto_Rico',
+ 'America/Punta_Arenas',
  'America/Rainy_River',
  'America/Rankin_Inlet',
  'America/Recife',
@@ -1298,6 +1316,7 @@ common_timezones = \
  'Asia/Aqtau',
  'Asia/Aqtobe',
  'Asia/Ashgabat',
+ 'Asia/Atyrau',
  'Asia/Baghdad',
  'Asia/Bahrain',
  'Asia/Baku',
@@ -1314,6 +1333,7 @@ common_timezones = \
  'Asia/Dili',
  'Asia/Dubai',
  'Asia/Dushanbe',
+ 'Asia/Famagusta',
  'Asia/Gaza',
  'Asia/Hebron',
  'Asia/Ho_Chi_Minh',
@@ -1348,7 +1368,6 @@ common_timezones = \
  'Asia/Pyongyang',
  'Asia/Qatar',
  'Asia/Qyzylorda',
- 'Asia/Rangoon',
  'Asia/Riyadh',
  'Asia/Sakhalin',
  'Asia/Samarkand',
@@ -1369,6 +1388,7 @@ common_timezones = \
  'Asia/Vientiane',
  'Asia/Vladivostok',
  'Asia/Yakutsk',
+ 'Asia/Yangon',
  'Asia/Yekaterinburg',
  'Asia/Yerevan',
  'Atlantic/Azores',
@@ -1441,6 +1461,7 @@ common_timezones = \
  'Europe/Samara',
  'Europe/San_Marino',
  'Europe/Sarajevo',
+ 'Europe/Saratov',
  'Europe/Simferopol',
  'Europe/Skopje',
  'Europe/Sofia',
@@ -1486,7 +1507,6 @@ common_timezones = \
  'Pacific/Guadalcanal',
  'Pacific/Guam',
  'Pacific/Honolulu',
- 'Pacific/Johnston',
  'Pacific/Kiritimati',
  'Pacific/Kosrae',
  'Pacific/Kwajalein',
