@@ -466,3 +466,21 @@ table.tablesorter tbody td {
     word-wrap: break-word;
     word-break: break-all;
 }
+
+.log-pagination {
+    display: inline-block;
+    padding: 0px;
+    margin: 0px;
+}
+
+.log-pagination .log-page.badge {
+    background-color: #ffffff;
+    font-weight: normal;
+}
+
+.log-pagination .log-page.badge.selected {
+    background-color: white;
+    font-weight: bold;
+    text-decoration: underline;
+}
+

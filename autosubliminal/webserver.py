@@ -595,33 +595,29 @@ class Log(object):
         pass
 
     @cherrypy.expose
-    def index(self, loglevel=""):
+    def index(self):
         redirect("/log/viewLog")
 
     @cherrypy.expose(alias='viewLog')
-    def view_log(self, loglevel=""):
+    def view_log(self, loglevel='all', lognum=None):
         tmpl = Template(file="web/templates/log/log.tmpl")
-        if loglevel == "":
-            tmpl.loglevel = "All"
-        else:
-            tmpl.loglevel = loglevel
-        result = utils.display_logfile(loglevel)
+        tmpl.loglevel = loglevel
+        tmpl.lognum = lognum
+        result = utils.display_logfile(loglevel, lognum)
         tmpl.message = result
 
         return str(tmpl)
 
     @cherrypy.expose(alias='clearLog')
-    def clear_log(self, loglevel=""):
+    def clear_log(self):
         # Clear log file (open it in write mode and pass)
         with open(autosubliminal.LOGFILE, 'w'):
             pass
             # Return to default log view
         tmpl = Template(file="web/templates/log/log.tmpl")
-        if loglevel == "":
-            tmpl.loglevel = "All"
-        else:
-            tmpl.loglevel = loglevel
-        result = utils.display_logfile(loglevel)
+        tmpl.loglevel = 'all'
+        tmpl.lognum = None
+        result = utils.display_logfile()
         tmpl.message = result
         return str(tmpl)
 

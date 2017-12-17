@@ -175,6 +175,12 @@ def skip_movie(title, year):
         return True
 
 
+def get_logfile_count():
+    # Count the number of additional logfiles
+    result = len([f for f in os.listdir('.') if os.path.isfile(f) and re.match(autosubliminal.LOGFILE + '.', f)])
+    return result
+
+
 def get_logfile(lognum=None):
     logfile = autosubliminal.LOGFILE
     if lognum:
@@ -184,10 +190,10 @@ def get_logfile(lognum=None):
     return None
 
 
-def display_logfile(loglevel):
+def display_logfile(loglevel='all', lognum=None):
     # Read log file data
     data = []
-    logfile = get_logfile()
+    logfile = get_logfile(lognum)
     if logfile:
         f = codecs.open(logfile, 'r', autosubliminal.SYSENCODING)
         data = f.readlines()
@@ -201,7 +207,7 @@ def display_logfile(loglevel):
         try:
             matches = LOG_PARSER.search(x)
             matchdic = matches.groupdict()
-            if (matchdic['loglevel'] == loglevel.upper()) or (loglevel == ''):
+            if (loglevel == 'all') or (matchdic['loglevel'] == loglevel.upper()):
                 log_data.append(x)
         except:
             continue

@@ -89,11 +89,12 @@ def test_display_logfile():
         file.write(text)
         file.close()
         os.close(fd)
-        assert display_logfile(loglevel='') == text
-        assert display_logfile(loglevel='INFO') == text
+        assert display_logfile() == text
+        assert display_logfile(loglevel='all') == text
+        assert display_logfile(loglevel='info') == text
         autosubliminal.LOGREVERSED = True
-        assert display_logfile(loglevel='INFO') == text
-        assert display_logfile(loglevel='ERROR') == ""
+        assert display_logfile(loglevel='info') == text
+        assert display_logfile(loglevel='error') == ""
     finally:
         os.remove(autosubliminal.LOGFILE)
 
