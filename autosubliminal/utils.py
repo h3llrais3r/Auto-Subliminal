@@ -175,8 +175,8 @@ def skip_movie(title, year):
         return True
 
 
-def get_logfile_count():
-    # Count the number of additional logfiles
+def count_backup_logfiles():
+    # Count the number of backup logfiles
     result = len([f for f in os.listdir('.') if os.path.isfile(f) and re.match(autosubliminal.LOGFILE + '.', f)])
     return result
 

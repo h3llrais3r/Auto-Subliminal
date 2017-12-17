@@ -1,4 +1,6 @@
 import json
+import os
+import re
 
 import cherrypy
 from Cheetah.Template import Template
@@ -613,7 +615,10 @@ class Log(object):
         # Clear log file (open it in write mode and pass)
         with open(autosubliminal.LOGFILE, 'w'):
             pass
-            # Return to default log view
+        # Remove possible backup log files
+        for f in [f for f in os.listdir('.') if os.path.isfile(f) and re.match(autosubliminal.LOGFILE + '.', f)]:
+            os.remove(f)
+        # Return to default log view
         tmpl = Template(file="web/templates/log/log.tmpl")
         tmpl.loglevel = 'all'
         tmpl.lognum = None

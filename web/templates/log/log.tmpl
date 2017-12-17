@@ -14,11 +14,11 @@
                 <div class="row">
                     <span class="h3 weighted">Log File</span>
                     <span class="pull-right">
-                        #set $log_count = $autosubliminal.utils.get_logfile_count()
+                        #set $backup_count = $autosubliminal.utils.count_backup_logfiles()
                         <ul class="log-pagination">
                             #set $current_style = $lognum is None and 'badge selected' or 'badge'
                             <li class="log-page $current_style"><a href="$autosubliminal.WEBROOT/log/viewLog/$loglevel">current</a></li>
-                            #for $num in $range($log_count)
+                            #for $num in $range($backup_count)
                                 #set $index = $num + 1
                                 #set $index_style = str($lognum) == str($index) and 'badge selected' or 'badge'
                                 <li class="log-page $index_style"><a href="$autosubliminal.WEBROOT/log/viewLog/$loglevel/$index">$index</a></li>
