@@ -45,6 +45,7 @@ What it uses (see libraries.txt for versions)
  * httplib2
  * imdbpy
  * langdetect
+ * lxml
  * oauth2
  * pushbullet
  * pynma
