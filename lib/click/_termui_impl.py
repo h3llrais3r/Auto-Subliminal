@@ -31,7 +31,7 @@ def _length_hint(obj):
     """Returns the length hint of an object."""
     try:
         return len(obj)
-    except TypeError:
+    except (AttributeError, TypeError):
         try:
             get_hint = type(obj).__length_hint__
         except AttributeError:
@@ -87,6 +87,7 @@ class ProgressBar(object):
         self.entered = False
         self.current_item = None
         self.is_hidden = not isatty(self.file)
+        self._last_line = None
 
     def __enter__(self):
         self.entered = True
@@ -128,7 +129,18 @@ class ProgressBar(object):
 
     def format_eta(self):
         if self.eta_known:
-            return time.strftime('%H:%M:%S', time.gmtime(self.eta + 1))
+            t = self.eta + 1
+            seconds = t % 60
+            t /= 60
+            minutes = t % 60
+            t /= 60
+            hours = t % 24
+            t /= 24
+            if t > 0:
+                days = t
+                return '%dd %02d:%02d:%02d' % (days, hours, minutes, seconds)
+            else:
+                return '%02d:%02d:%02d' % (hours, minutes, seconds)
         return ''
 
     def format_pos(self):
@@ -179,37 +191,44 @@ class ProgressBar(object):
 
     def render_progress(self):
         from .termui import get_terminal_size
+        nl = False
 
         if self.is_hidden:
-            echo(self.label, file=self.file, color=self.color)
+            buf = [self.label]
+            nl = True
+        else:
+            buf = []
+            # Update width in case the terminal has been resized
+            if self.autowidth:
+                old_width = self.width
+                self.width = 0
+                clutter_length = term_len(self.format_progress_line())
+                new_width = max(0, get_terminal_size()[0] - clutter_length)
+                if new_width < old_width:
+                    buf.append(BEFORE_BAR)
+                    buf.append(' ' * self.max_width)
+                    self.max_width = new_width
+                self.width = new_width
+
+            clear_width = self.width
+            if self.max_width is not None:
+                clear_width = self.max_width
+
+            buf.append(BEFORE_BAR)
+            line = self.format_progress_line()
+            line_len = term_len(line)
+            if self.max_width is None or self.max_width < line_len:
+                self.max_width = line_len
+            buf.append(line)
+
+            buf.append(' ' * (clear_width - line_len))
+        line = ''.join(buf)
+
+        # Render the line only if it changed.
+        if line != self._last_line:
+            self._last_line = line
+            echo(line, file=self.file, color=self.color, nl=nl)
             self.file.flush()
-            return
-
-        # Update width in case the terminal has been resized
-        if self.autowidth:
-            old_width = self.width
-            self.width = 0
-            clutter_length = term_len(self.format_progress_line())
-            new_width = max(0, get_terminal_size()[0] - clutter_length)
-            if new_width < old_width:
-                self.file.write(BEFORE_BAR)
-                self.file.write(' ' * self.max_width)
-                self.max_width = new_width
-            self.width = new_width
-
-        clear_width = self.width
-        if self.max_width is not None:
-            clear_width = self.max_width
-
-        self.file.write(BEFORE_BAR)
-        line = self.format_progress_line()
-        line_len = term_len(line)
-        if self.max_width is None or self.max_width < line_len:
-            self.max_width = line_len
-        # Use echo here so that we get colorama support.
-        echo(line, file=self.file, nl=False, color=self.color)
-        self.file.write(' ' * (clear_width - line_len))
-        self.file.flush()
 
     def make_step(self, n_steps):
         self.pos += n_steps
@@ -257,10 +276,11 @@ def pager(text, color=None):
     stdout = _default_text_stdout()
     if not isatty(sys.stdin) or not isatty(stdout):
         return _nullpager(stdout, text, color)
-    if 'PAGER' in os.environ:
+    pager_cmd = (os.environ.get('PAGER', None) or '').strip()
+    if pager_cmd:
         if WIN:
-            return _tempfilepager(text, os.environ['PAGER'], color)
-        return _pipepager(text, os.environ['PAGER'], color)
+            return _tempfilepager(text, pager_cmd, color)
+        return _pipepager(text, pager_cmd, color)
     if os.environ.get('TERM') in ('dumb', 'emacs'):
         return _nullpager(stdout, text, color)
     if WIN or sys.platform.startswith('os2'):

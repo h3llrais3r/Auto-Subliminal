@@ -157,6 +157,8 @@ class CliRunner(object):
         old_stdin = sys.stdin
         old_stdout = sys.stdout
         old_stderr = sys.stderr
+        old_forced_width = clickpkg.formatting.FORCED_WIDTH
+        clickpkg.formatting.FORCED_WIDTH = 80
 
         env = self.make_env(env)
 
@@ -211,7 +213,7 @@ class CliRunner(object):
         old_env = {}
         try:
             for key, value in iteritems(env):
-                old_env[key] = os.environ.get(value)
+                old_env[key] = os.environ.get(key)
                 if value is None:
                     try:
                         del os.environ[key]
@@ -236,6 +238,7 @@ class CliRunner(object):
             clickpkg.termui.hidden_prompt_func = old_hidden_prompt_func
             clickpkg.termui._getchar = old__getchar_func
             clickpkg.utils.should_strip_ansi = old_should_strip_ansi
+            clickpkg.formatting.FORCED_WIDTH = old_forced_width
 
     def invoke(self, cli, args=None, input=None, env=None,
                catch_exceptions=True, color=False, **extra):
@@ -277,8 +280,14 @@ class CliRunner(object):
             except SystemExit as e:
                 if e.code != 0:
                     exception = e
-                exit_code = e.code
+
                 exc_info = sys.exc_info()
+
+                exit_code = e.code
+                if not isinstance(exit_code, int):
+                    sys.stdout.write(str(exit_code))
+                    sys.stdout.write('\n')
+                    exit_code = 1
             except Exception as e:
                 if not catch_exceptions:
                     raise

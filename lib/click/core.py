@@ -1,19 +1,22 @@
+import errno
 import os
 import sys
-import codecs
 from contextlib import contextmanager
 from itertools import repeat
 from functools import update_wrapper
 
 from .types import convert_type, IntRange, BOOL
-from .utils import make_str, make_default_short_help, echo
+from .utils import make_str, make_default_short_help, echo, get_os_args
 from .exceptions import ClickException, UsageError, BadParameter, Abort, \
      MissingParameter
 from .termui import prompt, confirm
 from .formatting import HelpFormatter, join_options
 from .parser import OptionParser, split_opt
+from .globals import push_context, pop_context
 
 from ._compat import PY2, isidentifier, iteritems
+from ._unicodefun import _check_for_unicode_literals, _verify_python3_env
+
 
 _missing = object()
 
@@ -33,6 +36,27 @@ def _bashcomplete(cmd, prog_name, complete_var=None):
     from ._bashcomplete import bashcomplete
     if bashcomplete(cmd, prog_name, complete_var, complete_instr):
         sys.exit(1)
+
+
+def _check_multicommand(base_command, cmd_name, cmd, register=False):
+    if not base_command.chain or not isinstance(cmd, MultiCommand):
+        return
+    if register:
+        hint = 'It is not possible to add multi commands as children to ' \
+               'another multi command that is in chain mode'
+    else:
+        hint = 'Found a multi command as subcommand to a multi command ' \
+               'that is in chain mode.  This is not supported'
+    raise RuntimeError('%s.  Command "%s" is set to chain and "%s" was '
+                       'added as subcommand but it in itself is a '
+                       'multi command.  ("%s" is a %s within a chained '
+                       '%s named "%s").  This restriction was supposed to '
+                       'be lifted in 6.0 but the fix was flawed.  This '
+                       'will be fixed in Click 7.0' % (
+                           hint, base_command.name, cmd_name,
+                           cmd_name, cmd.__class__.__name__,
+                           base_command.__class__.__name__,
+                           base_command.name))
 
 
 def batch(iterable, batch_size):
@@ -185,10 +209,17 @@ class Context(object):
         self.params = {}
         #: the leftover arguments.
         self.args = []
+        #: protected arguments.  These are arguments that are prepended
+        #: to `args` when certain parsing scenarios are encountered but
+        #: must be never propagated to another arguments.  This is used
+        #: to implement nested parsing.
+        self.protected_args = []
         if obj is None and parent is not None:
             obj = parent.obj
         #: the user object stored.
         self.obj = obj
+        self._meta = getattr(parent, 'meta', {})
+
         #: A dictionary (-like object) with defaults for parameters.
         if default_map is None \
            and parent is not None \
@@ -291,31 +322,80 @@ class Context(object):
 
     def __enter__(self):
         self._depth += 1
+        push_context(self)
         return self
 
     def __exit__(self, exc_type, exc_value, tb):
         self._depth -= 1
         if self._depth == 0:
             self.close()
+        pop_context()
 
-    def _get_invoked_subcommands(self):
-        from warnings import warn
-        warn(Warning('This API does not work properly and has been largely '
-                     'removed in Click 3.2 to fix a regression the '
-                     'introduction of this API caused.  Consult the '
-                     'upgrade documentation for more information.  For '
-                     'more information about this see '
-                     'http://click.pocoo.org/upgrading/#upgrading-to-3.2'),
-             stacklevel=2)
-        if self.invoked_subcommand is None:
-            return []
-        return [self.invoked_subcommand]
-    def _set_invoked_subcommands(self, value):
-        self.invoked_subcommand = \
-            len(value) > 1 and '*' or value and value[0] or None
-    invoked_subcommands = property(_get_invoked_subcommands,
-                                   _set_invoked_subcommands)
-    del _get_invoked_subcommands, _set_invoked_subcommands
+    @contextmanager
+    def scope(self, cleanup=True):
+        """This helper method can be used with the context object to promote
+        it to the current thread local (see :func:`get_current_context`).
+        The default behavior of this is to invoke the cleanup functions which
+        can be disabled by setting `cleanup` to `False`.  The cleanup
+        functions are typically used for things such as closing file handles.
+
+        If the cleanup is intended the context object can also be directly
+        used as a context manager.
+
+        Example usage::
+
+            with ctx.scope():
+                assert get_current_context() is ctx
+
+        This is equivalent::
+
+            with ctx:
+                assert get_current_context() is ctx
+
+        .. versionadded:: 5.0
+
+        :param cleanup: controls if the cleanup functions should be run or
+                        not.  The default is to run these functions.  In
+                        some situations the context only wants to be
+                        temporarily pushed in which case this can be disabled.
+                        Nested pushes automatically defer the cleanup.
+        """
+        if not cleanup:
+            self._depth += 1
+        try:
+            with self as rv:
+                yield rv
+        finally:
+            if not cleanup:
+                self._depth -= 1
+
+    @property
+    def meta(self):
+        """This is a dictionary which is shared with all the contexts
+        that are nested.  It exists so that click utiltiies can store some
+        state here if they need to.  It is however the responsibility of
+        that code to manage this dictionary well.
+
+        The keys are supposed to be unique dotted strings.  For instance
+        module paths are a good choice for it.  What is stored in there is
+        irrelevant for the operation of click.  However what is important is
+        that code that places data here adheres to the general semantics of
+        the system.
+
+        Example usage::
+
+            LANG_KEY = __name__ + '.lang'
+
+            def set_language(value):
+                ctx = get_current_context()
+                ctx.meta[LANG_KEY] = value
+
+            def get_language():
+                return get_current_context().meta.get(LANG_KEY, 'en_US')
+
+        .. versionadded:: 5.0
+        """
+        return self._meta
 
     def make_formatter(self):
         """Creates the formatter for the help and usage output."""
@@ -434,11 +514,6 @@ class Context(object):
         self, callback = args[:2]
         ctx = self
 
-        # This is just to improve the error message in cases where old
-        # code incorrectly invoked this method.  This will eventually be
-        # removed.
-        injected_arguments = False
-
         # It's also possible to invoke another command which might or
         # might not have a callback.  In that case we also fill
         # in defaults and make a new context for this command.
@@ -453,26 +528,11 @@ class Context(object):
             for param in other_cmd.params:
                 if param.name not in kwargs and param.expose_value:
                     kwargs[param.name] = param.get_default(ctx)
-                    injected_arguments = True
 
         args = args[2:]
-        if getattr(callback, '__click_pass_context__', False):
-            args = (ctx,) + args
         with augment_usage_errors(self):
-            try:
-                with ctx:
-                    return callback(*args, **kwargs)
-            except TypeError as e:
-                if not injected_arguments:
-                    raise
-                if 'got multiple values for' in str(e):
-                    raise RuntimeError(
-                        'You called .invoke() on the context with a command '
-                        'but provided parameters as positional arguments.  '
-                        'This is not supported but sometimes worked by chance '
-                        'in older versions of Click.  To fix this see '
-                        'http://click.pocoo.org/upgrading/#upgrading-to-3.2')
-                raise
+            with ctx:
+                return callback(*args, **kwargs)
 
     def forward(*args, **kwargs):
         """Similar to :meth:`invoke` but fills in default keyword
@@ -557,7 +617,8 @@ class BaseCommand(object):
             if key not in extra:
                 extra[key] = value
         ctx = Context(self, info_name=info_name, parent=parent, **extra)
-        self.parse_args(ctx, args)
+        with ctx.scope(cleanup=False):
+            self.parse_args(ctx, args)
         return ctx
 
     def parse_args(self, ctx, args):
@@ -612,23 +673,15 @@ class BaseCommand(object):
         # sane at this point of reject further execution to avoid a
         # broken script.
         if not PY2:
-            try:
-                import locale
-                fs_enc = codecs.lookup(locale.getpreferredencoding()).name
-            except Exception:
-                fs_enc = 'ascii'
-            if fs_enc == 'ascii':
-                raise RuntimeError('Click will abort further execution '
-                                   'because Python 3 was configured to use '
-                                   'ASCII as encoding for the environment. '
-                                   'Either switch to Python 2 or consult '
-                                   'http://click.pocoo.org/python3/ '
-                                   'for mitigation steps.')
+            _verify_python3_env()
+        else:
+            _check_for_unicode_literals()
 
         if args is None:
-            args = sys.argv[1:]
+            args = get_os_args()
         else:
             args = list(args)
+
         if prog_name is None:
             prog_name = make_str(os.path.basename(
                 sys.argv and sys.argv[0] or __file__))
@@ -653,6 +706,11 @@ class BaseCommand(object):
                     raise
                 e.show()
                 sys.exit(e.exit_code)
+            except IOError as e:
+                if e.errno == errno.EPIPE:
+                    sys.exit(1)
+                else:
+                    raise
         except Abort:
             if not standalone_mode:
                 raise
@@ -882,6 +940,12 @@ class MultiCommand(Command):
         #: overridden with the :func:`resultcallback` decorator.
         self.result_callback = result_callback
 
+        if self.chain:
+            for param in self.params:
+                if isinstance(param, Argument) and not param.required:
+                    raise RuntimeError('Multi commands in chain mode cannot '
+                                       'have optional arguments.')
+
     def collect_usage_pieces(self, ctx):
         rv = Command.collect_usage_pieces(self, ctx)
         rv.append(self.subcommand_metavar)
@@ -950,7 +1014,15 @@ class MultiCommand(Command):
         if not args and self.no_args_is_help and not ctx.resilient_parsing:
             echo(ctx.get_help(), color=ctx.color)
             ctx.exit()
-        return Command.parse_args(self, ctx, args)
+
+        rest = Command.parse_args(self, ctx, args)
+        if self.chain:
+            ctx.protected_args = rest
+            ctx.args = []
+        elif rest:
+            ctx.protected_args, ctx.args = rest[:1], rest[1:]
+
+        return ctx.args
 
     def invoke(self, ctx):
         def _process_result(value):
@@ -959,7 +1031,7 @@ class MultiCommand(Command):
                                    **ctx.params)
             return value
 
-        if not ctx.args:
+        if not ctx.protected_args:
             # If we are invoked without command the chain flag controls
             # how this happens.  If we are not in chain mode, the return
             # value here is the return value of the command.
@@ -974,7 +1046,10 @@ class MultiCommand(Command):
                     return _process_result([])
             ctx.fail('Missing command.')
 
-        args = ctx.args
+        # Fetch args back out
+        args = ctx.protected_args + ctx.args
+        ctx.args = []
+        ctx.protected_args = []
 
         # If we're not in chain mode, we only allow the invocation of a
         # single command but we also inform the current context about the
@@ -1009,7 +1084,7 @@ class MultiCommand(Command):
                                            allow_extra_args=True,
                                            allow_interspersed_args=False)
                 contexts.append(sub_ctx)
-                args = sub_ctx.args
+                args, sub_ctx.args = sub_ctx.args, []
 
             rv = []
             for sub_ctx in contexts:
@@ -1075,6 +1150,7 @@ class Group(MultiCommand):
         name = name or cmd.name
         if name is None:
             raise TypeError('Command has no name.')
+        _check_multicommand(self, name, cmd, register=True)
         self.commands[name] = cmd
 
     def command(self, *args, **kwargs):
@@ -1128,6 +1204,8 @@ class CommandCollection(MultiCommand):
         for source in self.sources:
             rv = source.get_command(ctx, cmd_name)
             if rv is not None:
+                if self.chain:
+                    _check_multicommand(self, cmd_name, rv)
                 return rv
 
     def list_commands(self, ctx):
@@ -1459,9 +1537,12 @@ class Option(Parameter):
                 if split_char in decl:
                     first, second = decl.split(split_char, 1)
                     first = first.rstrip()
-                    possible_names.append(split_opt(first))
-                    opts.append(first)
-                    secondary_opts.append(second.lstrip())
+                    if first:
+                        possible_names.append(split_opt(first))
+                        opts.append(first)
+                    second = second.lstrip()
+                    if second:
+                        secondary_opts.append(second.lstrip())
                 else:
                     possible_names.append(split_opt(decl))
                     opts.append(decl)
@@ -1616,6 +1697,9 @@ class Argument(Parameter):
             else:
                 required = attrs.get('nargs', 1) > 0
         Parameter.__init__(self, param_decls, required=required, **attrs)
+        if self.default is not None and self.nargs < 0:
+            raise TypeError('nargs=-1 in combination with a default value '
+                            'is not supported.')
 
     @property
     def human_readable_name(self):

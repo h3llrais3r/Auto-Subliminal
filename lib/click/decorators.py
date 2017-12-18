@@ -4,15 +4,18 @@ import inspect
 from functools import update_wrapper
 
 from ._compat import iteritems
+from ._unicodefun import _check_for_unicode_literals
 from .utils import echo
+from .globals import get_current_context
 
 
 def pass_context(f):
     """Marks a callback as wanting to receive the current context
     object as first argument.
     """
-    f.__click_pass_context__ = True
-    return f
+    def new_func(*args, **kwargs):
+        return f(get_current_context(), *args, **kwargs)
+    return update_wrapper(new_func, f)
 
 
 def pass_obj(f):
@@ -20,10 +23,8 @@ def pass_obj(f):
     context onwards (:attr:`Context.obj`).  This is useful if that object
     represents the state of a nested system.
     """
-    @pass_context
     def new_func(*args, **kwargs):
-        ctx = args[0]
-        return ctx.invoke(f, ctx.obj, *args[1:], **kwargs)
+        return f(get_current_context().obj, *args, **kwargs)
     return update_wrapper(new_func, f)
 
 
@@ -50,9 +51,8 @@ def make_pass_decorator(object_type, ensure=False):
                    remembered on the context if it's not there yet.
     """
     def decorator(f):
-        @pass_context
         def new_func(*args, **kwargs):
-            ctx = args[0]
+            ctx = get_current_context()
             if ensure:
                 obj = ctx.ensure_object(object_type)
             else:
@@ -84,6 +84,7 @@ def _make_command(f, name, attrs, cls):
     else:
         help = inspect.cleandoc(help)
     attrs['help'] = help
+    _check_for_unicode_literals()
     return cls(name=name or f.__name__.lower(),
                callback=f, params=params, **attrs)
 
@@ -111,7 +112,9 @@ def command(name=None, cls=None, **attrs):
     if cls is None:
         cls = Command
     def decorator(f):
-        return _make_command(f, name, attrs, cls)
+        cmd = _make_command(f, name, attrs, cls)
+        cmd.__doc__ = f.__doc__
+        return cmd
     return decorator
 
 
