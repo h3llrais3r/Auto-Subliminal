@@ -119,7 +119,7 @@ PNotify.desktop.permission(); // Check for permission for desktop notifications
  * ========== */
 
 // Set the websocket_message_url variable
-var websocket_message_url = "ws://" + window.location.host + "/" + webroot + "/system/message"
+var websocket_message_url = "ws://" + window.location.host + webroot + "/system/message"
 
 // Function to get a message through websocket
 function get_message_through_websocket(message) {
