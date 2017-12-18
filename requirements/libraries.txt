@@ -22,7 +22,6 @@ httplib2==0.10.3
 imdbpy==5.0
 langdetect==1.0.7
 oauth2==1.9.0
-pbr==3.1.1
 pushbullet==0.10.0
 pynma==1.0
 pynmwp==0.1
