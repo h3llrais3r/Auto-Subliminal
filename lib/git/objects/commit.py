@@ -5,8 +5,8 @@
 # the BSD License: http://www.opensource.org/licenses/bsd-license.php
 
 from gitdb import IStream
-from gitdb.util import hex_to_bin
 from git.util import (
+    hex_to_bin,
     Actor,
     Iterable,
     Stats,
@@ -21,7 +21,8 @@ from .util import (
     Serializable,
     parse_date,
     altz_to_utctz_str,
-    parse_actor_and_date
+    parse_actor_and_date,
+    from_timestamp,
 )
 from git.compat import text_type
 
@@ -92,7 +93,7 @@ class Commit(base.Object, Iterable, Diffable, Traversable, Serializable):
             is the committed DateTime - use time.gmtime() to convert it into a
             different format
         :param committer_tz_offset: int_seconds_west_of_utc
-            is the timezone that the authored_date is in
+            is the timezone that the committed_date is in
         :param message: string
             is the commit message
         :param encoding: string
@@ -129,7 +130,8 @@ class Commit(base.Object, Iterable, Diffable, Traversable, Serializable):
             self.parents = parents
         if encoding is not None:
             self.encoding = encoding
-        self.gpgsig = gpgsig
+        if gpgsig is not None:
+            self.gpgsig = gpgsig
 
     @classmethod
     def _get_intermediate_items(cls, commit):
@@ -138,11 +140,19 @@ class Commit(base.Object, Iterable, Diffable, Traversable, Serializable):
     def _set_cache_(self, attr):
         if attr in Commit.__slots__:
             # read the data in a chunk, its faster - then provide a file wrapper
-            binsha, typename, self.size, stream = self.repo.odb.stream(self.binsha)
+            binsha, typename, self.size, stream = self.repo.odb.stream(self.binsha)  # @UnusedVariable
             self._deserialize(BytesIO(stream.read()))
         else:
             super(Commit, self)._set_cache_(attr)
         # END handle attrs
+
+    @property
+    def authored_datetime(self):
+        return from_timestamp(self.authored_date, self.author_tz_offset)
+
+    @property
+    def committed_datetime(self):
+        return from_timestamp(self.committed_date, self.committer_tz_offset)
 
     @property
     def summary(self):
@@ -153,12 +163,12 @@ class Commit(base.Object, Iterable, Diffable, Traversable, Serializable):
         """Count the number of commits reachable from this commit
 
         :param paths:
-            is an optinal path or a list of paths restricting the return value
+            is an optional path or a list of paths restricting the return value
             to commits actually containing the paths
 
         :param kwargs:
             Additional options to be passed to git-rev-list. They must not alter
-            the ouput style of the command, or parsing will yield incorrect results
+            the output style of the command, or parsing will yield incorrect results
         :return: int defining the number of reachable commits"""
         # yes, it makes a difference whether empty paths are given or not in our case
         # as the empty paths version will ignore merge commits for some reason.
@@ -182,7 +192,7 @@ class Commit(base.Object, Iterable, Diffable, Traversable, Serializable):
         :param repo: is the Repo
         :param rev: revision specifier, see git-rev-parse for viable options
         :param paths:
-            is an optinal path or list of paths, if set only Commits that include the path
+            is an optional path or list of paths, if set only Commits that include the path
             or paths will be considered
         :param kwargs:
             optional keyword arguments to git rev-list where
@@ -257,7 +267,7 @@ class Commit(base.Object, Iterable, Diffable, Traversable, Serializable):
             hexsha = line.strip()
             if len(hexsha) > 40:
                 # split additional information, as returned by bisect for instance
-                hexsha, rest = line.split(None, 1)
+                hexsha, _ = line.split(None, 1)
             # END handle extra info
 
             assert len(hexsha) == 40, "Invalid line: %s" % hexsha
@@ -416,10 +426,13 @@ class Commit(base.Object, Iterable, Diffable, Traversable, Serializable):
         if self.encoding != self.default_encoding:
             write(("encoding %s\n" % self.encoding).encode('ascii'))
 
-        if self.gpgsig:
-            write(b"gpgsig")
-            for sigline in self.gpgsig.rstrip("\n").split("\n"):
-                write((" " + sigline + "\n").encode('ascii'))
+        try:
+            if self.__getattribute__('gpgsig') is not None:
+                write(b"gpgsig")
+                for sigline in self.gpgsig.rstrip("\n").split("\n"):
+                    write((" " + sigline + "\n").encode('ascii'))
+        except AttributeError:
+            pass
 
         write(b"\n")
 
@@ -464,6 +477,7 @@ class Commit(base.Object, Iterable, Diffable, Traversable, Serializable):
         # now we can have the encoding line, or an empty line followed by the optional
         # message.
         self.encoding = self.default_encoding
+        self.gpgsig = None
 
         # read headers
         enc = next_line
@@ -492,14 +506,14 @@ class Commit(base.Object, Iterable, Diffable, Traversable, Serializable):
 
         try:
             self.author, self.authored_date, self.author_tz_offset = \
-                parse_actor_and_date(author_line.decode(self.encoding))
+                parse_actor_and_date(author_line.decode(self.encoding, 'replace'))
         except UnicodeDecodeError:
             log.error("Failed to decode author line '%s' using encoding %s", author_line, self.encoding,
                       exc_info=True)
 
         try:
             self.committer, self.committed_date, self.committer_tz_offset = \
-                parse_actor_and_date(committer_line.decode(self.encoding))
+                parse_actor_and_date(committer_line.decode(self.encoding, 'replace'))
         except UnicodeDecodeError:
             log.error("Failed to decode committer line '%s' using encoding %s", committer_line, self.encoding,
                       exc_info=True)
@@ -509,7 +523,7 @@ class Commit(base.Object, Iterable, Diffable, Traversable, Serializable):
         # The end of our message stream is marked with a newline that we strip
         self.message = stream.read()
         try:
-            self.message = self.message.decode(self.encoding)
+            self.message = self.message.decode(self.encoding, 'replace')
         except UnicodeDecodeError:
             log.error("Failed to decode message '%s' using encoding %s", self.message, self.encoding, exc_info=True)
         # END exception handling

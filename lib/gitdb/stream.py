@@ -33,7 +33,7 @@ from gitdb.utils.encoding import force_bytes
 has_perf_mod = False
 PY26 = sys.version_info[:2] < (2, 7)
 try:
-    from _perf import apply_delta as c_apply_delta
+    from gitdb_speedups._perf import apply_delta as c_apply_delta
     has_perf_mod = True
 except ImportError:
     pass
@@ -660,7 +660,7 @@ class FDCompressedSha1Writer(Sha1Writer):
 
     def write(self, data):
         """:raise IOError: If not all bytes could be written
-        :return: lenght of incoming data"""
+        :return: length of incoming data"""
         self.sha1.update(data)
         cdata = self.zip.compress(data)
         bytes_written = write(self.fd, cdata)

@@ -4,72 +4,45 @@
 # This module is part of GitPython and is released under
 # the BSD License: http://www.opensource.org/licenses/bsd-license.php
 
-from git.exc import (
-    InvalidGitRepositoryError,
-    NoSuchPathError,
-    GitCommandError
-)
+from collections import namedtuple
+import logging
+import os
+import re
+import warnings
+
 from git.cmd import (
     Git,
     handle_process_output
 )
-from git.refs import (
-    HEAD,
-    Head,
-    Reference,
-    TagReference,
-)
-from git.objects import (
-    Submodule,
-    RootModule,
-    Commit
-)
-from git.util import (
-    Actor,
-    finalize_process
-)
-from git.index import IndexFile
-from git.config import GitConfigParser
-from git.remote import (
-    Remote,
-    add_progress
-)
-
-from git.db import GitCmdObjectDB
-
-from gitdb.util import (
-    join,
-    isfile,
-    hex_to_bin
-)
-
-from .fun import (
-    rev_parse,
-    is_git_dir,
-    find_git_dir,
-    touch,
-)
 from git.compat import (
     text_type,
     defenc,
-    PY3
+    PY3,
+    safe_decode,
+    range,
+    is_win,
 )
+from git.config import GitConfigParser
+from git.db import GitCmdObjectDB
+from git.exc import InvalidGitRepositoryError, NoSuchPathError, GitCommandError
+from git.index import IndexFile
+from git.objects import Submodule, RootModule, Commit
+from git.refs import HEAD, Head, Reference, TagReference
+from git.remote import Remote, add_progress, to_progress_instance
+from git.util import Actor, finalize_process, decygpath, hex_to_bin, expand_path
+import os.path as osp
 
-import os
-import sys
-import re
-
-DefaultDBType = GitCmdObjectDB
-if sys.version_info[:2] < (2, 5):     # python 2.4 compatiblity
-    DefaultDBType = GitCmdObjectDB
-# END handle python 2.4
+from .fun import rev_parse, is_git_dir, find_submodule_git_dir, touch, find_worktree_git_dir
+import gc
+import gitdb
 
 
-__all__ = ('Repo', )
+log = logging.getLogger(__name__)
+
+BlameEntry = namedtuple('BlameEntry', ['commit', 'linenos', 'orig_path', 'orig_linenos'])
 
 
-def _expand_path(p):
-    return os.path.abspath(os.path.expandvars(os.path.expanduser(p)))
+__all__ = ('Repo',)
 
 
 class Repo(object):
@@ -87,7 +60,12 @@ class Repo(object):
 
     'git_dir' is the .git repository directory, which is always set."""
     DAEMON_EXPORT_FILE = 'git-daemon-export-ok'
-    __slots__ = ("working_dir", "_working_tree_dir", "git_dir", "_bare", "git", "odb")
+
+    git = None  # Must exist, or  __del__  will fail in case we raise on `__init__()`
+    working_dir = None
+    _working_tree_dir = None
+    git_dir = None
+    _common_dir = None
 
     # precompiled regex
     re_whitespace = re.compile(r'\s+')
@@ -104,7 +82,7 @@ class Repo(object):
     # Subclasses may easily bring in their own custom types by placing a constructor or type here
     GitCommandWrapperType = Git
 
-    def __init__(self, path=None, odbt=DefaultDBType, search_parent_directories=False):
+    def __init__(self, path=None, odbt=GitCmdObjectDB, search_parent_directories=False, expand_vars=True):
         """Create a new Repo instance
 
         :param path:
@@ -115,6 +93,9 @@ class Repo(object):
                 repo = Repo("~/Development/git-python.git")
                 repo = Repo("$REPOSITORIES/Development/git-python.git")
 
+            - In *Cygwin*, path may be a `'cygdrive/...'` prefixed path.
+            - If it evaluates to false, :envvar:`GIT_DIR` is used, and if this also evals to false,
+              the current-directory is used.
         :param odbt:
             Object DataBase type - a type which is constructed by providing
             the directory containing the database objects, i.e. .git/objects. It will
@@ -127,37 +108,52 @@ class Repo(object):
         :raise InvalidGitRepositoryError:
         :raise NoSuchPathError:
         :return: git.Repo """
-        epath = _expand_path(path or os.getcwd())
-        self.git = None  # should be set for __del__ not to fail in case we raise
+
+        epath = path or os.getenv('GIT_DIR')
+        if not epath:
+            epath = os.getcwd()
+        if Git.is_cygwin():
+            epath = decygpath(epath)
+
+        epath = epath or path or os.getcwd()
+        if expand_vars and ("%" in epath or "$" in epath):
+            warnings.warn("The use of environment variables in paths is deprecated" +
+                          "\nfor security reasons and may be removed in the future!!")
+        epath = expand_path(epath, expand_vars)
         if not os.path.exists(epath):
             raise NoSuchPathError(epath)
 
-        self.working_dir = None
-        self._working_tree_dir = None
-        self.git_dir = None
+        ## Walk up the path to find the `.git` dir.
+        #
         curpath = epath
-
-        # walk up the path to find the .git dir
         while curpath:
-            # ABOUT os.path.NORMPATH
+            # ABOUT osp.NORMPATH
             # It's important to normalize the paths, as submodules will otherwise initialize their
             # repo instances with paths that depend on path-portions that will not exist after being
             # removed. It's just cleaner.
             if is_git_dir(curpath):
-                self.git_dir = os.path.normpath(curpath)
-                self._working_tree_dir = os.path.dirname(self.git_dir)
+                self.git_dir = curpath
+                self._working_tree_dir = os.getenv('GIT_WORK_TREE', os.path.dirname(self.git_dir))
                 break
 
-            gitpath = find_git_dir(join(curpath, '.git'))
-            if gitpath is not None:
-                self.git_dir = os.path.normpath(gitpath)
+            dotgit = osp.join(curpath, '.git')
+            sm_gitpath = find_submodule_git_dir(dotgit)
+            if sm_gitpath is not None:
+                self.git_dir = osp.normpath(sm_gitpath)
+
+            sm_gitpath = find_submodule_git_dir(dotgit)
+            if sm_gitpath is None:
+                sm_gitpath = find_worktree_git_dir(dotgit)
+
+            if sm_gitpath is not None:
+                self.git_dir = expand_path(sm_gitpath, expand_vars)
                 self._working_tree_dir = curpath
                 break
 
             if not search_parent_directories:
                 break
-            curpath, dummy = os.path.split(curpath)
-            if not dummy:
+            curpath, tail = osp.split(curpath)
+            if not tail:
                 break
         # END while curpath
 
@@ -171,24 +167,53 @@ class Repo(object):
             # lets not assume the option exists, although it should
             pass
 
+        try:
+            common_dir = open(osp.join(self.git_dir, 'commondir'), 'rt').readlines()[0].strip()
+            self._common_dir = osp.join(self.git_dir, common_dir)
+        except (OSError, IOError):
+            self._common_dir = None
+
         # adjust the wd in case we are actually bare - we didn't know that
         # in the first place
         if self._bare:
             self._working_tree_dir = None
         # END working dir handling
 
-        self.working_dir = self._working_tree_dir or self.git_dir
+        self.working_dir = self._working_tree_dir or self.common_dir
         self.git = self.GitCommandWrapperType(self.working_dir)
 
         # special handling, in special times
-        args = [join(self.git_dir, 'objects')]
+        args = [osp.join(self.common_dir, 'objects')]
         if issubclass(odbt, GitCmdObjectDB):
             args.append(self.git)
         self.odb = odbt(*args)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.close()
+
     def __del__(self):
+        try:
+            self.close()
+        except Exception:
+            pass
+
+    def close(self):
         if self.git:
             self.git.clear_cache()
+            # Tempfiles objects on Windows are holding references to
+            # open files until they are collected by the garbage
+            # collector, thus preventing deletion.
+            # TODO: Find these references and ensure they are closed
+            # and deleted synchronously rather than forcing a gc
+            # collection.
+            if is_win:
+                gc.collect()
+            gitdb.util.mman.collect()
+            if is_win:
+                gc.collect()
 
     def __eq__(self, rhs):
         if isinstance(rhs, Repo):
@@ -203,12 +228,14 @@ class Repo(object):
 
     # Description property
     def _get_description(self):
-        filename = join(self.git_dir, 'description')
-        return open(filename, 'rb').read().rstrip().decode(defenc)
+        filename = osp.join(self.git_dir, 'description')
+        with open(filename, 'rb') as fp:
+            return fp.read().rstrip().decode(defenc)
 
     def _set_description(self, descr):
-        filename = join(self.git_dir, 'description')
-        open(filename, 'wb').write((descr + '\n').encode(defenc))
+        filename = osp.join(self.git_dir, 'description')
+        with open(filename, 'wb') as fp:
+            fp.write((descr + '\n').encode(defenc))
 
     description = property(_get_description, _set_description,
                            doc="the project's description")
@@ -220,6 +247,13 @@ class Repo(object):
         """:return: The working tree directory of our git repository. If this is a bare repository, None is returned.
         """
         return self._working_tree_dir
+
+    @property
+    def common_dir(self):
+        """:return: The git dir that holds everything except possibly HEAD,
+        FETCH_HEAD, ORIG_HEAD, COMMIT_EDITMSG, index, and logs/ .
+        """
+        return self._common_dir or self.git_dir
 
     @property
     def bare(self):
@@ -249,7 +283,9 @@ class Repo(object):
 
     @property
     def index(self):
-        """:return: IndexFile representing this repository's index."""
+        """:return: IndexFile representing this repository's index.
+        :note: This property can be expensive, as the returned ``IndexFile`` will be
+         reinitialized. It's recommended to re-use the object."""
         return IndexFile(self)
 
     @property
@@ -362,18 +398,18 @@ class Repo(object):
     def _get_config_path(self, config_level):
         # we do not support an absolute path of the gitconfig on windows ,
         # use the global config instead
-        if sys.platform == "win32" and config_level == "system":
+        if is_win and config_level == "system":
             config_level = "global"
 
         if config_level == "system":
             return "/etc/gitconfig"
         elif config_level == "user":
-            config_home = os.environ.get("XDG_CONFIG_HOME") or os.path.join(os.environ.get("HOME", '~'), ".config")
-            return os.path.normpath(os.path.expanduser(join(config_home, "git", "config")))
+            config_home = os.environ.get("XDG_CONFIG_HOME") or osp.join(os.environ.get("HOME", '~'), ".config")
+            return osp.normpath(osp.expanduser(osp.join(config_home, "git", "config")))
         elif config_level == "global":
-            return os.path.normpath(os.path.expanduser("~/.gitconfig"))
+            return osp.normpath(osp.expanduser("~/.gitconfig"))
         elif config_level == "repository":
-            return os.path.normpath(join(self.git_dir, "config"))
+            return osp.normpath(osp.join(self.git_dir, "config"))
 
         raise ValueError("Invalid configuration level: %r" % config_level)
 
@@ -403,13 +439,13 @@ class Repo(object):
         """
         :return:
             GitConfigParser allowing to write values of the specified configuration file level.
-            Config writers should be retrieved, used to change the configuration ,and written
+            Config writers should be retrieved, used to change the configuration, and written
             right away as they will lock the configuration file in question and prevent other's
             to write it.
 
         :param config_level:
             One of the following values
-            system = sytem wide configuration file
+            system = system wide configuration file
             global = user level configuration file
             repository = configuration file for this repostory only"""
         return GitConfigParser(self._get_config_path(config_level), read_only=False)
@@ -464,7 +500,7 @@ class Repo(object):
         :note: to receive only commits between two named revisions, use the
             "revA...revB" revision specifier
 
-        :return ``git.Commit[]``"""
+        :return: ``git.Commit[]``"""
         if rev is None:
             rev = self.head.commit
 
@@ -517,12 +553,12 @@ class Repo(object):
         return True
 
     def _get_daemon_export(self):
-        filename = join(self.git_dir, self.DAEMON_EXPORT_FILE)
-        return os.path.exists(filename)
+        filename = osp.join(self.git_dir, self.DAEMON_EXPORT_FILE)
+        return osp.exists(filename)
 
     def _set_daemon_export(self, value):
-        filename = join(self.git_dir, self.DAEMON_EXPORT_FILE)
-        fileexists = os.path.exists(filename)
+        filename = osp.join(self.git_dir, self.DAEMON_EXPORT_FILE)
+        fileexists = osp.exists(filename)
         if value and not fileexists:
             touch(filename)
         elif not value and fileexists:
@@ -537,14 +573,11 @@ class Repo(object):
         """The list of alternates for this repo from which objects can be retrieved
 
         :return: list of strings being pathnames of alternates"""
-        alternates_path = join(self.git_dir, 'objects', 'info', 'alternates')
+        alternates_path = osp.join(self.git_dir, 'objects', 'info', 'alternates')
 
-        if os.path.exists(alternates_path):
-            try:
-                f = open(alternates_path, 'rb')
+        if osp.exists(alternates_path):
+            with open(alternates_path, 'rb') as f:
                 alts = f.read().decode(defenc)
-            finally:
-                f.close()
             return alts.strip().splitlines()
         else:
             return list()
@@ -558,26 +591,21 @@ class Repo(object):
 
         :raise NoSuchPathError:
         :note:
-            The method does not check for the existance of the paths in alts
+            The method does not check for the existence of the paths in alts
             as the caller is responsible."""
-        alternates_path = join(self.git_dir, 'objects', 'info', 'alternates')
+        alternates_path = osp.join(self.common_dir, 'objects', 'info', 'alternates')
         if not alts:
-            if isfile(alternates_path):
+            if osp.isfile(alternates_path):
                 os.remove(alternates_path)
         else:
-            try:
-                f = open(alternates_path, 'wb')
+            with open(alternates_path, 'wb') as f:
                 f.write("\n".join(alts).encode(defenc))
-            finally:
-                f.close()
-            # END file handling
-        # END alts handling
 
     alternates = property(_get_alternates, _set_alternates,
                           doc="Retrieve a list of alternates paths or set a list paths to be used as alternates")
 
     def is_dirty(self, index=True, working_tree=True, untracked_files=False,
-                 submodules=True):
+                 submodules=True, path=None):
         """
         :return:
             ``True``, the repository is considered dirty. By default it will react
@@ -592,9 +620,11 @@ class Repo(object):
         default_args = ['--abbrev=40', '--full-index', '--raw']
         if not submodules:
             default_args.append('--ignore-submodules')
+        if path:
+            default_args.append(path)
         if index:
             # diff index against HEAD
-            if isfile(self.index.path) and \
+            if osp.isfile(self.index.path) and \
                     len(self.git.diff('--cached', *default_args)):
                 return True
         # END index handling
@@ -604,7 +634,7 @@ class Repo(object):
                 return True
         # END working tree handling
         if untracked_files:
-            if len(self._get_untracked_files(ignore_submodules=not submodules)):
+            if len(self._get_untracked_files(path, ignore_submodules=not submodules)):
                 return True
         # END untracked files
         return False
@@ -619,12 +649,16 @@ class Repo(object):
             are relative to the current working directory of the git command.
 
         :note:
-            ignored files will not appear here, i.e. files mentioned in .gitignore"""
+            ignored files will not appear here, i.e. files mentioned in .gitignore
+        :note:
+            This property is expensive, as no cache is involved. To process the result, please
+            consider caching it yourself."""
         return self._get_untracked_files()
 
-    def _get_untracked_files(self, **kwargs):
-        # make sure we get all files, no only untracked directores
-        proc = self.git.status(porcelain=True,
+    def _get_untracked_files(self, *args, **kwargs):
+        # make sure we get all files, not only untracked directories
+        proc = self.git.status(*args,
+                               porcelain=True,
                                untracked_files=True,
                                as_process=True,
                                **kwargs)
@@ -655,7 +689,72 @@ class Repo(object):
         :return: Head to the active branch"""
         return self.head.reference
 
-    def blame(self, rev, file):
+    def blame_incremental(self, rev, file, **kwargs):
+        """Iterator for blame information for the given file at the given revision.
+
+        Unlike .blame(), this does not return the actual file's contents, only
+        a stream of BlameEntry tuples.
+
+        :parm rev: revision specifier, see git-rev-parse for viable options.
+        :return: lazy iterator of BlameEntry tuples, where the commit
+                 indicates the commit to blame for the line, and range
+                 indicates a span of line numbers in the resulting file.
+
+        If you combine all line number ranges outputted by this command, you
+        should get a continuous range spanning all line numbers in the file.
+        """
+        data = self.git.blame(rev, '--', file, p=True, incremental=True, stdout_as_string=False, **kwargs)
+        commits = dict()
+
+        stream = (line for line in data.split(b'\n') if line)
+        while True:
+            line = next(stream)  # when exhausted, causes a StopIteration, terminating this function
+            hexsha, orig_lineno, lineno, num_lines = line.split()
+            lineno = int(lineno)
+            num_lines = int(num_lines)
+            orig_lineno = int(orig_lineno)
+            if hexsha not in commits:
+                # Now read the next few lines and build up a dict of properties
+                # for this commit
+                props = dict()
+                while True:
+                    line = next(stream)
+                    if line == b'boundary':
+                        # "boundary" indicates a root commit and occurs
+                        # instead of the "previous" tag
+                        continue
+
+                    tag, value = line.split(b' ', 1)
+                    props[tag] = value
+                    if tag == b'filename':
+                        # "filename" formally terminates the entry for --incremental
+                        orig_filename = value
+                        break
+
+                c = Commit(self, hex_to_bin(hexsha),
+                           author=Actor(safe_decode(props[b'author']),
+                                        safe_decode(props[b'author-mail'].lstrip(b'<').rstrip(b'>'))),
+                           authored_date=int(props[b'author-time']),
+                           committer=Actor(safe_decode(props[b'committer']),
+                                           safe_decode(props[b'committer-mail'].lstrip(b'<').rstrip(b'>'))),
+                           committed_date=int(props[b'committer-time']))
+                commits[hexsha] = c
+            else:
+                # Discard all lines until we find "filename" which is
+                # guaranteed to be the last line
+                while True:
+                    line = next(stream)  # will fail if we reach the EOF unexpectedly
+                    tag, value = line.split(b' ', 1)
+                    if tag == b'filename':
+                        orig_filename = value
+                        break
+
+            yield BlameEntry(commits[hexsha],
+                             range(lineno, lineno + num_lines),
+                             safe_decode(orig_filename),
+                             range(orig_lineno, orig_lineno + num_lines))
+
+    def blame(self, rev, file, incremental=False, **kwargs):
         """The blame information for the given file at the given revision.
 
         :parm rev: revision specifier, see git-rev-parse for viable options.
@@ -664,7 +763,10 @@ class Repo(object):
             A list of tuples associating a Commit object with a list of lines that
             changed within the given commit. The Commit objects will be given in order
             of appearance."""
-        data = self.git.blame(rev, '--', file, p=True, stdout_as_string=False)
+        if incremental:
+            return self.blame_incremental(rev, file, **kwargs)
+
+        data = self.git.blame(rev, '--', file, p=True, stdout_as_string=False, **kwargs)
         commits = dict()
         blames = list()
         info = None
@@ -738,8 +840,7 @@ class Repo(object):
                                            authored_date=info['author_date'],
                                            committer=Actor._from_string(
                                                info['committer'] + ' ' + info['committer_email']),
-                                           committed_date=info['committer_date'],
-                                           message=info['summary'])
+                                           committed_date=info['committer_date'])
                                 commits[sha] = c
                             # END if commit objects needs initial creation
                             if not is_binary:
@@ -762,7 +863,7 @@ class Repo(object):
         return blames
 
     @classmethod
-    def init(cls, path=None, mkdir=True, odbt=DefaultDBType, **kwargs):
+    def init(cls, path=None, mkdir=True, odbt=GitCmdObjectDB, expand_vars=True, **kwargs):
         """Initialize a git repository at the given path if specified
 
         :param path:
@@ -780,13 +881,18 @@ class Repo(object):
             the directory containing the database objects, i.e. .git/objects.
             It will be used to access all object data
 
+        :param expand_vars:
+            if specified, environment variables will not be escaped. This
+            can lead to information disclosure, allowing attackers to
+            access the contents of environment variables
+
         :parm kwargs:
             keyword arguments serving as additional options to the git-init command
 
         :return: ``git.Repo`` (the newly created repo)"""
         if path:
-            path = _expand_path(path)
-        if mkdir and path and not os.path.exists(path):
+            path = expand_path(path, expand_vars)
+        if mkdir and path and not osp.exists(path):
             os.makedirs(path, 0o755)
 
         # git command automatically chdir into the directory
@@ -796,63 +902,54 @@ class Repo(object):
 
     @classmethod
     def _clone(cls, git, url, path, odb_default_type, progress, **kwargs):
-        # special handling for windows for path at which the clone should be
-        # created.
-        # tilde '~' will be expanded to the HOME no matter where the ~ occours. Hence
-        # we at least give a proper error instead of letting git fail
-        prev_cwd = None
-        prev_path = None
+        if progress is not None:
+            progress = to_progress_instance(progress)
+
         odbt = kwargs.pop('odbt', odb_default_type)
-        if os.name == 'nt':
-            if '~' in path:
-                raise OSError("Git cannot handle the ~ character in path %r correctly" % path)
 
-            # on windows, git will think paths like c: are relative and prepend the
-            # current working dir ( before it fails ). We temporarily adjust the working
-            # dir to make this actually work
-            match = re.match("(\w:[/\\\])(.*)", path)
-            if match:
-                prev_cwd = os.getcwd()
-                prev_path = path
-                drive, rest_of_path = match.groups()
-                os.chdir(drive)
-                path = rest_of_path
-                kwargs['with_keep_cwd'] = True
-            # END cwd preparation
-        # END windows handling
+        # when pathlib.Path or other classbased path is passed
+        if not isinstance(path, str):
+            path = str(path)
 
-        try:
-            proc = git.clone(url, path, with_extended_output=True, as_process=True,
-                             v=True, **add_progress(kwargs, git, progress))
-            if progress:
-                handle_process_output(proc, None, progress.new_message_handler(), finalize_process)
-            else:
-                proc.communicate()
-                finalize_process(proc)
-            # end handle progress
-        finally:
-            if prev_cwd is not None:
-                os.chdir(prev_cwd)
-                path = prev_path
-            # END reset previous working dir
-        # END bad windows handling
+        ## A bug win cygwin's Git, when `--bare` or `--separate-git-dir`
+        #  it prepends the cwd or(?) the `url` into the `path, so::
+        #        git clone --bare  /cygwin/d/foo.git  C:\\Work
+        #  becomes::
+        #        git clone --bare  /cygwin/d/foo.git  /cygwin/d/C:\\Work
+        #
+        clone_path = (Git.polish_url(path)
+                      if Git.is_cygwin() and 'bare' in kwargs
+                      else path)
+        sep_dir = kwargs.get('separate_git_dir')
+        if sep_dir:
+            kwargs['separate_git_dir'] = Git.polish_url(sep_dir)
+        proc = git.clone(Git.polish_url(url), clone_path, with_extended_output=True, as_process=True,
+                         v=True, universal_newlines=True, **add_progress(kwargs, git, progress))
+        if progress:
+            handle_process_output(proc, None, progress.new_message_handler(), finalize_process, decode_streams=False)
+        else:
+            (stdout, stderr) = proc.communicate()
+            log.debug("Cmd(%s)'s unused stdout: %s", getattr(proc, 'args', ''), stdout)
+            finalize_process(proc, stderr=stderr)
 
         # our git command could have a different working dir than our actual
         # environment, hence we prepend its working dir if required
-        if not os.path.isabs(path) and git.working_dir:
-            path = join(git._working_dir, path)
+        if not osp.isabs(path) and git.working_dir:
+            path = osp.join(git._working_dir, path)
+
+        repo = cls(path, odbt=odbt)
+
+        # retain env values that were passed to _clone()
+        repo.git.update_environment(**git.environment())
 
         # adjust remotes - there may be operating systems which use backslashes,
         # These might be given as initial paths, but when handling the config file
         # that contains the remote from which we were clones, git stops liking it
         # as it will escape the backslashes. Hence we undo the escaping just to be
         # sure
-        repo = cls(os.path.abspath(path), odbt=odbt)
         if repo.remotes:
-            writer = repo.remotes[0].config_writer
-            writer.set_value('url', repo.remotes[0].url.replace("\\\\", "\\").replace("\\", "/"))
-            # PY3: be sure cleanup is performed and lock is released
-            writer.release()
+            with repo.remotes[0].config_writer as writer:
+                writer.set_value('url', Git.polish_url(repo.remotes[0].url))
         # END handle remote repo
         return repo
 
@@ -867,7 +964,7 @@ class Repo(object):
             * All remaining keyword arguments are given to the git-clone command
 
         :return: ``git.Repo`` (the newly cloned repo)"""
-        return self._clone(self.git, self.git_dir, path, type(self.odb), progress, **kwargs)
+        return self._clone(self.git, self.common_dir, path, type(self.odb), progress, **kwargs)
 
     @classmethod
     def clone_from(cls, url, to_path, progress=None, env=None, **kwargs):
@@ -895,7 +992,7 @@ class Repo(object):
             * Use the 'format' argument to define the kind of format. Use
               specialized ostreams to write any format supported by python.
             * You may specify the special **path** keyword, which may either be a repository-relative
-              path to a directory or file to place into the archive, or a list or tuple of multipe paths.
+              path to a directory or file to place into the archive, or a list or tuple of multiple paths.
 
         :raise GitCommandError: in case something went wrong
         :return: self"""
@@ -915,12 +1012,12 @@ class Repo(object):
     def has_separate_working_tree(self):
         """
         :return: True if our git_dir is not at the root of our working_tree_dir, but a .git file with a
-            platform agnositic symbolic link. Our git_dir will be whereever the .git file points to
+            platform agnositic symbolic link. Our git_dir will be wherever the .git file points to
         :note: bare repositories will always return False here
         """
         if self.bare:
             return False
-        return os.path.isfile(os.path.join(self.working_tree_dir, '.git'))
+        return osp.isfile(osp.join(self.working_tree_dir, '.git'))
 
     rev_parse = rev_parse
 

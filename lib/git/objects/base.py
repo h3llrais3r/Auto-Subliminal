@@ -3,14 +3,13 @@
 #
 # This module is part of GitPython and is released under
 # the BSD License: http://www.opensource.org/licenses/bsd-license.php
-from .util import get_object_type_by_name
-from git.util import LazyMixin, join_path_native, stream_copy
-from gitdb.util import (
-    bin_to_hex,
-    basename
-)
+from git.util import LazyMixin, join_path_native, stream_copy, bin_to_hex
 
 import gitdb.typ as dbtyp
+import os.path as osp
+
+from .util import get_object_type_by_name
+
 
 _assertion_msg_format = "Created object %r whose python type %r disagrees with the acutal git object type %r"
 
@@ -40,7 +39,7 @@ class Object(LazyMixin):
         assert len(binsha) == 20, "Require 20 byte binary sha, got %r, len = %i" % (binsha, len(binsha))
 
     @classmethod
-    def new(cls, repo, id):
+    def new(cls, repo, id):  # @ReservedAssignment
         """
         :return: New Object instance of a type appropriate to the object type behind
             id. The id of the newly created object will be a binsha even though
@@ -127,7 +126,7 @@ class IndexObject(Object):
     SubModule objects"""
     __slots__ = ("path", "mode")
 
-    # for compatability with iterable lists
+    # for compatibility with iterable lists
     _id_attribute_ = 'path'
 
     def __init__(self, repo, binsha, mode=None, path=None):
@@ -137,7 +136,7 @@ class IndexObject(Object):
         :param binsha: 20 byte sha1
         :param mode:
             is the stat compatible file mode as int, use the stat module
-            to evaluate the infomration
+            to evaluate the information
         :param path:
             is the path to the file in the file system, relative to the git repository root, i.e.
             file.ext or folder/other.ext
@@ -153,7 +152,7 @@ class IndexObject(Object):
     def __hash__(self):
         """
         :return:
-            Hash of our path as index items are uniquely identifyable by path, not
+            Hash of our path as index items are uniquely identifiable by path, not
             by their data !"""
         return hash(self.path)
 
@@ -165,12 +164,12 @@ class IndexObject(Object):
                 % (attr, type(self).__name__))
         else:
             super(IndexObject, self)._set_cache_(attr)
-        # END hanlde slot attribute
+        # END handle slot attribute
 
     @property
     def name(self):
         """:return: Name portion of the path, effectively being the basename"""
-        return basename(self.path)
+        return osp.basename(self.path)
 
     @property
     def abspath(self):

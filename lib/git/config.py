@@ -6,19 +6,13 @@
 """Module containing module parser implementation able to properly read and write
 configuration files"""
 
-import re
-try:
-    import ConfigParser as cp
-except ImportError:
-    # PY3
-    import configparser as cp
+import abc
+from functools import wraps
 import inspect
 import logging
-import abc
 import os
+import re
 
-from git.odict import OrderedDict
-from git.util import LockFile
 from git.compat import (
     string_types,
     FileType,
@@ -27,6 +21,18 @@ from git.compat import (
     with_metaclass,
     PY3
 )
+from git.odict import OrderedDict
+from git.util import LockFile
+
+import os.path as osp
+
+
+try:
+    import ConfigParser as cp
+except ImportError:
+    # PY3
+    import configparser as cp
+
 
 __all__ = ('GitConfigParser', 'SectionConstraint')
 
@@ -38,7 +44,7 @@ log.addHandler(logging.NullHandler())
 class MetaParserBuilder(abc.ABCMeta):
 
     """Utlity class wrapping base-class methods into decorators that assure read-only properties"""
-    def __new__(metacls, name, bases, clsdict):
+    def __new__(cls, name, bases, clsdict):
         """
         Equip all base-class methods with a needs_values decorator, and all non-const methods
         with a set_dirty_and_flush_changes decorator in addition to that."""
@@ -60,18 +66,18 @@ class MetaParserBuilder(abc.ABCMeta):
             # END for each base
         # END if mutating methods configuration is set
 
-        new_type = super(MetaParserBuilder, metacls).__new__(metacls, name, bases, clsdict)
+        new_type = super(MetaParserBuilder, cls).__new__(cls, name, bases, clsdict)
         return new_type
 
 
 def needs_values(func):
     """Returns method assuring we read values (on demand) before we try to access them"""
 
+    @wraps(func)
     def assure_data_present(self, *args, **kwargs):
         self.read()
         return func(self, *args, **kwargs)
     # END wrapper method
-    assure_data_present.__name__ = func.__name__
     return assure_data_present
 
 
@@ -95,7 +101,10 @@ class SectionConstraint(object):
     """Constrains a ConfigParser to only option commands which are constrained to
     always use the section we have been initialized with.
 
-    It supports all ConfigParser methods that operate on an option"""
+    It supports all ConfigParser methods that operate on an option.
+
+    :note:
+        If used as a context manager, will release the wrapped ConfigParser."""
     __slots__ = ("_config", "_section_name")
     _valid_attrs_ = ("get_value", "set_value", "get", "set", "getint", "getfloat", "getboolean", "has_option",
                      "remove_section", "remove_option", "options")
@@ -129,6 +138,13 @@ class SectionConstraint(object):
         """Equivalent to GitConfigParser.release(), which is called on our underlying parser instance"""
         return self._config.release()
 
+    def __enter__(self):
+        self._config.__enter__()
+        return self
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        self._config.__exit__(exception_type, exception_value, traceback)
+
 
 class GitConfigParser(with_metaclass(MetaParserBuilder, cp.RawConfigParser, object)):
 
@@ -145,14 +161,15 @@ class GitConfigParser(with_metaclass(MetaParserBuilder, cp.RawConfigParser, obje
 
     :note:
         The config is case-sensitive even when queried, hence section and option names
-        must match perfectly."""
+        must match perfectly.
+        If used as a context manager, will release the locked file."""
 
     #{ Configuration
     # The lock type determines the type of lock to use in new configuration readers.
     # They must be compatible to the LockFile interface.
     # A suitable alternative would be the BlockingLockFile
     t_lock = LockFile
-    re_comment = re.compile('^\s*[#;]')
+    re_comment = re.compile(r'^\s*[#;]')
 
     #} END configuration
 
@@ -181,7 +198,7 @@ class GitConfigParser(with_metaclass(MetaParserBuilder, cp.RawConfigParser, obje
             configuration files have been included
         :param merge_includes: if True, we will read files mentioned in [include] sections and merge their
             contents into ours. This makes it impossible to write back an individual configuration file.
-            Thus, if you want to modify a single conifguration file, turn this off to leave the original
+            Thus, if you want to modify a single configuration file, turn this off to leave the original
             dataset unaltered when reading it."""
         cp.RawConfigParser.__init__(self, dict_type=OrderedDict)
 
@@ -195,18 +212,23 @@ class GitConfigParser(with_metaclass(MetaParserBuilder, cp.RawConfigParser, obje
         self._is_initialized = False
         self._merge_includes = merge_includes
         self._lock = None
+        self._acquire_lock()
 
-        if not read_only:
-            if isinstance(file_or_files, (tuple, list)):
-                raise ValueError(
-                    "Write-ConfigParsers can operate on a single file only, multiple files have been passed")
-            # END single file check
+    def _acquire_lock(self):
+        if not self._read_only:
+            if not self._lock:
+                if isinstance(self._file_or_files, (tuple, list)):
+                    raise ValueError(
+                        "Write-ConfigParsers can operate on a single file only, multiple files have been passed")
+                # END single file check
 
-            if not isinstance(file_or_files, string_types):
-                file_or_files = file_or_files.name
-            # END get filename from handle/stream
-            # initialize lock base - we want to write
-            self._lock = self.t_lock(file_or_files)
+                file_or_files = self._file_or_files
+                if not isinstance(self._file_or_files, string_types):
+                    file_or_files = self._file_or_files.name
+                # END get filename from handle/stream
+                # initialize lock base - we want to write
+                self._lock = self.t_lock(file_or_files)
+            # END lock check
 
             self._lock._obtain_lock()
         # END read-only check
@@ -214,6 +236,13 @@ class GitConfigParser(with_metaclass(MetaParserBuilder, cp.RawConfigParser, obje
     def __del__(self):
         """Write pending changes if required and release locks"""
         # NOTE: only consistent in PY2
+        self.release()
+
+    def __enter__(self):
+        self._acquire_lock()
+        return self
+
+    def __exit__(self, exception_type, exception_value, traceback):
         self.release()
 
     def release(self):
@@ -246,7 +275,7 @@ class GitConfigParser(with_metaclass(MetaParserBuilder, cp.RawConfigParser, obje
         """A direct copy of the py2.4 version of the super class's _read method
         to assure it uses ordered dicts. Had to change one line to make it work.
 
-        Future versions have this fixed, but in fact its quite embarassing for the
+        Future versions have this fixed, but in fact its quite embarrassing for the
         guys not to have done it right in the first place !
 
         Removed big comments to make it more compact.
@@ -365,42 +394,38 @@ class GitConfigParser(with_metaclass(MetaParserBuilder, cp.RawConfigParser, obje
         while files_to_read:
             file_path = files_to_read.pop(0)
             fp = file_path
-            close_fp = False
+            file_ok = False
 
-            # assume a path if it is not a file-object
-            if not hasattr(fp, "seek"):
+            if hasattr(fp, "seek"):
+                self._read(fp, fp.name)
+            else:
+                # assume a path if it is not a file-object
                 try:
-                    fp = open(file_path, 'rb')
-                    close_fp = True
+                    with open(file_path, 'rb') as fp:
+                        file_ok = True
+                        self._read(fp, fp.name)
                 except IOError:
                     continue
-            # END fp handling
-
-            try:
-                self._read(fp, fp.name)
-            finally:
-                if close_fp:
-                    fp.close()
-            # END read-handling
 
             # Read includes and append those that we didn't handle yet
             # We expect all paths to be normalized and absolute (and will assure that is the case)
             if self._has_includes():
                 for _, include_path in self.items('include'):
                     if include_path.startswith('~'):
-                        include_path = os.path.expanduser(include_path)
-                    if not os.path.isabs(include_path):
-                        if not close_fp:
+                        include_path = osp.expanduser(include_path)
+                    if not osp.isabs(include_path):
+                        if not file_ok:
                             continue
                         # end ignore relative paths if we don't know the configuration file path
-                        assert os.path.isabs(file_path), "Need absolute paths to be sure our cycle checks will work"
-                        include_path = os.path.join(os.path.dirname(file_path), include_path)
+                        assert osp.isabs(file_path), "Need absolute paths to be sure our cycle checks will work"
+                        include_path = osp.join(osp.dirname(file_path), include_path)
                     # end make include path absolute
-                    include_path = os.path.normpath(include_path)
+                    include_path = osp.normpath(include_path)
                     if include_path in seen or not os.access(include_path, os.R_OK):
                         continue
                     seen.add(include_path)
-                    files_to_read.append(include_path)
+                    # insert included file to the top to be considered first
+                    files_to_read.insert(0, include_path)
                     num_read_include_files += 1
                 # each include path in configuration file
             # end handle includes
@@ -448,40 +473,26 @@ class GitConfigParser(with_metaclass(MetaParserBuilder, cp.RawConfigParser, obje
         # end assert multiple files
 
         if self._has_includes():
-            log.debug("Skipping write-back of confiuration file as include files were merged in." +
+            log.debug("Skipping write-back of configuration file as include files were merged in." +
                       "Set merge_includes=False to prevent this.")
             return
         # end
 
         fp = self._file_or_files
-        close_fp = False
 
         # we have a physical file on disk, so get a lock
-        if isinstance(fp, string_types + (FileType, )):
+        is_file_lock = isinstance(fp, string_types + (FileType, ))
+        if is_file_lock:
             self._lock._obtain_lock()
-        # END get lock for physical files
-
         if not hasattr(fp, "seek"):
-            fp = open(self._file_or_files, "wb")
-            close_fp = True
+            with open(self._file_or_files, "wb") as fp:
+                self._write(fp)
         else:
             fp.seek(0)
             # make sure we do not overwrite into an existing file
             if hasattr(fp, 'truncate'):
                 fp.truncate()
-            # END
-        # END handle stream or file
-
-        # WRITE DATA
-        try:
             self._write(fp)
-        finally:
-            if close_fp:
-                fp.close()
-        # END data writing
-
-        # we do not release the lock - it will be done automatically once the
-        # instance vanishes
 
     def _assure_writable(self, method_name):
         if self.read_only:

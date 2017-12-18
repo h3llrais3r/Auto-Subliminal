@@ -3,34 +3,28 @@
 #
 # This module is part of GitPython and is released under
 # the BSD License: http://www.opensource.org/licenses/bsd-license.php
-import tempfile
-import os
-import sys
-import subprocess
 import glob
 from io import BytesIO
-
+import os
 from stat import S_ISLNK
+import subprocess
+import sys
+import tempfile
 
-from .typ import (
-    BaseIndexEntry,
-    IndexEntry,
+from git.compat import (
+    izip,
+    xrange,
+    string_types,
+    force_bytes,
+    defenc,
+    mviter,
+    is_win
 )
-
-from .util import (
-    TemporaryFileSwap,
-    post_clear_cache,
-    default_index,
-    git_working_dir
-)
-
-import git.diff as diff
 from git.exc import (
     GitCommandError,
     CheckoutError,
     InvalidGitRepositoryError
 )
-
 from git.objects import (
     Blob,
     Submodule,
@@ -38,25 +32,21 @@ from git.objects import (
     Object,
     Commit,
 )
-
 from git.objects.util import Serializable
-from git.compat import (
-    izip,
-    xrange,
-    string_types,
-    force_bytes,
-    defenc,
-    mviter
-)
-
 from git.util import (
     LazyMixin,
     LockedFD,
     join_path_native,
     file_contents_ro,
     to_native_path_linux,
-    unbare_repo
+    unbare_repo,
+    to_bin_sha
 )
+from gitdb.base import IStream
+from gitdb.db import MemoryDB
+
+import git.diff as diff
+import os.path as osp
 
 from .fun import (
     entry_key,
@@ -68,10 +58,17 @@ from .fun import (
     S_IFGITLINK,
     run_commit_hook
 )
+from .typ import (
+    BaseIndexEntry,
+    IndexEntry,
+)
+from .util import (
+    TemporaryFileSwap,
+    post_clear_cache,
+    default_index,
+    git_working_dir
+)
 
-from gitdb.base import IStream
-from gitdb.db import MemoryDB
-from gitdb.util import to_bin_sha
 
 __all__ = ('IndexFile', 'CheckoutError')
 
@@ -118,13 +115,17 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             # read the current index
             # try memory map for speed
             lfd = LockedFD(self._file_path)
+            ok = False
             try:
                 fd = lfd.open(write=False, stream=False)
+                ok = True
             except OSError:
-                lfd.rollback()
                 # in new repositories, there may be no index, which means we are empty
                 self.entries = dict()
                 return
+            finally:
+                if not ok:
+                    lfd.rollback()
             # END exception handling
 
             # Here it comes: on windows in python 2.5, memory maps aren't closed properly
@@ -132,14 +133,14 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             # which happens during read-tree.
             # In this case, we will just read the memory in directly.
             # Its insanely bad ... I am disappointed !
-            allow_mmap = (os.name != 'nt' or sys.version_info[1] > 5)
+            allow_mmap = (is_win or sys.version_info[1] > 5)
             stream = file_contents_ro(fd, stream=True, allow_mmap=allow_mmap)
 
             try:
                 self._deserialize(stream)
             finally:
                 lfd.rollback()
-                # The handles will be closed on desctruction
+                # The handles will be closed on destruction
             # END read from default index on demand
         else:
             super(IndexFile, self)._set_cache_(attr)
@@ -165,7 +166,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
 
     def _deserialize(self, stream):
         """Initialize this instance with index values read from the given stream"""
-        self.version, self.entries, self._extension_data, conten_sha = read_cache(stream)
+        self.version, self.entries, self._extension_data, conten_sha = read_cache(stream)  # @UnusedVariable
         return self
 
     def _entries_sorted(self):
@@ -210,7 +211,13 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         lfd = LockedFD(file_path or self._file_path)
         stream = lfd.open(write=True, stream=True)
 
-        self._serialize(stream, ignore_extension_data)
+        ok = False
+        try:
+            self._serialize(stream, ignore_extension_data)
+            ok = True
+        finally:
+            if not ok:
+                lfd.rollback()
 
         lfd.commit()
 
@@ -343,7 +350,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             index.entries       # force it to read the file as we will delete the temp-file
             del(index_handler)  # release as soon as possible
         finally:
-            if os.path.exists(tmp_index):
+            if osp.exists(tmp_index):
                 os.remove(tmp_index)
         # END index merge handling
 
@@ -363,8 +370,8 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         rs = r + os.sep
         for path in paths:
             abs_path = path
-            if not os.path.isabs(abs_path):
-                abs_path = os.path.join(r, path)
+            if not osp.isabs(abs_path):
+                abs_path = osp.join(r, path)
             # END make absolute path
 
             try:
@@ -380,15 +387,23 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
 
             # resolve globs if possible
             if '?' in path or '*' in path or '[' in path:
-                for f in self._iter_expand_paths(glob.glob(abs_path)):
-                    yield f.replace(rs, '')
-                continue
+                resolved_paths = glob.glob(abs_path)
+                # not abs_path in resolved_paths:
+                #   a glob() resolving to the same path we are feeding it with
+                #   is a glob() that failed to resolve. If we continued calling
+                #   ourselves we'd endlessly recurse. If the condition below
+                #   evaluates to true then we are likely dealing with a file
+                #   whose name contains wildcard characters.
+                if abs_path not in resolved_paths:
+                    for f in self._iter_expand_paths(glob.glob(abs_path)):
+                        yield f.replace(rs, '')
+                    continue
             # END glob handling
             try:
-                for root, dirs, files in os.walk(abs_path, onerror=raise_exc):
+                for root, dirs, files in os.walk(abs_path, onerror=raise_exc):  # @UnusedVariable
                     for rela_file in files:
                         # add relative paths only
-                        yield os.path.join(root.replace(rs, ''), rela_file)
+                        yield osp.join(root.replace(rs, ''), rela_file)
                     # END for each file in subdir
                 # END for each subdirectory
             except OSError:
@@ -418,7 +433,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         try:
             proc.stdin.write(("%s\n" % filepath).encode(defenc))
         except IOError:
-            # pipe broke, usually because some error happend
+            # pipe broke, usually because some error happened
             raise fmakeexc()
         # END write exception handling
         proc.stdin.flush()
@@ -550,7 +565,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
     def _to_relative_path(self, path):
         """:return: Version of path relative to our git directory or raise ValueError
         if it is not within our git direcotory"""
-        if not os.path.isabs(path):
+        if not osp.isabs(path):
             return path
         if self.repo.bare:
             raise InvalidGitRepositoryError("require non-bare repository")
@@ -580,17 +595,15 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         """Store file at filepath in the database and return the base index entry
         Needs the git_working_dir decorator active ! This must be assured in the calling code"""
         st = os.lstat(filepath)     # handles non-symlinks as well
-        stream = None
         if S_ISLNK(st.st_mode):
             # in PY3, readlink is string, but we need bytes. In PY2, it's just OS encoded bytes, we assume UTF-8
-            stream = BytesIO(force_bytes(os.readlink(filepath), encoding=defenc))
+            open_stream = lambda: BytesIO(force_bytes(os.readlink(filepath), encoding=defenc))
         else:
-            stream = open(filepath, 'rb')
-        # END handle stream
-        fprogress(filepath, False, filepath)
-        istream = self.repo.odb.store(IStream(Blob.type, st.st_size, stream))
-        fprogress(filepath, True, filepath)
-        stream.close()
+            open_stream = lambda: open(filepath, 'rb')
+        with open_stream() as stream:
+            fprogress(filepath, False, filepath)
+            istream = self.repo.odb.store(IStream(Blob.type, st.st_size, stream))
+            fprogress(filepath, True, filepath)
         return BaseIndexEntry((stat_mode_to_index_mode(st.st_mode),
                                istream.binsha, 0, to_native_path_linux(filepath)))
 
@@ -600,12 +613,12 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         entries_added = list()
         if path_rewriter:
             for path in paths:
-                if os.path.isabs(path):
+                if osp.isabs(path):
                     abspath = path
                     gitrelative_path = path[len(self.repo.working_tree_dir) + 1:]
                 else:
                     gitrelative_path = path
-                    abspath = os.path.join(self.repo.working_tree_dir, gitrelative_path)
+                    abspath = osp.join(self.repo.working_tree_dir, gitrelative_path)
                 # end obtain relative and absolute paths
 
                 blob = Blob(self.repo, Blob.NULL_BIN_SHA,
@@ -833,7 +846,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
 
         :param working_tree:
             If True, the entry will also be removed from the working tree, physically
-            removing the respective file. This may fail if there are uncommited changes
+            removing the respective file. This may fail if there are uncommitted changes
             in it.
 
         :param kwargs:
@@ -863,7 +876,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
     def move(self, items, skip_errors=False, **kwargs):
         """Rename/move the items, whereas the last item is considered the destination of
         the move operation. If the destination is a file, the first item ( of two )
-        must be a file as well. If the destination is a directory, it may be preceeded
+        must be a file as well. If the destination is a directory, it may be preceded
         by one or more directories or files.
 
         The working tree will be affected in non-bare repositories.
@@ -873,7 +886,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             for reference.
         :param skip_errors:
             If True, errors such as ones resulting from missing source files will
-            be skpped.
+            be skipped.
         :param kwargs:
             Additional arguments you would like to pass to git-mv, such as dry_run
             or force.
@@ -882,7 +895,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             A list of pairs, containing the source file moved as well as its
             actual destination. Relative to the repository root.
 
-        :raise ValueErorr: If only one item was given
+        :raise ValueError: If only one item was given
             GitCommandError: If git could not handle your request"""
         args = list()
         if skip_errors:
@@ -923,20 +936,44 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         return out
 
     def commit(self, message, parent_commits=None, head=True, author=None,
-               committer=None, author_date=None, commit_date=None):
+               committer=None, author_date=None, commit_date=None,
+               skip_hooks=False):
         """Commit the current default index file, creating a commit object.
         For more information on the arguments, see tree.commit.
 
         :note: If you have manually altered the .entries member of this instance,
                don't forget to write() your changes to disk beforehand.
+               Passing skip_hooks=True is the equivalent of using `-n`
+               or `--no-verify` on the command line.
         :return: Commit object representing the new commit"""
-        run_commit_hook('pre-commit', self)
+        if not skip_hooks:
+            run_commit_hook('pre-commit', self)
+
+            self._write_commit_editmsg(message)
+            run_commit_hook('commit-msg', self, self._commit_editmsg_filepath())
+            message = self._read_commit_editmsg()
+            self._remove_commit_editmsg()
         tree = self.write_tree()
         rval = Commit.create_from_tree(self.repo, tree, message, parent_commits,
                                        head, author=author, committer=committer,
                                        author_date=author_date, commit_date=commit_date)
-        run_commit_hook('post-commit', self)
+        if not skip_hooks:
+            run_commit_hook('post-commit', self)
         return rval
+    
+    def _write_commit_editmsg(self, message):
+        with open(self._commit_editmsg_filepath(), "wb") as commit_editmsg_file:
+            commit_editmsg_file.write(message.encode(defenc))
+
+    def _remove_commit_editmsg(self):
+        os.remove(self._commit_editmsg_filepath())
+
+    def _read_commit_editmsg(self):
+        with open(self._commit_editmsg_filepath(), "rb") as commit_editmsg_file:
+            return commit_editmsg_file.read().decode(defenc)
+
+    def _commit_editmsg_filepath(self):
+        return osp.join(self.repo.common_dir, "COMMIT_EDITMSG")
 
     @classmethod
     def _flush_stdin_and_wait(cls, proc, ignore_stdout=False):
@@ -973,7 +1010,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             prior and after a file has been checked out
 
         :param kwargs:
-            Additional arguments to be pasesd to git-checkout-index
+            Additional arguments to be passed to git-checkout-index
 
         :return:
             iterable yielding paths to files which have been checked out and are
@@ -1036,7 +1073,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
                 # END for each possible ending
             # END for each line
             if unknown_lines:
-                raise GitCommandError(("git-checkout-index", ), 128, stderr)
+                raise GitCommandError(("git-checkout-index",), 128, stderr)
             if failed_files:
                 valid_files = list(set(iter_checked_out_files) - set(failed_files))
                 raise CheckoutError(
@@ -1067,6 +1104,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             kwargs['as_process'] = True
             kwargs['istream'] = subprocess.PIPE
             proc = self.repo.git.checkout_index(args, **kwargs)
+            # FIXME: Reading from GIL!
             make_exc = lambda: GitCommandError(("git-checkout-index",) + tuple(args), 128, proc.stderr.read())
             checked_out_files = list()
 
@@ -1078,11 +1116,11 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
                 try:
                     self.entries[(co_path, 0)]
                 except KeyError:
-                    dir = co_path
-                    if not dir.endswith('/'):
-                        dir += '/'
+                    folder = co_path
+                    if not folder.endswith('/'):
+                        folder += '/'
                     for entry in mviter(self.entries):
-                        if entry.path.startswith(dir):
+                        if entry.path.startswith(folder):
                             p = entry.path
                             self._write_path_to_stdin(proc, p, p, make_exc,
                                                       fprogress, read_from_stdout=False)
@@ -1200,7 +1238,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             cur_val = kwargs.get('R', False)
             kwargs['R'] = not cur_val
             return other.diff(self.Index, paths, create_patch, **kwargs)
-        # END diff against other item handlin
+        # END diff against other item handling
 
         # if other is not None here, something is wrong
         if other is not None:

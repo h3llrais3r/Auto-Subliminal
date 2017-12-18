@@ -1,31 +1,29 @@
-from git.util import (
-    Actor,
-    LockedFD,
-    LockFile,
-    assure_directory_exists,
-    to_native_path,
-)
+import re
+import time
 
-from gitdb.util import (
-    bin_to_hex,
-    join,
-    file_contents_ro_filepath,
-)
-
-from git.objects.util import (
-    parse_date,
-    Serializable,
-    altz_to_utctz_str,
-)
 from git.compat import (
     PY3,
     xrange,
     string_types,
     defenc
 )
+from git.objects.util import (
+    parse_date,
+    Serializable,
+    altz_to_utctz_str,
+)
+from git.util import (
+    Actor,
+    LockedFD,
+    LockFile,
+    assure_directory_exists,
+    to_native_path,
+    bin_to_hex,
+    file_contents_ro_filepath
+)
 
-import time
-import re
+import os.path as osp
+
 
 __all__ = ["RefLog", "RefLogEntry"]
 
@@ -114,7 +112,7 @@ class RefLogEntry(tuple):
         newhexsha = info[41:81]
         for hexsha in (oldhexsha, newhexsha):
             if not cls._re_hexsha_only.match(hexsha):
-                raise ValueError("Invalid hexsha: %s" % hexsha)
+                raise ValueError("Invalid hexsha: %r" % (hexsha,))
             # END if hexsha re doesn't match
         # END for each hexsha
 
@@ -135,7 +133,7 @@ class RefLog(list, Serializable):
     of the head in question. Custom query methods allow to retrieve log entries
     by date or by other criteria.
 
-    Reflog entries are orded, the first added entry is first in the list, the last
+    Reflog entries are ordered, the first added entry is first in the list, the last
     entry, i.e. the last change of the head or reference, is last in the list."""
 
     __slots__ = ('_path', )
@@ -185,7 +183,7 @@ class RefLog(list, Serializable):
             instance would be found. The path is not guaranteed to point to a valid
             file though.
         :param ref: SymbolicReference instance"""
-        return join(ref.repo.git_dir, "logs", to_native_path(ref.path))
+        return osp.join(ref.repo.git_dir, "logs", to_native_path(ref.path))
 
     @classmethod
     def iter_entries(cls, stream):
@@ -211,7 +209,7 @@ class RefLog(list, Serializable):
         """:return: RefLogEntry at the given index
         :param filepath: full path to the index file from which to read the entry
         :param index: python list compatible index, i.e. it may be negative to
-            specifiy an entry counted from the end of the list
+            specify an entry counted from the end of the list
 
         :raise IndexError: If the entry didn't exist
 
@@ -248,7 +246,7 @@ class RefLog(list, Serializable):
         try:
             self._serialize(fp)
             lfd.commit()
-        except:
+        except Exception:
             # on failure it rolls back automatically, but we make it clear
             lfd.rollback()
             raise
@@ -274,11 +272,12 @@ class RefLog(list, Serializable):
             raise ValueError("Shas need to be given in binary format")
         # END handle sha type
         assure_directory_exists(filepath, is_file=True)
+        first_line = message.split('\n')[0]
         committer = isinstance(config_reader, Actor) and config_reader or Actor.committer(config_reader)
         entry = RefLogEntry((
             bin_to_hex(oldbinsha).decode('ascii'),
             bin_to_hex(newbinsha).decode('ascii'),
-            committer, (int(time.time()), time.altzone), message
+            committer, (int(time.time()), time.altzone), first_line
         ))
 
         lf = LockFile(filepath)

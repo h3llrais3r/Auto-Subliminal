@@ -15,10 +15,13 @@ from collections import deque as Deque
 from string import digits
 import time
 import calendar
+from datetime import datetime, timedelta, tzinfo
 
 __all__ = ('get_object_type_by_name', 'parse_date', 'parse_actor_and_date',
            'ProcessStreamAdapter', 'Traversable', 'altz_to_utctz_str', 'utctz_to_altz',
-           'verify_utctz', 'Actor')
+           'verify_utctz', 'Actor', 'tzoffset', 'utc')
+
+ZERO = timedelta(0)
 
 #{ Functions
 
@@ -95,6 +98,31 @@ def verify_utctz(offset):
         raise fmt_exc
     # END for each char
     return offset
+
+
+class tzoffset(tzinfo):
+    def __init__(self, secs_west_of_utc, name=None):
+        self._offset = timedelta(seconds=-secs_west_of_utc)
+        self._name = name or 'fixed'
+
+    def utcoffset(self, dt):
+        return self._offset
+
+    def tzname(self, dt):
+        return self._name
+
+    def dst(self, dt):
+        return ZERO
+
+
+utc = tzoffset(0, 'UTC')
+
+
+def from_timestamp(timestamp, tz_offset):
+    """Converts a timestamp + tz_offset into an aware datetime instance."""
+    utc_dt = datetime.fromtimestamp(timestamp, utc)
+    local_dt = utc_dt.astimezone(tzoffset(tz_offset))
+    return local_dt
 
 
 def parse_date(string_date):
@@ -242,7 +270,7 @@ class Traversable(object):
     def traverse(self, predicate=lambda i, d: True,
                  prune=lambda i, d: False, depth=-1, branch_first=True,
                  visit_once=True, ignore_self=1, as_edge=False):
-        """:return: iterator yieling of items found when traversing self
+        """:return: iterator yielding of items found when traversing self
 
         :param predicate: f(i,d) returns False if item i at depth d should not be included in the result
 
@@ -254,7 +282,7 @@ class Traversable(object):
             define at which level the iteration should not go deeper
             if -1, there is no limit
             if 0, you would effectively only get self, the root of the iteration
-            i.e. if 1, you would only get the first level of predessessors/successors
+            i.e. if 1, you would only get the first level of predecessors/successors
 
         :param branch_first:
             if True, items will be returned branch first, otherwise depth first
@@ -270,7 +298,7 @@ class Traversable(object):
 
         :param as_edge:
             if True, return a pair of items, first being the source, second the
-            destinatination, i.e. tuple(src, dest) with the edge spanning from
+            destination, i.e. tuple(src, dest) with the edge spanning from
             source to destination"""
         visited = set()
         stack = Deque()
@@ -320,7 +348,7 @@ class Serializable(object):
 
     def _serialize(self, stream):
         """Serialize the data of this object into the given data stream
-        :note: a serialized object would ``_deserialize`` into the same objet
+        :note: a serialized object would ``_deserialize`` into the same object
         :param stream: a file-like object
         :return: self"""
         raise NotImplementedError("To be implemented in subclass")

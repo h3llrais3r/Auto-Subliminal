@@ -1,32 +1,29 @@
 """Package with general repository related functions"""
 import os
+import stat
 from string import digits
 
+from git.compat import xrange
+from git.exc import WorkTreeRepositoryUnsupported
+from git.objects import Object
+from git.refs import SymbolicReference
+from git.util import hex_to_bin, bin_to_hex, decygpath
 from gitdb.exc import (
     BadObject,
     BadName,
 )
-from git.refs import SymbolicReference
-from git.objects import Object
-from gitdb.util import (
-    join,
-    isdir,
-    isfile,
-    dirname,
-    hex_to_bin,
-    bin_to_hex
-)
-from git.exc import WorkTreeRepositoryUnsupported
-from git.compat import xrange
+
+import os.path as osp
+from git.cmd import Git
 
 
-__all__ = ('rev_parse', 'is_git_dir', 'touch', 'find_git_dir', 'name_to_object', 'short_to_long', 'deref_tag',
-           'to_commit')
+__all__ = ('rev_parse', 'is_git_dir', 'touch', 'find_submodule_git_dir', 'name_to_object', 'short_to_long', 'deref_tag',
+           'to_commit', 'find_worktree_git_dir')
 
 
 def touch(filename):
-    fp = open(filename, "ab")
-    fp.close()
+    with open(filename, "ab"):
+        pass
     return filename
 
 
@@ -38,18 +35,40 @@ def is_git_dir(d):
             but at least clearly indicates that we don't support it.
             There is the unlikely danger to throw if we see directories which just look like a worktree dir,
             but are none."""
-    if isdir(d):
-        if isdir(join(d, 'objects')) and isdir(join(d, 'refs')):
-            headref = join(d, 'HEAD')
-            return isfile(headref) or \
-                (os.path.islink(headref) and
+    if osp.isdir(d):
+        if osp.isdir(osp.join(d, 'objects')) and osp.isdir(osp.join(d, 'refs')):
+            headref = osp.join(d, 'HEAD')
+            return osp.isfile(headref) or \
+                (osp.islink(headref) and
                  os.readlink(headref).startswith('refs'))
-        elif isfile(join(d, 'gitdir')) and isfile(join(d, 'commondir')) and isfile(join(d, 'gitfile')):
+        elif (osp.isfile(osp.join(d, 'gitdir')) and
+              osp.isfile(osp.join(d, 'commondir')) and
+              osp.isfile(osp.join(d, 'gitfile'))):
             raise WorkTreeRepositoryUnsupported(d)
     return False
 
 
-def find_git_dir(d):
+def find_worktree_git_dir(dotgit):
+    """Search for a gitdir for this worktree."""
+    try:
+        statbuf = os.stat(dotgit)
+    except OSError:
+        return None
+    if not stat.S_ISREG(statbuf.st_mode):
+        return None
+
+    try:
+        lines = open(dotgit, 'r').readlines()
+        for key, value in [line.strip().split(': ') for line in lines]:
+            if key == 'gitdir':
+                return value
+    except ValueError:
+        pass
+    return None
+
+
+def find_submodule_git_dir(d):
+    """Search for a submodule repo."""
     if is_git_dir(d):
         return d
 
@@ -62,9 +81,13 @@ def find_git_dir(d):
     else:
         if content.startswith('gitdir: '):
             path = content[8:]
-            if not os.path.isabs(path):
-                path = join(dirname(d), path)
-            return find_git_dir(path)
+
+            if Git.is_cygwin():
+                ## Cygwin creates submodules prefixed with `/cygdrive/...` suffixes.
+                path = decygpath(path)
+            if not osp.isabs(path):
+                path = osp.join(osp.dirname(d), path)
+            return find_submodule_git_dir(path)
     # end handle exception
     return None
 
@@ -250,8 +273,8 @@ def rev_parse(repo, rev):
 
             # empty output types don't require any specific type, its just about dereferencing tags
             if output_type and obj.type != output_type:
-                raise ValueError("Could not accomodate requested object type %r, got %s" % (output_type, obj.type))
-            # END verify ouput type
+                raise ValueError("Could not accommodate requested object type %r, got %s" % (output_type, obj.type))
+            # END verify output type
 
             start = end + 1                   # skip brace
             parsed_to = start
@@ -280,11 +303,11 @@ def rev_parse(repo, rev):
         # END number parsing only if non-blob mode
 
         parsed_to = start
-        # handle hiererarchy walk
+        # handle hierarchy walk
         try:
             if token == "~":
                 obj = to_commit(obj)
-                for item in xrange(num):
+                for _ in xrange(num):
                     obj = obj.parents[0]
                 # END for each history item to walk
             elif token == "^":

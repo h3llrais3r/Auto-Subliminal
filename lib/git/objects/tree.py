@@ -5,7 +5,7 @@
 # the BSD License: http://www.opensource.org/licenses/bsd-license.php
 from git.util import join_path
 import git.diff as diff
-from gitdb.util import to_bin_sha
+from git.util import to_bin_sha
 
 from . import util
 from .base import IndexObject
@@ -18,7 +18,7 @@ from .fun import (
     tree_to_stream
 )
 
-from gitdb.utils.compat import PY3
+from git.compat import PY3
 
 if PY3:
     cmp = lambda a, b: (a > b) - (a < b)
@@ -77,7 +77,7 @@ class TreeModifier(object):
 
     """A utility class providing methods to alter the underlying cache in a list-like fashion.
 
-    Once all adjustments are complete, the _cache, which really is a refernce to
+    Once all adjustments are complete, the _cache, which really is a reference to
     the cache of a tree, will be sorted. Assuring it will be in a serializable state"""
     __slots__ = '_cache'
 
@@ -294,7 +294,7 @@ class Tree(IndexObject, diff.Diffable, util.Traversable, util.Serializable):
             return self._map_id_to_type[info[1] >> 12](self.repo, info[0], info[1], join_path(self.path, info[2]))
 
         if isinstance(item, string_types):
-            # compatability
+            # compatibility
             return self.join(item)
         # END index is basestring
 
@@ -308,7 +308,7 @@ class Tree(IndexObject, diff.Diffable, util.Traversable, util.Serializable):
                 # END compare sha
             # END for each entry
         # END handle item is index object
-        # compatability
+        # compatibility
 
         # treat item as repo-relative path
         path = self.path

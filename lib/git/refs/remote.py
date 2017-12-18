@@ -1,9 +1,10 @@
+import os
+
 from git.util import join_path
-from gitdb.util import join
+
+import os.path as osp
 
 from .head import Head
-
-import os
 
 
 __all__ = ["RemoteReference"]
@@ -28,7 +29,7 @@ class RemoteReference(Head):
         """Delete the given remote references
 
         :note:
-            kwargs are given for compatability with the base class method as we
+            kwargs are given for comparability with the base class method as we
             should not narrow the signature."""
         repo.git.branch("-d", "-r", *refs)
         # the official deletion method will ignore remote symbolic refs - these
@@ -36,7 +37,11 @@ class RemoteReference(Head):
         # and delete remainders manually
         for ref in refs:
             try:
-                os.remove(join(repo.git_dir, ref.path))
+                os.remove(osp.join(repo.common_dir, ref.path))
+            except OSError:
+                pass
+            try:
+                os.remove(osp.join(repo.git_dir, ref.path))
             except OSError:
                 pass
         # END for each ref

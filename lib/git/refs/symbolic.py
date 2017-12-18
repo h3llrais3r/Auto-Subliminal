@@ -1,35 +1,37 @@
 import os
 
+from git.compat import (
+    string_types,
+    defenc
+)
 from git.objects import Object, Commit
 from git.util import (
     join_path,
     join_path_native,
     to_native_path_linux,
-    assure_directory_exists
+    assure_directory_exists,
+    hex_to_bin,
+    LockedFD
 )
-
 from gitdb.exc import (
     BadObject,
     BadName
 )
-from gitdb.util import (
-    join,
-    dirname,
-    isdir,
-    exists,
-    isfile,
-    rename,
-    hex_to_bin,
-    LockedFD
-)
-from git.compat import (
-    string_types,
-    defenc
-)
+
+import os.path as osp
 
 from .log import RefLog
 
+
 __all__ = ["SymbolicReference"]
+
+
+def _git_dir(repo, path):
+    """ Find the git dir that's appropriate for the path"""
+    name = "%s" % (path,)
+    if name in ['HEAD', 'ORIG_HEAD', 'FETCH_HEAD', 'index', 'logs']:
+        return repo.git_dir
+    return repo.common_dir
 
 
 class SymbolicReference(object):
@@ -77,11 +79,11 @@ class SymbolicReference(object):
 
     @property
     def abspath(self):
-        return join_path_native(self.repo.git_dir, self.path)
+        return join_path_native(_git_dir(self.repo, self.path), self.path)
 
     @classmethod
     def _get_packed_refs_path(cls, repo):
-        return join(repo.git_dir, 'packed-refs')
+        return osp.join(repo.common_dir, 'packed-refs')
 
     @classmethod
     def _iter_packed_refs(cls, repo):
@@ -94,7 +96,15 @@ class SymbolicReference(object):
                     if not line:
                         continue
                     if line.startswith('#'):
-                        if line.startswith('# pack-refs with:') and not line.endswith('peeled'):
+                        # "# pack-refs with: peeled fully-peeled sorted"
+                        # the git source code shows "peeled",
+                        # "fully-peeled" and "sorted" as the keywords
+                        # that can go on this line, as per comments in git file
+                        # refs/packed-backend.c
+                        # I looked at master on 2017-10-11,
+                        # commit 111ef79afe, after tag v2.15.0-rc1
+                        # from repo https://github.com/git/git.git
+                        if line.startswith('# pack-refs with:') and 'peeled' not in line:
                             raise TypeError("PackingType of packed-Refs not understood: %r" % line)
                         # END abort if we do not understand the packing scheme
                         continue
@@ -108,10 +118,10 @@ class SymbolicReference(object):
                     yield tuple(line.split(' ', 1))
                 # END for each line
         except (OSError, IOError):
-            raise StopIteration
+            return
         # END no packed-refs file handling
         # NOTE: Had try-finally block around here to close the fp,
-        # but some python version woudn't allow yields within that.
+        # but some python version wouldn't allow yields within that.
         # I believe files are closing themselves on destruction, so it is
         # alright.
 
@@ -128,15 +138,15 @@ class SymbolicReference(object):
         # END recursive dereferencing
 
     @classmethod
-    def _get_ref_info(cls, repo, ref_path):
+    def _get_ref_info_helper(cls, repo, ref_path):
         """Return: (str(sha), str(target_ref_path)) if available, the sha the file at
         rela_path points to, or None. target_ref_path is the reference we
         point to, or None"""
         tokens = None
+        repodir = _git_dir(repo, ref_path)
         try:
-            fp = open(join(repo.git_dir, ref_path), 'rt')
-            value = fp.read().rstrip()
-            fp.close()
+            with open(osp.join(repodir, ref_path), 'rt') as fp:
+                value = fp.read().rstrip()
             # Don't only split on spaces, but on whitespace, which allows to parse lines like
             # 60b64ef992065e2600bfef6187a97f92398a9144                branch 'master' of git-server:/path/to/repo
             tokens = value.split()
@@ -144,7 +154,7 @@ class SymbolicReference(object):
         except (OSError, IOError):
             # Probably we are just packed, find our entry in the packed refs file
             # NOTE: We are not a symbolic ref if we are in a packed file, as these
-            # are excluded explictly
+            # are excluded explicitly
             for sha, path in cls._iter_packed_refs(repo):
                 if path != ref_path:
                     continue
@@ -165,6 +175,13 @@ class SymbolicReference(object):
             return (tokens[0], None)
 
         raise ValueError("Failed to parse reference information from %r" % ref_path)
+
+    @classmethod
+    def _get_ref_info(cls, repo, ref_path):
+        """Return: (str(sha), str(target_ref_path)) if available, the sha the file at
+        rela_path points to, or None. target_ref_path is the reference we
+        point to, or None"""
+        return cls._get_ref_info_helper(repo, ref_path)
 
     def _get_object(self):
         """
@@ -219,7 +236,7 @@ class SymbolicReference(object):
 
         return self
 
-    def set_object(self, object, logmsg=None):
+    def set_object(self, object, logmsg=None):  # @ReservedAssignment
         """Set the object we point to, possibly dereference our symbolic reference first.
         If the reference does not exist, it will be created
 
@@ -230,7 +247,7 @@ class SymbolicReference(object):
         :note: plain SymbolicReferences may not actually point to objects by convention
         :return: self"""
         if isinstance(object, SymbolicReference):
-            object = object.object
+            object = object.object  # @ReservedAssignment
         # END resolve references
 
         is_detached = True
@@ -265,7 +282,7 @@ class SymbolicReference(object):
         symbolic one.
 
         :param ref: SymbolicReference instance, Object instance or refspec string
-            Only if the ref is a SymbolicRef instance, we will point to it. Everthing
+            Only if the ref is a SymbolicRef instance, we will point to it. Everything
             else is dereferenced to obtain the actual object.
         :param logmsg: If set to a string, the message will be used in the reflog.
             Otherwise, a reflog entry is not written for the changed reference.
@@ -313,13 +330,17 @@ class SymbolicReference(object):
 
         lfd = LockedFD(fpath)
         fd = lfd.open(write=True, stream=True)
-        fd.write(write_value.encode('ascii'))
-        lfd.commit()
-
+        ok = True
+        try:
+            fd.write(write_value.encode('ascii') + b'\n')
+            lfd.commit()
+            ok = True
+        finally:
+            if not ok:
+                lfd.rollback()
         # Adjust the reflog
         if logmsg is not None:
             self.log_append(oldbinsha, logmsg)
-        # END handle reflog
 
         return self
 
@@ -415,51 +436,47 @@ class SymbolicReference(object):
             or just "myreference", hence 'refs/' is implied.
             Alternatively the symbolic reference to be deleted"""
         full_ref_path = cls.to_full_path(path)
-        abs_path = join(repo.git_dir, full_ref_path)
-        if exists(abs_path):
+        abs_path = osp.join(repo.common_dir, full_ref_path)
+        if osp.exists(abs_path):
             os.remove(abs_path)
         else:
             # check packed refs
             pack_file_path = cls._get_packed_refs_path(repo)
             try:
-                reader = open(pack_file_path, 'rb')
-            except (OSError, IOError):
-                pass  # it didnt exist at all
-            else:
-                new_lines = list()
-                made_change = False
-                dropped_last_line = False
-                for line in reader:
-                    # keep line if it is a comment or if the ref to delete is not
-                    # in the line
-                    # If we deleted the last line and this one is a tag-reference object,
-                    # we drop it as well
-                    line = line.decode(defenc)
-                    if (line.startswith('#') or full_ref_path not in line) and \
-                            (not dropped_last_line or dropped_last_line and not line.startswith('^')):
-                        new_lines.append(line)
-                        dropped_last_line = False
-                        continue
-                    # END skip comments and lines without our path
+                with open(pack_file_path, 'rb') as reader:
+                    new_lines = list()
+                    made_change = False
+                    dropped_last_line = False
+                    for line in reader:
+                        # keep line if it is a comment or if the ref to delete is not
+                        # in the line
+                        # If we deleted the last line and this one is a tag-reference object,
+                        # we drop it as well
+                        line = line.decode(defenc)
+                        if (line.startswith('#') or full_ref_path not in line) and \
+                                (not dropped_last_line or dropped_last_line and not line.startswith('^')):
+                            new_lines.append(line)
+                            dropped_last_line = False
+                            continue
+                        # END skip comments and lines without our path
 
-                    # drop this line
-                    made_change = True
-                    dropped_last_line = True
-                # END for each line in packed refs
-                reader.close()
+                        # drop this line
+                        made_change = True
+                        dropped_last_line = True
 
                 # write the new lines
                 if made_change:
                     # write-binary is required, otherwise windows will
                     # open the file in text mode and change LF to CRLF !
-                    open(pack_file_path, 'wb').writelines(l.encode(defenc) for l in new_lines)
-                # END write out file
-            # END open exception handling
-        # END handle deletion
+                    with open(pack_file_path, 'wb') as fd:
+                        fd.writelines(l.encode(defenc) for l in new_lines)
+
+            except (OSError, IOError):
+                pass  # it didn't exist at all
 
         # delete the reflog
         reflog_path = RefLog.path(cls(repo, full_ref_path))
-        if os.path.isfile(reflog_path):
+        if osp.isfile(reflog_path):
             os.remove(reflog_path)
         # END remove reflog
 
@@ -470,21 +487,23 @@ class SymbolicReference(object):
         a proper symbolic reference. Otherwise it will be resolved to the
         corresponding object and a detached symbolic reference will be created
         instead"""
+        git_dir = _git_dir(repo, path)
         full_ref_path = cls.to_full_path(path)
-        abs_ref_path = join(repo.git_dir, full_ref_path)
+        abs_ref_path = osp.join(git_dir, full_ref_path)
 
         # figure out target data
         target = reference
         if resolve:
             target = repo.rev_parse(str(reference))
 
-        if not force and isfile(abs_ref_path):
+        if not force and osp.isfile(abs_ref_path):
             target_data = str(target)
             if isinstance(target, SymbolicReference):
                 target_data = target.path
             if not resolve:
                 target_data = "ref: " + target_data
-            existing_data = open(abs_ref_path, 'rb').read().decode(defenc).strip()
+            with open(abs_ref_path, 'rb') as fd:
+                existing_data = fd.read().decode(defenc).strip()
             if existing_data != target_data:
                 raise OSError("Reference at %r does already exist, pointing to %r, requested was %r" %
                               (full_ref_path, existing_data, target_data))
@@ -544,12 +563,16 @@ class SymbolicReference(object):
         if self.path == new_path:
             return self
 
-        new_abs_path = join(self.repo.git_dir, new_path)
-        cur_abs_path = join(self.repo.git_dir, self.path)
-        if isfile(new_abs_path):
+        new_abs_path = osp.join(_git_dir(self.repo, new_path), new_path)
+        cur_abs_path = osp.join(_git_dir(self.repo, self.path), self.path)
+        if osp.isfile(new_abs_path):
             if not force:
                 # if they point to the same file, its not an error
-                if open(new_abs_path, 'rb').read().strip() != open(cur_abs_path, 'rb').read().strip():
+                with open(new_abs_path, 'rb') as fd1:
+                    f1 = fd1.read().strip()
+                with open(cur_abs_path, 'rb') as fd2:
+                    f2 = fd2.read().strip()
+                if f1 != f2:
                     raise OSError("File at path %r already exists" % new_abs_path)
                 # else: we could remove ourselves and use the otherone, but
                 # but clarity we just continue as usual
@@ -557,12 +580,12 @@ class SymbolicReference(object):
             os.remove(new_abs_path)
         # END handle existing target file
 
-        dname = dirname(new_abs_path)
-        if not isdir(dname):
+        dname = osp.dirname(new_abs_path)
+        if not osp.isdir(dname):
             os.makedirs(dname)
         # END create directory
 
-        rename(cur_abs_path, new_abs_path)
+        os.rename(cur_abs_path, new_abs_path)
         self.path = new_path
 
         return self
@@ -575,8 +598,8 @@ class SymbolicReference(object):
 
         # walk loose refs
         # Currently we do not follow links
-        for root, dirs, files in os.walk(join_path_native(repo.git_dir, common_path)):
-            if 'refs/' not in root:  # skip non-refs subfolders
+        for root, dirs, files in os.walk(join_path_native(repo.common_dir, common_path)):
+            if 'refs' not in root.split(os.sep):  # skip non-refs subfolders
                 refs_id = [d for d in dirs if d == 'refs']
                 if refs_id:
                     dirs[0:] = ['refs']
@@ -586,12 +609,12 @@ class SymbolicReference(object):
                 if f == 'packed-refs':
                     continue
                 abs_path = to_native_path_linux(join_path(root, f))
-                rela_paths.add(abs_path.replace(to_native_path_linux(repo.git_dir) + '/', ""))
+                rela_paths.add(abs_path.replace(to_native_path_linux(repo.common_dir) + '/', ""))
             # END for each file in root directory
         # END for each directory to walk
 
         # read packed refs
-        for sha, rela_path in cls._iter_packed_refs(repo):
+        for sha, rela_path in cls._iter_packed_refs(repo):  # @UnusedVariable
             if rela_path.startswith(common_path):
                 rela_paths.add(rela_path)
             # END relative path matches common path
@@ -621,7 +644,7 @@ class SymbolicReference(object):
             git.SymbolicReference[], each of them is guaranteed to be a symbolic
             ref which is not detached and pointing to a valid ref
 
-            List is lexigraphically sorted
+            List is lexicographically sorted
             The returned objects represent actual subclasses, such as Head or TagReference"""
         return (r for r in cls._iter_items(repo, common_path) if r.__class__ == SymbolicReference or not r.is_detached)
 

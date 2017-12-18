@@ -8,6 +8,12 @@ from .reference import Reference
 __all__ = ["HEAD", "Head"]
 
 
+def strip_quotes(string):
+    if string.startswith('"') and string.endswith('"'):
+        return string[1:-1]
+    return string
+    
+
 class HEAD(SymbolicReference):
 
     """Special case of a Symbolic Reference as it represents the repository's
@@ -133,18 +139,15 @@ class Head(Reference):
             raise ValueError("Incorrect parameter type: %r" % remote_reference)
         # END handle type
 
-        writer = self.config_writer()
-        if remote_reference is None:
-            writer.remove_option(self.k_config_remote)
-            writer.remove_option(self.k_config_remote_ref)
-            if len(writer.options()) == 0:
-                writer.remove_section()
-            # END handle remove section
-        else:
-            writer.set_value(self.k_config_remote, remote_reference.remote_name)
-            writer.set_value(self.k_config_remote_ref, Head.to_full_path(remote_reference.remote_head))
-        # END handle ref value
-        writer.release()
+        with self.config_writer() as writer:
+            if remote_reference is None:
+                writer.remove_option(self.k_config_remote)
+                writer.remove_option(self.k_config_remote_ref)
+                if len(writer.options()) == 0:
+                    writer.remove_section()
+            else:
+                writer.set_value(self.k_config_remote, remote_reference.remote_name)
+                writer.set_value(self.k_config_remote_ref, Head.to_full_path(remote_reference.remote_head))
 
         return self
 
@@ -155,7 +158,7 @@ class Head(Reference):
         from .remote import RemoteReference
         reader = self.config_reader()
         if reader.has_option(self.k_config_remote) and reader.has_option(self.k_config_remote_ref):
-            ref = Head(self.repo, Head.to_full_path(reader.get_value(self.k_config_remote_ref)))
+            ref = Head(self.repo, Head.to_full_path(strip_quotes(reader.get_value(self.k_config_remote_ref))))
             remote_refpath = RemoteReference.to_full_path(join_path(reader.get_value(self.k_config_remote), ref.name))
             return RemoteReference(self.repo, remote_refpath)
         # END handle have tracking branch
@@ -202,6 +205,8 @@ class Head(Reference):
         :return:
             The active branch after the checkout operation, usually self unless
             a new branch has been created.
+            If there is no active branch, as the HEAD is now detached, the HEAD
+            reference will be returned instead.
 
         :note:
             By default it is only allowed to checkout heads - everything else
@@ -212,10 +217,12 @@ class Head(Reference):
             kwargs.pop('f')
 
         self.repo.git.checkout(self, **kwargs)
-        return self.repo.active_branch
+        if self.repo.head.is_detached:
+            return self.repo.head
+        else:
+            return self.repo.active_branch
 
-    #{ Configruation
-
+    #{ Configuration
     def _config_parser(self, read_only):
         if read_only:
             parser = self.repo.config_reader()
@@ -233,7 +240,7 @@ class Head(Reference):
 
     def config_writer(self):
         """
-        :return: A configuration writer instance with read-and write acccess
+        :return: A configuration writer instance with read-and write access
             to options of this head"""
         return self._config_parser(read_only=False)
 

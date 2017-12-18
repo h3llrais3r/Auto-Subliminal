@@ -35,7 +35,7 @@ from gitdb.fun import (
 )
 
 try:
-    from _perf import PackIndexFile_sha_to_index
+    from gitdb_speedups._perf import PackIndexFile_sha_to_index
 except ImportError:
     pass
 # END try c module
@@ -85,7 +85,7 @@ def pack_object_at(cursor, offset, as_stream):
         an object of the correct type according to the type_id  of the object.
         If as_stream is True, the object will contain a stream, allowing  the
         data to be read decompressed.
-    :param data: random accessable data containing all required information
+    :param data: random accessible data containing all required information
     :parma offset: offset in to the data at which the object information is located
     :param as_stream: if True, a stream object will be returned that can read
         the data, otherwise you receive an info object only"""
@@ -266,6 +266,10 @@ class PackIndexFile(LazyMixin):
         super(PackIndexFile, self).__init__()
         self._indexpath = indexpath
 
+    def close(self):
+        mman.force_map_handle_removal_win(self._indexpath)
+        self._cursor = None
+        
     def _set_cache_(self, attr):
         if attr == "_packfile_checksum":
             self._packfile_checksum = self._cursor.map()[-40:-20]
@@ -447,7 +451,7 @@ class PackIndexFile(LazyMixin):
         :return: index as in `sha_to_index` or None if the sha was not found in this
             index file
         :param partial_bin_sha: an at least two bytes of a partial binary sha as bytes
-        :param canonical_length: lenght of the original hexadecimal representation of the
+        :param canonical_length: length of the original hexadecimal representation of the
             given partial binary sha
         :raise AmbiguousObjectName:"""
         if len(partial_bin_sha) < 2:
@@ -527,6 +531,10 @@ class PackFile(LazyMixin):
     def __init__(self, packpath):
         self._packpath = packpath
 
+    def close(self):
+        mman.force_map_handle_removal_win(self._packpath)
+        self._cursor = None
+        
     def _set_cache_(self, attr):
         # we fill the whole cache, whichever attribute gets queried first
         self._cursor = mman.make_cursor(self._packpath).use_region()
@@ -667,6 +675,10 @@ class PackEntity(LazyMixin):
         basename, ext = os.path.splitext(pack_or_index_path)
         self._index = self.IndexFileCls("%s.idx" % basename)            # PackIndexFile instance
         self._pack = self.PackFileCls("%s.pack" % basename)         # corresponding PackFile instance
+
+    def close(self):
+        self._index.close()
+        self._pack.close()
 
     def _set_cache_(self, attr):
         # currently this can only be _offset_map

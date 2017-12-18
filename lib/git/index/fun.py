@@ -1,6 +1,8 @@
 # Contains standalone functions to accompany the index implementation and make it
 # more versatile
 # NOTE: Autodoc hates it if this is a docstring
+from io import BytesIO
+import os
 from stat import (
     S_IFDIR,
     S_IFLNK,
@@ -9,12 +11,18 @@ from stat import (
     S_IFMT,
     S_IFREG,
 )
-
-from io import BytesIO
-import os
 import subprocess
 
-from git.util import IndexFileSHA1Writer
+from git.cmd import PROC_CREATIONFLAGS, handle_process_output
+from git.compat import (
+    PY3,
+    defenc,
+    force_text,
+    force_bytes,
+    is_posix,
+    safe_encode,
+    safe_decode,
+)
 from git.exc import (
     UnmergedEntriesError,
     HookExecutionError
@@ -24,6 +32,11 @@ from git.objects.fun import (
     traverse_tree_recursive,
     traverse_trees_recursive
 )
+from git.util import IndexFileSHA1Writer, finalize_process
+from gitdb.base import IStream
+from gitdb.typ import str_tree_type
+
+import os.path as osp
 
 from .typ import (
     BaseIndexEntry,
@@ -31,19 +44,11 @@ from .typ import (
     CE_NAMEMASK,
     CE_STAGESHIFT
 )
-
 from .util import (
     pack,
     unpack
 )
 
-from gitdb.base import IStream
-from gitdb.typ import str_tree_type
-from git.compat import (
-    defenc,
-    force_text,
-    force_bytes
-)
 
 S_IFGITLINK = S_IFLNK | S_IFDIR     # a submodule
 CE_NAMEMASK_INV = ~CE_NAMEMASK
@@ -54,35 +59,42 @@ __all__ = ('write_cache', 'read_cache', 'write_tree_from_cache', 'entry_key',
 
 def hook_path(name, git_dir):
     """:return: path to the given named hook in the given git repository directory"""
-    return os.path.join(git_dir, 'hooks', name)
+    return osp.join(git_dir, 'hooks', name)
 
 
-def run_commit_hook(name, index):
+def run_commit_hook(name, index, *args):
     """Run the commit hook of the given name. Silently ignores hooks that do not exist.
     :param name: name of hook, like 'pre-commit'
     :param index: IndexFile instance
+    :param args: arguments passed to hook file
     :raises HookExecutionError: """
     hp = hook_path(name, index.repo.git_dir)
     if not os.access(hp, os.X_OK):
         return
 
     env = os.environ.copy()
-    env['GIT_INDEX_FILE'] = index.path
+    env['GIT_INDEX_FILE'] = safe_decode(index.path) if PY3 else safe_encode(index.path)
     env['GIT_EDITOR'] = ':'
-    cmd = subprocess.Popen(hp,
-                           env=env,
-                           stdout=subprocess.PIPE,
-                           stderr=subprocess.PIPE,
-                           cwd=index.repo.working_dir,
-                           close_fds=(os.name == 'posix'))
-    stdout, stderr = cmd.communicate()
-    cmd.stdout.close()
-    cmd.stderr.close()
-
-    if cmd.returncode != 0:
-        stdout = force_text(stdout, defenc)
-        stderr = force_text(stderr, defenc)
-        raise HookExecutionError(hp, cmd.returncode, stdout, stderr)
+    try:
+        cmd = subprocess.Popen([hp] + list(args),
+                               env=env,
+                               stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE,
+                               cwd=index.repo.working_dir,
+                               close_fds=is_posix,
+                               creationflags=PROC_CREATIONFLAGS,)
+    except Exception as ex:
+        raise HookExecutionError(hp, ex)
+    else:
+        stdout = []
+        stderr = []
+        handle_process_output(cmd, stdout.append, stderr.append, finalize_process)
+        stdout = ''.join(stdout)
+        stderr = ''.join(stderr)
+        if cmd.returncode != 0:
+            stdout = force_text(stdout, defenc)
+            stderr = force_text(stderr, defenc)
+            raise HookExecutionError(hp, cmd.returncode, stderr, stdout)
     # end handle return code
 
 
@@ -93,7 +105,7 @@ def stat_mode_to_index_mode(mode):
         return S_IFLNK
     if S_ISDIR(mode) or S_IFMT(mode) == S_IFGITLINK:    # submodules
         return S_IFGITLINK
-    return S_IFREG | 0o644 | (mode & 0o100)       # blobs with or without executable bit
+    return S_IFREG | 0o644 | (mode & 0o111)       # blobs with or without executable bit
 
 
 def write_cache(entries, stream, extension_data=None, ShaStreamCls=IndexFileSHA1Writer):
@@ -253,7 +265,7 @@ def write_tree_from_cache(entries, odb, sl, si=0):
 
             # enter recursion
             # ci - 1 as we want to count our current item as well
-            sha, tree_entry_list = write_tree_from_cache(entries, odb, slice(ci - 1, xi), rbound + 1)
+            sha, tree_entry_list = write_tree_from_cache(entries, odb, slice(ci - 1, xi), rbound + 1)  # @UnusedVariable
             tree_items_append((sha, S_IFDIR, base))
 
             # skip ahead
@@ -344,7 +356,7 @@ def aggressive_tree_merge(odb, tree_shas):
                         out_append(_tree_entry_to_baseindexentry(theirs, 3))
                     # END theirs changed
                     # else:
-                    #   theirs didnt change
+                    #   theirs didn't change
                     #   pass
                 # END handle theirs
             # END handle ours
