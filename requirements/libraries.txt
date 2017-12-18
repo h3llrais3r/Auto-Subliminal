@@ -19,7 +19,7 @@ guessit==2.1.4
 html5lib==0.999
 httplib2==0.10.3
 idna=2.6
-imdbpy==5.1.1
+imdbpy==5.1.1,<6.0
 langdetect==1.0.7
 lxml==4.1.1
 oauth2==1.9.0
