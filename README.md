@@ -34,7 +34,6 @@ What it uses (see libraries.txt for versions)
  * cherrypy
  * click
  * dogpile.cache
- * dogpile.core
  * enum34
  * enzyme
  * futures

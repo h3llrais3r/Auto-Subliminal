@@ -8,8 +8,7 @@ chardet==3.0.4
 Cheetah==2.4.4
 cherrypy==8.1.0
 click==6.7
-dogpile.cache==0.6.2
-dogpile.core==0.4.1
+dogpile.cache==0.6.4
 enum34==1.1.6
 enzyme==0.4.1
 futures==3.2.0
