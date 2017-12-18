@@ -54,7 +54,6 @@ What it uses (see libraries.txt for versions)
  * pythontwitter
  * python-dateutil
  * pytz
- * pyxdg
  * rarfile
  * rebulk
  * requests
