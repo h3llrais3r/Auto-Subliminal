@@ -51,7 +51,6 @@ What it uses (see libraries.txt for versions)
  * portend
  * pushbullet
  * pynma
- * pynmwp
  * pysrt
  * pythontwitter
  * python-dateutil

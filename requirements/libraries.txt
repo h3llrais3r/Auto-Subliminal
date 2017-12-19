@@ -27,7 +27,6 @@ oauth2==1.9.0
 portend==2.2
 pushbullet.py==0.11.0
 pynma==1.0
-pynmwp==0.1
 pysrt==1.1.1
 pythontwitter==1.0.1
 python-dateutil==2.6.1
