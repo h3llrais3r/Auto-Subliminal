@@ -41,4 +41,4 @@ git+https://github.com/Diaoul/subliminal.git@7bbc7a1cfc5e8f9e556998a69b655daa07c
 git+https://github.com/h3llrais3r/tvdb_api_v2.git@c48e4bd083a0722c6dd9278c876783b9ac90fefa#egg=tvdb_api_v2
 urllib3==1.22
 websocket-client==0.44.0
-ws4py==0.4.2
+ws4py==0.4.3
