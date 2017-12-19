@@ -1,12 +1,14 @@
 Auto-Subliminal [![License](https://img.shields.io/github/license/h3llrais3r/Auto-Subliminal.svg)](https://github.com/h3llrais3r/Auto-Subliminal/blob/master/LICENSE)
 ===============
 
-| Badge | Master | Development |
-| ------|:------:| -----------:|
+| Status | Master | Development |
+| -------|:------:| -----------:|
 | Travis CI build status | [![Travis CI build status](https://travis-ci.org/h3llrais3r/Auto-Subliminal.svg?branch=master)](https://travis-ci.org/h3llrais3r/Auto-Subliminal) | [![Travis CI build status](https://travis-ci.org/h3llrais3r/Auto-Subliminal.svg?branch=development)](https://travis-ci.org/h3llrais3r/Auto-Subliminal) |
 | Coverage status | [![Coverage Status](https://coveralls.io/repos/github/h3llrais3r/Auto-Subliminal/badge.svg?branch=master)](https://coveralls.io/github/h3llrais3r/Auto-Subliminal?branch=master) | [![Coverage Status](https://coveralls.io/repos/github/h3llrais3r/Auto-Subliminal/badge.svg?branch=development)](https://coveralls.io/github/h3llrais3r/Auto-Subliminal?branch=development) |
 | Requirements status | [![Requirements Status](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements.svg?branch=master)](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements/?branch=master) | [![Requirements Status](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements.svg?branch=development)](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements/?branch=development) |
 
+About
+-----
 
 Thank you for choosing Auto-Subliminal! The automated python subtitle downloader.
 
