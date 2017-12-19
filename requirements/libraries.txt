@@ -31,7 +31,7 @@ pynmwp==0.1
 pysrt==1.1.1
 pythontwitter==1.0.1
 python-dateutil==2.6.1
-python-magic=0.4.15
+python-magic==0.4.15
 pytz==2017.3
 rarfile==3.0
 rebulk==0.9.0

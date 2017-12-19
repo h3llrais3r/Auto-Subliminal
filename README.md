@@ -37,8 +37,8 @@ What it uses (see libraries.txt for versions)
  * enum34
  * enzyme
  * futures
+ * gitdb2
  * gitpython
- * gitdb
  * growl
  * guessit
  * html5lib
@@ -62,7 +62,7 @@ What it uses (see libraries.txt for versions)
  * requests
  * simplejson
  * six
- * smmap
+ * smmap2
  * stevedore
  * subliminal
  * tempora
