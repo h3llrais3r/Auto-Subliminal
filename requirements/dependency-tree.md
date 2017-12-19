@@ -31,7 +31,7 @@ Libraries dependency tree
     |-- python-dateutil
     |-- rebulk
     |-- six
-|-- html5lib
+|-- html5lib (used as parser in combination with beautifulsoup4 for parsing html pages)
     |-- charade (optional dependency)
     |-- chardet (optional dependency)
 |-- imdbpy
