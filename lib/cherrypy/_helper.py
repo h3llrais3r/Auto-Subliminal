@@ -1,27 +1,26 @@
-"""
-Helper functions for CP apps
-"""
+"""Helper functions for CP apps."""
 
 import six
+from six.moves import urllib
 
-from cherrypy._cpcompat import urljoin as _urljoin, urlencode as _urlencode
 from cherrypy._cpcompat import text_or_bytes
 
 import cherrypy
 
 
 def expose(func=None, alias=None):
-    """
-    Expose the function or class, optionally providing an alias or set of aliases.
+    """Expose the function or class.
+
+    Optionally provide an alias or set of aliases.
     """
     def expose_(func):
         func.exposed = True
         if alias is not None:
             if isinstance(alias, text_or_bytes):
-                parents[alias.replace(".", "_")] = func
+                parents[alias.replace('.', '_')] = func
             else:
                 for a in alias:
-                    parents[a.replace(".", "_")] = func
+                    parents[a.replace('.', '_')] = func
         return func
 
     import sys
@@ -58,8 +57,9 @@ def expose(func=None, alias=None):
 
 
 def popargs(*args, **kwargs):
-    """A decorator for _cp_dispatch
-    (cherrypy.dispatch.Dispatcher.dispatch_method_name).
+    """A decorator for _cp_dispatch.
+
+    (cherrypy.dispatch.Dispatcher.dispatch_method_name)
 
     Optional keyword argument: handler=(Object or Function)
 
@@ -135,7 +135,6 @@ def popargs(*args, **kwargs):
             #...
 
     """
-
     # Since keyword arg comes after *args, we have to process it ourselves
     # for lower versions of python.
 
@@ -145,10 +144,8 @@ def popargs(*args, **kwargs):
         if k == 'handler':
             handler = v
         else:
-            raise TypeError(
-                "cherrypy.popargs() got an unexpected keyword argument '{0}'"
-                .format(k)
-            )
+            tm = "cherrypy.popargs() got an unexpected keyword argument '{0}'"
+            raise TypeError(tm.format(k))
 
     import inspect
 
@@ -160,7 +157,8 @@ def popargs(*args, **kwargs):
         if inspect.isclass(cls_or_self):
             # cherrypy.popargs is a class decorator
             cls = cls_or_self
-            setattr(cls, cherrypy.dispatch.Dispatcher.dispatch_method_name, decorated)
+            name = cherrypy.dispatch.Dispatcher.dispatch_method_name
+            setattr(cls, name, decorated)
             return cls
 
         # We're in the actual function
@@ -191,7 +189,7 @@ def popargs(*args, **kwargs):
     return decorated
 
 
-def url(path="", qs="", script_name=None, base=None, relative=None):
+def url(path='', qs='', script_name=None, base=None, relative=None):
     """Create an absolute URL for the given path.
 
     If 'path' starts with a slash ('/'), this will return
@@ -219,12 +217,12 @@ def url(path="", qs="", script_name=None, base=None, relative=None):
     relative to the server root; i.e., it will start with a slash.
     """
     if isinstance(qs, (tuple, list, dict)):
-        qs = _urlencode(qs)
+        qs = urllib.parse.urlencode(qs)
     if qs:
         qs = '?' + qs
 
     if cherrypy.request.app:
-        if not path.startswith("/"):
+        if not path.startswith('/'):
             # Append/remove trailing slash from path_info as needed
             # (this is to support mistyped URL's without redirecting;
             # if you want to redirect, use tools.trailing_slash).
@@ -236,17 +234,17 @@ def url(path="", qs="", script_name=None, base=None, relative=None):
                 if pi.endswith('/') and pi != '/':
                     pi = pi[:-1]
 
-            if path == "":
+            if path == '':
                 path = pi
             else:
-                path = _urljoin(pi, path)
+                path = urllib.parse.urljoin(pi, path)
 
         if script_name is None:
             script_name = cherrypy.request.script_name
         if base is None:
             base = cherrypy.request.base
 
-        newurl = base + script_name + path + qs
+        newurl = base + script_name + normalize_path(path) + qs
     else:
         # No request.app (we're being called outside a request).
         # We'll have to guess the base from server.* attributes.
@@ -255,25 +253,13 @@ def url(path="", qs="", script_name=None, base=None, relative=None):
         if base is None:
             base = cherrypy.server.base()
 
-        path = (script_name or "") + path
-        newurl = base + path + qs
-
-    if './' in newurl:
-        # Normalize the URL by removing ./ and ../
-        atoms = []
-        for atom in newurl.split('/'):
-            if atom == '.':
-                pass
-            elif atom == '..':
-                atoms.pop()
-            else:
-                atoms.append(atom)
-        newurl = '/'.join(atoms)
+        path = (script_name or '') + path
+        newurl = base + normalize_path(path) + qs
 
     # At this point, we should have a fully-qualified absolute URL.
 
     if relative is None:
-        relative = getattr(cherrypy.request.app, "relative_urls", False)
+        relative = getattr(cherrypy.request.app, 'relative_urls', False)
 
     # See http://www.ietf.org/rfc/rfc2396.txt
     if relative == 'server':
@@ -296,3 +282,60 @@ def url(path="", qs="", script_name=None, base=None, relative=None):
         newurl = '/'.join(new)
 
     return newurl
+
+
+def normalize_path(path):
+    """Resolve given path from relative into absolute form."""
+    if './' not in path:
+        return path
+
+    # Normalize the URL by removing ./ and ../
+    atoms = []
+    for atom in path.split('/'):
+        if atom == '.':
+            pass
+        elif atom == '..':
+            # Don't pop from empty list
+            # (i.e. ignore redundant '..')
+            if atoms:
+                atoms.pop()
+        elif atom:
+            atoms.append(atom)
+
+    newpath = '/'.join(atoms)
+    # Preserve leading '/'
+    if path.startswith('/'):
+        newpath = '/' + newpath
+
+    return newpath
+
+
+####
+# Inlined from jaraco.classes 1.4.3
+# Ref #1673
+class _ClassPropertyDescriptor(object):
+    """Descript for read-only class-based property.
+
+    Turns a classmethod-decorated func into a read-only property of that class
+    type (means the value cannot be set).
+    """
+
+    def __init__(self, fget, fset=None):
+        """Instantiated by ``_helper.classproperty``."""
+        self.fget = fget
+        self.fset = fset
+
+    def __get__(self, obj, klass=None):
+        """Return property value."""
+        if klass is None:
+            klass = type(obj)
+        return self.fget.__get__(obj, klass)()
+
+
+def classproperty(func):
+    """Decorator like classmethod to implement a static class property."""
+    if not isinstance(func, (classmethod, staticmethod)):
+        func = classmethod(func)
+
+    return _ClassPropertyDescriptor(func)
+####

@@ -1,6 +1,5 @@
 """CherryPy is a pythonic, object-oriented HTTP framework.
 
-
 CherryPy consists of not one, but four separate API layers.
 
 The APPLICATION LAYER is the simplest. CherryPy applications are written as
@@ -53,7 +52,8 @@ with customized or extended components. The core API's are:
  * Server API
  * WSGI API
 
-These API's are described in the `CherryPy specification <https://bitbucket.org/cherrypy/cherrypy/wiki/CherryPySpec>`_.
+These API's are described in the `CherryPy specification
+<https://github.com/cherrypy/cherrypy/wiki/CherryPySpec>`_.
 """
 
 try:
@@ -61,31 +61,51 @@ try:
 except ImportError:
     pass
 
-from cherrypy._cperror import HTTPError, HTTPRedirect, InternalRedirect  # noqa
-from cherrypy._cperror import NotFound, CherryPyException, TimeoutError  # noqa
+from threading import local as _local
 
-from cherrypy import _cpdispatch as dispatch  # noqa
+from ._cperror import (
+    HTTPError, HTTPRedirect, InternalRedirect,
+    NotFound, CherryPyException,
+)
 
-from cherrypy import _cptools
-tools = _cptools.default_toolbox
-Tool = _cptools.Tool
+from . import _cpdispatch as dispatch
 
-from cherrypy import _cprequest
-from cherrypy.lib import httputil as _httputil
+from ._cptools import default_toolbox as tools, Tool
+from ._helper import expose, popargs, url
 
-from cherrypy import _cptree
-tree = _cptree.Tree()
-from cherrypy._cptree import Application  # noqa
-from cherrypy import _cpwsgi as wsgi  # noqa
+from . import _cprequest, _cpserver, _cptree, _cplogging, _cpconfig
 
-from cherrypy import process
+import cherrypy.lib.httputil as _httputil
+
+from ._cptree import Application
+from . import _cpwsgi as wsgi
+
+from . import process
 try:
-    from cherrypy.process import win32
+    from .process import win32
     engine = win32.Win32Bus()
     engine.console_control_handler = win32.ConsoleCtrlHandler(engine)
     del win32
 except ImportError:
     engine = process.bus
+
+from . import _cpchecker
+
+__all__ = (
+    'HTTPError', 'HTTPRedirect', 'InternalRedirect',
+    'NotFound', 'CherryPyException',
+    'dispatch', 'tools', 'Tool', 'Application',
+    'wsgi', 'process', 'tree', 'engine',
+    'quickstart', 'serving', 'request', 'response', 'thread_data',
+    'log', 'expose', 'popargs', 'url', 'config',
+)
+
+
+__import__('cherrypy._cptools')
+__import__('cherrypy._cprequest')
+
+
+tree = _cptree.Tree()
 
 
 try:
@@ -94,33 +114,9 @@ except Exception:
     __version__ = 'unknown'
 
 
-# Timeout monitor. We add two channels to the engine
-# to which cherrypy.Application will publish.
 engine.listeners['before_request'] = set()
 engine.listeners['after_request'] = set()
 
-
-class _TimeoutMonitor(process.plugins.Monitor):
-
-    def __init__(self, bus):
-        self.servings = []
-        process.plugins.Monitor.__init__(self, bus, self.run)
-
-    def before_request(self):
-        self.servings.append((serving.request, serving.response))
-
-    def after_request(self):
-        try:
-            self.servings.remove((serving.request, serving.response))
-        except ValueError:
-            pass
-
-    def run(self):
-        """Check timeout on all responses. (Internal)"""
-        for req, resp in self.servings:
-            resp.check_timeout()
-engine.timeout_monitor = _TimeoutMonitor(engine)
-engine.timeout_monitor.subscribe()
 
 engine.autoreload = process.plugins.Autoreloader(engine)
 engine.autoreload.subscribe()
@@ -132,29 +128,30 @@ engine.signal_handler = process.plugins.SignalHandler(engine)
 
 
 class _HandleSignalsPlugin(object):
+    """Handle signals from other processes.
 
-    """Handle signals from other processes based on the configured
-    platform handlers above."""
+    Based on the configured platform handlers above.
+    """
 
     def __init__(self, bus):
         self.bus = bus
 
     def subscribe(self):
-        """Add the handlers based on the platform"""
-        if hasattr(self.bus, "signal_handler"):
+        """Add the handlers based on the platform."""
+        if hasattr(self.bus, 'signal_handler'):
             self.bus.signal_handler.subscribe()
-        if hasattr(self.bus, "console_control_handler"):
+        if hasattr(self.bus, 'console_control_handler'):
             self.bus.console_control_handler.subscribe()
+
 
 engine.signals = _HandleSignalsPlugin(engine)
 
 
-from cherrypy import _cpserver
 server = _cpserver.Server()
 server.subscribe()
 
 
-def quickstart(root=None, script_name="", config=None):
+def quickstart(root=None, script_name='', config=None):
     """Mount the given root, start the builtin server (and engine), then block.
 
     root: an instance of a "controller class" (a collection of page handler
@@ -181,11 +178,7 @@ def quickstart(root=None, script_name="", config=None):
     engine.block()
 
 
-from cherrypy._cpcompat import threadlocal as _local
-
-
 class _Serving(_local):
-
     """An interface for registering request and response objects.
 
     Rather than have a separate "thread local" object for the request and
@@ -196,8 +189,8 @@ class _Serving(_local):
     thread-safe way.
     """
 
-    request = _cprequest.Request(_httputil.Host("127.0.0.1", 80),
-                                 _httputil.Host("127.0.0.1", 1111))
+    request = _cprequest.Request(_httputil.Host('127.0.0.1', 80),
+                                 _httputil.Host('127.0.0.1', 1111))
     """
     The request object for the current thread. In the main thread,
     and any threads which are not receiving HTTP requests, this is None."""
@@ -215,6 +208,7 @@ class _Serving(_local):
         """Remove all attributes of self."""
         self.__dict__.clear()
 
+
 serving = _Serving()
 
 
@@ -230,7 +224,7 @@ class _ThreadLocalProxy(object):
         return getattr(child, name)
 
     def __setattr__(self, name, value):
-        if name in ("__attrname__", ):
+        if name in ('__attrname__', ):
             object.__setattr__(self, name, value)
         else:
             child = getattr(serving, self.__attrname__)
@@ -273,6 +267,7 @@ class _ThreadLocalProxy(object):
     # Python 3
     __bool__ = __nonzero__
 
+
 # Create request and response object (the same objects will be used
 #   throughout the entire life of the webserver, but will redirect
 #   to the "serving" object)
@@ -283,8 +278,9 @@ response = _ThreadLocalProxy('response')
 
 
 class _ThreadData(_local):
-
     """A container for thread-specific data."""
+
+
 thread_data = _ThreadData()
 
 
@@ -298,6 +294,7 @@ def _cherrypy_pydoc_resolve(thing, forceload=0):
         thing = getattr(serving, thing.__attrname__)
     return _pydoc._builtin_resolve(thing, forceload)
 
+
 try:
     import pydoc as _pydoc
     _pydoc._builtin_resolve = _pydoc.resolve
@@ -306,11 +303,7 @@ except ImportError:
     pass
 
 
-from cherrypy import _cplogging
-
-
 class _GlobalLogManager(_cplogging.LogManager):
-
     """A site-wide LogManager; routes to app.log or global log as appropriate.
 
     This :class:`LogManager<cherrypy._cplogging.LogManager>` implements
@@ -321,7 +314,10 @@ class _GlobalLogManager(_cplogging.LogManager):
     """
 
     def __call__(self, *args, **kwargs):
-        """Log the given message to the app.log or global log as appropriate.
+        """Log the given message to the app.log or global log.
+
+        Log the given message to the app.log or global
+        log as appropriate.
         """
         # Do NOT use try/except here. See
         # https://github.com/cherrypy/cherrypy/issues/945
@@ -332,7 +328,10 @@ class _GlobalLogManager(_cplogging.LogManager):
         return log.error(*args, **kwargs)
 
     def access(self):
-        """Log an access message to the app.log or global log as appropriate.
+        """Log an access message to the app.log or global log.
+
+        Log the given message to the app.log or global
+        log as appropriate.
         """
         try:
             return request.app.log.access()
@@ -348,14 +347,11 @@ log.error_file = ''
 log.access_file = ''
 
 
+@engine.subscribe('log')
 def _buslog(msg, level):
     log.error(msg, 'ENGINE', severity=level)
-engine.subscribe('log', _buslog)
 
-from cherrypy._helper import expose, popargs, url  # noqa
 
-# import _cpconfig last so it can reference other top-level objects
-from cherrypy import _cpconfig
 # Use _global_conf_alias so quickstart can use 'config' as an arg
 # without shadowing cherrypy.config.
 config = _global_conf_alias = _cpconfig.Config()
@@ -365,11 +361,10 @@ config.defaults = {
     'tools.trailing_slash.on': True,
     'tools.encode.on': True
 }
-config.namespaces["log"] = lambda k, v: setattr(log, k, v)
-config.namespaces["checker"] = lambda k, v: setattr(checker, k, v)
+config.namespaces['log'] = lambda k, v: setattr(log, k, v)
+config.namespaces['checker'] = lambda k, v: setattr(checker, k, v)
 # Must reset to get our defaults applied.
 config.reset()
 
-from cherrypy import _cpchecker
 checker = _cpchecker.Checker()
 engine.subscribe('start', checker)

@@ -18,6 +18,7 @@ from cherrypy import _cperror
 from cherrypy.lib import httputil
 from cherrypy.lib import is_closable_iterator
 
+
 def downgrade_wsgi_ux_to_1x(environ):
     """Return a new environ dict for WSGI 1.x from the given WSGI u.x environ.
     """
@@ -81,7 +82,7 @@ class VirtualHost(object):
     def __call__(self, environ, start_response):
         domain = environ.get('HTTP_HOST', '')
         if self.use_x_forwarded_host:
-            domain = environ.get("HTTP_X_FORWARDED_HOST", domain)
+            domain = environ.get('HTTP_X_FORWARDED_HOST', domain)
 
         nextapp = self.domains.get(domain)
         if nextapp is None:
@@ -112,7 +113,7 @@ class InternalRedirector(object):
                 # Add the *previous* path_info + qs to redirections.
                 old_uri = sn + path
                 if qs:
-                    old_uri += "?" + qs
+                    old_uri += '?' + qs
                 redirections.append(old_uri)
 
                 if not self.recursive:
@@ -120,20 +121,20 @@ class InternalRedirector(object):
                     # already
                     new_uri = sn + ir.path
                     if ir.query_string:
-                        new_uri += "?" + ir.query_string
+                        new_uri += '?' + ir.query_string
                     if new_uri in redirections:
                         ir.request.close()
                         tmpl = (
-                            "InternalRedirector visited the same URL twice: %r"
+                            'InternalRedirector visited the same URL twice: %r'
                         )
                         raise RuntimeError(tmpl % new_uri)
 
                 # Munge the environment and try again.
-                environ['REQUEST_METHOD'] = "GET"
+                environ['REQUEST_METHOD'] = 'GET'
                 environ['PATH_INFO'] = ir.path
                 environ['QUERY_STRING'] = ir.query_string
                 environ['wsgi.input'] = io.BytesIO()
-                environ['CONTENT_LENGTH'] = "0"
+                environ['CONTENT_LENGTH'] = '0'
                 environ['cherrypy.previous_request'] = ir.request
 
 
@@ -191,12 +192,11 @@ class _TrappedResponse(object):
             raise
         except StopIteration:
             raise
-        except:
+        except Exception:
             tb = _cperror.format_exc()
-            #print('trapped (started %s):' % self.started_response, tb)
             _cherrypy.log(tb, severity=40)
             if not _cherrypy.request.show_tracebacks:
-                tb = ""
+                tb = ''
             s, h, b = _cperror.bare_error(tb)
             if six.PY3:
                 # What fun.
@@ -213,7 +213,7 @@ class _TrappedResponse(object):
 
             try:
                 self.start_response(s, h, _sys.exc_info())
-            except:
+            except Exception:
                 # "The application must not trap any exceptions raised by
                 # start_response, if it called start_response with exc_info.
                 # Instead, it should allow such exceptions to propagate
@@ -223,7 +223,7 @@ class _TrappedResponse(object):
                 raise
 
             if self.started_response:
-                return ntob("").join(b)
+                return ntob('').join(b)
             else:
                 return b
 
@@ -248,16 +248,16 @@ class AppResponse(object):
 
             outstatus = r.output_status
             if not isinstance(outstatus, bytes):
-                raise TypeError("response.output_status is not a byte string.")
+                raise TypeError('response.output_status is not a byte string.')
 
             outheaders = []
             for k, v in r.header_list:
                 if not isinstance(k, bytes):
-                    tmpl = "response.header_list key %r is not a byte string."
+                    tmpl = 'response.header_list key %r is not a byte string.'
                     raise TypeError(tmpl % k)
                 if not isinstance(v, bytes):
                     tmpl = (
-                        "response.header_list value %r is not a byte string."
+                        'response.header_list value %r is not a byte string.'
                     )
                     raise TypeError(tmpl % v)
                 outheaders.append((k, v))
@@ -275,7 +275,7 @@ class AppResponse(object):
 
             self.iter_response = iter(r.body)
             self.write = start_response(outstatus, outheaders)
-        except:
+        except BaseException:
             self.close()
             raise
 
@@ -320,7 +320,7 @@ class AppResponse(object):
             env('REMOTE_HOST', ''),
         )
         scheme = env('wsgi.url_scheme')
-        sproto = env('ACTUAL_SERVER_PROTOCOL', "HTTP/1.1")
+        sproto = env('ACTUAL_SERVER_PROTOCOL', 'HTTP/1.1')
         request, resp = self.cpapp.get_serving(local, remote, scheme, sproto)
 
         # LOGON_USER is served by IIS, and is the name of the
@@ -365,7 +365,7 @@ class AppResponse(object):
         old_enc = self.environ.get('wsgi.url_encoding', 'ISO-8859-1')
         new_enc = self.cpapp.find_config(
             self.environ.get('PATH_INFO', ''),
-            "request.uri_encoding", 'utf-8',
+            'request.uri_encoding', 'utf-8',
         )
         if new_enc.lower() == old_enc.lower():
             return
@@ -389,9 +389,9 @@ class AppResponse(object):
             # We assume all incoming header keys are uppercase already.
             if cgiName in self.headerNames:
                 yield self.headerNames[cgiName], environ[cgiName]
-            elif cgiName[:5] == "HTTP_":
+            elif cgiName[:5] == 'HTTP_':
                 # Hackish attempt at recovering original header names.
-                translatedHeader = cgiName[5:].replace("_", "-")
+                translatedHeader = cgiName[5:].replace('_', '-')
                 yield translatedHeader, environ[cgiName]
 
 
@@ -452,16 +452,16 @@ class CPWSGIApp(object):
 
     def namespace_handler(self, k, v):
         """Config handler for the 'wsgi' namespace."""
-        if k == "pipeline":
+        if k == 'pipeline':
             # Note this allows multiple 'wsgi.pipeline' config entries
             # (but each entry will be processed in a 'random' order).
             # It should also allow developers to set default middleware
             # in code (passed to self.__init__) that deployers can add to
             # (but not remove) via config.
             self.pipeline.extend(v)
-        elif k == "response_class":
+        elif k == 'response_class':
             self.response_class = v
         else:
-            name, arg = k.split(".", 1)
+            name, arg = k.split('.', 1)
             bucket = self.config.setdefault(name, {})
             bucket[arg] = v

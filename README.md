@@ -31,6 +31,7 @@ What it uses (see libraries.txt for versions)
  * charade
  * chardet
  * cheetah
+ * cheroot
  * cherrypy
  * click
  * dogpile.cache
@@ -46,7 +47,9 @@ What it uses (see libraries.txt for versions)
  * imdbpy
  * langdetect
  * lxml
+ * more-itertools
  * oauth2
+ * portend
  * pushbullet
  * pynma
  * pynmwp
@@ -62,7 +65,7 @@ What it uses (see libraries.txt for versions)
  * smmap
  * stevedore
  * subliminal
- * tvdb_api
+ * tempora
  * tvdb_api_v2
  * urllib3
  * websocket-client

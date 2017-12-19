@@ -122,9 +122,6 @@ import cherrypy
 from cherrypy._cpcompat import text_or_bytes
 from cherrypy.lib import reprconf
 
-# Deprecated in  CherryPy 3.2--remove in 3.3
-NamespaceSet = reprconf.NamespaceSet
-
 
 def merge(base, other):
     """Merge one app config (from a dict, file, or filename) into another.
@@ -139,15 +136,14 @@ def merge(base, other):
     for section, value_map in reprconf.as_dict(other).items():
         if not isinstance(value_map, dict):
             raise ValueError(
-                "Application config must include section headers, but the "
+                'Application config must include section headers, but the '
                 "config you tried to merge doesn't have any sections. "
-                "Wrap your config in another dict with paths as section "
+                'Wrap your config in another dict with paths as section '
                 "headers, for example: {'/': config}.")
         base.setdefault(section, {}).update(value_map)
 
 
 class Config(reprconf.Config):
-
     """The 'global' configuration data for the entire CherryPy process."""
 
     def update(self, config):
@@ -159,12 +155,12 @@ class Config(reprconf.Config):
 
     def _apply(self, config):
         """Update self from a dict."""
-        if isinstance(config.get("global"), dict):
+        if isinstance(config.get('global'), dict):
             if len(config) > 1:
                 cherrypy.checker.global_config_contained_paths = True
-            config = config["global"]
+            config = config['global']
         if 'tools.staticdir.dir' in config:
-            config['tools.staticdir.section'] = "global"
+            config['tools.staticdir.section'] = 'global'
         reprconf.Config._apply(self, config)
 
     @staticmethod
@@ -172,8 +168,8 @@ class Config(reprconf.Config):
         """Decorator for page handlers to set _cp_config."""
         if args:
             raise TypeError(
-                "The cherrypy.config decorator does not accept positional "
-                "arguments; you must use keyword arguments.")
+                'The cherrypy.config decorator does not accept positional '
+                'arguments; you must use keyword arguments.')
 
         def tool_decorator(f):
             _Vars(f).setdefault('_cp_config', {}).update(kwargs)
@@ -182,10 +178,8 @@ class Config(reprconf.Config):
 
 
 class _Vars(object):
-    """
-    Adapter that allows setting a default attribute on a function
-    or class.
-    """
+    """Adapter allowing setting a default attribute on a function or class."""
+
     def __init__(self, target):
         self.target = target
 
@@ -197,14 +191,14 @@ class _Vars(object):
 
 # Sphinx begin config.environments
 Config.environments = environments = {
-    "staging": {
+    'staging': {
         'engine.autoreload.on': False,
         'checker.on': False,
         'tools.log_headers.on': False,
         'request.show_tracebacks': False,
         'request.show_mismatched_params': False,
     },
-    "production": {
+    'production': {
         'engine.autoreload.on': False,
         'checker.on': False,
         'tools.log_headers.on': False,
@@ -212,7 +206,7 @@ Config.environments = environments = {
         'request.show_mismatched_params': False,
         'log.screen': False,
     },
-    "embedded": {
+    'embedded': {
         # For use with CherryPy embedded in another deployment stack.
         'engine.autoreload.on': False,
         'checker.on': False,
@@ -223,7 +217,7 @@ Config.environments = environments = {
         'engine.SIGHUP': None,
         'engine.SIGTERM': None,
     },
-    "test_suite": {
+    'test_suite': {
         'engine.autoreload.on': False,
         'checker.on': False,
         'tools.log_headers.on': False,
@@ -237,11 +231,11 @@ Config.environments = environments = {
 
 def _server_namespace_handler(k, v):
     """Config handler for the "server" namespace."""
-    atoms = k.split(".", 1)
+    atoms = k.split('.', 1)
     if len(atoms) > 1:
         # Special-case config keys of the form 'server.servername.socket_port'
         # to configure additional HTTP servers.
-        if not hasattr(cherrypy, "servers"):
+        if not hasattr(cherrypy, 'servers'):
             cherrypy.servers = {}
 
         servername, k = atoms
@@ -260,7 +254,9 @@ def _server_namespace_handler(k, v):
             setattr(cherrypy.servers[servername], k, v)
     else:
         setattr(cherrypy.server, k, v)
-Config.namespaces["server"] = _server_namespace_handler
+
+
+Config.namespaces['server'] = _server_namespace_handler
 
 
 def _engine_namespace_handler(k, v):
@@ -271,8 +267,8 @@ def _engine_namespace_handler(k, v):
         engine.subscribe('SIGHUP', v)
     elif k == 'SIGTERM':
         engine.subscribe('SIGTERM', v)
-    elif "." in k:
-        plugin, attrname = k.split(".", 1)
+    elif '.' in k:
+        plugin, attrname = k.split('.', 1)
         plugin = getattr(engine, plugin)
         if attrname == 'on':
             if v and hasattr(getattr(plugin, 'subscribe', None), '__call__'):
@@ -287,7 +283,9 @@ def _engine_namespace_handler(k, v):
         setattr(plugin, attrname, v)
     else:
         setattr(engine, k, v)
-Config.namespaces["engine"] = _engine_namespace_handler
+
+
+Config.namespaces['engine'] = _engine_namespace_handler
 
 
 def _tree_namespace_handler(k, v):
@@ -295,9 +293,11 @@ def _tree_namespace_handler(k, v):
     if isinstance(v, dict):
         for script_name, app in v.items():
             cherrypy.tree.graft(app, script_name)
-            msg = "Mounted: %s on %s" % (app, script_name or "/")
+            msg = 'Mounted: %s on %s' % (app, script_name or '/')
             cherrypy.engine.log(msg)
     else:
         cherrypy.tree.graft(v, v.script_name)
-        cherrypy.engine.log("Mounted: %s on %s" % (v, v.script_name or "/"))
-Config.namespaces["tree"] = _tree_namespace_handler
+        cherrypy.engine.log('Mounted: %s on %s' % (v, v.script_name or '/'))
+
+
+Config.namespaces['tree'] = _tree_namespace_handler

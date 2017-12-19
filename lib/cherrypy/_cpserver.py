@@ -5,14 +5,13 @@ import six
 import cherrypy
 from cherrypy.lib.reprconf import attributes
 from cherrypy._cpcompat import text_or_bytes
+from cherrypy.process.servers import ServerAdapter
 
-# We import * because we want to export check_port
-# et al as attributes of this module.
-from cherrypy.process.servers import *
+
+__all__ = ('Server', )
 
 
 class Server(ServerAdapter):
-
     """An adapter for an HTTP server.
 
     You can set attributes (like socket_host and socket_port)
@@ -35,7 +34,7 @@ class Server(ServerAdapter):
         if value == '':
             raise ValueError("The empty string ('') is not an allowed value. "
                              "Use '0.0.0.0' instead to listen on all active "
-                             "interfaces (INADDR_ANY).")
+                             'interfaces (INADDR_ANY).')
         self._socket_host = value
     socket_host = property(
         _get_socket_host,
@@ -96,7 +95,8 @@ class Server(ServerAdapter):
 
     instance = None
     """If not None, this should be an HTTP server instance (such as
-    CPWSGIServer) which cherrypy.server will control. Use this when you need
+    cheroot.wsgi.Server) which cherrypy.server will control.
+    Use this when you need
     more control over object instantiation than is available in the various
     configuration options."""
 
@@ -113,20 +113,23 @@ class Server(ServerAdapter):
     ssl_private_key = None
     """The filename of the private key to use with SSL."""
 
+    ssl_ciphers = None
+    """The ciphers list of SSL."""
+
     if six.PY3:
         ssl_module = 'builtin'
         """The name of a registered SSL adaptation module to use with
         the builtin WSGI server. Builtin options are: 'builtin' (to
         use the SSL library built into recent versions of Python).
         You may also register your own classes in the
-        wsgiserver.ssl_adapters dict."""
+        cheroot.server.ssl_adapters dict."""
     else:
         ssl_module = 'pyopenssl'
         """The name of a registered SSL adaptation module to use with the
         builtin WSGI server. Builtin options are 'builtin' (to use the SSL
         library built into recent versions of Python) and 'pyopenssl' (to
         use the PyOpenSSL project, which you must install separately). You
-        may also register your own classes in the wsgiserver.ssl_adapters
+        may also register your own classes in the cheroot.server.ssl_adapters
         dict."""
 
     statistics = False
@@ -141,9 +144,11 @@ class Server(ServerAdapter):
     which declares it covers WSGI version 1.0.1 but still mandates the
     wsgi.version (1, 0)] and ('u', 0), an experimental unicode version.
     You may create and register your own experimental versions of the WSGI
-    protocol by adding custom classes to the wsgiserver.wsgi_gateways dict."""
+    protocol by adding custom classes to the cheroot.server.wsgi_gateways dict.
+    """
 
     def __init__(self):
+        """Initialize Server instance."""
         self.bus = cherrypy.engine
         self.httpserver = None
         self.interrupt = None
@@ -165,7 +170,7 @@ class Server(ServerAdapter):
         """Start the HTTP server."""
         if not self.httpserver:
             self.httpserver, self.bind_addr = self.httpserver_from_self()
-        ServerAdapter.start(self)
+        super(Server, self).start()
     start.priority = 75
 
     def _get_bind_addr(self):
@@ -189,9 +194,9 @@ class Server(ServerAdapter):
                 self.socket_host, self.socket_port = value
                 self.socket_file = None
             except ValueError:
-                raise ValueError("bind_addr must be a (host, port) tuple "
-                                 "(for TCP sockets) or a string (for Unix "
-                                 "domain sockets), not %r" % value)
+                raise ValueError('bind_addr must be a (host, port) tuple '
+                                 '(for TCP sockets) or a string (for Unix '
+                                 'domain sockets), not %r' % value)
     bind_addr = property(
         _get_bind_addr,
         _set_bind_addr,
@@ -199,7 +204,9 @@ class Server(ServerAdapter):
             'a str for Unix domain sockets.')
 
     def base(self):
-        """Return the base (scheme://host[:port] or sock file) for this server.
+        """Return the base for this server.
+
+        e.i. scheme://host[:port] or sock file
         """
         if self.socket_file:
             return self.socket_file
@@ -215,12 +222,12 @@ class Server(ServerAdapter):
         port = self.socket_port
 
         if self.ssl_certificate:
-            scheme = "https"
+            scheme = 'https'
             if port != 443:
-                host += ":%s" % port
+                host += ':%s' % port
         else:
-            scheme = "http"
+            scheme = 'http'
             if port != 80:
-                host += ":%s" % port
+                host += ':%s' % port
 
-        return "%s://%s" % (scheme, host)
+        return '%s://%s' % (scheme, host)
