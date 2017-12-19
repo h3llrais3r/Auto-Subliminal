@@ -131,7 +131,7 @@ def _get_application_configuration():
         '/': {
             'tools.encode.encoding': 'utf-8',
             'tools.decode.encoding': 'utf-8',
-            'tools.staticdir.root': os.path.join(autosubliminal.PATH, 'web/static/'),
+            'tools.staticdir.root': os.path.abspath(os.path.join(autosubliminal.PATH, 'web/static')),
         },
         '/css': {
             'tools.staticdir.on': True,
@@ -159,7 +159,8 @@ def _get_application_configuration():
         },
         '/favicon.ico': {
             'tools.staticfile.on': True,
-            'tools.staticfile.filename': os.path.join(autosubliminal.PATH, 'web/static/images/favicon.ico')
+            'tools.staticfile.filename': os.path.abspath(
+                os.path.join(autosubliminal.PATH, 'web/static/images/favicon.ico'))
         },
         '/system/message': {
             'tools.websocket.on': True,
