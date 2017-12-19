@@ -94,6 +94,9 @@ def start_server(restarting=False):
 def _configure_server(restarting=False):
     global websocket_plugin
 
+    # Configure server error log
+    cherrypy.config.update({'log.error_file': 'cherrypy.error.log'})
+
     # Configure server url
     cherrypy.config.update({'server.socket_host': str(autosubliminal.WEBSERVERIP),
                             'server.socket_port': int(autosubliminal.WEBSERVERPORT)
