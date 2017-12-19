@@ -28,7 +28,6 @@ What it uses (see libraries.txt for versions)
  * babelfish
  * beautifulsoup4
  * certifi
- * charade
  * chardet
  * cheetah
  * cheroot
