@@ -67,6 +67,7 @@ What it uses (see libraries.txt for versions)
  * tempora
  * tvdb_api_v2
  * urllib3
+ * webencodings
  * websocket-client
  * ws4py
 
