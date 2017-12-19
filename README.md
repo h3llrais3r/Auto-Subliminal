@@ -55,6 +55,7 @@ What it uses (see libraries.txt for versions)
  * pysrt
  * pythontwitter
  * python-dateutil
+ * python-magic
  * pytz
  * rarfile
  * rebulk

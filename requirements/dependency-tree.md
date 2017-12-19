@@ -37,7 +37,8 @@ Libraries dependency tree
 |-- lxml (used to speed up some parsing, can be used by different libraries is available)
 |-- oauth2
     |-- httplib2
-|-- pushbullet
+|-- pushbullet.py
+    |-- python-magic
     |-- requests
     |-- websocket-client
         |-- six
