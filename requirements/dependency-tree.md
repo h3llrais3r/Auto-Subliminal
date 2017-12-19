@@ -43,6 +43,7 @@ Libraries dependency tree
 |-- pushbullet
     |-- requests
     |-- websocket-client
+        |-- six
 |-- pynma
 |-- pysrt
     |-- chardet
@@ -79,7 +80,5 @@ Libraries dependency tree
     |-- python-dateutil
     |-- six
     |-- urllib3
-|-- websocket-client
-    |-- six
 |-- ws4py
 ```
