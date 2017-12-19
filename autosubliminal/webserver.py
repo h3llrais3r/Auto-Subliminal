@@ -529,7 +529,7 @@ class Config(object):
                  notifypushalot, pushalotapi,
                  notifypushover, pushoverkey, pushoverapi, pushoverdevices,
                  notifynma, nmaapi,
-                 notifygrowl, growlhost, growlport, growlpass,
+                 notifygrowl, growlhost, growlpass,
                  notifyprowl, prowlapi, prowlpriority,
                  notifypushbullet, pushbulletapi):
             # Set notify variables
@@ -556,7 +556,6 @@ class Config(object):
             autosubliminal.NMAAPI = nmaapi
             autosubliminal.NOTIFYGROWL = utils.getboolean(notifygrowl)
             autosubliminal.GROWLHOST = growlhost
-            autosubliminal.GROWLPORT = growlport
             autosubliminal.GROWLPASS = growlpass
             autosubliminal.NOTIFYPROWL = utils.getboolean(notifyprowl)
             autosubliminal.PROWLAPI = prowlapi
