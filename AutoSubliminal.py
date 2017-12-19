@@ -99,7 +99,7 @@ def main(argv=None):
     # Setup application
     import autosubliminal.application
 
-    # Setup signal hanlder
+    # Setup signal handler
     signal.signal(signal.SIGINT, autosubliminal.application.signal_handler)
 
     # Setup daemon

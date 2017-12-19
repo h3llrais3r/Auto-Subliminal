@@ -114,8 +114,8 @@ def _configure_server(restarting=False):
                                 'tools.auth_digest.key': 'yek.tsegid_htua.lanimilbuS-otuA'  # Can be any random string
                                 })
 
-    # Enable websocket plugin
     if not restarting:
+        # Enable websocket plugin
         websocket_plugin = WebSocketPlugin(cherrypy.engine)
         websocket_plugin.subscribe()
         cherrypy.tools.websocket = WebSocketTool()
@@ -248,8 +248,10 @@ def signal_handler(signum, frame):
 
 def _exit(shutdown_logger=True, code=0):
     if shutdown_logger:
-        log.info("Exiting PID: %s" % autosubliminal.PID)
         # Shutdown the logger to make sure the logfile is released before exiting
         logging.shutdown()
+    # Stop cherrypy server
+    cherrypy.engine.stop()
     # Exit process
+    log.info("Exiting PID: %s" % autosubliminal.PID)
     os._exit(code)
