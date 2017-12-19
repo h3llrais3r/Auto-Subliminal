@@ -102,10 +102,8 @@ def _configure_server(restarting=False):
                             'server.socket_port': int(autosubliminal.WEBSERVERPORT)
                             })
 
-    # Disable engine plugins (no need for autoreload and timeout_monitor plugin)
-    cherrypy.config.update({'engine.autoreload.on': False,
-                            'engine.timeout_monitor.on': False
-                            })
+    # Disable engine plugins (no need for autoreload plugin)
+    cherrypy.config.update({'engine.autoreload.on': False})
 
     # Configure authentication in if a username and password is set by the user
     if autosubliminal.USERNAME and autosubliminal.PASSWORD:
