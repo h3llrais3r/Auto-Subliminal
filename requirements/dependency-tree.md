@@ -5,9 +5,7 @@ Libraries dependency tree
 
 ```
 |-- babelfish
-    |-- requests
 |-- beautifulsoup4
-    |-- chardet (optional dependency)
     |-- html5lib (optional dependency)
     |-- lxml (optional dependency)
 |-- Cheetah
@@ -30,10 +28,8 @@ Libraries dependency tree
     |-- babelfish
     |-- python-dateutil
     |-- rebulk
-    |-- six
+        |-- six
 |-- html5lib (used as parser in combination with beautifulsoup4 for parsing html pages)
-    |-- charade (optional dependency)
-    |-- chardet (optional dependency)
 |-- imdbpy
 |-- langdetect
     |-- six
@@ -64,7 +60,6 @@ Libraries dependency tree
         |-- rebulk
             |-- six
         |-- python-dateutil
-        |-- six
     |-- rarfile
     |-- requests
         |-- certify
