@@ -86,7 +86,7 @@ def _dict_from_guess(guess):
                    'title': _property_from_guess(guess, 'title'),
                    'year': _property_from_guess(guess, 'year'),
                    'season': _property_from_guess(guess, 'season'),
-                   'episode': _property_from_guess(guess, 'episode'),
+                   'episode': _join_episodes(_property_from_guess(guess, 'episode')),
                    'source': _property_from_guess(guess, 'format'),
                    'quality': _property_from_guess(guess, 'screen_size'),
                    'codec': _property_from_guess(guess, 'video_codec'),
@@ -122,6 +122,12 @@ def _split_release_group(release_group):
             # Return first parenthesized group (=release group without [] part)
             return match.group(1)
     return release_group
+
+
+def _join_episodes(episode):
+    if isinstance(episode, list):
+        return ','.join(str(ep) for ep in episode)  # episode can be a list of episodes (int)
+    return episode
 
 
 def _enrich_dict(result_dict, file_path):
