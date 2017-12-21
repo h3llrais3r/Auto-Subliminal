@@ -62,7 +62,7 @@ def test_process_multi_episode_file(mocker):
     assert result_dict['tvdbid'] == 263365
 
 
-def test_get_process_file_movie(mocker):
+def test_process_file_movie(mocker):
     # Mock get_imdb_id_and_year call
     mocker.patch.object(autosubliminal.MOVIEINDEXER, 'get_imdb_id_and_year')
     autosubliminal.MOVIEINDEXER.get_imdb_id_and_year.return_value = '1798684', 2015
