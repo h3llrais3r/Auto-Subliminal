@@ -371,13 +371,20 @@ def read_config():
         if cfg.has_option('subliminal', 'addic7edusername') and cfg.has_option('subliminal', 'addic7edpassword'):
             autosubliminal.ADDIC7EDUSERNAME = cfg.get('subliminal', 'addic7edusername')
             autosubliminal.ADDIC7EDPASSWORD = cfg.get('subliminal', 'addic7edpassword')
+            autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'] = {}
+            autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_random_user_agent'] = {'random_user_agent': True}
             if autosubliminal.ADDIC7EDUSERNAME and autosubliminal.ADDIC7EDPASSWORD:
-                autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'] = {
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'].update({
                     'username': autosubliminal.ADDIC7EDUSERNAME,
-                    'password': autosubliminal.ADDIC7EDPASSWORD}
+                    'password': autosubliminal.ADDIC7EDPASSWORD})
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_random_user_agent'].update({
+                    'username': autosubliminal.ADDIC7EDUSERNAME,
+                    'password': autosubliminal.ADDIC7EDPASSWORD})
         else:
             autosubliminal.ADDIC7EDUSERNAME = u""
             autosubliminal.ADDIC7EDPASSWORD = u""
+            autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'] = {}
+            autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_random_user_agent'] = {'random_user_agent': True}
 
         if cfg.has_option('subliminal', 'opensubtitlesusername') and cfg.has_option('subliminal',
                                                                                     'opensubtitlespassword'):

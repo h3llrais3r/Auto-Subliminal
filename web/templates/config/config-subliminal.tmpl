@@ -160,7 +160,7 @@
                             </label>
                         </span>
                         <span class="col-xs-8 col-md-4">
-                            #set $providers = $autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
+                            #set $providers = sorted($autosubliminal.SUBLIMINALPROVIDERMANAGER.names())
                             <select multiple="mutiple" id="subliminalproviders" name="subliminalproviders" size="$len(providers)" class="form-control input-sm">
                                 #for provider in $providers:
                                 #if $provider in $autosubliminal.SUBLIMINALPROVIDERLIST:
