@@ -6,6 +6,14 @@ language: python
 python:
   - "2.7"
 
+# caching
+cache:
+  directories:
+    - $HOME/.cache/pip
+
+before_cache:
+  - rm -f $HOME/.cache/pip/log/debug.log
+
 # command(s) to install dependencies
 install:
   - pip install --upgrade pip
