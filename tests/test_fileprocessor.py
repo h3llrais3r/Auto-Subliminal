@@ -30,7 +30,7 @@ def test_process_episode_file(mocker):
     autosubliminal.SHOWINDEXER.get_tvdb_id.return_value = 263365
     # Test process_file
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
-    result_dict = process_file(dir_name, 'Marvels.Agents.of.S.H.I.E.L.D.S05E03.720p.HDTV.x264-AVS.mkv')
+    result_dict = process_file(dir_name, 'Marvels.Agents.of.S.H.I.E.L.D.S05E03.720p.HDTV.x264-AVS[rarbg].mkv')
     assert result_dict is not None
     assert result_dict['type'] == 'episode'
     assert result_dict['title'] == 'Marvels Agents of S.H.I.E.L.D.'
