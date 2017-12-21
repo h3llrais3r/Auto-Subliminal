@@ -1,7 +1,9 @@
 import logging
 import os
 import operator
+import random
 import shutil
+import time
 
 import babelfish
 import subliminal
@@ -86,6 +88,13 @@ class SubChecker(ScheduledProcess):
                     # Mark wanted item as deleted if there are no more wanted languages
                     else:
                         to_delete_wanted_queue.append(index)
+
+                # Throttle to prevent discarding of providers due to too many requests in short period of time
+                # Can be removed when subliminal has implemented the throttling itself
+                # See https://github.com/Diaoul/subliminal/issues/854
+                delay = random.randint(1, 5)
+                log.debug("Throttling search for %s seconds" % delay)
+                time.sleep(delay)
 
         # Cleanup wanted item(s)
         i = len(to_delete_wanted_queue) - 1
