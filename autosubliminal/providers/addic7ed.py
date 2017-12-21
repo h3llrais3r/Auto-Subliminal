@@ -3,8 +3,7 @@ import logging
 import random
 import re
 
-# from babelfish import Language, language_converters
-from babelfish import Language
+from babelfish import Language, language_converters
 from guessit import guessit
 from requests import Session
 
