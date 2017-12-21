@@ -132,6 +132,28 @@ def safe_trim(obj, default_value=None):
         return default_value
 
 
+def sanitize(string, ignore_characters=None):
+    """Sanitize a string to strip special characters.
+    Copied from https://github.com/Diaoul/subliminal/blob/master/subliminal/utils.py
+    """
+    ignore_characters = ignore_characters or set()
+    # Only deal with strings
+    if string is None:
+        return
+    # Replace some characters with one space
+    characters = {'-', ':', '(', ')', '.'} - ignore_characters
+    if characters:
+        string = re.sub(r'[%s]' % re.escape(''.join(characters)), ' ', string)
+    # Remove some characters
+    characters = {'\''} - ignore_characters
+    if characters:
+        string = re.sub(r'[%s]' % re.escape(''.join(characters)), '', string)
+    # Replace multiple spaces with one
+    string = re.sub(r'\s+', ' ', string)
+    # Strip and lower case
+    return string.strip().lower()
+
+
 def show_name_mapping(show_name):
     if show_name.upper() in autosubliminal.USERSHOWNAMEMAPPINGUPPER.keys():
         log.debug("Found match in usershownamemapping for %s" % show_name)

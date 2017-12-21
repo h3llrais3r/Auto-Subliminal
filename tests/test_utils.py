@@ -5,7 +5,7 @@ import time
 import pytest
 
 import autosubliminal
-from autosubliminal.utils import getboolean, safe_string, safe_trim, safe_uppercase, display_logfile, \
+from autosubliminal.utils import getboolean, safe_string, safe_trim, safe_uppercase, sanitize, display_logfile, \
     show_name_mapping, movie_name_mapping, skip_show, skip_movie, display_item, display_title, display_name, \
     display_timestamp, convert_timestamp, humanize_bytes, get_wanted_queue_lock, release_wanted_queue_lock, \
     count_wanted_items, get_file_size, set_rw_and_remove
@@ -79,6 +79,11 @@ def test_safe_trim():
     assert safe_trim(dict_value) is None
     assert safe_trim(dict_value, "N/A") == "N/A"
     print "Post processor failed:\r\n%s" % "test"
+
+
+def test_sanitize():
+    text = '(Mr.-Robot :)'
+    assert sanitize(text) == 'mr robot'
 
 
 def test_display_logfile():

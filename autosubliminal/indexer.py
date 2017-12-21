@@ -74,12 +74,12 @@ class ShowIndexer(Indexer):
         # Return a tvdb_api_v2.models.series_search.SeriesSearch object
         series_search = self._client.search_series_by_name(name)
         for series_search_data in series_search.data:
-            if series_search_data.series_name.lower() == name.lower():
+            if utils.sanitize(series_search_data.series_name) == utils.sanitize(name):
                 return series_search_data
             elif series_search_data.aliases:
                 # If no match, fallback to aliases (if aliases are available)
                 for alias in series_search_data.aliases:
-                    if alias.lower() == name.lower():
+                    if utils.sanitize(alias) == utils.sanitize(name):
                         return series_search_data
             else:
                 continue
@@ -138,7 +138,7 @@ class MovieIndexer(Indexer):
         # Find the first movie that matches the title (and year if present)
         for movie in imdb_movies:
             data = movie.data
-            if data['kind'] == 'movie' and data['title'].lower() == title.lower():
+            if data['kind'] == 'movie' and utils.sanitize(data['title']) == utils.sanitize(title):
                 # If a year is present, it should also be the same
                 if year:
                     if data['year'] == year:
