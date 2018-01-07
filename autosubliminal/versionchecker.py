@@ -5,7 +5,12 @@ import traceback
 import urllib2
 
 from distutils import version
-from git import Repo
+
+try:
+    from git import Repo
+except ImportError:
+    # GitPython throws import error when no git is available on the system
+    pass
 
 import autosubliminal
 from autosubliminal import runner, utils
