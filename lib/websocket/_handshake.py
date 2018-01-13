@@ -73,6 +73,12 @@ def handshake(sock, hostname, port, resource, **options):
 
     return handshake_response(status, resp, subproto)
 
+def _pack_hostname(hostname):
+    # IPv6 address
+    if ':' in hostname:
+        return '[' + hostname + ']'
+
+    return hostname
 
 def _get_handshake_headers(resource, host, port, options):
     headers = [
@@ -81,16 +87,16 @@ def _get_handshake_headers(resource, host, port, options):
         "Connection: Upgrade"
     ]
     if port == 80 or port == 443:
-        hostport = host
+        hostport = _pack_hostname(host)
     else:
-        hostport = "%s:%d" % (host, port)
+        hostport = "%s:%d" % (_pack_hostname(host), port)
 
-    if "host" in options and options["host"]:
+    if "host" in options and options["host"] is not None:
         headers.append("Host: %s" % options["host"])
     else:
         headers.append("Host: %s" % hostport)
 
-    if "origin" in options and options["origin"]:
+    if "origin" in options and options["origin"] is not None:
         headers.append("Origin: %s" % options["origin"])
     else:
         headers.append("Origin: http://%s" % hostport)

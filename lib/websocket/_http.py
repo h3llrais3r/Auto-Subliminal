@@ -47,11 +47,10 @@ class proxy_info(object):
         if self.host:
             self.port = options.get("http_proxy_port", 0)
             self.auth = options.get("http_proxy_auth", None)
-            self.no_proxy = options.get("http_no_proxy", None)
         else:
             self.port = 0
             self.auth = None
-            self.no_proxy = None
+        self.no_proxy = options.get("http_no_proxy", None)
 
 
 def connect(url, options, proxy, socket):
@@ -88,14 +87,17 @@ def connect(url, options, proxy, socket):
 def _get_addrinfo_list(hostname, port, is_secure, proxy):
     phost, pport, pauth = get_proxy_info(
         hostname, is_secure, proxy.host, proxy.port, proxy.auth, proxy.no_proxy)
-    if not phost:
-        addrinfo_list = socket.getaddrinfo(
-            hostname, port, 0, 0, socket.SOL_TCP)
-        return addrinfo_list, False, None
-    else:
-        pport = pport and pport or 80
-        addrinfo_list = socket.getaddrinfo(phost, pport, 0, 0, socket.SOL_TCP)
-        return addrinfo_list, True, pauth
+    try:
+        if not phost:
+            addrinfo_list = socket.getaddrinfo(
+                hostname, port, 0, 0, socket.SOL_TCP)
+            return addrinfo_list, False, None
+        else:
+            pport = pport and pport or 80
+            addrinfo_list = socket.getaddrinfo(phost, pport, 0, 0, socket.SOL_TCP)
+            return addrinfo_list, True, pauth
+    except socket.gaierror as e:
+        raise WebSocketAddressException(e)
 
 
 def _open_socket(addrinfo_list, sockopt, timeout):
@@ -114,7 +116,11 @@ def _open_socket(addrinfo_list, sockopt, timeout):
             sock.connect(address)
         except socket.error as error:
             error.remote_ip = str(address[0])
-            if error.errno in (errno.ECONNREFUSED, ):
+            try:
+                eConnRefused = (errno.ECONNREFUSED, errno.WSAECONNREFUSED)
+            except:
+                eConnRefused = (errno.ECONNREFUSED, )
+            if error.errno in eConnRefused:
                 err = error
                 continue
             else:
@@ -152,6 +158,8 @@ def _wrap_sni_socket(sock, sslopt, hostname, check_hostname):
     if 'cert_chain' in sslopt:
         certfile, keyfile, password = sslopt['cert_chain']
         context.load_cert_chain(certfile, keyfile, password)
+    if 'ecdh_curve' in sslopt:
+        context.set_ecdh_curve(sslopt['ecdh_curve'])
 
     return context.wrap_socket(
         sock,
@@ -170,7 +178,8 @@ def _ssl_socket(sock, user_sslopt, hostname):
     else:
         certPath = os.path.join(
             os.path.dirname(__file__), "cacert.pem")
-    if os.path.isfile(certPath) and user_sslopt.get('ca_cert', None) is None:
+    if os.path.isfile(certPath) and user_sslopt.get('ca_certs', None) is None \
+            and user_sslopt.get('ca_cert', None) is None:
         sslopt['ca_certs'] = certPath
     elif os.path.isdir(certPath) and user_sslopt.get('ca_cert_path', None) is None:
         sslopt['ca_cert_path'] = certPath
