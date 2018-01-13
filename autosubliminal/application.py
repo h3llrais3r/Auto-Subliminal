@@ -88,6 +88,7 @@ def start_server(restarting=False):
     except Exception, e:
         log.error("Could not start webserver, exiting")
         log.exception(e)
+        _shutdown()
         _exit(1)
 
 
@@ -204,11 +205,7 @@ def stop(exit=True):
     autosubliminal.WEBSOCKETBROADCASTER.stop()
 
     if exit:
-        # Stop cherrypy server before exiting
-        log.info("Stopping CherryPy webserver")
-        cherrypy.engine.exit()
-
-        # Exit
+        _shutdown()
         _exit()
 
 
@@ -224,12 +221,12 @@ def restart(exit=False):
         log.info("Exiting application with PID: %s" % autosubliminal.PID)
         log.info("Restarting application with command and arguments: %s" % popen_list)
         log.info("#" * 50)
-        # Shutdown the logger to make sure the logfile is released before starting a new process
-        logging.shutdown()
+        # Shutdown
+        _shutdown()
         # Start new process
         subprocess.Popen(popen_list, cwd=os.getcwd())
         # Exit current process
-        _exit(shutdown_logger=False)
+        _exit()
     else:
         # Stop without killing current process and restart
         stop(exit=False)
@@ -243,15 +240,18 @@ def signal_handler(signum, frame):
     log.debug("Received signal: %s" % signum)
     if signum == signal.SIGINT:
         log.info("Received interrupt signal, exiting")
+        _shutdown()
         _exit()
 
 
-def _exit(shutdown_logger=True, code=0):
-    if shutdown_logger:
-        # Shutdown the logger to make sure the logfile is released before exiting
-        logging.shutdown()
-    # Stop cherrypy server
-    cherrypy.engine.stop()
-    # Exit process
+def _shutdown():
+    log.info("Exiting CherryPy webserver")
+    cherrypy.engine.exit()
     log.info("Exiting PID: %s" % autosubliminal.PID)
+    # Shutdown the logger to make sure the logfile is released before starting a new process
+    logging.shutdown()
+
+
+def _exit(code=0):
+    # Exit process
     os._exit(code)
