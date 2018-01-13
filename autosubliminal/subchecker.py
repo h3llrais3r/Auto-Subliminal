@@ -64,6 +64,9 @@ class SubChecker(ScheduledProcess):
             if not video:
                 continue
 
+            # Clear discarded providers for each new wanted_item
+            provider_pool.discarded_providers.clear()
+
             # Check subtitles for each language
             languages = wanted_item['languages']
             for lang in languages[:]:
