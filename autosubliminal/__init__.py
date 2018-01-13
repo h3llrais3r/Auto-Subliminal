@@ -336,7 +336,8 @@ def _initialize_subliminal():
 
     # Add our custom addic7ed provider to list of subliminal providers
     provider = 'addic7ed_random_user_agent = autosubliminal.providers.addic7ed:Addic7edProvider'
-    provider_manager.register(provider)
+    if provider not in provider_manager.registered_extensions:
+        provider_manager.register(provider)
 
     # Return the provider manager with all providers
     return provider_manager
