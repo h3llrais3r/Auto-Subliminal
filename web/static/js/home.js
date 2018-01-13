@@ -174,21 +174,3 @@ $(".reset-wanted-item-link").click(function (event) {
     });
     return false;
 });
-
-// Activate the discarded providers notification
-$(document).ready(function () {
-    if ($("#discarded-providers").text()) {
-        new PNotify({
-            title: false, // Remove title
-            text: "Discarded providers during the previous subtitle check: <b>" + $("#discarded-providers").text() + "</b>",
-            type: "notice",
-            hide: false, // Disable fading
-            width: "auto",
-            addclass: "container stack-context",
-            stack: stack_context,
-            desktop: {
-                desktop: false // Disable desktop
-            }
-        });
-    }
-});
