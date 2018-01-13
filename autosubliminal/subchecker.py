@@ -51,52 +51,56 @@ class SubChecker(ScheduledProcess):
 
         # Setup provider pool
         provider_pool = _get_provider_pool()
-        log.info("Searching subtitles with providers: %s" % ', '.join(provider_pool.providers))
+        if provider_pool:
+            log.info("Searching subtitles with providers: %s" % ', '.join(provider_pool.providers))
 
-        # Process all items in wanted queue
-        db = WantedItems()
-        for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
-            log.info("Searching subtitles for video: %s" % wanted_item['videopath'])
+            # Process all items in wanted queue
+            db = WantedItems()
+            for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
+                log.info("Searching subtitles for video: %s" % wanted_item['videopath'])
 
-            # Scan wanted_item for video, skip when no video could be determined
-            video = _scan_wanted_item_for_video(wanted_item)
-            if not video:
-                continue
+                # Scan wanted_item for video, skip when no video could be determined
+                video = _scan_wanted_item_for_video(wanted_item)
+                if not video:
+                    continue
 
-            # Clear discarded providers for each new wanted_item
-            provider_pool.discarded_providers.clear()
+                # Clear discarded providers for each new wanted_item
+                provider_pool.discarded_providers.clear()
 
-            # Check subtitles for each language
-            languages = wanted_item['languages']
-            for lang in languages[:]:
-                # Search the best subtitle with the minimal score
-                subtitles, language, single = _search_subtitles(video, lang, True, provider_pool)
+                # Check subtitles for each language
+                languages = wanted_item['languages']
+                for lang in languages[:]:
+                    # Search the best subtitle with the minimal score
+                    subtitles, language, single = _search_subtitles(video, lang, True, provider_pool)
 
-                # Subtitle is found for the video
-                if subtitles:
-                    # Handle download
-                    download_item = _construct_download_item(wanted_item, subtitles, language, single)
-                    SubDownloader(download_item).run()
+                    # Subtitle is found for the video
+                    if subtitles:
+                        # Handle download
+                        download_item = _construct_download_item(wanted_item, subtitles, language, single)
+                        SubDownloader(download_item).run()
 
-                    # Remove downloaded language from wanted languages
-                    languages.remove(lang)
+                        # Remove downloaded language from wanted languages
+                        languages.remove(lang)
 
-                    # Update wanted item if there are still wanted languages
-                    if len(languages) > 0:
-                        db.update_wanted_item(wanted_item)
+                        # Update wanted item if there are still wanted languages
+                        if len(languages) > 0:
+                            db.update_wanted_item(wanted_item)
 
-                    # Mark wanted item as deleted if there are no more wanted languages
-                    else:
-                        to_delete_wanted_queue.append(index)
+                        # Mark wanted item as deleted if there are no more wanted languages
+                        else:
+                            to_delete_wanted_queue.append(index)
 
-        # Cleanup wanted item(s)
-        i = len(to_delete_wanted_queue) - 1
-        while i >= 0:
-            wanted_item_to_delete = autosubliminal.WANTEDQUEUE.pop(to_delete_wanted_queue[i])
-            log.debug("Removed item from the wanted queue at index %s" % to_delete_wanted_queue[i])
-            db.delete_wanted_item(wanted_item_to_delete)
-            log.debug("Removed %s from wanted_items database", wanted_item_to_delete['videopath'])
-            i -= 1
+            # Cleanup wanted item(s)
+            i = len(to_delete_wanted_queue) - 1
+            while i >= 0:
+                wanted_item_to_delete = autosubliminal.WANTEDQUEUE.pop(to_delete_wanted_queue[i])
+                log.debug("Removed item from the wanted queue at index %s" % to_delete_wanted_queue[i])
+                db.delete_wanted_item(wanted_item_to_delete)
+                log.debug("Removed %s from wanted_items database", wanted_item_to_delete['videopath'])
+                i -= 1
+
+        else:
+            log.info("No subliminal providers configured, skipping")
 
         # Release wanted queue lock
         log.info("Finished round of subtitle checking")
@@ -118,69 +122,73 @@ def search_subtitle(wanted_item_index, lang):
 
     # Setup provider pool
     provider_pool = _get_provider_pool()
-    log.info("Searching subtitles with providers: %s" % ', '.join(provider_pool.providers))
+    if provider_pool:
+        log.info("Searching subtitles with providers: %s" % ', '.join(provider_pool.providers))
 
-    # Get wanted_item
-    wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
-    log.info("Searching subtitles for video: %s" % wanted_item['videopath'])
+        # Get wanted_item
+        wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+        log.info("Searching subtitles for video: %s" % wanted_item['videopath'])
 
-    # Scan wanted_item for video
-    video = _scan_wanted_item_for_video(wanted_item, True)
-    if video:
-        # Search the subtitles with the default minimal score (to get all the possibilities to select from)
-        default_min_score = _get_min_match_score(video, True)
-        subtitles, language, single = _search_subtitles(video, lang, False, provider_pool)
+        # Scan wanted_item for video
+        video = _scan_wanted_item_for_video(wanted_item, True)
+        if video:
+            # Search the subtitles with the default minimal score (to get all the possibilities to select from)
+            default_min_score = _get_min_match_score(video, True)
+            subtitles, language, single = _search_subtitles(video, lang, False, provider_pool)
 
-        # Check if subtitles are found for the video
-        if subtitles:
-            # Add found subtitles to wanted_item
-            wanted_item['found_subtitles'] = {'subtitles': subtitles, 'language': language, 'single': single}
+            # Check if subtitles are found for the video
+            if subtitles:
+                # Add found subtitles to wanted_item
+                wanted_item['found_subtitles'] = {'subtitles': subtitles, 'language': language, 'single': single}
 
-            # Order subtitles by score and create new dict
-            # Use subliminal default compute_score
-            for index, subtitle, score in sorted(
-                    [(index, s, subliminal.compute_score(s, video, autosubliminal.PREFERHEARINGIMPAIRED))
-                     for index, s in enumerate(subtitles)], key=operator.itemgetter(2), reverse=True):
+                # Order subtitles by score and create new dict
+                # Use subliminal default compute_score
+                for index, subtitle, score in sorted(
+                        [(index, s, subliminal.compute_score(s, video, autosubliminal.PREFERHEARINGIMPAIRED))
+                         for index, s in enumerate(subtitles)], key=operator.itemgetter(2), reverse=True):
 
-                # Filter out subtitles that do not match the default score
-                if score < default_min_score:
-                    log.debug("Skipping subtitle %s with score below %d" % (subtitle, default_min_score))
-                    break
+                    # Filter out subtitles that do not match the default score
+                    if score < default_min_score:
+                        log.debug("Skipping subtitle %s with score below %d" % (subtitle, default_min_score))
+                        break
 
-                # Only add subtitle when content is found
-                if subtitle.content:
-                    # Create new sub dict for showing result
-                    sub = {'subtitle_index': index, 'score': score, 'provider_name': subtitle.provider_name,
-                           'content': subtitle.content, 'language': language, 'single': single,
-                           'page_link': subtitle.page_link, 'releases': _get_releases(subtitle),
-                           'wanted_item_index': wanted_item_index,
-                           'playvideo_url': _construct_playvideo_url(wanted_item)}
-                    # Get content preview (the first 28 lines and last 30 lines of the subtitle)
-                    content_split = subtitle.content.splitlines(False)
-                    if len(content_split) < 58:
-                        content_preview = "This seems to be an invalid subtitle."
-                        content_preview += "<br> It has less than 58 lines to preview."
-                    else:
-                        try:
-                            # First 28 lines
-                            content_preview = "<br>".join(
-                                x.replace('"', "'") for x in content_split[:28])
-                            # Separator
-                            content_preview += "<br>"
-                            content_preview += "<br>"
-                            content_preview += "..."
-                            content_preview += "<br>"
-                            content_preview += "<br>"
-                            # Last 30 lines
-                            content_preview += "<br>".join(
-                                x.replace('"', "'") for x in content_split[len(content_split) - 30:])
-                        except:
-                            content_preview = "Problem with parsing the first 28 and/or last 30 lines of the file."
-                    sub['content_preview'] = content_preview
-                    subs.append(sub)
+                    # Only add subtitle when content is found
+                    if subtitle.content:
+                        # Create new sub dict for showing result
+                        sub = {'subtitle_index': index, 'score': score, 'provider_name': subtitle.provider_name,
+                               'content': subtitle.content, 'language': language, 'single': single,
+                               'page_link': subtitle.page_link, 'releases': _get_releases(subtitle),
+                               'wanted_item_index': wanted_item_index,
+                               'playvideo_url': _construct_playvideo_url(wanted_item)}
+                        # Get content preview (the first 28 lines and last 30 lines of the subtitle)
+                        content_split = subtitle.content.splitlines(False)
+                        if len(content_split) < 58:
+                            content_preview = "This seems to be an invalid subtitle."
+                            content_preview += "<br> It has less than 58 lines to preview."
+                        else:
+                            try:
+                                # First 28 lines
+                                content_preview = "<br>".join(
+                                    x.replace('"', "'") for x in content_split[:28])
+                                # Separator
+                                content_preview += "<br>"
+                                content_preview += "<br>"
+                                content_preview += "..."
+                                content_preview += "<br>"
+                                content_preview += "<br>"
+                                # Last 30 lines
+                                content_preview += "<br>".join(
+                                    x.replace('"', "'") for x in content_split[len(content_split) - 30:])
+                            except:
+                                content_preview = "Problem with parsing the first 28 and/or last 30 lines of the file."
+                        sub['content_preview'] = content_preview
+                        subs.append(sub)
 
     # Release wanted queue lock
     utils.release_wanted_queue_lock()
+
+    if not provider_pool:
+        return subs, "Skipping! No subliminal providers are configured!"
 
     if not len(subs):
         return subs, "No subtitles could be found or downloaded!"
@@ -522,9 +530,13 @@ def _search_subtitles(video, lang, best_only, provider_pool):
 
 
 def _get_provider_pool():
-    # create a new provider pool with our settings
-    return ProviderPool(providers=autosubliminal.SUBLIMINALPROVIDERLIST,
-                        provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
+    # Create a new provider pool with our settings
+    # If we don't have any providers configured, don't create the pool
+    if autosubliminal.SUBLIMINALPROVIDERLIST:
+        return ProviderPool(providers=autosubliminal.SUBLIMINALPROVIDERLIST,
+                            provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
+    else:
+        return None
 
 
 def _get_wanted_subtitle(subtitles, subtitle_index):
