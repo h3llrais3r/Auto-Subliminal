@@ -116,6 +116,10 @@ def search_subtitle(wanted_item_index, lang):
     if not utils.get_wanted_queue_lock():
         return subs, "Skipping! Cannot get a wanted queue lock because another thread is using the queues!"
 
+    # Setup provider pool
+    provider_pool = _get_provider_pool()
+    log.info("Searching subtitles with providers: %s" % ', '.join(provider_pool.providers))
+
     # Get wanted_item
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
     log.info("Searching subtitles for video: %s" % wanted_item['videopath'])
@@ -125,7 +129,7 @@ def search_subtitle(wanted_item_index, lang):
     if video:
         # Search the subtitles with the default minimal score (to get all the possibilities to select from)
         default_min_score = _get_min_match_score(video, True)
-        subtitles, language, single = _search_subtitles(video, lang, False, _get_provider_pool())
+        subtitles, language, single = _search_subtitles(video, lang, False, provider_pool)
 
         # Check if subtitles are found for the video
         if subtitles:
