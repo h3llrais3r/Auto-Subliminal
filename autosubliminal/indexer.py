@@ -138,10 +138,10 @@ class MovieIndexer(Indexer):
         # Find the first movie that matches the title (and year if present)
         for movie in imdb_movies:
             data = movie.data
-            if data['kind'] == 'movie' and utils.sanitize(data['title']) == utils.sanitize(title):
+            if data['kind'] == 'movie' and utils.sanitize_imdb_title(data['title']) == utils.sanitize_imdb_title(title):
                 # If a year is present, it should also be the same
                 if year:
-                    if data['year'] == year:
+                    if data['year'] == int(year):
                         return movie
                     else:
                         continue

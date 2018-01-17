@@ -154,6 +154,12 @@ def sanitize(string, ignore_characters=None):
     return string.strip().lower()
 
 
+def sanitize_imdb_title(string, ignore_characters=None):
+    # Remove (I), (II), ... values from imdb titles (this is added when there are multiple titles with the same name)
+    # Example response from imdb: see http://www.imdb.com/find?q=Aftermath&s=tt&mx=20
+    string = re.sub('^(.+)(\(\w+\))$', r'\1', string)
+    return sanitize(string, ignore_characters)
+
 def show_name_mapping(show_name):
     if show_name.upper() in autosubliminal.USERSHOWNAMEMAPPINGUPPER.keys():
         log.debug("Found match in usershownamemapping for %s" % show_name)
