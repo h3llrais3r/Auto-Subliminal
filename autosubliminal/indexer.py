@@ -47,7 +47,7 @@ class ShowIndexer(Indexer):
     """
 
     def __init__(self):
-        self._client = TvdbClient(api_key=autosubliminal.TVDBAPIKEY)
+        self._client = TvdbClient(api_key=autosubliminal.TVDBAPIKEY, user_agent=autosubliminal.USERAGENT)
         # Currently, the token expires after 24 hours, see https://api.thetvdb.com/swagger
         # Let's refresh it every 2h at our side
         self._token_expiration_interval = 24 * 60 * 60
