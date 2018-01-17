@@ -1,3 +1,4 @@
+from tvdb_api_v2 import __version__
 from tvdb_api_v2.api_client import ApiClient
 from tvdb_api_v2.apis.authentication_api import AuthenticationApi
 from tvdb_api_v2.apis.episodes_api import EpisodesApi
@@ -9,12 +10,13 @@ from tvdb_api_v2.models.auth import Auth
 from tvdb_api_v2.rest import ApiException
 
 API_KEY = "9710D6F39C4A2457"
+USER_AGENT = "tvdb_api_v2/" + __version__.__version__
 HOST = "https://api.thetvdb.com"
 BASE_IMAGE_URL = "https://www.thetvdb.com"
 
 
 class TvdbClient(object):
-    def __init__(self, api_key=API_KEY):
+    def __init__(self, api_key=API_KEY, user_agent=USER_AGENT):
         # Setup configuration
         self.configuration = Configuration()
         self.configuration.host = HOST
@@ -22,6 +24,7 @@ class TvdbClient(object):
         self.configuration.api_key_prefix['Authorization'] = 'Bearer'
         # Create client
         self.api_client = ApiClient()
+        self.api_client.user_agent = user_agent
 
     #####################
     # AuthenticationApi #
