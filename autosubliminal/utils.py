@@ -160,6 +160,7 @@ def sanitize_imdb_title(string, ignore_characters=None):
     string = re.sub('^(.+)(\(\w+\))$', r'\1', string)
     return sanitize(string, ignore_characters)
 
+
 def show_name_mapping(show_name):
     if show_name.upper() in autosubliminal.USERSHOWNAMEMAPPINGUPPER.keys():
         log.debug("Found match in usershownamemapping for %s" % show_name)
