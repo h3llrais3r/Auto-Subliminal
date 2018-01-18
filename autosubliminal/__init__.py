@@ -210,6 +210,9 @@ def initialize():
     # Fake some entry points to get libraries working without installation
     _fake_entry_points()
 
+    # Cache settings
+    _init_cache()
+
     # Subliminal settings
     SUBLIMINALPROVIDERMANAGER = _initialize_subliminal()
     SUBLIMINALPROVIDERCONFIGS = {}
@@ -306,6 +309,22 @@ def _fake_entry_points():
     entry_points = {}
     distribution._ep_map = pkg_resources.EntryPoint.parse_map(entry_points, distribution)
     pkg_resources.working_set.add(distribution)
+
+
+def _init_cache():
+    """
+    Initialize internal cache
+    """
+
+    # Imports
+    from cache import region, MutexFileLock
+
+    # Configure autosubliminal/dogpile cache
+    # Use MutexFileLock otherwise it will not work due to fcntl module import error in windows
+    # Do not reconfigure after a soft restart (without exiting main app) -> otherwise RegionAlreadyConfigured exception
+    if not region.is_configured:
+        cache_file = os.path.abspath(os.path.expanduser('autosubliminal.cache.dbm'))
+        region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexFileLock})
 
 
 def _initialize_subliminal():

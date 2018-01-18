@@ -18,6 +18,7 @@ Libraries dependency tree
         |-- six
         |-- tempora
     |-- six
+|-- dogpile.cache
 |-- enum34
 |-- enzyme
 |-- gitpython
