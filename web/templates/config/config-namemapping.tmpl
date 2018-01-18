@@ -1,5 +1,6 @@
 #import autosubliminal
 
+#from autosubliminal.utils import display_name_mapping
 #from autosubliminal.templates.PageTemplate import PageTemplate
 #extends PageTemplate
 
@@ -45,6 +46,29 @@
                         </span>
                         <span class="col-xs-8 col-md-4">
                             <textarea rows="5" id="usershownamemapping" name="usershownamemapping" class="form-control input-sm">$autosubliminal.config.display_shownamemapping</textarea>
+                        </span>
+                    </div>
+
+                    <div class="form-group narrow">
+                        <span class="col-xs-4 col-md-3">
+                            <label for="addic7edshownamemapping">Addic7ed show name mapping
+                                <span class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            The local show name mapping to the Addic7ed ID.<br>
+                                            Examples:<br>
+                                            Show name = 12345<br>
+                                            Show name 2 = 123456<br>
+                                        </li>
+                                    </ul>
+                                </span>
+                            </label>
+                        </span>
+                        <span class="col-xs-8 col-md-4">
+                            <textarea rows="5" id="addic7edshownamemapping" name="addic7edshownamemapping" class="form-control input-sm">$display_name_mapping($autosubliminal.ADDIC7EDSHOWNAMEMAPPING)</textarea>
                         </span>
                     </div>
 

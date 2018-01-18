@@ -429,10 +429,11 @@ class Config(object):
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
-        def save(self, usershownamemapping, usermovienamemapping):
-            # Set usernamemapping variables
-            autosubliminal.USERSHOWNAMEMAPPING = config.string_to_dict(usershownamemapping)
-            autosubliminal.USERMOVIENAMEMAPPING = config.string_to_dict(usermovienamemapping)
+        def save(self, usershownamemapping, addic7edshownamemapping, usermovienamemapping):
+            # Set name mapping dicts
+            autosubliminal.USERSHOWNAMEMAPPING = utils.string_to_dict(usershownamemapping)
+            autosubliminal.ADDIC7EDSHOWNAMEMAPPING = utils.string_to_dict(addic7edshownamemapping, True)
+            autosubliminal.USERMOVIENAMEMAPPING = utils.string_to_dict(usermovienamemapping)
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed()
@@ -449,8 +450,8 @@ class Config(object):
         @cherrypy.tools.json_out()
         def save(self, skipshow, skipmovie):
             # Set skip variables
-            autosubliminal.SKIPSHOW = config.string_to_dict(skipshow)
-            autosubliminal.SKIPMOVIE = config.string_to_dict(skipmovie)
+            autosubliminal.SKIPSHOW = utils.string_to_dict(skipshow)
+            autosubliminal.SKIPMOVIE = utils.string_to_dict(skipmovie)
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed()

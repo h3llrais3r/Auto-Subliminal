@@ -161,6 +161,43 @@ def sanitize_imdb_title(string, ignore_characters=None):
     return sanitize(string, ignore_characters)
 
 
+def string_to_dict(items=None, sanitized=False):
+    """
+    Return a correct dict from a string.
+    Optionally you can sanitize the values.
+    """
+    items = items.split('\r\n')
+    returnitems = []
+
+    for item in items:
+        if item:
+            showinfo = []
+            for x in item.split('='):
+                if x[-1:] == ' ':
+                    x = x[:-1]
+                elif x[:1] == ' ':
+                    x = x[1:]
+                if sanitized:
+                    showinfo.append(sanitize(x))
+                else:
+                    showinfo.append(x)
+            showinfo = tuple(showinfo)
+            returnitems.append(showinfo)
+    returnitems = dict(returnitems)
+    return returnitems
+
+
+def display_name_mapping(name_mapping_dict):
+    """
+    Return a string containing all info from the name_mapping_dict.
+    After each name mapping an '\n' is added to create multiple rows in a text area.
+    """
+    s = ""
+    for x in name_mapping_dict:
+        s += x + " = " + str(name_mapping_dict[x]) + "\n"
+    return s
+
+
 def show_name_mapping(show_name):
     if show_name.upper() in autosubliminal.USERSHOWNAMEMAPPINGUPPER.keys():
         log.debug("Found match in usershownamemapping for %s" % show_name)
