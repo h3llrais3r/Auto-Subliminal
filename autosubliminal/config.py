@@ -715,22 +715,6 @@ def read_config():
         print "ERROR: Config version higher then this version of Auto-Subliminal supports. Update Auto-Subliminal."
         os._exit(1)
 
-    # If needed add default shownamemappings here
-    # This dictionary maps local series names to TVDB ID's
-    # Example: shownamemapping = {"Arrow" : "257655", "Grimm" : "248736"}
-    autosubliminal.SHOWNAMEMAPPING = {}
-    autosubliminal.SHOWNAMEMAPPINGUPPER = {}
-    for x in autosubliminal.SHOWNAMEMAPPING.keys():
-        autosubliminal.SHOWNAMEMAPPINGUPPER[x.upper()] = autosubliminal.SHOWNAMEMAPPING[x]
-
-    # If needed add default movienamemappings here
-    # This dictionary maps local series names to IMDB ID's
-    # Example: movienamemapping = {"The Dark Knight (2008)" : "0468569", "Batman Begins (2005)" : "0372784"}
-    autosubliminal.MOVIENAMEMAPPING = {}
-    autosubliminal.MOVIENAMEMAPPINGUPPER = {}
-    for x in autosubliminal.MOVIENAMEMAPPING.keys():
-        autosubliminal.MOVIENAMEMAPPINGUPPER[x.upper()] = autosubliminal.MOVIENAMEMAPPING[x]
-
 
 def save_config(section=None, variable=None, value=None):
     """
