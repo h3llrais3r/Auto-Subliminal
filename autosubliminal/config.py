@@ -778,9 +778,7 @@ def apply_addic7edshownamemapping():
         pass
 
     if cfg.has_section("addic7edshownamemapping"):
-        mapping = dict(cfg.items('addic7edshownamemapping'))
-        for x in mapping.keys():
-            autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x] = mapping[x]
+        autosubliminal.ADDIC7EDSHOWNAMEMAPPING = dict(cfg.items('addic7edshownamemapping'))
     else:
         autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {}
 
