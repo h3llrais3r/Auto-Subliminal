@@ -21,6 +21,6 @@ def test_get_imdb_id():
 
 def test_sanitize_imdb_title():
     # See result of http://www.imdb.com/find?q=Aftermath&s=tt&mx=20
-    assert MovieIndexer.sanitize_imdb_title('Aftermath (I)') == 'aftermath'
-    assert MovieIndexer.sanitize_imdb_title('Aftermath') == 'aftermath'
-    assert MovieIndexer.sanitize_imdb_title('(Aftermath)') == 'aftermath'
+    assert MovieIndexer._sanitize_imdb_title('Aftermath (I)') == 'aftermath'
+    assert MovieIndexer._sanitize_imdb_title('Aftermath') == 'aftermath'
+    assert MovieIndexer._sanitize_imdb_title('(Aftermath)') == 'aftermath'
