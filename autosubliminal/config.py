@@ -423,7 +423,7 @@ def read_config():
         mapping = dict(cfg.items('addic7edshownamemapping'))
         autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {}
         for x in mapping.keys():
-            autosubliminal.ADDIC7EDSHOWNAMEMAPPING[utils.sanitize(x)] = utils.sanitize(mapping[x])
+            autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x] = mapping[x]
     else:
         # Addic7ed shownamemapping section is missing
         autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {}
@@ -781,7 +781,7 @@ def apply_addic7edshownamemapping():
     if cfg.has_section("addic7edshownamemapping"):
         mapping = dict(cfg.items('addic7edshownamemapping'))
         for x in mapping.keys():
-            autosubliminal.ADDIC7EDSHOWNAMEMAPPING[utils.sanitize(x)] = utils.sanitize(mapping[x])
+            autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x] = mapping[x]
     else:
         autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {}
 
@@ -1126,8 +1126,7 @@ def save_addic7edshownamemapping_section():
             cfg.write(file)
 
     for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING:
-        save_config("addic7edshownamemapping", utils.sanitize(x),
-                    utils.sanitize(autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x]))
+        save_config("addic7edshownamemapping", x, autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
 
     # Set all shownamemapping stuff correct
     apply_addic7edshownamemapping()

@@ -154,14 +154,7 @@ def sanitize(string, ignore_characters=None):
     return string.strip().lower()
 
 
-def sanitize_imdb_title(string, ignore_characters=None):
-    # Remove (I), (II), ... values from imdb titles (this is added when there are multiple titles with the same name)
-    # Example response from imdb: see http://www.imdb.com/find?q=Aftermath&s=tt&mx=20
-    string = re.sub('^(.+)(\(\w+\))$', r'\1', string)
-    return sanitize(string, ignore_characters)
-
-
-def string_to_dict(items=None, sanitized=False):
+def string_to_dict(items=None):
     """
     Return a correct dict from a string.
     Optionally you can sanitize the values.
@@ -177,10 +170,7 @@ def string_to_dict(items=None, sanitized=False):
                     x = x[:-1]
                 elif x[:1] == ' ':
                     x = x[1:]
-                if sanitized:
-                    showinfo.append(sanitize(x))
-                else:
-                    showinfo.append(x)
+                showinfo.append(x)
             showinfo = tuple(showinfo)
             returnitems.append(showinfo)
     returnitems = dict(returnitems)

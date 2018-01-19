@@ -5,7 +5,7 @@ import time
 import pytest
 
 import autosubliminal
-from autosubliminal.utils import getboolean, safe_string, safe_trim, safe_uppercase, sanitize, sanitize_imdb_title, \
+from autosubliminal.utils import getboolean, safe_string, safe_trim, safe_uppercase, sanitize, \
     display_logfile, show_name_mapping, movie_name_mapping, skip_show, skip_movie, display_item, display_title, \
     display_name, display_timestamp, convert_timestamp, humanize_bytes, get_wanted_queue_lock, \
     release_wanted_queue_lock, count_wanted_items, get_file_size, set_rw_and_remove
@@ -83,13 +83,6 @@ def test_safe_trim():
 
 def test_sanitize():
     assert sanitize('(Mr.-Robot :)') == 'mr robot'
-
-
-def test_sanitize_imdb_title():
-    # See result of http://www.imdb.com/find?q=Aftermath&s=tt&mx=20
-    assert sanitize_imdb_title('Aftermath (I)') == 'aftermath'
-    assert sanitize_imdb_title('Aftermath') == 'aftermath'
-    assert sanitize_imdb_title('(Aftermath)') == 'aftermath'
 
 
 def test_display_logfile():
