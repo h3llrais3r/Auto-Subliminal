@@ -91,21 +91,26 @@ class Home(object):
                 raise cherrypy.HTTPError(400, "No wanted_item index supplied")
             if not title:
                 raise cherrypy.HTTPError(400, "No show supplied")
+            # Check if season is a number to be sure
+            if not season == '00':
+                season = str(int(season))
             config_season = season
-            if title.upper() in autosubliminal.SKIPSHOWUPPER:
-                for x in autosubliminal.SKIPSHOWUPPER[title.upper()].split(','):
-                    if x == season or x == '00':
-                        utils.add_notification_message("Already skipped show %s season %s" % (title, season))
-                        redirect("/home")
-                if season == '00':
-                    config_season = '00'
-                else:
-                    seasons = autosubliminal.SKIPSHOWUPPER[title.upper()].split(',')
-                    seasons.append(str(int(season)))
-                    config_season = ','.join(sorted(seasons))
-            else:
-                if not season == '00':
-                    season = str(int(season))
+            # Check if already skipped
+            title_sanitized = utils.sanitize(title)
+            for x in autosubliminal.SKIPSHOW.keys():
+                if title_sanitized == utils.sanitize(x):
+                    for s in autosubliminal.SKIPSHOW[x].split(','):
+                        if s == season or s == '00':
+                            utils.add_notification_message("Already skipped show %s season %s" % (title, season))
+                            redirect("/home")
+                    # Not skipped yet, skip all or append season the seasons to skip
+                    if season == '00':
+                        config_season = '00'
+                    else:
+                        seasons = autosubliminal.SKIPSHOW[x].split(',')
+                        seasons.append(season)
+                        config_season = ','.join(sorted(seasons))
+            # Skip show
             if subchecker.skip_show(wanted_item_index, season):
                 config.save_config('skipshow', title, config_season)
                 config.apply_skipshow()
@@ -127,17 +132,19 @@ class Home(object):
         movie = title
         if year:
             movie += " (" + year + ")"
-        if movie.upper() in autosubliminal.SKIPMOVIEUPPER:
-            utils.add_notification_message("Already skipped movie %s" % movie)
-            redirect("/home")
+        # Check if already skipped
+        movie_sanitized = utils.sanitize(movie)
+        for x in autosubliminal.SKIPMOVIE.keys():
+            if movie_sanitized == utils.sanitize(x):
+                utils.add_notification_message("Already skipped movie %s" % movie)
+                redirect("/home")
+        # Skip movie
+        if subchecker.skip_movie(wanted_item_index):
+            config.save_config('skipmovie', movie, '00')
+            config.apply_skipmovie()
+            utils.add_notification_message("Skipped movie %s" % movie)
         else:
-            if subchecker.skip_movie(wanted_item_index):
-                config.save_config('skipmovie', movie, '00')
-                config.apply_skipmovie()
-                utils.add_notification_message("Skipped movie %s" % movie)
-            else:
-                utils.add_notification_message("Could not skip movie! Please check the log file.", "error")
-
+            utils.add_notification_message("Could not skip movie! Please check the log file.", "error")
         redirect("/home")
 
     @cherrypy.expose(alias='deleteVideo')

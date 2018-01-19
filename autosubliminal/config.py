@@ -428,7 +428,7 @@ def read_config():
     if cfg.has_section('addic7edshownamemapping'):
         autosubliminal.ADDIC7EDSHOWNAMEMAPPING = dict(cfg.items('addic7edshownamemapping'))
     else:
-        # Addic7ed shownamemapping section is missing
+        # Addic7edshownamemapping section is missing
         autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {}
 
     if cfg.has_section('movienamemapping'):
@@ -439,23 +439,15 @@ def read_config():
 
     if cfg.has_section('skipshow'):
         autosubliminal.SKIPSHOW = dict(cfg.items('skipshow'))
-        autosubliminal.SKIPSHOWUPPER = {}
-        for x in autosubliminal.SKIPSHOW:
-            autosubliminal.SKIPSHOWUPPER[x.upper()] = autosubliminal.SKIPSHOW[x]
     else:
         # Skipshow section is missing
         autosubliminal.SKIPSHOW = {}
-        autosubliminal.SKIPSHOWUPPER = {}
 
     if cfg.has_section('skipmovie'):
         autosubliminal.SKIPMOVIE = dict(cfg.items('skipmovie'))
-        autosubliminal.SKIPMOVIEUPPER = {}
-        for x in autosubliminal.SKIPMOVIE:
-            autosubliminal.SKIPMOVIEUPPER[x.upper()] = autosubliminal.SKIPMOVIE[x]
     else:
         # Skipmovie section is missing
         autosubliminal.SKIPMOVIE = {}
-        autosubliminal.SKIPMOVIEUPPER = {}
 
     if cfg.has_section('notify'):
         if cfg.has_option("notify", "notify"):
@@ -827,9 +819,6 @@ def apply_skipshow():
         autosubliminal.SKIPSHOW = dict(cfg.items('skipshow'))
     else:
         autosubliminal.SKIPSHOW = {}
-    autosubliminal.SKIPSHOWUPPER = {}
-    for x in autosubliminal.SKIPSHOW:
-        autosubliminal.SKIPSHOWUPPER[x.upper()] = autosubliminal.SKIPSHOW[x]
 
 
 def apply_skipmovie():
@@ -848,9 +837,6 @@ def apply_skipmovie():
         autosubliminal.SKIPMOVIE = dict(cfg.items('skipmovie'))
     else:
         autosubliminal.SKIPMOVIE = {}
-    autosubliminal.SKIPMOVIEUPPER = {}
-    for x in autosubliminal.SKIPMOVIE:
-        autosubliminal.SKIPMOVIEUPPER[x.upper()] = autosubliminal.SKIPMOVIE[x]
 
 
 def display_videopaths():
@@ -1084,7 +1070,7 @@ def save_shownamemapping_section():
         with open(autosubliminal.CONFIGFILE, 'wb') as file:
             cfg.write(file)
 
-    for x in autosubliminal.SHOWNAMEMAPPING:
+    for x in autosubliminal.SHOWNAMEMAPPING.keys():
         save_config("shownamemapping", x, autosubliminal.SHOWNAMEMAPPING[x])
 
     # Set all shownamemapping stuff correct
@@ -1112,7 +1098,7 @@ def save_addic7edshownamemapping_section():
         with open(autosubliminal.CONFIGFILE, 'wb') as file:
             cfg.write(file)
 
-    for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING:
+    for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING.keys():
         save_config("addic7edshownamemapping", x, autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
 
     # Set all addic7edshownamemapping stuff correct
@@ -1140,7 +1126,7 @@ def save_movienamemapping_section():
         with open(autosubliminal.CONFIGFILE, 'wb') as file:
             cfg.write(file)
 
-    for x in autosubliminal.MOVIENAMEMAPPING:
+    for x in autosubliminal.MOVIENAMEMAPPING.keys():
         save_config("movienamemapping", x, autosubliminal.MOVIENAMEMAPPING[x])
 
     # Set all movienamemapping stuff correct
@@ -1168,7 +1154,7 @@ def save_skipshow_section():
         with open(autosubliminal.CONFIGFILE, 'wb') as file:
             cfg.write(file)
 
-    for x in autosubliminal.SKIPSHOW:
+    for x in autosubliminal.SKIPSHOW.keys():
         save_config("skipshow", x, autosubliminal.SKIPSHOW[x])
 
     # Set all skipshow stuff correct
@@ -1196,7 +1182,7 @@ def save_skipmovie_section():
         with open(autosubliminal.CONFIGFILE, 'wb') as file:
             cfg.write(file)
 
-    for x in autosubliminal.SKIPMOVIE:
+    for x in autosubliminal.SKIPMOVIE.keys():
         save_config("skipmovie", x, autosubliminal.SKIPMOVIE[x])
 
     # Set all skipmovie stuff correct

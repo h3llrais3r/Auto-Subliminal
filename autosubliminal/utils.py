@@ -189,9 +189,10 @@ def display_name_mapping(name_mapping_dict):
 
 
 def get_show_name_mapping(show_name):
+    show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.SHOWNAMEMAPPING.keys():
-        if sanitize(show_name) == sanitize(x):
-            log.debug("Found match in shownamemapping for %s" % show_name)
+        if show_name_sanitized == sanitize(x):
+            log.debug("Found match in shownamemapping for '%s'" % show_name)
             return autosubliminal.SHOWNAMEMAPPING[x]
 
 
@@ -199,32 +200,36 @@ def get_movie_name_mapping(title, year):
     movie = title
     if year:
         movie += " (" + str(year) + ")"
+    movie_sanitized = sanitize(movie)
     for x in autosubliminal.MOVIENAMEMAPPING.keys():
-        if sanitize(movie) == sanitize(x):
-            log.debug("Found match in movienamemapping for %s" % movie)
+        if movie_sanitized == sanitize(x):
+            log.debug("Found match in movienamemapping for '%s'" % movie)
             return autosubliminal.MOVIENAMEMAPPING[x]
 
 
 def skip_show(show_name, season, episode):
-    if show_name.upper() in autosubliminal.SKIPSHOWUPPER.keys():
-        log.debug("Found %s in skipshow dictionary" % show_name)
-        for seasontmp in autosubliminal.SKIPSHOWUPPER[show_name.upper()].split(','):
-            if seasontmp == '00':
-                log.debug("Variable of %s is set to 00, skipping the complete Serie" % show_name)
-                return True
-            elif int(seasontmp) == int(season):
-                log.debug("Season matches variable of %s, skipping season" % show_name)
-                return True
+    show_name_sanitized = sanitize(show_name)
+    for x in autosubliminal.SKIPSHOW.keys():
+        if show_name_sanitized == sanitize(x):
+            log.debug("Found match in skipshow for '%s'" % show_name)
+            for s in autosubliminal.SKIPSHOW[x].split(','):
+                if s == '00':
+                    log.debug("Found all season match in skipshow, skipping all seasons for '%s'" % show_name)
+                    return True
+                elif int(s) == int(season):
+                    log.debug("Found season match in skipshow, skipping season '%s' for '%s'" % (season, show_name))
+                    return True
 
 
 def skip_movie(title, year):
     movie = title
     if year:
         movie += " (" + str(year) + ")"
-    if movie.upper() in autosubliminal.SKIPMOVIEUPPER.keys():
-        log.debug("Found %s in skipmovie dictionary" % movie)
-        log.debug("Skipping movie %s" % movie)
-        return True
+    movie_sanitized = sanitize(movie)
+    for x in autosubliminal.SKIPMOVIE.keys():
+        if movie_sanitized == sanitize(x):
+            log.debug("Found match in skipmovie, skipping movie '%s'" % movie)
+            return True
 
 
 def count_backup_logfiles():
