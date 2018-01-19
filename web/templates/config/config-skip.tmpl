@@ -1,5 +1,6 @@
 #import autosubliminal
 
+#from autosubliminal.utils import display_mapping_dict
 #from autosubliminal.templates.PageTemplate import PageTemplate
 #extends PageTemplate
 
@@ -46,7 +47,7 @@
                             </label>
                         </span>
                         <span class="col-xs-8 col-md-4">
-                            <textarea rows="5" id="skipshow" name="skipshow" class="form-control input-sm">$autosubliminal.config.display_skipshow</textarea>
+                            <textarea rows="5" id="skipshow" name="skipshow" class="form-control input-sm">$display_mapping_dict($autosubliminal.SKIPSHOW)</textarea>
                         </span>
                     </div>
 
@@ -75,7 +76,7 @@
                             </label>
                         </span>
                         <span class="col-xs-8 col-md-4">
-                            <textarea rows="5" id="skipmovie" name="skipmovie" class="form-control input-sm">$autosubliminal.config.display_skipmovie</textarea>
+                            <textarea rows="5" id="skipmovie" name="skipmovie" class="form-control input-sm">$display_mapping_dict($autosubliminal.SKIPMOVIE)</textarea>
                         </span>
                     </div>
 

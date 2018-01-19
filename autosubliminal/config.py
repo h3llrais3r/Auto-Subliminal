@@ -864,30 +864,6 @@ def display_additional_languages():
     return s
 
 
-def display_skipshow():
-    """
-    Return a string containing all info from skipshow.
-    After each shows skip info an '\n' is added to create multiple rows
-    in a textarea.
-    """
-    s = ""
-    for x in autosubliminal.SKIPSHOW:
-        s += x + " = " + str(autosubliminal.SKIPSHOW[x]) + "\n"
-    return s
-
-
-def display_skipmovie():
-    """
-    Return a string containing all info from skipmovie.
-    After each movie skip info an '\n' is added to create multiple rows
-    in a textarea.
-    """
-    s = ""
-    for x in autosubliminal.SKIPMOVIE:
-        s += x + " = " + str(autosubliminal.SKIPMOVIE[x]) + "\n"
-    return s
-
-
 def save_config_section():
     """
     Save stuff

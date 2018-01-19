@@ -177,14 +177,14 @@ def string_to_dict(items=None):
     return returnitems
 
 
-def display_name_mapping(name_mapping_dict):
+def display_mapping_dict(mapping_dict):
     """
-    Return a string containing all info from the name_mapping_dict.
-    After each name mapping an '\n' is added to create multiple rows in a text area.
+    Return a string containing all info from the mapping_dict.
+    After each mapping (key = value) a '\n' is added to create multiple rows in a text area.
     """
     s = ""
-    for x in name_mapping_dict:
-        s += x + " = " + str(name_mapping_dict[x]) + "\n"
+    for x in mapping_dict.keys():
+        s += x + " = " + str(mapping_dict[x]) + "\n"
     return s
 
 

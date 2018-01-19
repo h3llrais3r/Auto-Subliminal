@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import os
 import tempfile
 import time
@@ -6,8 +7,8 @@ import pytest
 
 import autosubliminal
 from autosubliminal.utils import getboolean, safe_string, safe_trim, safe_uppercase, sanitize, display_logfile, \
-    get_show_name_mapping, get_movie_name_mapping, skip_show, skip_movie, display_item, display_title, \
-    display_name, display_timestamp, convert_timestamp, humanize_bytes, get_wanted_queue_lock, \
+    display_mapping_dict, get_show_name_mapping, get_movie_name_mapping, skip_show, skip_movie, display_item, \
+    display_title, display_name, display_timestamp, convert_timestamp, humanize_bytes, get_wanted_queue_lock, \
     release_wanted_queue_lock, count_wanted_items, get_file_size, set_rw_and_remove
 
 string_value = "test"
@@ -101,6 +102,12 @@ def test_display_logfile():
         assert display_logfile(loglevel='error') == ""
     finally:
         os.remove(autosubliminal.LOGFILE)
+
+
+def test_display_mapping_dict():
+    # We only use an OrderedDict here to keep the order as entered to be able to match the result
+    mapping_dict = OrderedDict([('key1', 'value1'), ('key2', 'value2')])
+    assert display_mapping_dict(mapping_dict) == 'key1 = value1\nkey2 = value2\n'
 
 
 def test_show_name_mapping():
