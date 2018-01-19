@@ -196,6 +196,14 @@ def get_show_name_mapping(show_name):
             return autosubliminal.SHOWNAMEMAPPING[x]
 
 
+def get_addic7ed_show_name_mapping(show_name):
+    show_name_sanitized = sanitize(show_name)
+    for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING.keys():
+        if show_name_sanitized == sanitize(x):
+            log.debug("Found match in addic7edshownamemapping for '%s'" % show_name)
+            return autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x]
+
+
 def get_movie_name_mapping(title, year):
     movie = title
     if year:

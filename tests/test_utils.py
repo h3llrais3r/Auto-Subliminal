@@ -7,9 +7,9 @@ import pytest
 
 import autosubliminal
 from autosubliminal.utils import getboolean, safe_string, safe_trim, safe_uppercase, sanitize, display_logfile, \
-    display_mapping_dict, get_show_name_mapping, get_movie_name_mapping, skip_show, skip_movie, display_item, \
-    display_title, display_name, display_timestamp, convert_timestamp, humanize_bytes, get_wanted_queue_lock, \
-    release_wanted_queue_lock, count_wanted_items, get_file_size, set_rw_and_remove
+    display_mapping_dict, get_show_name_mapping, get_addic7ed_show_name_mapping, get_movie_name_mapping, skip_show, \
+    skip_movie, display_item, display_title, display_name, display_timestamp, convert_timestamp, humanize_bytes, \
+    get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, get_file_size, set_rw_and_remove
 
 string_value = "test"
 num_value = 1
@@ -115,6 +115,13 @@ def test_show_name_mapping():
     assert get_show_name_mapping("show1") == "111111"
     assert get_show_name_mapping("show2") == "222222"
     assert get_show_name_mapping("show3") is None
+
+
+def test_addic7ed_show_name_mapping():
+    autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {"SHOW1": "111111", "SHOW2": "222222"}
+    assert get_addic7ed_show_name_mapping("show1") == "111111"
+    assert get_addic7ed_show_name_mapping("show2") == "222222"
+    assert get_addic7ed_show_name_mapping("show3") is None
 
 
 def test_movie_name_mapping():
