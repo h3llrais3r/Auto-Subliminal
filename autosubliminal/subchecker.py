@@ -20,6 +20,7 @@ import autosubliminal
 from autosubliminal import utils
 from autosubliminal.db import WantedItems
 from autosubliminal.postprocessor import PostProcessor
+from autosubliminal.providers import provider_cache
 from autosubliminal.scheduler import ScheduledProcess
 from autosubliminal.subdownloader import SubDownloader
 
@@ -53,6 +54,10 @@ class SubChecker(ScheduledProcess):
         provider_pool = _get_provider_pool()
         if provider_pool:
             log.info("Searching subtitles with providers: %s" % ', '.join(provider_pool.providers))
+
+            # Load the Addic7ed provider cache with our Addic7ed show name mappings
+            if 'addic7ed' in autosubliminal.SUBLIMINALPROVIDERS:
+                provider_cache.fill_addic7ed_show_id_cache()
 
             # Process all items in wanted queue
             db = WantedItems()
