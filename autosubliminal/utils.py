@@ -132,26 +132,26 @@ def safe_trim(obj, default_value=None):
         return default_value
 
 
-def sanitize(string, ignore_characters=None):
+def sanitize(string_value, ignore_characters=None):
     """Sanitize a string to strip special characters.
     Copied from https://github.com/Diaoul/subliminal/blob/master/subliminal/utils.py
     """
     ignore_characters = ignore_characters or set()
     # Only deal with strings
-    if string is None:
+    if string_value is None:
         return
     # Replace some characters with one space
     characters = {'-', ':', '(', ')', '.'} - ignore_characters
     if characters:
-        string = re.sub(r'[%s]' % re.escape(''.join(characters)), ' ', string)
+        string_value = re.sub(r'[%s]' % re.escape(''.join(characters)), ' ', string_value)
     # Remove some characters
     characters = {'\''} - ignore_characters
     if characters:
-        string = re.sub(r'[%s]' % re.escape(''.join(characters)), '', string)
+        string_value = re.sub(r'[%s]' % re.escape(''.join(characters)), '', string_value)
     # Replace multiple spaces with one
-    string = re.sub(r'\s+', ' ', string)
+    string_value = re.sub(r'\s+', ' ', string_value)
     # Strip and lower case
-    return string.strip().lower()
+    return string_value.strip().lower()
 
 
 def string_to_dict(items=None):

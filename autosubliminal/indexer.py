@@ -151,11 +151,11 @@ class MovieIndexer(Indexer):
                     return movie
 
     @staticmethod
-    def _sanitize_imdb_title(string, ignore_characters=None):
+    def _sanitize_imdb_title(string_value, ignore_characters=None):
         # Remove (I), (II), ... from imdb titles (this is added when there are multiple titles with the same name)
         # Example response from imdb: see http://www.imdb.com/find?q=Aftermath&s=tt&mx=20
-        string = re.sub('^(.+)(\(\w+\))$', r'\1', string)
-        return utils.sanitize(string, ignore_characters)
+        string_value = re.sub('^(.+)(\(\w+\))$', r'\1', string_value)
+        return utils.sanitize(string_value, ignore_characters)
 
     def get_imdb_id_and_year(self, title, year=None, force_search=False, store_id=True):
         imdb_id = None
