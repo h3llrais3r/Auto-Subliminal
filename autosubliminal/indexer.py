@@ -94,7 +94,7 @@ class ShowIndexer(Indexer):
         # If not force_search, first check shownamemapping and tvdb id cache
         if not force_search:
             # Check shownamemapping
-            tvdb_id = utils.show_name_mapping(name)
+            tvdb_id = utils.get_show_name_mapping(name)
             if tvdb_id:
                 log.debug("Tvdb id from shownamemapping %s" % tvdb_id)
                 return int(tvdb_id)
@@ -165,7 +165,7 @@ class MovieIndexer(Indexer):
         log.debug("Getting imdb info for %s" % name)
         # If not force_search, first check movienamemapping and tvdb id cache
         if not force_search:
-            imdb_id = utils.movie_name_mapping(title, year)
+            imdb_id = utils.get_movie_name_mapping(title, year)
             if imdb_id:
                 log.debug("Imdb id from movienamemapping %s" % imdb_id)
                 return imdb_id, year

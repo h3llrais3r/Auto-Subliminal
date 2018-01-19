@@ -188,25 +188,21 @@ def display_name_mapping(name_mapping_dict):
     return s
 
 
-def show_name_mapping(show_name):
-    if show_name.upper() in autosubliminal.USERSHOWNAMEMAPPINGUPPER.keys():
-        log.debug("Found match in usershownamemapping for %s" % show_name)
-        return autosubliminal.USERSHOWNAMEMAPPINGUPPER[show_name.upper()]
-    elif show_name.upper() in autosubliminal.SHOWNAMEMAPPINGUPPER.keys():
-        log.debug("Found match for %s" % show_name)
-        return autosubliminal.SHOWNAMEMAPPINGUPPER[show_name.upper()]
+def get_show_name_mapping(show_name):
+    for x in autosubliminal.SHOWNAMEMAPPING.keys():
+        if sanitize(show_name) == sanitize(x):
+            log.debug("Found match in shownamemapping for %s" % show_name)
+            return autosubliminal.SHOWNAMEMAPPING[x]
 
 
-def movie_name_mapping(title, year):
+def get_movie_name_mapping(title, year):
     movie = title
     if year:
         movie += " (" + str(year) + ")"
-    if movie.upper() in autosubliminal.USERMOVIENAMEMAPPINGUPPER.keys():
-        log.debug("Found match in usermovienamemapping for %s" % movie)
-        return autosubliminal.USERMOVIENAMEMAPPINGUPPER[movie.upper()]
-    elif movie.upper() in autosubliminal.MOVIENAMEMAPPINGUPPER.keys():
-        log.debug("Found match for %s" % movie)
-        return autosubliminal.MOVIENAMEMAPPINGUPPER[movie.upper()]
+    for x in autosubliminal.MOVIENAMEMAPPING.keys():
+        if sanitize(movie) == sanitize(x):
+            log.debug("Found match in movienamemapping for %s" % movie)
+            return autosubliminal.MOVIENAMEMAPPING[x]
 
 
 def skip_show(show_name, season, episode):

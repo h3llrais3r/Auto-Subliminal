@@ -419,34 +419,23 @@ def read_config():
         autosubliminal.OPENSUBTITLESUSERNAME = u""
         autosubliminal.OPENSUBTITLESPASSWORD = u""
 
+    if cfg.has_section('shownamemapping'):
+        autosubliminal.SHOWNAMEMAPPING = dict(cfg.items('shownamemapping'))
+    else:
+        # Shownamemapping section is missing
+        autosubliminal.SHOWNAMEMAPPING = {}
+
     if cfg.has_section('addic7edshownamemapping'):
-        mapping = dict(cfg.items('addic7edshownamemapping'))
-        autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {}
-        for x in mapping.keys():
-            autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x] = mapping[x]
+        autosubliminal.ADDIC7EDSHOWNAMEMAPPING = dict(cfg.items('addic7edshownamemapping'))
     else:
         # Addic7ed shownamemapping section is missing
         autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {}
 
-    if cfg.has_section('shownamemapping'):
-        autosubliminal.USERSHOWNAMEMAPPING = dict(cfg.items('shownamemapping'))
-        autosubliminal.USERSHOWNAMEMAPPINGUPPER = {}
-        for x in autosubliminal.USERSHOWNAMEMAPPING.keys():
-            autosubliminal.USERSHOWNAMEMAPPINGUPPER[x.upper()] = autosubliminal.USERSHOWNAMEMAPPING[x]
-    else:
-        # Shownamemapping section is missing
-        autosubliminal.USERSHOWNAMEMAPPING = {}
-        autosubliminal.USERSHOWNAMEMAPPINGUPPER = {}
-
     if cfg.has_section('movienamemapping'):
-        autosubliminal.USERMOVIENAMEMAPPING = dict(cfg.items('movienamemapping'))
-        autosubliminal.USERMOVIENAMEMAPPINGUPPER = {}
-        for x in autosubliminal.USERMOVIENAMEMAPPING.keys():
-            autosubliminal.USERMOVIENAMEMAPPINGUPPER[x.upper()] = autosubliminal.USERMOVIENAMEMAPPING[x]
+        autosubliminal.MOVIENAMEMAPPING = dict(cfg.items('movienamemapping'))
     else:
         # Movienamemapping section is missing
-        autosubliminal.USERMOVIENAMEMAPPING = {}
-        autosubliminal.USERMOVIENAMEMAPPINGUPPER = {}
+        autosubliminal.MOVIENAMEMAPPING = {}
 
     if cfg.has_section('skipshow'):
         autosubliminal.SKIPSHOW = dict(cfg.items('skipshow'))
@@ -766,6 +755,24 @@ def apply_subliminal():
         autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
 
 
+def apply_shownamemapping():
+    """
+    Read shownamemapping in the config file.
+    """
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        # No config yet
+        pass
+
+    if cfg.has_section("shownamemapping"):
+        autosubliminal.SHOWNAMEMAPPING = dict(cfg.items('shownamemapping'))
+    else:
+        autosubliminal.SHOWNAMEMAPPING = {}
+
+
 def apply_addic7edshownamemapping():
     """
     Read addic7edshownamemapping in the config file.
@@ -786,27 +793,6 @@ def apply_addic7edshownamemapping():
         autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {}
 
 
-def apply_shownamemapping():
-    """
-    Read shownamemapping in the config file.
-    """
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        pass
-
-    if cfg.has_section("shownamemapping"):
-        autosubliminal.USERSHOWNAMEMAPPING = dict(cfg.items('shownamemapping'))
-    else:
-        autosubliminal.USERSHOWNAMEMAPPING = {}
-    autosubliminal.USERSHOWNAMEMAPPINGUPPER = {}
-    for x in autosubliminal.USERSHOWNAMEMAPPING.keys():
-        autosubliminal.USERSHOWNAMEMAPPINGUPPER[x.upper()] = autosubliminal.USERSHOWNAMEMAPPING[x]
-
-
 def apply_movienamemapping():
     """
     Read movienamemapping in the config file.
@@ -820,12 +806,9 @@ def apply_movienamemapping():
         pass
 
     if cfg.has_section("movienamemapping"):
-        autosubliminal.USERMOVIENAMEMAPPING = dict(cfg.items('movienamemapping'))
+        autosubliminal.MOVIENAMEMAPPING = dict(cfg.items('movienamemapping'))
     else:
-        autosubliminal.USERMOVIENAMEMAPPING = {}
-    autosubliminal.USERMOVIENAMEMAPPINGUPPER = {}
-    for x in autosubliminal.USERMOVIENAMEMAPPING.keys():
-        autosubliminal.USERMOVIENAMEMAPPINGUPPER[x.upper()] = autosubliminal.USERMOVIENAMEMAPPING[x]
+        autosubliminal.MOVIENAMEMAPPING = {}
 
 
 def apply_skipshow():
@@ -892,30 +875,6 @@ def display_additional_languages():
             s += x
         else:
             s += "," + x
-    return s
-
-
-def display_shownamemapping():
-    """
-    Return a string containing all info from user shownamemapping.
-    After each shownamemapping an '\n' is added to create multiple rows
-    in a textarea.
-    """
-    s = ""
-    for x in autosubliminal.USERSHOWNAMEMAPPING:
-        s += x + " = " + str(autosubliminal.USERSHOWNAMEMAPPING[x]) + "\n"
-    return s
-
-
-def display_movienamemapping():
-    """
-    Return a string containing all info from user movienamemapping.
-    After each movienamemapping an '\n' is added to create multiple rows
-    in a textarea.
-    """
-    s = ""
-    for x in autosubliminal.USERMOVIENAMEMAPPING:
-        s += x + " = " + str(autosubliminal.USERMOVIENAMEMAPPING[x]) + "\n"
     return s
 
 
@@ -1104,6 +1063,34 @@ def save_subliminal_section():
     apply_subliminal()
 
 
+def save_shownamemapping_section():
+    """
+    Save stuff
+    """
+    section = 'shownamemapping'
+
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        # No config yet
+        cfg = SafeConfigParser()
+        pass
+
+    if cfg.has_section(section):
+        cfg.remove_section(section)
+        cfg.add_section(section)
+        with open(autosubliminal.CONFIGFILE, 'wb') as file:
+            cfg.write(file)
+
+    for x in autosubliminal.SHOWNAMEMAPPING:
+        save_config("shownamemapping", x, autosubliminal.SHOWNAMEMAPPING[x])
+
+    # Set all shownamemapping stuff correct
+    apply_shownamemapping()
+
+
 def save_addic7edshownamemapping_section():
     """
     Save stuff
@@ -1128,39 +1115,11 @@ def save_addic7edshownamemapping_section():
     for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING:
         save_config("addic7edshownamemapping", x, autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
 
-    # Set all shownamemapping stuff correct
+    # Set all addic7edshownamemapping stuff correct
     apply_addic7edshownamemapping()
 
 
-def save_usershownamemapping_section():
-    """
-    Save stuff
-    """
-    section = 'shownamemapping'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if cfg.has_section(section):
-        cfg.remove_section(section)
-        cfg.add_section(section)
-        with open(autosubliminal.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
-
-    for x in autosubliminal.USERSHOWNAMEMAPPING:
-        save_config("shownamemapping", x, autosubliminal.USERSHOWNAMEMAPPING[x])
-
-    # Set all shownamemapping stuff correct
-    apply_shownamemapping()
-
-
-def save_usermovienamemapping_section():
+def save_movienamemapping_section():
     """
     Save stuff
     """
@@ -1181,8 +1140,8 @@ def save_usermovienamemapping_section():
         with open(autosubliminal.CONFIGFILE, 'wb') as file:
             cfg.write(file)
 
-    for x in autosubliminal.USERMOVIENAMEMAPPING:
-        save_config("movienamemapping", x, autosubliminal.USERMOVIENAMEMAPPING[x])
+    for x in autosubliminal.MOVIENAMEMAPPING:
+        save_config("movienamemapping", x, autosubliminal.MOVIENAMEMAPPING[x])
 
     # Set all movienamemapping stuff correct
     apply_movienamemapping()
@@ -1473,9 +1432,9 @@ def write_config():
     save_logfile_section()
     save_webserver_section()
     save_subliminal_section()
+    save_shownamemapping_section()
     save_addic7edshownamemapping_section()
-    save_usershownamemapping_section()
-    save_usermovienamemapping_section()
+    save_movienamemapping_section()
     save_skipshow_section()
     save_skipmovie_section()
     save_notify_section()
@@ -1528,16 +1487,14 @@ def upgrade_config(from_version, to_version):
             autosubliminal.SHOWMATCHRELEASEGROUP = False
             print "INFO: New value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
             print "INFO: Replacing old user namemappings with tvdb id's."
-            for x in autosubliminal.USERSHOWNAMEMAPPING.keys():
+            for x in autosubliminal.SHOWNAMEMAPPING.keys():
                 # Search for tvdb id
                 tvdb_id = autosubliminal.SHOWINDEXER.get_tvdb_id(x, force_search=True)
                 # Replace by tvdb id or remove namemapping
                 if tvdb_id:
-                    autosubliminal.USERSHOWNAMEMAPPING[x] = str(tvdb_id)
-                    autosubliminal.USERSHOWNAMEMAPPINGUPPER[x.upper()] = str(tvdb_id)
+                    autosubliminal.SHOWNAMEMAPPING[x] = str(tvdb_id)
                 else:
-                    del autosubliminal.USERSHOWNAMEMAPPING[x]
-                    del autosubliminal.USERSHOWNAMEMAPPINGUPPER[x.upper()]
+                    del autosubliminal.SHOWNAMEMAPPING[x]
             print "INFO: Config upgraded to version 3."
             autosubliminal.CONFIGVERSION = 3
             autosubliminal.CONFIGUPGRADED = True

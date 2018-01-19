@@ -5,8 +5,8 @@ import time
 import pytest
 
 import autosubliminal
-from autosubliminal.utils import getboolean, safe_string, safe_trim, safe_uppercase, sanitize, \
-    display_logfile, show_name_mapping, movie_name_mapping, skip_show, skip_movie, display_item, display_title, \
+from autosubliminal.utils import getboolean, safe_string, safe_trim, safe_uppercase, sanitize, display_logfile, \
+    get_show_name_mapping, get_movie_name_mapping, skip_show, skip_movie, display_item, display_title, \
     display_name, display_timestamp, convert_timestamp, humanize_bytes, get_wanted_queue_lock, \
     release_wanted_queue_lock, count_wanted_items, get_file_size, set_rw_and_remove
 
@@ -104,23 +104,19 @@ def test_display_logfile():
 
 
 def test_show_name_mapping():
-    autosubliminal.USERSHOWNAMEMAPPINGUPPER = {"SHOW1": "111111"}
-    autosubliminal.SHOWNAMEMAPPINGUPPER = {"SHOW2": "222222"}
-    assert show_name_mapping("show1") == "111111"
-    assert show_name_mapping("show2") == "222222"
-    assert show_name_mapping("show3") is None
+    autosubliminal.SHOWNAMEMAPPING = {"SHOW1": "111111", "SHOW2": "222222"}
+    assert get_show_name_mapping("show1") == "111111"
+    assert get_show_name_mapping("show2") == "222222"
+    assert get_show_name_mapping("show3") is None
 
 
 def test_movie_name_mapping():
-    autosubliminal.USERMOVIENAMEMAPPINGUPPER = {"MOVIE1": "111111", "MOVIE3 (2016)": "333333"}
-    autosubliminal.MOVIENAMEMAPPINGUPPER = {"MOVIE2": "222222", "MOVIE4 (2016)": "444444"}
-    assert movie_name_mapping("movie1", None) == "111111"
-    assert movie_name_mapping("movie2", None) == "222222"
-    assert movie_name_mapping("movie3", None) is None
-    assert movie_name_mapping("movie3", 2016) == "333333"
-    assert movie_name_mapping("movie4", None) is None
-    assert movie_name_mapping("movie4", 2016) == "444444"
-    assert movie_name_mapping("movie5", None) is None
+    autosubliminal.MOVIENAMEMAPPING = {"MOVIE1": "111111", "MOVIE2": "222222", "MOVIE3 (2016)": "333333"}
+    assert get_movie_name_mapping("movie1", None) == "111111"
+    assert get_movie_name_mapping("movie2", None) == "222222"
+    assert get_movie_name_mapping("movie3", None) is None
+    assert get_movie_name_mapping("movie3", 2016) == "333333"
+    assert get_movie_name_mapping("movie4", None) is None
 
 
 def test_skip_show():
