@@ -139,7 +139,7 @@ class MovieIndexer(Indexer):
         # Find the first movie that matches the title (and year if present)
         for movie in imdb_movies:
             data = movie.data
-            if data['kind'] == 'movie' and self.sanitize_imdb_title(data['title']) == self.sanitize_imdb_title(title):
+            if data['kind'] == 'movie' and self._sanitize_imdb_title(data['title']) == self._sanitize_imdb_title(title):
                 # If a year is present, it should also be the same
                 if year:
                     if data['year'] == int(year):
@@ -151,7 +151,7 @@ class MovieIndexer(Indexer):
                     return movie
 
     @staticmethod
-    def sanitize_imdb_title(string, ignore_characters=None):
+    def _sanitize_imdb_title(string, ignore_characters=None):
         # Remove (I), (II), ... from imdb titles (this is added when there are multiple titles with the same name)
         # Example response from imdb: see http://www.imdb.com/find?q=Aftermath&s=tt&mx=20
         string = re.sub('^(.+)(\(\w+\))$', r'\1', string)
