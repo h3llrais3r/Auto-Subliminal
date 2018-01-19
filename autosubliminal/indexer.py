@@ -71,7 +71,7 @@ class ShowIndexer(Indexer):
         name = title
         if year:
             name += " (" + str(year) + ")"
-        log.info("Querying tvdb api for %s" % name)
+        log.info("Querying tvdb api for '%s'" % name)
         # Return a tvdb_api_v2.models.series_search.SeriesSearch object
         series_search = self._client.search_series_by_name(name)
         for series_search_data in series_search.data:
@@ -90,20 +90,20 @@ class ShowIndexer(Indexer):
         name = title
         if year:
             name += " (" + str(year) + ")"
-        log.debug("Getting tvdb id for %s" % name)
+        log.debug("Getting tvdb id for '%s'" % name)
         # If not force_search, first check shownamemapping and tvdb id cache
         if not force_search:
             # Check shownamemapping
             tvdb_id = utils.get_show_name_mapping(name)
             if tvdb_id:
-                log.debug("Tvdb id from shownamemapping %s" % tvdb_id)
+                log.debug("Tvdb id from shownamemapping: %s" % tvdb_id)
                 return int(tvdb_id)
             # Check tvdb id cache
             tvdb_id = TvdbIdCache().get_id(name)
             if tvdb_id:
-                log.debug("Getting tvdb id from cache %s" % tvdb_id)
+                log.debug("Tvdb id from cache: %s" % tvdb_id)
                 if tvdb_id == -1:
-                    log.error("Tvdb id not found in cache for %s" % name)
+                    log.error("Tvdb id not found in cache for '%s'" % name)
                     return
                 return int(tvdb_id)
         # Search on tvdb
@@ -112,7 +112,7 @@ class ShowIndexer(Indexer):
             if show:
                 tvdb_id = show.id
         except Exception, e:
-            log.error("Tvdb id not found for %s" % name)
+            log.error("Tvdb id not found for '%s'" % name)
             log.error(e)
             if store_id:
                 TvdbIdCache().set_id(-1, name)
@@ -120,7 +120,7 @@ class ShowIndexer(Indexer):
             log.debug("Tvdb id from api: %s" % tvdb_id)
             if store_id:
                 TvdbIdCache().set_id(tvdb_id, name)
-                log.info("%s added to cache with %s" % (name, tvdb_id))
+                log.info("Tvdb id added to cache for '%s': %s" % (name, tvdb_id))
             return int(tvdb_id)
 
 
@@ -133,7 +133,7 @@ class MovieIndexer(Indexer):
         name = title
         if year:
             name += " (" + str(year) + ")"
-        log.info("Querying imdb api for %s" % name)
+        log.info("Querying imdb api for '%s'" % name)
         # Return a imdb.Movie object
         imdb_movies = IMDb().search_movie(title)
         # Find the first movie that matches the title (and year if present)
@@ -162,16 +162,16 @@ class MovieIndexer(Indexer):
         name = title
         if year:
             name += " (" + str(year) + ")"
-        log.debug("Getting imdb info for %s" % name)
+        log.debug("Getting imdb info for '%s'" % name)
         # If not force_search, first check movienamemapping and tvdb id cache
         if not force_search:
             imdb_id = utils.get_movie_name_mapping(title, year)
             if imdb_id:
-                log.debug("Imdb id from movienamemapping %s" % imdb_id)
+                log.debug("Imdb id from movienamemapping: %s" % imdb_id)
                 return imdb_id, year
             imdb_id = ImdbIdCache().get_id(title, year)
             if imdb_id:
-                log.debug("Getting imdb id from cache %s" % imdb_id)
+                log.debug("Imdb id from cache: %s" % imdb_id)
                 return imdb_id, year
         # Search on imdb
         try:
@@ -182,10 +182,10 @@ class MovieIndexer(Indexer):
                 log.debug("Imdb id from api: %s" % imdb_id)
                 if store_id:
                     ImdbIdCache().set_id(imdb_id, title, year)
-                    log.info("%s added to cache with %s" % (name, imdb_id))
+                    log.info("Imdb id added to cache for '%s': %s" % (name, imdb_id))
         except Exception, e:
-            log.error("Imdb id not found for %s" % name)
+            log.error("Imdb id not found for '%s'" % name)
             log.error(e)
         if not imdb_id:
-            log.error("Imdb id not found for %s (%s)" % (title, year))
+            log.error("Imdb id not found for '%s'" % name)
         return imdb_id, year
