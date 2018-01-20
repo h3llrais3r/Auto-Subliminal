@@ -608,7 +608,7 @@ def _get_releases(subtitle):
     if isinstance(subtitle, Addic7edSubtitle):
         releases.extend([subtitle.version])
     elif isinstance(subtitle, LegendasTVSubtitle):
-        releases.extend([subtitle.archive])
+        releases.extend([subtitle.archive.name])
     elif isinstance(subtitle, NapiProjektSubtitle):
         releases.extend([subtitle.content])
     elif isinstance(subtitle, OpenSubtitlesSubtitle):
@@ -617,10 +617,10 @@ def _get_releases(subtitle):
         releases.extend(subtitle.releases)
     elif isinstance(subtitle, ShooterSubtitle):
         # No release present
-        releases.extend([])
+        releases.extend([subtitle.hash])
     elif isinstance(subtitle, TheSubDBSubtitle):
         # No release present
-        releases.extend([])
+        releases.extend([subtitle.hash])
     elif isinstance(subtitle, TVsubtitlesSubtitle):
         releases.extend([subtitle.release])
     return releases
