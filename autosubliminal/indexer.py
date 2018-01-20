@@ -103,25 +103,30 @@ class ShowIndexer(Indexer):
             if tvdb_id:
                 log.debug("Tvdb id from cache: %s" % tvdb_id)
                 if tvdb_id == -1:
-                    log.error("Tvdb id not found in cache for '%s'" % name)
-                    return
+                    log.warning("Tvdb id not found in cache for '%s'" % name)
+                    return None
                 return int(tvdb_id)
-        # Search on tvdb
+        # Search on tvdb (throws exception when not found)
         try:
             show = self._query_api(title, year)
             if show:
                 tvdb_id = show.id
         except Exception, e:
-            log.error("Tvdb id not found for '%s'" % name)
-            log.error(e)
-            if store_id:
-                TvdbIdCache().set_id(-1, name)
+            # Log error on other exceptions than 404
+            if e.status and e.status != 404:
+                log.error("Error while retrieving tvdb id for '%s'" % name)
+                log.error(e)
         if tvdb_id:
             log.debug("Tvdb id from api: %s" % tvdb_id)
             if store_id:
                 TvdbIdCache().set_id(tvdb_id, name)
                 log.info("Tvdb id added to cache for '%s': %s" % (name, tvdb_id))
             return int(tvdb_id)
+        else:
+            log.warning("Tvdb id not found for '%s'" % name)
+            if store_id:
+                TvdbIdCache().set_id(-1, name)
+            return None
 
 
 class MovieIndexer(Indexer):
@@ -172,6 +177,10 @@ class MovieIndexer(Indexer):
             imdb_id = ImdbIdCache().get_id(title, year)
             if imdb_id:
                 log.debug("Imdb id from cache: %s" % imdb_id)
+                # Imdb id is a string (digits only, but can have 0 prefixes)
+                if imdb_id == '-1':
+                    log.warning("Imdb id not found in cache for '%s'" % name)
+                    return None, year
                 return imdb_id, year
         # Search on imdb
         try:
@@ -179,13 +188,17 @@ class MovieIndexer(Indexer):
             if movie:
                 imdb_id = movie.movieID
                 year = movie.data['year'] if not year else year
-                log.debug("Imdb id from api: %s" % imdb_id)
-                if store_id:
-                    ImdbIdCache().set_id(imdb_id, title, year)
-                    log.info("Imdb id added to cache for '%s': %s" % (name, imdb_id))
         except Exception, e:
-            log.error("Imdb id not found for '%s'" % name)
+            log.error("Error while retrieving imdb id for '%s'" % name)
             log.error(e)
-        if not imdb_id:
-            log.error("Imdb id not found for '%s'" % name)
-        return imdb_id, year
+        if imdb_id:
+            log.debug("Imdb id from api: %s" % imdb_id)
+            if store_id:
+                ImdbIdCache().set_id(imdb_id, title, year)
+                log.info("Imdb id added to cache for '%s': %s" % (name, imdb_id))
+            return imdb_id, year
+        else:
+            log.warning("Imdb id not found for '%s'" % name)
+            if store_id:
+                ImdbIdCache().set_id('-1', title, year)
+            return None, year
