@@ -34,7 +34,7 @@ $(document).ready(function () {
 // <input type="hidden" id="<id/name>" name="<id/name>" value="<variable_true_or_false>">
 
 // Handle toggle checkbox values with hidden field (to support both 'on' and 'off' values on submit)
-$('input[type=checkbox][data-toggle=toggle]').on('change', function () {
+$('input[type=checkbox][data-toggle=toggle][data-on=Enabled][data-off=Disabled]').on('change', function () {
     // We need to get the parent first because bootstrap-toggle adds a toggle-group div around the checkbox
     var target = $(this).parent().next('input[type=hidden]').val();
     if (target == 'False') {
