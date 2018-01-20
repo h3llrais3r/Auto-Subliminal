@@ -395,7 +395,7 @@ table.tablesorter tbody td {
 }
 
 .main-column {
-    /*color: inherit;*/
+    color: #333333;
     font-weight: bold;
     text-decoration: none !important;
 }
