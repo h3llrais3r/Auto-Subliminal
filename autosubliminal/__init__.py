@@ -259,7 +259,7 @@ def initialize():
     CONFIGUPGRADED = False
     if CONFIGFILE is None:
         CONFIGFILE = 'config.properties'
-    config.read_config()
+    config.read_config(True)
     if CONFIGUPGRADED:
         print "INFO: Config seems to be upgraded. Writing config."
         config.write_config()
