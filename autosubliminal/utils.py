@@ -177,17 +177,6 @@ def string_to_dict(items=None):
     return returnitems
 
 
-def display_mapping_dict(mapping_dict):
-    """
-    Return a string containing all info from the mapping_dict.
-    After each mapping (key = value) a '\n' is added to create multiple rows in a text area.
-    """
-    s = ""
-    for x in mapping_dict.keys():
-        s += x + " = " + str(mapping_dict[x]) + "\n"
-    return s
-
-
 def get_show_name_mapping(show_name):
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.SHOWNAMEMAPPING.keys():
@@ -303,6 +292,19 @@ def display_list_multi_line(list_object):
             s += x
         else:
             s += '\n' + x
+    return s
+
+
+def display_mapping_dict(mapping_dict):
+    """
+    Return a multi lined string containing all mappings (key = value) from the mapping_dict.
+    """
+    s = ""
+    for x in mapping_dict.keys():
+        if s == '':
+            s += x + " = " + str(mapping_dict[x])
+        else:
+            s += "\n" + x + " = " + str(mapping_dict[x])
     return s
 
 

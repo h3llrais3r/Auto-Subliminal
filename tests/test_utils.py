@@ -105,12 +105,6 @@ def test_display_logfile():
         os.remove(autosubliminal.LOGFILE)
 
 
-def test_display_mapping_dict():
-    # We only use an OrderedDict here to keep the order as entered to be able to match the result
-    mapping_dict = OrderedDict([('key1', 'value1'), ('key2', 'value2')])
-    assert display_mapping_dict(mapping_dict) == 'key1 = value1\nkey2 = value2\n'
-
-
 def test_show_name_mapping():
     autosubliminal.SHOWNAMEMAPPING = {"SHOW1": "111111", "SHOW2": "222222"}
     assert get_show_name_mapping("show1") == "111111"
@@ -170,6 +164,14 @@ def test_display_list_multi_line():
     assert display_list_multi_line(list_object) == 'item1'
     list_object.append('item2')
     assert display_list_multi_line(list_object) == 'item1\nitem2'
+
+
+def test_display_mapping_dict():
+    # We only use an OrderedDict here to keep the order as entered to be able to match the result
+    mapping_dict = OrderedDict([('key1', 'value1')])
+    assert display_mapping_dict(mapping_dict) == 'key1 = value1'
+    mapping_dict.update({'key2': 'value2'})
+    assert display_mapping_dict(mapping_dict) == 'key1 = value1\nkey2 = value2'
 
 
 def test_display_item():
