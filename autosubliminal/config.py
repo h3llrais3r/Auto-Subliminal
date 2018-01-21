@@ -1340,9 +1340,10 @@ def check_for_restart():
         return False
 
 
-def write_config():
+def write_config(section=None):
     """
     Save all settings to the config file.
+    If a section is specified, only that section is saved, otherwise all config settings are saved.
     Return True if restart is needed, False otherwise.
     """
     # Read config file
@@ -1363,17 +1364,25 @@ def write_config():
     # Before we save everything to the config file we need to test if the app needs to be restarted
     restart = check_for_restart()
 
-    save_config_section()
-    save_logfile_section()
-    save_webserver_section()
-    save_subliminal_section()
-    save_shownamemapping_section()
-    save_addic7edshownamemapping_section()
-    save_movienamemapping_section()
-    save_skipshow_section()
-    save_skipmovie_section()
-    save_notify_section()
-    save_postprocessing_section()
+    if section == 'general' or section is None:
+        save_config_section()
+    if section == 'logging' or section is None:
+        save_logfile_section()
+    if section == 'webserver' or section is None:
+        save_webserver_section()
+    if section == 'subliminal' or section is None:
+        save_subliminal_section()
+    if section == 'namemapping' or section is None:
+        save_shownamemapping_section()
+        save_addic7edshownamemapping_section()
+        save_movienamemapping_section()
+    if section == 'skip' or section is None:
+        save_skipshow_section()
+        save_skipmovie_section()
+    if section == 'notification' or section is None:
+        save_notify_section()
+    if section == 'postprocessing' or section is None:
+        save_postprocessing_section()
 
     return restart
 
