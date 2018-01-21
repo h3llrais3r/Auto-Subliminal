@@ -437,15 +437,17 @@ def humanize_bytes(bytes, precision=1):
 
 
 # Thanks to http://stackoverflow.com/questions/51658/cross-platform-space-remaining-on-volume-using-python
-def get_free_space(directory):
-    """Return folder/drive free space."""
+def get_disk_space_details(directory):
+    """Return folder/drive disk space details (free and total space)."""
     if platform.system() == 'Windows':
+        total_bytes = ctypes.c_ulonglong(0)
         free_bytes = ctypes.c_ulonglong(0)
-        ctypes.windll.kernel32.GetDiskFreeSpaceExW(ctypes.c_wchar_p(directory), None, None, ctypes.pointer(free_bytes))
-        return free_bytes.value
+        ctypes.windll.kernel32.GetDiskFreeSpaceExW(ctypes.c_wchar_p(directory), None, ctypes.pointer(total_bytes),
+                                                   ctypes.pointer(free_bytes))
+        return free_bytes.value, total_bytes.value
     else:
         st = os.statvfs(directory)
-        return st.f_bavail * st.f_frsize4
+        return st.f_bavail * st.f_frsize4, st.f_blocks * st.f_frsize
 
 
 def set_rw_and_remove(operation, name, exc):

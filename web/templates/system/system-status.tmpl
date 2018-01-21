@@ -1,6 +1,6 @@
 #import autosubliminal
 
-#from autosubliminal.utils import display_timestamp, get_free_space, humanize_bytes
+#from autosubliminal.utils import display_timestamp, get_disk_space_details, humanize_bytes
 #from autosubliminal.templates.PageTemplate import PageTemplate
 #extends PageTemplate
 
@@ -58,7 +58,15 @@
                 <tr>
                     <td class="main-column">Auto-Subliminal path</td>
                     <td>$autosubliminal.PATH</td>
-                    <td>$humanize_bytes($get_free_space($autosubliminal.PATH))</td>
+                    #set $free_bytes, $total_bytes = $get_disk_space_details($autosubliminal.PATH)
+                    #set $percentage = (float($free_bytes) / float($total_bytes) * 100)
+                    #set $percentage_string = '%.2f' % $percentage + '%'
+                    <td>
+                        $humanize_bytes($free_bytes) of $humanize_bytes($total_bytes) ($percentage_string)
+                        #if $percentage < 10
+                        <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Low disk space"></i>
+                        #end if
+                    </td>
                 </tr>
                 #for $index, $path in enumerate($autosubliminal.VIDEOPATHS)
                 <tr>
@@ -68,7 +76,15 @@
                     #end if
                     <td class="main-column">Video path $path_suffix</td>
                     <td>$path</td>
-                    <td>$humanize_bytes($get_free_space($path))</td>
+                    #set $free_bytes, $total_bytes = $get_disk_space_details($path)
+                    #set $percentage = (float($free_bytes) / float($total_bytes) * 100)
+                    #set $percentage_string = '%.2f' % $percentage + '%'
+                    <td>
+                        $humanize_bytes($free_bytes) of $humanize_bytes($total_bytes) ($percentage_string)
+                        #if $percentage < 10
+                        <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Low disk space"></i>
+                        #end if
+                    </td>
                 </tr>
                 #end for
                 </tbody>
