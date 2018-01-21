@@ -8,8 +8,9 @@ import pytest
 import autosubliminal
 from autosubliminal.utils import getboolean, safe_string, safe_trim, safe_uppercase, sanitize, display_logfile, \
     display_mapping_dict, get_show_name_mapping, get_addic7ed_show_name_mapping, get_movie_name_mapping, skip_show, \
-    skip_movie, display_item, display_title, display_name, display_timestamp, convert_timestamp, humanize_bytes, \
-    get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, get_file_size, set_rw_and_remove
+    skip_movie, display_list_single_line, display_list_multi_line, display_item, display_title, display_name, \
+    display_timestamp, convert_timestamp, humanize_bytes, get_wanted_queue_lock, release_wanted_queue_lock, \
+    count_wanted_items, get_file_size, set_rw_and_remove
 
 string_value = "test"
 num_value = 1
@@ -155,6 +156,20 @@ def test_skip_movie():
     assert skip_movie("movie2", 2016)
     assert not skip_movie("movie3", None)
     assert not skip_movie("movie3", 2016)
+
+
+def test_display_list_single_line():
+    list_object = ['item1']
+    assert display_list_single_line(list_object) == 'item1'
+    list_object.append('item2')
+    assert display_list_single_line(list_object) == 'item1,item2'
+
+
+def test_display_list_multi_line():
+    list_object = ['item1']
+    assert display_list_multi_line(list_object) == 'item1'
+    list_object.append('item2')
+    assert display_list_multi_line(list_object) == 'item1\nitem2'
 
 
 def test_display_item():

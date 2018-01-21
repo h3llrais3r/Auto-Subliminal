@@ -837,31 +837,6 @@ def apply_skipmovie():
         autosubliminal.SKIPMOVIE = {}
 
 
-def display_videopaths():
-    """
-    Return a string containing all locations for user videos.
-    After each location an '\n' is added to create multiple rows
-    in a textarea.
-    """
-    s = ""
-    for x in autosubliminal.VIDEOPATHS:
-        s += x + "\n"
-    return s
-
-
-def display_additional_languages():
-    """
-    Return a string containing all the additional languages in a comma separated list.
-    """
-    s = ""
-    for x in autosubliminal.ADDITIONALLANGUAGES:
-        if s == "":
-            s += x
-        else:
-            s += "," + x
-    return s
-
-
 def save_config_section():
     """
     Save stuff

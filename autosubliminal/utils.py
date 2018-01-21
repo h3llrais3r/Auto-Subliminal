@@ -280,6 +280,32 @@ def display_logfile(loglevel='all', lognum=None):
     return result
 
 
+def display_list_single_line(list_object):
+    """
+    Return a single lined string (comma separated) containing all the values of the list.
+    """
+    s = ''
+    for x in list_object:
+        if s == '':
+            s += x
+        else:
+            s += ',' + x
+    return s
+
+
+def display_list_multi_line(list_object):
+    """
+    Return a multi lined string containing all values of the list.
+    """
+    s = ''
+    for x in list_object:
+        if s == '':
+            s += x
+        else:
+            s += '\n' + x
+    return s
+
+
 def display_item(item_dict, key, default_value='N/A', uppercase=False):
     item = item_dict.get(key, default_value) or default_value
     item = safe_string(item, default_value)
