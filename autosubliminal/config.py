@@ -743,6 +743,10 @@ def apply_subliminal():
     if cfg.has_section('subliminal'):
         autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
         autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
+        # Only allow valid providers by checking if they are found in the provider manager
+        for provider in autosubliminal.SUBLIMINALPROVIDERLIST:
+            if provider.lower() not in autosubliminal.SUBLIMINALPROVIDERMANAGER.names():
+                autosubliminal.SUBLIMINALPROVIDERLIST.remove(provider)
     else:
         autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
 
