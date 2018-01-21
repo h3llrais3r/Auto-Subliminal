@@ -236,7 +236,7 @@ class Config(object):
         self.webserver = self._ConfigWebServer()
         self.subliminal = self._ConfigSubliminal()
         self.namemapping = self._ConfigNameMapping()
-        self.skip = self._ConfigSkip()
+        self.skipmapping = self._ConfigSkipMapping()
         self.notification = self._ConfigNotification()
         self.postprocessing = self._ConfigPostProcessing()
 
@@ -450,10 +450,10 @@ class Config(object):
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.section)
 
-    class _ConfigSkip(object):
+    class _ConfigSkipMapping(object):
         def __init__(self):
-            self.tmpl_file = "web/templates/config/config-skip.tmpl"
-            self.section = 'skip'
+            self.tmpl_file = "web/templates/config/config-skipmapping.tmpl"
+            self.section = 'skipmapping'
 
         @cherrypy.expose
         def index(self):

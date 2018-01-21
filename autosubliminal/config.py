@@ -1384,7 +1384,7 @@ def write_config(section=None):
         save_shownamemapping_section()
         save_addic7edshownamemapping_section()
         save_movienamemapping_section()
-    if section == 'skip' or section is None:
+    if section == 'skipmapping' or section is None:
         save_skipshow_section()
         save_skipmovie_section()
     if section == 'notification' or section is None:
