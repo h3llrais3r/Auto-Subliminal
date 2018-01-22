@@ -441,11 +441,12 @@ class Config(object):
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
-        def save(self, shownamemapping, addic7edshownamemapping, movienamemapping):
+        def save(self, shownamemapping, addic7edshownamemapping, alternativeshownamemapping, movienamemapping):
             # Set name mapping dicts
-            autosubliminal.SHOWNAMEMAPPING = utils.string_to_dict(shownamemapping)
-            autosubliminal.ADDIC7EDSHOWNAMEMAPPING = utils.string_to_dict(addic7edshownamemapping)
-            autosubliminal.MOVIENAMEMAPPING = utils.string_to_dict(movienamemapping)
+            autosubliminal.SHOWNAMEMAPPING = utils.mapping_string_to_dict(shownamemapping)
+            autosubliminal.ADDIC7EDSHOWNAMEMAPPING = utils.mapping_string_to_dict(addic7edshownamemapping)
+            autosubliminal.ALTERNATIVESHOWNAMEMAPPING = utils.mapping_string_to_dict(alternativeshownamemapping)
+            autosubliminal.MOVIENAMEMAPPING = utils.mapping_string_to_dict(movienamemapping)
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.section)
@@ -463,8 +464,8 @@ class Config(object):
         @cherrypy.tools.json_out()
         def save(self, skipshow, skipmovie):
             # Set skip variables
-            autosubliminal.SKIPSHOW = utils.string_to_dict(skipshow)
-            autosubliminal.SKIPMOVIE = utils.string_to_dict(skipmovie)
+            autosubliminal.SKIPSHOW = utils.mapping_string_to_dict(skipshow)
+            autosubliminal.SKIPMOVIE = utils.mapping_string_to_dict(skipmovie)
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.section)

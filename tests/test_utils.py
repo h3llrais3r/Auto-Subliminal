@@ -6,11 +6,12 @@ import time
 import pytest
 
 import autosubliminal
-from autosubliminal.utils import getboolean, safe_string, safe_trim, safe_uppercase, sanitize, display_logfile, \
-    display_mapping_dict, get_show_name_mapping, get_addic7ed_show_name_mapping, get_movie_name_mapping, skip_show, \
-    skip_movie, display_list_single_line, display_list_multi_line, display_item, display_title, display_name, \
-    display_timestamp, convert_timestamp, humanize_bytes, get_wanted_queue_lock, release_wanted_queue_lock, \
-    count_wanted_items, get_file_size, set_rw_and_remove
+from autosubliminal.utils import getboolean, safe_string, safe_trim, safe_uppercase, sanitize, mapping_string_to_dict, \
+    display_logfile, display_mapping_dict, get_show_name_mapping, get_addic7ed_show_name_mapping, \
+    get_alternative_show_name_mapping, get_movie_name_mapping, skip_show, skip_movie, display_list_single_line, \
+    display_list_multi_line, display_item, display_title, display_name, display_timestamp, convert_timestamp, \
+    humanize_bytes, get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, get_file_size, \
+    set_rw_and_remove
 
 string_value = "test"
 num_value = 1
@@ -87,6 +88,11 @@ def test_sanitize():
     assert sanitize('(Mr.-Robot :)') == 'mr robot'
 
 
+def test_mapping_string_to_dict():
+    mapping_dict = {"show1": "111111,000000", "show2": "222222"}
+    assert mapping_string_to_dict('show1 = 111111,000000\r\nshow2 = 222222') == mapping_dict
+
+
 def test_display_logfile():
     try:
         text = '2016-06-06 20:32:15,509 INFO     [MainThread :: __main__] Running application with PID: 9944'
@@ -105,35 +111,42 @@ def test_display_logfile():
         os.remove(autosubliminal.LOGFILE)
 
 
-def test_show_name_mapping():
-    autosubliminal.SHOWNAMEMAPPING = {"SHOW1": "111111", "SHOW2": "222222"}
-    assert get_show_name_mapping("show1") == "111111"
-    assert get_show_name_mapping("show2") == "222222"
+def test_get_show_name_mapping():
+    autosubliminal.SHOWNAMEMAPPING = {"show1": "111111", "show2": "222222"}
+    assert get_show_name_mapping("SHOW1") == "111111"
+    assert get_show_name_mapping("Show2") == "222222"
     assert get_show_name_mapping("show3") is None
 
 
-def test_addic7ed_show_name_mapping():
-    autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {"SHOW1": "111111", "SHOW2": "222222"}
-    assert get_addic7ed_show_name_mapping("show1") == "111111"
-    assert get_addic7ed_show_name_mapping("show2") == "222222"
+def test_get_addic7ed_show_name_mapping():
+    autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {"show1": "111111", "show2": "222222"}
+    assert get_addic7ed_show_name_mapping("SHOW1") == "111111"
+    assert get_addic7ed_show_name_mapping("Show2") == "222222"
     assert get_addic7ed_show_name_mapping("show3") is None
 
 
+def test_get_alternative_show_name_mapping():
+    autosubliminal.ALTERNATIVESHOWNAMEMAPPING = {"show1": "show1a", "show2": "show2b"}
+    assert get_alternative_show_name_mapping("SHOW1") == "show1a"
+    assert get_alternative_show_name_mapping("Show2") == "show2b"
+    assert get_alternative_show_name_mapping("show3") is None
+
+
 def test_movie_name_mapping():
-    autosubliminal.MOVIENAMEMAPPING = {"MOVIE1": "111111", "MOVIE2": "222222", "MOVIE3 (2016)": "333333"}
-    assert get_movie_name_mapping("movie1", None) == "111111"
-    assert get_movie_name_mapping("movie2", None) == "222222"
+    autosubliminal.MOVIENAMEMAPPING = {"movie1": "111111", "movie2": "222222", "movie3 (2016)": "333333"}
+    assert get_movie_name_mapping("MOVIE1", None) == "111111"
+    assert get_movie_name_mapping("Movie2", None) == "222222"
     assert get_movie_name_mapping("movie3", None) is None
     assert get_movie_name_mapping("movie3", 2016) == "333333"
     assert get_movie_name_mapping("movie4", None) is None
 
 
 def test_skip_show():
-    autosubliminal.SKIPSHOW = {"SHOW1": "0", "SHOW2": "1", "SHOW3": "0,1", "SHOW4": "00"}
-    assert skip_show("show1", 0, 1)  # 0 means skip specials
-    assert not skip_show("show1", 1, 1)
-    assert not skip_show("show2", 0, 1)
-    assert skip_show("show2", 1, 1)
+    autosubliminal.SKIPSHOW = {"show1": "0", "show2": "1", "show3": "0,1", "show4": "00"}
+    assert skip_show("SHOW1", 0, 1)  # 0 means skip specials
+    assert not skip_show("SHOW1", 1, 1)
+    assert not skip_show("Show2", 0, 1)
+    assert skip_show("Show2", 1, 1)
     assert skip_show("show3", 0, 1)  # 00 means skip all, so also 0 is skipped
     assert skip_show("show3", 1, 1)  # 00 means skip all, so also 1 is skipped
     assert skip_show("show4", 0, 1)
@@ -143,11 +156,11 @@ def test_skip_show():
 
 
 def test_skip_movie():
-    autosubliminal.SKIPMOVIE = {"MOVIE1": "00", "MOVIE2 (2016)": "00"}
-    assert skip_movie("movie1", None)
-    assert not skip_movie("movie1", 2016)
-    assert not skip_movie("movie2", None)
-    assert skip_movie("movie2", 2016)
+    autosubliminal.SKIPMOVIE = {"movie1": "00", "movie2 (2016)": "00"}
+    assert skip_movie("MOVIE1", None)
+    assert not skip_movie("MOVIE1", 2016)
+    assert not skip_movie("Movie2", None)
+    assert skip_movie("Movie2", 2016)
     assert not skip_movie("movie3", None)
     assert not skip_movie("movie3", 2016)
 

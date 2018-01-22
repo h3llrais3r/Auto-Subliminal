@@ -154,27 +154,25 @@ def sanitize(string_value, ignore_characters=None):
     return string_value.strip().lower()
 
 
-def string_to_dict(items=None):
+def mapping_string_to_dict(mapping_string=None):
     """
-    Return a correct dict from a string.
-    Optionally you can sanitize the values.
+    Return a dict from a string for the name mappings (key = value).
     """
-    items = items.split('\r\n')
-    returnitems = []
+    mapping_string = mapping_string.split('\r\n')
+    mapping_info_list = []
 
-    for item in items:
-        if item:
-            showinfo = []
-            for x in item.split('='):
+    for mapping in mapping_string:
+        if mapping:
+            mapping_info = []
+            for x in mapping.split('='):
                 if x[-1:] == ' ':
                     x = x[:-1]
                 elif x[:1] == ' ':
                     x = x[1:]
-                showinfo.append(x)
-            showinfo = tuple(showinfo)
-            returnitems.append(showinfo)
-    returnitems = dict(returnitems)
-    return returnitems
+                mapping_info.append(x)
+            mapping_info = tuple(mapping_info)
+            mapping_info_list.append(mapping_info)
+    return dict(mapping_info_list)
 
 
 def get_show_name_mapping(show_name):
@@ -191,6 +189,14 @@ def get_addic7ed_show_name_mapping(show_name):
         if show_name_sanitized == sanitize(x):
             log.debug("Found match in addic7edshownamemapping for '%s'" % show_name)
             return autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x]
+
+
+def get_alternative_show_name_mapping(show_name):
+    show_name_sanitized = sanitize(show_name)
+    for x in autosubliminal.ALTERNATIVESHOWNAMEMAPPING.keys():
+        if show_name_sanitized == sanitize(x):
+            log.debug("Found match in alternativeshownamemapping for '%s'" % show_name)
+            return autosubliminal.ALTERNATIVESHOWNAMEMAPPING[x]
 
 
 def get_movie_name_mapping(title, year):
