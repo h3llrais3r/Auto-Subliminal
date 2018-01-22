@@ -1,8 +1,6 @@
 import autosubliminal
 from subliminal.cache import region
 
-from autosubliminal import utils
-
 # Addic7ed _search_show_id prefix (provide it for both subliminal version and our custom version)
 ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX = 'subliminal.providers.addic7ed:_search_show_id'
 CUSTOM_ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX = 'autosubliminal.providers.addic7ed:_search_show_id'
