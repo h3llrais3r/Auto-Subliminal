@@ -441,12 +441,14 @@ class Config(object):
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
-        def save(self, shownamemapping, addic7edshownamemapping, alternativeshownamemapping, movienamemapping):
+        def save(self, shownamemapping, addic7edshownamemapping, alternativeshownamemapping, movienamemapping,
+                 alternativemovienamemapping):
             # Set name mapping dicts
             autosubliminal.SHOWNAMEMAPPING = utils.mapping_string_to_dict(shownamemapping)
             autosubliminal.ADDIC7EDSHOWNAMEMAPPING = utils.mapping_string_to_dict(addic7edshownamemapping)
             autosubliminal.ALTERNATIVESHOWNAMEMAPPING = utils.mapping_string_to_dict(alternativeshownamemapping)
             autosubliminal.MOVIENAMEMAPPING = utils.mapping_string_to_dict(movienamemapping)
+            autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = utils.mapping_string_to_dict(alternativemovienamemapping)
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.section)

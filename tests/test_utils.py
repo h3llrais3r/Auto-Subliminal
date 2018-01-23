@@ -8,10 +8,10 @@ import pytest
 import autosubliminal
 from autosubliminal.utils import getboolean, safe_string, safe_trim, safe_uppercase, sanitize, mapping_string_to_dict, \
     display_logfile, display_mapping_dict, get_show_name_mapping, get_addic7ed_show_name_mapping, \
-    get_alternative_show_name_mapping, get_movie_name_mapping, skip_show, skip_movie, display_list_single_line, \
-    display_list_multi_line, display_item, display_title, display_name, display_timestamp, convert_timestamp, \
-    humanize_bytes, get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, get_file_size, \
-    set_rw_and_remove
+    get_alternative_show_name_mapping, get_movie_name_mapping, get_alternative_movie_name_mapping, skip_show, \
+    skip_movie, display_list_single_line, display_list_multi_line, display_item, display_title, display_name, \
+    display_timestamp, convert_timestamp, humanize_bytes, get_wanted_queue_lock, release_wanted_queue_lock, \
+    count_wanted_items, get_file_size, set_rw_and_remove
 
 string_value = "test"
 num_value = 1
@@ -139,6 +139,13 @@ def test_movie_name_mapping():
     assert get_movie_name_mapping("movie3", None) is None
     assert get_movie_name_mapping("movie3", 2016) == "333333"
     assert get_movie_name_mapping("movie4", None) is None
+
+
+def test_get_alternative_movie_name_mapping():
+    autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = {"movie1": "movie1a", "movie2": "movie2a"}
+    assert get_alternative_show_name_mapping("MOVIE1") == "movie1a"
+    assert get_alternative_show_name_mapping("Movie2") == "movie2a"
+    assert get_alternative_show_name_mapping("movie3") is None
 
 
 def test_skip_show():

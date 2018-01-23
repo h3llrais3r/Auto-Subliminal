@@ -117,6 +117,7 @@ SHOWNAMEMAPPING = None
 ADDIC7EDSHOWNAMEMAPPING = None
 ALTERNATIVESHOWNAMEMAPPING = None
 MOVIENAMEMAPPING = None
+ALTERNATIVEMOVIENAMEMAPPING = None
 
 # Skip config section
 SKIPSHOW = None
@@ -185,7 +186,8 @@ def initialize():
         SUBLIMINALPROVIDERMANAGER, SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERLIST, SUBLIMINALPROVIDERCONFIGS, \
         SUBTITLEUTF8ENCODING, MANUALREFINEVIDEO, REFINEVIDEO, PREFERHEARINGIMPAIRED, \
         ADDIC7EDUSERNAME, ADDIC7EDPASSWORD, OPENSUBTITLESUSERNAME, OPENSUBTITLESPASSWORD, \
-        SHOWNAMEMAPPING, ADDIC7EDSHOWNAMEMAPPING, ALTERNATIVESHOWNAMEMAPPING, MOVIENAMEMAPPING, \
+        SHOWNAMEMAPPING, ADDIC7EDSHOWNAMEMAPPING, ALTERNATIVESHOWNAMEMAPPING, \
+        MOVIENAMEMAPPING, ALTERNATIVEMOVIENAMEMAPPING, \
         SKIPSHOW, SKIPMOVIE, \
         NOTIFY, NOTIFYMAIL, MAILSRV, MAILFROMADDR, MAILTOADDR, MAILUSERNAME, MAILPASSWORD, MAILSUBJECT, MAILAUTH, \
         MAILENCRYPTION, NOTIFYTWITTER, TWITTERKEY, TWITTERSECRET, NOTIFYPUSHALOT, PUSHALOTAPI, \
@@ -336,10 +338,13 @@ def _initialize_subliminal():
         cache_file = os.path.abspath(os.path.expanduser('subliminal.cache.dbm'))
         region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexLock})
 
-    # Add our manual refiner to list of subliminal refiners
-    refiner = 'manual = autosubliminal.refiners.manual:refine'
-    if refiner not in refiner_manager.registered_extensions:
-        refiner_manager.register(refiner)
+    # Add our custom refiners to list of subliminal refiners
+    manual_refiner = 'manual = autosubliminal.refiners.manual:refine'
+    if manual_refiner not in refiner_manager.registered_extensions:
+        refiner_manager.register(manual_refiner)
+    namemapping_refiner = 'namemapping = autosubliminal.refiners.namemapping:refine'
+    if namemapping_refiner not in refiner_manager.registered_extensions:
+        refiner_manager.register(namemapping_refiner)
 
     # Add our custom addic7ed provider to list of subliminal providers
     provider = 'addic7ed_random_user_agent = autosubliminal.providers.addic7ed:Addic7edProvider'

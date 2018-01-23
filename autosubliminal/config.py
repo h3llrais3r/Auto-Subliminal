@@ -446,6 +446,12 @@ def read_config(check_upgrade=False):
         # Movienamemapping section is missing
         autosubliminal.MOVIENAMEMAPPING = {}
 
+    if cfg.has_section('alternativemovienamemapping'):
+        autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = dict(cfg.items('alternativemovienamemapping'))
+    else:
+        # Alternativemovienamemapping section is missing
+        autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = {}
+
     if cfg.has_section('skipshow'):
         autosubliminal.SKIPSHOW = dict(cfg.items('skipshow'))
     else:
@@ -833,6 +839,24 @@ def apply_movienamemapping():
         autosubliminal.MOVIENAMEMAPPING = {}
 
 
+def apply_alternativemovienamemapping():
+    """
+    Read alternativemovienamemapping in the config file.
+    """
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        # No config yet
+        pass
+
+    if cfg.has_section('alternativemovienamemapping'):
+        autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = dict(cfg.items('alternativemovienamemapping'))
+    else:
+        autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = {}
+
+
 def apply_skipshow():
     """
     Read skipshow in the config file.
@@ -1142,6 +1166,34 @@ def save_movienamemapping_section():
     apply_movienamemapping()
 
 
+def save_alternativemovienamemapping_section():
+    """
+    Save stuff
+    """
+    section = 'alternativemovienamemapping'
+
+    cfg = SafeConfigParser()
+    try:
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
+            cfg.readfp(f)
+    except:
+        # No config yet
+        cfg = SafeConfigParser()
+        pass
+
+    if cfg.has_section(section):
+        cfg.remove_section(section)
+        cfg.add_section(section)
+        with open(autosubliminal.CONFIGFILE, 'wb') as file:
+            cfg.write(file)
+
+    for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING.keys():
+        save_config('alternativemovienamemapping', x, autosubliminal.ALTERNATIVEMOVIENAMEMAPPING[x])
+
+    # Set all alternativemovienamemapping stuff correct
+    apply_alternativemovienamemapping()
+
+
 def save_skipshow_section():
     """
     Save stuff
@@ -1437,6 +1489,7 @@ def write_config(section=None):
         save_addic7edshownamemapping_section()
         save_alternativeshownamemapping_section()
         save_movienamemapping_section()
+        save_alternativemovienamemapping_section()
     if section == 'skipmapping' or section is None:
         save_skipshow_section()
         save_skipmovie_section()

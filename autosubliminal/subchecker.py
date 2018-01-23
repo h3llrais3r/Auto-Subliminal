@@ -475,7 +475,7 @@ def _scan_wanted_item_for_video(wanted_item, is_manual=False):
         video = subliminal.scan_video(video_path)
         if is_manual and autosubliminal.MANUALREFINEVIDEO:
             # Use our manual refiner only for manual search if enabled
-            refiner = ('manual',)
+            refiner = ('manual',)  # don't remove the , -> needs to be a tuple
             subliminal.refine(video, episode_refiners=refiner, movie_refiners=refiner, wanted_item=wanted_item)
         if autosubliminal.REFINEVIDEO:
             # Use build-in refiners

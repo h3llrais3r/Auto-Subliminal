@@ -210,6 +210,14 @@ def get_movie_name_mapping(title, year):
             return autosubliminal.MOVIENAMEMAPPING[x]
 
 
+def get_alternative_movie_name_mapping(title):
+    title_sanitized = sanitize(title)
+    for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING.keys():
+        if title_sanitized == sanitize(x):
+            log.debug("Found match in alternativemovienamemapping for '%s'" % title)
+            return autosubliminal.ALTERNATIVEMOVIENAMEMAPPING[x]
+
+
 def skip_show(show_name, season, episode):
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.SKIPSHOW.keys():
