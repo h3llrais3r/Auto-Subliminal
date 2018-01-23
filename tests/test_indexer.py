@@ -15,8 +15,8 @@ def test_get_tvdb_id():
 
 def test_get_imdb_id():
     indexer = MovieIndexer()
-    assert indexer.get_imdb_id_and_year('Southpaw', 2015, force_search=True, store_id=False) == ('1798684', 2015)
-    assert indexer.get_imdb_id_and_year('Southpaw', force_search=True, store_id=False) == ('1798684', 2015)
+    assert indexer.get_imdb_id_and_year('Southpaw', 2015, force_search=True, store_id=False) == ('tt1798684', 2015)
+    assert indexer.get_imdb_id_and_year('Southpaw', force_search=True, store_id=False) == ('tt1798684', 2015)
 
 
 def test_sanitize_imdb_title():
