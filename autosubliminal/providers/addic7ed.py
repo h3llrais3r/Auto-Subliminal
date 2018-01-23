@@ -30,7 +30,7 @@ series_year_re = re.compile(r'^(?P<series>[ \w\'.:(),*&!?-]+?)(?: \((?P<year>\d{
 
 class Addic7edSubtitle(Subtitle):
     """Addic7ed Subtitle."""
-    provider_name = 'addic7ed'
+    provider_name = 'addic7ed_random_user_agent'  # Needs to map to the name of the registered provider
 
     def __init__(self, language, hearing_impaired, page_link, series, season, episode, title, year, version,
                  download_link):
