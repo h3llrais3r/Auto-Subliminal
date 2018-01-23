@@ -236,7 +236,7 @@ def initialize():
     # Indexer settings
     TVDBAPIKEY = '76F2D5362F45C5EC'
     TVDBURL = 'http://thetvdb.com/?tab=series&id='
-    IMDBURL = 'http://www.imdb.com/title/tt'
+    IMDBURL = 'http://www.imdb.com/title/'
     SHOWINDEXER = ShowIndexer()
     MOVIEINDEXER = MovieIndexer()
 

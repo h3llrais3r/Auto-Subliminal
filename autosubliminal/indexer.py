@@ -178,7 +178,7 @@ class MovieIndexer(Indexer):
             if imdb_id:
                 log.debug("Imdb id from cache: %s" % imdb_id)
                 # Imdb id is a string (digits only, but can have 0 prefixes)
-                if imdb_id == '-1':
+                if imdb_id == 'tt0000000':
                     log.warning("Imdb id not found in cache for '%s'" % name)
                     return None, year
                 return imdb_id, year
@@ -186,7 +186,7 @@ class MovieIndexer(Indexer):
         try:
             movie = self._query_api(title, year)
             if movie:
-                imdb_id = movie.movieID
+                imdb_id = 'tt' + movie.movieID
                 year = movie.data['year'] if not year else year
         except Exception, e:
             log.error("Error while retrieving imdb id for '%s'" % name)
@@ -200,5 +200,5 @@ class MovieIndexer(Indexer):
         else:
             log.warning("Imdb id not found for '%s'" % name)
             if store_id:
-                ImdbIdCache().set_id('-1', title, year)
+                ImdbIdCache().set_id('tt0000000', title, year)
             return None, year
