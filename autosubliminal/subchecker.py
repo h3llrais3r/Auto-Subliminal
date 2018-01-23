@@ -21,6 +21,7 @@ from autosubliminal import utils
 from autosubliminal.db import WantedItems
 from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.providers import provider_cache
+from autosubliminal.providers.addic7ed import Addic7edSubtitle as Addic7edSubtitleRandomUserAgent
 from autosubliminal.scheduler import ScheduledProcess
 from autosubliminal.subdownloader import SubDownloader
 
@@ -611,7 +612,7 @@ def _get_min_match_score(video, default_score=False):
 def _get_releases(subtitle):
     log.debug("Getting supported releases")
     releases = []
-    if isinstance(subtitle, Addic7edSubtitle):
+    if isinstance(subtitle, (Addic7edSubtitle, Addic7edSubtitleRandomUserAgent)):
         releases.extend([subtitle.version])
     elif isinstance(subtitle, LegendasTVSubtitle):
         releases.extend([subtitle.archive.name])
