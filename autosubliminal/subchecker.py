@@ -470,16 +470,22 @@ def _scan_wanted_item_for_video(wanted_item, is_manual=False):
     video_path = wanted_item['videopath']
     log.info("Scanning video")
 
-    # Scan the video
     try:
+        # Scan the video
         video = subliminal.scan_video(video_path)
+
+        # Use build-in refiners
+        if autosubliminal.REFINEVIDEO:
+            subliminal.refine(video)
+
+        # Use our namemapping refiner (always enabled to enable our name mappings)
+        refiner = ('namemapping',)  # don't remove the , -> needs to be a tuple
+        subliminal.refine(video, episode_refiners=refiner, movie_refiners=refiner)
+
+        # Use our manual refiner only for manual search if enabled
         if is_manual and autosubliminal.MANUALREFINEVIDEO:
-            # Use our manual refiner only for manual search if enabled
             refiner = ('manual',)  # don't remove the , -> needs to be a tuple
             subliminal.refine(video, episode_refiners=refiner, movie_refiners=refiner, wanted_item=wanted_item)
-        if autosubliminal.REFINEVIDEO:
-            # Use build-in refiners
-            subliminal.refine(video)
     except Exception, e:
         log.error("Error while scanning video, skipping %s" % video_path)
         log.error("Exception: %s" % e)
@@ -616,10 +622,8 @@ def _get_releases(subtitle):
     elif isinstance(subtitle, PodnapisiSubtitle):
         releases.extend(subtitle.releases)
     elif isinstance(subtitle, ShooterSubtitle):
-        # No release present
         releases.extend([subtitle.hash])
     elif isinstance(subtitle, TheSubDBSubtitle):
-        # No release present
         releases.extend([subtitle.hash])
     elif isinstance(subtitle, TVsubtitlesSubtitle):
         releases.extend([subtitle.release])
