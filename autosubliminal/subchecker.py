@@ -475,18 +475,20 @@ def _scan_wanted_item_for_video(wanted_item, is_manual=False):
         # Scan the video
         video = subliminal.scan_video(video_path)
 
+        # Use our manual refiner only for manual search if enabled
+        # Always keep this first because you may completely override the video with this!
+        if is_manual and autosubliminal.MANUALREFINEVIDEO:
+            refiners = ('manual',)  # don't remove the , -> needs to be a tuple
+            subliminal.refine(video, episode_refiners=refiners, movie_refiners=refiners, wanted_item=wanted_item)
+
         # Use build-in refiners
         if autosubliminal.REFINEVIDEO:
             subliminal.refine(video)
 
         # Use our namemapping refiner (always enabled to enable our name mappings)
-        refiner = ('namemapping',)  # don't remove the , -> needs to be a tuple
-        subliminal.refine(video, episode_refiners=refiner, movie_refiners=refiner)
-
-        # Use our manual refiner only for manual search if enabled
-        if is_manual and autosubliminal.MANUALREFINEVIDEO:
-            refiner = ('manual',)  # don't remove the , -> needs to be a tuple
-            subliminal.refine(video, episode_refiners=refiner, movie_refiners=refiner, wanted_item=wanted_item)
+        # This should always be at the end since we want to enrich the result after the build-in refiners
+        refiners = ('namemapping',)  # don't remove the , -> needs to be a tuple
+        subliminal.refine(video, episode_refiners=refiners, movie_refiners=refiners)
     except Exception, e:
         log.error("Error while scanning video, skipping %s" % video_path)
         log.error("Exception: %s" % e)
