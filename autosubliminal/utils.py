@@ -176,30 +176,56 @@ def mapping_string_to_dict(mapping_string=None):
 
 
 def get_show_name_mapping(show_name):
+    """
+    Get the tvdb show name mapping for a show.
+    @param show_name: The show name to get the tvdb id for
+    @return: The tvdb show id or None
+    @rtype: int
+    """
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.SHOWNAMEMAPPING.keys():
         if show_name_sanitized == sanitize(x):
             log.debug("Found match in shownamemapping for '%s'" % show_name)
-            return autosubliminal.SHOWNAMEMAPPING[x]
+            return int(autosubliminal.SHOWNAMEMAPPING[x])
 
 
 def get_addic7ed_show_name_mapping(show_name):
+    """
+    Get the addic7ed show name mapping for a show.
+    @param show_name: The show name to get the addic7ed id for
+    @return: The addic7ed show id or None
+    @rtype: int
+    """
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING.keys():
         if show_name_sanitized == sanitize(x):
             log.debug("Found match in addic7edshownamemapping for '%s'" % show_name)
-            return autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x]
+            return int(autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
 
 
 def get_alternative_show_name_mapping(show_name):
+    """
+    Get the list of alternative show names for a show.
+    @param show_name: The show name to get the alternatives for.
+    @return: A list of alternative show names or None.
+    @rtype: list
+    """
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.ALTERNATIVESHOWNAMEMAPPING.keys():
         if show_name_sanitized == sanitize(x):
             log.debug("Found match in alternativeshownamemapping for '%s'" % show_name)
-            return autosubliminal.ALTERNATIVESHOWNAMEMAPPING[x]
+            alternatives = autosubliminal.ALTERNATIVESHOWNAMEMAPPING[x]
+            return [sanitize(x) for x in alternatives.split(',')]  # Needs to return a list
 
 
 def get_movie_name_mapping(title, year):
+    """
+    Get the imdb movie name mapping for a movie.
+    @param title: The title of the movie.
+    @param year:  The year of the movie.
+    @return: The imdb id of the movie or None.
+    @rtype: str
+    """
     movie = title
     if year:
         movie += " (" + str(year) + ")"
@@ -210,12 +236,23 @@ def get_movie_name_mapping(title, year):
             return autosubliminal.MOVIENAMEMAPPING[x]
 
 
-def get_alternative_movie_name_mapping(title):
-    title_sanitized = sanitize(title)
+def get_alternative_movie_name_mapping(title, year):
+    """
+    Get the list of alternative movie titles (without year).
+    @param title: The title of the movie.
+    @param year: The year of the movie.
+    @return: A list of alternative titles (without year) or None.
+    @rtype: list
+    """
+    movie = title
+    if year:
+        movie += " (" + str(year) + ")"
+    movie_sanitized = sanitize(movie)
     for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING.keys():
-        if title_sanitized == sanitize(x):
-            log.debug("Found match in alternativemovienamemapping for '%s'" % title)
-            return autosubliminal.ALTERNATIVEMOVIENAMEMAPPING[x]
+        if movie_sanitized == sanitize(x):
+            log.debug("Found match in alternativemovienamemapping for '%s'" % movie)
+            alternatives = autosubliminal.ALTERNATIVEMOVIENAMEMAPPING[x]
+            return [sanitize(x) for x in alternatives.split(',')]  # Needs to return a list
 
 
 def skip_show(show_name, season, episode):

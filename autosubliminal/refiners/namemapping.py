@@ -31,13 +31,13 @@ def refine(video, **kwargs):
         logger.info('Refining episode video with custom name mappings')
         video.alternative_series = (video.alternative_series or []) + (
             utils.get_alternative_show_name_mapping(video.series) or [])
-        video.series_tvdb_id = utils.get_show_name_mapping(video.series) or video.series
+        video.series_tvdb_id = utils.get_show_name_mapping(video.series) or video.series_tvdb_id
         return
 
     # refine movie
     if isinstance(video, Movie):
         logger.info('Refining movie video with custom name mappings')
         video.alternative_titles = (video.alternative_titles or []) + (
-            utils.get_alternative_movie_name_mapping(video.title) or [])
+            utils.get_alternative_movie_name_mapping(video.title, video.year) or [])
         video.imdb_id = utils.get_movie_name_mapping(video.title, video.year) or video.imdb_id
         return
