@@ -426,6 +426,10 @@ table.tablesorter tbody td {
     overflow-x: scroll;
 }
 
+.status-scheduler-running {
+    background-color: #dff0d8 !important; /* Bootstrap bg-success background color, but with !important */
+}
+
 .separator {
     padding: 0px 5px;
 }

@@ -31,7 +31,7 @@
 
                 <tbody>
                 #for $scheduler in $autosubliminal.SCHEDULERS.values()
-                <tr class="<%= 'bg-success' if scheduler.running else '' %>">
+                <tr class="<%= 'status-scheduler-running' if scheduler.running else '' %>">
                     <td class="main-column">$scheduler.name</td>
                     <td>$display_timestamp($scheduler.last_run)</td>
                     <td>$display_timestamp($scheduler.next_run)</td>
