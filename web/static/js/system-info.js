@@ -3,7 +3,7 @@
  */
 
 // Activate the infotabs
-$("#infotabs a").click(function (event) {
+$('#infotabs a').on('click', function (event) {
     event.preventDefault();
-    $(this).tab("show");
+    $(this).tab('show');
 });

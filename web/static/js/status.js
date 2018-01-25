@@ -4,7 +4,7 @@
 
 // Enable tablesorter for scheduler table
 $(document).ready(function () {
-    $("#scheduler").tablesorter({
+    $('#scheduler').tablesorter({
         // Enable widgets
         widgets: ['reflow', 'saveSort'],
         // Sort default by thread name asc
@@ -16,7 +16,7 @@ $(document).ready(function () {
 
 // Enable tablesorter for diskspace table
 $(document).ready(function () {
-    $("#diskspace").tablesorter({
+    $('#diskspace').tablesorter({
         // Enable widgets
         widgets: ['reflow', 'saveSort'],
         // Sort default by folder name asc

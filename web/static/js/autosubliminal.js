@@ -6,22 +6,22 @@
  * Global variables
  * ================ */
 
-var base_url = window.location.protocol + "//" + window.location.host + webroot;
+var base_url = window.location.protocol + '//' + window.location.host + webroot;
 
 /* ======
  * Navbar
  * ====== */
 
 // Handle navbar active navigation button (no submit)
-$(".navbar .nav a").on("click", function () {
-    $(".navbar").find(".nav").find(".active").removeClass("active");
-    $(this).parent().addClass("active");
+$('.navbar .nav a').on('click', function () {
+    $('.navbar').find('.nav').find('.active').removeClass('active');
+    $(this).parent().addClass('active');
 });
 
 //Handle navbar active navigation button (after submit)
 $(document).ready(function () {
-    subpath = "/" + location.pathname.replace(webroot, "").split("/")[1] + "/";
-    $(".navbar").find(".nav").find('a[href="' + subpath + '"]')
+    subpath = '/' + location.pathname.replace(webroot, '').split('/')[1] + '/';
+    $('.navbar').find('.nav').find('a[href=\'' + subpath + '\']')
         .closest('li').addClass('active');
 });
 
@@ -30,8 +30,8 @@ $(document).ready(function () {
  * ======== */
 
 // Usage (hidden field reflects the values of the checkbox):
-// <input type="checkbox" data-toggle="toggle" data-on="Enabled" data-off="Disabled" data-size="small">
-// <input type="hidden" id="<id/name>" name="<id/name>" value="<variable_true_or_false>">
+// <input type='checkbox' data-toggle='toggle' data-on='Enabled' data-off='Disabled' data-size='small'>
+// <input type='hidden' id='<id/name>' name='<id/name>' value='<variable_true_or_false>'>
 
 // Handle toggle checkbox values with hidden field (to support both 'on' and 'off' values on submit)
 $('input[type=checkbox][data-toggle=toggle][data-on=Enabled][data-off=Disabled]').on('change', function () {
@@ -52,8 +52,8 @@ $('input[type=checkbox][data-toggle=toggle][data-on=Enabled][data-off=Disabled]'
 // Enable countdown until scandisk next run date
 $(document).ready(function () {
     scandisknextrundate = new Date();
-    scandisknextrundate.setTime($("#scandisk-nextrun-time-ms").val());
-    $("#scandisk-nextrun").countdown(scandisknextrundate, function (event) {
+    scandisknextrundate.setTime($('#scandisk-nextrun-time-ms').val());
+    $('#scandisk-nextrun').countdown(scandisknextrundate, function (event) {
         if (event.strftime('%H:%M:%S') == '00:00:00') {
             $(this).text('Running...');
         } else {
@@ -65,8 +65,8 @@ $(document).ready(function () {
 // Enable countdown until checksub next run date
 $(document).ready(function () {
     checksubnextrundate = new Date();
-    checksubnextrundate.setTime($("#checksub-nextrun-time-ms").val());
-    $("#checksub-nextrun").countdown(checksubnextrundate, function (event) {
+    checksubnextrundate.setTime($('#checksub-nextrun-time-ms').val());
+    $('#checksub-nextrun').countdown(checksubnextrundate, function (event) {
         if (event.strftime('%H:%M:%S') == '00:00:00') {
             $(this).text('Running...');
         } else {
@@ -82,34 +82,34 @@ $(document).ready(function () {
 // By default we will use desktop notifications, but we also provide settings for fallback to browser notifications
 // Bottom right stack - to be aligned with desktop notifications at the right bottom
 var stack_bottomright = {
-    "dir1": "up",
-    "dir2": "left",
-    "firstpos1": 10,
-    "firstpos2": 10,
-    "spacing1": 10,
-    "spacing2": 10
+    'dir1': 'up',
+    'dir2': 'left',
+    'firstpos1': 10,
+    'firstpos2': 10,
+    'spacing1': 10,
+    'spacing2': 10
 };
 // Alternative stack - center stack - copied from https://github.com/sciactive/pnotify/issues/46
 var stack_center = {
-    "dir1": "down",
-    "dir2": "right",
-    "firstpos1": 4,
-    "firstpos2": ($(window).width() / 2) - (Number(PNotify.prototype.options.width.replace(/\D/g, '')) / 2)
+    'dir1': 'down',
+    'dir2': 'right',
+    'firstpos1': 4,
+    'firstpos2': ($(window).width() / 2) - (Number(PNotify.prototype.options.width.replace(/\D/g, '')) / 2)
 };
 // Function to adapt the center stack when resizing the browser
-$(window).resize(function () {
+$(window).on('resize', function () {
     stack_center.firstpos2 = ($(window).width() / 2) - (Number(PNotify.prototype.options.width.replace(/\D/g, '')) / 2);
 });
 // Alternative stack - context stack
 var stack_context = {
-    "dir1": "down",
-    "dir2": "right",
-    "context": $("#stack-context")
+    'dir1': 'down',
+    'dir2': 'right',
+    'context': $('#stack-context')
 };
 // PNotify default options
 PNotify.prototype.options.stack = stack_bottomright;
-PNotify.prototype.options.addclass = "stack-bottomright";
-PNotify.prototype.options.styling = "bootstrap3";
+PNotify.prototype.options.addclass = 'stack-bottomright';
+PNotify.prototype.options.styling = 'bootstrap3';
 PNotify.prototype.options.delay = 5000;
 PNotify.prototype.options.desktop.desktop = true; // Use desktop notifications
 PNotify.desktop.permission(); // Check for permission for desktop notifications
@@ -119,14 +119,14 @@ PNotify.desktop.permission(); // Check for permission for desktop notifications
  * ========== */
 
 // Set the websocket_message_url variable
-var websocket_message_url = "ws://" + window.location.host + webroot + "/system/message";
+var websocket_message_url = 'ws://' + window.location.host + webroot + '/system/message';
 
 // Function to get a message through websocket
 function get_message_through_websocket(message) {
     data = message.data;
     // console.log('Received websocket message: ' + data);
     if (!jQuery.isEmptyObject(data)) {
-        data_json = jQuery.parseJSON(data);
+        data_json = JSON.parse(data);
         _handle_message_data(data_json);
     }
 }
@@ -152,8 +152,8 @@ function _show_notification(message, type, sticky) {
             text: message,
             type: type,
             hide: false, // Disable fading
-            width: "auto",
-            addclass: "container stack-context",
+            width: 'auto',
+            addclass: 'container stack-context',
             stack: stack_context,
             desktop: {
                 desktop: false // Disable desktop
@@ -190,5 +190,5 @@ function _handle_event(event_type) {
 $(document).ready(function () {
     ws = new WebSocket(websocket_message_url);
     ws.onmessage = get_message_through_websocket;
-    // console.log("Websocket ready to receive messages");
+    // console.log('Websocket ready to receive messages');
 });
