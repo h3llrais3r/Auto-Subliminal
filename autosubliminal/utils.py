@@ -414,13 +414,6 @@ def convert_timestamp(timestamp_string, format_from='%Y-%m-%d %H:%M:%S', format_
     return time.strftime(format_to, time.strptime(timestamp_string, format_from))
 
 
-def check_mobile_device(req_useragent):
-    for MUA in autosubliminal.MOBILEUSERAGENTS:
-        if MUA.lower() in req_useragent.lower():
-            return True
-    return False
-
-
 def get_wanted_queue_lock():
     with _lock:
         if autosubliminal.WANTEDQUEUELOCK:

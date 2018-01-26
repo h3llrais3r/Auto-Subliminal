@@ -62,24 +62,7 @@ var vendor = {
         'node_modules/bootstrap/dist/fonts/**/*',
         // font awesome
         'node_modules/font-awesome/fonts/**/*'
-    ],
-    // Mobile setup
-    mobile: {
-        js: [
-            // jquery
-            'node_modules/jquery/dist/jquery.js',
-            // jquery mobile
-            'node_modules/jquery-mobile/dist/jquery.mobile.js'
-        ],
-        css: [
-            // jquery mobile
-            'node_modules/jquery-mobile/dist/jquery.mobile.css',
-            'node_modules/jquery-mobile/dist/jquery.mobile.theme.css'
-        ],
-        images: [
-            'node_modules/jquery-mobile/dist/images/**/*'
-        ]
-    },
+    ]
 };
 
 /************
@@ -102,22 +85,6 @@ gulp.task('bundle:vendor_css', function () {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('bundle:vendor_mobile_js', function () {
-    gulp_util.log('Bundle vendor_mobile js:');
-    gulp_util.log(vendor.mobile.js);
-    return gulp.src(vendor.mobile.js)
-        .pipe(gulp_concat('vendor.mobile.js'))
-        .pipe(gulp.dest('dist'));
-});
-
-gulp.task('bundle:vendor_mobile_css', function () {
-    gulp_util.log('Bundle vendor_mobile css:');
-    gulp_util.log(vendor.mobile.css);
-    return gulp.src(vendor.mobile.css)
-        .pipe(gulp_concat('vendor.mobile.css'))
-        .pipe(gulp.dest('dist'));
-});
-
 /************
  Minify tasks
  ************/
@@ -136,20 +103,6 @@ gulp.task('minify:vendor_css', ['bundle:vendor_css'], function () {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('minify:vendor_mobile_js', ['bundle:vendor_mobile_js'], function () {
-    return gulp.src('dist/vendor.mobile.js')
-        .pipe(gulp_rename('vendor.mobile.min.js'))
-        .pipe(gulp_uglify())
-        .pipe(gulp.dest('dist'));
-});
-
-gulp.task('minify:vendor_mobile_css', ['bundle:vendor_mobile_css'], function () {
-    return gulp.src('dist/vendor.mobile.css')
-        .pipe(gulp_rename('vendor.mobile.min.css'))
-        .pipe(gulp_clean_css())
-        .pipe(gulp.dest('dist'));
-});
-
 /**********
  Clean task
  **********/
@@ -161,12 +114,7 @@ var cleanup_sources = [
     'web/static/css/vendor.css',
     'web/static/css/vendor.min.css',
     'web/static/images/vendor',
-    'web/static/fonts',
-    'web/static/js/mobile/vendor.mobile.js',
-    'web/static/js/mobile/vendor.mobile.min.js',
-    'web/static/css/mobile/vendor.mobile.css',
-    'web/static/css/mobile/vendor.mobile.min.css',
-    'web/static/css/mobile/images'
+    'web/static/fonts'
 ];
 
 gulp.task('clean', function () {
@@ -207,29 +155,11 @@ gulp.task('copy:vendor_fonts', function () {
         .pipe(gulp.dest('web/static/fonts'));
 });
 
-gulp.task('copy:vendor_mobile_js', ['minify:vendor_mobile_js'], function () {
-    return gulp.src(['dist/vendor.mobile.js', 'dist/vendor.mobile.min.js'])
-        .pipe(gulp.dest('web/static/js/mobile'));
-});
-
-gulp.task('copy:vendor_mobile_css', ['minify:vendor_mobile_css'], function () {
-    return gulp.src(['dist/vendor.mobile.css', 'dist/vendor.mobile.min.css'])
-        .pipe(gulp.dest('web/static/css/mobile'));
-});
-
-gulp.task('copy:vendor_mobile_images', function () {
-    return gulp.src(vendor.mobile.images)
-        .pipe(gulp.dest('web/static/css/mobile/images'));
-});
-
 /************
  Install task
  ************/
 
-gulp.task('install', [
-    'copy:vendor_js', 'copy:vendor_css', 'copy:vendor_images', 'copy:vendor_fonts',
-    'copy:vendor_mobile_js', 'copy:vendor_mobile_css', 'copy:vendor_mobile_images'
-]);
+gulp.task('install', ['copy:vendor_js', 'copy:vendor_css', 'copy:vendor_images', 'copy:vendor_fonts']);
 
 /**********
  Build task

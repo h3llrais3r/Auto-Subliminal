@@ -29,10 +29,7 @@ class Home(object):
 
     @cherrypy.expose
     def index(self):
-        useragent = cherrypy.request.headers.get("User-Agent", '')
         tmpl = Template(file="web/templates/home/home.tmpl")
-        if autosubliminal.MOBILE and utils.check_mobile_device(useragent):
-            tmpl = Template(file="web/templates/mobile/home.tmpl")
         return str(tmpl)
 
     @cherrypy.expose(alias='updateWantedItem')
@@ -654,14 +651,8 @@ class System(object):
         # Run threads now (use delay to be sure that checksub is run after scandisk)
         autosubliminal.SCANDISK.run()
         autosubliminal.CHECKSUB.run(delay=0.5)
-        useragent = cherrypy.request.headers.get("User-Agent", '')
-        if autosubliminal.MOBILE and utils.check_mobile_device(useragent):
-            tmpl = Template(file="web/templates/mobile/message.tmpl")
-            tmpl.message = "Running everything <br> <a href='" + autosubliminal.WEBROOT + "/home'>Return</a>"
-            return str(tmpl)
-        else:
-            utils.add_notification_message("Running everything...")
-            redirect("/home")
+        utils.add_notification_message("Running everything...")
+        redirect("/home")
 
     @cherrypy.expose
     def restart(self):
@@ -735,15 +726,6 @@ class System(object):
         utils.add_notification_message("Flushed last downloads database")
         redirect("/home")
 
-    @cherrypy.expose(alias='exitMobile')
-    def exit_mobile(self):
-        if autosubliminal.MOBILE:
-            autosubliminal.MOBILE = False
-            redirect("/home")
-        else:
-            autosubliminal.MOBILE = True
-            redirect("/home")
-
     @cherrypy.expose(alias='isAlive')
     def is_alive(self, *args, **kwargs):
         if 'callback' in kwargs:
@@ -768,16 +750,6 @@ class System(object):
         pass
 
 
-class Mobile(object):
-    def __init__(self):
-        pass
-
-    @cherrypy.expose
-    def index(self):
-        tmpl = Template(file="web/templates/mobile/home.tmpl")
-        return str(tmpl)
-
-
 class WebServerRoot(object):
     def __init__(self):
         # Create root tree (name of attribute defines name of path: f.e. home -> /home)
@@ -785,7 +757,6 @@ class WebServerRoot(object):
         self.config = Config()
         self.log = Log()
         self.system = System()
-        self.mobile = Mobile()
 
     @cherrypy.expose
     def index(self):

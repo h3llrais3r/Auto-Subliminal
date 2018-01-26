@@ -46,10 +46,6 @@ DAEMON = None
 STARTED = None
 PID = None
 
-# Mobile
-MOBILE = None
-MOBILEUSERAGENTS = None
-
 # General config section
 PATH = None
 VIDEOPATHS = None
@@ -172,7 +168,6 @@ def initialize():
         TVDBAPIKEY, TVDBURL, IMDBURL, SHOWINDEXER, MOVIEINDEXER, \
         DBFILE, DBVERSION, \
         DAEMON, STARTED, PID, \
-        MOBILE, MOBILEUSERAGENTS, \
         PATH, VIDEOPATHS, DEFAULTLANGUAGE, DEFAULTLANGUAGESUFFIX, ADDITIONALLANGUAGES, \
         SCANDISKINTERVAL, CHECKSUBINTERVAL, CHECKVERSIONINTERVAL, CHECKVERSIONAUTOUPDATE, SCANEMBEDDEDSUBS, \
         SKIPHIDDENDIRS, DETECTINVALIDSUBLANGUAGE, DETECTEDLANGUAGEPROBABILITY, MINVIDEOFILESIZE, MAXDBRESULTS, \
@@ -242,14 +237,6 @@ def initialize():
 
     # Startup settings
     STARTED = False
-
-    # Mobile settings
-    MOBILE = True
-    MOBILEUSERAGENTS = ['midp', '240x320', 'blackberry', 'netfront', 'nokia', 'panasonic',
-                        'portalmmm', 'sharp', 'sie-', 'sonyericsson', 'symbian', 'windows ce',
-                        'benq', 'mda', 'mot-', 'opera mini', 'philips', 'pocket pc', 'sagem',
-                        'samsung', 'sda', 'sgh-', 'vodafone', 'xda', 'palm', 'iphone', 'ipod',
-                        'ipad', 'android', 'windows phone']
 
     # Score settings
     SHOWMINMATCHSCOREDEFAULT = 330
