@@ -22,7 +22,7 @@ idna=2.6
 imdbpy==5.1.1,<6.0 # version 6.0 and higher is pure Python3!
 langdetect==1.0.7
 lxml==4.1.1
-more-itertools==4.0.1
+more-itertools==4.1.0
 oauth2==1.9.0
 portend==2.2
 pushbullet.py==0.11.0
