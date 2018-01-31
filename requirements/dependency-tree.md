@@ -36,8 +36,6 @@ Libraries dependency tree
 |-- langdetect
     |-- six
 |-- lxml (used to speed up some parsing, can be used by different libraries is available)
-|-- oauth2
-    |-- httplib2
 |-- pushbullet.py
     |-- python-magic
     |-- requests
@@ -46,8 +44,6 @@ Libraries dependency tree
 |-- pynma
 |-- pysrt
     |-- chardet
-|-- pythontwitter
-    |-- oauth2
 |-- python-twitter
     |-- requests
     |-- requests-oauthlib
