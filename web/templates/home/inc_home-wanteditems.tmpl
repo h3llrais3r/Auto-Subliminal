@@ -211,10 +211,10 @@
                     </td>
                     <td class="wanted-item-languages">
                         #for $lang in $item['languages']
-                        #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/" + $lang + ".png"
+                        #set $imageurl = $autosubliminal.WEBROOT + "/images/flags/language/" + $lang + ".png"
                         <span class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="$imageurl" alt="$lang" title="Click to search manually">
+                                <img src="$imageurl" class="language-icon" alt="$lang" title="Click to search manually">
                             </a>
                             <ul class="dropdown-menu pull-right no-padding">
                                 <li>

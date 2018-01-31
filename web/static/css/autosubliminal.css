@@ -394,6 +394,11 @@ table.tablesorter tbody td {
     width: 25px;
 }
 
+.language-icon {
+    width: 18px;
+    height: auto;
+}
+
 .main-column {
     color: #333333;
     font-weight: bold;
