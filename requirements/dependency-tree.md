@@ -48,6 +48,10 @@ Libraries dependency tree
     |-- chardet
 |-- pythontwitter
     |-- oauth2
+|-- python-twitter
+    |-- requests
+    |-- requests-oauthlib
+        |-- oauthlib
 |-- simplejson (if not added, fallback to default json library in python)
 |-- subliminal
     |-- appdirs
