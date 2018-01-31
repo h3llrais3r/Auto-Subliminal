@@ -46,23 +46,23 @@ What it uses (see libraries.txt for versions)
  * growl
  * guessit
  * html5lib
- * httplib2
  * imdbpy
  * langdetect
  * lxml
  * more-itertools
- * oauth2
+ * oauthlib
  * portend
  * pushbullet
  * pynma
  * pysrt
- * pythontwitter
+ * python-twitter
  * python-dateutil
  * python-magic
  * pytz
  * rarfile
  * rebulk
  * requests
+ * requests-oauthlib
  * simplejson
  * six
  * smmap2
