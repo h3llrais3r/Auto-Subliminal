@@ -4,6 +4,7 @@ import re
 
 import cherrypy
 from Cheetah.Template import Template
+from requests_oauthlib.oauth1_session import OAuth1Session
 
 import autosubliminal
 from autosubliminal import config, notifiers, runner, subchecker, utils
@@ -489,51 +490,45 @@ class Config(object):
 
         @cherrypy.expose(alias='regTwitter')
         def reg_twitter(self, token_key=None, token_secret=None, token_pin=None):
-            import oauth2
-            import autosubliminal.notifiers.twitter as notifytwitter
-
-            try:
-                from urlparse import parse_qsl
-            except:
-                from cgi import parse_qsl
+            import autosubliminal.notifiers.twitter as twitter_notifier
 
             if not token_key and not token_secret:
-                consumer = oauth2.Consumer(key=notifytwitter.CONSUMER_KEY, secret=notifytwitter.CONSUMER_SECRET)
-                oauth_client = oauth2.Client(consumer)
-                response, content = oauth_client.request(notifytwitter.REQUEST_TOKEN_URL, 'GET')
-                if response['status'] != '200':
+                # Getting request token
+                oauth_client = OAuth1Session(client_key=twitter_notifier.CONSUMER_KEY,
+                                             client_secret=twitter_notifier.CONSUMER_SECRET)
+                try:
+                    response = oauth_client.fetch_request_token(twitter_notifier.REQUEST_TOKEN_URL)
+                except Exception as e:
                     tmpl = Template(file="web/templates/general/message.tmpl")
-                    tmpl.message = "Something went wrong..."
+                    tmpl.message = "Something went wrong.../n" + e
                     return str(tmpl)
-                else:
-                    request_token = dict(parse_qsl(content))
-                    tmpl = Template(file="web/templates/config/config-regtwitter.tmpl")
-                    tmpl.url = notifytwitter.AUTHORIZATION_URL + "?oauth_token=" + request_token['oauth_token']
-                    token_key = request_token['oauth_token']
-                    token_secret = request_token['oauth_token_secret']
-                    tmpl.token_key = token_key
-                    tmpl.token_secret = token_secret
-                    return str(tmpl)
+                # Authorize
+                tmpl = Template(file="web/templates/config/config-regtwitter.tmpl")
+                tmpl.url = oauth_client.authorization_url(twitter_notifier.AUTHORIZATION_URL)
+                tmpl.token_key = response.get('oauth_token')
+                tmpl.token_secret = response.get('oauth_token_secret')
+                return str(tmpl)
 
             if token_key and token_secret and token_pin:
-                token = oauth2.Token(token_key, token_secret)
-                token.set_verifier(token_pin)
-                consumer = oauth2.Consumer(key=notifytwitter.CONSUMER_KEY, secret=notifytwitter.CONSUMER_SECRET)
-                oauth_client2 = oauth2.Client(consumer, token)
-                response, content = oauth_client2.request(notifytwitter.ACCESS_TOKEN_URL, method='POST',
-                                                          body='oauth_verifier=%s' % token_pin)
-                access_token = dict(parse_qsl(content))
-                if response['status'] != '200':
+                # Getting access token
+                oauth_client = OAuth1Session(client_key=twitter_notifier.CONSUMER_KEY,
+                                             client_secret=twitter_notifier.CONSUMER_SECRET,
+                                             resource_owner_key=token_key,
+                                             resource_owner_secret=token_secret,
+                                             verifier=token_pin)
+                try:
+                    response = oauth_client.fetch_access_token(twitter_notifier.ACCESS_TOKEN_URL)
+                except Exception as e:
                     tmpl = Template(file="web/templates/general/message.tmpl")
-                    tmpl.message = "Something went wrong..."
+                    tmpl.message = "Something went wrong.../n" + e
                     return str(tmpl)
-                else:
-                    autosubliminal.TWITTERKEY = access_token['oauth_token']
-                    autosubliminal.TWITTERSECRET = access_token['oauth_token_secret']
-                    tmpl = Template(file="web/templates/general/message.tmpl")
-                    tmpl.message = "Twitter is now set up, remember to save your config and remember to test twitter!" \
-                                   "<br><a href='" + autosubliminal.WEBROOT + "/config'>Return</a>"
-                    return str(tmpl)
+                # Store access token
+                autosubliminal.TWITTERKEY = response.get('oauth_token')
+                autosubliminal.TWITTERSECRET = response.get('oauth_token_secret')
+                tmpl = Template(file="web/templates/general/message.tmpl")
+                tmpl.message = "Twitter is now set up, remember to save your config and remember to test twitter!" \
+                               "<br><a href='" + autosubliminal.WEBROOT + "/config/notification'>Return</a>"
+                return str(tmpl)
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()

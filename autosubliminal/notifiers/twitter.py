@@ -1,6 +1,6 @@
 import logging
 
-import pythontwitter
+from lib.twitter import Api
 
 import autosubliminal
 from autosubliminal.notifiers.generic import BaseNotifier
@@ -43,10 +43,10 @@ class TwitterNotifier(BaseNotifier):
 
     def _send_message(self, message, **kwargs):
         try:
-            twitter_api = pythontwitter.Api(consumer_key=CONSUMER_KEY,
-                                            consumer_secret=CONSUMER_SECRET,
-                                            access_token_key=autosubliminal.TWITTERKEY,
-                                            access_token_secret=autosubliminal.TWITTERSECRET)
+            twitter_api = Api(consumer_key=CONSUMER_KEY,
+                              consumer_secret=CONSUMER_SECRET,
+                              access_token_key=autosubliminal.TWITTERKEY,
+                              access_token_secret=autosubliminal.TWITTERSECRET)
             twitter_api.PostUpdate(message[:140])
             log.info("%s notification sent" % self.name)
             return True
