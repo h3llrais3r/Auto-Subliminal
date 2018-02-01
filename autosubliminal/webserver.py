@@ -500,7 +500,7 @@ class Config(object):
                     response = oauth_client.fetch_request_token(twitter_notifier.REQUEST_TOKEN_URL)
                 except Exception as e:
                     tmpl = Template(file="web/templates/general/message.tmpl")
-                    tmpl.message = "Something went wrong.../n" + e
+                    tmpl.message = "Something went wrong.../n" + e.message
                     return str(tmpl)
                 # Authorize
                 tmpl = Template(file="web/templates/config/config-regtwitter.tmpl")
@@ -520,7 +520,7 @@ class Config(object):
                     response = oauth_client.fetch_access_token(twitter_notifier.ACCESS_TOKEN_URL)
                 except Exception as e:
                     tmpl = Template(file="web/templates/general/message.tmpl")
-                    tmpl.message = "Something went wrong.../n" + e
+                    tmpl.message = "Something went wrong.../n" + e.message
                     return str(tmpl)
                 # Store access token
                 autosubliminal.TWITTERKEY = response.get('oauth_token')
