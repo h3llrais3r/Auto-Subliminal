@@ -519,7 +519,7 @@ def get_disk_space_details(directory):
         return free_bytes.value, total_bytes.value
     else:
         st = os.statvfs(directory)
-        return st.f_bavail * st.f_frsize4, st.f_blocks * st.f_frsize
+        return st.f_bavail * st.f_frsize, st.f_blocks * st.f_frsize
 
 
 def set_rw_and_remove(operation, name, exc):
