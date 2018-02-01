@@ -389,6 +389,14 @@ table.tablesorter tbody td {
     min-width: 90px;
 }
 
+.error-traceback {
+    display: inline-block;
+    margin: 10px;
+    padding: 5px;
+    text-align: left;
+    white-space: pre; /* Needed to get \r\n working inside div */
+}
+
 .img-notifier {
     height: 24px;
     width: 25px;
