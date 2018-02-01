@@ -6,6 +6,7 @@ import sys
 import webbrowser
 
 import cherrypy
+from cherrypy.lib import auth_digest
 from ws4py.manager import WebSocketManager
 from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool
 
@@ -111,7 +112,7 @@ def _configure_server(restarting=False):
         users = {str(autosubliminal.USERNAME): str(autosubliminal.PASSWORD)}
         cherrypy.config.update({'tools.auth_digest.on': True,
                                 'tools.auth_digest.realm': 'Auto-Subliminal website',
-                                'tools.auth_digest.get_ha1': cherrypy.lib.auth_digest.get_ha1_dict_plain(users),
+                                'tools.auth_digest.get_ha1': auth_digest.get_ha1_dict_plain(users),
                                 'tools.auth_digest.key': 'yek.tsegid_htua.lanimilbuS-otuA'  # Can be any random string
                                 })
 
