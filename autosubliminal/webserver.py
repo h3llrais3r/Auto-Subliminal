@@ -757,28 +757,15 @@ class WebServerRoot(object):
     def index(self):
         redirect("/home")
 
-    # Do not add self as first parameter or the method will not longer work
-    @staticmethod
-    def error_page_template(status_code, status, message, traceback, version):
+    def error_page(status, message, traceback, version):
+        # Parse status code (example status: '404 Not Found')
+        match = re.search(r'^(\d{3}).*$', status)
+        # Fill template
         tmpl = Template(file="web/templates/general/error.tmpl")
-        tmpl.status_code = status_code
+        tmpl.status_code = int(match.group(1)) if match else 500
         tmpl.status = status
         tmpl.message = message
         tmpl.traceback = traceback
         return str(tmpl)
 
-    # Do not add self as first parameter or the method will not longer work
-    def error_page_401(status, message, traceback, version):
-        return WebServerRoot.error_page_template(401, status, message, traceback, version)
-
-    # Do not add self as first parameter or the method will not longer work
-    def error_page_404(status, message, traceback, version):
-        return WebServerRoot.error_page_template(404, status, message, traceback, version)
-
-    # Do not add self as first parameter or the method will not longer work
-    def error_page_500(status, message, traceback, version):
-        return WebServerRoot.error_page_template(500, status, message, traceback, version)
-
-    _cp_config = {'error_page.401': error_page_401,
-                  'error_page.404': error_page_404,
-                  'error_page.500': error_page_500}
+    _cp_config = {'error_page.default': error_page}
