@@ -56,55 +56,71 @@ def process_file(dirname, filename):
                 utils.humanize_bytes(file_size), autosubliminal.MINVIDEOFILESIZE))
             return None
 
-    # Guess
-    try:
-        log.debug("Guessing file info")
-        guess = guessit(file_path)
-        log.debug("Guess result: %r" % guess)
-    except Exception, e:
-        log.error("Could not guess file info for: %s" % file_path)
-        log.error(e)
-        return None
-
-    # Create dict from guess
-    result_dict = _dict_from_guess(guess)
+    # Guess and create dict from guess
+    result_dict = _dict_from_guess(_guess(filename))
+    if result_dict is None:
+        # Fallback to guess on full path
+        result_dict = _dict_from_guess(_guess(file_path))
 
     # Enrich dict
-    if result_dict:
+    if result_dict is not None:
         _enrich_dict(result_dict, file_path)
 
     return result_dict
 
 
-def _dict_from_guess(guess):
-    """
-    Create a dict from a guess:
-    - The same dict is used for both episode and movie
-    - If no 'screenSize' is found, it will default to 'SD' quality
-    """
-    result_dict = {'type': _property_from_guess(guess, 'type'),
-                   'title': _property_from_guess(guess, 'title'),
-                   'year': _property_from_guess(guess, 'year'),
-                   'season': _property_from_guess(guess, 'season'),
-                   'episode': _join_episodes(_property_from_guess(guess, 'episode')),
-                   'source': _property_from_guess(guess, 'format'),
-                   'quality': _property_from_guess(guess, 'screen_size'),
-                   'codec': _property_from_guess(guess, 'video_codec'),
-                   'releasegrp': _split_release_group(_property_from_guess(guess, 'release_group'))}
-    log.debug("Dict from guess: %r" % result_dict)
-
-    # Check if mandatory elements are available in the guess
-    if result_dict['type'] == 'movie' and result_dict['title']:
-        log.debug("Video guessed as movie")
-        return result_dict
-    # Season and episode are numbers, so need to check explicitly for not None (0 results in False in Python)
-    elif result_dict['type'] == 'episode' and result_dict['title'] and result_dict['season'] is not None \
-            and result_dict['episode'] is not None:
-        log.debug("Video guessed as episode")
-        return result_dict
-    else:
-        log.error("Could not guess all the mandatory elements")
+def _guess(file_path):
+    try:
+        log.debug("Guessing file info")
+        guess = guessit(file_path)
+        log.debug("Guess result: %r" % guess)
+        return _validate_guess(guess)
+    except Exception, e:
+        log.error("Could not guess file info for: %s" % file_path)
+        log.error(e)
         return None
+
+
+def _validate_guess(guess):
+    log.debug("Validating guess")
+
+    # Validate episode guess
+    if _property_from_guess(guess, 'type') == 'episode':
+        log.debug("Video guessed as episode")
+        if _property_from_guess(guess, 'title') is None or _property_from_guess(guess, 'season') is None \
+                or _property_from_guess(guess, 'episode') is None:
+            log.error("Could not guess all the mandatory elements for an episode")
+            return None
+
+    # Validate movie guess
+    elif _property_from_guess(guess, 'type') == 'movie':
+        log.debug("Video guessed as movie")
+        if _property_from_guess(guess, 'title') is None:
+            log.error("Could not guess all the mandatory elements for a movie")
+            return None
+
+    # Invalid type guess
+    else:
+        log.error("Could not guess the type of video")
+        return None
+
+    return guess
+
+
+def _dict_from_guess(guess):
+    result_dict = None
+    if guess is not None:
+        result_dict = {'type': _property_from_guess(guess, 'type'),
+                       'title': _property_from_guess(guess, 'title'),
+                       'year': _property_from_guess(guess, 'year'),
+                       'season': _property_from_guess(guess, 'season'),
+                       'episode': _join_episodes(_property_from_guess(guess, 'episode')),
+                       'source': _property_from_guess(guess, 'format'),
+                       'quality': _property_from_guess(guess, 'screen_size'),
+                       'codec': _property_from_guess(guess, 'video_codec'),
+                       'releasegrp': _split_release_group(_property_from_guess(guess, 'release_group'))}
+        log.debug("Dict from guess: %r" % result_dict)
+    return result_dict
 
 
 def _property_from_guess(guess, property_name, default_value=None):
