@@ -81,7 +81,6 @@ def test_safe_trim():
     assert safe_trim(list_value, 'N/A') == 'N/A'
     assert safe_trim(dict_value) is None
     assert safe_trim(dict_value, 'N/A') == 'N/A'
-    print 'Post processor failed:\r\n%s' % 'test'
 
 
 def test_sanitize():
