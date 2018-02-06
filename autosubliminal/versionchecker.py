@@ -5,6 +5,7 @@ import traceback
 import urllib2
 
 from distutils import version
+from six import add_metaclass
 
 try:
     from git import Repo
@@ -100,11 +101,11 @@ class VersionChecker(ScheduledProcess):
         return self.manager.current_version_url
 
 
+@add_metaclass(abc.ABCMeta)
 class BaseVersionManager(object):
     """
     Base class for all version manager classes.
     """
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self):
         self.update_allowed = False

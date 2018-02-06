@@ -3,6 +3,7 @@ import logging
 import re
 
 from functools import wraps
+from six import add_metaclass
 from time import time
 
 from imdb import IMDb
@@ -31,11 +32,11 @@ def authenticate(func):
     return wrapper
 
 
+@add_metaclass(abc.ABCMeta)
 class Indexer(object):
     """
     Base class for all indexers.
     """
-    __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
     def _query_api(self, title, year=None):

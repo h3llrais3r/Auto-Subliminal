@@ -3,11 +3,14 @@ import logging
 import threading
 import time
 
+from six import add_metaclass
+
 import autosubliminal.application
 
 log = logging.getLogger(__name__)
 
 
+@add_metaclass(abc.ABCMeta)
 class Runner(object):
     """
     Base Runner class. Extend this class for permanent thread runners.
@@ -15,8 +18,6 @@ class Runner(object):
     :param name: Name of the thread to schedule
     :type name: str
     """
-
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self, name):
         self.name = name

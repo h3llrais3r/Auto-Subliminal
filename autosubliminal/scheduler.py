@@ -5,6 +5,8 @@ import threading
 import os
 import traceback
 
+from six import add_metaclass
+
 import autosubliminal
 
 log = logging.getLogger(__name__)
@@ -130,11 +132,11 @@ class Scheduler(object):
         return self.process.running
 
 
+@add_metaclass(abc.ABCMeta)
 class ScheduledProcess(object):
     """
     Base class for all scheduled processes.
     """
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self):
         self.running = False

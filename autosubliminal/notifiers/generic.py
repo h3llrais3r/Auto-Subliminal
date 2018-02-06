@@ -1,11 +1,13 @@
 import abc
 
+from six import add_metaclass
 
+
+@add_metaclass(abc.ABCMeta)
 class BaseNotifier(object):
     """
     Base class for all notifiers.
     """
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self):
         self.application = "Auto-Subliminal"
