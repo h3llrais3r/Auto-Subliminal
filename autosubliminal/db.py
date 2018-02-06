@@ -280,20 +280,20 @@ def create():
 
         connection.close()
 
-        print "INFO: Succesfully created the sqlite database."
+        print("INFO: Succesfully created the sqlite database.")
         autosubliminal.DBVERSION = version.DB_VERSION
     except:
-        print "ERROR: Could not create database."
-        print "ERROR: Please check if Auto-Subliminal has write access to file %s." % autosubliminal.DBFILE
+        print("ERROR: Could not create database.")
+        print("ERROR: Please check if Auto-Subliminal has write access to file %s." % autosubliminal.DBFILE)
 
     return True
 
 
 def upgrade(from_version, to_version):
-    print "INFO: Upgrading database from version %d to version %d." % (from_version, to_version)
+    print("INFO: Upgrading database from version %d to version %d." % (from_version, to_version))
     upgrades = to_version - from_version
     if upgrades != 1:
-        print "INFO: More than 1 upgrade required. Starting subupgrades."
+        print("INFO: More than 1 upgrade required. Starting subupgrades.")
         for x in range(from_version, upgrades + 1):
             upgrade((from_version - 1) + x, x + 1)
     else:
@@ -407,5 +407,5 @@ def initialize():
     if autosubliminal.DBVERSION < version.DB_VERSION:
         upgrade(autosubliminal.DBVERSION, version.DB_VERSION)
     elif autosubliminal.DBVERSION > version.DB_VERSION:
-        print "INFO: Database version higher then this version of Auto-Subliminal supports. Update."
+        print("ERROR: Database version higher then this version of Auto-Subliminal supports. Update.")
         os._exit(1)

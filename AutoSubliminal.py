@@ -67,33 +67,33 @@ def main(argv=None):
                 if os.path.exists(value):
                     autosubliminal.CONFIGFILE = value
                 else:
-                    print "ERROR: Configfile does not exists"
+                    print("ERROR: Configfile does not exists.")
                     os._exit(0)
             if option in ("-l", "--nolaunch"):
                 autosubliminal.LAUNCHBROWSER = False
             if option in ("-d", "--daemon"):
                 if sys.platform == "win32":
-                    print "ERROR: No support for daemon mode in Windows"
+                    print("ERROR: No support for daemon mode in Windows.")
                 else:
                     autosubliminal.DAEMON = True
 
     except Usage, err:
-        print >> sys.stderr, sys.argv[0].split("/")[-1] + ": " + str(err.msg)
-        print >> sys.stderr, "\t for help use --help"
+        sys.stderr.write(sys.argv[0].split("/")[-1] + ": " + str(err.msg) + "\n")
+        sys.stderr.write("For help use --help\n")
         return 2
 
     # Initialize configuration
     if os.path.isfile('config.properties.dev'):
-        print "WARNING: Using development configuration file."
+        print("WARNING: Using development configuration file.")
         autosubliminal.CONFIGFILE = 'config.properties.dev'
-    print "INFO: Initializing variables and loading config."
+    print("INFO: Initializing variables and loading config.")
     autosubliminal.initialize()
 
     # Change to the new work directory
     if os.path.exists(autosubliminal.PATH):
         os.chdir(autosubliminal.PATH)
     else:
-        print "ERROR: PATH does not exist, check config"
+        print("ERROR: PATH does not exist, check config.")
         os._exit(1)
 
     # Setup application
@@ -109,8 +109,8 @@ def main(argv=None):
     # Set the PID
     autosubliminal.PID = os.getpid()
 
-    print "INFO: Starting output to log."
-    print "INFO: Bye."
+    print("INFO: Starting output to log.")
+    print("INFO: Bye.")
     log = logging.getLogger(__name__)
     log.info("Running application with PID: %s" % autosubliminal.PID)
     log.info("System encoding: %s" % autosubliminal.SYSENCODING)

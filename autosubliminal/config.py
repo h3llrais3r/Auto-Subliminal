@@ -26,16 +26,16 @@ def read_config(check_upgrade=False):
         with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
             cfg.readfp(f)
     except:
-        print "********************************************************************"
-        print "ERROR: Not a valid configuration file! Using default values instead!"
-        print "********************************************************************"
+        print("********************************************************************")
+        print("ERROR: Not a valid configuration file! Using default values instead!")
+        print("********************************************************************")
         cfg = SafeConfigParser()
 
     if cfg.has_section('general'):
         if cfg.has_option('general', 'path'):
             autosubliminal.PATH = cfg.get('general', 'path')
         else:
-            print "ERROR: Required ariable PATH is missing. Using current working directory instead."
+            print("ERROR: Required ariable PATH is missing. Using current working directory instead.")
             autosubliminal.PATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
 
         if cfg.has_option('general', 'videopaths'):
@@ -43,11 +43,11 @@ def read_config(check_upgrade=False):
             if video_paths:
                 autosubliminal.VIDEOPATHS = video_paths.split(',')
             else:
-                print "ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead."
+                print("ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead.")
                 autosubliminal.VIDEOPATHS = []
                 autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
         else:
-            print "ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead."
+            print("ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead.")
             autosubliminal.VIDEOPATHS = []
             autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
 
@@ -80,8 +80,8 @@ def read_config(check_upgrade=False):
             # CHECKSUB may only be runed 6 times a day, to prevent the API key from being banned
             # If you want new subtitles faster, you should decrease the CHECKSUB time
             if autosubliminal.CHECKSUBINTERVAL < 21600:
-                print "WARNING: checksub variable is lower then 21600."
-                print "WARNING: This is not allowed, this is to prevent our API-key from being banned."
+                print("WARNING: checksub variable is lower then 21600.")
+                print("WARNING: This is not allowed, this is to prevent our API-key from being banned.")
                 autosubliminal.CHECKSUBINTERVAL = 21600  # Run every 6 hours
         else:
             autosubliminal.CHECKSUBINTERVAL = 86400  # Run every 24 hours
@@ -133,10 +133,10 @@ def read_config(check_upgrade=False):
 
     else:
         # General section is missing
-        print "ERROR: Required general section is missing. Using default values instead."
-        print "ERROR: Required variable PATH is missing. Using current working directory instead."
+        print("ERROR: Required general section is missing. Using default values instead.")
+        print("ERROR: Required variable PATH is missing. Using current working directory instead.")
         autosubliminal.PATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
-        print "ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead."
+        print("ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead.")
         autosubliminal.VIDEOPATHS = []
         autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
         autosubliminal.DEFAULTLANGUAGE = u'en'
@@ -162,7 +162,7 @@ def read_config(check_upgrade=False):
         if cfg.has_option('logging', 'logfile'):
             autosubliminal.LOGFILE = cfg.get('logging', 'logfile')
         else:
-            print "ERROR: Required variable LOGFILE is missing. Using 'AutoSubliminal.log' instead."
+            print("ERROR: Required variable LOGFILE is missing. Using 'AutoSubliminal.log' instead.")
             autosubliminal.LOGFILE = u'AutoSubliminal.log'
 
         if cfg.has_option('logging', 'loglevel'):
@@ -227,7 +227,7 @@ def read_config(check_upgrade=False):
 
     else:
         # Logfile section is missing
-        print "ERROR: Required variable LOGFILE is missing. Using 'AutoSuliminal.log' instead."
+        print("ERROR: Required variable LOGFILE is missing. Using 'AutoSuliminal.log' instead.")
         autosubliminal.LOGFILE = u'AutoSubliminal.log'
         autosubliminal.LOGLEVEL = logging.INFO
         autosubliminal.LOGNUM = 0
@@ -244,7 +244,7 @@ def read_config(check_upgrade=False):
             autosubliminal.WEBSERVERPORT = cfg.getint('webserver', 'webserverport')
 
         else:
-            print "ERROR: Webserver IP and port are required. Now setting the default values (0.0.0.0:8083)."
+            print("ERROR: Webserver IP and port are required. Now setting the default values (0.0.0.0:8083).")
             autosubliminal.WEBSERVERIP = u'0.0.0.0'
             autosubliminal.WEBSERVERPORT = 8083
 
@@ -263,7 +263,7 @@ def read_config(check_upgrade=False):
             autosubliminal.USERNAME = cfg.get('webserver', 'username')
             autosubliminal.PASSWORD = cfg.get('webserver', 'password')
         elif cfg.has_option('webserver', 'username') or cfg.has_option('webserver', 'password'):
-            print "ERROR: Both username and password are required. Now starting without authentication."
+            print("ERROR: Both username and password are required. Now starting without authentication.")
 
         if cfg.has_option('webserver', 'launchbrowser'):
             autosubliminal.LAUNCHBROWSER = cfg.getboolean('webserver', 'launchbrowser')
@@ -271,8 +271,8 @@ def read_config(check_upgrade=False):
             autosubliminal.LAUNCHBROWSER = True
     else:
         # Webserver section is missing
-        print "ERROR: The webserver section is required. Now setting the default values (0.0.0.0:8083)."
-        print "WARNING: The webserver is started without authentication."
+        print("ERROR: The webserver section is required. Now setting the default values (0.0.0.0:8083).")
+        print("WARNING: The webserver is started without authentication.")
         autosubliminal.WEBSERVERIP = u'0.0.0.0'
         autosubliminal.WEBSERVERPORT = 8083
         autosubliminal.WEBROOT = u''
@@ -285,8 +285,8 @@ def read_config(check_upgrade=False):
             autosubliminal.SHOWMINMATCHSCORE = cfg.getint('subliminal', 'showminmatchscore')
             # Force the default showminmatchscore when a wrongly configured value is entered manually in the config file
             if autosubliminal.SHOWMINMATCHSCORE < autosubliminal.SHOWMINMATCHSCOREDEFAULT:
-                print "WARNING: Invalid SHOWMINMATCHSCORE found."
-                print "WARNING: Using the default score (%s) instead." % autosubliminal.SHOWMINMATCHSCOREDEFAULT
+                print("WARNING: Invalid SHOWMINMATCHSCORE found.")
+                print("WARNING: Using the default score (%s) instead." % autosubliminal.SHOWMINMATCHSCOREDEFAULT)
                 autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
         else:
             autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
@@ -315,8 +315,8 @@ def read_config(check_upgrade=False):
             autosubliminal.MOVIEMINMATCHSCORE = cfg.getint('subliminal', 'movieminmatchscore')
             # Force the default movieminmatchscore when an invalid value is entered manually in the config file
             if autosubliminal.MOVIEMINMATCHSCORE < autosubliminal.MOVIEMINMATCHSCOREDEFAULT:
-                print "WARNING: Invalid MOVIEMINMATCHSCORE found."
-                print "WARNING: Using the default score (%s) instead." % autosubliminal.MOVIEMINMATCHSCOREDEFAULT
+                print("WARNING: Invalid MOVIEMINMATCHSCORE found.")
+                print("WARNING: Using the default score (%s) instead." % autosubliminal.MOVIEMINMATCHSCOREDEFAULT)
                 autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
         else:
             autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
@@ -709,7 +709,7 @@ def read_config(check_upgrade=False):
         if autosubliminal.CONFIGVERSION < version.CONFIG_VERSION:
             upgrade_config(autosubliminal.CONFIGVERSION, version.CONFIG_VERSION)
         elif autosubliminal.CONFIGVERSION > version.CONFIG_VERSION:
-            print "ERROR: Config version higher then this version of Auto-Subliminal supports. Update Auto-Subliminal."
+            print("ERROR: Config version higher then this version of Auto-Subliminal supports. Update Auto-Subliminal.")
             os._exit(1)
 
 
@@ -1502,27 +1502,27 @@ def write_config(section=None):
 
 
 def upgrade_config(from_version, to_version):
-    print "INFO: Upgrading config version from %d to %d." % (from_version, to_version)
-    print "INFO: Creating backup of old config file"
+    print("INFO: Upgrading config version from %d to %d." % (from_version, to_version))
+    print("INFO: Creating backup of old config file.")
     try:
         shutil.copy(autosubliminal.CONFIGFILE, autosubliminal.CONFIGFILE + '.' + time.strftime('%Y%m%d%H%M%S'))
     except:
-        print "ERROR: Unable to backup config file! Continuing without backup!"
+        print("ERROR: Unable to backup config file! Continuing without backup!")
     upgrades = to_version - from_version
     if upgrades != 1:
-        print "INFO: More than 1 upgrade required. Starting subupgrades."
+        print("INFO: More than 1 upgrade required. Starting subupgrades.")
         for x in range(from_version, upgrades + 1):
             upgrade_config((from_version - 1) + x, x + 1)
     else:
         if from_version == 1 and to_version == 2:
-            print "INFO: Upgrading showminmatchscore."
-            print "INFO: Old value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
+            print("INFO: Upgrading showminmatchscore.")
+            print("INFO: Old value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE)
             if (autosubliminal.SHOWMINMATCHSCORE % 2) == 0:
                 autosubliminal.SHOWMINMATCHSCORE = (autosubliminal.SHOWMINMATCHSCORE * 2) + 2
             else:
                 autosubliminal.SHOWMINMATCHSCORE = (autosubliminal.SHOWMINMATCHSCORE * 2) + 1
-            print "INFO: New value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
-            print "INFO: Config upgraded to version 2."
+            print("INFO: New value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE)
+            print("INFO: Config upgraded to version 2.")
             autosubliminal.CONFIGVERSION = 2
             autosubliminal.CONFIGUPGRADED = True
 
@@ -1541,15 +1541,15 @@ def upgrade_config(from_version, to_version):
         # video.scores['hash'] = 46
         # --> perfect match -> not configurable
         if from_version == 2 and to_version == 3:
-            print "INFO: Please configure your video paths again!"
-            print "INFO: New default showminmatchscore."
-            print "INFO: Old value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
+            print("INFO: Please configure your video paths again!")
+            print("INFO: New default showminmatchscore.")
+            print("INFO: Old value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE)
             autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
             autosubliminal.SHOWMATCHQUALITY = False
             autosubliminal.SHOWMATCHCODEC = False
             autosubliminal.SHOWMATCHRELEASEGROUP = False
-            print "INFO: New value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
-            print "INFO: Replacing old user namemappings with tvdb id's."
+            print("INFO: New value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE)
+            print("INFO: Replacing old user namemappings with tvdb id's.")
             for x in autosubliminal.SHOWNAMEMAPPING.keys():
                 # Search for tvdb id
                 tvdb_id = autosubliminal.SHOWINDEXER.get_tvdb_id(x, force_search=True)
@@ -1558,7 +1558,7 @@ def upgrade_config(from_version, to_version):
                     autosubliminal.SHOWNAMEMAPPING[x] = str(tvdb_id)
                 else:
                     del autosubliminal.SHOWNAMEMAPPING[x]
-            print "INFO: Config upgraded to version 3."
+            print("INFO: Config upgraded to version 3.")
             autosubliminal.CONFIGVERSION = 3
             autosubliminal.CONFIGUPGRADED = True
 
@@ -1579,16 +1579,16 @@ def upgrade_config(from_version, to_version):
         # video.scores['hash'] = 74
         # --> perfect match -> not configurable
         if from_version == 3 and to_version == 4:
-            print "INFO: Multi subtitle language support. Please configure your default and additional languages!"
-            print "INFO: New default showminmatchscore."
-            print "INFO: Old value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
+            print("INFO: Multi subtitle language support. Please configure your default and additional languages!")
+            print("INFO: New default showminmatchscore.")
+            print("INFO: Old value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE)
             autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
             autosubliminal.SHOWMATCHSOURCE = False
             autosubliminal.SHOWMATCHQUALITY = False
             autosubliminal.SHOWMATCHCODEC = False
             autosubliminal.SHOWMATCHRELEASEGROUP = False
-            print "INFO: New value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
-            print "INFO: Config upgraded to version 4."
+            print("INFO: New value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE)
+            print("INFO: Config upgraded to version 4.")
             autosubliminal.CONFIGVERSION = 4
             autosubliminal.CONFIGUPGRADED = True
 
@@ -1623,20 +1623,20 @@ def upgrade_config(from_version, to_version):
         # video.scores['hash'] = 62
         # --> perfect match -> not configurable
         if from_version == 4 and to_version == 5:
-            print "INFO: Movie support. Please reconfigure your min match scores!"
+            print("INFO: Movie support. Please reconfigure your min match scores!")
             autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
             autosubliminal.SHOWMATCHSOURCE = False
             autosubliminal.SHOWMATCHQUALITY = False
             autosubliminal.SHOWMATCHCODEC = False
             autosubliminal.SHOWMATCHRELEASEGROUP = False
-            print "INFO: Default value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
+            print("INFO: Default value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE)
             autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
             autosubliminal.MOVIEMATCHSOURCE = False
             autosubliminal.MOVIEMATCHQUALITY = False
             autosubliminal.MOVIEMATCHCODEC = False
             autosubliminal.MOVIEMATCHRELEASEGROUP = False
-            print "INFO: Default value movieminmatchscore: %d" % autosubliminal.MOVIEMINMATCHSCORE
-            print "INFO: Config upgraded to version 5."
+            print("INFO: Default value movieminmatchscore: %d" % autosubliminal.MOVIEMINMATCHSCORE)
+            print("INFO: Config upgraded to version 5.")
             autosubliminal.CONFIGVERSION = 5
             autosubliminal.CONFIGUPGRADED = True
 
@@ -1679,9 +1679,9 @@ def upgrade_config(from_version, to_version):
         # 'hearing_impaired': 1
         # --> used for score increasing if wanted
         if from_version == 5 and to_version == 6:
-            print "INFO: Upgrading scoring calculation. Please check/reconfigure your min match scores!"
+            print("INFO: Upgrading scoring calculation. Please check/reconfigure your min match scores!")
             autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
-            print "INFO: Default value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
+            print("INFO: Default value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE)
             if autosubliminal.SHOWMATCHSOURCE:
                 autosubliminal.SHOWMINMATCHSCORE += 7
             if autosubliminal.SHOWMATCHQUALITY:
@@ -1690,9 +1690,9 @@ def upgrade_config(from_version, to_version):
                 autosubliminal.SHOWMINMATCHSCORE += 2
             if autosubliminal.SHOWMATCHRELEASEGROUP:
                 autosubliminal.SHOWMINMATCHSCORE += 15
-            print "INFO: New calculated value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE
+            print("INFO: New calculated value showminmatchscore: %d" % autosubliminal.SHOWMINMATCHSCORE)
             autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
-            print "INFO: Default value movieminmatchscore: %d" % autosubliminal.MOVIEMINMATCHSCORE
+            print("INFO: Default value movieminmatchscore: %d" % autosubliminal.MOVIEMINMATCHSCORE)
             if autosubliminal.MOVIEMATCHSOURCE:
                 autosubliminal.MOVIEMINMATCHSCORE += 7
             if autosubliminal.MOVIEMATCHQUALITY:
@@ -1701,25 +1701,25 @@ def upgrade_config(from_version, to_version):
                 autosubliminal.MOVIEMINMATCHSCORE += 2
             if autosubliminal.MOVIEMATCHRELEASEGROUP:
                 autosubliminal.MOVIEMINMATCHSCORE += 15
-            print "INFO: New calculated value movieminmatchscore: %d" % autosubliminal.MOVIEMINMATCHSCORE
-            print "INFO: Hearing impaired logic changed. Please check your config!"
+            print("INFO: New calculated value movieminmatchscore: %d" % autosubliminal.MOVIEMINMATCHSCORE)
+            print("INFO: Hearing impaired logic changed. Please check your config!")
             autosubliminal.PREFERHEARINGIMPAIRED = False
-            print "INFO: Config upgraded to version 6."
+            print("INFO: Config upgraded to version 6.")
             autosubliminal.CONFIGVERSION = 6
             autosubliminal.CONFIGUPGRADED = True
             utils.add_notification_message("Config upgraded. Please check or reconfigure you subliminal configuration.",
                                            "notice", True)
         if from_version == 6 and to_version == 7:
-            print "INFO: Upgrading log config. Please check/reconfigure your config!"
+            print("INFO: Upgrading log config. Please check/reconfigure your config!")
             autosubliminal.LOGNUM = 0
             autosubliminal.LOGSIZE = 0
-            print "INFO: Config upgraded to version 7."
+            print("INFO: Config upgraded to version 7.")
             autosubliminal.CONFIGVERSION = 7
             autosubliminal.CONFIGUPGRADED = True
             utils.add_notification_message("Config upgraded. Please check or reconfigure your logging configuration.",
                                            "notice", True)
         if from_version == 7 and to_version == 8:
-            print "INFO: Upgrading skip config. Please check/reconfigure your config!"
+            print("INFO: Upgrading skip config. Please check/reconfigure your config!")
             # '00' means now skip all, '0' means skip season 0
             for x in autosubliminal.SKIPSHOW.keys():
                 seasons = autosubliminal.SKIPSHOW[x].split(',')
@@ -1727,13 +1727,13 @@ def upgrade_config(from_version, to_version):
                 autosubliminal.SKIPSHOW[x] = ','.join([replace[r] if r in replace.keys() else r for r in seasons])
             for x in autosubliminal.SKIPMOVIE.keys():
                 autosubliminal.SKIPMOVIE[x] = '00'
-            print "INFO: Config upgraded to version 8."
+            print("INFO: Config upgraded to version 8.")
             autosubliminal.CONFIGVERSION = 8
             autosubliminal.CONFIGUPGRADED = True
             utils.add_notification_message("Config upgraded. Please check or reconfigure your skip configuration.",
                                            "notice", True)
         if from_version == 8 and to_version == 9:
-            print "INFO: Renaming config, logfile and skip section. Please check/reconfigure your config!"
+            print("INFO: Renaming config, logfile and skip section. Please check/reconfigure your config!")
             # Read config file
             cfg = SafeConfigParser()
             try:
@@ -1765,7 +1765,7 @@ def upgrade_config(from_version, to_version):
             read_config()
             # Clear config file to trigger a clean write after the upgrade
             open(autosubliminal.CONFIGFILE, 'w').close()
-            print "INFO: Config upgraded to version 9."
+            print("INFO: Config upgraded to version 9.")
             autosubliminal.CONFIGVERSION = 9
             autosubliminal.CONFIGUPGRADED = True
             utils.add_notification_message(

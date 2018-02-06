@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 
 
 def daemon():
-    print "INFO: Starting as a daemon"
+    print("INFO: Starting as a daemon.")
     try:
         pid = os.fork()
         if pid > 0:
@@ -40,7 +40,7 @@ def daemon():
     except OSError:
         sys.exit(1)
 
-    print "INFO: Disabling console output for daemon"
+    print("INFO: Disabling console output for daemon.")
 
     cherrypy.log.screen = False
     sys.stdin.close()

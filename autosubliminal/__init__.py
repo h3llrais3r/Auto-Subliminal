@@ -251,15 +251,15 @@ def initialize():
         CONFIGFILE = 'config.properties'
     config.read_config(True)
     if CONFIGUPGRADED:
-        print "INFO: Config seems to be upgraded. Writing config."
+        print("INFO: Config seems to be upgraded. Writing config.")
         config.write_config()
-        print "INFO: Writing config done."
+        print("INFO: Writing config done.")
 
     # Change to the new work directory
     if os.path.exists(PATH):
         os.chdir(PATH)
     else:
-        print "ERROR: PATH does not exist, check config"
+        print("ERROR: PATH does not exist, check config.")
         os._exit(1)
 
     # Database
