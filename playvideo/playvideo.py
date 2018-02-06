@@ -35,7 +35,7 @@ def main(script, url):
     # Start the file with the default program
     try:
         os.startfile(url)
-    except Exception, e:
+    except Exception as e:
         print(e)
 
 

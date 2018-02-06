@@ -75,9 +75,9 @@ def _guess(file_path):
         guess = guessit(file_path)
         log.debug("Guess result: %r" % guess)
         return _validate_guess(guess)
-    except Exception, e:
+    except Exception as e:
         log.error("Could not guess file info for: %s" % file_path)
-        log.error(e)
+        log.exception(e)
         return None
 
 

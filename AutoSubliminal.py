@@ -56,7 +56,7 @@ def main(argv=None):
     try:
         try:
             opts, args = getopt.getopt(argv[1:], "hc:dl", ["help", "config=", "daemon", "nolaunch"])
-        except getopt.error, msg:
+        except getopt.error as msg:
             raise Usage(msg)
 
         # Option processing
@@ -77,7 +77,7 @@ def main(argv=None):
                 else:
                     autosubliminal.DAEMON = True
 
-    except Usage, err:
+    except Usage as err:
         sys.stderr.write(sys.argv[0].split("/")[-1] + ": " + str(err.msg) + "\n")
         sys.stderr.write("For help use --help\n")
         return 2

@@ -111,11 +111,11 @@ class ShowIndexer(Indexer):
             show = self._query_api(title, year)
             if show:
                 tvdb_id = show.id
-        except Exception, e:
+        except Exception as e:
             # Log error on other exceptions than 404
             if e.status and e.status != 404:
                 log.error("Error while retrieving tvdb id for '%s'" % name)
-                log.error(e)
+                log.exception(e)
         if tvdb_id:
             log.debug("Tvdb id from api: %s" % tvdb_id)
             if store_id:
@@ -188,9 +188,9 @@ class MovieIndexer(Indexer):
             if movie:
                 imdb_id = 'tt' + movie.movieID
                 year = movie.data['year'] if not year else year
-        except Exception, e:
+        except Exception as e:
             log.error("Error while retrieving imdb id for '%s'" % name)
-            log.error(e)
+            log.exception(e)
         if imdb_id:
             log.debug("Imdb id from api: %s" % imdb_id)
             if store_id:

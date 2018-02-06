@@ -86,7 +86,7 @@ def start_server(restarting=False):
     log.info("Starting CherryPy webserver")
     try:
         cherrypy.engine.start()
-    except Exception, e:
+    except Exception as e:
         log.error("Could not start webserver, exiting")
         log.exception(e)
         _shutdown()

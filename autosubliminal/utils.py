@@ -72,10 +72,10 @@ def connect_url(url):
     try:
         response = urllib2.urlopen(url, None, autosubliminal.TIMEOUT)
         log.debug("Connection successful")
-    except urllib2.HTTPError, e:
+    except urllib2.HTTPError as e:
         http_code = e.code
         log.debug("Could not connect to url: http response code %s" % http_code)
-    except Exception, e:
+    except Exception as e:
         log.debug("Could not connect to url: %s" % e.message)
 
     return response

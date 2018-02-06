@@ -60,7 +60,7 @@ class DiskScanner(ScheduledProcess):
         for videodir in autosubliminal.VIDEOPATHS:
             try:
                 new_wanted_items.extend(walk_dir(videodir))
-            except Exception, e:
+            except Exception as e:
                 log.error("Could not scan the video path (%s), skipping..." % videodir)
                 log.exception(e)
 
@@ -256,7 +256,7 @@ def _get_embedded_subtitles(dirname, filename):
         else:
             log.debug("Check is only supported for MKV containers, skipping")
     except:
-        log.exception('Parsing video metadata with enzyme failed')
+        log.error('Parsing video metadata with enzyme failed')
     return embedded_subtitle_languages
 
 
@@ -299,7 +299,7 @@ def _delete_subtitle_file(subtitle_path, language):
         log.warning("Deleting subtitle with invalid language: %s [%s]" % (subtitle_path, language))
         os.remove(subtitle_path)
         return True
-    except Exception, e:
+    except Exception as e:
         log.error("Unable to delete subtitle with invalid language: %s [%s]" % (subtitle_path, language))
-        log.error("Exception: %s" % e)
+        log.exception(e)
         return False
