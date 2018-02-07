@@ -49,6 +49,7 @@ Libraries dependency tree
     |-- requests-oauthlib
         |-- oauthlib
 |-- simplejson (if not added, fallback to default json library in python)
+|-- six
 |-- subliminal
     |-- appdirs
     |-- babelfish
