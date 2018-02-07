@@ -30,7 +30,7 @@ class Home(object):
 
     @cherrypy.expose
     def index(self):
-        tmpl = Template(file="web/templates/home/home.tmpl")
+        tmpl = Template(file='web/templates/home/home.tmpl')
         return str(tmpl)
 
     @cherrypy.expose(alias='updateWantedItem')
@@ -75,20 +75,20 @@ class Home(object):
     @cherrypy.expose(alias='searchId')
     def force_id_search(self, wanted_item_index):
         subchecker.force_id_search(wanted_item_index)
-        redirect("/home")
+        redirect('/home')
 
     @cherrypy.expose(alias='skipShow')
     def skip_show(self, wanted_item_index, title, season=None):
         if not season:
-            tmpl = Template(file="web/templates/home/home-skipshow.tmpl")
+            tmpl = Template(file='web/templates/home/home-skipshow.tmpl')
             tmpl.wanted_item_index = wanted_item_index
             tmpl.title = title
             return str(tmpl)
         else:
             if not wanted_item_index:
-                raise cherrypy.HTTPError(400, "No wanted_item index supplied")
+                raise cherrypy.HTTPError(400, 'No wanted_item index supplied')
             if not title:
-                raise cherrypy.HTTPError(400, "No show supplied")
+                raise cherrypy.HTTPError(400, 'No show supplied')
             # Check if season is a number to be sure
             if not season == '00':
                 season = str(int(season))
@@ -99,8 +99,8 @@ class Home(object):
                 if title_sanitized == utils.sanitize(x):
                     for s in autosubliminal.SKIPSHOW[x].split(','):
                         if s == season or s == '00':
-                            utils.add_notification_message("Already skipped show %s season %s" % (title, season))
-                            redirect("/home")
+                            utils.add_notification_message('Already skipped show %s season %s' % (title, season))
+                            redirect('/home')
                     # Not skipped yet, skip all or append season the seasons to skip
                     if season == '00':
                         config_season = '00'
@@ -113,44 +113,44 @@ class Home(object):
                 config.save_config('skipshow', title, config_season)
                 config.apply_skipshow()
                 if season == '00':
-                    utils.add_notification_message("Skipped show %s all seasons" % title)
+                    utils.add_notification_message('Skipped show %s all seasons' % title)
                 else:
-                    utils.add_notification_message("Skipped show %s season %s" % (title, season))
+                    utils.add_notification_message('Skipped show %s season %s' % (title, season))
             else:
-                utils.add_notification_message("Could not skip show! Please check the log file.", "error")
+                utils.add_notification_message('Could not skip show! Please check the log file.', 'error')
 
-            redirect("/home")
+            redirect('/home')
 
     @cherrypy.expose(alias='skipMovie')
     def skip_movie(self, wanted_item_index, title, year):
         if not wanted_item_index:
-            raise cherrypy.HTTPError(400, "No wanted_item index supplied")
+            raise cherrypy.HTTPError(400, 'No wanted_item index supplied')
         if not title:
-            raise cherrypy.HTTPError(400, "No title supplied")
+            raise cherrypy.HTTPError(400, 'No title supplied')
         movie = title
         if year:
-            movie += " (" + year + ")"
+            movie += ' (' + year + ')'
         # Check if already skipped
         movie_sanitized = utils.sanitize(movie)
         for x in autosubliminal.SKIPMOVIE.keys():
             if movie_sanitized == utils.sanitize(x):
-                utils.add_notification_message("Already skipped movie %s" % movie)
-                redirect("/home")
+                utils.add_notification_message('Already skipped movie %s' % movie)
+                redirect('/home')
         # Skip movie
         if subchecker.skip_movie(wanted_item_index):
             config.save_config('skipmovie', movie, '00')
             config.apply_skipmovie()
-            utils.add_notification_message("Skipped movie %s" % movie)
+            utils.add_notification_message('Skipped movie %s' % movie)
         else:
-            utils.add_notification_message("Could not skip movie! Please check the log file.", "error")
-        redirect("/home")
+            utils.add_notification_message('Could not skip movie! Please check the log file.', 'error')
+        redirect('/home')
 
     @cherrypy.expose(alias='deleteVideo')
     def delete_video(self, wanted_item_index, confirmed=False, cleanup=False):
         if not confirmed:
             # Get wanted item
             wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
-            tmpl = Template(file="web/templates/home/home-deleteVideo.tmpl")
+            tmpl = Template(file='web/templates/home/home-deleteVideo.tmpl')
             tmpl.wanted_item_index = wanted_item_index
             tmpl.video = wanted_item['videopath']
             return str(tmpl)
@@ -158,19 +158,19 @@ class Home(object):
             # Delete video
             deleted = subchecker.delete_video(wanted_item_index, cleanup)
             if deleted:
-                utils.add_notification_message("Video deleted from filesystem")
+                utils.add_notification_message('Video deleted from filesystem')
             else:
-                utils.add_notification_message("Video could not be deleted! Please check the log file.", "error")
-            redirect("/home")
+                utils.add_notification_message('Video could not be deleted! Please check the log file.', 'error')
+            redirect('/home')
 
     @cherrypy.expose(alias='searchSubtitle')
     def search_subtitle(self, wanted_item_index, lang):
         # Search subtitle
         subs, errormessage = subchecker.search_subtitle(wanted_item_index, lang)
         # Send response in html (store subs under subs key)
-        tmpl = Template(file="web/templates/home/home-manualsearch.tmpl")
+        tmpl = Template(file='web/templates/home/home-manualsearch.tmpl')
         tmpl.subs = subs
-        tmpl.infomessage = ""
+        tmpl.infomessage = ''
         tmpl.errormessage = errormessage
         return str(tmpl)
 
@@ -223,7 +223,7 @@ class Home(object):
                         'errormessage': 'Unable to handle post processing! Please check the log file!'}
         else:
             subchecker.post_process_no_subtitle(wanted_item_index)
-            redirect("/home")
+            redirect('/home')
 
 
 class Config(object):
@@ -250,17 +250,17 @@ class Config(object):
         else:
             # For some reason the config needs to be read again, otherwise all pages get an error
             config.read_config()
-            utils.add_notification_message("Config saved")
+            utils.add_notification_message('Config saved')
             return {}
 
     @cherrypy.expose
     def index(self):
         # Redirect to general settings by default
-        redirect("/config/general")
+        redirect('/config/general')
 
     class _ConfigGeneral(object):
         def __init__(self):
-            self.tmpl_file = "web/templates/config/config-general.tmpl"
+            self.tmpl_file = 'web/templates/config/config-general.tmpl'
             self.section = 'general'
 
         @cherrypy.expose
@@ -294,7 +294,7 @@ class Config(object):
 
     class _ConfigLogging(object):
         def __init__(self):
-            self.tmpl_file = "web/templates/config/config-logging.tmpl"
+            self.tmpl_file = 'web/templates/config/config-logging.tmpl'
             self.section = 'logging'
 
         @cherrypy.expose
@@ -321,7 +321,7 @@ class Config(object):
 
     class _ConfigWebServer(object):
         def __init__(self):
-            self.tmpl_file = "web/templates/config/config-webserver.tmpl"
+            self.tmpl_file = 'web/templates/config/config-webserver.tmpl'
             self.section = 'webserver'
 
         @cherrypy.expose
@@ -344,7 +344,7 @@ class Config(object):
 
     class _ConfigSubliminal(object):
         def __init__(self):
-            self.tmpl_file = "web/templates/config/config-subliminal.tmpl"
+            self.tmpl_file = 'web/templates/config/config-subliminal.tmpl'
             self.section = 'subliminal'
 
         @cherrypy.expose
@@ -430,7 +430,7 @@ class Config(object):
 
     class _ConfigNameMapping(object):
         def __init__(self):
-            self.tmpl_file = "web/templates/config/config-namemapping.tmpl"
+            self.tmpl_file = 'web/templates/config/config-namemapping.tmpl'
             self.section = 'namemapping'
 
         @cherrypy.expose
@@ -453,7 +453,7 @@ class Config(object):
 
     class _ConfigSkipMapping(object):
         def __init__(self):
-            self.tmpl_file = "web/templates/config/config-skipmapping.tmpl"
+            self.tmpl_file = 'web/templates/config/config-skipmapping.tmpl'
             self.section = 'skipmapping'
 
         @cherrypy.expose
@@ -472,7 +472,7 @@ class Config(object):
 
     class _ConfigNotification(object):
         def __init__(self):
-            self.tmpl_file = "web/templates/config/config-notification.tmpl"
+            self.tmpl_file = 'web/templates/config/config-notification.tmpl'
             self.section = 'notification'
 
         @cherrypy.expose
@@ -483,9 +483,9 @@ class Config(object):
         @cherrypy.tools.json_out()
         def test(self, notify_lib):
             if notifiers.test_notifier(notify_lib):
-                utils.add_notification_message("Test notification (%s) sent" % notify_lib)
+                utils.add_notification_message('Test notification (%s) sent' % notify_lib)
             else:
-                utils.add_notification_message("Test notification (%s) failed" % notify_lib, "error")
+                utils.add_notification_message('Test notification (%s) failed' % notify_lib, 'error')
             return {}
 
         @cherrypy.expose(alias='regTwitter')
@@ -499,11 +499,11 @@ class Config(object):
                 try:
                     response = oauth_client.fetch_request_token(twitter_notifier.REQUEST_TOKEN_URL)
                 except Exception as e:
-                    tmpl = Template(file="web/templates/general/message.tmpl")
-                    tmpl.message = "Something went wrong.../n" + e.message
+                    tmpl = Template(file='web/templates/general/message.tmpl')
+                    tmpl.message = 'Something went wrong.../n' + e.message
                     return str(tmpl)
                 # Authorize
-                tmpl = Template(file="web/templates/config/config-regtwitter.tmpl")
+                tmpl = Template(file='web/templates/config/config-regtwitter.tmpl')
                 tmpl.url = oauth_client.authorization_url(twitter_notifier.AUTHORIZATION_URL)
                 tmpl.token_key = response.get('oauth_token')
                 tmpl.token_secret = response.get('oauth_token_secret')
@@ -519,15 +519,15 @@ class Config(object):
                 try:
                     response = oauth_client.fetch_access_token(twitter_notifier.ACCESS_TOKEN_URL)
                 except Exception as e:
-                    tmpl = Template(file="web/templates/general/message.tmpl")
-                    tmpl.message = "Something went wrong.../n" + e.message
+                    tmpl = Template(file='web/templates/general/message.tmpl')
+                    tmpl.message = 'Something went wrong.../n' + e.message
                     return str(tmpl)
                 # Store access token
                 autosubliminal.TWITTERKEY = response.get('oauth_token')
                 autosubliminal.TWITTERSECRET = response.get('oauth_token_secret')
-                tmpl = Template(file="web/templates/general/message.tmpl")
-                tmpl.message = "Twitter is now set up, remember to save your config and remember to test twitter!" \
-                               "<br><a href='" + autosubliminal.WEBROOT + "/config/notification'>Return</a>"
+                tmpl = Template(file='web/templates/general/message.tmpl')
+                tmpl.message = 'Twitter is now set up, remember to save your config and remember to test twitter!' \
+                               '<br><a href="' + autosubliminal.WEBROOT + '/config/notification">Return</a>'
                 return str(tmpl)
 
         @cherrypy.expose(alias='save')
@@ -578,7 +578,7 @@ class Config(object):
 
     class _ConfigPostProcessing(object):
         def __init__(self):
-            self.tmpl_file = "web/templates/config/config-postprocessing.tmpl"
+            self.tmpl_file = 'web/templates/config/config-postprocessing.tmpl'
             self.section = 'postprocessing'
 
         @cherrypy.expose
@@ -608,11 +608,11 @@ class Log(object):
 
     @cherrypy.expose
     def index(self):
-        redirect("/log/viewLog")
+        redirect('/log/viewLog')
 
     @cherrypy.expose(alias='viewLog')
     def view_log(self, loglevel='all', lognum=None):
-        tmpl = Template(file="web/templates/log/log.tmpl")
+        tmpl = Template(file='web/templates/log/log.tmpl')
         tmpl.loglevel = loglevel
         tmpl.lognum = lognum
         result = utils.display_logfile(loglevel, lognum)
@@ -629,7 +629,7 @@ class Log(object):
         for f in [f for f in os.listdir('.') if os.path.isfile(f) and re.match(autosubliminal.LOGFILE + '.', f)]:
             os.remove(f)
         # Return to default log view
-        tmpl = Template(file="web/templates/log/log.tmpl")
+        tmpl = Template(file='web/templates/log/log.tmpl')
         tmpl.loglevel = 'all'
         tmpl.lognum = None
         result = utils.display_logfile()
@@ -646,62 +646,62 @@ class System(object):
         # Run threads now (use delay to be sure that checksub is run after scandisk)
         autosubliminal.SCANDISK.run()
         autosubliminal.CHECKSUB.run(delay=0.5)
-        utils.add_notification_message("Running everything...")
-        redirect("/home")
+        utils.add_notification_message('Running everything...')
+        redirect('/home')
 
     @cherrypy.expose
     def restart(self):
         runner.restart_app()
-        tmpl = Template(file="web/templates/system/system-restart.tmpl")
-        tmpl.message = "Auto-Subliminal is restarting..."
+        tmpl = Template(file='web/templates/system/system-restart.tmpl')
+        tmpl.message = 'Auto-Subliminal is restarting...'
         return str(tmpl)
 
     @cherrypy.expose
     def shutdown(self):
         runner.shutdown_app()
-        tmpl = Template(file="web/templates/general/message.tmpl")
-        tmpl.message = "Auto-Subliminal is shutting down..."
+        tmpl = Template(file='web/templates/general/message.tmpl')
+        tmpl.message = 'Auto-Subliminal is shutting down...'
         return str(tmpl)
 
     @cherrypy.expose(alias='info')
     def info(self):
-        tmpl = Template(file="web/templates/system/system-info.tmpl")
+        tmpl = Template(file='web/templates/system/system-info.tmpl')
         return str(tmpl)
 
     @cherrypy.expose
     def status(self):
-        tmpl = Template(file="web/templates/system/system-status.tmpl")
+        tmpl = Template(file='web/templates/system/system-status.tmpl')
         return str(tmpl)
 
     @cherrypy.expose(alias='scanDisk')
     def scan_disk(self):
         autosubliminal.SCANDISK.run()
-        redirect_referer("/home")
+        redirect_referer('/home')
 
     @cherrypy.expose(alias='checkSub')
     def check_sub(self):
         autosubliminal.CHECKSUB.run()
-        redirect_referer("/home")
+        redirect_referer('/home')
 
     @cherrypy.expose(alias='checkVersion')
     def check_version(self):
         autosubliminal.CHECKVERSION.run()
-        redirect_referer("/home")
+        redirect_referer('/home')
 
     @cherrypy.expose(alias='updateVersion')
     def update_version(self):
         autosubliminal.CHECKVERSION.process.update()
         runner.restart_app(exit=True)
-        tmpl = Template(file="web/templates/system/system-restart.tmpl")
-        tmpl.message = "Auto-Subliminal is restarting..."
+        tmpl = Template(file='web/templates/system/system-restart.tmpl')
+        tmpl.message = 'Auto-Subliminal is restarting...'
         return str(tmpl)
 
     @cherrypy.expose(alias='flushCache')
     def flush_cache(self):
         TvdbIdCache().flush_cache()
         ImdbIdCache().flush_cache()
-        utils.add_notification_message("Flushed id cache database")
-        redirect("/home")
+        utils.add_notification_message('Flushed id cache database')
+        redirect('/home')
 
     @cherrypy.expose(alias='flushWantedItems')
     def flush_wanted_items(self):
@@ -710,32 +710,32 @@ class System(object):
             WantedItems().flush_wanted_items()
             autosubliminal.WANTEDQUEUE = []
             utils.release_wanted_queue_lock()
-            utils.add_notification_message("Flushed wanted items database. Please launch system 'run now'.")
+            utils.add_notification_message('Flushed wanted items database. Please launch system "run now".')
         else:
-            utils.add_notification_message("Cannot flush wanted items database when wanted queue is in use", "notice")
-        redirect("/home")
+            utils.add_notification_message('Cannot flush wanted items database when wanted queue is in use', 'notice')
+        redirect('/home')
 
     @cherrypy.expose(alias='flushLastDownloads')
     def flush_last_downloads(self):
         LastDownloads().flush_last_downloads()
-        utils.add_notification_message("Flushed last downloads database")
-        redirect("/home")
+        utils.add_notification_message('Flushed last downloads database')
+        redirect('/home')
 
     @cherrypy.expose(alias='isAlive')
     def is_alive(self, *args, **kwargs):
         if 'callback' in kwargs:
             callback = kwargs['callback']
         else:
-            return "Error: Unsupported Request. Send jsonp request with 'callback' variable in the query string."
-        cherrypy.response.headers['Cache-Control'] = "max-age=0,no-cache,no-store"
-        cherrypy.response.headers['Content-Type'] = "text/javascript"
-        cherrypy.response.headers['Access-Control-Allow-Origin'] = "*"
-        cherrypy.response.headers['Access-Control-Allow-Headers'] = "x-requested-with"
+            return 'Error: Unsupported Request. Send jsonp request with "callback" variable in the query string.'
+        cherrypy.response.headers['Cache-Control'] = 'max-age=0,no-cache,no-store'
+        cherrypy.response.headers['Content-Type'] = 'text/javascript'
+        cherrypy.response.headers['Access-Control-Allow-Origin'] = '*'
+        cherrypy.response.headers['Access-Control-Allow-Headers'] = 'x-requested-with'
 
         if autosubliminal.STARTED:
-            return callback + '(' + json.dumps({"msg": "True"}) + ');'
+            return callback + '(' + json.dumps({'msg': 'True'}) + ');'
         else:
-            return callback + '(' + json.dumps({"msg": "False"}) + ');'
+            return callback + '(' + json.dumps({'msg': 'False'}) + ');'
 
     @cherrypy.expose
     def message(self):
@@ -755,13 +755,13 @@ class WebServerRoot(object):
 
     @cherrypy.expose
     def index(self):
-        redirect("/home")
+        redirect('/home')
 
     def error_page(status, message, traceback, version):
         # Parse status code (example status: '404 Not Found')
         match = re.search(r'^(\d{3}).*$', status)
         # Fill template
-        tmpl = Template(file="web/templates/general/error.tmpl")
+        tmpl = Template(file='web/templates/general/error.tmpl')
         tmpl.status_code = int(match.group(1)) if match else 500
         tmpl.status = status
         tmpl.message = message

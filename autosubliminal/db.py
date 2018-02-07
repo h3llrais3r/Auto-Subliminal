@@ -29,9 +29,9 @@ def dict_factory_wanted_items(cursor, row):
 
 class TvdbIdCache(object):
     def __init__(self):
-        self._query_get_id = "select tvdb_id from tvdb_id_cache where show_name = ?"
-        self._query_set_id = "insert into tvdb_id_cache values (?,?)"
-        self._query_flush_cache = "delete from tvdb_id_cache"
+        self._query_get_id = 'select tvdb_id from tvdb_id_cache where show_name = ?'
+        self._query_set_id = 'insert into tvdb_id_cache values (?,?)'
+        self._query_flush_cache = 'delete from tvdb_id_cache'
 
     def get_id(self, show_name):
         tvdb_id = None
@@ -61,9 +61,9 @@ class TvdbIdCache(object):
 
 class ImdbIdCache(object):
     def __init__(self):
-        self._query_get_id = "select imdb_id from imdb_id_cache where title = ? and year = ?"
-        self._query_set_id = "insert into imdb_id_cache values (?,?,?)"
-        self._query_flush_cache = "delete from imdb_id_cache"
+        self._query_get_id = 'select imdb_id from imdb_id_cache where title = ? and year = ?'
+        self._query_set_id = 'insert into imdb_id_cache values (?,?,?)'
+        self._query_flush_cache = 'delete from imdb_id_cache'
 
     def get_id(self, title, year):
         imdb_id = None
@@ -92,14 +92,14 @@ class ImdbIdCache(object):
 
 class WantedItems(object):
     def __init__(self):
-        self._query_get_all = "select * from wanted_items order by timestamp desc"
-        self._query_get = "select * from wanted_items where videopath=?"
-        self._query_set = "insert into wanted_items values (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        self._query_update = "update wanted_items set videopath=?, timestamp=?, languages=?, type=?, title=?, " \
-                             "year=?, season=?, episode=?, quality=?, source=?, codec=?, releasegrp=?, tvdbid=?, " \
-                             "imdbid=? where id=?"
-        self._query_delete = "delete from wanted_items where videopath=?"
-        self._query_flush = "delete from wanted_items"
+        self._query_get_all = 'select * from wanted_items order by timestamp desc'
+        self._query_get = 'select * from wanted_items where videopath=?'
+        self._query_set = 'insert into wanted_items values (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+        self._query_update = 'update wanted_items set videopath=?, timestamp=?, languages=?, type=?, title=?, ' \
+                             'year=?, season=?, episode=?, quality=?, source=?, codec=?, releasegrp=?, tvdbid=?, ' \
+                             'imdbid=? where id=?'
+        self._query_delete = 'delete from wanted_items where videopath=?'
+        self._query_flush = 'delete from wanted_items'
 
     def get_wanted_items(self):
         connection = sqlite3.connect(autosubliminal.DBFILE)
@@ -194,9 +194,9 @@ class WantedItems(object):
 
 class LastDownloads(object):
     def __init__(self):
-        self._query_get = "select * from last_downloads order by timestamp desc"
-        self._query_set = "insert into last_downloads values (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?)"
-        self._query_flush = "delete from last_downloads"
+        self._query_get = 'select * from last_downloads order by timestamp desc'
+        self._query_set = 'insert into last_downloads values (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+        self._query_flush = 'delete from last_downloads'
 
     def get_last_downloads(self):
         connection = sqlite3.connect(autosubliminal.DBFILE)
@@ -250,50 +250,50 @@ def create():
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
 
-        query = "CREATE TABLE tvdb_id_cache (tvdb_id INTEGER, show_name TEXT)"
+        query = 'CREATE TABLE tvdb_id_cache (tvdb_id INTEGER, show_name TEXT)'
         cursor.execute(query)
         connection.commit()
 
-        query = "CREATE TABLE imdb_id_cache (imdb_id TEXT, title TEXT, year TEXT)"
+        query = 'CREATE TABLE imdb_id_cache (imdb_id TEXT, title TEXT, year TEXT)'
         cursor.execute(query)
         connection.commit()
 
-        query = "CREATE TABLE wanted_items (id INTEGER PRIMARY KEY, videopath TEXT, timestamp DATETIME, " \
-                "languages TEXT, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, quality TEXT, " \
-                "source TEXT, codec TEXT, releasegrp TEXT, tvdbid TEXT, imdbid TEXT)"
+        query = 'CREATE TABLE wanted_items (id INTEGER PRIMARY KEY, videopath TEXT, timestamp DATETIME, ' \
+                'languages TEXT, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, quality TEXT, ' \
+                'source TEXT, codec TEXT, releasegrp TEXT, tvdbid TEXT, imdbid TEXT)'
         cursor.execute(query)
         connection.commit()
 
-        query = "CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, season TEXT, " \
-                "episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, " \
-                "releasegrp TEXT, subtitle TEXT, provider TEXT)"
+        query = 'CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, season TEXT, ' \
+                'episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, ' \
+                'releasegrp TEXT, subtitle TEXT, provider TEXT)'
         cursor.execute(query)
         connection.commit()
 
-        query = "CREATE TABLE info (database_version NUMERIC)"
+        query = 'CREATE TABLE info (database_version NUMERIC)'
         cursor.execute(query)
         connection.commit()
 
-        query = "INSERT INTO info VALUES (%d)" % version.DB_VERSION
+        query = 'INSERT INTO info VALUES (%d)' % version.DB_VERSION
         cursor.execute(query)
         connection.commit()
 
         connection.close()
 
-        print("INFO: Succesfully created the sqlite database.")
+        print('INFO: Succesfully created the sqlite database.')
         autosubliminal.DBVERSION = version.DB_VERSION
     except:
-        print("ERROR: Could not create database.")
-        print("ERROR: Please check if Auto-Subliminal has write access to file %s." % autosubliminal.DBFILE)
+        print('ERROR: Could not create database.')
+        print('ERROR: Please check if Auto-Subliminal has write access to file %s.' % autosubliminal.DBFILE)
 
     return True
 
 
 def upgrade(from_version, to_version):
-    print("INFO: Upgrading database from version %d to version %d." % (from_version, to_version))
+    print('INFO: Upgrading database from version %d to version %d.' % (from_version, to_version))
     upgrades = to_version - from_version
     if upgrades != 1:
-        print("INFO: More than 1 upgrade required. Starting subupgrades.")
+        print('INFO: More than 1 upgrade required. Starting subupgrades.')
         for x in range(from_version, upgrades + 1):
             upgrade((from_version - 1) + x, x + 1)
     else:
@@ -302,36 +302,36 @@ def upgrade(from_version, to_version):
             # New table, info with dbversion
             connection = sqlite3.connect(autosubliminal.DBFILE)
             cursor = connection.cursor()
-            cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'codec')
-            cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'timestamp')
-            cursor.execute("CREATE TABLE info (database_version NUMERIC);")
-            cursor.execute("INSERT INTO info VALUES (%d)" % 2)
+            cursor.execute('ALTER TABLE last_downloads ADD COLUMN %s TEXT' % 'codec')
+            cursor.execute('ALTER TABLE last_downloads ADD COLUMN %s TEXT' % 'timestamp')
+            cursor.execute('CREATE TABLE info (database_version NUMERIC);')
+            cursor.execute('INSERT INTO info VALUES (%d)' % 2)
             connection.commit()
             connection.close()
         if from_version == 2 and to_version == 3:
             # Add Releasegrp
             connection = sqlite3.connect(autosubliminal.DBFILE)
             cursor = connection.cursor()
-            cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'releasegrp')
-            cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'subtitle')
-            cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (3, 2))
+            cursor.execute('ALTER TABLE last_downloads ADD COLUMN %s TEXT' % 'releasegrp')
+            cursor.execute('ALTER TABLE last_downloads ADD COLUMN %s TEXT' % 'subtitle')
+            cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (3, 2))
             connection.commit()
             connection.close()
         if from_version == 3 and to_version == 4:
             # Create id_cache table from scratch with tvdb_id
             connection = sqlite3.connect(autosubliminal.DBFILE)
             cursor = connection.cursor()
-            cursor.execute("DROP TABLE id_cache;")
-            cursor.execute("CREATE TABLE id_cache (tvdb_id INTEGER, show_name TEXT);")
-            cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (4, 3))
+            cursor.execute('DROP TABLE id_cache;')
+            cursor.execute('CREATE TABLE id_cache (tvdb_id INTEGER, show_name TEXT);')
+            cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (4, 3))
             connection.commit()
             connection.close()
         if from_version == 4 and to_version == 5:
             # Add provider column to last_downloads table
             connection = sqlite3.connect(autosubliminal.DBFILE)
             cursor = connection.cursor()
-            cursor.execute("ALTER TABLE last_downloads ADD COLUMN '%s' 'TEXT'" % 'provider')
-            cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (5, 4))
+            cursor.execute('ALTER TABLE last_downloads ADD COLUMN %s TEXT' % 'provider')
+            cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (5, 4))
             connection.commit()
             connection.close()
         if from_version == 5 and to_version == 6:
@@ -339,29 +339,29 @@ def upgrade(from_version, to_version):
             cursor = connection.cursor()
             # Recreate last_downloads
             cursor.execute(
-                "CREATE TABLE tmp_last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, "
-                "season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, "
-                "releasegrp TEXT, subtitle TEXT, provider TEXT)"
+                'CREATE TABLE tmp_last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, '
+                'season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, '
+                'releasegrp TEXT, subtitle TEXT, provider TEXT)'
             )
             cursor.execute(
-                "INSERT INTO tmp_last_downloads SELECT id, 'episode', show_name, '', season, episode, quality, source, "
-                "language, codec, timestamp, releasegrp, subtitle, provider FROM last_downloads")
-            cursor.execute("DROP TABLE last_downloads")
+                'INSERT INTO tmp_last_downloads SELECT id, episode, show_name, NULL, season, episode, quality, source, '
+                'language, codec, timestamp, releasegrp, subtitle, provider FROM last_downloads')
+            cursor.execute('DROP TABLE last_downloads')
             cursor.execute(
-                "CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, season TEXT, "
-                "episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, "
-                "releasegrp TEXT, subtitle TEXT, provider TEXT)"
+                'CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, season TEXT, '
+                'episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, '
+                'releasegrp TEXT, subtitle TEXT, provider TEXT)'
             )
-            cursor.execute("INSERT INTO last_downloads SELECT * FROM tmp_last_downloads")
-            cursor.execute("DROP TABLE tmp_last_downloads")
+            cursor.execute('INSERT INTO last_downloads SELECT * FROM tmp_last_downloads')
+            cursor.execute('DROP TABLE tmp_last_downloads')
             # Create imdb_id_cache
-            cursor.execute("CREATE TABLE imdb_id_cache (imdb_id TEXT, title TEXT, year TEXT)")
+            cursor.execute('CREATE TABLE imdb_id_cache (imdb_id TEXT, title TEXT, year TEXT)')
             # Create tvdb_id_cache
-            cursor.execute("CREATE TABLE tvdb_id_cache (tvdb_id TEXT, show_name TEXT)")
+            cursor.execute('CREATE TABLE tvdb_id_cache (tvdb_id TEXT, show_name TEXT)')
             # Drop id_cache
-            cursor.execute("DROP TABLE id_cache")
+            cursor.execute('DROP TABLE id_cache')
             # Update database version
-            cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (6, 5))
+            cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (6, 5))
             connection.commit()
             connection.close()
         if from_version == 6 and to_version == 7:
@@ -369,12 +369,12 @@ def upgrade(from_version, to_version):
             cursor = connection.cursor()
             # Create wanted_items
             cursor.execute(
-                "CREATE TABLE wanted_items (id INTEGER PRIMARY KEY, videopath TEXT, timestamp DATETIME, "
-                "languages TEXT, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, quality TEXT, "
-                "source TEXT, codec TEXT, releasegrp TEXT, tvdbid TEXT, imdbid TEXT)"
+                'CREATE TABLE wanted_items (id INTEGER PRIMARY KEY, videopath TEXT, timestamp DATETIME, '
+                'languages TEXT, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, quality TEXT, '
+                'source TEXT, codec TEXT, releasegrp TEXT, tvdbid TEXT, imdbid TEXT)'
             )
             # Update database version
-            cursor.execute("UPDATE info SET database_version = %d WHERE database_version = %d" % (7, 6))
+            cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (7, 6))
             connection.commit()
             connection.close()
 
@@ -407,5 +407,5 @@ def initialize():
     if autosubliminal.DBVERSION < version.DB_VERSION:
         upgrade(autosubliminal.DBVERSION, version.DB_VERSION)
     elif autosubliminal.DBVERSION > version.DB_VERSION:
-        print("ERROR: Database version higher then this version of Auto-Subliminal supports. Update.")
+        print('ERROR: Database version higher then this version of Auto-Subliminal supports. Update.')
         os._exit(1)

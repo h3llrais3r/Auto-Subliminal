@@ -8,7 +8,7 @@ log = logging.getLogger(__name__)
 # Utility function to get a notifier object instance of a notifier library
 # Each notifier library must define an '__CLASS_NAME__' variable which defines the notifier class name
 def _get_notifier_instance(library_name):
-    module = importlib.import_module("." + library_name.lower(), __package__)
+    module = importlib.import_module('.' + library_name.lower(), __package__)
     return getattr(module, module.__CLASS_NAME__)()
 
 
@@ -32,7 +32,7 @@ class Notifier(object):
                                'provider': download_item['provider']}
 
     def notify_download(self):
-        log.debug("Sending download notifications. Video: %s, Subtitle: %s, Language: %s, Provider: %s" % (
+        log.debug('Sending download notifications. Video: %s, Subtitle: %s, Language: %s, Provider: %s' % (
             self._notifier_dict['video'], self._notifier_dict['subtitle'], self._notifier_dict['language'],
             self._notifier_dict['provider']))
 

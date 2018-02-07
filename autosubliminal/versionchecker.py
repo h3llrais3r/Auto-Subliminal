@@ -37,7 +37,7 @@ class VersionChecker(ScheduledProcess):
             self.manager = GitVersionManager()
             self.install_type = InstallType.GIT
         except:
-            log.debug("Could not initialize git, falling back to source version check")
+            log.debug('Could not initialize git, falling back to source version check')
             self.manager = SourceVersionManager()
             self.install_type = InstallType.SOURCE
 
@@ -50,7 +50,7 @@ class VersionChecker(ScheduledProcess):
         # Wait for internet connection
         utils.wait_for_internet_connection()
 
-        log.info("Checking version")
+        log.info('Checking version')
 
         # Check version
         self.manager.check_version(force_run)
@@ -69,7 +69,7 @@ class VersionChecker(ScheduledProcess):
         return True
 
     def update(self):
-        log.info("Updating version")
+        log.info('Updating version')
 
         # Block update when another process is using the wanted queue
         # We do not want to update the version while the application is busy with another process
@@ -146,11 +146,11 @@ class SourceVersionManager(BaseVersionManager):
 
     @property
     def current_branch(self):
-        return "master"
+        return 'master'
 
     @property
     def current_branch_url(self):
-        return autosubliminal.GITHUBURL + "/tree/" + self.current_branch
+        return autosubliminal.GITHUBURL + '/tree/' + self.current_branch
 
     @property
     def current_version(self):
@@ -158,7 +158,7 @@ class SourceVersionManager(BaseVersionManager):
 
     @property
     def current_version_url(self):
-        return autosubliminal.GITHUBURL + "/releases/tag/" + self.current_version
+        return autosubliminal.GITHUBURL + '/releases/tag/' + self.current_version
 
     def check_version(self, force_run=False):
         # Reset update_allowed flag
@@ -166,49 +166,49 @@ class SourceVersionManager(BaseVersionManager):
 
         # Local version
         local_version = self.current_strict_version
-        log.debug("Local version: %s" % local_version)
+        log.debug('Local version: %s' % local_version)
 
         # Remote github version
         try:
             req = urllib2.Request(autosubliminal.VERSIONURL)
-            req.add_header("User-agent", autosubliminal.USERAGENT)
+            req.add_header('User-agent', autosubliminal.USERAGENT)
             resp = urllib2.urlopen(req, None, autosubliminal.TIMEOUT)
             response = resp.read()
             resp.close()
         except:
-            log.error("Could not get remote version from %s" % autosubliminal.VERSIONURL)
+            log.error('Could not get remote version from %s' % autosubliminal.VERSIONURL)
             return False
         try:
             match = re.search(VERSION_PATTERN, response, re.MULTILINE)
             remote_version = version.StrictVersion(match.group(1))
-            log.debug("Remote version: %s" % remote_version)
+            log.debug('Remote version: %s' % remote_version)
         except:
-            log.error("Could not parse version from %s" % autosubliminal.VERSIONURL)
+            log.error('Could not parse version from %s' % autosubliminal.VERSIONURL)
             return False
 
         # Compare versions
         if local_version > remote_version:
-            log.info("Unknown version found")
+            log.info('Unknown version found')
             utils.add_notification_message(
-                "Unknown version found! "
-                "Check <a href=" + autosubliminal.GITHUBURL + "/releases>Github</a> and reinstall!",
-                "error", True)
+                'Unknown version found! '
+                'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and reinstall!',
+                'error', True)
         elif local_version < remote_version:
-            log.info("New version found")
+            log.info('New version found')
             utils.add_notification_message(
-                "New version found! "
-                "Check <a href=" + autosubliminal.GITHUBURL + "/releases>Github</a> and update!",
-                "notice", True)
+                'New version found! '
+                'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and update!',
+                'notice', True)
         else:
-            log.info("Version up to date")
+            log.info('Version up to date')
             # Show info message (only when run was forced manually)
             if force_run:
-                utils.add_notification_message("You are running the latest version")
+                utils.add_notification_message('You are running the latest version')
 
         return True
 
     def update_version(self):
-        log.info("Update version not supported")
+        log.info('Update version not supported')
 
 
 class GitVersionManager(BaseVersionManager):
@@ -231,7 +231,7 @@ class GitVersionManager(BaseVersionManager):
 
     @property
     def current_branch_url(self):
-        return autosubliminal.GITHUBURL + "/tree/" + self.current_branch
+        return autosubliminal.GITHUBURL + '/tree/' + self.current_branch
 
     @property
     def current_version(self):
@@ -240,7 +240,7 @@ class GitVersionManager(BaseVersionManager):
 
     @property
     def current_version_url(self):
-        return autosubliminal.GITHUBURL + "/commit/" + self.current_version
+        return autosubliminal.GITHUBURL + '/commit/' + self.current_version
 
     def clean(self):
         # call git clean to remove all untracked files (only in source and lib folders)
@@ -251,20 +251,20 @@ class GitVersionManager(BaseVersionManager):
         self.update_allowed = False
 
         # Local git version
-        log.debug("Local branch: %s" % self.current_git_branch)
-        log.debug("Local commit: %s" % self.current_git_commit)
+        log.debug('Local branch: %s' % self.current_git_branch)
+        log.debug('Local commit: %s' % self.current_git_commit)
         if self.repo.is_dirty():
-            log.warning("Local branch is dirty")
+            log.warning('Local branch is dirty')
 
         # Remote git version
         try:
             remote_url = self.repo.remote(name='origin').url
             remote_fetch_info = self.repo.remote().fetch(refspec=self.current_git_branch)[0]
             remote_commit = remote_fetch_info.commit
-            log.debug("Remote url: %s" % remote_url)
-            log.debug("Remote commit: %s" % remote_commit)
+            log.debug('Remote url: %s' % remote_url)
+            log.debug('Remote commit: %s' % remote_commit)
         except:
-            log.error("Could not get remote git version")
+            log.error('Could not get remote git version')
             return False
 
         # Get number of commits ahead and behind (option --count not supported git < 1.7.2)
@@ -279,27 +279,27 @@ class GitVersionManager(BaseVersionManager):
                 self.num_commits_ahead = int(output.count('<'))
                 self.num_commits_behind = int(output.count('>'))
             except:
-                log.error("Could not get the difference in commits between local and remote branch")
+                log.error('Could not get the difference in commits between local and remote branch')
                 return False
-        log.debug("Number of commits ahead: %s" % self.num_commits_ahead)
-        log.debug("Number of commits behind: %s" % self.num_commits_behind)
+        log.debug('Number of commits ahead: %s' % self.num_commits_ahead)
+        log.debug('Number of commits behind: %s' % self.num_commits_behind)
 
         if self.num_commits_ahead > 0:
-            log.info("Unknown version found")
+            log.info('Unknown version found')
             utils.add_notification_message(
-                "Unknown version found! Check <a href=" + autosubliminal.GITHUBURL +
-                "/releases>Github</a> and reinstall!", "error", True)
+                'Unknown version found! Check <a href=' + autosubliminal.GITHUBURL +
+                '/releases>Github</a> and reinstall!', 'error', True)
         elif self.num_commits_behind > 0:
-            log.info("New version found")
+            log.info('New version found')
             utils.add_notification_message(
-                "New version found! <a href=" + autosubliminal.WEBROOT + "/system/updateVersion>Update</a>",
-                "notice", True)
+                'New version found! <a href=' + autosubliminal.WEBROOT + '/system/updateVersion>Update</a>',
+                'notice', True)
             self.update_allowed = True
         else:
-            log.info("Version up to date")
+            log.info('Version up to date')
             # Show info message (only when run was forced manually)
             if force_run:
-                utils.add_notification_message("You are running the latest version")
+                utils.add_notification_message('You are running the latest version')
 
         return True
 
@@ -310,7 +310,7 @@ class GitVersionManager(BaseVersionManager):
                 self.clean()
                 self.repo.remote(name='origin').pull()
                 self.clean()
-                log.info("Updated to the latest version")
-                utils.add_notification_message("Updated to the latest version")
+                log.info('Updated to the latest version')
+                utils.add_notification_message('Updated to the latest version')
             except:
-                log.error("Could not update version: %s" % traceback.format_exc())
+                log.error('Could not update version: %s' % traceback.format_exc())

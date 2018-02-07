@@ -10,7 +10,7 @@ from autosubliminal import utils
 
 log = logging.getLogger(__name__)
 
-release_group_regex = "(.*)\[.*?\]"
+release_group_regex = '(.*)\[.*?\]'
 
 
 def process_file(dirname, filename):
@@ -44,7 +44,7 @@ def process_file(dirname, filename):
     - 'imdbid'
     """
 
-    log.info("Processing file: %s" % filename)
+    log.info('Processing file: %s' % filename)
     file_path = os.path.join(dirname, filename)
 
     # Check minimal video file size if needed
@@ -52,7 +52,7 @@ def process_file(dirname, filename):
         file_size = os.path.getsize(file_path)
         # MINVIDEOFILESIZE is size in MB
         if file_size < autosubliminal.MINVIDEOFILESIZE * 1024 * 1024:
-            log.warning("File size (%s) is lower than %sMB, skipping" % (
+            log.warning('File size (%s) is lower than %sMB, skipping' % (
                 utils.humanize_bytes(file_size), autosubliminal.MINVIDEOFILESIZE))
             return None
 
@@ -71,37 +71,37 @@ def process_file(dirname, filename):
 
 def _guess(file_path):
     try:
-        log.debug("Guessing file info")
+        log.debug('Guessing file info')
         guess = guessit(file_path)
-        log.debug("Guess result: %r" % guess)
+        log.debug('Guess result: %r' % guess)
         return _validate_guess(guess)
     except Exception as e:
-        log.error("Could not guess file info for: %s" % file_path)
+        log.error('Could not guess file info for: %s' % file_path)
         log.exception(e)
         return None
 
 
 def _validate_guess(guess):
-    log.debug("Validating guess")
+    log.debug('Validating guess')
 
     # Validate episode guess
     if _property_from_guess(guess, 'type') == 'episode':
-        log.debug("Video guessed as episode")
+        log.debug('Video guessed as episode')
         if _property_from_guess(guess, 'title') is None or _property_from_guess(guess, 'season') is None \
                 or _property_from_guess(guess, 'episode') is None:
-            log.error("Could not guess all the mandatory elements for an episode")
+            log.error('Could not guess all the mandatory elements for an episode')
             return None
 
     # Validate movie guess
     elif _property_from_guess(guess, 'type') == 'movie':
-        log.debug("Video guessed as movie")
+        log.debug('Video guessed as movie')
         if _property_from_guess(guess, 'title') is None:
-            log.error("Could not guess all the mandatory elements for a movie")
+            log.error('Could not guess all the mandatory elements for a movie')
             return None
 
     # Invalid type guess
     else:
-        log.error("Could not guess the type of video")
+        log.error('Could not guess the type of video')
         return None
 
     return guess
@@ -119,7 +119,7 @@ def _dict_from_guess(guess):
                        'quality': _property_from_guess(guess, 'screen_size'),
                        'codec': _property_from_guess(guess, 'video_codec'),
                        'releasegrp': _split_release_group(_property_from_guess(guess, 'release_group'))}
-        log.debug("Dict from guess: %r" % result_dict)
+        log.debug('Dict from guess: %r' % result_dict)
     return result_dict
 
 
@@ -147,7 +147,7 @@ def _join_episodes(episode):
 
 
 def _enrich_dict(result_dict, file_path):
-    log.debug("Enriching dict with metadata")
+    log.debug('Enriching dict with metadata')
 
     # Enrich with common data
     result_dict['videopath'] = file_path
@@ -166,4 +166,4 @@ def _enrich_dict(result_dict, file_path):
             result_dict['title'],
             result_dict['year'])
 
-    log.debug("Enriched dict: %r" % result_dict)
+    log.debug('Enriched dict: %r' % result_dict)

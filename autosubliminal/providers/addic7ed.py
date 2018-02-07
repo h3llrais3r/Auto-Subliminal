@@ -136,7 +136,7 @@ class Addic7edProvider(Provider):
         if self.random_user_agent:
             from autosubliminal.providers.useragents import RANDOM_USER_AGENTS
             user_agent = RANDOM_USER_AGENTS[random.randint(0, len(RANDOM_USER_AGENTS) - 1)]
-            logger.debug("Using random user agent '%s'" % user_agent)
+            logger.debug('Using random user agent: %s' % user_agent)
         return user_agent
 
     @region.cache_on_arguments(expiration_time=SHOW_EXPIRATION_TIME)

@@ -22,7 +22,7 @@ class PushalotNotifier(BaseNotifier):
 
     @property
     def name(self):
-        return "Pushalot"
+        return 'Pushalot'
 
     @property
     def enabled(self):
@@ -33,21 +33,21 @@ class PushalotNotifier(BaseNotifier):
                 'Title': self.application_title,
                 'Body': message.encode('utf-8')}
         try:
-            http_handler = HTTPSConnection("pushalot.com")
-            http_handler.request(method="POST",
-                                 url="/api/sendmessage",
-                                 headers={'Content-type': "application/x-www-form-urlencoded"},
+            http_handler = HTTPSConnection('pushalot.com')
+            http_handler.request(method='POST',
+                                 url='/api/sendmessage',
+                                 headers={'Content-type': 'application/x-www-form-urlencoded'},
                                  body=urlencode(data))
             response = http_handler.getresponse()
             request_status = response.status
             if request_status != 200:
-                log.error("%s notification failed: %s" % (self.name, response.reason))
+                log.error('%s notification failed: %s' % (self.name, response.reason))
                 return False
             else:
-                log.info("%s notification sent" % self.name)
+                log.info('%s notification sent' % self.name)
                 return True
         except:
-            log.error("%s notification failed" % self.name)
+            log.error('%s notification failed' % self.name)
             return False
 
 

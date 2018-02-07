@@ -22,7 +22,7 @@ class PushbulletNotifier(BaseNotifier):
 
     @property
     def name(self):
-        return "Pushbullet"
+        return 'Pushbullet'
 
     @property
     def enabled(self):
@@ -32,10 +32,10 @@ class PushbulletNotifier(BaseNotifier):
         try:
             pb = Pushbullet(autosubliminal.PUSHBULLETAPI)
             pb.push_note(title=self.application_title, body=message.encode('utf-8'))
-            log.info("%s notification sent" % self.name)
+            log.info('%s notification sent' % self.name)
             return True
         except:
-            log.error("%s notification failed" % self.name)
+            log.error('%s notification failed' % self.name)
             return False
 
 

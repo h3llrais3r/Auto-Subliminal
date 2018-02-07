@@ -42,7 +42,7 @@ def main(argv=None):
 
     # From Sickbeard / Headphones
     try:
-        locale.setlocale(locale.LC_ALL, "")
+        locale.setlocale(locale.LC_ALL, '')
         autosubliminal.SYSENCODING = locale.getpreferredencoding()
     except (locale.Error, IOError):
         pass
@@ -55,45 +55,45 @@ def main(argv=None):
         argv = sys.argv
     try:
         try:
-            opts, args = getopt.getopt(argv[1:], "hc:dl", ["help", "config=", "daemon", "nolaunch"])
+            opts, args = getopt.getopt(argv[1:], 'hc:dl', ['help', 'config=', 'daemon', 'nolaunch'])
         except getopt.error as msg:
             raise Usage(msg)
 
         # Option processing
         for option, value in opts:
-            if option in ("-h", "--help"):
+            if option in ('-h', '--help'):
                 raise Usage(help_message)
-            if option in ("-c", "--config"):
+            if option in ('-c', '--config'):
                 if os.path.exists(value):
                     autosubliminal.CONFIGFILE = value
                 else:
-                    print("ERROR: Configfile does not exists.")
+                    print('ERROR: Configfile does not exists.')
                     os._exit(0)
-            if option in ("-l", "--nolaunch"):
+            if option in ('-l', '--nolaunch'):
                 autosubliminal.LAUNCHBROWSER = False
-            if option in ("-d", "--daemon"):
-                if sys.platform == "win32":
-                    print("ERROR: No support for daemon mode in Windows.")
+            if option in ('-d', '--daemon'):
+                if sys.platform == 'win32':
+                    print('ERROR: No support for daemon mode in Windows.')
                 else:
                     autosubliminal.DAEMON = True
 
     except Usage as err:
-        sys.stderr.write(sys.argv[0].split("/")[-1] + ": " + str(err.msg) + "\n")
-        sys.stderr.write("For help use --help\n")
+        sys.stderr.write(sys.argv[0].split('/')[-1] + ': ' + str(err.msg) + '\n')
+        sys.stderr.write('For help use --help\n')
         return 2
 
     # Initialize configuration
     if os.path.isfile('config.properties.dev'):
-        print("WARNING: Using development configuration file.")
+        print('WARNING: Using development configuration file.')
         autosubliminal.CONFIGFILE = 'config.properties.dev'
-    print("INFO: Initializing variables and loading config.")
+    print('INFO: Initializing variables and loading config.')
     autosubliminal.initialize()
 
     # Change to the new work directory
     if os.path.exists(autosubliminal.PATH):
         os.chdir(autosubliminal.PATH)
     else:
-        print("ERROR: PATH does not exist, check config.")
+        print('ERROR: PATH does not exist, check config.')
         os._exit(1)
 
     # Setup application
@@ -109,13 +109,13 @@ def main(argv=None):
     # Set the PID
     autosubliminal.PID = os.getpid()
 
-    print("INFO: Starting output to log.")
-    print("INFO: Bye.")
+    print('INFO: Starting output to log.')
+    print('INFO: Bye.')
     log = logging.getLogger(__name__)
-    log.info("Running application with PID: %s" % autosubliminal.PID)
-    log.info("System encoding: %s" % autosubliminal.SYSENCODING)
-    log.info("Config version: %d" % autosubliminal.CONFIGVERSION)
-    log.info("Db version: %d" % autosubliminal.DBVERSION)
+    log.info('Running application with PID: %s' % autosubliminal.PID)
+    log.info('System encoding: %s' % autosubliminal.SYSENCODING)
+    log.info('Config version: %d' % autosubliminal.CONFIGVERSION)
+    log.info('Db version: %d' % autosubliminal.DBVERSION)
 
     # Start server and application
     autosubliminal.application.start_server()
@@ -125,10 +125,10 @@ def main(argv=None):
     if autosubliminal.LAUNCHBROWSER:
         autosubliminal.application.launch_browser()
 
-    log.info("Application started, going into a loop to keep the main thread going")
+    log.info('Application started, going into a loop to keep the main thread going')
     while True:
         time.sleep(1)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     sys.exit(main())

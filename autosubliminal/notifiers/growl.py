@@ -23,7 +23,7 @@ class GrowlNotifier(BaseNotifier):
 
     @property
     def name(self):
-        return "Growl"
+        return 'Growl'
 
     @property
     def enabled(self):
@@ -31,7 +31,7 @@ class GrowlNotifier(BaseNotifier):
 
     # Override of generic test method (test will also take care the growl registration)
     def test(self):
-        log.debug("Testing a %s notification" % self.name)
+        log.debug('Testing a %s notification' % self.name)
         # Registration
         if not self._send_message(self._create_registration()):
             return False
@@ -63,10 +63,10 @@ class GrowlNotifier(BaseNotifier):
             address = (autosubliminal.GROWLHOST, GROWL_UDP_PORT)
             s.sendto(message.payload(), address)
             s.close()
-            log.info("%s notification sent" % self.name)
+            log.info('%s notification sent' % self.name)
             return True
         except socket.error:
-            log.error("%s notification failed" % self.name)
+            log.error('%s notification failed' % self.name)
             return False
 
 

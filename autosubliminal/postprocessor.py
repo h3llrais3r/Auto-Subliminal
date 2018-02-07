@@ -31,47 +31,47 @@ class PostProcessor(object):
 
     def run(self):
         if not self._cmd:
-            log.debug("No post processor command specified, skipping")
+            log.debug('No post processor command specified, skipping')
             return True
 
-        log.info("Running post processor")
+        log.info('Running post processor')
         process_cmd = self._construct_process_cmd()
         stdout, stderr = utils.run_cmd(process_cmd)
         if stderr:
-            log.error("Post processor failed:\n%s" % utils.safe_trim(stderr))
+            log.error('Post processor failed:\n%s' % utils.safe_trim(stderr))
             return False
-        log.debug("Post processor output:\n%s" % utils.safe_trim(stdout))
+        log.debug('Post processor output:\n%s' % utils.safe_trim(stdout))
         return True
 
     def _construct_process_cmd(self):
-        log.debug("#" * 30)
-        log.debug("Command:")
-        log.debug("%s" % self._cmd)
+        log.debug('#' * 30)
+        log.debug('Command:')
+        log.debug('%s' % self._cmd)
         process = [self._encode(self._cmd)]
-        log.debug("Arguments:")
+        log.debug('Arguments:')
 
         # Add optional command arguments if needed
         if self._args:
             for arg in self._args:
-                log.debug("%s" % arg)
+                log.debug('%s' % arg)
                 process.append(self._encode(arg))
 
         # Add encoding argument
-        log.debug("%s" % self._encoding)
+        log.debug('%s' % self._encoding)
         process.append(self._encoding)
 
         # Add video argument from the wanted_item
         video = self._wanted_item['videopath']
-        log.debug("%s" % video)
+        log.debug('%s' % video)
         process.append(self._encode(video))
         # Add subtitle argument from the wanted_item (can be empty if no subtitle was downloaded)
         subtitle = None
         if 'destinationFileLocationOnDisk' in self._wanted_item.keys():
             subtitle = self._wanted_item['destinationFileLocationOnDisk']
         if subtitle:
-            log.debug("%s" % subtitle)
+            log.debug('%s' % subtitle)
             process.append(self._encode(subtitle))
-        log.debug("#" * 30)
+        log.debug('#' * 30)
 
         return process
 

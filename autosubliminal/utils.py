@@ -54,7 +54,7 @@ def add_notification_message(notification_message, notification_type='info', sti
 
 
 def run_cmd(cmd, communicate=True):
-    log.debug("Running cmd: %s" % cmd)
+    log.debug('Running cmd: %s' % cmd)
     process = subprocess.Popen(cmd,
                                shell=True,
                                stdin=subprocess.PIPE,
@@ -67,24 +67,24 @@ def run_cmd(cmd, communicate=True):
 
 
 def connect_url(url):
-    log.debug("Connecting to url: %s" % url)
+    log.debug('Connecting to url: %s' % url)
     response = None
     try:
         response = urllib2.urlopen(url, None, autosubliminal.TIMEOUT)
-        log.debug("Connection successful")
+        log.debug('Connection successful')
     except urllib2.HTTPError as e:
         http_code = e.code
-        log.debug("Could not connect to url: http response code %s" % http_code)
+        log.debug('Could not connect to url: http response code %s' % http_code)
     except Exception as e:
-        log.debug("Could not connect to url: %s" % e.message)
+        log.debug('Could not connect to url: %s' % e.message)
 
     return response
 
 
 def wait_for_internet_connection():
-    log.debug("Checking internet connection")
+    log.debug('Checking internet connection')
     while not connect_url(autosubliminal.VERSIONURL):
-        log.debug("Waiting for internet connection")
+        log.debug('Waiting for internet connection')
         time.sleep(5)
 
 
@@ -185,7 +185,7 @@ def get_show_name_mapping(show_name):
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.SHOWNAMEMAPPING.keys():
         if show_name_sanitized == sanitize(x):
-            log.debug("Found match in shownamemapping for '%s'" % show_name)
+            log.debug('Found match in shownamemapping for %s' % show_name)
             return int(autosubliminal.SHOWNAMEMAPPING[x])
 
 
@@ -199,7 +199,7 @@ def get_addic7ed_show_name_mapping(show_name):
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING.keys():
         if show_name_sanitized == sanitize(x):
-            log.debug("Found match in addic7edshownamemapping for '%s'" % show_name)
+            log.debug('Found match in addic7edshownamemapping for %s' % show_name)
             return int(autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
 
 
@@ -213,7 +213,7 @@ def get_alternative_show_name_mapping(show_name):
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.ALTERNATIVESHOWNAMEMAPPING.keys():
         if show_name_sanitized == sanitize(x):
-            log.debug("Found match in alternativeshownamemapping for '%s'" % show_name)
+            log.debug('Found match in alternativeshownamemapping for %s' % show_name)
             alternatives = autosubliminal.ALTERNATIVESHOWNAMEMAPPING[x]
             return [sanitize(x) for x in alternatives.split(',')]  # Needs to return a list
 
@@ -228,11 +228,11 @@ def get_movie_name_mapping(title, year):
     """
     movie = title
     if year:
-        movie += " (" + str(year) + ")"
+        movie += ' (' + str(year) + ')'
     movie_sanitized = sanitize(movie)
     for x in autosubliminal.MOVIENAMEMAPPING.keys():
         if movie_sanitized == sanitize(x):
-            log.debug("Found match in movienamemapping for '%s'" % movie)
+            log.debug('Found match in movienamemapping for %s' % movie)
             return autosubliminal.MOVIENAMEMAPPING[x]
 
 
@@ -246,11 +246,11 @@ def get_alternative_movie_name_mapping(title, year):
     """
     movie = title
     if year:
-        movie += " (" + str(year) + ")"
+        movie += ' (' + str(year) + ')'
     movie_sanitized = sanitize(movie)
     for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING.keys():
         if movie_sanitized == sanitize(x):
-            log.debug("Found match in alternativemovienamemapping for '%s'" % movie)
+            log.debug('Found match in alternativemovienamemapping for %s' % movie)
             alternatives = autosubliminal.ALTERNATIVEMOVIENAMEMAPPING[x]
             return [sanitize(x) for x in alternatives.split(',')]  # Needs to return a list
 
@@ -259,24 +259,24 @@ def skip_show(show_name, season, episode):
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.SKIPSHOW.keys():
         if show_name_sanitized == sanitize(x):
-            log.debug("Found match in skipshow for '%s'" % show_name)
+            log.debug('Found match in skipshow for %s' % show_name)
             for s in autosubliminal.SKIPSHOW[x].split(','):
                 if s == '00':
-                    log.debug("Found all season match in skipshow, skipping all seasons for '%s'" % show_name)
+                    log.debug('Found all season match in skipshow, skipping all seasons for %s' % show_name)
                     return True
                 elif int(s) == int(season):
-                    log.debug("Found season match in skipshow, skipping season '%s' for '%s'" % (season, show_name))
+                    log.debug('Found season match in skipshow, skipping season %s for %s' % (season, show_name))
                     return True
 
 
 def skip_movie(title, year):
     movie = title
     if year:
-        movie += " (" + str(year) + ")"
+        movie += ' (' + str(year) + ')'
     movie_sanitized = sanitize(movie)
     for x in autosubliminal.SKIPMOVIE.keys():
         if movie_sanitized == sanitize(x):
-            log.debug("Found match in skipmovie, skipping movie '%s'" % movie)
+            log.debug('Found match in skipmovie, skipping movie %s' % movie)
             return True
 
 
@@ -289,7 +289,7 @@ def count_backup_logfiles():
 def get_logfile(lognum=None):
     logfile = autosubliminal.LOGFILE
     if lognum:
-        logfile += "." + str(lognum)
+        logfile += '.' + str(lognum)
     if os.path.isfile(logfile):
         return logfile
     return None
@@ -316,7 +316,7 @@ def display_logfile(loglevel='all', lognum=None):
                 log_data.append(x)
         except:
             continue
-    result = cgi.escape("".join(log_data))
+    result = cgi.escape(''.join(log_data))
     return result
 
 
@@ -350,12 +350,12 @@ def display_mapping_dict(mapping_dict):
     """
     Return a multi lined string containing all mappings (key = value) from the mapping_dict.
     """
-    s = ""
+    s = ''
     for x in mapping_dict.keys():
         if s == '':
-            s += x + " = " + str(mapping_dict[x])
+            s += x + ' = ' + str(mapping_dict[x])
         else:
-            s += "\n" + x + " = " + str(mapping_dict[x])
+            s += '\n' + x + ' = ' + str(mapping_dict[x])
     return s
 
 
@@ -371,7 +371,7 @@ def display_title(item_dict, default_value='N/A', uppercase=False):
     title = display_item(item_dict, 'title', default_value, False)
     year = display_item(item_dict, 'year', default_value, False)
     if not title == default_value and not year == default_value:
-        title += " (" + year + ")"
+        title += ' (' + year + ')'
     if uppercase:
         title = safe_uppercase(title, default_value)
     return title
@@ -379,11 +379,11 @@ def display_title(item_dict, default_value='N/A', uppercase=False):
 
 def display_name(item_dict, default_value='N/A', uppercase=False):
     name = display_title(item_dict, default_value, False)
-    if 'type' in item_dict.keys() and item_dict['type'] == "episode":
+    if 'type' in item_dict.keys() and item_dict['type'] == 'episode':
         season = display_item(item_dict, 'season', default_value, False)
         episode = display_item(item_dict, 'episode', default_value, False)
         if not season == default_value and not episode == default_value:
-            name += " S" + season.zfill(2) + "E" + episode.zfill(2)
+            name += ' S' + season.zfill(2) + 'E' + episode.zfill(2)
     if uppercase:
         name = safe_uppercase(name, default_value)
     return name
@@ -398,7 +398,7 @@ def display_timestamp(time_float, format='%d-%m-%Y %H:%M:%S', default_value='N/A
 
 def display_next_scheduler_run(scheduler):
     if scheduler.running:
-        return "Running..."
+        return 'Running...'
     else:
         return display_timestamp(scheduler.interval - (time.time() - scheduler.last_run), '%H:%M:%S')
 
@@ -417,10 +417,10 @@ def convert_timestamp(timestamp_string, format_from='%Y-%m-%d %H:%M:%S', format_
 def get_wanted_queue_lock():
     with _lock:
         if autosubliminal.WANTEDQUEUELOCK:
-            log.debug("Cannot get wanted queue lock, skipping")
+            log.debug('Cannot get wanted queue lock, skipping')
             return False
         else:
-            log.debug("Getting wanted queue lock")
+            log.debug('Getting wanted queue lock')
             autosubliminal.WANTEDQUEUELOCK = True
             return True
 
@@ -428,10 +428,10 @@ def get_wanted_queue_lock():
 def release_wanted_queue_lock():
     with _lock:
         if autosubliminal.WANTEDQUEUELOCK:
-            log.debug("Releasing wanted queue lock")
+            log.debug('Releasing wanted queue lock')
             autosubliminal.WANTEDQUEUELOCK = False
         else:
-            log.warning("Trying to release a wanted queue lock while there is no lock")
+            log.warning('Trying to release a wanted queue lock while there is no lock')
 
 
 def count_wanted_items(itemtype=None):

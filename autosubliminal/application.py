@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 
 
 def daemon():
-    print("INFO: Starting as a daemon.")
+    print('INFO: Starting as a daemon.')
     try:
         pid = os.fork()
         if pid > 0:
@@ -40,7 +40,7 @@ def daemon():
     except OSError:
         sys.exit(1)
 
-    print("INFO: Disabling console output for daemon.")
+    print('INFO: Disabling console output for daemon.')
 
     cherrypy.log.screen = False
     sys.stdin.close()
@@ -63,14 +63,14 @@ def launch_browser():
         try:
             webbrowser.open(url, 1, 1)
         except:
-            log.error("Browser launch failed")
+            log.error('Browser launch failed')
 
 
 def start_server(restarting=False):
     # stop server when restarting
     if restarting:
         # Stop server
-        log.info("Stopping CherryPy webserver")
+        log.info('Stopping CherryPy webserver')
         cherrypy.engine.stop()
 
     # Configure server
@@ -83,11 +83,11 @@ def start_server(restarting=False):
     cherrypy.tree.mount(WebServerRoot(), str(autosubliminal.WEBROOT), config=_get_application_configuration())
 
     # Start cherrypy server
-    log.info("Starting CherryPy webserver")
+    log.info('Starting CherryPy webserver')
     try:
         cherrypy.engine.start()
     except Exception as e:
-        log.error("Could not start webserver, exiting")
+        log.error('Could not start webserver, exiting')
         log.exception(e)
         _shutdown()
         _exit(1)
@@ -138,25 +138,25 @@ def _get_application_configuration():
         },
         '/css': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "css",
+            'tools.staticdir.dir': 'css',
             'tools.expires.on': True,
             'tools.expires.secs': 3600 * 24 * 7
         },
         '/fonts': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "fonts",
+            'tools.staticdir.dir': 'fonts',
             'tools.expires.on': True,
             'tools.expires.secs': 3600 * 24 * 7
         },
         '/images': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "images",
+            'tools.staticdir.dir': 'images',
             'tools.expires.on': True,
             'tools.expires.secs': 3600 * 24 * 7
         },
         '/js': {
             'tools.staticdir.on': True,
-            'tools.staticdir.dir': "js",
+            'tools.staticdir.dir': 'js',
             'tools.expires.on': True,
             'tools.expires.secs': 3600 * 24 * 7
         },
@@ -176,7 +176,7 @@ def _get_application_configuration():
 
 
 def start():
-    log.info("Starting")
+    log.info('Starting')
 
     # Start permanent threads
     autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
@@ -191,13 +191,13 @@ def start():
 
 
 def stop(exit=True):
-    log.info("Stopping")
+    log.info('Stopping')
 
     # Mark as stopped
     autosubliminal.STARTED = False
 
     # Stop scheduled threads
-    log.info("Stopping threads")
+    log.info('Stopping threads')
     autosubliminal.SCANDISK.stop()
     autosubliminal.CHECKSUB.stop()
     autosubliminal.CHECKVERSION.stop()
@@ -211,7 +211,7 @@ def stop(exit=True):
 
 
 def restart(exit=False):
-    log.info("Restarting")
+    log.info('Restarting')
     if exit:
         # Exit current process and restart a new one with the same args
         # Get executable and args
@@ -219,9 +219,9 @@ def restart(exit=False):
         popen_list += autosubliminal.ARGS
         # Stop without exit
         stop(exit=False)
-        log.info("Exiting application with PID: %s" % autosubliminal.PID)
-        log.info("Restarting application with command and arguments: %s" % popen_list)
-        log.info("#" * 50)
+        log.info('Exiting application with PID: %s' % autosubliminal.PID)
+        log.info('Restarting application with command and arguments: %s' % popen_list)
+        log.info('#' * 50)
         # Shutdown
         _shutdown()
         # Start new process
@@ -234,21 +234,21 @@ def restart(exit=False):
         autosubliminal.initialize()
         start_server(True)
         start()
-        log.info("Restarted")
+        log.info('Restarted')
 
 
 def signal_handler(signum, frame):
-    log.debug("Received signal: %s" % signum)
+    log.debug('Received signal: %s' % signum)
     if signum == signal.SIGINT:
-        log.info("Received interrupt signal, exiting")
+        log.info('Received interrupt signal, exiting')
         _shutdown()
         _exit()
 
 
 def _shutdown():
-    log.info("Exiting CherryPy webserver")
+    log.info('Exiting CherryPy webserver')
     cherrypy.engine.exit()
-    log.info("Exiting PID: %s" % autosubliminal.PID)
+    log.info('Exiting PID: %s' % autosubliminal.PID)
     # Shutdown the logger to make sure the logfile is released before starting a new process
     logging.shutdown()
 

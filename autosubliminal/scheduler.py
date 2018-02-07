@@ -39,13 +39,13 @@ class Scheduler(object):
         self._register_scheduler()
 
         # Start thread
-        log.info("Starting thread %s" % self.name)
+        log.info('Starting thread %s' % self.name)
         self._thread = threading.Thread(target=self._schedule_process, name=self.name)
         self._thread.start()
 
         # Initial run will block caller thread until process is executed the first time
         if initial_run:
-            log.debug("Waiting for initial run of thread %s" % self.name)
+            log.debug('Waiting for initial run of thread %s' % self.name)
             while not self.last_run:
                 time.sleep(1)
 
@@ -61,11 +61,11 @@ class Scheduler(object):
                 try:
                     suffix = int(scheduler_name_suffix)
                     suffix += 1
-                    scheduler_name = scheduler_name[:suffix_index] + "-" + str(suffix)
+                    scheduler_name = scheduler_name[:suffix_index] + '-' + str(suffix)
                 except:
-                    scheduler_name = scheduler_name + "-" + str(suffix)
+                    scheduler_name = scheduler_name + '-' + str(suffix)
             else:
-                scheduler_name = scheduler_name + "-" + str(suffix)
+                scheduler_name = scheduler_name + '-' + str(suffix)
         self.name = scheduler_name
         autosubliminal.SCHEDULERS[scheduler_name] = self
 
@@ -81,7 +81,7 @@ class Scheduler(object):
             if self._force_run:
                 run_needed = True
                 if self._delay:
-                    log.info("Delaying thread %s with %s seconds" % (self.name, self._delay))
+                    log.info('Delaying thread %s with %s seconds' % (self.name, self._delay))
                     time.sleep(self._delay)
             if current_time - self.last_run > self.interval:
                 run_needed = True
@@ -95,7 +95,7 @@ class Scheduler(object):
     def _run_process(self, current_time):
         try:
             self.process.running = True
-            log.debug("Running thread process")
+            log.debug('Running thread process')
             if self.process.run(self._force_run):
                 # Update process properties if process has run
                 self.last_run = current_time
@@ -111,12 +111,12 @@ class Scheduler(object):
             os._exit(1)
 
     def stop(self):
-        log.info("Stopping thread %s" % self.name)
+        log.info('Stopping thread %s' % self.name)
         self._force_stop = True
         self._thread.join(10)
 
     def run(self, delay=0):
-        log.info("Running thread %s" % self.name)
+        log.info('Running thread %s' % self.name)
         self._force_run = True
         self._delay = delay
 

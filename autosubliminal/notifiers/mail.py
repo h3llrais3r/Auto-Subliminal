@@ -23,7 +23,7 @@ class MailNotifier(BaseNotifier):
 
     @property
     def name(self):
-        return "Mail"
+        return 'Mail'
 
     @property
     def enabled(self):
@@ -32,9 +32,9 @@ class MailNotifier(BaseNotifier):
     # Override of generic _get_message method
     def _get_message(self, **kwargs):
         # Prepend extra info to default message
-        message = self.application_title + "\n\n"
+        message = self.application_title + '\n\n'
         if 'video' in kwargs.keys():
-            message += "Video: %s\n" % kwargs['video']
+            message += 'Video: %s\n' % kwargs['video']
         message += super(MailNotifier, self)._get_message(**kwargs)
         return message
 
@@ -45,7 +45,7 @@ class MailNotifier(BaseNotifier):
         subject = autosubliminal.MAILSUBJECT if autosubliminal.MAILSUBJECT else self.application_title
         # Add subtitle from kwargs to subject if available
         if 'subtitle' in kwargs.keys():
-            subject += " - " + kwargs['subtitle']
+            subject += ' - ' + kwargs['subtitle']
         mail_message['Subject'] = subject
         # Convert message to string
         mail_message = mail_message.as_string()
@@ -56,14 +56,14 @@ class MailNotifier(BaseNotifier):
             if autosubliminal.MAILUSERNAME != '' and autosubliminal.MAILPASSWORD != '':
                 server.ehlo()
                 if autosubliminal.MAILAUTH != u'':
-                    server.esmtp_features["auth"] = autosubliminal.MAILAUTH.upper()
+                    server.esmtp_features['auth'] = autosubliminal.MAILAUTH.upper()
                 server.login(autosubliminal.MAILUSERNAME, autosubliminal.MAILPASSWORD)
             server.sendmail(autosubliminal.MAILFROMADDR, autosubliminal.MAILTOADDR, mail_message)
             server.quit()
-            log.info("%s notification sent" % self.name)
+            log.info('%s notification sent' % self.name)
             return True
         except:
-            log.error("%s notification failed" % self.name)
+            log.error('%s notification failed' % self.name)
             return False
 
 

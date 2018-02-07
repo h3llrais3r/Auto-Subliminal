@@ -19,7 +19,7 @@ class SubDownloader(object):
     """
 
     def __init__(self, download_item):
-        log.debug("Download item: %r" % download_item)
+        log.debug('Download item: %r' % download_item)
         self._download_item = download_item
         self._keys = download_item.keys()
 
@@ -28,7 +28,7 @@ class SubDownloader(object):
         Save the subtitle with further handling
         """
 
-        log.info("Running sub downloader")
+        log.info('Running sub downloader')
 
         # Save the subtitle
         if self.save():
@@ -43,14 +43,14 @@ class SubDownloader(object):
             name = utils.display_name(self._download_item)
             provider = self._download_item['provider']
             utils.add_notification_message(
-                "Downloaded '" + language + "' subtitle for '" + name + "' from '" + provider + "'", "success")
+                'Downloaded "' + language + '" subtitle for "' + name + '" from "' + provider + '"', 'success')
 
     def save(self):
         """
         Save the subtitle
         """
 
-        log.debug("Saving subtitle")
+        log.debug('Saving subtitle')
 
         # Check download_item
         if 'video' in self._keys and 'subtitles' in self._keys and 'single' in self._keys:
@@ -61,7 +61,7 @@ class SubDownloader(object):
                                       encoding=encoding)
             return True
         else:
-            log.error("Download item is not complete, skipping")
+            log.error('Download item is not complete, skipping')
             return False
 
     def mark_downloaded(self):
@@ -69,7 +69,7 @@ class SubDownloader(object):
         Mark the subtitle as downloaded
         """
 
-        log.debug("Marking subtitle as downloaded")
+        log.debug('Marking subtitle as downloaded')
 
         # Add download_item to last downloads
         self._download_item['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -86,7 +86,7 @@ class SubDownloader(object):
         Post process the subtitle
         """
 
-        log.debug("Post processing subtitle")
+        log.debug('Post processing subtitle')
 
         if autosubliminal.POSTPROCESS:
 

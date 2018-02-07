@@ -30,7 +30,7 @@ class TwitterNotifier(BaseNotifier):
 
     @property
     def name(self):
-        return "Twitter"
+        return 'Twitter'
 
     @property
     def enabled(self):
@@ -39,7 +39,7 @@ class TwitterNotifier(BaseNotifier):
     # Override of generic _get_message method
     def _get_message(self, **kwargs):
         # Prepend application title to default message
-        return self.application_title + "\n" + super(TwitterNotifier, self)._get_message(**kwargs)
+        return self.application_title + '\n' + super(TwitterNotifier, self)._get_message(**kwargs)
 
     def _send_message(self, message, **kwargs):
         try:
@@ -48,10 +48,10 @@ class TwitterNotifier(BaseNotifier):
                               access_token_key=autosubliminal.TWITTERKEY,
                               access_token_secret=autosubliminal.TWITTERSECRET)
             twitter_api.PostUpdate(message[:140])
-            log.info("%s notification sent" % self.name)
+            log.info('%s notification sent' % self.name)
             return True
         except:
-            log.error("%s notification failed" % self.name)
+            log.error('%s notification failed' % self.name)
             return False
 
 

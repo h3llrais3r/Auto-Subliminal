@@ -22,7 +22,7 @@ class ProwlNotifier(BaseNotifier):
 
     @property
     def name(self):
-        return "Prowl"
+        return 'Prowl'
 
     @property
     def enabled(self):
@@ -32,24 +32,24 @@ class ProwlNotifier(BaseNotifier):
         data = {'apikey': autosubliminal.PROWLAPI,
                 'application': self.application,
                 'event': self.title,
-                'description': message.encode("utf-8"),
+                'description': message.encode('utf-8'),
                 'priority': autosubliminal.PROWLPRIORITY}
         try:
-            http_handler = HTTPSConnection("api.prowlapp.com")
-            http_handler.request(method="POST",
-                                 url="/publicapi/add",
-                                 headers={'Content-type': "application/x-www-form-urlencoded"},
+            http_handler = HTTPSConnection('api.prowlapp.com')
+            http_handler.request(method='POST',
+                                 url='/publicapi/add',
+                                 headers={'Content-type': 'application/x-www-form-urlencoded'},
                                  body=urlencode(data))
             response = http_handler.getresponse()
             request_status = response.status
             if request_status != 200:
-                log.error("%s notification failed: %s" % (self.name, response.reason))
+                log.error('%s notification failed: %s' % (self.name, response.reason))
                 return False
             else:
-                log.info("%s notification sent" % self.name)
+                log.info('%s notification sent' % self.name)
                 return True
         except:
-            log.error("%s notification failed" % self.name)
+            log.error('%s notification failed' % self.name)
             return False
 
 
