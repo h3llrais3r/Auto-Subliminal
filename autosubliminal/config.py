@@ -1381,15 +1381,15 @@ def check_for_restart():
 
         if cfg.has_option('logging', 'loglevel'):
             loglevel = cfg.get('logging', 'loglevel')
-            if loglevel.lower() == 'error':
+            if loglevel.lower() == u'error':
                 loglevel = logging.ERROR
-            elif loglevel.lower() == 'warning':
+            elif loglevel.lower() == u'warning':
                 loglevel = logging.WARNING
-            elif loglevel.lower() == 'debug':
+            elif loglevel.lower() == u'debug':
                 loglevel = logging.DEBUG
-            elif loglevel.lower() == 'info':
+            elif loglevel.lower() == u'info':
                 loglevel = logging.INFO
-            elif loglevel.lower() == 'critical':
+            elif loglevel.lower() == u'critical':
                 loglevel = logging.CRITICAL
 
         if cfg.has_option('logging', 'lognum'):
@@ -1409,15 +1409,15 @@ def check_for_restart():
 
         if cfg.has_option('logging', 'loglevelconsole'):
             loglevelconsole = cfg.get('logging', 'loglevelconsole')
-            if loglevelconsole.lower() == 'error':
+            if loglevelconsole.lower() == u'error':
                 loglevelconsole = logging.ERROR
-            elif loglevelconsole.lower() == 'warning':
+            elif loglevelconsole.lower() == u'warning':
                 loglevelconsole = logging.WARNING
-            elif loglevelconsole.lower() == 'debug':
+            elif loglevelconsole.lower() == u'debug':
                 loglevelconsole = logging.DEBUG
-            elif loglevelconsole.lower() == 'info':
+            elif loglevelconsole.lower() == u'info':
                 loglevelconsole = logging.INFO
-            elif loglevelconsole.lower() == 'critical':
+            elif loglevelconsole.lower() == u'critical':
                 loglevelconsole = logging.CRITICAL
 
     if cfg.has_section('webserver'):
