@@ -134,7 +134,7 @@ class Addic7edProvider(Provider):
     def _get_user_agent(self):
         user_agent = 'Subliminal/%s' % __short_version__
         if self.random_user_agent:
-            from useragents import RANDOM_USER_AGENTS
+            from autosubliminal.providers.useragents import RANDOM_USER_AGENTS
             user_agent = RANDOM_USER_AGENTS[random.randint(0, len(RANDOM_USER_AGENTS) - 1)]
             logger.debug("Using random user agent '%s'" % user_agent)
         return user_agent

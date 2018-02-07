@@ -294,7 +294,7 @@ def _init_cache():
     """
 
     # Imports
-    from cache import region, MutexFileLock
+    from autosubliminal.cache import region, MutexFileLock
 
     # Configure autosubliminal/dogpile cache
     # Use MutexFileLock otherwise it will not work due to fcntl module import error in windows
