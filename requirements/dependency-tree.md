@@ -36,6 +36,8 @@ Libraries dependency tree
 |-- langdetect
     |-- six
 |-- lxml (used to speed up some parsing, can be used by different libraries is available)
+|-- mako
+    |-- markupsafe
 |-- pushbullet.py
     |-- python-magic
     |-- requests

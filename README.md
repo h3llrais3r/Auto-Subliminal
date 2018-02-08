@@ -49,6 +49,8 @@ What it uses (see libraries.txt for versions)
  * imdbpy
  * langdetect
  * lxml
+ * mako
+ * markupsafe
  * more-itertools
  * oauthlib
  * portend
