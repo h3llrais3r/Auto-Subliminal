@@ -51,11 +51,11 @@ class MailNotifier(BaseNotifier):
         mail_message = mail_message.as_string()
         try:
             server = smtplib.SMTP(autosubliminal.MAILSRV)
-            if autosubliminal.MAILENCRYPTION == u'TLS':
+            if autosubliminal.MAILENCRYPTION == 'TLS':
                 server.starttls()
-            if autosubliminal.MAILUSERNAME != '' and autosubliminal.MAILPASSWORD != '':
+            if autosubliminal.MAILUSERNAME and autosubliminal.MAILPASSWORD:
                 server.ehlo()
-                if autosubliminal.MAILAUTH != u'':
+                if autosubliminal.MAILAUTH:
                     server.esmtp_features['auth'] = autosubliminal.MAILAUTH.upper()
                 server.login(autosubliminal.MAILUSERNAME, autosubliminal.MAILPASSWORD)
             server.sendmail(autosubliminal.MAILFROMADDR, autosubliminal.MAILTOADDR, mail_message)

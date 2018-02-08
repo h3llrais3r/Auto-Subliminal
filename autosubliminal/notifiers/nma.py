@@ -32,7 +32,7 @@ class NmaNotifier(BaseNotifier):
         try:
             nma_instance = pynma.PyNMA(str(autosubliminal.NMAAPI))
             resp = nma_instance.push(application=self.application, event=self.title, description=message)
-            if not resp[str(autosubliminal.NMAAPI)][u'code'] == u'200':
+            if not resp[str(autosubliminal.NMAAPI)]['code'] == '200':
                 log.error('%s notification failed' % self.name)
                 return False
             else:
