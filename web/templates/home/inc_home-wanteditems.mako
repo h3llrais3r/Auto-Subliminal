@@ -73,16 +73,16 @@
                                         % if item['type'] == 'episode':
                                             <ul class="dropdown-menu has-tip">
                                                 <li>
-                                                    <a href="${autosubliminal.WEBROOT}}/home/postProcess/${index}}">Skip and post process show</a>
+                                                    <a href="${autosubliminal.WEBROOT}/home/postProcess/${index}">Skip and post process show</a>
                                                 </li>
                                                 <li>
-                                                    <a href="${autosubliminal.WEBROOT}}/home/deleteVideo/${index}}">Skip and delete show</a>
+                                                    <a href="${autosubliminal.WEBROOT}/home/deleteVideo/${index}">Skip and delete show</a>
                                                 </li>
                                                 <li>
-                                                    <a href="${autosubliminal.WEBROOT}}/home/skipShow/${index}}/${item['title']}">Skip show</a>
+                                                    <a href="${autosubliminal.WEBROOT}/home/skipShow/${index}/${item['title']}">Skip show</a>
                                                 </li>
                                                 <li>
-                                                    <a href="${autosubliminal.WEBROOT}}/home/skipShow/${index}}/${item['title']}/${item['season']}">Skip season ${item['season']}</a>
+                                                    <a href="${autosubliminal.WEBROOT}/home/skipShow/${index}/${item['title']}/${item['season']}">Skip season ${item['season']}</a>
                                                 </li>
                                             </ul>
                                         % elif item['type'] == 'movie':
