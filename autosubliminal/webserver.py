@@ -611,13 +611,8 @@ class Log(object):
 
     @cherrypy.expose(alias='viewLog')
     def view_log(self, loglevel='all', lognum=None):
-        tmpl = Template(file='web/templates/log/log.tmpl')
-        tmpl.loglevel = loglevel
-        tmpl.lognum = lognum
-        result = utils.display_logfile(loglevel, lognum)
-        tmpl.message = result
-
-        return str(tmpl)
+        content = utils.display_logfile(loglevel, lognum)
+        return MakoPageTemplate(filename='/log/log.mako').render(loglevel=loglevel, lognum=lognum, content=content)
 
     @cherrypy.expose(alias='clearLog')
     def clear_log(self):
@@ -628,12 +623,8 @@ class Log(object):
         for f in [f for f in os.listdir('.') if os.path.isfile(f) and re.match(autosubliminal.LOGFILE + '.', f)]:
             os.remove(f)
         # Return to default log view
-        tmpl = Template(file='web/templates/log/log.tmpl')
-        tmpl.loglevel = 'all'
-        tmpl.lognum = None
-        result = utils.display_logfile()
-        tmpl.message = result
-        return str(tmpl)
+        content = utils.display_logfile()
+        return MakoPageTemplate(filename='/log/log.mako').render(loglevel='all', lognum=None, content=content)
 
 
 class System(object):
