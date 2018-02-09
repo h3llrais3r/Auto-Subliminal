@@ -603,6 +603,7 @@ class Config(object):
 
 class Log(object):
     def __init__(self):
+        self.template_file = '/log/log.mako'
         pass
 
     @cherrypy.expose
@@ -612,7 +613,7 @@ class Log(object):
     @cherrypy.expose(alias='viewLog')
     def view_log(self, loglevel='all', lognum=None):
         content = utils.display_logfile(loglevel, lognum)
-        return MakoPageTemplate(filename='/log/log.mako').render(loglevel=loglevel, lognum=lognum, content=content)
+        return MakoPageTemplate(filename=self.template_file).render(loglevel=loglevel, lognum=lognum, content=content)
 
     @cherrypy.expose(alias='clearLog')
     def clear_log(self):
@@ -624,7 +625,7 @@ class Log(object):
             os.remove(f)
         # Return to default log view
         content = utils.display_logfile()
-        return MakoPageTemplate(filename='/log/log.mako').render(loglevel='all', lognum=None, content=content)
+        return MakoPageTemplate(filename=self.template_file).render(loglevel='all', lognum=None, content=content)
 
 
 class System(object):
