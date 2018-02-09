@@ -9,7 +9,7 @@ from requests_oauthlib.oauth1_session import OAuth1Session
 import autosubliminal
 from autosubliminal import config, notifiers, runner, subchecker, utils
 from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache, WantedItems
-from autosubliminal.templates.mako import MakoPageTemplate
+from autosubliminal.templates.layout import MakoPageTemplate
 
 
 def redirect(abspath, *args, **kwargs):
