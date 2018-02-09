@@ -4,7 +4,6 @@ babelfish==0.5.5
 beautifulsoup4==4.6.0
 certifi==2018.1.18
 chardet==3.0.4
-Cheetah==2.4.4
 cheroot==6.0.0
 cherrypy==13.1.0
 click==6.7

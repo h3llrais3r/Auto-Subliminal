@@ -28,7 +28,7 @@ install_requirements = []
 
 test_requirements = ['pytest', 'pytest-mock', 'pytest-pep8', 'pytest-flakes']
 
-dev_requirements = ['Cheetah', 'tox']
+dev_requirements = ['tox']
 
 # setup
 setup(name='Auto-Subliminal',

@@ -48,14 +48,6 @@ Export installed libraries to file
 
 This does not work for libraries exported in other folder (f.e. lib)
 
-Compile a Cheetah template
-==========================
-- Make sure that you have installed Cheetah (pip install -e .[dev] takes care of this)
-
-- Go to template dir and compile the template (f.e. PageTemplate.tmpl):
-
-        cheetah compile PageTemplate.tmpl
-
 Install javascript library
 ==========================
 Install javascript library via npm:

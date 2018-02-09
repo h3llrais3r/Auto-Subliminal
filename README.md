@@ -33,7 +33,6 @@ What it uses (see libraries.txt for versions)
  * beautifulsoup4
  * certifi
  * chardet
- * cheetah
  * cheroot
  * cherrypy
  * click

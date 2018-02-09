@@ -3,7 +3,6 @@ import os
 import re
 
 import cherrypy
-from Cheetah.Template import Template
 from requests_oauthlib.oauth1_session import OAuth1Session
 
 import autosubliminal

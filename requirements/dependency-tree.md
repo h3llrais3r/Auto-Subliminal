@@ -8,7 +8,6 @@ Libraries dependency tree
 |-- beautifulsoup4
     |-- html5lib (optional dependency)
     |-- lxml (optional dependency)
-|-- Cheetah
 |-- cherrypy
     |-- cheroot
         |-- more-itertools
