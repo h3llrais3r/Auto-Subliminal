@@ -13,7 +13,7 @@ mako_cache = None
 mako_lookup = TemplateLookup(directories=[mako_path], module_directory=mako_cache)
 
 
-class MakoPageTemplate(Template):
+class PageTemplate(Template):
     """
     Mako page template.
     """

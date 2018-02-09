@@ -9,7 +9,7 @@ from requests_oauthlib.oauth1_session import OAuth1Session
 import autosubliminal
 from autosubliminal import config, notifiers, runner, subchecker, utils
 from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache, WantedItems
-from autosubliminal.templates.layout import MakoPageTemplate
+from autosubliminal.templates.page import PageTemplate
 
 
 def redirect(abspath, *args, **kwargs):
@@ -31,7 +31,7 @@ class Home(object):
 
     @cherrypy.expose
     def index(self):
-        return MakoPageTemplate(filename='/home/home.mako').render()
+        return PageTemplate(filename='/home/home.mako').render()
 
     @cherrypy.expose(alias='updateWantedItem')
     @cherrypy.tools.json_out()
@@ -80,7 +80,7 @@ class Home(object):
     @cherrypy.expose(alias='skipShow')
     def skip_show(self, wanted_item_index, title, season=None):
         if not season:
-            return MakoPageTemplate(filename='/home/home-skipshow.mako').render(wanted_item_index=wanted_item_index,
+            return PageTemplate(filename='/home/home-skipshow.mako').render(wanted_item_index=wanted_item_index,
                                                                                 title=title)
         else:
             if not wanted_item_index:
@@ -148,7 +148,7 @@ class Home(object):
         if not confirmed:
             wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
             video = wanted_item['videopath']
-            return MakoPageTemplate(filename='/home/home-deleteVideo.mako').render(wanted_item_index=wanted_item_index,
+            return PageTemplate(filename='/home/home-deleteVideo.mako').render(wanted_item_index=wanted_item_index,
                                                                                    video=video)
         else:
             # Delete video
@@ -164,7 +164,7 @@ class Home(object):
         # Search subtitle
         subs, errormessage = subchecker.search_subtitle(wanted_item_index, lang)
         # Send response in html (store subs under subs key)
-        return MakoPageTemplate(filename='/home/home-manualsearch.mako').render(subs=subs, infomessage=None,
+        return PageTemplate(filename='/home/home-manualsearch.mako').render(subs=subs, infomessage=None,
                                                                                 errormessage=errormessage)
 
     @cherrypy.expose(alias='saveSubtitle')
@@ -258,7 +258,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return MakoPageTemplate(filename=self.template_file).render()
+            return PageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -292,7 +292,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return MakoPageTemplate(filename=self.template_file).render()
+            return PageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -319,7 +319,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return MakoPageTemplate(filename=self.template_file).render()
+            return PageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -342,7 +342,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return MakoPageTemplate(filename=self.template_file).render()
+            return PageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -428,7 +428,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return MakoPageTemplate(filename=self.template_file).render()
+            return PageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -451,7 +451,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return MakoPageTemplate(filename=self.template_file).render()
+            return PageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -470,7 +470,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return MakoPageTemplate(filename=self.template_file).render()
+            return PageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='test')
         @cherrypy.tools.json_out()
@@ -493,12 +493,12 @@ class Config(object):
                     response = oauth_client.fetch_request_token(twitter_notifier.REQUEST_TOKEN_URL)
                 except Exception as e:
                     message = 'Something went wrong.../n' + e.message
-                    return MakoPageTemplate(filename='/general/message.mako').render(message=message)
+                    return PageTemplate(filename='/general/message.mako').render(message=message)
                 # Authorize
                 url = oauth_client.authorization_url(twitter_notifier.AUTHORIZATION_URL)
                 token_key = response.get('oauth_token')
                 token_secret = response.get('oauth_token_secret')
-                return MakoPageTemplate(filename='/config/config-regtwitter.mako').render(url=url, token_key=token_key,
+                return PageTemplate(filename='/config/config-regtwitter.mako').render(url=url, token_key=token_key,
                                                                                           token_secret=token_secret)
 
             if token_key and token_secret and token_pin:
@@ -512,14 +512,14 @@ class Config(object):
                     response = oauth_client.fetch_access_token(twitter_notifier.ACCESS_TOKEN_URL)
                 except Exception as e:
                     message = 'Something went wrong.../n' + e.message
-                    return MakoPageTemplate(filename='/general/message.mako').render(message=message)
+                    return PageTemplate(filename='/general/message.mako').render(message=message)
                 # Store access token
                 autosubliminal.TWITTERKEY = response.get('oauth_token')
                 autosubliminal.TWITTERSECRET = response.get('oauth_token_secret')
                 # Render template
                 message = 'Twitter is now set up, remember to save your config and remember to test twitter!' \
                           '<br><a href="' + autosubliminal.WEBROOT + '/config/notification">Return</a>'
-                return MakoPageTemplate(filename='/general/message.mako').render(message=message)
+                return PageTemplate(filename='/general/message.mako').render(message=message)
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -574,7 +574,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return MakoPageTemplate(filename=self.template_file).render()
+            return PageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -605,7 +605,7 @@ class Log(object):
     @cherrypy.expose(alias='viewLog')
     def view_log(self, loglevel='all', lognum=None):
         content = utils.display_logfile(loglevel, lognum)
-        return MakoPageTemplate(filename=self.template_file).render(loglevel=loglevel, lognum=lognum, content=content)
+        return PageTemplate(filename=self.template_file).render(loglevel=loglevel, lognum=lognum, content=content)
 
     @cherrypy.expose(alias='clearLog')
     def clear_log(self):
@@ -617,7 +617,7 @@ class Log(object):
             os.remove(f)
         # Return to default log view
         content = utils.display_logfile()
-        return MakoPageTemplate(filename=self.template_file).render(loglevel='all', lognum=None, content=content)
+        return PageTemplate(filename=self.template_file).render(loglevel='all', lognum=None, content=content)
 
 
 class System(object):
@@ -636,21 +636,21 @@ class System(object):
     def restart(self):
         runner.restart_app()
         message = 'Auto-Subliminal is restarting...'
-        return MakoPageTemplate(filename='/system/system-restart.mako').render(message=message)
+        return PageTemplate(filename='/system/system-restart.mako').render(message=message)
 
     @cherrypy.expose
     def shutdown(self):
         runner.shutdown_app()
         message = 'Auto-Subliminal is shutting down...'
-        return MakoPageTemplate(filename='/general/message.mako').render(message=message)
+        return PageTemplate(filename='/general/message.mako').render(message=message)
 
     @cherrypy.expose(alias='info')
     def info(self):
-        return MakoPageTemplate(filename='/system/system-info.mako').render()
+        return PageTemplate(filename='/system/system-info.mako').render()
 
     @cherrypy.expose
     def status(self):
-        return MakoPageTemplate(filename='/system/system-status.mako').render()
+        return PageTemplate(filename='/system/system-status.mako').render()
 
     @cherrypy.expose(alias='scanDisk')
     def scan_disk(self):
@@ -672,7 +672,7 @@ class System(object):
         autosubliminal.CHECKVERSION.process.update()
         runner.restart_app(exit=True)
         message = 'Auto-Subliminal is restarting...'
-        return MakoPageTemplate(filename='/system/system-restart.mako').render(message=message)
+        return PageTemplate(filename='/system/system-restart.mako').render(message=message)
 
     @cherrypy.expose(alias='flushCache')
     def flush_cache(self):
@@ -740,7 +740,7 @@ class WebServerRoot(object):
         match = re.search(r'^(\d{3}).*$', status)
         # Render template
         status_code = int(match.group(1)) if match else 500
-        return MakoPageTemplate(filename='/general/error.mako').render(status_code=status_code, status=status,
+        return PageTemplate(filename='/general/error.mako').render(status_code=status_code, status=status,
                                                                        message=message, traceback=traceback)
 
     _cp_config = {'error_page.default': error_page}
