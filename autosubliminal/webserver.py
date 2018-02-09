@@ -500,9 +500,8 @@ class Config(object):
                 try:
                     response = oauth_client.fetch_request_token(twitter_notifier.REQUEST_TOKEN_URL)
                 except Exception as e:
-                    tmpl = Template(file='web/templates/general/message.tmpl')
-                    tmpl.message = 'Something went wrong.../n' + e.message
-                    return str(tmpl)
+                    message = 'Something went wrong.../n' + e.message
+                    return MakoPageTemplate(filename='/general/message.mako').render(message=message)
                 # Authorize
                 tmpl = Template(file='web/templates/config/config-regtwitter.tmpl')
                 tmpl.url = oauth_client.authorization_url(twitter_notifier.AUTHORIZATION_URL)
@@ -520,16 +519,15 @@ class Config(object):
                 try:
                     response = oauth_client.fetch_access_token(twitter_notifier.ACCESS_TOKEN_URL)
                 except Exception as e:
-                    tmpl = Template(file='web/templates/general/message.tmpl')
-                    tmpl.message = 'Something went wrong.../n' + e.message
-                    return str(tmpl)
+                    message = 'Something went wrong.../n' + e.message
+                    return MakoPageTemplate(filename='/general/message.mako').render(message=message)
                 # Store access token
                 autosubliminal.TWITTERKEY = response.get('oauth_token')
                 autosubliminal.TWITTERSECRET = response.get('oauth_token_secret')
-                tmpl = Template(file='web/templates/general/message.tmpl')
-                tmpl.message = 'Twitter is now set up, remember to save your config and remember to test twitter!' \
-                               '<br><a href="' + autosubliminal.WEBROOT + '/config/notification">Return</a>'
-                return str(tmpl)
+                # Render template
+                message = 'Twitter is now set up, remember to save your config and remember to test twitter!' \
+                          '<br><a href="' + autosubliminal.WEBROOT + '/config/notification">Return</a>'
+                return MakoPageTemplate(filename='/general/message.mako').render(message=message)
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -659,9 +657,8 @@ class System(object):
     @cherrypy.expose
     def shutdown(self):
         runner.shutdown_app()
-        tmpl = Template(file='web/templates/general/message.tmpl')
-        tmpl.message = 'Auto-Subliminal is shutting down...'
-        return str(tmpl)
+        message = 'Auto-Subliminal is shutting down...'
+        return MakoPageTemplate(filename='/general/message.mako').render(message=message)
 
     @cherrypy.expose(alias='info')
     def info(self):
