@@ -757,12 +757,9 @@ class WebServerRoot(object):
     def error_page(status, message, traceback, version):
         # Parse status code (example status: '404 Not Found')
         match = re.search(r'^(\d{3}).*$', status)
-        # Fill template
-        tmpl = Template(file='web/templates/general/error.tmpl')
-        tmpl.status_code = int(match.group(1)) if match else 500
-        tmpl.status = status
-        tmpl.message = message
-        tmpl.traceback = traceback
-        return str(tmpl)
+        # Render template
+        status_code = int(match.group(1)) if match else 500
+        return MakoPageTemplate(filename='/general/error.mako').render(status_code=status_code, status=status,
+                                                                       message=message, traceback=traceback)
 
     _cp_config = {'error_page.default': error_page}
