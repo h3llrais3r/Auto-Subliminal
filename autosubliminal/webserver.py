@@ -9,6 +9,7 @@ from requests_oauthlib.oauth1_session import OAuth1Session
 import autosubliminal
 from autosubliminal import config, notifiers, runner, subchecker, utils
 from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache, WantedItems
+from autosubliminal.templates.mako import MakoPageTemplate
 
 
 def redirect(abspath, *args, **kwargs):
@@ -652,9 +653,8 @@ class System(object):
     @cherrypy.expose
     def restart(self):
         runner.restart_app()
-        tmpl = Template(file='web/templates/system/system-restart.tmpl')
-        tmpl.message = 'Auto-Subliminal is restarting...'
-        return str(tmpl)
+        message = 'Auto-Subliminal is restarting...'
+        return MakoPageTemplate(filename='/system/system-restart.mako').render(message=message)
 
     @cherrypy.expose
     def shutdown(self):
@@ -665,13 +665,11 @@ class System(object):
 
     @cherrypy.expose(alias='info')
     def info(self):
-        tmpl = Template(file='web/templates/system/system-info.tmpl')
-        return str(tmpl)
+        return MakoPageTemplate(filename='/system/system-info.mako').render()
 
     @cherrypy.expose
     def status(self):
-        tmpl = Template(file='web/templates/system/system-status.tmpl')
-        return str(tmpl)
+        return MakoPageTemplate(filename='/system/system-status.mako').render()
 
     @cherrypy.expose(alias='scanDisk')
     def scan_disk(self):
@@ -692,9 +690,8 @@ class System(object):
     def update_version(self):
         autosubliminal.CHECKVERSION.process.update()
         runner.restart_app(exit=True)
-        tmpl = Template(file='web/templates/system/system-restart.tmpl')
-        tmpl.message = 'Auto-Subliminal is restarting...'
-        return str(tmpl)
+        message = 'Auto-Subliminal is restarting...'
+        return MakoPageTemplate(filename='/system/system-restart.mako').render(message=message)
 
     @cherrypy.expose(alias='flushCache')
     def flush_cache(self):
