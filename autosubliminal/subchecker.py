@@ -167,15 +167,15 @@ def search_subtitle(wanted_item_index, lang):
                                'wanted_item_index': wanted_item_index,
                                'playvideo_url': _construct_playvideo_url(wanted_item)}
                         # Get content preview (the first 28 lines and last 30 lines of the subtitle)
-                        content_split = subtitle.content.splitlines(False)
+                        # Use the subtitle text (decoded content) instead of content to generate the preview
+                        content_split = subtitle.text.splitlines(False)
                         if len(content_split) < 58:
                             content_preview = 'This seems to be an invalid subtitle.'
                             content_preview += '<br> It has less than 58 lines to preview.'
                         else:
                             try:
                                 # First 28 lines
-                                content_preview = '<br>'.join(
-                                    x.replace('"', '\'') for x in content_split[:28])
+                                content_preview = '<br>'.join(x.replace('"', '\'') for x in content_split[:28])
                                 # Separator
                                 content_preview += '<br>'
                                 content_preview += '<br>'

@@ -31,8 +31,7 @@ class Home(object):
 
     @cherrypy.expose
     def index(self):
-        tmpl = Template(file='web/templates/home/home.tmpl')
-        return str(tmpl)
+        return MakoPageTemplate(filename='/home/home.mako').render()
 
     @cherrypy.expose(alias='updateWantedItem')
     @cherrypy.tools.json_out()
@@ -81,10 +80,8 @@ class Home(object):
     @cherrypy.expose(alias='skipShow')
     def skip_show(self, wanted_item_index, title, season=None):
         if not season:
-            tmpl = Template(file='web/templates/home/home-skipshow.tmpl')
-            tmpl.wanted_item_index = wanted_item_index
-            tmpl.title = title
-            return str(tmpl)
+            return MakoPageTemplate(filename='/home/home-skipshow.mako').render(wanted_item_index=wanted_item_index,
+                                                                                title=title)
         else:
             if not wanted_item_index:
                 raise cherrypy.HTTPError(400, 'No wanted_item index supplied')
@@ -149,12 +146,10 @@ class Home(object):
     @cherrypy.expose(alias='deleteVideo')
     def delete_video(self, wanted_item_index, confirmed=False, cleanup=False):
         if not confirmed:
-            # Get wanted item
             wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
-            tmpl = Template(file='web/templates/home/home-deleteVideo.tmpl')
-            tmpl.wanted_item_index = wanted_item_index
-            tmpl.video = wanted_item['videopath']
-            return str(tmpl)
+            video = wanted_item['videopath']
+            return MakoPageTemplate(filename='/home/home-deleteVideo.mako').render(wanted_item_index=wanted_item_index,
+                                                                                   video=video)
         else:
             # Delete video
             deleted = subchecker.delete_video(wanted_item_index, cleanup)
@@ -169,11 +164,8 @@ class Home(object):
         # Search subtitle
         subs, errormessage = subchecker.search_subtitle(wanted_item_index, lang)
         # Send response in html (store subs under subs key)
-        tmpl = Template(file='web/templates/home/home-manualsearch.tmpl')
-        tmpl.subs = subs
-        tmpl.infomessage = ''
-        tmpl.errormessage = errormessage
-        return str(tmpl)
+        return MakoPageTemplate(filename='/home/home-manualsearch.mako').render(subs=subs, infomessage=None,
+                                                                                errormessage=errormessage)
 
     @cherrypy.expose(alias='saveSubtitle')
     @cherrypy.tools.json_out()
@@ -181,9 +173,9 @@ class Home(object):
         # Save subtitle
         saved = subchecker.save_subtitle(wanted_item_index, subtitle_index)
         if saved:
-            return {'result': saved, 'infomessage': 'Subtitle saved.', 'errormessage': ''}
+            return {'result': saved, 'infomessage': 'Subtitle saved.', 'errormessage': None}
         else:
-            return {'result': saved, 'infomessage': '',
+            return {'result': saved, 'infomessage': None,
                     'errormessage': 'Unable to save the subtitle! Please check the log file!'}
 
     @cherrypy.expose(alias='deleteSubtitle')
@@ -192,9 +184,9 @@ class Home(object):
         # Delete subtitle
         removed = subchecker.delete_subtitle(wanted_item_index)
         if removed:
-            return {'result': removed, 'infomessage': 'Subtitle deleted.', 'errormessage': ''}
+            return {'result': removed, 'infomessage': 'Subtitle deleted.', 'errormessage': None}
         else:
-            return {'result': removed, 'infomessage': '',
+            return {'result': removed, 'infomessage': None,
                     'errormessage': 'Unable to delete the subtitle! Please check the log file!'}
 
     @cherrypy.expose(alias='playVideo')
@@ -206,9 +198,9 @@ class Home(object):
         video = wanted_item['videopath']
         try:
             utils.run_cmd(video, False)
-            return {'result': True, 'infomessage': 'Playing video.', 'errormessage': ''}
+            return {'result': True, 'infomessage': 'Playing video.', 'errormessage': None}
         except:
-            return {'result': False, 'infomessage': '',
+            return {'result': False, 'infomessage': None,
                     'errormessage': 'Cannot play the video! Please check the log file!'}
 
     @cherrypy.expose(alias='postProcess')
@@ -218,9 +210,9 @@ class Home(object):
         if subtitle_index:
             processed = subchecker.post_process(wanted_item_index, subtitle_index)
             if processed:
-                return {'result': processed, 'infomessage:': '', 'errormessage': '', 'redirect': '/home'}
+                return {'result': processed, 'infomessage:': None, 'errormessage': None, 'redirect': '/home'}
             else:
-                return {'result': processed, 'infomessage': '',
+                return {'result': processed, 'infomessage': None,
                         'errormessage': 'Unable to handle post processing! Please check the log file!'}
         else:
             subchecker.post_process_no_subtitle(wanted_item_index)
