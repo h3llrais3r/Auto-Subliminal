@@ -261,12 +261,12 @@ class Config(object):
 
     class _ConfigGeneral(object):
         def __init__(self):
-            self.tmpl_file = 'web/templates/config/config-general.tmpl'
+            self.template_file = '/config/config-general.mako'
             self.section = 'general'
 
         @cherrypy.expose
         def index(self):
-            return str(Template(file=self.tmpl_file))
+            return MakoPageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -295,12 +295,12 @@ class Config(object):
 
     class _ConfigLogging(object):
         def __init__(self):
-            self.tmpl_file = 'web/templates/config/config-logging.tmpl'
+            self.template_file = '/config/config-logging.mako'
             self.section = 'logging'
 
         @cherrypy.expose
         def index(self):
-            return str(Template(file=self.tmpl_file))
+            return MakoPageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -322,12 +322,12 @@ class Config(object):
 
     class _ConfigWebServer(object):
         def __init__(self):
-            self.tmpl_file = 'web/templates/config/config-webserver.tmpl'
+            self.template_file = '/config/config-webserver.mako'
             self.section = 'webserver'
 
         @cherrypy.expose
         def index(self):
-            return str(Template(file=self.tmpl_file))
+            return MakoPageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -345,12 +345,12 @@ class Config(object):
 
     class _ConfigSubliminal(object):
         def __init__(self):
-            self.tmpl_file = 'web/templates/config/config-subliminal.tmpl'
+            self.template_file = '/config/config-subliminal.mako'
             self.section = 'subliminal'
 
         @cherrypy.expose
         def index(self):
-            return str(Template(file=self.tmpl_file))
+            return MakoPageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -431,12 +431,12 @@ class Config(object):
 
     class _ConfigNameMapping(object):
         def __init__(self):
-            self.tmpl_file = 'web/templates/config/config-namemapping.tmpl'
+            self.template_file = '/config/config-namemapping.mako'
             self.section = 'namemapping'
 
         @cherrypy.expose
         def index(self):
-            return str(Template(file=self.tmpl_file))
+            return MakoPageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -454,12 +454,12 @@ class Config(object):
 
     class _ConfigSkipMapping(object):
         def __init__(self):
-            self.tmpl_file = 'web/templates/config/config-skipmapping.tmpl'
+            self.template_file = '/config/config-skipmapping.mako'
             self.section = 'skipmapping'
 
         @cherrypy.expose
         def index(self):
-            return str(Template(file=self.tmpl_file))
+            return MakoPageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -473,12 +473,12 @@ class Config(object):
 
     class _ConfigNotification(object):
         def __init__(self):
-            self.tmpl_file = 'web/templates/config/config-notification.tmpl'
+            self.template_file = '/config/config-notification.mako'
             self.section = 'notification'
 
         @cherrypy.expose
         def index(self):
-            return str(Template(file=self.tmpl_file))
+            return MakoPageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='test')
         @cherrypy.tools.json_out()
@@ -503,11 +503,11 @@ class Config(object):
                     message = 'Something went wrong.../n' + e.message
                     return MakoPageTemplate(filename='/general/message.mako').render(message=message)
                 # Authorize
-                tmpl = Template(file='web/templates/config/config-regtwitter.tmpl')
-                tmpl.url = oauth_client.authorization_url(twitter_notifier.AUTHORIZATION_URL)
-                tmpl.token_key = response.get('oauth_token')
-                tmpl.token_secret = response.get('oauth_token_secret')
-                return str(tmpl)
+                url = oauth_client.authorization_url(twitter_notifier.AUTHORIZATION_URL)
+                token_key = response.get('oauth_token')
+                token_secret = response.get('oauth_token_secret')
+                return MakoPageTemplate(filename='/config/config-regtwitter.mako').render(url=url, token_key=token_key,
+                                                                                          token_secret=token_secret)
 
             if token_key and token_secret and token_pin:
                 # Getting access token
@@ -577,12 +577,12 @@ class Config(object):
 
     class _ConfigPostProcessing(object):
         def __init__(self):
-            self.tmpl_file = 'web/templates/config/config-postprocessing.tmpl'
+            self.template_file = '/config/config-postprocessing.mako'
             self.section = 'postprocessing'
 
         @cherrypy.expose
         def index(self):
-            return str(Template(file=self.tmpl_file))
+            return MakoPageTemplate(filename=self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
