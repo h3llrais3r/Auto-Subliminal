@@ -42,15 +42,16 @@ class Home(object):
             if key in wanted_item.keys():
                 wanted_item[key] = kwargs[key]
         # Only return updatable fields
+        # These values will be shown in the view through jquery, so apply the display_item() on it!
         return {'displaytitle': utils.display_title(wanted_item),
-                'title': utils.display_item(wanted_item, 'title', default_value=''),
-                'year': utils.display_item(wanted_item, 'year', default_value=''),
-                'season': utils.display_item(wanted_item, 'season', default_value=''),
-                'episode': utils.display_item(wanted_item, 'episode', default_value=''),
-                'source': utils.display_item(wanted_item, 'source', uppercase=True),
-                'quality': utils.display_item(wanted_item, 'quality', uppercase=True),
-                'codec': utils.display_item(wanted_item, 'codec', uppercase=True),
-                'releasegrp': utils.display_item(wanted_item, 'releasegrp', uppercase=True)}
+                'title': utils.display_item(wanted_item, 'title'),
+                'year': utils.display_item(wanted_item, 'year'),
+                'season': utils.display_item(wanted_item, 'season'),
+                'episode': utils.display_item(wanted_item, 'episode'),
+                'source': utils.display_item(wanted_item, 'source', 'N/A', uppercase=True),
+                'quality': utils.display_item(wanted_item, 'quality', 'N/A', uppercase=True),
+                'codec': utils.display_item(wanted_item, 'codec', 'N/A', uppercase=True),
+                'releasegrp': utils.display_item(wanted_item, 'releasegrp', 'N/A', uppercase=True)}
 
     @cherrypy.expose(alias='resetWantedItem')
     @cherrypy.tools.json_out()
@@ -58,14 +59,15 @@ class Home(object):
         # Get wanted item
         wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
         wanted_item_db = WantedItems().get_wanted_item(wanted_item['videopath'])
-        for key in wanted_item.keys():
+        for key in wanted_item_db.keys():
             wanted_item[key] = wanted_item_db[key]
         # Only return updatable fields
+        # These values represent the original values, so apply default display_item() on it!
         return {'displaytitle': utils.display_title(wanted_item),
-                'title': utils.display_item(wanted_item, 'title', default_value=''),
-                'year': utils.display_item(wanted_item, 'year', default_value=''),
-                'season': utils.display_item(wanted_item, 'season', default_value=''),
-                'episode': utils.display_item(wanted_item, 'episode', default_value=''),
+                'title': utils.display_item(wanted_item, 'title'),
+                'year': utils.display_item(wanted_item, 'year'),
+                'season': utils.display_item(wanted_item, 'season'),
+                'episode': utils.display_item(wanted_item, 'episode'),
                 'source': utils.display_item(wanted_item, 'source'),
                 'quality': utils.display_item(wanted_item, 'quality'),
                 'codec': utils.display_item(wanted_item, 'codec'),
@@ -80,7 +82,7 @@ class Home(object):
     def skip_show(self, wanted_item_index, title, season=None):
         if not season:
             return PageTemplate(filename='/home/home-skipshow.mako').render(wanted_item_index=wanted_item_index,
-                                                                                title=title)
+                                                                            title=title)
         else:
             if not wanted_item_index:
                 raise cherrypy.HTTPError(400, 'No wanted_item index supplied')
@@ -148,7 +150,7 @@ class Home(object):
             wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
             video = wanted_item['videopath']
             return PageTemplate(filename='/home/home-deleteVideo.mako').render(wanted_item_index=wanted_item_index,
-                                                                                   video=video)
+                                                                               video=video)
         else:
             # Delete video
             deleted = subchecker.delete_video(wanted_item_index, cleanup)
@@ -164,7 +166,7 @@ class Home(object):
         subs, errormessage = subchecker.search_subtitle(wanted_item_index, lang)
         # Send response in html (store subs under subs key)
         return PageTemplate(filename='/home/home-manualsearch.mako').render(subs=subs, infomessage=None,
-                                                                                errormessage=errormessage)
+                                                                            errormessage=errormessage)
 
     @cherrypy.expose(alias='saveSubtitle')
     @cherrypy.tools.json_out()
@@ -498,7 +500,7 @@ class Config(object):
                 token_key = response.get('oauth_token')
                 token_secret = response.get('oauth_token_secret')
                 return PageTemplate(filename='/config/config-regtwitter.mako').render(url=url, token_key=token_key,
-                                                                                          token_secret=token_secret)
+                                                                                      token_secret=token_secret)
 
             if token_key and token_secret and token_pin:
                 # Getting access token
@@ -740,6 +742,6 @@ class WebServerRoot(object):
         # Render template
         status_code = int(match.group(1)) if match else 500
         return PageTemplate(filename='/general/error.mako').render(status_code=status_code, status=status,
-                                                                       message=message, traceback=traceback)
+                                                                   message=message, traceback=traceback)
 
     _cp_config = {'error_page.default': error_page}

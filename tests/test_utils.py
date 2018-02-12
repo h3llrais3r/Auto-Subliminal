@@ -201,7 +201,7 @@ def test_display_item():
     empty_dict = {}
     assert display_item(item_dict, 'test') == 'value'
     assert display_item(item_dict, 'test', uppercase=True) == 'VALUE'
-    assert display_item(empty_dict, 'test') == 'N/A'
+    assert display_item(empty_dict, 'test') == ''
     assert display_item(empty_dict, 'test', default_value='default') == 'default'
     assert display_item(empty_dict, 'test', default_value='default', uppercase=True) == 'DEFAULT'
 

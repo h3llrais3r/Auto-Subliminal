@@ -359,7 +359,7 @@ def display_mapping_dict(mapping_dict):
     return s
 
 
-def display_item(item_dict, key, default_value='N/A', uppercase=False):
+def display_item(item_dict, key, default_value='', uppercase=False):
     item = item_dict.get(key, default_value) or default_value
     item = safe_string(item, default_value)
     if uppercase:

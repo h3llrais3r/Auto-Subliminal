@@ -163,35 +163,35 @@
                                                         <div class="panel-body text-right">
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Title:</span>
-                                                                <input type="text" value="${display_item(item, 'title', '')}" class="form-control input-sm update-wanted-item-title">
+                                                                <input type="text" value="${display_item(item, 'title')}" class="form-control input-sm update-wanted-item-title">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Year:</span>
-                                                                <input type="text" value="${display_item(item, 'year', '')}" class="form-control input-sm update-wanted-item-year">
+                                                                <input type="text" value="${display_item(item, 'year')}" class="form-control input-sm update-wanted-item-year">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Season:</span>
-                                                                <input type="text" value="${display_item(item, 'season', '')}" class="form-control input-sm update-wanted-item-season">
+                                                                <input type="text" value="${display_item(item, 'season')}" class="form-control input-sm update-wanted-item-season">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Episode:</span>
-                                                                <input type="text" value="${display_item(item, 'episode', '')}" class="form-control input-sm update-wanted-item-episode">
+                                                                <input type="text" value="${display_item(item, 'episode')}" class="form-control input-sm update-wanted-item-episode">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Source:</span>
-                                                                <input type="text" value="${display_item(item, 'source', '')}" class="form-control input-sm update-wanted-item-source">
+                                                                <input type="text" value="${display_item(item, 'source')}" class="form-control input-sm update-wanted-item-source">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Quality:</span>
-                                                                <input type="text" value="${display_item(item, 'quality', '')}" class="form-control input-sm update-wanted-item-quality">
+                                                                <input type="text" value="${display_item(item, 'quality')}" class="form-control input-sm update-wanted-item-quality">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Codec:</span>
-                                                                <input type="text" value="${display_item(item, 'codec', '')}" class="form-control input-sm update-wanted-item-codec">
+                                                                <input type="text" value="${display_item(item, 'codec')}" class="form-control input-sm update-wanted-item-codec">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Group:</span>
-                                                                <input type="text" value="${display_item(item, 'releasegrp', '')}" class="form-control input-sm update-wanted-item-releasegrp">
+                                                                <input type="text" value="${display_item(item, 'releasegrp')}" class="form-control input-sm update-wanted-item-releasegrp">
                                                             </div>
                                                             <a href="${autosubliminal.WEBROOT}/home/resetWantedItem/${index}" class="btn btn-sm btn-default reset-wanted-item-link">Reset</a>
                                                             <a href="${autosubliminal.WEBROOT}/home/updateWantedItem/${index}" class="btn btn-sm btn-default update-wanted-item-link">Update</a>
@@ -202,8 +202,12 @@
                                         </span>
                                     % endif
                                 </td>
-                                <td class="wanted-item-season">${display_item(item, 'season', '')}</td>
-                                <td class="wanted-item-episode">${display_item(item, 'season', '')}</td>
+                                <td class="wanted-item-season">
+                                    ${display_item(item, 'season')}
+                                </td>
+                                <td class="wanted-item-episode">
+                                    ${display_item(item, 'episode')}
+                                </td>
                                 <td class="wanted-item-source wrapped">
                                     ${display_item(item, 'source', 'N/A', True)}
                                 </td>

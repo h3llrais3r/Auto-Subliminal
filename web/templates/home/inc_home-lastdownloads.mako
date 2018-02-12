@@ -72,20 +72,24 @@
                                             <li>
                                                 <span class="info-list-label">Subtitle:</span>
                                                 <span>
-                                                    ${display_item(item, 'subtitle', 'N/A', False)}
+                                                    ${display_item(item, 'subtitle', 'N/A')}
                                                 </span>
                                             </li>
                                             <li>
                                                 <span class="info-list-label">Provider:</span>
                                                 <span>
-                                                    ${display_item(item, 'provider', 'N/A', False)}
+                                                    ${display_item(item, 'provider', 'N/A')}
                                                 </span>
                                             </li>
                                         </ul>
                                     </span>
                                 </td>
-                                <td>${display_item(item, 'season', '')}</td>
-                                <td>${display_item(item, 'episode', '')}</td>
+                                <td>
+                                    ${display_item(item, 'season')}
+                                </td>
+                                <td>
+                                    ${display_item(item, 'episode')}
+                                </td>
                                 <td class="wrapped">
                                     ${display_item(item, 'source', 'N/A', True)}
                                 </td>
