@@ -84,8 +84,8 @@
                                         </ul>
                                     </span>
                                 </td>
-                                <td>${item['season']}</td>
-                                <td>${item['episode']}</td>
+                                <td>${display_item(item, 'season', '')}</td>
+                                <td>${display_item(item, 'episode', '')}</td>
                                 <td class="wrapped">
                                     ${display_item(item, 'source', 'N/A', True)}
                                 </td>
