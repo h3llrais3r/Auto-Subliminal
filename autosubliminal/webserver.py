@@ -263,11 +263,10 @@ class Config(object):
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
-        def save(self, path, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, scandisk,
-                 checksub, checkversion, checkversionautoupdate, scanembeddedsubs, skiphiddendirs,
-                 detectinvalidsublanguage, detectedlanguageprobability, minvideofilesize, maxdbresults):
+        def save(self, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, scandisk, checksub,
+                 checkversion, checkversionautoupdate, scanembeddedsubs, skiphiddendirs, detectinvalidsublanguage,
+                 detectedlanguageprobability, minvideofilesize, maxdbresults):
             # Set general variables
-            autosubliminal.PATH = path
             autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
             autosubliminal.DEFAULTLANGUAGE = defaultlanguage
             autosubliminal.DEFAULTLANGUAGESUFFIX = utils.getboolean(defaultlanguagesuffix)

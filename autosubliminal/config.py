@@ -32,12 +32,6 @@ def read_config(check_upgrade=False):
         cfg = SafeConfigParser()
 
     if cfg.has_section('general'):
-        if cfg.has_option('general', 'path'):
-            autosubliminal.PATH = cfg.get('general', 'path')
-        else:
-            print('ERROR: Required ariable PATH is missing. Using current working directory instead.')
-            autosubliminal.PATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
-
         if cfg.has_option('general', 'videopaths'):
             video_paths = unicode(str(cfg.get('general', 'videopaths')))
             if video_paths:
@@ -927,7 +921,6 @@ def save_general_section():
             else:
                 additionallanguages = x
 
-    cfg.set(section, 'path', autosubliminal.PATH)
     cfg.set(section, 'videopaths', str(videopaths))
     cfg.set(section, 'defaultlanguage', autosubliminal.DEFAULTLANGUAGE)
     cfg.set(section, 'defaultlanguagesuffix', str(autosubliminal.DEFAULTLANGUAGESUFFIX))
@@ -1466,7 +1459,7 @@ def write_config(section=None):
         with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
             cfg.readfp(f)
     except:
-        # No config file so we create one in autosubliminal.PATH
+        # No config file so we create one
         if not autosubliminal.CONFIGFILE:
             autosubliminal.CONFIGFILE = 'config.properties'
         open(autosubliminal.CONFIGFILE, 'w').close()
@@ -1771,3 +1764,24 @@ def upgrade_config(from_version, to_version):
             utils.add_notification_message(
                 'Config upgraded. Please check or reconfigure your general, logging and notification configuration.',
                 'notice', True)
+        if from_version == 9 and to_version == 10:
+            print('INFO: Removing old PATH config.')
+            # Read config file
+            cfg = SafeConfigParser()
+            try:
+                with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
+                    cfg.readfp(f)
+            except:
+                # No config yet, just mark as upgraded
+                cfg = SafeConfigParser()
+            if cfg.has_section('general'):
+                if cfg.has_option('general', 'path'):
+                    cfg.remove_option('general', 'path')
+            # Write to file
+            with open(autosubliminal.CONFIGFILE, 'wb') as file:
+                cfg.write(file)
+            print('INFO: Config upgraded to version 10.')
+            autosubliminal.CONFIGVERSION = 10
+            autosubliminal.CONFIGUPGRADED = True
+            utils.add_notification_message(
+                'Config upgraded.', 'notice', True)

@@ -89,13 +89,6 @@ def main(argv=None):
     print('INFO: Initializing variables and loading config.')
     autosubliminal.initialize()
 
-    # Change to the new work directory
-    if os.path.exists(autosubliminal.PATH):
-        os.chdir(autosubliminal.PATH)
-    else:
-        print('ERROR: PATH does not exist, check config.')
-        os._exit(1)
-
     # Setup application
     import autosubliminal.application
 

@@ -25,27 +25,6 @@
 
                         <div class="form-group narrow">
                             <span class="col-xs-4 col-md-3">
-                                <label for="path">Root path
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>
-                                                The folder where the Auto-Subliminal files are located.<br>
-                                                This field is required.
-                                            </li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-8 col-md-6">
-                                <input type="text" value="${autosubliminal.PATH}" id="path" name="path" class="form-control input-sm">
-                            </span>
-                        </div>
-
-                        <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
                                 <label for="videopaths">Video paths
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
