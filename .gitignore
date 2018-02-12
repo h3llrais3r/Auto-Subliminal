@@ -26,6 +26,7 @@ node_modules/
 
 # Cache files
 .cache/
+cache/
 
 #Coverage files
 .coverage

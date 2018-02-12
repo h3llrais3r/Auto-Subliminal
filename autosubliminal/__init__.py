@@ -10,6 +10,8 @@ CONFIGVERSION = None
 CONFIGUPGRADED = None
 
 # System
+PATH = None
+CACHEDIR = None
 DEREFERURL = None
 GITHUBURL = None
 VERSIONURL = None
@@ -47,7 +49,6 @@ STARTED = None
 PID = None
 
 # General config section
-PATH = None
 VIDEOPATHS = None
 DEFAULTLANGUAGE = None
 DEFAULTLANGUAGESUFFIX = None
@@ -162,7 +163,7 @@ MOVIEPOSTPROCESSCMDARGS = None
 
 def initialize():
     global CONFIGFILE, CONFIGVERSION, CONFIGUPGRADED, \
-        DEREFERURL, GITHUBURL, VERSIONURL, USERAGENT, SYSENCODING, TIMEOUT, MESSAGEQUEUE, \
+        CACHEDIR, DEREFERURL, GITHUBURL, VERSIONURL, USERAGENT, SYSENCODING, TIMEOUT, MESSAGEQUEUE, \
         WANTEDQUEUE, WANTEDQUEUELOCK, WEBSOCKETBROADCASTER, SCHEDULERS, SCANDISK, CHECKSUB, CHECKVERSION, \
         DEVELOPER, \
         TVDBAPIKEY, TVDBURL, IMDBURL, SHOWINDEXER, MOVIEINDEXER, \
@@ -195,23 +196,13 @@ def initialize():
     # Fake some entry points to get libraries working without installation
     _fake_entry_points()
 
-    # Cache settings
-    _init_cache()
-
-    # Subliminal settings
-    SUBLIMINALPROVIDERMANAGER = _initialize_subliminal()
-    SUBLIMINALPROVIDERCONFIGS = {}
-
-    # Langdetect settings
-    _init_langdetect()
-
     # System settings
+    PATH = os.path.abspath(os.getcwd())
+    CACHEDIR = os.path.abspath(os.path.join(PATH, 'cache'))
     DEREFERURL = 'http://www.dereferer.org/?'
     GITHUBURL = 'https://github.com/h3llrais3r/Auto-Subliminal'
     VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py'
     USERAGENT = 'Auto-Subliminal/' + version.RELEASE_VERSION
-
-    # Default http timeout
     TIMEOUT = 300
 
     # Message queue (list of message dicts with 'message' and 'severity' key)
@@ -225,7 +216,7 @@ def initialize():
     # Scheduler settings
     SCHEDULERS = {}
 
-    # Developer
+    # Developer settings
     DEVELOPER = False
 
     # Indexer settings
@@ -245,7 +236,17 @@ def initialize():
     # Webserver settings
     LAUNCHBROWSER = True
 
-    # Config file settings
+    # Cache settings
+    _init_cache()
+
+    # Subliminal settings
+    SUBLIMINALPROVIDERMANAGER = _init_subliminal()
+    SUBLIMINALPROVIDERCONFIGS = {}
+
+    # Langdetect settings
+    _init_langdetect()
+
+    # Config settings
     CONFIGUPGRADED = False
     if CONFIGFILE is None:
         CONFIGFILE = 'config.properties'
@@ -262,11 +263,11 @@ def initialize():
         print('ERROR: PATH does not exist, check config.')
         os._exit(1)
 
-    # Database
+    # Database settings
     DBFILE = 'database.db'
     db.initialize()
 
-    # Logging
+    # Logging settings
     logger.initialize()
 
 
@@ -274,7 +275,7 @@ def _fake_entry_points():
     """
     Fake some entry points to get libraries working without installation.
     After setup, entry points can be retrieved by:
-        pkg_resources.get_entry_info(dist='fake_entry_points', group=None, name='entry_point_namespace')
+    pkg_resources.get_entry_info(dist='fake_entry_points', group=None, name='entry_point_namespace')
     """
 
     # Do not normalize the path or the entry point will be loaded under the wrong entry_key
@@ -290,21 +291,25 @@ def _fake_entry_points():
 
 def _init_cache():
     """
-    Initialize internal cache
+    Initialize internal cache.
     """
 
     # Imports
     from autosubliminal.cache import region, MutexFileLock
 
+    # Make sure the cache dir exists
+    if not os.path.exists(CACHEDIR):
+        os.makedirs(CACHEDIR)
+
     # Configure autosubliminal/dogpile cache
     # Use MutexFileLock otherwise it will not work due to fcntl module import error in windows
     # Do not reconfigure after a soft restart (without exiting main app) -> otherwise RegionAlreadyConfigured exception
     if not region.is_configured:
-        cache_file = os.path.abspath(os.path.expanduser('autosubliminal.cache.dbm'))
+        cache_file = os.path.abspath(os.path.join(CACHEDIR, 'autosubliminal.cache.dbm'))
         region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexFileLock})
 
 
-def _initialize_subliminal():
+def _init_subliminal():
     """
     Initialize subliminal.
     This must always be done AFTER the registration of our fake_entry_points.
@@ -322,7 +327,7 @@ def _initialize_subliminal():
     # Use MutexLock otherwise some providers will not work due to fcntl module import error in windows
     # Do not reconfigure after a soft restart (without exiting main app) -> otherwise RegionAlreadyConfigured exception
     if not region.is_configured:
-        cache_file = os.path.abspath(os.path.expanduser('subliminal.cache.dbm'))
+        cache_file = os.path.abspath(os.path.join(CACHEDIR, 'subliminal.cache.dbm'))
         region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexLock})
 
     # Add our custom refiners to list of subliminal refiners
@@ -343,6 +348,9 @@ def _initialize_subliminal():
 
 
 def _init_langdetect():
+    """
+    Initialize language detection.
+    """
     # Imports
     import langdetect.detector_factory
     from langdetect.detector_factory import DetectorFactory

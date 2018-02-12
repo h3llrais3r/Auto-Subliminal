@@ -6,10 +6,8 @@ from mako.template import Template
 
 import autosubliminal
 
-mako_path = os.path.normpath(os.path.join(autosubliminal.PATH, 'web/templates'))
-# TODO: configure mako cache
-# mako_cache = os.path.normpath(os.path.join(autosubliminal.CACHE_DIR, 'mako'))
-mako_cache = None
+mako_path = os.path.abspath(os.path.join(autosubliminal.PATH, 'web/templates'))
+mako_cache = os.path.abspath(os.path.join(autosubliminal.CACHEDIR, 'mako'))
 mako_lookup = TemplateLookup(directories=[mako_path], module_directory=mako_cache)
 
 
