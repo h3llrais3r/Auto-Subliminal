@@ -155,7 +155,7 @@ class MovieIndexer(Indexer):
                 # If no year is present, take the first match
                 else:
                     return movie
-            elif data['akas']:
+            elif data.get('akas', None):
                 for alias in data['akas']:
                     if self.sanitize_imdb_title(alias) == self.sanitize_imdb_title(title):
                         # If a year is present, it should also be the same
