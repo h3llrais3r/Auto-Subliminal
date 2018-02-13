@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from collections import OrderedDict
 import os
 import tempfile
@@ -6,19 +8,22 @@ import time
 import pytest
 
 import autosubliminal
-from autosubliminal.utils import getboolean, safe_string, safe_trim, safe_uppercase, sanitize, mapping_string_to_dict, \
+from autosubliminal.utils import getboolean, safe_text, safe_trim, safe_uppercase, sanitize, mapping_string_to_dict, \
     display_logfile, display_mapping_dict, get_show_name_mapping, get_addic7ed_show_name_mapping, \
     get_alternative_show_name_mapping, get_movie_name_mapping, get_alternative_movie_name_mapping, skip_show, \
     skip_movie, display_list_single_line, display_list_multi_line, display_item, display_title, display_name, \
     display_timestamp, convert_timestamp, humanize_bytes, get_wanted_queue_lock, release_wanted_queue_lock, \
     count_wanted_items, get_file_size, set_rw_and_remove
 
-string_value = 'test'
+text_value = 'test'
+text_value_special_char = u'ù'
 num_value = 1
 long_value = 1.0
 bool_value = True
 list_value = []
+list_value_with_items = ['a', 'b']
 dict_value = {}
+dict_value_with_items = {'1': 'a', '2': 'b'}
 
 
 def test_getboolean():
@@ -34,20 +39,24 @@ def test_getboolean():
         getboolean('test')
 
 
-def test_save_string():
-    assert safe_string(None) == 'None'
-    assert safe_string(string_value) == 'test'
-    assert safe_string(num_value) == '1'
-    assert safe_string(long_value) == '1.0'
-    assert safe_string(bool_value) == 'True'
-    assert safe_string(list_value) == '[]'
-    assert safe_string(dict_value) == '{}'
+def test_save_text():
+    assert safe_text(None) == 'None'
+    assert safe_text(text_value) == 'test'
+    assert safe_text(text_value_special_char) == u'ù'
+    assert safe_text(num_value) == '1'
+    assert safe_text(long_value) == '1.0'
+    assert safe_text(bool_value) == 'True'
+    assert safe_text(list_value) == '[]'
+    assert safe_text(list_value_with_items) == '[\'a\', \'b\']'
+    assert safe_text(dict_value) == '{}'
+    assert safe_text(dict_value_with_items) == '{\'1\': \'a\', \'2\': \'b\'}'
 
 
 def test_safe_uppercase():
     assert safe_uppercase(None) is None
     assert safe_uppercase(None, 'N/A') == 'N/A'
-    assert safe_uppercase(string_value) == 'TEST'
+    assert safe_uppercase(text_value) == 'TEST'
+    assert safe_uppercase(text_value_special_char) == u'Ù'
     assert safe_uppercase(num_value) is None
     assert safe_uppercase(num_value, 'N/A') == 'N/A'
     assert safe_uppercase(long_value) is None
@@ -56,8 +65,12 @@ def test_safe_uppercase():
     assert safe_uppercase(bool_value, 'N/A') == 'N/A'
     assert safe_uppercase(list_value) is None
     assert safe_uppercase(list_value, 'N/A') == 'N/A'
+    assert safe_uppercase(list_value_with_items, 'N/A') == 'N/A'
+    assert safe_uppercase(safe_text(list_value_with_items), 'N/A') == '[\'A\', \'B\']'
     assert safe_uppercase(dict_value) is None
     assert safe_uppercase(dict_value, 'N/A') == 'N/A'
+    assert safe_uppercase(dict_value_with_items, 'N/A') == 'N/A'
+    assert safe_uppercase(safe_text(dict_value_with_items), 'N/A') == '{\'1\': \'A\', \'2\': \'B\'}'
 
 
 def test_safe_trim():
@@ -197,9 +210,10 @@ def test_display_mapping_dict():
 
 
 def test_display_item():
-    item_dict = {'test': 'value'}
+    item_dict = {'test': 'value', 'test2': u'ù'}
     empty_dict = {}
     assert display_item(item_dict, 'test') == 'value'
+    assert display_item(item_dict, 'test2') == u'ù'
     assert display_item(item_dict, 'test', uppercase=True) == 'VALUE'
     assert display_item(empty_dict, 'test') == ''
     assert display_item(empty_dict, 'test', default_value='default') == 'default'

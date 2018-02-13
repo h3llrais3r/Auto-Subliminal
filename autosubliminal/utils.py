@@ -10,6 +10,7 @@ import subprocess
 import threading
 import time
 import urllib2
+from six import text_type
 
 import autosubliminal
 
@@ -96,14 +97,13 @@ def getboolean(value):
     return _boolean_states[v.lower()]
 
 
-def safe_string(obj, default_value=None):
+def safe_text(obj, default_value=None):
     """
-    Return the object converted to string.
+    Return the object converted to text.
     When not possible return the default value.
     """
     try:
-        text = str(obj)
-        return text
+        return text_type(obj)
     except:
         return default_value
 
@@ -114,8 +114,7 @@ def safe_uppercase(obj, default_value=None):
     When not possible return the default value.
     """
     try:
-        text = obj.upper()
-        return text
+        return obj.upper()
     except:
         return default_value
 
@@ -126,8 +125,7 @@ def safe_trim(obj, default_value=None):
     When not possible return the default value.
     """
     try:
-        text = obj.strip(' \n\r\t')
-        return text
+        return obj.strip(' \n\r\t')
     except:
         return default_value
 
@@ -361,7 +359,7 @@ def display_mapping_dict(mapping_dict):
 
 def display_item(item_dict, key, default_value='', uppercase=False):
     item = item_dict.get(key, default_value) or default_value
-    item = safe_string(item, default_value)
+    item = safe_text(item, default_value)
     if uppercase:
         item = safe_uppercase(item, default_value)
     return item
