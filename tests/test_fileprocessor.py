@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import os
 
 import autosubliminal
@@ -118,3 +120,17 @@ def test_process_file_movie(mocker):
     assert result_dict['quality'] == '1080p'
     assert result_dict['codec'] == 'h264'
     assert result_dict['imdbid'] == '1798684'
+
+
+def test_process_movie_file_special_chars(mocker):
+    # Mock get_imdb_id_and_year call
+    mocker.patch.object(autosubliminal.MOVIEINDEXER, 'get_imdb_id_and_year')
+    autosubliminal.MOVIEINDEXER.get_imdb_id_and_year.return_value = '0993789', 2008
+    # Test process_file
+    dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
+    result_dict = process_file(dir_name, u'Un conte de Noël (2008).mkv')
+    assert result_dict is not None
+    assert result_dict['type'] == 'movie'
+    assert result_dict['title'] == u'Un conte de Noël'
+    assert result_dict['year'] == 2008
+    assert result_dict['imdbid'] == '0993789'
