@@ -1,13 +1,16 @@
+# coding=utf-8
+
 import abc
 import logging
 import re
 
 from functools import wraps
-from six import add_metaclass
+from six import add_metaclass, text_type
 from time import time
 
 from imdb import IMDb
 from tvdb_api_v2.client import TvdbClient
+from unidecode import unidecode
 
 import autosubliminal
 from autosubliminal import utils
@@ -71,7 +74,7 @@ class ShowIndexer(Indexer):
     def _query_api(self, title, year=None):
         name = title
         if year:
-            name += ' (' + str(year) + ')'
+            name += ' (' + text_type(year) + ')'
         log.info('Querying tvdb api for %s' % name)
         # Return a tvdb_api_v2.models.series_search.SeriesSearch object
         series_search = self._client.search_series_by_name(name)
@@ -90,7 +93,7 @@ class ShowIndexer(Indexer):
         tvdb_id = None
         name = title
         if year:
-            name += ' (' + str(year) + ')'
+            name += ' (' + text_type(year) + ')'
         log.debug('Getting tvdb id for %s' % name)
         # If not force_search, first check shownamemapping and tvdb id cache
         if not force_search:
@@ -138,7 +141,7 @@ class MovieIndexer(Indexer):
     def _query_api(self, title, year=None):
         name = title
         if year:
-            name += ' (' + str(year) + ')'
+            name += ' (' + text_type(year) + ')'
         log.info('Querying imdb api for %s' % name)
         # Return a imdb.Movie object
         imdb_movies = IMDb().search_movie(title)
@@ -155,31 +158,21 @@ class MovieIndexer(Indexer):
                 # If no year is present, take the first match
                 else:
                     return movie
-            elif data.get('akas', None):
-                for alias in data['akas']:
-                    if self.sanitize_imdb_title(alias) == self.sanitize_imdb_title(title):
-                        # If a year is present, it should also be the same
-                        if year:
-                            if data['year'] == int(year):
-                                return movie
-                            else:
-                                continue
-                        # If no year is present, take the first match
-                        else:
-                            return movie
 
     @staticmethod
     def sanitize_imdb_title(string_value, ignore_characters=None):
         # Remove (I), (II), ... from imdb titles (this is added when there are multiple titles with the same name)
         # Example response from imdb: see http://www.imdb.com/find?q=Aftermath&s=tt&mx=20
         string_value = re.sub('^(.+)(\(\w+\))$', r'\1', string_value)
+        # Sanitize on ascii level (replaces à by a)
+        string_value = unidecode(string_value)
         return utils.sanitize(string_value, ignore_characters)
 
     def get_imdb_id_and_year(self, title, year=None, force_search=False, store_id=True):
         imdb_id = None
         name = title
         if year:
-            name += ' (' + str(year) + ')'
+            name += ' (' + text_type(year) + ')'
         log.debug('Getting imdb info for %s' % name)
         # If not force_search, first check movienamemapping and tvdb id cache
         if not force_search:
