@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import email.utils
 import logging
 import smtplib

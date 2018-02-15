@@ -1,3 +1,5 @@
+# coding=utf-8
+
 # Copied from Sub-Zero.bundle plex plugin
 # https://github.com/pannal/Sub-Zero.bundle/blob/master/Contents/Libraries/Shared/subliminal_patch/providers/utils.py
 RANDOM_USER_AGENTS = [

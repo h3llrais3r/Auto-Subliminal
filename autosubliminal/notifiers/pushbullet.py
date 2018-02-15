@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import logging
 
 from lib.pushbullet import Pushbullet

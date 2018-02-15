@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from subliminal.cache import region
 
 import autosubliminal

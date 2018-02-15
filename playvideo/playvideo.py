@@ -1,3 +1,5 @@
+# coding=utf-8
+
 # Custom protocol handler script to play a remote video with your default video player from within the application.
 # This script should be registered as a custom protocol handler to play a video with the protocol 'playvideo://'.
 #

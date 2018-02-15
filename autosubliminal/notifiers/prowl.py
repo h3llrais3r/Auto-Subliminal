@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import logging
 from httplib import HTTPSConnection
 from urllib import urlencode
