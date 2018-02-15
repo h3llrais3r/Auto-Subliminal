@@ -399,12 +399,11 @@ class Config(object):
             if moviemmsreleasegroup:
                 autosubliminal.MOVIEMINMATCHSCORE += 15
                 autosubliminal.MOVIEMATCHRELEASEGROUP = True
-            # Subliminal providers (convert list to comma separated string if multiple are selected)
-            if subliminalproviders and not isinstance(subliminalproviders, basestring):
-                autosubliminal.SUBLIMINALPROVIDERS = ','.join([text_type(provider) for provider in subliminalproviders])
-            else:
-                # Just one selected or None (in this case, None will be saved and no providers will be used)
+            # Subliminal providers
+            if isinstance(subliminalproviders, list):
                 autosubliminal.SUBLIMINALPROVIDERS = subliminalproviders
+            else:
+                autosubliminal.SUBLIMINALPROVIDERS = [subliminalproviders] if subliminalproviders else []
             # Subtitle utf8 encoding
             autosubliminal.SUBTITLEUTF8ENCODING = utils.getboolean(subtitleutf8encoding)
             # Refine video

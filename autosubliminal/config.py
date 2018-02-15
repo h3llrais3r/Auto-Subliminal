@@ -338,14 +338,15 @@ def read_config(check_upgrade=False):
             autosubliminal.MOVIEMATCHRELEASEGROUP = False
 
         if cfg.has_option('subliminal', 'providers'):
-            autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
-            autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
+            providers = cfg.get('subliminal', 'providers')
+            # All subliminal providers should be listed in lower case (see subliminal provider registration)
+            autosubliminal.SUBLIMINALPROVIDERS = providers.lower().split(',')
             # Only allow valid providers by checking if they are found in the provider manager
-            for provider in autosubliminal.SUBLIMINALPROVIDERLIST:
-                if provider.lower() not in autosubliminal.SUBLIMINALPROVIDERMANAGER.names():
-                    autosubliminal.SUBLIMINALPROVIDERLIST.remove(provider)
+            for provider in autosubliminal.SUBLIMINALPROVIDERS:
+                if provider not in autosubliminal.SUBLIMINALPROVIDERMANAGER.names():
+                    autosubliminal.SUBLIMINALPROVIDERS.remove(provider)
         else:
-            autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
+            autosubliminal.SUBLIMINALPROVIDERS = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
 
         if cfg.has_option('subliminal', 'subtitleutf8encoding'):
             autosubliminal.SUBTITLEUTF8ENCODING = cfg.getboolean('subliminal', 'subtitleutf8encoding')
@@ -408,7 +409,7 @@ def read_config(check_upgrade=False):
         autosubliminal.MOVIEMATCHQUALITY = False
         autosubliminal.MOVIEMATCHCODEC = False
         autosubliminal.MOVIEMATCHRELEASEGROUP = False
-        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
+        autosubliminal.SUBLIMINALPROVIDERS = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
         autosubliminal.SUBTITLEUTF8ENCODING = False
         autosubliminal.MANUALREFINEVIDEO = False
         autosubliminal.REFINEVIDEO = False
@@ -850,6 +851,8 @@ def write_subliminal_section():
     if not cfg.has_section(section):
         cfg.add_section(section)
 
+    providers = u'' if not autosubliminal.SUBLIMINALPROVIDERS else ','.join(autosubliminal.SUBLIMINALPROVIDERS)
+
     cfg.set(section, 'showminmatchscore', text_type(autosubliminal.SHOWMINMATCHSCORE))
     cfg.set(section, 'showmatchsource', text_type(autosubliminal.SHOWMATCHSOURCE))
     cfg.set(section, 'showmatchquality', text_type(autosubliminal.SHOWMATCHQUALITY))
@@ -860,7 +863,7 @@ def write_subliminal_section():
     cfg.set(section, 'moviematchquality', text_type(autosubliminal.MOVIEMATCHQUALITY))
     cfg.set(section, 'moviematchcodec', text_type(autosubliminal.MOVIEMATCHCODEC))
     cfg.set(section, 'moviematchreleasegroup', text_type(autosubliminal.MOVIEMATCHRELEASEGROUP))
-    cfg.set(section, 'providers', text_type(autosubliminal.SUBLIMINALPROVIDERS))
+    cfg.set(section, 'providers', providers)
     cfg.set(section, 'subtitleutf8encoding', text_type(autosubliminal.SUBTITLEUTF8ENCODING))
     cfg.set(section, 'manualrefinevideo', text_type(autosubliminal.MANUALREFINEVIDEO))
     cfg.set(section, 'refinevideo', text_type(autosubliminal.REFINEVIDEO))
@@ -1125,14 +1128,14 @@ def apply_subliminal():
     cfg = _load_config_parser()
 
     if cfg.has_section('subliminal'):
-        autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
-        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERS.split(',')
+        providers = cfg.get('subliminal', 'providers')
+        autosubliminal.SUBLIMINALPROVIDERS = providers.lower().split(',')
         # Only allow valid providers by checking if they are found in the provider manager
-        for provider in autosubliminal.SUBLIMINALPROVIDERLIST:
-            if provider.lower() not in autosubliminal.SUBLIMINALPROVIDERMANAGER.names():
-                autosubliminal.SUBLIMINALPROVIDERLIST.remove(provider)
+        for provider in autosubliminal.SUBLIMINALPROVIDERS:
+            if provider not in autosubliminal.SUBLIMINALPROVIDERMANAGER.names():
+                autosubliminal.SUBLIMINALPROVIDERS.remove(provider)
     else:
-        autosubliminal.SUBLIMINALPROVIDERLIST = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
+        autosubliminal.SUBLIMINALPROVIDERS = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
 
 
 def apply_shownamemapping():

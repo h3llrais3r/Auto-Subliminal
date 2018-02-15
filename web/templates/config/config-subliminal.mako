@@ -148,7 +148,7 @@
                                 <% providers = sorted(autosubliminal.SUBLIMINALPROVIDERMANAGER.names()) %>
                                 <select multiple="mutiple" id="subliminalproviders" name="subliminalproviders" size="${len(providers)}" class="form-control input-sm">
                                     % for provider in providers:
-                                        % if provider in autosubliminal.SUBLIMINALPROVIDERLIST:
+                                        % if provider in autosubliminal.SUBLIMINALPROVIDERS:
                                             <option selected="selected" value="${provider}">${provider}</option>
                                         % else:
                                             <option value="${provider}">${provider}</option>

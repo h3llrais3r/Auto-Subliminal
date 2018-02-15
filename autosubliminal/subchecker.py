@@ -546,8 +546,8 @@ def _search_subtitles(video, lang, best_only, provider_pool):
 def _get_provider_pool():
     # Create a new provider pool with our settings
     # If we don't have any providers configured, don't create the pool
-    if autosubliminal.SUBLIMINALPROVIDERLIST:
-        return ProviderPool(providers=autosubliminal.SUBLIMINALPROVIDERLIST,
+    if autosubliminal.SUBLIMINALPROVIDERS:
+        return ProviderPool(providers=autosubliminal.SUBLIMINALPROVIDERS,
                             provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
     else:
         return None
