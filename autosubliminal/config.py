@@ -1,17 +1,19 @@
-from __future__ import with_statement
-
 import codecs
 import logging
 import os
 import shutil
 import time
 
-from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
+from six import text_type
 
 import autosubliminal
 from autosubliminal import utils, version
 
 log = logging.getLogger(__name__)
+
+# Config file encoding
+ENCODING = 'utf-8'
 
 
 def read_config(check_upgrade=False):
@@ -21,29 +23,29 @@ def read_config(check_upgrade=False):
     """
 
     # Read config file
-    cfg = SafeConfigParser()
+    cfg = ConfigParser()
     try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
+            cfg.read_file(f)
     except:
         print('********************************************************************')
         print('ERROR: Not a valid configuration file! Using default values instead!')
         print('********************************************************************')
-        cfg = SafeConfigParser()
+        cfg = ConfigParser()
 
     if cfg.has_section('general'):
         if cfg.has_option('general', 'videopaths'):
-            video_paths = unicode(str(cfg.get('general', 'videopaths')))
+            video_paths = cfg.get('general', 'videopaths')
             if video_paths:
                 autosubliminal.VIDEOPATHS = video_paths.split(',')
             else:
                 print('ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead.')
                 autosubliminal.VIDEOPATHS = []
-                autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
+                autosubliminal.VIDEOPATHS.append(os.getcwdu())
         else:
             print('ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead.')
             autosubliminal.VIDEOPATHS = []
-            autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
+            autosubliminal.VIDEOPATHS.append(os.getcwdu())
 
         if cfg.has_option('general', 'defaultlanguage'):
             autosubliminal.DEFAULTLANGUAGE = cfg.get('general', 'defaultlanguage')
@@ -129,10 +131,10 @@ def read_config(check_upgrade=False):
         # General section is missing
         print('ERROR: Required general section is missing. Using default values instead.')
         print('ERROR: Required variable PATH is missing. Using current working directory instead.')
-        autosubliminal.PATH = unicode(os.getcwd(), autosubliminal.SYSENCODING)
+        autosubliminal.PATH = os.getcwdu()
         print('ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead.')
         autosubliminal.VIDEOPATHS = []
-        autosubliminal.VIDEOPATHS.append(unicode(os.getcwd(), autosubliminal.SYSENCODING))
+        autosubliminal.VIDEOPATHS.append(os.getcwdu())
         autosubliminal.DEFAULTLANGUAGE = u'en'
         autosubliminal.DEFAULTLANGUAGESUFFIX = False
         autosubliminal.ADDITIONALLANGUAGES = []
@@ -701,54 +703,426 @@ def read_config(check_upgrade=False):
     # Check if config needs to be upgraded
     if check_upgrade:
         if autosubliminal.CONFIGVERSION < version.CONFIG_VERSION:
-            upgrade_config(autosubliminal.CONFIGVERSION, version.CONFIG_VERSION)
+            _upgrade_config(autosubliminal.CONFIGVERSION, version.CONFIG_VERSION)
         elif autosubliminal.CONFIGVERSION > version.CONFIG_VERSION:
             print('ERROR: Config version higher then this version of Auto-Subliminal supports. Update Auto-Subliminal.')
             os._exit(1)
 
 
-def save_config(section=None, variable=None, value=None):
+def write_config(section=None):
     """
-    Add a variable and value to section in the config file.
-
-    Keyword arguments:
-    section -- Section to with the variable - value pair will be added
-    variable -- Option that will be added to the config file
-    value -- Value of the variable that will be added
+    Write all settings to the config file.
+    If a section is specified, only that section is written, otherwise all config settings are written.
+    Return True if restart is needed, False otherwise.
     """
 
-    cfg = SafeConfigParser()
+    # Read config file
+    cfg = ConfigParser()
     try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
+        # A config file is set so we use this to add the settings
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
+            cfg.read_file(f)
     except:
-        # No config yet
-        pass
+        # No config file found, create one instead
+        open(autosubliminal.CONFIGFILE, 'w').close()
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
+            cfg.read_file(f)
+
+    # Before we save everything to the config file we need to test if the app needs to be restarted
+    restart = _check_for_restart()
+
+    if section == 'general' or section is None:
+        write_general_section()
+    if section == 'logging' or section is None:
+        write_logging_section()
+    if section == 'webserver' or section is None:
+        write_webserver_section()
+    if section == 'subliminal' or section is None:
+        write_subliminal_section()
+    if section == 'namemapping' or section is None:
+        write_shownamemapping_section()
+        write_addic7edshownamemapping_section()
+        write_alternativeshownamemapping_section()
+        write_movienamemapping_section()
+        write_alternativemovienamemapping_section()
+    if section == 'skipmapping' or section is None:
+        write_skipshow_section()
+        write_skipmovie_section()
+    if section == 'notification' or section is None:
+        write_notification_section()
+    if section == 'postprocessing' or section is None:
+        write_postprocessing_section()
+
+    return restart
+
+
+def write_general_section():
+    """
+    Write the general section.
+    """
+    section = 'general'
+
+    cfg = _load_config_parser()
+
+    if not cfg.has_section(section):
+        cfg.add_section(section)
+
+    # convert lists to comma separated values
+    videopaths = u'' if not autosubliminal.VIDEOPATHS else ','.join(autosubliminal.VIDEOPATHS)
+    additionallanguages = u'' if not autosubliminal.ADDITIONALLANGUAGES else ','.join(
+        autosubliminal.ADDITIONALLANGUAGES)
+
+    cfg.set(section, 'videopaths', videopaths)
+    cfg.set(section, 'defaultlanguage', autosubliminal.DEFAULTLANGUAGE)
+    cfg.set(section, 'defaultlanguagesuffix', text_type(autosubliminal.DEFAULTLANGUAGESUFFIX))
+    cfg.set(section, 'additionallanguages', additionallanguages)
+    cfg.set(section, 'scandisk', text_type(autosubliminal.SCANDISKINTERVAL))
+    cfg.set(section, 'checksub', text_type(autosubliminal.CHECKSUBINTERVAL))
+    cfg.set(section, 'checkversion', text_type(autosubliminal.CHECKVERSIONINTERVAL))
+    cfg.set(section, 'checkversionautoupdate', text_type(autosubliminal.CHECKVERSIONAUTOUPDATE))
+    cfg.set(section, 'scanembeddedsubs', text_type(autosubliminal.SCANEMBEDDEDSUBS))
+    cfg.set(section, 'skiphiddendirs', text_type(autosubliminal.SKIPHIDDENDIRS))
+    cfg.set(section, 'detectinvalidsublanguage', text_type(autosubliminal.DETECTINVALIDSUBLANGUAGE))
+    cfg.set(section, 'detectedlanguageprobability', text_type(autosubliminal.DETECTEDLANGUAGEPROBABILITY))
+    cfg.set(section, 'minvideofilesize', text_type(autosubliminal.MINVIDEOFILESIZE))
+    cfg.set(section, 'maxdbresults', text_type(autosubliminal.MAXDBRESULTS))
+    cfg.set(section, 'configversion', text_type(autosubliminal.CONFIGVERSION))
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', encoding=ENCODING) as f:
+        cfg.write(f)
+
+
+def write_logging_section():
+    """
+    Write the logging section.
+    """
+    section = 'logging'
+
+    cfg = _load_config_parser()
+
+    if not cfg.has_section(section):
+        cfg.add_section(section)
+
+    cfg.set(section, 'logfile', autosubliminal.LOGFILE)
+    cfg.set(section, 'loglevel', logging.getLevelName(int(autosubliminal.LOGLEVEL)).lower())
+    cfg.set(section, 'lognum', text_type(autosubliminal.LOGNUM))
+    cfg.set(section, 'logsize', text_type(autosubliminal.LOGSIZE))
+    cfg.set(section, 'loghttpaccess', text_type(autosubliminal.LOGHTTPACCESS))
+    cfg.set(section, 'logexternallibs', text_type(autosubliminal.LOGEXTERNALLIBS))
+    cfg.set(section, 'logdetailedformat', text_type(autosubliminal.LOGDETAILEDFORMAT))
+    cfg.set(section, 'logreversed', text_type(autosubliminal.LOGREVERSED))
+    cfg.set(section, 'loglevelconsole', logging.getLevelName(int(autosubliminal.LOGLEVELCONSOLE)).lower())
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+        cfg.write(f)
+
+
+def write_webserver_section():
+    """
+    Write the webserver section.
+    """
+    section = 'webserver'
+
+    cfg = _load_config_parser()
+
+    if not cfg.has_section(section):
+        cfg.add_section(section)
+
+    cfg.set(section, 'webserverip', text_type(autosubliminal.WEBSERVERIP))
+    cfg.set(section, 'webserverport', text_type(autosubliminal.WEBSERVERPORT))
+    cfg.set(section, 'webroot', autosubliminal.WEBROOT)
+    cfg.set(section, 'username', autosubliminal.USERNAME)
+    cfg.set(section, 'password', autosubliminal.PASSWORD)
+    cfg.set(section, 'launchbrowser', text_type(autosubliminal.LAUNCHBROWSER))
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+        cfg.write(f)
+
+
+def write_subliminal_section():
+    """
+    Write the subliminal section.
+    """
+    section = 'subliminal'
+
+    cfg = _load_config_parser()
+
+    if not cfg.has_section(section):
+        cfg.add_section(section)
+
+    cfg.set(section, 'showminmatchscore', text_type(autosubliminal.SHOWMINMATCHSCORE))
+    cfg.set(section, 'showmatchsource', text_type(autosubliminal.SHOWMATCHSOURCE))
+    cfg.set(section, 'showmatchquality', text_type(autosubliminal.SHOWMATCHQUALITY))
+    cfg.set(section, 'showmatchcodec', text_type(autosubliminal.SHOWMATCHCODEC))
+    cfg.set(section, 'showmatchreleasegroup', text_type(autosubliminal.SHOWMATCHRELEASEGROUP))
+    cfg.set(section, 'movieminmatchscore', text_type(autosubliminal.MOVIEMINMATCHSCORE))
+    cfg.set(section, 'moviematchsource', text_type(autosubliminal.MOVIEMATCHSOURCE))
+    cfg.set(section, 'moviematchquality', text_type(autosubliminal.MOVIEMATCHQUALITY))
+    cfg.set(section, 'moviematchcodec', text_type(autosubliminal.MOVIEMATCHCODEC))
+    cfg.set(section, 'moviematchreleasegroup', text_type(autosubliminal.MOVIEMATCHRELEASEGROUP))
+    cfg.set(section, 'providers', text_type(autosubliminal.SUBLIMINALPROVIDERS))
+    cfg.set(section, 'subtitleutf8encoding', text_type(autosubliminal.SUBTITLEUTF8ENCODING))
+    cfg.set(section, 'manualrefinevideo', text_type(autosubliminal.MANUALREFINEVIDEO))
+    cfg.set(section, 'refinevideo', text_type(autosubliminal.REFINEVIDEO))
+    cfg.set(section, 'preferhearingimpaired', text_type(autosubliminal.PREFERHEARINGIMPAIRED))
+    cfg.set(section, 'addic7edusername', autosubliminal.ADDIC7EDUSERNAME)
+    cfg.set(section, 'addic7edpassword', autosubliminal.ADDIC7EDPASSWORD)
+    cfg.set(section, 'opensubtitlesusername', autosubliminal.OPENSUBTITLESUSERNAME)
+    cfg.set(section, 'opensubtitlespassword', autosubliminal.OPENSUBTITLESPASSWORD)
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+        cfg.write(f)
+
+    # Apply subliminal settings
+    apply_subliminal()
+
+
+def write_shownamemapping_section():
+    """
+    Write the shownamemapping section.
+    """
+    section = 'shownamemapping'
+
+    cfg = _load_config_parser()
 
     if cfg.has_section(section):
-        cfg.set(section, variable.encode('utf8'), value.encode('utf8'))
+        cfg.remove_section(section)
+    cfg.add_section(section)
+
+    for x in autosubliminal.SHOWNAMEMAPPING.keys():
+        cfg.set('shownamemapping', x, autosubliminal.SHOWNAMEMAPPING[x])
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+        cfg.write(f)
+
+    # Apply the shownamemapping settings
+    apply_shownamemapping()
+
+
+def write_addic7edshownamemapping_section():
+    """
+    Write the addic7edshownamemapping section.
+    """
+    section = 'addic7edshownamemapping'
+
+    cfg = _load_config_parser()
+
+    if cfg.has_section(section):
+        cfg.remove_section(section)
+    cfg.add_section(section)
+
+    for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING.keys():
+        cfg.set('addic7edshownamemapping', x, autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+        cfg.write(f)
+
+    # Apply the addic7edshownamemapping settings
+    apply_addic7edshownamemapping()
+
+
+def write_alternativeshownamemapping_section():
+    """
+    Write the alternativeshownamemapping section.
+    """
+    section = 'alternativeshownamemapping'
+
+    cfg = _load_config_parser()
+
+    if cfg.has_section(section):
+        cfg.remove_section(section)
+    cfg.add_section(section)
+
+    for x in autosubliminal.ALTERNATIVESHOWNAMEMAPPING.keys():
+        cfg.set('alternativeshownamemapping', x, autosubliminal.ALTERNATIVESHOWNAMEMAPPING[x])
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+        cfg.write(f)
+
+    # Apply the alternativeshownamemapping settings
+    apply_alternativeshownamemapping()
+
+
+def write_movienamemapping_section():
+    """
+    Write the movienamemapping section.
+    """
+    section = 'movienamemapping'
+
+    cfg = _load_config_parser()
+
+    if cfg.has_section(section):
+        cfg.remove_section(section)
+    cfg.add_section(section)
+
+    for x in autosubliminal.MOVIENAMEMAPPING.keys():
+        cfg.set('movienamemapping', x, autosubliminal.MOVIENAMEMAPPING[x])
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+        cfg.write(f)
+
+    # Apply the movienamemapping settings
+    apply_movienamemapping()
+
+
+def write_alternativemovienamemapping_section():
+    """
+    Write the alternativemovienamemapping section.
+    """
+    section = 'alternativemovienamemapping'
+
+    cfg = _load_config_parser()
+
+    if cfg.has_section(section):
+        cfg.remove_section(section)
+    cfg.add_section(section)
+
+    for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING.keys():
+        cfg.set('alternativemovienamemapping', x, autosubliminal.ALTERNATIVEMOVIENAMEMAPPING[x])
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+        cfg.write(f)
+
+    # Apply the alternativemovienamemapping settings
+    apply_alternativemovienamemapping()
+
+
+def write_skipshow_section():
+    """
+    Write the skipshow section.
+    """
+    section = 'skipshow'
+
+    cfg = _load_config_parser()
+
+    if cfg.has_section(section):
+        cfg.remove_section(section)
+    cfg.add_section(section)
+
+    for x in autosubliminal.SKIPSHOW.keys():
+        cfg.set('skipshow', x, autosubliminal.SKIPSHOW[x])
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+        cfg.write(f)
+
+    # Apply the skipshow settings
+    apply_skipshow()
+
+
+def write_skipmovie_section():
+    """
+    Write the skipmovie section.
+    """
+    section = 'skipmovie'
+
+    cfg = _load_config_parser()
+
+    if cfg.has_section(section):
+        cfg.remove_section(section)
+    cfg.add_section(section)
+
+    for x in autosubliminal.SKIPMOVIE.keys():
+        cfg.set('skipmovie', x, autosubliminal.SKIPMOVIE[x])
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+        cfg.write(f)
+
+    # Apply the skipmovie settings
+    apply_skipmovie()
+
+
+def write_notification_section():
+    """
+    Write the notification section.
+    """
+    section = 'notification'
+
+    cfg = _load_config_parser()
+
+    if not cfg.has_section(section):
+        cfg.add_section(section)
+
+    cfg.set(section, 'notify', text_type(autosubliminal.NOTIFY))
+    cfg.set(section, 'notifymail', text_type(autosubliminal.NOTIFYMAIL))
+    cfg.set(section, 'mailsrv', autosubliminal.MAILSRV)
+    cfg.set(section, 'mailfromaddr', autosubliminal.MAILFROMADDR)
+    cfg.set(section, 'mailtoaddr', autosubliminal.MAILTOADDR)
+    cfg.set(section, 'mailusername', autosubliminal.MAILUSERNAME)
+    cfg.set(section, 'mailpassword', autosubliminal.MAILPASSWORD)
+    cfg.set(section, 'mailsubject', autosubliminal.MAILSUBJECT)
+    cfg.set(section, 'mailencryption', autosubliminal.MAILENCRYPTION)
+    cfg.set(section, 'mailauth', autosubliminal.MAILAUTH)
+    cfg.set(section, 'notifytwitter', text_type(autosubliminal.NOTIFYTWITTER))
+    cfg.set(section, 'twitterkey', autosubliminal.TWITTERKEY)
+    cfg.set(section, 'twittersecret', autosubliminal.TWITTERSECRET)
+    cfg.set(section, 'notifypushalot', text_type(autosubliminal.NOTIFYPUSHALOT))
+    cfg.set(section, 'pushalotapi', autosubliminal.PUSHALOTAPI)
+    cfg.set(section, 'notifypushover', text_type(autosubliminal.NOTIFYPUSHOVER))
+    cfg.set(section, 'pushoverkey', autosubliminal.PUSHOVERKEY)
+    cfg.set(section, 'pushoverapi', autosubliminal.PUSHOVERAPI)
+    cfg.set(section, 'pushoverdevices', autosubliminal.PUSHOVERDEVICES)
+    cfg.set(section, 'notifynma', text_type(autosubliminal.NOTIFYNMA))
+    cfg.set(section, 'nmaapi', autosubliminal.NMAAPI)
+    cfg.set(section, 'notifygrowl', text_type(autosubliminal.NOTIFYGROWL))
+    cfg.set(section, 'growlhost', autosubliminal.GROWLHOST)
+    cfg.set(section, 'growlpass', autosubliminal.GROWLPASS)
+    cfg.set(section, 'notifyprowl', text_type(autosubliminal.NOTIFYPROWL))
+    cfg.set(section, 'prowlapi', autosubliminal.PROWLAPI)
+    cfg.set(section, 'prowlpriority', text_type(autosubliminal.PROWLPRIORITY))
+    cfg.set(section, 'notifypushbullet', text_type(autosubliminal.NOTIFYPUSHBULLET))
+    cfg.set(section, 'pushbulletapi', autosubliminal.PUSHBULLETAPI)
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+        cfg.write(f)
+
+
+def write_postprocessing_section():
+    """
+    Write the postprocessing section.
+    """
+    section = 'postprocessing'
+
+    cfg = _load_config_parser()
+
+    if not cfg.has_section(section):
+        cfg.add_section(section)
+
+    cfg.set(section, 'postprocess', text_type(autosubliminal.POSTPROCESS))
+    cfg.set(section, 'postprocessindividual', text_type(autosubliminal.POSTPROCESSINDIVIDUAL))
+    cfg.set(section, 'postprocessutf8encoding', text_type(autosubliminal.POSTPROCESSUTF8ENCODING))
+    cfg.set(section, 'showpostprocesscmd', autosubliminal.SHOWPOSTPROCESSCMD)
+    cfg.set(section, 'showpostprocesscmdargs', autosubliminal.SHOWPOSTPROCESSCMDARGS)
+    cfg.set(section, 'moviepostprocesscmd', autosubliminal.MOVIEPOSTPROCESSCMD)
+    cfg.set(section, 'moviepostprocesscmdargs', autosubliminal.MOVIEPOSTPROCESSCMDARGS)
+
+    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+        cfg.write(f)
+
+
+def write_config_property(section=None, property_key=None, property_value=None):
+    """
+    Write a config property to a section.
+    """
+    cfg = _load_config_parser()
+
+    if cfg.has_section(section):
+        cfg.set(section, property_key, property_value)
         edited = True
     else:
         cfg.add_section(section)
-        cfg.set(section, variable.encode('utf8'), value.encode('utf8'))
+        cfg.set(section, property_key, property_value)
         edited = True
 
     if edited:
-        with open(autosubliminal.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
+        with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+            cfg.write(f)
 
 
 def apply_subliminal():
     """
-    Read subliminal in the config file.
+    Apply the subliminal settings.
     """
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # no config yet
-        pass
+    cfg = _load_config_parser()
 
     if cfg.has_section('subliminal'):
         autosubliminal.SUBLIMINALPROVIDERS = cfg.get('subliminal', 'providers')
@@ -763,15 +1137,9 @@ def apply_subliminal():
 
 def apply_shownamemapping():
     """
-    Read shownamemapping in the config file.
+    Apply the shownamemapping settings.
     """
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        pass
+    cfg = _load_config_parser()
 
     if cfg.has_section('shownamemapping'):
         autosubliminal.SHOWNAMEMAPPING = dict(cfg.items('shownamemapping'))
@@ -781,15 +1149,9 @@ def apply_shownamemapping():
 
 def apply_addic7edshownamemapping():
     """
-    Read addic7edshownamemapping in the config file.
+    Apply the addic7edshownamemapping settings.
     """
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        pass
+    cfg = _load_config_parser()
 
     if cfg.has_section('addic7edshownamemapping'):
         autosubliminal.ADDIC7EDSHOWNAMEMAPPING = dict(cfg.items('addic7edshownamemapping'))
@@ -799,15 +1161,9 @@ def apply_addic7edshownamemapping():
 
 def apply_alternativeshownamemapping():
     """
-    Read alternativeshownamemapping in the config file.
+    Apply the alternativeshownamemapping settings.
     """
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        pass
+    cfg = _load_config_parser()
 
     if cfg.has_section('alternativeshownamemapping'):
         autosubliminal.ALTERNATIVESHOWNAMEMAPPING = dict(cfg.items('alternativeshownamemapping'))
@@ -817,15 +1173,9 @@ def apply_alternativeshownamemapping():
 
 def apply_movienamemapping():
     """
-    Read movienamemapping in the config file.
+    Apply the movienamemapping settings.
     """
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        pass
+    cfg = _load_config_parser()
 
     if cfg.has_section('movienamemapping'):
         autosubliminal.MOVIENAMEMAPPING = dict(cfg.items('movienamemapping'))
@@ -835,15 +1185,9 @@ def apply_movienamemapping():
 
 def apply_alternativemovienamemapping():
     """
-    Read alternativemovienamemapping in the config file.
+    Apply the alternativemovienamemapping settings.
     """
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        pass
+    cfg = _load_config_parser()
 
     if cfg.has_section('alternativemovienamemapping'):
         autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = dict(cfg.items('alternativemovienamemapping'))
@@ -853,15 +1197,9 @@ def apply_alternativemovienamemapping():
 
 def apply_skipshow():
     """
-    Read skipshow in the config file.
+    Apply the skipshow settings.
     """
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # no config yet
-        pass
+    cfg = _load_config_parser()
 
     if cfg.has_section('skipshow'):
         autosubliminal.SKIPSHOW = dict(cfg.items('skipshow'))
@@ -871,15 +1209,9 @@ def apply_skipshow():
 
 def apply_skipmovie():
     """
-    Read skipmovie in the config file.
+    Apply the skipmovie settings.
     """
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # no config yet
-        pass
+    cfg = _load_config_parser()
 
     if cfg.has_section('skipmovie'):
         autosubliminal.SKIPMOVIE = dict(cfg.items('skipmovie'))
@@ -887,457 +1219,30 @@ def apply_skipmovie():
         autosubliminal.SKIPMOVIE = {}
 
 
-def save_general_section():
+def _load_config_parser():
     """
-    Save stuff
+    Read the config file and return the config parser.
+    If no config file is present, a new config parser object is returned.
     """
-    section = 'general'
+    cfg = ConfigParser()
 
-    cfg = SafeConfigParser()
     try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
+        with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
+            cfg.read_file(f)
     except:
         # No config yet
-        cfg = SafeConfigParser()
+        cfg = ConfigParser()
         pass
 
-    if not cfg.has_section(section):
-        cfg.add_section(section)
+    return cfg
 
-    videopaths = u''
-    for x in autosubliminal.VIDEOPATHS:
-        if x:
-            if videopaths:
-                videopaths += ',' + x
-            else:
-                videopaths = x
 
-    additionallanguages = u''
-    for x in autosubliminal.ADDITIONALLANGUAGES:
-        if x:
-            if additionallanguages:
-                additionallanguages += ',' + x
-            else:
-                additionallanguages = x
-
-    cfg.set(section, 'videopaths', str(videopaths))
-    cfg.set(section, 'defaultlanguage', autosubliminal.DEFAULTLANGUAGE)
-    cfg.set(section, 'defaultlanguagesuffix', str(autosubliminal.DEFAULTLANGUAGESUFFIX))
-    cfg.set(section, 'additionallanguages', str(additionallanguages))
-    cfg.set(section, 'scandisk', str(autosubliminal.SCANDISKINTERVAL))
-    cfg.set(section, 'checksub', str(autosubliminal.CHECKSUBINTERVAL))
-    cfg.set(section, 'checkversion', str(autosubliminal.CHECKVERSIONINTERVAL))
-    cfg.set(section, 'checkversionautoupdate', str(autosubliminal.CHECKVERSIONAUTOUPDATE))
-    cfg.set(section, 'scanembeddedsubs', str(autosubliminal.SCANEMBEDDEDSUBS))
-    cfg.set(section, 'skiphiddendirs', str(autosubliminal.SKIPHIDDENDIRS))
-    cfg.set(section, 'detectinvalidsublanguage', str(autosubliminal.DETECTINVALIDSUBLANGUAGE))
-    cfg.set(section, 'detectedlanguageprobability', str(autosubliminal.DETECTEDLANGUAGEPROBABILITY))
-    cfg.set(section, 'minvideofilesize', str(autosubliminal.MINVIDEOFILESIZE))
-    cfg.set(section, 'maxdbresults', str(autosubliminal.MAXDBRESULTS))
-    cfg.set(section, 'configversion', str(autosubliminal.CONFIGVERSION))
-
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', encoding=autosubliminal.SYSENCODING) as file:
-        cfg.write(file)
-
-
-def save_logging_section():
-    """
-    Save stuff
-    """
-    section = 'logging'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if not cfg.has_section(section):
-        cfg.add_section(section)
-
-    cfg.set(section, 'logfile', autosubliminal.LOGFILE)
-    cfg.set(section, 'loglevel', logging.getLevelName(int(autosubliminal.LOGLEVEL)).lower())
-    cfg.set(section, 'lognum', str(autosubliminal.LOGNUM))
-    cfg.set(section, 'logsize', str(autosubliminal.LOGSIZE))
-    cfg.set(section, 'loghttpaccess', str(autosubliminal.LOGHTTPACCESS))
-    cfg.set(section, 'logexternallibs', str(autosubliminal.LOGEXTERNALLIBS))
-    cfg.set(section, 'logdetailedformat', str(autosubliminal.LOGDETAILEDFORMAT))
-    cfg.set(section, 'logreversed', str(autosubliminal.LOGREVERSED))
-    cfg.set(section, 'loglevelconsole', logging.getLevelName(int(autosubliminal.LOGLEVELCONSOLE)).lower())
-
-    with open(autosubliminal.CONFIGFILE, 'wb') as file:
-        cfg.write(file)
-
-
-def save_webserver_section():
-    """
-    Save stuff
-    """
-    section = 'webserver'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if not cfg.has_section(section):
-        cfg.add_section(section)
-
-    cfg.set(section, 'webserverip', str(autosubliminal.WEBSERVERIP))
-    cfg.set(section, 'webserverport', str(autosubliminal.WEBSERVERPORT))
-    cfg.set(section, 'webroot', autosubliminal.WEBROOT)
-    cfg.set(section, 'username', autosubliminal.USERNAME)
-    cfg.set(section, 'password', autosubliminal.PASSWORD)
-    cfg.set(section, 'launchbrowser', str(autosubliminal.LAUNCHBROWSER))
-
-    with open(autosubliminal.CONFIGFILE, 'wb') as file:
-        cfg.write(file)
-
-
-def save_subliminal_section():
-    """
-    Save stuff
-    """
-    section = 'subliminal'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if not cfg.has_section(section):
-        cfg.add_section(section)
-
-    cfg.set(section, 'showminmatchscore', str(autosubliminal.SHOWMINMATCHSCORE))
-    cfg.set(section, 'showmatchsource', str(autosubliminal.SHOWMATCHSOURCE))
-    cfg.set(section, 'showmatchquality', str(autosubliminal.SHOWMATCHQUALITY))
-    cfg.set(section, 'showmatchcodec', str(autosubliminal.SHOWMATCHCODEC))
-    cfg.set(section, 'showmatchreleasegroup', str(autosubliminal.SHOWMATCHRELEASEGROUP))
-    cfg.set(section, 'movieminmatchscore', str(autosubliminal.MOVIEMINMATCHSCORE))
-    cfg.set(section, 'moviematchsource', str(autosubliminal.MOVIEMATCHSOURCE))
-    cfg.set(section, 'moviematchquality', str(autosubliminal.MOVIEMATCHQUALITY))
-    cfg.set(section, 'moviematchcodec', str(autosubliminal.MOVIEMATCHCODEC))
-    cfg.set(section, 'moviematchreleasegroup', str(autosubliminal.MOVIEMATCHRELEASEGROUP))
-    cfg.set(section, 'providers', str(autosubliminal.SUBLIMINALPROVIDERS))
-    cfg.set(section, 'subtitleutf8encoding', str(autosubliminal.SUBTITLEUTF8ENCODING))
-    cfg.set(section, 'manualrefinevideo', str(autosubliminal.MANUALREFINEVIDEO))
-    cfg.set(section, 'refinevideo', str(autosubliminal.REFINEVIDEO))
-    cfg.set(section, 'preferhearingimpaired', str(autosubliminal.PREFERHEARINGIMPAIRED))
-    cfg.set(section, 'addic7edusername', str(autosubliminal.ADDIC7EDUSERNAME))
-    cfg.set(section, 'addic7edpassword', str(autosubliminal.ADDIC7EDPASSWORD))
-    cfg.set(section, 'opensubtitlesusername', str(autosubliminal.OPENSUBTITLESUSERNAME))
-    cfg.set(section, 'opensubtitlespassword', str(autosubliminal.OPENSUBTITLESPASSWORD))
-
-    with open(autosubliminal.CONFIGFILE, 'wb') as file:
-        cfg.write(file)
-
-    # Set all subliminal stuff correct
-    apply_subliminal()
-
-
-def save_shownamemapping_section():
-    """
-    Save stuff
-    """
-    section = 'shownamemapping'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if cfg.has_section(section):
-        cfg.remove_section(section)
-        cfg.add_section(section)
-        with open(autosubliminal.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
-
-    for x in autosubliminal.SHOWNAMEMAPPING.keys():
-        save_config('shownamemapping', x, autosubliminal.SHOWNAMEMAPPING[x])
-
-    # Set all shownamemapping stuff correct
-    apply_shownamemapping()
-
-
-def save_addic7edshownamemapping_section():
-    """
-    Save stuff
-    """
-    section = 'addic7edshownamemapping'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if cfg.has_section(section):
-        cfg.remove_section(section)
-        cfg.add_section(section)
-        with open(autosubliminal.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
-
-    for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING.keys():
-        save_config('addic7edshownamemapping', x, autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
-
-    # Set all addic7edshownamemapping stuff correct
-    apply_addic7edshownamemapping()
-
-
-def save_alternativeshownamemapping_section():
-    """
-    Save stuff
-    """
-    section = 'alternativeshownamemapping'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if cfg.has_section(section):
-        cfg.remove_section(section)
-        cfg.add_section(section)
-        with open(autosubliminal.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
-
-    for x in autosubliminal.ALTERNATIVESHOWNAMEMAPPING.keys():
-        save_config('alternativeshownamemapping', x, autosubliminal.ALTERNATIVESHOWNAMEMAPPING[x])
-
-    # Set all alternativeshownamemapping stuff correct
-    apply_alternativeshownamemapping()
-
-
-def save_movienamemapping_section():
-    """
-    Save stuff
-    """
-    section = 'movienamemapping'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if cfg.has_section(section):
-        cfg.remove_section(section)
-        cfg.add_section(section)
-        with open(autosubliminal.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
-
-    for x in autosubliminal.MOVIENAMEMAPPING.keys():
-        save_config('movienamemapping', x, autosubliminal.MOVIENAMEMAPPING[x])
-
-    # Set all movienamemapping stuff correct
-    apply_movienamemapping()
-
-
-def save_alternativemovienamemapping_section():
-    """
-    Save stuff
-    """
-    section = 'alternativemovienamemapping'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if cfg.has_section(section):
-        cfg.remove_section(section)
-        cfg.add_section(section)
-        with open(autosubliminal.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
-
-    for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING.keys():
-        save_config('alternativemovienamemapping', x, autosubliminal.ALTERNATIVEMOVIENAMEMAPPING[x])
-
-    # Set all alternativemovienamemapping stuff correct
-    apply_alternativemovienamemapping()
-
-
-def save_skipshow_section():
-    """
-    Save stuff
-    """
-    section = 'skipshow'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if cfg.has_section(section):
-        cfg.remove_section(section)
-        cfg.add_section(section)
-        with open(autosubliminal.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
-
-    for x in autosubliminal.SKIPSHOW.keys():
-        save_config('skipshow', x, autosubliminal.SKIPSHOW[x])
-
-    # Set all skipshow stuff correct
-    apply_skipshow()
-
-
-def save_skipmovie_section():
-    """
-    Save stuff
-    """
-    section = 'skipmovie'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if cfg.has_section(section):
-        cfg.remove_section(section)
-        cfg.add_section(section)
-        with open(autosubliminal.CONFIGFILE, 'wb') as file:
-            cfg.write(file)
-
-    for x in autosubliminal.SKIPMOVIE.keys():
-        save_config('skipmovie', x, autosubliminal.SKIPMOVIE[x])
-
-    # Set all skipmovie stuff correct
-    apply_skipmovie()
-
-
-def save_notification_section():
-    """
-    Save stuff
-    """
-    section = 'notification'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if not cfg.has_section(section):
-        cfg.add_section(section)
-
-    cfg.set(section, 'notify', str(autosubliminal.NOTIFY))
-    cfg.set(section, 'notifymail', str(autosubliminal.NOTIFYMAIL))
-    cfg.set(section, 'mailsrv', autosubliminal.MAILSRV)
-    cfg.set(section, 'mailfromaddr', autosubliminal.MAILFROMADDR)
-    cfg.set(section, 'mailtoaddr', autosubliminal.MAILTOADDR)
-    cfg.set(section, 'mailusername', autosubliminal.MAILUSERNAME)
-    cfg.set(section, 'mailpassword', autosubliminal.MAILPASSWORD)
-    cfg.set(section, 'mailsubject', autosubliminal.MAILSUBJECT)
-    cfg.set(section, 'mailencryption', autosubliminal.MAILENCRYPTION)
-    cfg.set(section, 'mailauth', autosubliminal.MAILAUTH)
-    cfg.set(section, 'notifytwitter', str(autosubliminal.NOTIFYTWITTER))
-    cfg.set(section, 'twitterkey', autosubliminal.TWITTERKEY)
-    cfg.set(section, 'twittersecret', autosubliminal.TWITTERSECRET)
-    cfg.set(section, 'notifypushalot', str(autosubliminal.NOTIFYPUSHALOT))
-    cfg.set(section, 'pushalotapi', autosubliminal.PUSHALOTAPI)
-    cfg.set(section, 'notifypushover', str(autosubliminal.NOTIFYPUSHOVER))
-    cfg.set(section, 'pushoverkey', autosubliminal.PUSHOVERKEY)
-    cfg.set(section, 'pushoverapi', autosubliminal.PUSHOVERAPI)
-    cfg.set(section, 'pushoverdevices', autosubliminal.PUSHOVERDEVICES)
-    cfg.set(section, 'notifynma', str(autosubliminal.NOTIFYNMA))
-    cfg.set(section, 'nmaapi', autosubliminal.NMAAPI)
-    cfg.set(section, 'notifygrowl', str(autosubliminal.NOTIFYGROWL))
-    cfg.set(section, 'growlhost', autosubliminal.GROWLHOST)
-    cfg.set(section, 'growlpass', autosubliminal.GROWLPASS)
-    cfg.set(section, 'notifyprowl', str(autosubliminal.NOTIFYPROWL))
-    cfg.set(section, 'prowlapi', autosubliminal.PROWLAPI)
-    cfg.set(section, 'prowlpriority', str(autosubliminal.PROWLPRIORITY))
-    cfg.set(section, 'notifypushbullet', str(autosubliminal.NOTIFYPUSHBULLET))
-    cfg.set(section, 'pushbulletapi', autosubliminal.PUSHBULLETAPI)
-
-    with open(autosubliminal.CONFIGFILE, 'wb') as file:
-        cfg.write(file)
-
-
-def save_postprocessing_section():
-    """
-    Save stuff
-    """
-    section = 'postprocessing'
-
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
-
-    if not cfg.has_section(section):
-        cfg.add_section(section)
-
-    cfg.set(section, 'postprocess', str(autosubliminal.POSTPROCESS))
-    cfg.set(section, 'postprocessindividual', str(autosubliminal.POSTPROCESSINDIVIDUAL))
-    cfg.set(section, 'postprocessutf8encoding', str(autosubliminal.POSTPROCESSUTF8ENCODING))
-    cfg.set(section, 'showpostprocesscmd', autosubliminal.SHOWPOSTPROCESSCMD)
-    cfg.set(section, 'showpostprocesscmdargs', autosubliminal.SHOWPOSTPROCESSCMDARGS)
-    cfg.set(section, 'moviepostprocesscmd', autosubliminal.MOVIEPOSTPROCESSCMD)
-    cfg.set(section, 'moviepostprocesscmdargs', autosubliminal.MOVIEPOSTPROCESSCMDARGS)
-
-    with open(autosubliminal.CONFIGFILE, 'wb') as file:
-        cfg.write(file)
-
-
-def check_for_restart():
+def _check_for_restart():
     """
     Check if internal variables are different from the config file.
     Only check the variables the require a restart to take effect
     """
-    cfg = SafeConfigParser()
-    try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config yet
-        cfg = SafeConfigParser()
-        pass
+    cfg = _load_config_parser()
 
     # Set the default values
     scandiskinterval = 3600
@@ -1445,56 +1350,7 @@ def check_for_restart():
         return False
 
 
-def write_config(section=None):
-    """
-    Save all settings to the config file.
-    If a section is specified, only that section is saved, otherwise all config settings are saved.
-    Return True if restart is needed, False otherwise.
-    """
-    # Read config file
-    cfg = SafeConfigParser()
-
-    try:
-        # A config file is set so we use this to add the settings
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-    except:
-        # No config file so we create one
-        if not autosubliminal.CONFIGFILE:
-            autosubliminal.CONFIGFILE = 'config.properties'
-        open(autosubliminal.CONFIGFILE, 'w').close()
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-            cfg.readfp(f)
-
-    # Before we save everything to the config file we need to test if the app needs to be restarted
-    restart = check_for_restart()
-
-    if section == 'general' or section is None:
-        save_general_section()
-    if section == 'logging' or section is None:
-        save_logging_section()
-    if section == 'webserver' or section is None:
-        save_webserver_section()
-    if section == 'subliminal' or section is None:
-        save_subliminal_section()
-    if section == 'namemapping' or section is None:
-        save_shownamemapping_section()
-        save_addic7edshownamemapping_section()
-        save_alternativeshownamemapping_section()
-        save_movienamemapping_section()
-        save_alternativemovienamemapping_section()
-    if section == 'skipmapping' or section is None:
-        save_skipshow_section()
-        save_skipmovie_section()
-    if section == 'notification' or section is None:
-        save_notification_section()
-    if section == 'postprocessing' or section is None:
-        save_postprocessing_section()
-
-    return restart
-
-
-def upgrade_config(from_version, to_version):
+def _upgrade_config(from_version, to_version):
     print('INFO: Upgrading config version from %d to %d.' % (from_version, to_version))
     print('INFO: Creating backup of old config file.')
     try:
@@ -1505,7 +1361,7 @@ def upgrade_config(from_version, to_version):
     if upgrades != 1:
         print('INFO: More than 1 upgrade required. Starting subupgrades.')
         for x in range(from_version, upgrades + 1):
-            upgrade_config((from_version - 1) + x, x + 1)
+            _upgrade_config((from_version - 1) + x, x + 1)
     else:
         if from_version == 1 and to_version == 2:
             print('INFO: Upgrading showminmatchscore.')
@@ -1548,7 +1404,7 @@ def upgrade_config(from_version, to_version):
                 tvdb_id = autosubliminal.SHOWINDEXER.get_tvdb_id(x, force_search=True)
                 # Replace by tvdb id or remove namemapping
                 if tvdb_id:
-                    autosubliminal.SHOWNAMEMAPPING[x] = str(tvdb_id)
+                    autosubliminal.SHOWNAMEMAPPING[x] = text_type(tvdb_id)
                 else:
                     del autosubliminal.SHOWNAMEMAPPING[x]
             print('INFO: Config upgraded to version 3.')
@@ -1728,13 +1584,13 @@ def upgrade_config(from_version, to_version):
         if from_version == 8 and to_version == 9:
             print('INFO: Renaming config, logfile and skip section. Please check/reconfigure your config!')
             # Read config file
-            cfg = SafeConfigParser()
+            cfg = ConfigParser()
             try:
-                with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-                    cfg.readfp(f)
+                with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
+                    cfg.read_file(f)
             except:
                 # No config yet, just mark as upgraded
-                cfg = SafeConfigParser()
+                cfg = ConfigParser()
             # Reame sections
             if cfg.has_section('config'):
                 cfg.add_section('general')
@@ -1752,8 +1608,8 @@ def upgrade_config(from_version, to_version):
                     cfg.set('notification', item[0], item[1])
                 cfg.remove_section('notify')
             # Write to file
-            with open(autosubliminal.CONFIGFILE, 'wb') as file:
-                cfg.write(file)
+            with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+                cfg.write(f)
             # Read config again to load the copied values from their new section
             read_config()
             # Clear config file to trigger a clean write after the upgrade
@@ -1767,19 +1623,19 @@ def upgrade_config(from_version, to_version):
         if from_version == 9 and to_version == 10:
             print('INFO: Removing old PATH config.')
             # Read config file
-            cfg = SafeConfigParser()
+            cfg = ConfigParser()
             try:
-                with codecs.open(autosubliminal.CONFIGFILE, 'r', autosubliminal.SYSENCODING) as f:
-                    cfg.readfp(f)
+                with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
+                    cfg.read_file(f)
             except:
                 # No config yet, just mark as upgraded
-                cfg = SafeConfigParser()
+                cfg = ConfigParser()
             if cfg.has_section('general'):
                 if cfg.has_option('general', 'path'):
                     cfg.remove_option('general', 'path')
             # Write to file
-            with open(autosubliminal.CONFIGFILE, 'wb') as file:
-                cfg.write(file)
+            with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+                cfg.write(f)
             print('INFO: Config upgraded to version 10.')
             autosubliminal.CONFIGVERSION = 10
             autosubliminal.CONFIGUPGRADED = True

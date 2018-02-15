@@ -4,6 +4,7 @@ import re
 
 import cherrypy
 from requests_oauthlib.oauth1_session import OAuth1Session
+from six import text_type
 
 import autosubliminal
 from autosubliminal import config, notifiers, runner, subchecker, utils
@@ -13,7 +14,7 @@ from autosubliminal.templates.page import PageTemplate
 
 def redirect(abspath, *args, **kwargs):
     assert abspath[0] == '/'
-    raise cherrypy.HTTPRedirect(str(autosubliminal.WEBROOT) + abspath, *args, **kwargs)
+    raise cherrypy.HTTPRedirect(text_type(autosubliminal.WEBROOT) + abspath, *args, **kwargs)
 
 
 def redirect_referer(abspath, *args, **kwargs):
@@ -90,7 +91,7 @@ class Home(object):
                 raise cherrypy.HTTPError(400, 'No show supplied')
             # Check if season is a number to be sure
             if not season == '00':
-                season = str(int(season))
+                season = text_type(int(season))
             config_season = season
             # Check if already skipped
             title_sanitized = utils.sanitize(title)
@@ -109,7 +110,7 @@ class Home(object):
                         config_season = ','.join(sorted(seasons))
             # Skip show
             if subchecker.skip_show(wanted_item_index, season):
-                config.save_config('skipshow', title, config_season)
+                config.write_config_property('skipshow', title, config_season)
                 config.apply_skipshow()
                 if season == '00':
                     utils.add_notification_message('Skipped show %s all seasons' % title)
@@ -137,7 +138,7 @@ class Home(object):
                 redirect('/home')
         # Skip movie
         if subchecker.skip_movie(wanted_item_index):
-            config.save_config('skipmovie', movie, '00')
+            config.write_config_property('skipmovie', movie, '00')
             config.apply_skipmovie()
             utils.add_notification_message('Skipped movie %s' % movie)
         else:
@@ -400,7 +401,7 @@ class Config(object):
                 autosubliminal.MOVIEMATCHRELEASEGROUP = True
             # Subliminal providers (convert list to comma separated string if multiple are selected)
             if subliminalproviders and not isinstance(subliminalproviders, basestring):
-                autosubliminal.SUBLIMINALPROVIDERS = ','.join([str(provider) for provider in subliminalproviders])
+                autosubliminal.SUBLIMINALPROVIDERS = ','.join([text_type(provider) for provider in subliminalproviders])
             else:
                 # Just one selected or None (in this case, None will be saved and no providers will be used)
                 autosubliminal.SUBLIMINALPROVIDERS = subliminalproviders
