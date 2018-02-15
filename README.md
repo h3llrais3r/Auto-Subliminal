@@ -36,6 +36,7 @@ What it uses (see libraries.txt for versions)
  * cheroot
  * cherrypy
  * click
+ * configparser
  * dogpile.cache
  * enum34
  * enzyme
