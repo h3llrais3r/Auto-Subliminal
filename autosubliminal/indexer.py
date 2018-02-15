@@ -117,7 +117,7 @@ class ShowIndexer(Indexer):
                 tvdb_id = show.id
         except Exception as e:
             # Log error on other exceptions than 404
-            if e.status and e.status != 404:
+            if not hasattr(e, 'status') or e.status != 404:
                 log.error('Error while retrieving tvdb id for %s' % name)
                 log.exception(e)
         if tvdb_id:
