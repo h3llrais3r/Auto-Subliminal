@@ -10,6 +10,7 @@ import subprocess
 import threading
 import time
 import urllib2
+
 from six import text_type
 
 import autosubliminal
@@ -91,7 +92,7 @@ def wait_for_internet_connection():
 
 # Based on ConfigParser.getboolean
 def getboolean(value):
-    v = str(value)
+    v = text_type(value)
     if v.lower() not in _boolean_states:
         raise ValueError('Not a boolean: %s' % v)
     return _boolean_states[v.lower()]
@@ -226,7 +227,7 @@ def get_movie_name_mapping(title, year):
     """
     movie = title
     if year:
-        movie += ' (' + str(year) + ')'
+        movie += ' (' + text_type(year) + ')'
     movie_sanitized = sanitize(movie)
     for x in autosubliminal.MOVIENAMEMAPPING.keys():
         if movie_sanitized == sanitize(x):
@@ -244,7 +245,7 @@ def get_alternative_movie_name_mapping(title, year):
     """
     movie = title
     if year:
-        movie += ' (' + str(year) + ')'
+        movie += ' (' + text_type(year) + ')'
     movie_sanitized = sanitize(movie)
     for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING.keys():
         if movie_sanitized == sanitize(x):
@@ -270,7 +271,7 @@ def skip_show(show_name, season, episode):
 def skip_movie(title, year):
     movie = title
     if year:
-        movie += ' (' + str(year) + ')'
+        movie += ' (' + text_type(year) + ')'
     movie_sanitized = sanitize(movie)
     for x in autosubliminal.SKIPMOVIE.keys():
         if movie_sanitized == sanitize(x):
@@ -287,7 +288,7 @@ def count_backup_logfiles():
 def get_logfile(lognum=None):
     logfile = autosubliminal.LOGFILE
     if lognum:
-        logfile += '.' + str(lognum)
+        logfile += '.' + text_type(lognum)
     if os.path.isfile(logfile):
         return logfile
     return None
@@ -351,9 +352,9 @@ def display_mapping_dict(mapping_dict):
     s = ''
     for x in mapping_dict.keys():
         if s == '':
-            s += x + ' = ' + str(mapping_dict[x])
+            s += x + ' = ' + text_type(mapping_dict[x])
         else:
-            s += '\n' + x + ' = ' + str(mapping_dict[x])
+            s += '\n' + x + ' = ' + text_type(mapping_dict[x])
     return s
 
 
