@@ -81,5 +81,6 @@ Libraries dependency tree
     |-- python-dateutil
     |-- six
     |-- urllib3
+|-- unidecode
 |-- ws4py
 ```

@@ -72,6 +72,7 @@ What it uses (see libraries.txt for versions)
  * subliminal
  * tempora
  * tvdb_api_v2
+ * unidecode
  * urllib3
  * webencodings
  * websocket-client
