@@ -419,20 +419,21 @@ def post_process(wanted_item_index, subtitle_index):
         downloader.mark_downloaded()
         processed = downloader.post_process()
 
-        # Remove downloaded language from wanted languages
-        wanted_item['languages'].remove(language)
+        if processed:
+            # Remove downloaded language from wanted languages
+            wanted_item['languages'].remove(language)
 
-        # Update wanted item if there are still wanted languages
-        if len(wanted_item['languages']) > 0:
-            WantedItems().update_wanted_item(wanted_item)
+            # Update wanted item if there are still wanted languages
+            if len(wanted_item['languages']) > 0:
+                WantedItems().update_wanted_item(wanted_item)
 
-        # Remove wanted item if there are no more wanted languages
-        else:
-            # Remove wanted item
-            autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
-            log.debug('Removed item from the wanted queue at index %s' % int(wanted_item_index))
-            WantedItems().delete_wanted_item(wanted_item)
-            log.debug('Removed %s from wanted_items database', wanted_item['videopath'])
+            # Remove wanted item if there are no more wanted languages
+            else:
+                # Remove wanted item
+                autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
+                log.debug('Removed item from the wanted queue at index %s' % int(wanted_item_index))
+                WantedItems().delete_wanted_item(wanted_item)
+                log.debug('Removed %s from wanted_items database', wanted_item['videopath'])
 
     else:
         log.warning('No subtitle downloaded, skipping post processing')

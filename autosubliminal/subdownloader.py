@@ -94,7 +94,7 @@ class SubDownloader(object):
 
             # Individual processing: process after each subtitle download
             if autosubliminal.POSTPROCESSINDIVIDUAL:
-                PostProcessor(self._download_item).run()
+                return PostProcessor(self._download_item).run()
 
             # Global processing: only process when all subtitles are downloaded
             else:
@@ -102,6 +102,6 @@ class SubDownloader(object):
                 downloaded_language = self._download_item['downlang']
                 wanted_languages.remove(downloaded_language)
                 if len(wanted_languages) == 0:
-                    PostProcessor(self._download_item).run()
+                    return PostProcessor(self._download_item).run()
 
         return True

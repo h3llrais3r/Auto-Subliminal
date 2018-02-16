@@ -13,13 +13,17 @@ class PostProcessor(object):
     """
     Post Processor.
     It launches the specified command and retrieves the arguments from the wanted_item (or download_item).
-    Additionally, arguments and the encoding (for command and arguments) can be specified.
+    Default arguments passed:
+    - encoding
+    - video_path
+    - subtitle_path (optional, postprocessing is possible without a subtitle)
+    Custom arguments can be specified, and will be added before the default arguments.
     """
 
     def __init__(self, wanted_item):
         # Set utf-8 encoding if needed, otherwise use default encoding (normally ascii)
         self._wanted_item = wanted_item
-        self._encoding = 'utf-8' if autosubliminal.POSTPROCESSUTF8ENCODING else sys.getdefaultencoding()
+        self._encoding = 'utf-8' if autosubliminal.POSTPROCESSUTF8ENCODING else autosubliminal.SYSENCODING
         if wanted_item['type'] == 'episode':
             self._cmd = autosubliminal.SHOWPOSTPROCESSCMD
             self._args = None
@@ -38,42 +42,52 @@ class PostProcessor(object):
 
         log.info('Running post processor')
         process_cmd = self._construct_process_cmd()
+        # Check if the post process command could be created
+        if not process_cmd:
+            return False
+        # Execute post process command
         stdout, stderr = utils.run_cmd(process_cmd)
         if stderr:
-            log.error('Post processor failed:\n%s' % utils.safe_trim(stderr))
+            self._log_process_output('Post processor failed:\n%s' % utils.safe_trim(stderr), logging.ERROR)
             return False
-        log.debug('Post processor output:\n%s' % utils.safe_trim(stdout))
+        self._log_process_output('Post processor output:\n%s' % utils.safe_trim(stdout), logging.DEBUG)
+
         return True
 
     def _construct_process_cmd(self):
-        log.debug('#' * 30)
-        log.debug('Command:')
-        log.debug('%s' % self._cmd)
-        process = [self._encode(self._cmd)]
-        log.debug('Arguments:')
+        try:
+            log.debug('#' * 30)
+            log.debug('Command:')
+            log.debug('%s' % self._cmd)
+            process = [self._encode(self._cmd)]
+            log.debug('Arguments:')
 
-        # Add optional command arguments if needed
-        if self._args:
-            for arg in self._args:
-                log.debug('%s' % arg)
-                process.append(self._encode(arg))
+            # Add optional command arguments if needed
+            if self._args:
+                for arg in self._args:
+                    log.debug('%s' % arg)
+                    process.append(self._encode(arg))
 
-        # Add encoding argument
-        log.debug('%s' % self._encoding)
-        process.append(self._encoding)
+            # Add encoding argument
+            log.debug('%s' % self._encoding)
+            process.append(self._encoding)
 
-        # Add video argument from the wanted_item
-        video = self._wanted_item['videopath']
-        log.debug('%s' % video)
-        process.append(self._encode(video))
-        # Add subtitle argument from the wanted_item (can be empty if no subtitle was downloaded)
-        subtitle = None
-        if 'destinationFileLocationOnDisk' in self._wanted_item.keys():
-            subtitle = self._wanted_item['destinationFileLocationOnDisk']
-        if subtitle:
-            log.debug('%s' % subtitle)
-            process.append(self._encode(subtitle))
-        log.debug('#' * 30)
+            # Add video argument from the wanted_item
+            video = self._wanted_item['videopath']
+            log.debug('%s' % video)
+            process.append(self._encode(video))
+            # Add subtitle argument from the wanted_item (can be empty if no subtitle was downloaded)
+            subtitle = None
+            if 'destinationFileLocationOnDisk' in self._wanted_item.keys():
+                subtitle = self._wanted_item['destinationFileLocationOnDisk']
+            if subtitle:
+                log.debug('%s' % subtitle)
+                process.append(self._encode(subtitle))
+            log.debug('#' * 30)
+        except UnicodeEncodeError:
+            log.debug('#' * 30)
+            log.error('Cannot encode command parameters, please enable post process utf-8 encoding!')
+            process = None
 
         return process
 
@@ -81,3 +95,11 @@ class PostProcessor(object):
         if self._encoding:
             return value.encode(self._encoding)
         return value
+
+    def _log_process_output(self, output, log_level):
+        # Make sure to log in utf-8
+        if self._encoding.lower() == 'utf-8':
+            log.log(log_level, output)
+        else:
+            # Decode first from used encoding and encode back to utf-8
+            log.log(log_level, output.decode(self._encoding).encode('utf-8'))
