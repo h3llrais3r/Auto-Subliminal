@@ -71,10 +71,10 @@ class Home(object):
                 'year': utils.display_item(wanted_item, 'year'),
                 'season': utils.display_item(wanted_item, 'season'),
                 'episode': utils.display_item(wanted_item, 'episode'),
-                'source': utils.display_item(wanted_item, 'source'),
-                'quality': utils.display_item(wanted_item, 'quality'),
-                'codec': utils.display_item(wanted_item, 'codec'),
-                'releasegrp': utils.display_item(wanted_item, 'releasegrp')}
+                'source': utils.display_item(wanted_item, 'source', 'N/A'),
+                'quality': utils.display_item(wanted_item, 'quality', 'N/A'),
+                'codec': utils.display_item(wanted_item, 'codec', 'N/A'),
+                'releasegrp': utils.display_item(wanted_item, 'releasegrp', 'N/A')}
 
     @cherrypy.expose(alias='searchId')
     def force_id_search(self, wanted_item_index):
