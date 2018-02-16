@@ -637,7 +637,4 @@ def _get_releases(subtitle):
 
 def _construct_playvideo_url(wanted_item):
     log.debug('Constructing "playvideo://" url')
-    play_protocol = 'playvideo://'
-    # Encode path for special characters -> need to decode again before accessing the path (see playvideo.py)
-    video_path = wanted_item['videopath'].encode('utf-8')
-    return play_protocol + video_path
+    return 'playvideo://' + wanted_item['videopath']
