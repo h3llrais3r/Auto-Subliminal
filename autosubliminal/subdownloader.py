@@ -34,18 +34,23 @@ class SubDownloader(object):
 
         # Save the subtitle
         if self.save():
+            name = utils.display_name(self._download_item)
+
             # Mark as downloaded
             self.mark_downloaded()
 
             # Post process
-            self.post_process()
+            processed = self.post_process()
+            if not processed:
+                utils.add_notification_message(
+                    'Unable to handle post processing for \'%s\'! Please check the log file!' % name, 'error')
 
             # Show success message
             language = self._download_item['downlang']
             name = utils.display_name(self._download_item)
             provider = self._download_item['provider']
             utils.add_notification_message(
-                'Downloaded "' + language + '" subtitle for "' + name + '" from "' + provider + '"', 'success')
+                'Downloaded \'%s\' subtitle for \'%s\' from \'%s\'.' % (language, name, provider), 'success')
 
     def save(self):
         """

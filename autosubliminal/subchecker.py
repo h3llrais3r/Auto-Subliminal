@@ -463,6 +463,8 @@ def post_process_no_subtitle(wanted_item_index):
         log.debug('Removed item from the wanted queue at index %s' % int(wanted_item_index))
         WantedItems().delete_wanted_item(wanted_item)
         log.debug('Removed %s from wanted_items database', wanted_item['videopath'])
+    else:
+        utils.add_notification_message('Unable to handle post processing! Please check the log file!', 'error')
 
     # Release wanted queue lock
     utils.release_wanted_queue_lock()
