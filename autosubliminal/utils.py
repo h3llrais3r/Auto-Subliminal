@@ -12,6 +12,7 @@ import subprocess
 import threading
 import time
 import urllib2
+from os.path import sep
 
 from six import text_type
 
@@ -454,6 +455,36 @@ def get_file_size(path):
         # Occurs when displaying gui when a sub check is running and files are already moved by a postprocessor script
         byte_size = 0
     return humanize_bytes(byte_size, 2)
+
+
+def get_common_path(paths):
+    """
+    Get the common path between paths.
+    This unlike the os.path.commonprefix version always returns path prefixes as it compares path component wise.
+    See https://stackoverflow.com/questions/21498939/how-to-circumvent-the-fallacy-of-pythons-os-path-commonprefix
+    """
+    cp = []
+    ls = [p.split(sep) for p in paths]
+    ml = min(len(p) for p in ls)
+    for i in range(ml):
+        s = set(p[i] for p in ls)
+        if len(s) != 1:
+            break
+        cp.append(s.pop())
+    return sep.join(cp) if cp else None
+
+
+def get_root_path(video_path):
+    """
+    Get the root path of a video path.
+    The root path must be one of the paths listed in autosubliminal.VIDEOPATHS
+    """
+    for path in autosubliminal.VIDEOPATHS:
+        norm_path = os.path.normpath(path)
+        if get_common_path([norm_path, video_path]) == norm_path:
+            return path
+    # Should not occur, but you just to make sure
+    raise RuntimeError('Video %s not located in one of the configured VIDEOPATHS' % video_path)
 
 
 # Thanks to: http://stackoverflow.com/questions/1088392/sorting-a-python-list-by-key-while-checking-for-string-or-float

@@ -15,8 +15,9 @@ class PostProcessor(object):
     It launches the specified command and retrieves the arguments from the wanted_item (or download_item).
     Default arguments passed:
     - encoding
-    - video_path
-    - subtitle_path (can be empty, postprocessing is possible without a subtitle)
+    - video path
+    - subtitle path (can be empty, postprocessing is possible without a subtitle)
+    - root video path (one of the video paths listed in autosubliminal.VIDEOPATHS, where video path is located in)
     Custom arguments can be added after the default arguments
     """
 
@@ -66,16 +67,22 @@ class PostProcessor(object):
             log.debug('encoding: %s' % self._encoding)
             process.append(self._encoding)
 
-            # Add video argument from the wanted_item
-            video = self._wanted_item['videopath']
-            log.debug('video path: %s' % video)
-            process.append(self._encode(video))
-            # Add subtitle argument from the wanted_item (can be empty if no subtitle was downloaded)
-            subtitle = None
+            # Add root video path argument
+            video_path = self._wanted_item['videopath']
+            root_path = utils.get_root_path(video_path)
+            log.debug('root path: %s' % root_path)
+            process.append(self._encode(root_path))
+
+            # Add video path argument
+            log.debug('video path: %s' % video_path)
+            process.append(self._encode(video_path))
+
+            # Add subtitle path argument (can be empty if no subtitle was downloaded)
+            subtitle_path = None
             if 'destinationFileLocationOnDisk' in self._wanted_item.keys():
-                subtitle = self._wanted_item['destinationFileLocationOnDisk']
-            log.debug('subtitle path: %s' % subtitle if subtitle else '')
-            process.append(self._encode(subtitle if subtitle else ''))
+                subtitle_path = self._wanted_item['destinationFileLocationOnDisk']
+            log.debug('subtitle path: %s' % subtitle_path if subtitle_path else '')
+            process.append(self._encode(subtitle_path if subtitle_path else ''))
 
             # Add optional command arguments if needed
             if self._args:

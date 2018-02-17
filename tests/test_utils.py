@@ -13,7 +13,7 @@ from autosubliminal.utils import getboolean, safe_text, safe_trim, safe_uppercas
     get_alternative_show_name_mapping, get_movie_name_mapping, get_alternative_movie_name_mapping, skip_show, \
     skip_movie, display_list_single_line, display_list_multi_line, display_item, display_title, display_name, \
     display_timestamp, convert_timestamp, humanize_bytes, get_wanted_queue_lock, release_wanted_queue_lock, \
-    count_wanted_items, get_file_size, set_rw_and_remove
+    count_wanted_items, get_common_path, get_root_path, get_file_size, set_rw_and_remove
 
 text_value = 'test'
 text_value_special_char = u'ù'
@@ -291,6 +291,18 @@ def test_count_wanted_items():
     assert count_wanted_items(itemtype='movie') == 1
     assert count_wanted_items(itemtype='episode') == 1
     assert count_wanted_items(itemtype='video') == 0
+
+
+def test_get_common_path():
+    assert get_common_path(['c:\\temp\\test', 'c:\\temp\\video_path.ext']) == 'c:\\temp'
+    assert get_common_path(['c:\\temp', 'd:\\temp']) is None
+
+
+def test_get_root_path():
+    autosubliminal.VIDEOPATHS = ['c:\\temp', 'c:\\test']
+    assert get_root_path('c:\\temp\\video_path.ext') == 'c:\\temp'
+    with pytest.raises(RuntimeError):
+        get_root_path('c:\\temp2\\test.ext')
 
 
 def test_get_file_size():
