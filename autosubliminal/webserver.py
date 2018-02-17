@@ -692,7 +692,7 @@ class System(object):
             autosubliminal.WANTEDQUEUE = []
             utils.release_wanted_queue_lock()
             utils.add_notification_message(
-                'Flushed wanted items database. Please launch system \'scan disk\' or \'run now\'.')
+                'Flushed wanted items database. Please launch system \'Scan Disk\'.')
         else:
             utils.add_notification_message('Cannot flush wanted items database when wanted queue is in use!', 'notice')
         redirect('/home')
