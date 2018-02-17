@@ -198,14 +198,14 @@ class SourceVersionManager(BaseVersionManager):
         elif local_version < remote_version:
             log.info('New version found')
             utils.add_notification_message(
-                'New version found! '
+                'New version found. '
                 'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and update!',
                 'notice', True)
         else:
             log.info('Version up to date')
             # Show info message (only when run was forced manually)
             if force_run:
-                utils.add_notification_message('You are running the latest version')
+                utils.add_notification_message('You are running the latest version.')
 
         return True
 
@@ -294,14 +294,14 @@ class GitVersionManager(BaseVersionManager):
         elif self.num_commits_behind > 0:
             log.info('New version found')
             utils.add_notification_message(
-                'New version found! <a href=' + autosubliminal.WEBROOT + '/system/updateVersion>Update</a>',
+                'New version found. <a href=' + autosubliminal.WEBROOT + '/system/updateVersion>Update</a>!',
                 'notice', True)
             self.update_allowed = True
         else:
             log.info('Version up to date')
             # Show info message (only when run was forced manually)
             if force_run:
-                utils.add_notification_message('You are running the latest version')
+                utils.add_notification_message('You are running the latest version.')
 
         return True
 
@@ -313,6 +313,6 @@ class GitVersionManager(BaseVersionManager):
                 self.repo.remote(name='origin').pull()
                 self.clean()
                 log.info('Updated to the latest version')
-                utils.add_notification_message('Updated to the latest version')
+                utils.add_notification_message('Updated to the latest version.')
             except:
                 log.error('Could not update version: %s' % traceback.format_exc())

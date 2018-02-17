@@ -101,7 +101,7 @@ class Home(object):
                 if title_sanitized == utils.sanitize(x):
                     for s in autosubliminal.SKIPSHOW[x].split(','):
                         if s == season or s == '00':
-                            utils.add_notification_message('Already skipped show %s season %s' % (title, season))
+                            utils.add_notification_message('Already skipped show %s season %s.' % (title, season))
                             redirect('/home')
                     # Not skipped yet, skip all or append season the seasons to skip
                     if season == '00':
@@ -115,11 +115,11 @@ class Home(object):
                 config.write_config_property('skipshow', title, config_season)
                 config.apply_skipshow()
                 if season == '00':
-                    utils.add_notification_message('Skipped show %s all seasons' % title)
+                    utils.add_notification_message('Skipped show %s all seasons.' % title)
                 else:
-                    utils.add_notification_message('Skipped show %s season %s' % (title, season))
+                    utils.add_notification_message('Skipped show %s season %s.' % (title, season))
             else:
-                utils.add_notification_message('Could not skip show! Please check the log file.', 'error')
+                utils.add_notification_message('Could not skip show! Please check the log file!', 'error')
 
             redirect('/home')
 
@@ -136,15 +136,15 @@ class Home(object):
         movie_sanitized = utils.sanitize(movie)
         for x in autosubliminal.SKIPMOVIE.keys():
             if movie_sanitized == utils.sanitize(x):
-                utils.add_notification_message('Already skipped movie %s' % movie)
+                utils.add_notification_message('Already skipped movie %s.' % movie)
                 redirect('/home')
         # Skip movie
         if subchecker.skip_movie(wanted_item_index):
             config.write_config_property('skipmovie', movie, '00')
             config.apply_skipmovie()
-            utils.add_notification_message('Skipped movie %s' % movie)
+            utils.add_notification_message('Skipped movie %s.' % movie)
         else:
-            utils.add_notification_message('Could not skip movie! Please check the log file.', 'error')
+            utils.add_notification_message('Could not skip movie! Please check the log file!', 'error')
         redirect('/home')
 
     @cherrypy.expose(alias='deleteVideo')
@@ -158,9 +158,9 @@ class Home(object):
             # Delete video
             deleted = subchecker.delete_video(wanted_item_index, cleanup)
             if deleted:
-                utils.add_notification_message('Video deleted from filesystem')
+                utils.add_notification_message('Video deleted from filesystem.')
             else:
-                utils.add_notification_message('Video could not be deleted! Please check the log file.', 'error')
+                utils.add_notification_message('Video could not be deleted! Please check the log file!', 'error')
             redirect('/home')
 
     @cherrypy.expose(alias='searchSubtitle')
@@ -247,7 +247,7 @@ class Config(object):
         else:
             # For some reason the config needs to be read again, otherwise all pages get an error
             config.read_config()
-            utils.add_notification_message('Config saved')
+            utils.add_notification_message('Config saved.')
             return {}
 
     @cherrypy.expose
@@ -478,9 +478,10 @@ class Config(object):
         @cherrypy.tools.json_out()
         def test(self, notify_lib):
             if notifiers.test_notifier(notify_lib):
-                utils.add_notification_message('Test notification (%s) sent' % notify_lib)
+                utils.add_notification_message('Test notification (%s) sent.' % notify_lib)
             else:
-                utils.add_notification_message('Test notification (%s) failed' % notify_lib, 'error')
+                utils.add_notification_message('Test notification (%s) failed! Please check the log file!' % notify_lib,
+                                               'error')
             return {}
 
         @cherrypy.expose(alias='regTwitter')
@@ -680,7 +681,7 @@ class System(object):
     def flush_cache(self):
         TvdbIdCache().flush_cache()
         ImdbIdCache().flush_cache()
-        utils.add_notification_message('Flushed id cache database')
+        utils.add_notification_message('Flushed id cache database.')
         redirect('/home')
 
     @cherrypy.expose(alias='flushWantedItems')
@@ -690,15 +691,16 @@ class System(object):
             WantedItems().flush_wanted_items()
             autosubliminal.WANTEDQUEUE = []
             utils.release_wanted_queue_lock()
-            utils.add_notification_message('Flushed wanted items database. Please launch system "run now".')
+            utils.add_notification_message(
+                'Flushed wanted items database. Please launch system \'scan disk\' or \'run now\'.')
         else:
-            utils.add_notification_message('Cannot flush wanted items database when wanted queue is in use', 'notice')
+            utils.add_notification_message('Cannot flush wanted items database when wanted queue is in use!', 'notice')
         redirect('/home')
 
     @cherrypy.expose(alias='flushLastDownloads')
     def flush_last_downloads(self):
         LastDownloads().flush_last_downloads()
-        utils.add_notification_message('Flushed last downloads database')
+        utils.add_notification_message('Flushed last downloads database.')
         redirect('/home')
 
     @cherrypy.expose(alias='isAlive')

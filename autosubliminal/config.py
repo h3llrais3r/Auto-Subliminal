@@ -1561,7 +1561,7 @@ def _upgrade_config(from_version, to_version):
             print('INFO: Config upgraded to version 6.')
             autosubliminal.CONFIGVERSION = 6
             autosubliminal.CONFIGUPGRADED = True
-            utils.add_notification_message('Config upgraded. Please check or reconfigure you subliminal configuration.',
+            utils.add_notification_message('Config upgraded. Please check or reconfigure you subliminal configuration!',
                                            'notice', True)
         if from_version == 6 and to_version == 7:
             print('INFO: Upgrading log config. Please check/reconfigure your config!')
@@ -1570,7 +1570,7 @@ def _upgrade_config(from_version, to_version):
             print('INFO: Config upgraded to version 7.')
             autosubliminal.CONFIGVERSION = 7
             autosubliminal.CONFIGUPGRADED = True
-            utils.add_notification_message('Config upgraded. Please check or reconfigure your logging configuration.',
+            utils.add_notification_message('Config upgraded. Please check or reconfigure your logging configuration!',
                                            'notice', True)
         if from_version == 7 and to_version == 8:
             print('INFO: Upgrading skip config. Please check/reconfigure your config!')
@@ -1584,7 +1584,7 @@ def _upgrade_config(from_version, to_version):
             print('INFO: Config upgraded to version 8.')
             autosubliminal.CONFIGVERSION = 8
             autosubliminal.CONFIGUPGRADED = True
-            utils.add_notification_message('Config upgraded. Please check or reconfigure your skip configuration.',
+            utils.add_notification_message('Config upgraded. Please check or reconfigure your skip configuration!',
                                            'notice', True)
         if from_version == 8 and to_version == 9:
             print('INFO: Renaming config, logfile and skip section. Please check/reconfigure your config!')
@@ -1623,7 +1623,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 9
             autosubliminal.CONFIGUPGRADED = True
             utils.add_notification_message(
-                'Config upgraded. Please check or reconfigure your general, logging and notification configuration.',
+                'Config upgraded. Please check or reconfigure your general, logging and notification configuration!',
                 'notice', True)
         if from_version == 9 and to_version == 10:
             print('INFO: Removing old PATH config.')
@@ -1645,4 +1645,4 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 10
             autosubliminal.CONFIGUPGRADED = True
             utils.add_notification_message(
-                'Config upgraded.', 'notice', True)
+                'Config upgraded!', 'notice', True)
