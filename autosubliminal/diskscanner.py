@@ -33,7 +33,7 @@ class DiskScanner(ScheduledProcess):
         if not utils.get_wanted_queue_lock():
             return False
 
-        log.info('Starting round of local disk checking at %s' % autosubliminal.VIDEOPATHS)
+        log.info('Starting round of local disk checking at %r' % autosubliminal.VIDEOPATHS)
 
         # Show info message (only when run was forced manually)
         if force_run:
@@ -51,7 +51,7 @@ class DiskScanner(ScheduledProcess):
                     one_dir_exists = True
         if not one_dir_exists:
             # Release wanted queue lock
-            log.error('None of the configured video paths (%s) exists, aborting...' % autosubliminal.VIDEOPATHS)
+            log.error('None of the configured video paths (%r) exists, aborting...' % autosubliminal.VIDEOPATHS)
             utils.release_wanted_queue_lock()
             return True
 
