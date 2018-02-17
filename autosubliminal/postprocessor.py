@@ -16,8 +16,8 @@ class PostProcessor(object):
     Default arguments passed:
     - encoding
     - video_path
-    - subtitle_path (optional, postprocessing is possible without a subtitle)
-    Custom arguments can be specified, and will be added before the default arguments.
+    - subtitle_path (can be empty, postprocessing is possible without a subtitle)
+    Custom arguments can be added after the default arguments
     """
 
     def __init__(self, wanted_item):
@@ -62,27 +62,26 @@ class PostProcessor(object):
             process = [self._encode(self._cmd)]
             log.debug('Arguments:')
 
-            # Add optional command arguments if needed
-            if self._args:
-                for arg in self._args:
-                    log.debug('%s' % arg)
-                    process.append(self._encode(arg))
-
             # Add encoding argument
-            log.debug('%s' % self._encoding)
+            log.debug('encoding: %s' % self._encoding)
             process.append(self._encoding)
 
             # Add video argument from the wanted_item
             video = self._wanted_item['videopath']
-            log.debug('%s' % video)
+            log.debug('video path: %s' % video)
             process.append(self._encode(video))
             # Add subtitle argument from the wanted_item (can be empty if no subtitle was downloaded)
             subtitle = None
             if 'destinationFileLocationOnDisk' in self._wanted_item.keys():
                 subtitle = self._wanted_item['destinationFileLocationOnDisk']
-            if subtitle:
-                log.debug('%s' % subtitle)
-                process.append(self._encode(subtitle))
+            log.debug('subtitle path: %s' % subtitle if subtitle else '')
+            process.append(self._encode(subtitle if subtitle else ''))
+
+            # Add optional command arguments if needed
+            if self._args:
+                for arg in self._args:
+                    log.debug('%s' % arg)
+                    process.append(self._encode(arg))
             log.debug('#' * 30)
         except UnicodeEncodeError:
             log.debug('#' * 30)
