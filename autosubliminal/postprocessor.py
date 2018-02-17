@@ -86,7 +86,7 @@ class PostProcessor(object):
             log.debug('#' * 30)
         except UnicodeEncodeError:
             log.debug('#' * 30)
-            log.error('Cannot encode command parameters, please enable post process utf-8 encoding!')
+            log.error('Cannot encode command parameters in %s, please enable utf-8 encoding!' % self._encoding)
             process = None
 
         return process
@@ -97,7 +97,7 @@ class PostProcessor(object):
         return value
 
     def _log_process_output(self, output, log_level):
-        # Make sure to log in utf-8
+        # We expect the encoding of the output to be the same as the encoding we used (but we log in utf-8)
         if self._encoding.lower() == 'utf-8':
             log.log(log_level, output)
         else:
