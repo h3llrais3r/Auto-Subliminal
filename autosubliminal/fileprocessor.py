@@ -6,6 +6,7 @@ import re
 import time
 
 from guessit import guessit
+from six import text_type
 
 import autosubliminal
 from autosubliminal import utils
@@ -144,7 +145,7 @@ def _split_release_group(release_group):
 
 def _join_episodes(episode):
     if isinstance(episode, list):
-        return ','.join(str(ep) for ep in episode)  # episode can be a list of episodes (int)
+        return ','.join(text_type(ep) for ep in episode)  # episode can be a list of episodes (int)
     return episode
 
 
