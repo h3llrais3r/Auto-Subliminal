@@ -58,10 +58,6 @@ class SubChecker(ScheduledProcess):
         if provider_pool:
             log.info('Searching subtitles with providers: %s' % ', '.join(provider_pool.providers))
 
-            # Load the Addic7ed provider cache with our Addic7ed show name mappings
-            if 'addic7ed' in autosubliminal.SUBLIMINALPROVIDERS:
-                provider_cache.fill_addic7ed_show_id_cache()
-
             # Process all items in wanted queue
             db = WantedItems()
             for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
@@ -552,8 +548,11 @@ def _get_provider_pool():
     # Create a new provider pool with our settings
     # If we don't have any providers configured, don't create the pool
     if autosubliminal.SUBLIMINALPROVIDERS:
-        return ProviderPool(providers=autosubliminal.SUBLIMINALPROVIDERS,
+        pool = ProviderPool(providers=autosubliminal.SUBLIMINALPROVIDERS,
                             provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
+        # Load the Addic7ed provider cache with our Addic7ed show name mappings
+        if 'addic7ed' in ','.join(autosubliminal.SUBLIMINALPROVIDERS):
+            provider_cache.fill_addic7ed_show_id_cache()
     else:
         return None
 

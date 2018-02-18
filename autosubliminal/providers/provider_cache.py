@@ -1,5 +1,6 @@
 # coding=utf-8
 
+from six import text_type
 from subliminal.cache import region
 
 import autosubliminal
@@ -25,7 +26,7 @@ def fill_addic7ed_show_id_cache():
     """
     for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING.keys():
         cache_value = int(autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
-        cache_key = str(ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX + '|' + x)
+        cache_key = text_type(ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX + '|' + x).encode('utf-8')
         region.set(cache_key, cache_value)
-        cache_key = str(CUSTOM_ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX + '|' + x)
+        cache_key = text_type(CUSTOM_ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX + '|' + x).encode('utf-8')
         region.set(cache_key, cache_value)
