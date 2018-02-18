@@ -2,6 +2,7 @@
 
 <%!
     from string import capwords
+    from six import text_type
 
     import autosubliminal
 %>
@@ -24,7 +25,7 @@
                                 % for num in range(backup_count):
                                 <%
                                     index = num + 1
-                                    index_style = str(lognum) == str(index) and 'badge selected' or 'badge'
+                                    index_style = text_type(lognum) == text_type(index) and 'badge selected' or 'badge'
                                 %>
                                     <li class="log-page ${index_style}">
                                         <a href="${autosubliminal.WEBROOT}/log/viewLog/${loglevel}/${index}">${index}</a>
