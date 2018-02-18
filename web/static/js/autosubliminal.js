@@ -45,6 +45,14 @@ $('input[type=checkbox][data-toggle=toggle][data-on=Enabled][data-off=Disabled]'
     $(this).parent().next('input[type=hidden]').val(target);
 });
 
+/* ========
+ * Popovers
+ * ======== */
+
+$(document).ready(function () {
+    $('[data-toggle=popover]').popover();
+});
+
 /* =========
  * Countdown
  * ========= */

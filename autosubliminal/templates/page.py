@@ -23,7 +23,7 @@ class PageTemplate(Template):
         self.template = self.lookup.get_template(filename)
         # Default arguments for all pages
         self.arguments = {
-            'appPID': str(autosubliminal.PID)
+            'appPID': autosubliminal.PID
         }
 
     def render(self, *args, **kwargs):
