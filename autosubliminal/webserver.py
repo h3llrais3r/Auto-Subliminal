@@ -16,7 +16,7 @@ from autosubliminal.templates.page import PageTemplate
 
 def redirect(abspath, *args, **kwargs):
     assert abspath[0] == '/'
-    raise cherrypy.HTTPRedirect(text_type(autosubliminal.WEBROOT) + abspath, *args, **kwargs)
+    raise cherrypy.HTTPRedirect(autosubliminal.WEBROOT + abspath, *args, **kwargs)
 
 
 def redirect_referer(abspath, *args, **kwargs):
