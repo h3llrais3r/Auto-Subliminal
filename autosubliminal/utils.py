@@ -557,3 +557,20 @@ def get_disk_space_details(directory):
 def set_rw_and_remove(operation, name, exc):
     os.chmod(name, stat.S_IWRITE)
     os.remove(name)
+
+
+def u2b(unicode_string, encoding='utf-8'):
+    """
+    Convert a unicode string to a byte string.
+    @param unicode_string: Unicode string
+    @param encoding: Used encoding, defaults to utf-8.
+    @return: byte string
+    """
+    try:
+        return unicode_string.encode(encoding)
+    except:
+        # Fallback to 'replace' and 'ignore' error mode
+        try:
+            return unicode_string.encode(encoding, 'replace')
+        except:
+            return unicode_string.encode(encoding, 'ignore')

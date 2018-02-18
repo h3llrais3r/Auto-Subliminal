@@ -13,7 +13,7 @@ from autosubliminal.utils import getboolean, safe_text, safe_trim, safe_uppercas
     get_alternative_show_name_mapping, get_movie_name_mapping, get_alternative_movie_name_mapping, skip_show, \
     skip_movie, display_list_single_line, display_list_multi_line, display_item, display_title, display_name, \
     display_timestamp, convert_timestamp, humanize_bytes, get_wanted_queue_lock, release_wanted_queue_lock, \
-    count_wanted_items, get_common_path, get_root_path, get_file_size, set_rw_and_remove
+    count_wanted_items, get_common_path, get_root_path, get_file_size, set_rw_and_remove, u2b
 
 text_value = 'test'
 text_value_special_char = u'ù'
@@ -330,3 +330,7 @@ def test_set_rw_and_remove():
     finally:
         if os.path.exists(file_path):
             os.remove(file_path)
+
+
+def test_u2b():
+    assert u2b(u'élà') == b'élà'
