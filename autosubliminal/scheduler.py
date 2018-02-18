@@ -7,7 +7,7 @@ import threading
 import os
 import traceback
 
-from six import add_metaclass
+from six import add_metaclass, text_type
 
 import autosubliminal
 
@@ -63,11 +63,11 @@ class Scheduler(object):
                 try:
                     suffix = int(scheduler_name_suffix)
                     suffix += 1
-                    scheduler_name = scheduler_name[:suffix_index] + '-' + str(suffix)
+                    scheduler_name = scheduler_name[:suffix_index] + '-' + text_type(suffix)
                 except:
-                    scheduler_name = scheduler_name + '-' + str(suffix)
+                    scheduler_name = scheduler_name + '-' + text_type(suffix)
             else:
-                scheduler_name = scheduler_name + '-' + str(suffix)
+                scheduler_name = scheduler_name + '-' + text_type(suffix)
         self.name = scheduler_name
         autosubliminal.SCHEDULERS[scheduler_name] = self
 
