@@ -8,6 +8,8 @@ import signal
 import sys
 import time
 
+from six import binary_type
+
 # Insert the lib folder at the beginning of the python system path
 # This to prevent installation of the libraries and to prevent the 'lib.' prefix when importing the libraries
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
@@ -80,7 +82,7 @@ def main(argv=None):
                     autosubliminal.DAEMON = True
 
     except Usage as err:
-        sys.stderr.write(sys.argv[0].split('/')[-1] + ': ' + str(err.msg) + '\n')
+        sys.stderr.write(sys.argv[0].split('/')[-1] + ': ' + binary_type(err.msg) + '\n')
         sys.stderr.write('For help use --help\n')
         return 2
 
