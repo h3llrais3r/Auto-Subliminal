@@ -548,11 +548,12 @@ def _get_provider_pool():
     # Create a new provider pool with our settings
     # If we don't have any providers configured, don't create the pool
     if autosubliminal.SUBLIMINALPROVIDERS:
-        pool = ProviderPool(providers=autosubliminal.SUBLIMINALPROVIDERS,
-                            provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
-        # Load the Addic7ed provider cache with our Addic7ed show name mappings
+        # Load the Addic7ed provider cache (if needed) with our Addic7ed show name mappings
         if 'addic7ed' in ','.join(autosubliminal.SUBLIMINALPROVIDERS):
             provider_cache.fill_addic7ed_show_id_cache()
+        # Create the pool
+        return ProviderPool(providers=autosubliminal.SUBLIMINALPROVIDERS,
+                            provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
     else:
         return None
 
