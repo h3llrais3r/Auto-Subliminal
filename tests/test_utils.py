@@ -294,15 +294,17 @@ def test_count_wanted_items():
 
 
 def test_get_common_path():
-    assert get_common_path(['c:\\temp\\test', 'c:\\temp\\video_path.ext']) == 'c:\\temp'
-    assert get_common_path(['c:\\temp', 'd:\\temp']) is None
+    separator = '\\'
+    assert get_common_path(['c:\\temp\\test', 'c:\\temp\\video_path.ext'], separator) == 'c:\\temp'
+    assert get_common_path(['c:\\temp', 'd:\\temp'], separator) is None
 
 
 def test_get_root_path():
+    separator = '\\'
     autosubliminal.VIDEOPATHS = ['c:\\temp', 'c:\\test']
-    assert get_root_path('c:\\temp\\video_path.ext') == 'c:\\temp'
+    assert get_root_path('c:\\temp\\video_path.ext', separator) == 'c:\\temp'
     with pytest.raises(RuntimeError):
-        get_root_path('c:\\temp2\\test.ext')
+        get_root_path('c:\\temp2\\test.ext', separator)
 
 
 def test_get_file_size():
