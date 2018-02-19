@@ -3,7 +3,6 @@
 import logging
 
 import gntp.notifier
-from gntp.errors import BaseError
 
 import autosubliminal
 from autosubliminal.notifiers.generic import BaseNotifier
@@ -46,8 +45,9 @@ class GrowlNotifier(BaseNotifier):
                 log.error('%s registration failed: %r' % (self.name, response))
                 return False
             return True
-        except BaseError:
+        except Exception as e:
             log.error('%s registration failed' % self.name)
+            log.exception(e)
             return False
 
     def _send_message(self, message, **kwargs):
@@ -61,8 +61,9 @@ class GrowlNotifier(BaseNotifier):
                 return False
             log.info('%s notification sent' % self.name)
             return True
-        except BaseError:
+        except Exception as e:
             log.error('%s notification failed' % self.name)
+            log.exception(e)
             return False
 
     # Override of generic test method (test will also take care the growl registration)

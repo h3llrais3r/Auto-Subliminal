@@ -36,8 +36,9 @@ class PushbulletNotifier(BaseNotifier):
             pb.push_note(title=self.notification_title, body=message.encode('utf-8'))
             log.info('%s notification sent' % self.name)
             return True
-        except:
+        except Exception as e:
             log.error('%s notification failed' % self.name)
+            log.exception(e)
             return False
 
 

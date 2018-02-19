@@ -40,8 +40,10 @@ class NmaNotifier(BaseNotifier):
             else:
                 log.info('%s notification sent' % self.name)
                 return True
-        except:
+        except Exception as e:
             log.error('%s notification failed' % self.name)
+            log.exception(e)
+            return False
 
 
 __CLASS_NAME__ = NmaNotifier.__name__
