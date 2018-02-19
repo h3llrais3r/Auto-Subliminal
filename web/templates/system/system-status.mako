@@ -31,7 +31,7 @@
                     </thead>
 
                     <tbody>
-                        % for scheduler in autosubliminal.SCHEDULERS.values():
+                        % for scheduler in list(autosubliminal.SCHEDULERS.values()):
                             <tr class="<% 'status-scheduler-running' if scheduler.running else '' %>">
                                 <td class="main-column">${scheduler.name}</td>
                                 <td>${display_timestamp(scheduler.last_run)}</td>

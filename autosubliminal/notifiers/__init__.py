@@ -39,7 +39,7 @@ class Notifier(object):
             self._notifier_dict['provider']))
 
         notified = False
-        for notifier in _notifiers.values():
+        for notifier in list(_notifiers.values()):
             notified |= notifier.notify_download(**self._notifier_dict)
 
         return notified
