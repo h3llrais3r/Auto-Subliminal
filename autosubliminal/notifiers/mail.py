@@ -35,7 +35,7 @@ class MailNotifier(BaseNotifier):
     def _get_message(self, **kwargs):
         # Prepend extra info to default message
         message = self.application_title + '\n\n'
-        if 'video' in kwargs.keys():
+        if 'video' in kwargs:
             message += 'Video: %s\n' % kwargs['video']
         message += super(MailNotifier, self)._get_message(**kwargs)
         return message
@@ -46,7 +46,7 @@ class MailNotifier(BaseNotifier):
         mail_message['To'] = email.utils.formataddr(('Recipient', autosubliminal.MAILTOADDR))
         subject = autosubliminal.MAILSUBJECT if autosubliminal.MAILSUBJECT else self.application_title
         # Add subtitle from kwargs to subject if available
-        if 'subtitle' in kwargs.keys():
+        if 'subtitle' in kwargs:
             subject += ' - ' + kwargs['subtitle']
         mail_message['Subject'] = subject
         # Convert message to string

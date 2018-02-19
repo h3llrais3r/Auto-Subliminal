@@ -184,7 +184,7 @@ def get_show_name_mapping(show_name):
     @rtype: int
     """
     show_name_sanitized = sanitize(show_name)
-    for x in autosubliminal.SHOWNAMEMAPPING.keys():
+    for x in autosubliminal.SHOWNAMEMAPPING:
         if show_name_sanitized == sanitize(x):
             log.debug('Found match in shownamemapping for %s' % show_name)
             return int(autosubliminal.SHOWNAMEMAPPING[x])
@@ -198,7 +198,7 @@ def get_addic7ed_show_name_mapping(show_name):
     @rtype: int
     """
     show_name_sanitized = sanitize(show_name)
-    for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING.keys():
+    for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING:
         if show_name_sanitized == sanitize(x):
             log.debug('Found match in addic7edshownamemapping for %s' % show_name)
             return int(autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
@@ -212,7 +212,7 @@ def get_alternative_show_name_mapping(show_name):
     @rtype: list
     """
     show_name_sanitized = sanitize(show_name)
-    for x in autosubliminal.ALTERNATIVESHOWNAMEMAPPING.keys():
+    for x in autosubliminal.ALTERNATIVESHOWNAMEMAPPING:
         if show_name_sanitized == sanitize(x):
             log.debug('Found match in alternativeshownamemapping for %s' % show_name)
             alternatives = autosubliminal.ALTERNATIVESHOWNAMEMAPPING[x]
@@ -231,7 +231,7 @@ def get_movie_name_mapping(title, year):
     if year:
         movie += ' (' + text_type(year) + ')'
     movie_sanitized = sanitize(movie)
-    for x in autosubliminal.MOVIENAMEMAPPING.keys():
+    for x in autosubliminal.MOVIENAMEMAPPING:
         if movie_sanitized == sanitize(x):
             log.debug('Found match in movienamemapping for %s' % movie)
             return autosubliminal.MOVIENAMEMAPPING[x]
@@ -249,7 +249,7 @@ def get_alternative_movie_name_mapping(title, year):
     if year:
         movie += ' (' + text_type(year) + ')'
     movie_sanitized = sanitize(movie)
-    for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING.keys():
+    for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING:
         if movie_sanitized == sanitize(x):
             log.debug('Found match in alternativemovienamemapping for %s' % movie)
             alternatives = autosubliminal.ALTERNATIVEMOVIENAMEMAPPING[x]
@@ -258,7 +258,7 @@ def get_alternative_movie_name_mapping(title, year):
 
 def skip_show(show_name, season, episode):
     show_name_sanitized = sanitize(show_name)
-    for x in autosubliminal.SKIPSHOW.keys():
+    for x in autosubliminal.SKIPSHOW:
         if show_name_sanitized == sanitize(x):
             log.debug('Found match in skipshow for %s' % show_name)
             for s in autosubliminal.SKIPSHOW[x].split(','):
@@ -275,7 +275,7 @@ def skip_movie(title, year):
     if year:
         movie += ' (' + text_type(year) + ')'
     movie_sanitized = sanitize(movie)
-    for x in autosubliminal.SKIPMOVIE.keys():
+    for x in autosubliminal.SKIPMOVIE:
         if movie_sanitized == sanitize(x):
             log.debug('Found match in skipmovie, skipping movie %s' % movie)
             return True
@@ -352,7 +352,7 @@ def display_mapping_dict(mapping_dict):
     Return a multi lined string containing all mappings (key = value) from the mapping_dict.
     """
     s = ''
-    for x in mapping_dict.keys():
+    for x in mapping_dict:
         if s == '':
             s += x + ' = ' + text_type(mapping_dict[x])
         else:
@@ -380,7 +380,7 @@ def display_title(item_dict, default_value='N/A', uppercase=False):
 
 def display_name(item_dict, default_value='N/A', uppercase=False):
     name = display_title(item_dict, default_value, False)
-    if 'type' in item_dict.keys() and item_dict['type'] == 'episode':
+    if 'type' in item_dict and item_dict['type'] == 'episode':
         season = display_item(item_dict, 'season', default_value, False)
         episode = display_item(item_dict, 'episode', default_value, False)
         if not season == default_value and not episode == default_value:

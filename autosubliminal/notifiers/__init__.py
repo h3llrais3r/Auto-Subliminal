@@ -49,7 +49,7 @@ def test_notifier(library):
     """
     Simple method to send a test notification for a supported notifier library.
     """
-    if library in _notifiers.keys():
+    if library in _notifiers:
         return _notifiers[library].test()
     else:
         raise NotImplementedError

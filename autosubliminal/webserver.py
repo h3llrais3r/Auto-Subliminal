@@ -41,8 +41,8 @@ class Home(object):
         # Get wanted item
         wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
         # Update all keys that are passed
-        for key in kwargs.keys() if wanted_item else None:
-            if key in wanted_item.keys():
+        for key in kwargs if wanted_item else None:
+            if key in wanted_item:
                 wanted_item[key] = kwargs[key]
         # Only return updatable fields
         # These values will be shown in the view through jquery, so apply the display_item() on it!
@@ -62,7 +62,7 @@ class Home(object):
         # Get wanted item
         wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
         wanted_item_db = WantedItems().get_wanted_item(wanted_item['videopath'])
-        for key in wanted_item_db.keys():
+        for key in wanted_item_db:
             wanted_item[key] = wanted_item_db[key]
         # Only return updatable fields
         # These values represent the original values, so apply default display_item() on it!
@@ -97,7 +97,7 @@ class Home(object):
             config_season = season
             # Check if already skipped
             title_sanitized = utils.sanitize(title)
-            for x in autosubliminal.SKIPSHOW.keys():
+            for x in autosubliminal.SKIPSHOW:
                 if title_sanitized == utils.sanitize(x):
                     for s in autosubliminal.SKIPSHOW[x].split(','):
                         if s == season or s == '00':
@@ -134,7 +134,7 @@ class Home(object):
             movie += ' (' + year + ')'
         # Check if already skipped
         movie_sanitized = utils.sanitize(movie)
-        for x in autosubliminal.SKIPMOVIE.keys():
+        for x in autosubliminal.SKIPMOVIE:
             if movie_sanitized == utils.sanitize(x):
                 utils.add_notification_message('Already skipped movie %s.' % movie)
                 redirect('/home')

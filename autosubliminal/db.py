@@ -126,9 +126,9 @@ class WantedItems(object):
         cursor = connection.cursor()
 
         # Can be unavailable in dict
-        if 'tvdbid' not in wanted_item.keys():
+        if 'tvdbid' not in wanted_item:
             wanted_item['tvdbid'] = None
-        if 'imdbid' not in wanted_item.keys():
+        if 'imdbid' not in wanted_item:
             wanted_item['imdbid'] = None
 
         cursor.execute(self._query_set, [
@@ -162,9 +162,9 @@ class WantedItems(object):
         cursor = connection.cursor()
 
         # Can be unavailable in dict
-        if 'tvdbid' not in wanted_item.keys():
+        if 'tvdbid' not in wanted_item:
             wanted_item['tvdbid'] = None
-        if 'imdbid' not in wanted_item.keys():
+        if 'imdbid' not in wanted_item:
             wanted_item['imdbid'] = None
 
         cursor.execute(self._query_update, [
@@ -218,7 +218,7 @@ class LastDownloads(object):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
 
-        if 'source' not in download_item.keys():
+        if 'source' not in download_item:
             download_item['source'] = None
 
         cursor.execute(self._query_set, [

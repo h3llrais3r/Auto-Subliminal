@@ -894,7 +894,7 @@ def write_shownamemapping_section():
         cfg.remove_section(section)
     cfg.add_section(section)
 
-    for x in autosubliminal.SHOWNAMEMAPPING.keys():
+    for x in autosubliminal.SHOWNAMEMAPPING:
         cfg.set('shownamemapping', x, autosubliminal.SHOWNAMEMAPPING[x])
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
@@ -916,7 +916,7 @@ def write_addic7edshownamemapping_section():
         cfg.remove_section(section)
     cfg.add_section(section)
 
-    for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING.keys():
+    for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING:
         cfg.set('addic7edshownamemapping', x, autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
@@ -938,7 +938,7 @@ def write_alternativeshownamemapping_section():
         cfg.remove_section(section)
     cfg.add_section(section)
 
-    for x in autosubliminal.ALTERNATIVESHOWNAMEMAPPING.keys():
+    for x in autosubliminal.ALTERNATIVESHOWNAMEMAPPING:
         cfg.set('alternativeshownamemapping', x, autosubliminal.ALTERNATIVESHOWNAMEMAPPING[x])
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
@@ -960,7 +960,7 @@ def write_movienamemapping_section():
         cfg.remove_section(section)
     cfg.add_section(section)
 
-    for x in autosubliminal.MOVIENAMEMAPPING.keys():
+    for x in autosubliminal.MOVIENAMEMAPPING:
         cfg.set('movienamemapping', x, autosubliminal.MOVIENAMEMAPPING[x])
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
@@ -982,7 +982,7 @@ def write_alternativemovienamemapping_section():
         cfg.remove_section(section)
     cfg.add_section(section)
 
-    for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING.keys():
+    for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING:
         cfg.set('alternativemovienamemapping', x, autosubliminal.ALTERNATIVEMOVIENAMEMAPPING[x])
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
@@ -1004,7 +1004,7 @@ def write_skipshow_section():
         cfg.remove_section(section)
     cfg.add_section(section)
 
-    for x in autosubliminal.SKIPSHOW.keys():
+    for x in autosubliminal.SKIPSHOW:
         cfg.set('skipshow', x, autosubliminal.SKIPSHOW[x])
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
@@ -1026,7 +1026,7 @@ def write_skipmovie_section():
         cfg.remove_section(section)
     cfg.add_section(section)
 
-    for x in autosubliminal.SKIPMOVIE.keys():
+    for x in autosubliminal.SKIPMOVIE:
         cfg.set('skipmovie', x, autosubliminal.SKIPMOVIE[x])
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
@@ -1404,7 +1404,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.SHOWMATCHRELEASEGROUP = False
             print('INFO: New value showminmatchscore: %d' % autosubliminal.SHOWMINMATCHSCORE)
             print('INFO: Replacing old user namemappings with tvdb ids.')
-            for x in autosubliminal.SHOWNAMEMAPPING.keys():
+            for x in autosubliminal.SHOWNAMEMAPPING:
                 # Search for tvdb id
                 tvdb_id = autosubliminal.SHOWINDEXER.get_tvdb_id(x, force_search=True)
                 # Replace by tvdb id or remove namemapping
@@ -1575,11 +1575,11 @@ def _upgrade_config(from_version, to_version):
         if from_version == 7 and to_version == 8:
             print('INFO: Upgrading skip config. Please check/reconfigure your config!')
             # '00' means now skip all, '0' means skip season 0
-            for x in autosubliminal.SKIPSHOW.keys():
+            for x in autosubliminal.SKIPSHOW:
                 seasons = autosubliminal.SKIPSHOW[x].split(',')
                 replace = {'0': '00', '00': '0'}
-                autosubliminal.SKIPSHOW[x] = ','.join([replace[r] if r in replace.keys() else r for r in seasons])
-            for x in autosubliminal.SKIPMOVIE.keys():
+                autosubliminal.SKIPSHOW[x] = ','.join([replace[r] if r in replace else r for r in seasons])
+            for x in autosubliminal.SKIPMOVIE:
                 autosubliminal.SKIPMOVIE[x] = '00'
             print('INFO: Config upgraded to version 8.')
             autosubliminal.CONFIGVERSION = 8

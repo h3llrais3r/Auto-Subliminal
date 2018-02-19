@@ -24,7 +24,7 @@ def fill_addic7ed_show_id_cache():
     >>>@region.cache_on_arguments(expiration_time=SHOW_EXPIRATION_TIME)
     >>>def _search_show_id(self, series, year=None):
     """
-    for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING.keys():
+    for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING:
         # Dogpile cache expects byte strings as keys!
         cache_value = int(autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
         cache_key = utils.u2b(ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX + '|' + x)

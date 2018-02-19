@@ -128,7 +128,7 @@ def _dict_from_guess(guess):
 
 def _property_from_guess(guess, property_name, default_value=None):
     property_value = default_value
-    if property_name in guess.keys():
+    if property_name in guess:
         property_value = guess[property_name]
     return property_value
 

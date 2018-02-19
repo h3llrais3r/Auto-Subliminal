@@ -54,7 +54,7 @@ class Scheduler(object):
     def _register_scheduler(self):
         # Add scheduler to dict of schedulers
         scheduler_name = self.name
-        while scheduler_name in autosubliminal.SCHEDULERS.keys():
+        while scheduler_name in autosubliminal.SCHEDULERS:
             # Add suffix in case of multiple schedulers with same name (but this shouldn't occur)
             suffix = 1
             suffix_index = scheduler_name.rfind('-')

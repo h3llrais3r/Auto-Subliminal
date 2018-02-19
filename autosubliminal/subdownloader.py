@@ -23,7 +23,7 @@ class SubDownloader(object):
     def __init__(self, download_item):
         log.debug('Download item: %r' % download_item)
         self._download_item = download_item
-        self._keys = download_item.keys()
+        self._keys = list(download_item)
 
     def run(self):
         """

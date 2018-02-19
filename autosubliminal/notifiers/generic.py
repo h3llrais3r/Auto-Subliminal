@@ -34,11 +34,11 @@ class BaseNotifier(object):
         Default message.
         """
         message = ''
-        if 'subtitle' in kwargs.keys():
+        if 'subtitle' in kwargs:
             message += 'Subtitle: %s\n' % kwargs['subtitle']
-        if 'language' in kwargs.keys():
+        if 'language' in kwargs:
             message += 'Language: %s\n' % kwargs['language']
-        if 'provider' in kwargs.keys():
+        if 'provider' in kwargs:
             message += 'Provider: %s\n' % kwargs['provider']
         return message
 
