@@ -31,15 +31,6 @@ class GrowlNotifier(BaseNotifier):
     def enabled(self):
         return autosubliminal.NOTIFYGROWL
 
-    # Override of generic test method (test will also take care the growl registration)
-    def test(self):
-        log.debug('Testing a %s notification' % self.name)
-        # Registration
-        if not self._register():
-            return False
-        # Notification
-        return self._send_message(self.test_message)
-
     def _create_notifier(self):
         return gntp.notifier.GrowlNotifier(applicationName=self.application,
                                            notifications=[self.notification_title],
@@ -73,6 +64,15 @@ class GrowlNotifier(BaseNotifier):
         except BaseError:
             log.error('%s notification failed' % self.name)
             return False
+
+    # Override of generic test method (test will also take care the growl registration)
+    def test(self):
+        log.debug('Testing a %s notification' % self.name)
+        # Registration
+        if not self._register():
+            return False
+        # Notification
+        return self._send_message(self.test_message)
 
 
 __CLASS_NAME__ = GrowlNotifier.__name__

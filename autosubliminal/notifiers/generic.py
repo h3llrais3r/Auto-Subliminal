@@ -42,6 +42,10 @@ class BaseNotifier(object):
             message += 'Provider: %s\n' % kwargs['provider']
         return message
 
+    @abc.abstractmethod
+    def _send_message(self, message, **kwargs):
+        pass
+
     def notify_download(self, **kwargs):
         # Only notify when enabled
         if self.enabled:
@@ -54,7 +58,3 @@ class BaseNotifier(object):
     def test(self):
         self.log.debug('Testing a %s notification' % self.name)
         return self._send_message(self.test_message)
-
-    @abc.abstractmethod
-    def _send_message(self, message, **kwargs):
-        pass
