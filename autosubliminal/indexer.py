@@ -71,14 +71,14 @@ class ShowIndexer(Indexer):
         return time() >= self._token_generation_time + self._token_expiration_interval
 
     @authenticate
-    def _query_api(self, title, year=None):
+    def _query_api(self, title, year=None, language='en'):
         name = title
         if year:
             name += ' (' + text_type(year) + ')'
         log.info('Querying tvdb api for %s' % name)
         # Return a tvdb_api_v2.models.series_search.SeriesSearch object
         # Make sure to convert it to byte string before searching (to prevent unicode encoding error)
-        series_search = self._client.search_series_by_name(utils.u2b(name))
+        series_search = self._client.search_series_by_name(utils.u2b(name), language=language)
         for series_search_data in series_search.data:
             if utils.sanitize(series_search_data.series_name) == utils.sanitize(name):
                 return series_search_data
@@ -90,7 +90,7 @@ class ShowIndexer(Indexer):
             else:
                 continue
 
-    def get_tvdb_id(self, title, year=None, force_search=False, store_id=True):
+    def get_tvdb_id(self, title, year=None, language='en', force_search=False, store_id=True):
         tvdb_id = None
         name = title
         if year:
@@ -113,7 +113,7 @@ class ShowIndexer(Indexer):
                 return int(tvdb_id)
         # Search on tvdb (throws exception when not found)
         try:
-            show = self._query_api(title, year)
+            show = self._query_api(title, year=year, language=language)
             if show:
                 tvdb_id = show.id
         except Exception as e:

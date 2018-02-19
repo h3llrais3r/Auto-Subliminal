@@ -13,6 +13,7 @@ def test_get_tvdb_id():
     assert indexer.get_tvdb_id(u'The Big Bang Theory', force_search=True, store_id=False) == 80379
     assert indexer.get_tvdb_id(u'The Americans', year=2013, force_search=True, store_id=False) == 261690
     assert indexer.get_tvdb_id(u'Mr Robot', force_search=True, store_id=False) == 289590
+    assert indexer.get_tvdb_id(u'Fais pas ci, fais pas ça', language='fr', force_search=True, store_id=False) == 80977
 
 
 def test_get_imdb_id():
