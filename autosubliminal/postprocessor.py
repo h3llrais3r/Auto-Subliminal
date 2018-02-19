@@ -1,7 +1,6 @@
 # coding=utf-8
 
 import logging
-import sys
 
 import autosubliminal
 from autosubliminal import utils
