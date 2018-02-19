@@ -465,7 +465,7 @@ def get_common_path(paths, separator=os.path.sep):
     cp = []
     ls = [p.split(separator) for p in paths]
     ml = min(len(p) for p in ls)
-    for i in range(ml):
+    for i in list(range(ml)):
         s = set(p[i] for p in ls)
         if len(s) != 1:
             break

@@ -1365,7 +1365,7 @@ def _upgrade_config(from_version, to_version):
     upgrades = to_version - from_version
     if upgrades != 1:
         print('INFO: More than 1 upgrade required. Starting subupgrades.')
-        for x in range(from_version, upgrades + 1):
+        for x in list(range(from_version, upgrades + 1)):
             _upgrade_config((from_version - 1) + x, x + 1)
     else:
         if from_version == 1 and to_version == 2:

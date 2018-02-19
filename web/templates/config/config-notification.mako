@@ -717,7 +717,7 @@
                             <span class="col-xs-8 col-md-6">
                                 <% priormapper = {-2 : 'Very Low', -1 : 'Moderate', 0 : 'Normal', 1 : 'High', 2 : 'Emergency'} %>
                                 <select id="prowlpriority" name="prowlpriority" class="form-control input-sm">
-                                    % for prior in range(-2, 3, 1):
+                                    % for prior in list(range(-2, 3, 1)):
                                         % if prior == autosubliminal.PROWLPRIORITY:
                                             <option value="${prior}" selected="selected">${priormapper[prior]}</option>
                                         % else:

@@ -22,7 +22,7 @@
                                 <li class="log-page ${current_style}">
                                     <a href="${autosubliminal.WEBROOT}/log/viewLog/${loglevel}">current</a>
                                 </li>
-                                % for num in range(backup_count):
+                                % for num in list(range(backup_count)):
                                 <%
                                     index = num + 1
                                     index_style = text_type(lognum) == text_type(index) and 'badge selected' or 'badge'

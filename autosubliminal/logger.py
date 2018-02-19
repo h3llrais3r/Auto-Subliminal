@@ -118,7 +118,7 @@ class CustomRotatingFileHandler(BaseRotatingHandler):
             self.stream.close()
             self.stream = None
         if self.backupCount > 0:
-            for i in range(self.backupCount - 1, 0, -1):
+            for i in list(range(self.backupCount - 1, 0, -1)):
                 sfn = "%s.%d" % (self.baseFilename, i)
                 dfn = "%s.%d" % (self.baseFilename, i + 1)
                 if os.path.exists(sfn):
