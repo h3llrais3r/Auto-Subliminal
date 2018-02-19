@@ -42,7 +42,7 @@ class GrowlNotifier(BaseNotifier):
 
     def _create_notifier(self):
         return gntp.notifier.GrowlNotifier(applicationName=self.application,
-                                           notifications=[self.application_title],
+                                           notifications=[self.notification_title],
                                            hostname=autosubliminal.GROWLHOST,
                                            port=autosubliminal.GROWLPORT,
                                            password=autosubliminal.GROWLPASS if autosubliminal.GROWLPASS else None)
@@ -61,7 +61,7 @@ class GrowlNotifier(BaseNotifier):
 
     def _send_message(self, message, **kwargs):
         try:
-            response = self._create_notifier().notify(noteType=self.application_title,
+            response = self._create_notifier().notify(noteType=self.notification_title,
                                                       title=self.title,
                                                       description=message,
                                                       priority=autosubliminal.GROWLPRIORITY)

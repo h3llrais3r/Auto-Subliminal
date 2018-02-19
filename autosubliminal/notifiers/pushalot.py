@@ -32,7 +32,7 @@ class PushalotNotifier(BaseNotifier):
 
     def _send_message(self, message, **kwargs):
         data = {'AuthorizationToken': autosubliminal.PUSHALOTAPI,
-                'Title': self.application_title,
+                'Title': self.notification_title,
                 'Body': message.encode('utf-8')}
         try:
             http_handler = HTTPSConnection('pushalot.com')

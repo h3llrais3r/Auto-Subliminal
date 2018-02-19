@@ -33,7 +33,7 @@ class PushoverNotifier(BaseNotifier):
     def _send_message(self, message, **kwargs):
         data = {'token': autosubliminal.PUSHOVERAPI,
                 'user': autosubliminal.PUSHOVERKEY,
-                'title': self.application_title,
+                'title': self.notification_title,
                 'devices': autosubliminal.PUSHOVERDEVICES,
                 'message': message.encode('utf-8')}
         try:

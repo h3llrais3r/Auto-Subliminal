@@ -41,7 +41,7 @@ class TwitterNotifier(BaseNotifier):
     # Override of generic _get_message method
     def _get_message(self, **kwargs):
         # Prepend application title to default message
-        return self.application_title + '\n' + super(TwitterNotifier, self)._get_message(**kwargs)
+        return self.notification_title + '\n' + super(TwitterNotifier, self)._get_message(**kwargs)
 
     def _send_message(self, message, **kwargs):
         try:
