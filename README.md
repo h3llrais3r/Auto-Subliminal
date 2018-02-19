@@ -44,7 +44,6 @@ What it uses (see libraries.txt for versions)
  * gitdb2
  * gitpython
  * gntp
- * growl
  * guessit
  * html5lib
  * imdbpy
