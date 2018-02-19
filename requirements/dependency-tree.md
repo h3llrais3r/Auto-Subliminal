@@ -24,6 +24,7 @@ Libraries dependency tree
 |-- gitpython
     |-- gitdb2
         |-- smmap2
+|-- gntp
 |-- growl
 |-- guessit
     |-- babelfish

@@ -43,6 +43,7 @@ What it uses (see libraries.txt for versions)
  * futures
  * gitdb2
  * gitpython
+ * gntp
  * growl
  * guessit
  * html5lib
