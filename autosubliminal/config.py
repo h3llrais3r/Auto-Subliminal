@@ -585,10 +585,20 @@ def read_config(check_upgrade=False):
         else:
             autosubliminal.GROWLHOST = u'127.0.0.1'
 
+        if cfg.has_option('notify', 'growlport'):
+            autosubliminal.GROWLPORT = cfg.getint('notify', 'growlport')
+        else:
+            autosubliminal.GROWLPORT = 23053
+
         if cfg.has_option('notification', 'growlpass'):
             autosubliminal.GROWLPASS = cfg.get('notification', 'growlpass')
         else:
             autosubliminal.GROWLPASS = u'mysecretpassword'
+
+        if cfg.has_option('notification', 'growlpriority'):
+            autosubliminal.GROWLPRIORITY = cfg.getint('notification', 'growlpriority')
+        else:
+            autosubliminal.GROWLPRIORITY = 0
 
         # Prowl
         if cfg.has_option('notification', 'notifyprowl'):
@@ -642,7 +652,9 @@ def read_config(check_upgrade=False):
         autosubliminal.NMAAPI = u'API key'
         autosubliminal.NOTIFYGROWL = False
         autosubliminal.GROWLHOST = u'127.0.0.1'
+        autosubliminal.GROWLPORT = 23053
         autosubliminal.GROWLPASS = u'mysecretpassword'
+        autosubliminal.GROWLPRIORITY = 0
         autosubliminal.NOTIFYPROWL = False
         autosubliminal.PROWLAPI = u'API key'
         autosubliminal.PROWLPRIORITY = 0
@@ -1070,7 +1082,9 @@ def write_notification_section():
     cfg.set(section, 'nmaapi', autosubliminal.NMAAPI)
     cfg.set(section, 'notifygrowl', text_type(autosubliminal.NOTIFYGROWL))
     cfg.set(section, 'growlhost', autosubliminal.GROWLHOST)
+    cfg.set(section, "growlport", text_type(autosubliminal.GROWLPORT))
     cfg.set(section, 'growlpass', autosubliminal.GROWLPASS)
+    cfg.set(section, 'growlpriority', text_type(autosubliminal.GROWLPRIORITY))
     cfg.set(section, 'notifyprowl', text_type(autosubliminal.NOTIFYPROWL))
     cfg.set(section, 'prowlapi', autosubliminal.PROWLAPI)
     cfg.set(section, 'prowlpriority', text_type(autosubliminal.PROWLPRIORITY))

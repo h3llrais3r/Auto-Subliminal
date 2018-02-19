@@ -1,9 +1,9 @@
 # coding=utf-8
 
 import logging
-import socket
 
-from lib.growl.growl import Registration, Notification, GROWL_UDP_PORT
+import gntp.notifier
+from gntp.errors import BaseError
 
 import autosubliminal
 from autosubliminal.notifiers.generic import BaseNotifier
@@ -35,39 +35,42 @@ class GrowlNotifier(BaseNotifier):
     def test(self):
         log.debug('Testing a %s notification' % self.name)
         # Registration
-        if not self._send_message(self._create_registration()):
+        if not self._register():
             return False
         # Notification
-        return self._send_message(self._create_notification(self.test_message))
+        return self._send_message(self.test_message)
 
-    def _create_registration(self):
-        registration = Registration(application=self.application,
-                                    password=autosubliminal.GROWLPASS if autosubliminal.GROWLPASS else None)
-        registration.add_notification(notification=self.application_title)
-        return registration
+    def _create_notifier(self):
+        return gntp.notifier.GrowlNotifier(applicationName=self.application,
+                                           notifications=[self.application_title],
+                                           hostname=autosubliminal.GROWLHOST,
+                                           port=autosubliminal.GROWLPORT,
+                                           password=autosubliminal.GROWLPASS if autosubliminal.GROWLPASS else None)
 
-    def _create_notification(self, message):
-        notification = Notification(application=self.application,
-                                    notification=self.application_title,
-                                    title=self.title,
-                                    description=message,
-                                    password=autosubliminal.GROWLPASS if autosubliminal.GROWLPASS else None)
-        return notification
-
-    # Override of generic _get_message method
-    def _get_message(self, **kwargs):
-        message = super(GrowlNotifier, self)._get_message(**kwargs)
-        return self._create_notification(message)
+    def _register(self):
+        try:
+            # Can return error in case of invalid response
+            response = self._create_notifier().register()
+            if response is not True:
+                log.error('%s registration failed: %r' % (self.name, response))
+                return False
+            return True
+        except BaseError:
+            log.error('%s registration failed' % self.name)
+            return False
 
     def _send_message(self, message, **kwargs):
         try:
-            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            address = (autosubliminal.GROWLHOST, GROWL_UDP_PORT)
-            s.sendto(message.payload(), address)
-            s.close()
+            response = self._create_notifier().notify(noteType=self.application_title,
+                                                      title=self.title,
+                                                      description=message,
+                                                      priority=autosubliminal.GROWLPRIORITY)
+            if response is not True:
+                log.error('%s notification failed: %r' % (self.name, response))
+                return False
             log.info('%s notification sent' % self.name)
             return True
-        except socket.error:
+        except BaseError:
             log.error('%s notification failed' % self.name)
             return False
 
