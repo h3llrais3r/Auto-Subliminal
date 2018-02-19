@@ -41,7 +41,7 @@ class MailNotifier(BaseNotifier):
         return message
 
     def _send_message(self, message, **kwargs):
-        mail_message = MIMEText(message)
+        mail_message = MIMEText(message, _charset='utf-8')
         mail_message['From'] = email.utils.formataddr((autosubliminal.MAILFROMADDR, autosubliminal.MAILFROMADDR))
         mail_message['To'] = email.utils.formataddr(('Recipient', autosubliminal.MAILTOADDR))
         subject = autosubliminal.MAILSUBJECT if autosubliminal.MAILSUBJECT else self.notification_title
