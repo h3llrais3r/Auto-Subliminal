@@ -1,10 +1,14 @@
 # coding=utf-8
 
 import logging
-from httplib import HTTPSConnection
-from urllib import urlencode
+
+from pip import utils
+
+import requests
+from six.moves.urllib_parse import urlencode
 
 import autosubliminal
+from autosubliminal import utils
 from autosubliminal.notifiers.generic import BaseNotifier
 
 log = logging.getLogger(__name__)
@@ -35,16 +39,11 @@ class PushoverNotifier(BaseNotifier):
                 'user': autosubliminal.PUSHOVERKEY,
                 'title': self.notification_title,
                 'devices': autosubliminal.PUSHOVERDEVICES,
-                'message': message.encode('utf-8')}
+                'message': utils.u2b(message)}
         try:
-            http_handler = HTTPSConnection('api.pushover.net')
-            http_handler.request(method='POST',
-                                 url='/1/messages.json',
-                                 headers={'Content-type': 'application/x-www-form-urlencoded'},
-                                 body=urlencode(data))
-            response = http_handler.getresponse()
-            request_status = response.status
-            if request_status != 200:
+            response = requests.post('https://api.pushover.net/1/messages.json', data=urlencode(data),
+                                     headers={'Content-type': 'application/x-www-form-urlencoded'})
+            if response.status_code != 200:
                 log.error('%s notification failed: %s' % (self.name, response.reason))
                 return False
             else:

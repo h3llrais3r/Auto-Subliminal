@@ -1,10 +1,12 @@
 # coding=utf-8
 
 import logging
-from httplib import HTTPSConnection
-from urllib import urlencode
+
+import requests
+from six.moves.urllib_parse import urlencode
 
 import autosubliminal
+from autosubliminal import utils
 from autosubliminal.notifiers.generic import BaseNotifier
 
 log = logging.getLogger(__name__)
@@ -33,16 +35,11 @@ class PushalotNotifier(BaseNotifier):
     def _send_message(self, message, **kwargs):
         data = {'AuthorizationToken': autosubliminal.PUSHALOTAPI,
                 'Title': self.notification_title,
-                'Body': message.encode('utf-8')}
+                'Body': utils.u2b(message)}
         try:
-            http_handler = HTTPSConnection('pushalot.com')
-            http_handler.request(method='POST',
-                                 url='/api/sendmessage',
-                                 headers={'Content-type': 'application/x-www-form-urlencoded'},
-                                 body=urlencode(data))
-            response = http_handler.getresponse()
-            request_status = response.status
-            if request_status != 200:
+            response = requests.post('https://pushalot.com/api/sendmessage', data=urlencode(data),
+                                     headers={'Content-type': 'application/x-www-form-urlencoded'})
+            if response.status_code != 200:
                 log.error('%s notification failed: %s' % (self.name, response.reason))
                 return False
             else:
