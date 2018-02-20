@@ -2,8 +2,6 @@
 
 import logging
 
-from pip import utils
-
 import requests
 from six.moves.urllib_parse import urlencode
 
