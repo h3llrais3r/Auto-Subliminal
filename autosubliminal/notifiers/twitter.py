@@ -4,6 +4,7 @@ from __future__ import absolute_import
 
 import logging
 
+from six import text_type
 from twitter import Api
 
 import autosubliminal
@@ -51,7 +52,7 @@ class TwitterNotifier(BaseNotifier):
                       consumer_secret=CONSUMER_SECRET,
                       access_token_key=autosubliminal.TWITTERKEY,
                       access_token_secret=autosubliminal.TWITTERSECRET)
-            api.PostUpdate(message[:280])
+            api.PostUpdate(text_type(message[:280]))
             log.info('%s notification sent' % self.name)
             return True
         except Exception as e:
