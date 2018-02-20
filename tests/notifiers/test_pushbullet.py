@@ -28,8 +28,8 @@ def test_pushbullet_exception(monkeypatch, mocker):
 def test_pushbullet_notify_download(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHBULLET', True)
     # Mock successful push
-    mocker.patch('lib.pushbullet.Pushbullet.__init__', return_value=None)
-    mocker.patch('lib.pushbullet.Pushbullet.push_note', return_value={})
+    mocker.patch('pushbullet.Pushbullet.__init__', return_value=None)
+    mocker.patch('pushbullet.Pushbullet.push_note', return_value={})
     notifier = PushbulletNotifier()
     assert notifier.name == notifier_name
     assert notifier.notify_download(**item_dict) is True

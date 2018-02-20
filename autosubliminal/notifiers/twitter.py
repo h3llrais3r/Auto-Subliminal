@@ -1,8 +1,10 @@
 # coding=utf-8
 
+from __future__ import absolute_import
+
 import logging
 
-from lib.twitter import Api
+from twitter import Api
 
 import autosubliminal
 from autosubliminal.notifiers.generic import BaseNotifier

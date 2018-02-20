@@ -1,8 +1,10 @@
 # coding=utf-8
 
+from __future__ import absolute_import
+
 import logging
 
-from lib.pushbullet import Pushbullet
+from pushbullet import Pushbullet
 
 import autosubliminal
 from autosubliminal.notifiers.generic import BaseNotifier
