@@ -33,7 +33,7 @@ class PushbulletNotifier(BaseNotifier):
     def _send_message(self, message, **kwargs):
         try:
             pb = Pushbullet(autosubliminal.PUSHBULLETAPI)
-            pb.push_note(title=self.notification_title, body=message.encode('utf-8'))
+            pb.push_note(title=self.notification_title, body=message)
             log.info('%s notification sent' % self.name)
             return True
         except Exception as e:
