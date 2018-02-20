@@ -3,13 +3,13 @@
 import logging
 
 import requests
-from six.moves.urllib_parse import urlencode
 
 import autosubliminal
-from autosubliminal import utils
 from autosubliminal.notifiers.generic import BaseNotifier
 
 log = logging.getLogger(__name__)
+
+PUSHOVERURL = 'https://api.pushover.net/1/messages.json'
 
 
 class PushoverNotifier(BaseNotifier):
@@ -37,10 +37,9 @@ class PushoverNotifier(BaseNotifier):
                 'user': autosubliminal.PUSHOVERKEY,
                 'title': self.notification_title,
                 'devices': autosubliminal.PUSHOVERDEVICES,
-                'message': utils.u2b(message)}
+                'message': message}
         try:
-            response = requests.post('https://api.pushover.net/1/messages.json', data=urlencode(data),
-                                     headers={'Content-type': 'application/x-www-form-urlencoded'})
+            response = requests.post(PUSHOVERURL, data=data)
             if response.status_code != 200:
                 log.error('%s notification failed: %s' % (self.name, response.reason))
                 return False
