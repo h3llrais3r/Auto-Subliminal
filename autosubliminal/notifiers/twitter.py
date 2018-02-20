@@ -51,7 +51,7 @@ class TwitterNotifier(BaseNotifier):
                       consumer_secret=CONSUMER_SECRET,
                       access_token_key=autosubliminal.TWITTERKEY,
                       access_token_secret=autosubliminal.TWITTERSECRET)
-            api.PostUpdate(message[:140])
+            api.PostUpdate(message[:280])
             log.info('%s notification sent' % self.name)
             return True
         except Exception as e:
