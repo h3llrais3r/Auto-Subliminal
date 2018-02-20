@@ -29,7 +29,7 @@ portend==2.2
 pushbullet.py==0.11.0
 pynma==1.0
 pysrt==1.1.1
-python-twitter==3.3
+python-twitter==3.4
 python-dateutil==2.6.1
 python-magic==0.4.15
 pytz==2018.3
