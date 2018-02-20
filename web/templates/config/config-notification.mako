@@ -735,7 +735,9 @@
                                         <ul class="dropdown-menu has-tip info-list">
                                             <li>
                                                 The API key for Prowl.<br>
-                                                Your api key can be found by visiting: https://prowlapp.com/api_settings.php
+                                                <span>Your api key can be found by visiting:
+                                                    <a href="https://prowlapp.com/api_settings.php" target="_blank">https://prowlapp.com/api_settings.php</a>
+                                                </span>
                                             </li>
                                         </ul>
                                     </span>
@@ -826,7 +828,6 @@
                                         <ul class="dropdown-menu has-tip info-list">
                                             <li>
                                                 The API key for Pushbullet.<br>
-                                                Your api key can be found by visiting: https://prowlapp.com/api_settings.php
                                             </li>
                                         </ul>
                                     </span>
