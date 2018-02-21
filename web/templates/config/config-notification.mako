@@ -559,6 +559,33 @@
                         </div>
 
                         <div class="form-group narrow">
+                            <span class="col-xs-4 col-md-3">
+                                <label for="nmapriority">Priority
+                                    <span class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                        </a>
+                                        <ul class="dropdown-menu has-tip info-list">
+                                            <li>The priority for the Notify My Android notification.</li>
+                                        </ul>
+                                    </span>
+                                </label>
+                            </span>
+                            <span class="col-xs-8 col-md-6">
+                                <% priormapper = {-2 : 'Very Low', -1 : 'Moderate', 0 : 'Normal', 1 : 'High', 2 : 'Emergency'} %>
+                                <select id="nmapriority" name="nmapriority" class="form-control input-sm">
+                                    % for prior in list(range(-2, 3, 1)):
+                                        % if prior == autosubliminal.NMAPRIORITY:
+                                            <option value="${prior}" selected="selected">${priormapper[prior]}</option>
+                                        % else:
+                                            <option value="${prior}">${priormapper[prior]}</option>
+                                        % endif
+                                    % endfor
+                                </select>
+                            </span>
+                        </div>
+
+                        <div class="form-group narrow">
                             <span class="col-xs-4 col-md-3"></span>
                             <span class="col-xs-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/nma" class="btn btn-sm btn-default btn-test">Test</a>

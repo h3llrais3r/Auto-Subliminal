@@ -532,7 +532,7 @@ class Config(object):
                  notifytwitter, twitterkey, twittersecret,
                  notifypushalot, pushalotapi,
                  notifypushover, pushoverkey, pushoverapi, pushoverdevices,
-                 notifynma, nmaapi,
+                 notifynma, nmaapi, nmapriority,
                  notifygrowl, growlhost, growlport, growlpass, growlpriority,
                  notifyprowl, prowlapi, prowlpriority,
                  notifypushbullet, pushbulletapi):
@@ -558,6 +558,7 @@ class Config(object):
             autosubliminal.PUSHOVERDEVICES = pushoverdevices
             autosubliminal.NOTIFYNMA = utils.getboolean(notifynma)
             autosubliminal.NMAAPI = nmaapi
+            autosubliminal.NMAPRIORITY = nmapriority
             autosubliminal.NOTIFYGROWL = utils.getboolean(notifygrowl)
             autosubliminal.GROWLHOST = growlhost
             autosubliminal.GROWLPORT = int(growlport)

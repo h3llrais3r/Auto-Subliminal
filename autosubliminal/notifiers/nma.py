@@ -1,13 +1,16 @@
 # coding=utf-8
 
 import logging
+import xml.etree.ElementTree as ET
 
-import pynma
+import requests
 
 import autosubliminal
 from autosubliminal.notifiers.generic import BaseNotifier
 
 log = logging.getLogger(__name__)
+
+NMAURL = 'https://www.notifymyandroid.com/publicapi/notify'
 
 
 class NmaNotifier(BaseNotifier):
@@ -31,18 +34,39 @@ class NmaNotifier(BaseNotifier):
         return autosubliminal.NOTIFYNMA
 
     def _send_message(self, message, **kwargs):
+        data = {
+            'apikey': autosubliminal.NMAAPI,
+            'application': self.application,
+            'event': self.title,
+            'description': message,
+            'priority': autosubliminal.NMAPRIORITY
+        }
         try:
-            nma_instance = pynma.PyNMA(str(autosubliminal.NMAAPI))
-            resp = nma_instance.push(application=self.application, event=self.title, description=message)
-            if not resp[str(autosubliminal.NMAAPI)]['code'] == '200':
-                log.error('%s notification failed', self.name)
+            response = requests.post(NMAURL, data=data)
+            if response.status_code != 200:
+                log.error('%s notification failed: %s', self.name, response.reason)
                 return False
             else:
-                log.info('%s notification sent', self.name)
-                return True
+                return self._parse_response(response)
         except Exception as e:
             log.error('%s notification failed', self.name)
             log.exception(e)
+            return False
+
+    def _parse_response(self, response):
+        # Example success response:
+        # <?xml version="1.0" encoding="UTF-8"?><nma><success code="200" remaining="997" resettimer="52"/></nma>
+        # Example error response (but request was still ok)
+        # <?xml version="1.0" encoding="UTF-8"?><nma><error code="402" resettimer="15">Your IP exceeded...</error></nma>
+        response_xml = ET.fromstring(response.content)
+        success = response_xml.find('./success')
+        if success is not None:
+            log.info('%s notification sent', self.name)
+            log.debug('Response: %r', success.attrib)
+            return True
+        else:
+            error = response_xml.find('./error')
+            log.error('%s notification failed: %r', self.name, error.attrib)
             return False
 
 
