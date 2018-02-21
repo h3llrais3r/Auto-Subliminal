@@ -8,7 +8,7 @@ from functools import wraps
 from six import add_metaclass, text_type
 from time import time
 
-from imdb import IMDb
+from imdbpie import Imdb
 from tvdb_api_v2.client import TvdbClient
 from unidecode import unidecode
 
@@ -144,21 +144,36 @@ class MovieIndexer(Indexer):
         if year:
             name += ' (' + text_type(year) + ')'
         log.info('Querying imdb api for %s', name)
-        # Return a imdb.Movie object
-        imdb_movies = IMDb().search_movie(title)
+        api = Imdb()
+        imdb_movies = api.search_for_title(title)
         # Find the first movie that matches the title (and year if present)
         for movie in imdb_movies:
-            data = movie.data
-            if data['kind'] == 'movie' and self.sanitize_imdb_title(data['title']) == self.sanitize_imdb_title(title):
+            if self.sanitize_imdb_title(movie['title']) == self.sanitize_imdb_title(title):
                 # If a year is present, it should also be the same
                 if year:
-                    if data['year'] == int(year):
-                        return movie
+                    if movie['year'] == text_type(year):
+                        return movie['imdb_id'], int(movie['year'])
                     else:
                         continue
                 # If no year is present, take the first match
                 else:
-                    return movie
+                    return movie['imdb_id'], int(movie['year'])
+        # If no match is found, try to search for alternative titles of the first (most relevant) result
+        if len(imdb_movies) > 0:
+            best_match = imdb_movies[0]
+            best_match_title_versions = api.get_title_versions(best_match['imdb_id'])
+            if best_match_title_versions and 'alternateTitles' in best_match_title_versions:
+                for alternate_title in best_match_title_versions['alternateTitles']:
+                    if self.sanitize_imdb_title(alternate_title['title']) == self.sanitize_imdb_title(title):
+                        # If a year is present, it should also be the same
+                        if year:
+                            if best_match['year'] == text_type(year):
+                                return best_match['imdb_id'], int(best_match['year'])
+                            else:
+                                continue
+                        # If no year is present, take the first match
+                        else:
+                            return best_match['imdb_id'], text_type(best_match['year'])
 
     @staticmethod
     def sanitize_imdb_title(string_value, ignore_characters=None):
@@ -191,10 +206,7 @@ class MovieIndexer(Indexer):
                 return imdb_id, year
         # Search on imdb
         try:
-            movie = self._query_api(title, year)
-            if movie:
-                imdb_id = 'tt' + movie.movieID
-                year = movie.data['year'] if not year else year
+            imdb_id, year = self._query_api(title, year)
         except Exception as e:
             log.error('Error while retrieving imdb id for %s', name)
             log.exception(e)

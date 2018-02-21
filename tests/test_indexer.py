@@ -21,6 +21,7 @@ def test_get_imdb_id():
     assert indexer.get_imdb_id_and_year(u'Southpaw', 2015, force_search=True, store_id=False) == ('tt1798684', 2015)
     assert indexer.get_imdb_id_and_year(u'Southpaw', force_search=True, store_id=False) == ('tt1798684', 2015)
     assert indexer.get_imdb_id_and_year(u'Joyeux Noël', 2005, force_search=True, store_id=False) == ('tt0424205', 2005)
+    assert indexer.get_imdb_id_and_year(u'Kyatapirâ', 2010, force_search=True, store_id=False) == ('tt1508290', 2010)
 
 
 def test_sanitize_imdb_title():
