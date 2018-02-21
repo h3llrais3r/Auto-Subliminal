@@ -42,11 +42,11 @@ class GrowlNotifier(BaseNotifier):
             # Can return error in case of invalid response
             response = self._create_notifier().register()
             if response is not True:
-                log.error('%s registration failed: %r' % (self.name, response))
+                log.error('%s registration failed: %r', self.name, response)
                 return False
             return True
         except Exception as e:
-            log.error('%s registration failed' % self.name)
+            log.error('%s registration failed', self.name)
             log.exception(e)
             return False
 
@@ -57,18 +57,18 @@ class GrowlNotifier(BaseNotifier):
                                                       description=message,
                                                       priority=autosubliminal.GROWLPRIORITY)
             if response is not True:
-                log.error('%s notification failed: %r' % (self.name, response))
+                log.error('%s notification failed: %r', self.name, response)
                 return False
-            log.info('%s notification sent' % self.name)
+            log.info('%s notification sent', self.name)
             return True
         except Exception as e:
-            log.error('%s notification failed' % self.name)
+            log.error('%s notification failed', self.name)
             log.exception(e)
             return False
 
     # Override of generic test method (test will also take care the growl registration)
     def test(self):
-        log.debug('Testing a %s notification' % self.name)
+        log.debug('Testing a %s notification', self.name)
         # Registration
         if not self._register():
             return False

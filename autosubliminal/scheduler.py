@@ -41,13 +41,13 @@ class Scheduler(object):
         self._register_scheduler()
 
         # Start thread
-        log.info('Starting thread %s' % self.name)
+        log.info('Starting thread %s', self.name)
         self._thread = threading.Thread(target=self._schedule_process, name=self.name)
         self._thread.start()
 
         # Initial run will block caller thread until process is executed the first time
         if initial_run:
-            log.debug('Waiting for initial run of thread %s' % self.name)
+            log.debug('Waiting for initial run of thread %s', self.name)
             while not self.last_run:
                 time.sleep(1)
 
@@ -83,7 +83,7 @@ class Scheduler(object):
             if self._force_run:
                 run_needed = True
                 if self._delay:
-                    log.info('Delaying thread %s with %s seconds' % (self.name, self._delay))
+                    log.info('Delaying thread %s with %s seconds', self.name, self._delay)
                     time.sleep(self._delay)
             if current_time - self.last_run > self.interval:
                 run_needed = True
@@ -113,12 +113,12 @@ class Scheduler(object):
             os._exit(1)
 
     def stop(self):
-        log.info('Stopping thread %s' % self.name)
+        log.info('Stopping thread %s', self.name)
         self._force_stop = True
         self._thread.join(10)
 
     def run(self, delay=0):
-        log.info('Running thread %s' % self.name)
+        log.info('Running thread %s', self.name)
         self._force_run = True
         self._delay = delay
 

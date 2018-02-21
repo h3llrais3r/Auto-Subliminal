@@ -49,12 +49,12 @@ class BaseNotifier(object):
     def notify_download(self, **kwargs):
         # Only notify when enabled
         if self.enabled:
-            self.log.debug('Sending a %s notification' % self.name)
+            self.log.debug('Sending a %s notification', self.name)
             message = self._get_message(**kwargs)
             return self._send_message(message, **kwargs)
         else:
             return False
 
     def test(self):
-        self.log.debug('Testing a %s notification' % self.name)
+        self.log.debug('Testing a %s notification', self.name)
         return self._send_message(self.test_message)

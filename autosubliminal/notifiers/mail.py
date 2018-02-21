@@ -62,10 +62,10 @@ class MailNotifier(BaseNotifier):
                 server.login(autosubliminal.MAILUSERNAME, autosubliminal.MAILPASSWORD)
             server.sendmail(autosubliminal.MAILFROMADDR, autosubliminal.MAILTOADDR, mail_message)
             server.quit()
-            log.info('%s notification sent' % self.name)
+            log.info('%s notification sent', self.name)
             return True
         except Exception as e:
-            log.error('%s notification failed' % self.name)
+            log.error('%s notification failed', self.name)
             log.exception(e)
             return False
 

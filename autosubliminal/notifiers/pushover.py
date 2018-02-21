@@ -41,13 +41,13 @@ class PushoverNotifier(BaseNotifier):
         try:
             response = requests.post(PUSHOVERURL, data=data)
             if response.status_code != 200:
-                log.error('%s notification failed: %s' % (self.name, response.reason))
+                log.error('%s notification failed: %s', self.name, response.reason)
                 return False
             else:
-                log.info('%s notification sent' % self.name)
+                log.info('%s notification sent', self.name)
                 return True
         except Exception as e:
-            log.error('%s notification failed' % self.name)
+            log.error('%s notification failed', self.name)
             log.exception(e)
             return False
 

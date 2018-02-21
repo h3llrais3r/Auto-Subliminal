@@ -166,21 +166,21 @@ class SourceVersionManager(BaseVersionManager):
 
         # Local version
         local_version = self.current_strict_version
-        log.debug('Local version: %s' % local_version)
+        log.debug('Local version: %s', local_version)
 
         # Remote github version
         try:
             response = utils.connect_url(autosubliminal.VERSIONURL)
         except Exception as e:
-            log.error('Could not get remote version from %s' % autosubliminal.VERSIONURL)
+            log.error('Could not get remote version from %s', autosubliminal.VERSIONURL)
             log.exception(e)
             return False
         try:
             match = re.search(VERSION_PATTERN, response.text, re.MULTILINE)
             remote_version = version.StrictVersion(match.group(1))
-            log.debug('Remote version: %s' % remote_version)
+            log.debug('Remote version: %r', remote_version)
         except Exception as e:
-            log.error('Could not parse version from %s' % autosubliminal.VERSIONURL)
+            log.error('Could not parse version from %s', autosubliminal.VERSIONURL)
             log.exception(e)
             return False
 
@@ -249,8 +249,8 @@ class GitVersionManager(BaseVersionManager):
         self.update_allowed = False
 
         # Local git version
-        log.debug('Local branch: %s' % self.current_git_branch)
-        log.debug('Local commit: %s' % self.current_git_commit)
+        log.debug('Local branch: %s', self.current_git_branch)
+        log.debug('Local commit: %s', self.current_git_commit)
         if self.repo.is_dirty():
             log.warning('Local branch is dirty')
 
@@ -259,8 +259,8 @@ class GitVersionManager(BaseVersionManager):
             remote_url = self.repo.remote(name='origin').url
             remote_fetch_info = self.repo.remote().fetch(refspec=self.current_git_branch)[0]
             remote_commit = remote_fetch_info.commit
-            log.debug('Remote url: %s' % remote_url)
-            log.debug('Remote commit: %s' % remote_commit)
+            log.debug('Remote url: %s', remote_url)
+            log.debug('Remote commit: %s', remote_commit)
         except Exception as e:
             log.error('Could not get remote git version')
             log.exception(e)
@@ -281,8 +281,8 @@ class GitVersionManager(BaseVersionManager):
                 log.error('Could not get the difference in commits between local and remote branch')
                 log.exception(e)
                 return False
-        log.debug('Number of commits ahead: %s' % self.num_commits_ahead)
-        log.debug('Number of commits behind: %s' % self.num_commits_behind)
+        log.debug('Number of commits ahead: %s', self.num_commits_ahead)
+        log.debug('Number of commits behind: %s', self.num_commits_behind)
 
         if self.num_commits_ahead > 0:
             log.info('Unknown version found')

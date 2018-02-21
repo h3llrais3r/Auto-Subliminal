@@ -26,7 +26,7 @@ class Runner(object):
         self._force_stop = False
 
         # Start thread
-        log.info('Starting thread %s' % self.name)
+        log.info('Starting thread %s', self.name)
         self._thread = threading.Thread(target=self._run_process, name=self.name)
         self._thread.start()
 
@@ -40,7 +40,7 @@ class Runner(object):
         pass
 
     def stop(self):
-        log.info('Stopping thread %s' % self.name)
+        log.info('Stopping thread %s', self.name)
         self._force_stop = True
         self._thread.join(10)
 

@@ -58,7 +58,7 @@ def add_notification_message(notification_message, notification_type='info', sti
 
 
 def run_cmd(cmd, communicate=True):
-    log.debug('Running cmd: %s' % cmd)
+    log.debug('Running cmd: %s', cmd)
     process = subprocess.Popen(cmd,
                                shell=True,
                                stdin=subprocess.PIPE,
@@ -75,11 +75,11 @@ def connect_url(url):
     Connect to a certain url.
     Use our user agent and timeout by default.
     """
-    log.debug('Connecting to url: %s' % url)
+    log.debug('Connecting to url: %s', url)
     try:
         return requests.get(url, headers={'User-Agent': autosubliminal.USERAGENT}, timeout=autosubliminal.TIMEOUT)
     except Exception as e:
-        log.debug('Could not connect to url: %s' % url)
+        log.debug('Could not connect to url: %s', url)
         log.debug(e, exc_info=True)  # Replaces log.exception(e) because we want it to be logged in debug
         # Throw again the exception
         raise e
@@ -198,7 +198,7 @@ def get_show_name_mapping(show_name):
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.SHOWNAMEMAPPING:
         if show_name_sanitized == sanitize(x):
-            log.debug('Found match in shownamemapping for %s' % show_name)
+            log.debug('Found match in shownamemapping for %s', show_name)
             return int(autosubliminal.SHOWNAMEMAPPING[x])
 
 
@@ -212,7 +212,7 @@ def get_addic7ed_show_name_mapping(show_name):
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING:
         if show_name_sanitized == sanitize(x):
-            log.debug('Found match in addic7edshownamemapping for %s' % show_name)
+            log.debug('Found match in addic7edshownamemapping for %s', show_name)
             return int(autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
 
 
@@ -226,7 +226,7 @@ def get_alternative_show_name_mapping(show_name):
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.ALTERNATIVESHOWNAMEMAPPING:
         if show_name_sanitized == sanitize(x):
-            log.debug('Found match in alternativeshownamemapping for %s' % show_name)
+            log.debug('Found match in alternativeshownamemapping for %s', show_name)
             alternatives = autosubliminal.ALTERNATIVESHOWNAMEMAPPING[x]
             return [sanitize(x) for x in alternatives.split(',')]  # Needs to return a list
 
@@ -245,7 +245,7 @@ def get_movie_name_mapping(title, year):
     movie_sanitized = sanitize(movie)
     for x in autosubliminal.MOVIENAMEMAPPING:
         if movie_sanitized == sanitize(x):
-            log.debug('Found match in movienamemapping for %s' % movie)
+            log.debug('Found match in movienamemapping for %s', movie)
             return autosubliminal.MOVIENAMEMAPPING[x]
 
 
@@ -263,7 +263,7 @@ def get_alternative_movie_name_mapping(title, year):
     movie_sanitized = sanitize(movie)
     for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING:
         if movie_sanitized == sanitize(x):
-            log.debug('Found match in alternativemovienamemapping for %s' % movie)
+            log.debug('Found match in alternativemovienamemapping for %s', movie)
             alternatives = autosubliminal.ALTERNATIVEMOVIENAMEMAPPING[x]
             return [sanitize(x) for x in alternatives.split(',')]  # Needs to return a list
 
@@ -272,13 +272,13 @@ def skip_show(show_name, season, episode):
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.SKIPSHOW:
         if show_name_sanitized == sanitize(x):
-            log.debug('Found match in skipshow for %s' % show_name)
+            log.debug('Found match in skipshow for %s', show_name)
             for s in autosubliminal.SKIPSHOW[x].split(','):
                 if s == '00':
-                    log.debug('Found all season match in skipshow, skipping all seasons for %s' % show_name)
+                    log.debug('Found all season match in skipshow, skipping all seasons for %s', show_name)
                     return True
                 elif int(s) == int(season):
-                    log.debug('Found season match in skipshow, skipping season %s for %s' % (season, show_name))
+                    log.debug('Found season match in skipshow, skipping season %s for %s', season, show_name)
                     return True
 
 
@@ -289,7 +289,7 @@ def skip_movie(title, year):
     movie_sanitized = sanitize(movie)
     for x in autosubliminal.SKIPMOVIE:
         if movie_sanitized == sanitize(x):
-            log.debug('Found match in skipmovie, skipping movie %s' % movie)
+            log.debug('Found match in skipmovie, skipping movie %s', movie)
             return True
 
 

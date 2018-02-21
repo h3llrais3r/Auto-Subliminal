@@ -222,8 +222,8 @@ def restart(exit=False):
         popen_list += autosubliminal.ARGS
         # Stop without exit
         stop(exit=False)
-        log.info('Exiting application with PID: %s' % autosubliminal.PID)
-        log.info('Restarting application with command and arguments: %s' % popen_list)
+        log.info('Exiting application with PID: %s', autosubliminal.PID)
+        log.info('Restarting application with command and arguments: %s', popen_list)
         log.info('#' * 50)
         # Shutdown
         _shutdown()
@@ -241,7 +241,7 @@ def restart(exit=False):
 
 
 def signal_handler(signum, frame):
-    log.debug('Received signal: %s' % signum)
+    log.debug('Received signal: %s', signum)
     if signum == signal.SIGINT:
         log.info('Received interrupt signal, exiting')
         _shutdown()
@@ -251,7 +251,7 @@ def signal_handler(signum, frame):
 def _shutdown():
     log.info('Exiting CherryPy webserver')
     cherrypy.engine.exit()
-    log.info('Exiting PID: %s' % autosubliminal.PID)
+    log.info('Exiting PID: %s', autosubliminal.PID)
     # Shutdown the logger to make sure the logfile is released before starting a new process
     logging.shutdown()
 

@@ -33,7 +33,7 @@ class DiskScanner(ScheduledProcess):
         if not utils.get_wanted_queue_lock():
             return False
 
-        log.info('Starting round of local disk checking at %r' % autosubliminal.VIDEOPATHS)
+        log.info('Starting round of local disk checking at %r', autosubliminal.VIDEOPATHS)
 
         # Show info message (only when run was forced manually)
         if force_run:
@@ -51,7 +51,7 @@ class DiskScanner(ScheduledProcess):
                     one_dir_exists = True
         if not one_dir_exists:
             # Release wanted queue lock
-            log.error('None of the configured video paths (%r) exists, aborting...' % autosubliminal.VIDEOPATHS)
+            log.error('None of the configured video paths (%r) exists, aborting...', autosubliminal.VIDEOPATHS)
             utils.release_wanted_queue_lock()
             return True
 
@@ -63,7 +63,7 @@ class DiskScanner(ScheduledProcess):
             try:
                 new_wanted_items.extend(walk_dir(videodir))
             except Exception as e:
-                log.error('Could not scan the video path (%s), skipping...' % videodir)
+                log.error('Could not scan the video path (%s), skipping...', videodir)
                 log.exception(e)
 
         # Cleanup wanted items that have been removed from disk manually but are still stored in the db
@@ -71,13 +71,13 @@ class DiskScanner(ScheduledProcess):
         for item in old_wanted_items:
             if item not in new_wanted_items:
                 db.delete_wanted_item(item)
-                log.debug('Deleted non existing wanted item: %s' % item['videopath'])
+                log.debug('Deleted non existing wanted item: %s', item['videopath'])
 
         # Populate WANTEDQUEUE with all items from wanted_items database
         log.info('Listing videos with missing subtitles:')
         autosubliminal.WANTEDQUEUE = []
         for item in db.get_wanted_items():
-            log.info('%s %s' % (item['videopath'], item['languages']))
+            log.info('%s %s', item['videopath'], item['languages'])
             autosubliminal.WANTEDQUEUE.append(item)
 
         # Release wanted queue lock
@@ -91,13 +91,13 @@ class DiskScanner(ScheduledProcess):
 
 
 def walk_dir(path):
-    log.info('Scanning video path: %s' % path)
+    log.info('Scanning video path: %s', path)
     wanted_items = []
     db = WantedItems()
 
     # Check all folders and files
     for dirname, dirnames, filenames in os.walk(os.path.join(path)):
-        log.debug('Directory: %s' % dirname)
+        log.debug('Directory: %s', dirname)
 
         # Check folders to be skipped
         if autosubliminal.SKIPHIDDENDIRS and os.path.split(dirname)[1].startswith(u'.'):
@@ -118,7 +118,7 @@ def walk_dir(path):
                 # Skip 'sample' videos
                 if re.search('sample', filename, re.IGNORECASE):
                     continue
-                log.debug('Video file found: %s' % filename)
+                log.debug('Video file found: %s', filename)
 
                 # Check if video file has already been processed before, so we don't need to process it again
                 wanted_item = db.get_wanted_item(os.path.join(dirname, filename))
@@ -153,7 +153,7 @@ def walk_dir(path):
                         episode = wanted_item['episode']
                         if utils.skip_show(title, season, episode):
                             db.delete_wanted_item(wanted_item)
-                            log.info('Skipping %s - Season %s Episode %s' % (title, season, episode))
+                            log.info('Skipping %s - Season %s Episode %s', title, season, episode)
                             continue
                     # Skip movie check
                     elif wanted_item['type'] == 'movie':
@@ -161,7 +161,7 @@ def walk_dir(path):
                         year = wanted_item['year']
                         if utils.skip_movie(title, year):
                             db.delete_wanted_item(wanted_item)
-                            log.info('Skipping %s (%s)' % (title, year))
+                            log.info('Skipping %s (%s)', title, year)
                             continue
 
                 # Add it to list of wanted items
@@ -200,7 +200,7 @@ def check_missing_subtitle_languages(dirname, filename):
             log.debug('Subtitle found, checking if it is not an invalid default language')
             detected_language = _detect_subtitle_language(srt_path)
             if detected_language and detected_language != default_language:
-                log.warning('Detected an invalid default language: %s' % detected_language)
+                log.warning('Detected an invalid default language: %s', detected_language)
                 # Remove the subtitle with an invalid detected language in order to search for a new one
                 if _delete_subtitle_file(srt_path, detected_language):
                     log.debug('Video is missing the default language: %s', autosubliminal.DEFAULTLANGUAGE)
@@ -289,19 +289,19 @@ def _detect_subtitle_language(srt_path):
             detected_language = detected_languages[0]
             language_probability = detected_language.prob
             if language_probability >= autosubliminal.DETECTEDLANGUAGEPROBABILITY:
-                log.debug('Probability of detected subtitle language accepted: %s' % detected_language)
+                log.debug('Probability of detected subtitle language accepted: %s', detected_language)
                 return Language.fromietf(detected_language.lang)
             else:
-                log.debug('Probability of detected subtitle language too low: %s' % detected_language)
+                log.debug('Probability of detected subtitle language too low: %s', detected_language)
     return None
 
 
 def _delete_subtitle_file(subtitle_path, language):
     try:
-        log.warning('Deleting subtitle with invalid language: %s [%s]' % (subtitle_path, language))
+        log.warning('Deleting subtitle with invalid language: %s [%s]', subtitle_path, language)
         os.remove(subtitle_path)
         return True
     except Exception as e:
-        log.error('Unable to delete subtitle with invalid language: %s [%s]' % (subtitle_path, language))
+        log.error('Unable to delete subtitle with invalid language: %s [%s]', subtitle_path, language)
         log.exception(e)
         return False

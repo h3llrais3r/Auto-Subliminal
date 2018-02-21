@@ -47,7 +47,7 @@ def process_file(dirname, filename):
     - 'imdbid'
     """
 
-    log.info('Processing file: %s' % filename)
+    log.info('Processing file: %s', filename)
     file_path = os.path.join(dirname, filename)
 
     # Check minimal video file size if needed
@@ -55,8 +55,8 @@ def process_file(dirname, filename):
         file_size = os.path.getsize(file_path)
         # MINVIDEOFILESIZE is size in MB
         if file_size < autosubliminal.MINVIDEOFILESIZE * 1024 * 1024:
-            log.warning('File size (%s) is lower than %sMB, skipping' % (
-                utils.humanize_bytes(file_size), autosubliminal.MINVIDEOFILESIZE))
+            log.warning('File size (%s) is lower than %sMB, skipping', utils.humanize_bytes(file_size),
+                        autosubliminal.MINVIDEOFILESIZE)
             return None
 
     # Guess and create dict from guess
@@ -76,10 +76,10 @@ def _guess(file_path):
     try:
         log.debug('Guessing file info')
         guess = guessit(file_path)
-        log.debug('Guess result: %r' % guess)
+        log.debug('Guess result: %r', guess)
         return _validate_guess(guess)
     except Exception as e:
-        log.error('Could not guess file info for: %s' % file_path)
+        log.error('Could not guess file info for: %s', file_path)
         log.exception(e)
         return None
 
@@ -122,7 +122,7 @@ def _dict_from_guess(guess):
                        'quality': _property_from_guess(guess, 'screen_size'),
                        'codec': _property_from_guess(guess, 'video_codec'),
                        'releasegrp': _split_release_group(_property_from_guess(guess, 'release_group'))}
-        log.debug('Dict from guess: %r' % result_dict)
+        log.debug('Dict from guess: %r', result_dict)
     return result_dict
 
 
@@ -169,4 +169,4 @@ def _enrich_dict(result_dict, file_path):
             result_dict['title'],
             result_dict['year'])
 
-    log.debug('Enriched dict: %r' % result_dict)
+    log.debug('Enriched dict: %r', result_dict)

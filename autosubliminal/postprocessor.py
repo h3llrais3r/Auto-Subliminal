@@ -58,40 +58,40 @@ class PostProcessor(object):
         try:
             log.debug('#' * 30)
             log.debug('Command:')
-            log.debug('%s' % self._cmd)
+            log.debug('%s', self._cmd)
             process = [self._encode(self._cmd)]
             log.debug('Arguments:')
 
             # Add encoding argument
-            log.debug('encoding: %s' % self._encoding)
+            log.debug('encoding: %s', self._encoding)
             process.append(self._encoding)
 
             # Add root video path argument
             video_path = self._wanted_item['videopath']
             root_path = utils.get_root_path(video_path)
-            log.debug('root path: %s' % root_path)
+            log.debug('root path: %s', root_path)
             process.append(self._encode(root_path))
 
             # Add video path argument
-            log.debug('video path: %s' % video_path)
+            log.debug('video path: %s', video_path)
             process.append(self._encode(video_path))
 
             # Add subtitle path argument (can be empty if no subtitle was downloaded)
             subtitle_path = None
             if 'destinationFileLocationOnDisk' in self._wanted_item:
                 subtitle_path = self._wanted_item['destinationFileLocationOnDisk']
-            log.debug('subtitle path: %s' % subtitle_path if subtitle_path else '')
+            log.debug('subtitle path: %s', subtitle_path if subtitle_path else '')
             process.append(self._encode(subtitle_path if subtitle_path else ''))
 
             # Add optional command arguments if needed
             if self._args:
                 for arg in self._args:
-                    log.debug('%s' % arg)
+                    log.debug('%s', arg)
                     process.append(self._encode(arg))
             log.debug('#' * 30)
         except UnicodeEncodeError:
             log.debug('#' * 30)
-            log.error('Cannot encode command parameters in %s, please enable utf-8 encoding!' % self._encoding)
+            log.error('Cannot encode command parameters in %s, please enable utf-8 encoding!', self._encoding)
             process = None
 
         return process

@@ -56,12 +56,12 @@ class SubChecker(ScheduledProcess):
         # Setup provider pool
         provider_pool = _get_provider_pool()
         if provider_pool:
-            log.info('Searching subtitles with providers: %s' % ', '.join(provider_pool.providers))
+            log.info('Searching subtitles with providers: %s', ', '.join(provider_pool.providers))
 
             # Process all items in wanted queue
             db = WantedItems()
             for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
-                log.info('Searching subtitles for video: %s' % wanted_item['videopath'])
+                log.info('Searching subtitles for video: %s', wanted_item['videopath'])
 
                 # Scan wanted_item for video, skip when no video could be determined
                 video = _scan_wanted_item_for_video(wanted_item)
@@ -98,7 +98,7 @@ class SubChecker(ScheduledProcess):
             i = len(to_delete_wanted_queue) - 1
             while i >= 0:
                 wanted_item_to_delete = autosubliminal.WANTEDQUEUE.pop(to_delete_wanted_queue[i])
-                log.debug('Removed item from the wanted queue at index %s' % to_delete_wanted_queue[i])
+                log.debug('Removed item from the wanted queue at index %s', to_delete_wanted_queue[i])
                 db.delete_wanted_item(wanted_item_to_delete)
                 log.debug('Removed %s from wanted_items database', wanted_item_to_delete['videopath'])
                 i -= 1
@@ -127,11 +127,11 @@ def search_subtitle(wanted_item_index, lang):
     # Setup provider pool
     provider_pool = _get_provider_pool()
     if provider_pool:
-        log.info('Searching subtitles with providers: %s' % ', '.join(provider_pool.providers))
+        log.info('Searching subtitles with providers: %s', ', '.join(provider_pool.providers))
 
         # Get wanted_item
         wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
-        log.info('Searching subtitles for video: %s' % wanted_item['videopath'])
+        log.info('Searching subtitles for video: %s', wanted_item['videopath'])
 
         # Scan wanted_item for video
         video = _scan_wanted_item_for_video(wanted_item, True)
@@ -153,7 +153,7 @@ def search_subtitle(wanted_item_index, lang):
 
                     # Filter out subtitles that do not match the default score
                     if score < default_min_score:
-                        log.debug('Skipping subtitle %s with score below %d' % (subtitle, default_min_score))
+                        log.debug('Skipping subtitle %s with score below %d', subtitle, default_min_score)
                         break
 
                     # Only add subtitle when content is found
@@ -266,7 +266,7 @@ def delete_subtitle(wanted_item_index):
         os.remove(subtitle_path)
         deleted = True
     except Exception as e:
-        log.error('Unable to delete subtitle: %s' % subtitle_path)
+        log.error('Unable to delete subtitle: %s', subtitle_path)
         log.exception(e)
 
     # Release wanted queue lock
@@ -285,7 +285,7 @@ def delete_video(wanted_item_index, cleanup):
     # Remove wanted item
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
     autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
-    log.debug('Removed item from the wanted queue at index %s' % int(wanted_item_index))
+    log.debug('Removed item from the wanted queue at index %s', int(wanted_item_index))
     WantedItems().delete_wanted_item(wanted_item)
     log.debug('Removed %s from wanted_items database', wanted_item['videopath'])
 
@@ -309,21 +309,21 @@ def delete_video(wanted_item_index, cleanup):
                     try:
                         # Remove the folder of the video underneath the root folder
                         shutil.rmtree(folder_to_clean, onerror=utils.set_rw_and_remove)
-                        log.info('Deleted video folder: %s' % folder_to_clean)
+                        log.info('Deleted video folder: %s', folder_to_clean)
                         deleted = True
                         # Break for loop
                         break
                     except Exception as e:
-                        log.error('Unable to delete video folder: %s' % folder_to_clean)
+                        log.error('Unable to delete video folder: %s', folder_to_clean)
                         log.exception(e)
     # Delete video file only
     if not deleted:
         try:
             os.remove(video_path)
-            log.info('Deleted file: %s' % video_path)
+            log.info('Deleted file: %s', video_path)
             deleted = True
         except Exception as e:
-            log.error('Unable to delete file: %s' % video_path)
+            log.error('Unable to delete file: %s', video_path)
             log.exception(e)
 
     # Release wanted queue lock
@@ -427,7 +427,7 @@ def post_process(wanted_item_index, subtitle_index):
             else:
                 # Remove wanted item
                 autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
-                log.debug('Removed item from the wanted queue at index %s' % int(wanted_item_index))
+                log.debug('Removed item from the wanted queue at index %s', int(wanted_item_index))
                 WantedItems().delete_wanted_item(wanted_item)
                 log.debug('Removed %s from wanted_items database', wanted_item['videopath'])
 
@@ -456,7 +456,7 @@ def post_process_no_subtitle(wanted_item_index):
     # Remove wanted item if processed
     if processed:
         autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
-        log.debug('Removed item from the wanted queue at index %s' % int(wanted_item_index))
+        log.debug('Removed item from the wanted queue at index %s', int(wanted_item_index))
         WantedItems().delete_wanted_item(wanted_item)
         log.debug('Removed %s from wanted_items database', wanted_item['videopath'])
     else:
@@ -491,7 +491,7 @@ def _scan_wanted_item_for_video(wanted_item, is_manual=False):
         refiners = ('namemapping',)  # don't remove the , -> needs to be a tuple
         subliminal.refine(video, episode_refiners=refiners, movie_refiners=refiners)
     except Exception as e:
-        log.error('Error while scanning video, skipping %s' % video_path)
+        log.error('Error while scanning video, skipping %s', video_path)
         log.exception(e)
         return
 
@@ -502,12 +502,12 @@ def _scan_wanted_item_for_video(wanted_item, is_manual=False):
 
 
 def _search_subtitles(video, lang, best_only, provider_pool):
-    log.info('Searching for %s subtitles' % lang)
+    log.info('Searching for %s subtitles', lang)
 
     # Determine language
     language = babelfish.Language.fromietf(lang)
     if not language:
-        log.error('Invalid language specified: %s' % lang)
+        log.error('Invalid language specified: %s', lang)
         return
 
     # Determine if language alpha2 code suffix is needed in srt file name (f.e. <episode_name>.nl.srt)
@@ -535,7 +535,7 @@ def _search_subtitles(video, lang, best_only, provider_pool):
         # Download all subtitles (without saving it to file)
         subtitles = provider_pool.list_subtitles(video, languages)
         if subtitles:
-            log.info('Found %s subtitles for video' % len(subtitles))
+            log.info('Found %s subtitles for video', len(subtitles))
             for subtitle in subtitles:
                 provider_pool.download_subtitle(subtitle)
         else:
@@ -571,7 +571,7 @@ def _get_subtitle_path(wanted_item):
 
     # Get subtitle path
     path = subliminal.subtitle.get_subtitle_path(wanted_item['video'].name, None if single else language)
-    log.debug('Subtitle path: %s' % path)
+    log.debug('Subtitle path: %s', path)
     return path
 
 
@@ -580,7 +580,7 @@ def _construct_download_item(wanted_item, subtitles, language, single):
 
     # Get the subtitle, subtitles should only contain 1 subtitle
     subtitle = subtitles[0]
-    log.debug('Download page link: %s' % subtitle.page_link)
+    log.debug('Download page link: %s', subtitle.page_link)
 
     # Construct the download item
     download_item = wanted_item.copy()
@@ -603,16 +603,16 @@ def _get_min_match_score(video, default_score=False):
             min_score = autosubliminal.SHOWMINMATCHSCOREDEFAULT
         else:
             min_score = autosubliminal.SHOWMINMATCHSCORE
-        log.debug('Using episode min match score: %s' % min_score)
+        log.debug('Using episode min match score: %s', min_score)
     elif isinstance(video, Movie):
         if default_score:
             min_score = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
         else:
             min_score = autosubliminal.MOVIEMINMATCHSCORE
-        log.debug('Using movie min match score: %s' % min_score)
+        log.debug('Using movie min match score: %s', min_score)
     else:
-        log.error('Invalid video found: %r' % video)
-        log.debug('Unknown min match score: %d' % min_score)
+        log.error('Invalid video found: %r', video)
+        log.debug('Unknown min match score: %d', min_score)
     return min_score
 
 

@@ -34,9 +34,9 @@ class Notifier(object):
                                'provider': download_item['provider']}
 
     def notify_download(self):
-        log.debug('Sending download notifications. Video: %s, Subtitle: %s, Language: %s, Provider: %s' % (
-            self._notifier_dict['video'], self._notifier_dict['subtitle'], self._notifier_dict['language'],
-            self._notifier_dict['provider']))
+        log.debug('Sending download notifications. Video: %s, Subtitle: %s, Language: %s, Provider: %s',
+                  self._notifier_dict['video'], self._notifier_dict['subtitle'], self._notifier_dict['language'],
+                  self._notifier_dict['provider'])
 
         notified = False
         for notifier in list(_notifiers.values()):

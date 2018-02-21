@@ -53,10 +53,10 @@ class TwitterNotifier(BaseNotifier):
                       access_token_key=autosubliminal.TWITTERKEY,
                       access_token_secret=autosubliminal.TWITTERSECRET)
             api.PostUpdate(text_type(message[:280]))
-            log.info('%s notification sent' % self.name)
+            log.info('%s notification sent', self.name)
             return True
         except Exception as e:
-            log.error('%s notification failed' % self.name)
+            log.error('%s notification failed', self.name)
             log.exception(e)
             return False
 
