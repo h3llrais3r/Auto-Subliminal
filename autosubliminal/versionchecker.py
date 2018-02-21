@@ -4,7 +4,6 @@ import abc
 import logging
 import re
 
-import requests
 from distutils import version
 from six import add_metaclass, text_type
 

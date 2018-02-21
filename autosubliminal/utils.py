@@ -95,7 +95,7 @@ def wait_for_internet_connection():
         try:
             connect_url(url)
             return True
-        except Exception as e:
+        except:
             return False
 
     log.debug('Checking internet connection')

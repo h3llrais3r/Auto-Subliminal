@@ -14,8 +14,8 @@ from autosubliminal.utils import connect_url, getboolean, safe_text, safe_trim, 
     get_addic7ed_show_name_mapping, get_alternative_show_name_mapping, get_movie_name_mapping, \
     get_alternative_movie_name_mapping, skip_show, skip_movie, display_list_single_line, display_list_multi_line, \
     display_item, display_title, display_name, display_timestamp, convert_timestamp, humanize_bytes, \
-    get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, get_common_path, get_root_path, get_file_size, \
-    set_rw_and_remove, u2b
+    get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, get_common_path, get_root_path, \
+    get_file_size, set_rw_and_remove, u2b
 
 text_value = 'test'
 text_value_special_char = u'ù'
