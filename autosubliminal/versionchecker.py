@@ -3,9 +3,8 @@
 import abc
 import logging
 import re
-import traceback
-import urllib2
 
+import requests
 from distutils import version
 from six import add_metaclass, text_type
 
@@ -172,20 +171,18 @@ class SourceVersionManager(BaseVersionManager):
 
         # Remote github version
         try:
-            req = urllib2.Request(autosubliminal.VERSIONURL)
-            req.add_header('User-agent', autosubliminal.USERAGENT)
-            resp = urllib2.urlopen(req, None, autosubliminal.TIMEOUT)
-            response = resp.read()
-            resp.close()
-        except:
+            response = utils.connect_url(autosubliminal.VERSIONURL)
+        except Exception as e:
             log.error('Could not get remote version from %s' % autosubliminal.VERSIONURL)
+            log.exception(e)
             return False
         try:
-            match = re.search(VERSION_PATTERN, response, re.MULTILINE)
+            match = re.search(VERSION_PATTERN, response.text, re.MULTILINE)
             remote_version = version.StrictVersion(match.group(1))
             log.debug('Remote version: %s' % remote_version)
-        except:
+        except Exception as e:
             log.error('Could not parse version from %s' % autosubliminal.VERSIONURL)
+            log.exception(e)
             return False
 
         # Compare versions
@@ -265,8 +262,9 @@ class GitVersionManager(BaseVersionManager):
             remote_commit = remote_fetch_info.commit
             log.debug('Remote url: %s' % remote_url)
             log.debug('Remote commit: %s' % remote_commit)
-        except:
+        except Exception as e:
             log.error('Could not get remote git version')
+            log.exception(e)
             return False
 
         # Get number of commits ahead and behind (option --count not supported git < 1.7.2)
@@ -280,8 +278,9 @@ class GitVersionManager(BaseVersionManager):
                 output = self.repo.git.execute('git rev-list --left-right HEAD...@{upstream}')
                 self.num_commits_ahead = int(output.count('<'))
                 self.num_commits_behind = int(output.count('>'))
-            except:
+            except Exception as e:
                 log.error('Could not get the difference in commits between local and remote branch')
+                log.exception(e)
                 return False
         log.debug('Number of commits ahead: %s' % self.num_commits_ahead)
         log.debug('Number of commits behind: %s' % self.num_commits_behind)
@@ -314,5 +313,6 @@ class GitVersionManager(BaseVersionManager):
                 self.clean()
                 log.info('Updated to the latest version')
                 utils.add_notification_message('Updated to the latest version.')
-            except:
-                log.error('Could not update version: %s' % traceback.format_exc())
+            except Exception as e:
+                log.error('Could not update version')
+                log.exception(e)

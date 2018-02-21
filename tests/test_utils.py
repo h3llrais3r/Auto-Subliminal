@@ -1,19 +1,21 @@
 # coding=utf-8
 
-from collections import OrderedDict
 import os
 import tempfile
 import time
+from collections import OrderedDict
 
 import pytest
 
 import autosubliminal
-from autosubliminal.utils import getboolean, safe_text, safe_trim, safe_uppercase, sanitize, mapping_string_to_dict, \
-    display_logfile, display_mapping_dict, get_show_name_mapping, get_addic7ed_show_name_mapping, \
-    get_alternative_show_name_mapping, get_movie_name_mapping, get_alternative_movie_name_mapping, skip_show, \
-    skip_movie, display_list_single_line, display_list_multi_line, display_item, display_title, display_name, \
-    display_timestamp, convert_timestamp, humanize_bytes, get_wanted_queue_lock, release_wanted_queue_lock, \
-    count_wanted_items, get_common_path, get_root_path, get_file_size, set_rw_and_remove, u2b
+from autosubliminal import version
+from autosubliminal.utils import connect_url, getboolean, safe_text, safe_trim, safe_uppercase, sanitize, \
+    mapping_string_to_dict, display_logfile, display_mapping_dict, get_show_name_mapping, \
+    get_addic7ed_show_name_mapping, get_alternative_show_name_mapping, get_movie_name_mapping, \
+    get_alternative_movie_name_mapping, skip_show, skip_movie, display_list_single_line, display_list_multi_line, \
+    display_item, display_title, display_name, display_timestamp, convert_timestamp, humanize_bytes, \
+    get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, get_common_path, get_root_path, get_file_size, \
+    set_rw_and_remove, u2b
 
 text_value = 'test'
 text_value_special_char = u'ù'
@@ -24,6 +26,21 @@ list_value = []
 list_value_with_items = ['a', 'b']
 dict_value = {}
 dict_value_with_items = {'1': 'a', '2': 'b'}
+
+
+def test_connect_url(monkeypatch):
+    monkeypatch.setattr('autosubliminal.USERAGENT', 'Auto-Subliminal/' + version.RELEASE_VERSION)
+    monkeypatch.setattr('autosubliminal.TIMEOUT', 60)
+    response = connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py')
+    assert response is not None
+    assert response.text is not None
+
+
+def test_connect_url_exception(monkeypatch):
+    monkeypatch.setattr('autosubliminal.USERAGENT', 'Auto-Subliminal/' + version.RELEASE_VERSION)
+    monkeypatch.setattr('autosubliminal.TIMEOUT', 60)
+    with pytest.raises(Exception):
+        connect_url('invalid_url')
 
 
 def test_getboolean():

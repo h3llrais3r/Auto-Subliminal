@@ -11,8 +11,8 @@ import stat
 import subprocess
 import threading
 import time
-import urllib2
 
+import requests
 from six import text_type
 
 import autosubliminal
@@ -71,23 +71,35 @@ def run_cmd(cmd, communicate=True):
 
 
 def connect_url(url):
+    """
+    Connect to a certain url.
+    Use our user agent and timeout by default.
+    """
     log.debug('Connecting to url: %s' % url)
-    response = None
     try:
-        response = urllib2.urlopen(url, None, autosubliminal.TIMEOUT)
-        log.debug('Connection successful')
-    except urllib2.HTTPError as e:
-        http_code = e.code
-        log.debug('Could not connect to url: http response code %s' % http_code)
+        return requests.get(url, headers={'User-Agent': autosubliminal.USERAGENT}, timeout=autosubliminal.TIMEOUT)
     except Exception as e:
-        log.debug('Could not connect to url: %s' % e.message)
-
-    return response
+        log.debug('Could not connect to url: %s' % url)
+        log.debug(e, exc_info=True)  # Replaces log.exception(e) because we want it to be logged in debug
+        # Throw again the exception
+        raise e
 
 
 def wait_for_internet_connection():
+    """
+    Function that blocks the process until there is internet connection.
+    """
+
+    # Internal check for internet connection
+    def _check_internet_connection(url):
+        try:
+            connect_url(url)
+            return True
+        except Exception as e:
+            return False
+
     log.debug('Checking internet connection')
-    while not connect_url(autosubliminal.VERSIONURL):
+    while not _check_internet_connection(autosubliminal.VERSIONURL):
         log.debug('Waiting for internet connection')
         time.sleep(5)
 
