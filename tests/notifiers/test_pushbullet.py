@@ -17,7 +17,7 @@ def test_pushbullet_disabled():
     assert notifier.notify_download(**item_dict) is False
 
 
-def test_pushbullet_exception(monkeypatch, mocker):
+def test_pushbullet_exception(monkeypatch):
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHBULLET', True)
     monkeypatch.setattr('autosubliminal.PUSHBULLETAPI', '123456')  # Invalid api key
     notifier = PushbulletNotifier()

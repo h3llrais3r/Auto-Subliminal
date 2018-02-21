@@ -29,7 +29,7 @@ def test_nma_exception(monkeypatch):
         assert notifier.notify_download(**item_dict) is False
 
 
-def test_nma_notify_download_error_response(monkeypatch, mocker):
+def test_nma_notify_download_error_response(monkeypatch):
     monkeypatch.setattr('autosubliminal.NOTIFYNMA', True)
     with requests_mock.mock() as m:
         # Mock successful request
