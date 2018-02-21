@@ -31,12 +31,14 @@ What it uses (see libraries.txt for versions)
  * appdirs
  * babelfish
  * beautifulsoup4
+ * boto
  * certifi
  * chardet
  * cheroot
  * cherrypy
  * click
  * configparser
+ * diskcache
  * dogpile.cache
  * enum34
  * enzyme
@@ -46,7 +48,7 @@ What it uses (see libraries.txt for versions)
  * gntp
  * guessit
  * html5lib
- * imdbpy
+ * imdbpie
  * langdetect
  * lxml
  * mako

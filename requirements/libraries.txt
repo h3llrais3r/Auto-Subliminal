@@ -18,7 +18,7 @@ gntp==1.0.3
 guessit==2.1.4
 html5lib==1.0.1
 idna=2.6
-imdbpy==5.1.1,<6.0 # version 6.0 and higher is pure Python3!
+imdbpie=5.2.0
 langdetect==1.0.7
 lxml==4.1.1
 mako==1.0.7

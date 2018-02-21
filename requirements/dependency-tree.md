@@ -32,7 +32,12 @@ Libraries dependency tree
         |-- six
 |-- html5lib (used as parser in combination with beautifulsoup4 for parsing html pages)
     |-- webencodings
-|-- imdbpy
+|-- imdbpie
+    |-- boto
+    |-- diskcache
+    |-- python-dateutil
+    |-- requests
+    |-- six
 |-- langdetect
     |-- six
 |-- lxml (used to speed up some parsing, can be used by different libraries is available)
