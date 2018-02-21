@@ -19,7 +19,11 @@
 
 import os
 import sys
-import urllib
+
+try:
+    from urllib.parse import unquote
+except ImportError:
+    from urllib import unquote
 
 
 def main(script, url):
@@ -29,7 +33,7 @@ def main(script, url):
     """
 
     # Url need to be unquoted (because it's triggered from an url) and decoded from utf-8 to cover special characters
-    url = urllib.unquote(url).decode('utf-8')
+    url = unquote(url).decode('utf-8')
 
     # Reconstruct url (replace the playvideo:// with the file:// protocol to open the file with the default program)
     url = url.replace('playvideo://', 'file://')
