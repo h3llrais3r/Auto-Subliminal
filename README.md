@@ -55,7 +55,6 @@ What it uses (see libraries.txt for versions)
  * oauthlib
  * portend
  * pushbullet
- * pynma
  * pysrt
  * python-twitter
  * python-dateutil

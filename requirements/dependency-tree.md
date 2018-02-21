@@ -43,7 +43,6 @@ Libraries dependency tree
     |-- requests
     |-- websocket-client
         |-- six
-|-- pynma
 |-- pysrt
     |-- chardet
 |-- python-twitter
