@@ -2,7 +2,7 @@
 
 import requests_mock
 
-from autosubliminal.notifiers.prowl import ProwlNotifier
+from autosubliminal.notifiers.prowl import ProwlNotifier, PROWLURL
 
 notifier_name = 'Prowl'
 
@@ -23,7 +23,7 @@ def test_prowl_exception(monkeypatch):
     monkeypatch.setattr('autosubliminal.NOTIFYPROWL', True)
     with requests_mock.mock() as m:
         # Mock erroneous request
-        m.register_uri(requests_mock.ANY, requests_mock.ANY, status_code=500)
+        m.register_uri('POST', PROWLURL, status_code=500)
         notifier = ProwlNotifier()
         assert notifier.name == notifier_name
         assert notifier.notify_download(**item_dict) is False
@@ -33,7 +33,7 @@ def test_prowl_notify_download(monkeypatch):
     monkeypatch.setattr('autosubliminal.NOTIFYPROWL', True)
     with requests_mock.mock() as m:
         # Mock successful request
-        m.register_uri(requests_mock.ANY, requests_mock.ANY, status_code=200)
+        m.register_uri('POST', PROWLURL, status_code=200)
         notifier = ProwlNotifier()
         assert notifier.name == notifier_name
         assert notifier.notify_download(**item_dict) is True
