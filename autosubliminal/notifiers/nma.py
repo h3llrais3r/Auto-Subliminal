@@ -54,6 +54,7 @@ class NmaNotifier(BaseNotifier):
             return False
 
     def _parse_response(self, response):
+        # See http://www.notifymyandroid.com/api.jsp#returnmsg
         # Example success response:
         # <?xml version="1.0" encoding="UTF-8"?><nma><success code="200" remaining="997" resettimer="52"/></nma>
         # Example error response (but request was still ok)
