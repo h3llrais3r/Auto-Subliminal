@@ -3,6 +3,8 @@
 import os
 import pkg_resources
 
+from six.moves import getcwd
+
 from autosubliminal import version, config, logger, db
 from autosubliminal.indexer import ShowIndexer, MovieIndexer
 
@@ -201,7 +203,7 @@ def initialize():
     _fake_entry_points()
 
     # System settings
-    PATH = os.path.abspath(os.getcwd())
+    PATH = os.path.abspath(getcwd())
     CACHEDIR = os.path.abspath(os.path.join(PATH, 'cache'))
     DEREFERURL = 'http://www.dereferer.org/?'
     GITHUBURL = 'https://github.com/h3llrais3r/Auto-Subliminal'

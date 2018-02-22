@@ -8,6 +8,7 @@ import time
 
 from configparser import ConfigParser
 from six import text_type
+from six.moves import getcwd
 
 import autosubliminal
 from autosubliminal import utils, version
@@ -43,11 +44,11 @@ def read_config(check_upgrade=False):
             else:
                 print('ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead.')
                 autosubliminal.VIDEOPATHS = []
-                autosubliminal.VIDEOPATHS.append(os.getcwdu())
+                autosubliminal.VIDEOPATHS.append(getcwd())
         else:
             print('ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead.')
             autosubliminal.VIDEOPATHS = []
-            autosubliminal.VIDEOPATHS.append(os.getcwdu())
+            autosubliminal.VIDEOPATHS.append(getcwd())
 
         if cfg.has_option('general', 'defaultlanguage'):
             autosubliminal.DEFAULTLANGUAGE = cfg.get('general', 'defaultlanguage')
@@ -133,10 +134,10 @@ def read_config(check_upgrade=False):
         # General section is missing
         print('ERROR: Required general section is missing. Using default values instead.')
         print('ERROR: Required variable PATH is missing. Using current working directory instead.')
-        autosubliminal.PATH = os.getcwdu()
+        autosubliminal.PATH = getcwd()
         print('ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead.')
         autosubliminal.VIDEOPATHS = []
-        autosubliminal.VIDEOPATHS.append(os.getcwdu())
+        autosubliminal.VIDEOPATHS.append(getcwd())
         autosubliminal.DEFAULTLANGUAGE = u'en'
         autosubliminal.DEFAULTLANGUAGESUFFIX = False
         autosubliminal.ADDITIONALLANGUAGES = []
