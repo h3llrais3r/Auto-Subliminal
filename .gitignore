@@ -28,8 +28,8 @@ node_modules/
 cache/
 
 # Cache files
-.cache/
-.pytest_cache/
+.cache
+.pytest_cache
 
 #Coverage files
 .coverage
