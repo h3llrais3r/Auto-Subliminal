@@ -4,6 +4,7 @@ import os
 import tempfile
 import time
 from collections import OrderedDict
+from vcr import VCR
 
 import pytest
 
@@ -17,6 +18,11 @@ from autosubliminal.utils import connect_url, getboolean, safe_text, safe_trim, 
     get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, get_common_path, get_root_path, \
     get_file_size, set_rw_and_remove, u2b
 
+vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
+          record_mode='once',
+          match_on=['method', 'scheme', 'host', 'port', 'path', 'query', 'body'],
+          cassette_library_dir=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'cassettes', 'utils'))
+
 text_value = 'test'
 text_value_special_char = u'ù'
 num_value = 1
@@ -28,6 +34,7 @@ dict_value = {}
 dict_value_with_items = {'1': 'a', '2': 'b'}
 
 
+@vcr.use_cassette()
 def test_connect_url(monkeypatch):
     monkeypatch.setattr('autosubliminal.USERAGENT', 'Auto-Subliminal/' + version.RELEASE_VERSION)
     monkeypatch.setattr('autosubliminal.TIMEOUT', 60)
