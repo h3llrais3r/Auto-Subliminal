@@ -24,9 +24,12 @@ build/
 dist/
 node_modules/
 
+# Application cache
+cache/
+
 # Cache files
 .cache/
-cache/
+.pytest_cache/
 
 #Coverage files
 .coverage
