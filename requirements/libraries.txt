@@ -2,12 +2,14 @@
 appdirs==1.4.3
 babelfish==0.5.5
 beautifulsoup4==4.6.0
+boto==2.48.0
 certifi==2018.1.18
 chardet==3.0.4
 cheroot==6.0.0
 cherrypy==14.0.0
 click==6.7
 configparser==3.5.0
+diskcache==2.9.0
 dogpile.cache==0.6.4
 enum34==1.1.6
 enzyme==0.4.1
