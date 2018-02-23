@@ -174,6 +174,7 @@ class MovieIndexer(Indexer):
                         # If no year is present, take the first match
                         else:
                             return best_match['imdb_id'], text_type(best_match['year'])
+        return None, year
 
     @staticmethod
     def sanitize_imdb_title(string_value, ignore_characters=None):
