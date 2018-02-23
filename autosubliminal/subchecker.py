@@ -639,5 +639,5 @@ def _get_releases(subtitle):
 
 
 def _construct_playvideo_url(wanted_item):
-    log.debug('Constructing "playvideo://" url')
+    log.debug('Constructing \'playvideo://\' url')
     return 'playvideo://' + wanted_item['videopath']

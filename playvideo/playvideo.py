@@ -32,7 +32,7 @@ def main(script, url):
     This will trigger your default video player (if any) to open the video.
     """
 
-    # Url need to be unquoted (because it's triggered from an url) and decoded from utf-8 to cover special characters
+    # Url needs to be unquoted (because it's triggered from an url) and decoded from utf-8 to cover special characters
     url = unquote(url).decode('utf-8')
 
     # Reconstruct url (replace the playvideo:// with the file:// protocol to open the file with the default program)
