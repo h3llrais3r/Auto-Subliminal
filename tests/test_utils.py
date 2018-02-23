@@ -4,9 +4,10 @@ import os
 import tempfile
 import time
 from collections import OrderedDict
-from vcr import VCR
 
 import pytest
+from six import PY2, text_type, binary_type
+from vcr import VCR
 
 import autosubliminal
 from autosubliminal import version
@@ -16,7 +17,7 @@ from autosubliminal.utils import connect_url, getboolean, safe_text, safe_trim, 
     get_alternative_movie_name_mapping, skip_show, skip_movie, display_list_single_line, display_list_multi_line, \
     display_item, display_title, display_name, display_timestamp, convert_timestamp, humanize_bytes, \
     get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, get_common_path, get_root_path, \
-    get_file_size, set_rw_and_remove, u2b
+    get_file_size, set_rw_and_remove, u2b, s2n
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -360,3 +361,13 @@ def test_set_rw_and_remove():
 
 def test_u2b():
     assert u2b(u'élà') == b'élà'
+
+
+def test_s2n():
+    s = u'test'
+    if PY2:
+        assert s2n(s) == b'test'
+        assert isinstance(s2n(s), binary_type)
+    else:
+        assert s2n(s) == u'test'
+        assert isinstance(s2n(s), text_type)

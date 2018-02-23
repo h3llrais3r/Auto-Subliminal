@@ -84,7 +84,7 @@ def start_server(restarting=False):
     if restarting:
         # Remove previous mount (in case webroot should change)
         del cherrypy.tree.apps[list(cherrypy.tree.apps)[0]]
-    cherrypy.tree.mount(WebServerRoot(), utils.u2b(autosubliminal.WEBROOT), config=_get_application_configuration())
+    cherrypy.tree.mount(WebServerRoot(), utils.s2n(autosubliminal.WEBROOT), config=_get_application_configuration())
 
     # Start cherrypy server
     log.info('Starting CherryPy webserver')
@@ -104,7 +104,7 @@ def _configure_server(restarting=False):
     cherrypy.config.update({'log.error_file': 'cherrypy.error.log'})
 
     # Configure server url
-    cherrypy.config.update({'server.socket_host': utils.u2b(autosubliminal.WEBSERVERIP),
+    cherrypy.config.update({'server.socket_host': utils.s2n(autosubliminal.WEBSERVERIP),
                             'server.socket_port': int(autosubliminal.WEBSERVERPORT)
                             })
 
@@ -113,7 +113,7 @@ def _configure_server(restarting=False):
 
     # Configure authentication in if a username and password is set by the user
     if autosubliminal.USERNAME and autosubliminal.PASSWORD:
-        users = {utils.u2b(autosubliminal.USERNAME): utils.u2b(autosubliminal.PASSWORD)}
+        users = {utils.s2n(autosubliminal.USERNAME): utils.s2n(autosubliminal.PASSWORD)}
         cherrypy.config.update({'tools.auth_digest.on': True,
                                 'tools.auth_digest.realm': 'Auto-Subliminal website',
                                 'tools.auth_digest.get_ha1': auth_digest.get_ha1_dict_plain(users),

@@ -13,7 +13,7 @@ import threading
 import time
 
 import requests
-from six import text_type
+from six import PY2, text_type, binary_type
 
 import autosubliminal
 
@@ -585,3 +585,22 @@ def u2b(unicode_string, encoding='utf-8'):
             return unicode_string.encode(encoding, 'replace')
         except:
             return unicode_string.encode(encoding, 'ignore')
+
+
+def s2n(s, encoding='utf-8'):
+    """
+    Convert a string value to the native string representation.
+    @param s: A string value.
+    @param encoding: Used encoding, defaults to utf-8.
+    @return: native string (based on python version).
+    """
+    if PY2:
+        # In Python 2, the native string type is bytes.
+        if isinstance(s, text_type):  # unicode for Python 2
+            return s.encode(encoding)
+        return s
+    else:
+        # In Python 3, the native string type is unicode
+        if isinstance(s, binary_type):  # bytes for Python 3
+            return s.decode(encoding)
+        return s
