@@ -154,7 +154,7 @@ def _enrich_dict(result_dict, file_path):
 
     # Enrich with common data
     result_dict['videopath'] = file_path
-    result_dict['timestamp'] = unicode(
+    result_dict['timestamp'] = text_type(
         time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(os.path.getctime(result_dict['videopath']))))
     # Languages cannot be derived from the processing file, so set it outside the fileprocessor (i.e. in diskscanner)
     result_dict['languages'] = []
