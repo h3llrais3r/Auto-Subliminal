@@ -37,7 +37,7 @@ class Usage(Exception):
 
 def main(argv=None):
     from six import binary_type
-    
+
     import autosubliminal
 
     # Set startup parameters
