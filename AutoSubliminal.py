@@ -8,8 +8,6 @@ import signal
 import sys
 import time
 
-from six import binary_type
-
 # Insert the lib folder at the beginning of the python system path
 # This to prevent installation of the libraries and to prevent the 'lib.' prefix when importing the libraries
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
@@ -38,6 +36,8 @@ class Usage(Exception):
 
 
 def main(argv=None):
+    from six import binary_type
+    
     import autosubliminal
 
     # Set startup parameters
