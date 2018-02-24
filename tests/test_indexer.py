@@ -1,8 +1,10 @@
 # coding=utf-8
 
 import autosubliminal
+from autosubliminal import version
 from autosubliminal.indexer import MovieIndexer, ShowIndexer
 
+autosubliminal.USERAGENT = 'Auto-Subliminal/' + version.RELEASE_VERSION
 autosubliminal.TVDBAPIKEY = '76F2D5362F45C5EC'
 autosubliminal.SHOWNAMEMAPPING = {}
 autosubliminal.MOVIENAMEMAPPING = {}
