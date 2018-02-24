@@ -313,7 +313,7 @@ def display_logfile(loglevel='all', lognum=None):
     data = []
     logfile = get_logfile(lognum)
     if logfile:
-        f = codecs.open(logfile, 'r', autosubliminal.SYSENCODING)
+        f = codecs.open(logfile, 'r', 'utf-8')
         data = f.readlines()
         f.close()
         # If reversed order is needed, use reversed(data)

@@ -19,8 +19,11 @@ def initialize():
 
     log_filter = _LogFilter(autosubliminal.LOGHTTPACCESS, autosubliminal.LOGEXTERNALLIBS)
     log_formatter = _LogFormatter(autosubliminal.LOGDETAILEDFORMAT)
-    log_handler = CustomRotatingFileHandler(autosubliminal.LOGFILE, 'a', autosubliminal.LOGSIZE * 1024 * 1024,
-                                            autosubliminal.LOGNUM)
+    log_handler = CustomRotatingFileHandler(autosubliminal.LOGFILE,
+                                            mode='a',
+                                            maxBytes=autosubliminal.LOGSIZE * 1024 * 1024,
+                                            backupCount=autosubliminal.LOGNUM,
+                                            encoding='utf-8')
     log_handler.addFilter(log_filter)
     log_handler.setFormatter(log_formatter)
     log_handler.setLevel(autosubliminal.LOGLEVEL)
