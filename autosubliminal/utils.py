@@ -573,9 +573,9 @@ def set_rw_and_remove(operation, name, exc):
 def u2b(unicode_string, encoding='utf-8'):
     """
     Convert a unicode string to a byte string.
-    @param unicode_string: Unicode string
-    @param encoding: Used encoding, defaults to utf-8.
-    @return: byte string
+    @param unicode_string: A unicode string
+    @param encoding: The used encoding, defaults to utf-8
+    @return: The byte string
     """
     try:
         return unicode_string.encode(encoding)
@@ -590,12 +590,12 @@ def u2b(unicode_string, encoding='utf-8'):
 def s2n(s, encoding='utf-8'):
     """
     Convert a string value to the native string representation.
-    @param s: A string value.
-    @param encoding: Used encoding, defaults to utf-8.
-    @return: native string (based on python version).
+    @param s: A string value
+    @param encoding: The used encoding, defaults to utf-8
+    @return: The native string (based on python version)
     """
     if PY2:
-        # In Python 2, the native string type is bytes.
+        # In Python 2, the native string type is bytes
         if isinstance(s, text_type):  # unicode for Python 2
             return s.encode(encoding)
         return s

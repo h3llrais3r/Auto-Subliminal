@@ -77,8 +77,8 @@ class ShowIndexer(Indexer):
             name += ' (' + text_type(year) + ')'
         log.info('Querying tvdb api for %s', name)
         # Return a tvdb_api_v2.models.series_search.SeriesSearch object
-        # Make sure to convert it to byte string before searching (to prevent unicode encoding error)
-        series_search = self._client.search_series_by_name(utils.u2b(name), language=language)
+        # Make sure to convert it to native string before searching (to prevent unicode encoding error)
+        series_search = self._client.search_series_by_name(utils.s2n(name), language=language)
         for series_search_data in series_search.data:
             if utils.sanitize(series_search_data.series_name) == utils.sanitize(name):
                 return series_search_data
