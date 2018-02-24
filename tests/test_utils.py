@@ -360,14 +360,19 @@ def test_set_rw_and_remove():
 
 
 def test_u2b():
-    assert u2b(u'élà') == b'élà'
+    assert u2b(u'élà') == b'\xc3\xa9l\xc3\xa0'
 
 
 def test_s2n():
-    s = u'test'
+    s1 = u'élà'
+    s2 = b'\xc3\xa9l\xc3\xa0'
     if PY2:
-        assert s2n(s) == b'test'
-        assert isinstance(s2n(s), binary_type)
+        assert s2n(s1) == b'\xc3\xa9l\xc3\xa0'
+        assert isinstance(s2n(s1), binary_type)
+        assert s2n(s2) == b'\xc3\xa9l\xc3\xa0'
+        assert isinstance(s2n(s2), binary_type)
     else:
-        assert s2n(s) == u'test'
-        assert isinstance(s2n(s), text_type)
+        assert s2n(s1) == u'élà'
+        assert isinstance(s2n(s1), text_type)
+        assert s2n(s2) == u'élà'
+        assert isinstance(s2n(s2), text_type)
