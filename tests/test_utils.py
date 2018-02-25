@@ -17,7 +17,7 @@ from autosubliminal.utils import connect_url, getboolean, safe_text, safe_trim, 
     get_alternative_movie_name_mapping, skip_show, skip_movie, display_list_single_line, display_list_multi_line, \
     display_item, display_title, display_name, display_timestamp, convert_timestamp, humanize_bytes, \
     get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, get_common_path, get_root_path, \
-    get_file_size, set_rw_and_remove, u2b, s2n
+    get_file_size, set_rw_and_remove, u2b, b2u, s2n
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -361,6 +361,10 @@ def test_set_rw_and_remove():
 
 def test_u2b():
     assert u2b(u'élà') == b'\xc3\xa9l\xc3\xa0'
+
+
+def test_b2u():
+    assert b2u(b'\xc3\xa9l\xc3\xa0') == u'élà'
 
 
 def test_s2n():

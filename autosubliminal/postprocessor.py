@@ -48,9 +48,9 @@ class PostProcessor(object):
         # Execute post process command
         stdout, stderr = utils.run_cmd(process_cmd)
         if stderr:
-            self._log_process_output('Post processor failed:\n%s' % utils.safe_trim(stderr), logging.ERROR)
+            self._log_process_output('Post processor failed:\n%s' % utils.safe_trim(utils.b2u(stderr)), logging.ERROR)
             return False
-        self._log_process_output('Post processor output:\n%s' % utils.safe_trim(stdout), logging.DEBUG)
+        self._log_process_output('Post processor output:\n%s' % utils.safe_trim(utils.b2u(stdout)), logging.DEBUG)
 
         return True
 
@@ -59,35 +59,35 @@ class PostProcessor(object):
             log.debug('#' * 30)
             log.debug('Command:')
             log.debug('%s', self._cmd)
-            process = [self._encode(self._cmd)]
+            process = [self._convert_arg(self._cmd)]
             log.debug('Arguments:')
 
             # Add encoding argument
             log.debug('encoding: %s', self._encoding)
-            process.append(self._encoding)
+            process.append(self._convert_arg(self._encoding))
 
             # Add root video path argument
             video_path = self._wanted_item['videopath']
             root_path = utils.get_root_path(video_path)
             log.debug('root path: %s', root_path)
-            process.append(self._encode(root_path))
+            process.append(self._convert_arg(root_path))
 
             # Add video path argument
             log.debug('video path: %s', video_path)
-            process.append(self._encode(video_path))
+            process.append(self._convert_arg(video_path))
 
             # Add subtitle path argument (can be empty if no subtitle was downloaded)
             subtitle_path = None
             if 'destinationFileLocationOnDisk' in self._wanted_item:
                 subtitle_path = self._wanted_item['destinationFileLocationOnDisk']
             log.debug('subtitle path: %s', subtitle_path if subtitle_path else '')
-            process.append(self._encode(subtitle_path if subtitle_path else ''))
+            process.append(self._convert_arg(subtitle_path if subtitle_path else ''))
 
             # Add optional command arguments if needed
             if self._args:
                 for arg in self._args:
                     log.debug('%s', arg)
-                    process.append(self._encode(arg))
+                    process.append(self._convert_arg(arg))
             log.debug('#' * 30)
         except UnicodeEncodeError:
             log.debug('#' * 30)
@@ -96,10 +96,11 @@ class PostProcessor(object):
 
         return process
 
-    def _encode(self, value):
+    def _convert_arg(self, arg):
+        # Arguments should be sent in native strings
         if self._encoding:
-            return value.encode(self._encoding)
-        return value
+            return utils.s2n(arg, self._encoding)
+        return utils.s2n(arg)
 
     def _log_process_output(self, output, log_level):
         # We expect the encoding of the output to be the same as the encoding we used (but we log in utf-8)

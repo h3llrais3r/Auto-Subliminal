@@ -587,6 +587,23 @@ def u2b(unicode_string, encoding='utf-8'):
             return unicode_string.encode(encoding, 'ignore')
 
 
+def b2u(byte_string, encoding='utf-8'):
+    """
+    Convert a byte string to a unicode string.
+    @param btype_string: A byte string
+    @param encoding: The used encoding, defaults to utf-8
+    @return: The unicode string
+    """
+    try:
+        return byte_string.decode(encoding)
+    except:
+        # Fallback to 'replace' and 'ignore' error mode
+        try:
+            return byte_string.decode(encoding, 'replace')
+        except:
+            return byte_string.decode(encoding, 'ignore')
+
+
 def s2n(s, encoding='utf-8'):
     """
     Convert a string value to the native string representation.
