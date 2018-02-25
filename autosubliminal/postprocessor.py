@@ -91,16 +91,15 @@ class PostProcessor(object):
             log.debug('#' * 30)
         except UnicodeEncodeError:
             log.debug('#' * 30)
-            log.error('Cannot encode command parameters in %s, please enable utf-8 encoding!', self._encoding)
+            log.exception('Cannot convert post processor parameters in %s, please enable utf-8 encoding!',
+                          self._encoding)
             process = None
 
         return process
 
     def _convert_arg(self, arg):
-        # Arguments should be sent in native strings
-        if self._encoding:
-            return utils.s2n(arg, self._encoding)
-        return utils.s2n(arg)
+        # Arguments should be sent in native strings (validate if the args can be sent in the specified encoding)
+        return utils.s2n(arg, encoding=self._encoding, validate=True)
 
     def _log_process_output(self, message, output, log_level):
         # Process output is always in bytes

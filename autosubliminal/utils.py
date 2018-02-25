@@ -604,20 +604,28 @@ def b2u(byte_string, encoding='utf-8'):
             return byte_string.decode(encoding, 'ignore')
 
 
-def s2n(s, encoding='utf-8'):
+def s2n(s, encoding='utf-8', validate=False):
     """
     Convert a string value to the native string representation.
     @param s: A string value
     @param encoding: The used encoding, defaults to utf-8
+    @param validate: Indication if the provided native string must be validated against the provided encoding
     @return: The native string (based on python version)
     """
     if PY2:
         # In Python 2, the native string type is bytes
         if isinstance(s, text_type):  # unicode for Python 2
             return s.encode(encoding)
-        return s
+        elif validate:
+            # Test if the provided native string can be represented with the provided encoding
+            return s.decode(encoding).encode(encoding)
+        else:
+            return s
     else:
         # In Python 3, the native string type is unicode
         if isinstance(s, binary_type):  # bytes for Python 3
             return s.decode(encoding)
-        return s
+        elif validate:
+            return s.encode(encoding).decode(encoding)
+        else:
+            return s
