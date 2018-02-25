@@ -48,9 +48,8 @@ class NmaNotifier(BaseNotifier):
                 return False
             else:
                 return self._parse_response(response)
-        except Exception as e:
-            log.error('%s notification failed', self.name)
-            log.exception(e)
+        except Exception:
+            log.exception('%s notification failed', self.name)
             return False
 
     def _parse_response(self, response):

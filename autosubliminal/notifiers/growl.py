@@ -45,9 +45,8 @@ class GrowlNotifier(BaseNotifier):
                 log.error('%s registration failed: %r', self.name, response)
                 return False
             return True
-        except Exception as e:
-            log.error('%s registration failed', self.name)
-            log.exception(e)
+        except Exception:
+            log.exception('%s registration failed', self.name)
             return False
 
     def _send_message(self, message, **kwargs):
@@ -61,9 +60,8 @@ class GrowlNotifier(BaseNotifier):
                 return False
             log.info('%s notification sent', self.name)
             return True
-        except Exception as e:
-            log.error('%s notification failed', self.name)
-            log.exception(e)
+        except Exception:
+            log.exception('%s notification failed', self.name)
             return False
 
     # Override of generic test method (test will also take care the growl registration)

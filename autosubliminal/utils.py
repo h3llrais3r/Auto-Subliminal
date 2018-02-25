@@ -79,8 +79,8 @@ def connect_url(url):
     try:
         return requests.get(url, headers={'User-Agent': autosubliminal.USERAGENT}, timeout=autosubliminal.TIMEOUT)
     except Exception as e:
-        log.debug('Could not connect to url: %s', url)
-        log.debug(e, exc_info=True)  # Replaces log.exception(e) because we want it to be logged in debug
+        # Replaces log.exception() because we want it to be logged in debug
+        log.debug('Could not connect to url: %s', url, exc_info=True)
         # Throw again the exception
         raise e
 

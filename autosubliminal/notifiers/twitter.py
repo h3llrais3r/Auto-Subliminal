@@ -55,9 +55,8 @@ class TwitterNotifier(BaseNotifier):
             api.PostUpdate(text_type(message[:280]))
             log.info('%s notification sent', self.name)
             return True
-        except Exception as e:
-            log.error('%s notification failed', self.name)
-            log.exception(e)
+        except Exception:
+            log.exception('%s notification failed', self.name)
             return False
 
 

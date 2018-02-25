@@ -119,8 +119,7 @@ class ShowIndexer(Indexer):
         except Exception as e:
             # Log error on other exceptions than 404
             if not hasattr(e, 'status') or e.status != 404:
-                log.error('Error while retrieving tvdb id for %s', name)
-                log.exception(e)
+                log.exception('Error while retrieving tvdb id for %s', name)
         if tvdb_id:
             log.debug('Tvdb id from api: %s', tvdb_id)
             if store_id:
@@ -208,9 +207,8 @@ class MovieIndexer(Indexer):
         # Search on imdb
         try:
             imdb_id, year = self._query_api(title, year)
-        except Exception as e:
-            log.error('Error while retrieving imdb id for %s', name)
-            log.exception(e)
+        except Exception:
+            log.exception('Error while retrieving imdb id for %s', name)
         if imdb_id:
             log.debug('Imdb id from api: %s', imdb_id)
             if store_id:

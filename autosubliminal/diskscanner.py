@@ -62,9 +62,8 @@ class DiskScanner(ScheduledProcess):
         for videodir in autosubliminal.VIDEOPATHS:
             try:
                 new_wanted_items.extend(walk_dir(videodir))
-            except Exception as e:
-                log.error('Could not scan the video path (%s), skipping...', videodir)
-                log.exception(e)
+            except Exception:
+                log.exception('Could not scan the video path (%s), skipping it', videodir)
 
         # Cleanup wanted items that have been removed from disk manually but are still stored in the db
         log.debug('Checking for non existing wanted items in wanted_items database')
@@ -301,7 +300,6 @@ def _delete_subtitle_file(subtitle_path, language):
         log.warning('Deleting subtitle with invalid language: %s [%s]', subtitle_path, language)
         os.remove(subtitle_path)
         return True
-    except Exception as e:
-        log.error('Unable to delete subtitle with invalid language: %s [%s]', subtitle_path, language)
-        log.exception(e)
+    except Exception:
+        log.exception('Unable to delete subtitle with invalid language: %s [%s]', subtitle_path, language)
         return False

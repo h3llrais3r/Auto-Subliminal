@@ -265,9 +265,8 @@ def delete_subtitle(wanted_item_index):
     try:
         os.remove(subtitle_path)
         deleted = True
-    except Exception as e:
-        log.error('Unable to delete subtitle: %s', subtitle_path)
-        log.exception(e)
+    except Exception:
+        log.exception('Unable to delete subtitle: %s', subtitle_path)
 
     # Release wanted queue lock
     utils.release_wanted_queue_lock()
@@ -313,18 +312,16 @@ def delete_video(wanted_item_index, cleanup):
                         deleted = True
                         # Break for loop
                         break
-                    except Exception as e:
-                        log.error('Unable to delete video folder: %s', folder_to_clean)
-                        log.exception(e)
+                    except Exception:
+                        log.exception('Unable to delete video folder: %s', folder_to_clean)
     # Delete video file only
     if not deleted:
         try:
             os.remove(video_path)
             log.info('Deleted file: %s', video_path)
             deleted = True
-        except Exception as e:
-            log.error('Unable to delete file: %s', video_path)
-            log.exception(e)
+        except Exception:
+            log.exception('Unable to delete file: %s', video_path)
 
     # Release wanted queue lock
     utils.release_wanted_queue_lock()
@@ -490,9 +487,8 @@ def _scan_wanted_item_for_video(wanted_item, is_manual=False):
         # This should always be at the end since we want to enrich the result after the build-in refiners
         refiners = ('namemapping',)  # don't remove the , -> needs to be a tuple
         subliminal.refine(video, episode_refiners=refiners, movie_refiners=refiners)
-    except Exception as e:
-        log.error('Error while scanning video, skipping %s', video_path)
-        log.exception(e)
+    except Exception:
+        log.exception('Error while scanning video, skipping %s', video_path)
         return
 
     # Add video to wanted item
