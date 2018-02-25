@@ -48,9 +48,9 @@ class PostProcessor(object):
         # Execute post process command
         stdout, stderr = utils.run_cmd(process_cmd)
         if stderr:
-            self._log_process_output('Post processor failed:\n%s' % utils.safe_trim(utils.b2u(stderr)), logging.ERROR)
+            self._log_process_output('Post processor failed:\n', stderr, logging.ERROR)
             return False
-        self._log_process_output('Post processor output:\n%s' % utils.safe_trim(utils.b2u(stdout)), logging.DEBUG)
+        self._log_process_output('Post processor output:\n', stdout, logging.DEBUG)
 
         return True
 
@@ -102,10 +102,11 @@ class PostProcessor(object):
             return utils.s2n(arg, self._encoding)
         return utils.s2n(arg)
 
-    def _log_process_output(self, output, log_level):
-        # We expect the encoding of the output to be the same as the encoding we used (but we log in utf-8)
-        if self._encoding.lower() == 'utf-8':
-            log.log(log_level, output)
-        else:
-            # Decode first from used encoding and encode back to utf-8
-            log.log(log_level, output.decode(self._encoding).encode('utf-8'))
+    def _log_process_output(self, message, output, log_level):
+        # Process output is always in bytes
+        # We expect the encoding of the output to be the same as the encoding we used
+        try:
+            output_u = utils.safe_trim(utils.b2u(output, self._encoding))
+            log.log(log_level, '%s%s', message, output_u)
+        except Exception:
+            log.exception('Unable to log process output')
