@@ -5,6 +5,8 @@ import os
 import shutil
 from logging.handlers import BaseRotatingHandler
 
+import six
+
 import autosubliminal
 
 
@@ -22,7 +24,8 @@ def initialize():
     log_handler = CustomRotatingFileHandler(autosubliminal.LOGFILE,
                                             mode='a',
                                             maxBytes=autosubliminal.LOGSIZE * 1024 * 1024,
-                                            backupCount=autosubliminal.LOGNUM)
+                                            backupCount=autosubliminal.LOGNUM,
+                                            encoding='utf-8' if six.PY3 else None)
     log_handler.addFilter(log_filter)
     log_handler.setFormatter(log_formatter)
     log_handler.setLevel(autosubliminal.LOGLEVEL)
