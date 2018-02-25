@@ -30,7 +30,7 @@ def read_config(check_upgrade=False):
     try:
         with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
             cfg.read_file(f)
-    except:
+    except Exception:
         print('********************************************************************')
         print('ERROR: Not a valid configuration file! Using default values instead!')
         print('********************************************************************')
@@ -744,7 +744,7 @@ def write_config(section=None):
         # A config file is set so we use this to add the settings
         with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
             cfg.read_file(f)
-    except:
+    except Exception:
         # No config file found, create one instead
         open(autosubliminal.CONFIGFILE, 'w').close()
         with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
@@ -1256,7 +1256,7 @@ def _load_config_parser():
     try:
         with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
             cfg.read_file(f)
-    except:
+    except Exception:
         # No config yet
         cfg = ConfigParser()
         pass
@@ -1382,7 +1382,7 @@ def _upgrade_config(from_version, to_version):
     print('INFO: Creating backup of old config file.')
     try:
         shutil.copy(autosubliminal.CONFIGFILE, autosubliminal.CONFIGFILE + '.' + time.strftime('%Y%m%d%H%M%S'))
-    except:
+    except Exception:
         print('ERROR: Unable to backup config file! Continuing without backup!')
     upgrades = to_version - from_version
     if upgrades != 1:
@@ -1615,7 +1615,7 @@ def _upgrade_config(from_version, to_version):
             try:
                 with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
                     cfg.read_file(f)
-            except:
+            except Exception:
                 # No config yet, just mark as upgraded
                 cfg = ConfigParser()
             # Reame sections
@@ -1654,7 +1654,7 @@ def _upgrade_config(from_version, to_version):
             try:
                 with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
                     cfg.read_file(f)
-            except:
+            except Exception:
                 # No config yet, just mark as upgraded
                 cfg = ConfigParser()
             if cfg.has_section('general'):

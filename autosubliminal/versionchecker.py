@@ -36,7 +36,7 @@ class VersionChecker(ScheduledProcess):
             Repo(autosubliminal.PATH)
             self.manager = GitVersionManager()
             self.install_type = InstallType.GIT
-        except:
+        except Exception:
             log.debug('Could not initialize git, falling back to source version check')
             self.manager = SourceVersionManager()
             self.install_type = InstallType.SOURCE
@@ -268,7 +268,7 @@ class GitVersionManager(BaseVersionManager):
             ahead, behind = self.repo.git.execute('git rev-list --count --left-right HEAD...@{upstream}').split('\t')
             self.num_commits_ahead = int(ahead)
             self.num_commits_behind = int(behind)
-        except:
+        except Exception:
             # Count it ourselves when option --count is not supported
             try:
                 output = self.repo.git.execute('git rev-list --left-right HEAD...@{upstream}')

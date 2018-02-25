@@ -10,7 +10,7 @@
         response = utils.connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/master/changelog.html')
         page = BeautifulSoup(response.text, 'html5lib')
         releases = page.find_all("div", "release")
-    except:
+    except Exception:
         parsed = False
 %>
 

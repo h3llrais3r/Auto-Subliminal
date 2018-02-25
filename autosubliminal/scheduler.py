@@ -64,7 +64,7 @@ class Scheduler(object):
                     suffix = int(scheduler_name_suffix)
                     suffix += 1
                     scheduler_name = scheduler_name[:suffix_index] + '-' + text_type(suffix)
-                except:
+                except Exception:
                     scheduler_name = scheduler_name + '-' + text_type(suffix)
             else:
                 scheduler_name = scheduler_name + '-' + text_type(suffix)

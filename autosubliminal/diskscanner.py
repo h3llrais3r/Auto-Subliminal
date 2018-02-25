@@ -256,7 +256,7 @@ def _get_embedded_subtitles(dirname, filename):
                 log.debug('MKV has no subtitle track')
         else:
             log.debug('Check is only supported for MKV containers, skipping')
-    except:
+    except Exception:
         log.error('Parsing video metadata with enzyme failed')
     return embedded_subtitle_languages
 
@@ -267,10 +267,10 @@ def _detect_subtitle_language(srt_path):
     # Load srt file (try first iso-8859-1 with fallback to utf-8)
     try:
         subtitle = pysrt.open(path=srt_path, encoding='iso-8859-1')
-    except:
+    except Exception:
         try:
             subtitle = pysrt.open(path=srt_path, encoding='utf-8')
-        except:
+        except Exception:
             # If we can't read it, we can't detect, so return
             return None
 

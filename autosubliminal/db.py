@@ -284,7 +284,7 @@ def create():
 
         print('INFO: Succesfully created the sqlite database.')
         autosubliminal.DBVERSION = version.DB_VERSION
-    except:
+    except Exception:
         print('ERROR: Could not create database.')
         print('ERROR: Please check if Auto-Subliminal has write access to file %s.' % autosubliminal.DBFILE)
 
@@ -394,7 +394,7 @@ def get_version():
         connection.close()
 
         return int(db_version)
-    except:
+    except Exception:
         return 1
 
 

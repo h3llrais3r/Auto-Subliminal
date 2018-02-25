@@ -95,7 +95,7 @@ def wait_for_internet_connection():
         try:
             connect_url(url)
             return True
-        except:
+        except Exception:
             return False
 
     log.debug('Checking internet connection')
@@ -119,7 +119,7 @@ def safe_text(obj, default_value=None):
     """
     try:
         return text_type(obj)
-    except:
+    except Exception:
         return default_value
 
 
@@ -130,7 +130,7 @@ def safe_uppercase(obj, default_value=None):
     """
     try:
         return obj.upper()
-    except:
+    except Exception:
         return default_value
 
 
@@ -141,7 +141,7 @@ def safe_trim(obj, default_value=None):
     """
     try:
         return obj.strip(' \n\r\t')
-    except:
+    except Exception:
         return default_value
 
 
@@ -327,7 +327,7 @@ def display_logfile(loglevel='all', lognum=None):
             matchdic = matches.groupdict()
             if (loglevel == 'all') or (matchdic['loglevel'] == loglevel.upper()):
                 log_data.append(x)
-        except:
+        except Exception:
             continue
     result = cgi.escape(''.join(log_data))
     return result
@@ -461,7 +461,7 @@ def count_wanted_items(itemtype=None):
 def get_file_size(path):
     try:
         byte_size = os.path.getsize(path)
-    except:
+    except Exception:
         # If size cannot be retrieved, it's most likely because the path doesn't exist anymore
         # Occurs when displaying gui when a sub check is running and files are already moved by a postprocessor script
         byte_size = 0
@@ -579,11 +579,11 @@ def u2b(unicode_string, encoding='utf-8'):
     """
     try:
         return unicode_string.encode(encoding)
-    except:
+    except Exception:
         # Fallback to 'replace' and 'ignore' error mode
         try:
             return unicode_string.encode(encoding, 'replace')
-        except:
+        except Exception:
             return unicode_string.encode(encoding, 'ignore')
 
 
@@ -596,11 +596,11 @@ def b2u(byte_string, encoding='utf-8'):
     """
     try:
         return byte_string.decode(encoding)
-    except:
+    except Exception:
         # Fallback to 'replace' and 'ignore' error mode
         try:
             return byte_string.decode(encoding, 'replace')
-        except:
+        except Exception:
             return byte_string.decode(encoding, 'ignore')
 
 

@@ -183,7 +183,7 @@ def search_subtitle(wanted_item_index, lang):
                                 # Last 30 lines
                                 content_preview += '<br>'.join(
                                     x.replace('"', '\'') for x in content_split[len(content_split) - 30:])
-                            except:
+                            except Exception:
                                 content_preview = 'Problem with parsing the first 28 and/or last 30 lines of the file.'
                         sub['content_preview'] = content_preview
                         subs.append(sub)

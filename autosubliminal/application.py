@@ -63,11 +63,11 @@ def launch_browser():
     url = url + wr
     try:
         webbrowser.open(url, 2, 1)
-    except:
+    except Exception:
         try:
             webbrowser.open(url, 1, 1)
-        except:
-            log.error('Browser launch failed')
+        except Exception:
+            log.exception('Browser launch failed')
 
 
 def start_server(restarting=False):

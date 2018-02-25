@@ -203,7 +203,7 @@ class Home(object):
         try:
             utils.run_cmd(video, False)
             return {'result': True, 'infomessage': 'Playing video.', 'errormessage': None}
-        except:
+        except Exception:
             return {'result': False, 'infomessage': None,
                     'errormessage': 'Cannot play the video! Please check the log file!'}
 
