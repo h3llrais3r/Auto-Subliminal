@@ -41,6 +41,7 @@ class VersionChecker(ScheduledProcess):
             self.manager = SourceVersionManager()
             self.install_type = InstallType.SOURCE
 
+    @utils.release_wanted_queue_lock_on_exception
     def run(self, force_run):
         # Block version check (and update) in no force run mode when another process is using the wanted queue
         # We do not want to auto update the version while the application is busy with another process
@@ -68,6 +69,7 @@ class VersionChecker(ScheduledProcess):
         # Always return 'True' because we don't want to retry it until the next scheduled run
         return True
 
+    @utils.release_wanted_queue_lock_on_exception
     def update(self):
         log.info('Updating version')
 

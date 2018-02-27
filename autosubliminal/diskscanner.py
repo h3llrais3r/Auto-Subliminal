@@ -28,6 +28,7 @@ class DiskScanner(ScheduledProcess):
     def __init__(self):
         super(DiskScanner, self).__init__()
 
+    @utils.release_wanted_queue_lock_on_exception
     def run(self, force_run):
         # Get wanted queue lock
         if not utils.get_wanted_queue_lock():

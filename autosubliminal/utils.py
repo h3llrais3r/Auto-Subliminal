@@ -11,6 +11,7 @@ import stat
 import subprocess
 import threading
 import time
+from functools import wraps
 
 import requests
 from six import PY2, text_type, binary_type
@@ -445,6 +446,26 @@ def release_wanted_queue_lock():
             autosubliminal.WANTEDQUEUELOCK = False
         else:
             log.warning('Trying to release a wanted queue lock while there is no lock')
+
+
+def release_wanted_queue_lock_on_exception(func):
+    """
+    Decorator to force the release of the wanted queue lock on unexpected exceptions.
+    This should be used on every place where we do a get_wanted_queue_lock to release it also on unexpected exceptions.
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            with _lock:
+                if autosubliminal.WANTEDQUEUELOCK:
+                    log.exception('Releasing wanted queue lock with force due to exception')
+                    autosubliminal.WANTEDQUEUELOCK = False
+            raise e
+
+    return wrapper
 
 
 def count_wanted_items(itemtype=None):

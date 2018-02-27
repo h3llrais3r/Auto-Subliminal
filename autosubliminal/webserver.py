@@ -687,6 +687,7 @@ class System(object):
         utils.add_notification_message('Flushed id cache database.')
         redirect('/home')
 
+    @utils.release_wanted_queue_lock_on_exception
     @cherrypy.expose(alias='flushWantedItems')
     def flush_wanted_items(self):
         if utils.get_wanted_queue_lock():

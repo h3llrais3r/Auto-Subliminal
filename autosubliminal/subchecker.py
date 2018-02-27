@@ -38,6 +38,7 @@ class SubChecker(ScheduledProcess):
     def __init__(self):
         super(SubChecker, self).__init__()
 
+    @utils.release_wanted_queue_lock_on_exception
     def run(self, force_run):
         # Get wanted queue lock
         if not utils.get_wanted_queue_lock():
@@ -116,6 +117,7 @@ class SubChecker(ScheduledProcess):
         return True
 
 
+@utils.release_wanted_queue_lock_on_exception
 def search_subtitle(wanted_item_index, lang):
     log.info('Searching for an individual subtitle')
     subs = []
@@ -200,6 +202,7 @@ def search_subtitle(wanted_item_index, lang):
     return subs, None
 
 
+@utils.release_wanted_queue_lock_on_exception
 def save_subtitle(wanted_item_index, subtitle_index):
     log.info('Saving an individual subtitle')
 
@@ -227,6 +230,7 @@ def save_subtitle(wanted_item_index, subtitle_index):
     return downloaded
 
 
+@utils.release_wanted_queue_lock_on_exception
 def force_id_search(wanted_item_index):
     log.info('Force id search')
 
@@ -249,6 +253,7 @@ def force_id_search(wanted_item_index):
     utils.release_wanted_queue_lock()
 
 
+@utils.release_wanted_queue_lock_on_exception
 def delete_subtitle(wanted_item_index):
     log.info('Deleting an individual subtitle')
 
@@ -274,6 +279,7 @@ def delete_subtitle(wanted_item_index):
     return deleted
 
 
+@utils.release_wanted_queue_lock_on_exception
 def delete_video(wanted_item_index, cleanup):
     log.info('Deleting an individual video file')
 
@@ -329,6 +335,7 @@ def delete_video(wanted_item_index, cleanup):
     return deleted
 
 
+@utils.release_wanted_queue_lock_on_exception
 def skip_show(wanted_item_index, season):
     log.info('Skipping a show')
 
@@ -364,6 +371,7 @@ def skip_show(wanted_item_index, season):
     return True
 
 
+@utils.release_wanted_queue_lock_on_exception
 def skip_movie(wanted_item_index):
     log.info('Skipping a movie')
 
@@ -385,6 +393,7 @@ def skip_movie(wanted_item_index):
     return True
 
 
+@utils.release_wanted_queue_lock_on_exception
 def post_process(wanted_item_index, subtitle_index):
     log.info('Post processing an individual subtitle')
 
@@ -437,6 +446,7 @@ def post_process(wanted_item_index, subtitle_index):
     return processed
 
 
+@utils.release_wanted_queue_lock_on_exception
 def post_process_no_subtitle(wanted_item_index):
     log.info('Post processing without subtitle')
 
