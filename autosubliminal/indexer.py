@@ -5,10 +5,10 @@ import logging
 import re
 
 from functools import wraps
-from six import add_metaclass, text_type
 from time import time
 
 from imdbpie import Imdb
+from six import add_metaclass, text_type
 from tvdb_api_v2.client import TvdbClient
 from unidecode import unidecode
 
