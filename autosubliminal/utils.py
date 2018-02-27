@@ -58,7 +58,7 @@ def add_notification_message(notification_message, notification_type='info', sti
 
 
 def run_cmd(cmd, communicate=True):
-    log.debug('Running cmd: %s', cmd)
+    log.debug('Running cmd: %r', cmd)
     process = subprocess.Popen(cmd,
                                shell=True,
                                stdin=subprocess.PIPE,
