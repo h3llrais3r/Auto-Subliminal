@@ -3,6 +3,7 @@
 import cgi
 import codecs
 import ctypes
+import datetime
 import logging
 import os
 import platform
@@ -28,6 +29,14 @@ _boolean_states = {'1': True, 'yes': True, 'true': True, 'on': True,
 
 LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
                         re.IGNORECASE)
+
+
+def today():
+    """
+    Helper to get today as datetime.
+    We made this a function, otherwise we can't mock built-in datetime.datetime.today in our tests!
+    """
+    return datetime.datetime.today()
 
 
 def add_event_message(event_type):

@@ -26,6 +26,7 @@ from autosubliminal.providers import provider_cache
 from autosubliminal.providers.addic7ed import Addic7edSubtitle as Addic7edSubtitleRandomUserAgent
 from autosubliminal.scheduler import ScheduledProcess
 from autosubliminal.subdownloader import SubDownloader
+from autosubliminal.wanteditem import WantedItem
 
 log = logging.getLogger(__name__)
 
@@ -63,6 +64,11 @@ class SubChecker(ScheduledProcess):
             db = WantedItems()
             for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
                 log.info('Searching subtitles for video: %s', wanted_item['videopath'])
+
+                # Check if the search is currently enabled for the wanted_item
+                if not WantedItem(wanted_item).search_enabled:
+                    log.info('Search disabled in this run for video: %s', wanted_item['videopath'])
+                    continue
 
                 # Scan wanted_item for video, skip when no video could be determined
                 video = _scan_wanted_item_for_video(wanted_item)

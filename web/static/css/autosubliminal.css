@@ -249,6 +249,10 @@ table.tablesorter thead tr .sorter-false {
     padding: 4px;
 }
 
+table.tablesorter tbody tr.disabled > td {
+    opacity: 0.5;
+}
+
 table.tablesorter tbody td {
     border: 1px dotted #eeeeee;
 }

@@ -3,6 +3,7 @@
 
     import autosubliminal
     from autosubliminal.utils import convert_timestamp, display_item, display_title, get_file_size, count_wanted_items
+    from autosubliminal.wanteditem import WantedItem
 %>
 
 <%block name="bodyContent">
@@ -65,7 +66,12 @@
 
                     <tbody>
                         % for index, item in enumerate(autosubliminal.WANTEDQUEUE):
-                            <tr class="wanted-item">
+                            <%
+                                search_enabled = WantedItem(item).search_enabled
+                                rowClass = 'wanted-item' if search_enabled else 'wanted-item disabled'
+                                rowTitle = '' if search_enabled else 'Search disabled'
+                            %>
+                            <tr class="${rowClass}" title="${rowTitle}">
                                 <td class="hidden">${item['type']}</td>
                                 <td>
                                     <span class="dropdown">
