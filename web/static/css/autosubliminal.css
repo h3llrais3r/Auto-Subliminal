@@ -98,7 +98,7 @@ a:hover, a:active, a:focus, a:visited > .fa {
 }
 
 .dropdown-menu-inverse > li > a:hover {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     color: #000000;
 }
 
@@ -128,7 +128,7 @@ a:hover, a:active, a:focus, a:visited > .fa {
     content: '';
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-bottom: 6px solid #FFFFFF;
+    border-bottom: 6px solid #ffffff;
     display: inline-block;
 }
 
@@ -277,7 +277,7 @@ table.tablesorter tbody td {
 }
 
 .tablesorter-default tr.even > td {
-    background-color: #FFFFFF; /*Adapted colors to by inline with my style*/
+    background-color: #ffffff; /*Adapted colors to by inline with my style*/
 }
 
 /* Needed to get the filtering working. */
