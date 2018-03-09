@@ -113,7 +113,7 @@ a:hover, a:active, a:focus, a:visited > .fa {
 .dropdown-menu.has-tip:before {
     position: absolute;
     top: -6px;
-    left: 9px;
+    left: 1px;
     content: "";
     border-right: 7px solid transparent;
     border-left: 7px solid transparent;
@@ -124,7 +124,7 @@ a:hover, a:active, a:focus, a:visited > .fa {
 .dropdown-menu.has-tip:after {
     position: absolute;
     top: -5px;
-    left: 10px;
+    left: 2px;
     content: '';
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
@@ -134,12 +134,12 @@ a:hover, a:active, a:focus, a:visited > .fa {
 
 .dropdown-menu.has-tip.anchor-right:before {
     left: auto;
-    right: 9px;
+    right: 1px;
 }
 
 .dropdown-menu.has-tip.anchor-right:after {
     left: auto;
-    right: 10px;
+    right: 2px;
 }
 
 /*****************
