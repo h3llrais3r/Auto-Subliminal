@@ -11,16 +11,17 @@ search_deadline = datetime.timedelta(weeks=4)
 search_delta = datetime.timedelta(weeks=1)
 
 
-# TODO: Refactor wanted_item dit to WantedItem class! For now we use the wanted_item dict inside the WantedItem class!
+# TODO: Refactor wanted_item dict to WantedItem class! For now we use the wanted_item dict inside the WantedItem class!
 class WantedItem(object):
     def __init__(self, wanted_item):
+        # TODO: Remove dict when all properties are available and usage of dict has been replaced by this class
         self.wanted_item = wanted_item
 
     @property
-    def search_enabled(self):
+    def search_active(self):
         """
-        Check if the search is enabled for the wanted item.
-        The search will be enabled:
+        Check if the search is active for the wanted item.
+        The search will be active:
         - on each run when file age is less or equal to 4 weeks
         - once every week (calculated from file timestamp) when file age is more than 4 weeks
         """

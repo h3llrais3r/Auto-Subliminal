@@ -66,12 +66,8 @@
 
                     <tbody>
                         % for index, item in enumerate(autosubliminal.WANTEDQUEUE):
-                            <%
-                                search_enabled = WantedItem(item).search_enabled
-                                rowClass = 'wanted-item' if search_enabled else 'wanted-item disabled'
-                                rowTitle = '' if search_enabled else 'Search disabled'
-                            %>
-                            <tr class="${rowClass}" title="${rowTitle}">
+                            <% rowClass = 'wanted-item' if WantedItem(item).search_active else 'wanted-item inactive' %>
+                            <tr class="${rowClass}">
                                 <td class="hidden">${item['type']}</td>
                                 <td>
                                     <span class="dropdown">
@@ -133,9 +129,11 @@
                                                 </ul>
                                             </span>
                                         % else:
-                                            <a href="${autosubliminal.DEREFERURL}${autosubliminal.TVDBURL}${item['tvdbid']}" target="_blank">
-                                                <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
-                                            </a>
+                                            <span>
+                                                <a href="${autosubliminal.DEREFERURL}${autosubliminal.TVDBURL}${item['tvdbid']}" target="_blank">
+                                                    <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
+                                                </a>
+                                            </span>
                                         % endif
                                     % elif item['type'] == 'movie':
                                         % if not item['imdbid']:
@@ -150,9 +148,11 @@
                                                 </ul>
                                             </span>
                                         % else:
-                                            <a href="${autosubliminal.DEREFERURL}${autosubliminal.IMDBURL}${item['imdbid']}" target="_blank">
-                                                <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
-                                            </a>
+                                            <span>
+                                                <a href="${autosubliminal.DEREFERURL}${autosubliminal.IMDBURL}${item['imdbid']}" target="_blank">
+                                                    <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
+                                                </a>
+                                            </span>
                                         % endif
                                     % endif
                                     % if autosubliminal.MANUALREFINEVIDEO:

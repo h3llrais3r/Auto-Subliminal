@@ -65,9 +65,9 @@ class SubChecker(ScheduledProcess):
             for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
                 log.info('Searching subtitles for video: %s', wanted_item['videopath'])
 
-                # Check if the search is currently enabled for the wanted_item
-                if not WantedItem(wanted_item).search_enabled:
-                    log.info('Search disabled in this run for video: %s', wanted_item['videopath'])
+                # Check if the search is currently active for the wanted_item
+                if not WantedItem(wanted_item).search_active:
+                    log.info('Search not active in this run for video: %s', wanted_item['videopath'])
                     continue
 
                 # Scan wanted_item for video, skip when no video could be determined
