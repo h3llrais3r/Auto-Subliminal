@@ -249,14 +249,21 @@ table.tablesorter thead tr .sorter-false {
     padding: 4px;
 }
 
-/* Inactive rows */
-table.tablesorter tbody tr.inactive * {
+/* Inactive rows - grey out and set background color */
+table.tablesorter tbody tr.inactive td {
+    color: rgb(0, 0, 0);
+    color: rgba(0, 0, 0, 0.5);
+    background-color: #ffffff;
+}
+
+/* Inactive rows - grey out underlying items */
+table.tablesorter tbody tr.inactive td * {
     color: rgb(0, 0, 0);
     color: rgba(0, 0, 0, 0.5);
 }
 
-/* Inactive rows - images (rgba has no effect on images, so use opacity instead) */
-table.tablesorter tbody tr.inactive img {
+/* Inactive rows - grey out images (rgba has no effect on images, so use opacity instead) */
+table.tablesorter tbody tr.inactive td img {
     opacity: 0.5;
 }
 
@@ -277,7 +284,7 @@ table.tablesorter tbody td {
 }
 
 .tablesorter-default tr.even > td {
-    background-color: #ffffff; /*Adapted colors to by inline with my style*/
+    background-color: #f3f3f3; /*Adapted colors to by inline with my style*/
 }
 
 /* Needed to get the filtering working. */

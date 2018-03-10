@@ -284,7 +284,7 @@
                 <div class="note">
                     <div>Click 'Show/Movie name' for skip functionality</div>
                     <div>Click 'Language' icon for manual search</div>
-                    <div>Greyed out rows are currently inactive for automatic search</div>
+                    <div>Transparent rows are currently inactive for automatic search</div>
                 </div>
             </div>
 
