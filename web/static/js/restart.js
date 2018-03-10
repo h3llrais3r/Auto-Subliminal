@@ -20,7 +20,7 @@ function is_alive() {
 }
 
 // Activate the modal and is_alive function
-$(document).ready(function () {
+$(function () {
     $('#restartModal').modal('show');
     is_alive();
 });

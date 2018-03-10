@@ -3,7 +3,7 @@
  */
 
 // Enable tablesorter and tablesorterPager for wanteditems table
-$(document).ready(function () {
+$(function () {
     $('#wanteditems')
         .tablesorter({
             // Enable widgets
@@ -43,7 +43,7 @@ $('.wanteditemsfilterreset').on('click', function () {
 });
 
 // Enable tablesorter and tablesorterPager for lastdownloads table
-$(document).ready(function () {
+$(function () {
     $('#lastdownloads')
         .tablesorter({
             // Enable widgets

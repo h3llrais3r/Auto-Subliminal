@@ -19,7 +19,7 @@ $('.navbar .nav a').on('click', function () {
 });
 
 //Handle navbar active navigation button (after submit)
-$(document).ready(function () {
+$(function () {
     subpath = '/' + location.pathname.replace(webroot, '').split('/')[1] + '/';
     $('.navbar').find('.nav').find('a[href=\'' + subpath + '\']')
         .closest('li').addClass('active');
@@ -49,7 +49,7 @@ $('input[type=checkbox][data-toggle=toggle][data-on=Enabled][data-off=Disabled]'
  * Popovers
  * ======== */
 
-$(document).ready(function () {
+$(function () {
     $('[data-toggle=popover]').popover();
 });
 
@@ -58,7 +58,7 @@ $(document).ready(function () {
  * ========= */
 
 // Enable countdown until scandisk next run date
-$(document).ready(function () {
+$(function () {
     scandisknextrundate = new Date();
     scandisknextrundate.setTime($('#scandisk-nextrun-time-ms').val());
     $('#scandisk-nextrun').countdown(scandisknextrundate, function (event) {
@@ -71,7 +71,7 @@ $(document).ready(function () {
 });
 
 // Enable countdown until checksub next run date
-$(document).ready(function () {
+$(function () {
     checksubnextrundate = new Date();
     checksubnextrundate.setTime($('#checksub-nextrun-time-ms').val());
     $('#checksub-nextrun').countdown(checksubnextrundate, function (event) {
@@ -195,7 +195,7 @@ function _handle_event(event_type) {
 }
 
 // Activate the websocket message system
-$(document).ready(function () {
+$(function () {
     ws = new WebSocket(websocket_message_url);
     ws.onmessage = get_message_through_websocket;
     // console.log('Websocket ready to receive messages');

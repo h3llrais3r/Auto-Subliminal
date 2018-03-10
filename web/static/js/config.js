@@ -2,7 +2,7 @@
  * Javascript needed on the config pages
  */
 
-$(document).ready(function () {
+$(function () {
     $('.btn-save').on('click', function (event) {
         // Prevent the actual click on the link
         event.preventDefault();
@@ -18,7 +18,7 @@ $(document).ready(function () {
     });
 });
 
-$(document).ready(function () {
+$(function () {
     $('.btn-test').on('click', function (event) {
         // Prevent the actual click on the link
         event.preventDefault();

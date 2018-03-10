@@ -3,7 +3,7 @@
  */
 
 // Enable tablesorter for scheduler table
-$(document).ready(function () {
+$(function () {
     $('#scheduler').tablesorter({
         // Enable widgets
         widgets: ['reflow', 'saveSort'],
@@ -15,7 +15,7 @@ $(document).ready(function () {
 });
 
 // Enable tablesorter for diskspace table
-$(document).ready(function () {
+$(function () {
     $('#diskspace').tablesorter({
         // Enable widgets
         widgets: ['reflow', 'saveSort'],
