@@ -2,96 +2,94 @@
  * Javascript needed on the home page
  */
 
-// Enable tablesorter and tablesorterPager for wanteditems table
-$(function () {
-    $('#wanteditems')
-        .tablesorter({
-            // Enable widgets
-            widgets: ['reflow', 'filter', 'saveSort'],
-            widgetOptions: {
-                // No column filters
-                filter_columnFilters: false,
-                // External filter selector
-                filter_external: '.wanteditemsfilter',
-                // Search faster (default 300)
-                filter_searchDelay: 50,
-                // Save filters
-                filter_saveFilters: true,
-                // Reset filter selector
-                filter_reset: '.wanteditemsfilterreset'
-            },
-            // Use date format 'ddmmyyyy'
-            dateFormat: 'ddmmyyyy',
-            // Force text sorter in show/movie name column (this is needed due to img in table cell)
-            // See https://github.com/Mottie/tablesorter/issues/1149
-            headers: {
-                0: {sorter: 'false'},
-                1: {sorter: 'text'}
-            },
-            // Sort default by time desc
-            sortList: [[9, 1]]
-        })
-        .tablesorterPager({
-            container: $('#wanteditemspager'),
-            output: '{startRow} to {endRow} ({filteredRows})'
-        });
-});
+// Setup the wanted items table
+$('#wanteditems')
+    .tablesorter({
+        // Enable widgets
+        widgets: ['reflow', 'filter', 'saveSort'],
+        widgetOptions: {
+            // No column filters
+            filter_columnFilters: false,
+            // External filter selector
+            filter_external: '.wanteditemsfilter',
+            // Search faster (default 300)
+            filter_searchDelay: 50,
+            // Save filters
+            filter_saveFilters: true,
+            // Reset filter selector
+            filter_reset: '.wanteditemsfilterreset'
+        },
+        // Use date format 'ddmmyyyy'
+        dateFormat: 'ddmmyyyy',
+        // Force text sorter in show/movie name column (this is needed due to img in table cell)
+        // See https://github.com/Mottie/tablesorter/issues/1149
+        headers: {
+            0: {sorter: 'false'},
+            1: {sorter: 'text'}
+        },
+        // Sort default by time desc
+        sortList: [[9, 1]]
+    })
+    .tablesorterPager({
+        container: $('#wanteditemspager'),
+        output: '{startRow} to {endRow} ({filteredRows})'
+    });
 
+// Setup the wanted items filter
 $('.wanteditemsfilterreset').on('click', function () {
     $(this).prev('input').val('').focus();
     $.tablesorter.storage($('#wanteditems'), 'tablesorter-filters', '');
 });
 
-// Enable tablesorter and tablesorterPager for lastdownloads table
-$(function () {
-    $('#lastdownloads')
-        .tablesorter({
-            // Enable widgets
-            widgets: ['reflow', 'filter', 'saveSort'],
-            widgetOptions: {
-                // No column filters
-                filter_columnFilters: false,
-                // External filter selector
-                filter_external: '.lastdownloadsfilter',
-                // Search faster (default 300)
-                filter_searchDelay: 50,
-                // Save filters
-                filter_saveFilters: true,
-                // Reset filter selector
-                filter_reset: '.lastdownloadsfilterreset'
-            },
-            // Use date format 'ddmmyyyy'
-            dateFormat: 'ddmmyyyy',
-            // Force text sorter in show/movie name column (this is needed due to img in table cell)
-            // See https://github.com/Mottie/tablesorter/issues/1149
-            headers: {
-                1: {sorter: 'text'}
-            },
-            // Sort default by time desc
-            sortList: [[9, 1]]
-        })
-        .tablesorterPager({
-            container: $('#lastdownloadspager'),
-            output: '{startRow} to {endRow} ({filteredRows})'
-        });
-});
-// Handle filter reset
+// Setup the last downloads table
+$('#lastdownloads')
+    .tablesorter({
+        // Enable widgets
+        widgets: ['reflow', 'filter', 'saveSort'],
+        widgetOptions: {
+            // No column filters
+            filter_columnFilters: false,
+            // External filter selector
+            filter_external: '.lastdownloadsfilter',
+            // Search faster (default 300)
+            filter_searchDelay: 50,
+            // Save filters
+            filter_saveFilters: true,
+            // Reset filter selector
+            filter_reset: '.lastdownloadsfilterreset'
+        },
+        // Use date format 'ddmmyyyy'
+        dateFormat: 'ddmmyyyy',
+        // Force text sorter in show/movie name column (this is needed due to img in table cell)
+        // See https://github.com/Mottie/tablesorter/issues/1149
+        headers: {
+            1: {sorter: 'text'}
+        },
+        // Sort default by time desc
+        sortList: [[9, 1]]
+    })
+    .tablesorterPager({
+        container: $('#lastdownloadspager'),
+        output: '{startRow} to {endRow} ({filteredRows})'
+    });
+
+// Setup the last downloads filter
 $('.lastdownloadsfilterreset').on('click', function () {
     $(this).prev('input').val('').focus();
     $.tablesorter.storage($('#lastdownloads'), 'tablesorter-filters', '');
 });
 
-// Activate the container-manualsearch-link
+// Setup the manual search link
 $('.container-manualsearch-link').on('click', function (event) {
-    // prevent default behaviour
+    // Prevent default behaviour
     event.preventDefault();
-    // define variables
+    // Define variables
     var searchUrl = $(this).attr('href');
     var loadingIcon = $(this).next('i');
     var contentDiv = $(this).parent('div').next('div');
-    // show the loading icon
+    // Show the loading icon
     loadingIcon.removeClass('invisible').addClass('visible');
-    // call the searchUrl
+    // Call the searchUrl
     $.get(searchUrl, function (data) {
         // hide the loading icon
         loadingIcon.removeClass('visible').addClass('invisible');
@@ -102,11 +100,11 @@ $('.container-manualsearch-link').on('click', function (event) {
     return false;
 });
 
-// Activate the update-wanted-item-link
+// Setup the update wanted items link
 $('.update-wanted-item-link').on('click', function (event) {
-    // prevent default behaviour
+    // Prevent default behaviour
     event.preventDefault();
-    // define variables
+    // Define variables
     var link = $(this);
     var updateUrl = link.attr('href');
     var updatePanel = $(this).closest('.panel-body');
@@ -120,7 +118,7 @@ $('.update-wanted-item-link').on('click', function (event) {
         'codec': updatePanel.find('input.update-wanted-item-codec').val(),
         'releasegrp': updatePanel.find('input.update-wanted-item-releasegrp').val()
     };
-    // call the updateUrl
+    // Call the updateUrl
     $.post(updateUrl, updateObj, function (data) {
         if (data) {
             // Close the dropdown
@@ -139,15 +137,15 @@ $('.update-wanted-item-link').on('click', function (event) {
     return false;
 });
 
-// Activate the reset-wanted-item-link
+// Setup the reset wanted items link
 $('.reset-wanted-item-link').on('click', function (event) {
-    // prevent default behaviour
+    // Prevent default behaviour
     event.preventDefault();
-    // define variables
+    // Define variables
     var link = $(this);
     var resetUrl = link.attr('href');
     var updatePanel = $(this).closest('.panel-body');
-    // call the resetUrl
+    // Call the resetUrl
     $.get(resetUrl, function (data) {
         if (data) {
             // Close the dropdown

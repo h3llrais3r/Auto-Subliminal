@@ -2,103 +2,105 @@
  * Javascript needed on the home-manualsearch page
  */
 
-// Activate the manualsearchvisitlink
+// Setup the manual search visit website link
 $('.manualsearchvisitlink').on('click', function (event) {
-    // prevent default behaviour
+    // Prevent default behaviour
     event.preventDefault();
-    // define variables
+    // Define variables
     var url = $(this).attr('href');
+    // Visit page
     window.open(url, '_blank');
     return false;
 });
 
-// Activate the manualsearchsavelink
+// Setup the manual search save subtitle link
 $('.manualsearchsavelink').on('click', function (event) {
-    // prevent default behaviour
+    // Prevent default behaviour
     event.preventDefault();
-    // define variables
+    // Define variables
     var url = $(this).attr('href');
-    // call the url
+    // Call url
     $.get(url, function (data) {
         emptyMessages();
         if (data['result']) {
-            // show info message
+            // Show info message
             $('#div-info').append(data['infomessage']);
         } else {
-            // show error message
+            // Show error message
             $('#div-error').append(data['errormessage']);
         }
     });
     return false;
 });
 
-// Activate the manualsearchdeletelink
+// Setup the manual search delete subtitle link
 $('.manualsearchdeletelink').on('click', function (event) {
-    // prevent default behaviour
+    // Prevent default behaviour
     event.preventDefault();
-    // define variables
+    // Define variables
     var url = $(this).attr('href');
-    // call the url
+    // Call url
     $.get(url, function (data) {
         emptyMessages();
         if (data['result']) {
-            // show info message
+            // Show info message
             $('#div-info').append(data['infomessage']);
         } else {
-            // show error message
+            // Show error message
             $('#div-error').append(data['errormessage']);
         }
     });
     return false;
 });
 
-// Activate the manualsearchplaylink
+// Setup the manual search play video link
 $('.manualsearchplaylink').on('click', function (event) {
-    // define variables
+    // Define variables
     var url = $(this).attr('href');
-    // play the video
+    // Play video
     window.location = url;
     emptyMessages();
-    // show info message
+    // Show info message
     $('#div-info').append('Trying to play the video. ');
     $('#div-info').append('If the video does not start, you\'ll need to install the \'playvideo://\' protocol first!');
     return false;
 });
 
-// Activate the manualsearchpostprocesslink
+// Setup the manual search post process link
 $('.manualsearchpostprocesslink').on('click', function (event) {
-    // prevent default behaviour
+    // Prevent default behaviour
     event.preventDefault();
-    // define variables
+    // Define variables
     var postProcessLink = $(this);
     var url = $(this).attr('href');
-    // toggle postprocessing icon
+    // Toggle postprocessing icon
     postProcessLink.find('i').toggleClass('hidden');
-    // call the url
+    // Call url
     $.get(url, function (data) {
         emptyMessages();
         if (data['result']) {
-            // toggle postprocessing icon
+            // Toggle postprocessing icon
             postProcessLink.find('i').toggleClass('hidden');
-            // redirect
+            // Redirect
             window.location.href = data['redirect'];
         } else {
-            // toggle postprocessing icon
+            // Toggle postprocessing icon
             postProcessLink.find('i').toggleClass('hidden');
-            // show error message
+            // Show error message
             $('#div-error').append(data['errormessage']);
         }
     });
     return false;
 });
 
-// Activate the text hover
-$('.dropdown-hoverintent').hoverIntent(function (event) {
-        // show the provider releases as tooltip
+// Setup the hover on the provider name to show the supported releases
+$('.dropdown-hoverintent').hoverIntent(
+    function (event) {
+        // Show the provider releases as tooltip
         $(this).next('ul').show();
     },
     function (event) {
-        // hide the provider releases as tooltip
+        // Hide the provider releases as tooltip
         $(this).next('ul').hide();
     });
 

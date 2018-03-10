@@ -12,18 +12,15 @@ var base_url = window.location.protocol + '//' + window.location.host + webroot;
  * Navbar
  * ====== */
 
-// Handle navbar active navigation button (no submit)
+// Highlight the active navigation button (without page submit)
 $('.navbar .nav a').on('click', function () {
     $('.navbar').find('.nav').find('.active').removeClass('active');
     $(this).parent().addClass('active');
 });
 
-//Handle navbar active navigation button (after submit)
-$(function () {
-    subpath = '/' + location.pathname.replace(webroot, '').split('/')[1] + '/';
-    $('.navbar').find('.nav').find('a[href=\'' + subpath + '\']')
-        .closest('li').addClass('active');
-});
+//Highlight the active navigation button (after page submit)
+var base_path = '/' + location.pathname.replace(webroot, '').split('/')[1] + '/';
+$('.navbar').find('.nav').find('a[href=\'' + base_path + '\']').closest('li').addClass('active');
 
 /* ========
  * Checkbox
@@ -33,7 +30,7 @@ $(function () {
 // <input type='checkbox' data-toggle='toggle' data-on='Enabled' data-off='Disabled' data-size='small'>
 // <input type='hidden' id='<id/name>' name='<id/name>' value='<variable_true_or_false>'>
 
-// Handle toggle checkbox values with hidden field (to support both 'on' and 'off' values on submit)
+// Handle the toggle checkbox values with a hidden field (to support both 'on' and 'off' values on submit)
 $('input[type=checkbox][data-toggle=toggle][data-on=Enabled][data-off=Disabled]').on('change', function () {
     // We need to get the parent first because bootstrap-toggle adds a toggle-group div around the checkbox
     var target = $(this).parent().next('input[type=hidden]').val();
@@ -49,38 +46,33 @@ $('input[type=checkbox][data-toggle=toggle][data-on=Enabled][data-off=Disabled]'
  * Popovers
  * ======== */
 
-$(function () {
-    $('[data-toggle=popover]').popover();
-});
+// Enable the popovers
+$('[data-toggle=popover]').popover();
 
 /* =========
  * Countdown
  * ========= */
 
-// Enable countdown until scandisk next run date
-$(function () {
-    scandisknextrundate = new Date();
-    scandisknextrundate.setTime($('#scandisk-nextrun-time-ms').val());
-    $('#scandisk-nextrun').countdown(scandisknextrundate, function (event) {
-        if (event.strftime('%H:%M:%S') == '00:00:00') {
-            $(this).text('Running...');
-        } else {
-            $(this).text(event.strftime('%H:%M:%S'));
-        }
-    });
+// Setup the countdown until scandisk next run date
+var scandisk_next_run_date = new Date();
+scandisk_next_run_date.setTime($('#scandisk-nextrun-time-ms').val());
+$('#scandisk-nextrun').countdown(scandisk_next_run_date, function (event) {
+    if (event.strftime('%H:%M:%S') == '00:00:00') {
+        $(this).text('Running...');
+    } else {
+        $(this).text(event.strftime('%H:%M:%S'));
+    }
 });
 
-// Enable countdown until checksub next run date
-$(function () {
-    checksubnextrundate = new Date();
-    checksubnextrundate.setTime($('#checksub-nextrun-time-ms').val());
-    $('#checksub-nextrun').countdown(checksubnextrundate, function (event) {
-        if (event.strftime('%H:%M:%S') == '00:00:00') {
-            $(this).text('Running...');
-        } else {
-            $(this).text(event.strftime('%H:%M:%S'));
-        }
-    });
+// Setup the countdown until checksub next run date
+var checksub_next_run_date = new Date();
+checksub_next_run_date.setTime($('#checksub-nextrun-time-ms').val());
+$('#checksub-nextrun').countdown(checksub_next_run_date, function (event) {
+    if (event.strftime('%H:%M:%S') == '00:00:00') {
+        $(this).text('Running...');
+    } else {
+        $(this).text(event.strftime('%H:%M:%S'));
+    }
 });
 
 /* =============
@@ -88,6 +80,7 @@ $(function () {
  * ============= */
 
 // By default we will use desktop notifications, but we also provide settings for fallback to browser notifications
+
 // Bottom right stack - to be aligned with desktop notifications at the right bottom
 var stack_bottomright = {
     'dir1': 'up',
@@ -97,6 +90,7 @@ var stack_bottomright = {
     'spacing1': 10,
     'spacing2': 10
 };
+
 // Alternative stack - center stack - copied from https://github.com/sciactive/pnotify/issues/46
 var stack_center = {
     'dir1': 'down',
@@ -104,16 +98,19 @@ var stack_center = {
     'firstpos1': 4,
     'firstpos2': ($(window).width() / 2) - (Number(PNotify.prototype.options.width.replace(/\D/g, '')) / 2)
 };
-// Function to adapt the center stack when resizing the browser
+
+// Handle the center stack when resizing the browser
 $(window).on('resize', function () {
     stack_center.firstpos2 = ($(window).width() / 2) - (Number(PNotify.prototype.options.width.replace(/\D/g, '')) / 2);
 });
+
 // Alternative stack - context stack
 var stack_context = {
     'dir1': 'down',
     'dir2': 'right',
     'context': $('#stack-context')
 };
+
 // PNotify default options
 PNotify.prototype.options.stack = stack_bottomright;
 PNotify.prototype.options.addclass = 'stack-bottomright';
@@ -139,6 +136,7 @@ function get_message_through_websocket(message) {
     }
 }
 
+// Function to handle the message data
 function _handle_message_data(message) {
     if (message['message_type'] == 'notification') {
         var notification = message['notification'];
@@ -178,13 +176,13 @@ function _show_notification(message, type, sticky) {
     }
 }
 
+// Function to handle an event
 function _handle_event(event_type) {
     if (event_type == 'HOME_PAGE_RELOAD') {
         // only reload when we are actually on the home page
         if (window.location.pathname.indexOf('/home') >= 0) {
-            // add delay of 1s to be sure it's not triggered immediately after a page redirect (or load)
-            // when redirecting and loading really fast after each other,
-            // it's possible that your websocket is not initialized in time and your websocket message is lost
+            // Add delay of 1s to be sure it's not triggered immediately after a page redirect (or load)
+            // When redirecting and loading really fast after each other, it's possible that your websocket is not initialized in time and your websocket message is lost
             setTimeout(function () {
                 window.location.reload();
             }, 1000);
@@ -194,9 +192,7 @@ function _handle_event(event_type) {
     }
 }
 
-// Activate the websocket message system
-$(function () {
-    ws = new WebSocket(websocket_message_url);
-    ws.onmessage = get_message_through_websocket;
-    // console.log('Websocket ready to receive messages');
-});
+// Setup the websocket message system
+var ws = new WebSocket(websocket_message_url);
+ws.onmessage = get_message_through_websocket;
+// console.log('Websocket ready to receive messages');

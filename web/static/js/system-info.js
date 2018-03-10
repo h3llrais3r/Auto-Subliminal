@@ -2,7 +2,7 @@
  * Javascript needed on the config-info page
  */
 
-// Activate the infotabs
+// Setup the info tabs
 $('#infotabs a').on('click', function (event) {
     event.preventDefault();
     $(this).tab('show');
