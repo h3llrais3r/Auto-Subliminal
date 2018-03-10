@@ -3,8 +3,10 @@
 <html lang="en">
 
     <head>
+
         <%include file="/layout/inc_header.mako"/>
         <%block name="headerContent"/>
+
     </head>
 
     <body>
@@ -18,12 +20,10 @@
                 <%block name="bodyContent"/>
             </div>
 
-            <div class="jumbotron-footer">
-                <%include file="/layout/inc_footer.mako"/>
-                <%block name="footerContent"/>
-            </div>
-
         </div>
+
+        <%include file="/layout/inc_footer.mako"/>
+        <%block name="footerContent"/>
 
     </body>
 
