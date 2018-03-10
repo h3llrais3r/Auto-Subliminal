@@ -19,7 +19,7 @@
 
                 <span class="row h4 weighted">Schedulers</span>
 
-                <table id="scheduler" class="table table-condensed table-striped table-hover">
+                <table id="scheduler" class="table table-condensed table-striped">
 
                     <thead>
                     <tr>
@@ -45,7 +45,7 @@
 
                 <span class="row h4 weighted">Disk space</span>
 
-                <table id="diskspace" class="table table-condensed table-striped table-hover">
+                <table id="diskspace" class="table table-condensed table-striped">
 
                     <thead>
                     <tr>
