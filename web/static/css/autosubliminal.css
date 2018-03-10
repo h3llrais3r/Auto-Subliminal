@@ -205,19 +205,60 @@ a:hover, a:active, a:focus, a:visited > .fa {
     text-wrap: none;
 }
 
-/***********************
- * TABLESORTER STYLING *
- ***********************/
+/*****************
+ * TABLE STYLING *
+ *****************/
 
-table.tablesorter, table {
+/* Always use bootstrap 'table' class by default on all tables to apply our styling! */
+table.table {
     border: 1px solid #dddddd;
 }
 
-table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+table.table thead tr th, table tfoot tr th {
     background-color: #eeeeee;
     border: 1px solid #dddddd;
     padding: 5px 17px 5px 4px;
 }
+
+table.table tbody tr td {
+    border: 1px dotted #eeeeee;
+}
+
+/* Inactive rows - grey out and set background color */
+table.table tbody tr.inactive td {
+    color: rgb(0, 0, 0);
+    color: rgba(0, 0, 0, 0.5);
+    background-color: #ffffff;
+}
+
+/* Inactive rows - grey out underlying items */
+table.table tbody tr.inactive td * {
+    color: rgb(0, 0, 0);
+    color: rgba(0, 0, 0, 0.5);
+}
+
+/* Inactive rows - grey out images (rgba has no effect on images, so use opacity instead) */
+table.table tbody tr.inactive td img {
+    opacity: 0.5;
+}
+
+/* Striped settings by adding 'table-striped' class -> based on bootstrap classes */
+table.table.table-striped > tbody > tr:nth-of-type(even) {
+    background-color: #f6f6f6;
+}
+
+table.table.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+/* Hover settings by adding 'table-hover' class -> based on bootstrap classes */
+table.table.table-hover > tbody > tr:hover {
+    background-color: #f3f3f3;
+}
+
+/***********************
+ * TABLESORTER STYLING *
+ ***********************/
 
 table.tablesorter thead tr .tablesorter-header {
     /* black (unsorted) double arrow (with spacing!) */
@@ -249,51 +290,15 @@ table.tablesorter thead tr .sorter-false {
     padding: 4px;
 }
 
-/* Inactive rows - grey out and set background color */
-table.tablesorter tbody tr.inactive td {
-    color: rgb(0, 0, 0);
-    color: rgba(0, 0, 0, 0.5);
-    background-color: #ffffff;
-}
-
-/* Inactive rows - grey out underlying items */
-table.tablesorter tbody tr.inactive td * {
-    color: rgb(0, 0, 0);
-    color: rgba(0, 0, 0, 0.5);
-}
-
-/* Inactive rows - grey out images (rgba has no effect on images, so use opacity instead) */
-table.tablesorter tbody tr.inactive td img {
-    opacity: 0.5;
-}
-
-table.tablesorter tbody td {
-    border: 1px dotted #eeeeee;
+/* Needed to get the filtering working. */
+/* rows hidden by filtering (needed for child rows) */
+table.tablesorter .filtered {
+    display: none;
 }
 
 .tablesorter-pager select {
     border-radius: 3px;
 }
-
-/* Copied from https://github.com/Mottie/tablesorter/blob/master/css/theme.default.css */
-/***************************************************************************************/
-
-/* Zebra Widget - row alternating colors */
-.tablesorter-default tr.odd > td {
-    background-color: #f9f9f9; /*Adapted colors to by inline with my style*/
-}
-
-.tablesorter-default tr.even > td {
-    background-color: #f3f3f3; /*Adapted colors to by inline with my style*/
-}
-
-/* Needed to get the filtering working. */
-/* rows hidden by filtering (needed for child rows) */
-.tablesorter .filtered {
-    display: none;
-}
-
-/* End copy */
 
 /* Copied from https://mottie.github.io/tablesorter/docs/example-widget-reflow.html#required_css */
 /*************************************************************************************************/
