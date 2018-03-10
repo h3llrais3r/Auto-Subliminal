@@ -6,7 +6,7 @@
 $(document).ready(function () {
     $('#scheduler').tablesorter({
         // Enable widgets
-        widgets: ['reflow', 'saveSort'],
+        widgets: ['reflow', 'saveSort', 'zebra'],
         // Sort default by thread name asc
         sortList: [[0, 0]],
         // Use date format 'ddmmyyyy'
@@ -18,7 +18,7 @@ $(document).ready(function () {
 $(document).ready(function () {
     $('#diskspace').tablesorter({
         // Enable widgets
-        widgets: ['reflow', 'saveSort'],
+        widgets: ['reflow', 'saveSort', 'zebra'],
         // Sort default by folder name asc
         sortList: [[0, 0]]
     });
