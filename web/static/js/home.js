@@ -28,7 +28,12 @@ $('#wanteditems')
             1: {sorter: 'text'}
         },
         // Sort default by time desc
-        sortList: [[9, 1]]
+        sortList: [[9, 1]],
+        // Remove loading indication and show content when initialized
+        initialized: function () {
+            $('#wanteditems').find('tbody.table-loading').remove();
+            $('#wanteditems').find('tbody.table-content').removeClass('hidden');
+        }
     })
     .tablesorterPager({
         container: $('#wanteditemspager'),
@@ -66,7 +71,12 @@ $('#lastdownloads')
             1: {sorter: 'text'}
         },
         // Sort default by time desc
-        sortList: [[9, 1]]
+        sortList: [[9, 1]],
+        // Remove loading indication and show content when initialized
+        initialized: function () {
+            $('#lastdownloads').find('tbody.table-loading').remove();
+            $('#lastdownloads').find('tbody.table-content').removeClass('hidden');
+        }
     })
     .tablesorterPager({
         container: $('#lastdownloadspager'),

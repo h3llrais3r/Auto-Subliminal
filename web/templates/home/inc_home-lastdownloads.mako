@@ -58,7 +58,15 @@
                     </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody class="table-loading">
+                    <tr>
+                        <td colspan="10" class="text-center">
+                            <i class="fa fa-refresh fa-spin fa-fw" aria-hidden="true" title="Loading..."></i>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                    <tbody class="table-content hidden">
                         % for item in lastdownloads:
                             <tr>
                                 <td class="hidden">${item['type']}</td>

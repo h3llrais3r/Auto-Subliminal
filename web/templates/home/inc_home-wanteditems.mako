@@ -64,7 +64,15 @@
                     </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody class="table-loading">
+                    <tr>
+                        <td colspan="10" class="text-center">
+                            <i class="fa fa-refresh fa-spin fa-fw" aria-hidden="true" title="Loading..."></i>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                    <tbody class="table-content hidden">
                         % for index, item in enumerate(autosubliminal.WANTEDQUEUE):
                             <% rowClass = 'wanted-item' if WantedItem(item).search_active else 'wanted-item inactive' %>
                             <tr class="${rowClass}">
