@@ -5,6 +5,7 @@
 // Setup the wanted items table
 $('#wanteditems')
     .tablesorter({
+        debug: false, // Put on true to debug
         // Enable widgets
         widgets: ['reflow', 'filter', 'saveSort'],
         widgetOptions: {
@@ -31,8 +32,9 @@ $('#wanteditems')
         sortList: [[9, 1]],
         // Remove loading indication and show content when initialized
         initialized: function () {
-            $('#wanteditems').find('tbody.table-loading').remove();
-            $('#wanteditems').find('tbody.table-content').removeClass('hidden');
+            $('#wanteditems').find('.loading-row').remove();
+            $('#wanteditems').find('.content-row').removeClass('hidden');
+            $('#wanteditems').trigger('update'); // Trigger table update for the removed loading row
         }
     })
     .tablesorterPager({
@@ -49,6 +51,7 @@ $('.wanteditemsfilterreset').on('click', function () {
 // Setup the last downloads table
 $('#lastdownloads')
     .tablesorter({
+        debug: false, // Put on true to debug
         // Enable widgets
         widgets: ['reflow', 'filter', 'saveSort'],
         widgetOptions: {
@@ -74,8 +77,9 @@ $('#lastdownloads')
         sortList: [[9, 1]],
         // Remove loading indication and show content when initialized
         initialized: function () {
-            $('#lastdownloads').find('tbody.table-loading').remove();
-            $('#lastdownloads').find('tbody.table-content').removeClass('hidden');
+            $('#lastdownloads').find('.loading-row').remove();
+            $('#lastdownloads').find('.content-row').removeClass('hidden');
+            $('#lastdownloads').trigger('update'); // Trigger table update for the removed loading row
         }
     })
     .tablesorterPager({
