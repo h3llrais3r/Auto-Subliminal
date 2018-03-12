@@ -39,7 +39,7 @@
 
 <!-- Vendor javascript -->
 <% vendor_js = autosubliminal.DEVELOPER and "vendor.js" or "vendor.min.js" %>
-<script type="text/javascript" src="${autosubliminal.WEBROOT}/js/${vendor_js}"></script>
+<script type="text/javascript" src="${autosubliminal.WEBROOT}/js/${vendor_js}?v=${appUUID}"></script>
 
 <!-- Auto-Subliminal javascript (applies to all pages) -->
-<script type="text/javascript" src="${autosubliminal.WEBROOT}/js/autosubliminal.js"></script>
+<script type="text/javascript" src="${autosubliminal.WEBROOT}/js/autosubliminal.js?v=${appUUID}"></script>

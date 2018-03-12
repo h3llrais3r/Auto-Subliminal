@@ -92,4 +92,4 @@
 </div>
 
 <!-- Need to include it here because otherwise it's loaded too early which causes some functionality to fail -->
-<script type="text/javascript" src="${autosubliminal.WEBROOT}/js/home-manualsearch.js"></script>
+<script type="text/javascript" src="${autosubliminal.WEBROOT}/js/home-manualsearch.js?v=${appUUID}"></script>

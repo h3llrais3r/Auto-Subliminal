@@ -42,6 +42,6 @@
 
 <%block name="footerContent">
 
-    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/system-info.js"></script>
+    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/system-info.js?v=${appUUID}"></script>
 
 </%block>

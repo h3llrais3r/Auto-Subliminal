@@ -38,6 +38,6 @@
 
 <%block name="footerContent">
 
-    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/error.js"></script>
+    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/error.js?v=${appUUID}"></script>
 
 </%block>

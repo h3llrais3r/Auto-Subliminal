@@ -29,6 +29,6 @@
 
 <%block name="footerContent">
 
-    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/restart.js"></script>
+    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/restart.js?v=${appUUID}"></script>
 
 </%block>

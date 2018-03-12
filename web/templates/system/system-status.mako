@@ -107,6 +107,6 @@
 
 <%block name="footerContent">
 
-    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/status.js"></script>
+    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/status.js?v=${appUUID}"></script>
 
 </%block>

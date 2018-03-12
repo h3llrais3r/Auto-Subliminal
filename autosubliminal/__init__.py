@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import os
+import uuid
 import pkg_resources
 
 from six.moves import getcwd
@@ -51,6 +52,7 @@ ARGS = None
 DAEMON = None
 STARTED = None
 PID = None
+UUID = None
 
 # General config section
 VIDEOPATHS = None
@@ -174,7 +176,7 @@ def initialize():
         DEVELOPER, \
         TVDBAPIKEY, TVDBURL, IMDBURL, SHOWINDEXER, MOVIEINDEXER, \
         DBFILE, DBVERSION, \
-        DAEMON, STARTED, PID, \
+        DAEMON, STARTED, PID, UUID, \
         PATH, VIDEOPATHS, DEFAULTLANGUAGE, DEFAULTLANGUAGESUFFIX, ADDITIONALLANGUAGES, \
         SCANDISKINTERVAL, CHECKSUBINTERVAL, CHECKVERSIONINTERVAL, CHECKVERSIONAUTOUPDATE, SCANEMBEDDEDSUBS, \
         SKIPHIDDENDIRS, DETECTINVALIDSUBLANGUAGE, DETECTEDLANGUAGEPROBABILITY, MINVIDEOFILESIZE, MAXDBRESULTS, \
@@ -234,6 +236,7 @@ def initialize():
 
     # Startup settings
     STARTED = False
+    UUID = uuid.uuid4()  # Generate random uuid each time we initialize the application
 
     # Score settings
     SHOWMINMATCHSCOREDEFAULT = 330

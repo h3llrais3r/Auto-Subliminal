@@ -889,6 +889,6 @@
 
 <%block name="footerContent">
 
-    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/config.js"></script>
+    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/config.js?v=${appUUID}"></script>
 
 </%block>

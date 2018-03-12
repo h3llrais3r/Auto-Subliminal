@@ -9,10 +9,10 @@
 
 <!-- Vendor theme -->
 <% vendor_css = autosubliminal.DEVELOPER and "vendor.css" or "vendor.min.css" %>
-<link rel="stylesheet" href="${autosubliminal.WEBROOT}/css/${vendor_css}" media="screen">
+<link rel="stylesheet" href="${autosubliminal.WEBROOT}/css/${vendor_css}?v=${appUUID}" media="screen">
 
 <!-- Auto-Subliminal theme -->
-<link rel="stylesheet" href="${autosubliminal.WEBROOT}/css/autosubliminal.css" media="screen">
+<link rel="stylesheet" href="${autosubliminal.WEBROOT}/css/autosubliminal.css?v=${appUUID}" media="screen">
 
 <script type="text/javascript">
     // Global webroot variable (can be used in Javascript files)
