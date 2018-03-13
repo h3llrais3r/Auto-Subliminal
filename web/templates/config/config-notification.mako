@@ -873,6 +873,94 @@
                             </span>
                         </div>
 
+                        <div class="form-group section-title">
+                            <div class="col-xs-12 col-md-9">
+                                <span class="badge">Telegram</span>
+                                <a href="https://telegram.org/" target="_blank">
+                                    <img class="img-notifier" src="${autosubliminal.WEBROOT}/images/notifiers/telegram.png" alt="telegram" title="telegram">
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <span class="col-xs-4 col-md-3">
+                                <label for="notifytelegram">Notify
+                                    <span class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                        </a>
+                                        <ul class="dropdown-menu has-tip info-list">
+                                            <li>When enabled, a Telegram notification will be sent when a subtitle has been downloaded.</li>
+                                        </ul>
+                                    </span>
+                                </label>
+                            </span>
+                            <span class="col-xs-8 col-md-6">
+                                <select id="notifytelegram" name="notifytelegram" class="form-control input-sm">
+                                    % if autosubliminal.NOTIFYTELEGRAM:
+                                        <option value="True" selected="selected">Enabled</option>
+                                        <option value="False">Disabled</option>
+                                    % else:
+                                        <option value="True">Enabled</option>
+                                        <option value="False" selected="selected">Disabled</option>
+                                    % endif
+                                </select>
+                            </span>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <span class="col-xs-4 col-md-3">
+                                <label for="telegrambotapi">Bot API key (token)
+                                    <span class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                        </a>
+                                        <ul class="dropdown-menu has-tip info-list">
+                                            <li>
+                                                The bot api key (token) for Telegram.<br>
+                                                Contact @BotFather on Telegram to set up one.<br>
+                                                <span>See
+                                                    <a href="https://core.telegram.org/bots" target="_blank">https://core.telegram.org/bots</a>
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </span>
+                                </label>
+                            </span>
+                            <span class="col-xs-8 col-md-6">
+                                <input type="text" value="${autosubliminal.TELEGRAMBOTAPI}" id="telegrambotapi" name="telegrambotapi" class="form-control input-sm">
+                            </span>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <span class="col-xs-4 col-md-3">
+                                <label for="telegramchatid">Chat id
+                                    <span class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                        </a>
+                                        <ul class="dropdown-menu has-tip info-list">
+                                            <li>
+                                                Unique identifier for the target chat or username of the target channel (in the format @channelusername).<br>
+                                                Contact @myidbot on Telegram to get an ID.
+                                            </li>
+                                        </ul>
+                                    </span>
+                                </label>
+                            </span>
+                            <span class="col-xs-8 col-md-6">
+                                <input type="text" value="${autosubliminal.TELEGRAMCHATID}" id="telegramchatid" name="telegramchatid" class="form-control input-sm">
+                            </span>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <span class="col-xs-4 col-md-3"></span>
+                            <span class="col-xs-8 col-md-6">
+                                <a href="${autosubliminal.WEBROOT}/config/notification/test/telegram" class="btn btn-sm btn-default btn-test">Test</a>
+                                <a href="${saveUrl}" class="btn btn-sm btn-default btn-save">Save</a>
+                            </span>
+                        </div>
+
                     </div>
 
                 </div>

@@ -535,7 +535,8 @@ class Config(object):
                  notifynma, nmaapi, nmapriority,
                  notifygrowl, growlhost, growlport, growlpass, growlpriority,
                  notifyprowl, prowlapi, prowlpriority,
-                 notifypushbullet, pushbulletapi):
+                 notifypushbullet, pushbulletapi,
+                 notifytelegram, telegrambotapi, telegramchatid):
             # Set notify variables
             autosubliminal.NOTIFY = utils.getboolean(notify)
             autosubliminal.NOTIFYMAIL = utils.getboolean(notifymail)
@@ -569,6 +570,9 @@ class Config(object):
             autosubliminal.PROWLPRIORITY = int(prowlpriority)
             autosubliminal.NOTIFYPUSHBULLET = utils.getboolean(notifypushbullet)
             autosubliminal.PUSHBULLETAPI = pushbulletapi
+            autosubliminal.NOTIFYTELEGRAM = utils.getboolean(notifytelegram)
+            autosubliminal.TELEGRAMBOTAPI = telegrambotapi
+            autosubliminal.TELEGRAMCHATID = telegramchatid
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.section)

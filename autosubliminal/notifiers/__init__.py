@@ -16,7 +16,7 @@ def _get_notifier_instance(library_name):
 
 # Supported notifier libraries must be added here
 # The name in the list must match the name of the library module
-_notifier_libraries = ['growl', 'mail', 'nma', 'prowl', 'pushalot', 'pushbullet', 'pushover', 'twitter']
+_notifier_libraries = ['growl', 'mail', 'nma', 'prowl', 'pushalot', 'pushbullet', 'pushover', 'telegram', 'twitter']
 
 # Dict of notifiers (key=name, value=notifier_instance)
 _notifiers = dict((name, _get_notifier_instance(name)) for name in _notifier_libraries)

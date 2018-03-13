@@ -633,6 +633,22 @@ def read_config(check_upgrade=False):
         else:
             autosubliminal.PUSHBULLETAPI = u'API key'
 
+        # Telegram
+        if cfg.has_option('notification', 'notifytelegram'):
+            autosubliminal.NOTIFYTELEGRAM = cfg.getboolean('notification', 'notifytelegram')
+        else:
+            autosubliminal.NOTIFYTELEGRAM = False
+
+        if cfg.has_option('notification', 'telegrambotapi'):
+            autosubliminal.TELEGRAMBOTAPI = cfg.get('notification', 'telegrambotapi')
+        else:
+            autosubliminal.TELEGRAMBOTAPI = u'API key'
+
+        if cfg.has_option('notification', 'telegramchatid'):
+            autosubliminal.TELEGRAMCHATID = cfg.get('notification', 'telegramchatid')
+        else:
+            autosubliminal.TELEGRAMCHATID = u''
+
     else:
         # Notify section is missing
         autosubliminal.NOTIFY = False
@@ -667,6 +683,9 @@ def read_config(check_upgrade=False):
         autosubliminal.PROWLPRIORITY = 0
         autosubliminal.NOTIFYPUSHBULLET = False
         autosubliminal.PUSHBULLETAPI = u'API key'
+        autosubliminal.NOTIFYTELEGRAM = False
+        autosubliminal.TELEGRAMBOTAPI = u'API key'
+        autosubliminal.TELEGRAMCHATID = u''
 
     if cfg.has_section('postprocessing'):
         if cfg.has_option('postprocessing', 'postprocess'):
@@ -1098,6 +1117,9 @@ def write_notification_section():
     cfg.set(section, 'prowlpriority', text_type(autosubliminal.PROWLPRIORITY))
     cfg.set(section, 'notifypushbullet', text_type(autosubliminal.NOTIFYPUSHBULLET))
     cfg.set(section, 'pushbulletapi', autosubliminal.PUSHBULLETAPI)
+    cfg.set(section, 'notifytelegram', text_type(autosubliminal.NOTIFYTELEGRAM))
+    cfg.set(section, 'telegrambotapi', autosubliminal.TELEGRAMBOTAPI)
+    cfg.set(section, 'telegramchatid', autosubliminal.TELEGRAMCHATID)
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
         cfg.write(f)
