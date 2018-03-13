@@ -82,7 +82,11 @@ class SubChecker(ScheduledProcess):
                 languages = wanted_item['languages']
                 for lang in languages[:]:
                     # Search the best subtitle with the minimal score
-                    subtitles, language, single = _search_subtitles(video, lang, True, provider_pool)
+                    try:
+                        subtitles, language, single = _search_subtitles(video, lang, True, provider_pool)
+                    except Exception:
+                        log.exception('Error while searching subtitles for video %r', wanted_item['videopath'])
+                        continue
 
                     # Subtitle is found for the video
                     if subtitles:
