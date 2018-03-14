@@ -321,24 +321,33 @@ def get_logfile(lognum=None):
 def display_logfile(loglevel='all', lognum=None):
     # Read log file data
     data = []
+    previous_loglevel = loglevel
     logfile = get_logfile(lognum)
     if logfile:
         f = codecs.open(logfile, 'r', 'utf-8')
         data = f.readlines()
         f.close()
-        # If reversed order is needed, use reversed(data)
-    if autosubliminal.LOGREVERSED:
-        data = reversed(data)
-        # Log data
+    # Log data
     log_data = []
     for x in data:
         try:
             matches = LOG_PARSER.search(x)
-            matchdic = matches.groupdict()
-            if (loglevel == 'all') or (matchdic['loglevel'] == loglevel.upper()):
-                log_data.append(x)
-        except Exception:
+            match_dict = matches.groupdict() if matches else None
+            if match_dict:
+                # Check if the record matches the requested loglevel
+                if (loglevel == 'all') or (match_dict['loglevel'] == loglevel.upper()):
+                    log_data.append(x)
+                # Store record loglevel as previous loglevel (needed for log records without match_dict)
+                previous_loglevel = match_dict['loglevel']
+            else:
+                # When no match is found (f.e. traceback logging) assume it's the same loglevel as the previous record
+                if (loglevel == 'all') or (previous_loglevel.upper() == loglevel.upper()):
+                    log_data.append(x)
+        except Exception as e:
             continue
+    # If reversed order is needed, use reversed(log_data)
+    if autosubliminal.LOGREVERSED:
+        log_data = reversed(log_data)
     result = cgi.escape(''.join(log_data))
     return result
 

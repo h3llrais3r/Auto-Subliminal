@@ -132,18 +132,26 @@ def test_mapping_string_to_dict():
 
 def test_display_logfile():
     try:
-        text = '2016-06-06 20:32:15,509 INFO     [MainThread :: __main__] Running application with PID: 9944'
+        line1 = u'2016-06-06 20:32:15,509 INFO     [MainThread :: __main__] Running application with PID: 9944'
+        line2 = u'traceback'
+        line3 = u'2016-06-06 20:32:15,509 DEBUG    [MainThread :: __main__] System encoding: cp1252'
+        line4 = u'2016-06-06 20:32:15,509 DEBUG    [MainThread :: __main__] Config version: 10'
+        lines = line1 + '\r\n' + line2 + '\r\n' + line3 + '\r\n' + line4 + '\r\n'
+        lines_info = line1 + '\r\n' + line2 + '\r\n'
+        lines_debug = line3 + '\r\n' + line4 + '\r\n'
+        lines_debug_reversed = line4 + '\r\n' + line3 + '\r\n'
         fd, autosubliminal.LOGFILE = tempfile.mkstemp(text=True)
         file = open(autosubliminal.LOGFILE, 'w')
-        file.write(text)
+        file.write(line1 + '\n' + line2 + '\n' + line3 + '\n' + line4 + '\n')
         file.close()
         os.close(fd)
-        assert display_logfile() == text
-        assert display_logfile(loglevel='all') == text
-        assert display_logfile(loglevel='info') == text
-        autosubliminal.LOGREVERSED = True
-        assert display_logfile(loglevel='info') == text
+        assert display_logfile() == lines
+        assert display_logfile(loglevel='all') == lines
+        assert display_logfile(loglevel='debug') == lines_debug
+        assert display_logfile(loglevel='info') == lines_info
         assert display_logfile(loglevel='error') == ''
+        autosubliminal.LOGREVERSED = True
+        assert display_logfile(loglevel='debug') == lines_debug_reversed
     finally:
         os.remove(autosubliminal.LOGFILE)
 
