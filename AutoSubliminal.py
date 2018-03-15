@@ -131,6 +131,7 @@ def main(argv=None):
     log.info('System encoding: %s', autosubliminal.SYSENCODING)
     log.info('Config version: %d', autosubliminal.CONFIGVERSION)
     log.info('Db version: %d', autosubliminal.DBVERSION)
+    log.info('#' * 40)
 
     # Start server and application
     autosubliminal.application.start_server()
