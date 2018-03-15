@@ -343,7 +343,7 @@ def display_logfile(loglevel='all', lognum=None):
                 # When no match is found (f.e. traceback logging) assume it's the same loglevel as the previous record
                 if (loglevel == 'all') or (previous_loglevel.upper() == loglevel.upper()):
                     log_data.append(x)
-        except Exception as e:
+        except Exception:
             continue
     # If reversed order is needed, use reversed(log_data)
     if autosubliminal.LOGREVERSED:
