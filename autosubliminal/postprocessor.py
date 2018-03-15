@@ -56,7 +56,7 @@ class PostProcessor(object):
 
     def _construct_process_cmd(self):
         try:
-            log.debug('#' * 30)
+            log.debug('#' * 40)
             log.debug('Command:')
             log.debug('%s', self._cmd)
             process = [self._convert_arg(self._cmd)]
@@ -88,9 +88,9 @@ class PostProcessor(object):
                 for arg in self._args:
                     log.debug('%s', arg)
                     process.append(self._convert_arg(arg))
-            log.debug('#' * 30)
+            log.debug('#' * 40)
         except UnicodeEncodeError:
-            log.debug('#' * 30)
+            log.debug('#' * 40)
             log.exception('Cannot convert post processor parameters in %s, please enable utf-8 encoding!',
                           self._encoding)
             process = None
