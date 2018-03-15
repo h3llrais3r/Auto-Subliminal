@@ -143,10 +143,10 @@ class CustomRotatingFileHandler(BaseRotatingHandler):
                 # See http://bugs.python.org/issue4749
                 #######################################
                 shutil.copy(self.baseFilename, dfn)
-                # clear base log file
-                with file(self.baseFilename, 'w'):
+                # Clear base log file
+                with open(self.baseFilename, 'w'):
                     pass
-                    #######################################
+                #######################################
 
         if not self.delay:
             self.stream = self._open()
