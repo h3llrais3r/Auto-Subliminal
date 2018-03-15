@@ -9,6 +9,7 @@ import functools as ft
 import io
 import os
 import os.path as op
+import pickletools
 import sqlite3
 import struct
 import sys
@@ -47,10 +48,11 @@ class Constant(tuple):
         return tuple.__new__(cls, (name,))
 
     def __repr__(self):
-        return self[0]
+        return '%s' % self[0]
 
 DBNAME = 'cache.db'
 ENOVAL = Constant('ENOVAL')
+UNKNOWN = Constant('UNKNOWN')
 
 MODE_NONE = 0
 MODE_RAW = 1
@@ -64,10 +66,11 @@ DEFAULT_SETTINGS = {
     u'eviction_policy': u'least-recently-stored',
     u'size_limit': 2 ** 30,  # 1gb
     u'cull_limit': 10,
+    u'sqlite_auto_vacuum': 1,        # FULL
     u'sqlite_cache_size': 2 ** 13,   # 8,192 pages
-    u'sqlite_journal_mode': u'WAL',
+    u'sqlite_journal_mode': u'wal',
     u'sqlite_mmap_size': 2 ** 26,    # 64mb
-    u'sqlite_synchronous': u'NORMAL',
+    u'sqlite_synchronous': 1,        # NORMAL
     u'disk_min_file_size': 2 ** 15,  # 32kb
     u'disk_pickle_protocol': pickle.HIGHEST_PROTOCOL,
 }
@@ -91,15 +94,15 @@ EVICTION_POLICY = {
             ' Cache (store_time)'
         ),
         'get': None,
-        'cull': 'SELECT %s FROM Cache ORDER BY store_time LIMIT ?',
+        'cull': 'SELECT {fields} FROM Cache ORDER BY store_time LIMIT ?',
     },
     'least-recently-used': {
         'init': (
             'CREATE INDEX IF NOT EXISTS Cache_access_time ON'
             ' Cache (access_time)'
         ),
-        'get': 'access_time = ((julianday("now") - 2440587.5) * 86400.0)',
-        'cull': 'SELECT %s FROM Cache ORDER BY access_time LIMIT ?',
+        'get': 'access_time = {now}',
+        'cull': 'SELECT {fields} FROM Cache ORDER BY access_time LIMIT ?',
     },
     'least-frequently-used': {
         'init': (
@@ -107,7 +110,7 @@ EVICTION_POLICY = {
             ' Cache (access_count)'
         ),
         'get': 'access_count = access_count + 1',
-        'cull': 'SELECT %s FROM Cache ORDER BY access_count LIMIT ?',
+        'cull': 'SELECT {fields} FROM Cache ORDER BY access_count LIMIT ?',
     },
 }
 
@@ -167,7 +170,8 @@ class Disk(object):
                 or (type_key is float)):
             return key, True
         else:
-            result = pickle.dumps(key, protocol=self.pickle_protocol)
+            data = pickle.dumps(key, protocol=self.pickle_protocol)
+            result = pickletools.optimize(data)
             return sqlite3.Binary(result), False
 
 
@@ -186,12 +190,13 @@ class Disk(object):
             return pickle.load(BytesIO(key))
 
 
-    def store(self, value, read):
+    def store(self, value, read, key=UNKNOWN):
         """Convert `value` to fields size, mode, filename, and value for Cache
         table.
 
         :param value: value to convert
         :param bool read: True when value is file-like object
+        :param key: key for item (default UNKNOWN)
         :return: (size, mode, filename, value) tuple for Cache table
 
         """
@@ -208,14 +213,14 @@ class Disk(object):
             if len(value) < min_file_size:
                 return 0, MODE_RAW, None, sqlite3.Binary(value)
             else:
-                filename, full_path = self.filename()
+                filename, full_path = self.filename(key, value)
 
                 with open(full_path, 'wb') as writer:
                     writer.write(value)
 
                 return len(value), MODE_BINARY, filename, None
         elif type_value is TextType:
-            filename, full_path = self.filename()
+            filename, full_path = self.filename(key, value)
 
             with io_open(full_path, 'w', encoding='UTF-8') as writer:
                 writer.write(value)
@@ -225,7 +230,7 @@ class Disk(object):
         elif read:
             size = 0
             reader = ft.partial(value.read, 2 ** 22)
-            filename, full_path = self.filename()
+            filename, full_path = self.filename(key, value)
 
             with open(full_path, 'wb') as writer:
                 for chunk in iter(reader, b''):
@@ -234,12 +239,13 @@ class Disk(object):
 
             return size, MODE_BINARY, filename, None
         else:
-            result = pickle.dumps(value, protocol=self.pickle_protocol)
+            data = pickle.dumps(value, protocol=self.pickle_protocol)
+            result = pickletools.optimize(data)
 
             if len(result) < min_file_size:
                 return 0, MODE_PICKLE, None, sqlite3.Binary(result)
             else:
-                filename, full_path = self.filename()
+                filename, full_path = self.filename(key, value)
 
                 with open(full_path, 'wb') as writer:
                     writer.write(result)
@@ -279,15 +285,25 @@ class Disk(object):
                 return pickle.load(BytesIO(value))
 
 
-    def filename(self):
+    def filename(self, key=UNKNOWN, value=UNKNOWN):
         """Return filename and full-path tuple for file storage.
 
         Filename will be a randomly generated 28 character hexadecimal string
         with ".val" suffixed. Two levels of sub-directories will be used to
         reduce the size of directories. On older filesystems, lookups in
-        directories with many files are slow.
+        directories with many files may be slow.
+
+        The default implementation ignores the `key` and `value` parameters.
+
+        In some scenarios, for example :meth:`Cache.push
+        <diskcache.Cache.push>`, the `key` or `value` may not be known when the
+        item is stored in the cache.
+
+        :param key: key for item (default UNKNOWN)
+        :param value: value for item (default UNKNOWN)
 
         """
+        # pylint: disable=unused-argument
         hex_name = codecs.encode(os.urandom(16), 'hex').decode('utf-8')
         sub_dir = op.join(hex_name[:2], hex_name[2:4])
         name = hex_name[4:] + '.val'
@@ -377,14 +393,12 @@ class Cache(object):
 
         # Setup Settings table.
 
-        sql('CREATE TABLE IF NOT EXISTS Settings ('
-            ' key TEXT NOT NULL UNIQUE,'
-            ' value)'
-        )
-
-        current_settings = dict(sql(
-            'SELECT key, value FROM Settings'
-        ).fetchall())
+        try:
+            current_settings = dict(sql(
+                'SELECT key, value FROM Settings'
+            ).fetchall())
+        except sqlite3.OperationalError:
+            current_settings = {}
 
         sets = DEFAULT_SETTINGS.copy()
         sets.update(current_settings)
@@ -392,6 +406,19 @@ class Cache(object):
 
         for key in METADATA:
             sets.pop(key, None)
+
+        # Chance to set pragmas before any tables are created.
+
+        for key, value in sorted(sets.items()):
+            if not key.startswith('sqlite_'):
+                continue
+
+            self.reset(key, value, update=False)
+
+        sql('CREATE TABLE IF NOT EXISTS Settings ('
+            ' key TEXT NOT NULL UNIQUE,'
+            ' value)'
+        )
 
         # Setup Disk object (must happen after settings initialized).
 
@@ -421,7 +448,6 @@ class Cache(object):
             ' rowid INTEGER PRIMARY KEY,'
             ' key BLOB,'
             ' raw INTEGER,'
-            ' version INTEGER DEFAULT 0,'
             ' store_time REAL,'
             ' expire_time REAL,'
             ' access_time REAL,'
@@ -490,7 +516,7 @@ class Cache(object):
 
         self.close()
         self._timeout = timeout
-        assert self._sql
+        self._sql  # pylint: disable=pointless-statement
 
 
     @property
@@ -521,6 +547,20 @@ class Cache(object):
                 timeout=self._timeout,
                 isolation_level=None,
             )
+
+            # Some SQLite pragmas work on a per-connection basis so query the
+            # Settings table and reset the pragmas. The Settings table may not
+            # exist so catch and ignore the OperationalError that may occur.
+
+            try:
+                select = 'SELECT key, value FROM Settings'
+                settings = con.execute(select).fetchall()
+            except sqlite3.OperationalError:
+                pass
+            else:
+                for key, value in settings:
+                    if key.startswith('sqlite_'):
+                        self.reset(key, value, update=False)
 
         return con.execute
 
@@ -569,7 +609,7 @@ class Cache(object):
         now = time.time()
         db_key, raw = self._disk.put(key)
         expire_time = None if expire is None else now + expire
-        size, mode, filename, db_value = self._disk.store(value, read)
+        size, mode, filename, db_value = self._disk.store(value, read, key=key)
         columns = (expire_time, tag, size, mode, filename, db_value)
 
         # The order of SELECT, UPDATE, and INSERT is important below.
@@ -619,7 +659,6 @@ class Cache(object):
         sql = self._sql
         expire_time, tag, size, mode, filename, value = columns
         sql('UPDATE Cache SET'
-            ' version = ?,'
             ' store_time = ?,'
             ' expire_time = ?,'
             ' access_time = ?,'
@@ -630,7 +669,6 @@ class Cache(object):
             ' filename = ?,'
             ' value = ?'
             ' WHERE rowid = ?', (
-                0,            # version
                 now,          # store_time
                 expire_time,
                 now,          # access_time
@@ -649,12 +687,11 @@ class Cache(object):
         sql = self._sql
         expire_time, tag, size, mode, filename, value = columns
         sql('INSERT INTO Cache('
-            ' key, raw, version, store_time, expire_time, access_time,'
+            ' key, raw, store_time, expire_time, access_time,'
             ' access_count, tag, size, mode, filename, value'
-            ') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (
+            ') VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', (
                 key,
                 raw,
-                0,           # version
                 now,         # store_time
                 expire_time,
                 now,         # access_time
@@ -668,8 +705,8 @@ class Cache(object):
         )
 
 
-    def _cull(self, now, sql, cleanup):
-        cull_limit = self.cull_limit
+    def _cull(self, now, sql, cleanup, limit=None):
+        cull_limit = self.cull_limit if limit is None else limit
 
         if cull_limit == 0:
             return
@@ -702,21 +739,20 @@ class Cache(object):
 
         # Evict keys by policy.
 
-        select_policy_template = EVICTION_POLICY[self.eviction_policy]['cull']
+        select_policy = EVICTION_POLICY[self.eviction_policy]['cull']
 
-        if select_policy_template is None or self.volume() < self.size_limit:
+        if select_policy is None or self.volume() < self.size_limit:
             return
 
-        select_policy = select_policy_template % 'filename'
-
-        rows = sql(select_policy, (cull_limit,)).fetchall()
+        select_filename = select_policy.format(fields='filename', now=now)
+        rows = sql(select_filename, (cull_limit,)).fetchall()
 
         if rows:
-            delete_policy = (
+            delete = (
                 'DELETE FROM Cache WHERE rowid IN (%s)'
-                % (select_policy_template % 'rowid')
+                % (select_policy.format(fields='rowid', now=now))
             )
-            sql(delete_policy, (cull_limit,))
+            sql(delete, (cull_limit,))
 
             for filename, in rows:
                 cleanup(filename)
@@ -746,7 +782,7 @@ class Cache(object):
         now = time.time()
         db_key, raw = self._disk.put(key)
         expire_time = None if expire is None else now + expire
-        size, mode, filename, db_value = self._disk.store(value, read)
+        size, mode, filename, db_value = self._disk.store(value, read, key=key)
         columns = (expire_time, tag, size, mode, filename, db_value)
 
         with self._transact(filename) as (sql, cleanup):
@@ -809,7 +845,7 @@ class Cache(object):
                     raise KeyError(key)
 
                 value = default + delta
-                columns = (None, None) + self._disk.store(value, False)
+                columns = (None, None) + self._disk.store(value, False, key=key)
                 self._row_insert(db_key, raw, now, columns)
                 self._cull(now, sql, cleanup)
                 return value
@@ -821,7 +857,7 @@ class Cache(object):
                     raise KeyError(key)
 
                 value = default + delta
-                columns = (None, None) + self._disk.store(value, False)
+                columns = (None, None) + self._disk.store(value, False, key=key)
                 self._row_update(rowid, now, columns)
                 self._cull(now, sql, cleanup)
                 cleanup(filename)
@@ -831,7 +867,10 @@ class Cache(object):
 
             columns = 'store_time = ?, value = ?'
             update_column = EVICTION_POLICY[self.eviction_policy]['get']
-            columns += '' if update_column is None else ', ' + update_column
+
+            if update_column is not None:
+                columns += ', ' + update_column.format(now=now)
+
             update = 'UPDATE Cache SET %s WHERE rowid = ?' % columns
             sql(update, (now, value, rowid))
 
@@ -881,7 +920,6 @@ class Cache(object):
         """
         db_key, raw = self._disk.put(key)
         update_column = EVICTION_POLICY[self.eviction_policy]['get']
-        update = 'UPDATE Cache SET %s WHERE rowid = ?'
         select = (
             'SELECT rowid, expire_time, tag, mode, filename, value'
             ' FROM Cache WHERE key = ? AND raw = ?'
@@ -913,7 +951,6 @@ class Cache(object):
                     raise
 
         else:  # Slow path, transaction required.
-
             cache_hit = (
                 'UPDATE Settings SET value = value + 1 WHERE key = "hits"'
             )
@@ -946,8 +983,11 @@ class Cache(object):
                 if self.statistics:
                     sql(cache_hit)
 
+                now = time.time()
+                update = 'UPDATE Cache SET %s WHERE rowid = ?'
+
                 if update_column is not None:
-                    sql(update % update_column, (rowid,))
+                    sql(update % update_column.format(now=now), (rowid,))
 
         if expire_time and tag:
             return (value, db_expire_time, db_tag)
@@ -1509,6 +1549,58 @@ class Cache(object):
         return self._select_delete(select, args, row_index=1)
 
 
+    def cull(self):
+        """Cull items from cache until volume is less than size limit.
+
+        Removing items is an iterative process. In each iteration, a subset of
+        items is removed. Concurrent writes may occur between iterations.
+
+        If a :exc:`Timeout` occurs, the first element of the exception's
+        `args` attribute will be the number of items removed before the
+        exception occurred.
+
+        :return: count of items removed
+        :raises Timeout: if database timeout expires
+
+        """
+        now = time.time()
+
+        # Remove expired items.
+
+        count = self.expire(now)
+
+        # Remove items by policy.
+
+        select_policy = EVICTION_POLICY[self.eviction_policy]['cull']
+
+        if select_policy is None:
+            return
+
+        select_filename = select_policy.format(fields='filename', now=now)
+
+        try:
+            while self.volume() > self.size_limit:
+                with self._transact() as (sql, cleanup):
+                    rows = sql(select_filename, (10,)).fetchall()
+
+                    if not rows:
+                        break
+
+                    count += len(rows)
+                    delete = (
+                        'DELETE FROM Cache WHERE rowid IN (%s)'
+                        % select_policy.format(fields='rowid', now=now)
+                    )
+                    sql(delete, (10,))
+
+                    for filename, in rows:
+                        cleanup(filename)
+        except Timeout:
+            raise Timeout(count)
+
+        return count
+
+
     def clear(self):
         """Remove all items from cache.
 
@@ -1734,14 +1826,15 @@ class Cache(object):
         self.__init__(*state)
 
 
-    def reset(self, key, value=ENOVAL):
+    def reset(self, key, value=ENOVAL, update=True):
         """Reset `key` and `value` item from Settings table.
+
+        Use `reset` to update the value of Cache settings correctly. Cache
+        settings are stored in the Settings table of the SQLite database. If
+        `update` is ``False`` then no attempt is made to update the database.
 
         If `value` is not given, it is reloaded from the Settings
         table. Otherwise, the Settings table is updated.
-
-        Settings attributes on cache objects are lazy-loaded and
-        read-only. Use `reset` to update the value.
 
         Settings with the ``disk_`` prefix correspond to Disk
         attributes. Updating the value will change the unprefixed attribute on
@@ -1751,8 +1844,12 @@ class Cache(object):
         pragmas. Updating the value will execute the corresponding PRAGMA
         statement.
 
+        SQLite PRAGMA statements may be executed before the Settings table
+        exists in the database by setting `update` to ``False``.
+
         :param str key: Settings key for item
         :param value: value for item (optional)
+        :param bool update: update database Settings table (default True)
         :return: updated value for item
         :raises Timeout: if database timeout expires
 
@@ -1763,9 +1860,12 @@ class Cache(object):
             setattr(self, key, value)
             return value
         else:
-            with self._transact() as (sql, _):
-                update = 'UPDATE Settings SET value = ? WHERE key = ?'
-                sql(update, (value, key))
+            if update:
+                with self._transact() as (sql, _):
+                    statement = 'UPDATE Settings SET value = ? WHERE key = ?'
+                    sql(statement, (value, key))
+            else:
+                sql = self._sql
 
             if key.startswith('sqlite_'):
 

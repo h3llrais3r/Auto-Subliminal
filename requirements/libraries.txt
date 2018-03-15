@@ -9,7 +9,7 @@ cheroot==6.0.0
 cherrypy==14.0.0
 click==6.7
 configparser==3.5.0
-diskcache==2.9.0
+diskcache==3.0.1
 dogpile.cache==0.6.4
 enum34==1.1.6
 enzyme==0.4.1
