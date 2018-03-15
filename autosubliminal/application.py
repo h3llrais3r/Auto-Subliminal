@@ -222,9 +222,8 @@ def restart(exit=False):
         popen_list += autosubliminal.ARGS
         # Stop without exit
         stop(exit=False)
-        log.info('Exiting application with PID: %s', autosubliminal.PID)
         log.info('Restarting application with command and arguments: %s', popen_list)
-        log.info('#' * 50)
+        log.info('Exiting application with PID: %s', autosubliminal.PID)
         # Shutdown
         _shutdown()
         # Start new process
