@@ -18,8 +18,8 @@ class Api(twitter.Api):
         Returns:
             data
         """
-
         url = "{0}{1}".format(self.base_url, endpoint)
+        print(url)
 
         if verb == 'POST':
             if 'media_ids' in data:
@@ -36,7 +36,7 @@ class Api(twitter.Api):
                     raw_data = requests.post(
                         url,
                         files=data,
-                        auth=self.__auth,
+                        auth=self._Api__auth,
                         timeout=self._timeout
                     )
                 except requests.RequestException as e:
@@ -47,7 +47,7 @@ class Api(twitter.Api):
                     raw_data = requests.post(
                         url,
                         data=data,
-                        auth=self.__auth,
+                        auth=self._Api__auth,
                         timeout=self._timeout
                     )
                 except requests.RequestException as e:
@@ -58,7 +58,7 @@ class Api(twitter.Api):
             try:
                 raw_data = requests.get(
                     url,
-                    auth=self.__auth,
+                    auth=self._Api__auth,
                     timeout=self._timeout)
 
             except requests.RequestException as e:

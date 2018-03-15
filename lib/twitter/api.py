@@ -37,11 +37,9 @@ import os
 try:
     # python 3
     from urllib.parse import urlparse, urlunparse, urlencode, quote_plus
-    from urllib.request import urlopen
     from urllib.request import __version__ as urllib_version
 except ImportError:
     from urlparse import urlparse, urlunparse
-    from urllib2 import urlopen
     from urllib import urlencode, quote_plus
     from urllib import __version__ as urllib_version
 
@@ -63,7 +61,8 @@ from twitter.twitter_utils import (
     calc_expected_status_length,
     is_url,
     parse_media_file,
-    enf_type)
+    enf_type,
+    parse_arg_list)
 
 from twitter.error import (
     TwitterError,
@@ -1444,14 +1443,14 @@ class Api(object):
 
         if len(words) == 1 and not is_url(words[0]):
             if len(words[0]) > CHARACTER_LIMIT:
-                raise TwitterError({"message": "Unable to split status into tweetable parts. Word was: {0}/{1}".format(len(words[0]), char_lim)})
+                raise TwitterError("Unable to split status into tweetable parts. Word was: {0}/{1}".format(len(words[0]), char_lim))
             else:
                 tweets.append(words[0])
                 return tweets
 
         for word in words:
             if len(word) > char_lim:
-                raise TwitterError({"message": "Unable to split status into tweetable parts. Word was: {0}/{1}".format(len(word), char_lim)})
+                raise TwitterError("Unable to split status into tweetable parts. Word was: {0}/{1}".format(len(word), char_lim))
             new_len = line_length
 
             if is_url(word):
@@ -1568,8 +1567,13 @@ class Api(object):
         Returns:
           A sequence of twitter.Status instances, one for each message up to count
         """
-        return self.GetUserTimeline(since_id=since_id, count=count, max_id=max_id, trim_user=trim_user,
-                                    exclude_replies=True, include_rts=True)
+        return self.GetUserTimeline(
+            since_id=since_id,
+            count=count,
+            max_id=max_id,
+            trim_user=trim_user,
+            exclude_replies=True,
+            include_rts=True)
 
     def GetReplies(self,
                    since_id=None,
@@ -1713,25 +1717,20 @@ class Api(object):
             When True, the user entities will be included. [Optional]
         """
         url = '%s/statuses/retweets_of_me.json' % self.base_url
-        parameters = {}
         if count is not None:
             try:
                 if int(count) > 100:
                     raise TwitterError({'message': "'count' may not be greater than 100"})
             except ValueError:
                 raise TwitterError({'message': "'count' must be an integer"})
-        if count:
-            parameters['count'] = count
-        if since_id:
-            parameters['since_id'] = since_id
-        if max_id:
-            parameters['max_id'] = max_id
-        if trim_user:
-            parameters['trim_user'] = trim_user
-        if not include_entities:
-            parameters['include_entities'] = include_entities
-        if not include_user_entities:
-            parameters['include_user_entities'] = include_user_entities
+        parameters = {
+            'count': count,
+            'since_id': since_id,
+            'max_id': max_id,
+            'trim_user': bool(trim_user),
+            'include_entities': bool(include_entities),
+            'include_user_entities': bool(include_user_entities),
+        }
 
         resp = self._RequestUrl(url, 'GET', data=parameters)
         data = self._ParseAndCheckTwitter(resp.content.decode('utf-8'))
@@ -2787,7 +2786,7 @@ class Api(object):
         Args:
           user_id (int, list, optional):
             A list of user_ids to retrieve extended information.
-          screen_name (str, optional):
+          screen_name (str, list, optional):
             A list of screen_names to retrieve extended information.
           users (list, optional):
             A list of twitter.User objects to retrieve extended information.
@@ -2815,10 +2814,12 @@ class Api(object):
         if len(uids):
             parameters['user_id'] = ','.join([str(u) for u in uids])
         if screen_name:
-            parameters['screen_name'] = ','.join(screen_name)
+            parameters['screen_name'] = parse_arg_list(screen_name, 'screen_name')
 
         if len(uids) > 100:
             raise TwitterError("No more than 100 users may be requested per request.")
+
+        print(parameters)
 
         resp = self._RequestUrl(url, 'GET', data=parameters)
         data = self._ParseAndCheckTwitter(resp.content.decode('utf-8'))
@@ -2915,24 +2916,18 @@ class Api(object):
           A sequence of twitter.DirectMessage instances
         """
         url = '%s/direct_messages.json' % self.base_url
-        parameters = {}
-        if since_id:
-            parameters['since_id'] = since_id
-        if max_id:
-            parameters['max_id'] = max_id
+        parameters = {
+            'full_text': bool(full_text),
+            'include_entities': bool(include_entities),
+            'max_id': max_id,
+            'since_id': since_id,
+            'skip_status': bool(skip_status),
+        }
+
         if count:
-            try:
-                parameters['count'] = int(count)
-            except ValueError:
-                raise TwitterError({'message': "count must be an integer"})
-        if not include_entities:
-            parameters['include_entities'] = 'false'
-        if skip_status:
-            parameters['skip_status'] = 1
-        if full_text:
-            parameters['full_text'] = 'true'
+            parameters['count'] = enf_type('count', int, count)
         if page:
-            parameters['page'] = page
+            parameters['page'] = enf_type('page', int, page)
 
         resp = self._RequestUrl(url, 'GET', data=parameters)
         data = self._ParseAndCheckTwitter(resp.content.decode('utf-8'))
@@ -2952,26 +2947,25 @@ class Api(object):
         """Returns a list of the direct messages sent by the authenticating user.
 
         Args:
-          since_id:
+          since_id (int, optional):
             Returns results with an ID greater than (that is, more recent
             than) the specified ID. There are limits to the number of
             Tweets which can be accessed through the API. If the limit of
             Tweets has occured since the since_id, the since_id will be
-            forced to the oldest ID available. [Optional]
-          max_id:
+            forced to the oldest ID available.
+          max_id (int, optional):
             Returns results with an ID less than (that is, older than) or
-            equal to the specified ID. [Optional]
-          count:
+            equal to the specified ID.
+          count (int, optional):
             Specifies the number of direct messages to try and retrieve, up to a
             maximum of 200. The value of count is best thought of as a limit to the
             number of Tweets to return because suspended or deleted content is
-            removed after the count has been applied. [Optional]
-          page:
+            removed after the count has been applied.
+          page (int, optional):
             Specifies the page of results to retrieve.
             Note: there are pagination limits. [Optional]
-          include_entities:
+          include_entities (bool, optional):
             The entities node will be omitted when set to False.
-            [Optional]
           return_json (bool, optional):
             If True JSON data will be returned, instead of twitter.User
 
@@ -2979,20 +2973,17 @@ class Api(object):
           A sequence of twitter.DirectMessage instances
         """
         url = '%s/direct_messages/sent.json' % self.base_url
-        parameters = {}
-        if since_id:
-            parameters['since_id'] = since_id
-        if page:
-            parameters['page'] = page
-        if max_id:
-            parameters['max_id'] = max_id
+
+        parameters = {
+            'include_entities': bool(include_entities),
+            'max_id': max_id,
+            'since_id': since_id,
+        }
+
         if count:
-            try:
-                parameters['count'] = int(count)
-            except ValueError:
-                raise TwitterError({'message': "count must be an integer"})
-        if not include_entities:
-            parameters['include_entities'] = 'false'
+            parameters['count'] = enf_type('count', int, count)
+        if page:
+            parameters['page'] = enf_type('page', int, page)
 
         resp = self._RequestUrl(url, 'GET', data=parameters)
         data = self._ParseAndCheckTwitter(resp.content.decode('utf-8'))
@@ -3241,7 +3232,7 @@ class Api(object):
         parameters = {}
 
         if user_id:
-            if isinstance(user_id, list) or isinstance(user_id, tuple):
+            if isinstance(user_id, (list, tuple)):
                 uids = list()
                 for user in user_id:
                     if isinstance(user, User):
@@ -3255,7 +3246,7 @@ class Api(object):
                 else:
                     parameters['user_id'] = enf_type('user_id', int, user_id)
         if screen_name:
-            if isinstance(screen_name, list) or isinstance(screen_name, tuple):
+            if isinstance(screen_name, (list, tuple)):
                 sn_list = list()
                 for user in screen_name:
                     if isinstance(user, User):
@@ -3269,8 +3260,7 @@ class Api(object):
                 else:
                     parameters['screen_name'] = enf_type('screen_name', str, screen_name)
         if not user_id and not screen_name:
-            raise TwitterError(
-                "Specify at least one of user_id or screen_name.")
+            raise TwitterError("Specify at least one of user_id or screen_name.")
 
         resp = self._RequestUrl(url, 'GET', data=parameters)
         data = self._ParseAndCheckTwitter(resp.content.decode('utf-8'))
@@ -3543,20 +3533,17 @@ class Api(object):
           A sequence of twitter.Status instances, one for each mention of the user.
         """
         url = '%s/statuses/mentions_timeline.json' % self.base_url
-        parameters = {}
+
+        parameters = {
+            'contributor_details': bool(contributor_details),
+            'include_entities': bool(include_entities),
+            'max_id': max_id,
+            'since_id': since_id,
+            'trim_user': bool(trim_user),
+        }
 
         if count:
             parameters['count'] = enf_type('count', int, count)
-        if since_id:
-            parameters['since_id'] = enf_type('since_id', int, since_id)
-        if max_id:
-            parameters['max_id'] = enf_type('max_id', int, max_id)
-        if trim_user:
-            parameters['trim_user'] = 1
-        if contributor_details:
-            parameters['contributor_details'] = 'true'
-        if not include_entities:
-            parameters['include_entities'] = 'false'
 
         resp = self._RequestUrl(url, 'GET', data=parameters)
         data = self._ParseAndCheckTwitter(resp.content.decode('utf-8'))
@@ -4386,49 +4373,37 @@ class Api(object):
         """Update's the authenticated user's profile data.
 
         Args:
-          name:
+          name (str, optional):
             Full name associated with the profile.
-            Maximum of 20 characters. [Optional]
-          profileURL:
+          profileURL (str, optional):
             URL associated with the profile.
             Will be prepended with "http://" if not present.
-            Maximum of 100 characters. [Optional]
-          location:
+          location (str, optional):
             The city or country describing where the user of the account is located.
             The contents are not normalized or geocoded in any way.
-            Maximum of 30 characters. [Optional]
-          description:
+          description (str, optional):
             A description of the user owning the account.
-            Maximum of 160 characters. [Optional]
-          profile_link_color:
+          profile_link_color (str, optional):
             hex value of profile color theme. formated without '#' or '0x'. Ex:  FF00FF
-            [Optional]
-          include_entities:
+          include_entities (bool, optional):
             The entities node will be omitted when set to False.
-            [Optional]
-          skip_status:
+          skip_status (bool, optional):
             When set to either True, t or 1 then statuses will not be included
-            in the returned user objects. [Optional]
+            in the returned user objects.
 
         Returns:
           A twitter.User instance representing the modified user.
         """
         url = '%s/account/update_profile.json' % (self.base_url)
-        data = {}
-        if name:
-            data['name'] = name
-        if profileURL:
-            data['url'] = profileURL
-        if location:
-            data['location'] = location
-        if description:
-            data['description'] = description
-        if profile_link_color:
-            data['profile_link_color'] = profile_link_color
-        if include_entities:
-            data['include_entities'] = include_entities
-        if skip_status:
-            data['skip_status'] = skip_status
+        data = {
+            'name': name,
+            'url': profileURL,
+            'location': location,
+            'description': description,
+            'profile_link_color': profile_link_color,
+            'include_entities': include_entities,
+            'skip_status': skip_status,
+        }
 
         resp = self._RequestUrl(url, 'POST', data=data)
         data = self._ParseAndCheckTwitter(resp.content.decode('utf-8'))
@@ -4823,10 +4798,10 @@ class Api(object):
         # Add any additional path elements to the path
         if path_elements:
             # Filter out the path elements that have a value of None
-            p = [i for i in path_elements if i]
+            filtered_elements = [i for i in path_elements if i]
             if not path.endswith('/'):
                 path += '/'
-            path += '/'.join(p)
+            path += '/'.join(filtered_elements)
 
         # Add any additional query parameters to the query string
         if extra_params and len(extra_params) > 0:
@@ -4881,7 +4856,13 @@ class Api(object):
         if not isinstance(parameters, dict):
             raise TwitterError("`parameters` must be a dict.")
         else:
-            return urlencode(dict((k, v) for k, v in parameters.items() if v is not None))
+            params = dict()
+            for k, v in parameters.items():
+                if v is not None:
+                    if getattr(v, 'encode', None):
+                        v = v.encode('utf8')
+                    params.update({k: v})
+            return urlencode(params)
 
     def _ParseAndCheckTwitter(self, json_data):
         """Try and parse the JSON returned from Twitter and return

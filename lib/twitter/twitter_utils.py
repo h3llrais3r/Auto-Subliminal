@@ -15,9 +15,13 @@ except ImportError:
 
 import requests
 from twitter import TwitterError
+import twitter
 
 if sys.version_info < (3,):
     range = xrange
+
+if sys.version_info > (3,):
+    unicode = str
 
 CHAR_RANGES = [
     range(0, 4351),
@@ -177,6 +181,8 @@ def calc_expected_status_length(status, short_url_length=23):
 
     """
     status_length = 0
+    if isinstance(status, bytes):
+        status = unicode(status)
     for word in re.split(r'\s', status):
         if is_url(word):
             status_length += short_url_length
@@ -205,7 +211,8 @@ def is_url(text):
 def http_to_file(http):
     data_file = NamedTemporaryFile()
     req = requests.get(http, stream=True)
-    data_file.write(req.raw.data)
+    for chunk in req.iter_content(chunk_size=1024 * 1024):
+        data_file.write(chunk)
     return data_file
 
 
@@ -290,3 +297,18 @@ def enf_type(field, _type, val):
         raise TwitterError({
             'message': '"{0}" must be type {1}'.format(field, _type.__name__)
         })
+
+
+def parse_arg_list(args, attr):
+    out = []
+    if isinstance(args, (str, unicode)):
+        out.append(args)
+    elif isinstance(args, twitter.User):
+        out.append(getattr(args, attr))
+    elif isinstance(args, (list, tuple)):
+        for item in args:
+            if isinstance(item, (str, unicode)):
+                out.append(item)
+            elif isinstance(item, twitter.User):
+                out.append(getattr(item, attr))
+    return ",".join([str(item) for item in out])
