@@ -35,8 +35,10 @@ class Stopwatch(object):
 	In that case, the watch is stopped when the context is exited,
 	so to read the elapsed time::
 
-	>>> watch.elapsed # doctest: +ELLIPSIS
-	datetime.timedelta(0, ...)
+	>>> watch.elapsed
+	datetime.timedelta(...)
+	>>> watch.elapsed.seconds
+	0
 	"""
 	def __init__(self):
 		self.reset()
@@ -199,11 +201,15 @@ class BackoffDelay(object):
 		self.factor = factor
 		if isinstance(limit, numbers.Number):
 			limit_ = limit
-			limit = lambda n: max(0, min(limit_, n))
+
+			def limit(n):
+				return max(0, min(limit_, n))
 		self.limit = limit
 		if isinstance(jitter, numbers.Number):
 			jitter_ = jitter
-			jitter = lambda: jitter_
+
+			def jitter():
+				return jitter_
 		self.jitter = jitter
 
 	def __call__(self):
