@@ -49,4 +49,4 @@ unidecode==1.0.22
 urllib3==1.22
 webencodings==0.5.1
 websocket-client==0.47.0
-ws4py==0.4.3
+ws4py==0.5.1
