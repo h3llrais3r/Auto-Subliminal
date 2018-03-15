@@ -32,7 +32,7 @@ bool_value = True
 list_value = []
 list_value_with_items = ['a', 'b']
 dict_value = {}
-dict_value_with_items = {'1': 'a', '2': 'b'}
+dict_value_with_items = {'1': 'a'}
 
 
 @vcr.use_cassette()
@@ -74,7 +74,7 @@ def test_save_text():
     assert safe_text(list_value) == '[]'
     assert safe_text(list_value_with_items) == '[\'a\', \'b\']'
     assert safe_text(dict_value) == '{}'
-    assert safe_text(dict_value_with_items) == '{\'1\': \'a\', \'2\': \'b\'}'
+    assert safe_text(dict_value_with_items) == '{\'1\': \'a\'}'
 
 
 def test_safe_uppercase():
@@ -95,7 +95,7 @@ def test_safe_uppercase():
     assert safe_uppercase(dict_value) is None
     assert safe_uppercase(dict_value, 'N/A') == 'N/A'
     assert safe_uppercase(dict_value_with_items, 'N/A') == 'N/A'
-    assert safe_uppercase(safe_text(dict_value_with_items), 'N/A') == '{\'1\': \'A\', \'2\': \'B\'}'
+    assert safe_uppercase(safe_text(dict_value_with_items), 'N/A') == '{\'1\': \'A\'}'
 
 
 def test_safe_trim():
