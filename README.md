@@ -86,7 +86,6 @@ How to use
  * Start the script: " python AutoSubliminal.py "
  * A web browser should now open
  * Go to the config menu, check the settings and make sure you set at least:
-    * Root path: The location where AutoSubliminal.py is located
     * Video paths: The root folder(s) of your series and/or movies
     * Default language: Your primary subtitle language
     * Subliminal settings: Your minimal match score and used providers
