@@ -25,9 +25,9 @@ def fill_addic7ed_show_id_cache():
     >>>def _search_show_id(self, series, year=None):
     """
     for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING:
-        # Dogpile cache expects byte strings as keys!
+        # Dogpile cache expects native strings as keys!
         cache_value = int(autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
-        cache_key = utils.u2b(ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX + '|' + x)
+        cache_key = utils.s2n(ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX + '|' + x)
         region.set(cache_key, cache_value)
-        cache_key = utils.u2b(CUSTOM_ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX + '|' + x)
+        cache_key = utils.s2n(CUSTOM_ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX + '|' + x)
         region.set(cache_key, cache_value)
