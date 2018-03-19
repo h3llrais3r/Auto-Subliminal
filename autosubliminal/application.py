@@ -19,7 +19,7 @@ from autosubliminal.diskscanner import DiskScanner
 from autosubliminal.scheduler import Scheduler
 from autosubliminal.subchecker import SubChecker
 from autosubliminal.versionchecker import VersionChecker
-from autosubliminal.webserver import WebServerRoot
+from autosubliminal.server.root import WebServerRoot
 from autosubliminal.websocket import WebSocketBroadCaster, WebSocketHandler
 
 log = logging.getLogger(__name__)
