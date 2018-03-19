@@ -42,6 +42,12 @@ Example commit:
 
     pip install git+https://github.com/Diaoul/subliminal.git@7bbc7a1cfc5e8f9e556998a69b655daa07c231c4#egg=subliminal -t lib
 
+Pip options:
+
+    --no-compile
+    --no-cache-dir
+    --no-binary :all:
+
 Export installed libraries to file
 ==================================
     pip freeze > requirements/libraries.txt
