@@ -5,6 +5,7 @@ import re
 
 import cherrypy
 
+from autosubliminal.server.api import Api
 from autosubliminal.server.web import redirect
 from autosubliminal.server.web.config import Config
 from autosubliminal.server.web.home import Home
@@ -44,6 +45,7 @@ class WebServerRoot(object):
         self.config = Config()
         self.log = Log()
         self.system = System()
+        self.api = Api()
 
     @cherrypy.expose
     def index(self):
