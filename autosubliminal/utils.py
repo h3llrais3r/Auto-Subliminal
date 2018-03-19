@@ -232,8 +232,8 @@ def get_alternative_show_name_mapping(show_name):
     """
     Get the list of alternative show names for a show.
 
-    :param show_name: The show name to get the alternatives for.
-    :return: A list of alternative show names or None.
+    :param show_name: The show name to get the alternatives for
+    :return: A list of alternative show names or None
     :rtype: list
     """
     show_name_sanitized = sanitize(show_name)
@@ -248,9 +248,9 @@ def get_movie_name_mapping(title, year):
     """
     Get the imdb movie name mapping for a movie.
 
-    :param title: The title of the movie.
-    :param year:  The year of the movie.
-    :return: The imdb id of the movie or None.
+    :param title: The title of the movie
+    :param year:  The year of the movie
+    :return: The imdb id of the movie or None
     :rtype: str
     """
     movie = title
@@ -267,9 +267,9 @@ def get_alternative_movie_name_mapping(title, year):
     """
     Get the list of alternative movie titles (without year).
 
-    :param title: The title of the movie.
-    :param year: The year of the movie.
-    :return: A list of alternative titles (without year) or None.
+    :param title: The title of the movie
+    :param year: The year of the movie
+    :return: A list of alternative titles (without year) or None
     :rtype: list
     """
     movie = title
