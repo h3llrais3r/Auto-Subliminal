@@ -201,9 +201,10 @@ def mapping_string_to_dict(mapping_string=None):
 def get_show_name_mapping(show_name):
     """
     Get the tvdb show name mapping for a show.
-    @param show_name: The show name to get the tvdb id for
-    @return: The tvdb show id or None
-    @rtype: int
+
+    :param show_name: The show name to get the tvdb id for
+    :return: The tvdb show id or None
+    :rtype: int
     """
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.SHOWNAMEMAPPING:
@@ -215,9 +216,10 @@ def get_show_name_mapping(show_name):
 def get_addic7ed_show_name_mapping(show_name):
     """
     Get the addic7ed show name mapping for a show.
-    @param show_name: The show name to get the addic7ed id for
-    @return: The addic7ed show id or None
-    @rtype: int
+
+    :param show_name: The show name to get the addic7ed id for
+    :return: The addic7ed show id or None
+    :rtype: int
     """
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING:
@@ -229,9 +231,10 @@ def get_addic7ed_show_name_mapping(show_name):
 def get_alternative_show_name_mapping(show_name):
     """
     Get the list of alternative show names for a show.
-    @param show_name: The show name to get the alternatives for.
-    @return: A list of alternative show names or None.
-    @rtype: list
+
+    :param show_name: The show name to get the alternatives for.
+    :return: A list of alternative show names or None.
+    :rtype: list
     """
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.ALTERNATIVESHOWNAMEMAPPING:
@@ -244,10 +247,11 @@ def get_alternative_show_name_mapping(show_name):
 def get_movie_name_mapping(title, year):
     """
     Get the imdb movie name mapping for a movie.
-    @param title: The title of the movie.
-    @param year:  The year of the movie.
-    @return: The imdb id of the movie or None.
-    @rtype: str
+
+    :param title: The title of the movie.
+    :param year:  The year of the movie.
+    :return: The imdb id of the movie or None.
+    :rtype: str
     """
     movie = title
     if year:
@@ -262,10 +266,11 @@ def get_movie_name_mapping(title, year):
 def get_alternative_movie_name_mapping(title, year):
     """
     Get the list of alternative movie titles (without year).
-    @param title: The title of the movie.
-    @param year: The year of the movie.
-    @return: A list of alternative titles (without year) or None.
-    @rtype: list
+
+    :param title: The title of the movie.
+    :param year: The year of the movie.
+    :return: A list of alternative titles (without year) or None.
+    :rtype: list
     """
     movie = title
     if year:
@@ -612,9 +617,10 @@ def set_rw_and_remove(operation, name, exc):
 def u2b(unicode_string, encoding='utf-8'):
     """
     Convert a unicode string to a byte string.
-    @param unicode_string: A unicode string
-    @param encoding: The used encoding, defaults to utf-8
-    @return: The byte string
+
+    :param unicode_string: A unicode string
+    :param encoding: The used encoding, defaults to utf-8
+    :return: The byte string
     """
     try:
         return unicode_string.encode(encoding)
@@ -629,9 +635,10 @@ def u2b(unicode_string, encoding='utf-8'):
 def b2u(byte_string, encoding='utf-8'):
     """
     Convert a byte string to a unicode string.
-    @param btype_string: A byte string
-    @param encoding: The used encoding, defaults to utf-8
-    @return: The unicode string
+
+    :param byte_string: A byte string
+    :param encoding: The used encoding, defaults to utf-8
+    :return: The unicode string
     """
     try:
         return byte_string.decode(encoding)
@@ -646,10 +653,11 @@ def b2u(byte_string, encoding='utf-8'):
 def s2n(s, encoding='utf-8', validate=False):
     """
     Convert a string value to the native string representation.
-    @param s: A string value
-    @param encoding: The used encoding, defaults to utf-8
-    @param validate: Indication if the provided native string must be validated against the provided encoding
-    @return: The native string (based on python version)
+
+    :param s: A string value
+    :param encoding: The used encoding, defaults to utf-8
+    :param validate: Indication if the provided native string must be validated against the provided encoding
+    :return: The native string (based on python version)
     """
     if PY2:
         # In Python 2, the native string type is bytes
