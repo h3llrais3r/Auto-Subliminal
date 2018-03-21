@@ -41,6 +41,21 @@ def initialize():
         log.addHandler(console)
 
 
+def update_settings():
+    # The new settings must already be set in the autosubliminal variables
+    # Only apply the settings that can be changed at runtime, others require a restart
+    logging.getLogger().setLevel(autosubliminal.LOGLEVEL)
+    for handler in logging.getLogger().handlers:
+        if isinstance(handler, CustomRotatingFileHandler):
+            handler.setLevel(autosubliminal.LOGLEVEL)
+            for log_filter in handler.filters:
+                if isinstance(log_filter, _LogFilter):
+                    log_filter.log_http_access = autosubliminal.LOGHTTPACCESS
+                    log_filter.log_external_libs = autosubliminal.LOGEXTERNALLIBS
+        elif isinstance(handler, logging.StreamHandler):
+            handler.setLevel(autosubliminal.LOGLEVELCONSOLE)
+
+
 class _LogFormatter(logging.Formatter):
     def __init__(self, detailed_format=False):
         self.detailed_format = detailed_format

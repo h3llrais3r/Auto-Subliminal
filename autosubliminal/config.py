@@ -11,7 +11,7 @@ from six import text_type
 from six.moves import getcwd
 
 import autosubliminal
-from autosubliminal import utils, version
+from autosubliminal import logger, utils, version
 
 log = logging.getLogger(__name__)
 
@@ -857,6 +857,9 @@ def write_logging_section():
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
         cfg.write(f)
 
+    # Apply logging settings
+    apply_logging()
+
 
 def write_webserver_section():
     """
@@ -1167,6 +1170,13 @@ def write_config_property(section=None, property_key=None, property_value=None):
             cfg.write(f)
 
 
+def apply_logging():
+    """
+    Apply the logging settings.
+    """
+    logger.update_settings()
+
+
 def apply_subliminal():
     """
     Apply the subliminal settings.
@@ -1298,12 +1308,8 @@ def _check_for_restart():
     checksubinterval = 86400
     checkversioninterval = 43200
     logfile = u'AutoSubliminal.log'
-    loglevel = logging.INFO
-    loglevelconsole = logging.ERROR
     logsize = 0
     lognum = 0
-    loghttpaccess = False
-    logexternallibs = False
     logdetailedformat = False
     webserverip = u'0.0.0.0'
     webserverport = 8083
@@ -1326,46 +1332,14 @@ def _check_for_restart():
         if cfg.has_option('logging', 'logfile'):
             logfile = cfg.get('logging', 'logfile')
 
-        if cfg.has_option('logging', 'loglevel'):
-            loglevel = cfg.get('logging', 'loglevel')
-            if loglevel.lower() == u'error':
-                loglevel = logging.ERROR
-            elif loglevel.lower() == u'warning':
-                loglevel = logging.WARNING
-            elif loglevel.lower() == u'debug':
-                loglevel = logging.DEBUG
-            elif loglevel.lower() == u'info':
-                loglevel = logging.INFO
-            elif loglevel.lower() == u'critical':
-                loglevel = logging.CRITICAL
-
         if cfg.has_option('logging', 'lognum'):
             lognum = cfg.getint('logging', 'lognum')
 
         if cfg.has_option('logging', 'logsize'):
             logsize = cfg.getint('logging', 'logsize')
 
-        if cfg.has_option('logging', 'loghttpaccess'):
-            loghttpaccess = cfg.getboolean('logging', 'loghttpaccess')
-
-        if cfg.has_option('logging', 'logexternallibs'):
-            logexternallibs = cfg.getboolean('logging', 'logexternallibs')
-
         if cfg.has_option('logging', 'logdetailedformat'):
             logdetailedformat = cfg.getboolean('logging', 'logdetailedformat')
-
-        if cfg.has_option('logging', 'loglevelconsole'):
-            loglevelconsole = cfg.get('logging', 'loglevelconsole')
-            if loglevelconsole.lower() == u'error':
-                loglevelconsole = logging.ERROR
-            elif loglevelconsole.lower() == u'warning':
-                loglevelconsole = logging.WARNING
-            elif loglevelconsole.lower() == u'debug':
-                loglevelconsole = logging.DEBUG
-            elif loglevelconsole.lower() == u'info':
-                loglevelconsole = logging.INFO
-            elif loglevelconsole.lower() == u'critical':
-                loglevelconsole = logging.CRITICAL
 
     if cfg.has_section('webserver'):
         if cfg.has_option('webserver', 'webserverip') and cfg.has_option('webserver', 'webserverport'):
@@ -1382,13 +1356,9 @@ def _check_for_restart():
             or checksubinterval != autosubliminal.CHECKSUBINTERVAL \
             or checkversioninterval != autosubliminal.CHECKVERSIONINTERVAL \
             or logfile != autosubliminal.LOGFILE \
-            or loglevel != autosubliminal.LOGLEVEL \
             or logsize != autosubliminal.LOGSIZE \
             or lognum != autosubliminal.LOGNUM \
-            or loghttpaccess != autosubliminal.LOGHTTPACCESS \
-            or logexternallibs != autosubliminal.LOGEXTERNALLIBS \
             or logdetailedformat != autosubliminal.LOGDETAILEDFORMAT \
-            or loglevelconsole != autosubliminal.LOGLEVELCONSOLE \
             or webserverip != autosubliminal.WEBSERVERIP \
             or webserverport != autosubliminal.WEBSERVERPORT \
             or webroot != autosubliminal.WEBROOT \
