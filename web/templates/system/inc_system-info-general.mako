@@ -69,6 +69,11 @@
     % endif
 
     <div class="form-group narrow">
+        <span class="col-xs-4 col-md-2"><label>System encoding</label></span>
+        <span class="col-xs-8 col-md-10 wrapped">${autosubliminal.SYSENCODING}</span>
+    </div>
+
+    <div class="form-group narrow">
         <span class="col-xs-4 col-md-2"><label>Python version</label></span>
         <span class="col-xs-8 col-md-10 wrapped">${sys.version}</span>
     </div>
