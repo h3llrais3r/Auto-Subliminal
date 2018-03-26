@@ -38,6 +38,7 @@ Libraries dependency tree
     |-- python-dateutil
     |-- requests
     |-- six
+|-- jsonpickle
 |-- langdetect
     |-- six
 |-- lxml (used to speed up some parsing, can be used by different libraries is available)

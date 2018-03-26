@@ -49,6 +49,7 @@ What it uses (see libraries.txt for versions)
  * guessit
  * html5lib
  * imdbpie
+ * jsonpickle
  * langdetect
  * lxml
  * mako
