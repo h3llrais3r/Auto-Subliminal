@@ -20,6 +20,7 @@ from autosubliminal.scheduler import Scheduler
 from autosubliminal.subchecker import SubChecker
 from autosubliminal.versionchecker import VersionChecker
 from autosubliminal.server.root import WebServerRoot
+from autosubliminal.util.json import json_out_handler
 from autosubliminal.websocket import WebSocketBroadCaster, WebSocketHandler
 
 log = logging.getLogger(__name__)
@@ -119,6 +120,9 @@ def _configure_server(restarting=False):
                                 'tools.auth_digest.key': 'yek.tsegid_htua.lanimilbuS-otuA'  # Can be any random string
                                 })
 
+    # Configure our custom json_out_handler (Uncomment if it should be used for any @cherrypy.tools.json_out())
+    # cherrypy.config.update({'tools.json_out.handler': json_out_handler})
+
     if not restarting:
         # Enable websocket plugin
         websocket_plugin = WebSocketPlugin(cherrypy.engine)
@@ -138,6 +142,9 @@ def _get_application_configuration():
             'tools.encode.encoding': 'utf-8',
             'tools.decode.encoding': 'utf-8',
             'tools.staticdir.root': os.path.abspath(os.path.join(autosubliminal.PATH, 'web/static')),
+        },
+        '/api': {
+            'tools.json_out.handler': json_out_handler  # Use our custom json_out_handler for /api
         },
         '/css': {
             'tools.staticdir.on': True,
