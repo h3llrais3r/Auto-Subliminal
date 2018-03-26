@@ -17,15 +17,14 @@ class Wanted(RestResource):
 
     def get(self):
         """Get the list of wanted items."""
-        if len(autosubliminal.WANTEDQUEUE) > 0:
-            return autosubliminal.WANTEDQUEUE
-        else:
-            return {}
+        return autosubliminal.WANTEDQUEUE
 
     def delete(self, wanted_item_index):
         """Delete a wanted item."""
-        if not wanted_item_index or int(wanted_item_index) >= len(autosubliminal.WANTEDQUEUE):
+        if wanted_item_index is None or int(wanted_item_index) >= len(autosubliminal.WANTEDQUEUE):
             return self._bad_request('Invalid wanted_item_index')
 
         # Remove wanted item
-        autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
+        wanted_item = autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
+
+        return wanted_item
