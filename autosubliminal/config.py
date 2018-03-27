@@ -31,9 +31,9 @@ def read_config(check_upgrade=False):
         with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
             cfg.read_file(f)
     except Exception:
-        print('********************************************************************')
-        print('ERROR: Not a valid configuration file! Using default values instead!')
-        print('********************************************************************')
+        print('***********************************************************************')
+        print('ERROR: No valid configuration file found! Using default values instead!')
+        print('***********************************************************************')
         cfg = ConfigParser()
 
     if cfg.has_section('general'):
@@ -42,13 +42,11 @@ def read_config(check_upgrade=False):
             if video_paths:
                 autosubliminal.VIDEOPATHS = video_paths.split(',')
             else:
-                print('ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead.')
+                print('ERROR: Required variable VIDEOPATHS is missing. Please configure at least 1 video path.')
                 autosubliminal.VIDEOPATHS = []
-                autosubliminal.VIDEOPATHS.append(getcwd())
         else:
-            print('ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead.')
+            print('ERROR: Required variable VIDEOPATHS is missing. Please configure at least 1 video path.')
             autosubliminal.VIDEOPATHS = []
-            autosubliminal.VIDEOPATHS.append(getcwd())
 
         if cfg.has_option('general', 'defaultlanguage'):
             autosubliminal.DEFAULTLANGUAGE = cfg.get('general', 'defaultlanguage')
@@ -132,12 +130,8 @@ def read_config(check_upgrade=False):
 
     else:
         # General section is missing
-        print('ERROR: Required general section is missing. Using default values instead.')
-        print('ERROR: Required variable PATH is missing. Using current working directory instead.')
-        autosubliminal.PATH = getcwd()
-        print('ERROR: Required variable VIDEOPATHS is missing. Using current working directory instead.')
+        print('ERROR: Required variable VIDEOPATHS is missing. Please configure at least 1 video path.')
         autosubliminal.VIDEOPATHS = []
-        autosubliminal.VIDEOPATHS.append(getcwd())
         autosubliminal.DEFAULTLANGUAGE = u'en'
         autosubliminal.DEFAULTLANGUAGESUFFIX = False
         autosubliminal.ADDITIONALLANGUAGES = []
@@ -161,7 +155,6 @@ def read_config(check_upgrade=False):
         if cfg.has_option('logging', 'logfile'):
             autosubliminal.LOGFILE = cfg.get('logging', 'logfile')
         else:
-            print('ERROR: Required variable LOGFILE is missing. Using AutoSubliminal.log instead.')
             autosubliminal.LOGFILE = u'AutoSubliminal.log'
 
         if cfg.has_option('logging', 'loglevel'):
@@ -226,7 +219,6 @@ def read_config(check_upgrade=False):
 
     else:
         # Logfile section is missing
-        print('ERROR: Required variable LOGFILE is missing. Using AutoSuliminal.log instead.')
         autosubliminal.LOGFILE = u'AutoSubliminal.log'
         autosubliminal.LOGLEVEL = logging.INFO
         autosubliminal.LOGNUM = 0
@@ -241,9 +233,11 @@ def read_config(check_upgrade=False):
         if cfg.has_option('webserver', 'webserverip') and cfg.has_option('webserver', 'webserverport'):
             autosubliminal.WEBSERVERIP = cfg.get('webserver', 'webserverip')
             autosubliminal.WEBSERVERPORT = cfg.getint('webserver', 'webserverport')
+            print('INFO: The webserver is started on %s:%d.' % (
+                autosubliminal.WEBSERVERIP, autosubliminal.WEBSERVERPORT))
 
         else:
-            print('ERROR: Webserver IP and port are required. Now setting the default values (0.0.0.0:8083).')
+            print('INFO: The webserver is started on 0.0.0.0:8083.')
             autosubliminal.WEBSERVERIP = u'0.0.0.0'
             autosubliminal.WEBSERVERPORT = 8083
 
@@ -262,7 +256,7 @@ def read_config(check_upgrade=False):
             autosubliminal.USERNAME = cfg.get('webserver', 'username')
             autosubliminal.PASSWORD = cfg.get('webserver', 'password')
         elif cfg.has_option('webserver', 'username') or cfg.has_option('webserver', 'password'):
-            print('ERROR: Both username and password are required. Now starting without authentication.')
+            print('ERROR: Both username and password are required. Starting without authentication.')
 
         if cfg.has_option('webserver', 'launchbrowser'):
             autosubliminal.LAUNCHBROWSER = cfg.getboolean('webserver', 'launchbrowser')
@@ -270,8 +264,8 @@ def read_config(check_upgrade=False):
             autosubliminal.LAUNCHBROWSER = True
     else:
         # Webserver section is missing
-        print('ERROR: The webserver section is required. Now setting the default values (0.0.0.0:8083).')
-        print('WARNING: The webserver is started without authentication.')
+        print('INFO: The webserver section is started on 0.0.0.0:8083.')
+        print('INFO: The webserver is started without authentication.')
         autosubliminal.WEBSERVERIP = u'0.0.0.0'
         autosubliminal.WEBSERVERPORT = 8083
         autosubliminal.WEBROOT = u''
