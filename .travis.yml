@@ -9,7 +9,7 @@ python:
   - "3.5"
   - "3.6"
 
-# caching
+# Caching
 cache:
   directories:
     - $HOME/.cache/pip
@@ -17,17 +17,18 @@ cache:
 before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
 
-# command(s) to install dependencies
+# Command(s) to install dependencies
 install:
   - pip install --upgrade pip
+  - pip install --upgrade six # Upgrade pip because Python 3.4 is packaged with 1.10.0 and we need at least 1.11.0
   - pip install -e .[dev,test]
   - pip install coveralls
 
-# build command(s)
+# Build command(s)
 script:
   - coverage run --branch --source=autosubliminal setup.py test
   - coverage report
 
-# after success command(s)
+# After success command(s)
 after_success:
   - coveralls
