@@ -8,7 +8,6 @@ import time
 
 from configparser import ConfigParser
 from six import text_type
-from six.moves import getcwd
 
 import autosubliminal
 from autosubliminal import logger, utils, version
