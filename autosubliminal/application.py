@@ -144,7 +144,9 @@ def _get_application_configuration():
             'tools.staticdir.root': os.path.abspath(os.path.join(autosubliminal.PATH, 'web/static')),
         },
         '/api': {
-            'tools.json_out.handler': json_out_handler  # Use our custom json_out_handler for /api
+            'tools.json_out.handler': json_out_handler,  # Use our custom json_out_handler for /api
+            'tools.response_headers.on': True,  # Always force content-type
+            'tools.response_headers.headers': [('Content-Type', 'application/json; charset=utf-8')]
         },
         '/css': {
             'tools.staticdir.on': True,
