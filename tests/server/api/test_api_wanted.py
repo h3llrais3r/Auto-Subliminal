@@ -3,7 +3,7 @@
 import jsonpickle
 
 import autosubliminal
-from autosubliminal.server.api.wanted import Wanted
+from autosubliminal.server.api.wanted import WantedAPi
 
 wanted_item = {
     'codec': u'h264',
@@ -38,7 +38,7 @@ def test_get():
     # - pickle ourselves because we don't use cherrypy.tools here
     # - force sorted keys to be able to compare results (Python 3 sorts by default)
     jsonpickle.set_encoder_options('simplejson', sort_keys=True)
-    json_out = jsonpickle.encode(Wanted().get())
+    json_out = jsonpickle.encode(WantedAPi().get())
     assert wanted_item_list_json == json_out
 
 
@@ -47,7 +47,7 @@ def test_delete():
     autosubliminal.WANTEDQUEUE = []
     autosubliminal.WANTEDQUEUE.append(wanted_item)
     # Check conversion to json (need to pickle ourselves because we don't use cherrypy.tools here)
-    json_out = jsonpickle.encode(Wanted().delete(0))
+    json_out = jsonpickle.encode(WantedAPi().delete(0))
     assert wanted_item_json == json_out
-    json_out = jsonpickle.encode(Wanted().get())
+    json_out = jsonpickle.encode(WantedAPi().get())
     assert '[]' == json_out

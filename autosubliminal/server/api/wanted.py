@@ -7,9 +7,9 @@ from autosubliminal.server.rest import RestResource
 
 
 @cherrypy.popargs('wanted_item_index')
-class Wanted(RestResource):
+class WantedApi(RestResource):
     """
-    Rest resource for handling the wanted items.
+    Rest resource for handling the wanted api.
     """
 
     def __init__(self):
@@ -20,7 +20,7 @@ class Wanted(RestResource):
         return autosubliminal.WANTEDQUEUE
 
     def delete(self, wanted_item_index):
-        """Delete a wanted item."""
+        """Delete a wanted item for the wanted queue."""
         if wanted_item_index is None or int(wanted_item_index) >= len(autosubliminal.WANTEDQUEUE):
             return self._bad_request('Invalid wanted_item_index')
 

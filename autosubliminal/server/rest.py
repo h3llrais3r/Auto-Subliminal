@@ -66,21 +66,27 @@ class RestResource(object):
 
 
 class MethodNotAllowed(cherrypy.HTTPError):
-    """Exception raised when the request method is not allowed (405)."""
+    """
+    Exception raised when the request method is not allowed (405).
+    """
 
     def __init__(self):
         cherrypy.HTTPError.__init__(self, status=405, message='Method not allowed')
 
 
 class MethodNotImplemented(cherrypy.HTTPError):
-    """Exception raised when the request method is not implemented (501)."""
+    """
+    Exception raised when the request method is not implemented (501).
+    """
 
     def __init__(self):
         cherrypy.HTTPError.__init__(self, status=501, message='Method not implemented')
 
 
 class BadRequest(cherrypy.HTTPError):
-    """Exception raised for a bad request (400)."""
+    """
+    Exception raised for a bad request (400).
+    """
 
     def __init__(self, message):
         self.args = (message,)
