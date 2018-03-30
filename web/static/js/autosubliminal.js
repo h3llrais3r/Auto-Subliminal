@@ -8,6 +8,25 @@
 
 var base_url = window.location.protocol + '//' + window.location.host + webroot;
 
+/* ================
+ * Global utilities
+ * ================ */
+
+// Jquery wrapper to post with json content-type
+$.postJSON = function (url, data, success, dataType) {
+    if (typeof data != 'string') {
+        data = JSON.stringify(data);
+    }
+    $.ajax({
+        url: url,
+        type: 'post',
+        data: data,
+        dataType: dataType || 'json',
+        contentType: 'application/json; charset=utf-8',
+        success: success
+    });
+};
+
 /* ======
  * Navbar
  * ====== */
