@@ -6,13 +6,28 @@ import autosubliminal
 from autosubliminal.server.rest import RestResource
 
 
-@cherrypy.popargs('wanted_item_index')
-class WantedApi(RestResource):
+class ItemsApi(RestResource):
     """
-    Rest resource for handling the wanted api.
+    Rest resource for handling the /api/items path.
     """
 
     def __init__(self):
+        super(ItemsApi, self).__init__()
+
+        # Add all sub paths here: /api/items/...
+        self.wanted = _WantedApi()
+
+
+@cherrypy.popargs('wanted_item_index')
+class _WantedApi(RestResource):
+    """
+    Rest resource for handling the /api/items/wanted path.
+    """
+
+    def __init__(self):
+        super(_WantedApi, self).__init__()
+
+        # Set the allowed methods
         self.allowed_methods = ('GET', 'DELETE')
 
     def get(self, wanted_item_index=None):
