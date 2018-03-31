@@ -6,7 +6,6 @@ import time
 from collections import OrderedDict
 
 import pytest
-from six import PY2, text_type, binary_type
 from vcr import VCR
 
 import autosubliminal
@@ -17,7 +16,7 @@ from autosubliminal.utils import connect_url, getboolean, safe_text, safe_trim, 
     get_alternative_movie_name_mapping, skip_show, skip_movie, display_list_single_line, display_list_multi_line, \
     display_item, display_title, display_name, display_timestamp, convert_timestamp, humanize_bytes, \
     get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, get_common_path, get_root_path, \
-    get_file_size, set_rw_and_remove, u2b, b2u, s2n
+    get_file_size, set_rw_and_remove
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -366,28 +365,3 @@ def test_set_rw_and_remove():
     finally:
         if os.path.exists(file_path):
             os.remove(file_path)
-
-
-def test_u2b():
-    assert u2b(u'élà') == b'\xc3\xa9l\xc3\xa0'
-
-
-def test_b2u():
-    assert b2u(b'\xc3\xa9l\xc3\xa0') == u'élà'
-
-
-def test_s2n():
-    s1 = u'élà'
-    s2 = b'\xc3\xa9l\xc3\xa0'
-    if PY2:
-        assert s2n(s1) == b'\xc3\xa9l\xc3\xa0'
-        assert s2n(s1, validate=True) == b'\xc3\xa9l\xc3\xa0'
-        assert isinstance(s2n(s1), binary_type)
-        assert s2n(s2) == b'\xc3\xa9l\xc3\xa0'
-        assert isinstance(s2n(s2), binary_type)
-    else:
-        assert s2n(s1) == u'élà'
-        assert s2n(s1, validate=True) == u'élà'
-        assert isinstance(s2n(s1), text_type)
-        assert s2n(s2) == u'élà'
-        assert isinstance(s2n(s2), text_type)

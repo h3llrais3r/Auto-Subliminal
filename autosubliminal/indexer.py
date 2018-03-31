@@ -3,7 +3,6 @@
 import abc
 import logging
 import re
-
 from functools import wraps
 from time import time
 
@@ -15,6 +14,7 @@ from unidecode import unidecode
 import autosubliminal
 from autosubliminal import utils
 from autosubliminal.db import ImdbIdCache, TvdbIdCache
+from autosubliminal.util.encoding import s2n
 
 log = logging.getLogger(__name__)
 
@@ -78,7 +78,7 @@ class ShowIndexer(Indexer):
         log.info('Querying tvdb api for %s', name)
         # Return a tvdb_api_v2.models.series_search.SeriesSearch object
         # Make sure to convert it to native string before searching (to prevent unicode encoding error)
-        series_search = self._client.search_series_by_name(utils.s2n(name), language=language)
+        series_search = self._client.search_series_by_name(s2n(name), language=language)
         for series_search_data in series_search.data:
             if utils.sanitize(series_search_data.series_name) == utils.sanitize(name):
                 return series_search_data

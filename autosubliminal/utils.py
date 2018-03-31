@@ -15,7 +15,7 @@ import time
 from functools import wraps
 
 import requests
-from six import PY2, text_type, binary_type
+from six import text_type
 
 import autosubliminal
 
@@ -612,67 +612,3 @@ def get_disk_space_details(directory):
 def set_rw_and_remove(operation, name, exc):
     os.chmod(name, stat.S_IWRITE)
     os.remove(name)
-
-
-def u2b(unicode_string, encoding='utf-8'):
-    """
-    Convert a unicode string to a byte string.
-
-    :param unicode_string: A unicode string
-    :param encoding: The used encoding, defaults to utf-8
-    :return: The byte string
-    """
-    try:
-        return unicode_string.encode(encoding)
-    except Exception:
-        # Fallback to 'replace' and 'ignore' error mode
-        try:
-            return unicode_string.encode(encoding, 'replace')
-        except Exception:
-            return unicode_string.encode(encoding, 'ignore')
-
-
-def b2u(byte_string, encoding='utf-8'):
-    """
-    Convert a byte string to a unicode string.
-
-    :param byte_string: A byte string
-    :param encoding: The used encoding, defaults to utf-8
-    :return: The unicode string
-    """
-    try:
-        return byte_string.decode(encoding)
-    except Exception:
-        # Fallback to 'replace' and 'ignore' error mode
-        try:
-            return byte_string.decode(encoding, 'replace')
-        except Exception:
-            return byte_string.decode(encoding, 'ignore')
-
-
-def s2n(s, encoding='utf-8', validate=False):
-    """
-    Convert a string value to the native string representation.
-
-    :param s: A string value
-    :param encoding: The used encoding, defaults to utf-8
-    :param validate: Indication if the provided native string must be validated against the provided encoding
-    :return: The native string (based on python version)
-    """
-    if PY2:
-        # In Python 2, the native string type is bytes
-        if isinstance(s, text_type):  # unicode for Python 2
-            return s.encode(encoding)
-        elif validate:
-            # Test if the provided native string can be represented with the provided encoding
-            return s.decode(encoding).encode(encoding)
-        else:
-            return s
-    else:
-        # In Python 3, the native string type is unicode
-        if isinstance(s, binary_type):  # bytes for Python 3
-            return s.decode(encoding)
-        elif validate:
-            return s.encode(encoding).decode(encoding)
-        else:
-            return s

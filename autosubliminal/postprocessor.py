@@ -4,6 +4,7 @@ import logging
 
 import autosubliminal
 from autosubliminal import utils
+from autosubliminal.util.encoding import b2u, s2n
 
 log = logging.getLogger(__name__)
 
@@ -99,13 +100,13 @@ class PostProcessor(object):
 
     def _convert_arg(self, arg):
         # Arguments should be sent in native strings (validate if the args can be sent in the specified encoding)
-        return utils.s2n(arg, encoding=self._encoding, validate=True)
+        return s2n(arg, encoding=self._encoding, validate=True)
 
     def _log_process_output(self, message, output, log_level):
         # Process output is always in bytes
         # We expect the encoding of the output to be the same as the encoding we used
         try:
-            output_u = utils.safe_trim(utils.b2u(output, self._encoding))
+            output_u = utils.safe_trim(b2u(output, self._encoding))
             log.log(log_level, '%s%s', message, output_u)
         except Exception:
             log.exception('Unable to log process output')

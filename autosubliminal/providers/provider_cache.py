@@ -3,7 +3,7 @@
 from subliminal.cache import region
 
 import autosubliminal
-from autosubliminal import utils
+from autosubliminal.util.encoding import s2n
 
 # Addic7ed _search_show_id prefix (provide it for both subliminal version and our custom version)
 ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX = 'subliminal.providers.addic7ed:_search_show_id'
@@ -27,7 +27,7 @@ def fill_addic7ed_show_id_cache():
     for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING:
         # Dogpile cache expects native strings as keys!
         cache_value = int(autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
-        cache_key = utils.s2n(ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX + '|' + x)
+        cache_key = s2n(ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX + '|' + x)
         region.set(cache_key, cache_value)
-        cache_key = utils.s2n(CUSTOM_ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX + '|' + x)
+        cache_key = s2n(CUSTOM_ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX + '|' + x)
         region.set(cache_key, cache_value)
