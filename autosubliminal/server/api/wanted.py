@@ -15,13 +15,18 @@ class WantedApi(RestResource):
     def __init__(self):
         self.allowed_methods = ('GET', 'DELETE')
 
-    def get(self):
-        """Get the list of wanted items."""
-        return autosubliminal.WANTEDQUEUE
+    def get(self, wanted_item_index=None):
+        """Get the list of wanted items or a single wanted item."""
+        if wanted_item_index is None:
+            return autosubliminal.WANTEDQUEUE
+        elif 0 <= int(wanted_item_index) < len(autosubliminal.WANTEDQUEUE):
+            return autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+        else:
+            return self._bad_request('Invalid wanted_item_index')
 
     def delete(self, wanted_item_index):
         """Delete a wanted item for the wanted queue."""
-        if wanted_item_index is None or int(wanted_item_index) >= len(autosubliminal.WANTEDQUEUE):
+        if wanted_item_index is None or not (0 <= int(wanted_item_index) < len(autosubliminal.WANTEDQUEUE)):
             return self._bad_request('Invalid wanted_item_index')
 
         # Remove wanted item
