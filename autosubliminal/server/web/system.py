@@ -5,7 +5,7 @@ import json
 import cherrypy
 
 import autosubliminal
-from autosubliminal import utils, runner
+from autosubliminal import system, utils
 from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache, WantedItems
 from autosubliminal.server.web import redirect, redirect_referer
 from autosubliminal.templates.page import PageTemplate
@@ -25,13 +25,13 @@ class System(object):
 
     @cherrypy.expose
     def restart(self):
-        runner.restart_app()
+        system.restart()
         message = 'Auto-Subliminal is restarting...'
         return PageTemplate(filename='/system/system-restart.mako').render(message=message)
 
     @cherrypy.expose
     def shutdown(self):
-        runner.shutdown_app()
+        system.shutdown()
         message = 'Auto-Subliminal is shutting down...'
         return PageTemplate(filename='/general/message.mako').render(message=message)
 
@@ -61,7 +61,7 @@ class System(object):
     @cherrypy.expose(alias='updateVersion')
     def update_version(self):
         autosubliminal.CHECKVERSION.process.update()
-        runner.restart_app(exit=True)
+        system.restart(exit=True)
         message = 'Auto-Subliminal is restarting...'
         return PageTemplate(filename='/system/system-restart.mako').render(message=message)
 

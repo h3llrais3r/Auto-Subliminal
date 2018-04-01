@@ -7,8 +7,6 @@ import time
 
 from six import add_metaclass
 
-import autosubliminal.application
-
 log = logging.getLogger(__name__)
 
 
@@ -43,19 +41,3 @@ class Runner(object):
         log.info('Stopping thread %s', self.name)
         self._force_stop = True
         self._thread.join(10)
-
-
-def restart_app(exit=False):
-    """
-    Runner function to restart the application.
-    """
-    threading.Thread(target=autosubliminal.application.restart, kwargs={'exit': exit}, name='AppRestarter').start()
-
-
-def shutdown_app():
-    """
-    Runner function to shutdown the application.
-    """
-    timer = threading.Timer(2, autosubliminal.application.stop)
-    timer.name = 'AppKiller'
-    timer.start()

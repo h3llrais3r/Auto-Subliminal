@@ -14,7 +14,7 @@ except ImportError:
     pass
 
 import autosubliminal
-from autosubliminal import runner, utils
+from autosubliminal import system, utils
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.enums import InstallType
 from autosubliminal.version import RELEASE_VERSION
@@ -64,7 +64,7 @@ class VersionChecker(ScheduledProcess):
         if not force_run and self.manager.update_allowed and autosubliminal.CHECKVERSIONAUTOUPDATE:
             self.update()
             # Restart the app with exit of current process to have a clean restart
-            runner.restart_app(exit=True)
+            system.restart(exit=True)
 
         # Always return 'True' because we don't want to retry it until the next scheduled run
         return True

@@ -7,7 +7,7 @@ import cherrypy
 from ws4py.websocket import WebSocket
 
 import autosubliminal
-from autosubliminal.runner import Runner
+from autosubliminal.core.runner import Runner
 
 log = logging.getLogger(__name__)
 
