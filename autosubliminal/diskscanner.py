@@ -13,8 +13,8 @@ from enzyme.mkv import MKV
 
 import autosubliminal
 from autosubliminal import utils, fileprocessor
+from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import WantedItems
-from autosubliminal.scheduler import ScheduledProcess
 
 log = logging.getLogger(__name__)
 

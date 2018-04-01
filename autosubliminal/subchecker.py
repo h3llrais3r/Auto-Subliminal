@@ -20,11 +20,11 @@ from subliminal.video import Episode, Movie
 
 import autosubliminal
 from autosubliminal import utils
+from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import WantedItems
 from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.providers import provider_cache
 from autosubliminal.providers.addic7ed import Addic7edSubtitle as Addic7edSubtitleRandomUserAgent
-from autosubliminal.scheduler import ScheduledProcess
 from autosubliminal.subdownloader import SubDownloader
 from autosubliminal.wanteditem import WantedItem
 

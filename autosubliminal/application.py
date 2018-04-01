@@ -14,8 +14,8 @@ from ws4py.manager import WebSocketManager
 from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool
 
 import autosubliminal
+from autosubliminal.core.scheduler import Scheduler
 from autosubliminal.diskscanner import DiskScanner
-from autosubliminal.scheduler import Scheduler
 from autosubliminal.subchecker import SubChecker
 from autosubliminal.versionchecker import VersionChecker
 from autosubliminal.server.root import WebServerRoot

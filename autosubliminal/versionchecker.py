@@ -15,8 +15,8 @@ except ImportError:
 
 import autosubliminal
 from autosubliminal import runner, utils
+from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.enums import InstallType
-from autosubliminal.scheduler import ScheduledProcess
 from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
