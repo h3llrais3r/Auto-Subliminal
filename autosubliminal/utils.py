@@ -41,18 +41,18 @@ def today():
 
 def add_event_message(event_type):
     """
-    Add an event message. The event type decides the event to handle.
+    Add a websocket event message. The event type decides the event to handle.
     Possible values for event type are:
     - HOME_PAGE_RELOAD
     """
     event = {'event_type': event_type}
     message_dict = {'message_type': 'event', 'event': event}
-    autosubliminal.MESSAGEQUEUE.append(message_dict)
+    autosubliminal.WEBSOCKETMESSAGEQUEUE.append(message_dict)
 
 
 def add_notification_message(notification_message, notification_type='info', sticky=False):
     """
-    Add a notification message with a specific notification type.
+    Add a websocket notification message with a specific notification type.
     Possible values for notification type are (to be in sync with PNotify jquery plugin):
     - info (blue)
     - success (green)
@@ -64,7 +64,7 @@ def add_notification_message(notification_message, notification_type='info', sti
                     'notification_type': notification_type,
                     'sticky': sticky}
     message_dict = {'message_type': 'notification', 'notification': notification}
-    autosubliminal.MESSAGEQUEUE.append(message_dict)
+    autosubliminal.WEBSOCKETMESSAGEQUEUE.append(message_dict)
 
 
 def run_cmd(cmd, communicate=True):

@@ -109,8 +109,8 @@ class System(object):
             return callback + '(' + json.dumps({'msg': 'False'}) + ');'
 
     @cherrypy.expose
-    def message(self):
-        # Handle message via websocket (no logic needed for now)
+    def websocket(self):
+        # Websocket path (no logic needed for now)
         # You can access the websocket handler class instance through:
         # handler = cherrypy.request.ws_handler
         pass

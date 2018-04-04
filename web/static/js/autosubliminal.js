@@ -1,4 +1,4 @@
-/*!
+/**
  * Javascript for general Auto-Subliminal stuff
  */
 
@@ -142,34 +142,43 @@ PNotify.desktop.permission(); // Check for permission for desktop notifications
  * Websockets
  * ========== */
 
-// Set the websocket_message_url variable
-var websocket_message_url = 'ws://' + window.location.host + webroot + '/system/message';
+// Setup the websocket system
+var websocket_url = 'ws://' + window.location.host + webroot + '/system/websocket';
+var ws = new WebSocket(websocket_url);
+ws.onmessage = get_message_through_websocket;
+// console.log('Websocket ready to receive messages');
 
 // Function to get a message through websocket
 function get_message_through_websocket(message) {
-    data = message.data;
+    var data = message.data;
     // console.log('Received websocket message: ' + data);
     if (!jQuery.isEmptyObject(data)) {
-        data_json = JSON.parse(data);
-        _handle_message_data(data_json);
+        var data_json = JSON.parse(data);
+        _handle_message(data_json);
     }
 }
 
-// Function to handle the message data
-function _handle_message_data(message) {
+// Function to send a message through the websocket to the server
+function send_message_through_websocket(message) {
+    ws.send(message);
+}
+
+// Function to handle the message
+function _handle_message(message) {
     if (message['message_type'] == 'notification') {
-        var notification = message['notification'];
-        _show_notification(notification['notification_message'], notification['notification_type'], notification['sticky']);
+        _show_notification(message['notification']);
     } else if (message['message_type'] == 'event') {
-        var event = data_json['event'];
-        _handle_event(event['event_type']);
+        _handle_event(message['event']);
     } else {
         console.error('Unsupported message: ' + message)
     }
 }
 
-// Function to show a notification message
-function _show_notification(message, type, sticky) {
+// Function to show a notification
+function _show_notification(notification) {
+    var message = notification['notification_message'];
+    var type = notification['notification_type'];
+    var sticky = notification['sticky'];
     // Sticky location - use stack_context
     if (sticky) {
         new PNotify({
@@ -196,7 +205,8 @@ function _show_notification(message, type, sticky) {
 }
 
 // Function to handle an event
-function _handle_event(event_type) {
+function _handle_event(event) {
+    var event_type = event['event_type']
     if (event_type == 'HOME_PAGE_RELOAD') {
         // only reload when we are actually on the home page
         if (window.location.pathname.indexOf('/home') >= 0) {
@@ -211,7 +221,15 @@ function _handle_event(event_type) {
     }
 }
 
-// Setup the websocket message system
-var ws = new WebSocket(websocket_message_url);
-ws.onmessage = get_message_through_websocket;
-// console.log('Websocket ready to receive messages');
+// Function to run a process on the server through the websocket system
+function run_process_on_server(process_name) {
+    // Construct the event message
+    var event_message = {
+        'message_type': 'event',
+        'event': {
+            'event_type': 'RUN_PROCESS',
+            'process': process_name
+        }
+    }
+    send_message_through_websocket(JSON.stringify(event_message));
+}

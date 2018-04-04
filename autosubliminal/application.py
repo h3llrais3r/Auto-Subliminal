@@ -177,7 +177,7 @@ def _get_application_configuration():
             'tools.staticfile.filename': os.path.abspath(
                 os.path.join(autosubliminal.PATH, 'web/static/images/favicon.ico'))
         },
-        '/system/message': {
+        '/system/websocket': {
             'tools.websocket.on': True,
             'tools.websocket.handler_cls': WebSocketHandler
         }
