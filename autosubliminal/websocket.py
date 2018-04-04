@@ -30,7 +30,7 @@ class WebSocketHandler(WebSocket):
         else:
             log.warning('Unsupported message received on websocket server: %r', message)
 
-    def handle_event_message(self, message):
+    def handle_message(self, message):
         handled = False
         # Check for a valid event message structure
         if 'message_type' in message and message['message_type'] in message:
