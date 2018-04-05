@@ -5,7 +5,7 @@
 
     import autosubliminal
     from autosubliminal import version
-    from autosubliminal.enums import InstallType
+    from autosubliminal.core.enums import InstallType
 %>
 
 <%

@@ -3,8 +3,8 @@
 import abc
 import logging
 import re
-
 from distutils import version
+
 from six import add_metaclass, text_type
 
 try:
@@ -15,8 +15,8 @@ except ImportError:
 
 import autosubliminal
 from autosubliminal import system, utils
+from autosubliminal.core.enums import InstallType
 from autosubliminal.core.scheduler import ScheduledProcess
-from autosubliminal.enums import InstallType
 from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
