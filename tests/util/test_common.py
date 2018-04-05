@@ -13,8 +13,7 @@ from autosubliminal import version
 from autosubliminal.util.common import connect_url, get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, \
     display_logfile, display_mapping_dict, skip_show, skip_movie, display_list_single_line, display_list_multi_line, \
     display_item, display_title, display_name, display_timestamp, convert_timestamp, humanize_bytes, \
-    get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, get_common_path, get_root_path, \
-    get_file_size, set_rw_and_remove
+    get_common_path, get_root_path, get_file_size, set_rw_and_remove
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -258,25 +257,6 @@ def test_humanize_bytes():
     assert humanize_bytes(1024 * 1234, 2) == '1.21 MB'
     assert humanize_bytes(1024 * 1234 * 1111, 2) == '1.31 GB'
     assert humanize_bytes(1024 * 1234 * 1111, 1) == '1.3 GB'
-
-
-def test_wanted_queue_lock():
-    assert get_wanted_queue_lock()
-    assert autosubliminal.WANTEDQUEUELOCK
-    assert not get_wanted_queue_lock()
-    assert autosubliminal.WANTEDQUEUELOCK
-    release_wanted_queue_lock()
-    assert not autosubliminal.WANTEDQUEUELOCK
-    release_wanted_queue_lock()
-    assert not autosubliminal.WANTEDQUEUELOCK
-
-
-def test_count_wanted_items():
-    autosubliminal.WANTEDQUEUE = [{'type': 'movie', 'title': 'title1'}, {'type': 'episode', 'title': 'title2'}]
-    assert count_wanted_items() == 2
-    assert count_wanted_items(itemtype='movie') == 1
-    assert count_wanted_items(itemtype='episode') == 1
-    assert count_wanted_items(itemtype='video') == 0
 
 
 def test_get_common_path():

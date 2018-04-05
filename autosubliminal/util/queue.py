@@ -1,0 +1,62 @@
+# coding=utf-8
+
+import logging
+import threading
+from functools import wraps
+
+import autosubliminal
+
+log = logging.getLogger(__name__)
+
+_lock = threading.Lock()
+
+
+def get_wanted_queue_lock():
+    with _lock:
+        if autosubliminal.WANTEDQUEUELOCK:
+            log.debug('Cannot get wanted queue lock, skipping')
+            return False
+        else:
+            log.debug('Getting wanted queue lock')
+            autosubliminal.WANTEDQUEUELOCK = True
+            return True
+
+
+def release_wanted_queue_lock():
+    with _lock:
+        if autosubliminal.WANTEDQUEUELOCK:
+            log.debug('Releasing wanted queue lock')
+            autosubliminal.WANTEDQUEUELOCK = False
+        else:
+            log.warning('Trying to release a wanted queue lock while there is no lock')
+
+
+def release_wanted_queue_lock_on_exception(func):
+    """
+    Decorator to force the release of the wanted queue lock on unexpected exceptions.
+    This should be used on every place where we do a get_wanted_queue_lock to release it also on unexpected exceptions.
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            with _lock:
+                if autosubliminal.WANTEDQUEUELOCK:
+                    log.exception('Releasing wanted queue lock with force due to exception')
+                    autosubliminal.WANTEDQUEUELOCK = False
+            raise e
+
+    return wrapper
+
+
+def count_wanted_queue_items(itemtype=None):
+    size = 0
+    if not itemtype:
+        size = len(autosubliminal.WANTEDQUEUE)
+    else:
+        for item in autosubliminal.WANTEDQUEUE:
+            if item['type'] == itemtype:
+                size += 1
+    return size

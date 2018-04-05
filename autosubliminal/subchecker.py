@@ -26,8 +26,10 @@ from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.providers import provider_cache
 from autosubliminal.providers.addic7ed import Addic7edSubtitle as Addic7edSubtitleRandomUserAgent
 from autosubliminal.subdownloader import SubDownloader
-from autosubliminal.util.common import add_event_message, add_notification_message, get_wanted_queue_lock, \
-    release_wanted_queue_lock, release_wanted_queue_lock_on_exception, set_rw_and_remove, wait_for_internet_connection
+from autosubliminal.util.common import add_event_message, add_notification_message, set_rw_and_remove, \
+    wait_for_internet_connection
+from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, \
+    release_wanted_queue_lock_on_exception
 
 log = logging.getLogger(__name__)
 

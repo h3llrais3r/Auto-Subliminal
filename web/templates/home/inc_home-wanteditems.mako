@@ -3,15 +3,16 @@
 
     import autosubliminal
     from autosubliminal.core.item import WantedItem
-    from autosubliminal.util.common import convert_timestamp, display_item, display_title, get_file_size, count_wanted_items
+    from autosubliminal.util.common import convert_timestamp, display_item, display_title, get_file_size
+    from autosubliminal.util.queue import count_wanted_queue_items
 %>
 
 <%block name="bodyContent">
 
     <%
-        total = count_wanted_items()
-        total_shows = count_wanted_items('episode')
-        total_movies = count_wanted_items('movie')
+        total = count_wanted_queue_items()
+        total_shows = count_wanted_queue_items('episode')
+        total_movies = count_wanted_queue_items('movie')
     %>
 
     <div class="container">
