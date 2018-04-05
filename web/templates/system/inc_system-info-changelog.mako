@@ -1,13 +1,13 @@
 <%!
     from bs4 import BeautifulSoup
 
-    from autosubliminal.util import common
+    from autosubliminal.util.common import connect_url
 %>
 
 <%
     parsed = True
     try:
-        response = utils.connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/master/changelog.html')
+        response = connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/master/changelog.html')
         page = BeautifulSoup(response.text, 'html5lib')
         releases = page.find_all("div", "release")
     except Exception:
