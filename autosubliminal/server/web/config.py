@@ -7,7 +7,8 @@ import autosubliminal
 from autosubliminal import config, notifiers
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
-from autosubliminal.util.common import add_notification_message, get_boolean, mapping_string_to_dict
+from autosubliminal.util.common import add_notification_message, get_boolean
+from autosubliminal.util.mapping import mapping_string_to_dict
 
 
 class Config(object):

@@ -11,9 +11,7 @@ from vcr import VCR
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.util.common import connect_url, get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, \
-    mapping_string_to_dict, display_logfile, display_mapping_dict, get_show_name_mapping, \
-    get_addic7ed_show_name_mapping, get_alternative_show_name_mapping, get_movie_name_mapping, \
-    get_alternative_movie_name_mapping, skip_show, skip_movie, display_list_single_line, display_list_multi_line, \
+    display_logfile, display_mapping_dict, skip_show, skip_movie, display_list_single_line, display_list_multi_line, \
     display_item, display_title, display_name, display_timestamp, convert_timestamp, humanize_bytes, \
     get_wanted_queue_lock, release_wanted_queue_lock, count_wanted_items, get_common_path, get_root_path, \
     get_file_size, set_rw_and_remove
@@ -124,11 +122,6 @@ def test_sanitize():
     assert sanitize('(Mr.-Robot :)') == 'mr robot'
 
 
-def test_mapping_string_to_dict():
-    mapping_dict = {'show1': '111111,000000', 'show2': '222222'}
-    assert mapping_string_to_dict('show1 = 111111,000000\r\nshow2 = 222222') == mapping_dict
-
-
 def test_display_logfile():
     try:
         linesep = os.linesep
@@ -154,46 +147,6 @@ def test_display_logfile():
         assert display_logfile(loglevel='debug') == lines_debug_reversed
     finally:
         os.remove(autosubliminal.LOGFILE)
-
-
-def test_get_show_name_mapping():
-    autosubliminal.SHOWNAMEMAPPING = {'show1': '111111', 'show2': '222222'}
-    assert get_show_name_mapping('SHOW1') == 111111
-    assert get_show_name_mapping('Show2') == 222222
-    assert get_show_name_mapping('show3') is None
-
-
-def test_get_addic7ed_show_name_mapping():
-    autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {'show1': '111111', 'show2': '222222'}
-    assert get_addic7ed_show_name_mapping('SHOW1') == 111111
-    assert get_addic7ed_show_name_mapping('Show2') == 222222
-    assert get_addic7ed_show_name_mapping('show3') is None
-
-
-def test_get_alternative_show_name_mapping():
-    autosubliminal.ALTERNATIVESHOWNAMEMAPPING = {'show1': 'show1a, show1b', 'show2': 'show2a'}
-    assert get_alternative_show_name_mapping('SHOW1') == ['show1a', 'show1b']
-    assert get_alternative_show_name_mapping('Show2') == ['show2a']
-    assert get_alternative_show_name_mapping('show3') is None
-
-
-def test_movie_name_mapping():
-    autosubliminal.MOVIENAMEMAPPING = {'movie1': 'tt111111', 'movie2': 'tt222222', 'movie3 (2016)': 'tt333333'}
-    assert get_movie_name_mapping('MOVIE1', None) == 'tt111111'
-    assert get_movie_name_mapping('Movie2', None) == 'tt222222'
-    assert get_movie_name_mapping('movie3', None) is None
-    assert get_movie_name_mapping('movie3', 2016) == 'tt333333'
-    assert get_movie_name_mapping('movie4', None) is None
-
-
-def test_get_alternative_movie_name_mapping():
-    autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = {'movie1': 'movie1a, movie1b', 'movie2': 'movie2a',
-                                                  'movie3 (2016)': 'movie3a'}
-    assert get_alternative_movie_name_mapping('MOVIE1', None) == ['movie1a', 'movie1b']
-    assert get_alternative_movie_name_mapping('Movie2', None) == ['movie2a']
-    assert get_alternative_movie_name_mapping('movie3', None) is None
-    assert get_alternative_movie_name_mapping('movie3', 2016) == ['movie3a']
-    assert get_alternative_movie_name_mapping('movie4', None) is None
 
 
 def test_skip_show():
