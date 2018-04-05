@@ -13,9 +13,10 @@ from enzyme.mkv import MKV
 
 import autosubliminal
 from autosubliminal import fileprocessor
-from autosubliminal.util.common import add_event_message, add_notification_message, skip_movie, skip_show
+from autosubliminal.util.common import add_event_message, add_notification_message
 from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, \
     release_wanted_queue_lock_on_exception
+from autosubliminal.util.skip import skip_movie, skip_show
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import WantedItems
 

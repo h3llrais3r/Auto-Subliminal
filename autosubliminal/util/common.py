@@ -169,31 +169,6 @@ def sanitize(string_value, ignore_characters=None):
     return string_value.strip().lower()
 
 
-def skip_show(show_name, season, episode):
-    show_name_sanitized = sanitize(show_name)
-    for x in autosubliminal.SKIPSHOW:
-        if show_name_sanitized == sanitize(x):
-            log.debug('Found match in skipshow for %s', show_name)
-            for s in autosubliminal.SKIPSHOW[x].split(','):
-                if s == '00':
-                    log.debug('Found all season match in skipshow, skipping all seasons for %s', show_name)
-                    return True
-                elif int(s) == int(season):
-                    log.debug('Found season match in skipshow, skipping season %s for %s', season, show_name)
-                    return True
-
-
-def skip_movie(title, year):
-    movie = title
-    if year:
-        movie += ' (' + text_type(year) + ')'
-    movie_sanitized = sanitize(movie)
-    for x in autosubliminal.SKIPMOVIE:
-        if movie_sanitized == sanitize(x):
-            log.debug('Found match in skipmovie, skipping movie %s', movie)
-            return True
-
-
 def display_list_single_line(list_object):
     """
     Return a single lined string (comma separated) containing all the values of the list.

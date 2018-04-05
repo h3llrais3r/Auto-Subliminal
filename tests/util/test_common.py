@@ -11,9 +11,9 @@ from vcr import VCR
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.util.common import connect_url, get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, \
-    display_mapping_dict, skip_show, skip_movie, display_list_single_line, display_list_multi_line, \
-    display_item, display_title, display_name, display_timestamp, convert_timestamp, humanize_bytes, \
-    get_common_path, get_root_path, get_file_size, set_rw_and_remove
+    display_mapping_dict, display_list_single_line, display_list_multi_line, display_item, display_title, \
+    display_name, display_timestamp, convert_timestamp, humanize_bytes, get_common_path, get_root_path, get_file_size, \
+    set_rw_and_remove
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -119,30 +119,6 @@ def test_safe_trim():
 
 def test_sanitize():
     assert sanitize('(Mr.-Robot :)') == 'mr robot'
-
-
-def test_skip_show():
-    autosubliminal.SKIPSHOW = {'show1': '0', 'show2': '1', 'show3': '0,1', 'show4': '00'}
-    assert skip_show('SHOW1', 0, 1)  # 0 means skip specials
-    assert not skip_show('SHOW1', 1, 1)
-    assert not skip_show('Show2', 0, 1)
-    assert skip_show('Show2', 1, 1)
-    assert skip_show('show3', 0, 1)  # 00 means skip all, so also 0 is skipped
-    assert skip_show('show3', 1, 1)  # 00 means skip all, so also 1 is skipped
-    assert skip_show('show4', 0, 1)
-    assert skip_show('show4', 1, 1)
-    assert not skip_show('show5', 0, 1)
-    assert not skip_show('show5', 1, 1)
-
-
-def test_skip_movie():
-    autosubliminal.SKIPMOVIE = {'movie1': '00', 'movie2 (2016)': '00'}
-    assert skip_movie('MOVIE1', None)
-    assert not skip_movie('MOVIE1', 2016)
-    assert not skip_movie('Movie2', None)
-    assert skip_movie('Movie2', 2016)
-    assert not skip_movie('movie3', None)
-    assert not skip_movie('movie3', 2016)
 
 
 def test_display_list_single_line():
