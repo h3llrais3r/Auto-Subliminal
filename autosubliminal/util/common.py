@@ -1,7 +1,5 @@
 # coding=utf-8
 
-import cgi
-import codecs
 import ctypes
 import datetime
 import logging
@@ -23,9 +21,6 @@ log = logging.getLogger(__name__)
 # Copied from ConfigParser
 _boolean_states = {'1': True, 'yes': True, 'true': True, 'on': True,
                    '0': False, 'no': False, 'false': False, 'off': False}
-
-LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
-                        re.IGNORECASE)
 
 
 def get_today():
@@ -197,55 +192,6 @@ def skip_movie(title, year):
         if movie_sanitized == sanitize(x):
             log.debug('Found match in skipmovie, skipping movie %s', movie)
             return True
-
-
-def count_backup_logfiles():
-    # Count the number of backup logfiles
-    result = len([f for f in os.listdir('.') if os.path.isfile(f) and re.match(autosubliminal.LOGFILE + '.', f)])
-    return result
-
-
-def get_logfile(lognum=None):
-    logfile = autosubliminal.LOGFILE
-    if lognum:
-        logfile += '.' + text_type(lognum)
-    if os.path.isfile(logfile):
-        return logfile
-    return None
-
-
-def display_logfile(loglevel='all', lognum=None):
-    # Read log file data
-    data = []
-    previous_loglevel = loglevel
-    logfile = get_logfile(lognum)
-    if logfile:
-        f = codecs.open(logfile, 'r', 'utf-8')
-        data = f.readlines()
-        f.close()
-    # Log data
-    log_data = []
-    for x in data:
-        try:
-            matches = LOG_PARSER.search(x)
-            match_dict = matches.groupdict() if matches else None
-            if match_dict:
-                # Check if the record matches the requested loglevel
-                if (loglevel == 'all') or (match_dict['loglevel'] == loglevel.upper()):
-                    log_data.append(x)
-                # Store record loglevel as previous loglevel (needed for log records without match_dict)
-                previous_loglevel = match_dict['loglevel']
-            else:
-                # When no match is found (f.e. traceback logging) assume it's the same loglevel as the previous record
-                if (loglevel == 'all') or (previous_loglevel.upper() == loglevel.upper()):
-                    log_data.append(x)
-        except Exception:
-            continue
-    # If reversed order is needed, use reversed(log_data)
-    if autosubliminal.LOGREVERSED:
-        log_data = reversed(log_data)
-    result = cgi.escape(''.join(log_data))
-    return result
 
 
 def display_list_single_line(list_object):

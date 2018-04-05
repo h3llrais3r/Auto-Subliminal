@@ -6,9 +6,9 @@ import re
 import cherrypy
 
 import autosubliminal
+from autosubliminal.core.logger import display_logfile
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
-from autosubliminal.util.common import display_logfile
 
 
 class Log(object):

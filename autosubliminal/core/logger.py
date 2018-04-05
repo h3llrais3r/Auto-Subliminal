@@ -1,13 +1,19 @@
 # coding=utf-8
 
+import cgi
+import codecs
 import logging
 import os
+import re
 import shutil
 from logging.handlers import BaseRotatingHandler
 
-import six
+from six import PY3, text_type
 
 import autosubliminal
+
+LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
+                        re.IGNORECASE)
 
 
 def initialize():
@@ -25,7 +31,7 @@ def initialize():
                                             mode='a',
                                             maxBytes=autosubliminal.LOGSIZE * 1024 * 1024,
                                             backupCount=autosubliminal.LOGNUM,
-                                            encoding='utf-8' if six.PY3 else None)
+                                            encoding='utf-8' if PY3 else None)
     log_handler.addFilter(log_filter)
     log_handler.setFormatter(log_formatter)
     log_handler.setLevel(autosubliminal.LOGLEVEL)
@@ -54,6 +60,55 @@ def update_settings():
                     log_filter.log_external_libs = autosubliminal.LOGEXTERNALLIBS
         elif isinstance(handler, logging.StreamHandler):
             handler.setLevel(autosubliminal.LOGLEVELCONSOLE)
+
+
+def display_logfile(loglevel='all', lognum=None):
+    # Read log file data
+    data = []
+    previous_loglevel = loglevel
+    logfile = get_logfile(lognum)
+    if logfile:
+        f = codecs.open(logfile, 'r', 'utf-8')
+        data = f.readlines()
+        f.close()
+    # Log data
+    log_data = []
+    for x in data:
+        try:
+            matches = LOG_PARSER.search(x)
+            match_dict = matches.groupdict() if matches else None
+            if match_dict:
+                # Check if the record matches the requested loglevel
+                if (loglevel == 'all') or (match_dict['loglevel'] == loglevel.upper()):
+                    log_data.append(x)
+                # Store record loglevel as previous loglevel (needed for log records without match_dict)
+                previous_loglevel = match_dict['loglevel']
+            else:
+                # When no match is found (f.e. traceback logging) assume it's the same loglevel as the previous record
+                if (loglevel == 'all') or (previous_loglevel.upper() == loglevel.upper()):
+                    log_data.append(x)
+        except Exception:
+            continue
+    # If reversed order is needed, use reversed(log_data)
+    if autosubliminal.LOGREVERSED:
+        log_data = reversed(log_data)
+    result = cgi.escape(''.join(log_data))
+    return result
+
+
+def get_logfile(lognum=None):
+    logfile = autosubliminal.LOGFILE
+    if lognum:
+        logfile += '.' + text_type(lognum)
+    if os.path.isfile(logfile):
+        return logfile
+    return None
+
+
+def count_backup_logfiles():
+    # Count the number of backup logfiles
+    result = len([f for f in os.listdir('.') if os.path.isfile(f) and re.match(autosubliminal.LOGFILE + '.', f)])
+    return result
 
 
 class _LogFormatter(logging.Formatter):
@@ -161,7 +216,7 @@ class CustomRotatingFileHandler(BaseRotatingHandler):
                 # Clear base log file
                 with open(self.baseFilename, 'w'):
                     pass
-                #######################################
+                    #######################################
 
         if not self.delay:
             self.stream = self._open()

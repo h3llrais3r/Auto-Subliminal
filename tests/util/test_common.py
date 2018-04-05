@@ -11,7 +11,7 @@ from vcr import VCR
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.util.common import connect_url, get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, \
-    display_logfile, display_mapping_dict, skip_show, skip_movie, display_list_single_line, display_list_multi_line, \
+    display_mapping_dict, skip_show, skip_movie, display_list_single_line, display_list_multi_line, \
     display_item, display_title, display_name, display_timestamp, convert_timestamp, humanize_bytes, \
     get_common_path, get_root_path, get_file_size, set_rw_and_remove
 
@@ -119,33 +119,6 @@ def test_safe_trim():
 
 def test_sanitize():
     assert sanitize('(Mr.-Robot :)') == 'mr robot'
-
-
-def test_display_logfile():
-    try:
-        linesep = os.linesep
-        line1 = u'2016-06-06 20:32:15,509 INFO     [MainThread :: __main__] Running application with PID: 9944'
-        line2 = u'traceback'
-        line3 = u'2016-06-06 20:32:15,509 DEBUG    [MainThread :: __main__] System encoding: cp1252'
-        line4 = u'2016-06-06 20:32:15,509 DEBUG    [MainThread :: __main__] Config version: 10'
-        lines = line1 + linesep + line2 + linesep + line3 + linesep + line4 + linesep
-        lines_info = line1 + linesep + line2 + linesep
-        lines_debug = line3 + linesep + line4 + linesep
-        lines_debug_reversed = line4 + linesep + line3 + linesep
-        fd, autosubliminal.LOGFILE = tempfile.mkstemp(text=True)
-        file = open(autosubliminal.LOGFILE, 'w')
-        file.write(line1 + '\n' + line2 + '\n' + line3 + '\n' + line4 + '\n')
-        file.close()
-        os.close(fd)
-        assert display_logfile() == lines
-        assert display_logfile(loglevel='all') == lines
-        assert display_logfile(loglevel='debug') == lines_debug
-        assert display_logfile(loglevel='info') == lines_info
-        assert display_logfile(loglevel='error') == ''
-        autosubliminal.LOGREVERSED = True
-        assert display_logfile(loglevel='debug') == lines_debug_reversed
-    finally:
-        os.remove(autosubliminal.LOGFILE)
 
 
 def test_skip_show():

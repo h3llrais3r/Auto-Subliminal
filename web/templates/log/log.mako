@@ -5,7 +5,7 @@
     from six import text_type
 
     import autosubliminal
-    from autosubliminal.util.common import count_backup_logfiles
+    from autosubliminal.core.logger import count_backup_logfiles
 %>
 
 <%block name="bodyContent">
