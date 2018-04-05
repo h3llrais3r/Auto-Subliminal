@@ -8,7 +8,7 @@ from autosubliminal import config, subchecker
 from autosubliminal.db import WantedItems
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
-from autosubliminal.util.utils import add_notification_message, display_item, display_title, run_cmd, sanitize
+from autosubliminal.util.common import add_notification_message, display_item, display_title, run_cmd, sanitize
 
 
 class Home(object):

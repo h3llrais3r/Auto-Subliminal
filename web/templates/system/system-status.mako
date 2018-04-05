@@ -2,7 +2,7 @@
 
 <%!
     import autosubliminal
-    from autosubliminal.util.utils import display_timestamp, get_disk_space_details, humanize_bytes
+    from autosubliminal.util.common import display_timestamp, get_disk_space_details, humanize_bytes
 %>
 
 <%block name="bodyContent">

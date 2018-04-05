@@ -4,7 +4,7 @@
     import babelfish
 
     import autosubliminal
-    from autosubliminal.util.utils import display_list_multi_line, display_list_single_line
+    from autosubliminal.util.common import display_list_multi_line, display_list_single_line
 %>
 
 <%block name="bodyContent">

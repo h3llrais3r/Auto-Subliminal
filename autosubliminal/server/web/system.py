@@ -9,7 +9,7 @@ from autosubliminal import system
 from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache, WantedItems
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
-from autosubliminal.util.utils import add_notification_message, get_wanted_queue_lock, release_wanted_queue_lock, \
+from autosubliminal.util.common import add_notification_message, get_wanted_queue_lock, release_wanted_queue_lock, \
     release_wanted_queue_lock_on_exception
 
 

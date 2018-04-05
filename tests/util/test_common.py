@@ -10,7 +10,7 @@ from vcr import VCR
 
 import autosubliminal
 from autosubliminal import version
-from autosubliminal.util.utils import connect_url, get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, \
+from autosubliminal.util.common import connect_url, get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, \
     mapping_string_to_dict, display_logfile, display_mapping_dict, get_show_name_mapping, \
     get_addic7ed_show_name_mapping, get_alternative_show_name_mapping, get_movie_name_mapping, \
     get_alternative_movie_name_mapping, skip_show, skip_movie, display_list_single_line, display_list_multi_line, \
@@ -21,7 +21,7 @@ from autosubliminal.util.utils import connect_url, get_boolean, safe_text, safe_
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
           match_on=['method', 'scheme', 'host', 'port', 'path', 'query', 'body'],
-          cassette_library_dir=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'cassettes', 'utils'))
+          cassette_library_dir=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'cassettes', 'common'))
 
 text_value = 'test'
 text_value_special_char = u'ù'

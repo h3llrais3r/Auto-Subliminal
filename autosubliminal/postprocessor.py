@@ -4,7 +4,7 @@ import logging
 
 import autosubliminal
 from autosubliminal.util.encoding import b2u, s2n
-from autosubliminal.util.utils import get_root_path, run_cmd, safe_trim
+from autosubliminal.util.common import get_root_path, run_cmd, safe_trim
 
 log = logging.getLogger(__name__)
 

@@ -14,7 +14,7 @@ from unidecode import unidecode
 import autosubliminal
 from autosubliminal.db import ImdbIdCache, TvdbIdCache
 from autosubliminal.util.encoding import s2n
-from autosubliminal.util.utils import get_movie_name_mapping, get_show_name_mapping, sanitize
+from autosubliminal.util.common import get_movie_name_mapping, get_show_name_mapping, sanitize
 
 log = logging.getLogger(__name__)
 

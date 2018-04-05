@@ -12,7 +12,7 @@ from six import text_type
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.core import logger
-from autosubliminal.util.utils import add_notification_message
+from autosubliminal.util.common import add_notification_message
 
 log = logging.getLogger(__name__)
 

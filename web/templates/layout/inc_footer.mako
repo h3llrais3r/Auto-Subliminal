@@ -3,7 +3,7 @@
 
     import autosubliminal
     from autosubliminal import version
-    from autosubliminal.util.utils import get_next_scheduler_run_in_ms
+    from autosubliminal.util.common import get_next_scheduler_run_in_ms
 %>
 
 <!-- Footer -->

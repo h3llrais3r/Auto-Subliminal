@@ -9,7 +9,7 @@ from guessit import guessit
 from six import text_type
 
 import autosubliminal
-from autosubliminal.util.utils import humanize_bytes
+from autosubliminal.util.common import humanize_bytes
 
 log = logging.getLogger(__name__)
 

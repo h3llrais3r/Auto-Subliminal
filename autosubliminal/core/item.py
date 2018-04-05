@@ -2,7 +2,7 @@
 
 import datetime
 
-from autosubliminal.util.utils import get_today
+from autosubliminal.util.common import get_today
 
 # A subtitle will be searched on each run, as long as the file is not older than 4 weeks
 search_deadline = datetime.timedelta(weeks=4)

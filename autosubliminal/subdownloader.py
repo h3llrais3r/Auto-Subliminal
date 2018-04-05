@@ -9,7 +9,7 @@ import autosubliminal
 from autosubliminal.db import LastDownloads
 from autosubliminal.notifiers import Notifier
 from autosubliminal.postprocessor import PostProcessor
-from autosubliminal.util.utils import add_notification_message, display_name
+from autosubliminal.util.common import add_notification_message, display_name
 
 log = logging.getLogger(__name__)
 
