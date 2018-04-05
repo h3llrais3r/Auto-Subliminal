@@ -6,8 +6,8 @@ import pkg_resources
 
 from six.moves import getcwd
 
-from autosubliminal import version, config, logger, db
-from autosubliminal.indexer import ShowIndexer, MovieIndexer
+from autosubliminal import config, db, logger, version
+from autosubliminal.indexer import MovieIndexer, ShowIndexer
 
 # Config
 CONFIGFILE = None
@@ -306,7 +306,7 @@ def _init_cache():
     """
 
     # Imports
-    from autosubliminal.cache import region, MutexFileLock
+    from autosubliminal.core.cache import MutexFileLock, region
 
     # Make sure the cache dir exists
     if not os.path.exists(CACHEDIR):
