@@ -10,7 +10,8 @@ from configparser import ConfigParser
 from six import text_type
 
 import autosubliminal
-from autosubliminal import logger, utils, version
+from autosubliminal import utils, version
+from autosubliminal.core import logger
 
 log = logging.getLogger(__name__)
 

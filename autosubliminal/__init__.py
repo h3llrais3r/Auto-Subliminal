@@ -6,7 +6,8 @@ import pkg_resources
 
 from six.moves import getcwd
 
-from autosubliminal import config, db, logger, version
+from autosubliminal import config, db, version
+from autosubliminal.core import logger
 from autosubliminal.indexer import MovieIndexer, ShowIndexer
 
 # Config
