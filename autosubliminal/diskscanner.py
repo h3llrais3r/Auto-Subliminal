@@ -12,7 +12,9 @@ from babelfish import Error as BabelfishError, Language
 from enzyme.mkv import MKV
 
 import autosubliminal
-from autosubliminal import utils, fileprocessor
+from autosubliminal import fileprocessor
+from autosubliminal.util.utils import add_event_message, add_notification_message, get_wanted_queue_lock, \
+    release_wanted_queue_lock, release_wanted_queue_lock_on_exception, skip_movie, skip_show
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import WantedItems
 
@@ -28,17 +30,17 @@ class DiskScanner(ScheduledProcess):
     def __init__(self):
         super(DiskScanner, self).__init__()
 
-    @utils.release_wanted_queue_lock_on_exception
+    @release_wanted_queue_lock_on_exception
     def run(self, force_run):
         # Get wanted queue lock
-        if not utils.get_wanted_queue_lock():
+        if not get_wanted_queue_lock():
             return False
 
         log.info('Starting round of local disk checking at %r', autosubliminal.VIDEOPATHS)
 
         # Show info message (only when run was forced manually)
         if force_run:
-            utils.add_notification_message('Scanning disk...')
+            add_notification_message('Scanning disk...')
 
         # Check if a directory exists to scan
         one_dir_exists = False
@@ -53,7 +55,7 @@ class DiskScanner(ScheduledProcess):
         if not one_dir_exists:
             # Release wanted queue lock
             log.error('None of the configured video paths (%r) exists, aborting...', autosubliminal.VIDEOPATHS)
-            utils.release_wanted_queue_lock()
+            release_wanted_queue_lock()
             return True
 
         # Walk through paths to search for wanted items
@@ -82,10 +84,10 @@ class DiskScanner(ScheduledProcess):
 
         # Release wanted queue lock
         log.info('Finished round of local disk checking')
-        utils.release_wanted_queue_lock()
+        release_wanted_queue_lock()
 
         # Send home page reload event
-        utils.add_event_message('HOME_PAGE_RELOAD')
+        add_event_message('HOME_PAGE_RELOAD')
 
         return True
 
@@ -151,7 +153,7 @@ def walk_dir(path):
                         title = wanted_item['title']
                         season = wanted_item['season']
                         episode = wanted_item['episode']
-                        if utils.skip_show(title, season, episode):
+                        if skip_show(title, season, episode):
                             db.delete_wanted_item(wanted_item)
                             log.info('Skipping %s - Season %s Episode %s', title, season, episode)
                             continue
@@ -159,7 +161,7 @@ def walk_dir(path):
                     elif wanted_item['type'] == 'movie':
                         title = wanted_item['title']
                         year = wanted_item['year']
-                        if utils.skip_movie(title, year):
+                        if skip_movie(title, year):
                             db.delete_wanted_item(wanted_item)
                             log.info('Skipping %s (%s)', title, year)
                             continue

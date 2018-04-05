@@ -4,7 +4,7 @@
     import babelfish
 
     import autosubliminal
-    from autosubliminal import utils
+    from autosubliminal.util.utils import display_list_multi_line, display_list_single_line
 %>
 
 <%block name="bodyContent">
@@ -40,7 +40,7 @@
                                 </label>
                             </span>
                             <span class="col-xs-8 col-md-6">
-                                <textarea id="videopaths" name="videopaths" class="form-control input-sm">${utils.display_list_multi_line(autosubliminal.VIDEOPATHS)}</textarea>
+                                <textarea id="videopaths" name="videopaths" class="form-control input-sm">${display_list_multi_line(autosubliminal.VIDEOPATHS)}</textarea>
                             </span>
                         </div>
 
@@ -116,7 +116,7 @@
                                 </label>
                             </span>
                             <span class="col-xs-8 col-md-6">
-                                <input type="text" id="additionallanguages" name="additionallanguages" value="${utils.display_list_single_line(autosubliminal.ADDITIONALLANGUAGES)}" class="form-control input-sm">
+                                <input type="text" id="additionallanguages" name="additionallanguages" value="${display_list_single_line(autosubliminal.ADDITIONALLANGUAGES)}" class="form-control input-sm">
                             </span>
                         </div>
 

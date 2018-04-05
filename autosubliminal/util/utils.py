@@ -31,7 +31,7 @@ LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d
                         re.IGNORECASE)
 
 
-def today():
+def get_today():
     """
     Helper to get today as datetime.
     We made this a function, otherwise we can't mock built-in datetime.datetime.today in our tests!
@@ -115,7 +115,7 @@ def wait_for_internet_connection():
 
 
 # Based on ConfigParser.getboolean
-def getboolean(value):
+def get_boolean(value):
     v = text_type(value)
     if v.lower() not in _boolean_states:
         raise ValueError('Not a boolean: %s' % v)

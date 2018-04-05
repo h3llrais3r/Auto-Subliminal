@@ -12,9 +12,9 @@ from tvdb_api_v2.client import TvdbClient
 from unidecode import unidecode
 
 import autosubliminal
-from autosubliminal import utils
 from autosubliminal.db import ImdbIdCache, TvdbIdCache
 from autosubliminal.util.encoding import s2n
+from autosubliminal.util.utils import get_movie_name_mapping, get_show_name_mapping, sanitize
 
 log = logging.getLogger(__name__)
 
@@ -80,12 +80,12 @@ class ShowIndexer(Indexer):
         # Make sure to convert it to native string before searching (to prevent unicode encoding error)
         series_search = self._client.search_series_by_name(s2n(name), language=language)
         for series_search_data in series_search.data:
-            if utils.sanitize(series_search_data.series_name) == utils.sanitize(name):
+            if sanitize(series_search_data.series_name) == sanitize(name):
                 return series_search_data
             elif series_search_data.aliases:
                 # If no match, fallback to aliases (if aliases are available)
                 for alias in series_search_data.aliases:
-                    if utils.sanitize(alias) == utils.sanitize(name):
+                    if sanitize(alias) == sanitize(name):
                         return series_search_data
             else:
                 continue
@@ -99,7 +99,7 @@ class ShowIndexer(Indexer):
         # If not force_search, first check shownamemapping and tvdb id cache
         if not force_search:
             # Check shownamemapping
-            tvdb_id = utils.get_show_name_mapping(name)
+            tvdb_id = get_show_name_mapping(name)
             if tvdb_id:
                 log.debug('Tvdb id from shownamemapping: %s', tvdb_id)
                 return int(tvdb_id)
@@ -182,7 +182,7 @@ class MovieIndexer(Indexer):
         string_value = re.sub('^(.+)(\(\w+\))$', r'\1', string_value)
         # Sanitize on ascii level (replaces à by a)
         string_value = unidecode(string_value)
-        return utils.sanitize(string_value, ignore_characters)
+        return sanitize(string_value, ignore_characters)
 
     def get_imdb_id_and_year(self, title, year=None, force_search=False, store_id=True):
         imdb_id = None
@@ -192,7 +192,7 @@ class MovieIndexer(Indexer):
         log.debug('Getting imdb info for %s', name)
         # If not force_search, first check movienamemapping and tvdb id cache
         if not force_search:
-            imdb_id = utils.get_movie_name_mapping(title, year)
+            imdb_id = get_movie_name_mapping(title, year)
             if imdb_id:
                 log.debug('Imdb id from movienamemapping: %s', imdb_id)
                 return imdb_id, year

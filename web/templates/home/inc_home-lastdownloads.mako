@@ -1,7 +1,7 @@
 <%!
     import autosubliminal
     from autosubliminal.db import LastDownloads
-    from autosubliminal.utils import convert_timestamp, display_item, display_title
+    from autosubliminal.util.utils import convert_timestamp, display_item, display_title
 %>
 
 <%block name="bodyContent">

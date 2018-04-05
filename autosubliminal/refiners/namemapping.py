@@ -1,9 +1,11 @@
 # coding=utf-8
 
 import logging
-from autosubliminal import utils
 
 from subliminal.video import Episode, Movie
+
+from autosubliminal.util.utils import get_alternative_movie_name_mapping, get_alternative_show_name_mapping, \
+    get_movie_name_mapping, get_show_name_mapping
 
 logger = logging.getLogger(__name__)
 
@@ -32,14 +34,14 @@ def refine(video, **kwargs):
     if isinstance(video, Episode):
         logger.info('Refining episode video with custom name mappings')
         video.alternative_series = (video.alternative_series or []) + (
-            utils.get_alternative_show_name_mapping(video.series) or [])
-        video.series_tvdb_id = utils.get_show_name_mapping(video.series) or video.series_tvdb_id
+            get_alternative_show_name_mapping(video.series) or [])
+        video.series_tvdb_id = get_show_name_mapping(video.series) or video.series_tvdb_id
         return
 
     # refine movie
     if isinstance(video, Movie):
         logger.info('Refining movie video with custom name mappings')
         video.alternative_titles = (video.alternative_titles or []) + (
-            utils.get_alternative_movie_name_mapping(video.title, video.year) or [])
-        video.imdb_id = utils.get_movie_name_mapping(video.title, video.year) or video.imdb_id
+            get_alternative_movie_name_mapping(video.title, video.year) or [])
+        video.imdb_id = get_movie_name_mapping(video.title, video.year) or video.imdb_id
         return

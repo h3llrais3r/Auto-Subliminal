@@ -6,9 +6,9 @@ import re
 import cherrypy
 
 import autosubliminal
-from autosubliminal import utils
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
+from autosubliminal.util.utils import display_logfile
 
 
 class Log(object):
@@ -22,7 +22,7 @@ class Log(object):
 
     @cherrypy.expose(alias='viewLog')
     def view_log(self, loglevel='all', lognum=None):
-        content = utils.display_logfile(loglevel, lognum)
+        content = display_logfile(loglevel, lognum)
         return PageTemplate(filename=self.template_file).render(loglevel=loglevel, lognum=lognum, content=content)
 
     @cherrypy.expose(alias='clearLog')
@@ -34,5 +34,5 @@ class Log(object):
         for f in [f for f in os.listdir('.') if os.path.isfile(f) and re.match(autosubliminal.LOGFILE + '.', f)]:
             os.remove(f)
         # Return to default log view
-        content = utils.display_logfile()
+        content = display_logfile()
         return PageTemplate(filename=self.template_file).render(loglevel='all', lognum=None, content=content)

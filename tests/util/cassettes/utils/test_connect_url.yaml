@@ -5,7 +5,7 @@ interactions:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      User-Agent: [Auto-Subliminal/2.5.0b1]
+      User-Agent: [Auto-Subliminal/2.6.0b1]
     method: GET
     uri: https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py
   response:
@@ -15,14 +15,14 @@ interactions:
       age: ['0']
       connection: [keep-alive]
       content-length: ['0']
-      date: ['Thu, 22 Feb 2018 20:33:35 GMT']
+      date: ['Thu, 05 Apr 2018 19:21:07 GMT']
       location: ['https://raw.githubusercontent.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py']
       vary: [Accept-Encoding]
       via: [1.1 varnish]
       x-cache: [MISS]
       x-cache-hits: ['0']
-      x-fastly-request-id: [df64c81acc1318b2eb9c21985f887d1d260ad647]
-      x-served-by: [cache-ams4143-AMS]
+      x-fastly-request-id: [f3f32ca3840203c9fcaab87128a3054170ad8ab5]
+      x-served-by: [cache-ams4137-AMS]
     status: {code: 301, message: Moved Permanently}
 - request:
     body: null
@@ -30,39 +30,39 @@ interactions:
       Accept: ['*/*']
       Accept-Encoding: ['gzip, deflate']
       Connection: [keep-alive]
-      User-Agent: [Auto-Subliminal/2.5.0b1]
+      User-Agent: [Auto-Subliminal/2.6.0b1]
     method: GET
     uri: https://raw.githubusercontent.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py
   response:
     body:
       string: !!binary |
-        H4sIAAAAAAAAAwty9XF1DHaND3MNCvb091OwVVA30jPRM1Dncvb3c/N0R5Kw4HJxQuKacwEA0OEL
-        gjwAAAA=
+        H4sIAAAAAAAAA1NWSM5PycxLty0tSdO14OIKcvVxdQx2jQ9zDQr29PdTsFVQN9Iz1TNQ53L293Pz
+        dEeSMDTgcnFC4ptzAQD4e8jRTQAAAA==
     headers:
       accept-ranges: [bytes]
       access-control-allow-origin: ['*']
       cache-control: [max-age=300]
       connection: [keep-alive]
       content-encoding: [gzip]
-      content-length: ['62']
+      content-length: ['79']
       content-security-policy: [default-src 'none'; style-src 'unsafe-inline'; sandbox]
       content-type: [text/plain; charset=utf-8]
-      date: ['Thu, 22 Feb 2018 20:33:35 GMT']
-      etag: ['"30791f123a80ac37a8d02baf0948edb350c3491b"']
-      expires: ['Thu, 22 Feb 2018 20:38:35 GMT']
-      source-age: ['0']
+      date: ['Thu, 05 Apr 2018 19:21:07 GMT']
+      etag: ['"b26f08a580d46d31dca0bf89a56089b12b707d64"']
+      expires: ['Thu, 05 Apr 2018 19:26:07 GMT']
+      source-age: ['194']
       strict-transport-security: [max-age=31536000]
       vary: ['Authorization,Accept-Encoding']
       via: [1.1 varnish]
-      x-cache: [MISS]
-      x-cache-hits: ['0']
+      x-cache: [HIT]
+      x-cache-hits: ['1']
       x-content-type-options: [nosniff]
-      x-fastly-request-id: [b835bb4040f7c22b17b7f83c4bd91bbdb04e4ec5]
+      x-fastly-request-id: [42124f4b910fefef5719b9ff0f2ac2a7016a51e7]
       x-frame-options: [deny]
       x-geo-block-list: ['']
-      x-github-request-id: ['D026:5813:672C:6C71:5A8F291F']
-      x-served-by: [cache-ams4449-AMS]
-      x-timer: ['S1519331616.806613,VS0,VE127']
+      x-github-request-id: ['D3B2:5CB2:2979:2BA1:5AC67661']
+      x-served-by: [cache-ams4148-AMS]
+      x-timer: ['S1522956068.665730,VS0,VE1']
       x-xss-protection: [1; mode=block]
     status: {code: 200, message: OK}
 version: 1

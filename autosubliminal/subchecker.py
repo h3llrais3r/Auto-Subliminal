@@ -19,7 +19,6 @@ from subliminal.providers.tvsubtitles import TVsubtitlesSubtitle
 from subliminal.video import Episode, Movie
 
 import autosubliminal
-from autosubliminal import utils
 from autosubliminal.core.item import WantedItem
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import WantedItems
@@ -27,6 +26,8 @@ from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.providers import provider_cache
 from autosubliminal.providers.addic7ed import Addic7edSubtitle as Addic7edSubtitleRandomUserAgent
 from autosubliminal.subdownloader import SubDownloader
+from autosubliminal.util.utils import add_event_message, add_notification_message, get_wanted_queue_lock, \
+    release_wanted_queue_lock, release_wanted_queue_lock_on_exception, set_rw_and_remove, wait_for_internet_connection
 
 log = logging.getLogger(__name__)
 
@@ -39,21 +40,21 @@ class SubChecker(ScheduledProcess):
     def __init__(self):
         super(SubChecker, self).__init__()
 
-    @utils.release_wanted_queue_lock_on_exception
+    @release_wanted_queue_lock_on_exception
     def run(self, force_run):
         # Get wanted queue lock
-        if not utils.get_wanted_queue_lock():
+        if not get_wanted_queue_lock():
             return False
 
         # Wait for internet connection
-        utils.wait_for_internet_connection()
+        wait_for_internet_connection()
 
         log.info('Starting round of subtitle checking')
         to_delete_wanted_queue = []
 
         # Show info message (only when run was forced manually)
         if force_run:
-            utils.add_notification_message('Checking subtitles...')
+            add_notification_message('Checking subtitles...')
 
         # Setup provider pool
         provider_pool = _get_provider_pool()
@@ -119,21 +120,21 @@ class SubChecker(ScheduledProcess):
 
         # Release wanted queue lock
         log.info('Finished round of subtitle checking')
-        utils.release_wanted_queue_lock()
+        release_wanted_queue_lock()
 
         # Send home page reload event
-        utils.add_event_message('HOME_PAGE_RELOAD')
+        add_event_message('HOME_PAGE_RELOAD')
 
         return True
 
 
-@utils.release_wanted_queue_lock_on_exception
+@release_wanted_queue_lock_on_exception
 def search_subtitle(wanted_item_index, lang):
     log.info('Searching for an individual subtitle')
     subs = []
 
     # Get wanted queue lock
-    if not utils.get_wanted_queue_lock():
+    if not get_wanted_queue_lock():
         return subs, 'Skipping! Cannot get a wanted queue lock because another thread is using the queues!'
 
     # Setup provider pool
@@ -201,7 +202,7 @@ def search_subtitle(wanted_item_index, lang):
                         subs.append(sub)
 
     # Release wanted queue lock
-    utils.release_wanted_queue_lock()
+    release_wanted_queue_lock()
 
     if not provider_pool:
         return subs, 'Skipping! No subliminal providers are configured!'
@@ -212,12 +213,12 @@ def search_subtitle(wanted_item_index, lang):
     return subs, None
 
 
-@utils.release_wanted_queue_lock_on_exception
+@release_wanted_queue_lock_on_exception
 def save_subtitle(wanted_item_index, subtitle_index):
     log.info('Saving an individual subtitle')
 
     # Get wanted queue lock
-    if not utils.get_wanted_queue_lock():
+    if not get_wanted_queue_lock():
         return False
 
     # Get wanted item
@@ -235,17 +236,17 @@ def save_subtitle(wanted_item_index, subtitle_index):
     downloaded = SubDownloader(download_item).save()
 
     # Release wanted queue lock
-    utils.release_wanted_queue_lock()
+    release_wanted_queue_lock()
 
     return downloaded
 
 
-@utils.release_wanted_queue_lock_on_exception
+@release_wanted_queue_lock_on_exception
 def force_id_search(wanted_item_index):
     log.info('Force id search')
 
     # Get wanted queue lock
-    if not utils.get_wanted_queue_lock():
+    if not get_wanted_queue_lock():
         return
 
     # Force id search
@@ -260,15 +261,15 @@ def force_id_search(wanted_item_index):
         WantedItems().update_wanted_item(wanted_item)
 
     # Release wanted queue lock
-    utils.release_wanted_queue_lock()
+    release_wanted_queue_lock()
 
 
-@utils.release_wanted_queue_lock_on_exception
+@release_wanted_queue_lock_on_exception
 def delete_subtitle(wanted_item_index):
     log.info('Deleting an individual subtitle')
 
     # Get wanted queue lock
-    if not utils.get_wanted_queue_lock():
+    if not get_wanted_queue_lock():
         return False
 
     # Get wanted item
@@ -284,17 +285,17 @@ def delete_subtitle(wanted_item_index):
         log.exception('Unable to delete subtitle: %s', subtitle_path)
 
     # Release wanted queue lock
-    utils.release_wanted_queue_lock()
+    release_wanted_queue_lock()
 
     return deleted
 
 
-@utils.release_wanted_queue_lock_on_exception
+@release_wanted_queue_lock_on_exception
 def delete_video(wanted_item_index, cleanup):
     log.info('Deleting an individual video file')
 
     # Get wanted queue lock
-    if not utils.get_wanted_queue_lock():
+    if not get_wanted_queue_lock():
         return False
 
     # Remove wanted item
@@ -323,7 +324,7 @@ def delete_video(wanted_item_index, cleanup):
                         norm_video_folder = os.path.dirname(norm_video_folder).rstrip(os.sep)
                     try:
                         # Remove the folder of the video underneath the root folder
-                        shutil.rmtree(folder_to_clean, onerror=utils.set_rw_and_remove)
+                        shutil.rmtree(folder_to_clean, onerror=set_rw_and_remove)
                         log.info('Deleted video folder: %s', folder_to_clean)
                         deleted = True
                         # Break for loop
@@ -340,17 +341,17 @@ def delete_video(wanted_item_index, cleanup):
             log.exception('Unable to delete file: %s', video_path)
 
     # Release wanted queue lock
-    utils.release_wanted_queue_lock()
+    release_wanted_queue_lock()
 
     return deleted
 
 
-@utils.release_wanted_queue_lock_on_exception
+@release_wanted_queue_lock_on_exception
 def skip_show(wanted_item_index, season):
     log.info('Skipping a show')
 
     # Get wanted queue lock
-    if not utils.get_wanted_queue_lock():
+    if not get_wanted_queue_lock():
         return False
 
     # Get wanted item
@@ -376,17 +377,17 @@ def skip_show(wanted_item_index, season):
     log.info('Skipped show %s season %s', show, season)
 
     # Release wanted queue lock
-    utils.release_wanted_queue_lock()
+    release_wanted_queue_lock()
 
     return True
 
 
-@utils.release_wanted_queue_lock_on_exception
+@release_wanted_queue_lock_on_exception
 def skip_movie(wanted_item_index):
     log.info('Skipping a movie')
 
     # Get wanted queue lock
-    if not utils.get_wanted_queue_lock():
+    if not get_wanted_queue_lock():
         return False
 
     # Remove wanted item from queue and db
@@ -398,17 +399,17 @@ def skip_movie(wanted_item_index):
     log.info('Skipped movie %s', movie)
 
     # Release wanted queue lock
-    utils.release_wanted_queue_lock()
+    release_wanted_queue_lock()
 
     return True
 
 
-@utils.release_wanted_queue_lock_on_exception
+@release_wanted_queue_lock_on_exception
 def post_process(wanted_item_index, subtitle_index):
     log.info('Post processing an individual subtitle')
 
     # Get wanted queue lock
-    if not utils.get_wanted_queue_lock():
+    if not get_wanted_queue_lock():
         return False
 
     # Get wanted item
@@ -451,17 +452,17 @@ def post_process(wanted_item_index, subtitle_index):
         log.warning('No subtitle downloaded, skipping post processing')
 
     # Release wanted queue lock
-    utils.release_wanted_queue_lock()
+    release_wanted_queue_lock()
 
     return processed
 
 
-@utils.release_wanted_queue_lock_on_exception
+@release_wanted_queue_lock_on_exception
 def post_process_no_subtitle(wanted_item_index):
     log.info('Post processing without subtitle')
 
     # Get wanted queue lock
-    if not utils.get_wanted_queue_lock():
+    if not get_wanted_queue_lock():
         return False
 
     # Get wanted item
@@ -477,10 +478,10 @@ def post_process_no_subtitle(wanted_item_index):
         WantedItems().delete_wanted_item(wanted_item)
         log.debug('Removed %s from wanted_items database', wanted_item['videopath'])
     else:
-        utils.add_notification_message('Unable to handle post processing! Please check the log file!', 'error')
+        add_notification_message('Unable to handle post processing! Please check the log file!', 'error')
 
     # Release wanted queue lock
-    utils.release_wanted_queue_lock()
+    release_wanted_queue_lock()
 
     return processed
 

@@ -14,9 +14,11 @@ except ImportError:
     pass
 
 import autosubliminal
-from autosubliminal import system, utils
+from autosubliminal import system
 from autosubliminal.core.enums import InstallType
 from autosubliminal.core.scheduler import ScheduledProcess
+from autosubliminal.util.utils import add_notification_message, connect_url, get_wanted_queue_lock, \
+    release_wanted_queue_lock, release_wanted_queue_lock_on_exception, wait_for_internet_connection
 from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
@@ -41,15 +43,15 @@ class VersionChecker(ScheduledProcess):
             self.manager = SourceVersionManager()
             self.install_type = InstallType.SOURCE
 
-    @utils.release_wanted_queue_lock_on_exception
+    @release_wanted_queue_lock_on_exception
     def run(self, force_run):
         # Block version check (and update) in no force run mode when another process is using the wanted queue
         # We do not want to auto update the version while the application is busy with another process
-        if not force_run and not utils.get_wanted_queue_lock():
+        if not force_run and not get_wanted_queue_lock():
             return False
 
         # Wait for internet connection
-        utils.wait_for_internet_connection()
+        wait_for_internet_connection()
 
         log.info('Checking version')
 
@@ -58,7 +60,7 @@ class VersionChecker(ScheduledProcess):
 
         # Release wanted queue lock
         if not force_run:
-            utils.release_wanted_queue_lock()
+            release_wanted_queue_lock()
 
         # Only update and restart when: no force run, update is allowed and auto update is enabled
         if not force_run and self.manager.update_allowed and autosubliminal.CHECKVERSIONAUTOUPDATE:
@@ -69,20 +71,20 @@ class VersionChecker(ScheduledProcess):
         # Always return 'True' because we don't want to retry it until the next scheduled run
         return True
 
-    @utils.release_wanted_queue_lock_on_exception
+    @release_wanted_queue_lock_on_exception
     def update(self):
         log.info('Updating version')
 
         # Block update when another process is using the wanted queue
         # We do not want to update the version while the application is busy with another process
-        if not utils.get_wanted_queue_lock():
+        if not get_wanted_queue_lock():
             return False
 
         # Update version
         self.manager.update_version()
 
         # Release wanted queue lock
-        utils.release_wanted_queue_lock()
+        release_wanted_queue_lock()
 
         return True
 
@@ -172,7 +174,7 @@ class SourceVersionManager(BaseVersionManager):
 
         # Remote github version
         try:
-            response = utils.connect_url(autosubliminal.VERSIONURL)
+            response = connect_url(autosubliminal.VERSIONURL)
         except Exception:
             log.exception('Could not get remote version from %s', autosubliminal.VERSIONURL)
             return False
@@ -187,13 +189,13 @@ class SourceVersionManager(BaseVersionManager):
         # Compare versions
         if local_version > remote_version:
             log.info('Unknown version found')
-            utils.add_notification_message(
+            add_notification_message(
                 'Unknown version found! '
                 'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and reinstall!',
                 'error', True)
         elif local_version < remote_version:
             log.info('New version found')
-            utils.add_notification_message(
+            add_notification_message(
                 'New version found. '
                 'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and update!',
                 'notice', True)
@@ -201,7 +203,7 @@ class SourceVersionManager(BaseVersionManager):
             log.info('Version up to date')
             # Show info message (only when run was forced manually)
             if force_run:
-                utils.add_notification_message('You are running the latest version.')
+                add_notification_message('You are running the latest version.')
 
         return True
 
@@ -284,12 +286,12 @@ class GitVersionManager(BaseVersionManager):
 
         if self.num_commits_ahead > 0:
             log.info('Unknown version found')
-            utils.add_notification_message(
+            add_notification_message(
                 'Unknown version found! Check <a href=' + autosubliminal.GITHUBURL +
                 '/releases>Github</a> and reinstall!', 'error', True)
         elif self.num_commits_behind > 0:
             log.info('New version found')
-            utils.add_notification_message(
+            add_notification_message(
                 'New version found. <a href=' + autosubliminal.WEBROOT + '/system/updateVersion>Update</a>!',
                 'notice', True)
             self.update_allowed = True
@@ -297,7 +299,7 @@ class GitVersionManager(BaseVersionManager):
             log.info('Version up to date')
             # Show info message (only when run was forced manually)
             if force_run:
-                utils.add_notification_message('You are running the latest version.')
+                add_notification_message('You are running the latest version.')
 
         return True
 
@@ -309,6 +311,6 @@ class GitVersionManager(BaseVersionManager):
                 self.repo.remote(name='origin').pull()
                 self.clean()
                 log.info('Updated to the latest version')
-                utils.add_notification_message('Updated to the latest version.')
+                add_notification_message('Updated to the latest version.')
             except Exception:
                 log.exception('Could not update version')

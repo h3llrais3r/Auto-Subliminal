@@ -1,7 +1,7 @@
 <%!
     from bs4 import BeautifulSoup
 
-    from autosubliminal import utils
+    from autosubliminal.util import utils
 %>
 
 <%

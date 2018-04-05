@@ -5,10 +5,12 @@ import json
 import cherrypy
 
 import autosubliminal
-from autosubliminal import system, utils
+from autosubliminal import system
 from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache, WantedItems
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
+from autosubliminal.util.utils import add_notification_message, get_wanted_queue_lock, release_wanted_queue_lock, \
+    release_wanted_queue_lock_on_exception
 
 
 class System(object):
@@ -50,27 +52,27 @@ class System(object):
     def flush_cache(self):
         TvdbIdCache().flush_cache()
         ImdbIdCache().flush_cache()
-        utils.add_notification_message('Flushed id cache database.')
+        add_notification_message('Flushed id cache database.')
         redirect('/home')
 
-    @utils.release_wanted_queue_lock_on_exception
+    @release_wanted_queue_lock_on_exception
     @cherrypy.expose(alias='flushWantedItems')
     def flush_wanted_items(self):
-        if utils.get_wanted_queue_lock():
+        if get_wanted_queue_lock():
             # Flush db and wanted queue
             WantedItems().flush_wanted_items()
             autosubliminal.WANTEDQUEUE = []
-            utils.release_wanted_queue_lock()
-            utils.add_notification_message(
+            release_wanted_queue_lock()
+            add_notification_message(
                 'Flushed wanted items database. Please launch \'Scan Disk\' from the \'System\' menu.')
         else:
-            utils.add_notification_message('Cannot flush wanted items database when wanted queue is in use!', 'notice')
+            add_notification_message('Cannot flush wanted items database when wanted queue is in use!', 'notice')
         redirect('/home')
 
     @cherrypy.expose(alias='flushLastDownloads')
     def flush_last_downloads(self):
         LastDownloads().flush_last_downloads()
-        utils.add_notification_message('Flushed last downloads database.')
+        add_notification_message('Flushed last downloads database.')
         redirect('/home')
 
     @cherrypy.expose(alias='isAlive')

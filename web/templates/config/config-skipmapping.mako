@@ -2,7 +2,7 @@
 
 <%!
     import autosubliminal
-    from autosubliminal.utils import display_mapping_dict
+    from autosubliminal.util.utils import display_mapping_dict
 %>
 
 <%block name="bodyContent">

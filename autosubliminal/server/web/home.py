@@ -4,10 +4,11 @@ import cherrypy
 from six import text_type
 
 import autosubliminal
-from autosubliminal import config, subchecker, utils
+from autosubliminal import config, subchecker
 from autosubliminal.db import WantedItems
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
+from autosubliminal.util.utils import add_notification_message, display_item, display_title, run_cmd, sanitize
 
 
 class Home(object):
@@ -29,15 +30,15 @@ class Home(object):
                 wanted_item[key] = kwargs[key]
         # Only return updatable fields
         # These values will be shown in the view through jquery, so apply the display_item() on it!
-        return {'displaytitle': utils.display_title(wanted_item),
-                'title': utils.display_item(wanted_item, 'title'),
-                'year': utils.display_item(wanted_item, 'year'),
-                'season': utils.display_item(wanted_item, 'season'),
-                'episode': utils.display_item(wanted_item, 'episode'),
-                'source': utils.display_item(wanted_item, 'source', 'N/A', uppercase=True),
-                'quality': utils.display_item(wanted_item, 'quality', 'N/A', uppercase=True),
-                'codec': utils.display_item(wanted_item, 'codec', 'N/A', uppercase=True),
-                'releasegrp': utils.display_item(wanted_item, 'releasegrp', 'N/A', uppercase=True)}
+        return {'displaytitle': display_title(wanted_item),
+                'title': display_item(wanted_item, 'title'),
+                'year': display_item(wanted_item, 'year'),
+                'season': display_item(wanted_item, 'season'),
+                'episode': display_item(wanted_item, 'episode'),
+                'source': display_item(wanted_item, 'source', 'N/A', uppercase=True),
+                'quality': display_item(wanted_item, 'quality', 'N/A', uppercase=True),
+                'codec': display_item(wanted_item, 'codec', 'N/A', uppercase=True),
+                'releasegrp': display_item(wanted_item, 'releasegrp', 'N/A', uppercase=True)}
 
     @cherrypy.expose(alias='resetWantedItem')
     @cherrypy.tools.json_out()
@@ -49,15 +50,15 @@ class Home(object):
             wanted_item[key] = wanted_item_db[key]
         # Only return updatable fields
         # These values represent the original values, so apply default display_item() on it!
-        return {'displaytitle': utils.display_title(wanted_item),
-                'title': utils.display_item(wanted_item, 'title'),
-                'year': utils.display_item(wanted_item, 'year'),
-                'season': utils.display_item(wanted_item, 'season'),
-                'episode': utils.display_item(wanted_item, 'episode'),
-                'source': utils.display_item(wanted_item, 'source', 'N/A'),
-                'quality': utils.display_item(wanted_item, 'quality', 'N/A'),
-                'codec': utils.display_item(wanted_item, 'codec', 'N/A'),
-                'releasegrp': utils.display_item(wanted_item, 'releasegrp', 'N/A')}
+        return {'displaytitle': display_title(wanted_item),
+                'title': display_item(wanted_item, 'title'),
+                'year': display_item(wanted_item, 'year'),
+                'season': display_item(wanted_item, 'season'),
+                'episode': display_item(wanted_item, 'episode'),
+                'source': display_item(wanted_item, 'source', 'N/A'),
+                'quality': display_item(wanted_item, 'quality', 'N/A'),
+                'codec': display_item(wanted_item, 'codec', 'N/A'),
+                'releasegrp': display_item(wanted_item, 'releasegrp', 'N/A')}
 
     @cherrypy.expose(alias='searchId')
     def force_id_search(self, wanted_item_index):
@@ -79,12 +80,12 @@ class Home(object):
                 season = text_type(int(season))
             config_season = season
             # Check if already skipped
-            title_sanitized = utils.sanitize(title)
+            title_sanitized = sanitize(title)
             for x in autosubliminal.SKIPSHOW:
-                if title_sanitized == utils.sanitize(x):
+                if title_sanitized == sanitize(x):
                     for s in autosubliminal.SKIPSHOW[x].split(','):
                         if s == season or s == '00':
-                            utils.add_notification_message('Already skipped show %s season %s.' % (title, season))
+                            add_notification_message('Already skipped show %s season %s.' % (title, season))
                             redirect('/home')
                     # Not skipped yet, skip all or append season the seasons to skip
                     if season == '00':
@@ -98,11 +99,11 @@ class Home(object):
                 config.write_config_property('skipshow', title, config_season)
                 config.apply_skipshow()
                 if season == '00':
-                    utils.add_notification_message('Skipped show %s all seasons.' % title)
+                    add_notification_message('Skipped show %s all seasons.' % title)
                 else:
-                    utils.add_notification_message('Skipped show %s season %s.' % (title, season))
+                    add_notification_message('Skipped show %s season %s.' % (title, season))
             else:
-                utils.add_notification_message('Could not skip show! Please check the log file!', 'error')
+                add_notification_message('Could not skip show! Please check the log file!', 'error')
 
             redirect('/home')
 
@@ -116,18 +117,18 @@ class Home(object):
         if year:
             movie += ' (' + year + ')'
         # Check if already skipped
-        movie_sanitized = utils.sanitize(movie)
+        movie_sanitized = sanitize(movie)
         for x in autosubliminal.SKIPMOVIE:
-            if movie_sanitized == utils.sanitize(x):
-                utils.add_notification_message('Already skipped movie %s.' % movie)
+            if movie_sanitized == sanitize(x):
+                add_notification_message('Already skipped movie %s.' % movie)
                 redirect('/home')
         # Skip movie
         if subchecker.skip_movie(wanted_item_index):
             config.write_config_property('skipmovie', movie, '00')
             config.apply_skipmovie()
-            utils.add_notification_message('Skipped movie %s.' % movie)
+            add_notification_message('Skipped movie %s.' % movie)
         else:
-            utils.add_notification_message('Could not skip movie! Please check the log file!', 'error')
+            add_notification_message('Could not skip movie! Please check the log file!', 'error')
         redirect('/home')
 
     @cherrypy.expose(alias='deleteVideo')
@@ -141,9 +142,9 @@ class Home(object):
             # Delete video
             deleted = subchecker.delete_video(wanted_item_index, cleanup)
             if deleted:
-                utils.add_notification_message('Video deleted from filesystem.')
+                add_notification_message('Video deleted from filesystem.')
             else:
-                utils.add_notification_message('Video could not be deleted! Please check the log file!', 'error')
+                add_notification_message('Video could not be deleted! Please check the log file!', 'error')
             redirect('/home')
 
     @cherrypy.expose(alias='searchSubtitle')
@@ -184,7 +185,7 @@ class Home(object):
         # Play video with default player
         video = wanted_item['videopath']
         try:
-            utils.run_cmd(video, False)
+            run_cmd(video, False)
             return {'result': True, 'infomessage': 'Playing video.', 'errormessage': None}
         except Exception:
             return {'result': False, 'infomessage': None,

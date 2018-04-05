@@ -3,8 +3,8 @@
 import logging
 
 import autosubliminal
-from autosubliminal import utils
 from autosubliminal.util.encoding import b2u, s2n
+from autosubliminal.util.utils import get_root_path, run_cmd, safe_trim
 
 log = logging.getLogger(__name__)
 
@@ -47,7 +47,7 @@ class PostProcessor(object):
         if not process_cmd:
             return False
         # Execute post process command
-        stdout, stderr = utils.run_cmd(process_cmd)
+        stdout, stderr = run_cmd(process_cmd)
         if stderr:
             self._log_process_output('Post processor failed:\n', stderr, logging.ERROR)
             return False
@@ -69,7 +69,7 @@ class PostProcessor(object):
 
             # Add root video path argument
             video_path = self._wanted_item['videopath']
-            root_path = utils.get_root_path(video_path)
+            root_path = get_root_path(video_path)
             log.debug('root path: %s', root_path)
             process.append(self._convert_arg(root_path))
 
@@ -106,7 +106,7 @@ class PostProcessor(object):
         # Process output is always in bytes
         # We expect the encoding of the output to be the same as the encoding we used
         try:
-            output_u = utils.safe_trim(b2u(output, self._encoding))
+            output_u = safe_trim(b2u(output, self._encoding))
             log.log(log_level, '%s%s', message, output_u)
         except Exception:
             log.exception('Unable to log process output')

@@ -9,7 +9,7 @@ from guessit import guessit
 from six import text_type
 
 import autosubliminal
-from autosubliminal import utils
+from autosubliminal.util.utils import humanize_bytes
 
 log = logging.getLogger(__name__)
 
@@ -55,7 +55,7 @@ def process_file(dirname, filename):
         file_size = os.path.getsize(file_path)
         # MINVIDEOFILESIZE is size in MB
         if file_size < autosubliminal.MINVIDEOFILESIZE * 1024 * 1024:
-            log.warning('File size (%s) is lower than %sMB, skipping', utils.humanize_bytes(file_size),
+            log.warning('File size (%s) is lower than %sMB, skipping', humanize_bytes(file_size),
                         autosubliminal.MINVIDEOFILESIZE)
             return None
 

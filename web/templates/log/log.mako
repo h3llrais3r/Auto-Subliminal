@@ -5,6 +5,7 @@
     from six import text_type
 
     import autosubliminal
+    from autosubliminal.util.utils import count_backup_logfiles
 %>
 
 <%block name="bodyContent">
@@ -16,7 +17,7 @@
                     <div class="row">
                         <span class="h3 weighted">Log File</span>
                         <span class="pull-right">
-                            <% backup_count = autosubliminal.utils.count_backup_logfiles() %>
+                            <% backup_count = count_backup_logfiles() %>
                             <ul class="log-pagination">
                                 <% current_style = lognum is None and 'badge selected' or 'badge'%>
                                 <li class="log-page ${current_style}">

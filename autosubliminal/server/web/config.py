@@ -4,9 +4,10 @@ import cherrypy
 from requests_oauthlib.oauth1_session import OAuth1Session
 
 import autosubliminal
-from autosubliminal import config, notifiers, utils
+from autosubliminal import config, notifiers
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
+from autosubliminal.util.utils import add_notification_message, get_boolean, mapping_string_to_dict
 
 
 class Config(object):
@@ -33,7 +34,7 @@ class Config(object):
         else:
             # For some reason the config needs to be read again, otherwise all pages get an error
             config.read_config()
-            utils.add_notification_message('Config saved.')
+            add_notification_message('Config saved.')
             return {}
 
     @cherrypy.expose
@@ -58,15 +59,15 @@ class Config(object):
             # Set general variables
             autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
             autosubliminal.DEFAULTLANGUAGE = defaultlanguage
-            autosubliminal.DEFAULTLANGUAGESUFFIX = utils.getboolean(defaultlanguagesuffix)
+            autosubliminal.DEFAULTLANGUAGESUFFIX = get_boolean(defaultlanguagesuffix)
             autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split(',')
             autosubliminal.SCANDISKINTERVAL = int(scandisk)
             autosubliminal.CHECKSUBINTERVAL = int(checksub)
             autosubliminal.CHECKVERSIONINTERVAL = int(checkversion)
-            autosubliminal.CHECKVERSIONAUTOUPDATE = utils.getboolean(checkversionautoupdate)
-            autosubliminal.SCANEMBEDDEDSUBS = utils.getboolean(scanembeddedsubs)
-            autosubliminal.SKIPHIDDENDIRS = utils.getboolean(skiphiddendirs)
-            autosubliminal.DETECTINVALIDSUBLANGUAGE = utils.getboolean(detectinvalidsublanguage)
+            autosubliminal.CHECKVERSIONAUTOUPDATE = get_boolean(checkversionautoupdate)
+            autosubliminal.SCANEMBEDDEDSUBS = get_boolean(scanembeddedsubs)
+            autosubliminal.SKIPHIDDENDIRS = get_boolean(skiphiddendirs)
+            autosubliminal.DETECTINVALIDSUBLANGUAGE = get_boolean(detectinvalidsublanguage)
             autosubliminal.DETECTEDLANGUAGEPROBABILITY = float(detectedlanguageprobability)
             autosubliminal.MINVIDEOFILESIZE = int(minvideofilesize)
             autosubliminal.MAXDBRESULTS = int(maxdbresults)
@@ -92,10 +93,10 @@ class Config(object):
             autosubliminal.LOGLEVEL = int(loglevel)
             autosubliminal.LOGNUM = int(lognum)
             autosubliminal.LOGSIZE = int(logsize)
-            autosubliminal.LOGHTTPACCESS = utils.getboolean(loghttpaccess)
-            autosubliminal.LOGEXTERNALLIBS = utils.getboolean(logexternallibs)
-            autosubliminal.LOGDETAILEDFORMAT = utils.getboolean(logdetailedformat)
-            autosubliminal.LOGREVERSED = utils.getboolean(logreversed)
+            autosubliminal.LOGHTTPACCESS = get_boolean(loghttpaccess)
+            autosubliminal.LOGEXTERNALLIBS = get_boolean(logexternallibs)
+            autosubliminal.LOGDETAILEDFORMAT = get_boolean(logdetailedformat)
+            autosubliminal.LOGREVERSED = get_boolean(logreversed)
             autosubliminal.LOGLEVELCONSOLE = int(loglevelconsole)
 
             # Now save to the configfile and restart if needed
@@ -119,7 +120,7 @@ class Config(object):
             autosubliminal.WEBROOT = webroot
             autosubliminal.USERNAME = username
             autosubliminal.PASSWORD = password
-            autosubliminal.LAUNCHBROWSER = utils.getboolean(launchbrowser)
+            autosubliminal.LAUNCHBROWSER = get_boolean(launchbrowser)
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.section)
@@ -193,12 +194,12 @@ class Config(object):
             else:
                 autosubliminal.SUBLIMINALPROVIDERS = [subliminalproviders] if subliminalproviders else []
             # Subtitle utf8 encoding
-            autosubliminal.SUBTITLEUTF8ENCODING = utils.getboolean(subtitleutf8encoding)
+            autosubliminal.SUBTITLEUTF8ENCODING = get_boolean(subtitleutf8encoding)
             # Refine video
-            autosubliminal.MANUALREFINEVIDEO = utils.getboolean(manualrefinevideo)
-            autosubliminal.REFINEVIDEO = utils.getboolean(refinevideo)
+            autosubliminal.MANUALREFINEVIDEO = get_boolean(manualrefinevideo)
+            autosubliminal.REFINEVIDEO = get_boolean(refinevideo)
             # Hearing impaired
-            autosubliminal.PREFERHEARINGIMPAIRED = utils.getboolean(preferhearingimpaired)
+            autosubliminal.PREFERHEARINGIMPAIRED = get_boolean(preferhearingimpaired)
             # Addic7ed provider
             autosubliminal.ADDIC7EDUSERNAME = addic7edusername
             autosubliminal.ADDIC7EDPASSWORD = addic7edpassword
@@ -223,11 +224,11 @@ class Config(object):
         def save(self, shownamemapping, addic7edshownamemapping, alternativeshownamemapping, movienamemapping,
                  alternativemovienamemapping):
             # Set name mapping dicts
-            autosubliminal.SHOWNAMEMAPPING = utils.mapping_string_to_dict(shownamemapping)
-            autosubliminal.ADDIC7EDSHOWNAMEMAPPING = utils.mapping_string_to_dict(addic7edshownamemapping)
-            autosubliminal.ALTERNATIVESHOWNAMEMAPPING = utils.mapping_string_to_dict(alternativeshownamemapping)
-            autosubliminal.MOVIENAMEMAPPING = utils.mapping_string_to_dict(movienamemapping)
-            autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = utils.mapping_string_to_dict(alternativemovienamemapping)
+            autosubliminal.SHOWNAMEMAPPING = mapping_string_to_dict(shownamemapping)
+            autosubliminal.ADDIC7EDSHOWNAMEMAPPING = mapping_string_to_dict(addic7edshownamemapping)
+            autosubliminal.ALTERNATIVESHOWNAMEMAPPING = mapping_string_to_dict(alternativeshownamemapping)
+            autosubliminal.MOVIENAMEMAPPING = mapping_string_to_dict(movienamemapping)
+            autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = mapping_string_to_dict(alternativemovienamemapping)
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.section)
@@ -245,8 +246,8 @@ class Config(object):
         @cherrypy.tools.json_out()
         def save(self, skipshow, skipmovie):
             # Set skip variables
-            autosubliminal.SKIPSHOW = utils.mapping_string_to_dict(skipshow)
-            autosubliminal.SKIPMOVIE = utils.mapping_string_to_dict(skipmovie)
+            autosubliminal.SKIPSHOW = mapping_string_to_dict(skipshow)
+            autosubliminal.SKIPMOVIE = mapping_string_to_dict(skipmovie)
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.section)
@@ -264,10 +265,10 @@ class Config(object):
         @cherrypy.tools.json_out()
         def test(self, notify_lib):
             if notifiers.test_notifier(notify_lib):
-                utils.add_notification_message('Test notification (%s) sent.' % notify_lib)
+                add_notification_message('Test notification (%s) sent.' % notify_lib)
             else:
-                utils.add_notification_message('Test notification (%s) failed! Please check the log file!' % notify_lib,
-                                               'error')
+                add_notification_message('Test notification (%s) failed! Please check the log file!' % notify_lib,
+                                         'error')
             return {}
 
         @cherrypy.expose(alias='regTwitter')
@@ -324,8 +325,8 @@ class Config(object):
                  notifypushbullet, pushbulletapi,
                  notifytelegram, telegrambotapi, telegramchatid):
             # Set notify variables
-            autosubliminal.NOTIFY = utils.getboolean(notify)
-            autosubliminal.NOTIFYMAIL = utils.getboolean(notifymail)
+            autosubliminal.NOTIFY = get_boolean(notify)
+            autosubliminal.NOTIFYMAIL = get_boolean(notifymail)
             autosubliminal.MAILSRV = mailsrv
             autosubliminal.MAILFROMADDR = mailfromaddr
             autosubliminal.MAILTOADDR = mailtoaddr
@@ -334,29 +335,29 @@ class Config(object):
             autosubliminal.MAILSUBJECT = mailsubject
             autosubliminal.MAILENCRYPTION = mailencryption
             autosubliminal.MAILAUTH = mailauth
-            autosubliminal.NOTIFYTWITTER = utils.getboolean(notifytwitter)
+            autosubliminal.NOTIFYTWITTER = get_boolean(notifytwitter)
             autosubliminal.TWITTERKEY = twitterkey
             autosubliminal.TWITTERSECRET = twittersecret
-            autosubliminal.NOTIFYPUSHALOT = utils.getboolean(notifypushalot)
+            autosubliminal.NOTIFYPUSHALOT = get_boolean(notifypushalot)
             autosubliminal.PUSHALOTAPI = pushalotapi
-            autosubliminal.NOTIFYPUSHOVER = utils.getboolean(notifypushover)
+            autosubliminal.NOTIFYPUSHOVER = get_boolean(notifypushover)
             autosubliminal.PUSHOVERKEY = pushoverkey
             autosubliminal.PUSHOVERAPI = pushoverapi
             autosubliminal.PUSHOVERDEVICES = pushoverdevices
-            autosubliminal.NOTIFYNMA = utils.getboolean(notifynma)
+            autosubliminal.NOTIFYNMA = get_boolean(notifynma)
             autosubliminal.NMAAPI = nmaapi
             autosubliminal.NMAPRIORITY = nmapriority
-            autosubliminal.NOTIFYGROWL = utils.getboolean(notifygrowl)
+            autosubliminal.NOTIFYGROWL = get_boolean(notifygrowl)
             autosubliminal.GROWLHOST = growlhost
             autosubliminal.GROWLPORT = int(growlport)
             autosubliminal.GROWLPASS = growlpass
             autosubliminal.GROWLPRIORITY = int(growlpriority)
-            autosubliminal.NOTIFYPROWL = utils.getboolean(notifyprowl)
+            autosubliminal.NOTIFYPROWL = get_boolean(notifyprowl)
             autosubliminal.PROWLAPI = prowlapi
             autosubliminal.PROWLPRIORITY = int(prowlpriority)
-            autosubliminal.NOTIFYPUSHBULLET = utils.getboolean(notifypushbullet)
+            autosubliminal.NOTIFYPUSHBULLET = get_boolean(notifypushbullet)
             autosubliminal.PUSHBULLETAPI = pushbulletapi
-            autosubliminal.NOTIFYTELEGRAM = utils.getboolean(notifytelegram)
+            autosubliminal.NOTIFYTELEGRAM = get_boolean(notifytelegram)
             autosubliminal.TELEGRAMBOTAPI = telegrambotapi
             autosubliminal.TELEGRAMCHATID = telegramchatid
 
@@ -377,9 +378,9 @@ class Config(object):
         def save(self, postprocess, postprocessindividual, postprocessutf8encoding, showpostprocesscmd,
                  showpostprocesscmdargs, moviepostprocesscmd, moviepostprocesscmdargs):
             # Set postprocessing variables
-            autosubliminal.POSTPROCESS = utils.getboolean(postprocess)
-            autosubliminal.POSTPROCESSINDIVIDUAL = utils.getboolean(postprocessindividual)
-            autosubliminal.POSTPROCESSUTF8ENCODING = utils.getboolean(postprocessutf8encoding)
+            autosubliminal.POSTPROCESS = get_boolean(postprocess)
+            autosubliminal.POSTPROCESSINDIVIDUAL = get_boolean(postprocessindividual)
+            autosubliminal.POSTPROCESSUTF8ENCODING = get_boolean(postprocessutf8encoding)
             autosubliminal.SHOWPOSTPROCESSCMD = showpostprocesscmd
             autosubliminal.SHOWPOSTPROCESSCMDARGS = showpostprocesscmdargs
             autosubliminal.MOVIEPOSTPROCESSCMD = moviepostprocesscmd

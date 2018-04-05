@@ -2,7 +2,7 @@
 
 import datetime
 
-from autosubliminal import utils
+from autosubliminal.util.utils import get_today
 
 # A subtitle will be searched on each run, as long as the file is not older than 4 weeks
 search_deadline = datetime.timedelta(weeks=4)
@@ -31,7 +31,7 @@ class WantedItem(object):
         """
         file_datetime = datetime.datetime.strptime(self.wanted_item['timestamp'], '%Y-%m-%d %H:%M:%S')
         file_search_deadline = file_datetime + search_deadline
-        today = utils.today()
+        today = get_today()
         file_age_in_days = (today.date() - file_search_deadline.date()).days
         if today.date() <= file_search_deadline.date():
             return True

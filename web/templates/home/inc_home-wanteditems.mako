@@ -3,7 +3,7 @@
 
     import autosubliminal
     from autosubliminal.core.item import WantedItem
-    from autosubliminal.utils import convert_timestamp, display_item, display_title, get_file_size, count_wanted_items
+    from autosubliminal.util.utils import convert_timestamp, display_item, display_title, get_file_size, count_wanted_items
 %>
 
 <%block name="bodyContent">

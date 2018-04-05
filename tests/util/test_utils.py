@@ -10,7 +10,7 @@ from vcr import VCR
 
 import autosubliminal
 from autosubliminal import version
-from autosubliminal.utils import connect_url, getboolean, safe_text, safe_trim, safe_uppercase, sanitize, \
+from autosubliminal.util.utils import connect_url, get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, \
     mapping_string_to_dict, display_logfile, display_mapping_dict, get_show_name_mapping, \
     get_addic7ed_show_name_mapping, get_alternative_show_name_mapping, get_movie_name_mapping, \
     get_alternative_movie_name_mapping, skip_show, skip_movie, display_list_single_line, display_list_multi_line, \
@@ -50,17 +50,17 @@ def test_connect_url_exception(monkeypatch):
         connect_url('invalid_url')
 
 
-def test_getboolean():
-    assert getboolean('1')
-    assert getboolean('yes')
-    assert getboolean('true')
-    assert getboolean('on')
-    assert not getboolean('0')
-    assert not getboolean('no')
-    assert not getboolean('false')
-    assert not getboolean('off')
+def test_get_boolean():
+    assert get_boolean('1')
+    assert get_boolean('yes')
+    assert get_boolean('true')
+    assert get_boolean('on')
+    assert not get_boolean('0')
+    assert not get_boolean('no')
+    assert not get_boolean('false')
+    assert not get_boolean('off')
     with pytest.raises(ValueError):
-        getboolean('test')
+        get_boolean('test')
 
 
 def test_save_text():
