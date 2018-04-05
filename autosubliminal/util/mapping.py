@@ -5,7 +5,7 @@ import logging
 from six import text_type
 
 import autosubliminal
-from autosubliminal.util.common import sanitize, log
+from autosubliminal.util.common import sanitize
 
 log = logging.getLogger(__name__)
 
