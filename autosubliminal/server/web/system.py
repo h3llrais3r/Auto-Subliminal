@@ -7,7 +7,7 @@ import cherrypy
 import autosubliminal
 from autosubliminal import system, utils
 from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache, WantedItems
-from autosubliminal.server.web import redirect, redirect_referer
+from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
 
 
@@ -62,7 +62,7 @@ class System(object):
             autosubliminal.WANTEDQUEUE = []
             utils.release_wanted_queue_lock()
             utils.add_notification_message(
-                'Flushed wanted items database. Please launch system \'Scan Disk\'.')
+                'Flushed wanted items database. Please launch \'Scan Disk\' from the \'System\' menu.')
         else:
             utils.add_notification_message('Cannot flush wanted items database when wanted queue is in use!', 'notice')
         redirect('/home')
