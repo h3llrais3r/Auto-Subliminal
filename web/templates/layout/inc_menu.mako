@@ -95,10 +95,10 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-inverse">
                         <li>
-                            <a href="${autosubliminal.WEBROOT}/system/scanDisk"><i class="fa fa-play" aria-hidden="true"></i>&nbsp;Scan Disk</a>
+                            <a href="${autosubliminal.WEBROOT}/system" class="run-process" data-process-name="${autosubliminal.SCANDISK.name}"><i class="fa fa-play" aria-hidden="true"></i>&nbsp;Scan Disk</a>
                         </li>
                         <li>
-                            <a href="${autosubliminal.WEBROOT}/system/checkSub"><i class="fa fa-play" aria-hidden="true"></i>&nbsp;Check Subtitles</a>
+                            <a href="${autosubliminal.WEBROOT}/system" class="run-process" data-process-name="${autosubliminal.CHECKSUB.name}"><i class="fa fa-play" aria-hidden="true"></i>&nbsp;Check Subtitles</a>
                         </li>
                         <li class="divider"></li>
                         <li>
@@ -116,7 +116,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="${autosubliminal.WEBROOT}/system/checkVersion"><i class="fa fa-wrench" aria-hidden="true"></i>&nbsp;Check Version</a>
+                            <a href="${autosubliminal.WEBROOT}/system" class="run-process" data-process-name="${autosubliminal.CHECKVERSION.name}"><i class="fa fa-wrench" aria-hidden="true"></i>&nbsp;Check Version</a>
                         </li>
                         <li class="divider"></li>
                         <li>

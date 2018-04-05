@@ -68,7 +68,7 @@ a:hover, a:active, a:focus, a:visited > .fa {
  * DROPDOWN MENU STYLING *
  *************************/
 
-.dropdown-hoverintent {
+.dropdown-menu, .dropdown-hoverintent {
     cursor: pointer;
 }
 

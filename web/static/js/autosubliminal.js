@@ -33,13 +33,25 @@ $.postJSON = function (url, data, success, dataType) {
 
 // Highlight the active navigation button (without page submit)
 $('.navbar .nav a').on('click', function () {
-    $('.navbar').find('.nav').find('.active').removeClass('active');
-    $(this).parent().addClass('active');
+    // Skip change of active navigation button for links that run a process on the server (without page submit)
+    if (!$(this).hasClass('run-process')) {
+        $('.navbar').find('.nav').find('.active').removeClass('active');
+        $(this).parent().addClass('active');
+    }
 });
 
 //Highlight the active navigation button (after page submit)
 var base_path = '/' + location.pathname.replace(webroot, '').split('/')[1] + '/';
 $('.navbar').find('.nav').find('a[href=\'' + base_path + '\']').closest('li').addClass('active');
+
+// Setup navigation links that trigger the run of a process on the server
+$('.navbar .nav a.run-process').on('click', function () {
+    // Prevent default behaviour
+    event.preventDefault();
+    // Run the process
+    var process_name = $(this).data('process-name');
+    run_process_on_server(process_name);
+});
 
 /* ========
  * Checkbox

@@ -16,6 +16,10 @@ class System(object):
         pass
 
     @cherrypy.expose
+    def index(self):
+        return redirect('/system/info')
+
+    @cherrypy.expose
     def restart(self):
         system.restart()
         message = 'Auto-Subliminal is restarting...'
@@ -34,21 +38,6 @@ class System(object):
     @cherrypy.expose
     def status(self):
         return PageTemplate(filename='/system/system-status.mako').render()
-
-    @cherrypy.expose(alias='scanDisk')
-    def scan_disk(self):
-        autosubliminal.SCANDISK.run()
-        redirect_referer('/home')
-
-    @cherrypy.expose(alias='checkSub')
-    def check_sub(self):
-        autosubliminal.CHECKSUB.run()
-        redirect_referer('/home')
-
-    @cherrypy.expose(alias='checkVersion')
-    def check_version(self):
-        autosubliminal.CHECKVERSION.run()
-        redirect_referer('/home')
 
     @cherrypy.expose(alias='updateVersion')
     def update_version(self):
