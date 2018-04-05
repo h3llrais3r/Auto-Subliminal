@@ -15,13 +15,13 @@ from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool
 
 import autosubliminal
 from autosubliminal.core.scheduler import Scheduler
+from autosubliminal.core.websocket import WebSocketBroadCaster, WebSocketHandler
 from autosubliminal.diskscanner import DiskScanner
 from autosubliminal.subchecker import SubChecker
 from autosubliminal.versionchecker import VersionChecker
 from autosubliminal.server.root import WebServerRoot
 from autosubliminal.util.encoding import s2n
 from autosubliminal.util.json import json_out_handler
-from autosubliminal.websocket import WebSocketBroadCaster, WebSocketHandler
 
 log = logging.getLogger(__name__)
 
