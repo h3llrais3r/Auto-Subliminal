@@ -15,14 +15,6 @@ class System(object):
     def __init__(self):
         pass
 
-    @cherrypy.expose(alias='runNow')
-    def run_now(self):
-        # Run threads now (use delay to be sure that checksub is run after scandisk)
-        autosubliminal.SCANDISK.run()
-        autosubliminal.CHECKSUB.run(delay=1)
-        utils.add_notification_message('Running everything...')
-        redirect('/home')
-
     @cherrypy.expose
     def restart(self):
         system.restart()

@@ -102,9 +102,6 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="${autosubliminal.WEBROOT}/system/runNow"><i class="fa fa-play" aria-hidden="true"></i>&nbsp;Run Now All</a>
-                        </li>
-                        <li>
                             <a href="${autosubliminal.WEBROOT}/system/restart"><i class="fa fa-repeat" aria-hidden="true"></i>&nbsp;Restart</a>
                         </li>
                         <li>
