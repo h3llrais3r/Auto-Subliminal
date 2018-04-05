@@ -13,6 +13,10 @@ search_delta = datetime.timedelta(weeks=1)
 
 # TODO: Refactor wanted_item dict to WantedItem class! For now we use the wanted_item dict inside the WantedItem class!
 class WantedItem(object):
+    """
+    Class holding all the data for a wanted item.
+    """
+
     def __init__(self, wanted_item):
         # TODO: Remove dict when all properties are available and usage of dict has been replaced by this class
         self.wanted_item = wanted_item

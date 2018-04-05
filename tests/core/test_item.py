@@ -2,18 +2,18 @@
 
 import datetime
 
-from autosubliminal.wanteditem import WantedItem
+from autosubliminal.core.item import WantedItem
 
 wanted_item = WantedItem({'timestamp': '2018-01-01 12:30:01'})
 
 
-def test_is_search_active_before_on_creation(mocker):
+def test_is_search_active_for_wanted_item_before_on_creation(mocker):
     today = datetime.datetime(2018, 1, 1, 0, 0, 0)
     mocker.patch('autosubliminal.utils.today', return_value=today)
     assert wanted_item.search_active
 
 
-def test_is_search_active_before_deadline(mocker):
+def test_is_search_active_for_wanted_item_before_deadline(mocker):
     today = datetime.datetime(2018, 1, 2, 0, 0, 0)
     mocker.patch('autosubliminal.utils.today', return_value=today)
     assert wanted_item.search_active
