@@ -51,12 +51,12 @@ def release_wanted_queue_lock_on_exception(func):
     return wrapper
 
 
-def count_wanted_queue_items(itemtype=None):
+def count_wanted_queue_items(item_type=None):
     size = 0
-    if not itemtype:
+    if not item_type:
         size = len(autosubliminal.WANTEDQUEUE)
     else:
         for item in autosubliminal.WANTEDQUEUE:
-            if item['type'] == itemtype:
+            if item['type'] == item_type:
                 size += 1
     return size

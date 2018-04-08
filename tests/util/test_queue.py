@@ -18,6 +18,6 @@ def test_wanted_queue_lock():
 def test_count_wanted_queue_items():
     autosubliminal.WANTEDQUEUE = [{'type': 'movie', 'title': 'title1'}, {'type': 'episode', 'title': 'title2'}]
     assert count_wanted_queue_items() == 2
-    assert count_wanted_queue_items(itemtype='movie') == 1
-    assert count_wanted_queue_items(itemtype='episode') == 1
-    assert count_wanted_queue_items(itemtype='video') == 0
+    assert count_wanted_queue_items(item_type='movie') == 1
+    assert count_wanted_queue_items(item_type='episode') == 1
+    assert count_wanted_queue_items(item_type='video') == 0
