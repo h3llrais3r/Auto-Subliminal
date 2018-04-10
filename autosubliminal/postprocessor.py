@@ -79,8 +79,8 @@ class PostProcessor(object):
 
             # Add subtitle path argument (can be empty if no subtitle was downloaded)
             subtitle_path = None
-            if 'destinationFileLocationOnDisk' in self._wanted_item:
-                subtitle_path = self._wanted_item['destinationFileLocationOnDisk']
+            if 'subtitlepath' in self._wanted_item:
+                subtitle_path = self._wanted_item['subtitlepath']
             log.debug('subtitle path: %s', subtitle_path if subtitle_path else '')
             process.append(self._convert_arg(subtitle_path if subtitle_path else ''))
 

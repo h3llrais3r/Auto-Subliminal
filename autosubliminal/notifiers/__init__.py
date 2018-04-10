@@ -29,7 +29,7 @@ class Notifier(object):
 
     def __init__(self, download_item):
         self._notifier_dict = {'video': os.path.basename(download_item['videopath']),
-                               'subtitle': os.path.basename(download_item['destinationFileLocationOnDisk']),
+                               'subtitle': os.path.basename(download_item['subtitlepath']),
                                'language': download_item['downlang'],
                                'provider': download_item['provider']}
 

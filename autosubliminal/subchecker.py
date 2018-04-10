@@ -604,10 +604,10 @@ def _construct_download_item(wanted_item, subtitles, language, single):
     # Construct the download item
     download_item = wanted_item.copy()
     subtitle_path = subliminal.subtitle.get_subtitle_path(download_item['video'].name, None if single else language)
-    download_item['destinationFileLocationOnDisk'] = subtitle_path
+    download_item['subtitlepath'] = subtitle_path
     download_item['downloadLink'] = subtitle.page_link
     download_item['downlang'] = language.alpha2
-    download_item['subtitle'] = os.path.split(download_item['destinationFileLocationOnDisk'])[1][:-4]
+    download_item['subtitle'] = os.path.split(download_item['subtitlepath'])[1][:-4]
     download_item['provider'] = subtitle.provider_name
     download_item['subtitles'] = subtitles
     download_item['single'] = single
