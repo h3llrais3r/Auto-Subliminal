@@ -1668,4 +1668,4 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 11
             autosubliminal.CONFIGUPGRADED = True
             add_notification_message('Config upgraded. Please check or reconfigure your logging configuration!',
-                                           'notice', True)
+                                     'notice', True)
