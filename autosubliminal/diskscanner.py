@@ -214,7 +214,8 @@ def check_missing_subtitle_languages(dirname, filename):
 
     # Check additional languages
     if autosubliminal.ADDITIONALLANGUAGES:
-        if autosubliminal.INDIVIDUALADDITIONALLANGUAGE and autosubliminal.DEFAULTLANGUAGE:
+        detected_language = _detect_subtitle_language(srt_path)
+        if autosubliminal.INDIVIDUALADDITIONALLANGUAGE and detected_language == default_language:
             log.debug('Skipping search for additional language, video already have default language')
         else:
             log.debug('Checking for missing additional language(s)')
