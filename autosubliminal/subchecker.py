@@ -108,6 +108,10 @@ class SubChecker(ScheduledProcess):
                             else:
                                 db.update_wanted_item(wanted_item)
 
+                        # Mark wanted item as deleted if there are no more wanted languages
+                        else:
+                            to_delete_wanted_queue.append(index)
+
             # Cleanup wanted item(s)
             i = len(to_delete_wanted_queue) - 1
             while i >= 0:
