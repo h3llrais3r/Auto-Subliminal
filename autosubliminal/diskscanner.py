@@ -214,12 +214,14 @@ def check_missing_subtitle_languages(dirname, filename):
 
     # Check additional languages
     if autosubliminal.ADDITIONALLANGUAGES:
-        detect_language = autosubliminal.DETECTINVALIDSUBLANGUAGE
+        detect_languages = autosubliminal.DETECTINVALIDSUBLANGUAGE
+        ind_lang = autosubliminal.INDIVIDUALADDITIONALLANGUAGE
         detected_language = _detect_subtitle_language(srt_path)
-        if autosubliminal.INDIVIDUALADDITIONALLANGUAGE and detect_language and detected_language == default_language:
+        default_language = autosubliminal.DEFAULTLANGUAGE
+        if ind_lang and detected_language == default_language:
             log.debug('Skipping search for additional language, video already have default language')
         else:
-            if autosubliminal.INDIVIDUALADDITIONALLANGUAGE and sub_exists and detect_language == False:
+            if ind_lang and sub_exists and not detect_languages:
                 log.debug('Skipping search for additional language, video already have default language')
             else:
                 log.debug('Checking for missing additional language(s)')
@@ -227,11 +229,13 @@ def check_missing_subtitle_languages(dirname, filename):
                 for language in autosubliminal.ADDITIONALLANGUAGES:
                     additional_language = Language.fromietf(language)
                     srt_file = os.path.splitext(filename)[0] + u'.' + language + u'.srt'
-                    if not os.path.exists(os.path.join(dirname, srt_file)) and additional_language not in embedded_subtitles:
+                    path_exist = os.path.exists(os.path.join(dirname, srt_file))
+                    if not path_exist and additional_language not in embedded_subtitles:
                         log.debug('Video is missing the additional language: %s', language)
                         missing_subtitles.append(language)
 
-            return missing_subtitles
+    return missing_subtitles
+
 
 def _get_embedded_subtitles(dirname, filename):
     """
