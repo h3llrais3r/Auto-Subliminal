@@ -233,7 +233,6 @@ def check_missing_subtitle_languages(dirname, filename):
 
             return missing_subtitles
 
-
 def _get_embedded_subtitles(dirname, filename):
     """
     Based on subliminal.video.scan_video(...) but only keep the check for embedded subtitles
