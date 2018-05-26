@@ -1661,11 +1661,3 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 10
             autosubliminal.CONFIGUPGRADED = True
             add_notification_message('Config upgraded!', 'notice', True)
-        if from_version == 10 and to_version == 11:
-            print('INFO: Upgrading Individual additional language. Please check/reconfigure your config!')
-            autosubliminal.INDIVIDUALADDITIONALLANGUAGE = False
-            print('INFO: Config upgraded to version 11.')
-            autosubliminal.CONFIGVERSION = 11
-            autosubliminal.CONFIGUPGRADED = True
-            add_notification_message('Config upgraded. Please check or reconfigure your logging configuration!',
-                                     'notice', True)
