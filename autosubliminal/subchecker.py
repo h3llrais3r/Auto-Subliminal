@@ -102,7 +102,11 @@ class SubChecker(ScheduledProcess):
 
                         # Update wanted item if there are still wanted languages
                         if len(languages) > 0:
-                            db.update_wanted_item(wanted_item)
+                            if autosubliminal.INDIVIDUALADDITIONALLANGUAGE and lang == autosubliminal.DEFAULTLANGUAGE:
+                                # Mark wanted item as deleted if there are no more wanted languages
+                                to_delete_wanted_queue.append(index)
+                            else:
+                                db.update_wanted_item(wanted_item)
 
                         # Mark wanted item as deleted if there are no more wanted languages
                         else:

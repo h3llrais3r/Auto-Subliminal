@@ -120,6 +120,32 @@
                             </span>
                         </div>
 
+						<div class="form-group narrow">
+                            <span class="col-xs-4 col-md-3">
+                                <label for="individualadditionallanguage">Individual additional Language
+                                    <span class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                        </a>
+                                        <ul class="dropdown-menu has-tip info-list">
+                                            <li>When enabled, program will not search for additional language if default language is pressent.</li>
+                                        </ul>
+                                    </span>
+                                </label>
+                            </span>
+                            <span class="col-xs-8 col-md-6">
+                                <select id="individualadditionallanguage" name="individualadditionallanguage" class="form-control input-sm">
+                                    % if autosubliminal.INDIVIDUALADDITIONALLANGUAGE:
+                                        <option value="True" selected="selected">Enabled</option>
+                                        <option value="False">Disabled</option>
+                                    % else:
+                                        <option value="True">Enabled</option>
+                                        <option value="False" selected="selected">Disabled</option>
+                                    % endif
+                                </select>
+                            </span>
+                        </div>
+
                         <div class="form-group narrow">
                             <span class="col-xs-4 col-md-3">
                                 <label for="scandisk">Disk scan interval

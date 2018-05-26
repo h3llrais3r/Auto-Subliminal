@@ -68,6 +68,11 @@ def read_config(check_upgrade=False):
         else:
             autosubliminal.ADDITIONALLANGUAGES = []
 
+        if cfg.has_option('general', 'individualadditionallanguage'):
+            autosubliminal.INDIVIDUALADDITIONALLANGUAGE = cfg.getboolean('general', 'individualadditionallanguage')
+        else:
+            autosubliminal.INDIVIDUALADDITIONALLANGUAGE = False
+
         if cfg.has_option('general', 'scandisk'):
             autosubliminal.SCANDISKINTERVAL = cfg.getint('general', 'scandisk')
         else:
@@ -136,6 +141,7 @@ def read_config(check_upgrade=False):
         autosubliminal.DEFAULTLANGUAGE = u'en'
         autosubliminal.DEFAULTLANGUAGESUFFIX = False
         autosubliminal.ADDITIONALLANGUAGES = []
+        autosubliminal.INDIVIDUALADDITIONALLANGUAGE = False
         autosubliminal.SCANDISKINTERVAL = 3600
         autosubliminal.CHECKSUBINTERVAL = 86400
         autosubliminal.CHECKVERSIONINTERVAL = 43200
@@ -812,6 +818,7 @@ def write_general_section():
     cfg.set(section, 'defaultlanguage', autosubliminal.DEFAULTLANGUAGE)
     cfg.set(section, 'defaultlanguagesuffix', text_type(autosubliminal.DEFAULTLANGUAGESUFFIX))
     cfg.set(section, 'additionallanguages', additionallanguages)
+    cfg.set(section, 'individualadditionallanguage', text_type(autosubliminal.INDIVIDUALADDITIONALLANGUAGE))
     cfg.set(section, 'scandisk', text_type(autosubliminal.SCANDISKINTERVAL))
     cfg.set(section, 'checksub', text_type(autosubliminal.CHECKSUBINTERVAL))
     cfg.set(section, 'checkversion', text_type(autosubliminal.CHECKVERSIONINTERVAL))
