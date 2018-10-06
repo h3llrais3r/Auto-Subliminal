@@ -1,7 +1,7 @@
 <%!
     import autosubliminal
     from autosubliminal.db import LastDownloads
-    from autosubliminal.util.common import convert_timestamp, display_item, display_title
+    from autosubliminal.util.common import convert_timestamp, display_value, display_item_title
 %>
 
 <%block name="bodyContent">
@@ -66,9 +66,9 @@
                     </tr>
                         % for item in lastdownloads:
                             <tr class="content-row hidden">
-                                <td class="hidden">${item['type']}</td>
+                                <td class="hidden">${item.type}</td>
                                 <td>
-                                    <span class="main-column">${display_title(item)}</span>
+                                    <span class="main-column">${display_item_title(item)}</span>
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
                                             <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
@@ -77,42 +77,42 @@
                                             <li>
                                                 <span class="info-list-label">Subtitle:</span>
                                                 <span>
-                                                    ${display_item(item, 'subtitle', 'N/A')}
+                                                    ${display_value(item.subtitle, 'N/A')}
                                                 </span>
                                             </li>
                                             <li>
                                                 <span class="info-list-label">Provider:</span>
                                                 <span>
-                                                    ${display_item(item, 'provider', 'N/A')}
+                                                    ${display_value(item.provider, 'N/A')}
                                                 </span>
                                             </li>
                                         </ul>
                                     </span>
                                 </td>
                                 <td>
-                                    ${display_item(item, 'season')}
+                                    ${display_value(item.season)}
                                 </td>
                                 <td>
-                                    ${display_item(item, 'episode')}
+                                    ${display_value(item.episode)}
                                 </td>
                                 <td class="wrapped">
-                                    ${display_item(item, 'source', 'N/A', True)}
+                                    ${display_value(item.source, 'N/A', True)}
                                 </td>
                                 <td class="wrapped">
-                                    ${display_item(item, 'quality', 'N/A', True)}
+                                    ${display_value(item.quality, 'N/A', True)}
                                 </td>
                                 <td class="wrapped">
-                                    ${display_item(item, 'codec', 'N/A', True)}
+                                    ${display_value(item.codec, 'N/A', True)}
                                 </td>
                                 <td class="wrapped">
-                                    ${display_item(item, 'releasegrp', 'N/A', True)}
+                                    ${display_value(item.releasegrp, 'N/A', True)}
                                 </td>
                                 <td>
-                                    <% imageurl = autosubliminal.WEBROOT + "/images/flags/language/" + item['language'] + ".png" %>
-                                    <img src="${imageurl}" class="language-icon" alt="${item['language']}" title="${item['language']}">
+                                    <% imageurl = autosubliminal.WEBROOT + "/images/flags/language/" + item.language + ".png" %>
+                                    <img src="${imageurl}" class="language-icon" alt="${item.language}" title="${item.language}">
                                 </td>
                                 <td class="datetime">
-                                    ${convert_timestamp(item['timestamp'])}
+                                    ${convert_timestamp(item.timestamp)}
                                 </td>
                             </tr>
                         % endfor

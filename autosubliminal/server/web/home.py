@@ -8,7 +8,7 @@ from autosubliminal import config, subchecker
 from autosubliminal.db import WantedItems
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
-from autosubliminal.util.common import add_notification_message, display_item, display_title, run_cmd, sanitize
+from autosubliminal.util.common import add_notification_message, display_value, display_item_title, run_cmd, sanitize
 
 
 class Home(object):
@@ -29,36 +29,36 @@ class Home(object):
             if key in wanted_item:
                 wanted_item[key] = kwargs[key]
         # Only return updatable fields
-        # These values will be shown in the view through jquery, so apply the display_item() on it!
-        return {'displaytitle': display_title(wanted_item),
-                'title': display_item(wanted_item, 'title'),
-                'year': display_item(wanted_item, 'year'),
-                'season': display_item(wanted_item, 'season'),
-                'episode': display_item(wanted_item, 'episode'),
-                'source': display_item(wanted_item, 'source', 'N/A', uppercase=True),
-                'quality': display_item(wanted_item, 'quality', 'N/A', uppercase=True),
-                'codec': display_item(wanted_item, 'codec', 'N/A', uppercase=True),
-                'releasegrp': display_item(wanted_item, 'releasegrp', 'N/A', uppercase=True)}
+        # These values will be shown in the view through jquery, so apply the display_value() on it!
+        return {'displaytitle': display_item_title(wanted_item),
+                'title': display_value(wanted_item.title),
+                'year': display_value(wanted_item.year),
+                'season': display_value(wanted_item.season),
+                'episode': display_value(wanted_item.episode),
+                'source': display_value(wanted_item.source, 'N/A', uppercase=True),
+                'quality': display_value(wanted_item.quality, 'N/A', uppercase=True),
+                'codec': display_value(wanted_item.codec, 'N/A', uppercase=True),
+                'releasegrp': display_value(wanted_item.releasegrp, 'N/A', uppercase=True)}
 
     @cherrypy.expose(alias='resetWantedItem')
     @cherrypy.tools.json_out()
     def reset_wanted_item(self, wanted_item_index, **kwargs):
         # Get wanted item
         wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
-        wanted_item_db = WantedItems().get_wanted_item(wanted_item['videopath'])
+        wanted_item_db = WantedItems().get_wanted_item(wanted_item.videopath)
         for key in wanted_item_db:
             wanted_item[key] = wanted_item_db[key]
         # Only return updatable fields
-        # These values represent the original values, so apply default display_item() on it!
-        return {'displaytitle': display_title(wanted_item),
-                'title': display_item(wanted_item, 'title'),
-                'year': display_item(wanted_item, 'year'),
-                'season': display_item(wanted_item, 'season'),
-                'episode': display_item(wanted_item, 'episode'),
-                'source': display_item(wanted_item, 'source', 'N/A'),
-                'quality': display_item(wanted_item, 'quality', 'N/A'),
-                'codec': display_item(wanted_item, 'codec', 'N/A'),
-                'releasegrp': display_item(wanted_item, 'releasegrp', 'N/A')}
+        # These values represent the original values, so apply default display_value() on it!
+        return {'displaytitle': display_item_title(wanted_item),
+                'title': display_value(wanted_item.title),
+                'year': display_value(wanted_item.year),
+                'season': display_value(wanted_item.season),
+                'episode': display_value(wanted_item.episode),
+                'source': display_value(wanted_item.source, 'N/A'),
+                'quality': display_value(wanted_item.quality, 'N/A'),
+                'codec': display_value(wanted_item.codec, 'N/A'),
+                'releasegrp': display_value(wanted_item.releasegrp, 'N/A')}
 
     @cherrypy.expose(alias='searchId')
     def force_id_search(self, wanted_item_index):
@@ -135,7 +135,7 @@ class Home(object):
     def delete_video(self, wanted_item_index, confirmed=False, cleanup=False):
         if not confirmed:
             wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
-            video = wanted_item['videopath']
+            video = wanted_item.videopath
             return PageTemplate(filename='/home/home-deleteVideo.mako').render(wanted_item_index=wanted_item_index,
                                                                                video=video)
         else:
@@ -183,7 +183,7 @@ class Home(object):
         # Get wanted item
         wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
         # Play video with default player
-        video = wanted_item['videopath']
+        video = wanted_item.videopath
         try:
             run_cmd(video, False)
             return {'result': True, 'infomessage': 'Playing video.', 'errormessage': None}

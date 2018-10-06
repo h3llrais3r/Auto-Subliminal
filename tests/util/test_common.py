@@ -11,8 +11,8 @@ from vcr import VCR
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.util.common import connect_url, get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, \
-    display_mapping_dict, display_list_single_line, display_list_multi_line, display_item, display_title, \
-    display_name, display_timestamp, convert_timestamp, humanize_bytes, get_common_path, get_root_path, get_file_size, \
+    display_mapping_dict, display_list_single_line, display_list_multi_line, display_value, display_item_title, \
+    display_item_name, display_timestamp, convert_timestamp, humanize_bytes, get_common_path, get_root_path, get_file_size, \
     set_rw_and_remove
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
@@ -143,47 +143,45 @@ def test_display_mapping_dict():
     assert display_mapping_dict(mapping_dict) == 'key1 = value1\nkey2 = value2'
 
 
-def test_display_item():
-    item_dict = {'test': 'value', 'test2': u'ù'}
-    empty_dict = {}
-    assert display_item(item_dict, 'test') == 'value'
-    assert display_item(item_dict, 'test2') == u'ù'
-    assert display_item(item_dict, 'test', uppercase=True) == 'VALUE'
-    assert display_item(empty_dict, 'test') == ''
-    assert display_item(empty_dict, 'test', default_value='default') == 'default'
-    assert display_item(empty_dict, 'test', default_value='default', uppercase=True) == 'DEFAULT'
+def test_display_value():
+    assert display_value(None) == ''
+    assert display_value('value') == 'value'
+    assert display_value(u'ù') == u'ù'
+    assert display_value('value', uppercase=True) == 'VALUE'
+    assert display_value('', default_value='default') == 'default'
+    assert display_value('', default_value='default', uppercase=True) == 'DEFAULT'
 
 
-def test_display_title():
+def test_display_item_title():
     item_dict1 = {'title': 'title1'}
     item_dict2 = {'title': 'title2', 'year': 2016}
     empty_dict = {}
-    assert display_title(item_dict1) == 'title1'
-    assert display_title(item_dict1, uppercase=True) == 'TITLE1'
-    assert display_title(item_dict2) == 'title2 (2016)'
-    assert display_title(item_dict2, uppercase=True) == 'TITLE2 (2016)'
-    assert display_title(empty_dict) == 'N/A'
-    assert display_title(empty_dict, default_value='default') == 'default'
-    assert display_title(empty_dict, default_value='default', uppercase=True) == 'DEFAULT'
+    assert display_item_title(item_dict1) == 'title1'
+    assert display_item_title(item_dict1, uppercase=True) == 'TITLE1'
+    assert display_item_title(item_dict2) == 'title2 (2016)'
+    assert display_item_title(item_dict2, uppercase=True) == 'TITLE2 (2016)'
+    assert display_item_title(empty_dict) == 'N/A'
+    assert display_item_title(empty_dict, default_value='default') == 'default'
+    assert display_item_title(empty_dict, default_value='default', uppercase=True) == 'DEFAULT'
 
 
-def test_display_name():
+def test_display_item_name():
     item_dict1 = {'title': 'title1'}
     item_dict2 = {'title': 'title2', 'year': 2016, 'type': 'movie'}
     item_dict3 = {'title': 'title3', 'type': 'episode', 'season': 1, 'episode': 1}
     item_dict4 = {'title': 'title4', 'year': 2016, 'type': 'episode', 'season': 1, 'episode': 1}
     empty_dict = {}
-    assert display_name(item_dict1) == 'title1'
-    assert display_name(item_dict1, uppercase=True) == 'TITLE1'
-    assert display_name(item_dict2) == 'title2 (2016)'
-    assert display_name(item_dict2, uppercase=True) == 'TITLE2 (2016)'
-    assert display_name(item_dict3) == 'title3 S01E01'
-    assert display_name(item_dict3, uppercase=True) == 'TITLE3 S01E01'
-    assert display_name(item_dict4, uppercase=True) == 'TITLE4 (2016) S01E01'
-    assert display_name(item_dict4, uppercase=True) == 'TITLE4 (2016) S01E01'
-    assert display_name(empty_dict) == 'N/A'
-    assert display_name(empty_dict, default_value='default') == 'default'
-    assert display_name(empty_dict, default_value='default', uppercase=True) == 'DEFAULT'
+    assert display_item_name(item_dict1) == 'title1'
+    assert display_item_name(item_dict1, uppercase=True) == 'TITLE1'
+    assert display_item_name(item_dict2) == 'title2 (2016)'
+    assert display_item_name(item_dict2, uppercase=True) == 'TITLE2 (2016)'
+    assert display_item_name(item_dict3) == 'title3 S01E01'
+    assert display_item_name(item_dict3, uppercase=True) == 'TITLE3 S01E01'
+    assert display_item_name(item_dict4, uppercase=True) == 'TITLE4 (2016) S01E01'
+    assert display_item_name(item_dict4, uppercase=True) == 'TITLE4 (2016) S01E01'
+    assert display_item_name(empty_dict) == 'N/A'
+    assert display_item_name(empty_dict, default_value='default') == 'default'
+    assert display_item_name(empty_dict, default_value='default', uppercase=True) == 'DEFAULT'
 
 
 def test_display_timestamp():

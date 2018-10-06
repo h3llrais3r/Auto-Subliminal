@@ -2,13 +2,13 @@
 
 import logging
 import os
-import re
 import time
 
 from guessit import guessit
 from six import text_type
 
 import autosubliminal
+from autosubliminal.core.item import WantedItem
 from autosubliminal.util.common import humanize_bytes
 
 log = logging.getLogger(__name__)
@@ -18,33 +18,7 @@ release_group_regex = '(.*)\[.*?\]'
 
 def process_file(dirname, filename):
     """
-    Process a file with guessit and construct the wanted_item dict.
-    Items used in wanted_item for type = 'episode':
-    - 'videopath'
-    - 'timestamp'
-    - 'languages'
-    - 'type'
-    - 'title'
-    - 'year'
-    - 'season'
-    - 'episode'
-    - 'source'
-    - 'quality'
-    - 'codec'
-    - 'releasegrp'
-    - 'tvdbid'
-    Items used in wanted_item for type = 'movie':
-    - 'videopath'
-    - 'timestamp'
-    - 'languages'
-    - 'type'
-    - 'title'
-    - 'year'
-    - 'source'
-    - 'quality'
-    - 'codec'
-    - 'releasegrp'
-    - 'imdbid'
+    Process a file with guessit and construct the wanted item.
     """
 
     log.info('Processing file: %s', filename)
@@ -59,17 +33,18 @@ def process_file(dirname, filename):
                         autosubliminal.MINVIDEOFILESIZE)
             return None
 
-    # Guess and create dict from guess
-    result_dict = _dict_from_guess(_guess(filename))
-    if result_dict is None:
+    # Guess and create wanted item from guess
+    wanted_item = WantedItem.from_guess(_guess(filename))
+    if wanted_item is None:
         # Fallback to guess on full path
-        result_dict = _dict_from_guess(_guess(file_path))
+        wanted_item = WantedItem.from_guess(_guess(file_path))
+    log.debug('WantedItem from guess: %r', wanted_item)
 
-    # Enrich dict
-    if result_dict is not None:
-        _enrich_dict(result_dict, file_path)
+    # Enrich wanted item
+    if wanted_item is not None:
+        _enrich_wanted_item(wanted_item, file_path)
 
-    return result_dict
+    return wanted_item
 
 
 def _guess(file_path):
@@ -109,22 +84,6 @@ def _validate_guess(guess):
     return guess
 
 
-def _dict_from_guess(guess):
-    result_dict = None
-    if guess is not None:
-        result_dict = {'type': _property_from_guess(guess, 'type'),
-                       'title': _property_from_guess(guess, 'title'),
-                       'year': _property_from_guess(guess, 'year'),
-                       'season': _property_from_guess(guess, 'season'),
-                       'episode': _join_episodes(_property_from_guess(guess, 'episode')),
-                       'source': _property_from_guess(guess, 'format'),
-                       'quality': _property_from_guess(guess, 'screen_size'),
-                       'codec': _property_from_guess(guess, 'video_codec'),
-                       'releasegrp': _split_release_group(_property_from_guess(guess, 'release_group'))}
-        log.debug('Dict from guess: %r', result_dict)
-    return result_dict
-
-
 def _property_from_guess(guess, property_name, default_value=None):
     property_value = default_value
     if property_name in guess:
@@ -132,40 +91,29 @@ def _property_from_guess(guess, property_name, default_value=None):
     return property_value
 
 
-def _split_release_group(release_group):
-    if release_group:
-        # Remove release group provider (part between []) if present (f.e. KILLERS[rarbg])
-        match = re.search(release_group_regex, release_group)
-        if match:
-            # Return first parenthesized group (=release group without [] part)
-            return match.group(1)
-    return release_group
+def _enrich_wanted_item(wanted_item, file_path):
+    """
+    Enrich a wanted item.
 
-
-def _join_episodes(episode):
-    if isinstance(episode, list):
-        return ','.join(text_type(ep) for ep in episode)  # episode can be a list of episodes (int)
-    return episode
-
-
-def _enrich_dict(result_dict, file_path):
-    log.debug('Enriching dict with metadata')
+    :param wanted_item: the wanted item
+    :type wanted_item: WantedItem
+    :param file_path: the file path
+    :type file_path: str
+    """
+    log.debug('Enriching WantedItem with metadata')
 
     # Enrich with common data
-    result_dict['videopath'] = file_path
-    result_dict['timestamp'] = text_type(
-        time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(os.path.getctime(result_dict['videopath']))))
-    # Languages cannot be derived from the processing file, so set it outside the fileprocessor (i.e. in diskscanner)
-    result_dict['languages'] = []
+    wanted_item.videopath = file_path
+    wanted_item.timestamp = text_type(
+        time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(os.path.getctime(file_path))))
 
     # Enrich with episode data
-    if result_dict['type'] == 'episode':
-        result_dict['tvdbid'] = autosubliminal.SHOWINDEXER.get_tvdb_id(result_dict['title'], result_dict['year'])
+    if wanted_item.is_episode:
+        wanted_item.tvdbid = autosubliminal.SHOWINDEXER.get_tvdb_id(wanted_item.title, wanted_item.year)
 
     # Enrich with movie data
-    elif result_dict['type'] == 'movie':
-        result_dict['imdbid'], result_dict['year'] = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(
-            result_dict['title'],
-            result_dict['year'])
+    elif wanted_item.is_movie:
+        wanted_item.imdbid, wanted_item.year = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(wanted_item.title,
+                                                                                                wanted_item.year)
 
-    log.debug('Enriched dict: %r', result_dict)
+    log.debug('Enriched WantedItem: %r', wanted_item)

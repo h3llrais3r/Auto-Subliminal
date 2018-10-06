@@ -208,17 +208,17 @@ def display_mapping_dict(mapping_dict):
     return s
 
 
-def display_item(item_dict, key, default_value='', uppercase=False):
-    item = item_dict.get(key, default_value) or default_value
-    item = safe_text(item, default_value)
+def display_value(value, default_value='', uppercase=False):
+    result = value or default_value
+    result = safe_text(result, default_value)
     if uppercase:
-        item = safe_uppercase(item, default_value)
-    return item
+        result = safe_uppercase(result, default_value)
+    return result
 
 
-def display_title(item_dict, default_value='N/A', uppercase=False):
-    title = display_item(item_dict, 'title', default_value, False)
-    year = display_item(item_dict, 'year', default_value, False)
+def display_item_title(item, default_value='N/A', uppercase=False):
+    title = display_value(item.title, default_value, False)
+    year = display_value(item.year, default_value, False)
     if not title == default_value and not year == default_value:
         title += ' (' + year + ')'
     if uppercase:
@@ -226,11 +226,11 @@ def display_title(item_dict, default_value='N/A', uppercase=False):
     return title
 
 
-def display_name(item_dict, default_value='N/A', uppercase=False):
-    name = display_title(item_dict, default_value, False)
+def display_item_name(item_dict, default_value='N/A', uppercase=False):
+    name = display_item_title(item_dict, default_value, False)
     if 'type' in item_dict and item_dict['type'] == 'episode':
-        season = display_item(item_dict, 'season', default_value, False)
-        episode = display_item(item_dict, 'episode', default_value, False)
+        season = display_value(item_dict, 'season', default_value, False)
+        episode = display_value(item_dict, 'episode', default_value, False)
         if not season == default_value and not episode == default_value:
             name += ' S' + season.zfill(2) + 'E' + episode.zfill(2)
     if uppercase:

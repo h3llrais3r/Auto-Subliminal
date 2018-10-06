@@ -9,7 +9,7 @@ import autosubliminal
 from autosubliminal.db import LastDownloads
 from autosubliminal.notifiers import Notifier
 from autosubliminal.postprocessor import PostProcessor
-from autosubliminal.util.common import add_notification_message, display_name
+from autosubliminal.util.common import add_notification_message, display_item_name
 
 log = logging.getLogger(__name__)
 
@@ -23,7 +23,6 @@ class SubDownloader(object):
     def __init__(self, download_item):
         log.debug('Download item: %r', download_item)
         self._download_item = download_item
-        self._keys = list(download_item)
 
     def run(self):
         """
@@ -34,7 +33,8 @@ class SubDownloader(object):
 
         # Save the subtitle
         if self.save():
-            name = display_name(self._download_item)
+            # TODO: fix me, cannot iter download_item
+            name = display_item_name(self._download_item)
 
             # Mark as downloaded
             self.mark_downloaded()
@@ -46,9 +46,10 @@ class SubDownloader(object):
                     'Unable to handle post processing for \'%s\'! Please check the log file!' % name, 'error')
 
             # Show success message
-            language = self._download_item['downlang']
-            name = display_name(self._download_item)
-            provider = self._download_item['provider']
+            language = self._download_item.downlang
+            # TODO: fix me, cannot iter download_item
+            name = display_item_name(self._download_item)
+            provider = self._download_item.provider
             add_notification_message(
                 'Downloaded \'%s\' subtitle for \'%s\' from \'%s\'.' % (language, name, provider), 'success')
 
@@ -60,11 +61,11 @@ class SubDownloader(object):
         log.debug('Saving subtitle')
 
         # Check download_item
-        if 'video' in self._keys and 'subtitles' in self._keys and 'single' in self._keys:
+        if self._download_item.video and self._download_item.subtitles and self._download_item.single:
             # Save the subtitle
-            video = self._download_item['video']
+            video = self._download_item.video
             encoding = 'utf-8' if autosubliminal.SUBTITLEUTF8ENCODING else None
-            subliminal.save_subtitles(video, self._download_item['subtitles'], single=self._download_item['single'],
+            subliminal.save_subtitles(video, self._download_item.subtitles, single=self._download_item.single,
                                       encoding=encoding)
             return True
         else:
@@ -79,7 +80,7 @@ class SubDownloader(object):
         log.debug('Marking subtitle as downloaded')
 
         # Add download_item to last downloads
-        self._download_item['timestamp'] = time.strftime('%Y-%m-%d %H:%M:%S')
+        self._download_item.timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
         LastDownloads().set_last_downloads(self._download_item)
 
         # Notify
@@ -103,8 +104,8 @@ class SubDownloader(object):
 
             # Global processing: only process when all subtitles are downloaded
             else:
-                wanted_languages = self._download_item['languages'][:]
-                downloaded_language = self._download_item['downlang']
+                wanted_languages = self._download_item.languages[:]
+                downloaded_language = self._download_item.downlang
                 wanted_languages.remove(downloaded_language)
                 if len(wanted_languages) == 0:
                     return PostProcessor(self._download_item).run()

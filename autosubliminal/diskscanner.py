@@ -46,13 +46,13 @@ class DiskScanner(ScheduledProcess):
 
         # Check if a directory exists to scan
         one_dir_exists = False
-        for videodir in autosubliminal.VIDEOPATHS:
-            if os.path.exists(videodir):
+        for video_path in autosubliminal.VIDEOPATHS:
+            if os.path.exists(video_path):
                 one_dir_exists = True
             else:
                 # In case of a network path, it's possible that the path is not directly found -> sleep and check again
                 time.sleep(15)
-                if os.path.exists(videodir):
+                if os.path.exists(video_path):
                     one_dir_exists = True
         if not one_dir_exists:
             # Release wanted queue lock
@@ -64,24 +64,24 @@ class DiskScanner(ScheduledProcess):
         new_wanted_items = []
         db = WantedItems()
         old_wanted_items = db.get_wanted_items()
-        for videodir in autosubliminal.VIDEOPATHS:
+        for video_path in autosubliminal.VIDEOPATHS:
             try:
-                new_wanted_items.extend(walk_dir(videodir))
+                new_wanted_items.extend(walk_dir(video_path))
             except Exception:
-                log.exception('Could not scan the video path (%s), skipping it', videodir)
+                log.exception('Could not scan the video path (%s), skipping it', video_path)
 
         # Cleanup wanted items that have been removed from disk manually but are still stored in the db
         log.debug('Checking for non existing wanted items in wanted_items database')
         for item in old_wanted_items:
             if item not in new_wanted_items:
                 db.delete_wanted_item(item)
-                log.debug('Deleted non existing wanted item: %s', item['videopath'])
+                log.debug('Deleted non existing wanted item: %s', item.videopath)
 
         # Populate WANTEDQUEUE with all items from wanted_items database
         log.info('Listing videos with missing subtitles:')
         autosubliminal.WANTEDQUEUE = []
         for item in db.get_wanted_items():
-            log.info('%s %s', item['videopath'], item['languages'])
+            log.info('%s %s', item.videopath, item.languages)
             autosubliminal.WANTEDQUEUE.append(item)
 
         # Release wanted queue lock
@@ -121,7 +121,9 @@ def walk_dir(path):
             if ext and ext in subliminal.video.VIDEO_EXTENSIONS:
                 # Skip 'sample' videos
                 if re.search('sample', filename, re.IGNORECASE):
+                    log.debug('Skipping sample video: %s', filename)
                     continue
+
                 log.debug('Video file found: %s', filename)
 
                 # Check if video file has already been processed before, so we don't need to process it again
@@ -139,7 +141,7 @@ def walk_dir(path):
                         wanted_item = fileprocessor.process_file(dirname, filename)
                         if wanted_item:
                             # Add wanted languages and store in wanted_items database
-                            wanted_item['languages'] = languages
+                            wanted_item.languages = languages
                             db.set_wanted_item(wanted_item)
                         else:
                             continue
@@ -151,18 +153,19 @@ def walk_dir(path):
                 log.debug('Checking if the video needs to be skipped')
                 if wanted_item:
                     # Skip episode check
-                    if wanted_item['type'] == 'episode':
-                        title = wanted_item['title']
-                        season = wanted_item['season']
-                        episode = wanted_item['episode']
+                    if wanted_item.is_episode:
+                        title = wanted_item.title
+                        season = wanted_item.season
+                        episode = wanted_item.episode
                         if skip_show(title, season, episode):
                             db.delete_wanted_item(wanted_item)
                             log.info('Skipping %s - Season %s Episode %s', title, season, episode)
                             continue
+
                     # Skip movie check
-                    elif wanted_item['type'] == 'movie':
-                        title = wanted_item['title']
-                        year = wanted_item['year']
+                    if wanted_item.is_movie:
+                        title = wanted_item.title
+                        year = wanted_item.year
                         if skip_movie(title, year):
                             db.delete_wanted_item(wanted_item)
                             log.info('Skipping %s (%s)', title, year)
@@ -189,6 +192,7 @@ def check_missing_subtitle_languages(dirname, filename):
     if autosubliminal.DEFAULTLANGUAGE:
         log.debug('Checking for missing default language')
         default_language = Language.fromietf(autosubliminal.DEFAULTLANGUAGE)
+
         # Check with or without alpha2 code suffix depending on configuration
         if autosubliminal.DEFAULTLANGUAGESUFFIX:
             srt_file = os.path.splitext(filename)[0] + u'.' + autosubliminal.DEFAULTLANGUAGE + u'.srt'
@@ -215,6 +219,7 @@ def check_missing_subtitle_languages(dirname, filename):
     # Check additional languages
     if autosubliminal.ADDITIONALLANGUAGES:
         log.debug('Checking for missing additional language(s)')
+
         # Always check with alpha2 code suffix for additional languages
         for language in autosubliminal.ADDITIONALLANGUAGES:
             additional_language = Language.fromietf(language)
@@ -263,6 +268,7 @@ def _get_embedded_subtitles(dirname, filename):
             log.debug('Check is only supported for MKV containers, skipping')
     except Exception:
         log.error('Parsing video metadata with enzyme failed')
+
     return embedded_subtitle_languages
 
 
@@ -297,6 +303,7 @@ def _detect_subtitle_language(srt_path):
                 return Language.fromietf(detected_language.lang)
             else:
                 log.debug('Probability of detected subtitle language too low: %s', detected_language)
+
     return None
 
 

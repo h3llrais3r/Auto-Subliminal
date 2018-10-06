@@ -2,8 +2,7 @@
     import os
 
     import autosubliminal
-    from autosubliminal.core.item import WantedItem
-    from autosubliminal.util.common import convert_timestamp, display_item, display_title, get_file_size
+    from autosubliminal.util.common import convert_timestamp, display_value, display_item_title, get_file_size
     from autosubliminal.util.queue import count_wanted_queue_items
 %>
 
@@ -72,13 +71,13 @@
                         </td>
                     </tr>
                         % for index, item in enumerate(autosubliminal.WANTEDQUEUE):
-                            <% rowClass = 'content-row wanted-item hidden' if WantedItem(item).search_active else 'content-row wanted-item inactive hidden' %>
+                            <% rowClass = 'content-row wanted-item hidden' if item.search_active else 'content-row wanted-item inactive hidden' %>
                             <tr class="${rowClass}">
-                                <td class="hidden">${item['type']}</td>
+                                <td class="hidden">${item.type}</td>
                                 <td>
                                     <span class="dropdown">
-                                        <a class="dropdown-toggle wanted-item-title main-column" data-toggle="dropdown" title="Click to skip">${display_title(item)}</a>
-                                        % if item['type'] == 'episode':
+                                        <a class="dropdown-toggle wanted-item-title main-column" data-toggle="dropdown" title="Click to skip">${display_item_title(item)}</a>
+                                        % if item.is_episode:
                                             <ul class="dropdown-menu has-tip">
                                                 <li>
                                                     <a href="${autosubliminal.WEBROOT}/home/postProcess/${index}">Skip and post process show</a>
@@ -87,13 +86,13 @@
                                                     <a href="${autosubliminal.WEBROOT}/home/deleteVideo/${index}">Skip and delete show</a>
                                                 </li>
                                                 <li>
-                                                    <a href="${autosubliminal.WEBROOT}/home/skipShow/${index}/${item['title']}">Skip show</a>
+                                                    <a href="${autosubliminal.WEBROOT}/home/skipShow/${index}/${item.title}">Skip show</a>
                                                 </li>
                                                 <li>
-                                                    <a href="${autosubliminal.WEBROOT}/home/skipShow/${index}/${item['title']}/${item['season']}">Skip season ${item['season']}</a>
+                                                    <a href="${autosubliminal.WEBROOT}/home/skipShow/${index}/${item.title}/${item.season}">Skip season ${item.season}</a>
                                                 </li>
                                             </ul>
-                                        % elif item['type'] == 'movie':
+                                        % elif item.is_movie:
                                             <ul class="dropdown-menu has-tip">
                                                 <li>
                                                     <a href="${autosubliminal.WEBROOT}/home/postProcess/${index}">Skip and post process movie</a>
@@ -102,7 +101,7 @@
                                                     <a href="${autosubliminal.WEBROOT}/home/deleteVideo/${index}">Skip and delete movie</a>
                                                 </li>
                                                 <li>
-                                                    <a href="${autosubliminal.WEBROOT}/home/skipMovie/${index}/${item['title']}/${item['year']}">Skip movie</a>
+                                                    <a href="${autosubliminal.WEBROOT}/home/skipMovie/${index}/${item.title}/${item.year}">Skip movie</a>
                                                 </li>
                                             </ul>
                                         % endif
@@ -114,16 +113,16 @@
                                         <ul class="dropdown-menu has-tip info-list">
                                             <li>
                                                 <span class="info-list-label">File name:</span>
-                                                <span>${os.path.basename(item['videopath'])}</span>
+                                                <span>${os.path.basename(item.videopath)}</span>
                                             </li>
                                             <li>
                                                 <span class="info-list-label">File size:</span>
-                                                <span>${get_file_size(item['videopath'])}</span>
+                                                <span>${get_file_size(item.videopath)}</span>
                                             </li>
                                         </ul>
                                     </span>
-                                    % if item['type'] == 'episode':
-                                        % if not item['tvdbid']:
+                                    % if item.is_episode:
+                                        % if not item.tvdbid:
                                             <span class="dropdown">
                                                 <a class="dropdown-toggle" data-toggle="dropdown">
                                                     <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Tvdb id could not be found!"></i>
@@ -136,13 +135,13 @@
                                             </span>
                                         % else:
                                             <span>
-                                                <a href="${autosubliminal.DEREFERURL}${autosubliminal.TVDBURL}${item['tvdbid']}" target="_blank">
+                                                <a href="${autosubliminal.DEREFERURL}${autosubliminal.TVDBURL}${item.tvdbid}" target="_blank">
                                                     <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
                                                 </a>
                                             </span>
                                         % endif
-                                    % elif item['type'] == 'movie':
-                                        % if not item['imdbid']:
+                                    % elif item.is_movie:
+                                        % if not item.imdbid:
                                             <span class="dropdown">
                                                 <a class="dropdown-toggle" data-toggle="dropdown">
                                                     <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Imdb id could not be found!"></i>
@@ -155,7 +154,7 @@
                                             </span>
                                         % else:
                                             <span>
-                                                <a href="${autosubliminal.DEREFERURL}${autosubliminal.IMDBURL}${item['imdbid']}" target="_blank">
+                                                <a href="${autosubliminal.DEREFERURL}${autosubliminal.IMDBURL}${item.imdbid}" target="_blank">
                                                     <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
                                                 </a>
                                             </span>
@@ -175,35 +174,35 @@
                                                         <div class="panel-body text-right">
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Title:</span>
-                                                                <input type="text" value="${display_item(item, 'title')}" class="form-control input-sm update-wanted-item-title">
+                                                                <input type="text" value="${display_value(item.title)}" class="form-control input-sm update-wanted-item-title">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Year:</span>
-                                                                <input type="text" value="${display_item(item, 'year')}" class="form-control input-sm update-wanted-item-year">
+                                                                <input type="text" value="${display_value(item.year)}" class="form-control input-sm update-wanted-item-year">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Season:</span>
-                                                                <input type="text" value="${display_item(item, 'season')}" class="form-control input-sm update-wanted-item-season">
+                                                                <input type="text" value="${display_value(item.season)}" class="form-control input-sm update-wanted-item-season">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Episode:</span>
-                                                                <input type="text" value="${display_item(item, 'episode')}" class="form-control input-sm update-wanted-item-episode">
+                                                                <input type="text" value="${display_value(item.episode)}" class="form-control input-sm update-wanted-item-episode">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Source:</span>
-                                                                <input type="text" value="${display_item(item, 'source')}" class="form-control input-sm update-wanted-item-source">
+                                                                <input type="text" value="${display_value(item.source)}" class="form-control input-sm update-wanted-item-source">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Quality:</span>
-                                                                <input type="text" value="${display_item(item, 'quality')}" class="form-control input-sm update-wanted-item-quality">
+                                                                <input type="text" value="${display_value(item.quality)}" class="form-control input-sm update-wanted-item-quality">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Codec:</span>
-                                                                <input type="text" value="${display_item(item, 'codec')}" class="form-control input-sm update-wanted-item-codec">
+                                                                <input type="text" value="${display_value(item.codec)}" class="form-control input-sm update-wanted-item-codec">
                                                             </div>
                                                             <div class="form-inline form-group narrow">
                                                                 <span class="info-list-label">Group:</span>
-                                                                <input type="text" value="${display_item(item, 'releasegrp')}" class="form-control input-sm update-wanted-item-releasegrp">
+                                                                <input type="text" value="${display_value(item.releasegrp)}" class="form-control input-sm update-wanted-item-releasegrp">
                                                             </div>
                                                             <a href="${autosubliminal.WEBROOT}/home/resetWantedItem/${index}" class="btn btn-sm btn-default reset-wanted-item-link">Reset</a>
                                                             <a href="${autosubliminal.WEBROOT}/home/updateWantedItem/${index}" class="btn btn-sm btn-default update-wanted-item-link">Update</a>
@@ -215,25 +214,25 @@
                                     % endif
                                 </td>
                                 <td class="wanted-item-season">
-                                    ${display_item(item, 'season')}
+                                    ${display_value(item.season)}
                                 </td>
                                 <td class="wanted-item-episode">
-                                    ${display_item(item, 'episode')}
+                                    ${display_value(item.episode)}
                                 </td>
                                 <td class="wanted-item-source wrapped">
-                                    ${display_item(item, 'source', 'N/A', True)}
+                                    ${display_value(item.source, 'N/A', True)}
                                 </td>
                                 <td class="wanted-item-quality wrapped">
-                                    ${display_item(item, 'quality', 'N/A', True)}
+                                    ${display_value(item.quality, 'N/A', True)}
                                 </td>
                                 <td class="wanted-item-codec wrapped">
-                                    ${display_item(item, 'codec', 'N/A', True)}
+                                    ${display_value(item.codec, 'N/A', True)}
                                 </td>
                                 <td class="wanted-item-releasegrp wrapped">
-                                    ${display_item(item, 'releasegrp', 'N/A', True)}
+                                    ${display_value(item.releasegrp, 'N/A', True)}
                                 </td>
                                 <td class="wanted-item-languages">
-                                    % for lang in item['languages']:
+                                    % for lang in item.languages:
                                     <% imageurl = autosubliminal.WEBROOT + "/images/flags/language/" + lang + ".png" %>
                                         <span class="dropdown">
                                             <a class="dropdown-toggle" data-toggle="dropdown">
@@ -257,7 +256,7 @@
                                     % endfor
                                 </td>
                                 <td class="wanted-item-timestamp datetime">
-                                    ${convert_timestamp(item['timestamp'])}
+                                    ${convert_timestamp(item.timestamp)}
                                 </td>
                             </tr>
                         % endfor

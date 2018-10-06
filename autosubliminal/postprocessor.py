@@ -25,12 +25,12 @@ class PostProcessor(object):
         # Set utf-8 encoding if needed, otherwise use default encoding (normally ascii)
         self._wanted_item = wanted_item
         self._encoding = 'utf-8' if autosubliminal.POSTPROCESSUTF8ENCODING else autosubliminal.SYSENCODING
-        if wanted_item['type'] == 'episode':
+        if wanted_item.is_episode:
             self._cmd = autosubliminal.SHOWPOSTPROCESSCMD
             self._args = None
             if autosubliminal.SHOWPOSTPROCESSCMDARGS:
                 self._args = autosubliminal.SHOWPOSTPROCESSCMDARGS.split('|')
-        elif wanted_item['type'] == 'movie':
+        elif wanted_item.is_movie:
             self._cmd = autosubliminal.MOVIEPOSTPROCESSCMD
             self._args = None
             if autosubliminal.MOVIEPOSTPROCESSCMDARGS:
@@ -68,7 +68,7 @@ class PostProcessor(object):
             process.append(self._convert_arg(self._encoding))
 
             # Add root video path argument
-            video_path = self._wanted_item['videopath']
+            video_path = self._wanted_item.videopath
             root_path = get_root_path(video_path)
             log.debug('root path: %s', root_path)
             process.append(self._convert_arg(root_path))
@@ -78,9 +78,7 @@ class PostProcessor(object):
             process.append(self._convert_arg(video_path))
 
             # Add subtitle path argument (can be empty if no subtitle was downloaded)
-            subtitle_path = None
-            if 'subtitlepath' in self._wanted_item:
-                subtitle_path = self._wanted_item['subtitlepath']
+            subtitle_path = self._wanted_item.subtitlepath
             log.debug('subtitle path: %s', subtitle_path if subtitle_path else '')
             process.append(self._convert_arg(subtitle_path if subtitle_path else ''))
 

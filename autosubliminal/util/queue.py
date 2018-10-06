@@ -57,6 +57,6 @@ def count_wanted_queue_items(item_type=None):
         size = len(autosubliminal.WANTEDQUEUE)
     else:
         for item in autosubliminal.WANTEDQUEUE:
-            if item['type'] == item_type:
+            if item.type == item_type:
                 size += 1
     return size

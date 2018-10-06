@@ -6,27 +6,32 @@ import logging
 
 import autosubliminal
 from autosubliminal import version
+from autosubliminal.core.item import DownloadItem, DownloadedItem, WantedItem
 
 log = logging.getLogger(__name__)
 
 
-def dict_factory(cursor, row):
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
+def wanted_item_factory(cursor, row):
+    wanted_item = WantedItem()
 
-
-def dict_factory_wanted_items(cursor, row):
-    d = {}
     for idx, col in enumerate(cursor.description):
-        # Languages should be returned as a list (so let's split the comma separated string)
         if col[0] == 'languages':
-            d[col[0]] = row[idx].split(',')
+            # Languages should be returned as a list (so let's split the comma separated string)
+            setattr(wanted_item, col[0], row[idx].split(','))
         else:
             # Use default value from database
-            d[col[0]] = row[idx]
-    return d
+            setattr(wanted_item, col[0], row[idx])
+
+    return wanted_item
+
+
+def downloaded_item_factory(cursor, row):
+    downloaded_item = DownloadedItem()
+
+    for idx, col in enumerate(cursor.description):
+        setattr(downloaded_item, col[0], row[idx])
+
+    return downloaded_item
 
 
 class TvdbIdCache(object):
@@ -36,6 +41,14 @@ class TvdbIdCache(object):
         self._query_flush_cache = 'delete from tvdb_id_cache'
 
     def get_id(self, show_name):
+        """
+        Get the tvdb id for a show from the database.
+
+        :param show_name: the show name
+        :type show_name: str
+        :return: the tvdb id or None if not found
+        :rtype: int | None
+        """
         tvdb_id = None
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
@@ -43,10 +56,19 @@ class TvdbIdCache(object):
         for row in cursor:
             tvdb_id = row[0]
         connection.close()
+
         if tvdb_id:
             return int(tvdb_id)
 
     def set_id(self, tvdb_id, show_name):
+        """
+        Set the tvdb id for a show in the database.
+
+        :param tvdb_id: the tvdb id
+        :type tvdb_id: int
+        :param show_name: the show name
+        :type show_name: str
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self._query_set_id, [tvdb_id, show_name.upper()])
@@ -54,6 +76,9 @@ class TvdbIdCache(object):
         connection.close()
 
     def flush_cache(self):
+        """
+        Flush all the tvdb id's from the database.
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self._query_flush_cache)
@@ -68,6 +93,16 @@ class ImdbIdCache(object):
         self._query_flush_cache = 'delete from imdb_id_cache'
 
     def get_id(self, title, year):
+        """
+        Get the imdb id for a movie title and year from the database.
+
+        :param title: the movie title
+        :type title: str
+        :param year: the movie year
+        :type year: str | int
+        :return: the imdb id or None
+        :rtype: str | None
+        """
         imdb_id = None
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
@@ -78,6 +113,16 @@ class ImdbIdCache(object):
         return imdb_id
 
     def set_id(self, imdb_id, title, year):
+        """
+        Set the imdb id for a movie title and year in the database.
+
+        :param imdb_id: the imdb id
+        :type imdb_id: str
+        :param title: the movie title
+        :type title: str
+        :param year: the movie year
+        :type year: str | int
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self._query_set_id, [imdb_id, title.upper(), year])
@@ -85,6 +130,9 @@ class ImdbIdCache(object):
         connection.close()
 
     def flush_cache(self):
+        """
+        Flush all the imdb id's from the database.
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self._query_flush_cache)
@@ -104,89 +152,111 @@ class WantedItems(object):
         self._query_flush = 'delete from wanted_items'
 
     def get_wanted_items(self):
+        """
+        Get the list of wanted items from the database.
+
+        :return: list of wanted items
+        :rtype: list[WantedItem]
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
-        connection.row_factory = dict_factory_wanted_items
+        connection.row_factory = wanted_item_factory
         cursor = connection.cursor()
         cursor.execute(self._query_get_all)
         result_list = cursor.fetchall()
         connection.close()
+
         return result_list
 
     def get_wanted_item(self, video_path):
+        """
+        Get a single wanted item from the database based on it's video path.
+
+        :param video_path: the video path
+        :type video_path: str
+        :return: the wanted item
+        :rtype: WantedItem
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
-        connection.row_factory = dict_factory_wanted_items
+        connection.row_factory = wanted_item_factory
         cursor = connection.cursor()
         cursor.execute(self._query_get, [video_path])
         wanted_item = cursor.fetchone()
         connection.close()
+
         return wanted_item
 
     def set_wanted_item(self, wanted_item):
+        """
+        Set a wanted item in the database.
+
+        :param wanted_item: the wanted item
+        :type wanted_item: WantedItem
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-
-        # Can be unavailable in dict
-        if 'tvdbid' not in wanted_item:
-            wanted_item['tvdbid'] = None
-        if 'imdbid' not in wanted_item:
-            wanted_item['imdbid'] = None
-
         cursor.execute(self._query_set, [
-            wanted_item['videopath'],
-            wanted_item['timestamp'],
-            # Store languages as comma separated string
-            ','.join(wanted_item['languages']),
-            wanted_item['type'],
-            wanted_item['title'],
-            wanted_item['year'],
-            wanted_item['season'],
-            wanted_item['episode'],
-            wanted_item['quality'],
-            wanted_item['source'],
-            wanted_item['codec'],
-            wanted_item['releasegrp'],
-            wanted_item['tvdbid'],
-            wanted_item['imdbid']])
+            wanted_item.videopath,
+            wanted_item.timestamp,
+            ','.join(wanted_item.languages),  # Store languages as comma separated string
+            wanted_item.type,
+            wanted_item.title,
+            wanted_item.year,
+            wanted_item.season,
+            wanted_item.episode,
+            wanted_item.quality,
+            wanted_item.source,
+            wanted_item.codec,
+            wanted_item.releasegrp,
+            wanted_item.tvdbid,
+            wanted_item.imdbid])
         connection.commit()
         connection.close()
 
     def delete_wanted_item(self, wanted_item):
+        """
+        Delete a wanted item from the database.
+
+        :param wanted_item: the wanted item
+        :type wanted_item: WantedItem
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_delete, [wanted_item['videopath']])
+        cursor.execute(self._query_delete, [wanted_item.videopath])
         connection.commit()
         connection.close()
 
     def update_wanted_item(self, wanted_item):
+        """
+        Update a wanted item in the database.
+
+        :param wanted_item: the wanted item
+        :type wanted_item: WantedItem
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-
-        # Can be unavailable in dict
-        if 'tvdbid' not in wanted_item:
-            wanted_item['tvdbid'] = None
-        if 'imdbid' not in wanted_item:
-            wanted_item['imdbid'] = None
-
         cursor.execute(self._query_update, [
-            wanted_item['videopath'],
-            wanted_item['timestamp'],
-            ','.join(wanted_item['languages']),
-            wanted_item['type'],
-            wanted_item['title'],
-            wanted_item['year'],
-            wanted_item['season'],
-            wanted_item['episode'],
-            wanted_item['quality'],
-            wanted_item['source'],
-            wanted_item['codec'],
-            wanted_item['releasegrp'],
-            wanted_item['tvdbid'],
-            wanted_item['imdbid'],
-            wanted_item['id']])
+            wanted_item.videopath,
+            wanted_item.timestamp,
+            ','.join(wanted_item.languages),  # Store languages as comma separated string
+            wanted_item.type,
+            wanted_item.title,
+            wanted_item.year,
+            wanted_item.season,
+            wanted_item.episode,
+            wanted_item.quality,
+            wanted_item.source,
+            wanted_item.codec,
+            wanted_item.releasegrp,
+            wanted_item.tvdbid,
+            wanted_item.imdbid,
+            wanted_item.id])
         connection.commit()
         connection.close()
 
     def flush_wanted_items(self):
+        """
+        Flush all the wanted items from the database.
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self._query_flush)
@@ -201,8 +271,14 @@ class LastDownloads(object):
         self._query_flush = 'delete from last_downloads'
 
     def get_last_downloads(self):
+        """
+        Get the last downloaded items from the database.
+
+        :return: list of downloaded items
+        :rtype: list[DownloadedItem]
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
-        connection.row_factory = dict_factory
+        connection.row_factory = downloaded_item_factory
         cursor = connection.cursor()
         cursor.execute(self._query_get)
         result_list = cursor.fetchall()
@@ -215,30 +291,35 @@ class LastDownloads(object):
             return result_list
 
     def set_last_downloads(self, download_item):
+        """
+        Set a download item in the database.
+
+        :param download_item: the download item
+        :type download_item: DownloadItem
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-
-        if 'source' not in download_item:
-            download_item['source'] = None
-
         cursor.execute(self._query_set, [
-            download_item['type'],
-            download_item['title'],
-            download_item['year'],
-            download_item['season'],
-            download_item['episode'],
-            download_item['quality'],
-            download_item['source'],
-            download_item['downlang'],
-            download_item['codec'],
-            download_item['timestamp'],
-            download_item['releasegrp'],
-            download_item['subtitle'],
-            download_item['provider']])
+            download_item.type,
+            download_item.title,
+            download_item.year,
+            download_item.season,
+            download_item.episode,
+            download_item.quality,
+            download_item.source,
+            download_item.downlang,
+            download_item.codec,
+            download_item.timestamp,
+            download_item.releasegrp,
+            download_item.subtitle,
+            download_item.provider])
         connection.commit()
         connection.close()
 
     def flush_last_downloads(self):
+        """
+        Flush all the downloaded items from the database.
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self._query_flush)
@@ -293,6 +374,7 @@ def create():
 
 def upgrade(from_version, to_version):
     print('INFO: Upgrading database from version %d to version %d.' % (from_version, to_version))
+
     upgrades = to_version - from_version
     if upgrades != 1:
         print('INFO: More than 1 upgrade required. Starting subupgrades.')
@@ -310,6 +392,7 @@ def upgrade(from_version, to_version):
             cursor.execute('INSERT INTO info VALUES (%d)' % 2)
             connection.commit()
             connection.close()
+
         if from_version == 2 and to_version == 3:
             # Add Releasegrp
             connection = sqlite3.connect(autosubliminal.DBFILE)
@@ -319,6 +402,7 @@ def upgrade(from_version, to_version):
             cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (3, 2))
             connection.commit()
             connection.close()
+
         if from_version == 3 and to_version == 4:
             # Create id_cache table from scratch with tvdb_id
             connection = sqlite3.connect(autosubliminal.DBFILE)
@@ -328,6 +412,7 @@ def upgrade(from_version, to_version):
             cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (4, 3))
             connection.commit()
             connection.close()
+
         if from_version == 4 and to_version == 5:
             # Add provider column to last_downloads table
             connection = sqlite3.connect(autosubliminal.DBFILE)
@@ -336,6 +421,7 @@ def upgrade(from_version, to_version):
             cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (5, 4))
             connection.commit()
             connection.close()
+
         if from_version == 5 and to_version == 6:
             connection = sqlite3.connect(autosubliminal.DBFILE)
             cursor = connection.cursor()
@@ -366,6 +452,7 @@ def upgrade(from_version, to_version):
             cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (6, 5))
             connection.commit()
             connection.close()
+
         if from_version == 6 and to_version == 7:
             connection = sqlite3.connect(autosubliminal.DBFILE)
             cursor = connection.cursor()
@@ -399,13 +486,15 @@ def get_version():
 
 
 def initialize():
-    # Check if file is already there
+    # Check if the db file already exists and create it if not
     db_file = os.path.join(autosubliminal.PATH, autosubliminal.DBFILE)
     if not os.path.exists(db_file):
         create()
 
+    # Get the current database version
     autosubliminal.DBVERSION = get_version()
 
+    # Check if upgrade is needed
     if autosubliminal.DBVERSION < version.DB_VERSION:
         upgrade(autosubliminal.DBVERSION, version.DB_VERSION)
     elif autosubliminal.DBVERSION > version.DB_VERSION:

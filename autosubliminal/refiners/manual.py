@@ -40,23 +40,23 @@ def refine(video, wanted_item, **kwargs):
     # refine episode
     if isinstance(video, Episode):
         logger.info('Refining episode video with data from wanted_item')
-        video.series = wanted_item['title'] if wanted_item['title'] else video.series
-        video.year = int(wanted_item['year']) if wanted_item['year'] else video.year
-        video.season = int(wanted_item['season']) if wanted_item['season'] else video.season
-        video.episode = int(wanted_item['episode']) if wanted_item['episode'] else video.episode
-        video.format = wanted_item['source'] if wanted_item['source'] else video.format
-        video.resolution = wanted_item['quality'] if wanted_item['quality'] else video.resolution
-        video.video_codec = wanted_item['codec'] if wanted_item['codec'] else video.video_codec
-        video.release_group = wanted_item['releasegrp'] if wanted_item['releasegrp'] else video.release_group
+        video.series = wanted_item.title if wanted_item.title else video.series
+        video.year = int(wanted_item.year) if wanted_item.year else video.year
+        video.season = int(wanted_item.season) if wanted_item.season else video.season
+        video.episode = int(wanted_item.episode) if wanted_item.episode else video.episode
+        video.format = wanted_item.source if wanted_item.source else video.format
+        video.resolution = wanted_item.quality if wanted_item.quality else video.resolution
+        video.video_codec = wanted_item.codec if wanted_item.codec else video.video_codec
+        video.release_group = wanted_item.releasegrp if wanted_item.releasegrp else video.release_group
         return
 
     # refine movie
     if isinstance(video, Movie):
         logger.info('Refining movie video with data from wanted_item')
-        video.title = wanted_item['title'] if wanted_item['title'] else video.title
-        video.year = int(wanted_item['year']) if wanted_item['year'] else video.year
-        video.format = wanted_item['source'] if wanted_item['source'] else video.format
-        video.resolution = wanted_item['quality'] if wanted_item['quality'] else video.resolution
-        video.video_codec = wanted_item['codec'] if wanted_item['codec'] else video.video_codec
-        video.release_group = wanted_item['releasegrp'] if wanted_item['releasegrp'] else video.release_group
+        video.title = wanted_item.title if wanted_item.title else video.title
+        video.year = int(wanted_item.year) if wanted_item.year else video.year
+        video.format = wanted_item.source if wanted_item.source else video.format
+        video.resolution = wanted_item.quality if wanted_item.quality else video.resolution
+        video.video_codec = wanted_item.codec if wanted_item.codec else video.video_codec
+        video.release_group = wanted_item.releasegrp if wanted_item.releasegrp else video.release_group
         return
