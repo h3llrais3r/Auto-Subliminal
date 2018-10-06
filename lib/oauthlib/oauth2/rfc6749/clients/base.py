@@ -9,6 +9,7 @@ for consuming OAuth 2.0 RFC6749.
 from __future__ import absolute_import, unicode_literals
 
 import time
+import warnings
 
 from oauthlib.common import generate_token
 from oauthlib.oauth2.rfc6749 import tokens
@@ -111,8 +112,10 @@ class Client(object):
         self.state_generator = state_generator
         self.state = state
         self.redirect_url = redirect_url
+        self.code = None
+        self.expires_in = None
         self._expires_at = None
-        self._populate_attributes(self.token)
+        self.populate_token_attributes(self.token)
 
     @property
     def token_types(self):
@@ -173,8 +176,8 @@ class Client(object):
                                 nonce="274312:dj83hs9s",
                                 mac="kDZvddkndxvhGRXZhvuDjEWhGeE="
 
-        .. _`I-D.ietf-oauth-v2-bearer`: http://tools.ietf.org/html/rfc6749#section-12.2
-        .. _`I-D.ietf-oauth-v2-http-mac`: http://tools.ietf.org/html/rfc6749#section-12.2
+        .. _`I-D.ietf-oauth-v2-bearer`: https://tools.ietf.org/html/rfc6749#section-12.2
+        .. _`I-D.ietf-oauth-v2-http-mac`: https://tools.ietf.org/html/rfc6749#section-12.2
         """
         if not is_secure_transport(uri):
             raise InsecureTransportError()
@@ -186,7 +189,7 @@ class Client(object):
         if not self.token_type.lower() in case_insensitive_token_types:
             raise ValueError("Unsupported token type: %s" % self.token_type)
 
-        if not self.access_token:
+        if not (self.access_token or self.token.get('access_token')):
             raise ValueError("Missing access token.")
 
         if self._expires_at and self._expires_at < time.time():
@@ -401,12 +404,12 @@ class Client(object):
             Providers may supply this in all responses but are required to only
             if it has changed since the authorization request.
 
-        .. _`Section 5.1`: http://tools.ietf.org/html/rfc6749#section-5.1
-        .. _`Section 5.2`: http://tools.ietf.org/html/rfc6749#section-5.2
-        .. _`Section 7.1`: http://tools.ietf.org/html/rfc6749#section-7.1
+        .. _`Section 5.1`: https://tools.ietf.org/html/rfc6749#section-5.1
+        .. _`Section 5.2`: https://tools.ietf.org/html/rfc6749#section-5.2
+        .. _`Section 7.1`: https://tools.ietf.org/html/rfc6749#section-7.1
         """
         self.token = parse_token_response(body, scope=scope)
-        self._populate_attributes(self.token)
+        self.populate_token_attributes(self.token)
         return self.token
 
     def prepare_refresh_body(self, body='', refresh_token=None, scope=None, **kwargs):
@@ -460,7 +463,18 @@ class Client(object):
         return uri, headers, body
 
     def _populate_attributes(self, response):
-        """Add commonly used values such as access_token to self."""
+        warnings.warn("Please switch to the public method "
+                      "populate_token_attributes.", DeprecationWarning)
+        return self.populate_token_attributes(response)
+
+    def populate_code_attributes(self, response):
+        """Add attributes from an auth code response to self."""
+
+        if 'code' in response:
+            self.code = response.get('code')
+
+    def populate_token_attributes(self, response):
+        """Add attributes from a token exchange response to self."""
 
         if 'access_token' in response:
             self.access_token = response.get('access_token')
@@ -477,9 +491,6 @@ class Client(object):
 
         if 'expires_at' in response:
             self._expires_at = int(response.get('expires_at'))
-
-        if 'code' in response:
-            self.code = response.get('code')
 
         if 'mac_key' in response:
             self.mac_key = response.get('mac_key')
