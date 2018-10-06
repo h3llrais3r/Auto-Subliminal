@@ -8,6 +8,15 @@ wanted_item = WantedItem()
 wanted_item.timestamp = '2018-01-01 12:30:01'
 
 
+def test_compare_wanted_items():
+    wanted_item_1 = WantedItem(type='episode', title='testequal', season=1, episode=1)
+    wanted_item_2 = WantedItem(type='episode', title='testequal', season=1, episode=1)
+    wanted_item_3 = WantedItem(type='episode', title='testdifferent', season=1, episode=1)
+    assert wanted_item_1 == wanted_item_2
+    assert wanted_item_1 != wanted_item_3
+    assert wanted_item_2 != wanted_item_3
+
+
 def test_is_search_active_for_wanted_item_before_on_creation(mocker):
     today = datetime.datetime(2018, 1, 1, 0, 0, 0)
     mocker.patch('autosubliminal.core.item.get_today', return_value=today)
