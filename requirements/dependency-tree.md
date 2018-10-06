@@ -13,9 +13,10 @@ Libraries dependency tree
         |-- more-itertools
         |-- six
     |-- portend
-        |-- pytz
-        |-- six
         |-- tempora
+            |-- pytz
+            |-- six
+            |--jaraco.functools
     |-- six
 |-- configparser
 |-- dogpile.cache
