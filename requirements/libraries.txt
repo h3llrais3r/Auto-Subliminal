@@ -24,7 +24,7 @@ idna=2.6
 imdbpie=5.6.2
 jsonpickle=0.9.6
 langdetect==1.0.7
-lxml==4.2.0
+lxml==4.2.5
 mako==1.0.7
 markupsafe==1.0
 more-itertools==4.1.0
