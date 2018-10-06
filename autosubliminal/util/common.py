@@ -226,11 +226,11 @@ def display_item_title(item, default_value='N/A', uppercase=False):
     return title
 
 
-def display_item_name(item_dict, default_value='N/A', uppercase=False):
-    name = display_item_title(item_dict, default_value, False)
-    if 'type' in item_dict and item_dict['type'] == 'episode':
-        season = display_value(item_dict, 'season', default_value, False)
-        episode = display_value(item_dict, 'episode', default_value, False)
+def display_item_name(item, default_value='N/A', uppercase=False):
+    name = display_item_title(item, default_value, False)
+    if item.is_episode:
+        season = display_value(item.season, default_value, False)
+        episode = display_value(item.episode, default_value, False)
         if not season == default_value and not episode == default_value:
             name += ' S' + season.zfill(2) + 'E' + episode.zfill(2)
     if uppercase:
