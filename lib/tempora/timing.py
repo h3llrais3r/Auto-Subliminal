@@ -7,8 +7,15 @@ import functools
 import numbers
 import time
 
+import six
 
-class Stopwatch(object):
+import jaraco.functools
+
+
+__metaclass__ = type
+
+
+class Stopwatch:
 	"""
 	A simple stopwatch which starts automatically.
 
@@ -71,7 +78,7 @@ class Stopwatch(object):
 		self.stop()
 
 
-class IntervalGovernor(object):
+class IntervalGovernor:
 	"""
 	Decorate a function to only allow it to be called once per
 	min_interval. Otherwise, it returns None.
@@ -127,7 +134,7 @@ class Timer(Stopwatch):
 		return self.split().total_seconds() > self.target
 
 
-class BackoffDelay(object):
+class BackoffDelay(six.Iterator):
 	"""
 	Exponential backoff delay.
 
@@ -161,20 +168,38 @@ class BackoffDelay(object):
 	>>> bd.delay
 	0.015
 
+	To reset the backoff, simply call ``.reset()``:
+
+	>>> bd.reset()
+	>>> bd.delay
+	0.01
+
+	Iterate on the object to retrieve/advance the delay values.
+
+	>>> next(bd)
+	0.01
+	>>> next(bd)
+	0.015
+	>>> import itertools
+	>>> tuple(itertools.islice(bd, 3))
+	(0.015, 0.015, 0.015)
+
 	Limit may be a callable taking a number and returning
 	the limited number.
 
 	>>> at_least_one = lambda n: max(n, 1)
 	>>> bd = BackoffDelay(delay=0.01, factor=2, limit=at_least_one)
-	>>> bd()
-	>>> bd.delay
+	>>> next(bd)
+	0.01
+	>>> next(bd)
 	1
 
 	Pass a jitter to add or subtract seconds to the delay.
 
 	>>> bd = BackoffDelay(jitter=0.01)
-	>>> bd()
-	>>> bd.delay
+	>>> next(bd)
+	0
+	>>> next(bd)
 	0.01
 
 	Jitter may be a callable. To supply a non-deterministic jitter
@@ -183,8 +208,9 @@ class BackoffDelay(object):
 	>>> import random
 	>>> jitter=functools.partial(random.uniform, -0.5, 0.5)
 	>>> bd = BackoffDelay(jitter=jitter)
-	>>> bd()
-	>>> 0 <= bd.delay <= 0.5
+	>>> next(bd)
+	0
+	>>> 0 <= next(bd) <= 0.5
 	True
 	"""
 
@@ -196,6 +222,7 @@ class BackoffDelay(object):
 	jitter = 0
 	"Number or callable returning extra seconds to add to delay"
 
+	@jaraco.functools.save_method_args
 	def __init__(self, delay=0, factor=1, limit=float('inf'), jitter=0):
 		self.delay = delay
 		self.factor = factor
@@ -213,5 +240,19 @@ class BackoffDelay(object):
 		self.jitter = jitter
 
 	def __call__(self):
-		time.sleep(self.delay)
+		time.sleep(next(self))
+
+	def __next__(self):
+		delay = self.delay
+		self.bump()
+		return delay
+
+	def __iter__(self):
+		return self
+
+	def bump(self):
 		self.delay = self.limit(self.delay * self.factor + self.jitter())
+
+	def reset(self):
+		saved = self._saved___init__
+		self.__init__(*saved.args, **saved.kwargs)

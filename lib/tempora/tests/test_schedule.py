@@ -8,6 +8,8 @@ import freezegun
 
 from tempora import schedule
 
+__metaclass__ = type
+
 
 @pytest.fixture
 def naive_times(monkeypatch):
@@ -59,7 +61,7 @@ def test_periodic_command_fixed_delay():
 	assert fd.next().due() is False
 
 
-class TestCommands(object):
+class TestCommands:
 	def test_delayed_command_from_timestamp(self):
 		"""
 		Ensure a delayed command can be constructed from a timestamp.

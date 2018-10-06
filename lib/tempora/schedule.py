@@ -13,6 +13,8 @@ import bisect
 
 import pytz
 
+__metaclass__ = type
+
 
 def now():
     """
@@ -151,7 +153,7 @@ class PeriodicCommandFixedDelay(PeriodicCommand):
         return cls.at_time(cls._localize(when), daily, target)
 
 
-class Scheduler(object):
+class Scheduler:
     """
     A rudimentary abstract scheduler accepting DelayedCommands
     and dispatching them on schedule.

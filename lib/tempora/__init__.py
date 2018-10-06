@@ -12,8 +12,10 @@ import functools
 
 import six
 
+__metaclass__ = type
 
-class Parser(object):
+
+class Parser:
 	"""
 	Datetime parser: parses a date-time string using multiple possible
 	formats.
@@ -136,7 +138,7 @@ def strptime(s, fmt, tzinfo=None):
 	return datetime.datetime(tzinfo=tzinfo, *res[:6])
 
 
-class DatetimeConstructor(object):
+class DatetimeConstructor:
 	"""
 	>>> cd = DatetimeConstructor.construct_datetime
 	>>> cd(datetime.datetime(2011,1,1))
