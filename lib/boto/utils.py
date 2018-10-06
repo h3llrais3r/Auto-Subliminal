@@ -89,7 +89,14 @@ qsa_of_interest = ['acl', 'cors', 'defaultObjectAcl', 'location', 'logging',
                    # Storage.
                    'websiteConfig',
                    # compose is a QSA for objects in Google Cloud Storage.
-                   'compose']
+                   'compose',
+                   # billing is a QSA for buckets in Google Cloud Storage.
+                   'billing',
+                   # userProject is a QSA for requests in Google Cloud Storage.
+                   'userProject',
+                   # encryptionConfig is a QSA for requests in Google Cloud
+                   # Storage.
+                   'encryptionConfig']
 
 
 _first_cap_regex = re.compile('(.)([A-Z][a-z]+)')
