@@ -42,7 +42,7 @@ requests==2.18.4
 requests-oauthlib==0.8.0
 simplejson==3.13.2
 six==1.11.0
-smmap2==2.0.3
+smmap2==2.0.4
 stevedore==1.28.0
 git+https://github.com/Diaoul/subliminal.git@879c0c8d18618e32ad466bb63bd939edb268bc60#egg=subliminal
 tempora==1.11
