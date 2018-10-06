@@ -21,6 +21,7 @@ from six.moves import _thread, range
 import heapq
 
 from ._common import weekday as weekdaybase
+from .tz import tzutc, tzlocal
 
 # For warning about deprecation of until and count
 from warnings import warn
@@ -336,10 +337,6 @@ class rrule(rrulebase):
 
     Additionally, it supports the following keyword arguments:
 
-    :param cache:
-        If given, it must be a boolean value specifying to enable or disable
-        caching of results. If you will use the same rrule instance multiple
-        times, enabling caching will improve the performance considerably.
     :param dtstart:
         The recurrence start. Besides being the base for the recurrence,
         missing parameters in the final recurrence instances will also be
@@ -386,6 +383,11 @@ class rrule(rrulebase):
     :param byyearday:
         If given, it must be either an integer, or a sequence of integers,
         meaning the year days to apply the recurrence to.
+    :param byeaster:
+        If given, it must be either an integer, or a sequence of integers,
+        positive or negative. Each integer will define an offset from the
+        Easter Sunday. Passing the offset 0 to byeaster will yield the Easter
+        Sunday itself. This is an extension to the RFC specification.
     :param byweekno:
         If given, it must be either an integer, or a sequence of integers,
         meaning the week numbers to apply the recurrence to. Week numbers
@@ -411,11 +413,10 @@ class rrule(rrulebase):
     :param bysecond:
         If given, it must be either an integer, or a sequence of integers,
         meaning the seconds to apply the recurrence to.
-    :param byeaster:
-        If given, it must be either an integer, or a sequence of integers,
-        positive or negative. Each integer will define an offset from the
-        Easter Sunday. Passing the offset 0 to byeaster will yield the Easter
-        Sunday itself. This is an extension to the RFC specification.
+    :param cache:
+        If given, it must be a boolean value specifying to enable or disable
+        caching of results. If you will use the same rrule instance multiple
+        times, enabling caching will improve the performance considerably.
      """
     def __init__(self, freq, dtstart=None,
                  interval=1, wkst=None, count=None, until=None, bysetpos=None,
@@ -426,7 +427,10 @@ class rrule(rrulebase):
         super(rrule, self).__init__(cache)
         global easter
         if not dtstart:
-            dtstart = datetime.datetime.now().replace(microsecond=0)
+            if until and until.tzinfo:
+                dtstart = datetime.datetime.now(tz=until.tzinfo).replace(microsecond=0)
+            else:           
+                dtstart = datetime.datetime.now().replace(microsecond=0)
         elif not isinstance(dtstart, datetime.datetime):
             dtstart = datetime.datetime.fromordinal(dtstart.toordinal())
         else:
@@ -446,6 +450,20 @@ class rrule(rrulebase):
         if until and not isinstance(until, datetime.datetime):
             until = datetime.datetime.fromordinal(until.toordinal())
         self._until = until
+
+        if self._dtstart and self._until:
+            if (self._dtstart.tzinfo is not None) != (self._until.tzinfo is not None):
+                # According to RFC5545 Section 3.3.10:
+                # https://tools.ietf.org/html/rfc5545#section-3.3.10
+                #
+                # > If the "DTSTART" property is specified as a date with UTC
+                # > time or a date with local time and time zone reference,
+                # > then the UNTIL rule part MUST be specified as a date with
+                # > UTC time.
+                raise ValueError(
+                    'RRULE UNTIL values must be specified in UTC when DTSTART '
+                    'is timezone-aware'
+                )
 
         if count is not None and until:
             warn("Using both 'count' and 'until' is inconsistent with RFC 5545"
