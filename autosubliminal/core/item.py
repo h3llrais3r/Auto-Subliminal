@@ -23,6 +23,7 @@ log = logging.getLogger(__name__)
 class _Item(object):
     """
     Base item object.
+    See https://stackoverflow.com/questions/390250/elegant-ways-to-support-equivalence-equality-in-python-classes
     """
 
     def __init__(self, type=None, title=None, year=None, season=None, episode=None, source=None, quality=None,
@@ -52,6 +53,21 @@ class _Item(object):
         self.quality = quality
         self.codec = codec
         self.releasegrp = _releasegrp
+
+    def __eq__(self, other):
+        """Overrides the default implementation"""
+        if not isinstance(other, type(self)):
+            return NotImplemented
+
+        return self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        """Overrides the default implementation (unnecessary in Python 3)"""
+        return not self.__eq__(other)
+
+    def __hash__(self):
+        """Overrides the default implementation"""
+        return hash(tuple(sorted(self.__dict__.items())))
 
 
 class WantedItem(_Item):
