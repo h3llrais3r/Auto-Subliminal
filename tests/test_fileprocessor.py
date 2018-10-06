@@ -32,17 +32,17 @@ def test_process_episode_file(mocker):
     autosubliminal.SHOWINDEXER.get_tvdb_id.return_value = 263365
     # Test process_file
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
-    result_dict = process_file(dir_name, 'Marvels.Agents.of.S.H.I.E.L.D.S05E03.720p.HDTV.x264-AVS[rarbg].mkv')
-    assert result_dict is not None
-    assert result_dict['type'] == 'episode'
-    assert result_dict['title'] == 'Marvels Agents of S.H.I.E.L.D.'
-    assert result_dict['season'] == 5
-    assert result_dict['episode'] == 3
-    assert result_dict['source'] == 'HDTV'
-    assert result_dict['quality'] == '720p'
-    assert result_dict['codec'] == 'h264'
-    assert result_dict['releasegrp'] == 'AVS'
-    assert result_dict['tvdbid'] == 263365
+    wanted_item = process_file(dir_name, 'Marvels.Agents.of.S.H.I.E.L.D.S05E03.720p.HDTV.x264-AVS[rarbg].mkv')
+    assert wanted_item is not None
+    assert wanted_item.type == 'episode'
+    assert wanted_item.title == 'Marvels Agents of S.H.I.E.L.D.'
+    assert wanted_item.season == 5
+    assert wanted_item.episode == 3
+    assert wanted_item.source == 'HDTV'
+    assert wanted_item.quality == '720p'
+    assert wanted_item.codec == 'h264'
+    assert wanted_item.releasegrp == 'AVS'
+    assert wanted_item.tvdbid == 263365
 
 
 def test_process_multi_episode_file(mocker):
@@ -51,17 +51,17 @@ def test_process_multi_episode_file(mocker):
     autosubliminal.SHOWINDEXER.get_tvdb_id.return_value = 263365
     # Test process_file
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
-    result_dict = process_file(dir_name, 'Marvels.Agents.of.S.H.I.E.L.D.S05E01-E02.720p.HDTV.x264-AVS.mkv')
-    assert result_dict is not None
-    assert result_dict['type'] == 'episode'
-    assert result_dict['title'] == 'Marvels Agents of S.H.I.E.L.D.'
-    assert result_dict['season'] == 5
-    assert result_dict['episode'] == '1,2'
-    assert result_dict['source'] == 'HDTV'
-    assert result_dict['quality'] == '720p'
-    assert result_dict['codec'] == 'h264'
-    assert result_dict['releasegrp'] == 'AVS'
-    assert result_dict['tvdbid'] == 263365
+    wanted_item = process_file(dir_name, 'Marvels.Agents.of.S.H.I.E.L.D.S05E01-E02.720p.HDTV.x264-AVS.mkv')
+    assert wanted_item is not None
+    assert wanted_item.type == 'episode'
+    assert wanted_item.title == 'Marvels Agents of S.H.I.E.L.D.'
+    assert wanted_item.season == 5
+    assert wanted_item.episode == '1,2'
+    assert wanted_item.source == 'HDTV'
+    assert wanted_item.quality == '720p'
+    assert wanted_item.codec == 'h264'
+    assert wanted_item.releasegrp == 'AVS'
+    assert wanted_item.tvdbid == 263365
 
 
 def test_process_episode_file_guess_by_filename(mocker):
@@ -70,17 +70,17 @@ def test_process_episode_file_guess_by_filename(mocker):
     autosubliminal.SHOWINDEXER.get_tvdb_id.return_value = 248741
     # Test process_file
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
-    result_dict = process_file(dir_name, '2 Broke Girls - S01E01 - HDTV-720p Proper - x264 AC3 - IMMERSE.mkv')
-    assert result_dict is not None
-    assert result_dict['type'] == 'episode'
-    assert result_dict['title'] == '2 Broke Girls'
-    assert result_dict['season'] == 1
-    assert result_dict['episode'] == 1
-    assert result_dict['source'] == 'HDTV'
-    assert result_dict['quality'] == '720p'
-    assert result_dict['codec'] == 'h264'
-    assert result_dict['releasegrp'] == 'IMMERSE'
-    assert result_dict['tvdbid'] == 248741
+    wanted_item = process_file(dir_name, '2 Broke Girls - S01E01 - HDTV-720p Proper - x264 AC3 - IMMERSE.mkv')
+    assert wanted_item is not None
+    assert wanted_item.type == 'episode'
+    assert wanted_item.title == '2 Broke Girls'
+    assert wanted_item.season == 1
+    assert wanted_item.episode == 1
+    assert wanted_item.source == 'HDTV'
+    assert wanted_item.quality == '720p'
+    assert wanted_item.codec == 'h264'
+    assert wanted_item.releasegrp == 'IMMERSE'
+    assert wanted_item.tvdbid == 248741
 
 
 def test_process_episode_file_guess_by_file_path(mocker):
@@ -92,17 +92,17 @@ def test_process_episode_file_guess_by_file_path(mocker):
     os.path.getctime.return_value = None
     # Test process_file (simulate dir_name)
     dir_name = os.path.join(os.path.abspath(os.sep), 'Series', '2 Broke Girls', 'Season 1')
-    result_dict = process_file(dir_name, 'S01E01.mkv')
-    assert result_dict is not None
-    assert result_dict['type'] == 'episode'
-    assert result_dict['title'] == '2 Broke Girls'
-    assert result_dict['season'] == 1
-    assert result_dict['episode'] == 1
-    assert result_dict['source'] is None
-    assert result_dict['quality'] is None
-    assert result_dict['codec'] is None
-    assert result_dict['releasegrp'] is None
-    assert result_dict['tvdbid'] == 248741
+    wanted_item = process_file(dir_name, 'S01E01.mkv')
+    assert wanted_item is not None
+    assert wanted_item.type == 'episode'
+    assert wanted_item.title == '2 Broke Girls'
+    assert wanted_item.season == 1
+    assert wanted_item.episode == 1
+    assert wanted_item.source is None
+    assert wanted_item.quality is None
+    assert wanted_item.codec is None
+    assert wanted_item.releasegrp is None
+    assert wanted_item.tvdbid == 248741
 
 
 def test_process_file_movie(mocker):
@@ -111,15 +111,15 @@ def test_process_file_movie(mocker):
     autosubliminal.MOVIEINDEXER.get_imdb_id_and_year.return_value = '1798684', 2015
     # Test process_file
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
-    result_dict = process_file(dir_name, 'Southpaw.2015.1080p.BluRay.x264.mkv')
-    assert result_dict is not None
-    assert result_dict['type'] == 'movie'
-    assert result_dict['title'] == 'Southpaw'
-    assert result_dict['year'] == 2015
-    assert result_dict['source'] == 'BluRay'
-    assert result_dict['quality'] == '1080p'
-    assert result_dict['codec'] == 'h264'
-    assert result_dict['imdbid'] == '1798684'
+    wanted_item = process_file(dir_name, 'Southpaw.2015.1080p.BluRay.x264.mkv')
+    assert wanted_item is not None
+    assert wanted_item.type == 'movie'
+    assert wanted_item.title == 'Southpaw'
+    assert wanted_item.year == 2015
+    assert wanted_item.source == 'BluRay'
+    assert wanted_item.quality == '1080p'
+    assert wanted_item.codec == 'h264'
+    assert wanted_item.imdbid == '1798684'
 
 
 def test_process_movie_file_special_chars(mocker):
@@ -128,9 +128,9 @@ def test_process_movie_file_special_chars(mocker):
     autosubliminal.MOVIEINDEXER.get_imdb_id_and_year.return_value = '0993789', 2008
     # Test process_file
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
-    result_dict = process_file(dir_name, u'Un conte de Noël (2008).mkv')
-    assert result_dict is not None
-    assert result_dict['type'] == 'movie'
-    assert result_dict['title'] == u'Un conte de Noël'
-    assert result_dict['year'] == 2008
-    assert result_dict['imdbid'] == '0993789'
+    wanted_item = process_file(dir_name, u'Un conte de Noël (2008).mkv')
+    assert wanted_item is not None
+    assert wanted_item.type == 'movie'
+    assert wanted_item.title == u'Un conte de Noël'
+    assert wanted_item.year == 2008
+    assert wanted_item.imdbid == '0993789'

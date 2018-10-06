@@ -6,7 +6,7 @@ import logging
 
 import autosubliminal
 from autosubliminal import version
-from autosubliminal.core.item import DownloadItem, DownloadedItem, WantedItem
+from autosubliminal.core.item import DownloadedItem, WantedItem
 
 log = logging.getLogger(__name__)
 

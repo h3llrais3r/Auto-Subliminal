@@ -19,7 +19,7 @@ from subliminal.providers.tvsubtitles import TVsubtitlesSubtitle
 from subliminal.video import Episode, Movie
 
 import autosubliminal
-from autosubliminal.core.item import WantedItem, DownloadItem
+from autosubliminal.core.item import DownloadItem
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import WantedItems
 from autosubliminal.postprocessor import PostProcessor
