@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, unicode_literals
 
-from .compat import PY32
-from .compat import unicode
+from .compat import string_types
 
 
 class JSONBackend(object):
@@ -12,7 +10,7 @@ class JSONBackend(object):
         simplejson, json, demjson
 
     simplejson is a fast and popular backend and is tried first.
-    json comes with python2.6 and is tried second.
+    json comes with Python and is tried second.
     demjson is the most permissive backend and is tried last.
 
     """
@@ -43,8 +41,7 @@ class JSONBackend(object):
         # Whether we've loaded any backends successfully
         self._verified = False
 
-        if not PY32:
-            self.load_backend('simplejson')
+        self.load_backend('simplejson')
         self.load_backend('json')
         self.load_backend('demjson', 'encode', 'decode', 'JSONDecodeError')
         self.load_backend('jsonlib', 'write', 'read', 'ReadError')
@@ -116,7 +113,7 @@ class JSONBackend(object):
                 not self._store(self._decoders, name, mod, loads)):
             return False
 
-        if isinstance(loads_exc, (str, unicode)):
+        if isinstance(loads_exc, string_types):
             # This backend's decoder exception is part of the backend
             if not self._store(self._decoder_exceptions, name, mod, loads_exc):
                 return False
@@ -170,7 +167,7 @@ class JSONBackend(object):
     dumps = encode
 
     def backend_encode(self, name, obj):
-        optargs, optkwargs = self._encoder_options[name]
+        optargs, optkwargs = self._encoder_options.get(name, ([], {}))
         encoder_kwargs = optkwargs.copy()
         encoder_args = (obj,) + tuple(optargs)
         return self._encoders[name](*encoder_args, **encoder_kwargs)
@@ -275,3 +272,6 @@ class JSONBackend(object):
             self.remove_backend(backend)
             return False
         return True
+
+
+json = JSONBackend()

@@ -1,21 +1,22 @@
-# -*- coding: utf-8 -*-
-
 from __future__ import absolute_import
-
+import ast
 import sys
 import zlib
 import warnings
+import json
 
 import numpy as np
 
-import ast
 from ..handlers import BaseHandler, register, unregister
-from ..compat import unicode, numeric_types
+from ..compat import numeric_types
 from ..util import b64decode, b64encode
+from .. import compat
+
 
 __all__ = ['register_handlers', 'unregister_handlers']
 
 native_byteorder = '<' if sys.byteorder == 'little' else '>'
+
 
 def get_byteorder(arr):
     """translate equals sign to native order"""
@@ -29,7 +30,7 @@ class NumpyBaseHandler(BaseHandler):
         if hasattr(dtype, 'tostring'):
             data['dtype'] = dtype.tostring()
         else:
-            dtype = unicode(dtype)
+            dtype = compat.ustr(dtype)
             prefix = '(numpy.record, '
             if dtype.startswith(prefix):
                 dtype = dtype[len(prefix):-1]
@@ -80,7 +81,8 @@ class NumpyNDArrayHandler(NumpyBaseHandler):
         self.flatten_flags(obj, data)
         data['values'] = self.context.flatten(obj.tolist(), reset=False)
         if 0 in obj.shape:
-            # add shape information explicitly as it cannot be inferred from an empty list
+            # add shape information explicitly as it cannot be
+            # inferred from an empty list
             data['shape'] = obj.shape
         return data
 
@@ -100,23 +102,26 @@ class NumpyNDArrayHandler(NumpyBaseHandler):
 
 
 class NumpyNDArrayHandlerBinary(NumpyNDArrayHandler):
-    """stores arrays with size greater than 'size_treshold' as (optionally) compressed base64
+    """stores arrays with size greater than 'size_threshold' as
+    (optionally) compressed base64
 
     Notes
     -----
-    This would be easier to implement using np.save/np.load, but that would be less language-agnostic
+    This would be easier to implement using np.save/np.load, but
+    that would be less language-agnostic
     """
 
-    def __init__(self, size_treshold=16, compression=zlib):
+    def __init__(self, size_threshold=16, compression=zlib):
         """
-        :param size_treshold: nonnegative int or None
-            valid values for 'size_treshold' are all nonnegative integers and None
-            if size_treshold is None, values are always stored as nested lists
+        :param size_threshold: nonnegative int or None
+            valid values for 'size_threshold' are all nonnegative
+            integers and None
+            if size_threshold is None, values are always stored as nested lists
         :param compression: a compression module or None
             valid values for 'compression' are {zlib, bz2, None}
             if compresion is None, no compression is applied
         """
-        self.size_treshold = size_treshold
+        self.size_threshold = size_threshold
         self.compression = compression
 
     def flatten_byteorder(self, obj, data):
@@ -131,12 +136,30 @@ class NumpyNDArrayHandlerBinary(NumpyNDArrayHandler):
 
     def flatten(self, obj, data):
         """encode numpy to json"""
-        if self.size_treshold >= obj.size or self.size_treshold is None:
+        if self.size_threshold is None or self.size_threshold >= obj.size:
             # encode as text
             data = super(NumpyNDArrayHandlerBinary, self).flatten(obj, data)
         else:
             # encode as binary
-            buffer = obj.tobytes(order='a')	 # numpy docstring is lacking as of 1.11.2, but this is the option we need
+            if obj.dtype == np.object:
+                # There's a bug deep in the bowels of numpy that causes a segfault when round-tripping an ndarray of dtype object.
+                # E.g., the following will result in a segfault:
+                #     import numpy as np
+                #     arr = np.array([str(i) for i in range(3)], dtype=np.object)
+                #     dtype = arr.dtype
+                #     shape = arr.shape
+                #     buf = arr.tobytes()
+                #     del arr
+                #     arr = np.ndarray(buffer=buf, dtype=dtype, shape=shape).copy()
+                # So, save as a binary-encoded list in this case
+                buffer = json.dumps(obj.tolist()).encode()
+            elif hasattr(obj, 'tobytes'):
+                # numpy docstring is lacking as of 1.11.2,
+                # but this is the option we need
+                buffer = obj.tobytes(order='a')
+            else:
+                # numpy < 1.9 compatibility
+                buffer = obj.tostring(order='a')
             if self.compression:
                 buffer = self.compression.compress(buffer)
             data['values'] = b64encode(buffer)
@@ -161,16 +184,25 @@ class NumpyNDArrayHandlerBinary(NumpyNDArrayHandler):
             arr = np.array([values], dtype=self.restore_dtype(data))
         else:
             # decode binary representation
+            dtype = self.restore_dtype(data)
             buffer = b64decode(values)
             if self.compression:
                 buffer = self.compression.decompress(buffer)
-            arr = np.ndarray(
-                buffer=buffer,
-                dtype=self.restore_dtype(data),
-                shape=data.get('shape'),
-                order=data.get('order', 'C')
-            ).copy() # make a copy, to force the result to own the data
-            self.restore_byteorder(data, arr)
+            # See note above about segfault bug for numpy dtype object. Those are saved as a list to work around that.
+            if dtype == np.object:
+                values = json.loads(buffer.decode())
+                arr = np.array(values, dtype=dtype, order=data.get('order', 'C'))
+                shape = data.get('shape', None)
+                if shape is not None:
+                    arr = arr.reshape(shape)
+            else:
+                arr = np.ndarray(
+                    buffer=buffer,
+                    dtype=dtype,
+                    shape=data.get('shape'),
+                    order=data.get('order', 'C')
+                ).copy()  # make a copy, to force the result to own the data
+                self.restore_byteorder(data, arr)
             self.restore_flags(data, arr)
 
         return arr
@@ -183,26 +215,35 @@ class NumpyNDArrayHandlerView(NumpyNDArrayHandlerBinary):
     -----
     The current implementation has some restrictions.
 
-    'base' arrays, or arrays which are viewed by other arrays, must be f-or-c-contiguous.
-    This is not such a large restriction in practice, because all numpy array creation is c-contiguous by default.
-    Relaxing this restriction would be nice though; especially if it can be done without bloating the design too much.
+    'base' arrays, or arrays which are viewed by other arrays,
+    must be f-or-c-contiguous.
+    This is not such a large restriction in practice, because all
+    numpy array creation is c-contiguous by default.
+    Relaxing this restriction would be nice though; especially if
+    it can be done without bloating the design too much.
 
-    Furthermore, ndarrays which are views of array-like objects implementing __array_interface__,
-    but which are not themselves nd-arrays, are deepcopied with a warning (by default),
-    as we cannot guarantee whatever custom logic such classes implement is correctly reproduced.
+    Furthermore, ndarrays which are views of array-like objects
+    implementing __array_interface__,
+    but which are not themselves nd-arrays, are deepcopied with
+    a warning (by default),
+    as we cannot guarantee whatever custom logic such classes
+    implement is correctly reproduced.
     """
-    def __init__(self, mode='warn', size_treshold=16, compression=zlib):
+    def __init__(self, mode='warn', size_threshold=16, compression=zlib):
         """
         :param mode: {'warn', 'raise', 'ignore'}
-            How to react when encountering array-like objects whos references we cannot safely serialize
-        :param size_treshold: nonnegative int or None
-            valid values for 'size_treshold' are all nonnegative integers and None
-            if size_treshold is None, values are always stored as nested lists
+            How to react when encountering array-like objects whos
+            references we cannot safely serialize
+        :param size_threshold: nonnegative int or None
+            valid values for 'size_threshold' are all nonnegative
+            integers and None
+            if size_threshold is None, values are always stored as nested lists
         :param compression: a compression module or None
             valid values for 'compression' are {zlib, bz2, None}
             if compresion is None, no compression is applied
         """
-        super(NumpyNDArrayHandlerView, self).__init__(size_treshold, compression)
+        super(NumpyNDArrayHandlerView, self).__init__(
+            size_threshold, compression)
         self.mode = mode
 
     def flatten(self, obj, data):
@@ -211,7 +252,8 @@ class NumpyNDArrayHandlerView(NumpyNDArrayHandlerBinary):
         if base is None and obj.flags.forc:
             # store by value
             data = super(NumpyNDArrayHandlerView, self).flatten(obj, data)
-            # ensure that views on arrays stored as text are interpreted correctly
+            # ensure that views on arrays stored as text
+            # are interpreted correctly
             if not obj.flags.c_contiguous:
                 data['order'] = 'F'
         elif isinstance(base, np.ndarray) and base.flags.forc:
@@ -230,23 +272,33 @@ class NumpyNDArrayHandlerView(NumpyNDArrayHandlerBinary):
             self.flatten_flags(obj, data)
 
             if get_byteorder(obj) != '|':
-                byteorder = 'S' if get_byteorder(obj) != get_byteorder(base) else None
+                byteorder = (
+                    'S' if get_byteorder(obj) != get_byteorder(base) else None)
                 if byteorder:
                     data['byteorder'] = byteorder
 
-            if self.size_treshold >= obj.size:
-                # not used in restore since base is present, but include values for human-readability
+            if self.size_threshold is None or self.size_threshold >= obj.size:
+                # not used in restore since base is present, but
+                # include values for human-readability
                 super(NumpyNDArrayHandlerBinary, self).flatten(obj, data)
         else:
             # store a deepcopy or fail
             if self.mode == 'warn':
-                msg = "ndarray is defined by reference to an object we do not know how to serialize. " \
-                      "A deep copy is serialized instead, breaking memory aliasing."
+                msg = (
+                    "ndarray is defined by reference to an object "
+                    "we do not know how to serialize. "
+                    "A deep copy is serialized instead, breaking "
+                    "memory aliasing."
+                )
                 warnings.warn(msg)
             elif self.mode == 'raise':
-                msg = "ndarray is defined by reference to an object we do not know how to serialize."
+                msg = (
+                    "ndarray is defined by reference to an object we do "
+                    "not know how to serialize."
+                )
                 raise ValueError(msg)
-            data = super(NumpyNDArrayHandlerView, self).flatten(obj.copy(), data)
+            data = super(NumpyNDArrayHandlerView, self) \
+                .flatten(obj.copy(), data)
 
         return data
 
@@ -264,7 +316,8 @@ class NumpyNDArrayHandlerView(NumpyNDArrayHandlerBinary):
 
             arr = np.ndarray(
                 buffer=base.data,
-                dtype=self.restore_dtype(data).newbyteorder(data.get('byteorder', '|')),
+                dtype=self.restore_dtype(data).newbyteorder(
+                    data.get('byteorder', '|')),
                 shape=data.get('shape'),
                 offset=data.get('offset', 0),
                 strides=data.get('strides', None)

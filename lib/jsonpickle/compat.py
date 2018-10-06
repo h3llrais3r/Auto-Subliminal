@@ -1,48 +1,36 @@
-# -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, unicode_literals
 import sys
-
-
-__all__ = ('bytes', 'set', 'unicode', 'long', 'unichr', 'queue')
+import types
+import base64
 
 PY_MAJOR = sys.version_info[0]
-PY_MINOR = sys.version_info[1]
 PY2 = PY_MAJOR == 2
 PY3 = PY_MAJOR == 3
-PY32 = PY3 and PY_MINOR == 2
 
-try:
-    bytes = bytes
-except NameError:
-    bytes = str
+class_types = (type,)
+iterator_types = (type(iter('')),)
 
-try:
-    set = set
-except NameError:
-    from sets import Set as set
-    set = set
-
-try:
-    unicode = unicode
-except NameError:
-    unicode = str
-
-try:
-    long = long
-    numeric_types = (int, float, long)
-except NameError:
-    long = int
-    numeric_types = (int, float)
-
-try:
-    unichr = unichr
-except NameError:
-    unichr = chr
-
-
-try:
-    # Python3
+if PY3:
+    import builtins
     import queue
-except ImportError:
-    # Python2
-    import Queue as queue
+    from base64 import encodebytes, decodebytes
+    from collections.abc import Iterator as abc_iterator
+    string_types = (str,)
+    numeric_types = (int, float)
+    ustr = str
+else:
+    from collections import Iterator as abc_iterator
+    builtins = __import__('__builtin__')
+    class_types += (types.ClassType,)
+    encodebytes = base64.encodestring
+    decodebytes = base64.decodestring
+    string_types = (builtins.basestring,)
+    numeric_types = (int, float, builtins.long)
+    queue = __import__('Queue')
+    ustr = builtins.unicode
+
+
+def iterator(class_):
+    if PY2 and hasattr(class_, '__next__'):
+        class_.next = class_.__next__
+    return class_

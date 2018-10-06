@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright (C) 2008 John Paulett (john -at- paulett.org)
+# Copyright (C) 2009-2018 David Aguilar (davvid -at- gmail.com)
 # All rights reserved.
 #
 # This software is licensed as described in the file COPYING, which
@@ -19,14 +18,15 @@ import types
 import inspect
 
 from . import tags
-from .compat import set, unicode, long, bytes, PY3
+from . import compat
+from .compat import numeric_types, PY2, PY3, class_types
+from .compat import abc_iterator, iterator_types
 
-if not PY3:
+if PY2:
     import __builtin__
 
 SEQUENCES = (list, set, tuple)
-SEQUENCES_SET = set(SEQUENCES)
-PRIMITIVES = set((unicode, bool, float, int, long))
+PRIMITIVES = (compat.ustr, bool, type(None)) + numeric_types
 
 
 def is_type(obj):
@@ -43,10 +43,7 @@ def is_type(obj):
     True
     """
     # use "isinstance" and not "is" to allow for metaclasses
-    if PY3:
-        return isinstance(obj, type)
-    else:
-        return isinstance(obj, (type, types.ClassType))
+    return isinstance(obj, class_types)
 
 
 def has_method(obj, name):
@@ -63,10 +60,14 @@ def has_method(obj, name):
     if not isinstance(func, (types.MethodType, types.FunctionType)):
         return False
 
-    # need to go through __dict__'s since in py3 methods are essentially descriptors
-    base_type = obj if is_type(obj) else obj.__class__  # __class__ for old-style classes
+    # need to go through __dict__'s since in py3
+    # methods are essentially descriptors
+
+    # __class__ for old-style classes
+    base_type = obj if is_type(obj) else obj.__class__
     original = None
-    for subtype in inspect.getmro(base_type):  # there is no .mro() for old-style classes
+    # there is no .mro() for old-style classes
+    for subtype in inspect.getmro(base_type):
         original = vars(subtype).get(name)
         if original is not None:
             break
@@ -106,7 +107,8 @@ def is_object(obj):
     False
     """
     return (isinstance(obj, object) and
-            not isinstance(obj, (type, types.FunctionType)))
+            not isinstance(obj, (type, types.FunctionType,
+                                 types.BuiltinFunctionType)))
 
 
 def is_primitive(obj):
@@ -119,11 +121,7 @@ def is_primitive(obj):
     >>> is_primitive([4,4])
     False
     """
-    if obj is None:
-        return True
-    elif type(obj) in PRIMITIVES:
-        return True
-    return False
+    return type(obj) in PRIMITIVES
 
 
 def is_dictionary(obj):
@@ -143,7 +141,7 @@ def is_sequence(obj):
     True
 
     """
-    return type(obj) in SEQUENCES_SET
+    return type(obj) in SEQUENCES
 
 
 def is_list(obj):
@@ -175,7 +173,7 @@ def is_bytes(obj):
 
 def is_unicode(obj):
     """Helper method to see if the object is a unicode string"""
-    return type(obj) is unicode
+    return type(obj) is compat.ustr
 
 
 def is_tuple(obj):
@@ -196,8 +194,9 @@ def is_dictionary_subclass(obj):
     True
     """
     # TODO: add UserDict
-    return (hasattr(obj, '__class__') and
-            issubclass(obj.__class__, dict) and not is_dictionary(obj))
+    return (hasattr(obj, '__class__')
+            and issubclass(obj.__class__, dict)
+            and type(obj) is not dict)
 
 
 def is_sequence_subclass(obj):
@@ -210,10 +209,12 @@ def is_sequence_subclass(obj):
     >>> is_sequence_subclass(Temp())
     True
     """
-    return (hasattr(obj, '__class__') and
-            (issubclass(obj.__class__, SEQUENCES) or
-                is_list_like(obj)) and
-            not is_sequence(obj))
+    return (hasattr(obj, '__class__')
+            and (
+                issubclass(obj.__class__, SEQUENCES)
+                or is_list_like(obj)
+            )
+            and not is_sequence(obj))
 
 
 def is_noncomplex(obj):
@@ -243,21 +244,14 @@ def is_function(obj):
     >>> is_function(1)
     False
     """
-    if type(obj) in (types.FunctionType,
-                     types.MethodType,
-                     types.LambdaType,
-                     types.BuiltinFunctionType,
-                     types.BuiltinMethodType):
-        return True
-    if not hasattr(obj, '__class__'):
-        return False
-    module = translate_module_name(obj.__class__.__module__)
-    name = obj.__class__.__name__
-    return (module == '__builtin__' and
-            name in ('function',
-                     'builtin_function_or_method',
-                     'instancemethod',
-                     'method-wrapper'))
+    function_types = (
+        types.FunctionType,
+        types.MethodType,
+        types.LambdaType,
+        types.BuiltinFunctionType,
+        types.BuiltinMethodType,
+    )
+    return type(obj) in function_types
 
 
 def is_module_function(obj):
@@ -273,7 +267,7 @@ def is_module_function(obj):
     """
 
     return (hasattr(obj, '__class__') and
-            isinstance(obj, types.FunctionType) and
+            isinstance(obj, (types.FunctionType, types.BuiltinFunctionType)) and
             hasattr(obj, '__module__') and
             hasattr(obj, '__name__') and
             obj.__name__ != '<lambda>')
@@ -331,33 +325,28 @@ def is_list_like(obj):
 
 
 def is_iterator(obj):
-    is_file = False
-    if not PY3:
-        is_file = isinstance(obj, __builtin__.file)
-
-    return (isinstance(obj, collections.Iterator) and
+    is_file = PY2 and isinstance(obj, __builtin__.file)
+    return (isinstance(obj, abc_iterator) and
             not isinstance(obj, io.IOBase) and not is_file)
 
 
 def is_collections(obj):
     try:
         return type(obj).__module__ == 'collections'
-    except:
+    except Exception:
         return False
 
 
-IteratorType = type(iter(''))
-
 def is_reducible(obj):
     """
-    Returns false if of a type which have special casing, and should not have their
-    __reduce__ methods used
+    Returns false if of a type which have special casing,
+    and should not have their __reduce__ methods used
     """
     # defaultdicts may contain functions which we cannot serialise
     if is_collections(obj) and not isinstance(obj, collections.defaultdict):
         return True
     return (not
-                (is_list(obj) or
+            (is_list(obj) or
                 is_list_like(obj) or
                 is_primitive(obj) or
                 is_bytes(obj) or
@@ -370,12 +359,11 @@ def is_reducible(obj):
                 is_sequence_subclass(obj) or
                 is_function(obj) or
                 is_module(obj) or
-                is_iterator(obj) or
-                type(getattr(obj, '__slots__', None)) is IteratorType or
+                isinstance(getattr(obj, '__slots__', None), iterator_types) or
                 type(obj) is object or
                 obj is object or
                 (is_type(obj) and obj.__module__ == 'datetime')
-                ))
+             ))
 
 
 def in_dict(obj, key, default=False):
@@ -391,7 +379,9 @@ def in_slots(obj, key, default=False):
     Returns true if key exists in obj.__slots__; false if not in.
     If obj.__slots__ is absent, return default
     """
-    return (key in obj.__slots__) if getattr(obj, '__slots__', None) else default
+    return (
+        (key in obj.__slots__) if getattr(obj, '__slots__', None) else default
+    )
 
 
 def has_reduce(obj):
@@ -409,7 +399,7 @@ def has_reduce(obj):
     # notwithstanding depending on default object
     # reduce
     if is_noncomplex(obj):
-         return (False, True)
+        return (False, True)
 
     has_reduce = False
     has_reduce_ex = False
@@ -419,7 +409,7 @@ def has_reduce(obj):
 
     # For object instance
     has_reduce = in_dict(obj, REDUCE) or in_slots(obj, REDUCE)
-    has_reduce_ex = in_dict(obj, REDUCE_EX) or in_slots(obj, REDUCE_EX) 
+    has_reduce_ex = in_dict(obj, REDUCE_EX) or in_slots(obj, REDUCE_EX)
 
     # turn to the MRO
     for base in type(obj).__mro__:
@@ -429,41 +419,41 @@ def has_reduce(obj):
         if has_reduce and has_reduce_ex:
             return (has_reduce, has_reduce_ex)
 
-    # for things that don't have a proper dict but can be getattred (rare, but includes some
-    # builtins)
+    # for things that don't have a proper dict but can be
+    # getattred (rare, but includes some builtins)
     cls = type(obj)
     object_reduce = getattr(object, REDUCE)
     object_reduce_ex = getattr(object, REDUCE_EX)
     if not has_reduce:
-         has_reduce_cls = getattr(cls, REDUCE, False)
-         if not has_reduce_cls is object_reduce:
-             has_reduce = has_reduce_cls
+        has_reduce_cls = getattr(cls, REDUCE, False)
+        if has_reduce_cls is not object_reduce:
+            has_reduce = has_reduce_cls
 
     if not has_reduce_ex:
         has_reduce_ex_cls = getattr(cls, REDUCE_EX, False)
-        if not has_reduce_ex_cls is object_reduce_ex:
-             has_reduce_ex = has_reduce_ex_cls
+        if has_reduce_ex_cls is not object_reduce_ex:
+            has_reduce_ex = has_reduce_ex_cls
 
     return (has_reduce, has_reduce_ex)
 
 
 def translate_module_name(module):
-    """Rename builtin modules to a consistent (Python2) module name
+    """Rename builtin modules to a consistent module name.
+
+    Prefer the more modern naming.
 
     This is used so that references to Python's `builtins` module can
     be loaded in both Python 2 and 3.  We remap to the "__builtin__"
     name and unmap it when importing.
 
-    See untranslate_module_name() for the reverse operation.
+    Map the Python2 `exceptions` module to `builtins` because
+    `builtins` is a superset and contains everything that is
+    available in `exceptions`, which makes the translation simpler.
 
+    See untranslate_module_name() for the reverse operation.
     """
-    if (PY3 and module == 'builtins') or module == 'exceptions':
-        # We map the Python2 `exceptions` module to `__builtin__` because
-        # `__builtin__` is a superset and contains everything that is
-        # available in `exceptions`, which makes the translation simpler.
-        return '__builtin__'
-    else:
-        return module
+    lookup = dict(__builtin__='builtins', exceptions='builtins')
+    return lookup.get(module, module)
 
 
 def untranslate_module_name(module):
@@ -473,13 +463,17 @@ def untranslate_module_name(module):
     a module name available to the current version of Python.
 
     """
-    if PY3:
-        # remap `__builtin__` and `exceptions` to the `builtins` module
-        if module == '__builtin__':
-            module = 'builtins'
-        elif module == 'exceptions':
-            module = 'builtins'
-    return module
+    module = _0_9_6_compat_untranslate(module)
+    lookup = dict(builtins='__builtin__') if PY2 else {}
+    return lookup.get(module, module)
+
+
+def _0_9_6_compat_untranslate(module):
+    """Provide compatibility for pickles created with jsonpickle 0.9.6 and
+    earlier, remapping `exceptions` and `__builtin__` to `builtins`.
+    """
+    lookup = dict(__builtin__='builtins', exceptions='builtins')
+    return lookup.get(module, module)
 
 
 def importable_name(cls):
@@ -490,33 +484,35 @@ def importable_name(cls):
     >>> ex = Example()
     >>> importable_name(ex.__class__) == 'jsonpickle.util.Example'
     True
-    >>> importable_name(type(25)) == '__builtin__.int'
+    >>> importable_name(type(25)) == 'builtins.int'
     True
-    >>> importable_name(None.__class__) == '__builtin__.NoneType'
+    >>> importable_name(None.__class__) == 'builtins.NoneType'
     True
-    >>> importable_name(False.__class__) == '__builtin__.bool'
+    >>> importable_name(False.__class__) == 'builtins.bool'
     True
-    >>> importable_name(AttributeError) == '__builtin__.AttributeError'
+    >>> importable_name(AttributeError) == 'builtins.AttributeError'
     True
 
     """
-    name = cls.__name__
+    # Use the fully-qualified name if available (Python >= 3.3)
+    name = getattr(cls, '__qualname__', cls.__name__)
     module = translate_module_name(cls.__module__)
-    return '%s.%s' % (module, name)
+    return '{}.{}'.format(module, name)
 
 
 def b64encode(data):
-    payload = base64.b64encode(data)
-    if PY3 and type(payload) is bytes:
-        payload = payload.decode('ascii')
-    return payload
+    """
+    Encode binary data to ascii text in base64. Data must be bytes.
+    """
+    return base64.b64encode(data).decode('ascii')
 
 
 def b64decode(payload):
-    if PY3 and type(payload) is not bytes:
-        payload = bytes(payload, 'ascii')
-    return base64.b64decode(payload)
+    """
+    Decode payload - must be ascii text.
+    """
+    return base64.b64decode(payload.encode('ascii'))
 
 
 def itemgetter(obj, getter=operator.itemgetter(0)):
-    return unicode(getter(obj))
+    return compat.ustr(getter(obj))

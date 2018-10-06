@@ -1,36 +1,43 @@
-# -*- coding: utf-8 -*-
-#
 # Copyright (C) 2008 John Paulett (john -at- paulett.org)
-# Copyright (C) 2009, 2011, 2013 David Aguilar (davvid -at- gmail.com) and contributors
+# Copyright (C) 2009-2018 David Aguilar (davvid -at- gmail.com)
 # All rights reserved.
 #
 # This software is licensed as described in the file COPYING, which
 # you should have received as part of this distribution.
 from __future__ import absolute_import, division, unicode_literals
-import base64
 import quopri
 import sys
 
 from . import util
 from . import tags
 from . import handlers
-from .compat import numeric_types, set, unicode
-from .backend import JSONBackend
+from .compat import numeric_types, decodebytes
+from .backend import json
 
 
 def decode(string, backend=None, context=None, keys=False, reset=True,
            safe=False, classes=None):
-    backend = _make_backend(backend)
-    if context is None:
-        context = Unpickler(keys=keys, backend=backend, safe=safe)
-    return context.restore(backend.decode(string), reset=reset, classes=classes)
+    """Convert a JSON string into a Python object.
 
+    The keyword argument 'keys' defaults to False.
+    If set to True then jsonpickle will decode non-string dictionary keys
+    into python objects via the jsonpickle protocol.
 
-def _make_backend(backend):
-    if backend is None:
-        return JSONBackend()
-    else:
-        return backend
+    The keyword argument 'classes' defaults to None.
+    If set to a single class, or a sequence (list, set, tuple) of classes,
+    then the classes will be made available when constructing objects.  This
+    can be used to give jsonpickle access to local classes that are not
+    available through the global module import scope.
+
+    >>> decode('"my string"') == 'my string'
+    True
+    >>> decode('36')
+    36
+    """
+    backend = backend or json
+    context = context or Unpickler(keys=keys, backend=backend, safe=safe)
+    data = backend.decode(string)
+    return context.restore(data, reset=reset, classes=classes)
 
 
 def _safe_hasattr(obj, attr):
@@ -96,7 +103,7 @@ def _obj_setvalue(obj, idx, proxy):
 class Unpickler(object):
 
     def __init__(self, backend=None, keys=False, safe=False):
-        self.backend = _make_backend(backend)
+        self.backend = backend or json
         self.keys = keys
         self.safe = safe
 
@@ -188,11 +195,12 @@ class Unpickler(object):
         elif util.is_dictionary(obj):
             restore = self._restore_dict
         else:
-            restore = lambda x: x
+            def restore(x):
+                return x
         return restore(obj)
 
     def _restore_base64(self, obj):
-        return base64.decodestring(obj[tags.B64].encode('utf-8'))
+        return decodebytes(obj[tags.B64].encode('utf-8'))
 
     #: For backwards compatibility with bytes data produced by older versions
     def _restore_quopri(self, obj):
@@ -210,7 +218,7 @@ class Unpickler(object):
         proxy = _Proxy()
         self._mkref(proxy)
         reduce_val = obj[tags.REDUCE]
-        reduce_tuple = f, args, state, listitems, dictitems = map(self._restore, reduce_val)
+        f, args, state, listitems, dictitems = map(self._restore, reduce_val)
 
         if f == tags.NEWOBJ or getattr(f, '__name__', '') == '__newobj__':
             # mandated special case
@@ -230,16 +238,15 @@ class Unpickler(object):
                     # we can't do a straight update here because we
                     # need object identity of the state dict to be
                     # preserved so that _swap_proxies works out
-                    for k in stage1.__dict__.keys():
-                        if k not in state:
-                            state[k] = stage1.__dict__[k]
+                    for k, v in stage1.__dict__.items():
+                        state.setdefault(k, v)
                     stage1.__dict__ = state
                 except AttributeError:
                     # next prescribed default
                     try:
                         for k, v in state.items():
                             setattr(stage1, k, v)
-                    except:
+                    except Exception:
                         dict_state, slots_state = state
                         if dict_state:
                             stage1.__dict__.update(dict_state)
@@ -334,9 +341,11 @@ class Unpickler(object):
         if kwargs:
             kwargs = self._restore(kwargs)
 
-        is_oldstyle = not (isinstance(cls, type) or getattr(cls, '__meta__', None))
+        is_oldstyle = (
+            not (isinstance(cls, type) or getattr(cls, '__meta__', None)))
         try:
-            if (not is_oldstyle) and hasattr(cls, '__new__'):  # new style classes
+            if (not is_oldstyle) and hasattr(cls, '__new__'):
+                # new style classes
                 if factory:
                     instance = cls.__new__(cls, factory, *args, **kwargs)
                     instance.default_factory = factory
@@ -353,7 +362,7 @@ class Unpickler(object):
             except TypeError:  # fail gracefully
                 try:
                     instance = make_blank_classic(cls)
-                except:  # fail gracefully
+                except Exception:  # fail gracefully
                     return self._mkref(obj)
 
         proxy.reset(instance)
@@ -378,7 +387,7 @@ class Unpickler(object):
             if ignorereserved and k in tags.RESERVED:
                 continue
             if isinstance(k, numeric_types):
-                str_k = unicode(k)
+                str_k = k.__str__()
             else:
                 str_k = k
             self._namestack.append(str_k)
@@ -466,9 +475,11 @@ class Unpickler(object):
         children = [self._restore(v) for v in obj]
         parent.extend(children)
         method = _obj_setvalue
-        proxies = [(parent, idx, value, method)
-                    for idx, value in enumerate(parent)
-                        if isinstance(value, _Proxy)]
+        proxies = [
+            (parent, idx, value, method)
+            for idx, value in enumerate(parent)
+            if isinstance(value, _Proxy)
+        ]
         self._proxies.extend(proxies)
         return parent
 
@@ -476,14 +487,14 @@ class Unpickler(object):
         return tuple([self._restore(v) for v in obj[tags.TUPLE]])
 
     def _restore_set(self, obj):
-        return set([self._restore(v) for v in obj[tags.SET]])
+        return {self._restore(v) for v in obj[tags.SET]}
 
     def _restore_dict(self, obj):
         data = {}
         restore_key = self._restore_key_fn()
         for k, v in sorted(obj.items(), key=util.itemgetter):
             if isinstance(k, numeric_types):
-                str_k = unicode(k)
+                str_k = k.__str__()
             else:
                 str_k = k
             self._namestack.append(str_k)
@@ -511,7 +522,8 @@ class Unpickler(object):
         if self.keys:
             restore_key = self._restore_pickled_key
         else:
-            restore_key = lambda key: key
+            def restore_key(key):
+                return key
         return restore_key
 
     def _restore_pickled_key(self, key):
@@ -578,7 +590,7 @@ def loadclass(module_and_name, classes=None):
 
     >>> loadclass('does.not.exist')
 
-    >>> loadclass('__builtin__.int')()
+    >>> loadclass('builtins.int')()
     0
 
     """
@@ -589,13 +601,21 @@ def loadclass(module_and_name, classes=None):
         except KeyError:
             pass
     # Otherwise, load classes from globally-accessible imports
-    try:
-        module, name = module_and_name.rsplit('.', 1)
-        module = util.untranslate_module_name(module)
-        __import__(module)
-        return getattr(sys.modules[module], name)
-    except (AttributeError, ImportError, ValueError):
-        return None
+    names = module_and_name.split('.')
+    # First assume that everything up to the last dot is the module name,
+    # then try other splits to handle classes that are defined within
+    # classes
+    for up_to in range(len(names)-1, 0, -1):
+        module = util.untranslate_module_name('.'.join(names[:up_to]))
+        try:
+            __import__(module)
+            obj = sys.modules[module]
+            for class_name in names[up_to:]:
+                obj = getattr(obj, class_name)
+            return obj
+        except (AttributeError, ImportError, ValueError) as ex:
+            continue
+    return None
 
 
 def getargs(obj, classes=None):
