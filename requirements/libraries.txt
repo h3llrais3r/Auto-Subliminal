@@ -29,7 +29,7 @@ mako==1.0.7
 markupsafe==1.0
 more-itertools==4.1.0
 oauthlib==2.0.6
-portend==2.2
+portend==2.3
 pushbullet.py==0.11.0
 pysrt==1.1.1
 python-twitter==3.4.1
