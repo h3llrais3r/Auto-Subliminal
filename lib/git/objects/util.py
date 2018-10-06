@@ -121,8 +121,11 @@ utc = tzoffset(0, 'UTC')
 def from_timestamp(timestamp, tz_offset):
     """Converts a timestamp + tz_offset into an aware datetime instance."""
     utc_dt = datetime.fromtimestamp(timestamp, utc)
-    local_dt = utc_dt.astimezone(tzoffset(tz_offset))
-    return local_dt
+    try:
+        local_dt = utc_dt.astimezone(tzoffset(tz_offset))
+        return local_dt
+    except ValueError:
+        return utc_dt
 
 
 def parse_date(string_date):
@@ -153,7 +156,7 @@ def parse_date(string_date):
             offset = utctz_to_altz(offset)
 
             # now figure out the date and time portion - split time
-            date_formats = list()
+            date_formats = []
             splitter = -1
             if ',' in string_date:
                 date_formats.append("%a, %d %b %Y")
@@ -248,7 +251,7 @@ class Traversable(object):
     into one direction.
     Subclasses only need to implement one function.
     Instances of the Subclass must be hashable"""
-    __slots__ = tuple()
+    __slots__ = ()
 
     @classmethod
     def _get_intermediate_items(cls, item):
@@ -344,7 +347,7 @@ class Traversable(object):
 class Serializable(object):
 
     """Defines methods to serialize and deserialize objects from and into a data stream"""
-    __slots__ = tuple()
+    __slots__ = ()
 
     def _serialize(self, stream):
         """Serialize the data of this object into the given data stream

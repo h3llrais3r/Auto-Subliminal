@@ -16,7 +16,7 @@ enum34==1.1.6
 enzyme==0.4.1
 futures==3.2.0
 gitdb2==2.0.4
-gitpython==2.1.8
+gitpython==2.1.11
 gntp==1.0.3
 guessit==2.1.4
 html5lib==1.0.1

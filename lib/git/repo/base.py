@@ -36,6 +36,11 @@ from .fun import rev_parse, is_git_dir, find_submodule_git_dir, touch, find_work
 import gc
 import gitdb
 
+try:
+    import pathlib
+except ImportError:
+    pathlib = None
+
 
 log = logging.getLogger(__name__)
 
@@ -116,6 +121,8 @@ class Repo(object):
             epath = decygpath(epath)
 
         epath = epath or path or os.getcwd()
+        if not isinstance(epath, str):
+            epath = str(epath)
         if expand_vars and ("%" in epath or "$" in epath):
             warnings.warn("The use of environment variables in paths is deprecated" +
                           "\nfor security reasons and may be removed in the future!!")
@@ -424,8 +431,7 @@ class Repo(object):
         :param config_level:
             For possible values, see config_writer method
             If None, all applicable levels will be used. Specify a level in case
-            you know which exact file you whish to read to prevent reading multiple files for
-            instance
+            you know which file you wish to read to prevent reading multiple files.
         :note: On windows, system configuration cannot currently be read as the path is
             unknown, instead the global path will be used."""
         files = None
@@ -485,15 +491,15 @@ class Repo(object):
     def iter_commits(self, rev=None, paths='', **kwargs):
         """A list of Commit objects representing the history of a given ref/commit
 
-        :parm rev:
+        :param rev:
             revision specifier, see git-rev-parse for viable options.
             If None, the active branch will be used.
 
-        :parm paths:
+        :param paths:
             is an optional path or a list of paths to limit the returned commits to
             Commits that do not contain that path or the paths will not be returned.
 
-        :parm kwargs:
+        :param kwargs:
             Arguments to be passed to git-rev-list - common ones are
             max_count and skip
 
@@ -519,7 +525,7 @@ class Repo(object):
             raise ValueError("Please specify at least two revs, got only %i" % len(rev))
         # end handle input
 
-        res = list()
+        res = []
         try:
             lines = self.git.merge_base(*rev, **kwargs).splitlines()
         except GitCommandError as err:
@@ -580,12 +586,12 @@ class Repo(object):
                 alts = f.read().decode(defenc)
             return alts.strip().splitlines()
         else:
-            return list()
+            return []
 
     def _set_alternates(self, alts):
         """Sets the alternates
 
-        :parm alts:
+        :param alts:
             is the array of string paths representing the alternates at which
             git should look for objects, i.e. /home/user/repo/.git/objects
 
@@ -664,7 +670,7 @@ class Repo(object):
                                **kwargs)
         # Untracked files preffix in porcelain mode
         prefix = "?? "
-        untracked_files = list()
+        untracked_files = []
         for line in proc.stdout:
             line = line.decode(defenc)
             if not line.startswith(prefix):
@@ -695,7 +701,7 @@ class Repo(object):
         Unlike .blame(), this does not return the actual file's contents, only
         a stream of BlameEntry tuples.
 
-        :parm rev: revision specifier, see git-rev-parse for viable options.
+        :param rev: revision specifier, see git-rev-parse for viable options.
         :return: lazy iterator of BlameEntry tuples, where the commit
                  indicates the commit to blame for the line, and range
                  indicates a span of line numbers in the resulting file.
@@ -704,7 +710,7 @@ class Repo(object):
         should get a continuous range spanning all line numbers in the file.
         """
         data = self.git.blame(rev, '--', file, p=True, incremental=True, stdout_as_string=False, **kwargs)
-        commits = dict()
+        commits = {}
 
         stream = (line for line in data.split(b'\n') if line)
         while True:
@@ -716,7 +722,7 @@ class Repo(object):
             if hexsha not in commits:
                 # Now read the next few lines and build up a dict of properties
                 # for this commit
-                props = dict()
+                props = {}
                 while True:
                     line = next(stream)
                     if line == b'boundary':
@@ -757,7 +763,7 @@ class Repo(object):
     def blame(self, rev, file, incremental=False, **kwargs):
         """The blame information for the given file at the given revision.
 
-        :parm rev: revision specifier, see git-rev-parse for viable options.
+        :param rev: revision specifier, see git-rev-parse for viable options.
         :return:
             list: [git.Commit, list: [<line>]]
             A list of tuples associating a Commit object with a list of lines that
@@ -767,8 +773,8 @@ class Repo(object):
             return self.blame_incremental(rev, file, **kwargs)
 
         data = self.git.blame(rev, '--', file, p=True, stdout_as_string=False, **kwargs)
-        commits = dict()
-        blames = list()
+        commits = {}
+        blames = []
         info = None
 
         keepends = True
@@ -871,7 +877,7 @@ class Repo(object):
             or None in which case the repository will be created in the current
             working directory
 
-        :parm mkdir:
+        :param mkdir:
             if specified will create the repository directory if it doesn't
             already exists. Creates the directory with a mode=0755.
             Only effective if a path is explicitly given
@@ -886,7 +892,7 @@ class Repo(object):
             can lead to information disclosure, allowing attackers to
             access the contents of environment variables
 
-        :parm kwargs:
+        :param kwargs:
             keyword arguments serving as additional options to the git-init command
 
         :return: ``git.Repo`` (the newly created repo)"""
@@ -984,10 +990,10 @@ class Repo(object):
     def archive(self, ostream, treeish=None, prefix=None, **kwargs):
         """Archive the tree at the given revision.
 
-        :parm ostream: file compatible stream object to which the archive will be written as bytes
-        :parm treeish: is the treeish name/id, defaults to active branch
-        :parm prefix: is the optional prefix to prepend to each filename in the archive
-        :parm kwargs: Additional arguments passed to git-archive
+        :param ostream: file compatible stream object to which the archive will be written as bytes
+        :param treeish: is the treeish name/id, defaults to active branch
+        :param prefix: is the optional prefix to prepend to each filename in the archive
+        :param kwargs: Additional arguments passed to git-archive
 
             * Use the 'format' argument to define the kind of format. Use
               specialized ostreams to write any format supported by python.
@@ -1001,7 +1007,7 @@ class Repo(object):
         if prefix and 'prefix' not in kwargs:
             kwargs['prefix'] = prefix
         kwargs['output_stream'] = ostream
-        path = kwargs.pop('path', list())
+        path = kwargs.pop('path', [])
         if not isinstance(path, (tuple, list)):
             path = [path]
         # end assure paths is list

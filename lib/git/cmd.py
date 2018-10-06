@@ -17,6 +17,7 @@ from subprocess import (
 import subprocess
 import sys
 import threading
+from collections import OrderedDict
 from textwrap import dedent
 
 from git.compat import (
@@ -31,7 +32,6 @@ from git.compat import (
     is_win,
 )
 from git.exc import CommandError
-from git.odict import OrderedDict
 from git.util import is_cygwin_git, cygpath, expand_path
 
 from .exc import (
@@ -44,10 +44,10 @@ from .util import (
 )
 
 
-execute_kwargs = set(('istream', 'with_extended_output',
-                      'with_exceptions', 'as_process', 'stdout_as_string',
-                      'output_stream', 'with_stdout', 'kill_after_timeout',
-                      'universal_newlines', 'shell', 'env'))
+execute_kwargs = {'istream', 'with_extended_output',
+                  'with_exceptions', 'as_process', 'stdout_as_string',
+                  'output_stream', 'with_stdout', 'kill_after_timeout',
+                  'universal_newlines', 'shell', 'env', 'max_chunk_size'}
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.NullHandler())
@@ -125,7 +125,7 @@ def dashify(string):
 
 
 def slots_to_dict(self, exclude=()):
-    return dict((s, getattr(self, s)) for s in self.__slots__ if s not in exclude)
+    return {s: getattr(self, s) for s in self.__slots__ if s not in exclude}
 
 
 def dict_to_slots_and__excluded_are_none(self, d, excluded=()):
@@ -143,8 +143,7 @@ CREATE_NO_WINDOW = 0x08000000
 ## CREATE_NEW_PROCESS_GROUP is needed to allow killing it afterwards,
 # see https://docs.python.org/3/library/subprocess.html#subprocess.Popen.send_signal
 PROC_CREATIONFLAGS = (CREATE_NO_WINDOW | subprocess.CREATE_NEW_PROCESS_GROUP
-                      if is_win and sys.version_info >= (2, 7)
-                      else 0)
+                      if is_win else 0)
 
 
 class Git(LazyMixin):
@@ -175,8 +174,6 @@ class Git(LazyMixin):
         dict_to_slots_and__excluded_are_none(self, d, excluded=self._excluded_)
 
     # CONFIGURATION
-    # The size in bytes read from stdout when copying git's output to another stream
-    max_chunk_size = io.DEFAULT_BUFFER_SIZE
 
     git_exec_name = "git"           # default that should work on linux and windows
 
@@ -486,10 +483,10 @@ class Git(LazyMixin):
 
         def readlines(self, size=-1):
             if self._nbr == self._size:
-                return list()
+                return []
 
             # leave all additional logic to our readline method, we just check the size
-            out = list()
+            out = []
             nbr = 0
             while True:
                 line = self.readline()
@@ -598,6 +595,7 @@ class Git(LazyMixin):
                 universal_newlines=False,
                 shell=None,
                 env=None,
+                max_chunk_size=io.DEFAULT_BUFFER_SIZE,
                 **subprocess_kwargs
                 ):
         """Handles executing the command on the shell and consumes and returns
@@ -643,6 +641,11 @@ class Git(LazyMixin):
 
         :param env:
             A dictionary of environment variables to be passed to `subprocess.Popen`.
+            
+        :param max_chunk_size:
+            Maximum number of bytes in one chunk of data passed to the output_stream in
+            one invocation of write() method. If the given number is not positive then
+            the default value is used.
 
         :param subprocess_kwargs:
             Keyword arguments to be passed to subprocess.Popen. Please note that
@@ -789,7 +792,8 @@ class Git(LazyMixin):
                     stderr_value = stderr_value[:-1]
                 status = proc.returncode
             else:
-                stream_copy(proc.stdout, output_stream, self.max_chunk_size)
+                max_chunk_size = max_chunk_size if max_chunk_size and max_chunk_size > 0 else io.DEFAULT_BUFFER_SIZE
+                stream_copy(proc.stdout, output_stream, max_chunk_size)
                 stdout_value = output_stream
                 stderr_value = proc.stderr.read()
                 # strip trailing "\n"
@@ -895,7 +899,7 @@ class Git(LazyMixin):
 
     def transform_kwargs(self, split_single_char_options=True, **kwargs):
         """Transforms Python style kwargs into git command line options."""
-        args = list()
+        args = []
         kwargs = OrderedDict(sorted(kwargs.items(), key=lambda x: x[0]))
         for k, v in kwargs.items():
             if isinstance(v, (list, tuple)):
@@ -914,7 +918,7 @@ class Git(LazyMixin):
                 return [arg_list.encode(defenc)]
             return [str(arg_list)]
 
-        outlist = list()
+        outlist = []
         for arg in arg_list:
             if isinstance(arg_list, (list, tuple)):
                 outlist.extend(cls.__unpack_args(arg))
@@ -973,8 +977,8 @@ class Git(LazyMixin):
         :return: Same as ``execute``"""
         # Handle optional arguments prior to calling transform_kwargs
         # otherwise these'll end up in args, which is bad.
-        exec_kwargs = dict((k, v) for k, v in kwargs.items() if k in execute_kwargs)
-        opts_kwargs = dict((k, v) for k, v in kwargs.items() if k not in execute_kwargs)
+        exec_kwargs = {k: v for k, v in kwargs.items() if k in execute_kwargs}
+        opts_kwargs = {k: v for k, v in kwargs.items() if k not in execute_kwargs}
 
         insert_after_this_arg = opts_kwargs.pop('insert_kwargs_after', None)
 
