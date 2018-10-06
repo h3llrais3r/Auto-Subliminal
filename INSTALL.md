@@ -44,6 +44,7 @@ Example commit:
 
 Pip options:
 
+    --no-deps
     --no-compile
     --no-cache-dir
     --no-binary :all:
