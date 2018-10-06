@@ -1,6 +1,6 @@
 from __future__ import print_function
 
-from collections import Counter, defaultdict, deque, Sequence
+from collections import Counter, defaultdict, deque
 from functools import partial, wraps
 from heapq import merge
 from itertools import (
@@ -12,11 +12,16 @@ from itertools import (
     groupby,
     islice,
     repeat,
+    starmap,
     takewhile,
     tee
 )
 from operator import itemgetter, lt, gt, sub
 from sys import maxsize, version_info
+try:
+    from collections.abc import Sequence
+except ImportError:
+    from collections import Sequence
 
 from six import binary_type, string_types, text_type
 from six.moves import filter, map, range, zip, zip_longest
@@ -48,13 +53,17 @@ __all__ = [
     'intersperse',
     'islice_extended',
     'iterate',
+    'last',
     'locate',
     'lstrip',
     'make_decorator',
+    'map_reduce',
     'numeric_range',
     'one',
     'padded',
     'peekable',
+    'replace',
+    'rlocate',
     'rstrip',
     'run_length',
     'seekable',
@@ -127,6 +136,32 @@ def first(iterable, default=_marker):
         # exception, and it's weird to explicitly catch StopIteration.
         if default is _marker:
             raise ValueError('first() was called on an empty iterable, and no '
+                             'default value was provided.')
+        return default
+
+
+def last(iterable, default=_marker):
+    """Return the last item of *iterable*, or *default* if *iterable* is
+    empty.
+
+        >>> last([0, 1, 2, 3])
+        3
+        >>> last([], 'some default')
+        'some default'
+
+    If *default* is not provided and there are no items in the iterable,
+    raise ``ValueError``.
+    """
+    try:
+        try:
+            # Try to access the last item directly
+            return iterable[-1]
+        except (TypeError, AttributeError, KeyError):
+            # If not slice-able, iterate entirely using length-1 deque
+            return deque(iterable, maxlen=1)[0]
+    except IndexError:  # If the iterable was empty
+        if default is _marker:
+            raise ValueError('last() was called on an empty iterable, and no '
                              'default value was provided.')
         return default
 
@@ -404,7 +439,11 @@ def ilen(iterable):
     This consumes the iterable, so handle with care.
 
     """
+    # maxlen=1 only stores the last item in the deque
     d = deque(enumerate(iterable, 1), maxlen=1)
+    # since we started enumerate at 1,
+    # the first item of the last pair will be the length of the iterable
+    # (assuming there were items)
     return d[0][0] if d else 0
 
 
@@ -539,9 +578,9 @@ def distinct_permutations(iterable):
                 item_counts[item] += 1
 
     item_counts = Counter(iterable)
+    length = sum(item_counts.values())
 
-    return perm_unique_helper(item_counts, [None] * len(iterable),
-                              len(iterable) - 1)
+    return perm_unique_helper(item_counts, [None] * length, length - 1)
 
 
 def intersperse(e, iterable, n=1):
@@ -722,7 +761,10 @@ class bucket(object):
             # a matching item, caching the rest.
             else:
                 while True:
-                    item = next(self._it)
+                    try:
+                        item = next(self._it)
+                    except StopIteration:
+                        return
                     item_value = self._key(item)
                     if item_value == value:
                         yield item
@@ -1337,6 +1379,10 @@ def groupby_transform(iterable, keyfunc=None, valuefunc=None):
         >>> [(k, ''.join(g)) for k, g in grouper]
         [(0, 'ab'), (1, 'cde'), (2, 'fgh'), (3, 'i')]
 
+    Note that the order of items in the iterable is significant.
+    Only adjacent items are grouped together, so if you don't want any
+    duplicate groups, you should sort the iterable by the key function.
+
     """
     valuefunc = (lambda x: x) if valuefunc is None else valuefunc
     return ((k, map(valuefunc, g)) for k, g in groupby(iterable, keyfunc))
@@ -1419,7 +1465,7 @@ def count_cycle(iterable, n=None):
     return ((i, item) for i in counter for item in iterable)
 
 
-def locate(iterable, pred=bool):
+def locate(iterable, pred=bool, window_size=None):
     """Yield the index of each item in *iterable* for which *pred* returns
     ``True``.
 
@@ -1429,18 +1475,17 @@ def locate(iterable, pred=bool):
         [1, 2, 4]
 
     Set *pred* to a custom function to, e.g., find the indexes for a particular
-    item:
+    item.
 
         >>> list(locate(['a', 'b', 'c', 'b'], lambda x: x == 'b'))
         [1, 3]
 
-    Use with :func:`windowed` to find the indexes of a sub-sequence:
+    If *window_size* is given, then the *pred* function will be called with
+    that many items. This enables searching for sub-sequences:
 
-        >>> from more_itertools import windowed
         >>> iterable = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3]
-        >>> sub = [1, 2, 3]
-        >>> pred = lambda w: w == tuple(sub)  # windowed() returns tuples
-        >>> list(locate(windowed(iterable, len(sub)), pred=pred))
+        >>> pred = lambda *args: args == (1, 2, 3)
+        >>> list(locate(iterable, pred=pred, window_size=3))
         [1, 5, 9]
 
     Use with :func:`seekable` to find indexes and then retrieve the associated
@@ -1458,7 +1503,14 @@ def locate(iterable, pred=bool):
         106
 
     """
-    return compress(count(), map(pred, iterable))
+    if window_size is None:
+        return compress(count(), map(pred, iterable))
+
+    if window_size < 1:
+        raise ValueError('window size must be at least 1')
+
+    it = windowed(iterable, window_size, fillvalue=_marker)
+    return compress(count(), starmap(pred, it))
 
 
 def lstrip(iterable, pred):
@@ -1983,3 +2035,177 @@ def make_decorator(wrapping_func, result_index=0):
         return outer_wrapper
 
     return decorator
+
+
+def map_reduce(iterable, keyfunc, valuefunc=None, reducefunc=None):
+    """Return a dictionary that maps the items in *iterable* to categories
+    defined by *keyfunc*, transforms them with *valuefunc*, and
+    then summarizes them by category with *reducefunc*.
+
+    *valuefunc* defaults to the identity function if it is unspecified.
+    If *reducefunc* is unspecified, no summarization takes place:
+
+        >>> keyfunc = lambda x: x.upper()
+        >>> result = map_reduce('abbccc', keyfunc)
+        >>> sorted(result.items())
+        [('A', ['a']), ('B', ['b', 'b']), ('C', ['c', 'c', 'c'])]
+
+    Specifying *valuefunc* transforms the categorized items:
+
+        >>> keyfunc = lambda x: x.upper()
+        >>> valuefunc = lambda x: 1
+        >>> result = map_reduce('abbccc', keyfunc, valuefunc)
+        >>> sorted(result.items())
+        [('A', [1]), ('B', [1, 1]), ('C', [1, 1, 1])]
+
+    Specifying *reducefunc* summarizes the categorized items:
+
+        >>> keyfunc = lambda x: x.upper()
+        >>> valuefunc = lambda x: 1
+        >>> reducefunc = sum
+        >>> result = map_reduce('abbccc', keyfunc, valuefunc, reducefunc)
+        >>> sorted(result.items())
+        [('A', 1), ('B', 2), ('C', 3)]
+
+    You may want to filter the input iterable before applying the map/reduce
+    procedure:
+
+        >>> all_items = range(30)
+        >>> items = [x for x in all_items if 10 <= x <= 20]  # Filter
+        >>> keyfunc = lambda x: x % 2  # Evens map to 0; odds to 1
+        >>> categories = map_reduce(items, keyfunc=keyfunc)
+        >>> sorted(categories.items())
+        [(0, [10, 12, 14, 16, 18, 20]), (1, [11, 13, 15, 17, 19])]
+        >>> summaries = map_reduce(items, keyfunc=keyfunc, reducefunc=sum)
+        >>> sorted(summaries.items())
+        [(0, 90), (1, 75)]
+
+    Note that all items in the iterable are gathered into a list before the
+    summarization step, which may require significant storage.
+
+    The returned object is a :obj:`collections.defaultdict` with the
+    ``default_factory`` set to ``None``, such that it behaves like a normal
+    dictionary.
+
+    """
+    valuefunc = (lambda x: x) if (valuefunc is None) else valuefunc
+
+    ret = defaultdict(list)
+    for item in iterable:
+        key = keyfunc(item)
+        value = valuefunc(item)
+        ret[key].append(value)
+
+    if reducefunc is not None:
+        for key, value_list in ret.items():
+            ret[key] = reducefunc(value_list)
+
+    ret.default_factory = None
+    return ret
+
+
+def rlocate(iterable, pred=bool, window_size=None):
+    """Yield the index of each item in *iterable* for which *pred* returns
+    ``True``, starting from the right and moving left.
+
+    *pred* defaults to :func:`bool`, which will select truthy items:
+
+        >>> list(rlocate([0, 1, 1, 0, 1, 0, 0]))  # Truthy at 1, 2, and 4
+        [4, 2, 1]
+
+    Set *pred* to a custom function to, e.g., find the indexes for a particular
+    item:
+
+        >>> iterable = iter('abcb')
+        >>> pred = lambda x: x == 'b'
+        >>> list(rlocate(iterable, pred))
+        [3, 1]
+
+    If *window_size* is given, then the *pred* function will be called with
+    that many items. This enables searching for sub-sequences:
+
+        >>> iterable = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3]
+        >>> pred = lambda *args: args == (1, 2, 3)
+        >>> list(rlocate(iterable, pred=pred, window_size=3))
+        [9, 5, 1]
+
+    Beware, this function won't return anything for infinite iterables.
+    If *iterable* is reversible, ``rlocate`` will reverse it and search from
+    the right. Otherwise, it will search from the left and return the results
+    in reverse order.
+
+    See :func:`locate` to for other example applications.
+
+    """
+    if window_size is None:
+        try:
+            len_iter = len(iterable)
+            return (
+                len_iter - i - 1 for i in locate(reversed(iterable), pred)
+            )
+        except TypeError:
+            pass
+
+    return reversed(list(locate(iterable, pred, window_size)))
+
+
+def replace(iterable, pred, substitutes, count=None, window_size=1):
+    """Yield the items from *iterable*, replacing the items for which *pred*
+    returns ``True`` with the items from the iterable *substitutes*.
+
+        >>> iterable = [1, 1, 0, 1, 1, 0, 1, 1]
+        >>> pred = lambda x: x == 0
+        >>> substitutes = (2, 3)
+        >>> list(replace(iterable, pred, substitutes))
+        [1, 1, 2, 3, 1, 1, 2, 3, 1, 1]
+
+    If *count* is given, the number of replacements will be limited:
+
+        >>> iterable = [1, 1, 0, 1, 1, 0, 1, 1, 0]
+        >>> pred = lambda x: x == 0
+        >>> substitutes = [None]
+        >>> list(replace(iterable, pred, substitutes, count=2))
+        [1, 1, None, 1, 1, None, 1, 1, 0]
+
+    Use *window_size* to control the number of items passed as arguments to
+    *pred*. This allows for locating and replacing subsequences.
+
+        >>> iterable = [0, 1, 2, 5, 0, 1, 2, 5]
+        >>> window_size = 3
+        >>> pred = lambda *args: args == (0, 1, 2)  # 3 items passed to pred
+        >>> substitutes = [3, 4] # Splice in these items
+        >>> list(replace(iterable, pred, substitutes, window_size=window_size))
+        [3, 4, 5, 3, 4, 5]
+
+    """
+    if window_size < 1:
+        raise ValueError('window_size must be at least 1')
+
+    # Save the substitutes iterable, since it's used more than once
+    substitutes = tuple(substitutes)
+
+    # Add padding such that the number of windows matches the length of the
+    # iterable
+    it = chain(iterable, [_marker] * (window_size - 1))
+    windows = windowed(it, window_size)
+
+    n = 0
+    for w in windows:
+        # If the current window matches our predicate (and we haven't hit
+        # our maximum number of replacements), splice in the substitutes
+        # and then consume the following windows that overlap with this one.
+        # For example, if the iterable is (0, 1, 2, 3, 4...)
+        # and the window size is 2, we have (0, 1), (1, 2), (2, 3)...
+        # If the predicate matches on (0, 1), we need to zap (0, 1) and (1, 2)
+        if pred(*w):
+            if (count is None) or (n < count):
+                n += 1
+                for s in substitutes:
+                    yield s
+                consume(windows, window_size - 1)
+                continue
+
+        # If there was no match (or we've reached the replacement limit),
+        # yield the first item from the window.
+        if w and (w[0] is not _marker):
+            yield w[0]
