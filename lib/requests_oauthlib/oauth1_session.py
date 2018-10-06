@@ -16,10 +16,6 @@ import requests
 
 from . import OAuth1
 
-import sys
-if sys.version > "3":
-    unicode = str
-
 
 log = logging.getLogger(__name__)
 
@@ -171,6 +167,26 @@ class OAuth1Session(requests.Session):
                 force_include_body=force_include_body,
                 **kwargs)
         self.auth = self._client
+
+    @property
+    def token(self):
+        oauth_token = self._client.client.resource_owner_key
+        oauth_token_secret = self._client.client.resource_owner_secret
+        oauth_verifier = self._client.client.verifier
+
+        token_dict = {}
+        if oauth_token:
+            token_dict["oauth_token"] = oauth_token
+        if oauth_token_secret:
+            token_dict["oauth_token_secret"] = oauth_token_secret
+        if oauth_verifier:
+            token_dict["oauth_verifier"] = oauth_verifier
+
+        return token_dict
+
+    @token.setter
+    def token(self, value):
+        self._populate_attributes(value)
 
     @property
     def authorized(self):
@@ -326,6 +342,7 @@ class OAuth1Session(requests.Session):
         token = dict(urldecode(urlparse(url).query))
         log.debug('Updating internal client token attribute.')
         self._populate_attributes(token)
+        self.token = token
         return token
 
     def _populate_attributes(self, token):
@@ -363,6 +380,7 @@ class OAuth1Session(requests.Session):
         log.debug('Obtained token %s', token)
         log.debug('Updating internal client attributes from token data.')
         self._populate_attributes(token)
+        self.token = token
         return token
 
     def rebuild_auth(self, prepared_request, response):

@@ -57,7 +57,7 @@ class OAuth2Session(requests.Session):
         :auto_refresh_kwargs: Extra arguments to pass to the refresh token
                               endpoint.
         :token_updater: Method with one argument, token, to be used to update
-                        your token databse on automatic token refresh. If not
+                        your token database on automatic token refresh. If not
                         set a TokenUpdated warning will be raised when a token
                         has been refreshed. This warning will carry the token
                         in its token argument.
@@ -77,9 +77,9 @@ class OAuth2Session(requests.Session):
         # Allow customizations for non compliant providers through various
         # hooks to adjust requests and responses.
         self.compliance_hook = {
-            'access_token_response': set([]),
-            'refresh_token_response': set([]),
-            'protected_request': set([]),
+            'access_token_response': set(),
+            'refresh_token_response': set(),
+            'protected_request': set(),
         }
 
     def new_state(self):
