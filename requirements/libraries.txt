@@ -2,6 +2,7 @@
 attrs==18.2.0
 appdirs==1.4.3
 babelfish==0.5.5
+backports.functools_lru_cache=1.5
 beautifulsoup4==4.6.0
 boto==2.49.0
 certifi==2018.8.24

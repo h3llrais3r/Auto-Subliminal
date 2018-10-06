@@ -17,6 +17,7 @@ Libraries dependency tree
             |-- pytz
             |-- six
             |--jaraco.functools
+                |--backports.functools_lru_cache
     |-- six
 |-- configparser
 |-- dogpile.cache
