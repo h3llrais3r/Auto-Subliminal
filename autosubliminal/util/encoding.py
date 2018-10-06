@@ -7,9 +7,9 @@ def b2u(b, encoding='utf-8'):
     """
     Convert a byte string to a unicode string.
 
-    :param b: A byte string
-    :param encoding: The used encoding, defaults to utf-8
-    :return: The unicode string
+    :param b: a byte string
+    :param encoding: the used encoding, defaults to utf-8
+    :return: the unicode string
     """
     try:
         return b.decode(encoding)
@@ -25,9 +25,9 @@ def u2b(u, encoding='utf-8'):
     """
     Convert a unicode string to a byte string.
 
-    :param u: A unicode string
-    :param encoding: The used encoding, defaults to utf-8
-    :return: The byte string
+    :param u: a unicode string
+    :param encoding: the used encoding, defaults to utf-8
+    :return: the byte string
     """
     try:
         return u.encode(encoding)
@@ -43,9 +43,9 @@ def s2b(s, encoding='utf-8'):
     """
     Convert a string value to a byte string.
 
-    :param s: A string
-    :param encoding: The used encoding, defaults to utf-8
-    :return: The byte string
+    :param s: a string
+    :param encoding: the used encoding, defaults to utf-8
+    :return: the byte string
     """
 
     if isinstance(s, binary_type):
@@ -58,9 +58,9 @@ def s2u(s, encoding='utf-8'):
     """
     Convert a string value to a unicode string.
 
-    :param s: A string
-    :param encoding: The used encoding, defaults to utf-8
-    :return: The unicode string
+    :param s: a string
+    :param encoding: the used encoding, defaults to utf-8
+    :return: the unicode string
     """
 
     if isinstance(s, text_type):
@@ -73,10 +73,10 @@ def s2n(s, encoding='utf-8', validate=False):
     """
     Convert a string value to the native string representation.
 
-    :param s: A string value
-    :param encoding: The used encoding, defaults to utf-8
-    :param validate: Indication if the provided native string must be validated against the provided encoding
-    :return: The native string (based on python version)
+    :param s: a string value
+    :param encoding: the used encoding, defaults to utf-8
+    :param validate: indication if the provided native string must be validated against the provided encoding
+    :return: the native string (based on python version)
     """
     if PY2:
         # In Python 2, the native string type is bytes

@@ -18,11 +18,11 @@ def error_page(status, message, traceback, version):
     """
     Custom error page.
 
-    :param status: The http error status
-    :param message: The error message
-    :param traceback: The error traceback
-    :param version: The server version
-    :return: The error page or json error
+    :param status: the http error status
+    :param message: the error message
+    :param traceback: the error traceback
+    :param version: the server version
+    :return: the error page or json error
     """
     # Do not show error page for json errors, show json error response instead
     content_type = cherrypy.response.headers['Content-Type']

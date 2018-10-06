@@ -35,9 +35,9 @@ def get_show_name_mapping(show_name):
     """
     Get the tvdb show name mapping for a show.
 
-    :param show_name: The show name to get the tvdb id for
-    :return: The tvdb show id or None
-    :rtype: int
+    :param show_name: the show name to get the tvdb id for
+    :return: the tvdb show id or None
+    :rtype: int | None
     """
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.SHOWNAMEMAPPING:
@@ -50,9 +50,9 @@ def get_addic7ed_show_name_mapping(show_name):
     """
     Get the addic7ed show name mapping for a show.
 
-    :param show_name: The show name to get the addic7ed id for
-    :return: The addic7ed show id or None
-    :rtype: int
+    :param show_name: the show name to get the addic7ed id for
+    :return: the addic7ed show id or None
+    :rtype: int | None
     """
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING:
@@ -65,9 +65,9 @@ def get_alternative_show_name_mapping(show_name):
     """
     Get the list of alternative show names for a show.
 
-    :param show_name: The show name to get the alternatives for
-    :return: A list of alternative show names or None
-    :rtype: list
+    :param show_name: the show name to get the alternatives for
+    :return: a list of alternative show names or None
+    :rtype: list | None
     """
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.ALTERNATIVESHOWNAMEMAPPING:
@@ -81,10 +81,10 @@ def get_movie_name_mapping(title, year):
     """
     Get the imdb movie name mapping for a movie.
 
-    :param title: The title of the movie
-    :param year:  The year of the movie
-    :return: The imdb id of the movie or None
-    :rtype: str
+    :param title: the title of the movie
+    :param year: the year of the movie
+    :return: the imdb id of the movie or None
+    :rtype: str | None
     """
     movie = title
     if year:
@@ -100,10 +100,10 @@ def get_alternative_movie_name_mapping(title, year):
     """
     Get the list of alternative movie titles (without year).
 
-    :param title: The title of the movie
-    :param year: The year of the movie
-    :return: A list of alternative titles (without year) or None
-    :rtype: list
+    :param title: the title of the movie
+    :param year: the year of the movie
+    :return: a list of alternative titles (without year) or None
+    :rtype: list | None
     """
     movie = title
     if year:

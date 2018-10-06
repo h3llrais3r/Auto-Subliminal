@@ -15,7 +15,7 @@ class Runner(object):
     """
     Base Runner class. Extend this class for permanent thread runners.
 
-    :param name: Name of the thread to schedule
+    :param name: name of the thread to schedule
     :type name: str
     """
 
