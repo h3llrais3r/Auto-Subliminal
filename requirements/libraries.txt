@@ -50,5 +50,5 @@ git+https://github.com/h3llrais3r/tvdb_api_v2.git@493724cf6de7ce7701a06cf4b11c9a
 unidecode==1.0.22
 urllib3==1.23
 webencodings==0.5.1
-websocket-client==0.47.0
+websocket-client==0.53.0
 ws4py==0.5.1
