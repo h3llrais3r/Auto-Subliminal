@@ -4,7 +4,8 @@ import datetime
 
 from autosubliminal.core.item import WantedItem
 
-wanted_item = WantedItem({'timestamp': '2018-01-01 12:30:01'})
+wanted_item = WantedItem()
+wanted_item.timestamp = '2018-01-01 12:30:01'
 
 
 def test_is_search_active_for_wanted_item_before_on_creation(mocker):
