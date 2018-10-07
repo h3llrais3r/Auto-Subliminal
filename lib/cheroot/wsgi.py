@@ -8,7 +8,7 @@ Simplest example on how to use this server::
         status = '200 OK'
         response_headers = [('Content-type','text/plain')]
         start_response(status, response_headers)
-        return ['Hello world!']
+        return [b'Hello world!']
 
     addr = '0.0.0.0', 8070
     server = wsgi.Server(addr, my_crazy_app)
@@ -24,6 +24,9 @@ as you want in one instance by using a PathInfoDispatcher::
     d = wsgi.PathInfoDispatcher(path_map)
     server = wsgi.Server(addr, d)
 """
+
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
 
 import sys
 
@@ -41,9 +44,12 @@ class Server(server.HTTPServer):
     wsgi_version = (1, 0)
     """The version of WSGI to produce."""
 
-    def __init__(self, bind_addr, wsgi_app, numthreads=10, server_name=None,
-                 max=-1, request_queue_size=5, timeout=10, shutdown_timeout=5,
-                 accepted_queue_size=-1, accepted_queue_timeout=10):
+    def __init__(
+        self, bind_addr, wsgi_app, numthreads=10, server_name=None,
+        max=-1, request_queue_size=5, timeout=10, shutdown_timeout=5,
+        accepted_queue_size=-1, accepted_queue_timeout=10,
+        peercreds_enabled=False, peercreds_resolve_enabled=False,
+    ):
         """Initialize WSGI Server instance.
 
         Args:
@@ -67,6 +73,8 @@ class Server(server.HTTPServer):
             bind_addr,
             gateway=wsgi_gateways[self.wsgi_version],
             server_name=server_name,
+            peercreds_enabled=peercreds_enabled,
+            peercreds_resolve_enabled=peercreds_resolve_enabled,
         )
         self.wsgi_app = wsgi_app
         self.request_queue_size = request_queue_size
@@ -77,12 +85,14 @@ class Server(server.HTTPServer):
             accepted_queue_size=accepted_queue_size,
             accepted_queue_timeout=accepted_queue_timeout)
 
-    def _get_numthreads(self):
+    @property
+    def numthreads(self):
+        """Set minimum number of threads."""
         return self.requests.min
 
-    def _set_numthreads(self, value):
+    @numthreads.setter
+    def numthreads(self, value):
         self.requests.min = value
-    numthreads = property(_get_numthreads, _set_numthreads)
 
 
 class Gateway(server.Gateway):
@@ -106,6 +116,7 @@ class Gateway(server.Gateway):
         Returns:
             dict[tuple[int,int],class]: map of gateway version and
                 corresponding class
+
         """
         return dict(
             (gw.version, gw)
@@ -119,7 +130,7 @@ class Gateway(server.Gateway):
     def respond(self):
         """Process the current request.
 
-        From PEP 333:
+        From :pep:`333`:
 
             The start_response callable must not actually transmit
             the response headers. Instead, it must store them for the
@@ -135,6 +146,8 @@ class Gateway(server.Gateway):
                     raise ValueError('WSGI Applications must yield bytes')
                 self.write(chunk)
         finally:
+            # Send headers if not already sent
+            self.req.ensure_headers_sent()
             if hasattr(response, 'close'):
                 response.close()
 
@@ -176,7 +189,7 @@ class Gateway(server.Gateway):
     def _encode_status(status):
         """Cast status to bytes representation of current Python version.
 
-        According to PEP 3333, when using Python 3, the response status
+        According to :pep:`3333`, when using Python 3, the response status
         and headers must be bytes masquerading as unicode; that is, they
         must be of type "str" but are restricted to code points in the
         "latin-1" set.
@@ -210,9 +223,7 @@ class Gateway(server.Gateway):
                 # to fit (so the client doesn't hang) and raise an error later.
                 chunk = chunk[:rbo]
 
-        if not self.req.sent_headers:
-            self.req.sent_headers = True
-            self.req.send_headers()
+        self.req.ensure_headers_sent()
 
         self.req.write(chunk)
 
@@ -231,6 +242,7 @@ class Gateway_10(Gateway):
     def get_environ(self):
         """Return a new environ dict targeting the given wsgi.version."""
         req = self.req
+        req_conn = req.conn
         env = {
             # set a non-standard environ entry so the WSGI app can know what
             # the *real* server protocol is (and what features to support).
@@ -238,8 +250,8 @@ class Gateway_10(Gateway):
             'ACTUAL_SERVER_PROTOCOL': req.server.protocol,
             'PATH_INFO': bton(req.path),
             'QUERY_STRING': bton(req.qs),
-            'REMOTE_ADDR': req.conn.remote_addr or '',
-            'REMOTE_PORT': str(req.conn.remote_port or ''),
+            'REMOTE_ADDR': req_conn.remote_addr or '',
+            'REMOTE_PORT': str(req_conn.remote_port or ''),
             'REQUEST_METHOD': bton(req.method),
             'REQUEST_URI': bton(req.uri),
             'SCRIPT_NAME': '',
@@ -249,6 +261,7 @@ class Gateway_10(Gateway):
             'SERVER_SOFTWARE': req.server.software,
             'wsgi.errors': sys.stderr,
             'wsgi.input': req.rfile,
+            'wsgi.input_terminated': bool(req.chunked_read),
             'wsgi.multiprocess': False,
             'wsgi.multithread': True,
             'wsgi.run_once': False,
@@ -260,6 +273,21 @@ class Gateway_10(Gateway):
             # AF_UNIX. This isn't really allowed by WSGI, which doesn't
             # address unix domain sockets. But it's better than nothing.
             env['SERVER_PORT'] = ''
+            try:
+                env['X_REMOTE_PID'] = str(req_conn.peer_pid)
+                env['X_REMOTE_UID'] = str(req_conn.peer_uid)
+                env['X_REMOTE_GID'] = str(req_conn.peer_gid)
+
+                env['X_REMOTE_USER'] = str(req_conn.peer_user)
+                env['X_REMOTE_GROUP'] = str(req_conn.peer_group)
+
+                env['REMOTE_USER'] = env['X_REMOTE_USER']
+            except RuntimeError:
+                """Unable to retrieve peer creds data.
+
+                Unsupported by current kernel or socket error happened, or
+                unsupported socket type, or disabled.
+                """
         else:
             env['SERVER_PORT'] = str(req.server.bind_addr[1])
 
@@ -332,7 +360,7 @@ class Gateway_u0(Gateway_10):
 wsgi_gateways = Gateway.gateway_map()
 
 
-class PathInfoDispatcher(object):
+class PathInfoDispatcher:
     """A WSGI dispatcher for dispatch based on the PATH_INFO."""
 
     def __init__(self, apps):
@@ -359,7 +387,7 @@ class PathInfoDispatcher(object):
     def __call__(self, environ, start_response):
         """Process incoming WSGI request.
 
-        Ref: PEP 3333
+        Ref: :pep:`3333`
 
         Args:
             environ (Mapping): a dict containing WSGI environment variables
@@ -369,6 +397,7 @@ class PathInfoDispatcher(object):
         Returns:
             list[bytes]: iterable containing bytes to be returned in
                 HTTP response body
+
         """
         path = environ['PATH_INFO'] or '/'
         for p, app in self.apps:

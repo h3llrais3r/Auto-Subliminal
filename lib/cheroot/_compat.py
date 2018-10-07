@@ -1,5 +1,8 @@
 """Compatibility code for using Cheroot with various versions of Python."""
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
 import re
 
 import six
@@ -57,6 +60,7 @@ def assert_native(n):
 
     Raises:
         TypeError: in case of failed check
+
     """
     if not isinstance(n, str):
         raise TypeError('n must be a native str (got %s)' % type(n).__name__)

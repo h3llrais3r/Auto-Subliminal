@@ -1,5 +1,8 @@
 """A thread-based worker pool."""
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
 
 import threading
 import time
@@ -11,7 +14,7 @@ from six.moves import queue
 __all__ = ('WorkerThread', 'ThreadPool')
 
 
-class TrueyZero(object):
+class TrueyZero:
     """Object which equals and does math like the integer 0 but evals True."""
 
     def __add__(self, other):
@@ -120,7 +123,7 @@ class WorkerThread(threading.Thread):
             self.server.interrupt = ex
 
 
-class ThreadPool(object):
+class ThreadPool:
     """A Request Queue for an HTTPServer which pools threads.
 
     ThreadPool objects must provide min, get(), put(obj), start()
@@ -161,10 +164,10 @@ class ThreadPool(object):
             while not worker.ready:
                 time.sleep(.1)
 
-    def _get_idle(self):
+    @property
+    def idle(self):  # noqa: D401; irrelevant for properties
         """Number of worker threads which are idle. Read-only."""
         return len([t for t in self._threads if t.conn is None])
-    idle = property(_get_idle, doc=_get_idle.__doc__)
 
     def put(self, obj):
         """Put request into queue.
@@ -262,6 +265,7 @@ class ThreadPool(object):
                         KeyboardInterrupt):
                     pass
 
-    def _get_qsize(self):
+    @property
+    def qsize(self):
+        """Return the queue size."""
         return self._queue.qsize()
-    qsize = property(_get_qsize)

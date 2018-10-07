@@ -1,8 +1,16 @@
 """Socket file object."""
 
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
+
 import socket
 
-import _pyio as io
+try:
+    # prefer slower Python-based io module
+    import _pyio as io
+except ImportError:
+    # Python 2.6
+    import io
 
 import six
 
@@ -35,14 +43,6 @@ class BufferedWriter(io.BufferedWriter):
             del self._write_buf[:n]
 
 
-def MakeFile_PY3(sock, mode='r', bufsize=io.DEFAULT_BUFFER_SIZE):
-    """File object attached to a socket object."""
-    if 'r' in mode:
-        return io.BufferedReader(socket.SocketIO(sock, mode), bufsize)
-    else:
-        return BufferedWriter(socket.SocketIO(sock, mode), bufsize)
-
-
 class MakeFile_PY2(getattr(socket, '_fileobject', object)):
     """Faux file object attached to a socket object."""
 
@@ -51,6 +51,16 @@ class MakeFile_PY2(getattr(socket, '_fileobject', object)):
         self.bytes_read = 0
         self.bytes_written = 0
         socket._fileobject.__init__(self, *args, **kwargs)
+        self._refcount = 0
+
+    def _reuse(self):
+        self._refcount += 1
+
+    def _drop(self):
+        if self._refcount < 0:
+            self.close()
+        else:
+            self._refcount -= 1
 
     def write(self, data):
         """Sendall for non-blocking sockets."""
@@ -90,7 +100,7 @@ class MakeFile_PY2(getattr(socket, '_fileobject', object)):
                 if what:
                     raise
 
-    class FauxSocket(object):
+    class FauxSocket:
         """Faux socket with the minimal interface required by pypy."""
 
         def _reuse(self):
@@ -376,4 +386,24 @@ class MakeFile_PY2(getattr(socket, '_fileobject', object)):
                 return ''.join(buffers)
 
 
-MakeFile = MakeFile_PY2 if six.PY2 else MakeFile_PY3
+if six.PY3:
+    class StreamReader(io.BufferedReader):
+        """Socket stream reader."""
+
+        def __init__(self, sock, mode='r', bufsize=io.DEFAULT_BUFFER_SIZE):
+            """Initialize socket stream reader."""
+            super().__init__(socket.SocketIO(sock, mode), bufsize)
+
+    class StreamWriter(BufferedWriter):
+        """Socket stream writer."""
+
+        def __init__(self, sock, mode='w', bufsize=io.DEFAULT_BUFFER_SIZE):
+            """Initialize socket stream writer."""
+            super().__init__(socket.SocketIO(sock, mode), bufsize)
+
+    def MakeFile(sock, mode='r', bufsize=io.DEFAULT_BUFFER_SIZE):
+        """File object attached to a socket object."""
+        cls = StreamReader if 'r' in mode else StreamWriter
+        return cls(sock, mode, bufsize)
+else:
+    StreamReader = StreamWriter = MakeFile = MakeFile_PY2

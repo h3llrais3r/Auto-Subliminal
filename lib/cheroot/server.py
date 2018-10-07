@@ -7,12 +7,12 @@ sticking incoming connections onto a Queue::
 
     server = HTTPServer(...)
     server.start()
-    while True:
-        tick()
-        # This blocks until a request comes in:
-        child = socket.accept()
-        conn = HTTPConnection(child, ...)
-        server.requests.put(conn)
+    ->  while True:
+            tick()
+            # This blocks until a request comes in:
+            child = socket.accept()
+            conn = HTTPConnection(child, ...)
+            server.requests.put(conn)
 
 Worker threads are kept in a pool and poll the Queue, popping off and then
 handling each connection in turn. Each connection can consist of an arbitrary
@@ -39,12 +39,30 @@ number of requests and their responses, so we run a nested loop::
                 if req.close_connection:
                     return
 
+For running a server you can invoke :func:`start() <HTTPServer.start()>` (it
+will run the server forever) or use invoking :func:`prepare()
+<HTTPServer.prepare()>` and :func:`serve() <HTTPServer.serve()>` like this::
+
+    server = HTTPServer(...)
+    server.prepare()
+    try:
+        threading.Thread(target=server.serve).start()
+
+        # waiting/detecting some appropriate stop condition here
+        ...
+
+    finally:
+        server.stop()
+
 And now for a trivial doctest to exercise the test suite
 
 >>> 'HTTPServer' in globals()
 True
 
 """
+
+from __future__ import absolute_import, division, print_function
+__metaclass__ = type
 
 import os
 import io
@@ -57,6 +75,11 @@ import traceback as traceback_
 import logging
 import platform
 
+try:
+    from functools import lru_cache
+except ImportError:
+    from backports.functools_lru_cache import lru_cache
+
 import six
 from six.moves import queue
 from six.moves import urllib
@@ -64,7 +87,7 @@ from six.moves import urllib
 from . import errors, __version__
 from ._compat import bton, ntou
 from .workers import threadpool
-from .makefile import MakeFile
+from .makefile import MakeFile, StreamWriter
 
 
 __all__ = ('HTTPRequest', 'HTTPConnection', 'HTTPServer',
@@ -72,11 +95,29 @@ __all__ = ('HTTPRequest', 'HTTPConnection', 'HTTPServer',
            'Gateway', 'get_ssl_adapter_class')
 
 
-if 'win' in sys.platform and hasattr(socket, 'AF_INET6'):
+IS_WINDOWS = platform.system() == 'Windows'
+
+
+if not IS_WINDOWS:
+    import grp
+    import pwd
+    import struct
+
+
+if IS_WINDOWS and hasattr(socket, 'AF_INET6'):
     if not hasattr(socket, 'IPPROTO_IPV6'):
         socket.IPPROTO_IPV6 = 41
     if not hasattr(socket, 'IPV6_V6ONLY'):
         socket.IPV6_V6ONLY = 27
+
+
+if not hasattr(socket, 'SO_PEERCRED'):
+    """
+    NOTE: the value for SO_PEERCRED can be architecture specific, in
+    which case the getsockopt() will hopefully fail. The arch
+    specific value could be derived from platform.processor()
+    """
+    socket.SO_PEERCRED = 17
 
 
 LF = b'\n'
@@ -106,7 +147,7 @@ if not hasattr(logging, 'statistics'):
     logging.statistics = {}
 
 
-class HeaderReader(object):
+class HeaderReader:
     """Object for reading headers from an HTTP request.
 
     Interface and default implementation.
@@ -180,7 +221,7 @@ class DropUnderscoreHeaderReader(HeaderReader):
         return orig and '_' not in key_name
 
 
-class SizeCheckWrapper(object):
+class SizeCheckWrapper:
     """Wraps a file-like object, raising MaxSizeExceeded if too large."""
 
     def __init__(self, rfile, maxlen):
@@ -206,6 +247,7 @@ class SizeCheckWrapper(object):
 
         Returns:
             bytes: Chunk from rfile, limited by size if specified.
+
         """
         data = self.rfile.read(size)
         self.bytes_read += len(data)
@@ -220,6 +262,7 @@ class SizeCheckWrapper(object):
 
         Returns:
             bytes: One line from rfile.
+
         """
         if size is not None:
             data = self.rfile.readline(size)
@@ -247,6 +290,7 @@ class SizeCheckWrapper(object):
 
         Returns:
             list[bytes]: Lines of bytes read from rfile.
+
         """
         # Shamelessly stolen from StringIO
         total = 0
@@ -275,15 +319,10 @@ class SizeCheckWrapper(object):
         self._check_length()
         return data
 
-    def next(self):
-        """Generate next file chunk."""
-        data = self.rfile.next()
-        self.bytes_read += len(data)
-        self._check_length()
-        return data
+    next = __next__
 
 
-class KnownLengthRFile(object):
+class KnownLengthRFile:
     """Wraps a file-like object, returning an empty string when exhausted."""
 
     def __init__(self, rfile, content_length):
@@ -292,6 +331,7 @@ class KnownLengthRFile(object):
         Args:
             rfile (file): file of a known size
             content_length (int): length of the file being read
+
         """
         self.rfile = rfile
         self.remaining = content_length
@@ -304,6 +344,7 @@ class KnownLengthRFile(object):
 
         Returns:
             bytes: Chunk from rfile, limited by size if specified.
+
         """
         if self.remaining == 0:
             return b''
@@ -324,6 +365,7 @@ class KnownLengthRFile(object):
 
         Returns:
             bytes: One line from rfile.
+
         """
         if self.remaining == 0:
             return b''
@@ -344,6 +386,7 @@ class KnownLengthRFile(object):
 
         Returns:
             list[bytes]: Lines of bytes read from rfile.
+
         """
         # Shamelessly stolen from StringIO
         total = 0
@@ -371,8 +414,10 @@ class KnownLengthRFile(object):
         self.remaining -= len(data)
         return data
 
+    next = __next__
 
-class ChunkedRFile(object):
+
+class ChunkedRFile:
     """Wraps a file-like object, returning an empty string when exhausted.
 
     This class is intended to provide a conforming wsgi.input value for
@@ -441,6 +486,7 @@ class ChunkedRFile(object):
 
         Returns:
             bytes: Chunk from rfile, limited by size if specified.
+
         """
         data = EMPTY
 
@@ -473,6 +519,7 @@ class ChunkedRFile(object):
 
         Returns:
             bytes: One line from rfile.
+
         """
         data = EMPTY
 
@@ -515,6 +562,7 @@ class ChunkedRFile(object):
 
         Returns:
             list[bytes]: Lines of bytes read from rfile.
+
         """
         # Shamelessly stolen from StringIO
         total = 0
@@ -533,6 +581,7 @@ class ChunkedRFile(object):
 
         Returns:
             Generator: yields CRLF separated lines.
+
         """
         if not self.closed:
             raise ValueError(
@@ -561,7 +610,7 @@ class ChunkedRFile(object):
         self.rfile.close()
 
 
-class HTTPRequest(object):
+class HTTPRequest:
     """An HTTP Request (and response).
 
     A single HTTP connection may consist of multiple request/response pairs.
@@ -667,6 +716,7 @@ class HTTPRequest(object):
 
         Returns:
             bool: True if the request line is valid or False if it's malformed.
+
         """
         # HTTP/1.1 connections are persistent by default. If a client
         # requests a page, then idles (leaves the connection open),
@@ -824,11 +874,11 @@ class HTTPRequest(object):
                 return False
 
             # Unquote the path+params (e.g. "/this%20path" -> "/this path").
-            # http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html#sec5.1.2
+            # https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html#sec5.1.2
             #
             # But note that "...a URI must be separated into its components
             # before the escaped characters within those components can be
-            # safely decoded." http://www.ietf.org/rfc/rfc2396.txt, sec 2.4.2
+            # safely decoded." https://www.ietf.org/rfc/rfc2396.txt, sec 2.4.2
             # Therefore, "/this%2Fpath" becomes "/this%2Fpath", not
             # "/this/path".
             try:
@@ -888,7 +938,16 @@ class HTTPRequest(object):
             return False
 
         mrbs = self.server.max_request_body_size
-        if mrbs and int(self.inheaders.get(b'Content-Length', 0)) > mrbs:
+
+        try:
+            cl = int(self.inheaders.get(b'Content-Length', 0))
+        except ValueError:
+            self.simple_response(
+                '400 Bad Request',
+                'Malformed Content-Length Header.')
+            return False
+
+        if mrbs and cl > mrbs:
             self.simple_response(
                 '413 Request Entity Too Large',
                 'The entity sent with the request exceeds the maximum '
@@ -972,10 +1031,8 @@ class HTTPRequest(object):
             self.rfile = KnownLengthRFile(self.conn.rfile, cl)
 
         self.server.gateway(self).respond()
+        self.ready and self.ensure_headers_sent()
 
-        if (self.ready and not self.sent_headers):
-            self.sent_headers = True
-            self.send_headers()
         if self.chunked_write:
             self.conn.wfile.write(b'0\r\n\r\n')
 
@@ -1015,6 +1072,12 @@ class HTTPRequest(object):
         except socket.error as ex:
             if ex.args[0] not in errors.socket_errors_to_ignore:
                 raise
+
+    def ensure_headers_sent(self):
+        """Ensure headers are sent to the client if not already sent."""
+        if not self.sent_headers:
+            self.sent_headers = True
+            self.send_headers()
 
     def write(self, chunk):
         """Write unbuffered data to the client."""
@@ -1102,7 +1165,7 @@ class HTTPRequest(object):
         self.conn.wfile.write(EMPTY.join(buf))
 
 
-class HTTPConnection(object):
+class HTTPConnection:
     """An HTTP connection (active socket)."""
 
     remote_addr = None
@@ -1111,6 +1174,8 @@ class HTTPConnection(object):
     rbufsize = io.DEFAULT_BUFFER_SIZE
     wbufsize = io.DEFAULT_BUFFER_SIZE
     RequestHandlerClass = HTTPRequest
+    peercreds_enabled = False
+    peercreds_resolve_enabled = False
 
     def __init__(self, server, sock, makefile=MakeFile):
         """Initialize HTTPConnection instance.
@@ -1126,6 +1191,18 @@ class HTTPConnection(object):
         self.rfile = makefile(sock, 'rb', self.rbufsize)
         self.wfile = makefile(sock, 'wb', self.wbufsize)
         self.requests_seen = 0
+
+        self.peercreds_enabled = self.server.peercreds_enabled
+        self.peercreds_resolve_enabled = self.server.peercreds_resolve_enabled
+
+        # LRU cached methods:
+        # Ref: https://stackoverflow.com/a/14946506/595220
+        self.resolve_peer_creds = (
+            lru_cache(maxsize=1)(self.resolve_peer_creds)
+        )
+        self.get_peer_creds = (
+            lru_cache(maxsize=1)(self.get_peer_creds)
+        )
 
     def communicate(self):
         """Read each request and respond appropriately."""
@@ -1184,7 +1261,7 @@ class HTTPConnection(object):
         if not req or req.sent_headers:
             return
         # Unwrap wfile
-        self.wfile = MakeFile(self.socket._sock, 'wb', self.wbufsize)
+        self.wfile = StreamWriter(self.socket._sock, 'wb', self.wbufsize)
         msg = (
             'The client sent a plain HTTP request, but '
             'this server only speaks HTTPS on this port.'
@@ -1202,7 +1279,7 @@ class HTTPConnection(object):
             return
 
         try:
-            req.simple_response('408 Request Timeout')
+            req.simple_response(response)
         except errors.FatalSSLAlert:
             pass
         except errors.NoSSLError:
@@ -1223,6 +1300,102 @@ class HTTPConnection(object):
             # Someday, perhaps, we'll do the full lingering_close that
             # Apache does, but not today.
             pass
+
+    def get_peer_creds(self):  # LRU cached on per-instance basis, see __init__
+        """Return the PID/UID/GID tuple of the peer socket for UNIX sockets.
+
+        This function uses SO_PEERCRED to query the UNIX PID, UID, GID
+        of the peer, which is only available if the bind address is
+        a UNIX domain socket.
+
+        Raises:
+            NotImplementedError: in case of unsupported socket type
+            RuntimeError: in case of SO_PEERCRED lookup unsupported or disabled
+
+        """
+        PEERCRED_STRUCT_DEF = '3i'
+
+        if IS_WINDOWS or self.socket.family != socket.AF_UNIX:
+            raise NotImplementedError(
+                'SO_PEERCRED is only supported in Linux kernel and WSL'
+            )
+        elif not self.peercreds_enabled:
+            raise RuntimeError(
+                'Peer creds lookup is disabled within this server'
+            )
+
+        try:
+            peer_creds = self.socket.getsockopt(
+                socket.SOL_SOCKET, socket.SO_PEERCRED,
+                struct.calcsize(PEERCRED_STRUCT_DEF)
+            )
+        except socket.error as socket_err:
+            """Non-Linux kernels don't support SO_PEERCRED.
+
+            Refs:
+            http://welz.org.za/notes/on-peer-cred.html
+            https://github.com/daveti/tcpSockHack
+            msdn.microsoft.com/en-us/commandline/wsl/release_notes#build-15025
+            """
+            six.raise_from(  # 3.6+: raise RuntimeError from socket_err
+                RuntimeError,
+                socket_err,
+            )
+        else:
+            pid, uid, gid = struct.unpack(PEERCRED_STRUCT_DEF, peer_creds)
+            return pid, uid, gid
+
+    @property
+    def peer_pid(self):
+        """Return the id of the connected peer process."""
+        pid, _, _ = self.get_peer_creds()
+        return pid
+
+    @property
+    def peer_uid(self):
+        """Return the user id of the connected peer process."""
+        _, uid, _ = self.get_peer_creds()
+        return uid
+
+    @property
+    def peer_gid(self):
+        """Return the group id of the connected peer process."""
+        _, _, gid = self.get_peer_creds()
+        return gid
+
+    def resolve_peer_creds(self):  # LRU cached on per-instance basis
+        """Return the username and group tuple of the peercreds if available.
+
+        Raises:
+            NotImplementedError: in case of unsupported OS
+            RuntimeError: in case of UID/GID lookup unsupported or disabled
+
+        """
+        if IS_WINDOWS:
+            raise NotImplementedError(
+                'UID/GID lookup can only be done under UNIX-like OS'
+            )
+        elif not self.peercreds_resolve_enabled:
+            raise RuntimeError(
+                'UID/GID lookup is disabled within this server'
+            )
+
+        user = pwd.getpwuid(self.peer_uid).pw_name  # [0]
+        group = grp.getgrgid(self.peer_gid).gr_name  # [0]
+
+        return user, group
+
+    @property
+    def peer_user(self):
+        """Return the username of the connected peer process."""
+        user, _ = self.resolve_peer_creds()
+        return user
+
+    @property
+    def peer_group(self):
+        """Return the group of the connected peer process."""
+        _, group = self.resolve_peer_creds()
+        return group
 
     def _close_kernel_socket(self):
         """Close kernel socket in outdated Python versions.
@@ -1254,7 +1427,10 @@ except ImportError:
         _SetHandleInformation.restype = ctypes.wintypes.BOOL
     except ImportError:
         def prevent_socket_inheritance(sock):
-            """Dummy function, since neither fcntl nor ctypes are available."""
+            """Stub inheritance prevention.
+
+            Dummy function, since neither fcntl nor ctypes are available.
+            """
             pass
     else:
         def prevent_socket_inheritance(sock):
@@ -1269,7 +1445,7 @@ else:
         fcntl.fcntl(fd, fcntl.F_SETFD, old_flags | fcntl.FD_CLOEXEC)
 
 
-class HTTPServer(object):
+class HTTPServer:
     """An HTTP server."""
 
     _bind_addr = '127.0.0.1'
@@ -1338,9 +1514,17 @@ class HTTPServer(object):
     You must have the corresponding SSL driver library installed.
     """
 
+    peercreds_enabled = False
+    """If True, peer cred lookup can be performed via UNIX domain socket."""
+
+    peercreds_resolve_enabled = False
+    """If True, username/group will be looked up in the OS from peercreds."""
+
     def __init__(
-            self, bind_addr, gateway, minthreads=10, maxthreads=-1,
-            server_name=None):
+        self, bind_addr, gateway,
+        minthreads=10, maxthreads=-1, server_name=None,
+        peercreds_enabled=False, peercreds_resolve_enabled=False,
+    ):
         """Initialize HTTPServer instance.
 
         Args:
@@ -1360,6 +1544,10 @@ class HTTPServer(object):
         if not server_name:
             server_name = self.version
         self.server_name = server_name
+        self.peercreds_enabled = peercreds_enabled
+        self.peercreds_resolve_enabled = (
+            peercreds_resolve_enabled and peercreds_enabled
+        )
         self.clear_stats()
 
     def clear_stats(self):
@@ -1407,10 +1595,27 @@ class HTTPServer(object):
         return '%s.%s(%r)' % (self.__module__, self.__class__.__name__,
                               self.bind_addr)
 
-    def _get_bind_addr(self):
+    @property
+    def bind_addr(self):
+        """Return the interface on which to listen for connections.
+
+        For TCP sockets, a (host, port) tuple. Host values may be any IPv4
+        or IPv6 address, or any valid hostname. The string 'localhost' is a
+        synonym for '127.0.0.1' (or '::1', if your hosts file prefers IPv6).
+        The string '0.0.0.0' is a special IPv4 entry meaning "any active
+        interface" (INADDR_ANY), and '::' is the similar IN6ADDR_ANY for
+        IPv6. The empty string or None are not allowed.
+
+        For UNIX sockets, supply the filename as a string.
+
+        Systemd socket activation is automatic and doesn't require tempering
+        with this variable.
+        """
         return self._bind_addr
 
-    def _set_bind_addr(self, value):
+    @bind_addr.setter
+    def bind_addr(self, value):
+        """Set the interface on which to listen for connections."""
         if isinstance(value, tuple) and value[0] in ('', None):
             # Despite the socket module docs, using '' does not
             # allow AI_PASSIVE to work. Passing None instead
@@ -1426,22 +1631,6 @@ class HTTPServer(object):
                              "Use '0.0.0.0' (IPv4) or '::' (IPv6) instead "
                              'to listen on all active interfaces.')
         self._bind_addr = value
-    bind_addr = property(
-        _get_bind_addr,
-        _set_bind_addr,
-        doc="""The interface on which to listen for connections.
-
-        For TCP sockets, a (host, port) tuple. Host values may be any IPv4
-        or IPv6 address, or any valid hostname. The string 'localhost' is a
-        synonym for '127.0.0.1' (or '::1', if your hosts file prefers IPv6).
-        The string '0.0.0.0' is a special IPv4 entry meaning "any active
-        interface" (INADDR_ANY), and '::' is the similar IN6ADDR_ANY for
-        IPv6. The empty string or None are not allowed.
-
-        For UNIX sockets, supply the filename as a string.
-
-        Systemd socket activation is automatic and doesn't require tempering
-        with this variable""")
 
     def safe_start(self):
         """Run the server forever, and stop it cleanly on exit."""
@@ -1458,12 +1647,12 @@ class HTTPServer(object):
             self.stop()
             raise
 
-    def start(self):
-        """Run the server forever."""
-        # We don't have to trap KeyboardInterrupt or SystemExit here,
-        # because cherrpy.server already does so, calling self.stop() for us.
-        # If you're using this server with another framework, you should
-        # trap those exceptions in whatever code block calls start().
+    def prepare(self):
+        """Prepare server to serving requests.
+
+        It binds a socket's port, setups the socket to ``listen()`` and does
+        other preparing things.
+        """
         self._interrupt = None
 
         if self.software is None:
@@ -1471,26 +1660,17 @@ class HTTPServer(object):
 
         # Select the appropriate socket
         self.socket = None
+        msg = 'No socket could be created'
         if os.getenv('LISTEN_PID', None):
             # systemd socket activation
             self.socket = socket.fromfd(3, socket.AF_INET, socket.SOCK_STREAM)
         elif isinstance(self.bind_addr, six.string_types):
             # AF_UNIX socket
-
-            # So we can reuse the socket...
             try:
-                os.unlink(self.bind_addr)
-            except Exception:
-                pass
-
-            # So everyone can access the socket...
-            try:
-                os.chmod(self.bind_addr, 0o777)
-            except Exception:
-                pass
-
-            info = [
-                (socket.AF_UNIX, socket.SOCK_STREAM, 0, '', self.bind_addr)]
+                self.bind_unix_socket(self.bind_addr)
+            except socket.error as serr:
+                msg = '%s -- (%s: %s)' % (msg, self.bind_addr, serr)
+                six.raise_from(socket.error(msg), serr)
         else:
             # AF_INET or AF_INET6 socket
             # Get the correct address family for our host (allows IPv6
@@ -1501,15 +1681,15 @@ class HTTPServer(object):
                     host, port, socket.AF_UNSPEC,
                     socket.SOCK_STREAM, 0, socket.AI_PASSIVE)
             except socket.gaierror:
-                if ':' in self.bind_addr[0]:
-                    info = [(socket.AF_INET6, socket.SOCK_STREAM,
-                             0, '', self.bind_addr + (0, 0))]
-                else:
-                    info = [(socket.AF_INET, socket.SOCK_STREAM,
-                             0, '', self.bind_addr)]
+                sock_type = socket.AF_INET
+                bind_addr = self.bind_addr
 
-        if not self.socket:
-            msg = 'No socket could be created'
+                if ':' in host:
+                    sock_type = socket.AF_INET6
+                    bind_addr = bind_addr + (0, 0)
+
+                info = [(sock_type, socket.SOCK_STREAM, 0, '', bind_addr)]
+
             for res in info:
                 af, socktype, proto, canonname, sa = res
                 try:
@@ -1521,8 +1701,8 @@ class HTTPServer(object):
                         self.socket.close()
                     self.socket = None
 
-            if not self.socket:
-                raise socket.error(msg)
+        if not self.socket:
+            raise socket.error(msg)
 
         # Timeout so KeyboardInterrupt can be caught on Win32
         self.socket.settimeout(1)
@@ -1533,6 +1713,9 @@ class HTTPServer(object):
 
         self.ready = True
         self._start_time = time.time()
+
+    def serve(self):
+        """Serve requests, after invoking :func:`prepare()`."""
         while self.ready:
             try:
                 self.tick()
@@ -1548,6 +1731,18 @@ class HTTPServer(object):
                     time.sleep(0.1)
                 if self.interrupt:
                     raise self.interrupt
+
+    def start(self):
+        """Run the server forever.
+
+        It is shortcut for invoking :func:`prepare()` then :func:`serve()`.
+        """
+        # We don't have to trap KeyboardInterrupt or SystemExit here,
+        # because cherrypy.server already does so, calling self.stop() for us.
+        # If you're using this server with another framework, you should
+        # trap those exceptions in whatever code block calls start().
+        self.prepare()
+        self.serve()
 
     def error_log(self, msg='', level=20, traceback=False):
         """Write error message to log.
@@ -1567,20 +1762,93 @@ class HTTPServer(object):
 
     def bind(self, family, type, proto=0):
         """Create (or recreate) the actual socket object."""
-        self.socket = socket.socket(family, type, proto)
-        prevent_socket_inheritance(self.socket)
-        if platform.system() != 'Windows':
+        sock = self.prepare_socket(
+            self.bind_addr,
+            family, type, proto,
+            self.nodelay, self.ssl_adapter,
+        )
+        sock = self.socket = self.bind_socket(sock, self.bind_addr)
+        self.bind_addr = self.resolve_real_bind_addr(sock)
+        return sock
+
+    def bind_unix_socket(self, bind_addr):
+        """Create (or recreate) a UNIX socket object."""
+        if IS_WINDOWS:
+            """
+            Trying to access socket.AF_UNIX under Windows
+            causes an AttributeError.
+            """
+            raise ValueError(  # or RuntimeError?
+                'AF_UNIX sockets are not supported under Windows.'
+            )
+
+        fs_permissions = 0o777  # TODO: allow changing mode
+
+        try:
+            # Make possible reusing the socket...
+            os.unlink(self.bind_addr)
+        except OSError:
+            """
+            File does not exist, which is the primary goal anyway.
+            """
+
+        sock = self.prepare_socket(
+            bind_addr=bind_addr,
+            family=socket.AF_UNIX, type=socket.SOCK_STREAM, proto=0,
+            nodelay=self.nodelay, ssl_adapter=self.ssl_adapter,
+        )
+
+        try:
+            """Linux way of pre-populating fs mode permissions."""
+            # Allow everyone access the socket...
+            os.fchmod(sock.fileno(), fs_permissions)
+            FS_PERMS_SET = True
+        except OSError:
+            FS_PERMS_SET = False
+
+        try:
+            sock = self.bind_socket(sock, bind_addr)
+        except socket.error:
+            sock.close()
+            raise
+
+        bind_addr = self.resolve_real_bind_addr(sock)
+
+        try:
+            """FreeBSD/macOS pre-populating fs mode permissions."""
+            if not FS_PERMS_SET:
+                os.lchmod(bind_addr, fs_permissions)
+                FS_PERMS_SET = True
+        except OSError:
+            pass
+
+        if not FS_PERMS_SET:
+            self.error_log(
+                'Failed to set socket fs mode permissions',
+                level=logging.WARNING,
+            )
+
+        self.bind_addr = bind_addr
+        self.socket = sock
+        return sock
+
+    @staticmethod
+    def prepare_socket(bind_addr, family, type, proto, nodelay, ssl_adapter):
+        """Create and prepare the socket object."""
+        sock = socket.socket(family, type, proto)
+        prevent_socket_inheritance(sock)
+        if not IS_WINDOWS:
             # Windows has different semantics for SO_REUSEADDR,
             # so don't set it.
             # https://msdn.microsoft.com/en-us/library/ms740621(v=vs.85).aspx
-            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        if self.nodelay and not isinstance(self.bind_addr, str):
-            self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        if nodelay and not isinstance(bind_addr, str):
+            sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
-        if self.ssl_adapter is not None:
-            self.socket = self.ssl_adapter.bind(self.socket)
+        if ssl_adapter is not None:
+            sock = ssl_adapter.bind(sock)
 
-        host, port = self.bind_addr[:2]
+        host, port = bind_addr[:2]
 
         # If listening on the IPV6 any address ('::' = IN6ADDR_ANY),
         # activate dual-stack. See
@@ -1592,14 +1860,38 @@ class HTTPServer(object):
         )
         if listening_ipv6:
             try:
-                self.socket.setsockopt(
+                sock.setsockopt(
                     socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 0)
             except (AttributeError, socket.error):
                 # Apparently, the socket option is not available in
                 # this machine's TCP stack
                 pass
 
-        self.socket.bind(self.bind_addr)
+        return sock
+
+    @staticmethod
+    def bind_socket(socket_, bind_addr):
+        """Bind the socket to given interface."""
+        socket_.bind(bind_addr)
+        return socket_
+
+    @staticmethod
+    def resolve_real_bind_addr(socket_):
+        """Retrieve actual bind addr from bound socket."""
+        # FIXME: keep requested bind_addr separate real bound_addr (port
+        # is different in case of ephemeral port 0)
+        bind_addr = socket_.getsockname()
+        if socket_.family in (
+            # Windows doesn't have socket.AF_UNIX, so not using it in check
+            socket.AF_INET,
+            socket.AF_INET6,
+        ):
+            """UNIX domain sockets are strings or bytes.
+
+            In case of bytes with a leading null-byte it's an abstract socket.
+            """
+            return bind_addr[:2]
+        return bind_addr
 
     def tick(self):
         """Accept a new connection and put it on the Queue."""
@@ -1693,16 +1985,17 @@ class HTTPServer(object):
                 return
             raise
 
-    def _get_interrupt(self):
+    @property
+    def interrupt(self):
+        """Flag interrupt of the server."""
         return self._interrupt
 
-    def _set_interrupt(self, interrupt):
+    @interrupt.setter
+    def interrupt(self, interrupt):
+        """Perform the shutdown of this server and save the exception."""
         self._interrupt = True
         self.stop()
         self._interrupt = interrupt
-    interrupt = property(_get_interrupt, _set_interrupt,
-                         doc='Set this to an Exception instance to '
-                             'interrupt the server.')
 
     def stop(self):
         """Gracefully shutdown a server that is serving forever."""
@@ -1735,7 +2028,7 @@ class HTTPServer(object):
                         try:
                             s = socket.socket(af, socktype, proto)
                             # See
-                            # http://groups.google.com/group/cherrypy-users/
+                            # https://groups.google.com/group/cherrypy-users/
                             #     browse_frm/thread/bbfe5eb39c904fe0
                             s.settimeout(1.0)
                             s.connect((host, port))
@@ -1750,7 +2043,7 @@ class HTTPServer(object):
         self.requests.stop(self.shutdown_timeout)
 
 
-class Gateway(object):
+class Gateway:
     """Base class to interface HTTPServer with other systems, such as WSGI."""
 
     def __init__(self, req):
