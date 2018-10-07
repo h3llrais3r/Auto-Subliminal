@@ -2,21 +2,21 @@
 appdirs==1.4.3
 attrs==18.2.0
 babelfish==0.5.5
-backports.functools_lru_cache=1.5
-beautifulsoup4==4.6.0
+backports.functools_lru_cache=1.5 # py2 only
+beautifulsoup4==4.6.0 # different for py2 and py3
 boto==2.49.0
 certifi==2018.8.24
 chardet==3.0.4
 cheroot==6.5.2
-cherrypy==17.4.0,<18.0.0 # from 18.0.0 it's python 3 only
+cherrypy==17.4.0,<18.0.0 # from 18.0.0 it's py3 only
 click==7.0
 configparser==3.5.0
 contextlib2=0.5.5
 diskcache==3.0.6
 dogpile.cache==0.6.7
-enum34==1.1.6
+enum34==1.1.6 # < py34 only
 enzyme==0.4.1
-futures==3.2.0
+futures==3.2.0 # py2 only
 gitdb2==2.0.4
 gitpython==2.1.11
 gntp==1.0.3
