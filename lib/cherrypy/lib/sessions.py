@@ -109,12 +109,19 @@ import binascii
 
 import six
 from six.moves import cPickle as pickle
+import contextlib2
+
+import zc.lockfile
 
 import cherrypy
 from cherrypy.lib import httputil
-from cherrypy.lib import lockfile
 from cherrypy.lib import locking
 from cherrypy.lib import is_iterator
+
+
+if six.PY2:
+    FileNotFoundError = OSError
+
 
 missing = object()
 
@@ -128,14 +135,16 @@ class Session(object):
     id_observers = None
     "A list of callbacks to which to pass new id's."
 
-    def _get_id(self):
+    @property
+    def id(self):
+        """Return the current session id."""
         return self._id
 
-    def _set_id(self, value):
+    @id.setter
+    def id(self, value):
         self._id = value
         for o in self.id_observers:
             o(value)
-    id = property(_get_id, _set_id, doc='The current session ID.')
 
     timeout = 60
     'Number of minutes after which to delete session data.'
@@ -551,8 +560,8 @@ class FileSession(Session):
         checker = locking.LockChecker(self.id, self.lock_timeout)
         while not checker.expired():
             try:
-                self.lock = lockfile.LockFile(path)
-            except lockfile.LockError:
+                self.lock = zc.lockfile.LockFile(path)
+            except zc.lockfile.LockError:
                 time.sleep(0.1)
             else:
                 break
@@ -562,8 +571,9 @@ class FileSession(Session):
 
     def release_lock(self, path=None):
         """Release the lock on the currently-loaded session data."""
-        self.lock.release()
-        self.lock.remove()
+        self.lock.close()
+        with contextlib2.suppress(FileNotFoundError):
+            os.remove(self.lock._path)
         self.locked = False
 
     def clean_up(self):

@@ -19,31 +19,11 @@ and the handler must be either a callable or a context manager.
 """
 
 from cherrypy._cpcompat import text_or_bytes
-
-try:
-    # Python 3.0+
-    from configparser import ConfigParser
-except ImportError:
-    from ConfigParser import ConfigParser
-
-try:
-    text_or_bytes
-except NameError:
-    text_or_bytes = str
-
-import operator as _operator
-import sys
-
+from six.moves import configparser
 from six.moves import builtins
 
-
-def as_dict(config):
-    """Return a dict from 'config' whether it is a dict, file, or filename."""
-    if isinstance(config, text_or_bytes):
-        config = Parser().dict_from_file(config)
-    elif hasattr(config, 'read'):
-        config = Parser().dict_from_file(config)
-    return config
+import operator
+import sys
 
 
 class NamespaceSet(dict):
@@ -146,16 +126,8 @@ class Config(dict):
         dict.update(self, self.defaults)
 
     def update(self, config):
-        """Update self from a dict, file or filename."""
-        if isinstance(config, text_or_bytes):
-            # Filename
-            config = Parser().dict_from_file(config)
-        elif hasattr(config, 'read'):
-            # Open file object
-            config = Parser().dict_from_file(config)
-        else:
-            config = config.copy()
-        self._apply(config)
+        """Update self from a dict, file, or filename."""
+        self._apply(Parser.load(config))
 
     def _apply(self, config):
         """Update self from a dict."""
@@ -174,7 +146,7 @@ class Config(dict):
         self.namespaces({k: v})
 
 
-class Parser(ConfigParser):
+class Parser(configparser.ConfigParser):
 
     """Sub-class of ConfigParser that keeps the case of options and that
     raises an exception if the file cannot be read.
@@ -223,6 +195,17 @@ class Parser(ConfigParser):
         else:
             self.read(file)
         return self.as_dict()
+
+    @classmethod
+    def load(self, input):
+        """Resolve 'input' to dict from a dict, file, or filename."""
+        is_file = (
+            # Filename
+            isinstance(input, text_or_bytes)
+            # Open file object
+            or hasattr(input, 'read')
+        )
+        return Parser().dict_from_file(input) if is_file else input.copy()
 
 
 # public domain "unrepr" implementation, found on the web and then improved.
@@ -477,13 +460,13 @@ class _Builder3:
         return op(left, right)
 
     def build_Add(self, o):
-        return _operator.add
+        return operator.add
 
     def build_Mult(self, o):
-        return _operator.mul
+        return operator.mul
 
     def build_USub(self, o):
-        return _operator.neg
+        return operator.neg
 
     def build_Attribute(self, o):
         parent = self.build(o.value)

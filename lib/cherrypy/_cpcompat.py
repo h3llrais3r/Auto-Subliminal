@@ -11,15 +11,20 @@ provides
 two functions: 'ntob', which translates native strings (of type 'str') into
 byte strings regardless of Python version, and 'ntou', which translates native
 strings to unicode strings.
+
+Try not to use the compatibility functions 'ntob', 'ntou', 'tonative'.
+They were created with Python 2.3-2.5 compatibility in mind.
+Instead, use unicode literals (from __future__) and bytes literals
+and their .encode/.decode methods as needed.
 """
 
 import re
 import sys
 import threading
-import base64
 
 import six
 from six.moves import urllib
+
 
 if six.PY3:
     def ntob(n, encoding='ISO-8859-1'):
@@ -88,24 +93,25 @@ def assert_native(n):
         raise TypeError('n must be a native str (got %s)' % type(n).__name__)
 
 
-def base64_decode(n, encoding='ISO-8859-1'):
-    """Return the native string base64-decoded (as a native string)."""
-    decoded = base64.decodestring(n.encode('ascii'))
-    return tonative(decoded, encoding)
-
-
 # Some platforms don't expose HTTPSConnection, so handle it separately
 HTTPSConnection = getattr(six.moves.http_client, 'HTTPSConnection', None)
 
 
-def unquote_qs(atom, encoding, errors='strict'):
-    atom_spc = atom.replace('+', ' ')
-    return (
-        urllib.parse.unquote(atom_spc, encoding=encoding, errors=errors)
-        if six.PY3 else
-        urllib.parse.unquote(atom_spc).decode(encoding, errors)
-    )
+def _unquote_plus_compat(string, encoding='utf-8', errors='replace'):
+    return urllib.parse.unquote_plus(string).decode(encoding, errors)
 
+
+def _unquote_compat(string, encoding='utf-8', errors='replace'):
+    return urllib.parse.unquote(string).decode(encoding, errors)
+
+
+def _quote_compat(string, encoding='utf-8', errors='replace'):
+    return urllib.parse.quote(string.encode(encoding, errors))
+
+
+unquote_plus = urllib.parse.unquote_plus if six.PY3 else _unquote_plus_compat
+unquote = urllib.parse.unquote if six.PY3 else _unquote_compat
+quote = urllib.parse.quote if six.PY3 else _quote_compat
 
 try:
     # Prefer simplejson
@@ -127,7 +133,7 @@ else:
     json_encode = _json_encode
 
 
-text_or_bytes = six.text_type, six.binary_type
+text_or_bytes = six.text_type, bytes
 
 
 if sys.version_info >= (3, 3):

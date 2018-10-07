@@ -117,6 +117,7 @@ Note that you have to explicitly set
 and not simply return an error message as a result.
 """
 
+import io
 import contextlib
 from sys import exc_info as _exc_info
 from traceback import format_exception as _format_exception
@@ -125,9 +126,11 @@ from xml.sax import saxutils
 import six
 from six.moves import urllib
 
+from more_itertools import always_iterable
+
 import cherrypy
 from cherrypy._cpcompat import escape_html
-from cherrypy._cpcompat import text_or_bytes, ntob
+from cherrypy._cpcompat import ntob
 from cherrypy._cpcompat import tonative
 from cherrypy._helper import classproperty
 from cherrypy.lib import httputil as _httputil
@@ -203,21 +206,18 @@ class HTTPRedirect(CherryPyException):
     """The encoding when passed urls are not native strings"""
 
     def __init__(self, urls, status=None, encoding=None):
-        if isinstance(urls, text_or_bytes):
-            urls = [urls]
-
-        abs_urls = []
-        for url in urls:
-            url = tonative(url, encoding or self.encoding)
-
+        self.urls = abs_urls = [
             # Note that urljoin will "do the right thing" whether url is:
             #  1. a complete URL with host (e.g. "http://www.example.com/test")
             #  2. a URL relative to root (e.g. "/dummy")
             #  3. a URL relative to the current path
             # Note that any query string in cherrypy.request is discarded.
-            url = urllib.parse.urljoin(cherrypy.url(), url)
-            abs_urls.append(url)
-        self.urls = abs_urls
+            urllib.parse.urljoin(
+                cherrypy.url(),
+                tonative(url, encoding or self.encoding),
+            )
+            for url in always_iterable(urls)
+        ]
 
         status = (
             int(status)
@@ -532,7 +532,7 @@ def get_error_page(status, **kwargs):
                     return result
             else:
                 # Load the template from this path.
-                template = tonative(open(error_page, 'rb').read())
+                template = io.open(error_page, newline='').read()
         except Exception:
             e = _format_exception(*_exc_info())[-1]
             m = kwargs['message']

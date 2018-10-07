@@ -8,7 +8,7 @@ boto==2.49.0
 certifi==2018.8.24
 chardet==3.0.4
 cheroot==6.0.0
-cherrypy==14.0.0
+cherrypy==17.4.0,<18.0.0 # from 18.0.0 it's python 3 only
 click==6.7
 configparser==3.5.0
 diskcache==3.0.6

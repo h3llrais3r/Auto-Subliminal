@@ -135,7 +135,7 @@ import six
 import cheroot.server
 
 import cherrypy
-from cherrypy._cpcompat import text_or_bytes, ntou
+from cherrypy._cpcompat import ntou, unquote
 from cherrypy.lib import httputil
 
 
@@ -470,13 +470,10 @@ class Entity(object):
                     self.filename.endswith('"')
                 ):
                     self.filename = self.filename[1:-1]
-
-    # The 'type' attribute is deprecated in 3.2; remove it in 3.3.
-    type = property(
-        lambda self: self.content_type,
-        doc='A deprecated alias for '
-            ':attr:`content_type<cherrypy._cpreqbody.Entity.content_type>`.'
-    )
+            if 'filename*' in disp.params:
+                # @see https://tools.ietf.org/html/rfc5987
+                encoding, lang, filename = disp.params['filename*'].split("'")
+                self.filename = unquote(str(filename), encoding)
 
     def read(self, size=None, fp_out=None):
         return self.fp.read(size, fp_out)
@@ -721,7 +718,7 @@ class Part(Entity):
             self.file = self.read_into_file()
         else:
             result = self.read_lines_to_boundary()
-            if isinstance(result, text_or_bytes):
+            if isinstance(result, bytes):
                 self.value = result
             else:
                 self.file = result

@@ -15,12 +15,12 @@ from cgi import parse_header
 from email.header import decode_header
 
 import six
-from six.moves import range, builtins
+from six.moves import range, builtins, map
 from six.moves.BaseHTTPServer import BaseHTTPRequestHandler
 
+import cherrypy
 from cherrypy._cpcompat import ntob, ntou
-from cherrypy._cpcompat import text_or_bytes
-from cherrypy._cpcompat import unquote_qs
+from cherrypy._cpcompat import unquote_plus
 
 response_codes = BaseHTTPRequestHandler.responses.copy()
 
@@ -202,7 +202,21 @@ class AcceptElement(HeaderElement):
         val = self.params.get('q', '1')
         if isinstance(val, HeaderElement):
             val = val.value
-        return float(val)
+        try:
+            return float(val)
+        except ValueError as val_err:
+            """Fail client requests with invalid quality value.
+
+            Ref: https://github.com/cherrypy/cherrypy/issues/1370
+            """
+            six.raise_from(
+                cherrypy.HTTPError(
+                    400,
+                    'Malformed HTTP header: `{}`'.
+                    format(str(self)),
+                ),
+                val_err,
+            )
 
     def __cmp__(self, other):
         diff = builtins.cmp(self.qvalue, other.qvalue)
@@ -345,8 +359,8 @@ def _parse_qs(qs, keep_blank_values=0, strict_parsing=0, encoding='utf-8'):
             else:
                 continue
         if len(nv[1]) or keep_blank_values:
-            name = unquote_qs(nv[0], encoding)
-            value = unquote_qs(nv[1], encoding)
+            name = unquote_plus(nv[0], encoding, errors='strict')
+            value = unquote_plus(nv[1], encoding, errors='strict')
             if name in d:
                 if not isinstance(d[name], list):
                     d[name] = [d[name]]
@@ -504,23 +518,20 @@ class HeaderMap(CaseInsensitiveDict):
         transmitting on the wire for HTTP.
         """
         for k, v in header_items:
-            if isinstance(k, six.text_type):
-                k = cls.encode(k)
+            if not isinstance(v, six.string_types):
+                v = six.text_type(v)
 
-            if not isinstance(v, text_or_bytes):
-                v = str(v)
+            yield tuple(map(cls.encode_header_item, (k, v)))
 
-            if isinstance(v, six.text_type):
-                v = cls.encode(v)
+    @classmethod
+    def encode_header_item(cls, item):
+        if isinstance(item, six.text_type):
+            item = cls.encode(item)
 
-            # See header_translate_* constants above.
-            # Replace only if you really know what you're doing.
-            k = k.translate(header_translate_table,
-                            header_translate_deletechars)
-            v = v.translate(header_translate_table,
-                            header_translate_deletechars)
-
-            yield (k, v)
+        # See header_translate_* constants above.
+        # Replace only if you really know what you're doing.
+        return item.translate(
+            header_translate_table, header_translate_deletechars)
 
     @classmethod
     def encode(cls, v):

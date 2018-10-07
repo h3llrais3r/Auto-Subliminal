@@ -1,16 +1,18 @@
 import sys
 import time
-import warnings
 
 import uuid
+
 import six
 from six.moves.http_cookies import SimpleCookie, CookieError
 
+from more_itertools import consume
+
 import cherrypy
-from cherrypy._cpcompat import text_or_bytes, ntob
+from cherrypy._cpcompat import ntob
 from cherrypy import _cpreqbody
 from cherrypy._cperror import format_exc, bare_error
-from cherrypy.lib import httputil, file_generator, reprconf
+from cherrypy.lib import httputil, reprconf, encoding
 
 
 class Hook(object):
@@ -139,8 +141,8 @@ def hooks_namespace(k, v):
     # hookpoint per path (e.g. "hooks.before_handler.1").
     # Little-known fact you only get from reading source ;)
     hookpoint = k.split('.', 1)[0]
-    if isinstance(v, text_or_bytes):
-        v = cherrypy.lib.attributes(v)
+    if isinstance(v, six.string_types):
+        v = cherrypy.lib.reprconf.attributes(v)
     if not isinstance(v, Hook):
         v = Hook(v)
     cherrypy.serving.request.hooks[hookpoint].append(v)
@@ -620,9 +622,6 @@ class Request(object):
 
         return response
 
-    # Uncomment for stage debugging
-    # stage = property(lambda self: self._stage, lambda self, v: print(v))
-
     def respond(self, path_info):
         """Generate a response for the resource at self.path_info. (Core)"""
         try:
@@ -770,36 +769,13 @@ class Request(object):
             inst.set_response()
             cherrypy.serving.response.finalize()
 
-    # ------------------------- Properties ------------------------- #
-
-    def _get_body_params(self):
-        warnings.warn(
-            'body_params is deprecated in CherryPy 3.2, will be removed in '
-            'CherryPy 3.3.',
-            DeprecationWarning
-        )
-        return self.body.params
-    body_params = property(_get_body_params,
-                           doc="""
-    If the request Content-Type is 'application/x-www-form-urlencoded' or
-    multipart, this will be a dict of the params pulled from the entity
-    body; that is, it will be the portion of request.params that come
-    from the message body (sometimes called "POST params", although they
-    can be sent with various HTTP method verbs). This value is set between
-    the 'before_request_body' and 'before_handler' hooks (assuming that
-    process_request_body is True).
-
-    Deprecated in 3.2, will be removed for 3.3 in favor of
-    :attr:`request.body.params<cherrypy._cprequest.RequestBody.params>`.""")
-
 
 class ResponseBody(object):
 
     """The body of the HTTP response (the response entity)."""
 
-    if six.PY3:
-        unicode_err = ('Page handlers MUST return bytes. Use tools.encode '
-                       'if you wish to return unicode.')
+    unicode_err = ('Page handlers MUST return bytes. Use tools.encode '
+                   'if you wish to return unicode.')
 
     def __get__(self, obj, objclass=None):
         if obj is None:
@@ -810,30 +786,14 @@ class ResponseBody(object):
 
     def __set__(self, obj, value):
         # Convert the given value to an iterable object.
-        if six.PY3 and isinstance(value, str):
+        if isinstance(value, six.text_type):
             raise ValueError(self.unicode_err)
-
-        if isinstance(value, text_or_bytes):
-            # strings get wrapped in a list because iterating over a single
-            # item list is much faster than iterating over every character
-            # in a long string.
-            if value:
-                value = [value]
-            else:
-                # [''] doesn't evaluate to False, so replace it with [].
-                value = []
-        elif six.PY3 and isinstance(value, list):
+        elif isinstance(value, list):
             # every item in a list must be bytes...
-            for i, item in enumerate(value):
-                if isinstance(item, str):
-                    raise ValueError(self.unicode_err)
-        # Don't use isinstance here; io.IOBase which has an ABC takes
-        # 1000 times as long as, say, isinstance(value, str)
-        elif hasattr(value, 'read'):
-            value = file_generator(value)
-        elif value is None:
-            value = []
-        obj._body = value
+            if any(isinstance(item, six.text_type) for item in value):
+                raise ValueError(self.unicode_err)
+
+        obj._body = encoding.prepare_iter(value)
 
 
 class Response(object):
@@ -891,19 +851,17 @@ class Response(object):
 
     def collapse_body(self):
         """Collapse self.body to a single string; replace it and return it."""
-        if isinstance(self.body, text_or_bytes):
-            return self.body
+        new_body = b''.join(self.body)
+        self.body = new_body
+        return new_body
 
-        newbody = []
-        for chunk in self.body:
-            if six.PY3 and not isinstance(chunk, bytes):
-                raise TypeError("Chunk %s is not of type 'bytes'." %
-                                repr(chunk))
-            newbody.append(chunk)
-        newbody = b''.join(newbody)
-
-        self.body = newbody
-        return newbody
+    def _flush_body(self):
+        """
+        Discard self.body but consume any generator such that
+        any finalization can occur, such as is required by
+        caching.tee_output().
+        """
+        consume(iter(self.body))
 
     def finalize(self):
         """Transform headers (and cookies) into self.header_list. (Core)"""
@@ -929,6 +887,7 @@ class Response(object):
             # and 304 (not modified) responses MUST NOT
             # include a message-body."
             dict.pop(headers, 'Content-Length', None)
+            self._flush_body()
             self.body = b''
         else:
             # Responses which are not streamed should have a Content-Length,
