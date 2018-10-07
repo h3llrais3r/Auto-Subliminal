@@ -10,8 +10,11 @@ Libraries dependency tree
     |-- lxml (optional dependency)
 |-- cherrypy
     |-- cheroot
+        |-- backports.functools_lru_cache
         |-- more-itertools
         |-- six
+    |-- contextlib2
+    |-- more-itertools
     |-- portend
         |-- tempora
             |-- pytz
@@ -19,6 +22,7 @@ Libraries dependency tree
             |--jaraco.functools
                 |--backports.functools_lru_cache
     |-- six
+    |-- zc.lockfile
 |-- configparser
 |-- dogpile.cache
 |-- enum34
