@@ -11,6 +11,7 @@ cheroot==6.5.2
 cherrypy==17.4.0,<18.0.0 # from 18.0.0 it's python 3 only
 click==6.7
 configparser==3.5.0
+contextlib2=0.5.5
 diskcache==3.0.6
 dogpile.cache==0.6.7
 enum34==1.1.6
