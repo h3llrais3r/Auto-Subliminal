@@ -59,7 +59,7 @@ Install javascript library
 ==========================
 Install javascript library via npm:
 
-    npm install --save <library_name>
+    npm install --save --save-exact <library_name>
 
 Adapt gulpfile.js to include needed files of the library (javascript, css, images, fonts, ...)
 
