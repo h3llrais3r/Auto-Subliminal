@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "baseBranches": [
+    "development"
+  ],
+  "js": {
+    "labels": ["Upgrade JS"],
+    "packageRules": [
+      {
+        "packageNames": ["bootstrap"],
+        "allowedVersions": "<4"
+      }
+    ]
+  }
+}
