@@ -6,6 +6,7 @@
     "development"
   ],
   "js": {
+    "labels": ["Upgrade JS"],
     "packageRules": [
       {
         "packageNames": ["bootstrap"],
