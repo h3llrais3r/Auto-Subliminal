@@ -4,5 +4,13 @@
   ],
   "baseBranches": [
     "development"
-  ]
+  ],
+  "js": {
+    "packageRules": [
+      {
+        "packageNames": ["bootstrap"],
+        "allowedVersions": "<4"
+      }
+    ]
+  }
 }
