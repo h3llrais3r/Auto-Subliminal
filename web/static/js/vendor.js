@@ -10768,17 +10768,8 @@ return jQuery;
     };
 });
 
-(function(factory) {
-	if (typeof define === 'function' && define.amd) {
-		define(['jquery'], factory);
-	} else if (typeof module === 'object' && typeof module.exports === 'object') {
-		module.exports = factory(require('jquery'));
-	} else {
-		factory(jQuery);
-	}
-}(function(jQuery) {
-
-/*! TableSorter (FORK) v2.29.0 *//*
+(function(factory){if (typeof define === 'function' && define.amd){define(['jquery'], factory);} else if (typeof module === 'object' && typeof module.exports === 'object'){module.exports = factory(require('jquery'));} else {factory(jQuery);}}(function(jQuery){
+/*! TableSorter (FORK) v2.31.0 *//*
 * Client-side table sorting with ease!
 * @requires jQuery v1.2.6+
 *
@@ -10802,7 +10793,7 @@ return jQuery;
 	'use strict';
 	var ts = $.tablesorter = {
 
-		version : '2.29.0',
+		version : '2.31.0',
 
 		parsers : [],
 		widgets : [],
@@ -10814,8 +10805,8 @@ return jQuery;
 			showProcessing   : false,      // show an indeterminate timer icon in the header when the table is sorted or filtered.
 
 			headerTemplate   : '{content}',// header layout template (HTML ok); {content} = innerHTML, {icon} = <i/> // class from cssIcon
-			onRenderTemplate : null,       // function( index, template ){ return template; }, // template is a string
-			onRenderHeader   : null,       // function( index ){}, // nothing to return
+			onRenderTemplate : null,       // function( index, template ) { return template; }, // template is a string
+			onRenderHeader   : null,       // function( index ) {}, // nothing to return
 
 			// *** functionality
 			cancelSelection  : true,       // prevent text selection in the header
@@ -10844,7 +10835,7 @@ return jQuery;
 			emptyTo          : 'bottom',   // sort empty cell to bottom, top, none, zero, emptyMax, emptyMin
 			stringTo         : 'max',      // sort strings in numerical column as max, min, top, bottom, zero
 			duplicateSpan    : true,       // colspan cells in the tbody will have duplicated content in the cache for each spanned column
-			textExtraction   : 'basic',    // text extraction method/function - function( node, table, cellIndex ){}
+			textExtraction   : 'basic',    // text extraction method/function - function( node, table, cellIndex ) {}
 			textAttribute    : 'data-text',// data-attribute that contains alternate cell text (used in default textExtraction function)
 			textSorter       : null,       // choose overall or specific column sorter function( a, b, direction, table, columnIndex ) [alt: ts.sortText]
 			numberSorter     : null,       // choose overall numeric sorter function( a, b, direction, maxColumnValue )
@@ -10858,7 +10849,7 @@ return jQuery;
 			},
 
 			// *** callbacks
-			initialized      : null,       // function( table ){},
+			initialized      : null,       // function( table ) {},
 
 			// *** extra css class names
 			tableClass       : '',
@@ -10996,7 +10987,7 @@ return jQuery;
 		setup : function( table, c ) {
 			// if no thead or tbody, or tablesorter is already present, quit
 			if ( !table || !table.tHead || table.tBodies.length === 0 || table.hasInitialized === true ) {
-				if ( c.debug ) {
+				if ( ts.debug(c, 'core') ) {
 					if ( table.hasInitialized ) {
 						console.warn( 'Stopping initialization. Tablesorter has already been initialized' );
 					} else {
@@ -11017,7 +11008,7 @@ return jQuery;
 			table.config = c;
 			// save the settings where they read
 			$.data( table, 'tablesorter', c );
-			if ( c.debug ) {
+			if ( ts.debug(c, 'core') ) {
 				console[ console.group ? 'group' : 'log' ]( 'Initializing tablesorter v' + ts.version );
 				$.data( table, 'startoveralltimer', new Date() );
 			}
@@ -11078,7 +11069,10 @@ return jQuery;
 			ts.setupParsers( c );
 			// start total row count at zero
 			c.totalRows = 0;
-			ts.validateOptions( c );
+			// only validate options while debugging. See #1528
+			if (c.debug) {
+				ts.validateOptions( c );
+			}
 			// build the cache for the tbody cells
 			// delayInit will delay building the cache until the user starts a sort
 			if ( !c.delayInit ) { ts.buildCache( c ); }
@@ -11123,9 +11117,9 @@ return jQuery;
 			// initialized
 			table.hasInitialized = true;
 			table.isProcessing = false;
-			if ( c.debug ) {
+			if ( ts.debug(c, 'core') ) {
 				console.log( 'Overall initialization time:' + ts.benchmark( $.data( table, 'startoveralltimer' ) ) );
-				if ( c.debug && console.groupEnd ) { console.groupEnd(); }
+				if ( ts.debug(c, 'core') && console.groupEnd ) { console.groupEnd(); }
 			}
 			$table.triggerHandler( 'tablesorter-initialized', table );
 			if ( typeof c.initialized === 'function' ) {
@@ -11283,10 +11277,13 @@ return jQuery;
 					return;
 				}
 				downTarget = null;
+				$cell = ts.getClosest( $( this ), '.' + ts.css.header );
 				// prevent sort being triggered on form elements
 				if ( ts.regex.formElements.test( e.target.nodeName ) ||
 					// nosort class name, or elements within a nosort container
 					$target.hasClass( c.cssNoSort ) || $target.parents( '.' + c.cssNoSort ).length > 0 ||
+					// disabled cell directly clicked
+					$cell.hasClass( 'sorter-false' ) ||
 					// elements within a button
 					$target.parents( 'button' ).length > 0 ) {
 					return !c.cancelSelection;
@@ -11294,14 +11291,9 @@ return jQuery;
 				if ( c.delayInit && ts.isEmptyObject( c.cache ) ) {
 					ts.buildCache( c );
 				}
-				// jQuery v1.2.6 doesn't have closest()
-				$cell = ts.getHeaderCell( $( this ) );
-				// reference original table headers and find the same cell
-				// don't use $headers or IE8 throws an error - see #987
-				temp = $headers.index( $cell );
-				c.last.clickedIndex = ( temp < 0 ) ? $cell.attr( 'data-column' ) : temp;
-				// use column index if $headers is undefined
-				cell = c.$headers[ c.last.clickedIndex ];
+				// use column index from data-attribute or index of current row; fixes #1116
+				c.last.clickedIndex = $cell.attr( 'data-column' ) || $cell.index();
+				cell = c.$headerIndexed[ c.last.clickedIndex ][0];
 				if ( cell && !cell.sortDisabled ) {
 					ts.initSort( c, cell, e );
 				}
@@ -11323,7 +11315,7 @@ return jQuery;
 			c.headerList = [];
 			c.headerContent = [];
 			c.sortVars = [];
-			if ( c.debug ) {
+			if ( ts.debug(c, 'core') ) {
 				timer = new Date();
 			}
 			// children tr in tfoot - see issue #196 & #547
@@ -11335,10 +11327,15 @@ return jQuery;
 				'';
 			// redefine c.$headers here in case of an updateAll that replaces or adds an entire header cell - see #683
 			c.$headers = $( $.map( c.$table.find( c.selectorHeaders ), function( elem, index ) {
-				var configHeaders, header, column, template, tmp, $th,
+				var configHeaders, header, column, template, tmp,
 					$elem = $( elem );
 				// ignore cell (don't add it to c.$headers) if row has ignoreRow class
-				if ( $elem.parent().hasClass( c.cssIgnoreRow ) ) { return; }
+				if ( ts.getClosest( $elem, 'tr' ).hasClass( c.cssIgnoreRow ) ) { return; }
+				// transfer data-column to element if not th/td - #1459
+				if ( !/(th|td)/i.test( elem.nodeName ) ) {
+					tmp = ts.getClosest( $elem, 'th, td' );
+					$elem.attr( 'data-column', tmp.attr( 'data-column' ) );
+				}
 				// make sure to get header cell & not column indexed cell
 				configHeaders = ts.getColumnData( c.table, c.headers, index, true );
 				// save original header content
@@ -11361,18 +11358,17 @@ return jQuery;
 				if ( c.onRenderHeader ) {
 					c.onRenderHeader.apply( $elem, [ index, c, c.$table ] );
 				}
-				// data-column stored on th or td only
-				$th = ts.getHeaderCell( $elem );
-				column = parseInt( $th.attr( 'data-column' ), 10 );
+				column = parseInt( $elem.attr( 'data-column' ), 10 );
 				elem.column = column;
 				tmp = ts.getOrder( ts.getData( $elem, configHeaders, 'sortInitialOrder' ) || c.sortInitialOrder );
 				// this may get updated numerous times if there are multiple rows
 				c.sortVars[ column ] = {
 					count : -1, // set to -1 because clicking on the header automatically adds one
-					order:  tmp ?
+					order : tmp ?
 						( c.sortReset ? [ 1, 0, 2 ] : [ 1, 0 ] ) : // desc, asc, unsorted
 						( c.sortReset ? [ 0, 1, 2 ] : [ 0, 1 ] ),  // asc, desc, unsorted
-					lockedOrder : false
+					lockedOrder : false,
+					sortedBy : ''
 				};
 				tmp = ts.getData( $elem, configHeaders, 'lockedOrder' ) || false;
 				if ( typeof tmp !== 'undefined' && tmp !== false ) {
@@ -11399,6 +11395,7 @@ return jQuery;
 				if ( ts.isEmptyObject( c.sortVars[ indx ] ) ) {
 					c.sortVars[ indx ] = {};
 				}
+				// Use c.$headers.parent() in case selectorHeaders doesn't point to the th/td
 				$temp = c.$headers.filter( '[data-column="' + indx + '"]' );
 				// target sortable column cells, unless there are none, then use non-sortable cells
 				// .last() added in jQuery 1.4; use .filter(':last') to maintain compatibility with jQuery v1.2.6
@@ -11414,7 +11411,7 @@ return jQuery;
 			});
 			// enable/disable sorting
 			ts.updateHeader( c );
-			if ( c.debug ) {
+			if ( ts.debug(c, 'core') ) {
 				console.log( 'Built headers:' + ts.benchmark( timer ) );
 				console.log( c.$headers );
 			}
@@ -11437,14 +11434,15 @@ return jQuery;
 				noParser, parser, extractor, time, tbody, len,
 				table = c.table,
 				tbodyIndex = 0,
-				debug = {};
+				debug = ts.debug(c, 'core'),
+				debugOutput = {};
 			// update table bodies in case we start with an empty table
 			c.$tbodies = c.$table.children( 'tbody:not(.' + c.cssInfoBlock + ')' );
 			tbody = typeof $tbodies === 'undefined' ? c.$tbodies : $tbodies;
 			len = tbody.length;
 			if ( len === 0 ) {
-				return c.debug ? console.warn( 'Warning: *Empty table!* Not building a parser cache' ) : '';
-			} else if ( c.debug ) {
+				return debug ? console.warn( 'Warning: *Empty table!* Not building a parser cache' ) : '';
+			} else if ( debug ) {
 				time = new Date();
 				console[ console.group ? 'group' : 'log' ]( 'Detecting parsers for each column' );
 			}
@@ -11486,8 +11484,8 @@ return jQuery;
 							if ( !parser ) {
 								parser = ts.detectParserForColumn( c, rows, -1, colIndex );
 							}
-							if ( c.debug ) {
-								debug[ '(' + colIndex + ') ' + header.text() ] = {
+							if ( debug ) {
+								debugOutput[ '(' + colIndex + ') ' + header.text() ] = {
 									parser : parser.id,
 									extractor : extractor ? extractor.id : 'none',
 									string : c.strings[ colIndex ],
@@ -11513,9 +11511,9 @@ return jQuery;
 				}
 				tbodyIndex += ( list.parsers.length ) ? len : 1;
 			}
-			if ( c.debug ) {
-				if ( !ts.isEmptyObject( debug ) ) {
-					console[ console.table ? 'table' : 'log' ]( debug );
+			if ( debug ) {
+				if ( !ts.isEmptyObject( debugOutput ) ) {
+					console[ console.table ? 'table' : 'log' ]( debugOutput );
 				} else {
 					console.warn( '  No parsers detected!' );
 				}
@@ -11541,7 +11539,7 @@ return jQuery;
 		},
 
 		getParserById : function( name ) {
-			/*jshint eqeqeq:false */
+			/*jshint eqeqeq:false */ // eslint-disable-next-line eqeqeq
 			if ( name == 'false' ) { return false; }
 			var indx,
 				len = ts.parsers.length;
@@ -11558,6 +11556,7 @@ return jQuery;
 				indx = ts.parsers.length,
 				node = false,
 				nodeValue = '',
+				debug = ts.debug(c, 'core'),
 				keepLooking = true;
 			while ( nodeValue === '' && keepLooking ) {
 				rowIndex++;
@@ -11568,7 +11567,7 @@ return jQuery;
 						node = rows[ rowIndex ].cells[ cellIndex ];
 						nodeValue = ts.getElementText( c, node, cellIndex );
 						$node = $( node );
-						if ( c.debug ) {
+						if ( debug ) {
 							console.log( 'Checking if value was empty on row ' + rowIndex + ', column: ' +
 								cellIndex + ': "' + nodeValue + '"' );
 						}
@@ -11650,7 +11649,8 @@ return jQuery;
 				cols, $cells, cell, cacheTime, totalRows, rowData, prevRowData,
 				colMax, span, cacheIndex, hasParser, max, len, index,
 				table = c.table,
-				parsers = c.parsers;
+				parsers = c.parsers,
+				debug = ts.debug(c, 'core');
 			// update tbody variable
 			c.$tbodies = c.$table.children( 'tbody:not(.' + c.cssInfoBlock + ')' );
 			$tbody = typeof $tbodies === 'undefined' ? c.$tbodies : $tbodies,
@@ -11658,9 +11658,9 @@ return jQuery;
 			c.totalRows = 0;
 			// if no parsers found, return - it's an empty table.
 			if ( !parsers ) {
-				return c.debug ? console.warn( 'Warning: *Empty table!* Not building a cache' ) : '';
+				return debug ? console.warn( 'Warning: *Empty table!* Not building a cache' ) : '';
 			}
-			if ( c.debug ) {
+			if ( debug ) {
 				cacheTime = new Date();
 			}
 			// processing icon
@@ -11729,7 +11729,7 @@ return jQuery;
 						cell = $row[ 0 ].cells[ colIndex ];
 						if ( cell && cacheIndex < c.columns ) {
 							hasParser = typeof parsers[ cacheIndex ] !== 'undefined';
-							if ( !hasParser && c.debug ) {
+							if ( !hasParser && debug ) {
 								console.warn( 'No parser found for row: ' + rowIndex + ', column: ' + colIndex +
 									'; cell containing: "' + $(cell).text() + '"; does it have a header?' );
 							}
@@ -11777,7 +11777,7 @@ return jQuery;
 			if ( c.showProcessing ) {
 				ts.isProcessing( table ); // remove processing icon
 			}
-			if ( c.debug ) {
+			if ( debug ) {
 				len = Math.min( 5, c.cache[ 0 ].normalized.length );
 				console[ console.group ? 'group' : 'log' ]( 'Building cache for ' + c.totalRows +
 					' rows (showing ' + len + ' rows in log) and ' + c.columns + ' columns' +
@@ -11808,7 +11808,7 @@ return jQuery;
 				data = { raw : [], parsed: [], $cell: [] },
 				c = table.config;
 			if ( ts.isEmptyObject( c ) ) {
-				if ( c.debug ) {
+				if ( ts.debug(c, 'core') ) {
 					console.warn( 'No cache found - aborting getColumnText function!' );
 				}
 			} else {
@@ -11862,6 +11862,15 @@ return jQuery;
 				css = [ ts.css.sortAsc + ' ' + c.cssAsc, ts.css.sortDesc + ' ' + c.cssDesc ],
 				cssIcon = [ c.cssIconAsc, c.cssIconDesc, c.cssIconNone ],
 				aria = [ 'ascending', 'descending' ],
+				updateColumnSort = function($el, index) {
+					$el
+						.removeClass( none )
+						.addClass( css[ index ] )
+						.attr( 'aria-sort', aria[ index ] )
+						.find( '.' + ts.css.icon )
+						.removeClass( cssIcon[ 2 ] )
+						.addClass( cssIcon[ index ] );
+				},
 				// find the footer
 				$extras = c.$table
 					.find( 'tfoot tr' )
@@ -11893,14 +11902,14 @@ return jQuery;
 				// direction = 2 means reset!
 				if ( list[ indx ][ 1 ] !== 2 ) {
 					// multicolumn sorting updating - see #1005
-					// .not(function(){}) needs jQuery 1.4
-					// filter(function(i, el){}) <- el is undefined in jQuery v1.2.6
+					// .not(function() {}) needs jQuery 1.4
+					// filter(function(i, el) {}) <- el is undefined in jQuery v1.2.6
 					$sorted = c.$headers.filter( function( i ) {
 						// only include headers that are in the sortList (this includes colspans)
 						var include = true,
 							$el = c.$headers.eq( i ),
 							col = parseInt( $el.attr( 'data-column' ), 10 ),
-							end = col + c.$headers[ i ].colSpan;
+							end = col + ts.getClosest( $el, 'th, td' )[0].colSpan;
 						for ( ; col < end; col++ ) {
 							include = include ? include || ts.isValueInArray( col, c.sortList ) > -1 : false;
 						}
@@ -11914,23 +11923,13 @@ return jQuery;
 					if ( $sorted.length ) {
 						for ( column = 0; column < $sorted.length; column++ ) {
 							if ( !$sorted[ column ].sortDisabled ) {
-								$sorted
-									.eq( column )
-									.removeClass( none )
-									.addClass( css[ list[ indx ][ 1 ] ] )
-									.attr( 'aria-sort', aria[ list[ indx ][ 1 ] ] )
-									.find( '.' + ts.css.icon )
-									.removeClass( cssIcon[ 2 ] )
-									.addClass( cssIcon[ list[ indx ][ 1 ] ] );
+								updateColumnSort( $sorted.eq( column ), list[ indx ][ 1 ] );
 							}
 						}
-						// add sorted class to footer & extra headers, if they exist
-						if ( $extras.length ) {
-							$extras
-								.filter( '[data-column="' + list[ indx ][ 0 ] + '"]' )
-								.removeClass( none )
-								.addClass( css[ list[ indx ][ 1 ] ] );
-						}
+					}
+					// add sorted class to footer & extra headers, if they exist
+					if ( $extras.length ) {
+						updateColumnSort( $extras.filter( '[data-column="' + list[ indx ][ 0 ] + '"]' ), list[ indx ][ 1 ] );
 					}
 				}
 			}
@@ -11941,29 +11940,20 @@ return jQuery;
 			}
 		},
 
-		// This function does NOT return closest if the $el matches the selector
 		getClosest : function( $el, selector ) {
-			return $.fn.closest ?
-				$el.closest( selector ) :
-				$el.parents( selector ).filter( ':first' );
-		},
-
-		getHeaderCell : function( $el ) {
 			// jQuery v1.2.6 doesn't have closest()
 			if ( $.fn.closest ) {
-				return $el.closest( 'th, td' );
+				return $el.closest( selector );
 			}
-			return /TH|TD/.test( $el[0].nodeName ) ?
+			return $el.is( selector ) ?
 				$el :
-				$el.parents( 'th, td' ).filter( ':first' );
+				$el.parents( selector ).filter( ':first' );
 		},
 
 		// nextSort (optional), lets you disable next sort text
 		setColumnAriaLabel : function( c, $header, nextSort ) {
 			if ( $header.length ) {
-				var $th = ts.getHeaderCell( $header ),
-					// data-column always stored on the th/td
-					column = parseInt( $th.attr( 'data-column' ), 10 ),
+				var column = parseInt( $header.attr( 'data-column' ), 10 ),
 					vars = c.sortVars[ column ],
 					tmp = $header.hasClass( ts.css.sortAsc ) ?
 						'sortAsc' :
@@ -11978,6 +11968,11 @@ return jQuery;
 					txt += ts.language[ nextSort === 0 ? 'nextAsc' : nextSort === 1 ? 'nextDesc' : 'nextNone' ];
 				}
 				$header.attr( 'aria-label', txt );
+				if (vars.sortedBy) {
+					$header.attr( 'data-sortedBy', vars.sortedBy );
+				} else {
+					$header.removeAttr('data-sortedBy');
+				}
 			}
 		},
 
@@ -12162,7 +12157,7 @@ return jQuery;
 					ts.resortComplete( c, callback );
 				}
 			} else {
-				if ( c.debug ) {
+				if ( ts.debug(c, 'core') ) {
 					console.error( 'updateCell aborted, tbody missing or not within the indicated table' );
 				}
 				c.table.isUpdating = false;
@@ -12181,11 +12176,11 @@ return jQuery;
 			} else if (
 				!$row ||
 				// row is a jQuery object?
-				!( $row instanceof jQuery ) ||
+				!( $row instanceof $ ) ||
 				// row contained in the table?
 				( ts.getClosest( $row, 'table' )[ 0 ] !== c.table )
 			) {
-				if ( c.debug ) {
+				if ( ts.debug(c, 'core') ) {
 					console.error( 'addRows method requires (1) a jQuery selector reference to rows that have already ' +
 						'been added to the table, or (2) row HTML string to be added to a table with only one tbody' );
 				}
@@ -12257,7 +12252,6 @@ return jQuery;
 		appendCache : function( c, init ) {
 			var parsed, totalRows, $tbody, $curTbody, rowIndex, tbodyIndex, appendTime,
 				table = c.table,
-				wo = c.widgetOptions,
 				$tbodies = c.$tbodies,
 				rows = [],
 				cache = c.cache;
@@ -12267,7 +12261,7 @@ return jQuery;
 				return c.appender ? c.appender( table, rows ) :
 					table.isUpdating ? c.$table.triggerHandler( 'updateComplete', table ) : ''; // Fixes #532
 			}
-			if ( c.debug ) {
+			if ( ts.debug(c, 'core') ) {
 				appendTime = new Date();
 			}
 			for ( tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
@@ -12280,7 +12274,7 @@ return jQuery;
 					for ( rowIndex = 0; rowIndex < totalRows; rowIndex++ ) {
 						rows[rows.length] = parsed[ rowIndex ][ c.columns ].$row;
 						// removeRows used by the pager plugin; don't render if using ajax - fixes #411
-						if ( !c.appender || ( c.pager && ( !c.pager.removeRows || !wo.pager_removeRows ) && !c.pager.ajax ) ) {
+						if ( !c.appender || ( c.pager && !c.pager.removeRows && !c.pager.ajax ) ) {
 							$curTbody.append( parsed[ rowIndex ][ c.columns ].$row );
 						}
 					}
@@ -12291,7 +12285,7 @@ return jQuery;
 			if ( c.appender ) {
 				c.appender( table, rows );
 			}
-			if ( c.debug ) {
+			if ( ts.debug(c, 'core') ) {
 				console.log( 'Rebuilt table' + ts.benchmark( appendTime ) );
 			}
 			// apply table widgets; but not before ajax completes
@@ -12322,7 +12316,7 @@ return jQuery;
 		initSort : function( c, cell, event ) {
 			if ( c.table.isUpdating ) {
 				// let any updates complete before initializing a sort
-				return setTimeout( function(){
+				return setTimeout( function() {
 					ts.initSort( c, cell, event );
 				}, 50 );
 			}
@@ -12331,10 +12325,11 @@ return jQuery;
 				notMultiSort = !event[ c.sortMultiSortKey ],
 				table = c.table,
 				len = c.$headers.length,
-				// get current column index; *always* stored on th/td
-				$th = ts.getHeaderCell( $( cell ) ),
-				col = parseInt( $th.attr( 'data-column' ), 10 ),
+				th = ts.getClosest( $( cell ), 'th, td' ),
+				col = parseInt( th.attr( 'data-column' ), 10 ),
+				sortedBy = event.type === 'mouseup' ? 'user' : event.type,
 				order = c.sortVars[ col ].order;
+			th = th[0];
 			// Only call sortStart if sorting is enabled
 			c.$table.triggerHandler( 'sortStart', table );
 			// get current column sort order
@@ -12353,6 +12348,9 @@ return jQuery;
 			}
 			// user only wants to sort on one column
 			if ( notMultiSort ) {
+				$.each( c.sortVars, function( i ) {
+					c.sortVars[ i ].sortedBy = '';
+				});
 				// flush the sort list
 				c.sortList = [];
 				c.last.sortList = [];
@@ -12361,6 +12359,7 @@ return jQuery;
 					for ( indx = 0; indx < arry.length; indx++ ) {
 						if ( arry[ indx ][ 0 ] !== col ) {
 							c.sortList[ c.sortList.length ] = arry[ indx ];
+							c.sortVars[ arry[ indx ][ 0 ] ].sortedBy = 'sortForce';
 						}
 					}
 				}
@@ -12368,12 +12367,14 @@ return jQuery;
 				dir = order[ c.sortVars[ col ].count ];
 				if ( dir < 2 ) {
 					c.sortList[ c.sortList.length ] = [ col, dir ];
+					c.sortVars[ col ].sortedBy = sortedBy;
 					// add other columns if header spans across multiple
-					if ( cell.colSpan > 1 ) {
-						for ( indx = 1; indx < cell.colSpan; indx++ ) {
+					if ( th.colSpan > 1 ) {
+						for ( indx = 1; indx < th.colSpan; indx++ ) {
 							c.sortList[ c.sortList.length ] = [ col + indx, dir ];
 							// update count on columns in colSpan
 							c.sortVars[ col + indx ].count = $.inArray( dir, order );
+							c.sortVars[ col + indx ].sortedBy = sortedBy;
 						}
 					}
 				}
@@ -12385,6 +12386,7 @@ return jQuery;
 				// the user has clicked on an already sorted column
 				if ( ts.isValueInArray( col, c.sortList ) >= 0 ) {
 					// reverse the sorting direction
+					c.sortVars[ col ].sortedBy = sortedBy;
 					for ( indx = 0; indx < c.sortList.length; indx++ ) {
 						tmp = c.sortList[ indx ];
 						if ( tmp[ 0 ] === col ) {
@@ -12399,14 +12401,16 @@ return jQuery;
 				} else {
 					// add column to sort list array
 					dir = order[ c.sortVars[ col ].count ];
+					c.sortVars[ col ].sortedBy = sortedBy;
 					if ( dir < 2 ) {
 						c.sortList[ c.sortList.length ] = [ col, dir ];
 						// add other columns if header spans across multiple
-						if ( cell.colSpan > 1 ) {
-							for ( indx = 1; indx < cell.colSpan; indx++ ) {
+						if ( th.colSpan > 1 ) {
+							for ( indx = 1; indx < th.colSpan; indx++ ) {
 								c.sortList[ c.sortList.length ] = [ col + indx, dir ];
 								// update count on columns in colSpan
 								c.sortVars[ col + indx ].count = $.inArray( dir, order );
+								c.sortVars[ col + indx ].sortedBy = sortedBy;
 							}
 						}
 					}
@@ -12442,6 +12446,7 @@ return jQuery;
 								}
 							}
 							c.sortList[ c.sortList.length ] = [ arry[ indx ][ 0 ], dir ];
+							c.sortVars[ arry[ indx ][ 0 ] ].sortedBy = 'sortAppend';
 						}
 					}
 				}
@@ -12473,7 +12478,7 @@ return jQuery;
 				// empty table - fixes #206/#346
 				return;
 			}
-			if ( c.debug ) { sortTime = new Date(); }
+			if ( ts.debug(c, 'core') ) { sortTime = new Date(); }
 			// cache textSorter to optimize speed
 			if ( typeof textSorter === 'object' ) {
 				colMax = c.columns;
@@ -12527,7 +12532,7 @@ return jQuery;
 								sort = sorter[ col ]( x[ col ], y[ col ], dir, col, table );
 							} else {
 								// fall back to natural sort
-								sort = ts[ 'sortNatural' + ( dir ? 'Asc' : 'Desc' ) ]( a[ col ], b[ col ], col, c );
+								sort = ts[ 'sortNatural' + ( dir ? 'Asc' : 'Desc' ) ]( a[ col ] || '', b[ col ] || '', col, c );
 							}
 						}
 						if ( sort ) { return sort; }
@@ -12535,7 +12540,7 @@ return jQuery;
 					return a[ c.columns ].order - b[ c.columns ].order;
 				});
 			}
-			if ( c.debug ) {
+			if ( ts.debug(c, 'core') ) {
 				console.log( 'Applying sort ' + sortList.toString() + ts.benchmark( sortTime ) );
 			}
 		},
@@ -12573,8 +12578,12 @@ return jQuery;
 		},
 
 		sortOn : function( c, list, callback, init ) {
-			var table = c.table;
+			var indx,
+				table = c.table;
 			c.$table.triggerHandler( 'sortStart', table );
+			for (indx = 0; indx < c.columns; indx++) {
+				c.sortVars[ indx ].sortedBy = ts.isValueInArray( indx, list ) > -1 ? 'sorton' : '';
+			}
 			// update header count index
 			ts.updateHeaderSortCount( c, list );
 			// set css for headers
@@ -12597,13 +12606,14 @@ return jQuery;
 
 		sortReset : function( c, callback ) {
 			c.sortList = [];
-			ts.setHeadersCss( c );
-			ts.multisort( c );
-			ts.appendCache( c );
 			var indx;
 			for (indx = 0; indx < c.columns; indx++) {
 				c.sortVars[ indx ].count = -1;
+				c.sortVars[ indx ].sortedBy = '';
 			}
+			ts.setHeadersCss( c );
+			ts.multisort( c );
+			ts.appendCache( c );
 			if ( $.isFunction( callback ) ) {
 				callback( c.table );
 			}
@@ -12621,20 +12631,20 @@ return jQuery;
 		// Natural sort - https://github.com/overset/javascript-natural-sort (date sorting removed)
 		sortNatural : function( a, b ) {
 			if ( a === b ) { return 0; }
-			a = a.toString();
-			b = b.toString();
+			a = ( a || '' ).toString();
+			b = ( b || '' ).toString();
 			var aNum, bNum, aFloat, bFloat, indx, max,
 				regex = ts.regex;
 			// first try and sort Hex codes
 			if ( regex.hex.test( b ) ) {
-				aNum = parseInt( ( a || '' ).match( regex.hex ), 16 );
-				bNum = parseInt( ( b || '' ).match( regex.hex ), 16 );
+				aNum = parseInt( a.match( regex.hex ), 16 );
+				bNum = parseInt( b.match( regex.hex ), 16 );
 				if ( aNum < bNum ) { return -1; }
 				if ( aNum > bNum ) { return 1; }
 			}
 			// chunk/tokenize
-			aNum = ( a || '' ).replace( regex.chunk, '\\0$1\\0' ).replace( regex.chunks, '' ).split( '\\0' );
-			bNum = ( b || '' ).replace( regex.chunk, '\\0$1\\0' ).replace( regex.chunks, '' ).split( '\\0' );
+			aNum = a.replace( regex.chunk, '\\0$1\\0' ).replace( regex.chunks, '' ).split( '\\0' );
+			bNum = b.replace( regex.chunk, '\\0$1\\0' ).replace( regex.chunks, '' ).split( '\\0' );
 			max = Math.max( aNum.length, bNum.length );
 			// natural sorting through split numeric strings and default strings
 			for ( indx = 0; indx < max; indx++ ) {
@@ -12788,6 +12798,7 @@ return jQuery;
 			var applied, time, name,
 				c = table.config,
 				wo = c.widgetOptions,
+				debug = ts.debug(c, 'core'),
 				widget = ts.getWidgetById( id );
 			if ( widget ) {
 				name = widget.id;
@@ -12796,7 +12807,7 @@ return jQuery;
 				if ( $.inArray( name, c.widgets ) < 0 ) {
 					c.widgets[ c.widgets.length ] = name;
 				}
-				if ( c.debug ) { time = new Date(); }
+				if ( debug ) { time = new Date(); }
 
 				if ( init || !( c.widgetInit[ name ] ) ) {
 					// set init flag first to prevent calling init more than once (e.g. pager)
@@ -12807,7 +12818,7 @@ return jQuery;
 					}
 					if ( typeof widget.init === 'function' ) {
 						applied = true;
-						if ( c.debug ) {
+						if ( debug ) {
 							console[ console.group ? 'group' : 'log' ]( 'Initializing ' + name + ' widget' );
 						}
 						widget.init( table, widget, c, wo );
@@ -12815,12 +12826,12 @@ return jQuery;
 				}
 				if ( !init && typeof widget.format === 'function' ) {
 					applied = true;
-					if ( c.debug ) {
+					if ( debug ) {
 						console[ console.group ? 'group' : 'log' ]( 'Updating ' + name + ' widget' );
 					}
 					widget.format( table, c, wo, false );
 				}
-				if ( c.debug ) {
+				if ( debug ) {
 					if ( applied ) {
 						console.log( 'Completed ' + ( init ? 'initializing ' : 'applying ' ) + name + ' widget' + ts.benchmark( time ) );
 						if ( console.groupEnd ) { console.groupEnd(); }
@@ -12833,12 +12844,13 @@ return jQuery;
 			table = $( table )[ 0 ]; // in case this is called externally
 			var indx, len, names, widget, time,
 				c = table.config,
+				debug = ts.debug(c, 'core'),
 				widgets = [];
 			// prevent numerous consecutive widget applications
 			if ( init !== false && table.hasInitialized && ( table.isApplyingWidgets || table.isUpdating ) ) {
 				return;
 			}
-			if ( c.debug ) { time = new Date(); }
+			if ( debug ) { time = new Date(); }
 			ts.addWidgetFromClass( table );
 			// prevent "tablesorter-ready" from firing multiple times in a row
 			clearTimeout( c.timerReady );
@@ -12857,7 +12869,7 @@ return jQuery;
 						// set priority to 10 if not defined
 						if ( !widget.priority ) { widget.priority = 10; }
 						widgets[ indx ] = widget;
-					} else if ( c.debug ) {
+					} else if ( debug ) {
 						console.warn( '"' + names[ indx ] + '" was enabled, but the widget code has not been loaded!' );
 					}
 				}
@@ -12867,7 +12879,7 @@ return jQuery;
 				});
 				// add/update selected widgets
 				len = widgets.length;
-				if ( c.debug ) {
+				if ( debug ) {
 					console[ console.group ? 'group' : 'log' ]( 'Start ' + ( init ? 'initializing' : 'applying' ) + ' widgets' );
 				}
 				for ( indx = 0; indx < len; indx++ ) {
@@ -12876,7 +12888,7 @@ return jQuery;
 						ts.applyWidgetId( table, widget.id, init );
 					}
 				}
-				if ( c.debug && console.groupEnd ) { console.groupEnd(); }
+				if ( debug && console.groupEnd ) { console.groupEnd(); }
 			}
 			c.timerReady = setTimeout( function() {
 				table.isApplyingWidgets = false;
@@ -12886,7 +12898,7 @@ return jQuery;
 				if ( !init && typeof callback === 'function' ) {
 					callback( table );
 				}
-				if ( c.debug ) {
+				if ( debug ) {
 					widget = c.widgets.length;
 					console.log( 'Completed ' +
 						( init === true ? 'initializing ' : 'applying ' ) + widget +
@@ -12923,7 +12935,7 @@ return jQuery;
 					c.widgets.splice( indx, 1 );
 				}
 				if ( widget && widget.remove ) {
-					if ( c.debug ) {
+					if ( ts.debug(c, 'core') ) {
 						console.log( ( refreshing ? 'Refreshing' : 'Removing' ) + ' "' + name[ index ] + '" widget' );
 					}
 					widget.remove( table, c, c.widgetOptions, refreshing );
@@ -12976,6 +12988,12 @@ return jQuery;
 		// deprecated ts.log
 		log : function() {
 			console.log( arguments );
+		},
+		debug : function(c, name) {
+			return c && (
+				c.debug === true ||
+				typeof c.debug === 'string' && c.debug.indexOf(name) > -1
+			);
 		},
 
 		// $.isEmptyObject from jQuery v1.4
@@ -13172,7 +13190,7 @@ return jQuery;
 				$cells = ( $headers || c.$headers ),
 				// c.$headerIndexed is not defined initially
 				$cell = c.$headerIndexed && c.$headerIndexed[ indx ] ||
-					$cells.filter( '[data-column="' + indx + '"]:last' );
+					$cells.find( '[data-column="' + indx + '"]:last' );
 			if ( typeof obj[ indx ] !== 'undefined' ) {
 				return getCell ? obj[ indx ] : obj[ $cells.index( $cell ) ];
 			}
@@ -13282,7 +13300,7 @@ return jQuery;
 				ignore = 'headers sortForce sortList sortAppend widgets'.split( ' ' ),
 				orig = c.originalSettings;
 			if ( orig ) {
-				if ( c.debug ) {
+				if ( ts.debug(c, 'core') ) {
 					timer = new Date();
 				}
 				for ( setting in orig ) {
@@ -13298,7 +13316,7 @@ return jQuery;
 						}
 					}
 				}
-				if ( c.debug ) {
+				if ( ts.debug(c, 'core') ) {
 					console.log( 'validate options time:' + ts.benchmark( timer ) );
 				}
 			}
@@ -13329,7 +13347,6 @@ return jQuery;
 			var events,
 				$t = $( table ),
 				c = table.config,
-				debug = c.debug,
 				$h = $t.find( 'thead:first' ),
 				$r = $h.find( 'tr.' + ts.css.headerRow ).removeClass( ts.css.headerRow + ' ' + c.cssHeaderRow ),
 				$f = $t.find( 'tfoot:first > tr' ).children( 'th, td' );
@@ -13367,7 +13384,7 @@ return jQuery;
 			if ( typeof callback === 'function' ) {
 				callback( table );
 			}
-			if ( debug ) {
+			if ( ts.debug(c, 'core') ) {
 				console.log( 'tablesorter has been removed' );
 			}
 		}
@@ -13484,7 +13501,7 @@ return jQuery;
 		is : function( str ) {
 			return ts.regex.isoDate.test( str );
 		},
-		format : function( str, table ) {
+		format : function( str ) {
 			var date = str ? new Date( str.replace( ts.regex.dash, '/' ) ) : str;
 			return date instanceof Date && isFinite( date ) ? date.getTime() : str;
 		},
@@ -13527,7 +13544,7 @@ return jQuery;
 			// Jan 01, 2013 12:34:56 PM or 01 Jan 2013
 			return ts.regex.usLongDateTest1.test( str ) || ts.regex.usLongDateTest2.test( str );
 		},
-		format : function( str, table ) {
+		format : function( str ) {
 			var date = str ? new Date( str.replace( ts.regex.dateReplace, '$1 $2' ) ) : str;
 			return date instanceof Date && isFinite( date ) ? date.getTime() : str;
 		},
@@ -13588,7 +13605,7 @@ return jQuery;
 		is : function( str ) {
 			return ts.regex.timeTest.test( str );
 		},
-		format : function( str, table ) {
+		format : function( str ) {
 			// isolate time... ignore month, day and year
 			var temp,
 				timePart = ( str || '' ).match( ts.regex.timeMatch ),
@@ -13655,7 +13672,7 @@ return jQuery;
 			var tbodyIndex, $tbody,
 				$tbodies = c.$tbodies,
 				toRemove = ( wo.zebra || [ 'even', 'odd' ] ).join( ' ' );
-			for ( tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ){
+			for ( tbodyIndex = 0; tbodyIndex < $tbodies.length; tbodyIndex++ ) {
 				$tbody = ts.processTbody( table, $tbodies.eq( tbodyIndex ), true ); // remove tbody
 				$tbody.children().removeClass( toRemove );
 				ts.processTbody( table, $tbody, false ); // restore tbody
@@ -13664,23 +13681,12 @@ return jQuery;
 	});
 
 })( jQuery );
+return jQuery.tablesorter;}));
 
-return jQuery.tablesorter;
-}));
-
-/*! tablesorter (FORK) - updated 09-27-2017 (v2.29.0)*/
+/*! tablesorter (FORK) - updated 2018-08-27 (v2.31.0)*/
 /* Includes widgets ( storage,uitheme,columns,filter,stickyHeaders,resizable,saveSort ) */
-(function(factory) {
-	if (typeof define === 'function' && define.amd) {
-		define(['jquery'], factory);
-	} else if (typeof module === 'object' && typeof module.exports === 'object') {
-		module.exports = factory(require('jquery'));
-	} else {
-		factory(jQuery);
-	}
-}(function(jQuery) {
-
-/*! Widget: storage - updated 4/18/2017 (v2.28.8) */
+(function(factory){if (typeof define === 'function' && define.amd){define(['jquery'], factory);} else if (typeof module === 'object' && typeof module.exports === 'object'){module.exports = factory(require('jquery'));} else {factory(jQuery);}}(function(jQuery) {
+/*! Widget: storage - updated 2018-03-18 (v2.30.0) */
 /*global JSON:false */
 ;(function ($, window, document) {
 	'use strict';
@@ -13726,6 +13732,7 @@ return jQuery.tablesorter;
 			values = {},
 			c = table.config,
 			wo = c && c.widgetOptions,
+			debug = ts.debug(c, 'storage'),
 			storageType = (
 				( options && options.storageType ) || ( wo && wo.storage_storageType )
 			).toString().charAt(0).toLowerCase(),
@@ -13754,14 +13761,12 @@ return jQuery.tablesorter;
 					hasStorage = true;
 					window[storageType].removeItem('_tmptest');
 				} catch (error) {
-					if (c && c.debug) {
-						console.warn( storageType + ' is not supported in this browser' );
-					}
+					console.warn( storageType + ' is not supported in this browser' );
 				}
 			}
 		}
-		if (c.debug) {
-			console.log('Storage widget using', hasStorage ? storageType : 'cookies');
+		if (debug) {
+			console.log('Storage >> Using', hasStorage ? storageType : 'cookies');
 		}
 		// *** get value ***
 		if ($.parseJSON) {
@@ -13797,7 +13802,7 @@ return jQuery.tablesorter;
 
 })(jQuery, window, document);
 
-/*! Widget: uitheme - updated 9/27/2017 (v2.29.0) */
+/*! Widget: uitheme - updated 2018-03-18 (v2.30.0) */
 ;(function ($) {
 	'use strict';
 	var ts = $.tablesorter || {};
@@ -13862,8 +13867,9 @@ return jQuery.tablesorter;
 				theme = c.theme || 'jui',
 				themes = themesAll[theme] || {},
 				remove = $.trim( [ themes.sortNone, themes.sortDesc, themes.sortAsc, themes.active ].join( ' ' ) ),
-				iconRmv = $.trim( [ themes.iconSortNone, themes.iconSortDesc, themes.iconSortAsc ].join( ' ' ) );
-			if (c.debug) { time = new Date(); }
+				iconRmv = $.trim( [ themes.iconSortNone, themes.iconSortDesc, themes.iconSortAsc ].join( ' ' ) ),
+				debug = ts.debug(c, 'uitheme');
+			if (debug) { time = new Date(); }
 			// initialization code - run once
 			if (!$table.hasClass('tablesorter-' + theme) || c.theme !== c.appliedTheme || !wo.uitheme_applied) {
 				wo.uitheme_applied = true;
@@ -13908,7 +13914,7 @@ return jQuery.tablesorter;
 						$(this)[ event.type === 'mouseenter' ? 'addClass' : 'removeClass' ](themes.hover || '');
 					});
 
-				$headers.each(function(){
+				$headers.each(function() {
 					var $this = $(this);
 					if (!$this.find('.' + ts.css.wrapper).length) {
 						// Firefox needs this inner div to position the icon & resizer correctly
@@ -13966,8 +13972,8 @@ return jQuery.tablesorter;
 					}
 				}
 			}
-			if (c.debug) {
-				console.log('Applying ' + theme + ' theme' + ts.benchmark(time));
+			if (debug) {
+				console.log('uitheme >> Applied ' + theme + ' theme' + ts.benchmark(time));
 			}
 		},
 		remove: function(table, c, wo, refreshing) {
@@ -14072,7 +14078,7 @@ return jQuery.tablesorter;
 
 })(jQuery);
 
-/*! Widget: filter - updated 7/4/2017 (v2.28.15) *//*
+/*! Widget: filter - updated 2018-03-18 (v2.30.0) *//*
  * Requires tablesorter v2.8+ and jQuery 1.7+
  * by Rob Garrison
  */
@@ -14114,6 +14120,7 @@ return jQuery.tablesorter;
 			filter_excludeFilter : {},    // filters to exclude, per column
 			filter_external      : '',    // jQuery selector string ( or jQuery object ) of external filters
 			filter_filteredRow   : 'filtered', // class added to filtered rows; define in css with "display:none" to hide the filtered-out rows
+			filter_filterLabel   : 'Filter "{{label}}" column by...', // Aria-label added to filter input/select; see #1495
 			filter_formatter     : null,  // add custom filter elements to the filter row
 			filter_functions     : null,  // add custom filter functions using this option
 			filter_hideEmpty     : true,  // hide filter row when table is empty
@@ -14353,6 +14360,7 @@ return jQuery.tablesorter;
 				if ( tsfRegex.exact.test( data.iFilter ) ) {
 					var txt = data.iFilter.replace( tsfRegex.exact, '' ),
 						filter = tsf.parseFilter( c, txt, data ) || '';
+					// eslint-disable-next-line eqeqeq
 					return data.anyMatch ? $.inArray( filter, data.rowArray ) >= 0 : filter == data.iExact;
 				}
 				return null;
@@ -14440,7 +14448,12 @@ return jQuery.tablesorter;
 
 			var options, string, txt, $header, column, val, fxn, noSelect,
 				c = table.config,
-				wo = c.widgetOptions;
+				wo = c.widgetOptions,
+				processStr = function(prefix, str, suffix) {
+					str = str.trim();
+					// don't include prefix/suffix if str is empty
+					return str === '' ? '' : (prefix || '') + str + (suffix || '');
+				};
 			c.$table.addClass( 'hasFilters' );
 			c.lastSearch = [];
 
@@ -14456,13 +14469,13 @@ return jQuery.tablesorter;
 			$.extend( tsfRegex, {
 				child : new RegExp( c.cssChildRow ),
 				filtered : new RegExp( wo.filter_filteredRow ),
-				alreadyFiltered : new RegExp( '(\\s+(' + ts.language.or + '|-|' + ts.language.to + ')\\s+)', 'i' ),
-				toTest : new RegExp( '\\s+(-|' + ts.language.to + ')\\s+', 'i' ),
-				toSplit : new RegExp( '(?:\\s+(?:-|' + ts.language.to + ')\\s+)', 'gi' ),
-				andTest : new RegExp( '\\s+(' + ts.language.and + '|&&)\\s+', 'i' ),
-				andSplit : new RegExp( '(?:\\s+(?:' + ts.language.and + '|&&)\\s+)', 'gi' ),
-				orTest : new RegExp( '(\\||\\s+' + ts.language.or + '\\s+)', 'i' ),
-				orSplit : new RegExp( '(?:\\s+(?:' + ts.language.or + ')\\s+|\\|)', 'gi' ),
+				alreadyFiltered : new RegExp( '(\\s+(-' + processStr('|', ts.language.or) + processStr('|', ts.language.to) + ')\\s+)', 'i' ),
+				toTest : new RegExp( '\\s+(-' + processStr('|', ts.language.to) + ')\\s+', 'i' ),
+				toSplit : new RegExp( '(?:\\s+(?:-' + processStr('|', ts.language.to) + ')\\s+)', 'gi' ),
+				andTest : new RegExp( '\\s+(' + processStr('', ts.language.and, '|') + '&&)\\s+', 'i' ),
+				andSplit : new RegExp( '(?:\\s+(?:' + processStr('', ts.language.and, '|') + '&&)\\s+)', 'gi' ),
+				orTest : new RegExp( '(\\|' + processStr('|\\s+', ts.language.or, '\\s+') + ')', 'i' ),
+				orSplit : new RegExp( '(?:\\|' + processStr('|\\s+(?:', ts.language.or, ')\\s+') + ')', 'gi' ),
 				iQuery : new RegExp( val, 'i' ),
 				igQuery : new RegExp( val, 'ig' ),
 				operTest : /^[<>]=?/,
@@ -14521,7 +14534,7 @@ return jQuery.tablesorter;
 						c.lastCombinedFilter = null;
 						c.lastSearch = [];
 						// update filterFormatters after update (& small delay) - Fixes #1237
-						setTimeout(function(){
+						setTimeout(function() {
 							c.$table.triggerHandler( 'filterFomatterUpdate' );
 						}, 100);
 					}
@@ -14615,7 +14628,7 @@ return jQuery.tablesorter;
 
 			// show processing icon
 			if ( c.showProcessing ) {
-				txt = 'filterStart filterEnd '.split( ' ' ).join( c.namespace + 'filter ' );
+				txt = 'filterStart filterEnd '.split( ' ' ).join( c.namespace + 'filter-sp ' );
 				c.$table
 					.unbind( txt.replace( ts.regex.spaces, ' ' ) )
 					.bind( txt, function( event, columns ) {
@@ -14694,6 +14707,9 @@ return jQuery.tablesorter;
 					c.lastSearch = c.$table.data( 'lastSearch' );
 					c.$table.triggerHandler( 'filterInit', c );
 					tsf.findRows( c.table, c.lastSearch || [] );
+					if (ts.debug(c, 'filter')) {
+						console.log('Filter >> Widget initialized');
+					}
 				};
 			if ( $.isEmptyObject( wo.filter_formatter ) ) {
 				completed();
@@ -14770,7 +14786,7 @@ return jQuery.tablesorter;
 				cellFilter = wo.filter_cellFilter,
 				columns = c.columns,
 				arry = $.isArray( cellFilter ),
-				buildFilter = '<tr role="row" class="' + tscss.filterRow + ' ' + c.cssIgnoreRow + '">';
+				buildFilter = '<tr role="search" class="' + tscss.filterRow + ' ' + c.cssIgnoreRow + '">';
 			for ( column = 0; column < columns; column++ ) {
 				if ( c.$headerIndexed[ column ].length ) {
 					// account for entire column set with colspan. See #1047
@@ -14839,7 +14855,22 @@ return jQuery.tablesorter;
 							( typeof wo.filter_cssFilter[column] !== 'undefined' ? wo.filter_cssFilter[column] || '' : '' ) :
 							wo.filter_cssFilter ) || '';
 						// copy data-column from table cell (it will include colspan)
-						buildFilter.addClass( tscss.filter + ' ' + name ).attr( 'data-column', $filter.attr( 'data-column' ) );
+						buildFilter.addClass( tscss.filter + ' ' + name );
+						name = wo.filter_filterLabel;
+						tmp = name.match(/{{([^}]+?)}}/g);
+						if (!tmp) {
+							tmp = [ '{{label}}' ];
+						}
+						$.each(tmp, function(indx, attr) {
+							var regex = new RegExp(attr, 'g'),
+								data = $header.attr('data-' + attr.replace(/{{|}}/g, '')),
+								text = typeof data === 'undefined' ? $header.text() : data;
+							name = name.replace( regex, $.trim( text ) );
+						});
+						buildFilter.attr({
+							'data-column': $filter.attr( 'data-column' ),
+							'aria-label': name
+						});
 						if ( disabled ) {
 							buildFilter.attr( 'placeholder', '' ).addClass( tscss.filterDisabled )[0].disabled = true;
 						}
@@ -15189,6 +15220,7 @@ return jQuery.tablesorter;
 				if ( $.inArray( ffxn, vars.excludeMatch ) < 0 && matches === null ) {
 					matches = tsf.types[ffxn]( c, data, vars );
 					if ( matches !== null ) {
+						data.matchedOn = ffxn;
 						filterMatched = matches;
 					}
 				}
@@ -15236,6 +15268,7 @@ return jQuery.tablesorter;
 					tsf.multipleColumns( c, wo.filter_$anyMatch ) :
 					[];
 			data.$cells = data.$row.children();
+			data.matchedOn = null;
 			if ( data.anyMatchFlag && columnIndex.length > 1 || ( data.anyMatchFilter && !hasAnyMatchInput ) ) {
 				data.anyMatch = true;
 				data.isMatch = true;
@@ -15337,7 +15370,9 @@ return jQuery.tablesorter;
 						// cycle through the different filters
 						// filters return a boolean or null if nothing matches
 						filterMatched = tsf.processTypes( c, data, vars );
-						if ( filterMatched !== null ) {
+						// select with exact match; ignore "and" or "or" within the text; fixes #1486
+						txt = fxn === true && (data.matchedOn === 'and' || data.matchedOn === 'or');
+						if ( filterMatched !== null && !txt) {
 							result = filterMatched;
 						// Look for match, and add child row data for matching
 						} else {
@@ -15375,6 +15410,7 @@ return jQuery.tablesorter;
 				storedFilters = $.extend( [], filters ),
 				c = table.config,
 				wo = c.widgetOptions,
+				debug = ts.debug(c, 'filter'),
 				// data object passed to filters; anyMatch is a flag for the filters
 				data = {
 					anyMatch: false,
@@ -15391,7 +15427,6 @@ return jQuery.tablesorter;
 					defaultColFilter : [],
 					defaultAnyFilter : ts.getColumnData( table, wo.filter_defaultFilter, c.columns, true ) || ''
 				};
-
 			// parse columns after formatter, in case the class is added at that point
 			data.parsed = [];
 			for ( columnIndex = 0; columnIndex < c.columns; columnIndex++ ) {
@@ -15413,8 +15448,8 @@ return jQuery.tablesorter;
 					( ts.getColumnData( table, wo.filter_excludeFilter, columnIndex, true ) || '' ).split( /\s+/ );
 			}
 
-			if ( c.debug ) {
-				console.log( 'Filter: Starting filter widget search', filters );
+			if ( debug ) {
+				console.log( 'Filter >> Starting filter widget search', filters );
 				time = new Date();
 			}
 			// filtered rows count
@@ -15512,8 +15547,8 @@ return jQuery.tablesorter;
 					notFiltered = $rows.not( '.' + wo.filter_filteredRow ).length;
 					// can't search when all rows are hidden - this happens when looking for exact matches
 					if ( searchFiltered && notFiltered === 0 ) { searchFiltered = false; }
-					if ( c.debug ) {
-						console.log( 'Filter: Searching through ' +
+					if ( debug ) {
+						console.log( 'Filter >> Searching through ' +
 							( searchFiltered && notFiltered < len ? notFiltered : 'all' ) + ' rows' );
 					}
 					if ( data.anyMatchFlag ) {
@@ -15616,8 +15651,8 @@ return jQuery.tablesorter;
 			if ( wo.filter_saveFilters && ts.storage ) {
 				ts.storage( table, 'tablesorter-filters', tsf.processFilters( storedFilters, true ) );
 			}
-			if ( c.debug ) {
-				console.log( 'Completed filter widget search' + ts.benchmark(time) );
+			if ( debug ) {
+				console.log( 'Filter >> Completed search' + ts.benchmark(time) );
 			}
 			if ( wo.filter_initialized ) {
 				c.$table.triggerHandler( 'filterBeforeEnd', c );
@@ -15832,13 +15867,13 @@ return jQuery.tablesorter;
 						options += '<option';
 						for ( val in option ) {
 							if ( option.hasOwnProperty( val ) && val !== 'text' ) {
-								options += ' ' + val + '="' + option[ val ] + '"';
+								options += ' ' + val + '="' + option[ val ].replace( tsfRegex.quote, '&quot;' ) + '"';
 							}
 						}
 						if ( !option.value ) {
-							options += ' value="' + option.text + '"';
+							options += ' value="' + option.text.replace( tsfRegex.quote, '&quot;' ) + '"';
 						}
-						options += '>' + option.text + '</option>';
+						options += '>' + option.text.replace( tsfRegex.quote, '&quot;' ) + '</option>';
 						// above code is needed in jQuery < v1.8
 
 						// make sure we don't turn an object into a string (objects without a "text" property)
@@ -16092,7 +16127,7 @@ return jQuery.tablesorter;
 			var index, len, $t,
 				$table = c.$table,
 				// add position: relative to attach element, hopefully it won't cause trouble.
-				$attach = $(wo.stickyHeaders_attachTo),
+				$attach = $(wo.stickyHeaders_attachTo || wo.stickyHeaders_appendTo),
 				namespace = c.namespace + 'stickyheaders ',
 				// element to watch for the scroll event
 				$yScroll = $(wo.stickyHeaders_yScroll || wo.stickyHeaders_attachTo || window),
@@ -16122,7 +16157,7 @@ return jQuery.tablesorter;
 				$stickyThead = $stickyTable.children('thead:first'),
 				$stickyCells,
 				laststate = '',
-				setWidth = function($orig, $clone){
+				setWidth = function($orig, $clone) {
 					var index, width, border, $cell, $this,
 						$cells = $orig.filter(':visible'),
 						len = $cells.length;
@@ -16152,7 +16187,10 @@ return jQuery.tablesorter;
 						});
 					}
 				},
-				getLeftPosition = function() {
+				getLeftPosition = function(yWindow) {
+					if (yWindow === false && $nestedSticky.length) {
+						return $table.position().left;
+					}
 					return $attach.length ?
 						parseInt($attach.css('padding-left'), 10) || 0 :
 						$table.offset().left - parseInt($table.css('margin-left'), 10) - $(window).scrollLeft();
@@ -16173,9 +16211,11 @@ return jQuery.tablesorter;
 						offset = $table.offset(),
 						stickyOffset = getStickyOffset(c, wo),
 						yWindow = $.isWindow( $yScroll[0] ), // $.isWindow needs jQuery 1.4.3
-						attachTop = $attach.length ?
-							( yWindow ? $yScroll.scrollTop() : $yScroll.offset().top ) :
-							$yScroll.scrollTop(),
+						yScroll = yWindow ?
+							$yScroll.scrollTop() :
+							// use parent sticky position if nested AND inside of a scrollable element - see #1512
+							$nestedSticky.length ? parseInt($nestedSticky[0].style.top, 10) : $yScroll.offset().top,
+						attachTop = $attach.length ? yScroll : $yScroll.scrollTop(),
 						captionHeight = wo.stickyHeaders_includeCaption ? 0 : $table.children( 'caption' ).height() || 0,
 						scrollTop = attachTop + stickyOffset + nestedStickyTop - captionHeight,
 						tableHeight = $table.height() - ($stickyWrap.height() + ($tfoot.height() || 0)) - captionHeight,
@@ -16189,12 +16229,14 @@ return jQuery.tablesorter;
 						cssSettings.top = yWindow ? scrollTop - $attach.offset().top : $attach.scrollTop();
 					}
 					// adjust when scrolling horizontally - fixes issue #143
-					tmp = getLeftPosition();
+					tmp = getLeftPosition(yWindow);
 					if (tmp !== parseInt($stickyWrap.css('left'), 10)) {
 						needsUpdating = true;
 						cssSettings.left = tmp;
 					}
-					cssSettings.top = ( cssSettings.top || 0 ) + stickyOffset + nestedStickyTop;
+					cssSettings.top = ( cssSettings.top || 0 ) +
+						// If nested AND inside of a scrollable element, only add parent sticky height
+						(!yWindow && $nestedSticky.length ? $nestedSticky.height() : stickyOffset + nestedStickyTop);
 					if (needsUpdating) {
 						$stickyWrap
 							.removeClass( ts.css.stickyVis + ' ' + ts.css.stickyHide )
@@ -16215,8 +16257,8 @@ return jQuery.tablesorter;
 			if ($stickyTable.attr('id')) { $stickyTable[0].id += wo.stickyHeaders_cloneId; }
 			// clear out cloned table, except for sticky header
 			// include caption & filter row (fixes #126 & #249) - don't remove cells to get correct cell indexing
-			$stickyTable.find('thead:gt(0), tr.sticky-false').hide();
-			$stickyTable.find('tbody, tfoot').remove();
+			$stickyTable.find('> thead:gt(0), tr.sticky-false').hide();
+			$stickyTable.find('> tbody, > tfoot').remove();
 			$stickyTable.find('caption').toggle(wo.stickyHeaders_includeCaption);
 			// issue #172 - find td/th in sticky header
 			$stickyCells = $stickyThead.children().children();
@@ -16248,7 +16290,6 @@ return jQuery.tablesorter;
 					c.onRenderHeader.apply( $t.eq( index ), [ index, c, $stickyTable ] );
 				}
 			}
-
 			// make it sticky!
 			$xScroll.add($yScroll)
 				.unbind( ('scroll resize '.split(' ').join( namespace )).replace(/\s+/g, ' ') )
@@ -16257,7 +16298,7 @@ return jQuery.tablesorter;
 				});
 			c.$table
 				.unbind('stickyHeadersUpdate' + namespace)
-				.bind('stickyHeadersUpdate' + namespace, function(){
+				.bind('stickyHeadersUpdate' + namespace, function() {
 					scrollSticky( true );
 				});
 
@@ -16319,7 +16360,7 @@ return jQuery.tablesorter;
 
 })(jQuery, window);
 
-/*! Widget: resizable - updated 9/27/2017 (v2.29.0) */
+/*! Widget: resizable - updated 2018-03-26 (v2.30.2) */
 /*jshint browser:true, jquery:true, unused:false */
 ;(function ($, window) {
 	'use strict';
@@ -16333,7 +16374,7 @@ return jQuery.tablesorter;
 	});
 
 	// Add extra scroller css
-	$(function(){
+	$(function() {
 		var s = '<style>' +
 			'body.' + ts.css.resizableNoSelect + ' { -ms-user-select: none; -moz-user-select: -moz-none;' +
 				'-khtml-user-select: none; -webkit-user-select: none; user-select: none; }' +
@@ -16478,7 +16519,7 @@ return jQuery.tablesorter;
 
 			if ( ts.hasWidget( c.table, 'scroller' ) ) {
 				tableHeight = 0;
-				c.$table.closest( '.' + ts.css.scrollerWrap ).children().each(function(){
+				c.$table.closest( '.' + ts.css.scrollerWrap ).children().each(function() {
 					var $this = $(this);
 					// center table has a max-height set
 					tableHeight += $this.filter('[style*="height"]').length ? $this.height() : $this.children('table').height();
@@ -16489,14 +16530,18 @@ return jQuery.tablesorter;
 				tableHeight -= c.$table.children('tfoot').height();
 			}
 			// subtract out table left position from resizable handles. Fixes #864
-			startPosition = c.$table.position().left;
+			// jQuery v3.3.0+ appears to include the start position with the $header.position().left; see #1544
+			startPosition = parseFloat($.fn.jquery) >= 3.3 ? 0 : c.$table.position().left;
 			$handles.each( function() {
 				var $this = $(this),
 					column = parseInt( $this.attr( 'data-column' ), 10 ),
 					columns = c.columns - 1,
 					$header = $this.data( 'header' );
 				if ( !$header ) { return; } // see #859
-				if ( !$header.is(':visible') ) {
+				if (
+					!$header.is(':visible') ||
+					( !wo.resizable_addLastColumn && ts.resizable.checkVisibleColumns(c, column) )
+				) {
 					$this.hide();
 				} else if ( column < columns || column === columns && wo.resizable_addLastColumn ) {
 					$this.css({
@@ -16506,6 +16551,16 @@ return jQuery.tablesorter;
 					});
 				}
 			});
+		},
+
+		// Fixes #1485
+		checkVisibleColumns: function( c, column ) {
+			var i,
+				len = 0;
+			for ( i = column + 1; i < c.columns; i++ ) {
+				len += c.$headerIndexed[i].is( ':visible' ) ? 1 : 0;
+			}
+			return len === 0;
 		},
 
 		// prevent text selection while dragging resize bar
@@ -16687,7 +16742,7 @@ return jQuery.tablesorter;
 	});
 
 	ts.resizableReset = function( table, refreshing ) {
-		$( table ).each(function(){
+		$( table ).each(function() {
 			var index, $t,
 				c = this.config,
 				wo = c && c.widgetOptions,
@@ -16697,7 +16752,7 @@ return jQuery.tablesorter;
 				if ( vars.overflow && vars.tableWidth ) {
 					ts.resizable.setWidth( c.$table, vars.tableWidth, true );
 					if ( vars.useStorage ) {
-						ts.storage( table, 'tablesorter-table-resized-width', 'auto' );
+						ts.storage( table, 'tablesorter-table-resized-width', vars.tableWidth );
 					}
 				}
 				for ( index = 0; index < c.columns; index++ ) {
@@ -16713,7 +16768,7 @@ return jQuery.tablesorter;
 				// reset stickyHeader widths
 				c.$table.triggerHandler( 'stickyHeadersUpdate' );
 				if ( ts.storage && !refreshing ) {
-					ts.storage( this, ts.css.resizableStorage, {} );
+					ts.storage( this, ts.css.resizableStorage, [] );
 				}
 			}
 		});
@@ -16721,13 +16776,22 @@ return jQuery.tablesorter;
 
 })( jQuery, window );
 
-/*! Widget: saveSort - updated 10/31/2015 (v2.24.0) *//*
+/*! Widget: saveSort - updated 2018-03-19 (v2.30.1) *//*
 * Requires tablesorter v2.16+
 * by Rob Garrison
 */
 ;(function ($) {
 	'use strict';
 	var ts = $.tablesorter || {};
+
+	function getStoredSortList(c) {
+		var stored = ts.storage( c.table, 'tablesorter-savesort' );
+		return (stored && stored.hasOwnProperty('sortList') && $.isArray(stored.sortList)) ? stored.sortList : [];
+	}
+
+	function sortListChanged(c, sortList) {
+		return (sortList || getStoredSortList(c)).join(',') !== c.sortList.join(',');
+	}
 
 	// this widget saves the last sort only if the
 	// saveSort widget option is true AND the
@@ -16744,18 +16808,19 @@ return jQuery.tablesorter;
 			thisWidget.format(table, c, wo, true);
 		},
 		format: function(table, c, wo, init) {
-			var stored, time,
+			var time,
 				$table = c.$table,
 				saveSort = wo.saveSort !== false, // make saveSort active/inactive; default to true
-				sortList = { 'sortList' : c.sortList };
-			if (c.debug) {
+				sortList = { 'sortList' : c.sortList },
+				debug = ts.debug(c, 'saveSort');
+			if (debug) {
 				time = new Date();
 			}
 			if ($table.hasClass('hasSaveSort')) {
-				if (saveSort && table.hasInitialized && ts.storage) {
+				if (saveSort && table.hasInitialized && ts.storage && sortListChanged(c)) {
 					ts.storage( table, 'tablesorter-savesort', sortList );
-					if (c.debug) {
-						console.log('saveSort widget: Saving last sort: ' + c.sortList + ts.benchmark(time));
+					if (debug) {
+						console.log('saveSort >> Saving last sort: ' + c.sortList + ts.benchmark(time));
 					}
 				}
 			} else {
@@ -16764,10 +16829,9 @@ return jQuery.tablesorter;
 				sortList = '';
 				// get data
 				if (ts.storage) {
-					stored = ts.storage( table, 'tablesorter-savesort' );
-					sortList = (stored && stored.hasOwnProperty('sortList') && $.isArray(stored.sortList)) ? stored.sortList : '';
-					if (c.debug) {
-						console.log('saveSort: Last sort loaded: "' + sortList + '"' + ts.benchmark(time));
+					sortList = getStoredSortList(c);
+					if (debug) {
+						console.log('saveSort >> Last sort loaded: "' + sortList + '"' + ts.benchmark(time));
 					}
 					$table.bind('saveSortReset', function(event) {
 						event.stopPropagation();
@@ -16780,7 +16844,9 @@ return jQuery.tablesorter;
 					c.sortList = sortList;
 				} else if (table.hasInitialized && sortList && sortList.length > 0) {
 					// update sort change
-					ts.sortOn( c, sortList );
+					if (sortListChanged(c, sortList)) {
+						ts.sortOn(c, sortList);
+					}
 				}
 			}
 		},
@@ -16792,16 +16858,20 @@ return jQuery.tablesorter;
 	});
 
 })(jQuery);
+return jQuery.tablesorter;}));
 
-return jQuery.tablesorter;
-}));
+(function(factory){if (typeof define === 'function' && define.amd){define(['jquery'], factory);} else if (typeof module === 'object' && typeof module.exports === 'object'){module.exports = factory(require('jquery'));} else {factory(jQuery);}}(function(jQuery){
 
 /*!
 * tablesorter (FORK) pager plugin
-* updated 4/18/2017 (v2.28.8)
+* updated 2018-08-27 (v2.31.0)
 */
-!function(e){"use strict";var t=e.tablesorter;e.extend({tablesorterPager:new function(){this.defaults={container:null,ajaxUrl:null,customAjaxUrl:function(e,t){return t},ajaxError:null,ajaxObject:{dataType:"json"},processAjaxOnInit:!0,ajaxProcessing:function(e){return[0,[],null]},output:"{startRow} to {endRow} of {totalRows} rows",updateArrows:!0,page:0,pageReset:0,size:10,maxOptionSize:20,savePages:!0,storageKey:"tablesorter-pager",fixedHeight:!1,countChildRows:!1,removeRows:!1,cssFirst:".first",cssPrev:".prev",cssNext:".next",cssLast:".last",cssGoto:".gotoPage",cssPageDisplay:".pagedisplay",cssPageSize:".pagesize",cssErrorRow:"tablesorter-errorRow",cssDisabled:"disabled",totalRows:0,totalPages:0,filteredRows:0,filteredPages:0,ajaxCounter:0,currentFilters:[],startRow:0,endRow:0,$size:null,last:{}};var a="filterInit filterStart filterEnd sortEnd disablePager enablePager destroyPager updateComplete pageSize pageSet pageAndSize pagerUpdate refreshComplete ",i=this,s=function(e,t,a){var i,s="addClass",r="removeClass",o=t.cssDisabled,n=!!a,l=n||0===t.page,g=z(e,t),c=n||t.page===g-1||0===g;t.updateArrows&&((i=t.$container.find(t.cssFirst+","+t.cssPrev))[l?s:r](o),i.each(function(){this.ariaDisabled=l}),(i=t.$container.find(t.cssNext+","+t.cssLast))[c?s:r](o),i.each(function(){this.ariaDisabled=c}))},r=function(e,a){var i,s,r,o=e.config,n=o.$table.hasClass("hasFilters");if(n&&!a.ajax)if(t.isEmptyObject(o.cache))a.filteredRows=a.totalRows=o.$tbodies.eq(0).children("tr").not(a.countChildRows?"":"."+o.cssChildRow).length;else for(a.filteredRows=0,r=(i=o.cache[0].normalized).length,s=0;s<r;s++)a.filteredRows+=a.regexRows.test(i[s][o.columns].$row[0].className)?0:1;else n||(a.filteredRows=a.totalRows)},o=function(a,i,o){if(!i.initializing){var g,c,d,p,f,u,h,w,b=a.config,R=b.namespace+"pager",P=j(i,i.size,"get");if("all"===P&&(P=i.totalRows),i.countChildRows&&(c[c.length]=b.cssChildRow),i.totalPages=Math.ceil(i.totalRows/P),b.totalRows=i.totalRows,x(a,i),r(a,i),b.filteredRows=i.filteredRows,i.filteredPages=Math.ceil(i.filteredRows/P)||0,z(a,i)>=0){if(c=P*i.page>i.filteredRows&&o,i.page=c?i.pageReset||0:i.page,i.startRow=c?P*i.page+1:0===i.filteredRows?0:P*i.page+1,i.endRow=Math.min(i.filteredRows,i.totalRows,P*(i.page+1)),d=i.$container.find(i.cssPageDisplay),"function"==typeof i.output?g=i.output(a,i):(w=d.attr("data-pager-output"+(i.filteredRows<i.totalRows?"-filtered":""))||i.output,g=(i.ajaxData&&i.ajaxData.output?i.ajaxData.output||w:w).replace(/\{page([\-+]\d+)?\}/gi,function(e,t){return i.totalPages?i.page+(t?parseInt(t,10):1):0}).replace(/\{\w+(\s*:\s*\w+)?\}/gi,function(e){var t,a,s=e.replace(/[{}\s]/g,""),r=s.split(":"),o=i.ajaxData,n=/(rows?|pages?)$/i.test(s)?0:"";return/(startRow|page)/.test(r[0])&&"input"===r[1]?(t=(""+("page"===r[0]?i.totalPages:i.totalRows)).length,a="page"===r[0]?i.page+1:i.startRow,'<input type="text" class="ts-'+r[0]+'" style="max-width:'+t+'em" value="'+a+'"/>'):r.length>1&&o&&o[r[0]]?o[r[0]][r[1]]:i[s]||(o?o[s]:n)||n})),(p=i.$container.find(i.cssGoto)).length){for(c="",u=(h=n(a,i)).length,f=0;f<u;f++)c+='<option value="'+h[f]+'">'+h[f]+"</option>";p.html(c).val(i.page+1)}d.length&&(d["INPUT"===d[0].nodeName?"val":"html"](g),d.find(".ts-startRow, .ts-page").unbind("change"+R).bind("change"+R,function(){var t=e(this).val(),a=e(this).hasClass("ts-startRow")?Math.floor(t/P)+1:t;b.$table.triggerHandler("pageSet"+R,[a])}))}s(a,i),l(a,i),i.initialized&&!1!==o&&(b.debug&&console.log("Pager: Triggering pagerComplete"),b.$table.triggerHandler("pagerComplete",i),i.savePages&&t.storage&&t.storage(a,i.storageKey,{page:i.page,size:P===i.totalRows?"all":P}))}},n=function(t,a){var i,s,r,o,n,l,g=z(t,a)||1,c=5*Math.ceil(g/a.maxOptionSize/5),d=g>a.maxOptionSize,p=a.page+1,f=c,u=g-c,h=[1];for(i=d?c:1;i<=g;)h[h.length]=i,i+=d?c:1;if(h[h.length]=g,d){for(r=[],(f=p-(s=Math.max(Math.floor(a.maxOptionSize/c)-1,5)))<1&&(f=1),(u=p+s)>g&&(u=g),i=f;i<=u;i++)r[r.length]=i;(n=(h=e.grep(h,function(t,a){return e.inArray(t,h)===a})).length)-(l=r.length)>c/2&&n+l>a.maxOptionSize&&(o=Math.floor(n/2)-Math.floor(l/2),Array.prototype.splice.apply(h,[o,l])),h=h.concat(r)}return h=e.grep(h,function(t,a){return e.inArray(t,h)===a}).sort(function(e,t){return e-t})},l=function(t,a){var i,s,r,o=t.config,n=o.$tbodies.eq(0);n.find("tr.pagerSavedHeightSpacer").remove(),a.fixedHeight&&!a.isDisabled&&(s=e.data(t,"pagerSavedHeight"))&&(r=0,e(t).css("border-spacing").split(" ").length>1&&(r=e(t).css("border-spacing").split(" ")[1].replace(/[^-\d\.]/g,"")),(i=s-n.height()+r*a.size-r)>5&&e.data(t,"pagerLastSize")===a.size&&n.children("tr:visible").length<("all"===a.size?a.totalRows:a.size)&&n.append('<tr class="pagerSavedHeightSpacer '+o.selectorRemove.slice(1)+'" style="height:'+i+'px;"></tr>'))},g=function(t,a){var i,s=t.config,r=s.$tbodies.eq(0);r.find("tr.pagerSavedHeightSpacer").remove(),r.children("tr:visible").length||r.append('<tr class="pagerSavedHeightSpacer '+s.selectorRemove.slice(1)+'"><td>&nbsp</td></tr>'),i=r.children("tr").eq(0).height()*("all"===a.size?a.totalRows:a.size),e.data(t,"pagerSavedHeight",i),l(t,a),e.data(t,"pagerLastSize",a.size)},c=function(e,a){if(!a.ajaxUrl){var i,s=0,r=e.config,o=r.$tbodies.eq(0).children("tr"),n=o.length,l="all"===a.size?a.totalRows:a.size,g=a.page*l,c=g+l,d=0,p=0;for(a.cacheIndex=[],i=0;i<n;i++)a.regexFiltered.test(o[i].className)||(p===g&&o[i].className.match(r.cssChildRow)?o[i].style.display="none":(o[i].style.display=p>=g&&p<c?"":"none",d!==p&&p>=g&&p<c&&(a.cacheIndex[a.cacheIndex.length]=i,d=p),(p+=o[i].className.match(r.cssChildRow+"|"+r.selectorRemove.slice(1))&&!a.countChildRows?0:1)===c&&"none"!==o[i].style.display&&o[i].className.match(t.css.cssHasChild)&&(s=i)));if(s>0&&o[s].className.match(t.css.cssHasChild))for(;++s<n&&o[s].className.match(r.cssChildRow);)o[s].style.display=""}},d=function(t,a){a.size=j(a,a.$container.find(a.cssPageSize).val(),"get"),P(t,a.size,a),s(t,a),a.removeRows||(c(t,a),e(t).bind("sortEnd filterEnd ".split(" ").join(t.config.namespace+"pager "),function(){c(t,a)}))},p=function(a,i,s,r,n,l){if("function"==typeof s.ajaxProcessing){i.config.$tbodies.eq(0).empty();var g,c,d,p,f,u,h,w,b,R,z,x,P,v,m,y=i.config,C=y.$table,$="",I=s.ajaxProcessing(a,i,r)||[0,[]];C.find("thead th").length;if(t.showError(i),l)y.debug&&console.error("Pager: >> Ajax Error",r,n,l),t.showError(i,r,n,l),y.$tbodies.eq(0).children("tr").detach(),s.totalRows=0;else{if(e.isArray(I)?(P=I[(d=isNaN(I[0])&&!isNaN(I[1]))?1:0],s.totalRows=isNaN(P)?s.totalRows||0:P,y.totalRows=y.filteredRows=s.filteredRows=s.totalRows,z=0===s.totalRows?[]:I[d?0:1]||[],R=I[2]):(s.ajaxData=I,y.totalRows=s.totalRows=I.total,y.filteredRows=s.filteredRows=void 0!==I.filteredRows?I.filteredRows:I.total,R=I.headers,z=I.rows||[]),x=z&&z.length,z instanceof jQuery)s.processAjaxOnInit&&(y.$tbodies.eq(0).empty(),y.$tbodies.eq(0).append(z));else if(x){for(g=0;g<x;g++){for($+="<tr>",c=0;c<z[g].length;c++)$+=/^\s*<td/.test(z[g][c])?e.trim(z[g][c]):"<td>"+z[g][c]+"</td>";$+="</tr>"}s.processAjaxOnInit&&y.$tbodies.eq(0).html($)}if(s.processAjaxOnInit=!0,R)for(u=(p=C.hasClass("hasStickyHeaders"))?y.widgetOptions.$sticky.children("thead:first").children("tr:not(."+y.cssIgnoreRow+")").children():"",f=C.find("tfoot tr:first").children(),v=(h=y.$headers.filter("th ")).length,c=0;c<v;c++)(w=h.eq(c)).find("."+t.css.icon).length?(b=w.find("."+t.css.icon).clone(!0),w.find("."+t.css.headerIn).html(R[c]).append(b),p&&u.length&&(b=u.eq(c).find("."+t.css.icon).clone(!0),u.eq(c).find("."+t.css.headerIn).html(R[c]).append(b))):(w.find("."+t.css.headerIn).html(R[c]),p&&u.length&&(s.$container=s.$container.add(y.widgetOptions.$sticky),u.eq(c).find("."+t.css.headerIn).html(R[c]))),f.eq(c).html(R[c])}y.showProcessing&&t.isProcessing(i),m=j(s,s.size,"get"),s.totalPages="all"===m?1:Math.ceil(s.totalRows/m),s.last.totalRows=s.totalRows,s.last.currentFilters=s.currentFilters,s.last.sortList=(y.sortList||[]).join(","),o(i,s,!1),t.updateCache(y,function(){s.initialized&&setTimeout(function(){y.debug&&console.log("Pager: Triggering pagerChange"),C.triggerHandler("pagerChange",s),t.applyWidget(i),o(i,s,!0)},0)})}s.initialized||S(i,s)},f=function(a,i){var s,r=u(a,i),o=e(document),n=a.config,l=n.namespace+"pager";""!==r&&(n.showProcessing&&t.isProcessing(a,!0),o.bind("ajaxError"+l,function(e,t,s,r){p(null,a,i,t,s,r),o.unbind("ajaxError"+l)}),s=++i.ajaxCounter,i.last.ajaxUrl=r,i.ajaxObject.url=r,i.ajaxObject.success=function(e,t,r){s<i.ajaxCounter||(p(e,a,i,r),o.unbind("ajaxError"+l),"function"==typeof i.oldAjaxSuccess&&i.oldAjaxSuccess(e))},n.debug&&console.log("Pager: Ajax initialized",i.ajaxObject),e.ajax(i.ajaxObject))},u=function(t,a){var i,s,r=t.config,o=a.ajaxUrl?a.ajaxUrl.replace(/\{page([\-+]\d+)?\}/,function(e,t){return a.page+(t?parseInt(t,10):0)}).replace(/\{size\}/g,a.size):"",n=r.sortList,l=a.currentFilters||e(t).data("lastSearch")||[],g=o.match(/\{\s*sort(?:List)?\s*:\s*(\w*)\s*\}/),c=o.match(/\{\s*filter(?:List)?\s*:\s*(\w*)\s*\}/),d=[];if(g){for(g=g[1],s=n.length,i=0;i<s;i++)d[d.length]=g+"["+n[i][0]+"]="+n[i][1];o=o.replace(/\{\s*sort(?:List)?\s*:\s*(\w*)\s*\}/g,d.length?d.join("&"):g),d=[]}if(c){for(c=c[1],s=l.length,i=0;i<s;i++)l[i]&&(d[d.length]=c+"["+i+"]="+encodeURIComponent(l[i]));o=o.replace(/\{\s*filter(?:List)?\s*:\s*(\w*)\s*\}/g,d.length?d.join("&"):c),a.currentFilters=l}return"function"==typeof a.customAjaxUrl&&(o=a.customAjaxUrl(t,o)),r.debug&&console.log("Pager: Ajax url = "+o),o},h=function(a,i,s){var r,n,l,g,d=e(a),p=a.config,f=p.$table.hasClass("hasFilters"),u=i&&i.length||0,h="all"===s.size?s.totalRows:s.size,w=s.page*h;if(u<1)p.debug&&console.warn("Pager: >> No rows for pager to render");else{if(s.page>=s.totalPages&&m(a,s),s.cacheIndex=[],s.isDisabled=!1,s.initialized&&(p.debug&&console.log("Pager: Triggering pagerChange"),d.triggerHandler("pagerChange",s)),s.removeRows){for(t.clearTableBody(a),r=t.processTbody(a,p.$tbodies.eq(0),!0),n=f?0:w,l=f?0:w,g=0;g<h&&n<i.length;)f&&s.regexFiltered.test(i[n][0].className)||++l>w&&g<=h&&(g++,s.cacheIndex[s.cacheIndex.length]=n,r.append(i[n])),n++;t.processTbody(a,r,!1)}else c(a,s);o(a,s),a.isUpdating&&(p.debug&&console.log("Pager: Triggering updateComplete"),d.triggerHandler("updateComplete",[a,!0]))}},w=function(a,i){var r,o,n;for(i.ajax?s(a,i,!0):(e.data(a,"pagerLastPage",i.page),e.data(a,"pagerLastSize",i.size),i.page=0,i.size=i.totalPages,i.totalPages=1,e(a).addClass("pagerDisabled").removeAttr("aria-describedby").find("tr.pagerSavedHeightSpacer").remove(),h(a,a.config.rowsCopy,i),i.isDisabled=!0,t.applyWidget(a),a.config.debug&&console.log("Pager: Disabled")),n=(o=i.$container.find(i.cssGoto+","+i.cssPageSize+", .ts-startRow, .ts-page")).length,r=0;r<n;r++)o.eq(r).addClass(i.cssDisabled)[0].disabled=!0,o[r].ariaDisabled=!0},b=function(e){var a=e.config,i=a.pager;t.updateCache(a,function(){var t,s=[],r=e.config.cache[0].normalized;for(i.totalRows=r.length,t=0;t<i.totalRows;t++)s[s.length]=r[t][a.columns].$row;a.rowsCopy=s,R(e,i,!0)})},R=function(a,i,s){if(!i.isDisabled){var o,n=a.config,l=e(a),g=i.last;if(!1!==s&&i.initialized&&t.isEmptyObject(n.cache))return b(a);i.ajax&&t.hasWidget(a,"filter")&&!n.widgetOptions.filter_initialized||(x(a,i),r(a,i),g.currentFilters=""===(g.currentFilters||[]).join("")?[]:g.currentFilters,i.currentFilters=""===(i.currentFilters||[]).join("")?[]:i.currentFilters,g.page===i.page&&g.size===i.size&&g.totalRows===i.totalRows&&(g.currentFilters||[]).join(",")===(i.currentFilters||[]).join(",")&&(g.ajaxUrl||"")===(i.ajaxObject.url||"")&&(g.optAjaxUrl||"")===(i.ajaxUrl||"")&&g.sortList===(n.sortList||[]).join(",")||(n.debug&&console.log("Pager: Changing to page "+i.page),i.last={page:i.page,size:i.size,sortList:(n.sortList||[]).join(","),totalRows:i.totalRows,currentFilters:i.currentFilters||[],ajaxUrl:i.ajaxObject.url||"",optAjaxUrl:i.ajaxUrl||""},i.ajax?i.processAjaxOnInit||t.isEmptyObject(i.initialRows)?f(a,i):(i.processAjaxOnInit=!0,o=i.initialRows,i.totalRows=void 0!==o.total?o.total:n.debug?console.error("Pager: no initial total page set!")||0:0,i.filteredRows=void 0!==o.filtered?o.filtered:n.debug?console.error("Pager: no initial filtered page set!")||0:0,S(a,i)):i.ajax||h(a,n.rowsCopy,i),e.data(a,"pagerLastPage",i.page),i.initialized&&!1!==s&&(n.debug&&console.log("Pager: Triggering pageMoved"),l.triggerHandler("pageMoved",i),t.applyWidget(a),a.isUpdating&&(n.debug&&console.log("Pager: Triggering updateComplete"),l.triggerHandler("updateComplete",[a,!0])))))}},z=function(e,a){return t.hasWidget(e,"filter")?Math.min(a.totalPages,a.filteredPages):a.totalPages},x=function(e,t){var a=z(e,t)-1;return t.page=parseInt(t.page,10),(t.page<0||isNaN(t.page))&&(t.page=0),t.page>a&&a>=0&&(t.page=a),t.page},j=function(e,t,a){var i=parseInt(t,10)||e.size||e.settings.size||10;return e.initialized&&(/all/i.test(i+" "+t)||i===e.totalRows)?e.$container.find(e.cssPageSize+' option[value="all"]').length?"all":e.totalRows:"get"===a?i:e.size},P=function(t,a,i){i.size=j(i,a,"get"),i.$container.find(i.cssPageSize).val(i.size),e.data(t,"pagerLastPage",x(t,i)),e.data(t,"pagerLastSize",i.size),i.totalPages="all"===i.size?1:Math.ceil(i.totalRows/i.size),i.filteredPages="all"===i.size?1:Math.ceil(i.filteredRows/i.size)},v=function(e,t){t.page=0,R(e,t)},m=function(e,t){t.page=z(e,t)-1,R(e,t)},y=function(e,t){t.page++;var a=z(e,t)-1;t.page>=a&&(t.page=a),R(e,t)},C=function(e,t){--t.page<=0&&(t.page=0),R(e,t)},S=function(a,i){i.initialized=!0,i.initializing=!1,a.config.debug&&console.log("Pager: Triggering pagerInitialized"),e(a).triggerHandler("pagerInitialized",i),t.applyWidget(a),o(a,i)},$=function(t,a){t.config.pager=e.extend(!0,{},e.tablesorterPager.defaults,a.settings),F(t,a.settings)},I=function(e,a){var i=e.config,s=i.namespace+"pager",r=[a.cssFirst,a.cssPrev,a.cssNext,a.cssLast,a.cssGoto,a.cssPageSize].join(",");w(e,a),a.$container.hide().find(r).unbind(s),i.appender=null,i.$table.unbind(s),t.storage&&t.storage(e,a.storageKey,""),delete i.pager,delete i.rowsCopy},A=function(a,i,s){var r,o,n,l=a.config;i.$container.find(i.cssGoto+","+i.cssPageSize+",.ts-startRow, .ts-page").removeClass(i.cssDisabled).removeAttr("disabled").each(function(){this.ariaDisabled=!1}),i.isDisabled=!1,i.page=e.data(a,"pagerLastPage")||i.page||0,o=(n=i.$container.find(i.cssPageSize)).find("option[selected]").val(),i.size=e.data(a,"pagerLastSize")||j(i,o,"get"),i.totalPages="all"===i.size?1:Math.ceil(z(a,i)/i.size),P(a,i.size,i),a.id&&!l.$table.attr("aria-describedby")&&((r=(n=i.$container.find(i.cssPageDisplay)).attr("id"))||(r=a.id+"_pager_info",n.attr("id",r)),l.$table.attr("aria-describedby",r)),g(a,i),s&&(t.update(l),P(a,i.size,i),R(a,i),d(a,i),l.debug&&console.log("Pager: Enabled"))},F=function(s,r){var n,l,p,f,u=s.config,h=u.widgetOptions,z=u.pager=e.extend(!0,{},e.tablesorterPager.defaults,r),x=u.$table,S=u.namespace+"pager",F=z.$container=e(z.container).addClass("tablesorter-pager").show();z.settings=e.extend(!0,{},e.tablesorterPager.defaults,r),u.debug&&console.log("Pager: Initializing"),z.oldAjaxSuccess=z.oldAjaxSuccess||z.ajaxObject.success,u.appender=i.appender,z.initializing=!0,z.savePages&&t.storage&&(n=t.storage(s,z.storageKey)||{},z.page=isNaN(n.page)?z.page:n.page,z.size="all"===n.size?n.size:(isNaN(n.size)?z.size:n.size)||z.setSize||10,P(s,z.size,z)),z.regexRows=new RegExp("("+(h.filter_filteredRow||"filtered")+"|"+u.selectorRemove.slice(1)+"|"+u.cssChildRow+")"),z.regexFiltered=new RegExp(h.filter_filteredRow||"filtered"),x.unbind(a.split(" ").join(S+" ").replace(/\s+/g," ")).bind("filterInit filterStart ".split(" ").join(S+" "),function(a,i){z.currentFilters=e.isArray(i)?i:u.$table.data("lastSearch");var r;if(z.ajax&&"filterInit"===a.type)return R(s,z,!1);r=t.filter.equalFilters?t.filter.equalFilters(u,u.lastSearch,z.currentFilters):(u.lastSearch||[]).join("")!==(z.currentFilters||[]).join(""),"filterStart"!==a.type||!1===z.pageReset||r||(z.page=z.pageReset)}).bind("filterEnd sortEnd ".split(" ").join(S+" "),function(){z.currentFilters=u.$table.data("lastSearch"),(z.initialized||z.initializing)&&(u.delayInit&&u.rowsCopy&&0===u.rowsCopy.length&&b(s),o(s,z,!1),R(s,z,!1),t.applyWidget(s))}).bind("disablePager"+S,function(e){e.stopPropagation(),w(s,z)}).bind("enablePager"+S,function(e){e.stopPropagation(),A(s,z,!0)}).bind("destroyPager"+S,function(e){e.stopPropagation(),I(s,z)}).bind("resetToLoadState"+S,function(e){e.stopPropagation(),$(s,z)}).bind("updateComplete"+S,function(e,t,a){if(e.stopPropagation(),t&&!a&&!z.ajax){var i=u.$tbodies.eq(0).children("tr").not(u.selectorRemove);z.totalRows=i.length-(z.countChildRows?0:i.filter("."+u.cssChildRow).length),z.totalPages="all"===z.size?1:Math.ceil(z.totalRows/z.size),i.length&&u.rowsCopy&&0===u.rowsCopy.length&&b(t),z.page>=z.totalPages&&m(t,z),c(t,z),g(t,z),o(t,z,!0)}}).bind("pageSize refreshComplete ".split(" ").join(S+" "),function(e,t){e.stopPropagation(),P(s,j(z,t,"get"),z),R(s,z),c(s,z),o(s,z,!1)}).bind("pageSet pagerUpdate ".split(" ").join(S+" "),function(e,t){e.stopPropagation(),"pagerUpdate"===e.type&&(t=void 0===t?z.page+1:t,z.last.page=!0),z.page=(parseInt(t,10)||1)-1,R(s,z,!0),o(s,z,!1)}).bind("pageAndSize"+S,function(e,t,a){e.stopPropagation(),z.page=(parseInt(t,10)||1)-1,P(s,j(z,a,"get"),z),R(s,z,!0),c(s,z),o(s,z,!1)}),l=[z.cssFirst,z.cssPrev,z.cssNext,z.cssLast],p=[v,C,y,m],u.debug&&!F.length&&console.warn("Pager: >> Container not found"),F.find(l.join(",")).attr("tabindex",0).unbind("click"+S).bind("click"+S,function(t){t.stopPropagation();var a,i=e(this),r=l.length;if(!i.hasClass(z.cssDisabled))for(a=0;a<r;a++)if(i.is(l[a])){p[a](s,z);break}}),(f=F.find(z.cssGoto)).length?f.unbind("change"+S).bind("change"+S,function(){z.page=e(this).val()-1,R(s,z,!0),o(s,z,!1)}):u.debug&&console.warn("Pager: >> Goto selector not found"),(f=F.find(z.cssPageSize)).length?(f.find("option").removeAttr("selected"),f.unbind("change"+S).bind("change"+S,function(){if(!e(this).hasClass(z.cssDisabled)){var t=e(this).val();P(s,t,z),R(s,z),g(s,z)}return!1})):u.debug&&console.warn("Pager: >> Size selector not found"),z.initialized=!1,x.triggerHandler("pagerBeforeInitialized",z),A(s,z,!1),"string"==typeof z.ajaxUrl?(z.ajax=!0,u.widgetOptions.filter_serversideFiltering=!0,u.serverSideSorting=!0,R(s,z)):(z.ajax=!1,t.appendCache(u,!0),d(s,z)),z.ajax||z.initialized||(z.initializing=!1,z.initialized=!0,P(s,z.size,z),R(s,z),u.debug&&console.log("Pager: Triggering pagerInitialized"),u.$table.triggerHandler("pagerInitialized",z),u.widgetOptions.filter_initialized&&t.hasWidget(s,"filter")||o(s,z,!1)),u.widgetInit.pager=!0};i.appender=function(t,a){var i=t.config,s=i.pager;s.ajax||(i.rowsCopy=a,s.totalRows=s.countChildRows?i.$tbodies.eq(0).children("tr").length:a.length,s.size=e.data(t,"pagerLastSize")||s.size||s.settings.size||10,s.totalPages="all"===s.size?1:Math.ceil(s.totalRows/s.size),h(t,a,s),o(t,s,!1))},i.construct=function(e){return this.each(function(){this.config&&this.hasInitialized&&F(this,e)})}}}),t.showError=function(t,a,i,s){var r=e(t),o=r[0].config,n=o&&o.widgetOptions,l=o.pager&&o.pager.cssErrorRow||n&&n.pager_css&&n.pager_css.errorRow||"tablesorter-errorRow",g=typeof a,c=!0,d="",p=function(){o.$table.find("thead").find(o.selectorRemove).remove()};if(r.length){if("function"==typeof o.pager.ajaxError){if(!1===(c=o.pager.ajaxError(o,a,i,s)))return p();d=c}else if("function"==typeof n.pager_ajaxError){if(!1===(c=n.pager_ajaxError(o,a,i,s)))return p();d=c}if(""===d)if("object"===g)d=0===a.status?"Not connected, verify Network":404===a.status?"Requested page not found [404]":500===a.status?"Internal Server Error [500]":"parsererror"===s?"Requested JSON parse failed":"timeout"===s?"Time out error":"abort"===s?"Ajax Request aborted":"Uncaught error: "+a.statusText+" ["+a.status+"]";else{if("string"!==g)return p();d=a}e(/tr\>/.test(d)?d:'<tr><td colspan="'+o.columns+'">'+d+"</td></tr>").click(function(){e(this).remove()}).appendTo(o.$table.find("thead:first")).addClass(l+" "+o.selectorRemove.slice(1)).attr({role:"alert","aria-live":"assertive"})}else console.error("tablesorter showError: no table parameter passed")},e.fn.extend({tablesorterPager:e.tablesorterPager.construct})}(jQuery);
-!function(e){"use strict";var t=e.tablesorter,l={init:function(t,o,r){var a,s=r.reflow_dataAttrib,i=r.reflow_headerAttrib,n=[];o.$table.addClass(r.reflow_className).off("refresh.tsreflow updateComplete.tsreflow2").on("refresh.tsreflow updateComplete.tsreflow2",function(){l.init(t,o,r)}),o.$headers.each(function(){a=e(this),n.push(e.trim(a.attr(i)||a.text()))}),o.$tbodies.children().each(function(){e(this).children().each(function(t){e(this).attr(s,n[t])})})},init2:function(o,r,a){var s,i,n,f,c,d,u=r.columns,h=a.reflow2_headerAttrib,w=[];for(r.$table.addClass(a.reflow2_className).off("refresh.tsreflow2 updateComplete.tsreflow2").on("refresh.tsreflow2 updateComplete.tsreflow2",function(){l.init2(o,r,a)}),n=0;n<u;n++)(f=r.$headers.filter('[data-column="'+n+'"]')).length>1?(c=[],f.each(function(){(s=e(this)).hasClass(a.reflow2_classIgnore)||c.push(s.attr(h)||s.text())})):c=[f.attr(h)||f.text()],w.push(c);c='<b class="'+r.selectorRemove.slice(1)+" "+a.reflow2_labelClass,r.$tbodies.children().each(function(){(i=t.processTbody(o,e(this),!0)).children().each(function(t){for(s=e(this),d=w[t].length,n=d-1;n>=0;)s.prepend(c+(0===n&&d>1?" "+a.reflow2_labelTop:"")+'">'+w[t][n]+"</b>"),n--}),t.processTbody(o,i,!1)})},remove:function(e,t,l){t.$table.removeClass(l.reflow_className)},remove2:function(e,t,l){t.$table.removeClass(l.reflow2_className)}};t.addWidget({id:"reflow",options:{reflow_className:"ui-table-reflow",reflow_headerAttrib:"data-name",reflow_dataAttrib:"data-title"},init:function(e,t,o,r){l.init(e,o,r)},remove:function(e,t,o){l.remove(e,t,o)}}),t.addWidget({id:"reflow2",options:{reflow2_className:"ui-table-reflow",reflow2_classIgnore:"ui-table-reflow-ignore",reflow2_headerAttrib:"data-name",reflow2_labelClass:"ui-table-cell-label",reflow2_labelTop:"ui-table-cell-label-top"},init:function(e,t,o,r){l.init2(e,o,r)},remove:function(e,t,o){l.remove2(e,t,o)}})}(jQuery);
+!function(M){"use strict";var T=M.tablesorter;M.extend({tablesorterPager:new function(){this.defaults={container:null,ajaxUrl:null,customAjaxUrl:function(e,t){return t},ajaxError:null,ajaxObject:{dataType:"json"},processAjaxOnInit:!0,ajaxProcessing:function(e){return e},output:"{startRow} to {endRow} of {totalRows} rows",updateArrows:!0,page:0,pageReset:0,size:10,maxOptionSize:20,savePages:!0,storageKey:"tablesorter-pager",fixedHeight:!1,countChildRows:!1,removeRows:!1,cssFirst:".first",cssPrev:".prev",cssNext:".next",cssLast:".last",cssGoto:".gotoPage",cssPageDisplay:".pagedisplay",cssPageSize:".pagesize",cssErrorRow:"tablesorter-errorRow",cssDisabled:"disabled",totalRows:0,totalPages:0,filteredRows:0,filteredPages:0,ajaxCounter:0,currentFilters:[],startRow:0,endRow:0,$size:null,last:{}};var f="filterInit filterStart filterEnd sortEnd disablePager enablePager destroyPager updateComplete pageSize pageSet pageAndSize pagerUpdate refreshComplete ",u=this,h=function(e,t,a){var i,s="addClass",r="removeClass",o=t.cssDisabled,n=!!a,l=n||0===t.page,g=I(e,t),c=n||t.page===g-1||0===g;t.updateArrows&&((i=t.$container.find(t.cssFirst+","+t.cssPrev))[l?s:r](o),i.each(function(){this.ariaDisabled=l}),(i=t.$container.find(t.cssNext+","+t.cssLast))[c?s:r](o),i.each(function(){this.ariaDisabled=c}))},w=function(e,t){var a,i,s,r=e.config,o=r.$table.hasClass("hasFilters");if(o&&!t.ajax)if(T.isEmptyObject(r.cache))t.filteredRows=t.totalRows=r.$tbodies.eq(0).children("tr").not(t.countChildRows?"":"."+r.cssChildRow).length;else for(t.filteredRows=0,s=(a=r.cache[0].normalized).length,i=0;i<s;i++)t.filteredRows+=t.regexRows.test(a[i][r.columns].$row[0].className)?0:1;else o||(t.filteredRows=t.totalRows)},y=function(e,n,t){if(!n.initializing){var a,i,s,r,o,l,g,c,d=e.config,p=d.namespace+"pager",f=A(n,n.size,"get");if("all"===f&&(f=n.totalRows),n.countChildRows&&(i[i.length]=d.cssChildRow),n.totalPages=Math.ceil(n.totalRows/f),d.totalRows=n.totalRows,N(e,n),w(e,n),d.filteredRows=n.filteredRows,n.filteredPages=Math.ceil(n.filteredRows/f)||0,0<=I(e,n)){if(i=f*n.page>n.filteredRows&&t,n.page=i?n.pageReset||0:n.page,n.startRow=i?f*n.page+1:0===n.filteredRows?0:f*n.page+1,n.endRow=Math.min(n.filteredRows,n.totalRows,f*(n.page+1)),s=n.$container.find(n.cssPageDisplay),"function"==typeof n.output?a=n.output(e,n):(c=s.attr("data-pager-output"+(n.filteredRows<n.totalRows?"-filtered":""))||n.output,a=(n.ajaxData&&n.ajaxData.output&&n.ajaxData.output||c).replace(/\{page([\-+]\d+)?\}/gi,function(e,t){return n.totalPages?n.page+(t?parseInt(t,10):1):0}).replace(/\{\w+(\s*:\s*\w+)?\}/gi,function(e){var t,a,i=e.replace(/[{}\s]/g,""),s=i.split(":"),r=n.ajaxData,o=/(rows?|pages?)$/i.test(i)?0:"";return/(startRow|page)/.test(s[0])&&"input"===s[1]?(t=(""+("page"===s[0]?n.totalPages:n.totalRows)).length,a="page"===s[0]?n.page+1:n.startRow,'<input type="text" class="ts-'+s[0]+'" style="max-width:'+t+'em" value="'+a+'"/>'):1<s.length&&r&&r[s[0]]?r[s[0]][s[1]]:n[i]||(r?r[i]:o)||o})),(r=n.$container.find(n.cssGoto)).length){for(i="",l=(g=b(e,n)).length,o=0;o<l;o++)i+='<option value="'+g[o]+'">'+g[o]+"</option>";r.html(i).val(n.page+1)}s.length&&(s["INPUT"===s[0].nodeName?"val":"html"](a),s.find(".ts-startRow, .ts-page").unbind("change"+p).bind("change"+p,function(){var e=M(this).val(),t=M(this).hasClass("ts-startRow")?Math.floor(e/f)+1:e;d.$table.triggerHandler("pageSet"+p,[t])}))}h(e,n),R(e,n),n.initialized&&!1!==t&&(T.debug(d,"pager")&&console.log("Pager >> Triggering pagerComplete"),d.$table.triggerHandler("pagerComplete",n),n.savePages&&T.storage&&T.storage(e,n.storageKey,{page:n.page,size:f===n.totalRows?"all":f}))}},b=function(e,t){var a,i,s,r,o,n,l=I(e,t)||1,g=5*Math.ceil(l/t.maxOptionSize/5),c=l>t.maxOptionSize,d=t.page+1,p=g,f=l-g,u=[1];for(a=c?g:1;a<=l;)u[u.length]=a,a+=c?g:1;if(u[u.length]=l,c){for(s=[],(p=d-(i=Math.max(Math.floor(t.maxOptionSize/g)-1,5)))<1&&(p=1),l<(f=d+i)&&(f=l),a=p;a<=f;a++)s[s.length]=a;g/2<(o=(u=M.grep(u,function(e,t){return M.inArray(e,u)===t})).length)-(n=s.length)&&o+n>t.maxOptionSize&&(r=Math.floor(o/2)-Math.floor(n/2),Array.prototype.splice.apply(u,[r,n])),u=u.concat(s)}return u=M.grep(u,function(e,t){return M.inArray(e,u)===t}).sort(function(e,t){return e-t})},R=function(e,t){var a,i,s,r=e.config,o=r.$tbodies.eq(0);o.find("tr.pagerSavedHeightSpacer").remove(),t.fixedHeight&&!t.isDisabled&&(i=M.data(e,"pagerSavedHeight"))&&(s=0,1<M(e).css("border-spacing").split(" ").length&&(s=M(e).css("border-spacing").split(" ")[1].replace(/[^-\d\.]/g,"")),5<(a=i-o.height()+s*t.size-s)&&M.data(e,"pagerLastSize")===t.size&&o.children("tr:visible").length<("all"===t.size?t.totalRows:t.size)&&o.append('<tr class="pagerSavedHeightSpacer '+r.selectorRemove.slice(1)+'" style="height:'+a+'px;"></tr>'))},z=function(e,t){var a,i=e.config,s=i.$tbodies.eq(0);s.find("tr.pagerSavedHeightSpacer").remove(),s.children("tr:visible").length||s.append('<tr class="pagerSavedHeightSpacer '+i.selectorRemove.slice(1)+'"><td>&nbsp</td></tr>'),a=s.children("tr").eq(0).height()*("all"===t.size?t.totalRows:t.size),M.data(e,"pagerSavedHeight",a),R(e,t),M.data(e,"pagerLastSize",t.size)},x=function(e,t){if(!t.ajaxUrl){var a,i=0,s=e.config,r=s.$tbodies.eq(0).children("tr"),o=r.length,n="all"===t.size?t.totalRows:t.size,l=t.page*n,g=l+n,c=0,d=0;for(t.cacheIndex=[],a=0;a<o;a++)t.regexFiltered.test(r[a].className)||(d===l&&r[a].className.match(s.cssChildRow)?r[a].style.display="none":(r[a].style.display=l<=d&&d<g?"":"none",c!==d&&l<=d&&d<g&&(t.cacheIndex[t.cacheIndex.length]=a,c=d),(d+=r[a].className.match(s.cssChildRow+"|"+s.selectorRemove.slice(1))&&!t.countChildRows?0:1)===g&&"none"!==r[a].style.display&&r[a].className.match(T.css.cssHasChild)&&(i=a)));if(0<i&&r[i].className.match(T.css.cssHasChild))for(;++i<o&&r[i].className.match(s.cssChildRow);)r[i].style.display=""}},j=function(e,t){t.size=A(t,t.$container.find(t.cssPageSize).val(),"get"),F(e,t.size,t),h(e,t),t.removeRows||(x(e,t),M(e).bind("sortEnd filterEnd ".split(" ").join(e.config.namespace+"pager "),function(){x(e,t)}))},P=function(e,t,a,i,s,r){if("function"==typeof a.ajaxProcessing){t.config.$tbodies.eq(0).empty();var o,n,l,g,c,d,p,f,u,h,w,b,R,z,x,j=t.config,P=j.$table,v="",m=a.ajaxProcessing(e,t,i)||[0,[]];if(T.showError(t),r)T.debug(j,"pager")&&console.error("Pager >> Ajax Error",i,s,r),T.showError(t,i,s,r),j.$tbodies.eq(0).children("tr").detach(),a.totalRows=0;else{if(M.isArray(m)?(R=m[(l=isNaN(m[0])&&!isNaN(m[1]))?1:0],a.totalRows=isNaN(R)?a.totalRows||0:R,j.totalRows=j.filteredRows=a.filteredRows=a.totalRows,w=0===a.totalRows?[]:m[l?0:1]||[],h=m[2]):(a.ajaxData=m,j.totalRows=a.totalRows=m.total,j.filteredRows=a.filteredRows=void 0!==m.filteredRows?m.filteredRows:m.total,h=m.headers,w=m.rows||[]),b=w&&w.length,w instanceof M)a.processAjaxOnInit&&(j.$tbodies.eq(0).empty(),j.$tbodies.eq(0).append(w));else if(b){for(o=0;o<b;o++){for(v+="<tr>",n=0;n<w[o].length;n++)v+=/^\s*<td/.test(w[o][n])?M.trim(w[o][n]):"<td>"+w[o][n]+"</td>";v+="</tr>"}a.processAjaxOnInit&&j.$tbodies.eq(0).html(v)}if(a.processAjaxOnInit=!0,h)for(d=(g=P.hasClass("hasStickyHeaders"))?j.widgetOptions.$sticky.children("thead:first").children("tr:not(."+j.cssIgnoreRow+")").children():"",c=P.find("tfoot tr:first").children(),z=(p=j.$headers.filter("th ")).length,n=0;n<z;n++)(f=p.eq(n)).find("."+T.css.icon).length?(u=f.find("."+T.css.icon).clone(!0),f.find("."+T.css.headerIn).html(h[n]).append(u),g&&d.length&&(u=d.eq(n).find("."+T.css.icon).clone(!0),d.eq(n).find("."+T.css.headerIn).html(h[n]).append(u))):(f.find("."+T.css.headerIn).html(h[n]),g&&d.length&&(a.$container=a.$container.add(j.widgetOptions.$sticky),d.eq(n).find("."+T.css.headerIn).html(h[n]))),c.eq(n).html(h[n])}j.showProcessing&&T.isProcessing(t),x=A(a,a.size,"get"),a.totalPages="all"===x?1:Math.ceil(a.totalRows/x),a.last.totalRows=a.totalRows,a.last.currentFilters=a.currentFilters,a.last.sortList=(j.sortList||[]).join(","),y(t,a,!1),T.updateCache(j,function(){a.initialized&&setTimeout(function(){T.debug(j,"pager")&&console.log("Pager >> Triggering pagerChange"),P.triggerHandler("pagerChange",a),T.applyWidget(t),y(t,a,!0)},0)})}a.initialized||q(t,a)},v=function(e,a){var t,i,s=e.config,r=a.ajaxUrl?a.ajaxUrl.replace(/\{page([\-+]\d+)?\}/,function(e,t){return a.page+(t?parseInt(t,10):0)}).replace(/\{size\}/g,a.size):"",o=s.sortList,n=a.currentFilters||M(e).data("lastSearch")||[],l=r.match(/\{\s*sort(?:List)?\s*:\s*(\w*)\s*\}/),g=r.match(/\{\s*filter(?:List)?\s*:\s*(\w*)\s*\}/),c=[];if(l){for(l=l[1],i=o.length,t=0;t<i;t++)c[c.length]=l+"["+o[t][0]+"]="+o[t][1];r=r.replace(/\{\s*sort(?:List)?\s*:\s*(\w*)\s*\}/g,c.length?c.join("&"):l),c=[]}if(g){for(g=g[1],i=n.length,t=0;t<i;t++)n[t]&&(c[c.length]=g+"["+t+"]="+encodeURIComponent(n[t]));r=r.replace(/\{\s*filter(?:List)?\s*:\s*(\w*)\s*\}/g,c.length?c.join("&"):g),a.currentFilters=n}return"function"==typeof a.customAjaxUrl&&(r=a.customAjaxUrl(e,r)),T.debug(s,"pager")&&console.log("Pager >> Ajax url = "+r),r},m=function(e,t,a){var i,s,r,o,n=M(e),l=e.config,g=T.debug(l,"pager"),c=l.$table.hasClass("hasFilters"),d=t&&t.length||0,p="all"===a.size?a.totalRows:a.size,f=a.page*p;if(d<1)g&&console.warn("Pager >> No rows for pager to render");else{if(a.page>=a.totalPages&&E(e,a),a.cacheIndex=[],a.isDisabled=!1,a.initialized&&(g&&console.log("Pager >> Triggering pagerChange"),n.triggerHandler("pagerChange",a)),a.removeRows){for(T.clearTableBody(e),i=T.processTbody(e,l.$tbodies.eq(0),!0),r=s=c?0:f,o=0;o<p&&s<t.length;)c&&a.regexFiltered.test(t[s][0].className)||f<++r&&o<=p&&(o++,a.cacheIndex[a.cacheIndex.length]=s,i.append(t[s])),s++;T.processTbody(e,i,!1)}else x(e,a);y(e,a),e.isUpdating&&(g&&console.log("Pager >> Triggering updateComplete"),n.triggerHandler("updateComplete",[e,!0]))}},C=function(e,t){var a,i,s;for(t.ajax?h(e,t,!0):(M.data(e,"pagerLastPage",t.page),M.data(e,"pagerLastSize",t.size),t.page=0,t.size=t.totalRows,t.totalPages=1,M(e).addClass("pagerDisabled").removeAttr("aria-describedby").find("tr.pagerSavedHeightSpacer").remove(),m(e,e.config.rowsCopy,t),t.isDisabled=!0,T.applyWidget(e),T.debug(e.config,"pager")&&console.log("Pager >> Disabled")),s=(i=t.$container.find(t.cssGoto+","+t.cssPageSize+", .ts-startRow, .ts-page")).length,a=0;a<s;a++)i.eq(a).addClass(t.cssDisabled)[0].disabled=!0,i[a].ariaDisabled=!0},S=function(i){var s=i.config,r=s.pager;T.updateCache(s,function(){var e,t=[],a=i.config.cache[0].normalized;for(r.totalRows=a.length,e=0;e<r.totalRows;e++)t[t.length]=a[e][s.columns].$row;s.rowsCopy=t,$(i,r,!0)})},$=function(e,t,a){if(!t.isDisabled){var i,s,r,o,n,l,g,c,d=e.config,p=T.debug(d,"pager"),f=M(e),u=t.last;if(!1!==a&&t.initialized&&T.isEmptyObject(d.cache))return S(e);if(!t.ajax||!T.hasWidget(e,"filter")||d.widgetOptions.filter_initialized)if(N(e,t),w(e,t),u.currentFilters=""===(u.currentFilters||[]).join("")?[]:u.currentFilters,t.currentFilters=""===(t.currentFilters||[]).join("")?[]:t.currentFilters,u.page!==t.page||u.size!==t.size||u.totalRows!==t.totalRows||(u.currentFilters||[]).join(",")!==(t.currentFilters||[]).join(",")||(u.ajaxUrl||"")!==(t.ajaxObject.url||"")||(u.optAjaxUrl||"")!==(t.ajaxUrl||"")||u.sortList!==(d.sortList||[]).join(","))p&&console.log("Pager >> Changing to page "+t.page),t.last={page:t.page,size:t.size,sortList:(d.sortList||[]).join(","),totalRows:t.totalRows,currentFilters:t.currentFilters||[],ajaxUrl:t.ajaxObject.url||"",optAjaxUrl:t.ajaxUrl||""},t.ajax?t.processAjaxOnInit||T.isEmptyObject(t.initialRows)?(n=v(s=e,r=t),l=M(document),g=s.config,c=g.namespace+"pager",""!==n&&(g.showProcessing&&T.isProcessing(s,!0),l.bind("ajaxError"+c,function(e,t,a,i){P(null,s,r,t,a,i),l.unbind("ajaxError"+c)}),o=++r.ajaxCounter,r.last.ajaxUrl=n,r.ajaxObject.url=n,r.ajaxObject.success=function(e,t,a){o<r.ajaxCounter||(P(e,s,r,a),l.unbind("ajaxError"+c),"function"==typeof r.oldAjaxSuccess&&r.oldAjaxSuccess(e))},T.debug(g,"pager")&&console.log("Pager >> Ajax initialized",r.ajaxObject),M.ajax(r.ajaxObject))):(t.processAjaxOnInit=!0,i=t.initialRows,t.totalRows=void 0!==i.total?i.total:p&&console.error("Pager >> No initial total page set!")||0,t.filteredRows=void 0!==i.filtered?i.filtered:p&&console.error("Pager >> No initial filtered page set!")||0,q(e,t)):t.ajax||m(e,d.rowsCopy,t),M.data(e,"pagerLastPage",t.page),t.initialized&&!1!==a&&(p&&console.log("Pager >> Triggering pageMoved"),f.triggerHandler("pageMoved",t),T.applyWidget(e),e.isUpdating&&(p&&console.log("Pager >> Triggering updateComplete"),f.triggerHandler("updateComplete",[e,!0])))}},I=function(e,t){return T.hasWidget(e,"filter")?Math.min(t.totalPages,t.filteredPages):t.totalPages},N=function(e,t){var a=I(e,t)-1;return t.page=parseInt(t.page,10),(t.page<0||isNaN(t.page))&&(t.page=0),t.page>a&&0<=a&&(t.page=a),t.page},A=function(e,t,a){var i=parseInt(t,10)||e.size||e.settings.size||10;return e.initialized&&(/all/i.test(i+" "+t)||i===e.totalRows)?e.$container.find(e.cssPageSize+' option[value="all"]').length?"all":e.totalRows:"get"===a?i:e.size},F=function(e,t,a){a.size=A(a,t,"get"),a.$container.find(a.cssPageSize).val(a.size),M.data(e,"pagerLastPage",N(e,a)),M.data(e,"pagerLastSize",a.size),a.totalPages="all"===a.size?1:Math.ceil(a.totalRows/a.size),a.filteredPages="all"===a.size?1:Math.ceil(a.filteredRows/a.size)},O=function(e,t){t.page=0,$(e,t)},E=function(e,t){t.page=I(e,t)-1,$(e,t)},L=function(e,t){t.page++;var a=I(e,t)-1;t.page>=a&&(t.page=a),$(e,t)},D=function(e,t){t.page--,t.page<=0&&(t.page=0),$(e,t)},q=function(e,t){t.initialized=!0,t.initializing=!1,T.debug(e.config,"pager")&&console.log("Pager >> Triggering pagerInitialized"),M(e).triggerHandler("pagerInitialized",t),T.applyWidget(e),y(e,t)},U=function(e,t,a){var i,s,r,o=e.config;t.$container.find(t.cssGoto+","+t.cssPageSize+",.ts-startRow, .ts-page").removeClass(t.cssDisabled).removeAttr("disabled").each(function(){this.ariaDisabled=!1}),t.isDisabled=!1,t.page=M.data(e,"pagerLastPage")||t.page||0,s=(r=t.$container.find(t.cssPageSize)).find("option[selected]").val(),t.size=M.data(e,"pagerLastSize")||A(t,s,"get"),t.totalPages="all"===t.size?1:Math.ceil(I(e,t)/t.size),F(e,t.size,t),e.id&&!o.$table.attr("aria-describedby")&&((i=(r=t.$container.find(t.cssPageDisplay)).attr("id"))||(i=e.id+"_pager_info",r.attr("id",i)),o.$table.attr("aria-describedby",i)),z(e,t),a&&(T.update(o),F(e,t.size,t),$(e,t),j(e,t),T.debug(o,"pager")&&console.log("Pager >> Enabled"))},H=function(o,e){var t,s,r,a,n=o.config,i=n.widgetOptions,l=T.debug(n,"pager"),g=n.pager=M.extend(!0,{},M.tablesorterPager.defaults,e),c=n.$table,d=n.namespace+"pager",p=g.$container=M(g.container).addClass("tablesorter-pager").show();g.settings=M.extend(!0,{},M.tablesorterPager.defaults,e),l&&console.log("Pager >> Initializing"),g.oldAjaxSuccess=g.oldAjaxSuccess||g.ajaxObject.success,n.appender=u.appender,g.initializing=!0,g.savePages&&T.storage&&(t=T.storage(o,g.storageKey)||{},g.page=isNaN(t.page)?g.page:t.page,g.size="all"===t.size?t.size:(isNaN(t.size)?g.size:t.size)||g.setSize||10,F(o,g.size,g)),g.regexRows=new RegExp("("+(i.filter_filteredRow||"filtered")+"|"+n.selectorRemove.slice(1)+"|"+n.cssChildRow+")"),g.regexFiltered=new RegExp(i.filter_filteredRow||"filtered"),c.unbind(f.split(" ").join(d+" ").replace(/\s+/g," ")).bind("filterInit filterStart ".split(" ").join(d+" "),function(e,t){var a;if(g.currentFilters=M.isArray(t)?t:n.$table.data("lastSearch"),g.ajax&&"filterInit"===e.type)return $(o,g,!1);a=T.filter.equalFilters?T.filter.equalFilters(n,n.lastSearch,g.currentFilters):(n.lastSearch||[]).join("")!==(g.currentFilters||[]).join(""),"filterStart"!==e.type||!1===g.pageReset||a||(g.page=g.pageReset)}).bind("filterEnd sortEnd ".split(" ").join(d+" "),function(){g.currentFilters=n.$table.data("lastSearch"),(g.initialized||g.initializing)&&(n.delayInit&&n.rowsCopy&&0===n.rowsCopy.length&&S(o),y(o,g,!1),$(o,g,!1),T.applyWidget(o))}).bind("disablePager"+d,function(e){e.stopPropagation(),C(o,g)}).bind("enablePager"+d,function(e){e.stopPropagation(),U(o,g,!0)}).bind("destroyPager"+d,function(e){var t,a,i,s,r;e.stopPropagation(),a=g,i=(t=o).config,s=i.namespace+"pager",r=[a.cssFirst,a.cssPrev,a.cssNext,a.cssLast,a.cssGoto,a.cssPageSize].join(","),C(t,a),a.$container.hide().find(r).unbind(s),i.appender=null,i.$table.unbind(s),T.storage&&T.storage(t,a.storageKey,""),delete i.pager,delete i.rowsCopy}).bind("resetToLoadState"+d,function(e){var t,a;e.stopPropagation(),a=g,(t=o).config.pager=M.extend(!0,{},M.tablesorterPager.defaults,a.settings),H(t,a.settings)}).bind("updateComplete"+d,function(e,t,a){if(e.stopPropagation(),t&&!a&&!g.ajax){var i=n.$tbodies.eq(0).children("tr").not(n.selectorRemove);g.totalRows=i.length-(g.countChildRows?0:i.filter("."+n.cssChildRow).length),g.totalPages="all"===g.size?1:Math.ceil(g.totalRows/g.size),i.length&&n.rowsCopy&&0===n.rowsCopy.length&&S(t),g.page>=g.totalPages&&E(t,g),x(t,g),z(t,g),y(t,g,!0)}}).bind("pageSize refreshComplete ".split(" ").join(d+" "),function(e,t){e.stopPropagation(),F(o,A(g,t,"get"),g),$(o,g),x(o,g),y(o,g,!1)}).bind("pageSet pagerUpdate ".split(" ").join(d+" "),function(e,t){e.stopPropagation(),"pagerUpdate"===e.type&&(t=void 0===t?g.page+1:t,g.last.page=!0),g.page=(parseInt(t,10)||1)-1,$(o,g,!0),y(o,g,!1)}).bind("pageAndSize"+d,function(e,t,a){e.stopPropagation(),g.page=(parseInt(t,10)||1)-1,F(o,A(g,a,"get"),g),$(o,g,!0),x(o,g),y(o,g,!1)}),s=[g.cssFirst,g.cssPrev,g.cssNext,g.cssLast],r=[O,D,L,E],l&&!p.length&&console.warn('Pager >> "container" not found'),p.find(s.join(",")).attr("tabindex",0).unbind("click"+d).bind("click"+d,function(e){e.stopPropagation();var t,a=M(this),i=s.length;if(!a.hasClass(g.cssDisabled))for(t=0;t<i;t++)if(a.is(s[t])){r[t](o,g);break}}),(a=p.find(g.cssGoto)).length?a.unbind("change"+d).bind("change"+d,function(){g.page=M(this).val()-1,$(o,g,!0),y(o,g,!1)}):l&&console.warn('Pager >> "goto" selector not found'),(a=p.find(g.cssPageSize)).length?(a.find("option").removeAttr("selected"),a.unbind("change"+d).bind("change"+d,function(){if(!M(this).hasClass(g.cssDisabled)){var e=M(this).val();F(o,e,g),$(o,g),z(o,g)}return!1})):l&&console.warn('Pager >> "size" selector not found'),g.initialized=!1,c.triggerHandler("pagerBeforeInitialized",g),U(o,g,!1),"string"==typeof g.ajaxUrl?(g.ajax=!0,n.widgetOptions.filter_serversideFiltering=!0,n.serverSideSorting=!0,$(o,g)):(g.ajax=!1,T.appendCache(n,!0),j(o,g)),g.ajax||g.initialized||(g.initializing=!1,g.initialized=!0,F(o,g.size,g),$(o,g),l&&console.log("Pager >> Triggering pagerInitialized"),n.$table.triggerHandler("pagerInitialized",g),n.widgetOptions.filter_initialized&&T.hasWidget(o,"filter")||y(o,g,!1)),n.widgetInit.pager=!0};u.appender=function(e,t){var a=e.config,i=a.pager;i.ajax||(a.rowsCopy=t,i.totalRows=i.countChildRows?a.$tbodies.eq(0).children("tr").length:t.length,i.size=M.data(e,"pagerLastSize")||i.size||i.settings.size||10,i.totalPages="all"===i.size?1:Math.ceil(i.totalRows/i.size),m(e,t,i),y(e,i,!1))},u.construct=function(e){return this.each(function(){this.config&&this.hasInitialized&&H(this,e)})}}}),T.showError=function(e,t,a,i){var s=M(e),r=s[0].config,o=r&&r.widgetOptions,n=r.pager&&r.pager.cssErrorRow||o&&o.pager_css&&o.pager_css.errorRow||"tablesorter-errorRow",l=typeof t,g=!0,c="",d=function(){r.$table.find("thead").find(r.selectorRemove).remove()};if(s.length){if("function"==typeof r.pager.ajaxError){if(!1===(g=r.pager.ajaxError(r,t,a,i)))return d();c=g}else if("function"==typeof o.pager_ajaxError){if(!1===(g=o.pager_ajaxError(r,t,a,i)))return d();c=g}if(""===c)if("object"===l)c=0===t.status?"Not connected, verify Network":404===t.status?"Requested page not found [404]":500===t.status?"Internal Server Error [500]":"parsererror"===i?"Requested JSON parse failed":"timeout"===i?"Time out error":"abort"===i?"Ajax Request aborted":"Uncaught error: "+t.statusText+" ["+t.status+"]";else{if("string"!==l)return d();c=t}M(/tr\>/.test(c)?c:'<tr><td colspan="'+r.columns+'">'+c+"</td></tr>").click(function(){M(this).remove()}).appendTo(r.$table.find("thead:first")).addClass(n+" "+r.selectorRemove.slice(1)).attr({role:"alert","aria-live":"assertive"})}else console.error("tablesorter showError: no table parameter passed")},M.fn.extend({tablesorterPager:M.tablesorterPager.construct})}(jQuery);return jQuery;}));
+
+(function(factory){if (typeof define === 'function' && define.amd){define(['jquery'], factory);} else if (typeof module === 'object' && typeof module.exports === 'object'){module.exports = factory(require('jquery'));} else {factory(jQuery);}}(function(jQuery){
+
+!function(u){"use strict";var h=u.tablesorter,w={init:function(e,t,l){var o,r=l.reflow_dataAttrib,a=l.reflow_headerAttrib,s=[];t.$table.addClass(l.reflow_className).off("refresh.tsreflow updateComplete.tsreflow2").on("refresh.tsreflow updateComplete.tsreflow2",function(){w.init(e,t,l)}),t.$headers.each(function(){o=u(this),s.push(u.trim(o.attr(a)||o.text()))}),t.$tbodies.children().each(function(){u(this).children().each(function(e){u(this).attr(r,s[e])})})},init2:function(e,t,l){var o,r,a,s,i,n,f=t.columns,c=l.reflow2_headerAttrib,d=[];for(t.$table.addClass(l.reflow2_className).off("refresh.tsreflow2 updateComplete.tsreflow2").on("refresh.tsreflow2 updateComplete.tsreflow2",function(){w.init2(e,t,l)}),a=0;a<f;a++)1<(s=t.$headers.filter('[data-column="'+a+'"]')).length?(i=[],s.each(function(){(o=u(this)).hasClass(l.reflow2_classIgnore)||i.push(o.attr(c)||o.text())})):i=[s.attr(c)||s.text()],d.push(i);i='<b class="'+t.selectorRemove.slice(1)+" "+l.reflow2_labelClass,t.$tbodies.children().each(function(){(r=h.processTbody(e,u(this),!0)).children().each(function(e){for(o=u(this),n=d[e].length,a=n-1;0<=a;)o.prepend(i+(0===a&&1<n?" "+l.reflow2_labelTop:"")+'">'+d[e][a]+"</b>"),a--}),h.processTbody(e,r,!1)})},remove:function(e,t,l){t.$table.removeClass(l.reflow_className)},remove2:function(e,t,l){t.$table.removeClass(l.reflow2_className)}};h.addWidget({id:"reflow",options:{reflow_className:"ui-table-reflow",reflow_headerAttrib:"data-name",reflow_dataAttrib:"data-title"},init:function(e,t,l,o){w.init(e,l,o)},remove:function(e,t,l){w.remove(e,t,l)}}),h.addWidget({id:"reflow2",options:{reflow2_className:"ui-table-reflow",reflow2_classIgnore:"ui-table-reflow-ignore",reflow2_headerAttrib:"data-name",reflow2_labelClass:"ui-table-cell-label",reflow2_labelTop:"ui-table-cell-label-top"},init:function(e,t,l,o){w.init2(e,l,o)},remove:function(e,t,l){w.remove2(e,t,l)}})}(jQuery);return jQuery;}));
+
 /*
 PNotify 3.2.0 sciactive.com/pnotify/
 (C) 2015 Hunter Perrin; Google, Inc.
