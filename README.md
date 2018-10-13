@@ -25,60 +25,11 @@ What it does
  * Support to search/save/delete a subtitle individually
  * Support to play a video remotely (need to register a custom protocol handler on your remote machine)
 
-What it uses (see libraries.txt for versions)
----------------------------------------------
+Dependencies
+------------
 
- * appdirs
- * babelfish
- * beautifulsoup4
- * boto
- * certifi
- * chardet
- * cheroot
- * cherrypy
- * click
- * configparser
- * diskcache
- * dogpile.cache
- * enum34
- * enzyme
- * futures
- * gitdb2
- * gitpython
- * gntp
- * guessit
- * html5lib
- * imdbpie
- * jsonpickle
- * langdetect
- * lxml
- * mako
- * markupsafe
- * more-itertools
- * oauthlib
- * portend
- * pushbullet
- * pysrt
- * python-twitter
- * python-dateutil
- * python-magic
- * pytz
- * rarfile
- * rebulk
- * requests
- * requests-oauthlib
- * simplejson
- * six
- * smmap2
- * stevedore
- * subliminal
- * tempora
- * tvdb_api_v2
- * unidecode
- * urllib3
- * webencodings
- * websocket-client
- * ws4py
+ * To run Auto-Subliminal from source you need Python 2.7 (experimental support for Python 3)
+ * Packaged external libraries: see [libaries.txt](requirements/libraries.txt)
 
 How to use
 ----------
