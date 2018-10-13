@@ -45,6 +45,7 @@ Libraries dependency tree
     |-- python-dateutil
     |-- requests
     |-- six
+    |-- trans
 |-- jsonpickle
 |-- langdetect
     |-- six
