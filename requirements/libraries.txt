@@ -17,7 +17,7 @@ dogpile.cache==0.6.7
 enum34==1.1.6 ; python_version < '3.4'
 enzyme==0.4.1
 futures==3.2.0 ; python_version < '3.0'
-gitdb2==2.0.4
+gitdb2==2.0.5
 gitpython==2.1.11
 gntp==1.0.3
 guessit==2.1.4
