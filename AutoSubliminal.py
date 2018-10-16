@@ -5,29 +5,37 @@ import locale
 import logging
 import os
 import signal
+import site
 import sys
 import time
 
 # Insert the lib folder at the beginning of the python system path
 # This to prevent installation of the libraries and to prevent the 'lib.' prefix when importing the libraries
 
-# Insert libs that are only needed for certain python versions
-# Copied from six to determine python version
+# Determine python version
 PY2 = sys.version_info[0] == 2
 PY3 = sys.version_info[0] == 3
 PY34 = sys.version_info[0:2] >= (3, 4)
+
+# Setup system path (include libraries at position 1 because position 0 must remain the current directory)
+sys.path, remainder = sys.path[:1], sys.path[1:]
+
+# Insert common libs for all python versions
+site.addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
+
+# Insert libs that are only needed for certain python versions
 if PY34:
-    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'libpy34')))
+    site.addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'libpy34')))
 elif PY3:
-    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'libpy3')))
+    site.addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'libpy3')))
 elif PY2:
-    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'libpy2')))
+    site.addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'libpy2')))
 else:
     print('Unsupported Python version found. Exiting.')
     os._exit(1)
 
-# Insert common libs for all python versions
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
+# Add remainder of the system path
+sys.path.extend(remainder)
 
 help_message = '''
 Usage:
