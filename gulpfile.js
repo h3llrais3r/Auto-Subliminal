@@ -1,10 +1,10 @@
 var gulp = require('gulp');
-var gulp_clean_css = require('gulp-clean-css');
-var gulp_concat = require('gulp-concat');
-var gulp_copy = require('gulp-copy');
-var gulp_rename = require('gulp-rename');
-var gulp_uglify = require('gulp-uglify');
-var gulp_util = require('gulp-util');
+var clean_css = require('gulp-clean-css');
+var concat = require('gulp-concat');
+var copy = require('gulp-copy');
+var rename = require('gulp-rename');
+var uglify = require('gulp-uglify');
+var log = require('fancy-log');
 var del = require('del');
 
 /*************
@@ -70,18 +70,18 @@ var vendor = {
  ************/
 
 gulp.task('bundle:vendor_js', function () {
-    gulp_util.log('Bundle vendor js:');
-    gulp_util.log(vendor.js);
+    log.info('Bundle vendor js:');
+    log.info(vendor.js);
     return gulp.src(vendor.js)
-        .pipe(gulp_concat('vendor.js'))
+        .pipe(concat('vendor.js'))
         .pipe(gulp.dest('dist'));
 });
 
 gulp.task('bundle:vendor_css', function () {
-    gulp_util.log('Bundle vendor css:');
-    gulp_util.log(vendor.css);
+    log.info('Bundle vendor css:');
+    log.info(vendor.css);
     return gulp.src(vendor.css)
-        .pipe(gulp_concat('vendor.css'))
+        .pipe(concat('vendor.css'))
         .pipe(gulp.dest('dist'));
 });
 
@@ -91,15 +91,15 @@ gulp.task('bundle:vendor_css', function () {
 
 gulp.task('minify:vendor_js', ['bundle:vendor_js'], function () {
     return gulp.src('dist/vendor.js')
-        .pipe(gulp_rename('vendor.min.js'))
-        .pipe(gulp_uglify())
+        .pipe(rename('vendor.min.js'))
+        .pipe(uglify())
         .pipe(gulp.dest('dist'));
 });
 
 gulp.task('minify:vendor_css', ['bundle:vendor_css'], function () {
     return gulp.src('dist/vendor.css')
-        .pipe(gulp_rename('vendor.min.css'))
-        .pipe(gulp_clean_css())
+        .pipe(rename('vendor.min.css'))
+        .pipe(clean_css())
         .pipe(gulp.dest('dist'));
 });
 
@@ -118,8 +118,8 @@ var cleanup_sources = [
 ];
 
 gulp.task('clean', function () {
-    gulp_util.log('Clean files/folders:');
-    gulp_util.log(cleanup_sources);
+    log.info('Clean files/folders:');
+    log.info(cleanup_sources);
     return del.sync(cleanup_sources);
 });
 
@@ -140,7 +140,7 @@ gulp.task('copy:vendor_css', ['minify:vendor_css'], function () {
 gulp.task('copy:vendor_images', function () {
     return gulp.src(vendor.images)
         .pipe(gulp.dest(function (path) {
-            //gulp_util.log(JSON.stringify(path));
+            //log.info(JSON.stringify(path));
             // copy images in specific subfolder
             if (path.base.indexOf('tablesorter') != -1) {
                 return 'web/static/images/vendor/tablesorter';
