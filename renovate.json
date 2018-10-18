@@ -6,11 +6,39 @@
     "development"
   ],
   "js": {
-    "labels": ["Upgrade JS"],
+    "labels": [
+      "Update dep (JavaScript)"
+    ],
     "packageRules": [
       {
-        "packageNames": ["bootstrap"],
-        "allowedVersions": "<4"
+        "packageNames": [
+          "bootstrap"
+        ],
+        "allowedVersions": "<4.0.0"
+      }
+    ]
+  },
+  "pip_requirements": {
+    "fileMatch": [
+      "requirements/libraries.txt"
+    ]
+  },
+  "python": {
+    "labels": [
+      "Update dep (Python)"
+    ],
+    "packageRules": [
+      {
+        "packageNames": [
+          "cherrypy"
+        ],
+        "allowedVersions": "<18.0.0"
+      },
+      {
+        "packageNames": [
+          "guessit"
+        ],
+        "allowedVersions": "<3.0.0"
       }
     ]
   }
