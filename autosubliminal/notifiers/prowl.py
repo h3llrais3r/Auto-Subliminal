@@ -44,7 +44,6 @@ class ProwlNotifier(BaseNotifier):
                 log.error('%s notification failed: %s', self.name, response.reason)
                 return False
             else:
-                log.info('%s notification sent', self.name)
                 return True
         except Exception:
             log.exception('%s notification failed', self.name)

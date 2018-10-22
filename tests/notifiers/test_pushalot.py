@@ -2,21 +2,23 @@
 
 import requests_mock
 
+from autosubliminal.core.item import DownloadItem, WantedItem
 from autosubliminal.notifiers.pushalot import PushalotNotifier, PUSHALOTURL
 
 notifier_name = 'Pushalot'
 
-item_dict = {
-    'subtitle': 'subtitle',
-    'language': 'en',
-    'provider': 'provider'
-}
+download_item = DownloadItem(WantedItem())
+download_item.videopath = 'path/to/video'
+download_item.subtitlepath = 'path/to/subtitle'
+download_item.downlang = 'en'
+download_item.provider = 'provider'
 
 
 def test_pushalot_disabled():
     notifier = PushalotNotifier()
     assert notifier.name == notifier_name
-    assert notifier.notify_download(**item_dict) is False
+    assert notifier.notify('test') is False
+    assert notifier.notify_download(download_item) is False
 
 
 def test_pushalot_exception(monkeypatch):
@@ -26,7 +28,8 @@ def test_pushalot_exception(monkeypatch):
         m.register_uri('POST', PUSHALOTURL, status_code=500)
         notifier = PushalotNotifier()
         assert notifier.name == notifier_name
-        assert notifier.notify_download(**item_dict) is False
+        assert notifier.notify('test') is False
+        assert notifier.notify_download(download_item) is False
 
 
 def test_pushalot_notify_download(monkeypatch):
@@ -36,4 +39,5 @@ def test_pushalot_notify_download(monkeypatch):
         m.register_uri('POST', PUSHALOTURL, status_code=200)
         notifier = PushalotNotifier()
         assert notifier.name == notifier_name
-        assert notifier.notify_download(**item_dict) is True
+        assert notifier.notify('test') is True
+        assert notifier.notify_download(download_item) is True

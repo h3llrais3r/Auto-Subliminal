@@ -41,10 +41,10 @@ class TwitterNotifier(BaseNotifier):
     def enabled(self):
         return autosubliminal.NOTIFYTWITTER
 
-    # Override of generic _get_message method
-    def _get_message(self, **kwargs):
-        # Prepend application title to default message
-        return self.notification_title + '\n' + super(TwitterNotifier, self)._get_message(**kwargs)
+    # Override of generic _get_download_message method
+    def _get_download_message(self, download_item):
+        # Prepend application title to default download message
+        return self.notification_title + '\n' + super(TwitterNotifier, self)._get_download_message(download_item)
 
     def _send_message(self, message, **kwargs):
         try:
@@ -53,7 +53,6 @@ class TwitterNotifier(BaseNotifier):
                       access_token_key=autosubliminal.TWITTERKEY,
                       access_token_secret=autosubliminal.TWITTERSECRET)
             api.PostUpdate(text_type(message[:280]))
-            log.info('%s notification sent', self.name)
             return True
         except Exception:
             log.exception('%s notification failed', self.name)

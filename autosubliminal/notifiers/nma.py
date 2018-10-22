@@ -61,7 +61,6 @@ class NmaNotifier(BaseNotifier):
         response_xml = ET.fromstring(response.content)
         success = response_xml.find('./success')
         if success is not None:
-            log.info('%s notification sent', self.name)
             log.debug('Response: %r', success.attrib)
             return True
         else:

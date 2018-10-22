@@ -36,7 +36,6 @@ class PushbulletNotifier(BaseNotifier):
         try:
             pb = Pushbullet(autosubliminal.PUSHBULLETAPI)
             pb.push_note(title=self.notification_title, body=message)
-            log.info('%s notification sent', self.name)
             return True
         except Exception:
             log.exception('%s notification failed', self.name)

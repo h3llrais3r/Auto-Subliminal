@@ -58,7 +58,6 @@ class GrowlNotifier(BaseNotifier):
             if response is not True:
                 log.error('%s notification failed: %r', self.name, response)
                 return False
-            log.info('%s notification sent', self.name)
             return True
         except Exception:
             log.exception('%s notification failed', self.name)
@@ -66,12 +65,11 @@ class GrowlNotifier(BaseNotifier):
 
     # Override of generic test method (test will also take care the growl registration)
     def test(self):
-        log.debug('Testing a %s notification', self.name)
         # Registration
         if not self._register():
             return False
         # Notification
-        return self._send_message(self.test_message)
+        return super(GrowlNotifier, self).test()
 
 
 __CLASS_NAME__ = GrowlNotifier.__name__

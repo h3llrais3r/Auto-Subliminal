@@ -1,20 +1,22 @@
 # coding=utf-8
 
+from autosubliminal.core.item import DownloadItem, WantedItem
 from autosubliminal.notifiers.mail import MailNotifier
 
 notifier_name = 'Mail'
 
-item_dict = {
-    'subtitle': 'subtitle',
-    'language': 'en',
-    'provider': 'provider'
-}
+download_item = DownloadItem(WantedItem())
+download_item.videopath = 'path/to/video'
+download_item.subtitlepath = 'path/to/subtitle'
+download_item.downlang = 'en'
+download_item.provider = 'provider'
 
 
 def test_mail_disabled():
     notifier = MailNotifier()
     assert notifier.name == notifier_name
-    assert notifier.notify_download(**item_dict) is False
+    assert notifier.notify('test') is False
+    assert notifier.notify_download(download_item) is False
 
 
 def test_mail_exception(monkeypatch):
@@ -26,7 +28,8 @@ def test_mail_exception(monkeypatch):
     monkeypatch.setattr('autosubliminal.MAILSRV', 'invalid_server')
     notifier = MailNotifier()
     assert notifier.name == notifier_name
-    assert notifier.notify_download(**item_dict) is False
+    assert notifier.notify('test') is False
+    assert notifier.notify_download(download_item) is False
 
 
 def test_mail_notify_download(monkeypatch, mocker):
@@ -47,4 +50,5 @@ def test_mail_notify_download(monkeypatch, mocker):
     mocker.patch('smtplib.SMTP.quit')
     notifier = MailNotifier()
     assert notifier.name == notifier_name
-    assert notifier.notify_download(**item_dict) is True
+    assert notifier.notify('test') is True
+    assert notifier.notify_download(download_item) is True

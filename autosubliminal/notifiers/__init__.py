@@ -22,33 +22,47 @@ _notifier_libraries = ['growl', 'mail', 'nma', 'prowl', 'pushalot', 'pushbullet'
 _notifiers = dict((name, _get_notifier_instance(name)) for name in _notifier_libraries)
 
 
-class Notifier(object):
+def notify(message, **kwargs):
     """
-    Root notifier. Only this class should be used. The different libraries should only be used here.
+     Send a notification message with all configured notifiers.
+
+     :param message: the message
+     :type message: str
     """
+    log.debug('Sending notifications for message %s', message)
 
-    def __init__(self, download_item):
-        self._notifier_dict = {'video': os.path.basename(download_item.videopath),
-                               'subtitle': os.path.basename(download_item.subtitlepath),
-                               'language': download_item.downlang,
-                               'provider': download_item.provider}
+    notified = False
+    for notifier in list(_notifiers.values()):
+        notified |= notifier.notify(message, **kwargs)
 
-    def notify_download(self):
-        log.debug('Sending download notifications. Video: %s, Subtitle: %s, Language: %s, Provider: %s',
-                  self._notifier_dict['video'], self._notifier_dict['subtitle'], self._notifier_dict['language'],
-                  self._notifier_dict['provider'])
+    return notified
 
-        notified = False
-        for notifier in list(_notifiers.values()):
-            notified |= notifier.notify_download(**self._notifier_dict)
 
-        return notified
+def notify_download(download_item, **kwargs):
+    """
+    Send a download notification message with all configured notifiers.
+
+    :param download_item: download item
+    :type download_item: autosubliminal.core.item.DownloadItem
+    """
+    log.debug('Sending download notifications for %r', download_item)
+
+    notified = False
+    for notifier in list(_notifiers.values()):
+        notified |= notifier.notify_download(download_item, **kwargs)
+
+    return notified
 
 
 def test_notifier(library):
     """
-    Simple method to send a test notification for a supported notifier library.
+    Send a test notification for a supported notifier library.
+
+    :param library: the notifier library
+    :type library: str
     """
+    log.debug('Sending a test notification with %s notifier library', library)
+
     if library in _notifiers:
         return _notifiers[library].test()
     else:

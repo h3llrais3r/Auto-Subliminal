@@ -6,8 +6,8 @@ import time
 import subliminal
 
 import autosubliminal
+from autosubliminal import notifiers
 from autosubliminal.db import LastDownloads
-from autosubliminal.notifiers import Notifier
 from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.util.common import add_notification_message, display_item_name
 
@@ -85,7 +85,7 @@ class SubDownloader(object):
 
         # Notify
         if autosubliminal.NOTIFY:
-            Notifier(self._download_item).notify_download()
+            notifiers.notify_download(self._download_item)
 
         return True
 

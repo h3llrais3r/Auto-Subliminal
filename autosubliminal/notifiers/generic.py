@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import abc
+import os
 
 from six import add_metaclass
 
@@ -29,32 +30,50 @@ class BaseNotifier(object):
     def enabled(self):
         pass
 
-    def _get_message(self, **kwargs):
-        """
-        Default message.
-        """
-        message = ''
-        if 'subtitle' in kwargs:
-            message += 'Subtitle: %s\n' % kwargs['subtitle']
-        if 'language' in kwargs:
-            message += 'Language: %s\n' % kwargs['language']
-        if 'provider' in kwargs:
-            message += 'Provider: %s\n' % kwargs['provider']
-        return message
-
     @abc.abstractmethod
     def _send_message(self, message, **kwargs):
+        """Implementation of the notifier to send a message."""
         pass
 
-    def notify_download(self, **kwargs):
+    def _get_download_message(self, download_item):
+        message = ''
+        if download_item.subtitlepath:
+            message += 'Subtitle: %s\n' % os.path.basename(download_item.subtitlepath)
+        if download_item.downlang:
+            message += 'Language: %s\n' % download_item.downlang
+        if download_item.provider:
+            message += 'Provider: %s\n' % download_item.provider
+        return message
+
+    def _notify(self, message, **kwargs):
+        notified = self._send_message(message, **kwargs)
+        if notified:
+            self.log.info('%s notification sent', self.name)
+        return notified
+
+    def notify(self, message, **kwargs):
+        """Send a notification message."""
+
         # Only notify when enabled
         if self.enabled:
             self.log.debug('Sending a %s notification', self.name)
-            message = self._get_message(**kwargs)
-            return self._send_message(message, **kwargs)
+            return self._notify(message, **kwargs)
+        else:
+            return False
+
+    def notify_download(self, download_item, **kwargs):
+        """Send a download notification message."""
+
+        # Only notify when enabled
+        if self.enabled:
+            self.log.debug('Sending a download notification with %s', self.name)
+            message = self._get_download_message(download_item)
+            return self._notify(message, **kwargs)
         else:
             return False
 
     def test(self):
-        self.log.debug('Testing a %s notification', self.name)
-        return self._send_message(self.test_message)
+        """Send a test notification message"""
+
+        # Notifier should not be enabled in order to test it
+        return self._notify(self.test_message)

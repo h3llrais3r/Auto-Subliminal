@@ -2,21 +2,23 @@
 
 import requests_mock
 
+from autosubliminal.core.item import DownloadItem, WantedItem
 from autosubliminal.notifiers.nma import NmaNotifier, NMAURL
 
 notifier_name = 'NMA'
 
-item_dict = {
-    'subtitle': 'subtitle',
-    'language': 'en',
-    'provider': 'provider'
-}
+download_item = DownloadItem(WantedItem())
+download_item.videopath = 'path/to/video'
+download_item.subtitlepath = 'path/to/subtitle'
+download_item.downlang = 'en'
+download_item.provider = 'provider'
 
 
 def test_nma_disabled():
     notifier = NmaNotifier()
     assert notifier.name == notifier_name
-    assert notifier.notify_download(**item_dict) is False
+    assert notifier.notify('test') is False
+    assert notifier.notify_download(download_item) is False
 
 
 def test_nma_exception(monkeypatch):
@@ -26,7 +28,8 @@ def test_nma_exception(monkeypatch):
         m.register_uri('POST', NMAURL, status_code=500)
         notifier = NmaNotifier()
         assert notifier.name == notifier_name
-        assert notifier.notify_download(**item_dict) is False
+        assert notifier.notify('test') is False
+        assert notifier.notify_download(download_item) is False
 
 
 def test_nma_notify_download_error_response(monkeypatch):
@@ -41,7 +44,8 @@ def test_nma_notify_download_error_response(monkeypatch):
                                b'</nma>')
         notifier = NmaNotifier()
         assert notifier.name == notifier_name
-        assert notifier.notify_download(**item_dict) is False
+        assert notifier.notify('test') is False
+        assert notifier.notify_download(download_item) is False
 
 
 def test_nma_notify_download(monkeypatch):
@@ -56,4 +60,5 @@ def test_nma_notify_download(monkeypatch):
                                b'</nma>')
         notifier = NmaNotifier()
         assert notifier.name == notifier_name
-        assert notifier.notify_download(**item_dict) is True
+        assert notifier.notify('test') is True
+        assert notifier.notify_download(download_item) is True
