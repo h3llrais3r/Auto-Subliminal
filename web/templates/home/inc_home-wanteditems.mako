@@ -71,7 +71,7 @@
                         </td>
                     </tr>
                         % for index, item in enumerate(autosubliminal.WANTEDQUEUE):
-                            <% rowClass = 'content-row wanted-item hidden' if item.search_active else 'content-row wanted-item inactive hidden' %>
+                            <% rowClass = 'content-row wanted-item hidden' if item.is_search_active else 'content-row wanted-item inactive hidden' %>
                             <tr class="${rowClass}">
                                 <td class="hidden">${item.type}</td>
                                 <td>

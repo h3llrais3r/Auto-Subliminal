@@ -69,7 +69,7 @@ class SubChecker(ScheduledProcess):
                 log.info('Searching subtitles for video: %s', wanted_item.videopath)
 
                 # Check if the search is currently active for the wanted_item
-                if not wanted_item.search_active:
+                if not wanted_item.is_search_active:
                     log.info('Search not active in this run for video: %s', wanted_item.videopath)
                     continue
 
