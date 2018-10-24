@@ -15,7 +15,7 @@ search_deadline = datetime.timedelta(weeks=4)
 search_delta = datetime.timedelta(weeks=1)
 
 # Release group regex
-release_group_regex = r'(.*)\[.*?\]'
+release_group_regex = re.compile(r'(.*)\[.*?\]')
 
 log = logging.getLogger(__name__)
 
@@ -59,7 +59,7 @@ class _Item(object):
         _releasegrp = releasegrp
         if releasegrp:
             # Remove release group provider (part between []) if present (f.e. KILLERS[rarbg])
-            match = re.search(release_group_regex, releasegrp)
+            match = release_group_regex.match(releasegrp)
             if match:
                 # Return first parenthesized group (=release group without [] part)
                 _releasegrp = match.group(1)
