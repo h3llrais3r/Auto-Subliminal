@@ -17,6 +17,11 @@ def test_compare_wanted_items():
     assert wanted_item_2 != wanted_item_3
 
 
+def test_release_group_regex():
+    wanted_item_1 = WantedItem(type='episode', title='test', season=1, episode=1, releasegrp='KILLERS[rarbg]')
+    assert wanted_item_1.releasegrp == 'KILLERS'
+
+
 def test_is_search_active_for_wanted_item_before_on_creation(mocker):
     today = datetime.datetime(2018, 1, 1, 0, 0, 0)
     mocker.patch('autosubliminal.core.item.get_today', return_value=today)

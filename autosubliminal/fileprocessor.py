@@ -13,8 +13,6 @@ from autosubliminal.util.common import humanize_bytes
 
 log = logging.getLogger(__name__)
 
-release_group_regex = '(.*)\[.*?\]'
-
 
 def process_file(dirname, filename):
     """

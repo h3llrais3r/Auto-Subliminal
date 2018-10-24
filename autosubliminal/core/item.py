@@ -15,7 +15,7 @@ search_deadline = datetime.timedelta(weeks=4)
 search_delta = datetime.timedelta(weeks=1)
 
 # Release group regex
-release_group_regex = '(.*)\[.*?\]'
+release_group_regex = r'(.*)\[.*?\]'
 
 log = logging.getLogger(__name__)
 
