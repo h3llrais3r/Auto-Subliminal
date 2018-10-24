@@ -89,6 +89,7 @@ Libraries dependency tree
     |-- pytz
     |-- six
     |-- stevedore
+        |-- six
 |-- tvdb_api_v2
     |-- certifi
     |-- python-dateutil
