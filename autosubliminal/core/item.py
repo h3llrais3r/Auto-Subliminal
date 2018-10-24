@@ -33,8 +33,8 @@ class _Item(object):
     :type year: int
     :param season: the parsed video season
     :type season: int
-    :param episode: the parsed video episode
-    :type episode: int
+    :param episode: the parsed video episode (comma separated string in case of multi episode)
+    :type episode: int or str
     :param source: the parsed video source
     :type source: str
     :param quality: the parsed video quality

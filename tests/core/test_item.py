@@ -17,7 +17,12 @@ def test_compare_wanted_items():
     assert wanted_item_2 != wanted_item_3
 
 
-def test_release_group_regex():
+def test_wanted_item_with_multi_episode():
+    wanted_item_1 = WantedItem(type='episode', title='test', season=1, episode=[1, 2])
+    assert wanted_item_1.episode == '1,2'
+
+
+def test_wanted_item_trim_release_group():
     wanted_item_1 = WantedItem(type='episode', title='test', season=1, episode=1, releasegrp='KILLERS[rarbg]')
     assert wanted_item_1.releasegrp == 'KILLERS'
 
@@ -34,19 +39,19 @@ def test_is_search_active_for_wanted_item_before_deadline(mocker):
     assert wanted_item.is_search_active
 
 
-def test_is_search_active_on_deadline(mocker):
+def test_is_search_active_for_wanted_item_on_deadline(mocker):
     today = datetime.datetime(2018, 1, 29, 0, 0, 0)
     mocker.patch('autosubliminal.core.item.get_today', return_value=today)
     assert wanted_item.is_search_active
 
 
-def test_is_search_active_after_deadline(mocker):
+def test_is_search_active_for_wanted_item_after_deadline(mocker):
     today = datetime.datetime(2018, 1, 30, 0, 0, 0)
     mocker.patch('autosubliminal.core.item.get_today', return_value=today)
     assert not wanted_item.is_search_active
 
 
-def test_is_search_active_after_deadline_on_delta(mocker):
+def test_is_search_active_for_wanted_item_after_deadline_on_delta(mocker):
     today = datetime.datetime(2018, 2, 26, 0, 0, 0)
     mocker.patch('autosubliminal.core.item.get_today', return_value=today)
     assert wanted_item.is_search_active
