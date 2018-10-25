@@ -34,6 +34,7 @@ Libraries dependency tree
 |-- guessit
     |-- babelfish
     |-- python-dateutil
+        |-- six
     |-- rebulk
         |-- six
 |-- html5lib (used as parser in combination with beautifulsoup4 for parsing html pages)
@@ -43,6 +44,7 @@ Libraries dependency tree
     |-- boto
     |-- diskcache
     |-- python-dateutil
+        |-- six
     |-- requests
     |-- six
     |-- trans
@@ -79,6 +81,7 @@ Libraries dependency tree
         |-- rebulk
             |-- six
         |-- python-dateutil
+            |-- six
     |-- rarfile
     |-- requests
         |-- certify
@@ -93,6 +96,7 @@ Libraries dependency tree
 |-- tvdb_api_v2
     |-- certifi
     |-- python-dateutil
+        |-- six
     |-- six
     |-- urllib3
 |-- unidecode
