@@ -22,6 +22,7 @@ from autosubliminal.versionchecker import VersionChecker
 from autosubliminal.server.root import WebServerRoot
 from autosubliminal.util.encoding import s2n
 from autosubliminal.util.json import json_out_handler
+from autosubliminal.util.packaging import get_library_version
 
 log = logging.getLogger(__name__)
 
@@ -110,6 +111,10 @@ def _configure_server(restarting=False):
 
     # Disable engine plugins (no need for autoreload plugin)
     cherrypy.config.update({'engine.autoreload.on': False})
+
+    # Read and store cherrypy server version (if not set, it returns CherryPy/Unknown because it's not installed)
+    server_header = 'CherryPy/%s' % get_library_version('cherrypy')
+    cherrypy.config.update({'response.headers.server': server_header})
 
     # Configure authentication in if a username and password is set by the user
     if autosubliminal.USERNAME and autosubliminal.PASSWORD:

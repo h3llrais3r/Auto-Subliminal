@@ -1,0 +1,6 @@
+#comment line
+mylib==1.0.0
+mylibwithcomment==2.0.0 # comment
+mylibwithfilter==3.0.0 # rq.filter: <=3.0.0
+mylibwithpythonversion==4.0.0 ; python_version < '3.0'
+git+https://github.com/h3llrais3r/tvdb_api_v2.git@493724cf6de7ce7701a06cf4b11c9a7e8ba4c258#egg=tvdb_api_v2
