@@ -1,3 +1,11 @@
-# coding=utf-8
-# DO NOT REMOVE ME SINCE IT DOESN'T FIND THE IMPORT 'zc.lockfile' WITHOUT THIS FILE
-# THIS IS BECAUSE WE CANNOT HANDLE NAMESPACE PACKAGES!
+# A Python "namespace package" http://www.python.org/dev/peps/pep-0382/
+# This always goes inside of a namespace package's __init__.py
+
+from pkgutil import extend_path
+__path__ = extend_path(__path__, __name__)
+
+try:
+    import pkg_resources
+    pkg_resources.declare_namespace(__name__)
+except ImportError:
+    pass
