@@ -559,22 +559,6 @@ def read_config(check_upgrade=False):
         else:
             autosubliminal.PUSHOVERDEVICES = u''
 
-        # Notify My Android
-        if cfg.has_option('notification', 'notifynma'):
-            autosubliminal.NOTIFYNMA = cfg.getboolean('notification', 'notifynma')
-        else:
-            autosubliminal.NOTIFYNMA = False
-
-        if cfg.has_option('notification', 'nmaapi'):
-            autosubliminal.NMAAPI = cfg.get('notification', 'nmaapi')
-        else:
-            autosubliminal.NMAAPI = u'API key'
-
-        if cfg.has_option('notification', 'nmapriority'):
-            autosubliminal.NMAPRIORITY = cfg.getint('notification', 'nmapriority')
-        else:
-            autosubliminal.NMAPRIORITY = 0
-
         # Growl
         if cfg.has_option('notification', 'notifygrowl'):
             autosubliminal.NOTIFYGROWL = cfg.getboolean('notification', 'notifygrowl')
@@ -665,9 +649,6 @@ def read_config(check_upgrade=False):
         autosubliminal.PUSHOVERKEY = u'user key'
         autosubliminal.PUSHOVERAPI = u'API key'
         autosubliminal.PUSHOVERDEVICES = u''
-        autosubliminal.NOTIFYNMA = False
-        autosubliminal.NMAAPI = u'API key'
-        autosubliminal.NMAPRIORITY = 0
         autosubliminal.NOTIFYGROWL = False
         autosubliminal.GROWLHOST = u'127.0.0.1'
         autosubliminal.GROWLPORT = 23053
@@ -1102,9 +1083,6 @@ def write_notification_section():
     cfg.set(section, 'pushoverkey', autosubliminal.PUSHOVERKEY)
     cfg.set(section, 'pushoverapi', autosubliminal.PUSHOVERAPI)
     cfg.set(section, 'pushoverdevices', autosubliminal.PUSHOVERDEVICES)
-    cfg.set(section, 'notifynma', text_type(autosubliminal.NOTIFYNMA))
-    cfg.set(section, 'nmaapi', autosubliminal.NMAAPI)
-    cfg.set(section, 'nmapriority', autosubliminal.NMAPRIORITY)
     cfg.set(section, 'notifygrowl', text_type(autosubliminal.NOTIFYGROWL))
     cfg.set(section, 'growlhost', autosubliminal.GROWLHOST)
     cfg.set(section, "growlport", text_type(autosubliminal.GROWLPORT))
