@@ -1,7 +1,6 @@
 var gulp = require('gulp');
 var clean_css = require('gulp-clean-css');
 var concat = require('gulp-concat');
-var copy = require('gulp-copy');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var log = require('fancy-log');
