@@ -30,6 +30,16 @@ def test_growl_exception(monkeypatch, mocker):
     assert notifier.notify_download(download_item) is False
 
 
+def test_growl_registration_exception(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.NOTIFYGROWL', True)
+    monkeypatch.setattr('autosubliminal.GROWLHOST', 'localhost')
+    monkeypatch.setattr('autosubliminal.GROWLPORT', 23053)
+    mocker.patch('gntp.notifier.GrowlNotifier.register', return_value=False)
+    notifier = GrowlNotifier()
+    assert notifier.name == notifier_name
+    assert notifier.test() is False
+
+
 def test_growl_notify_download(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.NOTIFYGROWL', True)
     monkeypatch.setattr('autosubliminal.GROWLHOST', 'localhost')
