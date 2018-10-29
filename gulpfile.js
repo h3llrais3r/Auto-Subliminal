@@ -89,14 +89,14 @@ gulp.task('bundle:vendor_css', function () {
  Minify tasks
  ************/
 
-gulp.task('minify:vendor_js', ['bundle:vendor_js'], function () {
+gulp.task('minify:vendor_js', function () {
     return gulp.src('dist/vendor.js')
         .pipe(rename('vendor.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('minify:vendor_css', ['bundle:vendor_css'], function () {
+gulp.task('minify:vendor_css', function () {
     return gulp.src('dist/vendor.css')
         .pipe(rename('vendor.min.css'))
         .pipe(clean_css())
@@ -120,19 +120,19 @@ var cleanup_sources = [
 gulp.task('clean', function () {
     log.info('Clean files/folders:');
     log.info(cleanup_sources);
-    return del.sync(cleanup_sources);
+    return del(cleanup_sources);
 });
 
 /**********
  Copy tasks
  **********/
 
-gulp.task('copy:vendor_js', ['minify:vendor_js'], function () {
+gulp.task('copy:vendor_js', function () {
     return gulp.src(['dist/vendor.js', 'dist/vendor.min.js'])
         .pipe(gulp.dest('web/static/js'));
 });
 
-gulp.task('copy:vendor_css', ['minify:vendor_css'], function () {
+gulp.task('copy:vendor_css', function () {
     return gulp.src(['dist/vendor.css', 'dist/vendor.min.css'])
         .pipe(gulp.dest('web/static/css'));
 });
@@ -156,19 +156,28 @@ gulp.task('copy:vendor_fonts', function () {
 });
 
 /************
+ Vendor tasks
+ ************/
+
+gulp.task('vendor_js', gulp.series('bundle:vendor_js', 'minify:vendor_js', 'copy:vendor_js'));
+gulp.task('vendor_css', gulp.series('bundle:vendor_css', 'minify:vendor_css', 'copy:vendor_css'));
+gulp.task('vendor_images', gulp.series('copy:vendor_images'));
+gulp.task('vendor_fonts', gulp.series('copy:vendor_fonts'));
+
+/************
  Install task
  ************/
 
-gulp.task('install', ['copy:vendor_js', 'copy:vendor_css', 'copy:vendor_images', 'copy:vendor_fonts']);
+gulp.task('install', gulp.series('vendor_js', 'vendor_css', 'vendor_images', 'vendor_fonts'));
 
 /**********
  Build task
  **********/
 
-gulp.task('build', ['clean', 'install']);
+gulp.task('build', gulp.series('clean', 'install'));
 
 /************
  Default task
  ************/
 
-gulp.task('default', ['build']);
+gulp.task('default', gulp.series('build'));
