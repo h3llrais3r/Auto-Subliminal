@@ -18,8 +18,15 @@ def test_compare_wanted_items():
 
 
 def test_wanted_item_with_multi_episode():
+    # Example file: Marvels.Agents.of.S.H.I.E.L.D.S05E01-E02.720p.HDTV.x264-AVS.mkv
     wanted_item_1 = WantedItem(type='episode', title='test', season=1, episode=[1, 2])
     assert wanted_item_1.episode == '1,2'
+
+
+def test_wanted_item_with_multi_codec():
+    # Example file: Code.37.S03E02.NL.VLAAMS.720p.HDTV.x264-SHOWGEMiST_xvid.avi
+    wanted_item_1 = WantedItem(type='episode', title='test', season=1, episode=1, codec=['h264', 'XviD'])
+    assert wanted_item_1.codec == 'h264,XviD'
 
 
 def test_wanted_item_trim_release_group():

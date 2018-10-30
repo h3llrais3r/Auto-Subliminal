@@ -55,6 +55,10 @@ class _Item(object):
         if isinstance(episode, list):
             _episode = ','.join(text_type(ep) for ep in episode)  # episode can be a list of episodes (int)
 
+        _codec = codec
+        if isinstance(codec, list):
+            _codec = ','.join(text_type(c) for c in codec)  # codec can be a list of codecs (str)
+
         # We need to trim the release group in some cases
         _releasegrp = releasegrp
         if releasegrp:
@@ -72,7 +76,7 @@ class _Item(object):
         self.episode = _episode
         self.source = source
         self.quality = quality
-        self.codec = codec
+        self.codec = _codec
         self.releasegrp = _releasegrp
 
     def __eq__(self, other):
