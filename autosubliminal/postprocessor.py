@@ -3,6 +3,7 @@
 import logging
 
 import autosubliminal
+from autosubliminal.core.item import DownloadItem
 from autosubliminal.util.encoding import b2u, s2n
 from autosubliminal.util.common import get_root_path, run_cmd, safe_trim
 
@@ -19,6 +20,9 @@ class PostProcessor(object):
     - subtitle path (can be empty, postprocessing is possible without a subtitle)
     - root video path (one of the video paths listed in autosubliminal.VIDEOPATHS, where video path is located in)
     Custom arguments can be added after the default arguments
+
+    :param wanted_item: the :class:`WantedItem` or :class:`DownloadItem` object
+    :type wanted_item: WantedItem or DownloadItem
     """
 
     def __init__(self, wanted_item):
@@ -78,7 +82,7 @@ class PostProcessor(object):
             process.append(self._convert_arg(video_path))
 
             # Add subtitle path argument (can be empty if no subtitle was downloaded)
-            subtitle_path = self._wanted_item.subtitlepath
+            subtitle_path = self._wanted_item.subtitlepath if isinstance(self._wanted_item, DownloadItem) else None
             log.debug('subtitle path: %s', subtitle_path if subtitle_path else '')
             process.append(self._convert_arg(subtitle_path if subtitle_path else ''))
 
