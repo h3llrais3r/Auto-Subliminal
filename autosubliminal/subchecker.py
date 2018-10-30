@@ -615,17 +615,19 @@ def _construct_download_item(wanted_item, subtitles, language, single):
     return download_item
 
 
-def _get_min_match_score(video, default_score=False):
+def _get_min_match_score(video, manual_search=False):
     min_score = 0
     if isinstance(video, Episode):
-        if default_score:
-            min_score = autosubliminal.SHOWMINMATCHSCOREDEFAULT
+        if manual_search:
+            if autosubliminal.MANUALSEARCHWITHSCORING:
+                min_score = autosubliminal.SHOWMINMATCHSCOREDEFAULT
         else:
             min_score = autosubliminal.SHOWMINMATCHSCORE
         log.debug('Using episode min match score: %s', min_score)
     elif isinstance(video, Movie):
-        if default_score:
-            min_score = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
+        if manual_search:
+            if autosubliminal.MANUALSEARCHWITHSCORING:
+                min_score = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
         else:
             min_score = autosubliminal.MOVIEMINMATCHSCORE
         log.debug('Using movie min match score: %s', min_score)

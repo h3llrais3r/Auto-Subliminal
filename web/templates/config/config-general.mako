@@ -122,6 +122,36 @@
 
                         <div class="form-group narrow">
                             <span class="col-xs-4 col-md-3">
+                                <label for="manualsearchwithscoring">Manual search with scoring
+                                    <span class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                        </a>
+                                        <ul class="dropdown-menu has-tip info-list">
+                                            <li>
+                                                When enabled, only subtitles matching the minimum default score will be returned.<br>
+                                                When disabled, all found subtitles will be returned.<br>
+                                                REMARK: Disable it at your own risk because it might return even unrelated subtitles!
+                                            </li>
+                                        </ul>
+                                    </span>
+                                </label>
+                            </span>
+                            <span class="col-xs-8 col-md-6">
+                                <select id="manualsearchwithscoring" name="manualsearchwithscoring" class="form-control input-sm">
+                                    % if autosubliminal.MANUALSEARCHWITHSCORING:
+                                        <option value="True" selected="selected">Enabled</option>
+                                        <option value="False">Disabled</option>
+                                    % else:
+                                        <option value="True">Enabled</option>
+                                        <option value="False" selected="selected">Disabled</option>
+                                    % endif
+                                </select>
+                            </span>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <span class="col-xs-4 col-md-3">
                                 <label for="scandisk">Disk scan interval
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
