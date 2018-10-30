@@ -23,6 +23,12 @@ def test_wanted_item_with_multi_episode():
     assert wanted_item_1.episode == '1,2'
 
 
+def test_wanted_item_with_multi_sources():
+    # Example file: Inferno.2016.1080p.WEB.BluRay.x264-[GROUP1.AG].mp4
+    wanted_item_1 = WantedItem(type='movie', title='test', source=['WEB-DL', 'BluRay'])
+    assert wanted_item_1.source == 'WEB-DL,BluRay'
+
+
 def test_wanted_item_with_multi_codec():
     # Example file: Code.37.S03E02.NL.VLAAMS.720p.HDTV.x264-SHOWGEMiST_xvid.avi
     wanted_item_1 = WantedItem(type='episode', title='test', season=1, episode=1, codec=['h264', 'XviD'])

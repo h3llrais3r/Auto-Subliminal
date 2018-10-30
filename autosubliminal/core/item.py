@@ -53,8 +53,14 @@ class _Item(object):
         # Episode can be a list of episodes (for multi-ep videos), so make sure it's a string
         _episode = episode
         if isinstance(episode, list):
-            _episode = ','.join(text_type(ep) for ep in episode)  # episode can be a list of episodes (int)
+            _episode = ','.join(text_type(e) for e in episode)  # episode can be a list of episodes (int)
 
+        # Source can be a list of sources, so make sure it's a string
+        _source = source
+        if isinstance(source, list):
+            _source = ','.join(text_type(s) for s in source)  # source can be a list of sources (str)
+
+        # Codec can be a list of codecs, so make sure it's a string
         _codec = codec
         if isinstance(codec, list):
             _codec = ','.join(text_type(c) for c in codec)  # codec can be a list of codecs (str)
@@ -74,7 +80,7 @@ class _Item(object):
         self.year = year
         self.season = season
         self.episode = _episode
-        self.source = source
+        self.source = _source
         self.quality = quality
         self.codec = _codec
         self.releasegrp = _releasegrp
