@@ -52,7 +52,7 @@ tempora==1.14
 trans==2.1.0
 git+https://github.com/h3llrais3r/tvdb_api_v2.git@493724cf6de7ce7701a06cf4b11c9a7e8ba4c258#egg=tvdb_api_v2
 unidecode==1.0.22
-urllib3==1.24
+urllib3==1.24.1
 webencodings==0.5.1
 websocket-client==0.54.0
 ws4py==0.5.1
