@@ -403,7 +403,7 @@ def calculate_prorated_values():
 	unit time), and return that same rate for various time periods.
 	"""
 	rate = six.moves.input("Enter the rate (3/hour, 50/month)> ")
-	res = re.match('(?P<value>[\d.]+)/(?P<period>\w+)$', rate).groupdict()
+	res = re.match(r'(?P<value>[\d.]+)/(?P<period>\w+)$', rate).groupdict()
 	value = float(res['value'])
 	value_per_second = value / get_period_seconds(res['period'])
 	for period in ('minute', 'hour', 'day', 'month', 'year'):
@@ -446,7 +446,7 @@ def parse_timedelta(str):
 
 
 def _parse_timedelta_part(part):
-	match = re.match('(?P<value>[\d.]+) (?P<unit>\w+)', part)
+	match = re.match(r'(?P<value>[\d.]+) (?P<unit>\w+)', part)
 	if not match:
 		msg = "Unable to parse {part!r} as a time delta".format(**locals())
 		raise ValueError(msg)
