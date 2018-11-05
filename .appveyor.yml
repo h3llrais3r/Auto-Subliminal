@@ -2,24 +2,29 @@ build: false
 
 environment:
   matrix:
-    - PYTHON: "C:\\Python27"
-      PYTHON_VERSION: "2.7"
-      PYTHON_ARCH: "32"
+    - PYTHON: C:\Python27
+      PYTHON_VERSION: 2.7
+      PYTHON_ARCH: 32
 
-    - PYTHON: "C:\\Python34"
-      PYTHON_VERSION: "3.4"
-      PYTHON_ARCH: "32"
+    - PYTHON: C:\Python34
+      PYTHON_VERSION: 3.4
+      PYTHON_ARCH: 32
 
-    - PYTHON: "C:\\Python35"
-      PYTHON_VERSION: "3.5"
-      PYTHON_ARCH: "32"
+    - PYTHON: C:\Python35
+      PYTHON_VERSION: 3.5
+      PYTHON_ARCH: 32
 
-    - PYTHON: "C:\\Python36"
-      PYTHON_VERSION: "3.6"
-      PYTHON_ARCH: "32"
+    - PYTHON: C:\Python36
+      PYTHON_VERSION: 3.6
+      PYTHON_ARCH: 32
+
+cache:
+  # Cache downloaded pip packages and built wheels.
+  - '%LOCALAPPDATA%\pip\Cache\http'
+  - '%LOCALAPPDATA%\pip\Cache\wheels'
 
 init:
-  - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
+  - ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%
 
 # Command(s) to install dependencies
 install:
@@ -28,13 +33,7 @@ install:
   - python -m pip install --upgrade pip # Gives access denied error when not using 'python -m' prefix
   - pip install --upgrade six # Upgrade six because Python 3.4 is packaged with 1.10.0 and we need at least 1.11.0
   - pip install -e .[dev,test]
-  - pip install coveralls
 
 # Build command(s)
 test_script:
-  - coverage run --branch --source=autosubliminal setup.py test
-  - coverage report
-
-# After success command(s)
-on_success:
-  - coveralls
+  - python setup.py test
