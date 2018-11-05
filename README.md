@@ -1,4 +1,4 @@
-Auto-Subliminal [![License](https://img.shields.io/github/license/h3llrais3r/Auto-Subliminal.svg)](https://github.com/h3llrais3r/Auto-Subliminal/blob/master/LICENSE)
+Auto-Subliminal [![License](https://img.shields.io/github/license/h3llrais3r/Auto-Subliminal.svg)](https://github.com/h3llrais3r/Auto-Subliminal/blob/master/LICENSE) [![Percentage of issues still open](http://isitmaintained.com/badge/open/h3llrais3r/Auto-Subliminal.svg)](http://isitmaintained.com/project/h3llrais3r/Auto-Subliminal "Percentage of issues still open") [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/h3llrais3r/Auto-Subliminal.svg)](http://isitmaintained.com/project/h3llrais3r/Auto-Subliminal "Average time to resolve an issue")
 ===============
 
 | Status | Master | Development |
@@ -6,8 +6,6 @@ Auto-Subliminal [![License](https://img.shields.io/github/license/h3llrais3r/Aut
 | Travis CI build | [![Travis CI build status](https://travis-ci.org/h3llrais3r/Auto-Subliminal.svg?branch=master)](https://travis-ci.org/h3llrais3r/Auto-Subliminal) | [![Travis CI build status](https://travis-ci.org/h3llrais3r/Auto-Subliminal.svg?branch=development)](https://travis-ci.org/h3llrais3r/Auto-Subliminal) |
 | Coverage | [![Coverage Status](https://coveralls.io/repos/github/h3llrais3r/Auto-Subliminal/badge.svg?branch=master)](https://coveralls.io/github/h3llrais3r/Auto-Subliminal?branch=master) | [![Coverage Status](https://coveralls.io/repos/github/h3llrais3r/Auto-Subliminal/badge.svg?branch=development)](https://coveralls.io/github/h3llrais3r/Auto-Subliminal?branch=development) |
 | Requirements | [![Requirements Status](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements.svg?branch=master)](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements/?branch=master) | [![Requirements Status](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements.svg?branch=development)](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements/?branch=development) |
-| Open issues | [![Percentage of issues still open](http://isitmaintained.com/badge/open/h3llrais3r/Auto-Subliminal.svg)](http://isitmaintained.com/project/h3llrais3r/Auto-Subliminal "Percentage of issues still open") |
-| Issue resolution time | [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/h3llrais3r/Auto-Subliminal.svg)](http://isitmaintained.com/project/h3llrais3r/Auto-Subliminal "Average time to resolve an issue") |
 
 About
 -----
