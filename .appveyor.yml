@@ -1,0 +1,38 @@
+build: false
+
+environment:
+  matrix:
+    - PYTHON: "C:\\Python27"
+      PYTHON_VERSION: "2.7"
+      PYTHON_ARCH: "32"
+
+    - PYTHON: "C:\\Python34"
+      PYTHON_VERSION: "3.4"
+      PYTHON_ARCH: "32"
+
+    - PYTHON: "C:\\Python35"
+      PYTHON_VERSION: "3.5"
+      PYTHON_ARCH: "32"
+
+    - PYTHON: "C:\\Python36"
+      PYTHON_VERSION: "3.6"
+      PYTHON_ARCH: "32"
+
+init:
+  - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
+
+# Command(s) to install dependencies
+install:
+  - "%PYTHON%/Scripts/pip.exe --upgrade pip"
+  - "%PYTHON%/Scripts/pip.exe --upgrade six" # Upgrade six because Python 3.4 is packaged with 1.10.0 and we need at least 1.11.0
+  - "%PYTHON%/Scripts/pip.exe install -e .[dev,test]"
+  - "%PYTHON%/Scripts/pip.exe install coveralls"
+
+# Build command(s)
+test_script:
+  - "%PYTHON%/Scripts/coverage run --branch --source=autosubliminal setup.py test"
+  - "%PYTHON%/Scripts/coverage report"
+
+# After success command(s)
+on_success:
+  - "%PYTHON%/Scripts/coveralls"
