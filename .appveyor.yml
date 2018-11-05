@@ -23,8 +23,8 @@ init:
 
 # Command(s) to install dependencies
 install:
-  - "%PYTHON%/Scripts/pip.exe --upgrade pip"
-  - "%PYTHON%/Scripts/pip.exe --upgrade six" # Upgrade six because Python 3.4 is packaged with 1.10.0 and we need at least 1.11.0
+  - "%PYTHON%/Scripts/pip.exe install --upgrade pip"
+  - "%PYTHON%/Scripts/pip.exe install --upgrade six" # Upgrade six because Python 3.4 is packaged with 1.10.0 and we need at least 1.11.0
   - "%PYTHON%/Scripts/pip.exe install -e .[dev,test]"
   - "%PYTHON%/Scripts/pip.exe install coveralls"
 
