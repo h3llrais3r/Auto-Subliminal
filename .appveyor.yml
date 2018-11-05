@@ -23,16 +23,18 @@ init:
 
 # Command(s) to install dependencies
 install:
-  - "%PYTHON%/Scripts/pip.exe install --upgrade pip"
-  - "%PYTHON%/Scripts/pip.exe install --upgrade six" # Upgrade six because Python 3.4 is packaged with 1.10.0 and we need at least 1.11.0
-  - "%PYTHON%/Scripts/pip.exe install -e .[dev,test]"
-  - "%PYTHON%/Scripts/pip.exe install coveralls"
+  - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH% # Prepend newly installed Python to the PATH of this build
+  - python --version # Verify version
+  - python -m pip install --upgrade pip # Gives access denied error when not using 'python -m' prefix
+  - pip install --upgrade six # Upgrade six because Python 3.4 is packaged with 1.10.0 and we need at least 1.11.0
+  - pip install -e .[dev,test]
+  - pip install coveralls
 
 # Build command(s)
 test_script:
-  - "%PYTHON%/Scripts/coverage run --branch --source=autosubliminal setup.py test"
-  - "%PYTHON%/Scripts/coverage report"
+  - coverage run --branch --source=autosubliminal setup.py test
+  - coverage report
 
 # After success command(s)
 on_success:
-  - "%PYTHON%/Scripts/coveralls"
+  - coveralls
