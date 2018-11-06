@@ -41,8 +41,8 @@ def test_mail_notify_download(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.MAILENCRYPTION', 'TLS')
     monkeypatch.setattr('autosubliminal.MAILUSERNAME', 'username')
     monkeypatch.setattr('autosubliminal.MAILPASSWORD', 'password')
-    monkeypatch.setattr('autosubliminal.MAILAUTH', None)  # Keep it None because I can't mock it
-    mocker.patch('smtplib.SMTP.__init__', return_value=None)
+    monkeypatch.setattr('autosubliminal.MAILAUTH', 'LOGIN')  # Keep it None because I can't mock it
+    mocker.patch('smtplib.SMTP')
     mocker.patch('smtplib.SMTP.starttls')
     mocker.patch('smtplib.SMTP.ehlo')
     mocker.patch('smtplib.SMTP.login')
