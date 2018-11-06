@@ -1,5 +1,5 @@
 # Version format
-version: {build}
+version: '{build}'
 
 # Build is not needed for Python
 build: off
