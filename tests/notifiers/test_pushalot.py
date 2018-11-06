@@ -21,11 +21,22 @@ def test_pushalot_disabled():
     assert notifier.notify_download(download_item) is False
 
 
-def test_pushalot_exception(monkeypatch):
+def test_pushalot_error(monkeypatch):
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHALOT', True)
     with requests_mock.mock() as m:
         # Mock erroneous request
         m.register_uri('POST', PUSHALOTURL, status_code=500)
+        notifier = PushalotNotifier()
+        assert notifier.name == notifier_name
+        assert notifier.notify('test') is False
+        assert notifier.notify_download(download_item) is False
+
+
+def test_pushalot_exception(monkeypatch):
+    monkeypatch.setattr('autosubliminal.NOTIFYPUSHALOT', True)
+    with requests_mock.mock() as m:
+        # Mock exception request
+        m.register_uri('POST', PUSHALOTURL, exc=Exception)
         notifier = PushalotNotifier()
         assert notifier.name == notifier_name
         assert notifier.notify('test') is False

@@ -21,11 +21,22 @@ def test_prowl_disabled():
     assert notifier.notify_download(download_item) is False
 
 
-def test_prowl_exception(monkeypatch):
+def test_prowl_error(monkeypatch):
     monkeypatch.setattr('autosubliminal.NOTIFYPROWL', True)
     with requests_mock.mock() as m:
         # Mock erroneous request
         m.register_uri('POST', PROWLURL, status_code=500)
+        notifier = ProwlNotifier()
+        assert notifier.name == notifier_name
+        assert notifier.notify('test') is False
+        assert notifier.notify_download(download_item) is False
+
+
+def test_prowl_exception(monkeypatch):
+    monkeypatch.setattr('autosubliminal.NOTIFYPROWL', True)
+    with requests_mock.mock() as m:
+        # Mock exception request
+        m.register_uri('POST', PROWLURL, exc=Exception)
         notifier = ProwlNotifier()
         assert notifier.name == notifier_name
         assert notifier.notify('test') is False

@@ -17,11 +17,10 @@ def test_notifiers_notify_download(mocker):
 
 
 def test_notifiers_test_notifier(mocker):
-    mocker.patch('autosubliminal.notifiers.generic.BaseNotifier.test', return_value=True)
+    mocker.patch('autosubliminal.notifiers.generic.BaseNotifier._notify', return_value=True)
     assert autosubliminal.notifiers.test_notifier('mail') is True
 
 
-def test_notifiers_test_notifier_exception(mocker):
-    mocker.patch('autosubliminal.notifiers.generic.BaseNotifier.test', return_value=True)
+def test_notifiers_test_notifier_exception():
     with pytest.raises(NotImplementedError):
         autosubliminal.notifiers.test_notifier('unknown')
