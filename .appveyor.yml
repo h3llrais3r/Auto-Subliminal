@@ -1,4 +1,8 @@
-build: false
+# Version format
+version: {build}
+
+# Build is not needed for Python
+build: off
 
 environment:
   matrix:
