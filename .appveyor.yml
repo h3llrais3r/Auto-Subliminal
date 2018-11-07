@@ -24,7 +24,7 @@ environment:
 
 # Caching
 cache:
-  - '%LOCALAPPDATA%\pip\Cache\http'
+  - '%LOCALAPPDATA%\pip\Cache'
 
 # Command(s) to execute before starting
 init:
