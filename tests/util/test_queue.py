@@ -1,8 +1,11 @@
 # coding=utf-8
 
+import pytest
+
 import autosubliminal
 from autosubliminal.core.item import WantedItem
-from autosubliminal.util.queue import count_wanted_queue_items, get_wanted_queue_lock, release_wanted_queue_lock
+from autosubliminal.util.queue import count_wanted_queue_items, get_wanted_queue_lock, release_wanted_queue_lock, \
+    release_wanted_queue_lock_on_exception
 
 
 def test_wanted_queue_lock():
@@ -24,3 +27,16 @@ def test_count_wanted_queue_items():
     assert count_wanted_queue_items(item_type='movie') == 1
     assert count_wanted_queue_items(item_type='episode') == 1
     assert count_wanted_queue_items(item_type='video') == 0
+
+
+def test_release_wanted_queue_lock_on_exception():
+    @release_wanted_queue_lock_on_exception
+    def test_function():
+        get_wanted_queue_lock()
+        assert autosubliminal.WANTEDQUEUELOCK
+        raise Exception('unexpected')
+
+    assert not autosubliminal.WANTEDQUEUELOCK
+    with pytest.raises(Exception):
+        test_function()
+    assert not autosubliminal.WANTEDQUEUELOCK
