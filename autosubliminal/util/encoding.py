@@ -3,40 +3,36 @@
 from six import binary_type, text_type, PY2
 
 
-def b2u(b, encoding='utf-8'):
+def b2u(b, encoding='utf-8', fallback_error_mode='replace'):
     """
     Convert a byte string to a unicode string.
 
     :param b: a byte string
-    :param encoding: the used encoding, defaults to utf-8
+    :param encoding: the used encoding, defaults to 'utf-8'
+    :param fallback_error_mode: the fallback error mode, defaults to 'replace'
     :return: the unicode string
     """
     try:
         return b.decode(encoding)
     except Exception:
-        # Fallback to 'replace' and 'ignore' error mode
-        try:
-            return b.decode(encoding, 'replace')
-        except Exception:
-            return b.decode(encoding, 'ignore')
+        # Use fallback error mode
+        return b.decode(encoding, fallback_error_mode)
 
 
-def u2b(u, encoding='utf-8'):
+def u2b(u, encoding='utf-8', fallback_error_mode='replace'):
     """
     Convert a unicode string to a byte string.
 
     :param u: a unicode string
-    :param encoding: the used encoding, defaults to utf-8
+    :param encoding: the used encoding, defaults to 'utf-8'
+    :param fallback_error_mode: the fallback error mode, defaults to 'replace'
     :return: the byte string
     """
     try:
         return u.encode(encoding)
     except Exception:
-        # Fallback to 'replace' and 'ignore' error mode
-        try:
-            return u.encode(encoding, 'replace')
-        except Exception:
-            return u.encode(encoding, 'ignore')
+        # Use fallback error mode
+        return u.encode(encoding, fallback_error_mode)
 
 
 def s2b(s, encoding='utf-8'):

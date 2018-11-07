@@ -9,8 +9,24 @@ def test_b2u():
     assert b2u(b'\xc3\xa9l\xc3\xa0') == u'élà'
 
 
+def test_b2u_exception_fallback_replace():
+    assert b2u(b'\xc3\xa9l\xc3\xa0', 'ascii') == u'��l��'
+
+
+def test_b2u_exception_fallback_ignore():
+    assert b2u(b'\xc3\xa9l\xc3\xa0', 'ascii', 'ignore') == u'l'
+
+
 def test_u2b():
     assert u2b(u'élà') == b'\xc3\xa9l\xc3\xa0'
+
+
+def test_u2b_exception_fallback_replace():
+    assert u2b(u'élà', 'ascii') == b'?l?'
+
+
+def test_u2b_exception_fallback_ignore():
+    assert u2b(u'élà', 'ascii', 'ignore') == b'l'
 
 
 def test_s2b():
