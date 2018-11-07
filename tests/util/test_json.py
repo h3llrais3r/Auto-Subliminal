@@ -2,7 +2,7 @@
 
 import jsonpickle
 
-from autosubliminal.util.json import from_json, to_json
+from autosubliminal.util.json import from_json, to_json, json_out_handler
 
 
 class MyClass(object):
@@ -73,3 +73,9 @@ def test_object_to_json():
 
 def test_dict_to_json():
     assert obj_json == to_json(obj_dict)
+
+
+def test_json_out_handler(mocker):
+    mocker.patch('cherrypy.serving.request')
+    mocker.patch('cherrypy.serving.request._json_inner_handler', return_value=obj)
+    assert json_out_handler() == obj_json
