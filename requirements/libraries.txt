@@ -41,7 +41,7 @@ python-twitter==3.5
 pytz==2018.7
 rarfile==3.0
 rebulk==1.0.0
-requests==2.20.0
+requests==2.20.1
 requests-oauthlib==1.0.0
 simplejson==3.16.0
 six==1.11.0
