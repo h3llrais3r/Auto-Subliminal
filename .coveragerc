@@ -1,0 +1,12 @@
+[run]
+# Enable branch coverage
+branch = True
+
+# Set source
+source = autosubliminal
+
+# Omit files
+omit =
+    autosubliminal/core/enums.py
+    autosubliminal/providers/addic7ed.py
+    autosubliminal/providers/useragents.py
