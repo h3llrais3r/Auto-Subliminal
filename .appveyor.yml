@@ -11,6 +11,7 @@ skip_branch_with_pr: true
 # Do not build on tags (GitHub and BitBucket)
 skip_tags: true
 
+# Build environment
 environment:
   matrix:
     - PYTHON: C:\Python27-x64
@@ -28,6 +29,10 @@ environment:
     - PYTHON: C:\Python36-x64
       PYTHON_VERSION: 3.6
       PYTHON_ARCH: 64
+
+# Build matrix
+matrix:
+  fast_finish: true # Finish build immediately once one of the jobs fails.
 
 # Caching
 cache:

@@ -9,6 +9,10 @@ python:
   - "3.5"
   - "3.6"
 
+# Build matrix
+matrix:
+  fast_finish: true # Finish build immediately once one of the jobs fails.
+
 # Caching
 cache:
   directories:
