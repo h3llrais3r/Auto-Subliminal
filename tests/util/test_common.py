@@ -4,6 +4,7 @@ import os
 import tempfile
 import time
 from collections import OrderedDict
+from datetime import datetime
 
 import pytest
 from vcr import VCR
@@ -11,10 +12,11 @@ from vcr import VCR
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.core.item import WantedItem
-from autosubliminal.util.common import connect_url, get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, \
-    display_mapping_dict, display_list_single_line, display_list_multi_line, display_value, display_item_title, \
-    display_item_name, display_timestamp, convert_timestamp, humanize_bytes, get_common_path, get_root_path, \
-    get_file_size, set_rw_and_remove
+from autosubliminal.util.common import get_today, add_event_message, add_notification_message, run_cmd, connect_url, \
+    wait_for_internet_connection, get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, display_mapping_dict, \
+    display_list_single_line, display_list_multi_line, display_value, display_item_title, display_item_name, \
+    display_timestamp, convert_timestamp, humanize_bytes, get_common_path, get_root_path, get_file_size, \
+    set_rw_and_remove
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -32,6 +34,44 @@ dict_value = {}
 dict_value_with_items = {'1': 'a'}
 
 
+def test_get_today():
+    today = get_today()
+    assert today is not None
+    assert isinstance(today, datetime)
+
+
+def test_add_event_message(monkeypatch):
+    monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
+    message = {
+        'message_type': 'event',
+        'event': {
+            'event_type': 'HOME_PAGE_RELOAD'
+        }
+    }
+    add_event_message('HOME_PAGE_RELOAD')
+    assert len(autosubliminal.WEBSOCKETMESSAGEQUEUE) == 1
+    assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
+
+
+def test_add_notification_message(monkeypatch):
+    monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
+    message = {
+        'message_type': 'notification',
+        'notification': {
+            'notification_message': 'test',
+            'notification_type': 'info',
+            'sticky': False
+        }
+    }
+    add_notification_message('test')
+    assert len(autosubliminal.WEBSOCKETMESSAGEQUEUE) == 1
+    assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
+
+
+def test_run_cmd():
+    assert run_cmd('cd') is not None
+
+
 @vcr.use_cassette()
 def test_connect_url(monkeypatch):
     monkeypatch.setattr('autosubliminal.USERAGENT', 'Auto-Subliminal/' + version.RELEASE_VERSION)
@@ -46,6 +86,20 @@ def test_connect_url_exception(monkeypatch):
     monkeypatch.setattr('autosubliminal.TIMEOUT', 60)
     with pytest.raises(Exception):
         connect_url('invalid_url')
+
+
+def test_wait_for_internet_connection(mocker):
+    mocker.patch('autosubliminal.util.common.connect_url')
+    time_sleep = mocker.patch('time.sleep')
+    wait_for_internet_connection()
+    assert not time_sleep.called
+
+
+def test_wait_for_internet_connection_with_sleep(mocker):
+    mocker.patch('autosubliminal.util.common.connect_url', side_effect=[Exception, None])
+    time_sleep = mocker.patch('time.sleep')
+    wait_for_internet_connection()
+    assert time_sleep.called
 
 
 def test_get_boolean():
@@ -72,6 +126,11 @@ def test_save_text():
     assert safe_text(list_value_with_items) == '[\'a\', \'b\']'
     assert safe_text(dict_value) == '{}'
     assert safe_text(dict_value_with_items) == '{\'1\': \'a\'}'
+
+
+def test_save_text_default_value(mocker):
+    mocker.patch('autosubliminal.util.common.text_type', side_effect=Exception)
+    assert safe_text(None, 'fallback') == 'fallback'
 
 
 def test_safe_uppercase():
@@ -119,6 +178,7 @@ def test_safe_trim():
 
 
 def test_sanitize():
+    assert sanitize(None) is None
     assert sanitize('(Mr.-Robot :)') == 'mr robot'
 
 
@@ -232,6 +292,10 @@ def test_get_file_size():
         assert float(size) > 0
     finally:
         os.remove(file_path)
+
+
+def test_get_file_size_exception():
+    assert get_file_size('path/does/not/exist') == '0 bytes'
 
 
 def test_set_rw_and_remove():

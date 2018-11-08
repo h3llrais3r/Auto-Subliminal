@@ -303,18 +303,6 @@ def get_root_path(video_path, separator=os.path.sep):
     raise RuntimeError('Video %s not located in one of the configured VIDEOPATHS' % video_path)
 
 
-# Thanks to: http://stackoverflow.com/questions/1088392/sorting-a-python-list-by-key-while-checking-for-string-or-float
-def get_attr(name):
-    def inner_func(o):
-        try:
-            rv = float(o[name])
-        except ValueError:
-            rv = o[name]
-        return rv
-
-    return inner_func
-
-
 # Thanks to: http://code.activestate.com/recipes/577081-humanized-representation-of-a-number-of-bytes/
 def humanize_bytes(bytes, precision=1):
     """
