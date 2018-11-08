@@ -10,17 +10,21 @@ environment:
       PYTHON_VERSION: 2.7
       PYTHON_ARCH: 32
 
-    - PYTHON: C:\Python34
+    - PYTHON: C:\Python27-x64
+      PYTHON_VERSION: 2.7
+      PYTHON_ARCH: 64
+
+    - PYTHON: C:\Python34-x64
       PYTHON_VERSION: 3.4
-      PYTHON_ARCH: 32
+      PYTHON_ARCH: 64
 
-    - PYTHON: C:\Python35
+    - PYTHON: C:\Python35-x64
       PYTHON_VERSION: 3.5
-      PYTHON_ARCH: 32
+      PYTHON_ARCH: 64
 
-    - PYTHON: C:\Python36
+    - PYTHON: C:\Python36-x64
       PYTHON_VERSION: 3.6
-      PYTHON_ARCH: 32
+      PYTHON_ARCH: 64
 
 # Caching
 cache:
@@ -43,6 +47,7 @@ init:
 install:
   - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH% # Prepend newly installed Python to the PATH of this build
   - python --version # Verify version
+  - python -c "import struct; print(struct.calcsize('P') * 8)" # Verify architecture
   - python -m pip install --upgrade pip # Gives access denied error when not using 'python -m' prefix
   - pip install --upgrade six # Upgrade six because Python 3.4 is packaged with 1.10.0 and we need at least 1.11.0
   - pip install -e .[dev,test]
