@@ -134,3 +134,28 @@ def test_process_movie_file_special_chars(mocker):
     assert wanted_item.title == u'Un conte de Noël'
     assert wanted_item.year == 2008
     assert wanted_item.imdbid == '0993789'
+
+
+def test_process_movie_file_insufficient_guess(mocker):
+    # Mock guessit result
+    mocker.patch('autosubliminal.fileprocessor.guessit',
+                 return_value=dict([('year', 2018), ('container', 'mkv'), ('type', 'movie')]))
+    # Test process_file
+    dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
+    assert process_file(dir_name, '2018.mkv') is None
+
+
+def test_guess_invalid_type(mocker):
+    # Mock guessit result
+    mocker.patch('autosubliminal.fileprocessor.guessit', return_value=dict([('year', 2018), ('container', 'mkv')]))
+    # Test process_file
+    dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
+    assert process_file(dir_name, '2018.mkv') is None
+
+
+def test_guess_exception(mocker):
+    # Mock guessit exception
+    mocker.patch('autosubliminal.fileprocessor.guessit', side_effect=Exception)
+    # Test process_file
+    dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
+    assert process_file(dir_name, 'Southpaw.2015.1080p.BluRay.x264.mkv') is None
