@@ -36,3 +36,10 @@ def test_refine_movie():
     assert movie.resolution == 'Resolution'
     assert movie.video_codec == 'Codec'
     assert movie.release_group == 'Group'
+
+
+def test_skip_refine():
+    movie = Movie(name=os.path.join(resources_dir, 'Refine.Movie.Not.Exists.mkv'), title='Refine')
+    wanted_item = WantedItem(type='movie', title='Title')
+    refine(movie, wanted_item)
+    assert movie.title == 'Refine'

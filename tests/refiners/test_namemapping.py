@@ -29,3 +29,9 @@ def test_refine_movie():
     refine(movie)
     assert movie.alternative_titles == ['title']
     assert movie.imdb_id == 't123456'
+
+
+def test_skip_refine():
+    movie = Movie(name=os.path.join(resources_dir, 'Refine.Movie.Not.Exists.mkv'), title='Refine')
+    refine(movie)
+    assert movie.title == 'Refine'
