@@ -29,6 +29,8 @@ def test_refine_movie():
     movie = Movie(name=os.path.join(resources_dir, 'Refine.Movie.mkv'), title='Refine')
     wanted_item = WantedItem(type='movie', title='Title', year=2018, source='Format', quality='Resolution',
                              codec='Codec', releasegrp='Group')
+    print(movie)
+    print(wanted_item)
     refine(movie, wanted_item)
     assert movie.title == 'Title'
     assert movie.year == 2018

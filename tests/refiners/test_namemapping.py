@@ -26,6 +26,9 @@ def test_refine_episode():
 
 def test_refine_movie():
     movie = Movie(name=os.path.join(resources_dir, 'Refine.Movie.mkv'), title='Refine')
+    print(movie)
+    print(autosubliminal.ALTERNATIVEMOVIENAMEMAPPING)
+    print(autosubliminal.MOVIENAMEMAPPING)
     refine(movie)
     assert movie.alternative_titles == ['title']
     assert movie.imdb_id == 't123456'
