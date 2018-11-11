@@ -56,7 +56,6 @@ downloaded_item_list_json = '[' + downloaded_item_json + ']'
 
 
 def test_get_wanted_all_items():
-    # Create wanted queue with 1 item
     autosubliminal.WANTEDQUEUE = []
     autosubliminal.WANTEDQUEUE.append(wanted_item)
     # Check conversion to json:
@@ -68,7 +67,6 @@ def test_get_wanted_all_items():
 
 
 def test_get_wanted_single_item():
-    # Create wanted queue with 1 item
     autosubliminal.WANTEDQUEUE = []
     autosubliminal.WANTEDQUEUE.append(wanted_item)
     # Check conversion to json:
@@ -80,7 +78,6 @@ def test_get_wanted_single_item():
 
 
 def test_delete_wanted():
-    # Create wanted queue with 1 item
     autosubliminal.WANTEDQUEUE = []
     autosubliminal.WANTEDQUEUE.append(wanted_item)
     # Check conversion to json (need to pickle ourselves because we don't use cherrypy.tools here)
@@ -91,7 +88,6 @@ def test_delete_wanted():
 
 
 def test_get_downloaded_all_items(mocker):
-    # Mock last downloads with 1 item
     mocker.patch.object(LastDownloads, 'get_last_downloads')
     LastDownloads.get_last_downloads.return_value = [downloaded_item]
     # Check conversion to json:
@@ -103,7 +99,6 @@ def test_get_downloaded_all_items(mocker):
 
 
 def test_get_downloaded_number_of_items(mocker):
-    # Mock last downloads with 1 item
     mocker.patch.object(LastDownloads, 'get_last_downloads')
     LastDownloads.get_last_downloads.return_value = [downloaded_item]
     # Check conversion to json:
@@ -115,7 +110,6 @@ def test_get_downloaded_number_of_items(mocker):
 
 
 def test_get_downloaded_zero_items(mocker):
-    # Mock last downloads with 1 item
     mocker.patch.object(LastDownloads, 'get_last_downloads')
     LastDownloads.get_last_downloads.return_value = [downloaded_item]
     # Check conversion to json:

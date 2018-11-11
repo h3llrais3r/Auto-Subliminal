@@ -29,4 +29,3 @@ def test_refine_movie():
     refine(movie)
     assert movie.alternative_titles == ['title']
     assert movie.imdb_id == 't123456'
-    pass
