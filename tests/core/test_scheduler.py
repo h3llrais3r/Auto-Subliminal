@@ -25,7 +25,7 @@ def test_scheduler(mocker):
     finally:
         if scheduler:
             scheduler.stop()
-            assert scheduler.process.running is False
+            assert scheduler.running is False
 
 
 def test_scheduler_force_run(mocker):
@@ -41,7 +41,7 @@ def test_scheduler_force_run(mocker):
     finally:
         if scheduler:
             scheduler.stop()
-            assert scheduler.process.running is False
+            assert scheduler.running is False
 
 
 def test_duplicate_scheduler(monkeypatch, mocker):
@@ -58,7 +58,7 @@ def test_duplicate_scheduler(monkeypatch, mocker):
     finally:
         if scheduler:
             scheduler.stop()
-            assert scheduler.process.running is False
+            assert scheduler.running is False
 
 
 def test_triple_scheduler(monkeypatch, mocker):
@@ -75,4 +75,4 @@ def test_triple_scheduler(monkeypatch, mocker):
     finally:
         if scheduler:
             scheduler.stop()
-            assert scheduler.process.running is False
+            assert scheduler.running is False
