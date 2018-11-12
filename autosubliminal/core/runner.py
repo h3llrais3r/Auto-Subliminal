@@ -35,7 +35,7 @@ class Runner(object):
 
     @abc.abstractmethod
     def run(self):
-        pass
+        pass  # pragma: no cover
 
     def stop(self):
         log.info('Stopping thread %s', self.name)

@@ -145,4 +145,4 @@ class ScheduledProcess(object):
 
     @abc.abstractmethod
     def run(self, force_run):
-        pass
+        pass  # pragma: no cover

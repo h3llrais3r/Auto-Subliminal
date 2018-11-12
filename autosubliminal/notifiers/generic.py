@@ -20,20 +20,20 @@ class BaseNotifier(object):
 
     @abc.abstractproperty
     def log(self):
-        pass
+        pass  # pragma: no cover
 
     @abc.abstractproperty
     def name(self):
-        pass
+        pass  # pragma: no cover
 
     @abc.abstractproperty
     def enabled(self):
-        pass
+        pass  # pragma: no cover
 
     @abc.abstractmethod
     def _send_message(self, message, **kwargs):
         """Implementation of the notifier to send a message."""
-        pass
+        pass  # pragma: no cover
 
     def _get_download_message(self, download_item):
         message = ''
