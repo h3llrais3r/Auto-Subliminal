@@ -109,6 +109,7 @@ class Scheduler(object):
                 self._delay += 1
             self.process.running = False
         except:
+            self.process.running = False
             print(traceback.format_exc())
             os._exit(1)
 
