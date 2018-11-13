@@ -10,7 +10,7 @@ autosubliminal.SCHEDULERS = {}
 
 class MyScheduledProcess(ScheduledProcess):
     def run(self, force_run):
-        pass
+        time.sleep(1)
 
 
 def test_scheduler(mocker):
