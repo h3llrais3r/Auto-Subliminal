@@ -33,6 +33,7 @@ def test_scheduler_force_run(mocker):
     try:  # Use try/finally block to make sure that the thread is stopped
         scheduler_mock = mocker.patch.object(MyScheduledProcess, 'run')
         scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 10, False)
+        assert scheduler.next_run == 0
         scheduler.run(delay=1)
         time.sleep(2)
         assert scheduler_mock.called
