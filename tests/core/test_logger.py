@@ -4,7 +4,7 @@ import os
 import tempfile
 
 import autosubliminal
-from autosubliminal.core.logger import display_logfile
+from autosubliminal.core.logger import count_backup_logfiles, display_logfile, get_logfile
 
 
 def test_display_logfile():
@@ -32,3 +32,18 @@ def test_display_logfile():
         assert display_logfile(loglevel='debug') == lines_debug_reversed
     finally:
         os.remove(autosubliminal.LOGFILE)
+
+
+def test_get_logfile():
+    try:
+        fd, autosubliminal.LOGFILE = tempfile.mkstemp(text=True)
+        os.close(fd)
+        assert get_logfile() == autosubliminal.LOGFILE
+        assert get_logfile(lognum=1) is None
+    finally:
+        os.remove(autosubliminal.LOGFILE)
+
+
+def test_count_backup_logfiles():
+    autosubliminal.LOGFILE = 'path/to/autosubliminal.log'
+    assert count_backup_logfiles() == 0
