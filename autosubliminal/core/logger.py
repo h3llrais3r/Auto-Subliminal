@@ -216,7 +216,7 @@ class CustomRotatingFileHandler(BaseRotatingHandler):
                 # Clear base log file
                 with open(self.baseFilename, 'w'):
                     pass
-                    #######################################
+                #######################################
 
         if not self.delay:
             self.stream = self._open()
