@@ -5,10 +5,10 @@ import os
 import tempfile
 
 import autosubliminal
-from autosubliminal.core.logger import count_backup_logfiles, display_logfile, get_logfile, initialize
+from autosubliminal.core.logger import count_backup_logfiles, display_logfile, get_logfile, initialize, update_settings
 
 
-def test_initialize(monkeypatch):
+def _mock_settings(monkeypatch):
     log_file = os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'resources', 'test.log'))
     monkeypatch.setattr('autosubliminal.LOGLEVEL', 'INFO')
     monkeypatch.setattr('autosubliminal.LOGHTTPACCESS', True)
@@ -19,6 +19,10 @@ def test_initialize(monkeypatch):
     monkeypatch.setattr('autosubliminal.LOGNUM', 1)
     monkeypatch.setattr('autosubliminal.DAEMON', False)
     monkeypatch.setattr('autosubliminal.LOGLEVELCONSOLE', 'ERROR')
+
+
+def test_initialize(monkeypatch):
+    _mock_settings(monkeypatch)
     initialize()
     log = logging.getLogger()
     assert log.level == logging.INFO
@@ -33,6 +37,24 @@ def test_initialize(monkeypatch):
     assert file_handler.formatter.detailed_format
     console_handler = log.handlers[1]
     assert console_handler.level == logging.ERROR
+
+
+def test_update_settings(monkeypatch):
+    _mock_settings(monkeypatch)
+    initialize()
+    monkeypatch.setattr('autosubliminal.LOGLEVEL', 'DEBUG')
+    monkeypatch.setattr('autosubliminal.LOGHTTPACCESS', False)
+    monkeypatch.setattr('autosubliminal.LOGEXTERNALLIBS', False)
+    monkeypatch.setattr('autosubliminal.LOGLEVELCONSOLE', 'WARNING')
+    update_settings()
+    log = logging.getLogger()
+    file_handler = log.handlers[0]
+    assert file_handler.level == logging.DEBUG
+    file_filter = file_handler.filters[0]
+    assert not file_filter.log_http_access
+    assert not file_filter.log_external_libs
+    console_handler = log.handlers[1]
+    assert console_handler.level == logging.WARNING
 
 
 def test_display_logfile():
