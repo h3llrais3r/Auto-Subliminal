@@ -1,10 +1,38 @@
 # coding=utf-8
 
+import logging
 import os
 import tempfile
 
 import autosubliminal
-from autosubliminal.core.logger import count_backup_logfiles, display_logfile, get_logfile
+from autosubliminal.core.logger import count_backup_logfiles, display_logfile, get_logfile, initialize
+
+
+def test_initialize(monkeypatch):
+    log_file = os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'resources', 'test.log'))
+    monkeypatch.setattr('autosubliminal.LOGLEVEL', 'INFO')
+    monkeypatch.setattr('autosubliminal.LOGHTTPACCESS', True)
+    monkeypatch.setattr('autosubliminal.LOGEXTERNALLIBS', True)
+    monkeypatch.setattr('autosubliminal.LOGDETAILEDFORMAT', True)
+    monkeypatch.setattr('autosubliminal.LOGFILE', log_file)
+    monkeypatch.setattr('autosubliminal.LOGSIZE', 1)
+    monkeypatch.setattr('autosubliminal.LOGNUM', 1)
+    monkeypatch.setattr('autosubliminal.DAEMON', False)
+    monkeypatch.setattr('autosubliminal.LOGLEVELCONSOLE', 'ERROR')
+    initialize()
+    log = logging.getLogger()
+    assert log.level == logging.INFO
+    assert len(log.handlers) == 2
+    file_handler = log.handlers[0]
+    assert file_handler.level == logging.INFO
+    assert len(file_handler.filters) == 1
+    file_filter = file_handler.filters[0]
+    assert file_filter.log_http_access
+    assert file_filter.log_external_libs
+    assert file_handler.formatter is not None
+    assert file_handler.formatter.detailed_format
+    console_handler = log.handlers[1]
+    assert console_handler.level == logging.ERROR
 
 
 def test_display_logfile():
