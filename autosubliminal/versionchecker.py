@@ -117,27 +117,27 @@ class BaseVersionManager(object):
 
     @abc.abstractproperty
     def current_branch(self):
-        pass  # pragma: no cover
+        pass
 
     @abc.abstractproperty
     def current_branch_url(self):
-        pass  # pragma: no cover
+        pass
 
     @abc.abstractproperty
     def current_version(self):
-        pass  # pragma: no cover
+        pass
 
     @abc.abstractproperty
     def current_version_url(self):
-        pass  # pragma: no cover
+        pass
 
     @abc.abstractmethod
     def check_version(self, force_run=False):
-        pass  # pragma: no cover
+        pass
 
     @abc.abstractmethod
     def update_version(self):
-        pass  # pragma: no cover
+        pass
 
 
 class SourceVersionManager(BaseVersionManager):

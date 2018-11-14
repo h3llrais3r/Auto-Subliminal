@@ -44,7 +44,7 @@ class Indexer(object):
 
     @abc.abstractmethod
     def _query_api(self, title, year=None):
-        pass  # pragma: no cover
+        pass
 
 
 class ShowIndexer(Indexer):

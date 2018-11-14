@@ -10,3 +10,10 @@ omit =
     autosubliminal/core/enums.py
     autosubliminal/providers/addic7ed.py
     autosubliminal/providers/useragents.py
+
+[report]
+# Regexes for lines to exclude in coverage report
+exclude_lines =
+    pragma: no cover
+    @abc.abstractproperty
+    @abc.abstractmethod
