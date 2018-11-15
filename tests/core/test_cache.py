@@ -9,7 +9,7 @@ import autosubliminal
 from autosubliminal.core.cache import region, MutexFileLock
 
 cache_file = os.path.abspath(
-    os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'resources', 'test.cache.dbm'))
+    os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'resources', 'test.autosubliminal.cache.dbm'))
 
 
 def test_cache(monkeypatch):
@@ -19,5 +19,5 @@ def test_cache(monkeypatch):
     region.set('KEY', 'VALUE')
     assert region.get('KEY') == 'VALUE'
     time.sleep(2)
-    assert isinstance(region.get('KEY'), NoValue)
+    assert isinstance(region.get('KEY'), NoValue)  # Cache already expired
     assert isinstance(region.get('UNKNOWN'), NoValue)
