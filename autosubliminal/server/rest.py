@@ -29,7 +29,7 @@ class RestResource(object):
 
         # Validate if resource exists
         if len(args) or not hasattr(self, self.http_method.lower()):
-            raise cherrypy.NotFound()
+            raise NotFound()
 
         # Validate if method is allowed
         if self.http_method not in self.allowed_methods:
@@ -42,9 +42,9 @@ class RestResource(object):
         defaults_count = len(arg_spec.defaults) if arg_spec.defaults else 0
         arg_spec_set = set(arg_spec.args[1:len(arg_spec.args) - defaults_count])
         arg_method_set = set(kwargs.keys())
-        # Proper 404 error when /api/wanted/{{wrong_id}}
+        # Proper 404 error for paths like /api/songs/{{wrong_id}}/artists/35745
         if len(arg_spec_set.difference(arg_method_set)):
-            raise cherrypy.NotFound()
+            raise NotFound()
 
         # Call method
         return method(*args, **kwargs)
@@ -65,6 +65,25 @@ class RestResource(object):
         raise BadRequest(message=error_message)
 
 
+class BadRequest(cherrypy.HTTPError):
+    """
+    Exception raised for a bad request (400).
+    """
+
+    def __init__(self, message):
+        self.args = (message,)
+        cherrypy.HTTPError.__init__(self, status=400, message=message)
+
+
+class NotFound(cherrypy.HTTPError):
+    """
+    Exception raised when the requested path is not found (404).
+    """
+
+    def __init__(self):
+        cherrypy.HTTPError.__init__(self, status=404, message='Not found')
+
+
 class MethodNotAllowed(cherrypy.HTTPError):
     """
     Exception raised when the request method is not allowed (405).
@@ -81,13 +100,3 @@ class MethodNotImplemented(cherrypy.HTTPError):
 
     def __init__(self):
         cherrypy.HTTPError.__init__(self, status=501, message='Method not implemented')
-
-
-class BadRequest(cherrypy.HTTPError):
-    """
-    Exception raised for a bad request (400).
-    """
-
-    def __init__(self, message):
-        self.args = (message,)
-        cherrypy.HTTPError.__init__(self, status=400, message=message)
