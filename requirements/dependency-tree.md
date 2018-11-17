@@ -65,6 +65,7 @@ Libraries dependency tree
     |-- requests
     |-- requests-oauthlib
         |-- oauthlib
+|-- schema
 |-- simplejson (if not added, fallback to default json library in python)
 |-- six
 |-- subliminal
