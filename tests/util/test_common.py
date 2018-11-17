@@ -12,11 +12,10 @@ from vcr import VCR
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.core.item import WantedItem
-from autosubliminal.util.common import get_today, add_event_message, add_notification_message, run_cmd, connect_url, \
-    wait_for_internet_connection, get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, display_mapping_dict, \
-    display_list_single_line, display_list_multi_line, display_value, display_item_title, display_item_name, \
-    display_timestamp, convert_timestamp, humanize_bytes, get_common_path, get_root_path, get_file_size, \
-    set_rw_and_remove
+from autosubliminal.util.common import get_today, run_cmd, connect_url, wait_for_internet_connection, get_boolean, \
+    safe_text, safe_trim, safe_uppercase, sanitize, display_mapping_dict, display_list_single_line, \
+    display_list_multi_line, display_value, display_item_title, display_item_name, display_timestamp, \
+    convert_timestamp, humanize_bytes, get_common_path, get_root_path, get_file_size, set_rw_and_remove
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -38,34 +37,6 @@ def test_get_today():
     today = get_today()
     assert today is not None
     assert isinstance(today, datetime)
-
-
-def test_add_event_message(monkeypatch):
-    monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
-    message = {
-        'message_type': 'event',
-        'event': {
-            'event_type': 'HOME_PAGE_RELOAD'
-        }
-    }
-    add_event_message('HOME_PAGE_RELOAD')
-    assert len(autosubliminal.WEBSOCKETMESSAGEQUEUE) == 1
-    assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
-
-
-def test_add_notification_message(monkeypatch):
-    monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
-    message = {
-        'message_type': 'notification',
-        'notification': {
-            'notification_message': 'test',
-            'notification_type': 'info',
-            'sticky': False
-        }
-    }
-    add_notification_message('test')
-    assert len(autosubliminal.WEBSOCKETMESSAGEQUEUE) == 1
-    assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
 
 
 def test_run_cmd():

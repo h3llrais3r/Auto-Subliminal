@@ -24,42 +24,18 @@ _boolean_states = {'1': True, 'yes': True, 'true': True, 'on': True,
 
 
 def get_today():
-    """
-    Helper to get today as datetime.
+    """Helper to get today as datetime.
+
     We made this a function, otherwise we can't mock built-in datetime.datetime.today in our tests!
     """
     return datetime.datetime.today()
 
 
-def add_event_message(event_type):
-    """
-    Add a websocket event message. The event type decides the event to handle.
-    Possible values for event type are:
-    - HOME_PAGE_RELOAD
-    """
-    event = {'event_type': event_type}
-    message_dict = {'message_type': 'event', 'event': event}
-    autosubliminal.WEBSOCKETMESSAGEQUEUE.append(message_dict)
-
-
-def add_notification_message(notification_message, notification_type='info', sticky=False):
-    """
-    Add a websocket notification message with a specific notification type.
-    Possible values for notification type are (to be in sync with PNotify jquery plugin):
-    - info (blue)
-    - success (green)
-    - notice (orange)
-    - error (red)
-    Sticky indicates that it will be shown at a fixed inline location and it will not fade.
-    """
-    notification = {'notification_message': notification_message,
-                    'notification_type': notification_type,
-                    'sticky': sticky}
-    message_dict = {'message_type': 'notification', 'notification': notification}
-    autosubliminal.WEBSOCKETMESSAGEQUEUE.append(message_dict)
-
-
 def run_cmd(cmd, communicate=True):
+    """Run a command.
+
+    By default it will communicate the output, but it can be disabled.
+    """
     log.debug('Running cmd: %r', cmd)
     process = subprocess.Popen(cmd,
                                shell=True,
@@ -73,8 +49,8 @@ def run_cmd(cmd, communicate=True):
 
 
 def connect_url(url):
-    """
-    Connect to a certain url.
+    """Connect to a certain url.
+
     Use our user agent and timeout by default.
     """
     log.debug('Connecting to url: %s', url)
@@ -88,10 +64,7 @@ def connect_url(url):
 
 
 def wait_for_internet_connection():
-    """
-    Function that blocks the process until there is internet connection.
-    """
-
+    """ Function that blocks the process until there is internet connection."""
     # Internal check for internet connection
     def _check_internet_connection(url):
         try:
@@ -115,8 +88,8 @@ def get_boolean(value):
 
 
 def safe_text(obj, default_value=None):
-    """
-    Return the object converted to text.
+    """Return the object converted to text.
+
     When not possible return the default value.
     """
     try:
@@ -126,8 +99,8 @@ def safe_text(obj, default_value=None):
 
 
 def safe_uppercase(obj, default_value=None):
-    """
-    Return the object converted to uppercase.
+    """Return the object converted to uppercase.
+
     When not possible return the default value.
     """
     try:
@@ -137,8 +110,8 @@ def safe_uppercase(obj, default_value=None):
 
 
 def safe_trim(obj, default_value=None):
-    """
-    Return the object trimmed with leading and trailing spaces, tabs and newlines.
+    """Return the object trimmed with leading and trailing spaces, tabs and newlines.
+
     When not possible return the default value.
     """
     try:
@@ -149,6 +122,7 @@ def safe_trim(obj, default_value=None):
 
 def sanitize(string_value, ignore_characters=None):
     """Sanitize a string to strip special characters.
+
     Copied from https://github.com/Diaoul/subliminal/blob/master/subliminal/utils.py
     """
     ignore_characters = ignore_characters or set()
@@ -170,9 +144,7 @@ def sanitize(string_value, ignore_characters=None):
 
 
 def display_list_single_line(list_object):
-    """
-    Return a single lined string (comma separated) containing all the values of the list.
-    """
+    """Return a single lined string (comma separated) containing all the values of the list."""
     s = ''
     for x in list_object:
         if s == '':
@@ -183,9 +155,7 @@ def display_list_single_line(list_object):
 
 
 def display_list_multi_line(list_object):
-    """
-    Return a multi lined string containing all values of the list.
-    """
+    """Return a multi lined string containing all values of the list."""
     s = ''
     for x in list_object:
         if s == '':
@@ -196,9 +166,7 @@ def display_list_multi_line(list_object):
 
 
 def display_mapping_dict(mapping_dict):
-    """
-    Return a multi lined string containing all mappings (key = value) from the mapping_dict.
-    """
+    """Return a multi lined string containing all mappings (key = value) from the mapping_dict."""
     s = ''
     for x in mapping_dict:
         if s == '':
@@ -274,8 +242,8 @@ def get_file_size(path):
 
 
 def get_common_path(paths, separator=os.path.sep):
-    """
-    Get the common path between paths.
+    """Get the common path between paths.
+
     This unlike the os.path.commonprefix version always returns path prefixes as it compares path component wise.
     See https://stackoverflow.com/questions/21498939/how-to-circumvent-the-fallacy-of-pythons-os-path-commonprefix
     """
@@ -291,9 +259,9 @@ def get_common_path(paths, separator=os.path.sep):
 
 
 def get_root_path(video_path, separator=os.path.sep):
-    """
-    Get the root path of a video path.
-    The root path must be one of the paths listed in autosubliminal.VIDEOPATHS
+    """Get the root path of a video path.
+
+    The root path must be one of the paths listed in autosubliminal.VIDEOPATHS.
     """
     for path in autosubliminal.VIDEOPATHS:
         norm_path = os.path.normpath(path)
@@ -305,8 +273,7 @@ def get_root_path(video_path, separator=os.path.sep):
 
 # Thanks to: http://code.activestate.com/recipes/577081-humanized-representation-of-a-number-of-bytes/
 def humanize_bytes(bytes, precision=1):
-    """
-    Return a humanized string representation of a number of bytes.
+    """Return a humanized string representation of a number of bytes.
 
     >>> humanize_bytes(1)
     '1 byte'

@@ -26,10 +26,10 @@ from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.providers import provider_cache
 from autosubliminal.providers.addic7ed import Addic7edSubtitle as Addic7edSubtitleRandomUserAgent
 from autosubliminal.subdownloader import SubDownloader
-from autosubliminal.util.common import add_event_message, add_notification_message, set_rw_and_remove, \
-    wait_for_internet_connection
+from autosubliminal.util.common import set_rw_and_remove, wait_for_internet_connection
 from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, \
     release_wanted_queue_lock_on_exception
+from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
 
 log = logging.getLogger(__name__)
 
@@ -56,7 +56,7 @@ class SubChecker(ScheduledProcess):
 
         # Show info message (only when run was forced manually)
         if force_run:
-            add_notification_message('Checking subtitles...')
+            send_websocket_notification('Checking subtitles...')
 
         # Setup provider pool
         provider_pool = _get_provider_pool()
@@ -125,7 +125,7 @@ class SubChecker(ScheduledProcess):
         release_wanted_queue_lock()
 
         # Send home page reload event
-        add_event_message('HOME_PAGE_RELOAD')
+        send_websocket_event(PAGE_RELOAD, {'name': 'home'})
 
         return True
 
@@ -480,7 +480,7 @@ def post_process_no_subtitle(wanted_item_index):
         WantedItems().delete_wanted_item(wanted_item)
         log.debug('Removed %s from wanted_items database', wanted_item.videopath)
     else:
-        add_notification_message('Unable to handle post processing! Please check the log file!', 'error')
+        send_websocket_notification('Unable to handle post processing! Please check the log file!', 'error')
 
     # Release wanted queue lock
     release_wanted_queue_lock()

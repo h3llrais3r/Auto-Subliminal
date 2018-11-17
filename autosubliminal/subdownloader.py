@@ -9,7 +9,8 @@ import autosubliminal
 from autosubliminal import notifiers
 from autosubliminal.db import LastDownloads
 from autosubliminal.postprocessor import PostProcessor
-from autosubliminal.util.common import add_notification_message, display_item_name
+from autosubliminal.util.common import display_item_name
+from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
 
@@ -42,7 +43,7 @@ class SubDownloader(object):
             # Post process
             processed = self.post_process()
             if not processed:
-                add_notification_message(
+                send_websocket_notification(
                     'Unable to handle post processing for \'%s\'! Please check the log file!' % name, 'error')
 
             # Show success message
@@ -50,7 +51,7 @@ class SubDownloader(object):
             # TODO: fix me, cannot iter download_item
             name = display_item_name(self._download_item)
             provider = self._download_item.provider
-            add_notification_message(
+            send_websocket_notification(
                 'Downloaded \'%s\' subtitle for \'%s\' from \'%s\'.' % (language, name, provider), 'success')
 
     def save(self):

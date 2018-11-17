@@ -7,8 +7,9 @@ import autosubliminal
 from autosubliminal import config, notifiers
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
-from autosubliminal.util.common import add_notification_message, get_boolean
+from autosubliminal.util.common import get_boolean
 from autosubliminal.util.mapping import mapping_string_to_dict
+from autosubliminal.util.websocket import send_websocket_notification
 
 
 class Config(object):
@@ -35,7 +36,7 @@ class Config(object):
         else:
             # For some reason the config needs to be read again, otherwise all pages get an error
             config.read_config()
-            add_notification_message('Config saved.')
+            send_websocket_notification('Config saved.')
             return {}
 
     @cherrypy.expose
@@ -267,10 +268,10 @@ class Config(object):
         @cherrypy.tools.json_out()
         def test(self, notify_lib):
             if notifiers.test_notifier(notify_lib):
-                add_notification_message('Test notification (%s) sent.' % notify_lib)
+                send_websocket_notification('Test notification (%s) sent.' % notify_lib)
             else:
-                add_notification_message('Test notification (%s) failed! Please check the log file!' % notify_lib,
-                                         'error')
+                send_websocket_notification('Test notification (%s) failed! Please check the log file!' % notify_lib,
+                                            'error')
             return {}
 
         @cherrypy.expose(alias='regTwitter')

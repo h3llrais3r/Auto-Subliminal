@@ -10,6 +10,7 @@ import traceback
 from six import add_metaclass, text_type
 
 import autosubliminal
+from autosubliminal.util.websocket import send_websocket_event, PROCESS_STARTED, PROCESS_FINISHED
 
 log = logging.getLogger(__name__)
 
@@ -97,6 +98,7 @@ class Scheduler(object):
     def _run_process(self, current_time):
         try:
             self.process.running = True
+            send_websocket_event(PROCESS_STARTED, {'name': self.name})
             log.debug('Running thread process')
             if self.process.run(self._force_run):
                 # Update process properties if process has run
@@ -108,8 +110,12 @@ class Scheduler(object):
                 # increase delay with 1 second each time the process cannot yet run
                 self._delay += 1
             self.process.running = False
+            send_websocket_event(PROCESS_FINISHED,
+                                 {'name': self.name, 'next_run': (self.last_run + self.interval) * 1000})
         except:
             self.process.running = False
+            send_websocket_event(PROCESS_FINISHED,
+                                 {'name': self.name, 'next_run': (self.last_run + self.interval) * 1000})
             print(traceback.format_exc())
             os._exit(1)
 

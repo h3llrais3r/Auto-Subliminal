@@ -17,9 +17,10 @@ import autosubliminal
 from autosubliminal import system
 from autosubliminal.core.enums import InstallType
 from autosubliminal.core.scheduler import ScheduledProcess
-from autosubliminal.util.common import add_notification_message, connect_url, wait_for_internet_connection
+from autosubliminal.util.common import connect_url, wait_for_internet_connection
 from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, \
     release_wanted_queue_lock_on_exception
+from autosubliminal.util.websocket import send_websocket_notification
 from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
@@ -190,13 +191,13 @@ class SourceVersionManager(BaseVersionManager):
         # Compare versions
         if local_version > remote_version:
             log.info('Unknown version found')
-            add_notification_message(
+            send_websocket_notification(
                 'Unknown version found! '
                 'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and reinstall!',
                 'error', True)
         elif local_version < remote_version:
             log.info('New version found')
-            add_notification_message(
+            send_websocket_notification(
                 'New version found. '
                 'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and update!',
                 'notice', True)
@@ -204,7 +205,7 @@ class SourceVersionManager(BaseVersionManager):
             log.info('Version up to date')
             # Show info message (only when run was forced manually)
             if force_run:
-                add_notification_message('You are running the latest version.')
+                send_websocket_notification('You are running the latest version.')
 
         return True
 
@@ -287,12 +288,12 @@ class GitVersionManager(BaseVersionManager):
 
         if self.num_commits_ahead > 0:
             log.info('Unknown version found')
-            add_notification_message(
+            send_websocket_notification(
                 'Unknown version found! Check <a href=' + autosubliminal.GITHUBURL +
                 '/releases>Github</a> and reinstall!', 'error', True)
         elif self.num_commits_behind > 0:
             log.info('New version found')
-            add_notification_message(
+            send_websocket_notification(
                 'New version found. <a href=' + autosubliminal.WEBROOT + '/system/updateVersion>Update</a>!',
                 'notice', True)
             self.update_allowed = True
@@ -300,7 +301,7 @@ class GitVersionManager(BaseVersionManager):
             log.info('Version up to date')
             # Show info message (only when run was forced manually)
             if force_run:
-                add_notification_message('You are running the latest version.')
+                send_websocket_notification('You are running the latest version.')
 
         return True
 
@@ -312,6 +313,6 @@ class GitVersionManager(BaseVersionManager):
                 self.repo.remote(name='origin').pull()
                 self.clean()
                 log.info('Updated to the latest version')
-                add_notification_message('Updated to the latest version.')
+                send_websocket_notification('Updated to the latest version.')
             except Exception:
                 log.exception('Could not update version')

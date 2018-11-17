@@ -9,9 +9,9 @@ from autosubliminal import system
 from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache, WantedItems
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
-from autosubliminal.util.common import add_notification_message
 from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, \
     release_wanted_queue_lock_on_exception
+from autosubliminal.util.websocket import send_websocket_notification
 
 
 class System(object):
@@ -53,7 +53,7 @@ class System(object):
     def flush_cache(self):
         TvdbIdCache().flush_cache()
         ImdbIdCache().flush_cache()
-        add_notification_message('Flushed id cache database.')
+        send_websocket_notification('Flushed id cache database.')
         redirect('/home')
 
     @release_wanted_queue_lock_on_exception
@@ -64,16 +64,16 @@ class System(object):
             WantedItems().flush_wanted_items()
             autosubliminal.WANTEDQUEUE = []
             release_wanted_queue_lock()
-            add_notification_message(
+            send_websocket_notification(
                 'Flushed wanted items database. Please launch \'Scan Disk\' from the \'System\' menu.')
         else:
-            add_notification_message('Cannot flush wanted items database when wanted queue is in use!', 'notice')
+            send_websocket_notification('Cannot flush wanted items database when wanted queue is in use!', 'notice')
         redirect('/home')
 
     @cherrypy.expose(alias='flushLastDownloads')
     def flush_last_downloads(self):
         LastDownloads().flush_last_downloads()
-        add_notification_message('Flushed last downloads database.')
+        send_websocket_notification('Flushed last downloads database.')
         redirect('/home')
 
     @cherrypy.expose(alias='isAlive')

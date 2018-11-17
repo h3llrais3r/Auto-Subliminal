@@ -13,12 +13,12 @@ from enzyme.mkv import MKV
 
 import autosubliminal
 from autosubliminal import fileprocessor
-from autosubliminal.util.common import add_event_message, add_notification_message
+from autosubliminal.core.scheduler import ScheduledProcess
+from autosubliminal.db import WantedItems
 from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, \
     release_wanted_queue_lock_on_exception
 from autosubliminal.util.skip import skip_movie, skip_show
-from autosubliminal.core.scheduler import ScheduledProcess
-from autosubliminal.db import WantedItems
+from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
 
 log = logging.getLogger(__name__)
 
@@ -42,7 +42,7 @@ class DiskScanner(ScheduledProcess):
 
         # Show info message (only when run was forced manually)
         if force_run:
-            add_notification_message('Scanning disk...')
+            send_websocket_notification('Scanning disk...')
 
         # Check if a directory exists to scan
         one_dir_exists = False
@@ -89,7 +89,7 @@ class DiskScanner(ScheduledProcess):
         release_wanted_queue_lock()
 
         # Send home page reload event
-        add_event_message('HOME_PAGE_RELOAD')
+        send_websocket_event(PAGE_RELOAD, {'name': 'home'})
 
         return True
 

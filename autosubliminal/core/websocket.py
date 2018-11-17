@@ -14,13 +14,15 @@ from autosubliminal.util.json import from_json, to_json
 
 log = logging.getLogger(__name__)
 
-SERVER_EVENT_TYPES = ('RUN_PROCESS',)
+RUN_PROCESS = 'RUN_PROCESS'
 
-SERVER_MESSAGE_SCHEMA = Schema({
-    'message_type': 'event',
+SUPPORTED_EVENT_TYPES = [RUN_PROCESS]
+
+MESSAGE_SCHEMA = Schema({
+    'type': 'EVENT',
     'event': {
-        'event_type': And(Use(str), lambda p: p in SERVER_EVENT_TYPES),
-        'process': And(Use(str))
+        'type': And(Use(str), lambda t: t in SUPPORTED_EVENT_TYPES),
+        'data': And(Use(dict))
     }
 })
 
@@ -45,10 +47,10 @@ class WebSocketHandler(WebSocket):
         if self.check_message_structure(message):
             # Handle a RUN_PROCESS event
             event = message['event']
-            if event['event_type'] == 'RUN_PROCESS':
-                process = event['process']
-                if process in autosubliminal.SCHEDULERS:
-                    autosubliminal.SCHEDULERS[process].run()
+            if event['type'] == RUN_PROCESS:
+                name = event['data']['name']
+                if name in autosubliminal.SCHEDULERS:
+                    autosubliminal.SCHEDULERS[name].run()
                     handled = True
 
         if not handled:
@@ -58,7 +60,7 @@ class WebSocketHandler(WebSocket):
 
     def check_message_structure(self, message):
         try:
-            SERVER_MESSAGE_SCHEMA.validate(message)
+            MESSAGE_SCHEMA.validate(message)
             return True
         except SchemaError:
             return False

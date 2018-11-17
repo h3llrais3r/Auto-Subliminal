@@ -8,7 +8,8 @@ from autosubliminal import config, subchecker
 from autosubliminal.db import WantedItems
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
-from autosubliminal.util.common import add_notification_message, display_value, display_item_title, run_cmd, sanitize
+from autosubliminal.util.common import display_value, display_item_title, run_cmd, sanitize
+from autosubliminal.util.websocket import send_websocket_notification
 
 
 class Home(object):
@@ -85,7 +86,7 @@ class Home(object):
                 if title_sanitized == sanitize(x):
                     for s in autosubliminal.SKIPSHOW[x].split(','):
                         if s == season or s == '00':
-                            add_notification_message('Already skipped show %s season %s.' % (title, season))
+                            send_websocket_notification('Already skipped show %s season %s.' % (title, season))
                             redirect('/home')
                     # Not skipped yet, skip all or append season the seasons to skip
                     if season == '00':
@@ -99,11 +100,11 @@ class Home(object):
                 config.write_config_property('skipshow', title, config_season)
                 config.apply_skipshow()
                 if season == '00':
-                    add_notification_message('Skipped show %s all seasons.' % title)
+                    send_websocket_notification('Skipped show %s all seasons.' % title)
                 else:
-                    add_notification_message('Skipped show %s season %s.' % (title, season))
+                    send_websocket_notification('Skipped show %s season %s.' % (title, season))
             else:
-                add_notification_message('Could not skip show! Please check the log file!', 'error')
+                send_websocket_notification('Could not skip show! Please check the log file!', 'error')
 
             redirect('/home')
 
@@ -120,15 +121,15 @@ class Home(object):
         movie_sanitized = sanitize(movie)
         for x in autosubliminal.SKIPMOVIE:
             if movie_sanitized == sanitize(x):
-                add_notification_message('Already skipped movie %s.' % movie)
+                send_websocket_notification('Already skipped movie %s.' % movie)
                 redirect('/home')
         # Skip movie
         if subchecker.skip_movie(wanted_item_index):
             config.write_config_property('skipmovie', movie, '00')
             config.apply_skipmovie()
-            add_notification_message('Skipped movie %s.' % movie)
+            send_websocket_notification('Skipped movie %s.' % movie)
         else:
-            add_notification_message('Could not skip movie! Please check the log file!', 'error')
+            send_websocket_notification('Could not skip movie! Please check the log file!', 'error')
         redirect('/home')
 
     @cherrypy.expose(alias='deleteVideo')
@@ -142,9 +143,9 @@ class Home(object):
             # Delete video
             deleted = subchecker.delete_video(wanted_item_index, cleanup)
             if deleted:
-                add_notification_message('Video deleted from filesystem.')
+                send_websocket_notification('Video deleted from filesystem.')
             else:
-                add_notification_message('Video could not be deleted! Please check the log file!', 'error')
+                send_websocket_notification('Video could not be deleted! Please check the log file!', 'error')
             redirect('/home')
 
     @cherrypy.expose(alias='searchSubtitle')

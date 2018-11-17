@@ -154,6 +154,16 @@ PNotify.desktop.permission(); // Check for permission for desktop notifications
  * Websockets
  * ========== */
 
+// Constants
+const EVENT = 'EVENT';
+const NOTIFICATION = 'NOTIFICATION';
+const PAGE_RELOAD = 'PAGE_RELOAD';
+const PROCESS_STARTED = 'PROCESS_STARTED';
+const PROCESS_FINISHED = 'PROCESS_FINISHED';
+const RUN_PROCESS = 'RUN_PROCESS';
+const DISK_SCANNER = 'DiskScanner';
+const SUB_CHECKER = 'SubChecker';
+
 // Setup the websocket system
 var websocket_url = 'ws://' + window.location.host + webroot + '/system/websocket';
 var ws = new WebSocket(websocket_url);
@@ -177,9 +187,9 @@ function send_message_through_websocket(message) {
 
 // Function to handle the message
 function _handle_message(message) {
-    if (message['message_type'] == 'notification') {
+    if (message['type'] == NOTIFICATION) {
         _show_notification(message['notification']);
-    } else if (message['message_type'] == 'event') {
+    } else if (message['type'] == EVENT) {
         _handle_event(message['event']);
     } else {
         console.error('Unsupported message: ' + message)
@@ -188,8 +198,8 @@ function _handle_message(message) {
 
 // Function to show a notification
 function _show_notification(notification) {
-    var message = notification['notification_message'];
-    var type = notification['notification_type'];
+    var message = notification['message'];
+    var type = notification['type'];
     var sticky = notification['sticky'];
     // Sticky location - use stack_context
     if (sticky) {
@@ -218,30 +228,64 @@ function _show_notification(notification) {
 
 // Function to handle an event
 function _handle_event(event) {
-    var event_type = event['event_type']
-    if (event_type == 'HOME_PAGE_RELOAD') {
-        // only reload when we are actually on the home page
-        if (window.location.pathname.indexOf('/home') >= 0) {
+    var type = event['type'];
+    var data = event['data'];
+    if (type == PAGE_RELOAD) {
+        if (!jQuery.isEmptyObject(data)) {
+            // Only reload when we are actually on the specified page
+            if (window.location.pathname.indexOf('/' + data['name']) >= 0) {
+                // Add delay of 1s to be sure it's not triggered immediately after a page redirect (or load)
+                // When redirecting and loading really fast after each other, it's possible that your websocket is not initialized in time and your websocket message is lost
+                setTimeout(function () {
+                    window.location.reload();
+                }, 1000);
+            }
+        } else {
+            // If no data is available, reload current page
             // Add delay of 1s to be sure it's not triggered immediately after a page redirect (or load)
             // When redirecting and loading really fast after each other, it's possible that your websocket is not initialized in time and your websocket message is lost
             setTimeout(function () {
                 window.location.reload();
             }, 1000);
         }
+    } else if (type == PROCESS_STARTED) {
+        if (!jQuery.isEmptyObject(data)) {
+            if (data['name'] == DISK_SCANNER) {
+                // Mark as running
+                $('#scandisk-nextrun').countdown('stop');
+                $('#scandisk-nextrun').text('Running...');
+            } else if (data['name'] == SUB_CHECKER) {
+                // Mark as running
+                $('#checksub-nextrun').countdown('stop');
+                $('#checksub-nextrun').text('Running...');
+            }
+        }
+    } else if (type == PROCESS_FINISHED) {
+        if (!jQuery.isEmptyObject(data)) {
+            if (data['name'] == DISK_SCANNER) {
+                // Restart countdown
+                $('#scandisk-nextrun').countdown(data['next_run']);
+            } else if (data['name'] == SUB_CHECKER) {
+                // Restart countdown
+                $('#checksub-nextrun').countdown(data['next_run']);
+            }
+        }
     } else {
-        console.error('Unsupported event: ' + event_type);
+        console.error('Unsupported event: ' + type);
     }
 }
 
 // Function to run a process on the server through the websocket system
 function run_process_on_server(process_name) {
-    // Construct the event message
-    var event_message = {
-        'message_type': 'event',
+    // Construct the event
+    var event = {
+        'type': EVENT,
         'event': {
-            'event_type': 'RUN_PROCESS',
-            'process': process_name
+            'type': RUN_PROCESS,
+            'data': {
+                'name': process_name
+            }
         }
     }
-    send_message_through_websocket(JSON.stringify(event_message));
+    send_message_through_websocket(JSON.stringify(event));
 }
