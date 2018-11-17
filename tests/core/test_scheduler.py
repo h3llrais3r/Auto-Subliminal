@@ -86,7 +86,7 @@ def test_scheduler_run_process_exception(mocker):
         scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 10, False)
         scheduler.last_run = time.time()
         scheduler.run()
-        time.sleep(1)  # Sleep to be sure that the run exception been executed at least once
+        time.sleep(2)  # Sleep to be sure that the run exception been executed at least once
         assert os_mock.called
     finally:
         if scheduler:
