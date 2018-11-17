@@ -3,6 +3,7 @@
 import logging
 
 import cherrypy
+from schema import And, Schema, SchemaError, Use
 from ws4py.messaging import TextMessage
 from ws4py.websocket import WebSocket
 
@@ -13,7 +14,15 @@ from autosubliminal.util.json import from_json, to_json
 
 log = logging.getLogger(__name__)
 
-SUPPORTED_SERVER_EVENT_TYPES = ('RUN_PROCESS',)
+SERVER_EVENT_TYPES = ('RUN_PROCESS',)
+
+SERVER_MESSAGE_SCHEMA = Schema({
+    'message_type': 'event',
+    'event': {
+        'event_type': And(Use(str), lambda p: p in SERVER_EVENT_TYPES),
+        'process': And(Use(str))
+    }
+})
 
 
 class WebSocketHandler(WebSocket):
@@ -33,23 +42,26 @@ class WebSocketHandler(WebSocket):
     def handle_message(self, message):
         handled = False
         # Check for a valid event message structure
-        if 'message_type' in message and message['message_type'] in message:
-            message_type = message['message_type']
-            if message_type == 'event':
-                event = message[message_type]
-                if 'event_type' in event and event['event_type'] in SUPPORTED_SERVER_EVENT_TYPES:
-                    event_type = event['event_type']
-                    # Handle a RUN_PROCESS event
-                    if event_type == 'RUN_PROCESS' and 'process' in event:
-                        process = event['process']
-                        if process in autosubliminal.SCHEDULERS:
-                            autosubliminal.SCHEDULERS[process].run()
-                            handled = True
+        if self.check_message_structure(message):
+            # Handle a RUN_PROCESS event
+            event = message['event']
+            if event['event_type'] == 'RUN_PROCESS':
+                process = event['process']
+                if process in autosubliminal.SCHEDULERS:
+                    autosubliminal.SCHEDULERS[process].run()
+                    handled = True
 
         if not handled:
             log.warning('Unsupported message received on websocket server: %r', message)
 
         return handled
+
+    def check_message_structure(self, message):
+        try:
+            SERVER_MESSAGE_SCHEMA.validate(message)
+            return True
+        except SchemaError:
+            return False
 
 
 class WebSocketBroadCaster(Runner):

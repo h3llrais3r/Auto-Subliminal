@@ -52,6 +52,19 @@ def test_handle_event_message_run_process_unsupported():
     assert not handler.handle_message(message)
 
 
+def test_handle_invalid_event_message():
+    handler = WebSocketHandler(None)
+    message = {
+        'message_type': 'event',
+        'event': {
+            'event_type': 'RUN_PROCESS',
+            'process': 'MyProcess'
+        },
+        'invalid': 'invalid'
+    }
+    assert not handler.handle_message(message)
+
+
 def test_websocket_broadcaster(monkeypatch, mocker):
     mocker.patch('threading.Thread')
     mocker.patch('cherrypy.engine.publish')
