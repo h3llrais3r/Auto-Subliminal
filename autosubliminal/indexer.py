@@ -173,7 +173,7 @@ class MovieIndexer(Indexer):
                                 continue
                         # If no year is present, take the first match
                         else:
-                            return best_match['imdb_id'], text_type(best_match['year'])
+                            return best_match['imdb_id'], int(best_match['year'])
         return None, year
 
     @staticmethod
