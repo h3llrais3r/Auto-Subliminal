@@ -90,6 +90,7 @@ class ShowIndexer(Indexer):
                         return series_search_data
             else:
                 continue
+        return None
 
     def get_tvdb_id(self, title, year=None, language='en', force_search=False, store_id=True):
         tvdb_id = None
