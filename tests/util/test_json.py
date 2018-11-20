@@ -49,12 +49,12 @@ obj_json_unpickable_true = '{"id": 1,' \
                            ' "object1": {"id": 11,' \
                            ' "key1": "keychild1",' \
                            ' "key2": "keychild2",' \
-                           ' "py/object": "test_json.MyChildClass"},' \
+                           ' "py/object": "tests.util.test_json.MyChildClass"},' \
                            ' "object2": {"id": 12,' \
                            ' "key1": "keychild1",' \
                            ' "key2": "keychild2",' \
-                           ' "py/object": "test_json.MyChildClass"},' \
-                           ' "py/object": "test_json.MyClass"}'
+                           ' "py/object": "tests.util.test_json.MyChildClass"},' \
+                           ' "py/object": "tests.util.test_json.MyClass"}'
 
 # Force sorted keys to be able to compare results (Python 3 sorts by default)
 jsonpickle.set_encoder_options('simplejson', sort_keys=True)
