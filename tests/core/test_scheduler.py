@@ -6,6 +6,7 @@ import autosubliminal
 from autosubliminal.core.scheduler import ScheduledProcess, Scheduler
 
 autosubliminal.SCHEDULERS = {}
+autosubliminal.WEBSOCKETMESSAGEQUEUE = []
 
 
 class MyScheduledProcess(ScheduledProcess):
