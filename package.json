@@ -33,7 +33,7 @@
     "jquery-countdown": "2.2.0",
     "jquery-hoverintent": "1.9.0",
     "pnotify": "3.2.1",
-    "tablesorter": "2.31.0"
+    "tablesorter": "2.31.1"
   },
   "devDependencies": {
     "del": "3.0.0",
