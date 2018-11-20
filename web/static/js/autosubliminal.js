@@ -163,6 +163,7 @@ const PROCESS_FINISHED = 'PROCESS_FINISHED';
 const RUN_PROCESS = 'RUN_PROCESS';
 const DISK_SCANNER = 'DiskScanner';
 const SUB_CHECKER = 'SubChecker';
+const VERSION_CHECKER = 'VersionChecker';
 
 // Setup the websocket system
 var websocket_url = 'ws://' + window.location.host + webroot + '/system/websocket';
@@ -250,24 +251,37 @@ function _handle_event(event) {
         }
     } else if (type == PROCESS_STARTED) {
         if (!jQuery.isEmptyObject(data)) {
+            // Mark process as running on status page
+            var scheduler_process_row = $('#scheduler').find('#' + data['name']);
+            scheduler_process_row.children('.running').text('True');
+            scheduler_process_row.addClass('status-scheduler-running');
             if (data['name'] == DISK_SCANNER) {
-                // Mark as running
+                // Mark disk scanner as running in footer
                 $('#scandisk-nextrun').countdown('stop');
                 $('#scandisk-nextrun').text('Running...');
             } else if (data['name'] == SUB_CHECKER) {
-                // Mark as running
+                // Mark sub checker as running in footer
                 $('#checksub-nextrun').countdown('stop');
                 $('#checksub-nextrun').text('Running...');
+            } else if (data['name'] == VERSION_CHECKER) {
+                // do nothing
             }
         }
     } else if (type == PROCESS_FINISHED) {
         if (!jQuery.isEmptyObject(data)) {
+            // Mark process as finished on status page
+            var scheduler_process_row = $('#scheduler').find('#' + data['name']);
+            scheduler_process_row.children('.running').text('False');
+            scheduler_process_row.removeClass('status-scheduler-running');
             if (data['name'] == DISK_SCANNER) {
-                // Restart countdown
+                mark_scheduler_not_running(DISK_SCANNER);
+                // Restart disk scanner countdown in footer
                 $('#scandisk-nextrun').countdown(data['next_run']);
             } else if (data['name'] == SUB_CHECKER) {
-                // Restart countdown
+                // Restart disk scanner countdown in footer
                 $('#checksub-nextrun').countdown(data['next_run']);
+            } else if (data['name'] == VERSION_CHECKER) {
+                // do nothing
             }
         }
     } else {
