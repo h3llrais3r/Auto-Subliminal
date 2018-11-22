@@ -274,7 +274,6 @@ function _handle_event(event) {
             scheduler_process_row.children('.running').text('False');
             scheduler_process_row.removeClass('status-scheduler-running');
             if (data['name'] == DISK_SCANNER) {
-                mark_scheduler_not_running(DISK_SCANNER);
                 // Restart disk scanner countdown in footer
                 $('#scandisk-nextrun').countdown(data['next_run']);
             } else if (data['name'] == SUB_CHECKER) {
