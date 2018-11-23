@@ -12,8 +12,8 @@ from vcr import VCR
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.core.item import WantedItem
-from autosubliminal.util.common import get_today, run_cmd, connect_url, wait_for_internet_connection, get_boolean, \
-    safe_text, safe_trim, safe_uppercase, sanitize, display_mapping_dict, display_list_single_line, \
+from autosubliminal.util.common import get_today, run_cmd, connect_url, wait_for_internet_connection, to_dict, \
+    get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, display_mapping_dict, display_list_single_line, \
     display_list_multi_line, display_value, display_item_title, display_item_name, display_timestamp, \
     convert_timestamp, humanize_bytes, get_common_path, get_root_path, get_file_size, set_rw_and_remove
 
@@ -31,6 +31,28 @@ list_value = []
 list_value_with_items = ['a', 'b']
 dict_value = {}
 dict_value_with_items = {'1': 'a'}
+
+
+class MyObject(object):
+    def __init__(self):
+        self.key1 = 1
+        self.key2 = '2'
+        self.key3 = [3]
+        self._key4 = 4
+
+    @property
+    def key5(self):
+        return {'5': 5}
+
+    @property
+    def key6(self):
+        return 6
+
+    def method1(self):
+        pass
+
+    def _method2(self):
+        pass
 
 
 def test_get_today():
@@ -71,6 +93,18 @@ def test_wait_for_internet_connection_with_sleep(mocker):
     time_sleep = mocker.patch('time.sleep')
     wait_for_internet_connection()
     assert time_sleep.called
+
+
+def test_to_dict():
+    obj_dict = {
+        'key1': 1,
+        'key2': '2',
+        'key3': [3],
+        'key5': {'5': 5}
+    }
+    my_args = ('key6',)
+    assert to_dict(MyObject(), 'key6') == obj_dict
+    assert to_dict(MyObject(), *my_args) == obj_dict  # test with predefined tuple
 
 
 def test_get_boolean():

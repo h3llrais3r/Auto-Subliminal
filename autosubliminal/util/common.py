@@ -79,6 +79,25 @@ def wait_for_internet_connection():
         time.sleep(5)
 
 
+def to_dict(obj, *args):
+    """Convert an object to a dict.
+
+    Only public attributes are converted. Private attributes and callable attributes (methods) are not included.
+    :param obj: the object to convert
+    :type obj: object
+    :param args: optional list of attributes not to include in the conversion
+    :type args: tuple
+    :return: the dict
+    :rtype: dict
+    """
+    obj_dict = {}
+    # Filter out private attributes (start with _) and callable attributes (methods)
+    for key in filter(lambda x: not x.startswith('_') and not callable(getattr(obj, x)), dir(obj)):
+        if key not in args:
+            obj_dict[key] = getattr(obj, key)
+    return obj_dict
+
+
 # Based on ConfigParser.getboolean
 def get_boolean(value):
     v = text_type(value)
