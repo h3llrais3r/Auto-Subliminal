@@ -27,7 +27,6 @@
                         <th>Interval</th>
                         <th>Last run</th>
                         <th>Next run</th>
-                        <th>Running</th>
                     </tr>
                     </thead>
 
@@ -35,10 +34,9 @@
                         % for scheduler in list(autosubliminal.SCHEDULERS.values()):
                             <tr id="${scheduler.name}" class="<% 'status-scheduler-running' if scheduler.running else '' %>">
                                 <td class="main-column">${scheduler.name}</td>
-                                <td class="interval">${display_interval(scheduler.interval)}</td>
+                                <td class="interval">${display_interval(scheduler.interval, True)}</td>
                                 <td class="last-run">${display_timestamp(scheduler.last_run)}</td>
                                 <td class="next-run">${display_timestamp(scheduler.next_run)}</td>
-                                <td class="running">${scheduler.running}</td>
                             </tr>
                         %endfor
                     </tbody>

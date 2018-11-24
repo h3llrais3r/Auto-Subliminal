@@ -232,8 +232,20 @@ def display_item_name(item, default_value='N/A', uppercase=False):
     return name
 
 
-def display_interval(seconds):
-    return str(datetime.timedelta(seconds=seconds))
+def display_interval(seconds, textual=False):
+    """Display a number of seconds as an interval."""
+    time_delta = datetime.timedelta(seconds=seconds)
+    if not textual:
+        return str(time_delta)
+    else:
+        days = time_delta.days
+        hours, remainder = divmod(time_delta.seconds, 3600)
+        minutes, seconds = divmod(remainder, 60)
+        formatted_interval = '%d day%s' % (days, 's' if days > 1 else '') if days else ''
+        formatted_interval += ' %d hour%s' % (hours, 's' if hours > 1 else '') if hours else ''
+        formatted_interval += ' %d minute%s' % (minutes, 's' if minutes > 1 else '') if minutes else ''
+        formatted_interval += ' %d second%s' % (seconds, 's' if seconds > 1 else '') if seconds else ''
+        return formatted_interval.lstrip()
 
 
 def display_timestamp(time_float, format='%d-%m-%Y %H:%M:%S', default_value='N/A'):

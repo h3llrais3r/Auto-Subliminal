@@ -256,8 +256,23 @@ def test_display_item_name():
 
 def test_display_interval():
     assert display_interval(1) == '0:00:01'
+    assert display_interval(1, True) == '1 second'
+    assert display_interval(30) == '0:00:30'
+    assert display_interval(30, True) == '30 seconds'
     assert display_interval(60) == '0:01:00'
+    assert display_interval(60, True) == '1 minute'
+    assert display_interval(1800) == '0:30:00'
+    assert display_interval(1800, True) == '30 minutes'
     assert display_interval(3600) == '1:00:00'
+    assert display_interval(3600, True) == '1 hour'
+    assert display_interval(43200) == '12:00:00'
+    assert display_interval(43200, True) == '12 hours'
+    assert display_interval(86400) == '1 day, 0:00:00'
+    assert display_interval(86400, True) == '1 day'
+    assert display_interval(172800) == '2 days, 0:00:00'
+    assert display_interval(172800, True) == '2 days'
+    assert display_interval(217830) == '2 days, 12:30:30'
+    assert display_interval(217830, True) == '2 days 12 hours 30 minutes 30 seconds'
 
 
 def test_display_timestamp():
