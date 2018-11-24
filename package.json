@@ -33,6 +33,8 @@
     "jquery-countdown": "2.2.0",
     "jquery-hoverintent": "1.9.0",
     "pnotify": "3.2.1",
+    "pubsub-js": "1.7.0",
+    "strftime": "0.10.0",
     "tablesorter": "2.31.1"
   },
   "devDependencies": {

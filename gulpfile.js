@@ -28,6 +28,10 @@ var vendor = {
         'node_modules/pnotify/src/pnotify.js',
         'node_modules/pnotify/src/pnotify.buttons.js',
         'node_modules/pnotify/src/pnotify.desktop.js',
+        // pubsub-js
+        'node_modules/pubsub-js/src/pubsub.js',
+        // strftime
+        'node_modules/strftime/strftime.js',
         // bootstrap
         'node_modules/bootstrap/dist/js/bootstrap.js',
         // bootstrap hover dropdown
