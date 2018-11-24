@@ -79,7 +79,7 @@ def wait_for_internet_connection():
         time.sleep(5)
 
 
-def to_dict(obj, *args):
+def to_dict(obj, *args, **kwargs):
     """Convert an object to a dict.
 
     Only public attributes are converted. Private attributes and callable attributes (methods) are not included.
@@ -87,14 +87,21 @@ def to_dict(obj, *args):
     :type obj: object
     :param args: optional list of attributes not to include in the conversion
     :type args: tuple
+    :param kwargs: optional dict with custom attributes to include in the conversion
+    :type args: dict
     :return: the dict
     :rtype: dict
     """
     obj_dict = {}
     # Filter out private attributes (start with _) and callable attributes (methods)
     for key in filter(lambda x: not x.startswith('_') and not callable(getattr(obj, x)), dir(obj)):
+        # Filter out unwanted attributes
         if key not in args:
             obj_dict[key] = getattr(obj, key)
+    # Add custom attributes
+    if kwargs:
+        for key in kwargs:
+            obj_dict[key] = kwargs[key]
     return obj_dict
 
 
@@ -223,6 +230,10 @@ def display_item_name(item, default_value='N/A', uppercase=False):
     if uppercase:
         name = safe_uppercase(name, default_value)
     return name
+
+
+def display_interval(seconds):
+    return str(datetime.timedelta(seconds=seconds))
 
 
 def display_timestamp(time_float, format='%d-%m-%Y %H:%M:%S', default_value='N/A'):

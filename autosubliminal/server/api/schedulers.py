@@ -19,15 +19,11 @@ class SchedulersApi(RestResource):
         # Set the allowed methods
         self.allowed_methods = ('GET',)
 
-        # Set the ignored attributes when converting the response objects
-        self._ignored_attributes = ('process',)
-
     def get(self, scheduler_name=None):
         """Get the list of schedulers or a single scheduler by it's name."""
         if scheduler_name is None:
-            return [to_dict(autosubliminal.SCHEDULERS[scheduler], *self._ignored_attributes) for scheduler in
-                    autosubliminal.SCHEDULERS]
+            return [autosubliminal.SCHEDULERS[scheduler].to_dict() for scheduler in autosubliminal.SCHEDULERS]
         elif scheduler_name in autosubliminal.SCHEDULERS:
-            return to_dict(autosubliminal.SCHEDULERS[scheduler_name], *self._ignored_attributes)
+            return autosubliminal.SCHEDULERS[scheduler_name].to_dict()
         else:
             return self._bad_request('Invalid scheduler_name')

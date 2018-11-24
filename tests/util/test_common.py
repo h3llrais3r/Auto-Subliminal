@@ -14,8 +14,9 @@ from autosubliminal import version
 from autosubliminal.core.item import WantedItem
 from autosubliminal.util.common import get_today, run_cmd, connect_url, wait_for_internet_connection, to_dict, \
     get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, display_mapping_dict, display_list_single_line, \
-    display_list_multi_line, display_value, display_item_title, display_item_name, display_timestamp, \
-    convert_timestamp, humanize_bytes, get_common_path, get_root_path, get_file_size, set_rw_and_remove
+    display_list_multi_line, display_value, display_item_title, display_item_name, display_interval, \
+    display_timestamp, convert_timestamp, humanize_bytes, get_common_path, get_root_path, get_file_size, \
+    set_rw_and_remove
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -102,9 +103,12 @@ def test_to_dict():
         'key3': [3],
         'key5': {'5': 5}
     }
+    object_dict_with_key7 = dict(obj_dict)
+    object_dict_with_key7.update({'key7': 7})
     my_args = ('key6',)
+    my_kwargs = {'key7': 7}
     assert to_dict(MyObject(), 'key6') == obj_dict
-    assert to_dict(MyObject(), *my_args) == obj_dict  # test with predefined tuple
+    assert to_dict(MyObject(), *my_args, **my_kwargs) == object_dict_with_key7  # test with predefined args and kwargs
 
 
 def test_get_boolean():
@@ -248,6 +252,12 @@ def test_display_item_name():
     assert display_item_name(wanted_item_empty) == 'N/A'
     assert display_item_name(wanted_item_empty, default_value='default') == 'default'
     assert display_item_name(wanted_item_empty, default_value='default', uppercase=True) == 'DEFAULT'
+
+
+def test_display_interval():
+    assert display_interval(1) == '0:00:01'
+    assert display_interval(60) == '0:01:00'
+    assert display_interval(3600) == '1:00:00'
 
 
 def test_display_timestamp():

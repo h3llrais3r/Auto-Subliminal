@@ -7,6 +7,7 @@ import jsonpickle
 import autosubliminal
 from autosubliminal.server.api.schedulers import SchedulersApi
 from autosubliminal.server.rest import BadRequest
+from autosubliminal.util.common import to_dict as convert_to_dict
 
 
 class MyScheduler(object):
@@ -22,6 +23,9 @@ class MyScheduler(object):
     @property
     def next_run(self):
         return self.last_run + self.interval
+
+    def to_dict(self):
+        return convert_to_dict(self, 'process')
 
 
 scheduler = MyScheduler('MyScheduler1')

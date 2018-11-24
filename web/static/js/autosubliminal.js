@@ -251,10 +251,9 @@ function _handle_event(event) {
         }
     } else if (type == PROCESS_STARTED) {
         if (!jQuery.isEmptyObject(data)) {
-            // Mark process as running on status page
-            var scheduler_process_row = $('#scheduler').find('#' + data['name']);
-            scheduler_process_row.children('.running').text('True');
-            scheduler_process_row.addClass('status-scheduler-running');
+            // Publish the event asynchronously
+            PubSub.publish(PROCESS_STARTED, data);
+            // Update footer
             if (data['name'] == DISK_SCANNER) {
                 // Mark disk scanner as running in footer
                 $('#scandisk-nextrun').countdown('stop');
@@ -269,16 +268,15 @@ function _handle_event(event) {
         }
     } else if (type == PROCESS_FINISHED) {
         if (!jQuery.isEmptyObject(data)) {
-            // Mark process as finished on status page
-            var scheduler_process_row = $('#scheduler').find('#' + data['name']);
-            scheduler_process_row.children('.running').text('False');
-            scheduler_process_row.removeClass('status-scheduler-running');
+            // Publish the event asynchronously
+            PubSub.publish(PROCESS_FINISHED, data);
+            // Update footer
             if (data['name'] == DISK_SCANNER) {
                 // Restart disk scanner countdown in footer
-                $('#scandisk-nextrun').countdown(data['next_run']);
+                $('#scandisk-nextrun').countdown(data['next_run'] * 1000);
             } else if (data['name'] == SUB_CHECKER) {
                 // Restart disk scanner countdown in footer
-                $('#checksub-nextrun').countdown(data['next_run']);
+                $('#checksub-nextrun').countdown(data['next_run'] * 1000);
             } else if (data['name'] == VERSION_CHECKER) {
                 // do nothing
             }
