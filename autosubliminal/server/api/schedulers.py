@@ -4,7 +4,6 @@ import cherrypy
 
 import autosubliminal
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import to_dict
 
 
 @cherrypy.popargs('scheduler_name')
