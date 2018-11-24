@@ -243,13 +243,6 @@ def display_timestamp(time_float, format='%d-%m-%Y %H:%M:%S', default_value='N/A
         return default_value
 
 
-def display_next_scheduler_run(scheduler):
-    if not scheduler or scheduler.running:
-        return 'Running...'
-    else:
-        return display_timestamp(scheduler.interval - (time.time() - scheduler.last_run), '%H:%M:%S')
-
-
 def get_next_scheduler_run_in_ms(scheduler):
     if not scheduler or scheduler.running:
         return 0
