@@ -11,6 +11,7 @@ from six import add_metaclass, text_type
 
 import autosubliminal
 from autosubliminal.util.common import to_dict
+from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock
 from autosubliminal.util.websocket import send_websocket_event, PROCESS_STARTED, PROCESS_FINISHED
 
 log = logging.getLogger(__name__)
@@ -97,21 +98,37 @@ class Scheduler(object):
             time.sleep(1)
 
     def _run_process(self, current_time):
+        # Check if the run needs a lock
+        run_lock = self.process.force_run_lock if self._force_run else self.process.run_lock
+
         try:
+            # Delay process if lock cannot be acquired
+            if run_lock and not get_wanted_queue_lock():
+                # Increase delay with 1 second each time the process cannot yet run
+                self._delay += 1
+                return
+
+            # Mark as running
             self.process.running = True
             send_websocket_event(PROCESS_STARTED, self.to_dict())
+
             log.debug('Running thread process')
-            if self.process.run(self._force_run):
-                # Update process properties if process has run
-                self.last_run = current_time
-                if self._force_run:
-                    self._force_run = False
-                    self._delay = 0
-            else:
-                # increase delay with 1 second each time the process cannot yet run
-                self._delay += 1
+            self.process.run(self._force_run)
+
+            # Update process properties after process run
+            self.last_run = current_time
+            if self._force_run:
+                self._force_run = False
+                self._delay = 0
+
+            # Mark as finished
             self.process.running = False
             send_websocket_event(PROCESS_FINISHED, self.to_dict())
+
+            # Release lock if needed
+            if run_lock:
+                release_wanted_queue_lock()
+
         except:
             self.process.running = False
             print(traceback.format_exc())
@@ -120,12 +137,14 @@ class Scheduler(object):
     def stop(self):
         """Stop the scheduler."""
         log.info('Stopping thread %s', self.name)
+
         self._force_stop = True
         self._thread.join(10)
 
     def run(self, delay=0):
         """Force run the scheduler."""
         log.info('Running thread %s', self.name)
+
         self._force_run = True
         self._delay = delay
 
@@ -151,8 +170,10 @@ class ScheduledProcess(object):
     Base class for all scheduled processes.
     """
 
-    def __init__(self):
+    def __init__(self, run_lock=True, force_run_lock=True):
         self.running = False
+        self.run_lock = run_lock
+        self.force_run_lock = force_run_lock
 
     @abc.abstractmethod
     def run(self, force_run):

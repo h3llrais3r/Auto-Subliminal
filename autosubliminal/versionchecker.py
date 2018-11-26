@@ -35,7 +35,7 @@ class VersionChecker(ScheduledProcess):
     """
 
     def __init__(self):
-        super(VersionChecker, self).__init__()
+        super(VersionChecker, self).__init__(force_run_lock=False)
         try:
             Repo(autosubliminal.PATH)
             self.manager = GitVersionManager()
@@ -47,22 +47,13 @@ class VersionChecker(ScheduledProcess):
 
     @release_wanted_queue_lock_on_exception
     def run(self, force_run):
-        # Block version check (and update) in no force run mode when another process is using the wanted queue
-        # We do not want to auto update the version while the application is busy with another process
-        if not force_run and not get_wanted_queue_lock():
-            return False
+        log.info('Checking version')
 
         # Wait for internet connection
         wait_for_internet_connection()
 
-        log.info('Checking version')
-
         # Check version
         self.manager.check_version(force_run)
-
-        # Release wanted queue lock
-        if not force_run:
-            release_wanted_queue_lock()
 
         # Only update and restart when: no force run, update is allowed and auto update is enabled
         if not force_run and self.manager.update_allowed and autosubliminal.CHECKVERSIONAUTOUPDATE:
@@ -70,25 +61,20 @@ class VersionChecker(ScheduledProcess):
             # Restart the app with exit of current process to have a clean restart
             system.restart(exit=True)
 
-        # Always return 'True' because we don't want to retry it until the next scheduled run
-        return True
-
     @release_wanted_queue_lock_on_exception
-    def update(self):
+    def update(self, force_update=False):
         log.info('Updating version')
 
-        # Block update when another process is using the wanted queue
-        # We do not want to update the version while the application is busy with another process
-        if not get_wanted_queue_lock():
-            return False
+        # Only get lock for force run because when called from run, we already have a queue lock
+        if force_update and not get_wanted_queue_lock():
+            return
 
         # Update version
         self.manager.update_version()
 
         # Release wanted queue lock
-        release_wanted_queue_lock()
-
-        return True
+        if force_update:
+            release_wanted_queue_lock()
 
     @property
     def current_branch(self):

@@ -44,19 +44,16 @@ class SubChecker(ScheduledProcess):
 
     @release_wanted_queue_lock_on_exception
     def run(self, force_run):
-        # Get wanted queue lock
-        if not get_wanted_queue_lock():
-            return False
+        log.info('Starting round of subtitle checking')
 
         # Wait for internet connection
         wait_for_internet_connection()
 
-        log.info('Starting round of subtitle checking')
-        to_delete_wanted_queue = []
-
         # Show info message (only when run was forced manually)
         if force_run:
             send_websocket_notification('Checking subtitles...')
+
+        to_delete_wanted_queue = []
 
         # Setup provider pool
         provider_pool = _get_provider_pool()
@@ -120,14 +117,10 @@ class SubChecker(ScheduledProcess):
         else:
             log.info('No subliminal providers configured, skipping')
 
-        # Release wanted queue lock
-        log.info('Finished round of subtitle checking')
-        release_wanted_queue_lock()
-
         # Send home page reload event
         send_websocket_event(PAGE_RELOAD, {'name': 'home'})
 
-        return True
+        log.info('Finished round of subtitle checking')
 
 
 @release_wanted_queue_lock_on_exception

@@ -15,8 +15,7 @@ import autosubliminal
 from autosubliminal import fileprocessor
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import WantedItems
-from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, \
-    release_wanted_queue_lock_on_exception
+from autosubliminal.util.queue import release_wanted_queue_lock_on_exception
 from autosubliminal.util.skip import skip_movie, skip_show
 from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
 
@@ -34,10 +33,6 @@ class DiskScanner(ScheduledProcess):
 
     @release_wanted_queue_lock_on_exception
     def run(self, force_run):
-        # Get wanted queue lock
-        if not get_wanted_queue_lock():
-            return False
-
         log.info('Starting round of local disk checking at %r', autosubliminal.VIDEOPATHS)
 
         # Show info message (only when run was forced manually)
@@ -55,10 +50,8 @@ class DiskScanner(ScheduledProcess):
                 if os.path.exists(video_path):
                     one_dir_exists = True
         if not one_dir_exists:
-            # Release wanted queue lock
             log.error('None of the configured video paths (%r) exists, aborting...', autosubliminal.VIDEOPATHS)
-            release_wanted_queue_lock()
-            return True
+            return
 
         # Walk through paths to search for wanted items
         new_wanted_items = []
@@ -84,14 +77,10 @@ class DiskScanner(ScheduledProcess):
             log.info('%s %s', item.videopath, item.languages)
             autosubliminal.WANTEDQUEUE.append(item)
 
-        # Release wanted queue lock
-        log.info('Finished round of local disk checking')
-        release_wanted_queue_lock()
-
         # Send home page reload event
         send_websocket_event(PAGE_RELOAD, {'name': 'home'})
 
-        return True
+        log.info('Finished round of local disk checking')
 
 
 def walk_dir(path):

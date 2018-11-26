@@ -44,7 +44,7 @@ class System(object):
 
     @cherrypy.expose(alias='updateVersion')
     def update_version(self):
-        autosubliminal.CHECKVERSION.process.update()
+        autosubliminal.CHECKVERSION.process.update(force_update=True)
         system.restart(exit=True)
         message = 'Auto-Subliminal is restarting...'
         return PageTemplate(filename='/system/system-restart.mako').render(message=message)
