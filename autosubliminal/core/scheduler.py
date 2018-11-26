@@ -125,14 +125,15 @@ class Scheduler(object):
             self.process.running = False
             send_websocket_event(PROCESS_FINISHED, self.to_dict())
 
-            # Release lock if needed
-            if run_lock:
-                release_wanted_queue_lock()
-
         except:
             self.process.running = False
             print(traceback.format_exc())
             os._exit(1)
+
+        finally:
+            # Release lock if needed
+            if run_lock:
+                release_wanted_queue_lock()
 
     def stop(self):
         """Stop the scheduler."""
