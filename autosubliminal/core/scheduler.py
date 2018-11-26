@@ -126,8 +126,8 @@ class Scheduler(object):
             send_websocket_event(PROCESS_FINISHED, self.to_dict())
 
         except:
-            self.process.running = False
             print(traceback.format_exc())
+            self.process.running = False
             os._exit(1)
 
         finally:
@@ -152,6 +152,10 @@ class Scheduler(object):
     def to_dict(self):
         """Convert the scheduler to its dict representation."""
         return to_dict(self, 'process')
+
+    @property
+    def active(self):
+        return self._thread.isAlive()
 
     @property
     def next_run(self):
