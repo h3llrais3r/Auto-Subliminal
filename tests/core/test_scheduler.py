@@ -24,9 +24,7 @@ def test_scheduler(mocker):
         assert scheduler.last_run > 0
         assert scheduler.next_run > 0
     finally:
-        if scheduler:
-            scheduler.stop()
-            assert scheduler.running is False
+        _assert_scheduler(scheduler)
 
 
 def test_scheduler_force_run(mocker):
@@ -40,9 +38,7 @@ def test_scheduler_force_run(mocker):
         assert scheduler.last_run > 0
         assert scheduler.next_run > 0
     finally:
-        if scheduler:
-            scheduler.stop()
-            assert scheduler.running is False
+        _assert_scheduler(scheduler)
 
 
 def test_duplicate_scheduler(monkeypatch, mocker):
@@ -57,9 +53,7 @@ def test_duplicate_scheduler(monkeypatch, mocker):
         assert scheduler.last_run > 0
         assert scheduler.next_run > 0
     finally:
-        if scheduler:
-            scheduler.stop()
-            assert scheduler.running is False
+        _assert_scheduler(scheduler)
 
 
 def test_triple_scheduler(monkeypatch, mocker):
@@ -74,9 +68,7 @@ def test_triple_scheduler(monkeypatch, mocker):
         assert scheduler.last_run > 0
         assert scheduler.next_run > 0
     finally:
-        if scheduler:
-            scheduler.stop()
-            assert scheduler.running is False
+        _assert_scheduler(scheduler)
 
 
 def test_scheduler_run_process_exception(mocker):
@@ -90,6 +82,11 @@ def test_scheduler_run_process_exception(mocker):
         time.sleep(3)  # Sleep to be sure that the run exception been executed at least once
         assert os_mock.called
     finally:
-        if scheduler:
-            scheduler.stop()
-            assert scheduler.running is False
+        _assert_scheduler(scheduler)
+
+
+def _assert_scheduler(scheduler):
+    if scheduler:
+        scheduler.stop()
+        assert scheduler.running is False
+        assert scheduler.active is False
