@@ -124,6 +124,17 @@ def safe_text(obj, default_value=None):
         return default_value
 
 
+def safe_lowercase(obj, default_value=None):
+    """Return the object converted to lowercase.
+
+    When not possible return the default value.
+    """
+    try:
+        return obj.lower()
+    except Exception:
+        return default_value
+
+
 def safe_uppercase(obj, default_value=None):
     """Return the object converted to uppercase.
 

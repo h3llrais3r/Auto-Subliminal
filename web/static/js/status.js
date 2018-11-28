@@ -35,7 +35,7 @@ var processFinishedEventSubscriber = function (msg, data) {
     // console.log(msg, data);
     // Mark process as finished on status page
     var scheduler_process_row = $('#scheduler').find('#' + data['name']);
-    scheduler_process_row.children('.active').text(data['active']);
+    scheduler_process_row.children('.alive').text(data['alive']);
     scheduler_process_row.children('.last-run').text(strftime('%d-%m-%Y %H:%M:%S', new Date(data['last_run'] * 1000)));
     scheduler_process_row.children('.next-run').text(strftime('%d-%m-%Y %H:%M:%S', new Date(data['next_run'] * 1000)));
     scheduler_process_row.removeClass('status-scheduler-running');

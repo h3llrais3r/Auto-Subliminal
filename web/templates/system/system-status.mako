@@ -2,7 +2,7 @@
 
 <%!
     import autosubliminal
-    from autosubliminal.util.common import display_interval, display_timestamp, get_disk_space_details, humanize_bytes
+    from autosubliminal.util.common import display_interval, display_timestamp, get_disk_space_details, humanize_bytes, safe_lowercase, safe_text
 %>
 
 <%block name="bodyContent">
@@ -24,7 +24,7 @@
                     <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Active</th>
+                        <th>Alive</th>
                         <th>Interval</th>
                         <th>Last run</th>
                         <th>Next run</th>
@@ -35,7 +35,7 @@
                         % for scheduler in list(autosubliminal.SCHEDULERS.values()):
                             <tr id="${scheduler.name}" class="<% 'status-scheduler-running' if scheduler.running else '' %>">
                                 <td class="main-column">${scheduler.name}</td>
-                                <td class="active">${scheduler.active}</td>
+                                <td class="alive">${safe_lowercase(safe_text(scheduler.alive))}</td>
                                 <td class="interval">${display_interval(scheduler.interval, True)}</td>
                                 <td class="last-run">${display_timestamp(scheduler.last_run)}</td>
                                 <td class="next-run">${display_timestamp(scheduler.next_run)}</td>

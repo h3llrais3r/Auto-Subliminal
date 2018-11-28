@@ -89,4 +89,4 @@ def _assert_scheduler(scheduler):
     if scheduler:
         scheduler.stop()
         assert scheduler.running is False
-        assert scheduler.active is False
+        assert scheduler.alive is False

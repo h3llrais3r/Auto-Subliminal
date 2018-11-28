@@ -13,10 +13,10 @@ import autosubliminal
 from autosubliminal import version
 from autosubliminal.core.item import WantedItem
 from autosubliminal.util.common import get_today, run_cmd, connect_url, wait_for_internet_connection, to_dict, \
-    get_boolean, safe_text, safe_trim, safe_uppercase, sanitize, display_mapping_dict, display_list_single_line, \
-    display_list_multi_line, display_value, display_item_title, display_item_name, display_interval, \
-    display_timestamp, convert_timestamp, humanize_bytes, get_common_path, get_root_path, get_file_size, \
-    set_rw_and_remove
+    get_boolean, safe_text, safe_lowercase, safe_uppercase, safe_trim, sanitize, display_mapping_dict, \
+    display_list_single_line, display_list_multi_line, display_value, display_item_title, display_item_name, \
+    display_interval, display_timestamp, convert_timestamp, humanize_bytes, get_common_path, get_root_path, \
+    get_file_size, set_rw_and_remove
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -24,14 +24,18 @@ vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           cassette_library_dir=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'cassettes', 'common'))
 
 text_value = 'test'
+text_value_upper = 'TEST'
 text_value_special_char = u'ù'
+text_value_special_char_upper = u'Ù'
 num_value = 1
 long_value = 1.0
 bool_value = True
 list_value = []
 list_value_with_items = ['a', 'b']
+list_value_with_items_upper = ['A', 'B']
 dict_value = {}
 dict_value_with_items = {'1': 'a'}
+dict_value_with_items_upper = {'1': 'A'}
 
 
 class MyObject(object):
@@ -140,6 +144,27 @@ def test_save_text():
 def test_save_text_default_value(mocker):
     mocker.patch('autosubliminal.util.common.text_type', side_effect=Exception)
     assert safe_text(None, 'fallback') == 'fallback'
+
+
+def test_safe_lowercase():
+    assert safe_lowercase(None) is None
+    assert safe_lowercase(None, 'n/a') == 'n/a'
+    assert safe_lowercase(text_value_upper) == 'test'
+    assert safe_lowercase(text_value_special_char_upper) == u'ù'
+    assert safe_lowercase(num_value) is None
+    assert safe_lowercase(num_value, 'n/a') == 'n/a'
+    assert safe_lowercase(long_value) is None
+    assert safe_lowercase(long_value, 'n/a') == 'n/a'
+    assert safe_lowercase(bool_value) is None
+    assert safe_lowercase(bool_value, 'n/a') == 'n/a'
+    assert safe_lowercase(list_value) is None
+    assert safe_lowercase(list_value, 'n/a') == 'n/a'
+    assert safe_lowercase(list_value_with_items, 'n/a') == 'n/a'
+    assert safe_lowercase(safe_text(list_value_with_items_upper), 'n/a') == '[\'a\', \'b\']'
+    assert safe_lowercase(dict_value) is None
+    assert safe_lowercase(dict_value, 'n/a') == 'n/a'
+    assert safe_lowercase(dict_value_with_items_upper, 'n/a') == 'n/a'
+    assert safe_lowercase(safe_text(dict_value_with_items_upper), 'n/a') == '{\'1\': \'a\'}'
 
 
 def test_safe_uppercase():

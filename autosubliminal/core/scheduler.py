@@ -154,7 +154,7 @@ class Scheduler(object):
         return to_dict(self, 'process')
 
     @property
-    def active(self):
+    def alive(self):
         return self._thread.isAlive()
 
     @property
