@@ -24,7 +24,7 @@ class MyScheduler(object):
     def next_run(self):
         return self.last_run + self.interval
 
-    def to_dict(self):
+    def to_json(self):
         return convert_to_dict(self, 'process')
 
 
