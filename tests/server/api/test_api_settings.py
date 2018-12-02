@@ -7,7 +7,8 @@ from autosubliminal.server.api.settings import SettingsApi
 settings_json = '{"timestampFormat": "%d-%m-%Y %H:%M:%S"}'
 
 
-def test_get_settings():
+def test_get_settings(monkeypatch):
+    monkeypatch.setattr('autosubliminal.TIMESTAMPFORMAT', '%d-%m-%Y %H:%M:%S')
     # Check conversion to json:
     # - pickle ourselves because we don't use cherrypy.tools here
     # - force sorted keys to be able to compare results (Python 3 sorts by default)
