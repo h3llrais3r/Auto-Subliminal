@@ -110,7 +110,7 @@ class Scheduler(object):
 
             # Mark as running
             self.process.running = True
-            send_websocket_event(PROCESS_STARTED, self.to_dict())
+            send_websocket_event(PROCESS_STARTED, self.to_json())
 
             log.debug('Running thread process')
             self.process.run(self._force_run)
@@ -123,7 +123,7 @@ class Scheduler(object):
 
             # Mark as finished
             self.process.running = False
-            send_websocket_event(PROCESS_FINISHED, self.to_dict())
+            send_websocket_event(PROCESS_FINISHED, self.to_json())
 
         except:
             print(traceback.format_exc())
@@ -149,9 +149,15 @@ class Scheduler(object):
         self._force_run = True
         self._delay = delay
 
-    def to_dict(self):
-        """Convert the scheduler to its dict representation."""
-        return to_dict(self, 'process')
+    def to_json(self):
+        """Convert the scheduler to its json representation."""
+        json_dict = to_dict(self, 'process')
+
+        # Convert timestamps to milliseconds for javascript Date compatibility
+        json_dict['last_run'] *= 1000
+        json_dict['next_run'] *= 1000
+
+        return json_dict
 
     @property
     def alive(self):

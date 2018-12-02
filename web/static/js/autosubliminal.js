@@ -273,10 +273,10 @@ function _handle_event(event) {
             // Update footer
             if (data['name'] == DISK_SCANNER) {
                 // Restart disk scanner countdown in footer
-                $('#scandisk-nextrun').countdown(data['next_run'] * 1000);
+                $('#scandisk-nextrun').countdown(data['next_run']);
             } else if (data['name'] == SUB_CHECKER) {
                 // Restart disk scanner countdown in footer
-                $('#checksub-nextrun').countdown(data['next_run'] * 1000);
+                $('#checksub-nextrun').countdown(data['next_run']);
             } else if (data['name'] == VERSION_CHECKER) {
                 // do nothing
             }
