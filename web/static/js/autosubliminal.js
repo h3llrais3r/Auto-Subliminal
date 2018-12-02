@@ -76,27 +76,7 @@ PubSub.subscribe(SETTINGS_LOADED, settingsLoaded);
 
 // Init after settings are loaded
 function init() {
-    // Setup the countdown until scandisk next run date
-    var scandisk_next_run_date = new Date();
-    scandisk_next_run_date.setTime($('#scandisk-nextrun-time-ms').val());
-    $('#scandisk-nextrun').countdown(scandisk_next_run_date, function (event) {
-        if (event.strftime(TIME_FORMAT) == '00:00:00') {
-            $(this).text('Running...');
-        } else {
-            $(this).text(event.strftime(TIME_FORMAT));
-        }
-    });
-
-    // Setup the countdown until checksub next run date
-    var checksub_next_run_date = new Date();
-    checksub_next_run_date.setTime($('#checksub-nextrun-time-ms').val());
-    $('#checksub-nextrun').countdown(checksub_next_run_date, function (event) {
-        if (event.strftime(TIME_FORMAT) == '00:00:00') {
-            $(this).text('Running...');
-        } else {
-            $(this).text(event.strftime(TIME_FORMAT));
-        }
-    });
+    // Nothing for now
 }
 
 /* ======
@@ -123,6 +103,33 @@ $('.navbar .nav a.run-process').on('click', function (event) {
     // Run the process
     var process_name = $(this).data('process-name');
     run_process_on_server(process_name);
+});
+
+
+/* =========
+ * Countdown
+ * ========= */
+
+// Setup the countdown until scandisk next run date
+var scandisk_next_run_date = new Date();
+scandisk_next_run_date.setTime($('#scandisk-nextrun-time-ms').val());
+$('#scandisk-nextrun').countdown(scandisk_next_run_date, function (event) {
+    if (event.strftime(TIME_FORMAT) == '00:00:00') {
+        $(this).text('Running...');
+    } else {
+        $(this).text(event.strftime(TIME_FORMAT));
+    }
+});
+
+// Setup the countdown until checksub next run date
+var checksub_next_run_date = new Date();
+checksub_next_run_date.setTime($('#checksub-nextrun-time-ms').val());
+$('#checksub-nextrun').countdown(checksub_next_run_date, function (event) {
+    if (event.strftime(TIME_FORMAT) == '00:00:00') {
+        $(this).text('Running...');
+    } else {
+        $(this).text(event.strftime(TIME_FORMAT));
+    }
 });
 
 /* ========
