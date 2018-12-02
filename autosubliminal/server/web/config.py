@@ -57,7 +57,8 @@ class Config(object):
         @cherrypy.tools.json_out()
         def save(self, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, manualsearchwithscoring,
                  scandisk, checksub, checkversion, checkversionautoupdate, scanembeddedsubs, skiphiddendirs,
-                 detectinvalidsublanguage, detectedlanguageprobability, minvideofilesize, maxdbresults):
+                 detectinvalidsublanguage, detectedlanguageprobability, minvideofilesize, maxdbresults,
+                 timestampformat):
             # Set general variables
             autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
             autosubliminal.DEFAULTLANGUAGE = defaultlanguage
@@ -74,6 +75,7 @@ class Config(object):
             autosubliminal.DETECTEDLANGUAGEPROBABILITY = float(detectedlanguageprobability)
             autosubliminal.MINVIDEOFILESIZE = int(minvideofilesize)
             autosubliminal.MAXDBRESULTS = int(maxdbresults)
+            autosubliminal.TIMESTAMPFORMAT = timestampformat
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.section)

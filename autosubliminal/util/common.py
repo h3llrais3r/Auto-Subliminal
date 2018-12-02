@@ -259,9 +259,9 @@ def display_interval(seconds, textual=False):
         return formatted_interval.lstrip()
 
 
-def display_timestamp(time_float, format='%d-%m-%Y %H:%M:%S', default_value='N/A'):
+def display_timestamp(time_float, default_value='N/A'):
     if time_float > 0.0:
-        return time.strftime(format, time.localtime(time_float))
+        return time.strftime(autosubliminal.TIMESTAMPFORMAT, time.localtime(time_float))
     else:
         return default_value
 
@@ -273,8 +273,9 @@ def get_next_scheduler_run_in_ms(scheduler):
         return (scheduler.last_run + scheduler.interval) * 1000
 
 
-def convert_timestamp(timestamp_string, format_from='%Y-%m-%d %H:%M:%S', format_to='%d-%m-%Y %H:%M:%S'):
-    return time.strftime(format_to, time.strptime(timestamp_string, format_from))
+def convert_timestamp(timestamp_string):
+    return time.strftime(autosubliminal.TIMESTAMPFORMAT,
+                         time.strptime(timestamp_string, autosubliminal.DBTIMESTAMPFORMAT))
 
 
 def get_file_size(path):

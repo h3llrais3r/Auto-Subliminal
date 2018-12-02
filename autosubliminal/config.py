@@ -27,7 +27,7 @@ def read_config(check_upgrade=False):
     """
 
     # Read config file
-    cfg = ConfigParser()
+    cfg = _create_config_parser()
     try:
         with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
             cfg.read_file(f)
@@ -35,7 +35,7 @@ def read_config(check_upgrade=False):
         print('***********************************************************************')
         print('ERROR: No valid configuration file found! Using default values instead!')
         print('***********************************************************************')
-        cfg = ConfigParser()
+        cfg = _create_config_parser()
 
     if cfg.has_section('general'):
         if cfg.has_option('general', 'videopaths'):
@@ -129,6 +129,11 @@ def read_config(check_upgrade=False):
         else:
             autosubliminal.MAXDBRESULTS = 0
 
+        if cfg.has_option('general', 'timestampformat'):
+            autosubliminal.TIMESTAMPFORMAT = cfg.get('general', 'timestampformat')
+        else:
+            autosubliminal.TIMESTAMPFORMAT = u'%Y-%m-%d %H:%M:%S'
+
         if cfg.has_option('general', 'configversion'):
             autosubliminal.CONFIGVERSION = cfg.getint('general', 'configversion')
         else:
@@ -152,6 +157,7 @@ def read_config(check_upgrade=False):
         autosubliminal.DETECTEDLANGUAGEPROBABILITY = 0.9
         autosubliminal.MINVIDEOFILESIZE = 0
         autosubliminal.MAXDBRESULTS = 0
+        autosubliminal.TIMESTAMPFORMAT = u'%Y-%m-%d %H:%M:%S'
         autosubliminal.CONFIGVERSION = version.CONFIG_VERSION
         # Check old config version location -> needed for upgrade from version 8 to 9
         if cfg.has_section('config'):
@@ -740,7 +746,7 @@ def write_config(section=None):
     """
 
     # Read config file
-    cfg = ConfigParser()
+    cfg = _create_config_parser()
     try:
         # A config file is set so we use this to add the settings
         with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
@@ -810,6 +816,7 @@ def write_general_section():
     cfg.set(section, 'detectedlanguageprobability', text_type(autosubliminal.DETECTEDLANGUAGEPROBABILITY))
     cfg.set(section, 'minvideofilesize', text_type(autosubliminal.MINVIDEOFILESIZE))
     cfg.set(section, 'maxdbresults', text_type(autosubliminal.MAXDBRESULTS))
+    cfg.set(section, 'timestampformat', autosubliminal.TIMESTAMPFORMAT)
     cfg.set(section, 'configversion', text_type(autosubliminal.CONFIGVERSION))
 
     with codecs.open(autosubliminal.CONFIGFILE, 'wb', encoding=ENCODING) as f:
@@ -1258,19 +1265,27 @@ def apply_skipmovie():
         autosubliminal.SKIPMOVIE = {}
 
 
+def _create_config_parser():
+    """Create a config parser.
+
+    Don't use interpolation (for now) because we want to support values with % in it (timestamp format).
+    """
+    return ConfigParser(interpolation=None)
+
+
 def _load_config_parser():
     """
     Read the config file and return the config parser.
     If no config file is present, a new config parser object is returned.
     """
-    cfg = ConfigParser()
+    cfg = _create_config_parser()
 
     try:
         with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
             cfg.read_file(f)
     except Exception:
         # No config yet
-        cfg = ConfigParser()
+        cfg = _create_config_parser()
         pass
 
     return cfg
@@ -1583,13 +1598,13 @@ def _upgrade_config(from_version, to_version):
         if from_version == 8 and to_version == 9:
             print('INFO: Renaming config, logfile and skip section. Please check/reconfigure your config!')
             # Read config file
-            cfg = ConfigParser()
+            cfg = _create_config_parser()
             try:
                 with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
                     cfg.read_file(f)
             except Exception:
                 # No config yet, just mark as upgraded
-                cfg = ConfigParser()
+                cfg = _create_config_parser()
             # Reame sections
             if cfg.has_section('config'):
                 cfg.add_section('general')
@@ -1622,13 +1637,13 @@ def _upgrade_config(from_version, to_version):
         if from_version == 9 and to_version == 10:
             print('INFO: Removing old PATH config.')
             # Read config file
-            cfg = ConfigParser()
+            cfg = _create_config_parser()
             try:
                 with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
                     cfg.read_file(f)
             except Exception:
                 # No config yet, just mark as upgraded
-                cfg = ConfigParser()
+                cfg = _create_config_parser()
             if cfg.has_section('general'):
                 if cfg.has_option('general', 'path'):
                     cfg.remove_option('general', 'path')

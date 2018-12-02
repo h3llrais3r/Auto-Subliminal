@@ -2,15 +2,32 @@
  * Javascript for general Auto-Subliminal stuff
  */
 
-/* ================
- * Global variables
- * ================ */
+/* ==============================
+ * Global constants and variables
+ * ============================== */
 
+// Constants
+const SETTINGS_LOADED = 'SETTINGS_LOADED';
+
+// Variables
 var base_url = window.location.protocol + '//' + window.location.host + webroot;
+
+// Default timestamp format
+var TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S';
+var DATE_FORMAT = TIMESTAMP_FORMAT.split(' ')[0];
+var TIME_FORMAT = TIMESTAMP_FORMAT.split(' ')[1];
+
+// Tablesorter date format
+var TABLESORTER_DATE_FORMAT = 'yyyymmdd';
 
 /* ================
  * Global utilities
  * ================ */
+
+// Function to trigger the initialization once the settings are loaded
+var settingsLoaded = function (msg, data) {
+    init();
+};
 
 // Jquery wrapper to post with json content-type
 $.postJSON = function (url, data, success, dataType) {
@@ -26,6 +43,61 @@ $.postJSON = function (url, data, success, dataType) {
         success: success
     });
 };
+
+/* =============
+ * Load settings
+ * ============= */
+
+// Load global variables through settings api
+$.get(webroot + '/api/settings', function (data) {
+    if (data) {
+        TIMESTAMP_FORMAT = data['timestampFormat'];
+        DATE_FORMAT = TIMESTAMP_FORMAT.split(' ')[0];
+        TIME_FORMAT = TIMESTAMP_FORMAT.split(' ')[1];
+        var datePattern = DATE_FORMAT.match(/[Ymd]+/g).join('');
+        if ('Ymd' == datePattern) {
+            TABLESORTER_DATE_FORMAT = 'yyyymmdd';
+        } else if ('mdY' == datePattern) {
+            TABLESORTER_DATE_FORMAT = 'mmddyyyy';
+        } else if ('dmY' == datePattern) {
+            TABLESORTER_DATE_FORMAT = 'ddmmyyyy';
+        }
+        // Publish the settings loaded event
+        PubSub.publish(SETTINGS_LOADED, null);
+    }
+});
+
+/* ===================
+ * After load settings
+ * =================== */
+
+// Wait until settings are loaded
+PubSub.subscribe(SETTINGS_LOADED, settingsLoaded);
+
+// Init after settings are loaded
+function init() {
+    // Setup the countdown until scandisk next run date
+    var scandisk_next_run_date = new Date();
+    scandisk_next_run_date.setTime($('#scandisk-nextrun-time-ms').val());
+    $('#scandisk-nextrun').countdown(scandisk_next_run_date, function (event) {
+        if (event.strftime(TIME_FORMAT) == '00:00:00') {
+            $(this).text('Running...');
+        } else {
+            $(this).text(event.strftime(TIME_FORMAT));
+        }
+    });
+
+    // Setup the countdown until checksub next run date
+    var checksub_next_run_date = new Date();
+    checksub_next_run_date.setTime($('#checksub-nextrun-time-ms').val());
+    $('#checksub-nextrun').countdown(checksub_next_run_date, function (event) {
+        if (event.strftime(TIME_FORMAT) == '00:00:00') {
+            $(this).text('Running...');
+        } else {
+            $(this).text(event.strftime(TIME_FORMAT));
+        }
+    });
+}
 
 /* ======
  * Navbar
@@ -79,32 +151,6 @@ $('input[type=checkbox][data-toggle=toggle][data-on=Enabled][data-off=Disabled]'
 
 // Enable the popovers
 $('[data-toggle=popover]').popover();
-
-/* =========
- * Countdown
- * ========= */
-
-// Setup the countdown until scandisk next run date
-var scandisk_next_run_date = new Date();
-scandisk_next_run_date.setTime($('#scandisk-nextrun-time-ms').val());
-$('#scandisk-nextrun').countdown(scandisk_next_run_date, function (event) {
-    if (event.strftime('%H:%M:%S') == '00:00:00') {
-        $(this).text('Running...');
-    } else {
-        $(this).text(event.strftime('%H:%M:%S'));
-    }
-});
-
-// Setup the countdown until checksub next run date
-var checksub_next_run_date = new Date();
-checksub_next_run_date.setTime($('#checksub-nextrun-time-ms').val());
-$('#checksub-nextrun').countdown(checksub_next_run_date, function (event) {
-    if (event.strftime('%H:%M:%S') == '00:00:00') {
-        $(this).text('Running...');
-    } else {
-        $(this).text(event.strftime('%H:%M:%S'));
-    }
-});
 
 /* =============
  * Notifications

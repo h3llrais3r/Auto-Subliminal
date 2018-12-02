@@ -5,6 +5,8 @@
 
     import autosubliminal
     from autosubliminal.util.common import display_list_multi_line, display_list_single_line
+
+    SUPPORTED_TIMESTAMP_FORMATS = ['%Y-%m-%d %H:%M:%S', '%m-%d-%Y %H:%M:%S', '%d-%m-%Y %H:%M:%S']
 %>
 
 <%block name="bodyContent">
@@ -389,6 +391,36 @@
                             </span>
                             <span class="col-xs-8 col-md-6">
                                 <input type="text" id="maxdbresults" name="maxdbresults" value="${autosubliminal.MAXDBRESULTS}" class="form-control input-sm">
+                            </span>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <span class="col-xs-4 col-md-3">
+                                <label for="timestampformat">Timestamp format
+                                    <span class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                        </a>
+                                        <ul class="dropdown-menu has-tip info-list">
+                                            <li>
+                                                The format in which timestamps are displayed.<br>
+                                                See Python <i>strftime()</i> for more details.
+                                            </li>
+                                        </ul>
+                                    </span>
+                                </label>
+                            </span>
+                            <span class="col-xs-8 col-md-6">
+                                <select id="timestampformat" name="timestampformat" class="form-control input-sm">
+                                    % for format in SUPPORTED_TIMESTAMP_FORMATS:
+                                        <% name = (language.name[:language.name.find('(') if language.name.find('(') != -1 else len(language.name)]) + ' (' + language.alpha2 + ')' %>
+                                        % if format == autosubliminal.TIMESTAMPFORMAT:
+                                            <option value="${format}" selected="selected">${format}</option>
+                                        % else:
+                                            <option value="${format}">${format}</option>
+                                        % endif
+                                    % endfor
+                                </select>
                             </span>
                         </div>
 

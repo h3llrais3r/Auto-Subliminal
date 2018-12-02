@@ -300,13 +300,16 @@ def test_display_interval():
     assert display_interval(217830, True) == '2 days 12 hours 30 minutes 30 seconds'
 
 
-def test_display_timestamp():
+def test_display_timestamp(monkeypatch):
+    monkeypatch.setattr('autosubliminal.TIMESTAMPFORMAT', '%d-%m-%Y %H:%M:%S')
     timestamp_float = time.mktime(time.strptime('01012016 0:00:00', '%d%m%Y %H:%M:%S')) - 1
     assert display_timestamp(timestamp_float) == '31-12-2015 23:59:59'
     assert display_timestamp(0.0) == 'N/A'
 
 
-def test_convert_timestamp():
+def test_convert_timestamp(monkeypatch):
+    monkeypatch.setattr('autosubliminal.DBTIMESTAMPFORMAT', '%Y-%m-%d %H:%M:%S')
+    monkeypatch.setattr('autosubliminal.TIMESTAMPFORMAT', '%d-%m-%Y %H:%M:%S')
     assert convert_timestamp('2015-12-31 23:59:59') == '31-12-2015 23:59:59'
 
 

@@ -3,6 +3,7 @@
 from autosubliminal.server.rest import RestResource
 from autosubliminal.server.api.items import ItemsApi
 from autosubliminal.server.api.schedulers import SchedulersApi
+from autosubliminal.server.api.settings import SettingsApi
 
 
 class Api(RestResource):
@@ -20,6 +21,7 @@ class Api(RestResource):
         # Add all sub paths here: /api/...
         self.items = ItemsApi()
         self.schedulers = SchedulersApi()
+        self.settings = SettingsApi()
 
     def get(self, *args, **kwargs):
         return {'api': 'Welcome to the Auto-Subliminal REST api'}
