@@ -50,23 +50,23 @@
                                     <div class="subtitle-preview">${sub['content_preview']}</div>
                                 </td>
                                 <td class="text-center">
-                                    <a class="subtitle-action manualsearchvisitlink" href="${autosubliminal.DEREFERURL}${sub['page_link']}">
+                                    <a class="subtitle-action manualsearch-visit-link" href="${autosubliminal.DEREFERURL}${sub['page_link']}">
                                         <i class="fa fa-arrow-circle-right" aria-hidden="true" title="Click to visit website"></i>
                                     </a>
                                     <br>
-                                    <a class="subtitle-action manualsearchsavelink" href="${autosubliminal.WEBROOT}/home/saveSubtitle/${sub['wanted_item_index']}/${sub['subtitle_index']}">
+                                    <a class="subtitle-action manualsearch-save-link" href="${autosubliminal.WEBROOT}/home/saveSubtitle/${sub['wanted_item_index']}/${sub['subtitle_index']}">
                                         <i class="fa fa-floppy-o" aria-hidden="true" title="Click to save subtitle"></i>
                                     </a>
                                     <br>
-                                    <a class="subtitle-action manualsearchdeletelink" href="${autosubliminal.WEBROOT}/home/deleteSubtitle/${sub['wanted_item_index']}">
+                                    <a class="subtitle-action manualsearch-delete-link" href="${autosubliminal.WEBROOT}/home/deleteSubtitle/${sub['wanted_item_index']}">
                                         <i class="fa fa-times" aria-hidden="true" title="Click to delete subtitle"></i>
                                     </a>
                                     <br>
-                                    <a class="subtitle-action manualsearchplaylink" href="${sub['playvideo_url']}">
+                                    <a class="subtitle-action manualsearch-play-link" href="${sub['playvideo_url']}">
                                         <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
                                     </a>
                                     <br>
-                                    <a class="subtitle-action manualsearchpostprocesslink" href="${autosubliminal.WEBROOT}/home/postProcess/${sub['wanted_item_index']}/${sub['subtitle_index']}">
+                                    <a class="subtitle-action manualsearch-postprocess-link" href="${autosubliminal.WEBROOT}/home/postProcess/${sub['wanted_item_index']}/${sub['subtitle_index']}">
                                         <i class="fa fa-refresh" aria-hidden="true" title="Click to execute post processing"></i>
                                         <i class="fa fa-refresh fa-spin hidden" aria-hidden="true" title="Post processing..."></i>
                                     </a>

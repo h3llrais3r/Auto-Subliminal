@@ -17,13 +17,13 @@ function init() {
                 // No column filters
                 filter_columnFilters: false,
                 // External filter selector
-                filter_external: '.wanteditemsfilter',
+                filter_external: '.wanteditems-filter',
                 // Search faster (default 300)
                 filter_searchDelay: 50,
                 // Save filters
                 filter_saveFilters: true,
                 // Reset filter selector
-                filter_reset: '.wanteditemsfilterreset'
+                filter_reset: '.wanteditems-filter-reset'
             },
             // Use configured date format
             dateFormat: TABLESORTER_DATE_FORMAT,
@@ -48,7 +48,7 @@ function init() {
         });
 
     // Setup the wanted items filter
-    $('.wanteditemsfilterreset').on('click', function () {
+    $('.wanteditems-filter-reset').on('click', function () {
         $(this).prev('input').val('').focus();
         $.tablesorter.storage($('#wanteditems'), 'tablesorter-filters', '');
     });
@@ -63,13 +63,13 @@ function init() {
                 // No column filters
                 filter_columnFilters: false,
                 // External filter selector
-                filter_external: '.lastdownloadsfilter',
+                filter_external: '.lastdownloads-filter',
                 // Search faster (default 300)
                 filter_searchDelay: 50,
                 // Save filters
                 filter_saveFilters: true,
                 // Reset filter selector
-                filter_reset: '.lastdownloadsfilterreset'
+                filter_reset: '.lastdownloads-filter-reset'
             },
             // Use configured date format
             dateFormat: TABLESORTER_DATE_FORMAT,
@@ -88,12 +88,12 @@ function init() {
             }
         })
         .tablesorterPager({
-            container: $('#lastdownloadspager'),
+            container: $('#lastdownloads-pager'),
             output: '{startRow} to {endRow} ({filteredRows})'
         });
 
     // Setup the last downloads filter
-    $('.lastdownloadsfilterreset').on('click', function () {
+    $('.lastdownloads-filter-reset').on('click', function () {
         $(this).prev('input').val('').focus();
         $.tablesorter.storage($('#lastdownloads'), 'tablesorter-filters', '');
     });

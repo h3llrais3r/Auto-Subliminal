@@ -3,7 +3,7 @@
  */
 
 // Setup the manual search visit website link
-$('.manualsearchvisitlink').on('click', function (event) {
+$('.manualsearch-visit-link').on('click', function (event) {
     // Prevent default behaviour
     event.preventDefault();
     // Define variables
@@ -14,7 +14,7 @@ $('.manualsearchvisitlink').on('click', function (event) {
 });
 
 // Setup the manual search save subtitle link
-$('.manualsearchsavelink').on('click', function (event) {
+$('.manualsearch-save-link').on('click', function (event) {
     // Prevent default behaviour
     event.preventDefault();
     // Define variables
@@ -34,7 +34,7 @@ $('.manualsearchsavelink').on('click', function (event) {
 });
 
 // Setup the manual search delete subtitle link
-$('.manualsearchdeletelink').on('click', function (event) {
+$('.manualsearch-delete-link').on('click', function (event) {
     // Prevent default behaviour
     event.preventDefault();
     // Define variables
@@ -54,7 +54,7 @@ $('.manualsearchdeletelink').on('click', function (event) {
 });
 
 // Setup the manual search play video link
-$('.manualsearchplaylink').on('click', function (event) {
+$('.manualsearch-play-link').on('click', function (event) {
     // Define variables
     var url = $(this).attr('href');
     // Play video
@@ -67,7 +67,7 @@ $('.manualsearchplaylink').on('click', function (event) {
 });
 
 // Setup the manual search post process link
-$('.manualsearchpostprocesslink').on('click', function (event) {
+$('.manualsearch-postprocess-link').on('click', function (event) {
     // Prevent default behaviour
     event.preventDefault();
     // Define variables

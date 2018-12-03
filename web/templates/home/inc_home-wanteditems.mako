@@ -29,7 +29,7 @@
                         <div class="col-xs-12 col-sm-6 col-md-6 table-filter left">
                             <div class="input-group">
                                 <span class="input-group-addon table-filter-label">Video type</span>
-                                <select id="wanteditemstypefilter" class="wanteditemsfilter form-control input-sm" type="search" data-column="0">
+                                <select id="wanteditems-type-filter" class="wanteditems-filter form-control input-sm" type="search" data-column="0">
                                     <option value="">All</option>
                                     <option value="episode">Shows</option>
                                     <option value="movie">Movies</option>
@@ -39,8 +39,8 @@
                         <div class="col-xs-12 col-sm-6 col-md-6 table-filter right">
                             <div class="input-group">
                                 <span class="input-group-addon table-filter-label">Search</span>
-                                <input id="wanteditemssearchfilter" class="wanteditemsfilter form-control input-sm" type="search" data-column="all">
-                                <span class="input-group-addon wanteditemsfilterreset">
+                                <input id="wanteditems-search-filter" class="wanteditems-filter form-control input-sm" type="search" data-column="all">
+                                <span class="input-group-addon wanteditems-filter-reset">
                                     <i class="fa fa-times" aria-hidden="true"></i></span>
                             </div>
                         </div>
