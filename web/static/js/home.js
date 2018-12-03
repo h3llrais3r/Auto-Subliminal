@@ -102,19 +102,30 @@ function init() {
     $('.container-manualsearch-link').on('click', function (event) {
         // Prevent default behaviour
         event.preventDefault();
+        // Prevent multi clicks when already running
+        var self = $(this);
+        if (self.data('running')) {
+            return false;
+        }
+        // Mark as running
+        self.data('running', true);
         // Define variables
-        var searchUrl = $(this).attr('href');
-        var loadingIcon = $(this).next('i');
-        var contentDiv = $(this).parent('div').next('div');
+        var searchUrl = self.attr('href');
+        var loadingIcon = self.next('i');
+        var contentDiv = self.parent('div').next('div');
         // Show the loading icon
         loadingIcon.removeClass('invisible').addClass('visible');
+        // Clear previous content
+        contentDiv.empty();
         // Call the searchUrl
         $.get(searchUrl, function (data) {
-            // hide the loading icon
+            // Hide the loading icon
             loadingIcon.removeClass('visible').addClass('invisible');
-            // output result (empty before storing new data)
-            contentDiv.empty();
+            // Output the result
             contentDiv.append(data);
+        }).always(function () {
+            // Mark as finished
+            self.data('running', false);
         });
         return false;
     });
@@ -124,9 +135,10 @@ function init() {
         // Prevent default behaviour
         event.preventDefault();
         // Define variables
-        var link = $(this);
-        var updateUrl = link.attr('href');
-        var updatePanel = $(this).closest('.panel-body');
+        var self = $(this);
+        var updateUrl = self.attr('href');
+        var updatePanel = self.closest('.panel-body');
+        var wantedItem = self.closest('.wanted-item');
         var updateObj = {
             'title': updatePanel.find('input.update-wanted-item-title').val(),
             'year': updatePanel.find('input.update-wanted-item-year').val(),
@@ -141,9 +153,8 @@ function init() {
         $.post(updateUrl, updateObj, function (data) {
             if (data) {
                 // Close the dropdown
-                link.closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
+                self.closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
                 // Update wanted item
-                var wantedItem = link.closest('.wanted-item');
                 wantedItem.find('.wanted-item-title').text(data.displaytitle);
                 wantedItem.find('.wanted-item-season').text(data.season);
                 wantedItem.find('.wanted-item-episode').text(data.episode);
@@ -161,14 +172,15 @@ function init() {
         // Prevent default behaviour
         event.preventDefault();
         // Define variables
-        var link = $(this);
-        var resetUrl = link.attr('href');
-        var updatePanel = $(this).closest('.panel-body');
+        var self = $(this);
+        var resetUrl = self.attr('href');
+        var updatePanel = self.closest('.panel-body');
+        var wantedItem = self.closest('.wanted-item');
         // Call the resetUrl
         $.get(resetUrl, function (data) {
             if (data) {
                 // Close the dropdown
-                link.closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
+                self.closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
                 // Update update panel
                 updatePanel.find('input.update-wanted-item-title').val(data.title);
                 updatePanel.find('input.update-wanted-item-year').val(data.year);
@@ -179,7 +191,6 @@ function init() {
                 updatePanel.find('input.update-wanted-item-codec').val(data.codec);
                 updatePanel.find('input.update-wanted-item-releasegrp').val(data.releasegrp);
                 // Update wanted item
-                var wantedItem = link.closest('.wanted-item');
                 wantedItem.find('.wanted-item-title').text(data.displaytitle);
                 wantedItem.find('.wanted-item-season').text(data.season);
                 wantedItem.find('.wanted-item-episode').text(data.episode);
