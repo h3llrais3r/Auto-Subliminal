@@ -66,23 +66,17 @@ $.get(getUrl('/api/settings'), function (data) {
     }
 });
 
-/* ===================
- * After load settings
- * =================== */
-
 // Function to trigger the initialization once the settings are loaded
+// This should ONLY be implemented ONCE on each page to prevent double calls
+// If this is triggered from multiple scripts on the same page, the logic will be executed multiple times
+// Usage:
+//   PubSub.subscribe(SETTINGS_LOADED, settingsLoaded);
+//   function init() {
+//     ...
+//   }
 var settingsLoaded = function (msg, data) {
     init();
 };
-
-// Wait until settings are loaded
-PubSub.subscribe(SETTINGS_LOADED, settingsLoaded);
-
-// Init after settings are loaded
-// Implement me in each page/script where we need to do something after the settings are loaded
-function init() {
-    // Nothing for now
-}
 
 /* ======
  * Navbar
