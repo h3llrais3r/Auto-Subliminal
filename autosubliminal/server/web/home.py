@@ -27,8 +27,8 @@ class Home(object):
         wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
         # Update all keys that are passed
         for key in kwargs if wanted_item else None:
-            if key in wanted_item:
-                wanted_item[key] = kwargs[key]
+            if hasattr(wanted_item, key):
+                setattr(wanted_item, key, kwargs[key])
         # Only return updatable fields
         # These values will be shown in the view through jquery, so apply the display_value() on it!
         return {'displaytitle': display_item_title(wanted_item),
@@ -47,8 +47,7 @@ class Home(object):
         # Get wanted item
         wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
         wanted_item_db = WantedItems().get_wanted_item(wanted_item.videopath)
-        for key in wanted_item_db:
-            wanted_item[key] = wanted_item_db[key]
+        wanted_item_db.copy_to(wanted_item)
         # Only return updatable fields
         # These values represent the original values, so apply default display_value() on it!
         return {'displaytitle': display_item_title(wanted_item),

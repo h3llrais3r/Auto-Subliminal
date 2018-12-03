@@ -173,6 +173,10 @@ class WantedItem(_Item):
         else:
             return False
 
+    def copy_to(self, wanted_item):
+        """Copy all attributes to another wanted item."""
+        wanted_item.__dict__.update(self.__dict__)
+
     @classmethod
     def from_guess(cls, guess):
         """Construct a :class:`WantedItem` object from a guess.

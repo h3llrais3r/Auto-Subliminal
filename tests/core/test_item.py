@@ -68,3 +68,10 @@ def test_is_search_active_for_wanted_item_after_deadline_on_delta(mocker):
     today = datetime.datetime(2018, 2, 26, 0, 0, 0)
     mocker.patch('autosubliminal.core.item.get_today', return_value=today)
     assert wanted_item.is_search_active
+
+
+def test_copy_to():
+    wanted_item_1 = WantedItem(type='episode', title='titl1', season=1, episode=1)
+    wanted_item_2 = WantedItem(type='episode', title='title2', season=2, episode=2, codec=2)
+    wanted_item_1.copy_to(wanted_item_2)
+    assert wanted_item_1 == wanted_item_2
