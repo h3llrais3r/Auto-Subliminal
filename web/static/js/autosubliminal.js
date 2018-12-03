@@ -7,7 +7,7 @@
  * ============================== */
 
 // Constants
-const SETTINGS_LOADED = 'SETTINGS_LOADED';
+var SETTINGS_LOADED = 'SETTINGS_LOADED';
 
 // Variables
 var base_url = window.location.protocol + '//' + window.location.host + webroot;
@@ -208,15 +208,15 @@ PNotify.desktop.permission(); // Check for permission for desktop notifications
  * ========== */
 
 // Constants
-const EVENT = 'EVENT';
-const NOTIFICATION = 'NOTIFICATION';
-const PAGE_RELOAD = 'PAGE_RELOAD';
-const PROCESS_STARTED = 'PROCESS_STARTED';
-const PROCESS_FINISHED = 'PROCESS_FINISHED';
-const RUN_PROCESS = 'RUN_PROCESS';
-const DISK_SCANNER = 'DiskScanner';
-const SUB_CHECKER = 'SubChecker';
-const VERSION_CHECKER = 'VersionChecker';
+var EVENT = 'EVENT';
+var NOTIFICATION = 'NOTIFICATION';
+var PAGE_RELOAD = 'PAGE_RELOAD';
+var PROCESS_STARTED = 'PROCESS_STARTED';
+var PROCESS_FINISHED = 'PROCESS_FINISHED';
+var RUN_PROCESS = 'RUN_PROCESS';
+var DISK_SCANNER = 'DiskScanner';
+var SUB_CHECKER = 'SubChecker';
+var VERSION_CHECKER = 'VersionChecker';
 
 // Setup the websocket system
 var websocket_url = 'ws://' + window.location.host + webroot + '/system/websocket';
