@@ -2,15 +2,12 @@
  * Javascript for general Auto-Subliminal stuff
  */
 
-/* ==============================
- * Global constants and variables
- * ============================== */
+/* ================
+ * Global variables
+ * ================ */
 
-// Constants
-var SETTINGS_LOADED = 'SETTINGS_LOADED';
-
-// Variables
-var base_url = window.location.protocol + '//' + window.location.host + webroot;
+// Base url
+var baseUrl = window.location.protocol + '//' + window.location.host + webroot;
 
 // Default timestamp format
 var TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S';
@@ -24,13 +21,13 @@ var TABLESORTER_DATE_FORMAT = 'yyyymmdd';
  * Global utilities
  * ================ */
 
-// Function to trigger the initialization once the settings are loaded
-var settingsLoaded = function (msg, data) {
-    init();
-};
+// Function to get the url taken the BASE_URL into account
+function getUrl(url) {
+    return baseUrl + url;
+}
 
 // Jquery wrapper to post with json content-type
-$.postJSON = function (url, data, success, dataType) {
+$.postJson = function (url, data, success, dataType) {
     if (typeof data != 'string') {
         data = JSON.stringify(data);
     }
@@ -48,8 +45,10 @@ $.postJSON = function (url, data, success, dataType) {
  * Load settings
  * ============= */
 
+var SETTINGS_LOADED = 'SETTINGS_LOADED';
+
 // Load global variables through settings api
-$.get(webroot + '/api/settings', function (data) {
+$.get(getUrl('/api/settings'), function (data) {
     if (data) {
         TIMESTAMP_FORMAT = data['timestampFormat'];
         DATE_FORMAT = TIMESTAMP_FORMAT.split(' ')[0];
@@ -71,10 +70,16 @@ $.get(webroot + '/api/settings', function (data) {
  * After load settings
  * =================== */
 
+// Function to trigger the initialization once the settings are loaded
+var settingsLoaded = function (msg, data) {
+    init();
+};
+
 // Wait until settings are loaded
 PubSub.subscribe(SETTINGS_LOADED, settingsLoaded);
 
 // Init after settings are loaded
+// Implement me in each page/script where we need to do something after the settings are loaded
 function init() {
     // Nothing for now
 }
@@ -93,27 +98,26 @@ $('.navbar .nav a').on('click', function () {
 });
 
 //Highlight the active navigation button (after page submit)
-var base_path = '/' + location.pathname.replace(webroot, '').split('/')[1] + '/';
-$('.navbar').find('.nav').find('a[href=\'' + base_path + '\']').closest('li').addClass('active');
+var basePath = '/' + location.pathname.replace(webroot, '').split('/')[1] + '/';
+$('.navbar').find('.nav').find('a[href=\'' + basePath + '\']').closest('li').addClass('active');
 
 // Setup navigation links that trigger the run of a process on the server
 $('.navbar .nav a.run-process').on('click', function (event) {
     // Prevent default behaviour
     event.preventDefault();
     // Run the process
-    var process_name = $(this).data('process-name');
-    run_process_on_server(process_name);
+    var processName = $(this).data('process-name');
+    runProcessOnServer(processName);
 });
-
 
 /* =========
  * Countdown
  * ========= */
 
 // Setup the countdown until scandisk next run date
-var scandisk_next_run_date = new Date();
-scandisk_next_run_date.setTime($('#scandisk-nextrun-time-ms').val());
-$('#scandisk-nextrun').countdown(scandisk_next_run_date, function (event) {
+var scanDiskNextRunDate = new Date();
+scanDiskNextRunDate.setTime($('#scandisk-nextrun-time-ms').val());
+$('#scandisk-nextrun').countdown(scanDiskNextRunDate, function (event) {
     if (event.strftime(TIME_FORMAT) == '00:00:00') {
         $(this).text('Running...');
     } else {
@@ -122,9 +126,9 @@ $('#scandisk-nextrun').countdown(scandisk_next_run_date, function (event) {
 });
 
 // Setup the countdown until checksub next run date
-var checksub_next_run_date = new Date();
-checksub_next_run_date.setTime($('#checksub-nextrun-time-ms').val());
-$('#checksub-nextrun').countdown(checksub_next_run_date, function (event) {
+var checkSubNextRunDate = new Date();
+checkSubNextRunDate.setTime($('#checksub-nextrun-time-ms').val());
+$('#checksub-nextrun').countdown(checkSubNextRunDate, function (event) {
     if (event.strftime(TIME_FORMAT) == '00:00:00') {
         $(this).text('Running...');
     } else {
@@ -166,7 +170,7 @@ $('[data-toggle=popover]').popover();
 // By default we will use desktop notifications, but we also provide settings for fallback to browser notifications
 
 // Bottom right stack - to be aligned with desktop notifications at the right bottom
-var stack_bottomright = {
+var stackBottomRight = {
     'dir1': 'up',
     'dir2': 'left',
     'firstpos1': 10,
@@ -176,7 +180,7 @@ var stack_bottomright = {
 };
 
 // Alternative stack - center stack - copied from https://github.com/sciactive/pnotify/issues/46
-var stack_center = {
+var stackCenter = {
     'dir1': 'down',
     'dir2': 'right',
     'firstpos1': 4,
@@ -185,18 +189,18 @@ var stack_center = {
 
 // Handle the center stack when resizing the browser
 $(window).on('resize', function () {
-    stack_center.firstpos2 = ($(window).width() / 2) - (Number(PNotify.prototype.options.width.replace(/\D/g, '')) / 2);
+    stackCenter.firstpos2 = ($(window).width() / 2) - (Number(PNotify.prototype.options.width.replace(/\D/g, '')) / 2);
 });
 
 // Alternative stack - context stack
-var stack_context = {
+var stackContext = {
     'dir1': 'down',
     'dir2': 'right',
     'context': $('#stack-context')
 };
 
 // PNotify default options
-PNotify.prototype.options.stack = stack_bottomright;
+PNotify.prototype.options.stack = stackBottomRight;
 PNotify.prototype.options.addclass = 'stack-bottomright';
 PNotify.prototype.options.styling = 'bootstrap3';
 PNotify.prototype.options.delay = 5000;
@@ -219,39 +223,39 @@ var SUB_CHECKER = 'SubChecker';
 var VERSION_CHECKER = 'VersionChecker';
 
 // Setup the websocket system
-var websocket_url = 'ws://' + window.location.host + webroot + '/system/websocket';
-var ws = new WebSocket(websocket_url);
-ws.onmessage = get_message_through_websocket;
+var websocketUrl = 'ws://' + window.location.host + webroot + '/system/websocket';
+var ws = new WebSocket(websocketUrl);
+ws.onmessage = getWebsocketMessage;
 // console.log('Websocket ready to receive messages');
 
-// Function to get a message through websocket
-function get_message_through_websocket(message) {
+// Function to get a websocket message
+function getWebsocketMessage(message) {
     var data = message.data;
     // console.log('Received websocket message: ' + data);
     if (!jQuery.isEmptyObject(data)) {
-        var data_json = JSON.parse(data);
-        _handle_message(data_json);
+        var dataJson = JSON.parse(data);
+        _handleWebsocketMessage(dataJson);
     }
 }
 
-// Function to send a message through the websocket to the server
-function send_message_through_websocket(message) {
+// Function to send a websocket message to the server
+function sendWebsocketMessage(message) {
     ws.send(message);
 }
 
-// Function to handle the message
-function _handle_message(message) {
+// Function to handle a websocket message
+function _handleWebsocketMessage(message) {
     if (message['type'] == NOTIFICATION) {
-        _show_notification(message['notification']);
+        _handleWebsocketNotification(message['notification']);
     } else if (message['type'] == EVENT) {
-        _handle_event(message['event']);
+        _handleWebsocketEvent(message['event']);
     } else {
         console.error('Unsupported message: ' + message)
     }
 }
 
-// Function to show a notification
-function _show_notification(notification) {
+// Function to handle a websocket notification
+function _handleWebsocketNotification(notification) {
     var message = notification['message'];
     var type = notification['type'];
     var sticky = notification['sticky'];
@@ -264,7 +268,7 @@ function _show_notification(notification) {
             hide: false, // Disable fading
             width: 'auto',
             addclass: 'container stack-context',
-            stack: stack_context,
+            stack: stackContext,
             desktop: {
                 desktop: false // Disable desktop
             }
@@ -280,8 +284,8 @@ function _show_notification(notification) {
     }
 }
 
-// Function to handle an event
-function _handle_event(event) {
+// Function to handle a websocket event
+function _handleWebsocketEvent(event) {
     var type = event['type'];
     var data = event['data'];
     if (type == PAGE_RELOAD) {
@@ -340,7 +344,7 @@ function _handle_event(event) {
 }
 
 // Function to run a process on the server through the websocket system
-function run_process_on_server(process_name) {
+function runProcessOnServer(process_name) {
     // Construct the event
     var event = {
         'type': EVENT,
@@ -351,5 +355,5 @@ function run_process_on_server(process_name) {
             }
         }
     }
-    send_message_through_websocket(JSON.stringify(event));
+    sendWebsocketMessage(JSON.stringify(event));
 }

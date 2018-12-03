@@ -12,7 +12,7 @@ $('.btn-save').on('click', function (event) {
     $.post(saveUrl, form.serialize(), function (data) {
         if (data && data.restart) {
             // If restart is present, restart the system
-            window.location = base_url + '/system/restart';
+            window.location = getUrl('/system/restart');
         }
     });
 });
