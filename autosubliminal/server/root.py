@@ -34,8 +34,8 @@ def error_page(status, message, traceback, version):
 
     # Render template
     status_code = int(match.group(1)) if match else 500
-    return PageTemplate(filename='/general/error.mako').render(status_code=status_code, status=status,
-                                                               message=message, traceback=traceback)
+    return PageTemplate('/general/error.mako').render(status_code=status_code, status=status, message=message,
+                                                      traceback=traceback)
 
 
 class WebServerRoot(object):

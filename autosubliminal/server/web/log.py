@@ -23,7 +23,7 @@ class Log(object):
     @cherrypy.expose(alias='viewLog')
     def view_log(self, loglevel='all', lognum=None):
         content = display_logfile(loglevel, lognum)
-        return PageTemplate(filename=self.template_file).render(loglevel=loglevel, lognum=lognum, content=content)
+        return PageTemplate(self.template_file).render(loglevel=loglevel, lognum=lognum, content=content)
 
     @cherrypy.expose(alias='clearLog')
     def clear_log(self):
@@ -35,4 +35,4 @@ class Log(object):
             os.remove(f)
         # Return to default log view
         content = display_logfile()
-        return PageTemplate(filename=self.template_file).render(loglevel='all', lognum=None, content=content)
+        return PageTemplate(self.template_file).render(loglevel='all', lognum=None, content=content)

@@ -26,28 +26,28 @@ class System(object):
     def restart(self):
         system.restart()
         message = 'Auto-Subliminal is restarting...'
-        return PageTemplate(filename='/system/system-restart.mako').render(message=message)
+        return PageTemplate('/system/system-restart.mako').render(message=message)
 
     @cherrypy.expose
     def shutdown(self):
         system.shutdown()
         message = 'Auto-Subliminal is shutting down...'
-        return PageTemplate(filename='/general/message.mako').render(message=message)
+        return PageTemplate('/general/message.mako').render(message=message)
 
     @cherrypy.expose(alias='info')
     def info(self):
-        return PageTemplate(filename='/system/system-info.mako').render()
+        return PageTemplate('/system/system-info.mako').render()
 
     @cherrypy.expose
     def status(self):
-        return PageTemplate(filename='/system/system-status.mako').render()
+        return PageTemplate('/system/system-status.mako').render()
 
     @cherrypy.expose(alias='updateVersion')
     def update_version(self):
         autosubliminal.CHECKVERSION.process.update(force_update=True)
         system.restart(exit=True)
         message = 'Auto-Subliminal is restarting...'
-        return PageTemplate(filename='/system/system-restart.mako').render(message=message)
+        return PageTemplate('/system/system-restart.mako').render(message=message)
 
     @cherrypy.expose(alias='flushCache')
     def flush_cache(self):

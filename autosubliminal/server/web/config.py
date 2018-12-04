@@ -51,7 +51,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return PageTemplate(filename=self.template_file).render()
+            return PageTemplate(self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -87,7 +87,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return PageTemplate(filename=self.template_file).render()
+            return PageTemplate(self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -114,7 +114,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return PageTemplate(filename=self.template_file).render()
+            return PageTemplate(self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -137,7 +137,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return PageTemplate(filename=self.template_file).render()
+            return PageTemplate(self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -222,7 +222,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return PageTemplate(filename=self.template_file).render()
+            return PageTemplate(self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -245,7 +245,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return PageTemplate(filename=self.template_file).render()
+            return PageTemplate(self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -264,7 +264,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return PageTemplate(filename=self.template_file).render()
+            return PageTemplate(self.template_file).render()
 
         @cherrypy.expose(alias='test')
         @cherrypy.tools.json_out()
@@ -288,13 +288,13 @@ class Config(object):
                     response = oauth_client.fetch_request_token(twitter_notifier.REQUEST_TOKEN_URL)
                 except Exception as e:
                     message = 'Something went wrong.../n' + e.message
-                    return PageTemplate(filename='/general/message.mako').render(message=message)
+                    return PageTemplate('/general/message.mako').render(message=message)
                 # Authorize
                 url = oauth_client.authorization_url(twitter_notifier.AUTHORIZATION_URL)
                 token_key = response.get('oauth_token')
                 token_secret = response.get('oauth_token_secret')
-                return PageTemplate(filename='/config/config-regtwitter.mako').render(url=url, token_key=token_key,
-                                                                                      token_secret=token_secret)
+                return PageTemplate('/config/config-regtwitter.mako').render(url=url, token_key=token_key,
+                                                                             token_secret=token_secret)
 
             if token_key and token_secret and token_pin:
                 # Getting access token
@@ -307,14 +307,14 @@ class Config(object):
                     response = oauth_client.fetch_access_token(twitter_notifier.ACCESS_TOKEN_URL)
                 except Exception as e:
                     message = 'Something went wrong.../n' + e.message
-                    return PageTemplate(filename='/general/message.mako').render(message=message)
+                    return PageTemplate('/general/message.mako').render(message=message)
                 # Store access token
                 autosubliminal.TWITTERKEY = response.get('oauth_token')
                 autosubliminal.TWITTERSECRET = response.get('oauth_token_secret')
                 # Render template
                 message = 'Twitter is now set up, remember to save your config and remember to test twitter!' \
                           '<br><a href="' + autosubliminal.WEBROOT + '/config/notification">Return</a>'
-                return PageTemplate(filename='/general/message.mako').render(message=message)
+                return PageTemplate('/general/message.mako').render(message=message)
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
@@ -372,7 +372,7 @@ class Config(object):
 
         @cherrypy.expose
         def index(self):
-            return PageTemplate(filename=self.template_file).render()
+            return PageTemplate(self.template_file).render()
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()

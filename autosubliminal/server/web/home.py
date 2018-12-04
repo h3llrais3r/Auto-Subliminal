@@ -18,7 +18,7 @@ class Home(object):
 
     @cherrypy.expose
     def index(self):
-        return PageTemplate(filename='/home/home.mako').render()
+        return PageTemplate('/home/home.mako').render()
 
     @cherrypy.expose(alias='updateWantedItem')
     @cherrypy.tools.json_out()
@@ -68,8 +68,7 @@ class Home(object):
     @cherrypy.expose(alias='skipShow')
     def skip_show(self, wanted_item_index, title, season=None):
         if not season:
-            return PageTemplate(filename='/home/home-skipshow.mako').render(wanted_item_index=wanted_item_index,
-                                                                            title=title)
+            return PageTemplate('/home/home-skipshow.mako').render(wanted_item_index=wanted_item_index, title=title)
         else:
             if not wanted_item_index:
                 raise cherrypy.HTTPError(400, 'No wanted_item index supplied')
@@ -136,8 +135,7 @@ class Home(object):
         if not confirmed:
             wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
             video = wanted_item.videopath
-            return PageTemplate(filename='/home/home-deleteVideo.mako').render(wanted_item_index=wanted_item_index,
-                                                                               video=video)
+            return PageTemplate('/home/home-deleteVideo.mako').render(wanted_item_index=wanted_item_index, video=video)
         else:
             # Delete video
             deleted = subchecker.delete_video(wanted_item_index, cleanup)
@@ -152,8 +150,8 @@ class Home(object):
         # Search subtitle
         subs, errormessage = subchecker.search_subtitle(wanted_item_index, lang)
         # Send response in html (store subs under subs key)
-        return PageTemplate(filename='/home/home-manualsearch.mako').render(subs=subs, infomessage=None,
-                                                                            errormessage=errormessage)
+        return PageTemplate('/home/home-manualsearch.mako').render(subs=subs, infomessage=None,
+                                                                   errormessage=errormessage)
 
     @cherrypy.expose(alias='saveSubtitle')
     @cherrypy.tools.json_out()
