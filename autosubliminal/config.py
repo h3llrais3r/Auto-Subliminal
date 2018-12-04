@@ -29,7 +29,7 @@ def read_config(check_upgrade=False):
     # Read config file
     cfg = _create_config_parser()
     try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
+        with codecs.open(autosubliminal.CONFIGFILE, mode='r', encoding=ENCODING) as f:
             cfg.read_file(f)
     except Exception:
         print('***********************************************************************')
@@ -749,12 +749,12 @@ def write_config(section=None):
     cfg = _create_config_parser()
     try:
         # A config file is set so we use this to add the settings
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
+        with codecs.open(autosubliminal.CONFIGFILE, mode='r', encoding=ENCODING) as f:
             cfg.read_file(f)
     except Exception:
         # No config file found, create one instead
         open(autosubliminal.CONFIGFILE, 'w').close()
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
+        with codecs.open(autosubliminal.CONFIGFILE, mode='r', encoding=ENCODING) as f:
             cfg.read_file(f)
 
     # Before we save everything to the config file we need to test if the app needs to be restarted
@@ -819,7 +819,7 @@ def write_general_section():
     cfg.set(section, 'timestampformat', autosubliminal.TIMESTAMPFORMAT)
     cfg.set(section, 'configversion', text_type(autosubliminal.CONFIGVERSION))
 
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', encoding=ENCODING) as f:
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
 
 
@@ -844,7 +844,7 @@ def write_logging_section():
     cfg.set(section, 'logreversed', text_type(autosubliminal.LOGREVERSED))
     cfg.set(section, 'loglevelconsole', logging.getLevelName(int(autosubliminal.LOGLEVELCONSOLE)).lower())
 
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
 
     # Apply logging settings
@@ -869,7 +869,7 @@ def write_webserver_section():
     cfg.set(section, 'password', autosubliminal.PASSWORD)
     cfg.set(section, 'launchbrowser', text_type(autosubliminal.LAUNCHBROWSER))
 
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
 
 
@@ -906,7 +906,7 @@ def write_subliminal_section():
     cfg.set(section, 'opensubtitlesusername', autosubliminal.OPENSUBTITLESUSERNAME)
     cfg.set(section, 'opensubtitlespassword', autosubliminal.OPENSUBTITLESPASSWORD)
 
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
 
     # Apply subliminal settings
@@ -928,7 +928,7 @@ def write_shownamemapping_section():
     for x in autosubliminal.SHOWNAMEMAPPING:
         cfg.set('shownamemapping', x, autosubliminal.SHOWNAMEMAPPING[x])
 
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
 
     # Apply the shownamemapping settings
@@ -950,7 +950,7 @@ def write_addic7edshownamemapping_section():
     for x in autosubliminal.ADDIC7EDSHOWNAMEMAPPING:
         cfg.set('addic7edshownamemapping', x, autosubliminal.ADDIC7EDSHOWNAMEMAPPING[x])
 
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
 
     # Apply the addic7edshownamemapping settings
@@ -972,7 +972,7 @@ def write_alternativeshownamemapping_section():
     for x in autosubliminal.ALTERNATIVESHOWNAMEMAPPING:
         cfg.set('alternativeshownamemapping', x, autosubliminal.ALTERNATIVESHOWNAMEMAPPING[x])
 
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
 
     # Apply the alternativeshownamemapping settings
@@ -994,7 +994,7 @@ def write_movienamemapping_section():
     for x in autosubliminal.MOVIENAMEMAPPING:
         cfg.set('movienamemapping', x, autosubliminal.MOVIENAMEMAPPING[x])
 
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
 
     # Apply the movienamemapping settings
@@ -1016,7 +1016,7 @@ def write_alternativemovienamemapping_section():
     for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING:
         cfg.set('alternativemovienamemapping', x, autosubliminal.ALTERNATIVEMOVIENAMEMAPPING[x])
 
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
 
     # Apply the alternativemovienamemapping settings
@@ -1038,7 +1038,7 @@ def write_skipshow_section():
     for x in autosubliminal.SKIPSHOW:
         cfg.set('skipshow', x, autosubliminal.SKIPSHOW[x])
 
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
 
     # Apply the skipshow settings
@@ -1060,7 +1060,7 @@ def write_skipmovie_section():
     for x in autosubliminal.SKIPMOVIE:
         cfg.set('skipmovie', x, autosubliminal.SKIPMOVIE[x])
 
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
 
     # Apply the skipmovie settings
@@ -1111,7 +1111,7 @@ def write_notification_section():
     cfg.set(section, 'telegrambotapi', autosubliminal.TELEGRAMBOTAPI)
     cfg.set(section, 'telegramchatid', autosubliminal.TELEGRAMCHATID)
 
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
 
 
@@ -1134,7 +1134,7 @@ def write_postprocessing_section():
     cfg.set(section, 'moviepostprocesscmd', autosubliminal.MOVIEPOSTPROCESSCMD)
     cfg.set(section, 'moviepostprocesscmdargs', autosubliminal.MOVIEPOSTPROCESSCMDARGS)
 
-    with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
 
 
@@ -1153,7 +1153,7 @@ def write_config_property(section=None, property_key=None, property_value=None):
         edited = True
 
     if edited:
-        with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+        with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
             cfg.write(f)
 
 
@@ -1281,7 +1281,7 @@ def _load_config_parser():
     cfg = _create_config_parser()
 
     try:
-        with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
+        with codecs.open(autosubliminal.CONFIGFILE, mode='r', encoding=ENCODING) as f:
             cfg.read_file(f)
     except Exception:
         # No config yet
@@ -1600,7 +1600,7 @@ def _upgrade_config(from_version, to_version):
             # Read config file
             cfg = _create_config_parser()
             try:
-                with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
+                with codecs.open(autosubliminal.CONFIGFILE, mode='r', encoding=ENCODING) as f:
                     cfg.read_file(f)
             except Exception:
                 # No config yet, just mark as upgraded
@@ -1622,7 +1622,7 @@ def _upgrade_config(from_version, to_version):
                     cfg.set('notification', item[0], item[1])
                 cfg.remove_section('notify')
             # Write to file
-            with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+            with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
                 cfg.write(f)
             # Read config again to load the copied values from their new section
             read_config()
@@ -1639,7 +1639,7 @@ def _upgrade_config(from_version, to_version):
             # Read config file
             cfg = _create_config_parser()
             try:
-                with codecs.open(autosubliminal.CONFIGFILE, 'r', ENCODING) as f:
+                with codecs.open(autosubliminal.CONFIGFILE, mode='r',encoding= ENCODING) as f:
                     cfg.read_file(f)
             except Exception:
                 # No config yet, just mark as upgraded
@@ -1648,7 +1648,7 @@ def _upgrade_config(from_version, to_version):
                 if cfg.has_option('general', 'path'):
                     cfg.remove_option('general', 'path')
             # Write to file
-            with codecs.open(autosubliminal.CONFIGFILE, 'wb', ENCODING) as f:
+            with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
                 cfg.write(f)
             print('INFO: Config upgraded to version 10.')
             autosubliminal.CONFIGVERSION = 10

@@ -64,10 +64,10 @@ def launch_browser():
     url = 'http://%s:%d' % (host, int(port))
     url = url + wr
     try:
-        webbrowser.open(url, 2, 1)
+        webbrowser.open_new_tab(url)
     except Exception:
         try:
-            webbrowser.open(url, 1, 1)
+            webbrowser.open_new(url)
         except Exception:
             log.exception('Browser launch failed')
 
@@ -199,7 +199,7 @@ def start():
     autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
 
     # Schedule threads
-    autosubliminal.SCANDISK = Scheduler('DiskScanner', DiskScanner(), autosubliminal.SCANDISKINTERVAL, True)
+    autosubliminal.SCANDISK = Scheduler('DiskScanner', DiskScanner(), autosubliminal.SCANDISKINTERVAL, initial_run=True)
     autosubliminal.CHECKSUB = Scheduler('SubChecker', SubChecker(), autosubliminal.CHECKSUBINTERVAL)
     autosubliminal.CHECKVERSION = Scheduler('VersionChecker', VersionChecker(), autosubliminal.CHECKVERSIONINTERVAL)
 

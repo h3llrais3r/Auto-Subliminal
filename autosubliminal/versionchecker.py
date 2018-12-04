@@ -167,7 +167,7 @@ class SourceVersionManager(BaseVersionManager):
             log.exception('Could not get remote version from %s', autosubliminal.VERSIONURL)
             return False
         try:
-            match = re.search(VERSION_PATTERN, response.text, re.MULTILINE)
+            match = re.search(VERSION_PATTERN, response.text, flags=re.MULTILINE)
             remote_version = version.StrictVersion(match.group(1))
             log.debug('Remote version: %r', remote_version)
         except Exception:

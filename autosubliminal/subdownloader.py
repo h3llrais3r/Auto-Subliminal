@@ -48,7 +48,6 @@ class SubDownloader(object):
 
             # Show success message
             language = self._download_item.downlang
-            # TODO: fix me, cannot iter download_item
             name = display_item_name(self._download_item)
             provider = self._download_item.provider
             send_websocket_notification(

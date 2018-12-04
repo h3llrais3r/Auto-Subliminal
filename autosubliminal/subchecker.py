@@ -142,10 +142,10 @@ def search_subtitle(wanted_item_index, lang):
         log.info('Searching subtitles for video: %s', wanted_item.videopath)
 
         # Scan wanted_item for video
-        video = _scan_wanted_item_for_video(wanted_item, True)
+        video = _scan_wanted_item_for_video(wanted_item, is_manual=True)
         if video:
             # Search the subtitles with the default minimal score (to get all the possibilities to select from)
-            default_min_score = _get_min_match_score(video, True)
+            default_min_score = _get_min_match_score(video, is_manual=True)
             subtitles, language, single = _search_subtitles(video, lang, False, provider_pool)
 
             # Check if subtitles are found for the video
@@ -252,7 +252,8 @@ def force_id_search(wanted_item_index):
         wanted_item.tvdbid = autosubliminal.SHOWINDEXER.get_tvdb_id(title, year, force_search=True)
         WantedItems().update_wanted_item(wanted_item)
     elif wanted_item.is_movie:
-        wanted_item.imdbid, wanted_item.year = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(title, year, True)
+        wanted_item.imdbid, wanted_item.year = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(title, year,
+                                                                                                force_search=True)
         WantedItems().update_wanted_item(wanted_item)
 
     # Release wanted queue lock
@@ -608,17 +609,17 @@ def _construct_download_item(wanted_item, subtitles, language, single):
     return download_item
 
 
-def _get_min_match_score(video, manual_search=False):
+def _get_min_match_score(video, is_manual=False):
     min_score = 0
     if isinstance(video, Episode):
-        if manual_search:
+        if is_manual:
             if autosubliminal.MANUALSEARCHWITHSCORING:
                 min_score = autosubliminal.SHOWMINMATCHSCOREDEFAULT
         else:
             min_score = autosubliminal.SHOWMINMATCHSCORE
         log.debug('Using episode min match score: %s', min_score)
     elif isinstance(video, Movie):
-        if manual_search:
+        if is_manual:
             if autosubliminal.MANUALSEARCHWITHSCORING:
                 min_score = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
         else:

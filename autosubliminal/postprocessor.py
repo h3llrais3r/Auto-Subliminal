@@ -108,7 +108,7 @@ class PostProcessor(object):
         # Process output is always in bytes
         # We expect the encoding of the output to be the same as the encoding we used
         try:
-            output_u = safe_trim(b2u(output, self._encoding))
+            output_u = safe_trim(b2u(output, encoding=self._encoding))
             log.log(log_level, '%s%s', message, output_u)
         except Exception:
             log.exception('Unable to log process output')

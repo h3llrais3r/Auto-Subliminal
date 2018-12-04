@@ -95,10 +95,10 @@ def walk_dir(path):
         # Check folders to be skipped
         if autosubliminal.SKIPHIDDENDIRS and os.path.split(dirname)[1].startswith(u'.'):
             continue
-        if re.search('_unpack_', dirname, re.IGNORECASE):
+        if re.search('_unpack_', dirname, flags=re.IGNORECASE):
             log.debug('Found a unpack directory, skipping')
             continue
-        if re.search('_failed_', dirname, re.IGNORECASE):
+        if re.search('_failed_', dirname, flags=re.IGNORECASE):
             log.debug('Found a failed directory, skipping')
             continue
 
@@ -109,7 +109,7 @@ def walk_dir(path):
             # Check for video files
             if ext and ext in subliminal.video.VIDEO_EXTENSIONS:
                 # Skip 'sample' videos
-                if re.search('sample', filename, re.IGNORECASE):
+                if re.search('sample', filename, flags=re.IGNORECASE):
                     log.debug('Skipping sample video: %s', filename)
                     continue
 

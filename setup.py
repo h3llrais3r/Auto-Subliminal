@@ -39,7 +39,7 @@ root_path = os.path.abspath(os.path.dirname(__file__))
 # Version (version must be compliant with version.StrictVersion of distutils)
 with io.open(os.path.join(root_path, 'autosubliminal', 'version.py'), 'r') as f:
     version = re.search(r'^RELEASE_VERSION\s*=\s*[\'\"]((\d+)\.(\d+)(\.(\d+))?([ab](\d+))?)[\'\"]$', f.read(),
-                        re.MULTILINE).group(1)
+                        flags=re.MULTILINE).group(1)
 
 # Readme
 with io.open(os.path.join(root_path, 'README.md'), encoding='utf-8') as f:
