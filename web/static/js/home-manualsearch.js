@@ -24,10 +24,10 @@ $('.manualsearch-save-link').on('click', function (event) {
         emptyMessages();
         if (data['result']) {
             // Show info message
-            $('#div-info').append(data['infomessage']);
+            $('#infoMessage').append(data['infomessage']);
         } else {
             // Show error message
-            $('#div-error').append(data['errormessage']);
+            $('#errorMessage').append(data['errormessage']);
         }
     });
     return false;
@@ -44,10 +44,10 @@ $('.manualsearch-delete-link').on('click', function (event) {
         emptyMessages();
         if (data['result']) {
             // Show info message
-            $('#div-info').append(data['infomessage']);
+            $('#infoMessage').append(data['infomessage']);
         } else {
             // Show error message
-            $('#div-error').append(data['errormessage']);
+            $('#errorMessage').append(data['errormessage']);
         }
     });
     return false;
@@ -61,8 +61,8 @@ $('.manualsearch-play-link').on('click', function (event) {
     window.location = url;
     emptyMessages();
     // Show info message
-    $('#div-info').append('Trying to play the video. ');
-    $('#div-info').append('If the video does not start, you\'ll need to install the \'playvideo://\' protocol first!');
+    $('#infoMessage').append('Trying to play the video. ');
+    $('#infoMessage').append('If the video does not start, you\'ll need to install the \'playvideo://\' protocol first!');
     return false;
 });
 
@@ -87,7 +87,7 @@ $('.manualsearch-postprocess-link').on('click', function (event) {
             // Toggle postprocessing icon
             postProcessLink.find('i').toggleClass('hidden');
             // Show error message
-            $('#div-error').append(data['errormessage']);
+            $('#errorMessage').append(data['errormessage']);
         }
     });
     return false;
@@ -106,6 +106,6 @@ $('.dropdown-hoverintent').hoverIntent(
 
 // Function to empty the messages on the page
 function emptyMessages() {
-    $('#div-info').empty();
-    $('#div-error').empty();
+    $('#infoMessage').empty();
+    $('#errorMessage').empty();
 }

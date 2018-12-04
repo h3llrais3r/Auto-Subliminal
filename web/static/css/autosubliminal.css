@@ -160,8 +160,8 @@ a:hover, a:active, a:focus, a:visited > .fa {
 /* Usage: */
 /*
 <span class="fa-checkbox">
-    <input type="checkbox" id="mycheckbox" checked>
-    <label for="mycheckbox">check me</label>
+    <input type="checkbox" id="myCheckbox" checked>
+    <label for="myCheckbox">check me</label>
 </span>
 */
 

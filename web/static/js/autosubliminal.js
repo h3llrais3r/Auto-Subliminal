@@ -110,8 +110,8 @@ $('.navbar .nav a.run-process').on('click', function (event) {
 
 // Setup the countdown until scandisk next run date
 var scanDiskNextRunDate = new Date();
-scanDiskNextRunDate.setTime($('#scandisk-nextrun-time-ms').val());
-$('#scandisk-nextrun').countdown(scanDiskNextRunDate, function (event) {
+scanDiskNextRunDate.setTime($('#scanDiskNextRunTimeMs').val());
+$('#scanDiskNextRun').countdown(scanDiskNextRunDate, function (event) {
     if (event.strftime(TIME_FORMAT) == '00:00:00') {
         $(this).text('Running...');
     } else {
@@ -121,8 +121,8 @@ $('#scandisk-nextrun').countdown(scanDiskNextRunDate, function (event) {
 
 // Setup the countdown until checksub next run date
 var checkSubNextRunDate = new Date();
-checkSubNextRunDate.setTime($('#checksub-nextrun-time-ms').val());
-$('#checksub-nextrun').countdown(checkSubNextRunDate, function (event) {
+checkSubNextRunDate.setTime($('#checkSubNextRunTimeMs').val());
+$('#checkSubNextRun').countdown(checkSubNextRunDate, function (event) {
     if (event.strftime(TIME_FORMAT) == '00:00:00') {
         $(this).text('Running...');
     } else {
@@ -186,11 +186,11 @@ $(window).on('resize', function () {
     stackCenter.firstpos2 = ($(window).width() / 2) - (Number(PNotify.prototype.options.width.replace(/\D/g, '')) / 2);
 });
 
-// Alternative stack - context stack
+// Alternative stack - context stack (fixed position)
 var stackContext = {
     'dir1': 'down',
     'dir2': 'right',
-    'context': $('#stack-context')
+    'context': $('stickyNotificationContext')
 };
 
 // PNotify default options
@@ -307,12 +307,12 @@ function _handleWebsocketEvent(event) {
             // Update footer
             if (data['name'] == DISK_SCANNER) {
                 // Mark disk scanner as running in footer
-                $('#scandisk-nextrun').countdown('stop');
-                $('#scandisk-nextrun').text('Running...');
+                $('#scanDiskNextRun').countdown('stop');
+                $('#scanDiskNextRun').text('Running...');
             } else if (data['name'] == SUB_CHECKER) {
                 // Mark sub checker as running in footer
-                $('#checksub-nextrun').countdown('stop');
-                $('#checksub-nextrun').text('Running...');
+                $('#checkSubNextRun').countdown('stop');
+                $('#checkSubNextRun').text('Running...');
             } else if (data['name'] == VERSION_CHECKER) {
                 // do nothing
             }
@@ -324,10 +324,10 @@ function _handleWebsocketEvent(event) {
             // Update footer
             if (data['name'] == DISK_SCANNER) {
                 // Restart disk scanner countdown in footer
-                $('#scandisk-nextrun').countdown(data['next_run']);
+                $('#scanDiskNextRun').countdown(data['next_run']);
             } else if (data['name'] == SUB_CHECKER) {
                 // Restart disk scanner countdown in footer
-                $('#checksub-nextrun').countdown(data['next_run']);
+                $('#checkSubNextRun').countdown(data['next_run']);
             } else if (data['name'] == VERSION_CHECKER) {
                 // do nothing
             }

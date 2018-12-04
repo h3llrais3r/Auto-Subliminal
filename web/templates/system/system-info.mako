@@ -12,7 +12,7 @@
 
             <!-- Nav tabs -->
             <div class="panel-heading no-border-bottom no-padding-bottom">
-                <ul id="infotabs" class="nav nav-tabs" role="tablist">
+                <ul id="infoTabs" class="nav nav-tabs" role="tablist">
                     <li role="presentation" class="active">
                         <a href="#general" role="tab" data-toggle="tab" aria-controls="general">General</a>
                     </li>

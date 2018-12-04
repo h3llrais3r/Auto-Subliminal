@@ -3,7 +3,7 @@
  */
 
 // Setup the info tabs
-$('#infotabs a').on('click', function (event) {
+$('#infoTabs a').on('click', function (event) {
     event.preventDefault();
     $(this).tab('show');
 });

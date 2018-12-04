@@ -3,6 +3,6 @@
  */
 
 // Setup the traceback link
-$('#traceback-link').on('click', function () {
+$('#tracebackLink').on('click', function () {
     $('#traceback').toggleClass('hidden');
 });

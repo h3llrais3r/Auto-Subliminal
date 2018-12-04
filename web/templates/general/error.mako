@@ -14,7 +14,7 @@
                     <h2>${status}</h2>
                     <br>
                     <p>${message}</p>
-                    <div><a href="#" id="traceback-link">Toggle error details</a></div>
+                    <div><a href="#" id="tracebackLink">Toggle error details</a></div>
                     <div id="traceback" class="hidden">
                         <div class="error-traceback alert-danger">${traceback}</div>
                     </div>

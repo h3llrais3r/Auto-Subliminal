@@ -83,8 +83,8 @@
         % endif
 
         <div class="panel-footer">
-            <div id="div-error" class="bg-danger">${errormessage if errormessage else ''}</div>
-            <div id="div-info" class="bg-info">${infomessage if infomessage else ''}</div>
+            <div id="errorMessage" class="bg-danger">${errormessage if errormessage else ''}</div>
+            <div id="infoMessage" class="bg-info">${infomessage if infomessage else ''}</div>
         </div>
 
     </div>

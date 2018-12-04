@@ -8,8 +8,8 @@
 
 <!-- Footer -->
 <div class="navbar navbar-fixed-bottom panel-footer text-center navbar-footer-small">
-    <input type="hidden" id="scandisk-nextrun-time-ms" value="${get_next_scheduler_run_in_ms(autosubliminal.SCANDISK)}">
-    <input type="hidden" id="checksub-nextrun-time-ms" value="${get_next_scheduler_run_in_ms(autosubliminal.CHECKSUB)}">
+    <input type="hidden" id="scanDiskNextRunTimeMs" value="${get_next_scheduler_run_in_ms(autosubliminal.SCANDISK)}">
+    <input type="hidden" id="checkSubNextRunTimeMs" value="${get_next_scheduler_run_in_ms(autosubliminal.CHECKSUB)}">
     <!-- tabindex="0" is needed to get the data-trigger="focus" working -->
     <i tabindex="0" class="fa fa-info-circle dropdown-toggle" aria-hidden="true" data-toggle="popover" data-placement="top"
        data-trigger="focus" data-title="<h4>Technical details</h4>" data-html="true" data-content='
@@ -28,12 +28,12 @@
     <span class="separator">|</span>
     <span>
         Next disk scan in :
-        <span id="scandisk-nextrun"></span>
+        <span id="scanDiskNextRun"></span>
     </span>
     <span class="separator">|</span>
     <span>
         Next subtitle check in :
-        <span id="checksub-nextrun"></span>
+        <span id="checkSubNextRun"></span>
     </span>
 </div>
 

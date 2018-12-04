@@ -43,7 +43,7 @@ function init() {
             }
         })
         .tablesorterPager({
-            container: $('#wanteditemspager'),
+            container: $('#wanteditemsPager'),
             output: '{startRow} to {endRow} ({filteredRows})'
         });
 
@@ -88,7 +88,7 @@ function init() {
             }
         })
         .tablesorterPager({
-            container: $('#lastdownloads-pager'),
+            container: $('#lastdownloadsPager'),
             output: '{startRow} to {endRow} ({filteredRows})'
         });
 
