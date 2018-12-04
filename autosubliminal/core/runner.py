@@ -25,7 +25,7 @@ class Runner(object):
 
         # Start thread
         log.info('Starting thread %s', self.name)
-        self._thread = threading.Thread(target=self._run_process, name=self.name)
+        self._thread = threading.Thread(name=self.name, target=self._run_process)
         self._thread.start()
 
     def _run_process(self):

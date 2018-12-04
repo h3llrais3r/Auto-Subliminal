@@ -45,7 +45,7 @@ class Scheduler(object):
 
         # Start thread
         log.info('Starting thread %s', self.name)
-        self._thread = threading.Thread(target=self._schedule_process, name=self.name)
+        self._thread = threading.Thread(name=self.name, target=self._schedule_process)
         self._thread.start()
 
         # Initial run will block caller thread until process is executed the first time

@@ -9,7 +9,7 @@ def restart(exit=False):
     """
     Thread to restart the application.
     """
-    threading.Thread(target=autosubliminal.application.restart, kwargs={'exit': exit}, name='AppRestarter').start()
+    threading.Thread(name='AppRestarter', target=autosubliminal.application.restart, kwargs={'exit': exit}).start()
 
 
 def shutdown():
