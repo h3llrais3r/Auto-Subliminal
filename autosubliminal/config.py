@@ -1639,7 +1639,7 @@ def _upgrade_config(from_version, to_version):
             # Read config file
             cfg = _create_config_parser()
             try:
-                with codecs.open(autosubliminal.CONFIGFILE, mode='r',encoding= ENCODING) as f:
+                with codecs.open(autosubliminal.CONFIGFILE, mode='r', encoding=ENCODING) as f:
                     cfg.read_file(f)
             except Exception:
                 # No config yet, just mark as upgraded
