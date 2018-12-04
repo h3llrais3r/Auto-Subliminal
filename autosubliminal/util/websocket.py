@@ -9,44 +9,44 @@ PROCESS_FINISHED = 'PROCESS_FINISHED'
 SUPPORTED_EVENT_TYPES = [PAGE_RELOAD, PROCESS_STARTED, PROCESS_FINISHED]
 
 
-def send_websocket_event(event_type, event_data={}):
+def send_websocket_event(type, data={}):
     """ Send a websocket event message.
 
-    :param event_type: the event type
-    :type event_type: WebsocketEventType
-    :param event_data: the optional data for the event
-    :type event_data: dict
+    :param type: the event type
+    :type type: str
+    :param data: the optional data for the event
+    :type data: dict
     """
     event = {
         'type': 'EVENT',
         'event': {
-            'type': event_type,
-            'data': event_data
+            'type': type,
+            'data': data
         }
     }
     autosubliminal.WEBSOCKETMESSAGEQUEUE.append(event)
 
 
-def send_websocket_notification(notification_message, notification_type='info', sticky=False):
+def send_websocket_notification(message, type='info', sticky=False):
     """Send a websocket notification message.
 
-    :param notification_message: the notification message
-    :type notification_message: str
-    :param notification_type: the notification type
+    :param message: the notification message
+    :type message: str
+    :param type: the notification type
     Possible values for notification type are (to be in sync with PNotify jquery plugin):
     - info (blue)
     - success (green)
     - notice (orange)
     - error (red)
-    :type notification_type: str
+    :type type: str
     :param sticky: indication if it will be shown at a fixed inline location and it will not fade
     :type sticky: bool
     """
     notification = {
         'type': 'NOTIFICATION',
         'notification': {
-            'message': notification_message,
-            'type': notification_type,
+            'message': message,
+            'type': type,
             'sticky': sticky}
     }
     autosubliminal.WEBSOCKETMESSAGEQUEUE.append(notification)

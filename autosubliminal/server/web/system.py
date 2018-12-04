@@ -67,7 +67,8 @@ class System(object):
             send_websocket_notification(
                 'Flushed wanted items database. Please launch \'Scan Disk\' from the \'System\' menu.')
         else:
-            send_websocket_notification('Cannot flush wanted items database when wanted queue is in use!', 'notice')
+            send_websocket_notification('Cannot flush wanted items database when wanted queue is in use!',
+                                        type='notice')
         redirect('/home')
 
     @cherrypy.expose(alias='flushLastDownloads')

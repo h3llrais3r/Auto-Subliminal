@@ -118,7 +118,7 @@ class SubChecker(ScheduledProcess):
             log.info('No subliminal providers configured, skipping')
 
         # Send home page reload event
-        send_websocket_event(PAGE_RELOAD, {'name': 'home'})
+        send_websocket_event(PAGE_RELOAD, data={'name': 'home'})
 
         log.info('Finished round of subtitle checking')
 
@@ -473,7 +473,7 @@ def post_process_no_subtitle(wanted_item_index):
         WantedItems().delete_wanted_item(wanted_item)
         log.debug('Removed %s from wanted_items database', wanted_item.videopath)
     else:
-        send_websocket_notification('Unable to handle post processing! Please check the log file!', 'error')
+        send_websocket_notification('Unable to handle post processing! Please check the log file!', type='error')
 
     # Release wanted queue lock
     release_wanted_queue_lock()

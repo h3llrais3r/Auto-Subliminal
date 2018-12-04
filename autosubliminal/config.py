@@ -1571,7 +1571,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 6
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification('Config upgraded. Please check or reconfigure you subliminal configuration!',
-                                        'notice', True)
+                                        type='notice', sticky=True)
         if from_version == 6 and to_version == 7:
             print('INFO: Upgrading log config. Please check/reconfigure your config!')
             autosubliminal.LOGNUM = 0
@@ -1580,7 +1580,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 7
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification('Config upgraded. Please check or reconfigure your logging configuration!',
-                                        'notice', True)
+                                        type='notice', sticky=True)
         if from_version == 7 and to_version == 8:
             print('INFO: Upgrading skip config. Please check/reconfigure your config!')
             # '00' means now skip all, '0' means skip season 0
@@ -1594,7 +1594,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 8
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification('Config upgraded. Please check or reconfigure your skip configuration!',
-                                        'notice', True)
+                                        type='notice', sticky=True)
         if from_version == 8 and to_version == 9:
             print('INFO: Renaming config, logfile and skip section. Please check/reconfigure your config!')
             # Read config file
@@ -1633,7 +1633,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification(
                 'Config upgraded. Please check or reconfigure your general, logging and notification configuration!',
-                'notice', True)
+                type='notice', sticky=True)
         if from_version == 9 and to_version == 10:
             print('INFO: Removing old PATH config.')
             # Read config file
@@ -1653,4 +1653,4 @@ def _upgrade_config(from_version, to_version):
             print('INFO: Config upgraded to version 10.')
             autosubliminal.CONFIGVERSION = 10
             autosubliminal.CONFIGUPGRADED = True
-            send_websocket_notification('Config upgraded!', 'notice', True)
+            send_websocket_notification('Config upgraded!', type='notice', sticky=True)

@@ -10,7 +10,7 @@ from autosubliminal.util.common import sanitize
 log = logging.getLogger(__name__)
 
 
-def mapping_string_to_dict(mapping_string=None):
+def mapping_string_to_dict(mapping_string):
     """
     Return a dict from a string for the name mappings (key = value).
     """

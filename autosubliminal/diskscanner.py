@@ -78,7 +78,7 @@ class DiskScanner(ScheduledProcess):
             autosubliminal.WANTEDQUEUE.append(item)
 
         # Send home page reload event
-        send_websocket_event(PAGE_RELOAD, {'name': 'home'})
+        send_websocket_event(PAGE_RELOAD, data={'name': 'home'})
 
         log.info('Finished round of local disk checking')
 

@@ -273,7 +273,7 @@ class Config(object):
                 send_websocket_notification('Test notification (%s) sent.' % notify_lib)
             else:
                 send_websocket_notification('Test notification (%s) failed! Please check the log file!' % notify_lib,
-                                            'error')
+                                            type='error')
             return {}
 
         @cherrypy.expose(alias='regTwitter')

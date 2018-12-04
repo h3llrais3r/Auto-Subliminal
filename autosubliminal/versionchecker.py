@@ -180,13 +180,13 @@ class SourceVersionManager(BaseVersionManager):
             send_websocket_notification(
                 'Unknown version found! '
                 'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and reinstall!',
-                'error', True)
+                type='error', sticky=True)
         elif local_version < remote_version:
             log.info('New version found')
             send_websocket_notification(
                 'New version found. '
                 'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and update!',
-                'notice', True)
+                type='notice', sticky=True)
         else:
             log.info('Version up to date')
             # Show info message (only when run was forced manually)
@@ -276,12 +276,12 @@ class GitVersionManager(BaseVersionManager):
             log.info('Unknown version found')
             send_websocket_notification(
                 'Unknown version found! Check <a href=' + autosubliminal.GITHUBURL +
-                '/releases>Github</a> and reinstall!', 'error', True)
+                '/releases>Github</a> and reinstall!', type='error', sticky=True)
         elif self.num_commits_behind > 0:
             log.info('New version found')
             send_websocket_notification(
                 'New version found. <a href=' + autosubliminal.WEBROOT + '/system/updateVersion>Update</a>!',
-                'notice', True)
+                type='notice', sticky=True)
             self.update_allowed = True
         else:
             log.info('Version up to date')

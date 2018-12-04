@@ -18,7 +18,7 @@ def test_send_websocket_event_page_reload(monkeypatch):
             }
         }
     }
-    send_websocket_event(PAGE_RELOAD, {'name': 'home'})
+    send_websocket_event(PAGE_RELOAD, data={'name': 'home'})
     assert len(autosubliminal.WEBSOCKETMESSAGEQUEUE) == 1
     assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
 
@@ -34,7 +34,7 @@ def test_send_websocket_event_process_started(monkeypatch):
             }
         }
     }
-    send_websocket_event(PROCESS_STARTED, {'name': 'MyProcess'})
+    send_websocket_event(PROCESS_STARTED, data={'name': 'MyProcess'})
     assert len(autosubliminal.WEBSOCKETMESSAGEQUEUE) == 1
     assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
 
@@ -52,7 +52,7 @@ def test_send_websocket_event_process_finished(monkeypatch):
             }
         }
     }
-    send_websocket_event(PROCESS_FINISHED, {'name': 'MyProcess', 'next_run': next_run})
+    send_websocket_event(PROCESS_FINISHED, data={'name': 'MyProcess', 'next_run': next_run})
     assert len(autosubliminal.WEBSOCKETMESSAGEQUEUE) == 1
     assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
 

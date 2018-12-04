@@ -110,7 +110,7 @@ class Scheduler(object):
 
             # Mark as running
             self.process.running = True
-            send_websocket_event(PROCESS_STARTED, self.to_json())
+            send_websocket_event(PROCESS_STARTED, data=self.to_json())
 
             log.debug('Running thread process')
             self.process.run(self._force_run)
@@ -123,7 +123,7 @@ class Scheduler(object):
 
             # Mark as finished
             self.process.running = False
-            send_websocket_event(PROCESS_FINISHED, self.to_json())
+            send_websocket_event(PROCESS_FINISHED, data=self.to_json())
 
         except:
             print(traceback.format_exc())

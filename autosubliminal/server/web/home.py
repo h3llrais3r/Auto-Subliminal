@@ -36,10 +36,10 @@ class Home(object):
                 'year': display_value(wanted_item.year),
                 'season': display_value(wanted_item.season),
                 'episode': display_value(wanted_item.episode),
-                'source': display_value(wanted_item.source, 'N/A', uppercase=True),
-                'quality': display_value(wanted_item.quality, 'N/A', uppercase=True),
-                'codec': display_value(wanted_item.codec, 'N/A', uppercase=True),
-                'releasegrp': display_value(wanted_item.releasegrp, 'N/A', uppercase=True)}
+                'source': display_value(wanted_item.source, default_value='N/A', uppercase=True),
+                'quality': display_value(wanted_item.quality, default_value='N/A', uppercase=True),
+                'codec': display_value(wanted_item.codec, default_value='N/A', uppercase=True),
+                'releasegrp': display_value(wanted_item.releasegrp, default_value='N/A', uppercase=True)}
 
     @cherrypy.expose(alias='resetWantedItem')
     @cherrypy.tools.json_out()
@@ -55,10 +55,10 @@ class Home(object):
                 'year': display_value(wanted_item.year),
                 'season': display_value(wanted_item.season),
                 'episode': display_value(wanted_item.episode),
-                'source': display_value(wanted_item.source, 'N/A'),
-                'quality': display_value(wanted_item.quality, 'N/A'),
-                'codec': display_value(wanted_item.codec, 'N/A'),
-                'releasegrp': display_value(wanted_item.releasegrp, 'N/A')}
+                'source': display_value(wanted_item.source, default_value='N/A'),
+                'quality': display_value(wanted_item.quality, default_value='N/A'),
+                'codec': display_value(wanted_item.codec, default_value='N/A'),
+                'releasegrp': display_value(wanted_item.releasegrp, default_value='N/A')}
 
     @cherrypy.expose(alias='searchId')
     def force_id_search(self, wanted_item_index):
@@ -102,7 +102,7 @@ class Home(object):
                 else:
                     send_websocket_notification('Skipped show %s season %s.' % (title, season))
             else:
-                send_websocket_notification('Could not skip show! Please check the log file!', 'error')
+                send_websocket_notification('Could not skip show! Please check the log file!', type='error')
 
             redirect('/home')
 
@@ -127,7 +127,7 @@ class Home(object):
             config.apply_skipmovie()
             send_websocket_notification('Skipped movie %s.' % movie)
         else:
-            send_websocket_notification('Could not skip movie! Please check the log file!', 'error')
+            send_websocket_notification('Could not skip movie! Please check the log file!', type='error')
         redirect('/home')
 
     @cherrypy.expose(alias='deleteVideo')
@@ -142,7 +142,7 @@ class Home(object):
             if deleted:
                 send_websocket_notification('Video deleted from filesystem.')
             else:
-                send_websocket_notification('Video could not be deleted! Please check the log file!', 'error')
+                send_websocket_notification('Video could not be deleted! Please check the log file!', type='error')
             redirect('/home')
 
     @cherrypy.expose(alias='searchSubtitle')

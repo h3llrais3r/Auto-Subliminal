@@ -222,8 +222,8 @@ def display_value(value, default_value='', uppercase=False):
 
 
 def display_item_title(item, default_value='N/A', uppercase=False):
-    title = display_value(item.title, default_value, False)
-    year = display_value(item.year, default_value, False)
+    title = display_value(item.title, default_value, uppercase=False)
+    year = display_value(item.year, default_value, uppercase=False)
     if not title == default_value and not year == default_value:
         title += ' (' + year + ')'
     if uppercase:
@@ -234,8 +234,8 @@ def display_item_title(item, default_value='N/A', uppercase=False):
 def display_item_name(item, default_value='N/A', uppercase=False):
     name = display_item_title(item, default_value, False)
     if item.is_episode:
-        season = display_value(item.season, default_value, False)
-        episode = display_value(item.episode, default_value, False)
+        season = display_value(item.season, default_value, uppercase=False)
+        episode = display_value(item.episode, default_value, uppercase=False)
         if not season == default_value and not episode == default_value:
             name += ' S' + season.zfill(2) + 'E' + episode.zfill(2)
     if uppercase:
