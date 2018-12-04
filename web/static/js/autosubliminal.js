@@ -190,7 +190,7 @@ $(window).on('resize', function () {
 var stackContext = {
     'dir1': 'down',
     'dir2': 'right',
-    'context': $('stickyNotificationContext')
+    'context': $('#stickyNotificationContext')
 };
 
 // PNotify default options
