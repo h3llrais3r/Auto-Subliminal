@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from tvdb_api_v2.models.series_search_data import SeriesSearchData
+from tvdb_api_v2.models.series_search_result import SeriesSearchResult
 
 import autosubliminal
 from autosubliminal import version
@@ -46,7 +46,7 @@ def test_get_tvdb_id_from_cache_not_found(monkeypatch, mocker):
 
 
 def test_get_tvdb_id_and_store_in_cache(mocker):
-    api_result = SeriesSearchData(id=80379)
+    api_result = SeriesSearchResult(id=80379)
     mocker.patch('autosubliminal.indexer.ShowIndexer._query_api', return_value=api_result)
     db_mock = mocker.patch('autosubliminal.db.TvdbIdCache.set_id')
     indexer = ShowIndexer()

@@ -66,8 +66,8 @@ class TvdbClient(object):
         :type name: str
         :param language: The desired language in which to return the result
         :type language: str
-        :return: The series search object
-        :rtype: tvdb_api_v2.models.series_search.SeriesSearch
+        :return: The series search results object
+        :rtype: tvdb_api_v2.models.series_search_results.SeriesSearchResults
         """
         return SearchApi(self.api_client).search_series_get(name=name, accept_language=language)
 
@@ -78,8 +78,8 @@ class TvdbClient(object):
         :type imdb_id: str
         :param language: The desired language in which to return the result
         :type language: str
-        :return: The series search data object
-        :rtype: tvdb_api_v2.models.series_search_data.SeriesSearchData
+        :return: The series search results object
+        :rtype: tvdb_api_v2.models.series_search_result.SeriesSearchResult
         """
         result = SearchApi(self.api_client).search_series_get(imdb_id=imdb_id, accept_language=language)
         # Return the first result (there should be only 1)
