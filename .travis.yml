@@ -19,6 +19,9 @@ cache:
 before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
 
+before_script:
+  - export BOTO_CONFIG=/dev/null # FIXME: Workaround for https://github.com/travis-ci/travis-ci/issues/7940
+
 # Command(s) to install dependencies
 install:
   - pip install --upgrade pip
