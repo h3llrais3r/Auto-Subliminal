@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from tvdb_api_v2 import __version__
 from tvdb_api_v2.api_client import ApiClient
 from tvdb_api_v2.apis.authentication_api import AuthenticationApi
@@ -12,7 +14,6 @@ from tvdb_api_v2.rest import ApiException
 API_KEY = "9710D6F39C4A2457"
 USER_AGENT = "tvdb_api_v2/" + __version__.__version__
 HOST = "https://api.thetvdb.com"
-BASE_IMAGE_URL = "https://www.thetvdb.com"
 
 
 class TvdbClient(object):
@@ -33,7 +34,7 @@ class TvdbClient(object):
     def login(self):
         """Login and return the authentication token.
 
-        :return: The authentication token.
+        :return: the authentication token
         :rtype: str
         """
         token = AuthenticationApi(self.api_client).login_post(Auth(self.configuration.api_key['ApiKey']))
@@ -43,7 +44,7 @@ class TvdbClient(object):
     def refresh_token(self):
         """Refresh the authentication token.
 
-        :return: The authentication token.
+        :return: the authentication token
         :rtype: str
         """
         token = AuthenticationApi(self.api_client).refresh_token_get()
@@ -62,11 +63,11 @@ class TvdbClient(object):
     def search_series_by_name(self, name, language='en'):
         """Search for a series based on it's name.
 
-        :param name: The name of the series
+        :param name: the name of the series
         :type name: str
-        :param language: The desired language in which to return the result
+        :param language: the desired language in which to return the result
         :type language: str
-        :return: The series search results object
+        :return: the series search results object
         :rtype: tvdb_api_v2.models.series_search_results.SeriesSearchResults
         """
         return SearchApi(self.api_client).search_series_get(name=name, accept_language=language)
@@ -74,11 +75,11 @@ class TvdbClient(object):
     def search_series_by_imdb_id(self, imdb_id, language='en'):
         """Search for a series based on it's imdb id.
 
-        :param imdb_id: The id of the series on imdb
+        :param imdb_id: the id of the series on imdb
         :type imdb_id: str
-        :param language: The desired language in which to return the result
+        :param language: the desired language in which to return the result
         :type language: str
-        :return: The series search results object
+        :return: the series search results object
         :rtype: tvdb_api_v2.models.series_search_result.SeriesSearchResult
         """
         result = SearchApi(self.api_client).search_series_get(imdb_id=imdb_id, accept_language=language)
@@ -92,11 +93,11 @@ class TvdbClient(object):
     def get_series(self, id, language='en'):
         """Get the details of a series.
 
-        :param id: The id of the series on tvdb
+        :param id: the id of the series on tvdb
         :type id: long
-        :param language: The desired language in which to return the result
+        :param language: the desired language in which to return the result
         :type language: str
-        :return: The series data object
+        :return: the series data object
         :rtype: tvdb_api_v2.models.series_data.SeriesData
         """
         return SeriesApi(self.api_client).series_id_get(id, accept_language=language)
@@ -104,11 +105,11 @@ class TvdbClient(object):
     def get_series_episodes(self, id, page=1):
         """Get all the episodes of a series.
 
-        :param id: The id of the series on tvdb
+        :param id: the id of the series on tvdb
         :type id: long
-        :param page: The page of the results to fetch (100 results per page)
+        :param page: the page of the results to fetch (100 results per page)
         :type page: str
-        :return: The series episodes object
+        :return: the series episodes object
         :rtype: tvdb_api_v2.models.series_episodes.SeriesEpisodes
         """
         return SeriesApi(self.api_client).series_id_episodes_get(id, page=page)
@@ -116,15 +117,15 @@ class TvdbClient(object):
     def get_series_episode(self, id, season, episode, language='en'):
         """Get a single episode of a series.
 
-        :param id: The id of the series on tvdb
+        :param id: the id of the series on tvdb
         :type id: long
-        :param season: The season number
+        :param season: the season number
         :type season: str
-        :param episode: The episode number
+        :param episode: the episode number
         :type episode: str
-        :param language: The desired language in which to return the result
+        :param language: the desired language in which to return the result
         :type language: str
-        :return: The series episodes query object
+        :return: the series episodes query object
         :rtype: tvdb_api_v2.models.series_episodes_query.SeriesEpisodesQuery
         """
         return SeriesApi(self.api_client).series_id_episodes_query_get(id, aired_season=season, aired_episode=episode,
@@ -133,13 +134,13 @@ class TvdbClient(object):
     def get_series_episode_by_absolute_number(self, id, absolute_number, language='en'):
         """Get a single episode of a series by it's absolute number.
 
-        :param id: The id of the series on tvdb
+        :param id: the id of the series on tvdb
         :type id: long
-        :param absolute_number: The absolute number
+        :param absolute_number: the absolute number
         :type absolute_number: str
-        :param language: The desired language in which to return the result
+        :param language: the desired language in which to return the result
         :type language: str
-        :return: The series episodes query object
+        :return: the series episodes query object
         :rtype: tvdb_api_v2.models.series_episodes_query.SeriesEpisodesQuery
         """
         return SeriesApi(self.api_client).series_id_episodes_query_get(id, absolute_number=absolute_number,
@@ -148,9 +149,9 @@ class TvdbClient(object):
     def get_series_images_count(self, id, language='en'):
         """Get the images count (for all image_type values) of a series.
 
-        :param id: The id of the series on tvdb
+        :param id: the id of the series on tvdb
         :type id: long
-        :return: The series images counts object
+        :return: the series images counts object
         :rtype: tvdb_api_v2.models.series_images_counts.SeriesImagesCounts
         """
         return SeriesApi(self.api_client).series_id_images_get(id, accept_language=language)
@@ -164,10 +165,32 @@ class TvdbClient(object):
         :type image_type: str
         :param language: the desired language in which to return the result
         :type language: str
-        :return: The series image query results object
+        :return: the series image query results object
         :rtype: tvdb_api_v2.models.series_image_query_results.SeriesImageQueryResults
         """
         return SeriesApi(self.api_client).series_id_images_query_get(id, key_type=image_type, accept_language=language)
+
+    def get_series_highest_rated_image(self, id, image_type='poster', language='en'):
+        """Get the highest rated image (of the specified image type) of a series.
+
+        :param id: the id of the series on tvdb
+        :type id: long
+        :param image_type: the image type (possible types are: 'fanart', 'poster', 'season', 'seasonwide', 'series')
+        :type image_type: str
+        :param language: the desired language in which to return the result
+        :type language: str
+        :return: the series image query results object
+        :rtype: tvdb_api_v2.models.series_image_query_result.SeriesImageQueryResult
+        """
+        highest_rated_image = None
+        images = SeriesApi(self.api_client).series_id_images_query_get(id, key_type=image_type,
+                                                                       accept_language=language)
+        if images.data:
+            # Sort by multiplying the rating average with the number of ratings
+            images_sorted = sorted(images.data, key=lambda x: x.ratings_info.average * x.ratings_info.count,
+                                   reverse=True)
+            highest_rated_image = images_sorted[0] if len(images_sorted) > 0 else None
+        return highest_rated_image
 
     ###############
     # EpisodesApi #
@@ -180,7 +203,7 @@ class TvdbClient(object):
         :type id: long
         :param language: the desired language in which to return the result
         :type language: str
-        :return: The episode object
+        :return: the episode object
         :rtype: tvdb_api_v2.models.episode.Episode
         """
         result = EpisodesApi(self.api_client).episodes_id_get(id, accept_language=language)
@@ -209,22 +232,3 @@ class TvdbClient(object):
         if not result.data:
             raise ApiException(status=404, reason='Not Found')
         return result
-
-
-#####################
-# Utility functions #
-#####################
-
-def get_artwork_url(artwork_file_name):
-    """Get the actual artwork url for download.
-
-    :param artwork_file_name: The artwork file name.
-        This can be taken from:
-            - The 'file_name' property in a SeriesImageQueryResult object from the get_series_images(...)
-            - The 'thumbnail' property in a SeriesImageQueryResult object from the get_series_images(...)
-            - the 'banner' property in a Series object from the SeriesData object from the get_series(...)
-    :type artwork_file_name: str
-    :return: The full artwork url.
-    :rtype: str
-    """
-    return '{base_url}/banners/{artwork_file_name}'.format(base_url=BASE_IMAGE_URL, artwork_file_name=artwork_file_name)
