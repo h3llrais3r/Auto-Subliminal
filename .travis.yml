@@ -12,17 +12,17 @@ matrix:
   fast_finish: true # Finish build immediately once one of the jobs fails.
 
 # Caching
+before_cache:
+  - rm -f $HOME/.cache/pip/log/debug.log
+
 cache:
   directories:
     - $HOME/.cache/pip
 
-before_cache:
-  - rm -f $HOME/.cache/pip/log/debug.log
-
-before_script:
+# Install command(s)
+before_install:
   - export BOTO_CONFIG=/dev/null # FIXME: Workaround for https://github.com/travis-ci/travis-ci/issues/7940
 
-# Command(s) to install dependencies
 install:
   - pip install --upgrade pip
   - pip install --upgrade six # Upgrade six because Python 3.4 is packaged with 1.10.0 and we need at least 1.11.0
