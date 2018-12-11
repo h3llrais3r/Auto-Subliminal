@@ -1,3 +1,3 @@
 - [ ] PR is based on the `development` branch
 - [ ] Don't send big changes all at once. Split up big PRs into multiple smaller PRs that are easier to manage and review
-- [ ] Read the [contribution guide](https://github.com/pymedusa/Auto-Subliminal/blob/master/.github/CONTRIBUTING.md)
+- [ ] Read the [contribution guide](https://github.com/h3llrais3r/Auto-Subliminal/blob/master/.github/CONTRIBUTING.md)
