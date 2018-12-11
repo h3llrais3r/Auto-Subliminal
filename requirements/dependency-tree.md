@@ -25,6 +25,7 @@ Libraries dependency tree
     |-- zc.lockfile
 |-- configparser
 |-- dogpile.cache
+    |-- decorator
 |-- enum34
 |-- enzyme
 |-- gitpython
