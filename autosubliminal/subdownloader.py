@@ -60,8 +60,8 @@ class SubDownloader(object):
 
         log.debug('Saving subtitle')
 
-        # Check download_item
-        if self._download_item.video and self._download_item.subtitles and self._download_item.single:
+        # Check download_item (check for not None on boolean variables!)
+        if self._download_item.video and self._download_item.subtitles and self._download_item.single is not None:
             # Save the subtitle
             video = self._download_item.video
             encoding = 'utf-8' if autosubliminal.SUBTITLEUTF8ENCODING else None
