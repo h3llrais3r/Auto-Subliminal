@@ -7,13 +7,14 @@ from tvdb_api_v2.apis.episodes_api import EpisodesApi
 from tvdb_api_v2.apis.search_api import SearchApi
 from tvdb_api_v2.apis.series_api import SeriesApi
 from tvdb_api_v2.apis.updates_api import UpdatesApi
+from tvdb_api_v2.client import parser
 from tvdb_api_v2.configuration import Configuration
 from tvdb_api_v2.models.auth import Auth
 from tvdb_api_v2.rest import ApiException
 
-API_KEY = "9710D6F39C4A2457"
-USER_AGENT = "tvdb_api_v2/" + __version__.__version__
-HOST = "https://api.thetvdb.com"
+API_KEY = '9710D6F39C4A2457'
+USER_AGENT = 'tvdb_api_v2/' + __version__.__version__
+HOST = 'https://api.thetvdb.com'
 
 
 class TvdbClient(object):
@@ -102,6 +103,18 @@ class TvdbClient(object):
         """
         return SeriesApi(self.api_client).series_id_get(id, accept_language=language)
 
+    def get_series_episodes_summary(self, id):
+        """Get the summary of the episodes and seasons of a series.
+
+        :param id: the id of the series on tvdb
+        :type id: long
+        :return: the series episodes summary object
+        :rtype: tvdb_api_v2.models.series_episodes_summary.SeriesEpisodesSummary
+        """
+        # Manual parsing because the generated object is not in sync with the object model!
+        params = {'id': id, '_preload_content': False}
+        return parser.parse_series_episodes_summary(SeriesApi(self.api_client).series_id_episodes_summary_get(**params))
+
     def get_series_episodes(self, id, page=1):
         """Get all the episodes of a series.
 
@@ -113,6 +126,21 @@ class TvdbClient(object):
         :rtype: tvdb_api_v2.models.series_episodes.SeriesEpisodes
         """
         return SeriesApi(self.api_client).series_id_episodes_get(id, page=page)
+
+    def get_series_episodes_by_season(self, id, season, language='en'):
+        """Get all the episodes belonging to a season of a series.
+
+        :param id: the id of the series on tvdb
+        :type id: long
+        :param season: the season number
+        :type season: str
+        :param language: the desired language in which to return the result
+        :type language: str
+        :return: the series episodes object
+        :rtype: tvdb_api_v2.models.series_episodes_query.SeriesEpisodesQuery
+        """
+        return SeriesApi(self.api_client).series_id_episodes_query_get(id, aired_season=season,
+                                                                       accept_language=language)
 
     def get_series_episode(self, id, season, episode, language='en'):
         """Get a single episode of a series.
