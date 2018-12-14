@@ -192,6 +192,8 @@ class WantedItem(_Item):
             if key in ['languages']:
                 # Must be returned as a list of values
                 setattr(self, key, to_list(value))
+            elif key in ['tvdbid']:
+                setattr(self, key, to_obj(value, obj_type=int))
             else:
                 super(WantedItem, self).set_attr(key, value)
 

@@ -48,6 +48,7 @@ def test_wanted_item_set_attr():
     wanted_item.set_attr('source', 'WEB-DL')
     wanted_item.set_attr('quality', '720p')
     wanted_item.set_attr('codec', 'h264')
+    wanted_item.set_attr('tvdbid', '263365')
     wanted_item.set_attr('unknown', 'unknown')
     assert wanted_item.languages == ['nl', 'en']
     assert wanted_item.season == 1
@@ -56,6 +57,7 @@ def test_wanted_item_set_attr():
     assert wanted_item.source == 'WEB-DL'
     assert wanted_item.quality == '720p'
     assert wanted_item.codec == 'h264'
+    assert wanted_item.tvdbid == 263365
     assert not hasattr(wanted_item, 'unknown')
 
 
