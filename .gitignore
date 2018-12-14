@@ -8,10 +8,12 @@
 TODO.txt
 
 # Log files
-*.log*
+*.log
+*.log.*
 
 # Database files
 *.db
+*.db.*
 *.dbm
 
 # Config files

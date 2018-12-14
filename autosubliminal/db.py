@@ -1,8 +1,10 @@
 # coding=utf-8
 
-import os
-import sqlite3
 import logging
+import os
+import shutil
+import sqlite3
+import time
 
 import autosubliminal
 from autosubliminal import version
@@ -367,6 +369,12 @@ def create():
 
 def upgrade(from_version, to_version):
     print('INFO: Upgrading database from version %d to version %d.' % (from_version, to_version))
+    print('INFO: Creating backup of database.')
+    try:
+        backup_file = '%s.v%d.%s' % (autosubliminal.DBFILE, from_version, time.strftime('%Y%m%d%H%M%S'))
+        shutil.copy(autosubliminal.DBFILE, backup_file)
+    except Exception:
+        print('ERROR: Unable to backup database! Continuing without backup!')
 
     upgrades = to_version - from_version
     if upgrades != 1:
