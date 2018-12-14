@@ -4,9 +4,7 @@ import datetime
 import logging
 import re
 
-from six import text_type
-
-from autosubliminal.util.common import get_today
+from autosubliminal.util.common import get_today, to_list, to_obj, to_obj_or_list
 
 # A subtitle will be searched on each run, as long as the file is not older than 4 weeks
 search_deadline = datetime.timedelta(weeks=4)
@@ -33,14 +31,14 @@ class _Item(object):
     :type year: int
     :param season: the parsed video season
     :type season: int
-    :param episode: the parsed video episode (comma separated string in case of multi episode)
-    :type episode: int or str
+    :param episode: the parsed video episode
+    :type episode: int or list(int)
     :param source: the parsed video source
-    :type source: str
+    :type source: str or list(str)
     :param quality: the parsed video quality
     :type quality: str
     :param codec: the parsed video codec
-    :type codec: str
+    :type codec: str or list(str)
     :param releasegrp: the parsed video release group
     :type releasegrp: str
 
@@ -50,21 +48,6 @@ class _Item(object):
 
     def __init__(self, type=None, title=None, year=None, season=None, episode=None, source=None, quality=None,
                  codec=None, releasegrp=None):
-        # Episode can be a list of episodes (for multi-ep videos), so make sure it's a string
-        _episode = episode
-        if isinstance(episode, list):
-            _episode = ','.join(text_type(e) for e in episode)  # episode can be a list of episodes (int)
-
-        # Source can be a list of sources, so make sure it's a string
-        _source = source
-        if isinstance(source, list):
-            _source = ','.join(text_type(s) for s in source)  # source can be a list of sources (str)
-
-        # Codec can be a list of codecs, so make sure it's a string
-        _codec = codec
-        if isinstance(codec, list):
-            _codec = ','.join(text_type(c) for c in codec)  # codec can be a list of codecs (str)
-
         # We need to trim the release group in some cases
         _releasegrp = releasegrp
         if releasegrp:
@@ -79,11 +62,34 @@ class _Item(object):
         self.title = title
         self.year = year
         self.season = season
-        self.episode = _episode
-        self.source = _source
+        self.episode = episode
+        self.source = source
         self.quality = quality
-        self.codec = _codec
+        self.codec = codec
         self.releasegrp = _releasegrp
+
+    def set_attr(self, key, value):
+        """Set the attribute on a wanted item.
+
+        It takes care of converting the value if needed.
+        :param key: the attribute key
+        :type key: str
+        :param value: the attribute value
+        :type value: str
+        """
+        if hasattr(self, key):
+            if key in ['year', 'season']:
+                # Set as int
+                setattr(self, key, to_obj(value, int))
+            elif key in ['episode']:
+                # Can be returned as a list of int values
+                setattr(self, key, to_obj_or_list(value, int))
+            elif key in ['source', 'codec']:
+                # Can be returned as a list of text values
+                setattr(self, key, to_obj_or_list(value))
+            else:
+                # Use default value
+                setattr(self, key, value)
 
     def __eq__(self, other):
         """Overrides the default implementation to allow comparison."""
@@ -119,13 +125,13 @@ class WantedItem(_Item):
     :param season: the parsed video season
     :type season: int
     :param episode: the parsed video episode
-    :type episode: int
+    :type episode: int or list(int)
     :param source: the parsed video source
-    :type source: str
+    :type source: str or list(str)
     :param quality: the parsed video quality
     :type quality: str
     :param codec: the parsed video codec
-    :type codec: str
+    :type codec: str or list(str)
     :param releasegrp: the parsed video release group
     :type releasegrp: str
     """
@@ -172,6 +178,22 @@ class WantedItem(_Item):
             return True
         else:
             return False
+
+    def set_attr(self, key, value):
+        """Set the attribute on a wanted item.
+
+        It takes care of converting the value if needed.
+        :param key: the attribute key
+        :type key: str
+        :param value: the attribute value
+        :type value: str
+        """
+        if hasattr(self, key):
+            if key in ['languages']:
+                # Must be returned as a list of values
+                setattr(self, key, to_list(value))
+            else:
+                super(WantedItem, self).set_attr(key, value)
 
     def copy_to(self, wanted_item):
         """Copy all attributes to another wanted item."""
@@ -241,6 +263,7 @@ class DownloadedItem(_Item):
     def __init__(self):
         super(DownloadedItem, self).__init__()
 
+        self.language = None
         self.timestamp = None  # Download timestamp string - format '%Y-%m-%d %H:%M:%S'
         self.subtitle = None
         self.provider = None

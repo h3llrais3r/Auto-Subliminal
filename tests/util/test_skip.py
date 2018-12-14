@@ -6,16 +6,16 @@ from autosubliminal.util.skip import skip_movie, skip_show
 
 def test_skip_show():
     autosubliminal.SKIPSHOW = {'show1': '0', 'show2': '1', 'show3': '0,1', 'show4': '00'}
-    assert skip_show('SHOW1', 0, 1)  # 0 means skip specials
-    assert not skip_show('SHOW1', 1, 1)
-    assert not skip_show('Show2', 0, 1)
-    assert skip_show('Show2', 1, 1)
-    assert skip_show('show3', 0, 1)  # 00 means skip all, so also 0 is skipped
-    assert skip_show('show3', 1, 1)  # 00 means skip all, so also 1 is skipped
-    assert skip_show('show4', 0, 1)
-    assert skip_show('show4', 1, 1)
-    assert not skip_show('show5', 0, 1)
-    assert not skip_show('show5', 1, 1)
+    assert skip_show('SHOW1', 0)  # 0 means skip specials
+    assert not skip_show('SHOW1', 1)
+    assert not skip_show('Show2', 0)
+    assert skip_show('Show2', 1)
+    assert skip_show('show3', 0)  # 00 means skip all, so also 0 is skipped
+    assert skip_show('show3', 1)  # 00 means skip all, so also 1 is skipped
+    assert skip_show('show4', 0)
+    assert skip_show('show4', 1)
+    assert not skip_show('show5', 0)
+    assert not skip_show('show5', 1)
 
 
 def test_skip_movie():

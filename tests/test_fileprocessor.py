@@ -49,7 +49,7 @@ def test_process_multi_episode_file(mocker):
     assert wanted_item.type == 'episode'
     assert wanted_item.title == 'Marvels Agents of S.H.I.E.L.D.'
     assert wanted_item.season == 5
-    assert wanted_item.episode == '1,2'
+    assert wanted_item.episode == [1, 2]
     assert wanted_item.source == 'HDTV'
     assert wanted_item.quality == '720p'
     assert wanted_item.codec == 'h264'

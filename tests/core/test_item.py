@@ -20,24 +20,50 @@ def test_compare_wanted_items():
 def test_wanted_item_with_multi_episode():
     # Example file: Marvels.Agents.of.S.H.I.E.L.D.S05E01-E02.720p.HDTV.x264-AVS.mkv
     wanted_item_1 = WantedItem(type='episode', title='test', season=1, episode=[1, 2])
-    assert wanted_item_1.episode == '1,2'
+    assert wanted_item_1.episode == [1, 2]
 
 
 def test_wanted_item_with_multi_sources():
     # Example file: Inferno.2016.1080p.WEB.BluRay.x264-[GROUP1.AG].mp4
     wanted_item_1 = WantedItem(type='movie', title='test', source=['WEB-DL', 'BluRay'])
-    assert wanted_item_1.source == 'WEB-DL,BluRay'
+    assert wanted_item_1.source == ['WEB-DL', 'BluRay']
 
 
 def test_wanted_item_with_multi_codec():
     # Example file: Code.37.S03E02.NL.VLAAMS.720p.HDTV.x264-SHOWGEMiST_xvid.avi
     wanted_item_1 = WantedItem(type='episode', title='test', season=1, episode=1, codec=['h264', 'XviD'])
-    assert wanted_item_1.codec == 'h264,XviD'
+    assert wanted_item_1.codec == ['h264', 'XviD']
 
 
 def test_wanted_item_trim_release_group():
     wanted_item_1 = WantedItem(type='episode', title='test', season=1, episode=1, releasegrp='KILLERS[rarbg]')
     assert wanted_item_1.releasegrp == 'KILLERS'
+
+
+def test_wanted_item_set_attr():
+    wanted_item.set_attr('languages', 'nl,en')
+    wanted_item.set_attr('season', '1')
+    wanted_item.set_attr('episode', '1,2')
+    wanted_item.set_attr('year', '2018')
+    wanted_item.set_attr('source', 'WEB-DL')
+    wanted_item.set_attr('quality', '720p')
+    wanted_item.set_attr('codec', 'h264')
+    wanted_item.set_attr('unknown', 'unknown')
+    assert wanted_item.languages == ['nl', 'en']
+    assert wanted_item.season == 1
+    assert wanted_item.episode == [1, 2]
+    assert wanted_item.year == 2018
+    assert wanted_item.source == 'WEB-DL'
+    assert wanted_item.quality == '720p'
+    assert wanted_item.codec == 'h264'
+    assert not hasattr(wanted_item, 'unknown')
+
+
+def test_wanted_item_copy_to():
+    wanted_item_1 = WantedItem(type='episode', title='titl1', season=1, episode=1)
+    wanted_item_2 = WantedItem(type='episode', title='title2', season=2, episode=2, codec=2)
+    wanted_item_1.copy_to(wanted_item_2)
+    assert wanted_item_1 == wanted_item_2
 
 
 def test_is_search_active_for_wanted_item_before_on_creation(mocker):
@@ -68,10 +94,3 @@ def test_is_search_active_for_wanted_item_after_deadline_on_delta(mocker):
     today = datetime.datetime(2018, 2, 26, 0, 0, 0)
     mocker.patch('autosubliminal.core.item.get_today', return_value=today)
     assert wanted_item.is_search_active
-
-
-def test_copy_to():
-    wanted_item_1 = WantedItem(type='episode', title='titl1', season=1, episode=1)
-    wanted_item_2 = WantedItem(type='episode', title='title2', season=2, episode=2, codec=2)
-    wanted_item_1.copy_to(wanted_item_2)
-    assert wanted_item_1 == wanted_item_2

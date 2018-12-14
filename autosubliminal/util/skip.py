@@ -10,7 +10,7 @@ from autosubliminal.util.common import sanitize
 log = logging.getLogger(__name__)
 
 
-def skip_show(show_name, season, episode):
+def skip_show(show_name, season):
     """Check if a show should be skipped."""
     show_name_sanitized = sanitize(show_name)
     for x in autosubliminal.SKIPSHOW:

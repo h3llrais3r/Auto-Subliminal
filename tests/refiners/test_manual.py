@@ -12,13 +12,13 @@ resources_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '
 
 def test_refine_episode():
     episode = Episode(name=os.path.join(resources_dir, 'Refine.Episode.mkv'), series='Refine', season=0, episode=0)
-    wanted_item = WantedItem(type='episode', title='Series', year=2018, season=1, episode=1, source='Format',
+    wanted_item = WantedItem(type='episode', title='Series', year=2018, season=1, episode=[1, 2], source='Format',
                              quality='Resolution', codec='Codec', releasegrp='Group')
     refine(episode, wanted_item)
     assert episode.series == 'Series'
     assert episode.year == 2018
     assert episode.season == 1
-    assert episode.episode == 1
+    assert episode.episode == 1  # Only first episode is kept when refining
     assert episode.format == 'Format'
     assert episode.resolution == 'Resolution'
     assert episode.video_codec == 'Codec'

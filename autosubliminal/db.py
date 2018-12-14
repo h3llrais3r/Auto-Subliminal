@@ -7,31 +7,24 @@ import logging
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.core.item import DownloadedItem, WantedItem
+from autosubliminal.util.common import to_text
 
 log = logging.getLogger(__name__)
 
 
-def wanted_item_factory(cursor, row):
-    wanted_item = WantedItem()
-
+def _item_factory(cursor, row, item_type):
+    item = item_type()
     for idx, col in enumerate(cursor.description):
-        if col[0] == 'languages':
-            # Languages should be returned as a list (so let's split the comma separated string)
-            setattr(wanted_item, col[0], row[idx].split(','))
-        else:
-            # Use default value from database
-            setattr(wanted_item, col[0], row[idx])
-
-    return wanted_item
+        item.set_attr(col[0], row[idx])
+    return item
 
 
-def downloaded_item_factory(cursor, row):
-    downloaded_item = DownloadedItem()
+def _wanted_item_factory(cursor, row):
+    return _item_factory(cursor, row, WantedItem)
 
-    for idx, col in enumerate(cursor.description):
-        setattr(downloaded_item, col[0], row[idx])
 
-    return downloaded_item
+def _downloaded_item_factory(cursor, row):
+    return _item_factory(cursor, row, DownloadedItem)
 
 
 class TvdbIdCache(object):
@@ -159,7 +152,7 @@ class WantedItems(object):
         :rtype: list[WantedItem]
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
-        connection.row_factory = wanted_item_factory
+        connection.row_factory = _wanted_item_factory
         cursor = connection.cursor()
         cursor.execute(self._query_get_all)
         result_list = cursor.fetchall()
@@ -177,7 +170,7 @@ class WantedItems(object):
         :rtype: WantedItem
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
-        connection.row_factory = wanted_item_factory
+        connection.row_factory = _wanted_item_factory
         cursor = connection.cursor()
         cursor.execute(self._query_get, [video_path])
         wanted_item = cursor.fetchone()
@@ -197,15 +190,15 @@ class WantedItems(object):
         cursor.execute(self._query_set, [
             wanted_item.videopath,
             wanted_item.timestamp,
-            ','.join(wanted_item.languages),  # Store languages as comma separated string
+            to_text(wanted_item.languages),  # Store languages as comma separated string
             wanted_item.type,
             wanted_item.title,
             wanted_item.year,
             wanted_item.season,
-            wanted_item.episode,
+            to_text(wanted_item.episode),  # Can be a list for multi episode files
             wanted_item.quality,
-            wanted_item.source,
-            wanted_item.codec,
+            to_text(wanted_item.source),  # Can be a list for multi source files
+            to_text(wanted_item.codec),  # Can be a list for multi codec files
             wanted_item.releasegrp,
             wanted_item.tvdbid,
             wanted_item.imdbid])
@@ -237,15 +230,15 @@ class WantedItems(object):
         cursor.execute(self._query_update, [
             wanted_item.videopath,
             wanted_item.timestamp,
-            ','.join(wanted_item.languages),  # Store languages as comma separated string
+            to_text(wanted_item.languages),  # Store languages as comma separated string
             wanted_item.type,
             wanted_item.title,
             wanted_item.year,
             wanted_item.season,
-            wanted_item.episode,
+            to_text(wanted_item.episode),  # Can be a list for multi episode files
             wanted_item.quality,
-            wanted_item.source,
-            wanted_item.codec,
+            to_text(wanted_item.source),  # Can be a list for multi source files
+            to_text(wanted_item.codec),  # Can be a list for multi codec files
             wanted_item.releasegrp,
             wanted_item.tvdbid,
             wanted_item.imdbid,
@@ -278,7 +271,7 @@ class LastDownloads(object):
         :rtype: list[DownloadedItem]
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
-        connection.row_factory = downloaded_item_factory
+        connection.row_factory = _downloaded_item_factory
         cursor = connection.cursor()
         cursor.execute(self._query_get)
         result_list = cursor.fetchall()
@@ -304,11 +297,11 @@ class LastDownloads(object):
             download_item.title,
             download_item.year,
             download_item.season,
-            download_item.episode,
+            to_text(download_item.episode),  # Can be a list for multi episode files
             download_item.quality,
-            download_item.source,
+            to_text(download_item.source),  # Can be a list for multi source files
             download_item.downlang,
-            download_item.codec,
+            to_text(download_item.codec),  # Can be a list for multi codec files
             download_item.timestamp,
             download_item.releasegrp,
             download_item.subtitle,

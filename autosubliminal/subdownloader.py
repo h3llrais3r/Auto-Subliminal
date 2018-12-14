@@ -34,7 +34,6 @@ class SubDownloader(object):
 
         # Save the subtitle
         if self.save():
-            # TODO: fix me, cannot iter download_item
             name = display_item_name(self._download_item)
 
             # Mark as downloaded

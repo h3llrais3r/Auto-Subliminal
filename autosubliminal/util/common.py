@@ -79,6 +79,52 @@ def wait_for_internet_connection():
         time.sleep(5)
 
 
+def to_obj(value, obj_type=text_type):
+    """Convert an object to an object value.
+
+    By default it converts it to a text value.
+    Optionally, it can be converted to the specified object type.
+    """
+    return obj_type(value) if value else None
+
+
+def to_text(obj):
+    """Convert an object to a text value.
+
+    When the object is a list, convert it to a comma separated text value.
+    If not, return the text representation of the object.
+    """
+    if obj and isinstance(obj, list):
+        return ','.join(text_type(e) for e in obj)
+
+    return text_type(obj) if obj else None
+
+
+def to_list(value, obj_type=text_type):
+    """Convert a value to a list.
+
+    Split the value on ',' and return the split values.
+    Optionally, it can be converted to the specified object type.
+    """
+    if value and isinstance(value, list):
+        return [obj_type(v) for v in value]
+
+    return [obj_type(v) for v in value.split(',')] if value else None
+
+
+def to_obj_or_list(value, obj_type=text_type):
+    """Convert a value to an object or a list.
+
+    Split the value on ',' if it contains it and return the split values.
+    If not return the value itself.
+    Optionally, it can be converted to the specified object type.
+    """
+    if value and ',' in value:
+        return to_list(value, obj_type=obj_type)
+
+    return obj_type(value) if value else None
+
+
 def to_dict(obj, *args, **kwargs):
     """Convert an object to a dict.
 
@@ -215,6 +261,7 @@ def display_mapping_dict(mapping_dict):
 
 def display_value(value, default_value='', uppercase=False):
     result = value or default_value
+    result = ','.join(text_type(v) for v in result) if isinstance(result, list) else result
     result = safe_text(result, default_value)
     if uppercase:
         result = safe_uppercase(result, default_value)
@@ -237,7 +284,15 @@ def display_item_name(item, default_value='N/A', uppercase=False):
         season = display_value(item.season, default_value, uppercase=False)
         episode = display_value(item.episode, default_value, uppercase=False)
         if not season == default_value and not episode == default_value:
-            name += ' S' + season.zfill(2) + 'E' + episode.zfill(2)
+            name += ' S' + season.zfill(2)
+            if isinstance(item.episode, list):
+                for idx, e in enumerate(item.episode):
+                    episode = display_value(e, default_value, uppercase=False)
+                    if idx > 0:
+                        name += '-'
+                    name += 'E' + episode.zfill(2)
+            else:
+                name += 'E' + episode.zfill(2)
     if uppercase:
         name = safe_uppercase(name, default_value)
     return name

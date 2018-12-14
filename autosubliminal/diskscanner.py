@@ -145,10 +145,9 @@ def walk_dir(path):
                     if wanted_item.is_episode:
                         title = wanted_item.title
                         season = wanted_item.season
-                        episode = wanted_item.episode
-                        if skip_show(title, season, episode):
+                        if skip_show(title, season):
                             db.delete_wanted_item(wanted_item)
-                            log.info('Skipping %s - Season %s Episode %s', title, season, episode)
+                            log.info('Skipping %s - Season %s', title, season)
                             continue
 
                     # Skip movie check

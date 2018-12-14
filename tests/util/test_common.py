@@ -12,11 +12,11 @@ from vcr import VCR
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.core.item import WantedItem
-from autosubliminal.util.common import get_today, run_cmd, connect_url, wait_for_internet_connection, to_dict, \
-    get_boolean, safe_text, safe_lowercase, safe_uppercase, safe_trim, sanitize, display_mapping_dict, \
-    display_list_single_line, display_list_multi_line, display_value, display_item_title, display_item_name, \
-    display_interval, display_timestamp, convert_timestamp, humanize_bytes, get_common_path, get_root_path, \
-    get_file_size, set_rw_and_remove
+from autosubliminal.util.common import get_today, run_cmd, connect_url, wait_for_internet_connection, to_obj, to_text, \
+    to_list, to_obj_or_list, to_dict, get_boolean, safe_text, safe_lowercase, safe_uppercase, safe_trim, sanitize, \
+    display_mapping_dict, display_list_single_line, display_list_multi_line, display_value, display_item_title, \
+    display_item_name, display_interval, display_timestamp, convert_timestamp, humanize_bytes, get_common_path, \
+    get_root_path, get_file_size, set_rw_and_remove
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -98,6 +98,42 @@ def test_wait_for_internet_connection_with_sleep(mocker):
     time_sleep = mocker.patch('time.sleep')
     wait_for_internet_connection()
     assert time_sleep.called
+
+
+def test_to_obj():
+    value_1 = 1
+    value_2 = '2'
+    assert to_obj(None) is None
+    assert to_obj(value_1) == '1'
+    assert to_obj(value_2, obj_type=int) == 2
+
+
+def test_to_text():
+    value_1 = 1
+    value_2 = [1, 2]
+    assert to_text(None) is None
+    assert to_text(value_1) == '1'
+    assert to_text(value_2) == '1,2'
+
+
+def test_to_list():
+    value_1 = '1'
+    value_2 = '1,2'
+    value_3 = [1, 2, 3]
+    value_4 = ['1', '2', '3', '4']
+    assert to_list(None) is None
+    assert to_list(value_1) == ['1']
+    assert to_list(value_2, obj_type=int) == [1, 2]
+    assert to_list(value_3) == ['1', '2', '3']
+    assert to_list(value_4, obj_type=int) == [1, 2, 3, 4]
+
+
+def test_to_obj_or_list():
+    value_1 = '1'
+    value_2 = '1,2'
+    assert to_obj_or_list(None) is None
+    assert to_obj_or_list(value_1) == '1'
+    assert to_obj_or_list(value_2, obj_type=int) == [1, 2]
 
 
 def test_to_dict():
@@ -265,6 +301,7 @@ def test_display_item_name():
     wanted_item_2 = WantedItem(title='title2', year=2016, type='mmovie')
     wanted_item_3 = WantedItem(title='title3', type='episode', season=1, episode=1)
     wanted_item_4 = WantedItem(title='title4', year=2016, type='episode', season=1, episode=1)
+    wanted_item_5 = WantedItem(title='title5', year=2016, type='episode', season=1, episode=[1, 2])
     wanted_item_empty = WantedItem()
     assert display_item_name(wanted_item_1) == 'title1'
     assert display_item_name(wanted_item_1, uppercase=True) == 'TITLE1'
@@ -272,8 +309,10 @@ def test_display_item_name():
     assert display_item_name(wanted_item_2, uppercase=True) == 'TITLE2 (2016)'
     assert display_item_name(wanted_item_3) == 'title3 S01E01'
     assert display_item_name(wanted_item_3, uppercase=True) == 'TITLE3 S01E01'
+    assert display_item_name(wanted_item_4) == 'title4 (2016) S01E01'
     assert display_item_name(wanted_item_4, uppercase=True) == 'TITLE4 (2016) S01E01'
-    assert display_item_name(wanted_item_4, uppercase=True) == 'TITLE4 (2016) S01E01'
+    assert display_item_name(wanted_item_5) == 'title5 (2016) S01E01-E02'
+    assert display_item_name(wanted_item_5, uppercase=True) == 'TITLE5 (2016) S01E01-E02'
     assert display_item_name(wanted_item_empty) == 'N/A'
     assert display_item_name(wanted_item_empty, default_value='default') == 'default'
     assert display_item_name(wanted_item_empty, default_value='default', uppercase=True) == 'DEFAULT'
