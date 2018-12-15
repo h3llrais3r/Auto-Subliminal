@@ -14,7 +14,7 @@ from enzyme.mkv import MKV
 import autosubliminal
 from autosubliminal import fileprocessor
 from autosubliminal.core.scheduler import ScheduledProcess
-from autosubliminal.db import WantedItems
+from autosubliminal.db import WantedItemsDb
 from autosubliminal.util.queue import release_wanted_queue_lock_on_exception
 from autosubliminal.util.skip import skip_movie, skip_show
 from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
@@ -55,7 +55,7 @@ class DiskScanner(ScheduledProcess):
 
         # Walk through paths to search for wanted items
         new_wanted_items = []
-        db = WantedItems()
+        db = WantedItemsDb()
         old_wanted_items = db.get_wanted_items()
         for video_path in autosubliminal.VIDEOPATHS:
             try:
@@ -86,7 +86,7 @@ class DiskScanner(ScheduledProcess):
 def walk_dir(path):
     log.info('Scanning video path: %s', path)
     wanted_items = []
-    db = WantedItems()
+    db = WantedItemsDb()
 
     # Check all folders and files
     for dirname, dirnames, filenames in os.walk(os.path.join(path)):

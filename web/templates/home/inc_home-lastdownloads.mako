@@ -1,6 +1,6 @@
 <%!
     import autosubliminal
-    from autosubliminal.db import LastDownloads
+    from autosubliminal.db import LastDownloadsDb
     from autosubliminal.util.common import convert_timestamp, display_value, display_item_title
 %>
 

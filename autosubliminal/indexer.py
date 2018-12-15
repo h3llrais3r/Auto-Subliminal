@@ -12,7 +12,7 @@ from tvdb_api_v2.client import TvdbClient
 from unidecode import unidecode
 
 import autosubliminal
-from autosubliminal.db import ImdbIdCache, TvdbIdCache
+from autosubliminal.db import ImdbIdCacheDb, TvdbIdCacheDb
 from autosubliminal.util.encoding import s2n
 from autosubliminal.util.common import sanitize
 from autosubliminal.util.mapping import get_movie_name_mapping, get_show_name_mapping
@@ -98,6 +98,7 @@ class ShowIndexer(Indexer):
         if year:
             name += ' (' + text_type(year) + ')'
         log.debug('Getting tvdb id for %s', name)
+        db = TvdbIdCacheDb()
         # If not force_search, first check shownamemapping and tvdb id cache
         if not force_search:
             # Check shownamemapping
@@ -106,7 +107,7 @@ class ShowIndexer(Indexer):
                 log.debug('Tvdb id from shownamemapping: %s', tvdb_id)
                 return int(tvdb_id)
             # Check tvdb id cache
-            tvdb_id = TvdbIdCache().get_id(name)
+            tvdb_id = db.get_tvdb_id(name)
             if tvdb_id:
                 log.debug('Tvdb id from cache: %s', tvdb_id)
                 if tvdb_id == -1:
@@ -125,13 +126,13 @@ class ShowIndexer(Indexer):
         if tvdb_id:
             log.debug('Tvdb id from api: %s', tvdb_id)
             if store_id:
-                TvdbIdCache().set_id(tvdb_id, name)
+                db.set_tvdb_id(tvdb_id, name)
                 log.info('Tvdb id added to cache for %s: %s', name, tvdb_id)
             return int(tvdb_id)
         else:
             log.warning('Tvdb id not found for %s', name)
             if store_id:
-                TvdbIdCache().set_id(-1, name)
+                db.set_tvdb_id(-1, name)
             return None
 
 
@@ -192,13 +193,14 @@ class MovieIndexer(Indexer):
         if year:
             name += ' (' + text_type(year) + ')'
         log.debug('Getting imdb info for %s', name)
+        db = ImdbIdCacheDb()
         # If not force_search, first check movienamemapping and tvdb id cache
         if not force_search:
             imdb_id = get_movie_name_mapping(title, year)
             if imdb_id:
                 log.debug('Imdb id from movienamemapping: %s', imdb_id)
                 return imdb_id, year
-            imdb_id = ImdbIdCache().get_id(title, year)
+            imdb_id = db.get_imdb_id(title, year)
             if imdb_id:
                 log.debug('Imdb id from cache: %s', imdb_id)
                 # Imdb id is a string (digits only, but can have 0 prefixes)
@@ -214,11 +216,11 @@ class MovieIndexer(Indexer):
         if imdb_id:
             log.debug('Imdb id from api: %s', imdb_id)
             if store_id:
-                ImdbIdCache().set_id(imdb_id, title, year)
+                db.set_imdb_id(imdb_id, title, year)
                 log.info('Imdb id added to cache for %s: %s', name, imdb_id)
             return imdb_id, year
         else:
             log.warning('Imdb id not found for %s', name)
             if store_id:
-                ImdbIdCache().set_id('tt0000000', title, year)
+                db.set_imdb_id('tt0000000', title, year)
             return None, year

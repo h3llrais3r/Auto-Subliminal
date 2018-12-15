@@ -3,7 +3,7 @@
 import cherrypy
 
 import autosubliminal
-from autosubliminal.db import LastDownloads
+from autosubliminal.db import LastDownloadsDb
 from autosubliminal.server.rest import RestResource
 
 
@@ -66,7 +66,7 @@ class _DownloadedApi(RestResource):
 
     def get(self, number_of_items=None):
         """Get the list of downloaded items or the specified last number of downloaded items."""
-        last_downloads = LastDownloads().get_last_downloads()
+        last_downloads = LastDownloadsDb().get_last_downloads()
         if number_of_items is None:
             return last_downloads
         elif 0 <= int(number_of_items) <= len(last_downloads):

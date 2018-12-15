@@ -5,7 +5,7 @@ import pytest
 import jsonpickle
 
 import autosubliminal
-from autosubliminal.db import LastDownloads
+from autosubliminal.db import LastDownloadsDb
 from autosubliminal.server.api.items import ItemsApi
 from autosubliminal.server.rest import BadRequest
 
@@ -103,7 +103,7 @@ def test_delete_wanted_item_bad_request():
 
 
 def test_get_downloaded_all_items(mocker):
-    mocker.patch.object(LastDownloads, 'get_last_downloads', return_value=[downloaded_item])
+    mocker.patch.object(LastDownloadsDb, 'get_last_downloads', return_value=[downloaded_item])
     # Check conversion to json:
     # - pickle ourselves because we don't use cherrypy.tools here
     # - force sorted keys to be able to compare results (Python 3 sorts by default)
@@ -113,7 +113,7 @@ def test_get_downloaded_all_items(mocker):
 
 
 def test_get_downloaded_number_of_items(mocker):
-    mocker.patch.object(LastDownloads, 'get_last_downloads', return_value=[downloaded_item])
+    mocker.patch.object(LastDownloadsDb, 'get_last_downloads', return_value=[downloaded_item])
     # Check conversion to json:
     # - pickle ourselves because we don't use cherrypy.tools here
     # - force sorted keys to be able to compare results (Python 3 sorts by default)
@@ -123,7 +123,7 @@ def test_get_downloaded_number_of_items(mocker):
 
 
 def test_get_downloaded_zero_items(mocker):
-    mocker.patch.object(LastDownloads, 'get_last_downloads', return_value=[downloaded_item])
+    mocker.patch.object(LastDownloadsDb, 'get_last_downloads', return_value=[downloaded_item])
     # Check conversion to json:
     # - pickle ourselves because we don't use cherrypy.tools here
     # - force sorted keys to be able to compare results (Python 3 sorts by default)
@@ -133,6 +133,6 @@ def test_get_downloaded_zero_items(mocker):
 
 
 def test_get_downloaded_items_bad_request(mocker):
-    mocker.patch.object(LastDownloads, 'get_last_downloads')
+    mocker.patch.object(LastDownloadsDb, 'get_last_downloads')
     with pytest.raises(BadRequest):
         ItemsApi().downloaded.get(-1)

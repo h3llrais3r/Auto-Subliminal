@@ -6,7 +6,7 @@ import cherrypy
 
 import autosubliminal
 from autosubliminal import system
-from autosubliminal.db import ImdbIdCache, LastDownloads, TvdbIdCache, WantedItems
+from autosubliminal.db import ImdbIdCacheDb, LastDownloadsDb, TvdbIdCacheDb, WantedItemsDb
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
 from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, \
@@ -51,8 +51,8 @@ class System(object):
 
     @cherrypy.expose(alias='flushCache')
     def flush_cache(self):
-        TvdbIdCache().flush_cache()
-        ImdbIdCache().flush_cache()
+        TvdbIdCacheDb().flush_tvdb_ids()
+        ImdbIdCacheDb().flush_imdb_ids()
         send_websocket_notification('Flushed id cache database.')
         redirect('/home')
 
@@ -61,7 +61,7 @@ class System(object):
     def flush_wanted_items(self):
         if get_wanted_queue_lock():
             # Flush db and wanted queue
-            WantedItems().flush_wanted_items()
+            WantedItemsDb().flush_wanted_items()
             autosubliminal.WANTEDQUEUE = []
             release_wanted_queue_lock()
             send_websocket_notification(
@@ -73,7 +73,7 @@ class System(object):
 
     @cherrypy.expose(alias='flushLastDownloads')
     def flush_last_downloads(self):
-        LastDownloads().flush_last_downloads()
+        LastDownloadsDb().flush_last_downloads()
         send_websocket_notification('Flushed last downloads database.')
         redirect('/home')
 

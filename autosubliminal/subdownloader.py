@@ -7,7 +7,7 @@ import subliminal
 
 import autosubliminal
 from autosubliminal import notifiers
-from autosubliminal.db import LastDownloads
+from autosubliminal.db import LastDownloadsDb
 from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.util.common import display_item_name
 from autosubliminal.util.websocket import send_websocket_notification
@@ -80,7 +80,7 @@ class SubDownloader(object):
 
         # Add download_item to last downloads
         self._download_item.timestamp = time.strftime('%Y-%m-%d %H:%M:%S')
-        LastDownloads().set_last_downloads(self._download_item)
+        LastDownloadsDb().set_last_downloads(self._download_item)
 
         # Notify
         if autosubliminal.NOTIFY:

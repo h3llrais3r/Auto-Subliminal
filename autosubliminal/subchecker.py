@@ -21,7 +21,7 @@ from subliminal.video import Episode, Movie
 import autosubliminal
 from autosubliminal.core.item import DownloadItem
 from autosubliminal.core.scheduler import ScheduledProcess
-from autosubliminal.db import WantedItems
+from autosubliminal.db import WantedItemsDb
 from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.providers import provider_cache
 from autosubliminal.providers.addic7ed import Addic7edSubtitle as Addic7edSubtitleRandomUserAgent
@@ -61,7 +61,7 @@ class SubChecker(ScheduledProcess):
             log.info('Searching subtitles with providers: %s', ', '.join(provider_pool.providers))
 
             # Process all items in wanted queue
-            db = WantedItems()
+            db = WantedItemsDb()
             for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
                 log.info('Searching subtitles for video: %s', wanted_item.videopath)
 
@@ -250,11 +250,11 @@ def force_id_search(wanted_item_index):
     year = wanted_item.year
     if wanted_item.is_episode:
         wanted_item.tvdbid = autosubliminal.SHOWINDEXER.get_tvdb_id(title, year, force_search=True)
-        WantedItems().update_wanted_item(wanted_item)
+        WantedItemsDb().update_wanted_item(wanted_item)
     elif wanted_item.is_movie:
         wanted_item.imdbid, wanted_item.year = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(title, year,
                                                                                                 force_search=True)
-        WantedItems().update_wanted_item(wanted_item)
+        WantedItemsDb().update_wanted_item(wanted_item)
 
     # Release wanted queue lock
     release_wanted_queue_lock()
@@ -298,7 +298,7 @@ def delete_video(wanted_item_index, cleanup):
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
     autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
     log.debug('Removed item from the wanted queue at index %s', int(wanted_item_index))
-    WantedItems().delete_wanted_item(wanted_item)
+    WantedItemsDb().delete_wanted_item(wanted_item)
     log.debug('Removed %s from wanted_items database', wanted_item.videopath)
 
     # Physically delete the video file (and optionally leftovers)
@@ -368,7 +368,7 @@ def skip_show(wanted_item_index, season):
     i = len(to_delete_wanted_queue) - 1
     while i >= 0:
         wanted_item_to_delete = autosubliminal.WANTEDQUEUE.pop(to_delete_wanted_queue[i])
-        WantedItems().delete_wanted_item(wanted_item_to_delete)
+        WantedItemsDb().delete_wanted_item(wanted_item_to_delete)
         i -= 1
     log.info('Skipped show %s season %s', show, season)
 
@@ -388,7 +388,7 @@ def skip_movie(wanted_item_index):
 
     # Remove wanted item from queue and db
     wanted_item = autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
-    WantedItems().delete_wanted_item(wanted_item)
+    WantedItemsDb().delete_wanted_item(wanted_item)
     movie = wanted_item.title
     if wanted_item.year:
         movie += ' (' + wanted_item.year + ')'
@@ -434,14 +434,14 @@ def post_process(wanted_item_index, subtitle_index):
 
             # Update wanted item if there are still wanted languages
             if len(wanted_item.languages) > 0:
-                WantedItems().update_wanted_item(wanted_item)
+                WantedItemsDb().update_wanted_item(wanted_item)
 
             # Remove wanted item if there are no more wanted languages
             else:
                 # Remove wanted item
                 autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
                 log.debug('Removed item from the wanted queue at index %s', int(wanted_item_index))
-                WantedItems().delete_wanted_item(wanted_item)
+                WantedItemsDb().delete_wanted_item(wanted_item)
                 log.debug('Removed %s from wanted_items database', wanted_item.videopath)
 
     else:
@@ -471,7 +471,7 @@ def post_process_no_subtitle(wanted_item_index):
     if processed:
         autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
         log.debug('Removed item from the wanted queue at index %s', int(wanted_item_index))
-        WantedItems().delete_wanted_item(wanted_item)
+        WantedItemsDb().delete_wanted_item(wanted_item)
         log.debug('Removed %s from wanted_items database', wanted_item.videopath)
     else:
         send_websocket_notification('Unable to handle post processing! Please check the log file!', type='error')
