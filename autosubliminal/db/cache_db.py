@@ -9,9 +9,9 @@ class TvdbIdCacheDb(object):
     """Tvdb id cache db."""
 
     def __init__(self):
-        self._query_get = 'select tvdb_id from tvdb_id_cache where show_name = ?'
-        self._query_set = 'insert into tvdb_id_cache values (?,?)'
-        self._query_flush = 'delete from tvdb_id_cache'
+        self._query_get = 'SELECT tvdb_id FROM tvdb_id_cache WHERE show_name = ?'
+        self._query_set = 'INSERT INTO tvdb_id_cache VALUES (?,?)'
+        self._query_flush = 'DELETE FROM tvdb_id_cache'
 
     def get_tvdb_id(self, show_name):
         """Get the tvdb id for a show.
@@ -59,9 +59,9 @@ class ImdbIdCacheDb(object):
     """Imdb id cache db."""
 
     def __init__(self):
-        self._query_get = 'select imdb_id from imdb_id_cache where title = ? and year = ?'
-        self._query_set = 'insert into imdb_id_cache values (?,?,?)'
-        self._query_flush = 'delete from imdb_id_cache'
+        self._query_get = 'SELECT imdb_id FROM imdb_id_cache WHERE title = ? AND year = ?'
+        self._query_set = 'INSERT INTO imdb_id_cache VALUES (?,?,?)'
+        self._query_flush = 'DELETE FROM imdb_id_cache'
 
     def get_imdb_id(self, title, year):
         """Get the imdb id for a movie title and year.

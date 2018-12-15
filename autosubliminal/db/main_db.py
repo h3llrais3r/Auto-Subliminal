@@ -29,14 +29,14 @@ class WantedItemsDb(object):
     """Wanted items db."""
 
     def __init__(self):
-        self._query_get_all = 'select * from wanted_items order by timestamp desc'
-        self._query_get = 'select * from wanted_items where videopath=?'
-        self._query_set = 'insert into wanted_items values (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
-        self._query_update = 'update wanted_items set videopath=?, timestamp=?, languages=?, type=?, title=?, ' \
+        self._query_get_all = 'SELECT * FROM wanted_items ORDER BY timestamp DESC'
+        self._query_get = 'SELECT * FROM wanted_items WHERE videopath=?'
+        self._query_set = 'INSERT INTO wanted_items VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+        self._query_update = 'UPDATE wanted_items SET videopath=?, timestamp=?, languages=?, type=?, title=?, ' \
                              'year=?, season=?, episode=?, quality=?, source=?, codec=?, releasegrp=?, tvdbid=?, ' \
-                             'imdbid=? where id=?'
-        self._query_delete = 'delete from wanted_items where videopath=?'
-        self._query_flush = 'delete from wanted_items'
+                             'imdbid=? WHERE id=?'
+        self._query_DELETE = 'DELETE FROM wanted_items WHERE videopath=?'
+        self._query_flush = 'DELETE FROM wanted_items'
 
     def get_wanted_items(self):
         """Get all of wanted items.
@@ -148,9 +148,9 @@ class LastDownloadsDb(object):
     """Last downloads db."""
 
     def __init__(self):
-        self._query_get = 'select * from last_downloads order by timestamp desc'
-        self._query_set = 'insert into last_downloads values (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?)'
-        self._query_flush = 'delete from last_downloads'
+        self._query_get = 'SELECT * FROM last_downloads ORDER BY timestamp DESC'
+        self._query_set = 'INSERT INTO last_downloads VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?)'
+        self._query_flush = 'DELETE FROM last_downloads'
 
     def get_last_downloads(self):
         """Get all last downloaded items.
