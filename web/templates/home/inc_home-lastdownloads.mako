@@ -6,7 +6,7 @@
 
 <%block name="bodyContent">
 
-    <% lastdownloads = LastDownloads().get_last_downloads() %>
+    <% lastdownloads = LastDownloadsDb().get_last_downloads() %>
 
     <div class="container">
 
