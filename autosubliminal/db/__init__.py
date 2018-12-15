@@ -8,9 +8,17 @@ import time
 import autosubliminal
 from autosubliminal import version
 
-# Import all classes of all submodules here so we don't need to import it from the submodule itself!
+# Import from submodules here so we don't need to import it from the submodule itself!
 from .cache_db import ImdbIdCacheDb, TvdbIdCacheDb
-from .main_db import WantedItemsDb, LastDownloadsDb
+from .main_db import LastDownloadsDb, WantedItemsDb
+
+# Reference all imports from the submodules here (to prevent unused imports errors)!
+__all__ = [
+    'ImdbIdCacheDb',
+    'TvdbIdCacheDb',
+    'LastDownloadsDb',
+    'WantedItemsDb'
+]
 
 
 def create():
