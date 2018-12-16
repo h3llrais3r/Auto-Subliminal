@@ -35,7 +35,10 @@
     "pnotify": "3.2.1",
     "pubsub-js": "1.7.0",
     "strftime": "0.10.0",
-    "tablesorter": "2.31.1"
+    "tablesorter": "2.31.1",
+    "vue": "2.5.21",
+    "vue-lazyload": "1.2.6",
+    "vue-simple-progress": "1.1.0"
   },
   "devDependencies": {
     "del": "3.0.0",
