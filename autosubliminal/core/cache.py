@@ -1,14 +1,25 @@
 # coding=utf-8
 
 import datetime
+import logging
+import os
 
+import requests
 from dogpile.cache.backends.file import AbstractFileLock
 from dogpile.cache.region import make_region
 from dogpile.util.readwrite_lock import ReadWriteMutex
+from PIL import Image
+from six import text_type
 
+import autosubliminal
+
+log = logging.getLogger(__name__)
 
 #: Expiration time for video scan
 SCAN_VIDEO_EXPIRATION_TIME = datetime.timedelta(days=1).total_seconds()
+
+# Thumbnail size
+THUMBNAIL_SIZE = (200, 200)
 
 
 # MutexFileLock: copied from subliminal.cli so we don't depend on subliminal for our cache
@@ -33,4 +44,39 @@ class MutexFileLock(AbstractFileLock):
         return self.mutex.release_write_lock()
 
 
+def cache_artwork(indexer_name, indexer_id, artwork_type, artwork_url):
+    """Store the artwork in the cache."""
+    try:
+        img_data = requests.get(artwork_url).content
+        # Store in cache
+        file_path = get_artwork_cache_path(indexer_name, indexer_id, artwork_type)
+        with open(file_path, 'wb') as handler:
+            handler.write(img_data)
+        # Create thumbnail
+        im = Image.open(file_path)
+        im.thumbnail(THUMBNAIL_SIZE)
+        im.save(get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=True))
+    except Exception as e:
+        log.exception('Unable to store artwork in cache')
+
+
+def is_artwork_cached(indexer_name, indexer_id, artwork_type):
+    """Check if the artwork is cached."""
+    return os.path.exists(get_artwork_cache_path(indexer_name, indexer_id, artwork_type))
+
+
+def get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=False):
+    """Get the path of the artwork in the cache."""
+    # Make sure the cache path exists
+    cache_location = os.path.join(autosubliminal.CACHEDIR, 'artwork', indexer_name, artwork_type)
+    if thumbnail:
+        cache_location = os.path.join(cache_location, 'thumbnail')
+    cache_path = os.path.abspath(cache_location)
+    if not os.path.exists(cache_path):
+        os.makedirs(cache_path)
+    # Return artwork cache path
+    return os.path.abspath(os.path.join(cache_path, text_type(indexer_id) + '.jpg'))
+
+
+# Global cache region
 region = make_region()
