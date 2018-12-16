@@ -69,7 +69,7 @@ class _Item(object):
         self.releasegrp = _releasegrp
 
     def set_attr(self, key, value):
-        """Set the attribute on a wanted item.
+        """Set an attribute.
 
         It takes care of converting the value if needed.
         :param key: the attribute key
@@ -180,7 +180,7 @@ class WantedItem(_Item):
             return False
 
     def set_attr(self, key, value):
-        """Set the attribute on a wanted item.
+        """Set an attribute.
 
         It takes care of converting the value if needed.
         :param key: the attribute key
