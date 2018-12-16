@@ -121,7 +121,7 @@ def test_to_list():
     value_2 = '1,2'
     value_3 = [1, 2, 3]
     value_4 = ['1', '2', '3', '4']
-    assert to_list(None) is None
+    assert to_list(None) == []
     assert to_list(value_1) == ['1']
     assert to_list(value_2, obj_type=int) == [1, 2]
     assert to_list(value_3) == ['1', '2', '3']

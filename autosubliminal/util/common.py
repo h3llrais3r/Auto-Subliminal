@@ -104,12 +104,13 @@ def to_list(value, obj_type=text_type):
     """Convert a value to a list.
 
     Split the value on ',' and return the split values.
+    A None value will be reverted to an empty list.
     Optionally, it can be converted to the specified object type.
     """
     if value and isinstance(value, list):
         return [obj_type(v) for v in value]
 
-    return [obj_type(v) for v in value.split(',')] if value else None
+    return [obj_type(v) for v in value.split(',')] if value else []
 
 
 def to_obj_or_list(value, obj_type=text_type):
