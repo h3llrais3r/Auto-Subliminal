@@ -35,7 +35,7 @@ class WantedItemsDb(object):
         self._query_update = 'UPDATE wanted_items SET videopath=?, timestamp=?, languages=?, type=?, title=?, ' \
                              'year=?, season=?, episode=?, quality=?, source=?, codec=?, releasegrp=?, tvdbid=?, ' \
                              'imdbid=? WHERE id=?'
-        self._query_DELETE = 'DELETE FROM wanted_items WHERE videopath=?'
+        self._query_delete = 'DELETE FROM wanted_items WHERE videopath=?'
         self._query_flush = 'DELETE FROM wanted_items'
 
     def get_wanted_items(self):
