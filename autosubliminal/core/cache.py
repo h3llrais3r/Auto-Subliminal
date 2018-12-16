@@ -56,7 +56,7 @@ def cache_artwork(indexer_name, indexer_id, artwork_type, artwork_url):
         im = Image.open(file_path)
         im.thumbnail(THUMBNAIL_SIZE)
         im.save(get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=True))
-    except Exception as e:
+    except Exception:
         log.exception('Unable to store artwork in cache')
 
 
