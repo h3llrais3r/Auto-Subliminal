@@ -17,5 +17,9 @@ class SettingsApi(RestResource):
 
     def get(self):
         """Get the list of settings for the frontend."""
-        settings = {'timestampFormat': autosubliminal.TIMESTAMPFORMAT}
+        settings = {
+            'tvdbUrl': autosubliminal.DEREFERURL + autosubliminal.TVDBURL,
+            'imdbUrl': autosubliminal.DEREFERURL + autosubliminal.IMDBURL,
+            'timestampFormat': autosubliminal.TIMESTAMPFORMAT
+        }
         return settings
