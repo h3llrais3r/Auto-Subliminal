@@ -166,6 +166,21 @@ def walk_dir(path):
     return wanted_items
 
 
+def check_available_subtitle_languages(dirname, filename, missing_subtitle_languages=None):
+    # Check which subtitle languages are needed
+    languages = []
+    languages.append(autosubliminal.DEFAULTLANGUAGE) if autosubliminal.DEFAULTLANGUAGE else None
+    languages.extend(autosubliminal.ADDITIONALLANGUAGES) if autosubliminal.ADDITIONALLANGUAGES else None
+
+    # Check if we need to check the missing languages or not
+    missing_languages = missing_subtitle_languages
+    if not missing_languages:
+        missing_languages = check_missing_subtitle_languages(dirname, filename)
+
+    # Check which are already available (= not in missing languages)
+    return [language for language in languages if language not in missing_languages]
+
+
 def check_missing_subtitle_languages(dirname, filename):
     log.debug('Checking for missing subtitle(s)')
     missing_subtitles = []
