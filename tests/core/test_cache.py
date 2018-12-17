@@ -55,9 +55,7 @@ def test_cache_artwork(monkeypatch):
         with requests_mock.mock() as m:
             m.get('http://path/to/poster.jpg', content=f.read())
             cache_artwork('tvdb', tvdb_id, 'poster', 'http://path/to/poster.jpg')
-    # Check if it created both poster and thumbnail
     assert os.path.exists(os.path.normpath('%s/artwork/tvdb/poster/%d.jpg' % (cache_path, tvdb_id)))
-    assert os.path.exists(os.path.normpath('%s/artwork/tvdb/poster/thumbnail/%d.jpg' % (cache_path, tvdb_id)))
 
 
 @pytest.mark.usefixtures('clear_cache', 'populate_cache')

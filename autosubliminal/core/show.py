@@ -69,7 +69,7 @@ class ShowDetails(object):
         """
         poster_file_name = None
         if poster and isinstance(poster, SeriesImageQueryResult):
-            poster_file_name = get_artwork_url(poster.file_name)
+            poster_file_name = poster.file_name
         if obj:
             if isinstance(obj, Series):
                 return cls(tvdb_id=obj.id,
@@ -77,14 +77,14 @@ class ShowDetails(object):
                            year=parser.parse(obj.first_aired).year,
                            overview=obj.overview,
                            poster=poster_file_name,
-                           banner=get_artwork_url(obj.banner) if obj.banner else None)
+                           banner=obj.banner)
             elif isinstance(obj, SeriesSearchResult):
                 return cls(tvdb_id=obj.id,
                            title=obj.series_name,
                            year=parser.parse(obj.first_aired).year,
                            overview=obj.overview,
                            poster=poster_file_name,
-                           banner=get_artwork_url(obj.banner) if obj.banner else None)
+                           banner=obj.banner)
         else:
             return None
 
