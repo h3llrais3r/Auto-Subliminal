@@ -45,6 +45,7 @@ def populate_cache(monkeypatch):
         with requests_mock.mock() as m:
             m.get('http://path/to/poster.jpg', content=f.read())
             cache_artwork('tvdb', tvdb_id, 'poster', 'http://path/to/poster.jpg')
+            cache_artwork('tvdb', tvdb_id, 'poster', 'http://path/to/poster.jpg', thumbnail=True)
 
 
 @pytest.mark.usefixtures('clear_cache')
@@ -55,12 +56,15 @@ def test_cache_artwork(monkeypatch):
         with requests_mock.mock() as m:
             m.get('http://path/to/poster.jpg', content=f.read())
             cache_artwork('tvdb', tvdb_id, 'poster', 'http://path/to/poster.jpg')
+            cache_artwork('tvdb', tvdb_id, 'poster', 'http://path/to/poster.jpg', thumbnail=True)
     assert os.path.exists(os.path.normpath('%s/artwork/tvdb/poster/%d.jpg' % (cache_path, tvdb_id)))
+    assert os.path.exists(os.path.normpath('%s/artwork/tvdb/poster/thumbnail/%d.jpg' % (cache_path, tvdb_id)))
 
 
 @pytest.mark.usefixtures('clear_cache', 'populate_cache')
 def test_is_artwork_cached():
     assert is_artwork_cached('tvdb', 289590, 'poster')
+    assert is_artwork_cached('tvdb', 289590, 'poster', thumbnail=True)
 
 
 def test_get_artwork_cache_path(monkeypatch):

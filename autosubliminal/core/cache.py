@@ -8,7 +8,6 @@ import requests
 from dogpile.cache.backends.file import AbstractFileLock
 from dogpile.cache.region import make_region
 from dogpile.util.readwrite_lock import ReadWriteMutex
-from PIL import Image
 from six import text_type
 
 import autosubliminal
@@ -44,20 +43,20 @@ class MutexFileLock(AbstractFileLock):
         return self.mutex.release_write_lock()
 
 
-def cache_artwork(indexer_name, indexer_id, artwork_type, artwork_url):
+def cache_artwork(indexer_name, indexer_id, artwork_type, artwork_url, thumbnail=False):
     """Store the artwork in the cache."""
     try:
         img_data = requests.get(artwork_url).content
-        file_path = get_artwork_cache_path(indexer_name, indexer_id, artwork_type)
+        file_path = get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=thumbnail)
         with open(file_path, 'wb') as handler:
             handler.write(img_data)
     except Exception:
         log.exception('Unable to store artwork in cache')
 
 
-def is_artwork_cached(indexer_name, indexer_id, artwork_type):
+def is_artwork_cached(indexer_name, indexer_id, artwork_type, thumbnail=False):
     """Check if the artwork is cached."""
-    return os.path.exists(get_artwork_cache_path(indexer_name, indexer_id, artwork_type))
+    return os.path.exists(get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=thumbnail))
 
 
 def get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=False):
