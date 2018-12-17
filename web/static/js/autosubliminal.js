@@ -9,6 +9,10 @@
 // Base url
 var baseUrl = window.location.protocol + '//' + window.location.host + webroot;
 
+// Indexer urls
+var TVDB_URL = 'http://thetvdb.com/?tab=series&id=';
+var IMDB_URL = 'http://www.imdb.com/title/';
+
 // Default timestamp format
 var TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S';
 var DATE_FORMAT = TIMESTAMP_FORMAT.split(' ')[0];
@@ -48,23 +52,27 @@ $.postJson = function (url, data, success, dataType) {
 var SETTINGS_LOADED = 'SETTINGS_LOADED';
 
 // Load global variables through settings api
-$.get(getUrl('/api/settings'), function (data) {
-    if (data) {
-        TIMESTAMP_FORMAT = data['timestampFormat'];
-        DATE_FORMAT = TIMESTAMP_FORMAT.split(' ')[0];
-        TIME_FORMAT = TIMESTAMP_FORMAT.split(' ')[1];
-        var datePattern = DATE_FORMAT.match(/[Ymd]+/g).join('');
-        if ('Ymd' == datePattern) {
-            TABLESORTER_DATE_FORMAT = 'yyyymmdd';
-        } else if ('mdY' == datePattern) {
-            TABLESORTER_DATE_FORMAT = 'mmddyyyy';
-        } else if ('dmY' == datePattern) {
-            TABLESORTER_DATE_FORMAT = 'ddmmyyyy';
+var loadSettings = function () {
+    $.get(getUrl('/api/settings'), function (data) {
+        if (data) {
+            TVDB_URL = data['tvdbUrl'];
+            IMDB_URL = data['imdbUrl'];
+            TIMESTAMP_FORMAT = data['timestampFormat'];
+            DATE_FORMAT = TIMESTAMP_FORMAT.split(' ')[0];
+            TIME_FORMAT = TIMESTAMP_FORMAT.split(' ')[1];
+            var datePattern = DATE_FORMAT.match(/[Ymd]+/g).join('');
+            if ('Ymd' == datePattern) {
+                TABLESORTER_DATE_FORMAT = 'yyyymmdd';
+            } else if ('mdY' == datePattern) {
+                TABLESORTER_DATE_FORMAT = 'mmddyyyy';
+            } else if ('dmY' == datePattern) {
+                TABLESORTER_DATE_FORMAT = 'ddmmyyyy';
+            }
+            // Publish the settings loaded event
+            PubSub.publish(SETTINGS_LOADED, null);
         }
-        // Publish the settings loaded event
-        PubSub.publish(SETTINGS_LOADED, null);
-    }
-});
+    });
+};
 
 // Function to trigger the initialization once the settings are loaded
 // This should ONLY be implemented ONCE on each page to prevent double calls
@@ -77,6 +85,9 @@ $.get(getUrl('/api/settings'), function (data) {
 var settingsLoaded = function (msg, data) {
     init();
 };
+
+// Load the settings
+loadSettings();
 
 /* ======
  * Navbar
