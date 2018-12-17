@@ -1,4 +1,5 @@
 # coding=utf-8
+from autosubliminal.server.api.shows import ShowsApi
 
 from autosubliminal.server.rest import RestResource
 from autosubliminal.server.api.items import ItemsApi
@@ -22,6 +23,7 @@ class Api(RestResource):
         self.items = ItemsApi()
         self.schedulers = SchedulersApi()
         self.settings = SettingsApi()
+        self.shows = ShowsApi()
 
     def get(self, *args, **kwargs):
         return {'api': 'Welcome to the Auto-Subliminal REST api'}

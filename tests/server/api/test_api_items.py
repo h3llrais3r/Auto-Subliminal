@@ -2,12 +2,12 @@
 
 import pytest
 
-import jsonpickle
-
 import autosubliminal
 from autosubliminal.db import LastDownloadsDb
 from autosubliminal.server.api.items import ItemsApi
 from autosubliminal.server.rest import BadRequest
+
+from tests.server.api.test_api import pickle_api_result
 
 wanted_item = {
     'codec': u'h264',
@@ -61,23 +61,13 @@ downloaded_item_list_json = '[' + downloaded_item_json + ']'
 def test_get_wanted_all_items():
     autosubliminal.WANTEDQUEUE = []
     autosubliminal.WANTEDQUEUE.append(wanted_item)
-    # Check conversion to json:
-    # - pickle ourselves because we don't use cherrypy.tools here
-    # - force sorted keys to be able to compare results (Python 3 sorts by default)
-    jsonpickle.set_encoder_options('simplejson', sort_keys=True)
-    json_out = jsonpickle.encode(ItemsApi().wanted.get())
-    assert wanted_item_list_json == json_out
+    assert wanted_item_list_json == pickle_api_result(ItemsApi().wanted.get())
 
 
 def test_get_wanted_single_item():
     autosubliminal.WANTEDQUEUE = []
     autosubliminal.WANTEDQUEUE.append(wanted_item)
-    # Check conversion to json:
-    # - pickle ourselves because we don't use cherrypy.tools here
-    # - force sorted keys to be able to compare results (Python 3 sorts by default)
-    jsonpickle.set_encoder_options('simplejson', sort_keys=True)
-    json_out = jsonpickle.encode(ItemsApi().wanted.get(0))
-    assert wanted_item_json == json_out
+    assert wanted_item_json == pickle_api_result(ItemsApi().wanted.get(0))
 
 
 def test_get_wanted_item_bad_request():
@@ -90,10 +80,8 @@ def test_delete_wanted_item():
     autosubliminal.WANTEDQUEUE = []
     autosubliminal.WANTEDQUEUE.append(wanted_item)
     # Check conversion to json (need to pickle ourselves because we don't use cherrypy.tools here)
-    json_out = jsonpickle.encode(ItemsApi().wanted.delete(0))
-    assert wanted_item_json == json_out
-    json_out = jsonpickle.encode(ItemsApi().wanted.get())
-    assert '[]' == json_out
+    assert wanted_item_json == pickle_api_result(ItemsApi().wanted.delete(0))
+    assert '[]' == pickle_api_result(ItemsApi().wanted.get())
 
 
 def test_delete_wanted_item_bad_request():
@@ -104,32 +92,17 @@ def test_delete_wanted_item_bad_request():
 
 def test_get_downloaded_all_items(mocker):
     mocker.patch.object(LastDownloadsDb, 'get_last_downloads', return_value=[downloaded_item])
-    # Check conversion to json:
-    # - pickle ourselves because we don't use cherrypy.tools here
-    # - force sorted keys to be able to compare results (Python 3 sorts by default)
-    jsonpickle.set_encoder_options('simplejson', sort_keys=True)
-    json_out = jsonpickle.encode(ItemsApi().downloaded.get())
-    assert downloaded_item_list_json == json_out
+    assert downloaded_item_list_json == pickle_api_result(ItemsApi().downloaded.get())
 
 
 def test_get_downloaded_number_of_items(mocker):
     mocker.patch.object(LastDownloadsDb, 'get_last_downloads', return_value=[downloaded_item])
-    # Check conversion to json:
-    # - pickle ourselves because we don't use cherrypy.tools here
-    # - force sorted keys to be able to compare results (Python 3 sorts by default)
-    jsonpickle.set_encoder_options('simplejson', sort_keys=True)
-    json_out = jsonpickle.encode(ItemsApi().downloaded.get(1))
-    assert downloaded_item_list_json == json_out
+    assert downloaded_item_list_json == pickle_api_result(ItemsApi().downloaded.get(1))
 
 
 def test_get_downloaded_zero_items(mocker):
     mocker.patch.object(LastDownloadsDb, 'get_last_downloads', return_value=[downloaded_item])
-    # Check conversion to json:
-    # - pickle ourselves because we don't use cherrypy.tools here
-    # - force sorted keys to be able to compare results (Python 3 sorts by default)
-    jsonpickle.set_encoder_options('simplejson', sort_keys=True)
-    json_out = jsonpickle.encode(ItemsApi().downloaded.get(0))
-    assert '[]' == json_out
+    assert '[]' == pickle_api_result(ItemsApi().downloaded.get(0))
 
 
 def test_get_downloaded_items_bad_request(mocker):
