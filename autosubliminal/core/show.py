@@ -4,7 +4,6 @@ import logging
 
 from dateutil import parser
 from tvdb_api_v2.models.episode import Episode
-from tvdb_api_v2.utils.artwork import get_artwork_url
 from tvdb_api_v2.models.series import Series
 from tvdb_api_v2.models.series_image_query_result import SeriesImageQueryResult
 from tvdb_api_v2.models.series_search_result import SeriesSearchResult
