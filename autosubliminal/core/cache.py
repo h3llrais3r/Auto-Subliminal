@@ -17,9 +17,6 @@ log = logging.getLogger(__name__)
 #: Expiration time for video scan
 SCAN_VIDEO_EXPIRATION_TIME = datetime.timedelta(days=1).total_seconds()
 
-# Thumbnail size
-THUMBNAIL_SIZE = (200, 200)
-
 
 # MutexFileLock: copied from subliminal.cli so we don't depend on subliminal for our cache
 class MutexFileLock(AbstractFileLock):
