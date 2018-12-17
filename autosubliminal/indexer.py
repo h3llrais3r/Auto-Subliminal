@@ -330,7 +330,7 @@ class MovieIndexer(Indexer):
         log.debug('Getting movie details for imdb id %s', imdb_id)
         try:
             api_obj = self._get_by_id(imdb_id)
-        except Exception as e:
+        except Exception:
             log.exception('Error while getting movie details for imdb id %s', imdb_id)
         # Convert to movie details object if found
         return MovieDetails.from_indexer(api_obj) if api_obj else None
