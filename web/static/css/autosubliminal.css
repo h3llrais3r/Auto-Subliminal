@@ -25,6 +25,26 @@ nav {
     min-width: 380px; /* Make sure the navbar does not become higher when screensize is too low */
 }
 
+/* Align navbar brand on all screen sizes */
+.navbar .navbar-brand {
+    margin-left: 0px !important;
+}
+
+@media (max-width: 767px) {
+    .navbar .navbar-brand {
+        margin-left: 15px !important;
+    }
+}
+
+/* Resize brand to 40px (instead of 50px) on smaller screens */
+@media (max-width: 991px) {
+    .navbar-brand img {
+        height: 40px;
+        position: absolute;
+        top: 5px;
+    }
+}
+
 .navbar-footer-small {
     min-height: 0;
     padding: 5px 0px;
@@ -218,6 +238,7 @@ table.table thead tr th, table tfoot tr th {
 
 table.table tbody tr td {
     border: 1px dotted #eeeeee;
+    vertical-align: middle;
 }
 
 /* Inactive rows - grey out and set background color */
