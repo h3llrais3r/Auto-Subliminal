@@ -16,6 +16,7 @@ class Config(object):
     def __init__(self):
         # Create config sub tree (name of attribute defines name of path: f.e. general -> /config/general)
         self.general = self._ConfigGeneral()
+        self.library = self._ConfigLibrary()
         self.logging = self._ConfigLogging()
         self.webserver = self._ConfigWebServer()
         self.subliminal = self._ConfigSubliminal()
@@ -76,6 +77,26 @@ class Config(object):
             autosubliminal.MINVIDEOFILESIZE = int(minvideofilesize)
             autosubliminal.MAXDBRESULTS = int(maxdbresults)
             autosubliminal.TIMESTAMPFORMAT = timestampformat
+
+            # Now save to the configfile and restart if needed
+            return Config.save_and_restart_if_needed(self.section)
+
+    class _ConfigLibrary(object):
+        def __init__(self):
+            self.template_file = '/config/config-library.mako'
+            self.section = 'library'
+
+        @cherrypy.expose
+        def index(self):
+            return PageTemplate(self.template_file).render()
+
+        @cherrypy.expose(alias='save')
+        @cherrypy.tools.json_out()
+        def save(self, librarymode, librarypaths, scanlibrary):
+            # Set library variables
+            autosubliminal.LIBRARYMODE = get_boolean(librarymode)
+            autosubliminal.LIBRARYPATHS = librarypaths.split('\r\n')
+            autosubliminal.SCANLIBRARYINTERVAL = int(scanlibrary)
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.section)

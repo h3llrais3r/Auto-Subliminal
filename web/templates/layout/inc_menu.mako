@@ -26,6 +26,22 @@
                         <i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home
                     </a>
                 </li>
+                <!-- Library (only shown when enabled in config) -->
+                % if autosubliminal.LIBRARYMODE:
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" data-close-others="true" href="${autosubliminal.WEBROOT}/library/">
+                            <i class="fa fa-list" aria-hidden="true"></i>&nbsp;Library&nbsp;<b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-inverse">
+                            <li>
+                                <a href="${autosubliminal.WEBROOT}/library/shows"><i class="fa fa-television" aria-hidden="true"></i>&nbsp;Shows</a>
+                            </li>
+                            <li>
+                                <a href="${autosubliminal.WEBROOT}/library/movies"><i class="fa fa-video-camera" aria-hidden="true"></i>&nbsp;Movies</a>
+                            </li>
+                        </ul>
+                    </li>
+                % endif
                 <!-- Config -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" data-close-others="true" href="${autosubliminal.WEBROOT}/config/">
@@ -34,6 +50,9 @@
                     <ul class="dropdown-menu dropdown-menu-inverse">
                         <li>
                             <a href="${autosubliminal.WEBROOT}/config/general"><i class="fa fa-cog" aria-hidden="true"></i>&nbsp;General</a>
+                        </li>
+                        <li>
+                            <a href="${autosubliminal.WEBROOT}/config/library"><i class="fa fa-cog" aria-hidden="true"></i>&nbsp;Library</a>
                         </li>
                         <li>
                             <a href="${autosubliminal.WEBROOT}/config/logging"><i class="fa fa-cog" aria-hidden="true"></i>&nbsp;Logging</a>
