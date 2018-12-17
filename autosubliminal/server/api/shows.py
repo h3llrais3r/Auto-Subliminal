@@ -6,7 +6,6 @@ import autosubliminal
 from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb
 
 from autosubliminal.server.rest import RestResource
-import cherrypy
 
 log = logging.getLogger(__name__)
 
