@@ -6,12 +6,12 @@ import os
 import re
 from functools import wraps
 from time import time
-from urlparse import urlparse, urlunparse
 
 from imdbpie import Imdb
 from imdbpie.facade import ImdbFacade
 from imdbpie.objects import TitleSearchResult
 from six import add_metaclass, text_type
+from six.moves.urllib.parse import urlparse, urlunparse
 from tvdb_api_v2.client import TvdbClient
 from unidecode import unidecode
 
