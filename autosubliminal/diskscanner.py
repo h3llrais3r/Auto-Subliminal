@@ -6,7 +6,6 @@ import re
 
 import langdetect
 import pysrt
-import subliminal
 from babelfish import Error as BabelfishError, Language
 from enzyme.mkv import MKV
 
@@ -14,7 +13,7 @@ import autosubliminal
 from autosubliminal import fileprocessor
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import WantedItemsDb
-from autosubliminal.util.filesystem import one_path_exists
+from autosubliminal.util.filesystem import is_skipped_dir, is_valid_video_file, one_path_exists
 from autosubliminal.util.queue import release_wanted_queue_lock_on_exception
 from autosubliminal.util.skip import skip_movie, skip_show
 from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
@@ -52,7 +51,7 @@ class DiskScanner(ScheduledProcess):
         old_wanted_items = self.wanted_db.get_wanted_items()
         for path in paths:
             try:
-                new_wanted_items.extend(self.scan_path(path))
+                new_wanted_items.extend(self._scan_path(path))
             except Exception:
                 log.exception('Could not scan the video path (%s), skipping it', path)
 
@@ -75,7 +74,7 @@ class DiskScanner(ScheduledProcess):
 
         log.info('Finished round of local disk checking')
 
-    def scan_path(self, path):
+    def _scan_path(self, path):
         log.info('Scanning video path: %s', path)
         wanted_items = []
 
@@ -83,78 +82,71 @@ class DiskScanner(ScheduledProcess):
         for dirname, dirnames, filenames in os.walk(os.path.join(path)):
             log.debug('Directory: %s', dirname)
 
-            # Check folders to be skipped
-            if autosubliminal.SKIPHIDDENDIRS and os.path.split(dirname)[1].startswith(u'.'):
-                continue
-            if re.search('_unpack_', dirname, flags=re.IGNORECASE):
-                log.debug('Found a unpack directory, skipping')
-                continue
-            if re.search('_failed_', dirname, flags=re.IGNORECASE):
-                log.debug('Found a failed directory, skipping')
+            # Ignore skipped dirs
+            if is_skipped_dir(dirname):
                 continue
 
             # Check files
             for filename in filenames:
-                root, ext = os.path.splitext(filename)
 
-                # Check for video files
-                if ext and ext in subliminal.video.VIDEO_EXTENSIONS:
-                    # Skip 'sample' videos
-                    if re.search('sample', filename, flags=re.IGNORECASE):
-                        log.debug('Skipping sample video: %s', filename)
-                        continue
-
+                # Only scan valid video files
+                if is_valid_video_file(filename):
                     log.debug('Video file found: %s', filename)
-
-                    # Check if video file has already been processed before, so we don't need to process it again
-                    wanted_item = self.wanted_db.get_wanted_item(os.path.join(dirname, filename))
-                    if wanted_item:
-                        log.debug('Video found in wanted_items database, no need to scan it again')
-                    else:
-                        log.debug('Video not found in wanted_items database, start scanning it')
-
-                        # Check for missing subtitles
-                        languages = check_missing_subtitle_languages(dirname, filename)
-
-                        # Process the video file if there are missing subtitles
-                        if len(languages) > 0:
-                            wanted_item = fileprocessor.process_file(dirname, filename)
-                            if wanted_item:
-                                # Add wanted languages and store in wanted_items database
-                                wanted_item.languages = languages
-                                self.wanted_db.set_wanted_item(wanted_item)
-                            else:
-                                continue
-                        else:
-                            log.debug('Video has no missing subtitles')
-                            continue
-
-                    # Check if we need to skip it and delete it from the database
-                    log.debug('Checking if the video needs to be skipped')
-                    if wanted_item:
-                        # Skip episode check
-                        if wanted_item.is_episode:
-                            title = wanted_item.title
-                            season = wanted_item.season
-                            if skip_show(title, season):
-                                self.wanted_db.delete_wanted_item(wanted_item)
-                                log.info('Skipping %s - Season %s', title, season)
-                                continue
-
-                        # Skip movie check
-                        if wanted_item.is_movie:
-                            title = wanted_item.title
-                            year = wanted_item.year
-                            if skip_movie(title, year):
-                                self.wanted_db.delete_wanted_item(wanted_item)
-                                log.info('Skipping %s (%s)', title, year)
-                                continue
+                    wanted_item = self._scan_file(dirname, filename)
 
                     # Add it to list of wanted items
-                    log.debug('Video added to list of wanted items')
-                    wanted_items.append(wanted_item)
+                    if wanted_item:
+                        log.debug('Video added to list of wanted items')
+                        wanted_items.append(wanted_item)
 
         return wanted_items
+
+    def _scan_file(self, dirname, filename):
+        # Check if video file has already been processed before, so we don't need to process it again
+        wanted_item = self.wanted_db.get_wanted_item(os.path.join(dirname, filename))
+        if wanted_item:
+            log.debug('Video found in wanted_items database, no need to scan it again')
+        else:
+            log.debug('Video not found in wanted_items database, start scanning it')
+
+            # Check for missing subtitles
+            languages = check_missing_subtitle_languages(dirname, filename)
+
+            # Process the video file if there are missing subtitles
+            if len(languages) > 0:
+                wanted_item = fileprocessor.process_file(dirname, filename)
+                if wanted_item:
+                    # Add wanted languages and store in wanted_items database
+                    wanted_item.languages = languages
+                    self.wanted_db.set_wanted_item(wanted_item)
+                else:
+                    return None
+            else:
+                log.debug('Video has no missing subtitles')
+                return None
+
+        # Check if we need to skip it and delete it from the database
+        log.debug('Checking if the video needs to be skipped')
+        if wanted_item:
+            # Skip episode check
+            if wanted_item.is_episode:
+                title = wanted_item.title
+                season = wanted_item.season
+                if skip_show(title, season):
+                    self.wanted_db.delete_wanted_item(wanted_item)
+                    log.info('Skipping %s - Season %s', title, season)
+                    return None
+
+            # Skip movie check
+            if wanted_item.is_movie:
+                title = wanted_item.title
+                year = wanted_item.year
+                if skip_movie(title, year):
+                    self.wanted_db.delete_wanted_item(wanted_item)
+                    log.info('Skipping %s (%s)', title, year)
+                    return None
+
+        return wanted_item
 
 
 def check_available_subtitle_languages(dirname, filename, missing_subtitle_languages=None):
