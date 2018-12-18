@@ -2,9 +2,11 @@
 
 import abc
 import logging
+import os
 import re
 from functools import wraps
 from time import time
+from urlparse import urlparse, urlunparse
 
 from imdbpie import Imdb
 from imdbpie.facade import ImdbFacade
@@ -106,6 +108,7 @@ class ShowIndexer(Indexer):
         log.info('Searching tvdb api for %s', name)
         # Make sure to convert it to native string before searching (to prevent unicode encoding error)
         search_results = self._client.search_series_by_name(s2n(name), language=language)
+
         # Only return 1 result or None
         for search_result in search_results.data:
             if sanitize(search_result.series_name) == sanitize(name):
@@ -117,6 +120,7 @@ class ShowIndexer(Indexer):
                         return search_result
             else:
                 continue
+
         return None
 
     @authenticate
@@ -132,6 +136,7 @@ class ShowIndexer(Indexer):
         """
         log.info('Querying tvdb api for id %s', id)
         series_data = self._client.get_series(id, language=language)
+
         return series_data.data if series_data.data else None
 
     def get_tvdb_id(self, title, year=None, language='en', force_search=False, store_id=True):
@@ -140,6 +145,7 @@ class ShowIndexer(Indexer):
         if year:
             name += ' (' + text_type(year) + ')'
         log.debug('Getting tvdb id for %s', name)
+
         db = TvdbIdCacheDb()
         # If not force_search, first check shownamemapping and tvdb id cache
         if not force_search:
@@ -156,6 +162,7 @@ class ShowIndexer(Indexer):
                     log.warning('Tvdb id not found in cache for %s', name)
                     return None
                 return int(tvdb_id)
+
         # Search on tvdb (throws exception when not found)
         try:
             api_obj = self._search(title, year=year, language=language)
@@ -165,6 +172,7 @@ class ShowIndexer(Indexer):
             # Log error on other exceptions than 404
             if not hasattr(e, 'status') or e.status != 404:
                 log.exception('Error while getting tvdb id for %s', name)
+
         if tvdb_id:
             log.debug('Tvdb id from api: %s', tvdb_id)
             if store_id:
@@ -177,10 +185,12 @@ class ShowIndexer(Indexer):
                 db.set_tvdb_id(-1, name)
             return None
 
+    @authenticate
     def get_show_details(self, tvdb_id, language='en'):
+        log.debug('Getting show details for tvdb id %s', tvdb_id)
+
         api_obj = None
         api_poster_obj = None
-        log.debug('Getting show details for tvdb id %s', tvdb_id)
         try:
             api_obj = self._get_by_id(tvdb_id, language=language)
             api_poster_obj = self._client.get_series_highest_rated_image(tvdb_id, language=language)
@@ -188,12 +198,16 @@ class ShowIndexer(Indexer):
             # Log error on other exceptions than 404
             if not hasattr(e, 'status') or e.status != 404:
                 log.exception('Error while getting show details for tvdb id %s', tvdb_id)
+
         # Convert to show object if found
         return ShowDetails.from_indexer(api_obj, api_poster_obj) if api_obj else None
 
+    @authenticate
     def get_show_episodes(self, tvdb_id):
-        api_list = []
+        log.debug('Getting show episode details for tvdb id %s', tvdb_id)
+
         page = 1
+        api_list = []
         episodes = self._client.get_series_episodes(tvdb_id, page=page)
         if episodes and episodes.data:
             api_list.extend(episodes.data)
@@ -203,6 +217,7 @@ class ShowIndexer(Indexer):
                 episodes = self._client.get_series_episodes(tvdb_id, page=page)
                 if episodes and episodes.data:
                     api_list.extend(episodes.data)
+
         # Convert to list of show details objects if found
         return [ShowEpisodeDetails.from_indexer(x) for x in api_list] if api_list else None
 
@@ -211,6 +226,9 @@ class MovieIndexer(Indexer):
     """
     Indexer for movies, which uses the IMDB api.
     """
+
+    def __init__(self):
+        pass
 
     @property
     def name(self):
@@ -231,6 +249,7 @@ class MovieIndexer(Indexer):
             name += ' (' + text_type(year) + ')'
         log.info('Searching imdb api for %s', name)
         search_results = ImdbFacade().search_for_title(title)
+
         # Find the first movie that matches the title (and year if present)
         for search_result in search_results:  # type: TitleSearchResult
             if self.sanitize_imdb_title(search_result.title) == self.sanitize_imdb_title(title):
@@ -243,6 +262,7 @@ class MovieIndexer(Indexer):
                 # If no year is present, take the first match
                 else:
                     return search_result
+
         # If no match is found, try to search for alternative titles of the first (most relevant) result
         if len(search_results) > 0:
             best_match = search_results[0]  # type: TitleSearchResult
@@ -261,6 +281,7 @@ class MovieIndexer(Indexer):
                         else:
                             return TitleSearchResult(imdb_id=best_match.imdb_id, title=best_match.title,
                                                      type=best_match.type, year=best_match.year)
+
         return None
 
     def _get_by_id(self, id):
@@ -272,18 +293,9 @@ class MovieIndexer(Indexer):
         :rtype : imdbpie.objects.Title or None
         """
         log.info('Querying imdb api for id %s', id)
-        api = ImdbFacade()
-        movie = api.get_title(id)
-        return movie
+        movie = ImdbFacade().get_title(id)
 
-    @staticmethod
-    def sanitize_imdb_title(string_value, ignore_characters=None):
-        # Remove (I), (II), ... from imdb titles (this is added when there are multiple titles with the same name)
-        # Example response from imdb: see http://www.imdb.com/find?q=Aftermath&s=tt&mx=20
-        string_value = re.sub('^(.+)(\(\w+\))$', r'\1', string_value)
-        # Sanitize on ascii level (replaces à by a)
-        string_value = unidecode(string_value)
-        return sanitize(string_value, ignore_characters)
+        return movie
 
     def get_imdb_id_and_year(self, title, year=None, force_search=False, store_id=True):
         imdb_id = None
@@ -291,6 +303,7 @@ class MovieIndexer(Indexer):
         if year:
             name += ' (' + text_type(year) + ')'
         log.debug('Getting imdb info for %s', name)
+
         db = ImdbIdCacheDb()
         # If not force_search, first check movienamemapping and tvdb id cache
         if not force_search:
@@ -306,6 +319,7 @@ class MovieIndexer(Indexer):
                     log.warning('Imdb id not found in cache for %s', name)
                     return None, year
                 return imdb_id, year
+
         # Search on imdb
         try:
             api_obj = self._search(title, year)
@@ -313,6 +327,7 @@ class MovieIndexer(Indexer):
                 imdb_id, year = api_obj.imdb_id, api_obj.year
         except Exception:
             log.exception('Error while getting imdb id for %s', name)
+
         if imdb_id:
             log.debug('Imdb id from api: %s', imdb_id)
             if store_id:
@@ -326,11 +341,41 @@ class MovieIndexer(Indexer):
             return None, year
 
     def get_movie_details(self, imdb_id):
-        api_obj = None
         log.debug('Getting movie details for imdb id %s', imdb_id)
+
+        api_obj = None
         try:
             api_obj = self._get_by_id(imdb_id)
         except Exception:
             log.exception('Error while getting movie details for imdb id %s', imdb_id)
+
         # Convert to movie details object if found
         return MovieDetails.from_indexer(api_obj) if api_obj else None
+
+    @staticmethod
+    def sanitize_imdb_title(string_value, ignore_characters=None):
+        # Remove (I), (II), ... from imdb titles (this is added when there are multiple titles with the same name)
+        # Example response from imdb: see http://www.imdb.com/find?q=Aftermath&s=tt&mx=20
+        string_value = re.sub('^(.+)(\(\w+\))$', r'\1', string_value)
+
+        # Sanitize on ascii level (replaces à by a)
+        string_value = unidecode(string_value)
+
+        # Return sanitized title
+        return sanitize(string_value, ignore_characters)
+
+    @staticmethod
+    def get_artwork_thumbnail_url(artwork_url):
+        if artwork_url:
+            # Parse url
+            parsed_parts = urlparse(artwork_url)
+
+            # Reconstruct url but now with thumbnail suffix included
+            if parsed_parts.path:
+                name, ext = os.path.splitext(parsed_parts.path)
+                if not name.endswith('_'):
+                    name += '_'
+                thumbnail_parts = parsed_parts._replace(path=name + 'SX300' + ext)
+                return urlunparse(thumbnail_parts)
+
+        return None

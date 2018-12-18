@@ -142,7 +142,7 @@ class ShowEpisodeDetails(object):
         if obj:
             if isinstance(obj, Episode):
                 return cls(tvdb_id=obj.id,
-                           show_tvdb_id=obj.series_id,
+                           show_tvdb_id=obj.series_id,  # FIXME: the series_id is returned as str instead of int?!
                            title=obj.episode_name,
                            season=obj.aired_season,
                            episode=obj.aired_episode_number)

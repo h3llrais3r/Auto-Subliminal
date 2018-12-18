@@ -6,7 +6,7 @@ from tvdb_api_v2.models.series_search_result import SeriesSearchResult
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.core.movie import MovieDetails
-from autosubliminal.core.show import ShowDetails
+from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails
 from autosubliminal.indexer import MovieIndexer, ShowIndexer
 
 autosubliminal.USERAGENT = 'Auto-Subliminal/' + version.RELEASE_VERSION
@@ -78,6 +78,21 @@ def test_get_show_details():
     assert show_details.poster is not None
 
 
+def test_get_show_episodes():
+    indexer = ShowIndexer()
+    episodes = indexer.get_show_episodes(80379)
+    assert episodes is not None
+    assert isinstance(episodes, list)
+    assert len(episodes) > 0
+    episode = episodes[0]
+    assert isinstance(episode, ShowEpisodeDetails)
+    assert episode.tvdb_id == 332484
+    assert episode.show_tvdb_id == '80379'
+    assert episode.title == 'Pilot'
+    assert episode.season == 1
+    assert episode.episode == 1
+
+
 def test_get_imdb_id():
     indexer = MovieIndexer()
     # By title
@@ -145,3 +160,11 @@ def test_sanitize_imdb_title():
     assert MovieIndexer.sanitize_imdb_title(u'Aftermath (I)') == 'aftermath'
     assert MovieIndexer.sanitize_imdb_title(u'Aftermath') == 'aftermath'
     assert MovieIndexer.sanitize_imdb_title(u'(Aftermath)') == 'aftermath'
+
+
+def test_get_artwork_thumbnail_url():
+    url = 'https://m.media-amazon.com/images/M/MV5BMjI1MTcwODk0MV5BMl5BanBnXkFtZTgwMTgwMDM5NTE@._V1.jpg'
+    url_ = 'https://m.media-amazon.com/images/M/MV5BMjI1MTcwODk0MV5BMl5BanBnXkFtZTgwMTgwMDM5NTE@._V1_.jpg'
+    url_thumb = 'https://m.media-amazon.com/images/M/MV5BMjI1MTcwODk0MV5BMl5BanBnXkFtZTgwMTgwMDM5NTE@._V1_SX300.jpg'
+    assert MovieIndexer.get_artwork_thumbnail_url(url) == url_thumb
+    assert MovieIndexer.get_artwork_thumbnail_url(url_) == url_thumb
