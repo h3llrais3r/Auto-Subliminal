@@ -52,7 +52,7 @@ class DiskScanner(ScheduledProcess):
         old_wanted_items = self.wanted_db.get_wanted_items()
         for path in paths:
             try:
-                new_wanted_items.extend(self.walk_dir(path))
+                new_wanted_items.extend(self.scan_path(path))
             except Exception:
                 log.exception('Could not scan the video path (%s), skipping it', path)
 
@@ -75,7 +75,7 @@ class DiskScanner(ScheduledProcess):
 
         log.info('Finished round of local disk checking')
 
-    def walk_dir(self, path):
+    def scan_path(self, path):
         log.info('Scanning video path: %s', path)
         wanted_items = []
 
