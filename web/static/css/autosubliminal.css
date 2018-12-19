@@ -479,7 +479,7 @@ table.tablesorter .filtered {
     overflow-x: scroll;
 }
 
-.status-scheduler-running {
+.scheduler-running {
     background-color: #dff0d8 !important; /* Bootstrap bg-success background color, but with !important */
 }
 

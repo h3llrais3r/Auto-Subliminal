@@ -98,6 +98,12 @@ class Config(object):
             autosubliminal.LIBRARYPATHS = librarypaths.split('\r\n')
             autosubliminal.SCANLIBRARYINTERVAL = int(scanlibrary)
 
+            # Activate/deactivate scheduler
+            if autosubliminal.LIBRARYMODE:
+                autosubliminal.SCANLIBRARY.activate()
+            else:
+                autosubliminal.SCANLIBRARY.deactivate()
+
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.section)
 
