@@ -50,3 +50,24 @@ def is_valid_video_file(filename):
             log.debug('Skipping sample video file: %s', filename)
             valid = False
     return valid
+
+
+def get_linked_files(file_path):
+    dirname, filename = os.path.split(file_path)
+    root, _ = os.path.splitext(filename)
+
+    files = []
+    for f in os.listdir(dirname):
+        if f.startswith(root):
+            _, ext = os.path.splitext(f)
+            files.append({'path': os.path.join(dirname, f), 'type': _get_file_type(ext)})
+
+    return files
+
+
+def _get_file_type(ext):
+    file_type = 'movie'
+    if ext == u'.srt':
+        file_type = 'subtitle'
+
+    return file_type
