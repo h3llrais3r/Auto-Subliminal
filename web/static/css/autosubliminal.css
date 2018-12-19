@@ -542,3 +542,16 @@ table.tablesorter .filtered {
     text-decoration: underline;
 }
 
+/*******************
+ * VUE APP STYLING *
+ *******************/
+
+/* Hide elements when being cloaked until it's loaded */
+[v-cloak] {
+    display: none;
+}
+
+/* Make sure the vue progress bar is show when used inside other components */
+.vue-simple-progress {
+    z-index: 0 !important;
+}

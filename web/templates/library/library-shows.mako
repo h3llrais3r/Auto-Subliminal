@@ -6,13 +6,99 @@
 
 <%block name="bodyContent">
 
-    <div class="container">
+    <!-- Vue app placeholder -->
+    <div id="app" class="container">
 
         <div class="panel panel-default">
 
             <div class="panel-heading">
                 <span class="h3 weighted">Library shows</span>
             </div>
+
+            <!-- Vue template for library shows -->
+            <library-shows inline-template>
+
+                <div class="panel-body">
+
+                    <div class="form-inline">
+                        <div class="row">
+                            <div class="col-xs-12 table-filter right">
+                                <div class="input-group">
+                                    <span class="input-group-addon table-filter-label">Search</span>
+                                    <input class="shows-filter form-control input-sm" type="search" data-column="all">
+                                    <span class="input-group-addon shows-filter-reset">
+                                        <i class="fa fa-times" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <table id="shows" class="table table-condensed table-striped table-hover">
+
+                        <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Year</th>
+                            <th>Indexer</th>
+                            <th>Path</th>
+                            <th>Wanted subtitles</th>
+                            <th>Subtitles</th>
+                        </tr>
+                        </thead>
+
+                        <tbody v-cloak>
+                        <tr class="loading-row">
+                            <td colspan="10" class="text-center">
+                                <i class="fa fa-refresh fa-spin fa-fw" aria-hidden="true" title="Loading..."></i>
+                            </td>
+                        </tr>
+                        <tr v-for="show in shows" :id="show.tvdb_id">
+                            <td>
+                                <a :href="getShowDetailsUrl(show.tvdb_id)" target="_blank" :title="show.title">
+                                    <img v-if="show.banner" v-lazy="bannerThumbnailUrl" :data-srcset="bannerThumbnailUrl + show.tvdb_id">
+                                </a>
+                            </td>
+                            <td>{{ show.year }}</td>
+                            <td>
+                                <a :href="tvdbUrl + show.tvdb_id" target="_blank">
+                                    <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
+                                </a>
+                            </td>
+                            <td class="wrapped">{{ show.path }}</td>
+                            <td class="show-subtitles-wanted">
+                                <span v-for="language in show.subtitles_wanted" class="label label-default">{{ language }}</span>
+                            </td>
+                            <td>
+                                <vue-simple-progress size="medium" :val="getProcessPercentage(show)" :text="show.total_subtitles_available + ' of ' + show.total_subtitles_needed" text-position="middle"/>
+                            </td>
+                        </tr>
+                        </tbody>
+
+                    </table>
+
+                    <div id="showsPager" class="pager">
+                        <% image_base_url = autosubliminal.WEBROOT + "/images/vendor/tablesorter" %>
+                        <img src="${image_base_url}/first.png" class="first"/>
+                        <img src="${image_base_url}/prev.png" class="prev"/>
+                        <span class="pagedisplay"></span>
+                        <!-- this can be any element, including an input -->
+                        <img src="${image_base_url}/next.png" class="next"/>
+                        <img src="${image_base_url}/last.png" class="last"/>
+                        <select class="pagesize" title="Select page size">
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                            <option value="all">All</option>
+                        </select>
+                        <select class="gotoPage" title="Select page number"></select>
+                    </div>
+
+                </div>
+
+            </library-shows>
 
         </div>
 
@@ -22,6 +108,6 @@
 
 <%block name="footerContent">
 
-    <!--<script type="text/javascript" src="${autosubliminal.WEBROOT}/js/library-shows.js?v=${appUUID}"></script>-->
+    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/library-shows.js?v=${appUUID}"></script>
 
 </%block>
