@@ -26,6 +26,4 @@ def test_get_movies(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
     monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en'])
     mocker.patch.object(MovieDetailsDb, 'get_all_movies', return_value=[movie_details_1, movie_details_2])
-    result = pickle_api_result(MoviesApi().get())
-    print result
-    print movies_json
+    assert movies_json == pickle_api_result(MoviesApi().get())
