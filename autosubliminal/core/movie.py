@@ -53,6 +53,8 @@ class MovieDetails(object):
         # Indicate if artwork is available or not
         json_dict['poster'] = True if self.poster else False
 
+        return json_dict
+
     @classmethod
     def from_indexer(cls, obj):
         """Construct a :class:`MovieDetails` object from the indexer object.
