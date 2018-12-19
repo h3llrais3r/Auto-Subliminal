@@ -155,6 +155,9 @@ class LibraryScanner(ScheduledProcess):
                                           self.movie_indexer.get_artwork_thumbnail_url(movie_details.poster),
                                           thumbnail=True)
 
+                # Check movie details
+                self._update_movie_details(dirname, filename, wanted_item.imdbid)
+
     def _get_show_path(self, dirname):
         path = dirname
         # Get root show path (ignore season folders)
@@ -173,3 +176,15 @@ class LibraryScanner(ScheduledProcess):
             episode_details.path = os.path.abspath(os.path.join(dirname, filename))
             # Update details in db
             self.show_episodes_db.update_show_episode(episode_details)
+
+    def _update_movie_details(self, dirname, filename, imdb_id):
+        movie_details = self.movie_db.get_movie(imdb_id)
+        if movie_details:
+            # Set details
+            missing_languages = diskscanner.check_missing_subtitle_languages(dirname, filename)
+            available_languages = diskscanner.check_available_subtitle_languages(dirname, filename, missing_languages)
+            movie_details.missing_languages = missing_languages
+            movie_details.available_languages = available_languages
+            movie_details.path = os.path.abspath(os.path.join(dirname, filename))
+            # Update details in db
+            self.movie_db.update_movie(movie_details)
