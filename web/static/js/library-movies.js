@@ -12,8 +12,6 @@ function init() {
         data: function () {
             return {
                 movies: [],
-                imdbUrl: IMDB_URL,
-                posterUrl: getUrl('/artwork/imdb/poster/'),
                 posterThumbnailUrl: getUrl('/artwork/imdb/poster/thumbnail/')
             }
         },
@@ -88,12 +86,10 @@ function init() {
                 });
             },
             getMovieDetailsUrl: function (imdb_id) {
-                // TODO: implement details page
-                // return getUrl('/library/movies/' + imdb_id);
-                return '';
+                return getUrl('/library/movies/' + imdb_id);
             },
             getProcessPercentage: function (movie) {
-                return movie.total_subtitles_available / movie.total_subtitles_needed * 100;
+                return movie.total_subtitles_available / movie.total_subtitles_wanted * 100;
             }
         }
     });

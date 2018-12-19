@@ -12,7 +12,7 @@
         <div class="panel panel-default">
 
             <div class="panel-heading">
-                <span class="h3 weighted">Library movies</span>
+                <span class="h3 weighted">Movies library</span>
             </div>
 
             <!-- Vue template for library movies -->
@@ -40,7 +40,6 @@
                         <tr>
                             <th>Title</th>
                             <th>Year</th>
-                            <th>Indexer</th>
                             <th>Path</th>
                             <th>Wanted subtitles</th>
                             <th>Subtitles</th>
@@ -55,23 +54,26 @@
                         </tr>
                         <tr v-for="movie in movies" :id="movie.imdb_id">
                             <td>
-                                <a :href="getMovieDetailsUrl(movie.imdb_id)" target="_blank" :title="movie.title">
-                                    <img v-if="movie.poster" v-lazy="posterThumbnailUrl" :data-srcset="posterThumbnailUrl + movie.imdb_id" height="55px">
-                                    {{ movie.title }}
-                                </a>
+                                <div class="movie-poster-thumb-container">
+                                    <div class="movie-poster-thumb-cell">
+                                        <a :href="getMovieDetailsUrl(movie.imdb_id)" :title="movie.title">
+                                            <img v-if="movie.poster" v-lazy="posterThumbnailUrl" :data-srcset="posterThumbnailUrl + movie.imdb_id" class="movie-poster-thumb-img">
+                                        </a>
+                                    </div>
+                                    <div class="movie-poster-thumb-cell">
+                                        <a :href="getMovieDetailsUrl(movie.imdb_id)" :title="movie.title">
+                                            <div class="movie-poster-thumb-title">{{ movie.title }}</div>
+                                        </a>
+                                    </div>
+                                </div>
                             </td>
                             <td>{{ movie.year }}</td>
-                            <td>
-                                <a :href="imdbUrl + movie.imdb_id" target="_blank">
-                                    <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
-                                </a>
-                            </td>
                             <td class="wrapped">{{ movie.path }}</td>
                             <td>
-                                <span v-for="language in movie.subtitles_wanted" class="label label-default">{{ language }}</span>
+                                <span v-for="language in movie.wanted_languages" class="language-badge">{{ language }}</span>
                             </td>
                             <td>
-                                <vue-simple-progress size="medium" :val="getProcessPercentage(movie)" :text="movie.total_subtitles_available + ' of ' + movie.total_subtitles_needed" text-position="middle"/>
+                                <vue-simple-progress size="medium" :val="getProcessPercentage(movie)" :text="movie.total_subtitles_available + ' of ' + movie.total_subtitles_wanted" text-position="middle"/>
                             </td>
                         </tr>
                         </tbody>

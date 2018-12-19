@@ -25,28 +25,28 @@ class ShowsApi(RestResource):
         """Get the list of shows."""
         result = []
 
-        subtitles_wanted = []
+        wanted_languages = []
         if autosubliminal.DEFAULTLANGUAGE:
-            subtitles_wanted.append(autosubliminal.DEFAULTLANGUAGE)
+            wanted_languages.append(autosubliminal.DEFAULTLANGUAGE)
         if autosubliminal.ADDITIONALLANGUAGES:
-            subtitles_wanted.extend(autosubliminal.ADDITIONALLANGUAGES)
+            wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES)
 
         shows = ShowDetailsDb().get_all_shows()
         for show in shows:
-            total_subtitles_needed = 0
+            total_subtitles_wanted = 0
             total_subtitles_available = 0
             total_subtitles_missing = 0
 
             episodes = ShowEpisodeDetailsDb().get_show_episodes(show.tvdb_id)
             for episode in episodes:
                 if episode.available:
-                    total_subtitles_needed += len(subtitles_wanted)
+                    total_subtitles_wanted += len(wanted_languages)
                     total_subtitles_available += len(episode.available_languages)
                     total_subtitles_missing += len(episode.missing_languages)
 
             show_json = show.to_json()
-            show_json['subtitles_wanted'] = subtitles_wanted
-            show_json['total_subtitles_needed'] = total_subtitles_needed
+            show_json['wanted_languages'] = wanted_languages
+            show_json['total_subtitles_wanted'] = total_subtitles_wanted
             show_json['total_subtitles_available'] = total_subtitles_available
             show_json['total_subtitles_missing'] = total_subtitles_missing
 

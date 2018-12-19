@@ -12,10 +12,7 @@ function init() {
         data: function () {
             return {
                 shows: [],
-                tvdbUrl: TVDB_URL,
-                bannerUrl: getUrl('/artwork/tvdb/banner/'),
                 bannerThumbnailUrl: getUrl('/artwork/tvdb/banner/thumbnail/'),
-                posterUrl: getUrl('/artwork/tvdb/poster/'),
                 posterThumbnailUrl: getUrl('/artwork/tvdb/poster/thumbnail/')
             }
         },
@@ -95,7 +92,7 @@ function init() {
                 return '';
             },
             getProcessPercentage: function (show) {
-                return show.total_subtitles_available / show.total_subtitles_needed * 100;
+                return show.total_subtitles_available / show.total_subtitles_wanted * 100;
             }
         }
     });

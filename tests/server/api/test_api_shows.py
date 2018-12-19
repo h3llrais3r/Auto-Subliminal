@@ -22,11 +22,11 @@ show_episode_details_2_2 = ShowEpisodeDetails(path='path2_2', tvdb_id=22, show_t
                                               episode=2, available_languages=[], missing_languages=['nl', 'en'])
 
 shows_json = '[{"banner": true, "overview": "overview1", "path": "path1", "poster": true, ' \
-             '"subtitles_wanted": ["nl", "en"], "title": "title1", "total_subtitles_available": 1, ' \
-             '"total_subtitles_missing": 1, "total_subtitles_needed": 2, "tvdb_id": 1, "year": 2018}, ' \
+             '"title": "title1", "total_subtitles_available": 1, "total_subtitles_missing": 1, ' \
+             '"total_subtitles_wanted": 2, "tvdb_id": 1, "wanted_languages": ["nl", "en"], "year": 2018}, ' \
              '{"banner": true, "overview": "overview2", "path": "path2", "poster": true, ' \
-             '"subtitles_wanted": ["nl", "en"], "title": "title2", "total_subtitles_available": 1, ' \
-             '"total_subtitles_missing": 3, "total_subtitles_needed": 4, "tvdb_id": 2, "year": 2019}]'
+             '"title": "title2", "total_subtitles_available": 1, "total_subtitles_missing": 3, ' \
+             '"total_subtitles_wanted": 4, "tvdb_id": 2, "wanted_languages": ["nl", "en"], "year": 2019}]'
 
 
 def test_get_shows(monkeypatch, mocker):

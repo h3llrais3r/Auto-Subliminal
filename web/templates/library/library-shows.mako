@@ -12,7 +12,7 @@
         <div class="panel panel-default">
 
             <div class="panel-heading">
-                <span class="h3 weighted">Library shows</span>
+                <span class="h3 weighted">Shows library</span>
             </div>
 
             <!-- Vue template for library shows -->
@@ -40,7 +40,6 @@
                         <tr>
                             <th>Title</th>
                             <th>Year</th>
-                            <th>Indexer</th>
                             <th>Path</th>
                             <th>Wanted subtitles</th>
                             <th>Subtitles</th>
@@ -55,22 +54,17 @@
                         </tr>
                         <tr v-for="show in shows" :id="show.tvdb_id">
                             <td>
-                                <a :href="getShowDetailsUrl(show.tvdb_id)" target="_blank" :title="show.title">
+                                <a :href="getShowDetailsUrl(show.tvdb_id)" :title="show.title">
                                     <img v-if="show.banner" v-lazy="bannerThumbnailUrl" :data-srcset="bannerThumbnailUrl + show.tvdb_id">
                                 </a>
                             </td>
                             <td>{{ show.year }}</td>
-                            <td>
-                                <a :href="tvdbUrl + show.tvdb_id" target="_blank">
-                                    <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
-                                </a>
-                            </td>
                             <td class="wrapped">{{ show.path }}</td>
                             <td class="show-subtitles-wanted">
-                                <span v-for="language in show.subtitles_wanted" class="label label-default">{{ language }}</span>
+                                <span v-for="language in show.wanted_languages" class="language-badge">{{ language }}</span>
                             </td>
                             <td>
-                                <vue-simple-progress size="medium" :val="getProcessPercentage(show)" :text="show.total_subtitles_available + ' of ' + show.total_subtitles_needed" text-position="middle"/>
+                                <vue-simple-progress size="medium" :val="getProcessPercentage(show)" :text="show.total_subtitles_available + ' of ' + show.total_subtitles_wanted" text-position="middle"/>
                             </td>
                         </tr>
                         </tbody>

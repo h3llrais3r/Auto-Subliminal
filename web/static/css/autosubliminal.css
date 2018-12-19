@@ -421,6 +421,72 @@ table.tablesorter .filtered {
     white-space: nowrap;
 }
 
+/******************************
+ * MOVIE/SHOW DETAILS STYLING *
+ *****************************/
+
+.details-container, .details-container {
+    display: table;
+    width: 100%;
+}
+
+.details-poster-container {
+    display: table-cell;
+}
+
+.details-poster-container > img {
+    width: 150px;
+}
+
+.details-info-container {
+    display: table-cell;
+    width: 100%;
+    vertical-align: top;
+}
+
+.details-info-title {
+    font-size: 24px;
+}
+
+.details-info-summary {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.details-info-summary td {
+    padding-bottom: 5px;
+    vertical-align: middle;
+}
+
+.details-files-container {
+    display: table;
+    width: 100%;
+}
+
+.details-files-title {
+    display: table;
+    width: 100%;
+    font-size: 24px;
+}
+
+.details-files-title > div {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.details-files-progress {
+    width: 150px;
+}
+
+.details-files-overview {
+    width: 100%;
+}
+
+.details-files-overview td {
+    padding-bottom: 5px;
+    vertical-align: middle;
+}
+
 /*******************
  * GENERAL STYLING *
  *******************/
@@ -442,6 +508,23 @@ table.tablesorter .filtered {
     width: 25px;
 }
 
+/* Based on boostrap label with background */
+.language-badge {
+    display: inline-block;
+    width: 25px;
+    padding: 4px;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 0.25em;
+    background-color: #777777;
+    margin-right: 8px;
+}
+
 .language-icon {
     height: 18px;
     width: auto;
@@ -451,6 +534,23 @@ table.tablesorter .filtered {
     color: #333333;
     font-weight: bold;
     text-decoration: none !important;
+}
+
+.movie-poster-thumb-container {
+    display: table;
+}
+
+.movie-poster-thumb-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.movie-poster-thumb-img {
+    height: 55px;
+}
+
+.movie-poster-thumb-title {
+    margin-left: 10px;
 }
 
 .no-padding {
