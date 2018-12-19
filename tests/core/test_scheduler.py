@@ -119,8 +119,8 @@ def test_scheduler_deactivate(mocker):
         assert scheduler.last_run > 0
         assert scheduler.next_run > 0
         assert scheduler.active
-        call_count = process_run_mock.call_count
         scheduler.deactivate()
+        call_count = process_run_mock.call_count
         time.sleep(2)  # Sleep to be sure that the run has been executed at least once
         assert process_run_mock.call_count == call_count  # No higher call count
         assert scheduler.last_run == 0
