@@ -26,7 +26,9 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <div class="details-poster-container">
-                                        <img v-if="movie.poster" :src="posterThumbnailUrl + movie.imdb_id">
+                                        <a :href="posterFullSizeUrl + movie.imdb_id" target="_blank">
+                                            <img class="details-poster-image" :src="posterThumbnailUrl + movie.imdb_id">
+                                        </a>
                                     </div>
                                     <div class="details-info-container">
                                         <div class="col-xs-12 details-info-title">

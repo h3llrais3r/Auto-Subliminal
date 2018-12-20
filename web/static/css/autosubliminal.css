@@ -434,7 +434,7 @@ table.tablesorter .filtered {
     display: table-cell;
 }
 
-.details-poster-container > img {
+.details-poster-container .details-poster-image {
     width: 150px;
 }
 

@@ -13,7 +13,7 @@ function init() {
             return {
                 movie: null,
                 imdbUrl: IMDB_URL,
-                posterUrl: getUrl('/artwork/imdb/poster/'),
+                posterFullSizeUrl: getUrl('/artwork/imdb/poster/fullsize/'),
                 posterThumbnailUrl: getUrl('/artwork/imdb/poster/thumbnail/')
             }
         },
@@ -42,7 +42,6 @@ function init() {
     });
 
     // Init vue plugins
-    Vue.use(VueLazyload);
 
     // Init vue app
     new Vue({
