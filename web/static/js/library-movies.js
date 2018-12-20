@@ -25,6 +25,7 @@ function init() {
         updated: function () {
             //console.log('updated');
             this.setupMovies();
+            styleProgressBar();
         },
         methods: {
             getMovies: function () {

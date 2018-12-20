@@ -487,6 +487,94 @@ table.tablesorter .filtered {
     vertical-align: middle;
 }
 
+/***********************
+ * PROGRESSBAR STYLING *
+ **********************/
+
+.progress-0 {
+    background-color: rgb(255, 2, 0) !important;
+}
+
+.progress-5 {
+    background-color: rgb(255, 28, 0) !important;
+}
+
+.progress-10 {
+    background-color: rgb(255, 53, 0) !important;
+}
+
+.progress-15 {
+    background-color: rgb(255, 78, 0) !important;
+}
+
+.progress-20 {
+    background-color: rgb(255, 103, 0) !important;
+}
+
+.progress-25 {
+    background-color: rgb(255, 129, 0) !important;
+}
+
+.progress-30 {
+    background-color: rgb(255, 154, 0) !important;
+}
+
+.progress-35 {
+    background-color: rgb(255, 179, 0) !important;
+}
+
+.progress-40 {
+    background-color: rgb(255, 204, 0) !important;
+}
+
+.progress-45 {
+    background-color: rgb(255, 230, 0) !important;
+}
+
+.progress-50 {
+    background-color: rgb(255, 255, 0) !important;
+}
+
+.progress-55 {
+    background-color: rgb(230, 255, 0) !important;
+}
+
+.progress-60 {
+    background-color: rgb(204, 255, 0) !important;
+}
+
+.progress-65 {
+    background-color: rgb(179, 255, 0) !important;
+}
+
+.progress-70 {
+    background-color: rgb(154, 255, 0) !important;
+}
+
+.progress-75 {
+    background-color: rgb(129, 255, 0) !important;
+}
+
+.progress-80 {
+    background-color: rgb(103, 255, 0) !important;
+}
+
+.progress-85 {
+    background-color: rgb(78, 255, 0) !important;
+}
+
+.progress-90 {
+    background-color: rgb(53, 255, 0) !important;
+}
+
+.progress-95 {
+    background-color: rgb(28, 255, 0) !important;
+}
+
+.progress-100 {
+    background-color: rgb(2, 255, 0) !important;
+}
+
 /*******************
  * GENERAL STYLING *
  *******************/
@@ -651,7 +739,18 @@ table.tablesorter .filtered {
     display: none;
 }
 
-/* Make sure the vue progress bar is show when used inside other components */
+/* Make sure the vue progress bar is show when used inside other components and use rounded corners */
 .vue-simple-progress {
     z-index: 0 !important;
+    border: 1px solid;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.vue-simple-progress-bar {
+    background-color: rgb(238, 238, 238);
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
 }

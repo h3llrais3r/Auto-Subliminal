@@ -26,6 +26,7 @@ function init() {
         },
         updated: function () {
             //console.log('updated');
+            styleProgressBar();
         },
         methods: {
             getMovieDetails: function () {

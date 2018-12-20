@@ -26,6 +26,7 @@ function init() {
         updated: function () {
             //console.log('updated');
             this.setupShows();
+            styleProgressBar();
         },
         methods: {
             getShows: function () {

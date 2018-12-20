@@ -64,7 +64,13 @@
                                 <span v-for="language in show.wanted_languages" class="language-badge">{{ language }}</span>
                             </td>
                             <td>
-                                <vue-simple-progress size="medium" :val="getProcessPercentage(show)" :text="show.total_subtitles_available + ' of ' + show.total_subtitles_wanted" text-position="middle"/>
+                                <vue-simple-progress
+                                        size="medium"
+                                        :val="getProcessPercentage(show)"
+                                        :text="show.total_subtitles_available + ' of ' + show.total_subtitles_wanted"
+                                        text-position="middle"
+                                        bar-color="transparent">
+                                </vue-simple-progress>
                             </td>
                         </tr>
                         </tbody>

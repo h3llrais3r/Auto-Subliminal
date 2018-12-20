@@ -362,3 +362,17 @@ function runProcessOnServer(process_name) {
     }
     sendWebsocketMessage(JSON.stringify(event));
 }
+
+// Function to style a vue progress bar
+function styleProgressBar() {
+    $('.vue-simple-progress-bar').each(function () {
+        var self = $(this);
+        var percentage = parseInt(self.css('width')) / parseInt(self.parent('.vue-simple-progress').css('width')) * 100;
+        console.log(percentage);
+        var progressPercentage = 100;
+        while (percentage <= progressPercentage && percentage > 0) {
+            progressPercentage -= 5;
+        }
+        self.addClass('progress-' + progressPercentage);
+    });
+}
