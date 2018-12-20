@@ -425,9 +425,22 @@ table.tablesorter .filtered {
  * MOVIE/SHOW DETAILS STYLING *
  *****************************/
 
-.details-container, .details-container {
+.details-container {
     display: table;
     width: 100%;
+}
+
+.details-poster-container {
+    display: table-cell;
+}
+
+/* Style poster on small devices */
+@media (max-width: 767px) {
+    .details-poster-container {
+        width: 100%;
+        float: left;
+        text-align: center;
+    }
 }
 
 .details-poster-container {
@@ -442,6 +455,13 @@ table.tablesorter .filtered {
     display: table-cell;
     width: 100%;
     vertical-align: top;
+}
+
+/* Style details info on small devices */
+@media (max-width: 767px) {
+    .details-info-container {
+        padding-top: 20px;
+    }
 }
 
 .details-info-title {
@@ -746,6 +766,14 @@ table.tablesorter .filtered {
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
+}
+
+/* Style progress bar in tablesorter reflow mode */
+@media (max-width: 48em) {
+    .vue-simple-progress {
+        width: 50%;
+        float: right;
+    }
 }
 
 .vue-simple-progress-bar {

@@ -45,7 +45,7 @@
                                             <table class="details-info-summary">
                                                 <tr>
                                                     <td>Location:</td>
-                                                    <td>{{ movie.path }}</td>
+                                                    <td class="wrapped">{{ movie.path }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Wanted languages:</td>
@@ -93,7 +93,7 @@
                                         <hr>
                                         <table class="details-files-overview">
                                             <tr v-for="file in movie.files">
-                                                <td>{{ file.path }}</td>
+                                                <td class="wrapped">{{ file.path }}</td>
                                                 <td class="pull-right">{{ file.type }}</td>
                                             </tr>
                                         </table>
