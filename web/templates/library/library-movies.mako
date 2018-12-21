@@ -54,15 +54,15 @@
                         </tr>
                         <tr v-for="movie in movies" :id="movie.imdb_id">
                             <td>
-                                <div class="movie-poster-thumb-container">
-                                    <div class="movie-poster-thumb-cell">
+                                <div class="title-poster-container">
+                                    <div class="title-poster-cell">
                                         <a :href="getMovieDetailsUrl(movie.imdb_id)" :title="movie.title">
-                                            <img v-if="movie.poster" v-lazy="posterThumbnailUrl" :data-srcset="posterThumbnailUrl + movie.imdb_id" class="movie-poster-thumb-img">
+                                            <img v-if="movie.poster" v-lazy="posterThumbnailUrl" :data-srcset="posterThumbnailUrl + movie.imdb_id" class="title-poster-image">
                                         </a>
                                     </div>
-                                    <div class="movie-poster-thumb-cell">
+                                    <div class="title-poster-cell">
                                         <a :href="getMovieDetailsUrl(movie.imdb_id)" :title="movie.title">
-                                            <div class="movie-poster-thumb-title">{{ movie.title }}</div>
+                                            <div class="title-poster-text">{{ movie.title }}</div>
                                         </a>
                                     </div>
                                 </div>

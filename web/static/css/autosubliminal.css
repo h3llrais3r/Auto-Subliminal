@@ -346,7 +346,7 @@ table.tablesorter .filtered {
         float: left;
         width: 50%;
         white-space: pre-wrap;
-        text-align: bottom;
+        vertical-align: bottom;
         display: inline-block;
     }
 
@@ -511,6 +511,8 @@ table.tablesorter .filtered {
  * PROGRESSBAR STYLING *
  **********************/
 
+/* Based on https://stackoverflow.com/questions/7128675/from-green-to-red-color-depend-on-percentage */
+
 .progress-0 {
     background-color: rgb(255, 2, 0) !important;
 }
@@ -599,6 +601,13 @@ table.tablesorter .filtered {
  * GENERAL STYLING *
  *******************/
 
+/* Style a banner title in tablesorter reflow mode */
+@media (max-width: 48em) {
+    .title-banner-image {
+        width: 50%;
+    }
+}
+
 .datetime {
     min-width: 90px;
 }
@@ -644,20 +653,20 @@ table.tablesorter .filtered {
     text-decoration: none !important;
 }
 
-.movie-poster-thumb-container {
+.title-poster-container {
     display: table;
 }
 
-.movie-poster-thumb-cell {
+.title-poster-cell {
     display: table-cell;
     vertical-align: middle;
 }
 
-.movie-poster-thumb-img {
+.title-poster-image {
     height: 55px;
 }
 
-.movie-poster-thumb-title {
+.title-poster-text {
     margin-left: 10px;
 }
 

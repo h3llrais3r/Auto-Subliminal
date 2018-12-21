@@ -55,12 +55,12 @@
                         <tr v-for="show in shows" :id="show.tvdb_id">
                             <td>
                                 <a :href="getShowDetailsUrl(show.tvdb_id)" :title="show.title">
-                                    <img v-if="show.banner" v-lazy="bannerThumbnailUrl" :data-srcset="bannerThumbnailUrl + show.tvdb_id">
+                                    <img v-if="show.banner" v-lazy="bannerThumbnailUrl" :data-srcset="bannerThumbnailUrl + show.tvdb_id" class="title-banner-image">
                                 </a>
                             </td>
                             <td>{{ show.year }}</td>
                             <td class="wrapped">{{ show.path }}</td>
-                            <td class="show-subtitles-wanted">
+                            <td>
                                 <span v-for="language in show.wanted_languages" class="language-badge">{{ language }}</span>
                             </td>
                             <td>
