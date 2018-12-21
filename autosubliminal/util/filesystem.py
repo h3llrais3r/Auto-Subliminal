@@ -64,7 +64,7 @@ def get_show_files(show_path):
     :rtype: list[dict]
     """
 
-    # Show files are supposed to be stored in individual season dirs or all files in the root dir
+    # Show files are supposed to be stored in individual season dirs or the root dir only
     files = {}
     for dirpath, dirnames, filenames in os.walk(show_path):
         if 'season' in os.path.normcase(dirpath):
@@ -75,18 +75,17 @@ def get_show_files(show_path):
                 _, ext = os.path.splitext(os.path.normcase(f))
                 if ext in FILE_EXTENSIONS:
                     season_files.append({'filename': f, 'type': _get_file_type(ext)})
-            files.update({season_name: {'path': dirpath, 'files': season_files}})
-        else:
-            # Files in non season/root dir(s)
+            if season_files:
+                files.update({season_name: {'path': dirpath, 'files': season_files}})
+        elif dirpath == show_path:
+            # Files in root dir
             root_name = 'Root'
             root_files = []
             for f in filenames:
                 _, ext = os.path.splitext(os.path.normcase(f))
                 if ext in FILE_EXTENSIONS:
                     root_files.append({'filename': f, 'type': _get_file_type(ext)})
-            if root_name in files:
-                files[root_name].extend(root_files)  # Add files if root already exists (only for non season folders)
-            else:
+            if root_files:
                 files.update({root_name: {'path': dirpath, 'files': root_files}})
 
     # Convert to list and return

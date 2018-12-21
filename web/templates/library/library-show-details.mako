@@ -79,7 +79,7 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <table v-if="file.location_files.length > 0" v-for="file in show.files" class="details-files-overview">
+                                        <table v-for="file in show.files" class="details-files-overview">
                                             <tr>
                                                 <td colspan="2">
                                                     <span class="details-files-location">{{ file.location_name }}</span>
