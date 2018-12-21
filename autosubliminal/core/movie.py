@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import logging
+import os
 
 from imdbpie.objects import Title
 
@@ -48,7 +49,11 @@ class MovieDetails(object):
 
     def to_json(self):
         """Convert to its json representation."""
-        json_dict = to_dict(self, 'poster')
+        json_dict = to_dict(self, 'path', 'poster')
+
+        # Remove filename from path
+        path, _ = os.path.split(self.path)
+        json_dict['path'] = path
 
         # Indicate if artwork is available or not
         json_dict['poster'] = True if self.poster else False
