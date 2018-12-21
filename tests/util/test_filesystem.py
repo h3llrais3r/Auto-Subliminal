@@ -1,5 +1,6 @@
 # coding=utf-8
 
+import json
 import os
 
 from autosubliminal.util.filesystem import is_skipped_dir, is_valid_video_file, get_movie_files, get_show_files, \
@@ -40,7 +41,7 @@ def test_get_show_files():
     show_files = [
         {'location_name': 'Root', 'location_path': show_path, 'location_files': files}
     ]
-    assert get_show_files(show_path) == show_files
+    assert json.dumps(get_show_files(show_path), sort_keys=True) == json.dumps(show_files, sort_keys=True)
 
 
 def test_get_show_files_in_season_folders():
@@ -55,7 +56,7 @@ def test_get_show_files_in_season_folders():
     show_files = [
         {'location_name': 'Season 01', 'location_path': os.path.join(show_path, 'Season 01'), 'location_files': files}
     ]
-    assert get_show_files(show_path) == show_files
+    assert json.dumps(get_show_files(show_path), sort_keys=True) == json.dumps(show_files, sort_keys=True)
 
 
 def test_get_movie_files():
@@ -64,4 +65,4 @@ def test_get_movie_files():
         os.path.join(os.path.dirname(__file__), '..', 'resources', file_name))
     subtitle_name = 'Southpaw.2015.1080p.BluRay.x264.srt'
     files = [{'filename': file_name, 'type': 'video'}, {'filename': subtitle_name, 'type': 'subtitle'}]
-    assert get_movie_files(file_path) == files
+    assert json.dumps(get_movie_files(file_path), sort_keys=True) == json.dumps(files, sort_keys=True)
