@@ -86,8 +86,8 @@ function init() {
                     $.tablesorter.storage($('#movies'), 'tablesorter-filters', '');
                 });
             },
-            getMovieDetailsUrl: function (imdb_id) {
-                return getUrl('/library/movies/' + imdb_id);
+            getMovieDetailsUrl: function (imdbId) {
+                return getUrl('/library/movies/' + imdbId);
             },
             getProcessPercentage: function (movie) {
                 return movie.total_subtitles_available / movie.total_subtitles_wanted * 100;

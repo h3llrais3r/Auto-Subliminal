@@ -31,8 +31,8 @@ function init() {
         methods: {
             getMovieDetails: function () {
                 var self = this;
-                var imdb_id = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
-                $.get('/api/movies/' + imdb_id, function (data) {
+                var imdbId = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
+                $.get('/api/movies/' + imdbId, function (data) {
                     self.movie = data;
                 });
             },

@@ -7,7 +7,7 @@ import cherrypy
 import autosubliminal
 from autosubliminal.db.movie_db import MovieDetailsDb
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.filesystem import get_linked_files
+from autosubliminal.util.filesystem import get_movie_files
 
 log = logging.getLogger(__name__)
 
@@ -36,15 +36,15 @@ class MoviesApi(RestResource):
         # Fetch movie(s)
         if imdb_id:
             db_movie = MovieDetailsDb().get_movie(imdb_id)
-            return self._enrich_movie_json(db_movie, wanted_languages, details=True)
+            return self._to_movie_json(db_movie, wanted_languages, details=True)
         else:
             movies = []
             db_movies = MovieDetailsDb().get_all_movies()
             for db_movie in db_movies:
-                movies.append(self._enrich_movie_json(db_movie, wanted_languages))
+                movies.append(self._to_movie_json(db_movie, wanted_languages))
             return movies
 
-    def _enrich_movie_json(self, movie, wanted_languages, details=False):
+    def _to_movie_json(self, movie, wanted_languages, details=False):
         movie_json = movie.to_json()
 
         total_subtitles_wanted = len(wanted_languages)
@@ -56,6 +56,6 @@ class MoviesApi(RestResource):
         movie_json['total_subtitles_missing'] = total_subtitles_missing
 
         if details:
-            movie_json['files'] = get_linked_files(movie.path)
+            movie_json['files'] = get_movie_files(movie.path)
 
         return movie_json

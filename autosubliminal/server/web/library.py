@@ -20,8 +20,11 @@ class Library(object):
         return PageTemplate('/library/library-overview.mako').render()
 
     @cherrypy.expose(alias='shows')
-    def shows(self):
-        return PageTemplate('/library/library-shows.mako').render()
+    def shows(self, tvdb_id=None):
+        if tvdb_id:
+            return PageTemplate('/library/library-show-details.mako').render()
+        else:
+            return PageTemplate('/library/library-shows.mako').render()
 
     @cherrypy.expose(alias='movies')
     def movies(self, imdb_id=None):

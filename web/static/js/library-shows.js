@@ -87,10 +87,8 @@ function init() {
                     $.tablesorter.storage($('#shows'), 'tablesorter-filters', '');
                 });
             },
-            getShowDetailsUrl: function (tvdb_id) {
-                // TODO: implement details page
-                // return getUrl('/library/shows/' + tvdb_id);
-                return '';
+            getShowDetailsUrl: function (tvdbId) {
+                return getUrl('/library/shows/' + tvdbId);
             },
             getProcessPercentage: function (show) {
                 return show.total_subtitles_available / show.total_subtitles_wanted * 100;

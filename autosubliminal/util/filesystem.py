@@ -11,6 +11,8 @@ import autosubliminal
 
 log = logging.getLogger(__name__)
 
+FILE_EXTENSIONS = list(subliminal.VIDEO_EXTENSIONS) + ['.srt']
+
 
 def one_path_exists(paths, retry_delay=15):
     exists = False
@@ -52,22 +54,72 @@ def is_valid_video_file(filename):
     return valid
 
 
-def get_linked_files(file_path):
-    dirname, filename = os.path.split(file_path)
+def get_show_files(show_path):
+    """Get all show files.
+
+    :param show_path: the root path of the show (folder)
+    :type show_path: str
+    :return: a list of dict objects representing a location (name and path) and its list of dict objects representing
+             a file (filename and type)
+    :rtype: list[dict]
+    """
+
+    # Show files are supposed to be stored in individual season dirs or all files in the root dir
+    files = {}
+    for dirpath, dirnames, filenames in os.walk(show_path):
+        if 'season' in os.path.normcase(dirpath):
+            _, season_name = os.path.split(dirpath)
+            # Files in season dirs
+            season_files = []
+            for f in filenames:
+                _, ext = os.path.splitext(os.path.normcase(f))
+                if ext in FILE_EXTENSIONS:
+                    season_files.append({'filename': f, 'type': _get_file_type(ext)})
+            files.update({season_name: {'path': dirpath, 'files': season_files}})
+        else:
+            # Files in non season/root dir(s)
+            root_name = 'Root'
+            root_files = []
+            for f in filenames:
+                _, ext = os.path.splitext(os.path.normcase(f))
+                if ext in FILE_EXTENSIONS:
+                    root_files.append({'filename': f, 'type': _get_file_type(ext)})
+            if root_name in files:
+                files[root_name].extend(root_files)  # Add files if root already exists (only for non season folders)
+            else:
+                files.update({root_name: {'path': dirpath, 'files': root_files}})
+
+    # Convert to list and return
+    return [{'location_name': k, 'location_path': v['path'], 'location_files': v['files']} for k, v in files.items()]
+
+
+def get_movie_files(movie_path):
+    """Get all movie files.
+
+    This returns all files that have a similar filename as the movie itself.
+    :param movie_path: path to the movie video file
+    :type movie_path: str
+    :return: list of dict objects representing a file (filename and type)
+    :rtype: list[dict]
+    """
+    dirname, filename = os.path.split(movie_path)
     root, _ = os.path.splitext(filename)
 
+    # Movie files are supposed to be in the same dir as the file itself
+    # Because movies can also be stored all together, we only check files with a similar name as the movie file itself
     files = []
     for f in os.listdir(dirname):
         if f.startswith(root):
-            _, ext = os.path.splitext(f)
-            files.append({'path': os.path.join(dirname, f), 'type': _get_file_type(ext)})
+            _, ext = os.path.splitext(os.path.normcase(f))
+            if ext in FILE_EXTENSIONS:
+                files.append({'filename': f, 'type': _get_file_type(ext)})
 
     return files
 
 
 def _get_file_type(ext):
-    file_type = 'movie'
-    if ext == u'.srt':
+    file_type = 'video'
+    if ext == '.srt':
         file_type = 'subtitle'
 
     return file_type
