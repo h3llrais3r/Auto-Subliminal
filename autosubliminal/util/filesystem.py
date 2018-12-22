@@ -76,7 +76,8 @@ def get_show_files(show_path):
                 if ext in FILE_EXTENSIONS:
                     season_files.append({'filename': f, 'type': _get_file_type(ext)})
             if season_files:
-                files.update({season_name: {'path': dirpath, 'files': season_files}})
+                sorted_files = sorted(season_files, key=lambda k: k['filename'])
+                files.update({season_name: {'path': dirpath, 'files': sorted_files}})
         elif dirpath == show_path:
             # Files in root dir
             root_name = 'Root'
@@ -86,7 +87,8 @@ def get_show_files(show_path):
                 if ext in FILE_EXTENSIONS:
                     root_files.append({'filename': f, 'type': _get_file_type(ext)})
             if root_files:
-                files.update({root_name: {'path': dirpath, 'files': root_files}})
+                sorted_files = sorted(root_files, key=lambda k: k['filename'])
+                files.update({root_name: {'path': dirpath, 'files': sorted_files}})
 
     # Convert to list and return
     return [{'location_name': k, 'location_path': v['path'], 'location_files': v['files']} for k, v in files.items()]
@@ -113,7 +115,7 @@ def get_movie_files(movie_path):
             if ext in FILE_EXTENSIONS:
                 files.append({'filename': f, 'type': _get_file_type(ext)})
 
-    return files
+    return sorted(files, key=lambda k: k['filename'])
 
 
 def _get_file_type(ext):
