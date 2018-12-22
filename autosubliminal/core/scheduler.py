@@ -94,6 +94,9 @@ class Scheduler(object):
                         time.sleep(self._delay)
                 if current_time - self.last_run > self.interval:
                     run_needed = True
+            elif self.last_run:
+                # Clear last_run if not active
+                self.last_run = 0
 
             # Run if needed
             if run_needed:
@@ -155,7 +158,6 @@ class Scheduler(object):
         """Deactivate the scheduler."""
         log.info('Deactivating scheduler %s', self.name)
         self.active = False
-        self.last_run = 0
 
     def run(self, delay=0):
         """Force run the scheduler."""
