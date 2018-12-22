@@ -108,8 +108,9 @@ class DiskScanner(ScheduledProcess):
         else:
             log.debug('Video not found in wanted_items database, start scanning it')
 
-            # Check for missing subtitles
-            languages = check_missing_subtitle_languages(dirname, filename)
+            # Check for missing subtitles (scan embedded and detect invalid if configured to do so)
+            languages = get_missing_subtitle_languages(dirname, filename, scan_embedded=autosubliminal.SCANEMBEDDEDSUBS,
+                                                       detect_invalid=autosubliminal.DETECTINVALIDSUBLANGUAGE)
 
             # Process the video file if there are missing subtitles
             if len(languages) > 0:
@@ -148,28 +149,26 @@ class DiskScanner(ScheduledProcess):
         return wanted_item
 
 
-def check_available_subtitle_languages(dirname, filename, missing_subtitle_languages=None):
-    # Check which subtitle languages are needed
-    languages = []
-    languages.append(autosubliminal.DEFAULTLANGUAGE) if autosubliminal.DEFAULTLANGUAGE else None
-    languages.extend(autosubliminal.ADDITIONALLANGUAGES) if autosubliminal.ADDITIONALLANGUAGES else None
+def get_available_subtitle_languages(dirname, filename, missing_subtitle_languages=None):
+    # Get the wanted languages
+    wanted_languages = []
+    wanted_languages.append(autosubliminal.DEFAULTLANGUAGE) if autosubliminal.DEFAULTLANGUAGE else None
+    wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES) if autosubliminal.ADDITIONALLANGUAGES else None
 
-    # Check if we need to check the missing languages or not
-    missing_languages = missing_subtitle_languages
-    if not missing_languages:
-        missing_languages = check_missing_subtitle_languages(dirname, filename)
+    # Get the missing languages if not yet available
+    missing_languages = missing_subtitle_languages or get_missing_subtitle_languages(dirname, filename)
 
-    # Check which are already available (= not in missing languages)
-    return [language for language in languages if language not in missing_languages]
+    # Return the available languages (= not in missing languages)
+    return [language for language in wanted_languages if language not in missing_languages]
 
 
-def check_missing_subtitle_languages(dirname, filename):
+def get_missing_subtitle_languages(dirname, filename, scan_embedded=False, detect_invalid=False):
     log.debug('Checking for missing subtitle(s)')
     missing_subtitles = []
 
     # Check embedded subtitles
     embedded_subtitles = []
-    if autosubliminal.SCANEMBEDDEDSUBS:
+    if scan_embedded:
         embedded_subtitles = _get_embedded_subtitles(dirname, filename)
 
     # Check default language
@@ -183,7 +182,7 @@ def check_missing_subtitle_languages(dirname, filename):
             srt_file = os.path.splitext(filename)[0] + u'.' + autosubliminal.DEFAULTLANGUAGE + u'.srt'
         else:
             srt_file = os.path.splitext(filename)[0] + u'.srt'
-            detect_language = autosubliminal.DETECTINVALIDSUBLANGUAGE
+            detect_language = detect_invalid  # Only for default subtitle without suffix
         srt_path = os.path.join(dirname, srt_file)
         sub_exists = os.path.exists(srt_path)
         if not sub_exists and default_language not in embedded_subtitles:

@@ -169,8 +169,8 @@ class LibraryScanner(ScheduledProcess):
         episode_details = self.show_episodes_db.get_show_episode(show_tvdb_id, season, episode)
         if episode_details:
             # Set details
-            missing_languages = diskscanner.check_missing_subtitle_languages(dirname, filename)
-            available_languages = diskscanner.check_available_subtitle_languages(dirname, filename, missing_languages)
+            missing_languages = diskscanner.get_missing_subtitle_languages(dirname, filename)
+            available_languages = diskscanner.get_available_subtitle_languages(dirname, filename, missing_languages)
             episode_details.missing_languages = missing_languages
             episode_details.available_languages = available_languages
             episode_details.path = os.path.abspath(os.path.join(dirname, filename))
@@ -181,8 +181,8 @@ class LibraryScanner(ScheduledProcess):
         movie_details = self.movie_db.get_movie(imdb_id)
         if movie_details:
             # Set details
-            missing_languages = diskscanner.check_missing_subtitle_languages(dirname, filename)
-            available_languages = diskscanner.check_available_subtitle_languages(dirname, filename, missing_languages)
+            missing_languages = diskscanner.get_missing_subtitle_languages(dirname, filename)
+            available_languages = diskscanner.get_available_subtitle_languages(dirname, filename, missing_languages)
             movie_details.missing_languages = missing_languages
             movie_details.available_languages = available_languages
             movie_details.path = os.path.abspath(os.path.join(dirname, filename))
