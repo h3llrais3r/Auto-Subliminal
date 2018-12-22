@@ -221,6 +221,7 @@ def stop(exit=True):
     autosubliminal.SCANDISK.stop()
     autosubliminal.CHECKSUB.stop()
     autosubliminal.CHECKVERSION.stop()
+    autosubliminal.SCANLIBRARY.stop()
 
     # Stop permanent threads
     autosubliminal.WEBSOCKETBROADCASTER.stop()
