@@ -61,7 +61,7 @@
                                         </a>
                                     </div>
                                     <div class="title-poster-cell">
-                                        <a :href="getMovieDetailsUrl(movie.imdb_id)" :title="movie.title">
+                                        <a :href="getMovieDetailsUrl(movie.imdb_id)" :title="movie.title" class="main-column">
                                             <div class="title-poster-text">{{ movie.title }}</div>
                                         </a>
                                     </div>
