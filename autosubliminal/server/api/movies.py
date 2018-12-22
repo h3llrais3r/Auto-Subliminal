@@ -56,6 +56,6 @@ class MoviesApi(RestResource):
         movie_json['total_subtitles_missing'] = total_subtitles_missing
 
         if details:
-            movie_json['files'] = get_movie_files(movie.path)
+            movie_json['files'] = get_movie_files(movie.path, movie.available_languages)
 
         return movie_json

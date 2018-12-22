@@ -5,6 +5,9 @@ import os
 import re
 import time
 
+from babelfish.language import Language
+from six import text_type
+
 import subliminal
 
 import autosubliminal
@@ -12,6 +15,8 @@ from autosubliminal.util.common import safe_lowercase
 
 log = logging.getLogger(__name__)
 
+VIDEO_TYPE = 'video'
+SUBTITLE_TYPE = 'subtitle'
 FILE_EXTENSIONS = list(subliminal.VIDEO_EXTENSIONS) + ['.srt']
 
 
@@ -95,33 +100,61 @@ def get_show_files(show_path):
     return [{'location_name': k, 'location_path': v['path'], 'location_files': v['files']} for k, v in files.items()]
 
 
-def get_movie_files(movie_path):
+def get_movie_files(movie_path, available_languages):
     """Get all movie files.
 
     This returns all files that have a similar filename as the movie itself.
     :param movie_path: path to the movie video file
     :type movie_path: str
+    :param available_languages: the list of available subtitle languages for the movie
+    :type available_languages: list[str]
     :return: list of dict objects representing a file (filename and type)
     :rtype: list[dict]
     """
-    dirname, filename = os.path.split(movie_path)
-    root, _ = os.path.splitext(filename)
+    dirname, movie_filename = os.path.split(movie_path)
+    root, _ = os.path.splitext(movie_filename)
 
     # Movie files are supposed to be in the same dir as the file itself
     # Because movies can also be stored all together, we only check files with a similar name as the movie file itself
-    files = []
+    files = {}
+    languages = []
     for f in os.listdir(dirname):
         if f.startswith(root):
             _, ext = os.path.splitext(os.path.normcase(f))
             if safe_lowercase(ext) in FILE_EXTENSIONS:
-                files.append({'filename': f, 'type': _get_file_type(ext)})
+                file_type = _get_file_type(ext)
+                language = None
+                if file_type == SUBTITLE_TYPE:
+                    language = _get_subtitle_language(f, movie_filename)
+                    languages.append(language)
+                files.update({f: {'filename': f, 'type': file_type, 'language': language}})
 
-    return sorted(files, key=lambda k: k['filename'])
+    # Add embedded languages to video filename if needed
+    embedded_languages = [l for l in available_languages if l not in languages]
+    if embedded_languages:
+        files[movie_filename]['language'] = embedded_languages
+
+    # Convert to list, sort and return
+    return sorted([v for v in files.values()], key=lambda k: k['filename'])
 
 
 def _get_file_type(ext):
-    file_type = 'video'
+    file_type = VIDEO_TYPE
     if safe_lowercase(ext) == '.srt':
-        file_type = 'subtitle'
+        file_type = SUBTITLE_TYPE
 
     return file_type
+
+
+def _get_subtitle_language(subtitle_filename, video_filename):
+    subtitle_name, _ = os.path.splitext(subtitle_filename)
+    video_name, _ = os.path.splitext(video_filename)
+    if subtitle_name == video_name:
+        return autosubliminal.DEFAULTLANGUAGE
+    else:
+        language = subtitle_filename.lstrip(video_name)
+        # Check for valid language code
+        try:
+            return text_type(Language.fromietf(language))
+        except Exception:
+            return text_type(Language('und'))  # Return undefined for invalid language

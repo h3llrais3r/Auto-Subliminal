@@ -58,10 +58,27 @@ def test_get_show_files_in_season_folders():
     assert get_show_files(show_path) == show_files
 
 
-def test_get_movie_files():
+def test_get_movie_files(monkeypatch):
+    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
     file_name = 'Southpaw.2015.1080p.BluRay.x264.mkv'
     file_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), '..', 'resources', file_name))
     subtitle_name = 'Southpaw.2015.1080p.BluRay.x264.srt'
-    files = [{'filename': file_name, 'type': 'video'}, {'filename': subtitle_name, 'type': 'subtitle'}]
-    assert get_movie_files(file_path) == files
+    files = [
+        {'filename': file_name, 'type': 'video', 'language': None},
+        {'filename': subtitle_name, 'type': 'subtitle', 'language': 'nl'}
+    ]
+    assert get_movie_files(file_path, ['nl']) == files
+
+
+def test_get_movie_files_with_embedded_subtitles(monkeypatch):
+    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
+    file_name = 'Southpaw.2015.1080p.BluRay.x264.mkv'
+    file_path = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), '..', 'resources', file_name))
+    subtitle_name = 'Southpaw.2015.1080p.BluRay.x264.srt'
+    files = [
+        {'filename': file_name, 'type': 'video', 'language': ['en', 'fr']},
+        {'filename': subtitle_name, 'type': 'subtitle', 'language': 'nl'}
+    ]
+    assert get_movie_files(file_path, ['en', 'fr', 'nl']) == files

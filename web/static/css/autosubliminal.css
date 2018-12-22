@@ -626,6 +626,23 @@ table.tablesorter .filtered {
     white-space: pre; /* Needed to get \r\n working inside div */
 }
 
+/* Based on boostrap label with background */
+.file-type-badge {
+    display: inline-block;
+    width: auto;
+    padding: 4px;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #000000;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 0.25em;
+    background-color: #dddddd;
+    margin-right: 8px;
+}
+
 .img-notifier {
     height: 24px;
     width: 25px;

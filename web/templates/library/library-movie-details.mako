@@ -94,7 +94,8 @@
                                         <table class="details-files-overview">
                                             <tr v-for="file in movie.files">
                                                 <td class="wrapped">{{ file.filename }}</td>
-                                                <td class="pull-right">{{ file.type }}</td>
+                                                <td class="pull-right file-type-badge">{{ file.type }}</td>
+                                                <td class="pull-right language-badge" v-if="file.language">{{ file.language }}</td>
                                             </tr>
                                         </table>
                                     </div>
