@@ -174,34 +174,34 @@ def safe_text(obj, default_value=None):
 def safe_lowercase(obj, default_value=None):
     """Return the object converted to lowercase.
 
-    When not possible return the default value.
+    When not possible return the obj itself, or the default value if specified.
     """
     try:
         return obj.lower()
     except Exception:
-        return default_value
+        return default_value or obj
 
 
 def safe_uppercase(obj, default_value=None):
     """Return the object converted to uppercase.
 
-    When not possible return the default value.
+    When not possible return the obj itself, or the default value if specified.
     """
     try:
         return obj.upper()
     except Exception:
-        return default_value
+        return default_value or obj
 
 
 def safe_trim(obj, default_value=None):
     """Return the object trimmed with leading and trailing spaces, tabs and newlines.
 
-    When not possible return the default value.
+    When not possible return the obj itself, or the default value if specified.
     """
     try:
         return obj.strip(' \n\r\t')
     except Exception:
-        return default_value
+        return default_value or obj
 
 
 def sanitize(string_value, ignore_characters=None):
@@ -265,7 +265,7 @@ def display_value(value, default_value='', uppercase=False):
     result = ','.join(text_type(v) for v in result) if isinstance(result, list) else result
     result = safe_text(result, default_value)
     if uppercase:
-        result = safe_uppercase(result, default_value)
+        result = safe_uppercase(result, default_value=default_value)
     return result
 
 
@@ -275,7 +275,7 @@ def display_item_title(item, default_value='N/A', uppercase=False):
     if not title == default_value and not year == default_value:
         title += ' (' + year + ')'
     if uppercase:
-        title = safe_uppercase(title, default_value)
+        title = safe_uppercase(title, default_value=default_value)
     return title
 
 
@@ -295,7 +295,7 @@ def display_item_name(item, default_value='N/A', uppercase=False):
             else:
                 name += 'E' + episode.zfill(2)
     if uppercase:
-        name = safe_uppercase(name, default_value)
+        name = safe_uppercase(name, default_value=default_value)
     return name
 
 

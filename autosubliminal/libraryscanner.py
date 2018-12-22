@@ -9,6 +9,7 @@ from autosubliminal.core.cache import cache_artwork, is_artwork_cached
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, MovieDetailsDb
 from autosubliminal.indexer import ShowIndexer, MovieIndexer
+from autosubliminal.util.common import safe_lowercase
 from autosubliminal.util.filesystem import is_valid_video_file, is_skipped_dir, one_path_exists
 from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
 from tvdb_api_v2.utils.artwork import get_artwork_url
@@ -161,7 +162,7 @@ class LibraryScanner(ScheduledProcess):
     def _get_show_path(self, dirname):
         path = dirname
         # Get root show path (ignore season folders)
-        while 'season' in os.path.normpath(os.path.normcase(path)):
+        while 'season' in safe_lowercase(os.path.normpath(os.path.normcase(path))):
             path, _ = os.path.split(path)
         return path
 

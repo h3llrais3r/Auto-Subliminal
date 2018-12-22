@@ -8,6 +8,7 @@ import time
 import subliminal
 
 import autosubliminal
+from autosubliminal.util.common import safe_lowercase
 
 log = logging.getLogger(__name__)
 
@@ -67,13 +68,13 @@ def get_show_files(show_path):
     # Show files are supposed to be stored in individual season dirs or the root dir only
     files = {}
     for dirpath, dirnames, filenames in os.walk(show_path):
-        if 'season' in os.path.normcase(dirpath):
+        if 'season' in safe_lowercase(os.path.normpath(os.path.normcase(dirpath))):
             _, season_name = os.path.split(dirpath)
             # Files in season dirs
             season_files = []
             for f in filenames:
                 _, ext = os.path.splitext(os.path.normcase(f))
-                if ext in FILE_EXTENSIONS:
+                if safe_lowercase(ext) in FILE_EXTENSIONS:
                     season_files.append({'filename': f, 'type': _get_file_type(ext)})
             if season_files:
                 sorted_files = sorted(season_files, key=lambda k: k['filename'])
@@ -84,15 +85,11 @@ def get_show_files(show_path):
             root_files = []
             for f in filenames:
                 _, ext = os.path.splitext(os.path.normcase(f))
-                if ext in FILE_EXTENSIONS:
+                if safe_lowercase(ext) in FILE_EXTENSIONS:
                     root_files.append({'filename': f, 'type': _get_file_type(ext)})
             if root_files:
                 sorted_files = sorted(root_files, key=lambda k: k['filename'])
                 files.update({root_name: {'path': dirpath, 'files': sorted_files}})
-        else:
-            print('Unsupported dir found: %s' % dirpath)
-            print(os.path.normcase(dirpath))
-            print(os.path.normpath(dirpath))
 
     # Convert to list and return
     return [{'location_name': k, 'location_path': v['path'], 'location_files': v['files']} for k, v in files.items()]
@@ -116,7 +113,7 @@ def get_movie_files(movie_path):
     for f in os.listdir(dirname):
         if f.startswith(root):
             _, ext = os.path.splitext(os.path.normcase(f))
-            if ext in FILE_EXTENSIONS:
+            if safe_lowercase(ext) in FILE_EXTENSIONS:
                 files.append({'filename': f, 'type': _get_file_type(ext)})
 
     return sorted(files, key=lambda k: k['filename'])
@@ -124,7 +121,7 @@ def get_movie_files(movie_path):
 
 def _get_file_type(ext):
     file_type = 'video'
-    if ext == '.srt':
+    if safe_lowercase(ext) == '.srt':
         file_type = 'subtitle'
 
     return file_type

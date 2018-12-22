@@ -184,49 +184,49 @@ def test_save_text_default_value(mocker):
 
 def test_safe_lowercase():
     assert safe_lowercase(None) is None
-    assert safe_lowercase(None, 'n/a') == 'n/a'
+    assert safe_lowercase(None, default_value='n/a') == 'n/a'
     assert safe_lowercase(text_value_upper) == 'test'
     assert safe_lowercase(text_value_special_char_upper) == u'ù'
-    assert safe_lowercase(num_value) is None
-    assert safe_lowercase(num_value, 'n/a') == 'n/a'
-    assert safe_lowercase(long_value) is None
-    assert safe_lowercase(long_value, 'n/a') == 'n/a'
-    assert safe_lowercase(bool_value) is None
-    assert safe_lowercase(bool_value, 'n/a') == 'n/a'
-    assert safe_lowercase(list_value) is None
-    assert safe_lowercase(list_value, 'n/a') == 'n/a'
-    assert safe_lowercase(list_value_with_items, 'n/a') == 'n/a'
-    assert safe_lowercase(safe_text(list_value_with_items_upper), 'n/a') == '[\'a\', \'b\']'
-    assert safe_lowercase(dict_value) is None
-    assert safe_lowercase(dict_value, 'n/a') == 'n/a'
-    assert safe_lowercase(dict_value_with_items_upper, 'n/a') == 'n/a'
-    assert safe_lowercase(safe_text(dict_value_with_items_upper), 'n/a') == '{\'1\': \'a\'}'
+    assert safe_lowercase(num_value) is num_value
+    assert safe_lowercase(num_value, default_value='n/a') == 'n/a'
+    assert safe_lowercase(long_value) is long_value
+    assert safe_lowercase(long_value, default_value='n/a') == 'n/a'
+    assert safe_lowercase(bool_value) is bool_value
+    assert safe_lowercase(bool_value, default_value='n/a') == 'n/a'
+    assert safe_lowercase(list_value) is list_value
+    assert safe_lowercase(list_value, default_value='n/a') == 'n/a'
+    assert safe_lowercase(list_value_with_items, default_value='n/a') == 'n/a'
+    assert safe_lowercase(safe_text(list_value_with_items_upper), default_value='n/a') == '[\'a\', \'b\']'
+    assert safe_lowercase(dict_value) is dict_value
+    assert safe_lowercase(dict_value, default_value='n/a') == 'n/a'
+    assert safe_lowercase(dict_value_with_items_upper, default_value='n/a') == 'n/a'
+    assert safe_lowercase(safe_text(dict_value_with_items_upper), default_value='n/a') == '{\'1\': \'a\'}'
 
 
 def test_safe_uppercase():
     assert safe_uppercase(None) is None
-    assert safe_uppercase(None, 'N/A') == 'N/A'
+    assert safe_uppercase(None, default_value='N/A') == 'N/A'
     assert safe_uppercase(text_value) == 'TEST'
     assert safe_uppercase(text_value_special_char) == u'Ù'
-    assert safe_uppercase(num_value) is None
-    assert safe_uppercase(num_value, 'N/A') == 'N/A'
-    assert safe_uppercase(long_value) is None
-    assert safe_uppercase(long_value, 'N/A') == 'N/A'
-    assert safe_uppercase(bool_value) is None
-    assert safe_uppercase(bool_value, 'N/A') == 'N/A'
-    assert safe_uppercase(list_value) is None
-    assert safe_uppercase(list_value, 'N/A') == 'N/A'
-    assert safe_uppercase(list_value_with_items, 'N/A') == 'N/A'
-    assert safe_uppercase(safe_text(list_value_with_items), 'N/A') == '[\'A\', \'B\']'
-    assert safe_uppercase(dict_value) is None
-    assert safe_uppercase(dict_value, 'N/A') == 'N/A'
-    assert safe_uppercase(dict_value_with_items, 'N/A') == 'N/A'
-    assert safe_uppercase(safe_text(dict_value_with_items), 'N/A') == '{\'1\': \'A\'}'
+    assert safe_uppercase(num_value) is num_value
+    assert safe_uppercase(num_value, default_value='N/A') == 'N/A'
+    assert safe_uppercase(long_value) is long_value
+    assert safe_uppercase(long_value, default_value='N/A') == 'N/A'
+    assert safe_uppercase(bool_value) is bool_value
+    assert safe_uppercase(bool_value, default_value='N/A') == 'N/A'
+    assert safe_uppercase(list_value) is list_value
+    assert safe_uppercase(list_value, default_value='N/A') == 'N/A'
+    assert safe_uppercase(list_value_with_items, default_value='N/A') == 'N/A'
+    assert safe_uppercase(safe_text(list_value_with_items), default_value='N/A') == '[\'A\', \'B\']'
+    assert safe_uppercase(dict_value) is dict_value
+    assert safe_uppercase(dict_value, default_value='N/A') == 'N/A'
+    assert safe_uppercase(dict_value_with_items, default_value='N/A') == 'N/A'
+    assert safe_uppercase(safe_text(dict_value_with_items), default_value='N/A') == '{\'1\': \'A\'}'
 
 
 def test_safe_trim():
     assert safe_trim(None) is None
-    assert safe_trim(None, 'N/A') == 'N/A'
+    assert safe_trim(None, default_value='N/A') == 'N/A'
     assert safe_trim('test') == 'test'
     assert safe_trim(' test ') == 'test'
     assert safe_trim('\ntest\n') == 'test'
@@ -235,16 +235,16 @@ def test_safe_trim():
     assert safe_trim(' \n\r\ttest \n\r\t') == 'test'
     assert safe_trim(' \n\r\ttest and test \n\r\t') == 'test and test'
     assert safe_trim(' \n\r\ttest \n\r\tand \n\r\ttest \n\r\t') == 'test \n\r\tand \n\r\ttest'
-    assert safe_trim(num_value) is None
-    assert safe_trim(num_value, 'N/A') == 'N/A'
-    assert safe_trim(long_value) is None
-    assert safe_trim(long_value, 'N/A') == 'N/A'
-    assert safe_trim(bool_value) is None
-    assert safe_trim(bool_value, 'N/A') == 'N/A'
-    assert safe_trim(list_value) is None
-    assert safe_trim(list_value, 'N/A') == 'N/A'
-    assert safe_trim(dict_value) is None
-    assert safe_trim(dict_value, 'N/A') == 'N/A'
+    assert safe_trim(num_value) is num_value
+    assert safe_trim(num_value, default_value='N/A') == 'N/A'
+    assert safe_trim(long_value) is long_value
+    assert safe_trim(long_value, default_value='N/A') == 'N/A'
+    assert safe_trim(bool_value) is bool_value
+    assert safe_trim(bool_value, default_value='N/A') == 'N/A'
+    assert safe_trim(list_value) is list_value
+    assert safe_trim(list_value, default_value='N/A') == 'N/A'
+    assert safe_trim(dict_value) is dict_value
+    assert safe_trim(dict_value, default_value='N/A') == 'N/A'
 
 
 def test_sanitize():
