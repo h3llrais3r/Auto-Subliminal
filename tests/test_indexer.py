@@ -93,6 +93,17 @@ def test_get_show_episodes():
     assert episode.episode == 1
 
 
+def test_get_show_episode():
+    indexer = ShowIndexer()
+    episode = indexer.get_show_episode(80379, 1, 1)
+    assert isinstance(episode, ShowEpisodeDetails)
+    assert episode.tvdb_id == 332484
+    assert episode.show_tvdb_id == '80379'
+    assert episode.title == 'Pilot'
+    assert episode.season == 1
+    assert episode.episode == 1
+
+
 def test_get_imdb_id():
     indexer = MovieIndexer()
     # By title

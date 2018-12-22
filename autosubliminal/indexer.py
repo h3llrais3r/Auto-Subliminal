@@ -221,6 +221,18 @@ class ShowIndexer(Indexer):
         # Convert to list of show details objects if found
         return [ShowEpisodeDetails.from_indexer(x) for x in api_list] if api_list else None
 
+    @authenticate
+    def get_show_episode(self, tvdb_id, season, episode, language='en'):
+        log.debug('Getting show episode details for tvdb id %s, season %d, episode, %d', tvdb_id, season, episode)
+
+        api_obj = None
+        api_query_obj = self._client.get_series_episode(tvdb_id, season, episode, language=language)
+        if api_query_obj and api_query_obj.data and len(api_query_obj.data) > 0:
+            api_obj = api_query_obj.data[0]  # Query should only return 1 episode
+
+        # Convert to show episode details if found
+        return ShowEpisodeDetails.from_indexer(api_obj) if episode else None
+
 
 class MovieIndexer(Indexer):
     """
