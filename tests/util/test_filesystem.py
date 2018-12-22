@@ -55,6 +55,7 @@ def test_get_show_files_in_season_folders():
     show_files = [
         {'location_name': 'Season 01', 'location_path': os.path.join(show_path, 'Season 01'), 'location_files': files}
     ]
+    print(show_path)
     assert get_show_files(show_path) == show_files
 
 

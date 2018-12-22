@@ -89,6 +89,10 @@ def get_show_files(show_path):
             if root_files:
                 sorted_files = sorted(root_files, key=lambda k: k['filename'])
                 files.update({root_name: {'path': dirpath, 'files': sorted_files}})
+        else:
+            print('Unsupported dir found: %s' % dirpath)
+            print(os.path.normcase(dirpath))
+            print(os.path.normpath(dirpath))
 
     # Convert to list and return
     return [{'location_name': k, 'location_path': v['path'], 'location_files': v['files']} for k, v in files.items()]
