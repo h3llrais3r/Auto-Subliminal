@@ -119,7 +119,6 @@
                         <li>
                             <a href="${autosubliminal.WEBROOT}/system" class="run-process" data-process-name="${autosubliminal.CHECKSUB.name}"><i class="fa fa-play" aria-hidden="true"></i>&nbsp;Check Subtitles</a>
                         </li>
-                        <li class="divider"></li>
                         <li>
                             <a href="${autosubliminal.WEBROOT}/system" class="run-process" data-process-name="${autosubliminal.SCANLIBRARY.name}"><i class="fa fa-play" aria-hidden="true"></i>&nbsp;Scan Library</a>
                         </li>
@@ -150,6 +149,9 @@
                         </li>
                         <li>
                             <a href="${autosubliminal.WEBROOT}/system/flushLastDownloads"><i class="fa fa-times" aria-hidden="true"></i>&nbsp;Flush Downloaded</a>
+                        </li>
+                        <li>
+                            <a href="${autosubliminal.WEBROOT}/system/flushLibrary"><i class="fa fa-times" aria-hidden="true"></i>&nbsp;Flush Library</a>
                         </li>
                         <li class="divider"></li>
                         <li>

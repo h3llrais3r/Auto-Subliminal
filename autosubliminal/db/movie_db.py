@@ -31,6 +31,7 @@ class MovieDetailsDb(object):
         self._query_set = 'INSERT INTO movie_details VALUES (?,?,?,?,?,?,?,?)'
         self._query_update = 'UPDATE movie_details SET title=?, year=?, path=?, overview=?, poster=?, ' \
                              'available_languages=?, missing_languages=? WHERE imdb_id=?'
+        self._query_flush = 'DELETE FROM movie_details'
 
     def get_all_movies(self):
         """Get all movies.
@@ -103,6 +104,14 @@ class MovieDetailsDb(object):
             to_text(movie_details.missing_languages),
             movie_details.imdb_id
         ])
+        connection.commit()
+        connection.close()
+
+    def flush_movies(self):
+        """Flush all movies."""
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_flush)
         connection.commit()
         connection.close()
 

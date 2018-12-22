@@ -36,6 +36,7 @@ class ShowDetailsDb(object):
         self._query_get_all = 'SELECT * FROM show_details'
         self._query_get = 'SELECT * FROM show_details WHERE tvdb_id = ?'
         self._query_set = 'INSERT INTO show_details VALUES (?,?,?,?,?,?,?)'
+        self._query_flush = 'DELETE FROM show_details'
 
     def get_all_shows(self):
         """Get all shows.
@@ -89,6 +90,14 @@ class ShowDetailsDb(object):
         connection.commit()
         connection.close()
 
+    def flush_shows(self):
+        """Flush all shows."""
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_flush)
+        connection.commit()
+        connection.close()
+
 
 class ShowEpisodeDetailsDb(object):
     def __init__(self):
@@ -97,6 +106,7 @@ class ShowEpisodeDetailsDb(object):
         self._query_set = 'INSERT INTO show_episode_details VALUES (?,?,?,?,?,?,?,?)'
         self._query_update = 'UPDATE show_episode_details SET show_tvdb_id=?, title=?, season=?, episode=?, path=?, ' \
                              'available_languages=?, missing_languages=? WHERE tvdb_id=?'
+        self._query_flush = 'DELETE FROM show_episode_details'
 
     def get_show_episodes(self, show_tvdb_id):
         """Get the episodes of a show by its tvdb id.
@@ -175,6 +185,14 @@ class ShowEpisodeDetailsDb(object):
             to_text(show_episode.missing_languages),
             show_episode.tvdb_id
         ])
+        connection.commit()
+        connection.close()
+
+    def flush_show_episodes(self):
+        """Flush all show episodes."""
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_flush)
         connection.commit()
         connection.close()
 
