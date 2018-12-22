@@ -25,7 +25,7 @@ class LibraryScanner(ScheduledProcess):
     """
 
     def __init__(self):
-        super(LibraryScanner, self).__init__()
+        super(LibraryScanner, self).__init__(run_lock=False, force_run_lock=False)
         self.show_db = ShowDetailsDb()
         self.show_episodes_db = ShowEpisodeDetailsDb()
         self.movie_db = MovieDetailsDb()
