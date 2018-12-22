@@ -129,7 +129,7 @@ def get_movie_files(movie_path, available_languages):
                     languages.append(language)
                 files.update({f: {'filename': f, 'type': file_type, 'language': language}})
 
-    # Add embedded languages to video filename if needed
+    # Add embedded languages to movie filename if needed
     embedded_languages = [l for l in available_languages if l not in languages]
     if embedded_languages:
         files[movie_filename]['language'] = embedded_languages

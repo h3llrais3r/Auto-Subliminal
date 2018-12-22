@@ -95,7 +95,7 @@
                                             </tr>
                                             <tr v-for="f in file.location_files">
                                                 <td class="wrapped">{{ f.filename }}</td>
-                                                <td class="pull-right">{{ f.type }}</td>
+                                                <td class="pull-right file-type-badge">{{ f.type }}</td>
                                             </tr>
                                         </table>
                                     </div>
