@@ -5,7 +5,7 @@ import logging
 import cherrypy
 
 import autosubliminal
-from autosubliminal.db.movie_db import MovieDetailsDb
+from autosubliminal.db import MovieDetailsDb
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.filesystem import get_movie_files
 

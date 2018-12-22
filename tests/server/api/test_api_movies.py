@@ -1,7 +1,7 @@
 # coding=utf-8
 
 from autosubliminal.core.movie import MovieDetails
-from autosubliminal.db.movie_db import MovieDetailsDb
+from autosubliminal.db import MovieDetailsDb
 from autosubliminal.server.api.movies import MoviesApi
 
 from tests.server.api.test_api import pickle_api_result

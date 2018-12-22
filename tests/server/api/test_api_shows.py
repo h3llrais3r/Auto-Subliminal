@@ -1,7 +1,7 @@
 # coding=utf-8
 
 from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails
-from autosubliminal.db.show_db import ShowDetailsDb, ShowEpisodeDetailsDb
+from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb
 from autosubliminal.server.api.shows import ShowsApi
 
 from tests.server.api.test_api import pickle_api_result
