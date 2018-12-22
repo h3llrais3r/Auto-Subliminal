@@ -168,6 +168,14 @@ class LibraryScanner(ScheduledProcess):
 
     def _update_episode_details(self, dirname, filename, show_tvdb_id, season, episode):
         episode_details = self.show_episodes_db.get_show_episode(show_tvdb_id, season, episode)
+
+        # If no episode is found, we need to fetch the episode detailts of the show
+        # This is because the show is still on-going and we didn't got all episodes when the show was loaded
+        if not episode_details:
+            episode_details = self.show_indexer.get_show_episode(show_tvdb_id, season, episode)
+            if episode_details:
+                self.show_episodes_db.set_show_episode(episode_details)
+
         if episode_details:
             # Set details
             missing_languages = diskscanner.get_missing_subtitle_languages(dirname, filename)
@@ -180,6 +188,7 @@ class LibraryScanner(ScheduledProcess):
 
     def _update_movie_details(self, dirname, filename, imdb_id):
         movie_details = self.movie_db.get_movie(imdb_id)
+
         if movie_details:
             # Set details
             missing_languages = diskscanner.get_missing_subtitle_languages(dirname, filename)
