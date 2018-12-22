@@ -121,6 +121,10 @@
                         </li>
                         <li class="divider"></li>
                         <li>
+                            <a href="${autosubliminal.WEBROOT}/system" class="run-process" data-process-name="${autosubliminal.SCANLIBRARY.name}"><i class="fa fa-play" aria-hidden="true"></i>&nbsp;Scan Library</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
                             <a href="${autosubliminal.WEBROOT}/system/restart"><i class="fa fa-repeat" aria-hidden="true"></i>&nbsp;Restart</a>
                         </li>
                         <li>
