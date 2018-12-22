@@ -167,9 +167,9 @@ def get_missing_subtitle_languages(dirname, filename, scan_embedded=False, detec
     missing_subtitles = []
 
     # Check embedded subtitles
-    embedded_subtitles = []
+    embedded_languages = []
     if scan_embedded:
-        embedded_subtitles = _get_embedded_subtitles(dirname, filename)
+        embedded_languages = get_embedded_subtitle_languages(dirname, filename)
 
     # Check default language
     detect_language = False
@@ -185,7 +185,7 @@ def get_missing_subtitle_languages(dirname, filename, scan_embedded=False, detec
             detect_language = detect_invalid  # Only for default subtitle without suffix
         srt_path = os.path.join(dirname, srt_file)
         sub_exists = os.path.exists(srt_path)
-        if not sub_exists and default_language not in embedded_subtitles:
+        if not sub_exists and default_language not in embedded_languages:
             log.debug('Video is missing the default language: %s', autosubliminal.DEFAULTLANGUAGE)
             missing_subtitles.append(autosubliminal.DEFAULTLANGUAGE)
         elif sub_exists and detect_language:
@@ -208,16 +208,17 @@ def get_missing_subtitle_languages(dirname, filename, scan_embedded=False, detec
         for language in autosubliminal.ADDITIONALLANGUAGES:
             additional_language = Language.fromietf(language)
             srt_file = os.path.splitext(filename)[0] + u'.' + language + u'.srt'
-            if not os.path.exists(os.path.join(dirname, srt_file)) and additional_language not in embedded_subtitles:
+            if not os.path.exists(os.path.join(dirname, srt_file)) and additional_language not in embedded_languages:
                 log.debug('Video is missing the additional language: %s', language)
                 missing_subtitles.append(language)
 
     return missing_subtitles
 
 
-def _get_embedded_subtitles(dirname, filename):
-    """
-    Based on subliminal.video.scan_video(...) but only keep the check for embedded subtitles
+def get_embedded_subtitle_languages(dirname, filename):
+    """Get the embedded subtitle languages for a video file.
+
+    Based on subliminal.video.scan_video(...) but only keep the check for embedded subtitles.
     """
     log.debug('Checking for embedded subtitle(s)')
 
