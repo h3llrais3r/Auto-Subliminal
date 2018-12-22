@@ -86,7 +86,7 @@ class System(object):
             MovieDetailsDb().flush_movies()
             send_websocket_notification('Flushed library database.')
         else:
-            send_websocket_notification('Cannot flush library database because library scanner is running!',
+            send_websocket_notification('Cannot flush library database when library scanner is running!',
                                         type='notice')
 
         redirect('/library')
