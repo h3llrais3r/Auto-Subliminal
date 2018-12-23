@@ -359,7 +359,7 @@ function runProcessOnServer(process_name) {
                 'name': process_name
             }
         }
-    }
+    };
     sendWebsocketMessage(JSON.stringify(event));
 }
 
@@ -367,9 +367,9 @@ function runProcessOnServer(process_name) {
 function styleProgressBar() {
     $('.vue-simple-progress-bar').each(function () {
         var self = $(this);
-        var percentage = Math.round(parseInt(self.css('width')) / parseInt(self.parent('.vue-simple-progress').css('width')) * 100);
+        var percentage = Math.round(parseInt(self.css('width')) / parseInt(self.prev('.vue-simple-progress-text').css('width')) * 100);
         var progressPercentage = 100;
-        while (percentage <= progressPercentage && percentage > 0) {
+        while (percentage > 0 && percentage < progressPercentage) {
             progressPercentage -= 5;
         }
         self.addClass('progress-' + progressPercentage);

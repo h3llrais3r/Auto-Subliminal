@@ -600,7 +600,7 @@ table.tablesorter .filtered {
 }
 
 .progress-100 {
-    background-color: rgb(2, 255, 0) !important;
+    background-color: rgb(2, 175, 0) !important; /* Use darker green instead of green to see clear difference on 100% */
 }
 
 /*******************
