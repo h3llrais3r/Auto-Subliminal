@@ -94,9 +94,15 @@
                                         <table class="table table-condensed table-striped table-no-column-borders">
                                             <tr v-for="f in movie.files">
                                                 <td class="wrapped">{{ f.filename }}</td>
-                                                <td class="text-right">
-                                                    <span class="language-badge" v-if="f.language && !isSubtitleFile(f)" v-for="language in f.language">{{ language }}</span>
-                                                    <span class="language-badge" v-if="f.language && isSubtitleFile(f)">{{ f.language }}</span>
+                                                <td v-if="f.type == 'video'" class="text-right">
+                                                    <!-- language is an array if available on video -->
+                                                    <span class="language-badge" v-if="f.language" v-for="language in f.language">{{ language }}</span>
+                                                    <span class="language-badge" v-if="f.language && f.language.length > 0">embedded</span>
+                                                    <span class="file-type-badge">{{ f.type }}</span>
+                                                </td>
+                                                <td v-if="f.type == 'subtitle'" class="text-right">
+                                                    <!-- language is a string if available on video -->
+                                                    <span class="language-badge" v-if="f.language">{{ f.language }}</span>
                                                     <span class="file-type-badge">{{ f.type }}</span>
                                                 </td>
                                             </tr>

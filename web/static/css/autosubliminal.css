@@ -645,7 +645,8 @@ table.tablesorter .filtered {
 /* Based on boostrap label with background */
 .language-badge {
     display: inline-block;
-    width: 25px;
+    width: auto;
+    min-width: 25px;
     padding: 4px;
     font-size: 75%;
     font-weight: 700;

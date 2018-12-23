@@ -38,9 +38,6 @@ function init() {
             },
             getProcessPercentage: function (show) {
                 return show.total_subtitles_available / show.total_subtitles_wanted * 100;
-            },
-            isSubtitleFile: function (file) {
-                return file.type == 'subtitle';
             }
         }
     });
