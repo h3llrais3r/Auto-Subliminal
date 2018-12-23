@@ -68,7 +68,9 @@
                                 </div>
                             </td>
                             <td>{{ movie.year }}</td>
-                            <td class="wrapped">{{ movie.path }}</td>
+                            <td class="wrapped">
+                                <span class="path">{{ movie.path }}</span>
+                            </td>
                             <td>
                                 <span v-for="language in movie.wanted_languages" class="language-badge">{{ language }}</span>
                             </td>

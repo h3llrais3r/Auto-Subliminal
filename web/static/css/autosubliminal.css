@@ -613,8 +613,9 @@ table.tablesorter .filtered {
 
 /* Style a banner title in tablesorter reflow mode */
 @media (max-width: 48em) {
-    .title-banner-image {
+    .title-banner-image, .path {
         width: 50%;
+        float: right;
     }
 }
 

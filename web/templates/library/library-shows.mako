@@ -59,7 +59,9 @@
                                 </a>
                             </td>
                             <td>{{ show.year }}</td>
-                            <td class="wrapped">{{ show.path }}</td>
+                            <td class="wrapped">
+                                <span class="path">{{ show.path }}</span>
+                            </td>
                             <td>
                                 <span v-for="language in show.wanted_languages" class="language-badge">{{ language }}</span>
                             </td>
