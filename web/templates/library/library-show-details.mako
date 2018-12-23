@@ -96,6 +96,7 @@
                                             <tr v-for="f in file.location_files">
                                                 <td class="wrapped">{{ f.filename }}</td>
                                                 <td class="pull-right file-type-badge">{{ f.type }}</td>
+                                                <td class="pull-right language-badge" v-if="f.language">{{ f.language }}</td>
                                             </tr>
                                         </table>
                                     </div>

@@ -79,7 +79,11 @@ def get_show_files(show_path):
             for f in filenames:
                 _, ext = os.path.splitext(os.path.normcase(f))
                 if safe_lowercase(ext) in FILE_EXTENSIONS:
-                    season_files.append({'filename': f, 'type': _get_file_type(ext)})
+                    file_type = _get_file_type(ext)
+                    language = None
+                    if file_type == SUBTITLE_TYPE:
+                        language = _get_subtitle_language(f)
+                    season_files.append({'filename': f, 'type': file_type, 'language': language})
             if season_files:
                 sorted_files = sorted(season_files, key=lambda k: k['filename'])
                 files.update({season_name: {'path': dirpath, 'files': sorted_files}})
@@ -90,7 +94,11 @@ def get_show_files(show_path):
             for f in filenames:
                 _, ext = os.path.splitext(os.path.normcase(f))
                 if safe_lowercase(ext) in FILE_EXTENSIONS:
-                    root_files.append({'filename': f, 'type': _get_file_type(ext)})
+                    file_type = _get_file_type(ext)
+                    language = None
+                    if file_type == SUBTITLE_TYPE:
+                        language = _get_subtitle_language(f)
+                    root_files.append({'filename': f, 'type': file_type, 'language': language})
             if root_files:
                 sorted_files = sorted(root_files, key=lambda k: k['filename'])
                 files.update({root_name: {'path': dirpath, 'files': sorted_files}})
@@ -125,7 +133,7 @@ def get_movie_files(movie_path, available_languages):
                 file_type = _get_file_type(ext)
                 language = None
                 if file_type == SUBTITLE_TYPE:
-                    language = _get_subtitle_language(f, movie_filename)
+                    language = _get_subtitle_language(f)
                     languages.append(language)
                 files.update({f: {'filename': f, 'type': file_type, 'language': language}})
 
@@ -146,15 +154,17 @@ def _get_file_type(ext):
     return file_type
 
 
-def _get_subtitle_language(subtitle_filename, video_filename):
-    subtitle_name, _ = os.path.splitext(subtitle_filename)
-    video_name, _ = os.path.splitext(video_filename)
-    if subtitle_name == video_name:
-        return autosubliminal.DEFAULTLANGUAGE
+def _get_subtitle_language(filename):
+    video_name, _ = os.path.splitext(filename)
+    language = None
+    # Try to parse the 2 last characters as language
+    try:
+        language = Language.fromietf(video_name[:-2])
+    except Exception:
+        pass
+    # Check if language suffix is used in filename (f.e. <video_name>.nl)
+    # If no language suffix is used, we assume it's the default language
+    if video_name[-3:-2] == '.' and language:
+        return text_type(language)
     else:
-        language = subtitle_filename.lstrip(video_name)
-        # Check for valid language code
-        try:
-            return text_type(Language.fromietf(language))
-        except Exception:
-            return text_type(Language('und'))  # Return undefined for invalid language
+        return autosubliminal.DEFAULTLANGUAGE

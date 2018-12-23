@@ -28,14 +28,15 @@ def test_is_valid_video_file():
     assert not is_valid_video_file('sample_test.mkv')
 
 
-def test_get_show_files():
-    file_name = 'The.Big.Bang.Theory.S01E01.720p.HDTV.x264-AVS[rarbg].mkv'
+def test_get_show_files(monkeypatch):
+    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
     show_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), '..', 'resources', 'shows', 'The Big Bang Theory'))
+    file_name = 'The.Big.Bang.Theory.S01E01.720p.HDTV.x264-AVS[rarbg].mkv'
     subtitle_name = 'The.Big.Bang.Theory.S01E01.720p.HDTV.x264-AVS[rarbg].srt'
     files = [
-        {'filename': file_name, 'type': 'video'},
-        {'filename': subtitle_name, 'type': 'subtitle'}
+        {'filename': file_name, 'type': 'video', 'language': None},
+        {'filename': subtitle_name, 'type': 'subtitle', 'language': 'nl'}
     ]
     show_files = [
         {'location_name': 'Root', 'location_path': show_path, 'location_files': files}
@@ -43,7 +44,8 @@ def test_get_show_files():
     assert get_show_files(show_path) == show_files
 
 
-def test_get_show_files_in_season_folders():
+def test_get_show_files_in_season_folders(monkeypatch):
+    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
     show_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), '..', 'resources', 'shows', 'Ash vs Evil Dead'))
     file_name_s01e01 = 'Ash.vs.Evil.Dead.S01E01.720p.WEB-DL.mkv'
@@ -51,12 +53,12 @@ def test_get_show_files_in_season_folders():
     subtitle_name_s01e01 = 'Ash.vs.Evil.Dead.S01E01.720p.WEB-DL.srt'
     subtitle_name_s04e01 = 'Ash.vs.Evil.Dead.S04E01.720p.WEB-DL.srt'
     files_s01 = [
-        {'filename': file_name_s01e01, 'type': 'video'},
-        {'filename': subtitle_name_s01e01, 'type': 'subtitle'}
+        {'filename': file_name_s01e01, 'type': 'video', 'language': None},
+        {'filename': subtitle_name_s01e01, 'type': 'subtitle', 'language': 'nl'}
     ]
     files_s04 = [
-        {'filename': file_name_s04e01, 'type': 'video'},
-        {'filename': subtitle_name_s04e01, 'type': 'subtitle'}
+        {'filename': file_name_s04e01, 'type': 'video', 'language': None},
+        {'filename': subtitle_name_s04e01, 'type': 'subtitle', 'language': 'nl'}
     ]
     show_files = [
         {'location_name': 'Season 01', 'location_path': os.path.join(show_path, 'Season 01'),
