@@ -5,13 +5,12 @@ import os
 import re
 import time
 
+import subliminal
 from babelfish.language import Language
 from six import text_type
 
-import subliminal
-
 import autosubliminal
-from autosubliminal.util.common import safe_lowercase
+from autosubliminal.util.common import natural_keys, safe_lowercase
 
 log = logging.getLogger(__name__)
 
@@ -96,8 +95,9 @@ def get_show_files(show_path):
                 sorted_files = sorted(root_files, key=lambda k: k['filename'])
                 files.update({root_name: {'path': dirpath, 'files': sorted_files}})
 
-    # Convert to list and return
-    return [{'location_name': k, 'location_path': v['path'], 'location_files': v['files']} for k, v in files.items()]
+    # Return sorted list of file dicts (grouped by location=subdir)
+    return [{'location_name': k, 'location_path': files[k]['path'], 'location_files': files[k]['files']} for k in
+            sorted(files.keys(), key=natural_keys)]
 
 
 def get_movie_files(movie_path, available_languages):
@@ -134,7 +134,7 @@ def get_movie_files(movie_path, available_languages):
     if embedded_languages:
         files[movie_filename]['language'] = embedded_languages
 
-    # Convert to list, sort and return
+    # Return sorted list of file dicts
     return sorted([v for v in files.values()], key=lambda k: k['filename'])
 
 

@@ -44,16 +44,25 @@ def test_get_show_files():
 
 
 def test_get_show_files_in_season_folders():
-    file_name = 'Ash.vs.Evil.Dead.S01E01.720p.WEB-DL.mkv'
     show_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), '..', 'resources', 'shows', 'Ash vs Evil Dead'))
-    subtitle_name = 'Ash.vs.Evil.Dead.S01E01.720p.WEB-DL.srt'
-    files = [
-        {'filename': file_name, 'type': 'video'},
-        {'filename': subtitle_name, 'type': 'subtitle'}
+    file_name_s01e01 = 'Ash.vs.Evil.Dead.S01E01.720p.WEB-DL.mkv'
+    file_name_s04e01 = 'Ash.vs.Evil.Dead.S04E01.720p.WEB-DL.mkv'
+    subtitle_name_s01e01 = 'Ash.vs.Evil.Dead.S01E01.720p.WEB-DL.srt'
+    subtitle_name_s04e01 = 'Ash.vs.Evil.Dead.S04E01.720p.WEB-DL.srt'
+    files_s01 = [
+        {'filename': file_name_s01e01, 'type': 'video'},
+        {'filename': subtitle_name_s01e01, 'type': 'subtitle'}
+    ]
+    files_s04 = [
+        {'filename': file_name_s04e01, 'type': 'video'},
+        {'filename': subtitle_name_s04e01, 'type': 'subtitle'}
     ]
     show_files = [
-        {'location_name': 'Season 01', 'location_path': os.path.join(show_path, 'Season 01'), 'location_files': files}
+        {'location_name': 'Season 01', 'location_path': os.path.join(show_path, 'Season 01'),
+         'location_files': files_s01},
+        {'location_name': 'Season 04', 'location_path': os.path.join(show_path, 'Season 04'),
+         'location_files': files_s04}
     ]
     assert get_show_files(show_path) == show_files
 
