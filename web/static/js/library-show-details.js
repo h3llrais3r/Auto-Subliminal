@@ -38,6 +38,32 @@ function init() {
             },
             getProcessPercentage: function (show) {
                 return show.total_subtitles_available / show.total_subtitles_wanted * 100;
+            },
+            getNrOfSubtitles: function (files, language) {
+                var subtitleCount = 0;
+                for (var i = 0; i < files.length; i++) {
+                    if (files[i].type == 'subtitle' && files[i].language != null && files[i].language == language) {
+                        // A subtitle file can have only 1 language
+                        subtitleCount++;
+                    } else if (files[i].type == 'video' && files[i].language != null) {
+                        // A video file can have multiple embedded languages, so we need to check if it contains it
+                        for (var j = 0; files[i].language[j]; j++) {
+                            if (files[i].language[j] == language) {
+                                subtitleCount++;
+                            }
+                        }
+                    }
+                }
+                return subtitleCount;
+            },
+            getNrOfVideos: function (files) {
+                var videoCount = 0;
+                for (var i = 0; i < files.length; i++) {
+                    if (files[i].type == 'video') {
+                        videoCount++;
+                    }
+                }
+                return videoCount;
             }
         }
     });

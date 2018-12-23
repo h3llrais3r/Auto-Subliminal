@@ -79,19 +79,35 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <table v-for="file in show.files" class="table table-condensed table-striped table-no-column-borders">
+                                        <table v-for="file in show.files" class="table table-condensed table-striped table-no-column-borders table-no-sort">
                                             <thead>
                                             <tr>
                                                 <th colspan="2">
-                                                    <span class="details-files-location">{{ file.location_name }}</span>
-                                                    <span class="dropdown">
-                                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                                        </a>
-                                                        <ul class="dropdown-menu has-tip info-list">
-                                                            <li>{{ file.location_path }}</li>
-                                                        </ul>
-                                                    </span>
+                                                    <table class="details-files-location">
+                                                        <tr>
+                                                            <td>
+                                                                <span>{{ file.location_name }}</span>
+                                                                <span class="dropdown">
+                                                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                                                    </a>
+                                                                    <ul class="dropdown-menu has-tip info-list">
+                                                                        <li>{{ file.location_path }}</li>
+                                                                    </ul>
+                                                                </span>
+                                                            </td>
+                                                            <td class="text-right">
+                                                                <span v-for="language in show.wanted_languages" class="btn btn-sm btn-static">
+                                                                    {{ language }}
+                                                                    <span class="badge">{{ getNrOfSubtitles(file.location_files, language) }}</span>
+                                                                </span>
+                                                                <span class="btn btn-sm btn-static">
+                                                                    video
+                                                                    <span class="badge">{{ getNrOfVideos(file.location_files) }}</span>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
                                                 </th>
                                             </tr>
                                             </thead>
@@ -99,14 +115,14 @@
                                             <tr v-for="f in file.location_files">
                                                 <td class="wrapped">{{ f.filename }}</td>
                                                 <td v-if="f.type == 'video'" class="text-right">
-                                                    <!-- language is an array if available on video -->
-                                                    <span class="language-badge" v-if="f.language" v-for="language in f.language">{{ language }}</span>
-                                                    <span class="language-badge" v-if="f.language && f.language.length > 0">embedded</span>
+                                                    <!-- language is an array in case of video type -->
+                                                    <span class="language-badge right-aligned" v-if="f.language" v-for="language in f.language">{{ language }}</span>
+                                                    <span class="language-badge right-aligned" v-if="f.language && f.language.length > 0">embedded</span>
                                                     <span class="file-type-badge">{{ f.type }}</span>
                                                 </td>
                                                 <td v-if="f.type == 'subtitle'" class="text-right">
-                                                    <!-- language is a string if available on video -->
-                                                    <span class="language-badge" v-if="f.language">{{ f.language }}</span>
+                                                    <!-- language is a string in case of subtitle type -->
+                                                    <span class="language-badge right-aligned" v-if="f.language">{{ f.language }}</span>
                                                     <span class="file-type-badge">{{ f.type }}</span>
                                                 </td>
                                             </tr>
