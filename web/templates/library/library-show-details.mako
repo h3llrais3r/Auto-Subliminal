@@ -79,9 +79,10 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <table v-for="file in show.files" class="details-files-overview">
+                                        <table v-for="file in show.files" class="table table-condensed table-striped table-no-column-borders">
+                                            <thead>
                                             <tr>
-                                                <td colspan="2">
+                                                <th colspan="2">
                                                     <span class="details-files-location">{{ file.location_name }}</span>
                                                     <span class="dropdown">
                                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -91,13 +92,19 @@
                                                             <li>{{ file.location_path }}</li>
                                                         </ul>
                                                     </span>
-                                                </td>
+                                                </th>
                                             </tr>
+                                            </thead>
+                                            <tbody>
                                             <tr v-for="f in file.location_files">
                                                 <td class="wrapped">{{ f.filename }}</td>
-                                                <td class="pull-right file-type-badge">{{ f.type }}</td>
-                                                <td class="pull-right language-badge" v-if="f.language">{{ f.language }}</td>
+                                                <td class="text-right">
+                                                    <span class="language-badge" v-if="f.language && !isSubtitleFile(f)" v-for="language in f.language">{{ language }}</span>
+                                                    <span class="language-badge" v-if="f.language && isSubtitleFile(f)">{{ f.language }}</span>
+                                                    <span class="file-type-badge">{{ f.type }}</span>
+                                                </td>
                                             </tr>
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>

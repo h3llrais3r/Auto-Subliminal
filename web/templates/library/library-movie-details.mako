@@ -91,11 +91,14 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <table class="details-files-overview">
-                                            <tr v-for="file in movie.files">
-                                                <td class="wrapped">{{ file.filename }}</td>
-                                                <td class="pull-right file-type-badge">{{ file.type }}</td>
-                                                <td class="pull-right language-badge" v-if="file.language">{{ file.language }}</td>
+                                        <table class="table table-condensed table-striped table-no-column-borders">
+                                            <tr v-for="f in movie.files">
+                                                <td class="wrapped">{{ f.filename }}</td>
+                                                <td class="text-right">
+                                                    <span class="language-badge" v-if="f.language && !isSubtitleFile(f)" v-for="language in f.language">{{ language }}</span>
+                                                    <span class="language-badge" v-if="f.language && isSubtitleFile(f)">{{ f.language }}</span>
+                                                    <span class="file-type-badge">{{ f.type }}</span>
+                                                </td>
                                             </tr>
                                         </table>
                                     </div>

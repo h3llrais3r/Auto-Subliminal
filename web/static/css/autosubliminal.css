@@ -241,6 +241,10 @@ table.table tbody tr td {
     vertical-align: middle;
 }
 
+table.table.table-no-column-borders tbody tr td {
+    border: none;
+}
+
 /* Inactive rows - grey out and set background color */
 table.table tbody tr.inactive td {
     color: rgb(0, 0, 0);
@@ -501,16 +505,6 @@ table.tablesorter .filtered {
 .details-files-location {
     font-weight: bold;
     padding-bottom: 5px;
-}
-
-.details-files-overview {
-    width: 100%;
-    margin-bottom: 20px;
-}
-
-.details-files-overview td {
-    padding-bottom: 5px;
-    vertical-align: middle;
 }
 
 /***********************
