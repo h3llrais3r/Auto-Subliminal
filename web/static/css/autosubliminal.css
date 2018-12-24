@@ -524,87 +524,150 @@ table.tablesorter .filtered {
 /* Based on https://stackoverflow.com/questions/7128675/from-green-to-red-color-depend-on-percentage */
 
 .progress-0 {
-    background-color: rgb(255, 2, 0) !important;
+    background-image: -moz-linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0)) !important;
+    background-image: linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0)) !important;
+    background-image: -o-linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0)) !important;
 }
 
 .progress-5 {
-    background-color: rgb(255, 28, 0) !important;
+    background-image: -moz-linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0)) !important;
+    background-image: linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0)) !important;
+    background-image: -o-linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0)) !important;
 }
 
 .progress-10 {
-    background-color: rgb(255, 53, 0) !important;
+    background-image: -moz-linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0)) !important;
+    background-image: linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0)) !important;
+    background-image: -o-linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0)) !important;
 }
 
 .progress-15 {
-    background-color: rgb(255, 78, 0) !important;
+    background-image: -moz-linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0)) !important;
+    background-image: linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0)) !important;
+    background-image: -o-linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0)) !important;
 }
 
 .progress-20 {
-    background-color: rgb(255, 103, 0) !important;
+    background-image: -moz-linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0)) !important;
+    background-image: linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0)) !important;
+    background-image: -o-linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0)) !important;
 }
 
 .progress-25 {
-    background-color: rgb(255, 129, 0) !important;
+    background-image: -moz-linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0)) !important;
+    background-image: linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0)) !important;
+    background-image: -o-linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0)) !important;
 }
 
 .progress-30 {
-    background-color: rgb(255, 154, 0) !important;
+    background-image: -moz-linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0)) !important;
+    background-image: linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0)) !important;
+    background-image: -o-linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0)) !important;
 }
 
 .progress-35 {
-    background-color: rgb(255, 179, 0) !important;
+    background-image: -moz-linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0)) !important;
+    background-image: linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0)) !important;
+    background-image: -o-linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0)) !important;
 }
 
 .progress-40 {
-    background-color: rgb(255, 204, 0) !important;
+    background-image: -moz-linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0)) !important;
+    background-image: linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0)) !important;
+    background-image: -o-linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0)) !important;
 }
 
 .progress-45 {
-    background-color: rgb(255, 230, 0) !important;
+    background-image: -moz-linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0)) !important;
+    background-image: linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0)) !important;
+    background-image: -o-linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0)) !important;
 }
 
 .progress-50 {
-    background-color: rgb(255, 255, 0) !important;
+    background-image: -moz-linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0)) !important;
+    background-image: linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0)) !important;
+    background-image: -o-linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0)) !important;
 }
 
 .progress-55 {
-    background-color: rgb(230, 255, 0) !important;
+    background-image: -moz-linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0)) !important;
+    background-image: linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0)) !important;
+    background-image: -o-linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0)) !important;
 }
 
 .progress-60 {
-    background-color: rgb(204, 255, 0) !important;
+    background-image: -moz-linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0)) !important;
+    background-image: linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0)) !important;
+    background-image: -o-linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0)) !important;
 }
 
 .progress-65 {
-    background-color: rgb(179, 255, 0) !important;
+    background-image: -moz-linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0)) !important;
+    background-image: linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0)) !important;
+    background-image: -o-linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0)) !important;
 }
 
 .progress-70 {
-    background-color: rgb(154, 255, 0) !important;
+    background-image: -moz-linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0)) !important;
+    background-image: linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0)) !important;
+    background-image: -o-linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0)) !important;
 }
 
 .progress-75 {
-    background-color: rgb(129, 255, 0) !important;
+    background-image: -moz-linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0)) !important;
+    background-image: linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0)) !important;
+    background-image: -o-linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0)) !important;
 }
 
 .progress-80 {
-    background-color: rgb(103, 255, 0) !important;
+    background-image: -moz-linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0)) !important;
+    background-image: linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0)) !important;
+    background-image: -o-linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0)) !important;
 }
 
 .progress-85 {
-    background-color: rgb(78, 255, 0) !important;
+    background-image: -moz-linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0)) !important;
+    background-image: linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0)) !important;
+    background-image: -o-linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0)) !important;
 }
 
 .progress-90 {
-    background-color: rgb(53, 255, 0) !important;
+    background-image: -moz-linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0)) !important;
+    background-image: linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0)) !important;
+    background-image: -o-linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0)) !important;
 }
 
 .progress-95 {
-    background-color: rgb(28, 255, 0) !important;
+    background-image: -moz-linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0)) !important;
+    background-image: linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0)) !important;
+    background-image: -o-linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0)) !important;
 }
 
 .progress-100 {
-    background-color: rgb(2, 175, 0) !important; /* Use darker green instead of green to see clear difference on 100% */
+    background-image: -moz-linear-gradient(rgb(2, 255, 0), rgb(2, 175, 0)) !important;
+    background-image: linear-gradient(rgb(2, 255, 0), rgb(2, 175, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(2, 255, 0), rgb(2, 175, 0)) !important;
+    background-image: -o-linear-gradient(rgb(2, 255, 0), rgb(2, 175, 0)) !important;
 }
 
 /*******************
