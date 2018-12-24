@@ -625,6 +625,10 @@ table.tablesorter .filtered {
     cursor: default;
 }
 
+.btn-gray {
+    background-color: #eeeeee;
+}
+
 .btn-static:active {
     -moz-box-shadow: inset 0 0 0px white;
     -webkit-box-shadow: inset 0 0 0px white;

@@ -22,7 +22,12 @@
 
                     <div class="form-inline">
                         <div class="row">
-                            <div class="col-xs-12 table-filter right">
+                            <div class="col-xs-12 col-sm-6 col-md-6 table-filter left">
+                                <div class="input-group">
+                                    <span v-cloak class="btn btn-sm btn-static btn-gray table-filter-label">{{ movies.length }} movies</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 table-filter right">
                                 <div class="input-group">
                                     <span class="input-group-addon table-filter-label">Search</span>
                                     <input class="movies-filter form-control input-sm" type="search" data-column="all">
