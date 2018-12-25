@@ -9,6 +9,12 @@
 // Base url
 var baseUrl = window.location.protocol + '//' + window.location.host + webroot;
 
+// Scheduler names
+var DISK_SCANNER = 'DiskScanner';
+var SUB_CHECKER = 'SubChecker';
+var VERSION_CHECKER = 'VersionChecker';
+var LIBRARY_SCANNER = 'LibraryScanner';
+
 // Indexer urls
 var TVDB_URL = 'http://thetvdb.com/?tab=series&id=';
 var IMDB_URL = 'http://www.imdb.com/title/';
@@ -223,9 +229,6 @@ var PAGE_RELOAD = 'PAGE_RELOAD';
 var PROCESS_STARTED = 'PROCESS_STARTED';
 var PROCESS_FINISHED = 'PROCESS_FINISHED';
 var RUN_PROCESS = 'RUN_PROCESS';
-var DISK_SCANNER = 'DiskScanner';
-var SUB_CHECKER = 'SubChecker';
-var VERSION_CHECKER = 'VersionChecker';
 
 // Setup the websocket system
 var websocketUrl = 'ws://' + window.location.host + webroot + '/system/websocket';
