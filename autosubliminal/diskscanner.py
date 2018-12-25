@@ -156,7 +156,9 @@ def get_available_subtitle_languages(dirname, filename, missing_subtitle_languag
     wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES) if autosubliminal.ADDITIONALLANGUAGES else None
 
     # Get the missing languages if not yet available
-    missing_languages = missing_subtitle_languages or get_missing_subtitle_languages(dirname, filename)
+    missing_languages = missing_subtitle_languages
+    if not isinstance(missing_languages, list):
+        missing_languages = get_missing_subtitle_languages(dirname, filename)
 
     # Return the available languages (= not in missing languages)
     return [language for language in wanted_languages if language not in missing_languages]
