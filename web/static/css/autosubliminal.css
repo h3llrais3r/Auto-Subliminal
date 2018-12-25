@@ -765,6 +765,10 @@ table.tablesorter .filtered {
     width: auto;
 }
 
+.library-scan-running {
+    font-weight: bold;
+}
+
 .main-column {
     color: #333333;
     font-weight: bold;

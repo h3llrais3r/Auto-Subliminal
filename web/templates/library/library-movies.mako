@@ -24,7 +24,12 @@
                         <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-6 table-filter left">
                                 <div class="input-group">
-                                    <span v-cloak class="btn btn-sm btn-static btn-gray table-filter-label">{{ movies.length }} movies</span>
+                                    <div v-cloak>
+                                        <span class="btn btn-sm btn-static btn-gray table-filter-label">{{ movies.length }} movies</span>
+                                        <span class="library-scan-running hidden">
+                                            Scanning library...<i class="fa fa-spinner fa-spin"></i>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-6 col-md-6 table-filter right">
