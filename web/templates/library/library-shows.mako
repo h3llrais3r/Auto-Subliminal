@@ -26,7 +26,7 @@
                                 <div class="input-group">
                                     <div v-cloak>
                                         <span v-cloak class="btn btn-sm btn-static btn-gray table-filter-label">{{ shows.length }} shows</span>
-                                        <span class="library-scan-running hidden">
+                                        <span class="library-scanner-running hidden">
                                             Scanning library...<i class="fa fa-spinner fa-spin"></i>
                                         </span>
                                     </div>
@@ -120,6 +120,7 @@
 
 <%block name="footerContent">
 
+    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/library.js?v=${appUUID}"></script>
     <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/library-shows.js?v=${appUUID}"></script>
 
 </%block>

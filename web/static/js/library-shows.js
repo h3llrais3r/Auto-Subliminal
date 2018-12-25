@@ -7,30 +7,12 @@ PubSub.subscribe(SETTINGS_LOADED, settingsLoaded);
 
 // Init after settings are loaded
 function init() {
-    // Check if a library scan is running
-    $.get(getUrl('/api/schedulers/' + LIBRARY_SCANNER), function (data) {
-        if (!jQuery.isEmptyObject(data) && data.running) {
-            $('.library-scan-running').removeClass('hidden');
-        }
-    });
+    // Check if the library scanner is running
+    checkLibraryScannerRunning();
 
-    // Subscribe to process started events
-    var processStartedEventSubscriber = function (msg, data) {
-        // Show that a library scan is running
-        if (!jQuery.isEmptyObject(data) && data['name'] == LIBRARY_SCANNER) {
-            $('.library-scan-running').removeClass('hidden');
-        }
-    };
-    PubSub.subscribe(PROCESS_STARTED, processStartedEventSubscriber);
-
-    // Subscribe to process finished events
-    var processFinishedEventSubscriber = function (msg, data) {
-        // Hide that a library scan is running
-        if (!jQuery.isEmptyObject(data) && data['name'] == LIBRARY_SCANNER) {
-            $('.library-scan-running').addClass('hidden');
-        }
-    };
-    PubSub.subscribe(PROCESS_FINISHED, processFinishedEventSubscriber);
+    // Subscribe to library scanner events
+    PubSub.subscribe(PROCESS_STARTED, libraryScannerStartedEventSubscriber);
+    PubSub.subscribe(PROCESS_FINISHED, libraryScannerFinishedEventSubscriber);
 
     // Init vue component
     Vue.component('library-shows', {
