@@ -696,10 +696,10 @@ table.tablesorter .filtered {
 }
 
 .progress-100 {
-    background-image: -moz-linear-gradient(rgb(2, 255, 0), rgb(2, 175, 0)) !important;
-    background-image: linear-gradient(rgb(2, 255, 0), rgb(2, 175, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(2, 255, 0), rgb(2, 175, 0)) !important;
-    background-image: -o-linear-gradient(rgb(2, 255, 0), rgb(2, 175, 0)) !important;
+    background-image: -moz-linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
+    background-image: linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
+    background-image: -webkit-linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
+    background-image: -o-linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
 }
 
 /*******************
