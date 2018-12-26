@@ -22,17 +22,16 @@ class ShowsApi(RestResource):
     def __init__(self):
         super(ShowsApi, self).__init__()
 
+        # Add all sub paths here: /api/shows/...
+        self.overview = _OverviewApi()
+
         # Set the allowed methods
         self.allowed_methods = ('GET',)
 
     def get(self, tvdb_id=None):
         """Get the list of shows or the details of a single show."""
         # Get wanted subtitles
-        wanted_languages = []
-        if autosubliminal.DEFAULTLANGUAGE:
-            wanted_languages.append(autosubliminal.DEFAULTLANGUAGE)
-        if autosubliminal.ADDITIONALLANGUAGES:
-            wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES)
+        wanted_languages = _get_wanted_languages()
 
         # Fetch show(s)
         if tvdb_id:
@@ -68,3 +67,47 @@ class ShowsApi(RestResource):
             show_json['files'] = get_show_files(show.path)
 
         return show_json
+
+
+class _OverviewApi(RestResource):
+    def __init__(self):
+        super(_OverviewApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('GET',)
+
+    def get(self):
+        wanted_languages = _get_wanted_languages()
+        shows = ShowDetailsDb().get_all_shows()
+        total_shows = len(shows)
+
+        total_episodes = 0
+        total_subtitles_wanted = 0
+        total_subtitles_available = 0
+        total_subtitles_missing = 0
+        show_details_db = ShowEpisodeDetailsDb()
+        for show in shows:
+            show_episodes = show_details_db.get_show_episodes(show.tvdb_id)
+            for episode in [e for e in show_episodes if e.available]:
+                total_episodes += 1
+                total_subtitles_wanted += len(wanted_languages)
+                total_subtitles_available += len(episode.available_languages) if episode.available_languages else 0
+                total_subtitles_missing += len(episode.missing_languages) if episode.missing_languages else 0
+
+        return {
+            'total_shows': total_shows,
+            'total_episodes': total_episodes,
+            'total_subtitles_wanted': total_subtitles_wanted,
+            'total_subtitles_available': total_subtitles_available,
+            'total_subtitles_missing': total_subtitles_missing
+        }
+
+
+def _get_wanted_languages():
+    wanted_languages = []
+    if autosubliminal.DEFAULTLANGUAGE:
+        wanted_languages.append(autosubliminal.DEFAULTLANGUAGE)
+    if autosubliminal.ADDITIONALLANGUAGES:
+        wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES)
+
+    return wanted_languages

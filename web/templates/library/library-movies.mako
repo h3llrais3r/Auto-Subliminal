@@ -20,15 +20,21 @@
 
                 <div class="panel-body">
 
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="alert alert-info library-scanner-running hidden" role="alert">
+                                <i class="fa fa-spinner fa-spin"></i>
+                                Scanning library...
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-inline">
                         <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-6 table-filter left">
                                 <div class="input-group">
                                     <div v-cloak>
                                         <span class="btn btn-sm btn-static btn-gray table-filter-label">{{ movies.length }} movies</span>
-                                        <span class="library-scanner-running hidden">
-                                            Scanning library...<i class="fa fa-spinner fa-spin"></i>
-                                        </span>
                                     </div>
                                 </div>
                             </div>

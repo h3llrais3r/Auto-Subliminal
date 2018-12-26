@@ -436,6 +436,38 @@ table.tablesorter .filtered {
     white-space: nowrap;
 }
 
+/****************************
+ * LIBRARY OVERVIEW STYLING *
+ ****************************/
+
+.overview-container {
+    border: 1px solid #101010;
+    border-radius: 5px;
+    margin: 15px 0px;
+}
+
+.overview-container > div {
+    background-color: #333333;
+    border-radius: 3px;
+    padding: 15px;
+}
+
+.overview-data {
+    padding: 5px;
+    color: #ffffff;
+}
+
+/* Align left on smaller screens, even when it's set to align right */
+@media (max-width: 767px) {
+    .overview-data .text-right {
+        text-align: left;
+    }
+}
+
+.overview-image {
+    width: 100%;
+}
+
 /******************************
  * MOVIE/SHOW DETAILS STYLING *
  *****************************/
@@ -792,6 +824,10 @@ table.tablesorter .filtered {
     margin-left: 10px;
 }
 
+.no-margin {
+    margin: 0px;
+}
+
 .no-padding {
     padding: 0px;
 }
@@ -901,7 +937,7 @@ table.tablesorter .filtered {
 
 /* Style progress bar in tablesorter reflow mode */
 @media (max-width: 48em) {
-    .vue-simple-progress {
+    .ui-table-reflow .vue-simple-progress {
         width: 50%;
         float: right;
     }

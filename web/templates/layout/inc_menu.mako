@@ -34,6 +34,10 @@
                         </a>
                         <ul class="dropdown-menu dropdown-menu-inverse">
                             <li>
+                                <a href="${autosubliminal.WEBROOT}/library/overview"><i class="fa fa-list" aria-hidden="true"></i>&nbsp;Overview</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
                                 <a href="${autosubliminal.WEBROOT}/library/shows"><i class="fa fa-television" aria-hidden="true"></i>&nbsp;Shows</a>
                             </li>
                             <li>
