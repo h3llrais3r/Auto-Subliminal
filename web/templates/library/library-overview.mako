@@ -34,7 +34,7 @@
                         <div class="row" v-cloak>
 
                             <!-- Shows overview -->
-                            <div v-if="showsOverview" class="col-xs-12 col-md-6">
+                            <div v-if="showsOverview" class="col-xs-12 col-sm-6">
                                 <div class="overview-container">
                                     <div>
                                         <div class="row">
@@ -45,8 +45,8 @@
                                             </div>
                                         </div>
                                         <div class="row overview-data">
-                                            <div class="col-xs-12 col-md-6">Total shows: {{ showsOverview.total_shows }}</div>
-                                            <div class="col-xs-12 col-md-6 text-right">Total episodes: {{ showsOverview.total_episodes }}</div>
+                                            <div class="col-xs-12 col-sm-6">Total shows: {{ showsOverview.total_shows }}</div>
+                                            <div class="col-xs-12 col-sm-6 text-right">Total episodes: {{ showsOverview.total_episodes }}</div>
                                         </div>
                                         <div class="row overview-data">
                                             <div class="col-xs-12">Total subtitles available:</div>
@@ -67,7 +67,7 @@
                             </div>
 
                             <!-- Movies overview -->
-                            <div v-if="showsOverview" class="col-xs-12 col-md-6">
+                            <div v-if="showsOverview" class="col-xs-12 col-sm-6">
                                 <div class="overview-container">
                                     <div>
                                         <div class="row">
