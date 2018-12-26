@@ -74,10 +74,12 @@ def test_get_movie_files(monkeypatch):
     file_name = 'Southpaw.2015.1080p.BluRay.x264.mkv'
     file_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), '..', 'resources', file_name))
-    subtitle_name = 'Southpaw.2015.1080p.BluRay.x264.srt'
+    subtitle_name_1 = 'Southpaw.2015.1080p.BluRay.x264.en.srt'
+    subtitle_name_2 = 'Southpaw.2015.1080p.BluRay.x264.srt'
     files = [
+        {'filename': subtitle_name_1, 'type': 'subtitle', 'language': 'en'},
         {'filename': file_name, 'type': 'video', 'language': None},
-        {'filename': subtitle_name, 'type': 'subtitle', 'language': 'nl'}
+        {'filename': subtitle_name_2, 'type': 'subtitle', 'language': 'nl'}
     ]
     assert get_movie_files(file_path, ['nl']) == files
 
@@ -87,9 +89,11 @@ def test_get_movie_files_with_embedded_subtitles(monkeypatch):
     file_name = 'Southpaw.2015.1080p.BluRay.x264.mkv'
     file_path = os.path.abspath(
         os.path.join(os.path.dirname(__file__), '..', 'resources', file_name))
-    subtitle_name = 'Southpaw.2015.1080p.BluRay.x264.srt'
+    subtitle_name_1 = 'Southpaw.2015.1080p.BluRay.x264.en.srt'
+    subtitle_name_2 = 'Southpaw.2015.1080p.BluRay.x264.srt'
     files = [
-        {'filename': file_name, 'type': 'video', 'language': ['en', 'fr']},
-        {'filename': subtitle_name, 'type': 'subtitle', 'language': 'nl'}
+        {'filename': subtitle_name_1, 'type': 'subtitle', 'language': 'en'},
+        {'filename': file_name, 'type': 'video', 'language': ['de', 'fr']},
+        {'filename': subtitle_name_2, 'type': 'subtitle', 'language': 'nl'}
     ]
-    assert get_movie_files(file_path, ['en', 'fr', 'nl']) == files
+    assert get_movie_files(file_path, ['de', 'fr', 'nl']) == files

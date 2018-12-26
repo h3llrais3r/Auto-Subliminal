@@ -159,7 +159,7 @@ def _get_subtitle_language(filename):
     language = None
     # Try to parse the 2 last characters as language
     try:
-        language = Language.fromietf(video_name[:-2])
+        language = Language.fromietf(video_name[-2:])
     except Exception:
         pass
     # Check if language suffix is used in filename (f.e. <video_name>.nl)
