@@ -2,6 +2,7 @@
 
 import autosubliminal
 from autosubliminal.server.rest import RestResource
+from autosubliminal.util.common import get_alpha2_languages
 
 
 class SettingsApi(RestResource):
@@ -20,6 +21,7 @@ class SettingsApi(RestResource):
         settings = {
             'tvdbUrl': autosubliminal.DEREFERURL + autosubliminal.TVDBURL,
             'imdbUrl': autosubliminal.DEREFERURL + autosubliminal.IMDBURL,
-            'timestampFormat': autosubliminal.TIMESTAMPFORMAT
+            'timestampFormat': autosubliminal.TIMESTAMPFORMAT,
+            'languages': get_alpha2_languages()
         }
         return settings

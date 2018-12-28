@@ -10,6 +10,7 @@ import stat
 import subprocess
 import time
 
+import babelfish
 import requests
 from six import text_type
 
@@ -451,3 +452,12 @@ def natural_keys(text):
     - my_list.sort(key=natural_keys)
     """
     return [atoi(c) for c in re.split('(\d+)', text)]
+
+
+def get_alpha2_languages():
+    """Get the list of iso languages in alpha2 format."""
+
+    def to_alpha2(language):
+        return {'alpha2': language.alpha2, 'name': language.name}
+
+    return map(to_alpha2, [language for language in babelfish.LANGUAGE_MATRIX if language.alpha2])
