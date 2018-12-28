@@ -53,18 +53,6 @@
                                                         <span v-for="language in movie.wanted_languages" class="language-badge">{{ language }}</span>
                                                     </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>Available languages:</td>
-                                                    <td>
-                                                        <span v-for="language in movie.available_languages" class="language-badge">{{ language }}</span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Missing languages:</td>
-                                                    <td>
-                                                        <span v-for="language in movie.missing_languages" class="language-badge">{{ language }}</span>
-                                                    </td>
-                                                </tr>
                                             </table>
                                         </div>
                                     </div>
