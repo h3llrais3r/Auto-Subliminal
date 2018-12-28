@@ -1,5 +1,7 @@
 # coding=utf-8
 
+import os
+
 import autosubliminal
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import get_alpha2_languages
@@ -22,6 +24,7 @@ class SettingsApi(RestResource):
             'tvdbUrl': autosubliminal.DEREFERURL + autosubliminal.TVDBURL,
             'imdbUrl': autosubliminal.DEREFERURL + autosubliminal.IMDBURL,
             'timestampFormat': autosubliminal.TIMESTAMPFORMAT,
+            'pathSeparator': os.path.sep,
             'languages': get_alpha2_languages()
         }
         return settings
