@@ -60,7 +60,8 @@ def create():
         connection.commit()
 
         query = 'CREATE TABLE show_episode_details (tvdb_id INTEGER PRIMARY KEY, show_tvdb_id INTEGER, title TEXT, ' \
-                'season TEXT, episode TEXT, path TEXT, available_languages TEXT, missing_languages TEXT)'
+                'season TEXT, episode TEXT, path TEXT, embedded_languages TEXT, external_languages TEXT, ' \
+                'missing_languages TEXT)'
         cursor.execute(query)
         connection.commit()
 
@@ -70,7 +71,7 @@ def create():
         connection.commit()
 
         query = 'CREATE TABLE movie_details (imdb_id TEXT PRIMARY KEY, title TEXT, year TEXT, path TEXT, ' \
-                'overview TEXT, poster TEXT, available_languages TEXT, missing_languages TEXT)'
+                'overview TEXT, poster TEXT, embedded_languages TEXT, external_languages TEXT, missing_languages TEXT)'
         cursor.execute(query)
         connection.commit()
 
@@ -210,7 +211,8 @@ def upgrade(from_version, to_version):
             # Create show_episode_details
             cursor.execute(
                 'CREATE TABLE show_episode_details (tvdb_id INTEGER PRIMARY KEY, show_tvdb_id INTEGER, title TEXT, '
-                'season TEXT, episode TEXT, path TEXT, available_languages TEXT, missing_languages TEXT)'
+                'season TEXT, episode TEXT, path TEXT, embedded_languages TEXT, external_languages TEXT, '
+                'missing_languages TEXT)'
             )
             # Create show_settings
             cursor.execute(
@@ -220,7 +222,7 @@ def upgrade(from_version, to_version):
             # Create movie_details
             cursor.execute(
                 'CREATE TABLE movie_details (imdb_id TEXT PRIMARY KEY, title TEXT, year TEXT, path TEXT, '
-                'overview TEXT, poster TEXT, available_languages TEXT, missing_languages TEXT)'
+                'overview TEXT, poster TEXT, embedded_languages TEXT, external_languages TEXT,  missing_languages TEXT)'
             )
             # Create movie_settings
             cursor.execute(

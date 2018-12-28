@@ -95,20 +95,25 @@ class ShowEpisodeDetails(object):
     """
 
     def __init__(self, path=None, tvdb_id=None, show_tvdb_id=None, title=None, season=None, episode=None,
-                 available_languages=None, missing_languages=None):
+                 embedded_languages=None, external_languages=None, missing_languages=None):
         self.path = path
         self.tvdb_id = tvdb_id
         self.show_tvdb_id = show_tvdb_id
         self.title = title
         self.season = season
         self.episode = episode
-        self.available_languages = available_languages or []
+        self.embedded_languages = embedded_languages or []
+        self.external_languages = external_languages or []
         self.missing_languages = missing_languages or []
 
     @property
     def available(self):
         """Indicates if the show episode is available on disk."""
         return self.path is not None
+
+    @property
+    def available_languages(self):
+        return self.embedded_languages + self.external_languages
 
     def set_attr(self, key, value):
         """Set an attribute.
@@ -123,7 +128,7 @@ class ShowEpisodeDetails(object):
             if key in ['tvdb_id', 'show_tvdb_id' 'year']:
                 # # Set as int
                 setattr(self, key, to_obj(value, obj_type=int))
-            elif key in ['available_languages', 'missing_languages']:
+            elif key in ['embedded_languages', 'external_languages', 'missing_languages']:
                 # Must be returned as a list of values
                 setattr(self, key, to_list(value))
             else:

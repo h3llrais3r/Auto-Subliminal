@@ -103,9 +103,9 @@ class ShowEpisodeDetailsDb(object):
     def __init__(self):
         self._query_get_all_for_show = 'SELECT * FROM show_episode_details WHERE show_tvdb_id = ?'
         self._query_get = 'SELECT * FROM show_episode_details WHERE show_tvdb_id = ? AND season = ? AND episode = ?'
-        self._query_set = 'INSERT INTO show_episode_details VALUES (?,?,?,?,?,?,?,?)'
+        self._query_set = 'INSERT INTO show_episode_details VALUES (?,?,?,?,?,?,?,?,?)'
         self._query_update = 'UPDATE show_episode_details SET show_tvdb_id=?, title=?, season=?, episode=?, path=?, ' \
-                             'available_languages=?, missing_languages=? WHERE tvdb_id=?'
+                             'embedded_languages=?, external_languages=?, missing_languages=? WHERE tvdb_id=?'
         self._query_flush = 'DELETE FROM show_episode_details'
 
     def get_show_episodes(self, show_tvdb_id):
@@ -161,7 +161,8 @@ class ShowEpisodeDetailsDb(object):
             show_episode.season,
             show_episode.episode,
             show_episode.path,
-            to_text(show_episode.available_languages),
+            to_text(show_episode.embedded_languages),
+            to_text(show_episode.external_languages),
             to_text(show_episode.missing_languages)
         ])
         connection.commit()
@@ -181,7 +182,8 @@ class ShowEpisodeDetailsDb(object):
             show_episode.season,
             show_episode.episode,
             show_episode.path,
-            to_text(show_episode.available_languages),
+            to_text(show_episode.embedded_languages),
+            to_text(show_episode.external_languages),
             to_text(show_episode.missing_languages),
             show_episode.tvdb_id
         ])

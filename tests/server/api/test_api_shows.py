@@ -13,16 +13,16 @@ show_details_2 = ShowDetails(path='/path/to/show2', tvdb_id=2, title='title2', y
                              poster='poster2.jpg', banner='banner2.jpg')
 
 show_episode_details_1_1 = ShowEpisodeDetails(path='/path/to/show1/s01e01.mkv', tvdb_id=11, show_tvdb_id=1,
-                                              title='title1_1', season=1, episode=1, available_languages=['nl'],
-                                              missing_languages=['en'])
+                                              title='title1_1', season=1, episode=1, embedded_languages=[],
+                                              external_languages=['nl'], missing_languages=['en'])
 
 show_episode_details_2_1 = ShowEpisodeDetails(path='/path/to/show2/s01e01.mkv', tvdb_id=21, show_tvdb_id=2,
-                                              title='title2_1', season=1, episode=1, available_languages=['nl'],
-                                              missing_languages=['en'])
+                                              title='title2_1', season=1, episode=1, embedded_languages=[],
+                                              external_languages=['nl'], missing_languages=['en'])
 
 show_episode_details_2_2 = ShowEpisodeDetails(path='/path/to/show2/s01e02.mkv', tvdb_id=22, show_tvdb_id=2,
-                                              title='title2_2', season=1, episode=2, available_languages=[],
-                                              missing_languages=['nl', 'en'])
+                                              title='title2_2', season=1, episode=2, embedded_languages=[],
+                                              external_languages=[], missing_languages=['nl', 'en'])
 
 shows_json = '[{"banner": true, "overview": "overview1", "path": "/path/to/show1", "poster": true, ' \
              '"title": "title1", "total_subtitles_available": 1, "total_subtitles_missing": 1, ' \

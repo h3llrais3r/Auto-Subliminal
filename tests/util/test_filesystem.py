@@ -35,13 +35,14 @@ def test_get_show_files(monkeypatch):
     file_name = 'The.Big.Bang.Theory.S01E01.720p.HDTV.x264-AVS[rarbg].mkv'
     subtitle_name = 'The.Big.Bang.Theory.S01E01.720p.HDTV.x264-AVS[rarbg].srt'
     files = [
-        {'filename': file_name, 'type': 'video', 'language': None},
+        {'filename': file_name, 'type': 'video', 'language': ['de', 'fr']},
         {'filename': subtitle_name, 'type': 'subtitle', 'language': 'nl'}
     ]
     show_files = [
         {'location_name': 'Root', 'location_path': show_path, 'location_files': files}
     ]
-    assert get_show_files(show_path) == show_files
+    embedded_subtitles = {os.path.join(show_path, file_name): ['de', 'fr']}
+    assert get_show_files(show_path, embedded_subtitles) == show_files
 
 
 def test_get_show_files_in_season_folders(monkeypatch):
@@ -53,7 +54,7 @@ def test_get_show_files_in_season_folders(monkeypatch):
     subtitle_name_s01e01 = 'Ash.vs.Evil.Dead.S01E01.720p.WEB-DL.srt'
     subtitle_name_s04e01 = 'Ash.vs.Evil.Dead.S04E01.720p.WEB-DL.srt'
     files_s01 = [
-        {'filename': file_name_s01e01, 'type': 'video', 'language': None},
+        {'filename': file_name_s01e01, 'type': 'video', 'language': ['de', 'fr']},
         {'filename': subtitle_name_s01e01, 'type': 'subtitle', 'language': 'nl'}
     ]
     files_s04 = [
@@ -66,7 +67,8 @@ def test_get_show_files_in_season_folders(monkeypatch):
         {'location_name': 'Season 04', 'location_path': os.path.join(show_path, 'Season 04'),
          'location_files': files_s04}
     ]
-    assert get_show_files(show_path) == show_files
+    embedded_subtitles = {os.path.join(show_path, 'Season 01', file_name_s01e01): ['de', 'fr']}
+    assert get_show_files(show_path, embedded_subtitles) == show_files
 
 
 def test_get_movie_files(monkeypatch):
@@ -78,22 +80,8 @@ def test_get_movie_files(monkeypatch):
     subtitle_name_2 = 'Southpaw.2015.1080p.BluRay.x264.srt'
     files = [
         {'filename': subtitle_name_1, 'type': 'subtitle', 'language': 'en'},
-        {'filename': file_name, 'type': 'video', 'language': None},
-        {'filename': subtitle_name_2, 'type': 'subtitle', 'language': 'nl'}
-    ]
-    assert get_movie_files(file_path, ['nl']) == files
-
-
-def test_get_movie_files_with_embedded_subtitles(monkeypatch):
-    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
-    file_name = 'Southpaw.2015.1080p.BluRay.x264.mkv'
-    file_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), '..', 'resources', file_name))
-    subtitle_name_1 = 'Southpaw.2015.1080p.BluRay.x264.en.srt'
-    subtitle_name_2 = 'Southpaw.2015.1080p.BluRay.x264.srt'
-    files = [
-        {'filename': subtitle_name_1, 'type': 'subtitle', 'language': 'en'},
         {'filename': file_name, 'type': 'video', 'language': ['de', 'fr']},
         {'filename': subtitle_name_2, 'type': 'subtitle', 'language': 'nl'}
     ]
-    assert get_movie_files(file_path, ['de', 'fr', 'nl']) == files
+    embedded_languages = ['de', 'fr']
+    assert get_movie_files(file_path, embedded_languages) == files

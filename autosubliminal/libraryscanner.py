@@ -7,11 +7,11 @@ import autosubliminal
 from autosubliminal.core.cache import cache_artwork, is_artwork_cached
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, MovieDetailsDb
-from autosubliminal.diskscanner import get_available_subtitle_languages, get_missing_subtitle_languages
 from autosubliminal.fileprocessor import process_file
 from autosubliminal.indexer import ShowIndexer, MovieIndexer
 from autosubliminal.util.common import safe_lowercase
-from autosubliminal.util.filesystem import is_valid_video_file, is_skipped_dir, one_path_exists
+from autosubliminal.util.filesystem import is_valid_video_file, is_skipped_dir, one_path_exists, \
+    get_embedded_subtitle_languages, get_hardcoded_subtitle_languages, get_external_subtitle_languages
 from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
 from tvdb_api_v2.utils.artwork import get_artwork_url
 
@@ -179,12 +179,13 @@ class LibraryScanner(ScheduledProcess):
 
         if episode_details:
             # Set details
-            missing_languages = get_missing_subtitle_languages(dirname, filename,
-                                                               scan_embedded=autosubliminal.SCANEMBEDDEDSUBS,
-                                                               scan_hardcoded=autosubliminal.SCANHARDCODEDSUBS)
-            available_languages = get_available_subtitle_languages(dirname, filename, missing_languages)
+            embedded_languages = get_embedded_subtitle_languages(dirname, filename) + get_hardcoded_subtitle_languages(
+                dirname, filename)
+            external_languages = get_external_subtitle_languages(dirname, filename)
+            missing_languages = self._get_missing_subtitle_languages(embedded_languages, external_languages)
+            episode_details.embedded_languages = embedded_languages
+            episode_details.external_languages = external_languages
             episode_details.missing_languages = missing_languages
-            episode_details.available_languages = available_languages
             episode_details.path = os.path.abspath(os.path.join(dirname, filename))
             # Update details in db
             self.show_episodes_db.update_show_episode(episode_details)
@@ -194,12 +195,21 @@ class LibraryScanner(ScheduledProcess):
 
         if movie_details:
             # Set details
-            missing_languages = get_missing_subtitle_languages(dirname, filename,
-                                                               scan_embedded=autosubliminal.SCANEMBEDDEDSUBS,
-                                                               scan_hardcoded=autosubliminal.SCANHARDCODEDSUBS)
-            available_languages = get_available_subtitle_languages(dirname, filename, missing_languages)
+            embedded_languages = get_embedded_subtitle_languages(dirname, filename) + get_hardcoded_subtitle_languages(
+                dirname, filename)
+            external_languages = get_external_subtitle_languages(dirname, filename)
+            missing_languages = self._get_missing_subtitle_languages(embedded_languages, external_languages)
+            movie_details.embedded_languages = embedded_languages
+            movie_details.external_languages = external_languages
             movie_details.missing_languages = missing_languages
-            movie_details.available_languages = available_languages
             movie_details.path = os.path.abspath(os.path.join(dirname, filename))
             # Update details in db
             self.movie_db.update_movie(movie_details)
+
+    def _get_missing_subtitle_languages(self, embedded_languages, external_languages):
+        wanted_languages = []
+        wanted_languages.append(autosubliminal.DEFAULTLANGUAGE) if autosubliminal.DEFAULTLANGUAGE else None
+        wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES) if autosubliminal.ADDITIONALLANGUAGES else None
+
+        # Return the missing languages (= not in available languages)
+        return [language for language in wanted_languages if language not in embedded_languages + external_languages]

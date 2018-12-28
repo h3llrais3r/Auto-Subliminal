@@ -48,10 +48,11 @@ class MoviesApi(RestResource):
             return movies
 
     def _to_movie_json(self, movie, wanted_languages, details=False):
-        movie_json = movie.to_json()
+        movie_json = movie.to_json(details=details)
 
         total_subtitles_wanted = len(wanted_languages)
-        total_subtitles_available = len(movie.available_languages)
+        total_subtitles_available = len(
+            _get_available_wanted_languages(wanted_languages, movie.available_languages))
         total_subtitles_missing = len(movie.missing_languages)
         movie_json['wanted_languages'] = wanted_languages
         movie_json['total_subtitles_wanted'] = total_subtitles_wanted
@@ -59,7 +60,7 @@ class MoviesApi(RestResource):
         movie_json['total_subtitles_missing'] = total_subtitles_missing
 
         if details:
-            movie_json['files'] = get_movie_files(movie.path, movie.available_languages)
+            movie_json['files'] = get_movie_files(movie.path, movie.embedded_languages)
 
         return movie_json
 
@@ -81,7 +82,8 @@ class _OverviewApi(RestResource):
         total_subtitles_missing = 0
         for movie in movies:
             total_subtitles_wanted += len(wanted_languages)
-            total_subtitles_available += len(movie.available_languages) if movie.available_languages else 0
+            total_subtitles_available += len(
+                _get_available_wanted_languages(wanted_languages, movie.available_languages))
             total_subtitles_missing += len(movie.missing_languages) if movie.missing_languages else 0
 
         return {
@@ -100,3 +102,10 @@ def _get_wanted_languages():
         wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES)
 
     return wanted_languages
+
+
+def _get_available_wanted_languages(wanted_languages, available_languages):
+    if available_languages:
+        return [l for l in available_languages if l in wanted_languages]
+    else:
+        return []

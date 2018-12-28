@@ -46,6 +46,7 @@ class ShowsApi(RestResource):
 
     def _to_show_json(self, show, wanted_languages, details=False):
         show_json = show.to_json()
+        embedded_subtitles = {}
 
         # Calculate totals based on available episodes
         total_subtitles_wanted = 0
@@ -55,8 +56,12 @@ class ShowsApi(RestResource):
         for episode in episodes:
             if episode.available:
                 total_subtitles_wanted += len(wanted_languages)
-                total_subtitles_available += len(episode.available_languages)
+                total_subtitles_available += len(
+                    _get_available_wanted_languages(wanted_languages, episode.available_languages))
                 total_subtitles_missing += len(episode.missing_languages)
+                # Keep track of episodes with embedded subtitles
+                if episode.embedded_languages:
+                    embedded_subtitles[episode.path] = episode.embedded_languages
 
         show_json['wanted_languages'] = wanted_languages
         show_json['total_subtitles_wanted'] = total_subtitles_wanted
@@ -64,7 +69,7 @@ class ShowsApi(RestResource):
         show_json['total_subtitles_missing'] = total_subtitles_missing
 
         if details:
-            show_json['files'] = get_show_files(show.path)
+            show_json['files'] = get_show_files(show.path, embedded_subtitles)
 
         return show_json
 
@@ -91,7 +96,8 @@ class _OverviewApi(RestResource):
             for episode in [e for e in show_episodes if e.available]:
                 total_episodes += 1
                 total_subtitles_wanted += len(wanted_languages)
-                total_subtitles_available += len(episode.available_languages) if episode.available_languages else 0
+                total_subtitles_available += len(
+                    _get_available_wanted_languages(wanted_languages, episode.available_languages))
                 total_subtitles_missing += len(episode.missing_languages) if episode.missing_languages else 0
 
         return {
@@ -111,3 +117,10 @@ def _get_wanted_languages():
         wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES)
 
     return wanted_languages
+
+
+def _get_available_wanted_languages(wanted_languages, available_languages):
+    if available_languages:
+        return [l for l in available_languages if l in wanted_languages]
+    else:
+        return []
