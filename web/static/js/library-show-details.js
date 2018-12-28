@@ -40,11 +40,7 @@ function init() {
                 return show.total_subtitles_available / show.total_subtitles_wanted * 100;
             },
             getPlayVideoUrl: function (filePath, filename) {
-                var separator = '/'; // Unix style
-                if (filePath.indexOf('\\') > 0) {
-                    separator = '\\'; // Windows style
-                }
-                return 'playvideo://' + filePath + separator + filename;
+                return 'playvideo://' + filePath + PATH_SEPARTOR + filename;
             },
             getNrOfSubtitles: function (files, language) {
                 var subtitleCount = 0;

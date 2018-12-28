@@ -27,6 +27,12 @@ var TIME_FORMAT = TIMESTAMP_FORMAT.split(' ')[1];
 // Tablesorter date format
 var TABLESORTER_DATE_FORMAT = 'yyyymmdd';
 
+// Path separator
+var PATH_SEPARTOR = '/';
+
+// Languages
+var LANGUAGES = [];
+
 /* ================
  * Global utilities
  * ================ */
@@ -74,6 +80,8 @@ var loadSettings = function () {
             } else if ('dmY' == datePattern) {
                 TABLESORTER_DATE_FORMAT = 'ddmmyyyy';
             }
+            PATH_SEPARTOR = data['pathSeparator'];
+            LANGUAGES = data['languages'];
             // Publish the settings loaded event
             PubSub.publish(SETTINGS_LOADED, null);
         }
