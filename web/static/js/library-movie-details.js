@@ -38,6 +38,13 @@ function init() {
             },
             getProcessPercentage: function (movie) {
                 return movie.total_subtitles_available / movie.total_subtitles_wanted * 100;
+            },
+            getPlayVideoUrl: function (filePath, filename) {
+                var separator = '/'; // Unix style
+                if (filePath.indexOf('\\') > 0) {
+                    separator = '\\'; // Windows style
+                }
+                return 'playvideo://' + filePath + separator + filename;
             }
         }
     });

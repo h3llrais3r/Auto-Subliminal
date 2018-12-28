@@ -113,7 +113,12 @@
                                             </thead>
                                             <tbody>
                                             <tr v-for="f in file.location_files">
-                                                <td class="wrapped">{{ f.filename }}</td>
+                                                <td class="wrapped">
+                                                    <span>{{ f.filename }}</span>
+                                                    <a v-if="f.type == 'video'" :href="getPlayVideoUrl(file.location_path, f.filename)">
+                                                        <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
+                                                    </a>
+                                                </td>
                                                 <td v-if="f.type == 'video'" class="text-right">
                                                     <!-- language is an array in case of video type -->
                                                     <span class="language-badge right-aligned" v-if="f.language" v-for="language in f.language">{{ language }}</span>

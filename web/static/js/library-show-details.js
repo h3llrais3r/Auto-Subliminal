@@ -39,6 +39,13 @@ function init() {
             getProcessPercentage: function (show) {
                 return show.total_subtitles_available / show.total_subtitles_wanted * 100;
             },
+            getPlayVideoUrl: function (filePath, filename) {
+                var separator = '/'; // Unix style
+                if (filePath.indexOf('\\') > 0) {
+                    separator = '\\'; // Windows style
+                }
+                return 'playvideo://' + filePath + separator + filename;
+            },
             getNrOfSubtitles: function (files, language) {
                 var subtitleCount = 0;
                 for (var i = 0; i < files.length; i++) {
