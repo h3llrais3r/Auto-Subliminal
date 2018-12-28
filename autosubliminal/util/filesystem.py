@@ -22,7 +22,7 @@ VIDEO_TYPE = u'video'
 SUBTITLE_TYPE = u'subtitle'
 SUBTITLE_EXTENSION = u'.srt'
 HARDCODED_SUBS_EXTENSION = u'.hardcoded.subs'
-FILE_EXTENSIONS = map(text_type, subliminal.VIDEO_EXTENSIONS) + [SUBTITLE_EXTENSION]
+FILE_EXTENSIONS = list(map(text_type, subliminal.VIDEO_EXTENSIONS)) + [SUBTITLE_EXTENSION]
 
 
 def one_path_exists(paths, retry_delay=15):
