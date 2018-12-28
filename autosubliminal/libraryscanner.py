@@ -180,7 +180,8 @@ class LibraryScanner(ScheduledProcess):
         if episode_details:
             # Set details
             missing_languages = get_missing_subtitle_languages(dirname, filename,
-                                                               scan_embedded=autosubliminal.SCANEMBEDDEDSUBS)
+                                                               scan_embedded=autosubliminal.SCANEMBEDDEDSUBS,
+                                                               scan_hardcoded=autosubliminal.SCANHARDCODEDSUBS)
             available_languages = get_available_subtitle_languages(dirname, filename, missing_languages)
             episode_details.missing_languages = missing_languages
             episode_details.available_languages = available_languages
@@ -194,7 +195,8 @@ class LibraryScanner(ScheduledProcess):
         if movie_details:
             # Set details
             missing_languages = get_missing_subtitle_languages(dirname, filename,
-                                                               scan_embedded=autosubliminal.SCANEMBEDDEDSUBS)
+                                                               scan_embedded=autosubliminal.SCANEMBEDDEDSUBS,
+                                                               scan_hardcoded=autosubliminal.SCANHARDCODEDSUBS)
             available_languages = get_available_subtitle_languages(dirname, filename, missing_languages)
             movie_details.missing_languages = missing_languages
             movie_details.available_languages = available_languages

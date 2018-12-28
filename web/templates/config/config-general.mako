@@ -274,6 +274,34 @@
 
                         <div class="form-group narrow">
                             <span class="col-xs-4 col-md-3">
+                                <label for="scanhardcodedsubs">Scan for hardcoded subtitles
+                                    <span class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                        </a>
+                                        <ul class="dropdown-menu has-tip info-list">
+                                            <li>
+                                                When enabled, the system will scan for hardcoded subtitles.<br>
+                                            </li>
+                                        </ul>
+                                    </span>
+                                </label>
+                            </span>
+                            <span class="col-xs-8 col-md-6">
+                                <select id="scanhardcodedsubs" name="scanhardcodedsubs" class="form-control input-sm">
+                                    % if autosubliminal.SCANHARDCODEDSUBS:
+                                        <option value="True" selected="selected">Enabled</option>
+                                        <option value="False">Disabled</option>
+                                    % else:
+                                        <option value="True">Enabled</option>
+                                        <option value="False" selected="selected">Disabled</option>
+                                    % endif
+                                </select>
+                            </span>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <span class="col-xs-4 col-md-3">
                                 <label for="skiphiddendirs">Skip hidden directories
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">

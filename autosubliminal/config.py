@@ -103,6 +103,11 @@ def read_config(check_upgrade=False):
         else:
             autosubliminal.SCANEMBEDDEDSUBS = False
 
+        if cfg.has_option('general', 'scanhardcodedsubs'):
+            autosubliminal.SCANHARDCODEDSUBS = cfg.getboolean('general', 'scanhardcodedsubs')
+        else:
+            autosubliminal.SCANHARDCODEDSUBS = False
+
         if cfg.has_option('general', 'skiphiddendirs'):
             autosubliminal.SKIPHIDDENDIRS = cfg.getboolean('general', 'skiphiddendirs')
         else:
@@ -151,6 +156,7 @@ def read_config(check_upgrade=False):
         autosubliminal.CHECKVERSIONINTERVAL = 43200
         autosubliminal.CHECKVERSIONAUTOUPDATE = False
         autosubliminal.SCANEMBEDDEDSUBS = False
+        autosubliminal.SCANHARDCODEDSUBS = False
         autosubliminal.SKIPHIDDENDIRS = False
         autosubliminal.DETECTINVALIDSUBLANGUAGE = False
         autosubliminal.DETECTEDLANGUAGEPROBABILITY = 0.9
@@ -842,6 +848,7 @@ def write_general_section():
     cfg.set(section, 'checkversion', text_type(autosubliminal.CHECKVERSIONINTERVAL))
     cfg.set(section, 'checkversionautoupdate', text_type(autosubliminal.CHECKVERSIONAUTOUPDATE))
     cfg.set(section, 'scanembeddedsubs', text_type(autosubliminal.SCANEMBEDDEDSUBS))
+    cfg.set(section, 'scanhardcodedsubs', text_type(autosubliminal.SCANHARDCODEDSUBS))
     cfg.set(section, 'skiphiddendirs', text_type(autosubliminal.SKIPHIDDENDIRS))
     cfg.set(section, 'detectinvalidsublanguage', text_type(autosubliminal.DETECTINVALIDSUBLANGUAGE))
     cfg.set(section, 'detectedlanguageprobability', text_type(autosubliminal.DETECTEDLANGUAGEPROBABILITY))

@@ -1,5 +1,6 @@
 # coding=utf-8
 
+import codecs
 import logging
 import os
 
@@ -110,6 +111,7 @@ class DiskScanner(ScheduledProcess):
 
             # Check for missing subtitles (scan embedded and detect invalid if configured to do so)
             languages = get_missing_subtitle_languages(dirname, filename, scan_embedded=autosubliminal.SCANEMBEDDEDSUBS,
+                                                       scan_hardcoded=autosubliminal.SCANHARDCODEDSUBS,
                                                        detect_invalid=autosubliminal.DETECTINVALIDSUBLANGUAGE)
 
             # Process the video file if there are missing subtitles
@@ -164,14 +166,19 @@ def get_available_subtitle_languages(dirname, filename, missing_subtitle_languag
     return [language for language in wanted_languages if language not in missing_languages]
 
 
-def get_missing_subtitle_languages(dirname, filename, scan_embedded=False, detect_invalid=False):
+def get_missing_subtitle_languages(dirname, filename, scan_embedded=False, scan_hardcoded=False, detect_invalid=False):
     log.debug('Checking for missing subtitle(s)')
     missing_subtitles = []
 
-    # Check embedded subtitles
+    # Check embedded languages
     embedded_languages = []
     if scan_embedded:
         embedded_languages = get_embedded_subtitle_languages(dirname, filename)
+
+    # Check hardcoded languages
+    hardcoded_languages = []
+    if scan_hardcoded:
+        hardcoded_languages = get_hardcoded_subtitle_languages(dirname, filename)
 
     # Check default language
     detect_language = False
@@ -187,7 +194,7 @@ def get_missing_subtitle_languages(dirname, filename, scan_embedded=False, detec
             detect_language = detect_invalid  # Only for default subtitle without suffix
         srt_path = os.path.join(dirname, srt_file)
         sub_exists = os.path.exists(srt_path)
-        if not sub_exists and default_language not in embedded_languages:
+        if not sub_exists and default_language not in embedded_languages | hardcoded_languages:
             log.debug('Video is missing the default language: %s', autosubliminal.DEFAULTLANGUAGE)
             missing_subtitles.append(autosubliminal.DEFAULTLANGUAGE)
         elif sub_exists and detect_language:
@@ -257,6 +264,20 @@ def get_embedded_subtitle_languages(dirname, filename):
         log.error('Parsing video metadata with enzyme failed')
 
     return embedded_subtitle_languages
+
+
+def get_hardcoded_subtitle_languages(dirname, filename):
+    log.debug('Checking for hardcoded subtitle(s)')
+
+    hardcoded_subtitles = set()
+    video_name, _ = os.path.splitext(filename)
+    hardcoded_filename = os.path.join(dirname, video_name + '.hardcoded.subs')
+    if os.path.exists(hardcoded_filename):
+        with codecs.open(hardcoded_filename, mode='r', encoding='utf-8') as f:
+            subtitles = f.readline().strip()
+            hardcoded_subtitles = set(subtitles.split(','))  # Subs are comma separated on 1st line
+
+    return hardcoded_subtitles
 
 
 def _detect_subtitle_language(srt_path):
