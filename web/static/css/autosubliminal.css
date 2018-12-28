@@ -756,6 +756,12 @@ table.tablesorter .filtered {
     vertical-align: middle;
     border-radius: 0.25em;
     background-color: #dddddd;
+    margin-right: 8px;
+}
+
+.file-type-badge.right-aligned {
+    margin-right: 0px;
+    margin-left: 8px;
 }
 
 .img-notifier {

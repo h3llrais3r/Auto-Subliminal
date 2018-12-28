@@ -118,12 +118,12 @@
                                                     <!-- language is an array in case of video type -->
                                                     <span class="language-badge right-aligned" v-if="f.language" v-for="language in f.language">{{ language }}</span>
                                                     <span class="language-badge right-aligned" v-if="f.language && f.language.length > 0">embedded</span>
-                                                    <span class="file-type-badge">{{ f.type }}</span>
+                                                    <span class="file-type-badge right-aligned">{{ f.type }}</span>
                                                 </td>
                                                 <td v-if="f.type == 'subtitle'" class="text-right">
                                                     <!-- language is a string in case of subtitle type -->
                                                     <span class="language-badge right-aligned" v-if="f.language">{{ f.language }}</span>
-                                                    <span class="file-type-badge">{{ f.type }}</span>
+                                                    <span class="file-type-badge right-aligned">{{ f.type }}</span>
                                                 </td>
                                             </tr>
                                             </tbody>
