@@ -460,4 +460,4 @@ def get_alpha2_languages():
     def to_alpha2(language):
         return {'alpha2': language.alpha2, 'name': language.name}
 
-    return map(to_alpha2, [language for language in babelfish.LANGUAGE_MATRIX if language.alpha2])
+    return list(map(to_alpha2, [language for language in babelfish.LANGUAGE_MATRIX if language.alpha2]))
