@@ -1,8 +1,8 @@
 # coding=utf-8
-from autosubliminal.server.web import redirect
 
 import cherrypy
 
+from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
 
 

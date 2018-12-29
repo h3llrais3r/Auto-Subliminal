@@ -549,6 +549,11 @@ table.tablesorter .filtered {
     width: 100%;
 }
 
+.details-files-file {
+    color: #333333;
+    text-decoration: none !important;
+}
+
 /***********************
  * PROGRESSBAR STYLING *
  **********************/

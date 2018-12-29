@@ -7,7 +7,7 @@ import cherrypy
 import autosubliminal
 from autosubliminal.db import MovieDetailsDb
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.filesystem import get_movie_files
+from autosubliminal.util.filesystem import get_movie_files, save_hardcoded_subtitle_languages
 
 log = logging.getLogger(__name__)
 
@@ -23,6 +23,7 @@ class MoviesApi(RestResource):
 
         # Add all sub paths here: /api/movies/...
         self.overview = _OverviewApi()
+        self.subtitles = _SubtitlesApi()
 
         # Set the allowed methods
         self.allowed_methods = ('GET',)
@@ -92,6 +93,46 @@ class _OverviewApi(RestResource):
             'total_subtitles_available': total_subtitles_available,
             'total_subtitles_missing': total_subtitles_missing
         }
+
+
+class _SubtitlesApi(RestResource):
+    """
+    Rest resource for handling the /api/movies/subtitles path.
+    """
+
+    def __init__(self):
+        super(_SubtitlesApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ()
+
+        # Add all sub paths here: /api/movies/subtitles/...
+        self.hardcoded = _HardcodedApi()
+
+
+class _HardcodedApi(RestResource):
+    """
+    Rest resource for handling the /api/movies/subtitles/hardcoded path.
+    """
+
+    def __init__(self):
+        super(_HardcodedApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('POST',)
+
+    def post(self):
+        """Save the list of hardcoded subtitles for a movie file."""
+        saved = False
+        input_json = cherrypy.request.json
+        if 'file_location' in input_json and 'file_name' in input_json and 'languages' in input_json:
+            file_location = input_json['file_location']
+            file_name = input_json['file_name']
+            languages = input_json['languages']
+            save_hardcoded_subtitle_languages(file_location, file_name, languages)
+            saved = True
+
+        return saved
 
 
 def _get_wanted_languages():

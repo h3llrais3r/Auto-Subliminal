@@ -82,7 +82,10 @@
                                         <table class="table table-condensed table-striped table-no-column-borders">
                                             <tr v-for="f in movie.files">
                                                 <td class="wrapped">
-                                                    <span>{{ f.filename }}</span>
+                                                    <span v-if="f.type != 'video'" class="details-files-file">{{ f.filename }}</span>
+                                                    <a v-if="f.type == 'video'" href="#" @click="openModal(movie.path, f.filename, $event)" title="Click to save hardcoded subtitle languages">
+                                                        <span class="details-files-file">{{ f.filename }}</span>
+                                                    </a>
                                                     <a v-if="f.type == 'video'" :href="getPlayVideoUrl(movie.path, f.filename)">
                                                         <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
                                                     </a>
@@ -105,6 +108,31 @@
                             </div>
                         </div>
 
+                    </div>
+
+                    <div id="subtitlesModal" class="modal fade" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h4 class="modal-title">Save hardcoded subtitle languages</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <span>Select 1 or more hardcoded subtitle languages:</span>
+                                    <span v-if="selectedHardcodedLanguages.length > 0">{{ selectedHardcodedLanguages }}</span>
+                                    <br><br>
+                                    <select v-model="selectedHardcodedLanguages" class="form-control input-sm" multiple>
+                                        <option v-for="language in languages" :value="language.alpha2">
+                                            {{ language.name + ' (' + language.alpha2 + ')' }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-default" @click="saveHardcodedSubtitles($event)">Save</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

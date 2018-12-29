@@ -14,7 +14,11 @@ function init() {
                 movie: null,
                 imdbUrl: IMDB_URL,
                 posterFullSizeUrl: getUrl('/artwork/imdb/poster/fullsize/'),
-                posterThumbnailUrl: getUrl('/artwork/imdb/poster/thumbnail/')
+                posterThumbnailUrl: getUrl('/artwork/imdb/poster/thumbnail/'),
+                languages: LANGUAGES,
+                selectedFileLocation: null,
+                selectedFileName: null,
+                selectedHardcodedLanguages: []
             }
         },
         created: function () {
@@ -41,6 +45,30 @@ function init() {
             },
             getPlayVideoUrl: function (filePath, filename) {
                 return 'playvideo://' + filePath + PATH_SEPARTOR + filename;
+            },
+            openModal: function (fileLocation, fileName, event) {
+                event.preventDefault();
+                // Set selected video file and clear language selection
+                var self = this;
+                self.selectedFileLocation = fileLocation;
+                self.selectedFileName = fileName;
+                self.selectedHardcodedLanguages = [];
+                // Open modal
+                $('#subtitlesModal').modal('show');
+            },
+            saveHardcodedSubtitles: function (event) {
+                event.preventDefault();
+                // Get data
+                var self = this;
+                var data = {
+                    'file_location': self.selectedFileLocation,
+                    'file_name': self.selectedFileName,
+                    'languages': self.selectedHardcodedLanguages
+                };
+                $.postJson(getUrl('/api/movies/subtitles/hardcoded'), data, function (data) {
+                    // Close modal on success
+                    $('#subtitlesModal').modal('hide');
+                });
             }
         }
     });
