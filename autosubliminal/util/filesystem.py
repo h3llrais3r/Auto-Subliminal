@@ -85,7 +85,7 @@ def check_missing_subtitle_languages(dirname, filename, scan_embedded=False, sca
     # Check embedded languages
     embedded_languages = []
     if scan_embedded:
-        embedded_languages = [s.language for s in get_embedded_subtitles(dirname, filename)]
+        embedded_languages = [s.language for s in get_embedded_subtitles(dirname, filename, log_scan=True)]
 
     # Check hardcoded languages
     hardcoded_languages = []
@@ -153,7 +153,7 @@ def get_available_subtitles(dirname, filename, scan_embedded=False, scan_hardcod
     return subtitles
 
 
-def get_embedded_subtitles(dirname, filename):
+def get_embedded_subtitles(dirname, filename, log_scan=False):
     """Get the embedded subtitle languages for a video file.
 
     Based on subliminal.video.scan_video(...) but only keep the check for embedded subtitles.
@@ -174,23 +174,26 @@ def get_embedded_subtitles(dirname, filename):
                         try:
                             embedded_subtitle_languages.add(Language.fromalpha3b(st.language))
                         except BabelfishError:
-                            log.error('Embedded subtitle track language %r is not a valid language', st.language)
+                            log_scan and log.error('Embedded subtitle track language %r is not a valid language',
+                                                   st.language)
                     elif st.name:
                         try:
                             embedded_subtitle_languages.add(Language.fromname(st.name))
                         except BabelfishError:
-                            log.error('Embedded subtitle track name %r is not a valid language', st.name)
+                            log_scan and log.error('Embedded subtitle track name %r is not a valid language', st.name)
                     else:
-                        log.error('Embedded subtitle track language %r is not a valid language', st.language)
-                log.debug('Found embedded subtitles %r with enzyme', embedded_subtitle_languages)
+                        log_scan and log.error('Embedded subtitle track language %r is not a valid language',
+                                               st.language)
+                log_scan and log.debug('Found embedded subtitles %r with enzyme', embedded_subtitle_languages)
             else:
-                log.debug('MKV has no subtitle track')
+                log_scan and log.debug('MKV has no subtitle track')
         else:
-            log.debug('Check is only supported for MKV containers, skipping')
+            log_scan and log.debug('Check is only supported for MKV containers, skipping')
     except Exception:
-        log.error('Parsing video metadata with enzyme failed')
+        log_scan and log.error('Parsing video metadata with enzyme failed')
 
-    return [Subtitle(EMBEDDED, language.alpha2, path) for language in embedded_subtitle_languages]
+    return [Subtitle(EMBEDDED, language.alpha2, path) for language in embedded_subtitle_languages if
+            language != Language('und')]
 
 
 def get_hardcoded_subtitles(dirname, filename):
