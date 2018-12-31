@@ -45,8 +45,6 @@ def test_get_movie(monkeypatch, mocker):
     mocker.patch('autosubliminal.server.api.movies.MoviesApi._get_movie_files',
                  return_value=[{'filename': 'movie1.mkv', 'type': 'video', 'languages': []},
                                {'filename': 'subtitle1.srt', 'type': 'subtitle', 'language': 'nl'}])
-    print movie_1_json
-    print pickle_api_result(MoviesApi().get('tt1'))
     assert movie_1_json == pickle_api_result(MoviesApi().get('tt1'))
 
 
