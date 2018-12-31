@@ -1,13 +1,15 @@
 # coding=utf-8
 
 import logging
+import os
 
 import cherrypy
 
 import autosubliminal
+from autosubliminal.core.subtitle import INTERNAL_TYPES
 from autosubliminal.db import MovieDetailsDb
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.filesystem import get_movie_files, save_hardcoded_subtitle_languages
+from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 
 log = logging.getLogger(__name__)
 
@@ -39,7 +41,7 @@ class MoviesApi(RestResource):
 
         # Fetch movie(s)
         if imdb_id:
-            db_movie = MovieDetailsDb().get_movie(imdb_id)
+            db_movie = MovieDetailsDb().get_movie(imdb_id, subtitles=True)
             return self._to_movie_json(db_movie, wanted_languages, details=True)
         else:
             movies = []
@@ -52,18 +54,37 @@ class MoviesApi(RestResource):
         movie_json = movie.to_json(details=details)
 
         total_subtitles_wanted = len(wanted_languages)
-        total_subtitles_available = len(
-            _get_available_wanted_languages(wanted_languages, movie.available_languages))
         total_subtitles_missing = len(movie.missing_languages)
+        total_subtitles_available = len(wanted_languages) - len(movie.missing_languages)
         movie_json['wanted_languages'] = wanted_languages
         movie_json['total_subtitles_wanted'] = total_subtitles_wanted
-        movie_json['total_subtitles_available'] = total_subtitles_available
         movie_json['total_subtitles_missing'] = total_subtitles_missing
+        movie_json['total_subtitles_available'] = total_subtitles_available
 
         if details:
-            movie_json['files'] = get_movie_files(movie.path, movie.embedded_languages)
+            movie_json['files'] = self._get_movie_files(movie)
 
         return movie_json
+
+    def _get_movie_files(self, movie):
+        # Movie files are supposed to be stored in the same dir
+        files = {}
+
+        internal_languages = []
+        # Get subtitle files
+        for subtitle in movie.subtitles:
+            if subtitle.type in INTERNAL_TYPES:
+                internal_languages.append(subtitle.language)
+            else:
+                _, filename = os.path.split(subtitle.path)
+                files.update(
+                    {filename: {'filename': filename, 'type': 'subtitle', 'language': subtitle.language}})
+        # Get video file
+        _, movie_filename = os.path.split(movie.path)
+        files.update({movie_filename: {'filename': movie_filename, 'type': 'video', 'languages': internal_languages}})
+
+        # Return sorted list
+        return sorted([v for v in files.values()], key=lambda k: k['filename'])
 
 
 class _OverviewApi(RestResource):
@@ -83,15 +104,14 @@ class _OverviewApi(RestResource):
         total_subtitles_missing = 0
         for movie in movies:
             total_subtitles_wanted += len(wanted_languages)
-            total_subtitles_available += len(
-                _get_available_wanted_languages(wanted_languages, movie.available_languages))
-            total_subtitles_missing += len(movie.missing_languages) if movie.missing_languages else 0
+            total_subtitles_missing += len(movie.missing_languages)
+            total_subtitles_available += len(wanted_languages) - len(movie.missing_languages)
 
         return {
             'total_movies': total_movies,
             'total_subtitles_wanted': total_subtitles_wanted,
-            'total_subtitles_available': total_subtitles_available,
-            'total_subtitles_missing': total_subtitles_missing
+            'total_subtitles_missing': total_subtitles_missing,
+            'total_subtitles_available': total_subtitles_available
         }
 
 
@@ -143,10 +163,3 @@ def _get_wanted_languages():
         wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES)
 
     return wanted_languages
-
-
-def _get_available_wanted_languages(wanted_languages, available_languages):
-    if available_languages:
-        return [l for l in available_languages if l in wanted_languages]
-    else:
-        return []

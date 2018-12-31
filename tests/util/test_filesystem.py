@@ -2,8 +2,11 @@
 
 import os
 
-from autosubliminal.util.filesystem import is_skipped_dir, is_valid_video_file, get_movie_files, get_show_files, \
-    one_path_exists
+from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
+from autosubliminal.util.filesystem import is_skipped_dir, is_valid_video_file, one_path_exists, \
+    check_missing_subtitle_languages, get_available_subtitles, get_embedded_subtitles, get_external_subtitles, \
+    get_hardcoded_subtitles
+from enzyme.mkv import SubtitleTrack
 
 
 def test_one_path_exists():
@@ -28,60 +31,63 @@ def test_is_valid_video_file():
     assert not is_valid_video_file('sample_test.mkv')
 
 
-def test_get_show_files(monkeypatch):
+def test_check_missing_subtitle_languages(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
-    show_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), '..', 'resources', 'shows', 'The Big Bang Theory'))
-    file_name = 'The.Big.Bang.Theory.S01E01.720p.HDTV.x264-AVS[rarbg].mkv'
-    subtitle_name = 'The.Big.Bang.Theory.S01E01.720p.HDTV.x264-AVS[rarbg].srt'
-    files = [
-        {'filename': file_name, 'type': 'video', 'language': ['de', 'fr']},
-        {'filename': subtitle_name, 'type': 'subtitle', 'language': 'nl'}
-    ]
-    show_files = [
-        {'location_name': 'Root', 'location_path': show_path, 'location_files': files}
-    ]
-    embedded_subtitles = {os.path.join(show_path, file_name): ['de', 'fr']}
-    assert get_show_files(show_path, embedded_subtitles) == show_files
+    monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['de', 'en', 'fr'])
+    mocker.patch('autosubliminal.util.filesystem.get_embedded_subtitles', return_value=[])
+    mocker.patch('autosubliminal.util.filesystem.get_hardcoded_subtitles', return_value=[])
+    filename = 'Southpaw.2015.1080p.BluRay.x264.mkv'
+    dirname = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'resources'))
+    missing_languages = ['de', 'fr']
+    assert missing_languages == check_missing_subtitle_languages(dirname, filename, scan_embedded=True,
+                                                                 scan_hardcoded=True)
 
 
-def test_get_show_files_in_season_folders(monkeypatch):
+def test_check_missing_subtitle_languages_with_langdetect(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
-    show_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), '..', 'resources', 'shows', 'Ash vs Evil Dead'))
-    file_name_s01e01 = 'Ash.vs.Evil.Dead.S01E01.720p.WEB-DL.mkv'
-    file_name_s04e01 = 'Ash.vs.Evil.Dead.S04E01.720p.WEB-DL.mkv'
-    subtitle_name_s01e01 = 'Ash.vs.Evil.Dead.S01E01.720p.WEB-DL.srt'
-    subtitle_name_s04e01 = 'Ash.vs.Evil.Dead.S04E01.720p.WEB-DL.srt'
-    files_s01 = [
-        {'filename': file_name_s01e01, 'type': 'video', 'language': ['de', 'fr']},
-        {'filename': subtitle_name_s01e01, 'type': 'subtitle', 'language': 'nl'}
-    ]
-    files_s04 = [
-        {'filename': file_name_s04e01, 'type': 'video', 'language': None},
-        {'filename': subtitle_name_s04e01, 'type': 'subtitle', 'language': 'nl'}
-    ]
-    show_files = [
-        {'location_name': 'Season 01', 'location_path': os.path.join(show_path, 'Season 01'),
-         'location_files': files_s01},
-        {'location_name': 'Season 04', 'location_path': os.path.join(show_path, 'Season 04'),
-         'location_files': files_s04}
-    ]
-    embedded_subtitles = {os.path.join(show_path, 'Season 01', file_name_s01e01): ['de', 'fr']}
-    assert get_show_files(show_path, embedded_subtitles) == show_files
+    monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en'])
+    mocker.patch('autosubliminal.util.filesystem._detect_subtitle_language', return_value='fr')
+    mocker.patch('autosubliminal.util.filesystem._delete_subtitle_file', return_value=True)
+    filename = 'Southpaw.2015.1080p.BluRay.x264.mkv'
+    dirname = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'resources'))
+    missing_languages = ['nl']
+    assert missing_languages == check_missing_subtitle_languages(dirname, filename, detect_invalid=True)
 
 
-def test_get_movie_files(monkeypatch):
+def test_get_available_subtitles(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
-    file_name = 'Southpaw.2015.1080p.BluRay.x264.mkv'
-    file_path = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), '..', 'resources', file_name))
-    subtitle_name_1 = 'Southpaw.2015.1080p.BluRay.x264.en.srt'
-    subtitle_name_2 = 'Southpaw.2015.1080p.BluRay.x264.srt'
-    files = [
-        {'filename': subtitle_name_1, 'type': 'subtitle', 'language': 'en'},
-        {'filename': file_name, 'type': 'video', 'language': ['de', 'fr']},
-        {'filename': subtitle_name_2, 'type': 'subtitle', 'language': 'nl'}
-    ]
-    embedded_languages = ['de', 'fr']
-    assert get_movie_files(file_path, embedded_languages) == files
+    fr = Subtitle(type=EMBEDDED, language='fr', path='/path/to/subtitle/fr')
+    de = Subtitle(type=HARDCODED, language='de', path='/path/to/subtitle/de')
+    mocker.patch('autosubliminal.util.filesystem.get_embedded_subtitles', return_value=[fr])
+    mocker.patch('autosubliminal.util.filesystem.get_hardcoded_subtitles', return_value=[de])
+    filename = 'Southpaw.2015.1080p.BluRay.x264.mkv'
+    dirname = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'resources'))
+    available_languages = ['de', 'en', 'fr', 'nl']
+    assert available_languages == sorted(
+        [s.language for s in get_available_subtitles(dirname, filename, scan_embedded=True, scan_hardcoded=True)])
+
+
+def test_get_embedded_subtitles(mocker):
+    mkv_mock = mocker.patch('autosubliminal.util.filesystem.MKV')
+    mkv_subtitles = [SubtitleTrack(language='dut', name='Dutch'), SubtitleTrack(name='English'),
+                     SubtitleTrack(name='invalid')]
+    mkv_mock.return_value.subtitle_tracks = mkv_subtitles
+    filename = 'Southpaw.2015.1080p.BluRay.x264.mkv'
+    dirname = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'resources'))
+    available_languages = ['en', 'nl']
+    assert available_languages == sorted([s.language for s in get_embedded_subtitles(dirname, filename)])
+
+
+def test_get_hardcoded_subtitles():
+    filename = 'Southpaw.2015.1080p.BluRay.x264.mkv'
+    dirname = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'resources'))
+    available_languages = ['de', 'fr']
+    assert available_languages == sorted([s.language for s in get_hardcoded_subtitles(dirname, filename)])
+
+
+def test_get_external_subtitles(monkeypatch):
+    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
+    filename = 'Southpaw.2015.1080p.BluRay.x264.mkv'
+    dirname = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'resources'))
+    available_languages = ['en', 'nl']
+    assert available_languages == sorted([s.language for s in get_external_subtitles(dirname, filename)])

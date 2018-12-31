@@ -92,8 +92,8 @@
                                                 </td>
                                                 <td v-if="f.type == 'video'" class="text-right">
                                                     <!-- language is an array in case of video type -->
-                                                    <span class="language-badge right-aligned" v-if="f.language" v-for="language in f.language">{{ language }}</span>
-                                                    <span class="language-badge right-aligned" v-if="f.language && f.language.length > 0">embedded</span>
+                                                    <span class="language-badge right-aligned" v-if="f.languages" v-for="language in f.languages">{{ language }}</span>
+                                                    <span class="language-badge right-aligned" v-if="f.languages && f.languages.length > 0">internal</span>
                                                     <span class="file-type-badge right-aligned">{{ f.type }}</span>
                                                 </td>
                                                 <td v-if="f.type == 'subtitle'" class="text-right">

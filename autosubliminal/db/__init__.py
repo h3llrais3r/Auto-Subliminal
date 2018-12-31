@@ -11,7 +11,7 @@ from autosubliminal import version
 # Import from submodules here so we don't need to import it from the submodule itself!
 from .cache_db import ImdbIdCacheDb, TvdbIdCacheDb
 from .main_db import LastDownloadsDb, WantedItemsDb
-from .movie_db import MovieDetailsDb, MovieSettingsDb
+from .movie_db import MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb
 from .show_db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb
 
 # Reference all imports from the submodules here (to prevent unused imports errors)!
@@ -22,6 +22,7 @@ __all__ = [
     'WantedItemsDb',
     'MovieDetailsDb',
     'MovieSettingsDb',
+    'MovieSubtitlesDb',
     'ShowDetailsDb',
     'ShowEpisodeDetailsDb',
     'ShowSettingsDb'
@@ -60,8 +61,11 @@ def create():
         connection.commit()
 
         query = 'CREATE TABLE show_episode_details (tvdb_id INTEGER PRIMARY KEY, show_tvdb_id INTEGER, title TEXT, ' \
-                'season TEXT, episode TEXT, path TEXT, embedded_languages TEXT, external_languages TEXT, ' \
-                'missing_languages TEXT)'
+                'season TEXT, episode TEXT, path TEXT, missing_languages TEXT)'
+        cursor.execute(query)
+        connection.commit()
+
+        query = 'CREATE TABLE show_episode_subtitles (tvdb_id INTEGER, type TEXT, language TEXT, path TEXT)'
         cursor.execute(query)
         connection.commit()
 
@@ -71,7 +75,11 @@ def create():
         connection.commit()
 
         query = 'CREATE TABLE movie_details (imdb_id TEXT PRIMARY KEY, title TEXT, year TEXT, path TEXT, ' \
-                'overview TEXT, poster TEXT, embedded_languages TEXT, external_languages TEXT, missing_languages TEXT)'
+                'overview TEXT, poster TEXT, missing_languages TEXT)'
+        cursor.execute(query)
+        connection.commit()
+
+        query = 'CREATE TABLE movie_subtitles (imdb_id TEXT, type TEXT, language TEXT, path TEXT)'
         cursor.execute(query)
         connection.commit()
 
@@ -211,8 +219,11 @@ def upgrade(from_version, to_version):
             # Create show_episode_details
             cursor.execute(
                 'CREATE TABLE show_episode_details (tvdb_id INTEGER PRIMARY KEY, show_tvdb_id INTEGER, title TEXT, '
-                'season TEXT, episode TEXT, path TEXT, embedded_languages TEXT, external_languages TEXT, '
-                'missing_languages TEXT)'
+                'season TEXT, episode TEXT, path TEXT, missing_languages TEXT)'
+            )
+            # Create show_subtitles
+            cursor.execute(
+                'CREATE TABLE show_episode_subtitles (tvdb_id INTEGER, type TEXT, language TEXT, path TEXT)'
             )
             # Create show_settings
             cursor.execute(
@@ -222,7 +233,11 @@ def upgrade(from_version, to_version):
             # Create movie_details
             cursor.execute(
                 'CREATE TABLE movie_details (imdb_id TEXT PRIMARY KEY, title TEXT, year TEXT, path TEXT, '
-                'overview TEXT, poster TEXT, embedded_languages TEXT, external_languages TEXT,  missing_languages TEXT)'
+                'overview TEXT, poster TEXT, missing_languages TEXT)'
+            )
+            # Create movie_subtitles
+            cursor.execute(
+                'CREATE TABLE movie_subtitles (imdb_id TEXT, type TEXT, language TEXT, path TEXT)'
             )
             # Create movie_settings
             cursor.execute(

@@ -81,9 +81,8 @@ class System(object):
     @cherrypy.expose(alias='flushLibrary')
     def flush_library(self):
         if not autosubliminal.SCANLIBRARY.running:
-            ShowEpisodeDetailsDb().flush_show_episodes()
-            ShowDetailsDb().flush_shows()
-            MovieDetailsDb().flush_movies()
+            ShowDetailsDb().flush_shows(episodes=True, subtitles=True)
+            MovieDetailsDb().flush_movies(subtitles=True)
             send_websocket_notification('Flushed library database.')
         else:
             send_websocket_notification('Cannot flush library database when library scanner is running!',

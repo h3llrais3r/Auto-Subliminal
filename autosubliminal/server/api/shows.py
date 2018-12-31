@@ -1,14 +1,16 @@
 # coding=utf-8
 
 import logging
+import os
 
 import cherrypy
 
 import autosubliminal
+from autosubliminal.core.subtitle import INTERNAL_TYPES
 from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb
-from autosubliminal.util.filesystem import get_show_files, save_hardcoded_subtitle_languages
-
 from autosubliminal.server.rest import RestResource
+from autosubliminal.util.common import natural_keys
+from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 
 log = logging.getLogger(__name__)
 
@@ -48,32 +50,65 @@ class ShowsApi(RestResource):
 
     def _to_show_json(self, show, wanted_languages, details=False):
         show_json = show.to_json()
-        embedded_subtitles = {}
 
         # Calculate totals based on available episodes
         total_subtitles_wanted = 0
         total_subtitles_available = 0
         total_subtitles_missing = 0
-        episodes = ShowEpisodeDetailsDb().get_show_episodes(show.tvdb_id)
+        episodes = ShowEpisodeDetailsDb().get_show_episodes(show.tvdb_id, available_only=True, subtitles=details)
         for episode in episodes:
-            if episode.available:
-                total_subtitles_wanted += len(wanted_languages)
-                total_subtitles_available += len(
-                    _get_available_wanted_languages(wanted_languages, episode.available_languages))
-                total_subtitles_missing += len(episode.missing_languages)
-                # Keep track of episodes with embedded subtitles
-                if episode.embedded_languages:
-                    embedded_subtitles[episode.path] = episode.embedded_languages
-
+            total_subtitles_wanted += len(wanted_languages)
+            total_subtitles_missing += len(episode.missing_languages)
+            total_subtitles_available += len(wanted_languages) - len(episode.missing_languages)
         show_json['wanted_languages'] = wanted_languages
         show_json['total_subtitles_wanted'] = total_subtitles_wanted
-        show_json['total_subtitles_available'] = total_subtitles_available
         show_json['total_subtitles_missing'] = total_subtitles_missing
+        show_json['total_subtitles_available'] = total_subtitles_available
 
         if details:
-            show_json['files'] = get_show_files(show.path, embedded_subtitles)
+            show_json['files'] = self._get_show_episode_files(episodes)
 
         return show_json
+
+    def _get_show_episode_files(self, show_episodes):
+        # Show episode files are supposed to be stored in individual season dirs or the root dir only
+        files = {}
+
+        # Create episode dict, grouped by season
+        season_episodes = {}
+        for episode in show_episodes:
+            if episode.season in season_episodes:
+                season_episodes[episode.season].append(episode)
+            else:
+                season_episodes.update({episode.season: [episode]})
+
+        for season in season_episodes.keys():
+            season_files = []
+            season_name = 'Season ' + season.zfill(2)
+            season_path = None
+            for episode in season_episodes[season]:
+                # Determine season path
+                if not season_path:
+                    season_path, _ = os.path.split(episode.path)
+                internal_languages = []
+                # Get subtitle files
+                for subtitle in episode.subtitles:
+                    if subtitle.type in INTERNAL_TYPES:
+                        internal_languages.append(subtitle.language)
+                    else:
+                        _, filename = os.path.split(subtitle.path)
+                        season_files.append({'filename': filename, 'type': 'subtitle', 'language': subtitle.language})
+                # Get video file
+                _, episode_filename = os.path.split(episode.path)
+                season_files.append({'filename': episode_filename, 'type': 'video', 'languages': internal_languages})
+            # Sort season files
+            if season_files:
+                sorted_files = sorted(season_files, key=lambda k: k['filename'])
+                files.update({season_name: {'path': season_path, 'files': sorted_files}})
+
+        # Return sorted list of file dicts (grouped by season)
+        return [{'season_name': k, 'season_path': files[k]['path'], 'season_files': files[k]['files']} for k in
+                sorted(files.keys(), key=natural_keys)]
 
 
 class _OverviewApi(RestResource):
@@ -98,20 +133,19 @@ class _OverviewApi(RestResource):
         total_subtitles_missing = 0
         show_details_db = ShowEpisodeDetailsDb()
         for show in shows:
-            show_episodes = show_details_db.get_show_episodes(show.tvdb_id)
-            for episode in [e for e in show_episodes if e.available]:
+            show_episodes = show_details_db.get_show_episodes(show.tvdb_id, available_only=True, subtitles=False)
+            for show_episode in show_episodes:
                 total_episodes += 1
                 total_subtitles_wanted += len(wanted_languages)
-                total_subtitles_available += len(
-                    _get_available_wanted_languages(wanted_languages, episode.available_languages))
-                total_subtitles_missing += len(episode.missing_languages) if episode.missing_languages else 0
+                total_subtitles_missing += len(show_episode.missing_languages)
+                total_subtitles_available += len(wanted_languages) - len(show_episode.missing_languages)
 
         return {
             'total_shows': total_shows,
             'total_episodes': total_episodes,
             'total_subtitles_wanted': total_subtitles_wanted,
-            'total_subtitles_available': total_subtitles_available,
-            'total_subtitles_missing': total_subtitles_missing
+            'total_subtitles_missing': total_subtitles_missing,
+            'total_subtitles_available': total_subtitles_available
         }
 
 
@@ -163,10 +197,3 @@ def _get_wanted_languages():
         wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES)
 
     return wanted_languages
-
-
-def _get_available_wanted_languages(wanted_languages, available_languages):
-    if available_languages:
-        return [l for l in available_languages if l in wanted_languages]
-    else:
-        return []

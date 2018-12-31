@@ -83,27 +83,27 @@
                                             <thead>
                                             <tr>
                                                 <th colspan="2">
-                                                    <table class="details-files-location">
+                                                    <table class="details-files-season">
                                                         <tr>
                                                             <td>
-                                                                <span>{{ file.location_name }}</span>
+                                                                <span>{{ file.season_name }}</span>
                                                                 <span class="dropdown">
                                                                     <a class="dropdown-toggle" data-toggle="dropdown">
                                                                         <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
                                                                     </a>
                                                                     <ul class="dropdown-menu has-tip info-list">
-                                                                        <li>{{ file.location_path }}</li>
+                                                                        <li>{{ file.season_path }}</li>
                                                                     </ul>
                                                                 </span>
                                                             </td>
                                                             <td class="text-right">
                                                                 <span v-for="language in show.wanted_languages" class="btn btn-sm btn-static">
                                                                     {{ language }}
-                                                                    <span class="badge">{{ getNrOfSubtitles(file.location_files, language) }}</span>
+                                                                    <span class="badge">{{ getNrOfSubtitles(file.season_files, language) }}</span>
                                                                 </span>
                                                                 <span class="btn btn-sm btn-static">
                                                                     video
-                                                                    <span class="badge">{{ getNrOfVideos(file.location_files) }}</span>
+                                                                    <span class="badge">{{ getNrOfVideos(file.season_files) }}</span>
                                                                 </span>
                                                             </td>
                                                         </tr>
@@ -112,20 +112,20 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr v-for="f in file.location_files">
+                                            <tr v-for="f in file.season_files">
                                                 <td>
                                                     <span v-if="f.type != 'video'" class="details-files-file">{{ f.filename }}</span>
-                                                    <a v-if="f.type == 'video'" href="#" @click="openModal(file.location_path, f.filename, $event)" title="Click to save hardcoded subtitle languages">
+                                                    <a v-if="f.type == 'video'" href="#" @click="openModal(file.season_path, f.filename, $event)" title="Click to save hardcoded subtitle languages">
                                                         <span class="details-files-file">{{ f.filename }}</span>
                                                     </a>
-                                                    <a v-if="f.type == 'video'" :href="getPlayVideoUrl(file.location_path, f.filename)">
+                                                    <a v-if="f.type == 'video'" :href="getPlayVideoUrl(file.season_path, f.filename)">
                                                         <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
                                                     </a>
                                                 </td>
                                                 <td v-if="f.type == 'video'" class="text-right">
                                                     <!-- language is an array in case of video type -->
-                                                    <span class="language-badge right-aligned" v-if="f.language" v-for="language in f.language">{{ language }}</span>
-                                                    <span class="language-badge right-aligned" v-if="f.language && f.language.length > 0">embedded</span>
+                                                    <span class="language-badge right-aligned" v-if="f.languages" v-for="language in f.languages">{{ language }}</span>
+                                                    <span class="language-badge right-aligned" v-if="f.languages && f.languages.length > 0">internal</span>
                                                     <span class="file-type-badge right-aligned">{{ f.type }}</span>
                                                 </td>
                                                 <td v-if="f.type == 'subtitle'" class="text-right">

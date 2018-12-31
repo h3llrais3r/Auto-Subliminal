@@ -52,10 +52,10 @@ function init() {
                     if (files[i].type == 'subtitle' && files[i].language != null && files[i].language == language) {
                         // A subtitle file can have only 1 language
                         subtitleCount++;
-                    } else if (files[i].type == 'video' && files[i].language != null) {
+                    } else if (files[i].type == 'video' && files[i].languages != null) {
                         // A video file can have multiple embedded languages, so we need to check if it contains it
-                        for (var j = 0; files[i].language[j]; j++) {
-                            if (files[i].language[j] == language) {
+                        for (var j = 0; files[i].languages[j]; j++) {
+                            if (files[i].languages[j] == language) {
                                 subtitleCount++;
                             }
                         }
