@@ -346,7 +346,7 @@ class ShowSettingsDb(object):
         cursor = connection.cursor()
         cursor.execute(self._query_set, [
             show_settings.tvdb_id,
-            to_text(show_settings.languages),
+            to_text(show_settings.wanted_languages),
             show_settings.refine,
             show_settings.hearing_impaired,
             show_settings.utf8_encoding
@@ -363,7 +363,7 @@ class ShowSettingsDb(object):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self._query_update, [
-            to_text(show_settings.languages),
+            to_text(show_settings.wanted_languages),
             show_settings.refine,
             show_settings.hearing_impaired,
             show_settings.utf8_encoding,

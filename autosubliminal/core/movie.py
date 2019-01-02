@@ -91,9 +91,9 @@ class MovieSettings(object):
     Contains all the settings for a movie.
     """
 
-    def __init__(self, imdb_id=None, languages=None, refine=None, hearing_impaired=None, utf8_encoding=None):
+    def __init__(self, imdb_id=None, wanted_languages=None, refine=None, hearing_impaired=None, utf8_encoding=None):
         self.imdb_id = imdb_id
-        self.languages = languages
+        self.wanted_languages = wanted_languages
         self.refine = refine
         self.hearing_impaired = hearing_impaired
         self.utf8_encoding = utf8_encoding
@@ -108,7 +108,7 @@ class MovieSettings(object):
         :type value: str
         """
         if hasattr(self, key):
-            if key in ['languages']:
+            if key in ['wanted_languages']:
                 # Must be returned as a list of values
                 setattr(self, key, to_list(value))
             elif key in ['refine', 'hearing_impaired', 'utf8_encoding']:
@@ -121,7 +121,7 @@ class MovieSettings(object):
     @classmethod
     def default_settings(cls, imdb_id):
         return cls(imdb_id=imdb_id,
-                   languages=get_wanted_languages(),
+                   wanted_languages=get_wanted_languages(),
                    refine=autosubliminal.REFINEVIDEO,
                    hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
                    utf8_encoding=autosubliminal.SUBTITLEUTF8ENCODING)

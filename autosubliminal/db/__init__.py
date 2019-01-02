@@ -69,7 +69,7 @@ def create():
         cursor.execute(query)
         connection.commit()
 
-        query = 'CREATE TABLE show_settings (tvdb_id INTEGER PRIMARY KEY, languages TEXT, refine INTEGER, ' \
+        query = 'CREATE TABLE show_settings (tvdb_id INTEGER PRIMARY KEY, wanted_languages TEXT, refine INTEGER, ' \
                 'hearing_impaired INTEGER, utf8_encoding INTEGER)'
         cursor.execute(query)
         connection.commit()
@@ -83,7 +83,7 @@ def create():
         cursor.execute(query)
         connection.commit()
 
-        query = 'CREATE TABLE movie_settings (imdb_id TEXT PRIMARY KEY, languages TEXT, refine INTEGER, ' \
+        query = 'CREATE TABLE movie_settings (imdb_id TEXT PRIMARY KEY, wanted_languages TEXT, refine INTEGER, ' \
                 'hearing_impaired INTEGER, utf8_encoding INTEGER)'
         cursor.execute(query)
         connection.commit()
@@ -227,7 +227,7 @@ def upgrade(from_version, to_version):
             )
             # Create show_settings
             cursor.execute(
-                'CREATE TABLE show_settings (tvdb_id INTEGER PRIMARY KEY, languages TEXT, refine INTEGER, '
+                'CREATE TABLE show_settings (tvdb_id INTEGER PRIMARY KEY, wanted_languages TEXT, refine INTEGER, '
                 'hearing_impaired INTEGER, utf8_encoding INTEGER)'
             )
             # Create movie_details
@@ -241,7 +241,7 @@ def upgrade(from_version, to_version):
             )
             # Create movie_settings
             cursor.execute(
-                'CREATE TABLE movie_settings (imdb_id TEXT PRIMARY KEY, languages TEXT, refine INTEGER, '
+                'CREATE TABLE movie_settings (imdb_id TEXT PRIMARY KEY, wanted_languages TEXT, refine INTEGER, '
                 'hearing_impaired INTEGER, utf8_encoding INTEGER)'
             )
             # Update database version

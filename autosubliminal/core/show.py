@@ -157,9 +157,9 @@ class ShowSettings(object):
     Contains all the settings for a show.
     """
 
-    def __init__(self, tvdb_id=None, languages=None, refine=None, hearing_impaired=None, utf8_encoding=None):
+    def __init__(self, tvdb_id=None, wanted_languages=None, refine=None, hearing_impaired=None, utf8_encoding=None):
         self.tvdb_id = tvdb_id
-        self.languages = languages
+        self.wanted_languages = wanted_languages
         self.refine = refine
         self.hearing_impaired = hearing_impaired
         self.utf8_encoding = utf8_encoding
@@ -177,7 +177,7 @@ class ShowSettings(object):
             if key in ['tvdb_id']:
                 # # Set as int
                 setattr(self, key, to_obj(value, obj_type=int))
-            elif key in ['languages']:
+            elif key in ['wanted_languages']:
                 # Must be returned as a list of values
                 setattr(self, key, to_list(value))
             elif key in ['refine', 'hearing_impaired', 'utf8_encoding']:
@@ -190,7 +190,7 @@ class ShowSettings(object):
     @classmethod
     def default_settings(cls, tvdb_id):
         return cls(tvdb_id=tvdb_id,
-                   languages=get_wanted_languages(),
+                   wanted_languages=get_wanted_languages(),
                    refine=autosubliminal.REFINEVIDEO,
                    hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
                    utf8_encoding=autosubliminal.SUBTITLEUTF8ENCODING)

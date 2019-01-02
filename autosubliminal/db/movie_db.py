@@ -253,7 +253,7 @@ class MovieSettingsDb(object):
         cursor = connection.cursor()
         cursor.execute(self._query_set, [
             movie_settings.imdb_id,
-            to_text(movie_settings.languages),
+            to_text(movie_settings.wanted_languages),
             movie_settings.refine,
             movie_settings.hearing_impaired,
             movie_settings.utf8_encoding
@@ -269,7 +269,7 @@ class MovieSettingsDb(object):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self._query_update, [
-            to_text(movie_settings.languages),
+            to_text(movie_settings.wanted_languages),
             movie_settings.refine,
             movie_settings.hearing_impaired,
             movie_settings.utf8_encoding,
