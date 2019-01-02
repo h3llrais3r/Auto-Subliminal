@@ -86,7 +86,7 @@ def to_obj(value, obj_type=text_type):
     By default it converts it to a text value.
     Optionally, it can be converted to the specified object type.
     """
-    return obj_type(value) if value else None
+    return obj_type(value) if value is not None else None
 
 
 def to_text(obj):
@@ -98,7 +98,7 @@ def to_text(obj):
     if obj and isinstance(obj, list):
         return ','.join(text_type(e) for e in obj)
 
-    return text_type(obj) if obj else None
+    return text_type(obj) if obj is not None else None
 
 
 def to_list(value, obj_type=text_type):
@@ -124,7 +124,7 @@ def to_obj_or_list(value, obj_type=text_type):
     if value and ',' in value:
         return to_list(value, obj_type=obj_type)
 
-    return obj_type(value) if value else None
+    return obj_type(value) if value is not None else None
 
 
 def to_dict(obj, *args, **kwargs):

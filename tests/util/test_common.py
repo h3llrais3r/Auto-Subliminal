@@ -101,17 +101,22 @@ def test_wait_for_internet_connection_with_sleep(mocker):
 
 
 def test_to_obj():
+    value_0 = 0
     value_1 = 1
     value_2 = '2'
     assert to_obj(None) is None
+    assert to_obj(value_0) == '0'
+    assert to_obj(value_0, obj_type=bool) is False
     assert to_obj(value_1) == '1'
     assert to_obj(value_2, obj_type=int) == 2
 
 
 def test_to_text():
+    value_0 = 0
     value_1 = 1
     value_2 = [1, 2]
     assert to_text(None) is None
+    assert to_text(value_0) == '0'
     assert to_text(value_1) == '1'
     assert to_text(value_2) == '1,2'
 
@@ -129,9 +134,12 @@ def test_to_list():
 
 
 def test_to_obj_or_list():
+    value_0 = 0
     value_1 = '1'
     value_2 = '1,2'
     assert to_obj_or_list(None) is None
+    assert to_obj_or_list(value_0) == '0'
+    assert to_obj_or_list(value_0, obj_type=bool) is False
     assert to_obj_or_list(value_1) == '1'
     assert to_obj_or_list(value_2, obj_type=int) == [1, 2]
 
