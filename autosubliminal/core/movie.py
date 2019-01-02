@@ -5,7 +5,8 @@ import os
 
 from imdbpie.objects import Title
 
-from autosubliminal.util.common import to_dict, to_obj, to_list
+import autosubliminal
+from autosubliminal.util.common import to_dict, to_obj, to_list, get_wanted_languages
 
 log = logging.getLogger(__name__)
 
@@ -116,3 +117,11 @@ class MovieSettings(object):
             else:
                 # Use default value
                 setattr(self, key, value)
+
+    @classmethod
+    def default_settings(cls, imdb_id):
+        return cls(imdb_id=imdb_id,
+                   languages=get_wanted_languages(),
+                   refine=autosubliminal.REFINEVIDEO,
+                   hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
+                   utf8_encoding=autosubliminal.SUBTITLEUTF8ENCODING)

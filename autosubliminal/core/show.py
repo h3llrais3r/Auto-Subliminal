@@ -8,7 +8,8 @@ from tvdb_api_v2.models.series import Series
 from tvdb_api_v2.models.series_image_query_result import SeriesImageQueryResult
 from tvdb_api_v2.models.series_search_result import SeriesSearchResult
 
-from autosubliminal.util.common import to_dict, to_list, to_obj
+import autosubliminal
+from autosubliminal.util.common import to_dict, to_list, to_obj, get_wanted_languages
 
 log = logging.getLogger(__name__)
 
@@ -185,3 +186,11 @@ class ShowSettings(object):
             else:
                 # Use default value
                 setattr(self, key, value)
+
+    @classmethod
+    def default_settings(cls, tvdb_id):
+        return cls(tvdb_id=tvdb_id,
+                   languages=get_wanted_languages(),
+                   refine=autosubliminal.REFINEVIDEO,
+                   hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
+                   utf8_encoding=autosubliminal.SUBTITLEUTF8ENCODING)

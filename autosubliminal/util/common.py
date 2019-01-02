@@ -454,6 +454,18 @@ def natural_keys(text):
     return [atoi(c) for c in re.split('(\d+)', text)]
 
 
+def get_wanted_languages():
+    """Get the default list of configured wanted languages."""
+    wanted_languages = []
+
+    if autosubliminal.DEFAULTLANGUAGE:
+        wanted_languages.append(autosubliminal.DEFAULTLANGUAGE)
+    if autosubliminal.ADDITIONALLANGUAGES:
+        wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES)
+
+    return wanted_languages
+
+
 def get_alpha2_languages():
     """Get the list of iso languages in alpha2 format."""
 

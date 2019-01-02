@@ -5,11 +5,11 @@ import os
 
 import cherrypy
 
-import autosubliminal
 from autosubliminal.core.subtitle import INTERNAL_TYPES
 from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import natural_keys
+from autosubliminal.util.common import get_wanted_languages
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 
 log = logging.getLogger(__name__)
@@ -33,9 +33,7 @@ class ShowsApi(RestResource):
 
     def get(self, tvdb_id=None):
         """Get the list of shows or the details of a single show."""
-
-        # Get wanted subtitles
-        wanted_languages = _get_wanted_languages()
+        wanted_languages = get_wanted_languages()
 
         # Fetch show(s)
         if tvdb_id:
@@ -123,7 +121,7 @@ class _OverviewApi(RestResource):
         self.allowed_methods = ('GET',)
 
     def get(self):
-        wanted_languages = _get_wanted_languages()
+        wanted_languages = get_wanted_languages()
         shows = ShowDetailsDb().get_all_shows()
         total_shows = len(shows)
 
@@ -187,13 +185,3 @@ class _HardcodedApi(RestResource):
             saved = True
 
         return saved
-
-
-def _get_wanted_languages():
-    wanted_languages = []
-    if autosubliminal.DEFAULTLANGUAGE:
-        wanted_languages.append(autosubliminal.DEFAULTLANGUAGE)
-    if autosubliminal.ADDITIONALLANGUAGES:
-        wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES)
-
-    return wanted_languages

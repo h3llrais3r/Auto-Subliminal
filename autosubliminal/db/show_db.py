@@ -316,6 +316,8 @@ class ShowSettingsDb(object):
     def __init__(self):
         self._query_get = 'SELECT * FROM show_settings WHERE tvdb_id=?'
         self._query_set = 'INSERT INTO show_settings VALUES(?,?,?,?,?)'
+        self._query_update = 'UPDATE show_settings SET languages=?, refine=?, hearing_impaired=?, utf8_encoding=? ' \
+                             'WHERE tvdb_id=?'
 
     def get_show_settings(self, tvdb_id):
         """Get the show settings by its tvdb id.
@@ -344,10 +346,27 @@ class ShowSettingsDb(object):
         cursor = connection.cursor()
         cursor.execute(self._query_set, [
             show_settings.tvdb_id,
-            show_settings.languages,
+            to_text(show_settings.languages),
             show_settings.refine,
             show_settings.hearing_impaired,
             show_settings.utf8_encoding
         ])
         connection.commit()
         connection.close()
+
+    def update_show_settings(self, show_settings):
+        """Update show settings.
+
+        :param show_settings: the show settings
+        :type show_settings: ShowSettings
+        """
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_update, [
+            to_text(show_settings.languages),
+            show_settings.refine,
+            show_settings.hearing_impaired,
+            show_settings.utf8_encoding,
+            show_settings.tvdb_id
+        ])
+        connection.commit()

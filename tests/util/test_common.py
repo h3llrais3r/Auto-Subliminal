@@ -16,7 +16,7 @@ from autosubliminal.util.common import get_today, run_cmd, connect_url, wait_for
     to_list, to_obj_or_list, to_dict, get_boolean, safe_text, safe_lowercase, safe_uppercase, safe_trim, sanitize, \
     display_mapping_dict, display_list_single_line, display_list_multi_line, display_value, display_item_title, \
     display_item_name, display_interval, display_timestamp, convert_timestamp, humanize_bytes, get_common_path, \
-    get_root_path, get_file_size, set_rw_and_remove, atoi, natural_keys, get_alpha2_languages
+    get_root_path, get_file_size, set_rw_and_remove, atoi, natural_keys, get_wanted_languages, get_alpha2_languages
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -423,6 +423,12 @@ def test_natural_keys():
     my_list = ['season 23', 'season 15', 'season 30', 'season 05', 'season 01', 'root']
     my_sorted_list = ['root', 'season 01', 'season 05', 'season 15', 'season 23', 'season 30']
     assert sorted(my_list, key=natural_keys) == my_sorted_list
+
+
+def test_get_wanted_languages(monkeypatch):
+    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
+    monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en', 'fr'])
+    assert ['nl', 'en', 'fr'] == get_wanted_languages()
 
 
 def test_get_alpha2_languages():

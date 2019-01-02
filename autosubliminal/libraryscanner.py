@@ -5,11 +5,13 @@ import os
 
 import autosubliminal
 from autosubliminal.core.cache import cache_artwork, is_artwork_cached
+from autosubliminal.core.movie import MovieSettings
 from autosubliminal.core.scheduler import ScheduledProcess
-from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, MovieDetailsDb
+from autosubliminal.core.show import ShowSettings
+from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb, MovieDetailsDb, MovieSettingsDb
 from autosubliminal.fileprocessor import process_file
 from autosubliminal.indexer import ShowIndexer, MovieIndexer, TVDB_ID_UNKNOWN, IMDB_ID_UNKNOWN
-from autosubliminal.util.common import safe_lowercase
+from autosubliminal.util.common import safe_lowercase, get_wanted_languages
 from autosubliminal.util.filesystem import is_valid_video_file, is_skipped_dir, one_path_exists, get_available_subtitles
 from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
 from tvdb_api_v2.utils.artwork import get_artwork_url
@@ -28,7 +30,9 @@ class LibraryScanner(ScheduledProcess):
         super(LibraryScanner, self).__init__(run_lock=False, force_run_lock=False)
         self.show_db = ShowDetailsDb()
         self.show_episodes_db = ShowEpisodeDetailsDb()
+        self.show_settings_db = ShowSettingsDb()
         self.movie_db = MovieDetailsDb()
+        self.movie_settings_db = MovieSettingsDb()
         self.show_indexer = ShowIndexer()
         self.movie_indexer = MovieIndexer()
 
@@ -92,6 +96,10 @@ class LibraryScanner(ScheduledProcess):
                     log.warning('Skipping show episode file with unknown tvdb id: %s', os.path.join(dirname, filename))
                     return
 
+                # Store default show settings if not yet available
+                if not self.show_settings_db.get_show_settings(wanted_item.tvdbid):
+                    self.show_settings_db.set_show_settings(ShowSettings.default_settings(wanted_item.tvdbid))
+
                 # Get show details
                 show_details = self.show_db.get_show(wanted_item.tvdbid)
                 # Add show and episodes to db if not yet in db
@@ -144,6 +152,10 @@ class LibraryScanner(ScheduledProcess):
                 if wanted_item.imdbid == IMDB_ID_UNKNOWN:
                     log.warning('Skipping movie file with unknown imdb id: %s', os.path.join(dirname, filename))
                     return
+
+                # Store default movie settings if not yet available
+                if not self.movie_settings_db.get_movie_settings(wanted_item.imdbid):
+                    self.movie_settings_db.set_movie_settings(MovieSettings.default_settings(wanted_item.imdbid))
 
                 # Get movie details
                 movie_details = self.movie_db.get_movie(wanted_item.imdbid)
@@ -213,9 +225,7 @@ class LibraryScanner(ScheduledProcess):
             self.movie_db.update_movie(movie_details, subtitles=True)
 
     def _get_missing_subtitle_languages(self, available_subtitles):
-        wanted_languages = []
-        wanted_languages.append(autosubliminal.DEFAULTLANGUAGE) if autosubliminal.DEFAULTLANGUAGE else None
-        wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES) if autosubliminal.ADDITIONALLANGUAGES else None
+        wanted_languages = get_wanted_languages()
 
         available_languages = []
         for subtitle in available_subtitles:
