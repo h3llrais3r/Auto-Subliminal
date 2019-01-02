@@ -8,7 +8,7 @@ from autosubliminal.core.cache import cache_artwork, is_artwork_cached
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, MovieDetailsDb
 from autosubliminal.fileprocessor import process_file
-from autosubliminal.indexer import ShowIndexer, MovieIndexer
+from autosubliminal.indexer import ShowIndexer, MovieIndexer, TVDB_ID_UNKNOWN, IMDB_ID_UNKNOWN
 from autosubliminal.util.common import safe_lowercase
 from autosubliminal.util.filesystem import is_valid_video_file, is_skipped_dir, one_path_exists, get_available_subtitles
 from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
@@ -73,22 +73,29 @@ class LibraryScanner(ScheduledProcess):
                 # Only scan valid video files
                 if is_valid_video_file(filename):
                     log.debug('Video file found: %s', filename)
-                    self._scan_file(dirname, filename)
+                    try:
+                        self._scan_file(dirname, filename)
+                    except Exception:
+                        log.error('Error while scanning video file: %s', os.path.join(dirname, filename))
 
     def _scan_file(self, dirname, filename):
         wanted_item = process_file(dirname, filename)
         if wanted_item:
             if wanted_item.is_episode:
                 # Do a force search if no tvdb id found
-                # FIXME: also handle value -1 (not found) for id
                 if not wanted_item.tvdbid:
                     wanted_item.tvdbid = self.show_indexer.get_tvdb_id(wanted_item.title, year=wanted_item.year,
                                                                        force_search=True)
 
+                # Skip if no tvdb id is found
+                if wanted_item.tvdbid == TVDB_ID_UNKNOWN:
+                    log.warning('Skipping show episode file with unknown tvdb id: %s', os.path.join(dirname, filename))
+                    return
+
                 # Get show details
                 show_details = self.show_db.get_show(wanted_item.tvdbid)
                 # Add show and episodes to db if not yet in db
-                if wanted_item.tvdbid and not show_details:
+                if not show_details:
                     show_details = self.show_indexer.get_show_details(wanted_item.tvdbid)
                     if show_details:
                         show_details.path = self._get_show_path(dirname)
@@ -128,11 +135,15 @@ class LibraryScanner(ScheduledProcess):
                                                  wanted_item.episode)
             if wanted_item.is_movie:
                 # Do a force search if no imdb id found
-                # FIXME: also handle value -1 (not found) for id
                 if not wanted_item.imdbid:
                     wanted_item.imdbid, _ = self.movie_indexer.get_imdb_id_and_year(wanted_item.title,
                                                                                     year=wanted_item.year,
                                                                                     force_search=True)
+
+                # Skip if no imdb id is found
+                if wanted_item.imdbid == IMDB_ID_UNKNOWN:
+                    log.warning('Skipping movie file with unknown imdb id: %s', os.path.join(dirname, filename))
+                    return
 
                 # Get movie details
                 movie_details = self.movie_db.get_movie(wanted_item.imdbid)

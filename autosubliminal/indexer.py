@@ -25,6 +25,9 @@ from autosubliminal.util.mapping import get_movie_name_mapping, get_show_name_ma
 
 log = logging.getLogger(__name__)
 
+TVDB_ID_UNKNOWN = -1
+IMDB_ID_UNKNOWN = 'tt0000000'
+
 
 def authenticate(func):
     """Decorator for :class:ShowIndexer methods that require authentication"""
@@ -158,7 +161,7 @@ class ShowIndexer(Indexer):
             tvdb_id = db.get_tvdb_id(name)
             if tvdb_id:
                 log.debug('Tvdb id from cache: %s', tvdb_id)
-                if tvdb_id == -1:
+                if tvdb_id == TVDB_ID_UNKNOWN:
                     log.warning('Tvdb id not found in cache for %s', name)
                     return None
                 return int(tvdb_id)
@@ -182,7 +185,7 @@ class ShowIndexer(Indexer):
         else:
             log.warning('Tvdb id not found for %s', name)
             if store_id:
-                db.set_tvdb_id(-1, name)
+                db.set_tvdb_id(TVDB_ID_UNKNOWN, name)
             return None
 
     @authenticate
@@ -327,7 +330,7 @@ class MovieIndexer(Indexer):
             if imdb_id:
                 log.debug('Imdb id from cache: %s', imdb_id)
                 # Imdb id is a string (digits only, but can have 0 prefixes)
-                if imdb_id == 'tt0000000':
+                if imdb_id == IMDB_ID_UNKNOWN:
                     log.warning('Imdb id not found in cache for %s', name)
                     return None, year
                 return imdb_id, year
@@ -349,7 +352,7 @@ class MovieIndexer(Indexer):
         else:
             log.warning('Imdb id not found for %s', name)
             if store_id:
-                db.set_imdb_id('tt0000000', title, year)
+                db.set_imdb_id(IMDB_ID_UNKNOWN, title, year)
             return None, year
 
     def get_movie_details(self, imdb_id):
