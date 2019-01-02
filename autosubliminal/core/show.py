@@ -187,6 +187,10 @@ class ShowSettings(object):
                 # Use default value
                 setattr(self, key, value)
 
+    def to_json(self):
+        """Convert to its json representation."""
+        return to_dict(self, 'tvdb_id')
+
     @classmethod
     def default_settings(cls, tvdb_id):
         return cls(tvdb_id=tvdb_id,

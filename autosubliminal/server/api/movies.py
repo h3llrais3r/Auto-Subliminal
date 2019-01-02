@@ -6,7 +6,7 @@ import os
 import cherrypy
 
 from autosubliminal.core.subtitle import INTERNAL_TYPES
-from autosubliminal.db import MovieDetailsDb
+from autosubliminal.db import MovieDetailsDb, MovieSettingsDb
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import get_wanted_languages
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
@@ -37,17 +37,21 @@ class MoviesApi(RestResource):
         # Fetch movie(s)
         if imdb_id:
             db_movie = MovieDetailsDb().get_movie(imdb_id, subtitles=True)
-            return self._to_movie_json(db_movie, wanted_languages, details=True)
+            db_movie_settings = MovieSettingsDb().get_movie_settings(imdb_id)
+            return self._to_movie_json(db_movie, db_movie_settings, details=True)
         else:
             movies = []
+            movie_settings_db = MovieSettingsDb()
             db_movies = MovieDetailsDb().get_all_movies()
             for db_movie in db_movies:
-                movies.append(self._to_movie_json(db_movie, wanted_languages))
+                movie_settings = movie_settings_db.get_movie_settings(db_movie.imdb_id)
+                movies.append(self._to_movie_json(db_movie, movie_settings))
             return movies
 
-    def _to_movie_json(self, movie, wanted_languages, details=False):
+    def _to_movie_json(self, movie, movie_settings, details=False):
         movie_json = movie.to_json(details=details)
 
+        wanted_languages = movie_settings.wanted_languages
         total_subtitles_wanted = len(wanted_languages)
         total_subtitles_missing = len(movie.missing_languages)
         total_subtitles_available = len(wanted_languages) - len(movie.missing_languages)
@@ -55,6 +59,7 @@ class MoviesApi(RestResource):
         movie_json['total_subtitles_wanted'] = total_subtitles_wanted
         movie_json['total_subtitles_missing'] = total_subtitles_missing
         movie_json['total_subtitles_available'] = total_subtitles_available
+        movie_json['settings'] = movie_settings.to_json()
 
         if details:
             movie_json['files'] = self._get_movie_files(movie)

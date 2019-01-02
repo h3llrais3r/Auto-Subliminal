@@ -6,7 +6,7 @@ import os
 import cherrypy
 
 from autosubliminal.core.subtitle import INTERNAL_TYPES
-from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb
+from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import natural_keys
 from autosubliminal.util.common import get_wanted_languages
@@ -38,21 +38,25 @@ class ShowsApi(RestResource):
         # Fetch show(s)
         if tvdb_id:
             db_show = ShowDetailsDb().get_show(tvdb_id)
-            return self._to_show_json(db_show, wanted_languages, details=True)
+            db_show_settings = ShowSettingsDb().get_show_settings(tvdb_id)
+            return self._to_show_json(db_show, db_show_settings, details=True)
         else:
             shows = []
+            show_settings_db = ShowSettingsDb()
             db_shows = ShowDetailsDb().get_all_shows()
-            for show in db_shows:
-                shows.append(self._to_show_json(show, wanted_languages))
+            for db_show in db_shows:
+                show_settings = show_settings_db.get_show_settings(db_show.tvdb_id)
+                shows.append(self._to_show_json(db_show, show_settings))
             return shows
 
-    def _to_show_json(self, show, wanted_languages, details=False):
+    def _to_show_json(self, show, show_settings, details=False):
         show_json = show.to_json()
 
         # Calculate totals based on available episodes
         total_subtitles_wanted = 0
         total_subtitles_available = 0
         total_subtitles_missing = 0
+        wanted_languages = show_settings.wanted_languages
         episodes = ShowEpisodeDetailsDb().get_show_episodes(show.tvdb_id, available_only=True, subtitles=details)
         for episode in episodes:
             total_subtitles_wanted += len(wanted_languages)
@@ -62,6 +66,7 @@ class ShowsApi(RestResource):
         show_json['total_subtitles_wanted'] = total_subtitles_wanted
         show_json['total_subtitles_missing'] = total_subtitles_missing
         show_json['total_subtitles_available'] = total_subtitles_available
+        show_json['settings'] = show_settings.to_json()
 
         if details:
             show_json['files'] = self._get_show_episode_files(episodes)

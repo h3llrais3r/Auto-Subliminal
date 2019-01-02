@@ -118,6 +118,10 @@ class MovieSettings(object):
                 # Use default value
                 setattr(self, key, value)
 
+    def to_json(self):
+        """Convert to its json representation."""
+        return to_dict(self, 'imdb_id')
+
     @classmethod
     def default_settings(cls, imdb_id):
         return cls(imdb_id=imdb_id,
