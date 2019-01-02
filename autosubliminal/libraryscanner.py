@@ -148,7 +148,7 @@ class LibraryScanner(ScheduledProcess):
                 # Get movie details
                 movie_details = self.movie_db.get_movie(wanted_item.imdbid)
                 # Add movie to db if not yet in db
-                if wanted_item.imdbid and not movie_details:
+                if not movie_details:
                     movie_details = self.movie_indexer.get_movie_details(wanted_item.imdbid)
                     if movie_details:
                         movie_details.path = dirname
