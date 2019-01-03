@@ -4,8 +4,6 @@
 HARDCODED = 'hardcoded'
 EMBEDDED = 'embedded'
 EXTERNAL = 'external'
-INTERNAL_TYPES = [HARDCODED, EMBEDDED]
-EXTERNAL_TYPES = [EXTERNAL]
 
 
 class Subtitle(object):

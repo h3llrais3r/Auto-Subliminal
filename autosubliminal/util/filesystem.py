@@ -64,15 +64,10 @@ def is_valid_video_file(filename):
 
 def save_hardcoded_subtitle_languages(dirname, filename, hardcoded_subtitle_languages):
     log.debug('Saving hardcoded subtitle(s)')
-
     hardcoded_filename = os.path.join(dirname, filename + HARDCODED_SUBS_EXTENSION)
-    # Check if there already exists a file wit hardcoded subtitle languages
-    existing_hardcoded_subtitle_languages = []
-    if os.path.exists(hardcoded_filename):
-        existing_hardcoded_subtitle_languages = [s.language for s in get_hardcoded_subtitles(dirname, filename)]
 
-    # Write hardcoded subtitle languages to file (use set to exclude duplicates)
-    languages = set(existing_hardcoded_subtitle_languages + hardcoded_subtitle_languages)
+    # Write hardcoded subtitle languages to file (use set to exclude duplicates), overwrite existing file!
+    languages = set(hardcoded_subtitle_languages)
     with codecs.open(hardcoded_filename, mode='w', encoding='utf-8') as f:
         f.write(','.join(languages))
 

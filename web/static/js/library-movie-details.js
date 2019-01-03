@@ -46,13 +46,21 @@ function init() {
             getPlayVideoUrl: function (filePath, filename) {
                 return 'playvideo://' + filePath + PATH_SEPARTOR + filename;
             },
-            openSubtitlesModal: function (fileLocation, fileName, event) {
+            internalLanguagesAvailable: function (file) {
+                var available = false;
+                if ((file.hardcoded_languages && file.hardcoded_languages.length > 0) ||
+                    (file.embedded_languages && file.embedded_languages.length > 0)) {
+                    available = true;
+                }
+                return available;
+            },
+            openSubtitlesModal: function (fileLocation, fileName, hardcodedSubtitles, event) {
                 event.preventDefault();
                 // Set selected video file and clear language selection
                 var self = this;
                 self.selectedFileLocation = fileLocation;
                 self.selectedFileName = fileName;
-                self.selectedHardcodedLanguages = [];
+                self.selectedHardcodedLanguages = hardcodedSubtitles;
                 // Open modal
                 $('#subtitlesModal').modal('show');
             },

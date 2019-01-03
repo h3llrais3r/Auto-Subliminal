@@ -115,7 +115,7 @@
                                             <tr v-for="f in file.season_files">
                                                 <td>
                                                     <span class="details-files-file">{{ f.filename }}</span>
-                                                    <a v-if="f.type == 'video'" href="#" @click="openSubtitlesModal(file.season_path, f.filename, $event)">
+                                                    <a v-if="f.type == 'video'" href="#" @click="openSubtitlesModal(file.season_path, f.filename, f.hardcoded_languages, $event)">
                                                         <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
                                                     </a>
                                                     <a v-if="f.type == 'video'" :href="getPlayVideoUrl(file.season_path, f.filename)">
@@ -124,8 +124,9 @@
                                                 </td>
                                                 <td v-if="f.type == 'video'" class="text-right">
                                                     <!-- language is an array in case of video type -->
-                                                    <span class="language-badge right-aligned" v-if="f.languages" v-for="language in f.languages">{{ language }}</span>
-                                                    <span class="language-badge right-aligned" v-if="f.languages && f.languages.length > 0">internal</span>
+                                                    <span class="language-badge right-aligned" v-if="f.hardcoded_languages" v-for="language in f.hardcoded_languages">{{ language }}</span>
+                                                    <span class="language-badge right-aligned" v-if="f.embedded_languages" v-for="language in f.embedded_languages">{{ language }}</span>
+                                                    <span class="language-badge right-aligned" v-if="internalLanguagesAvailable(f)">internal</span>
                                                     <span class="file-type-badge right-aligned">{{ f.type }}</span>
                                                 </td>
                                                 <td v-if="f.type == 'subtitle'" class="text-right">

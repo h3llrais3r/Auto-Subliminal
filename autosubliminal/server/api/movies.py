@@ -5,7 +5,7 @@ import os
 
 import cherrypy
 
-from autosubliminal.core.subtitle import INTERNAL_TYPES
+from autosubliminal.core.subtitle import EMBEDDED, HARDCODED
 from autosubliminal.db import MovieDetailsDb, MovieSettingsDb
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import get_wanted_languages
@@ -67,18 +67,22 @@ class MoviesApi(RestResource):
         # Movie files are supposed to be stored in the same dir
         files = {}
 
-        internal_languages = []
+        embedded_languages = []
+        hardcoded_languages = []
         # Get subtitle files
         for subtitle in movie.subtitles:
-            if subtitle.type in INTERNAL_TYPES:
-                internal_languages.append(subtitle.language)
+            if subtitle.type == EMBEDDED:
+                embedded_languages.append(subtitle.language)
+            elif subtitle.type == HARDCODED:
+                hardcoded_languages.append(subtitle.language)
             else:
                 _, filename = os.path.split(subtitle.path)
-                files.update(
-                    {filename: {'filename': filename, 'type': 'subtitle', 'language': subtitle.language}})
+                files.update({filename: {'filename': filename, 'type': 'subtitle', 'language': subtitle.language}})
         # Get video file
         _, movie_filename = os.path.split(movie.path)
-        files.update({movie_filename: {'filename': movie_filename, 'type': 'video', 'languages': internal_languages}})
+        files.update({movie_filename: {'filename': movie_filename, 'type': 'video',
+                                       'embedded_languages': embedded_languages,
+                                       'hardcoded_languages': hardcoded_languages}})
 
         # Return sorted list
         return sorted([v for v in files.values()], key=lambda k: k['filename'])

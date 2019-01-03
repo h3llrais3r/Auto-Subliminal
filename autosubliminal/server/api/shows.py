@@ -5,7 +5,7 @@ import os
 
 import cherrypy
 
-from autosubliminal.core.subtitle import INTERNAL_TYPES
+from autosubliminal.core.subtitle import EMBEDDED, HARDCODED
 from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import natural_keys
@@ -90,17 +90,22 @@ class ShowsApi(RestResource):
                 # Determine season path
                 if not season_path:
                     season_path, _ = os.path.split(episode.path)
-                internal_languages = []
+                embedded_languages = []
+                hardcoded_languages = []
                 # Get subtitle files
                 for subtitle in episode.subtitles:
-                    if subtitle.type in INTERNAL_TYPES:
-                        internal_languages.append(subtitle.language)
+                    if subtitle.type == EMBEDDED:
+                        embedded_languages.append(subtitle.language)
+                    elif subtitle.type == HARDCODED:
+                        hardcoded_languages.append(subtitle.language)
                     else:
                         _, filename = os.path.split(subtitle.path)
                         season_files.append({'filename': filename, 'type': 'subtitle', 'language': subtitle.language})
                 # Get video file
                 _, episode_filename = os.path.split(episode.path)
-                season_files.append({'filename': episode_filename, 'type': 'video', 'languages': internal_languages})
+                season_files.append(
+                    {'filename': episode_filename, 'type': 'video', 'embedded_languages': embedded_languages,
+                     'hardcoded_languages': hardcoded_languages})
             # Sort season files
             if season_files:
                 sorted_files = sorted(season_files, key=lambda k: k['filename'])
