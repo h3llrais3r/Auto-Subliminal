@@ -191,7 +191,7 @@ class WantedItem(_Item):
         if hasattr(self, key):
             if key in ['languages']:
                 # Must be returned as a list of values
-                setattr(self, key, to_list(value))
+                setattr(self, key, to_list(value, default_value=[]))
             elif key in ['tvdbid']:
                 setattr(self, key, to_obj(value, obj_type=int))
             else:

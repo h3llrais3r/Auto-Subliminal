@@ -43,7 +43,7 @@ class MovieDetails(object):
                 setattr(self, key, to_obj(value, obj_type=int))
             elif key in ['missing_languages']:
                 # Must be returned as a list of values
-                setattr(self, key, to_list(value))
+                setattr(self, key, to_list(value, default_value=[]))
             else:
                 # Use default value
                 setattr(self, key, value)
@@ -110,7 +110,7 @@ class MovieSettings(object):
         if hasattr(self, key):
             if key in ['wanted_languages']:
                 # Must be returned as a list of values
-                setattr(self, key, to_list(value))
+                setattr(self, key, to_list(value, default_value=[]))
             elif key in ['refine', 'hearing_impaired', 'utf8_encoding']:
                 # Set as bool
                 setattr(self, key, to_obj(value, obj_type=bool))

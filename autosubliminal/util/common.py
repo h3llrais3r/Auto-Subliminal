@@ -80,51 +80,65 @@ def wait_for_internet_connection():
         time.sleep(5)
 
 
-def to_obj(value, obj_type=text_type):
+def to_obj(value, obj_type=text_type, default_value=None):
     """Convert an object to an object value.
 
-    By default it converts it to a text value.
+    By default it converts it to text value.
     Optionally, it can be converted to the specified object type.
     """
-    return obj_type(value) if value is not None else None
+    return obj_type(value) if value is not None else default_value
 
 
-def to_text(obj):
+def to_text(obj, default_value=None):
     """Convert an object to a text value.
 
-    When the object is a list, convert it to a comma separated text value.
+    If the object is None, the default value will be returned.
+    If the object is a list, convert it to a comma separated text value.
     If not, return the text representation of the object.
     """
-    if obj and isinstance(obj, list):
-        return ','.join(text_type(e) for e in obj)
+    if obj is not None:
+        if isinstance(obj, list):
+            return ','.join(text_type(e) for e in obj) if obj else default_value
+        else:
+            return text_type(obj)
+    else:
+        return default_value
 
-    return text_type(obj) if obj is not None else None
 
-
-def to_list(value, obj_type=text_type):
+def to_list(value, obj_type=text_type, default_value=None):
     """Convert a value to a list.
 
-    Split the value on ',' and return the split values.
-    A None value will be reverted to an empty list.
+    If the value is None, the default value will be returned.
+    If the value contains ',', return the split values.
+    By default it converts the value(s) to text value(s).
     Optionally, it can be converted to the specified object type.
     """
-    if value and isinstance(value, list):
-        return [obj_type(v) for v in value]
+    if value is not None:
+        if isinstance(value, list):
+            return [obj_type(v) for v in value]
+        elif ',' in text_type(value):
+            return [obj_type(v) for v in text_type(value).split(',')]
+        else:
+            return [obj_type(value)] if text_type(value) != '' else default_value
+    else:
+        return default_value
 
-    return [obj_type(v) for v in value.split(',')] if value else []
 
-
-def to_obj_or_list(value, obj_type=text_type):
+def to_obj_or_list(value, obj_type=text_type, default_value=None):
     """Convert a value to an object or a list.
 
-    Split the value on ',' if it contains it and return the split values.
-    If not return the value itself.
+    If the value is None, the default value will be returned.
+    If the value contains ',', return the split values.
+    By default it converts the value(s) to text value(s).
     Optionally, it can be converted to the specified object type.
     """
-    if value and ',' in value:
-        return to_list(value, obj_type=obj_type)
-
-    return obj_type(value) if value is not None else None
+    if value is not None:
+        if isinstance(value, list) or ',' in text_type(value):
+            return to_list(value, obj_type=obj_type)
+        else:
+            return obj_type(value)
+    else:
+        return default_value
 
 
 def to_dict(obj, *args, **kwargs):

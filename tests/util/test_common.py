@@ -105,6 +105,7 @@ def test_to_obj():
     value_1 = 1
     value_2 = '2'
     assert to_obj(None) is None
+    assert to_obj(None, default_value='') == ''
     assert to_obj(value_0) == '0'
     assert to_obj(value_0, obj_type=bool) is False
     assert to_obj(value_1) == '1'
@@ -116,17 +117,27 @@ def test_to_text():
     value_1 = 1
     value_2 = [1, 2]
     assert to_text(None) is None
+    assert to_text(None, default_value='') == ''
+    assert to_text([]) is None
+    assert to_text([], default_value='') == ''
     assert to_text(value_0) == '0'
     assert to_text(value_1) == '1'
     assert to_text(value_2) == '1,2'
 
 
 def test_to_list():
+    value_0 = 0
     value_1 = '1'
     value_2 = '1,2'
     value_3 = [1, 2, 3]
     value_4 = ['1', '2', '3', '4']
-    assert to_list(None) == []
+    assert to_list(None) is None
+    assert to_list([]) == []
+    assert to_list('') is None
+    assert to_list('', default_value=[]) == []
+    assert to_list(value_0) == ['0']
+    assert to_list(value_0, obj_type=int) == [0]
+    assert to_list(value_0, obj_type=bool) == [False]
     assert to_list(value_1) == ['1']
     assert to_list(value_2, obj_type=int) == [1, 2]
     assert to_list(value_3) == ['1', '2', '3']
@@ -138,9 +149,12 @@ def test_to_obj_or_list():
     value_1 = '1'
     value_2 = '1,2'
     assert to_obj_or_list(None) is None
+    assert to_obj_or_list([]) == []
     assert to_obj_or_list(value_0) == '0'
+    assert to_obj_or_list(value_0, obj_type=int) == 0
     assert to_obj_or_list(value_0, obj_type=bool) is False
     assert to_obj_or_list(value_1) == '1'
+    assert to_obj_or_list(value_2) == ['1', '2']
     assert to_obj_or_list(value_2, obj_type=int) == [1, 2]
 
 
