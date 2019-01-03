@@ -33,9 +33,6 @@ class ShowsApi(RestResource):
 
     def get(self, tvdb_id=None):
         """Get the list of shows or the details of a single show."""
-        wanted_languages = get_wanted_languages()
-
-        # Fetch show(s)
         if tvdb_id:
             db_show = ShowDetailsDb().get_show(tvdb_id)
             db_show_settings = ShowSettingsDb().get_show_settings(tvdb_id)
@@ -45,8 +42,8 @@ class ShowsApi(RestResource):
             show_settings_db = ShowSettingsDb()
             db_shows = ShowDetailsDb().get_all_shows()
             for db_show in db_shows:
-                show_settings = show_settings_db.get_show_settings(db_show.tvdb_id)
-                shows.append(self._to_show_json(db_show, show_settings))
+                db_show_settings = show_settings_db.get_show_settings(db_show.tvdb_id)
+                shows.append(self._to_show_json(db_show, db_show_settings))
             return shows
 
     def _to_show_json(self, show, show_settings, details=False):

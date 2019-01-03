@@ -32,9 +32,6 @@ class MoviesApi(RestResource):
 
     def get(self, imdb_id=None):
         """Get the list of movies or the details of a single movie."""
-        wanted_languages = get_wanted_languages()
-
-        # Fetch movie(s)
         if imdb_id:
             db_movie = MovieDetailsDb().get_movie(imdb_id, subtitles=True)
             db_movie_settings = MovieSettingsDb().get_movie_settings(imdb_id)
@@ -44,8 +41,8 @@ class MoviesApi(RestResource):
             movie_settings_db = MovieSettingsDb()
             db_movies = MovieDetailsDb().get_all_movies()
             for db_movie in db_movies:
-                movie_settings = movie_settings_db.get_movie_settings(db_movie.imdb_id)
-                movies.append(self._to_movie_json(db_movie, movie_settings))
+                db_movie_settings = movie_settings_db.get_movie_settings(db_movie.imdb_id)
+                movies.append(self._to_movie_json(db_movie, db_movie_settings))
             return movies
 
     def _to_movie_json(self, movie, movie_settings, details=False):
