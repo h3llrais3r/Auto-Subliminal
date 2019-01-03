@@ -169,8 +169,14 @@ a:hover, a:active, a:focus, a:visited > .fa {
     transform: translate(-50%, -50%) !important;
     -ms-transform: translate(-50%, -50%) !important;
     -webkit-transform: translate(-50%, -50%) !important;
-    width: 500px;
-    height: 250px;
+}
+
+/* Style modal on small devices */
+@media (max-width: 767px) {
+    .modal-dialog {
+        width: 100%;
+        margin: 0px;
+    }
 }
 
 /***********************

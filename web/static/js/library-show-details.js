@@ -72,7 +72,7 @@ function init() {
                 }
                 return videoCount;
             },
-            openModal: function (fileLocation, fileName, event) {
+            openSubtitlesModal: function (fileLocation, fileName, event) {
                 event.preventDefault();
                 // Set selected video file and clear language selection
                 var self = this;

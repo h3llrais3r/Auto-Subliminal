@@ -82,9 +82,9 @@
                                         <table class="table table-condensed table-striped table-no-column-borders">
                                             <tr v-for="f in movie.files">
                                                 <td class="wrapped">
-                                                    <span v-if="f.type != 'video'" class="details-files-file">{{ f.filename }}</span>
-                                                    <a v-if="f.type == 'video'" href="#" @click="openModal(movie.path, f.filename, $event)" title="Click to save hardcoded subtitle languages">
-                                                        <span class="details-files-file">{{ f.filename }}</span>
+                                                    <span class="details-files-file">{{ f.filename }}</span>
+                                                    <a v-if="f.type == 'video'" href="#" @click="openSubtitlesModal(movie.path, f.filename, $event)">
+                                                        <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
                                                     </a>
                                                     <a v-if="f.type == 'video'" :href="getPlayVideoUrl(movie.path, f.filename)">
                                                         <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
@@ -115,7 +115,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title">Save hardcoded subtitle languages</h4>
+                                    <h3 class="modal-title">Save hardcoded subtitle languages</h3>
                                 </div>
                                 <div class="modal-body">
                                     <span>Select 1 or more hardcoded subtitle languages:</span>
