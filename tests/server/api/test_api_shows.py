@@ -44,7 +44,7 @@ shows_json = '[{"banner": true, "overview": "overview1", "path": "/path/to/show1
 
 show_1_json = '{"banner": true, "files": ' \
               '[{"season_files": [{"embedded_languages": [], "filename": "s01e01.mkv", "hardcoded_languages": [], ' \
-              '"type": "video"}, {"filename": "s01e01.srt", "language": "nl", "type": "subtitle"}], ' \
+              '"tvdb_id": 11, "type": "video"}, {"filename": "s01e01.srt", "language": "nl", "type": "subtitle"}], ' \
               '"season_name": "Season 01", "season_path": "/path/to/show1"}], ' \
               '"overview": "overview1", "path": "/path/to/show1", "poster": true, "settings": ' \
               '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, "wanted_languages": ["en", "nl"]}, ' \
@@ -71,7 +71,8 @@ def test_get_show(monkeypatch, mocker):
     mocker.patch.object(ShowSettingsDb, 'get_show_settings', return_value=show_settings_1)
     mocker.patch('autosubliminal.server.api.shows.ShowsApi._get_show_episode_files',
                  return_value=[{'season_name': 'Season 01', 'season_path': '/path/to/show1', 'season_files': [
-                     {'filename': 's01e01.mkv', 'type': 'video', 'embedded_languages': [], 'hardcoded_languages': []},
+                     {'filename': 's01e01.mkv', 'type': 'video', 'embedded_languages': [], 'hardcoded_languages': [],
+                      'tvdb_id': 11},
                      {'filename': 's01e01.srt', 'type': 'subtitle', 'language': 'nl'}
                  ]}])
     assert show_1_json == pickle_api_result(ShowsApi().get('1'))

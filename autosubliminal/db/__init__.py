@@ -12,7 +12,7 @@ from autosubliminal import version
 from .cache_db import ImdbIdCacheDb, TvdbIdCacheDb
 from .main_db import LastDownloadsDb, WantedItemsDb
 from .movie_db import MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb
-from .show_db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb
+from .show_db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb, ShowSettingsDb
 
 # Reference all imports from the submodules here (to prevent unused imports errors)!
 __all__ = [
@@ -25,6 +25,7 @@ __all__ = [
     'MovieSubtitlesDb',
     'ShowDetailsDb',
     'ShowEpisodeDetailsDb',
+    'ShowEpisodeSubtitlesDb',
     'ShowSettingsDb'
 ]
 

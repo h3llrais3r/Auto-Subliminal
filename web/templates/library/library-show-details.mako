@@ -115,7 +115,7 @@
                                             <tr v-for="f in file.season_files">
                                                 <td>
                                                     <span class="details-files-file">{{ f.filename }}</span>
-                                                    <a v-if="f.type == 'video'" href="#" @click="openSubtitlesModal(file.season_path, f.filename, f.hardcoded_languages, $event)">
+                                                    <a v-if="f.type == 'video'" href="#" @click="openSubtitlesModal(file.season_path, f.filename, f.hardcoded_languages, f.tvdb_id, $event)">
                                                         <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
                                                     </a>
                                                     <a v-if="f.type == 'video'" :href="getPlayVideoUrl(file.season_path, f.filename)">

@@ -5,8 +5,8 @@ import os
 
 import cherrypy
 
-from autosubliminal.core.subtitle import EMBEDDED, HARDCODED
-from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb
+from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
+from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb, ShowSettingsDb
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import natural_keys
 from autosubliminal.util.common import get_wanted_languages
@@ -105,7 +105,7 @@ class ShowsApi(RestResource):
                 _, episode_filename = os.path.split(episode.path)
                 season_files.append(
                     {'filename': episode_filename, 'type': 'video', 'embedded_languages': embedded_languages,
-                     'hardcoded_languages': hardcoded_languages})
+                     'hardcoded_languages': hardcoded_languages, 'tvdb_id': episode.tvdb_id})
             # Sort season files
             if season_files:
                 sorted_files = sorted(season_files, key=lambda k: k['filename'])
@@ -184,11 +184,23 @@ class _HardcodedApi(RestResource):
         """Save the list of hardcoded subtitles for a show episode file."""
         saved = False
         input_json = cherrypy.request.json
-        if 'file_location' in input_json and 'file_name' in input_json and 'languages' in input_json:
+
+        if all(k in input_json for k in ('tvdb_id', 'file_location', 'file_name', 'languages')):
+            # Save to file
+            tvdb_id = input_json['tvdb_id']
             file_location = input_json['file_location']
             file_name = input_json['file_name']
             languages = input_json['languages']
             save_hardcoded_subtitle_languages(file_location, file_name, languages)
+
+            # Update in db
+            subtitles = []
+            for language in languages:
+                subtitles.append(Subtitle(HARDCODED, language, path=os.path.join(file_location, file_name)))
+            subtitles_db = ShowEpisodeSubtitlesDb()
+            subtitles_db.delete_show_episode_subtitles(tvdb_id)
+            subtitles_db.set_show_episode_subtitles(tvdb_id, subtitles)
+
             saved = True
 
         return saved

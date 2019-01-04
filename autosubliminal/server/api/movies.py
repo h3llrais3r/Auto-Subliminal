@@ -5,8 +5,8 @@ import os
 
 import cherrypy
 
-from autosubliminal.core.subtitle import EMBEDDED, HARDCODED
-from autosubliminal.db import MovieDetailsDb, MovieSettingsDb
+from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
+from autosubliminal.db import MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import get_wanted_languages
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
@@ -146,11 +146,23 @@ class _HardcodedApi(RestResource):
         """Save the list of hardcoded subtitles for a movie file."""
         saved = False
         input_json = cherrypy.request.json
-        if 'file_location' in input_json and 'file_name' in input_json and 'languages' in input_json:
+
+        if all(k in input_json for k in ('imdb_id', 'file_location', 'file_name', 'languages')):
+            # Save to file
+            imdb_id = input_json['imdb_id']
             file_location = input_json['file_location']
             file_name = input_json['file_name']
             languages = input_json['languages']
             save_hardcoded_subtitle_languages(file_location, file_name, languages)
+
+            # Update in db
+            subtitles = []
+            for language in languages:
+                subtitles.append(Subtitle(HARDCODED, language, path=os.path.join(file_location, file_name)))
+            subtitles_db = MovieSubtitlesDb()
+            subtitles_db.delete_movie_subtitles(imdb_id)
+            subtitles_db.set_movie_subtitles(imdb_id, subtitles)
+
             saved = True
 
         return saved

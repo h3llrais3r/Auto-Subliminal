@@ -16,6 +16,7 @@ function init() {
                 posterFullSizeUrl: getUrl('/artwork/tvdb/poster/fullsize/'),
                 posterThumbnailUrl: getUrl('/artwork/tvdb/poster/thumbnail/'),
                 languages: LANGUAGES,
+                selectedEpisodeTvdbId: null,
                 selectedFileLocation: null,
                 selectedFileName: null,
                 selectedHardcodedLanguages: []
@@ -80,10 +81,11 @@ function init() {
                 }
                 return available;
             },
-            openSubtitlesModal: function (fileLocation, fileName, hardcodedLanguages, event) {
+            openSubtitlesModal: function (fileLocation, fileName, hardcodedLanguages, episodeTvdbId, event) {
                 event.preventDefault();
                 // Set selected video file and clear language selection
                 var self = this;
+                self.selectedEpisodeTvdbId = episodeTvdbId;
                 self.selectedFileLocation = fileLocation;
                 self.selectedFileName = fileName;
                 self.selectedHardcodedLanguages = hardcodedLanguages;
@@ -95,6 +97,7 @@ function init() {
                 // Get data
                 var self = this;
                 var data = {
+                    'tvdb_id': self.selectedEpisodeTvdbId,
                     'file_location': self.selectedFileLocation,
                     'file_name': self.selectedFileName,
                     'languages': self.selectedHardcodedLanguages
@@ -102,6 +105,8 @@ function init() {
                 $.postJson(getUrl('/api/shows/subtitles/hardcoded'), data, function (data) {
                     // Close modal on success
                     $('#subtitlesModal').modal('hide');
+                    // Get show details again to get the updates
+                    self.getShowDetails();
                 });
             }
         }
