@@ -44,8 +44,44 @@ function init() {
             getProcessPercentage: function (show) {
                 return show.total_subtitles_available / show.total_subtitles_wanted * 100;
             },
-            getPlayVideoUrl: function (filePath, filename) {
-                return 'playvideo://' + filePath + PATH_SEPARTOR + filename;
+            getPlayVideoUrl: constructPlayVideoUrl,
+            getLanguages: convertToLanguages,
+            getAlpha2Languages: convertToAlpha2Languages,
+            internalLanguagesAvailable: function (file) {
+                var available = false;
+                if ((file.hardcoded_languages && file.hardcoded_languages.length > 0) ||
+                    (file.embedded_languages && file.embedded_languages.length > 0)) {
+                    available = true;
+                }
+                return available;
+            },
+            openSubtitlesModal: function (fileLocation, fileName, hardcodedLanguages, episodeTvdbId, event) {
+                event.preventDefault();
+                // Set selected video file and clear language selection
+                var self = this;
+                self.selectedEpisodeTvdbId = episodeTvdbId;
+                self.selectedFileLocation = fileLocation;
+                self.selectedFileName = fileName;
+                self.selectedHardcodedLanguages = self.getLanguages(hardcodedLanguages);
+                // Open modal
+                $('#subtitlesModal').modal('show');
+            },
+            saveHardcodedSubtitles: function (event) {
+                event.preventDefault();
+                // Get data
+                var self = this;
+                var data = {
+                    'tvdb_id': self.selectedEpisodeTvdbId,
+                    'file_location': self.selectedFileLocation,
+                    'file_name': self.selectedFileName,
+                    'languages': self.getAlpha2Languages(self.selectedHardcodedLanguages)
+                };
+                $.postJson(getUrl('/api/shows/subtitles/hardcoded'), data, function (data) {
+                    // Close modal on success
+                    $('#subtitlesModal').modal('hide');
+                    // Get show details again to get the updates
+                    self.getShowDetails();
+                });
             },
             getNrOfSubtitles: function (files, language) {
                 var subtitleCount = 0;
@@ -72,44 +108,6 @@ function init() {
                     }
                 }
                 return videoCount;
-            },
-            getFilteredLanguages: filterLanguagesByAlpha2,
-            getAlpha2Languages: convertToAlpha2Languages,
-            internalLanguagesAvailable: function (file) {
-                var available = false;
-                if ((file.hardcoded_languages && file.hardcoded_languages.length > 0) ||
-                    (file.embedded_languages && file.embedded_languages.length > 0)) {
-                    available = true;
-                }
-                return available;
-            },
-            openSubtitlesModal: function (fileLocation, fileName, hardcodedLanguages, episodeTvdbId, event) {
-                event.preventDefault();
-                // Set selected video file and clear language selection
-                var self = this;
-                self.selectedEpisodeTvdbId = episodeTvdbId;
-                self.selectedFileLocation = fileLocation;
-                self.selectedFileName = fileName;
-                self.selectedHardcodedLanguages = self.getFilteredLanguages(hardcodedLanguages);
-                // Open modal
-                $('#subtitlesModal').modal('show');
-            },
-            saveHardcodedSubtitles: function (event) {
-                event.preventDefault();
-                // Get data
-                var self = this;
-                var data = {
-                    'tvdb_id': self.selectedEpisodeTvdbId,
-                    'file_location': self.selectedFileLocation,
-                    'file_name': self.selectedFileName,
-                    'languages': self.getAlpha2Languages(self.selectedHardcodedLanguages)
-                };
-                $.postJson(getUrl('/api/shows/subtitles/hardcoded'), data, function (data) {
-                    // Close modal on success
-                    $('#subtitlesModal').modal('hide');
-                    // Get show details again to get the updates
-                    self.getShowDetails();
-                });
             }
         }
     });

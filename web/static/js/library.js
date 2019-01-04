@@ -27,7 +27,13 @@ var libraryScannerFinishedEventSubscriber = function (msg, data) {
     }
 };
 
-var filterLanguagesByAlpha2 = function (alpha2Languages) {
+// Construct a playvideo url
+var constructPlayVideoUrl = function (filePath, filename) {
+    return 'playvideo://' + filePath + PATH_SEPARTOR + filename;
+};
+
+// Convert a list of alpha2 language codes to a list of language objects
+var convertToLanguages = function (alpha2Languages) {
     var languages = [];
     for (var i = 0; i < alpha2Languages.length; i++) {
         var alpha2Language = alpha2Languages[i];
@@ -40,6 +46,7 @@ var filterLanguagesByAlpha2 = function (alpha2Languages) {
     return languages;
 };
 
+// Convert a list of language objects to a list of alpha2 language codes
 var convertToAlpha2Languages = function (languages) {
     var alpha2Languages = [];
     for (var i = 0; i < languages.length; i++) {

@@ -43,10 +43,8 @@ function init() {
             getProcessPercentage: function (movie) {
                 return movie.total_subtitles_available / movie.total_subtitles_wanted * 100;
             },
-            getPlayVideoUrl: function (filePath, filename) {
-                return 'playvideo://' + filePath + PATH_SEPARTOR + filename;
-            },
-            getFilteredLanguages: filterLanguagesByAlpha2,
+            getPlayVideoUrl: constructPlayVideoUrl,
+            getLanguages: convertToLanguages,
             getAlpha2Languages: convertToAlpha2Languages,
             internalLanguagesAvailable: function (file) {
                 var available = false;
@@ -62,7 +60,7 @@ function init() {
                 var self = this;
                 self.selectedFileLocation = fileLocation;
                 self.selectedFileName = fileName;
-                self.selectedHardcodedLanguages = self.getFilteredLanguages(hardcodedLanguages);
+                self.selectedHardcodedLanguages = self.getLanguages(hardcodedLanguages);
                 // Open modal
                 $('#subtitlesModal').modal('show');
             },
