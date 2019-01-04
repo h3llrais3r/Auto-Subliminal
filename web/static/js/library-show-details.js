@@ -73,6 +73,8 @@ function init() {
                 }
                 return videoCount;
             },
+            getFilteredLanguages: filterLanguagesByAlpha2,
+            getAlpha2Languages: convertToAlpha2Languages,
             internalLanguagesAvailable: function (file) {
                 var available = false;
                 if ((file.hardcoded_languages && file.hardcoded_languages.length > 0) ||
@@ -88,7 +90,7 @@ function init() {
                 self.selectedEpisodeTvdbId = episodeTvdbId;
                 self.selectedFileLocation = fileLocation;
                 self.selectedFileName = fileName;
-                self.selectedHardcodedLanguages = hardcodedLanguages;
+                self.selectedHardcodedLanguages = self.getFilteredLanguages(hardcodedLanguages);
                 // Open modal
                 $('#subtitlesModal').modal('show');
             },
@@ -100,7 +102,7 @@ function init() {
                     'tvdb_id': self.selectedEpisodeTvdbId,
                     'file_location': self.selectedFileLocation,
                     'file_name': self.selectedFileName,
-                    'languages': self.selectedHardcodedLanguages
+                    'languages': self.getAlpha2Languages(self.selectedHardcodedLanguages)
                 };
                 $.postJson(getUrl('/api/shows/subtitles/hardcoded'), data, function (data) {
                     // Close modal on success
@@ -112,7 +114,8 @@ function init() {
         }
     });
 
-    // Init vue plugins
+    // Init vue components
+    Vue.component('multiselect', window.VueMultiselect.default);
 
     // Init vue app
     new Vue({

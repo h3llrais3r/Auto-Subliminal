@@ -46,6 +46,8 @@ function init() {
             getPlayVideoUrl: function (filePath, filename) {
                 return 'playvideo://' + filePath + PATH_SEPARTOR + filename;
             },
+            getFilteredLanguages: filterLanguagesByAlpha2,
+            getAlpha2Languages: convertToAlpha2Languages,
             internalLanguagesAvailable: function (file) {
                 var available = false;
                 if ((file.hardcoded_languages && file.hardcoded_languages.length > 0) ||
@@ -54,13 +56,13 @@ function init() {
                 }
                 return available;
             },
-            openSubtitlesModal: function (fileLocation, fileName, hardcodedSubtitles, event) {
+            openSubtitlesModal: function (fileLocation, fileName, hardcodedLanguages, event) {
                 event.preventDefault();
                 // Set selected video file and clear language selection
                 var self = this;
                 self.selectedFileLocation = fileLocation;
                 self.selectedFileName = fileName;
-                self.selectedHardcodedLanguages = hardcodedSubtitles;
+                self.selectedHardcodedLanguages = self.getFilteredLanguages(hardcodedLanguages);
                 // Open modal
                 $('#subtitlesModal').modal('show');
             },
@@ -72,7 +74,7 @@ function init() {
                     'imdb_id': self.movie.imdb_id,
                     'file_location': self.selectedFileLocation,
                     'file_name': self.selectedFileName,
-                    'languages': self.selectedHardcodedLanguages
+                    'languages': self.getAlpha2Languages(self.selectedHardcodedLanguages)
                 };
                 $.postJson(getUrl('/api/movies/subtitles/hardcoded'), data, function (data) {
                     // Close modal on success
@@ -84,7 +86,8 @@ function init() {
         }
     });
 
-    // Init vue plugins
+    // Init vue components
+    Vue.component('multiselect', window.VueMultiselect.default);
 
     // Init vue app
     new Vue({

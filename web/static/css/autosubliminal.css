@@ -943,6 +943,10 @@ table.tablesorter .filtered {
     display: none;
 }
 
+/*******************************
+ * VUE SIMPLE PROGRESS STYLING *
+ *******************************/
+
 /* Make sure the vue progress bar is show when used inside other components and use rounded corners */
 .vue-simple-progress {
     z-index: 0 !important;
@@ -965,4 +969,20 @@ table.tablesorter .filtered {
     -webkit-border-radius: 1px;
     -moz-border-radius: 1px;
     border-radius: 1px;
+}
+
+/***************************
+ * VUE MULTISELECT STYLING *
+ ***************************/
+
+.multiselect__tag, .multiselect__option--highlight, .multiselect__option--highlight:after {
+    background: #777777; /* Bootstrap badge color */
+}
+
+.multiselect__tag-icon:focus, .multiselect__tag-icon:hover {
+    background: #333333;
+}
+
+.multiselect__tag-icon:after {
+    color: #ffffff;
 }

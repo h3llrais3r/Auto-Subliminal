@@ -125,6 +125,7 @@
 
 <%block name="footerContent">
 
+    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/library.js?v=${appUUID}"></script>
     <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/library-movie-details.js?v=${appUUID}"></script>
 
 </%block>

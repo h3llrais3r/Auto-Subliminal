@@ -10,14 +10,16 @@
             </div>
 
             <div class="modal-body">
-                <span>Select 1 or more hardcoded subtitle languages:</span>
-                <span v-if="selectedHardcodedLanguages.length > 0">{{ selectedHardcodedLanguages }}</span>
-                <br><br>
-                <select v-model="selectedHardcodedLanguages" class="form-control input-sm" multiple>
-                    <option v-for="language in languages" :value="language.alpha2">
-                        {{ language.name + ' (' + language.alpha2 + ')' }}
-                    </option>
-                </select>
+                <span>Select 1 or more hardcoded subtitle languages</span>
+                <br>
+                <multiselect v-model="selectedHardcodedLanguages"
+                             :options="languages"
+                             :multiple="true"
+                             :taggable="true"
+                             tag-placeholder=""
+                             label="name"
+                             track-by="alpha2">
+                </multiselect>
             </div>
 
             <div class="modal-footer">

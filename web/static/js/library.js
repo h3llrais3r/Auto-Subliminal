@@ -27,3 +27,24 @@ var libraryScannerFinishedEventSubscriber = function (msg, data) {
     }
 };
 
+var filterLanguagesByAlpha2 = function (alpha2Languages) {
+    var languages = [];
+    for (var i = 0; i < alpha2Languages.length; i++) {
+        var alpha2Language = alpha2Languages[i];
+        for (var j = 0; j < LANGUAGES.length; j++) {
+            if (LANGUAGES[j].alpha2 == alpha2Language) {
+                languages.push(LANGUAGES[j]);
+            }
+        }
+    }
+    return languages;
+};
+
+var convertToAlpha2Languages = function (languages) {
+    var alpha2Languages = [];
+    for (var i = 0; i < languages.length; i++) {
+        alpha2Languages.push(languages[i].alpha2);
+    }
+    return alpha2Languages;
+};
+
