@@ -99,6 +99,7 @@ class LibraryScanner(ScheduledProcess):
                 # Store default show settings if not yet available
                 if not self.show_settings_db.get_show_settings(wanted_item.tvdbid):
                     self.show_settings_db.set_show_settings(ShowSettings.default_settings(wanted_item.tvdbid))
+                show_settings = self.show_settings_db.get_show_settings(wanted_item.tvdbid)
 
                 # Get show details
                 show_details = self.show_db.get_show(wanted_item.tvdbid)
@@ -137,10 +138,11 @@ class LibraryScanner(ScheduledProcess):
                 # Check episode details
                 if isinstance(wanted_item.episode, list):
                     for episode in wanted_item.episode:
-                        self._update_episode_details(dirname, filename, wanted_item.tvdbid, wanted_item.season, episode)
+                        self._update_episode_details(show_settings, dirname, filename, wanted_item.tvdbid,
+                                                     wanted_item.season, episode)
                 else:
-                    self._update_episode_details(dirname, filename, wanted_item.tvdbid, wanted_item.season,
-                                                 wanted_item.episode)
+                    self._update_episode_details(show_settings, dirname, filename, wanted_item.tvdbid,
+                                                 wanted_item.season, wanted_item.episode)
             if wanted_item.is_movie:
                 # Do a force search if no imdb id found
                 if not wanted_item.imdbid:
@@ -156,6 +158,7 @@ class LibraryScanner(ScheduledProcess):
                 # Store default movie settings if not yet available
                 if not self.movie_settings_db.get_movie_settings(wanted_item.imdbid):
                     self.movie_settings_db.set_movie_settings(MovieSettings.default_settings(wanted_item.imdbid))
+                movie_settings = self.movie_settings_db.get_movie_settings(wanted_item.imdbid)
 
                 # Get movie details
                 movie_details = self.movie_db.get_movie(wanted_item.imdbid)
@@ -180,7 +183,7 @@ class LibraryScanner(ScheduledProcess):
                                           thumbnail=True)
 
                 # Check movie details
-                self._update_movie_details(dirname, filename, wanted_item.imdbid)
+                self._update_movie_details(movie_settings, dirname, filename, wanted_item.imdbid)
 
     def _get_show_path(self, dirname):
         path = dirname
@@ -189,7 +192,7 @@ class LibraryScanner(ScheduledProcess):
             path, _ = os.path.split(path)
         return path
 
-    def _update_episode_details(self, dirname, filename, show_tvdb_id, season, episode):
+    def _update_episode_details(self, show_settings, dirname, filename, show_tvdb_id, season, episode):
         episode_details = self.show_episodes_db.get_show_episode(show_tvdb_id, season, episode)
 
         # If no episode is found, we need to fetch the episode details of the show
@@ -203,29 +206,33 @@ class LibraryScanner(ScheduledProcess):
             # Set details
             available_subtitles = get_available_subtitles(dirname, filename, autosubliminal.SCANEMBEDDEDSUBS,
                                                           autosubliminal.SCANHARDCODEDSUBS)
-            missing_languages = self._get_missing_subtitle_languages(available_subtitles)
+            missing_languages = self._get_missing_subtitle_languages(available_subtitles,
+                                                                     wanted_languages=show_settings.wanted_languages)
             episode_details.subtitles = available_subtitles
             episode_details.missing_languages = missing_languages
             episode_details.path = os.path.abspath(os.path.join(dirname, filename))
             # Update details in db
             self.show_episodes_db.update_show_episode(episode_details, subtitles=True)
 
-    def _update_movie_details(self, dirname, filename, imdb_id):
+    def _update_movie_details(self, movie_settings, dirname, filename, imdb_id):
         movie_details = self.movie_db.get_movie(imdb_id)
 
         if movie_details:
             # Set details
             available_subtitles = get_available_subtitles(dirname, filename, autosubliminal.SCANEMBEDDEDSUBS,
                                                           autosubliminal.SCANHARDCODEDSUBS)
-            missing_languages = self._get_missing_subtitle_languages(available_subtitles)
+            missing_languages = self._get_missing_subtitle_languages(available_subtitles,
+                                                                     wanted_languages=movie_settings.wanted_languages)
             movie_details.subtitles = available_subtitles
             movie_details.missing_languages = missing_languages
             movie_details.path = os.path.abspath(os.path.join(dirname, filename))
             # Update details in db
             self.movie_db.update_movie(movie_details, subtitles=True)
 
-    def _get_missing_subtitle_languages(self, available_subtitles):
-        wanted_languages = get_wanted_languages()
+    def _get_missing_subtitle_languages(self, available_subtitles, wanted_languages=None):
+        # Use custom wanted languages or globally configured wanted languages if not provided
+        if wanted_languages is None:
+            wanted_languages = get_wanted_languages()
 
         available_languages = []
         for subtitle in available_subtitles:
