@@ -104,12 +104,11 @@ function init() {
                 // Get data
                 var self = this;
                 var data = {
-                    'tvdb_id': self.selectedEpisodeTvdbId,
                     'file_location': self.selectedFileLocation,
                     'file_name': self.selectedFileName,
                     'languages': self.getAlpha2Languages(self.selectedHardcodedLanguages)
                 };
-                $.postJson(getUrl('/api/shows/subtitles/hardcoded'), data, function (data) {
+                $.putJson(getUrl('/api/shows/subtitles/hardcoded/' + self.selectedEpisodeTvdbId), data, function (data) {
                     // Close modal on success
                     $('#subtitlesModal').modal('hide');
                     // Get show details again to get the updates

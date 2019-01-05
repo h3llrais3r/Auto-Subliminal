@@ -151,7 +151,7 @@ class _SettingsApi(RestResource):
 
             return True
 
-        return self._bad_request('Invalid settings provided')
+        return self._bad_request('Missing data')
 
 
 class _SubtitlesApi(RestResource):
@@ -169,6 +169,7 @@ class _SubtitlesApi(RestResource):
         self.hardcoded = _HardcodedApi()
 
 
+@cherrypy.popargs('imdb_id')
 class _HardcodedApi(RestResource):
     """
     Rest resource for handling the /api/movies/subtitles/hardcoded path.
@@ -178,16 +179,17 @@ class _HardcodedApi(RestResource):
         super(_HardcodedApi, self).__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('POST',)
+        self.allowed_methods = ('PUT',)
 
-    def post(self):
+    def put(self, imdb_id):
         """Save the list of hardcoded subtitles for a movie file."""
-        saved = False
         input_json = cherrypy.request.json
 
-        if all(k in input_json for k in ('imdb_id', 'file_location', 'file_name', 'languages')):
+        if not imdb_id:
+            return self._bad_request('Imdb_id required')
+
+        if all(k in input_json for k in ('file_location', 'file_name', 'languages')):
             # Save to file
-            imdb_id = input_json['imdb_id']
             file_location = input_json['file_location']
             file_name = input_json['file_name']
             languages = input_json['languages']
@@ -201,6 +203,6 @@ class _HardcodedApi(RestResource):
             subtitles_db.delete_movie_subtitles(imdb_id)
             subtitles_db.set_movie_subtitles(imdb_id, subtitles)
 
-            saved = True
+            return True
 
-        return saved
+        return self._bad_request('Missing data')

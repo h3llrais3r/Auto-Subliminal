@@ -102,12 +102,11 @@ function init() {
                 // Get data
                 var self = this;
                 var data = {
-                    'imdb_id': self.movie.imdb_id,
                     'file_location': self.selectedFileLocation,
                     'file_name': self.selectedFileName,
                     'languages': self.getAlpha2Languages(self.selectedHardcodedLanguages)
                 };
-                $.postJson(getUrl('/api/movies/subtitles/hardcoded'), data, function (data) {
+                $.putJson(getUrl('/api/movies/subtitles/hardcoded/' + self.movie.imdb_id), data, function (data) {
                     // Close modal on success
                     $('#subtitlesModal').modal('hide');
                     // Get movie details again to get the updates
