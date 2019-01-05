@@ -42,17 +42,13 @@ movie_1_json = '{"files": [{"embedded_languages": [], "filename": "movie1.mkv", 
                '"total_subtitles_wanted": 2, "year": 2018}'
 
 
-def test_get_movies(monkeypatch, mocker):
-    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
-    monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en'])
+def test_get_movies(mocker):
     mocker.patch.object(MovieDetailsDb, 'get_all_movies', return_value=[movie_details_1, movie_details_2])
     mocker.patch.object(MovieSettingsDb, 'get_movie_settings', side_effect=[movie_settings_1, movie_settings_2])
     assert movies_json == pickle_api_result(MoviesApi().get())
 
 
-def test_get_movie(monkeypatch, mocker):
-    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
-    monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en'])
+def test_get_movie(mocker):
     mocker.patch.object(MovieDetailsDb, 'get_movie', return_value=movie_details_1)
     mocker.patch('autosubliminal.server.api.movies.MoviesApi._get_movie_files',
                  return_value=[
@@ -62,10 +58,9 @@ def test_get_movie(monkeypatch, mocker):
     assert movie_1_json == pickle_api_result(MoviesApi().get('tt1'))
 
 
-def test_get_movies_overview(monkeypatch, mocker):
-    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
-    monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en'])
+def test_get_movies_overview(mocker):
     mocker.patch.object(MovieDetailsDb, 'get_all_movies', return_value=[movie_details_1])
+    mocker.patch.object(MovieSettingsDb, 'get_movie_settings', side_effect=[movie_settings_1, movie_settings_2])
     overview_json = '{"total_movies": 1, "total_subtitles_available": 1, "total_subtitles_missing": 1, ' \
                     '"total_subtitles_wanted": 2}'
     assert overview_json == pickle_api_result(MoviesApi().overview.get())

@@ -53,9 +53,7 @@ show_1_json = '{"banner": true, "files": ' \
               '"tvdb_id": 1, "year": 2018}'
 
 
-def test_get_shows(monkeypatch, mocker):
-    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
-    monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en'])
+def test_get_shows(mocker):
     mocker.patch.object(ShowDetailsDb, 'get_all_shows', return_value=[show_details_1, show_details_2])
     mocker.patch.object(ShowEpisodeDetailsDb, 'get_show_episodes',
                         side_effect=[[show_episode_details_1_1], [show_episode_details_2_1, show_episode_details_2_2]])
@@ -63,9 +61,7 @@ def test_get_shows(monkeypatch, mocker):
     assert shows_json == pickle_api_result(ShowsApi().get())
 
 
-def test_get_show(monkeypatch, mocker):
-    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
-    monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en'])
+def test_get_show(mocker):
     mocker.patch.object(ShowDetailsDb, 'get_show', return_value=show_details_1)
     mocker.patch.object(ShowEpisodeDetailsDb, 'get_show_episodes', return_value=[show_episode_details_1_1])
     mocker.patch.object(ShowSettingsDb, 'get_show_settings', return_value=show_settings_1)
@@ -78,10 +74,9 @@ def test_get_show(monkeypatch, mocker):
     assert show_1_json == pickle_api_result(ShowsApi().get('1'))
 
 
-def test_get_shows_overview(monkeypatch, mocker):
-    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
-    monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en'])
+def test_get_shows_overview(mocker):
     mocker.patch.object(ShowDetailsDb, 'get_all_shows', return_value=[show_details_1, show_details_2])
+    mocker.patch.object(ShowSettingsDb, 'get_show_settings', side_effect=[show_settings_1, show_settings_2])
     mocker.patch.object(ShowEpisodeDetailsDb, 'get_show_episodes',
                         side_effect=[[show_episode_details_1_1], [show_episode_details_2_1, show_episode_details_2_2]])
     overview_json = '{"total_episodes": 3, "total_shows": 2, "total_subtitles_available": 2, ' \

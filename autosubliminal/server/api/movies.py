@@ -102,14 +102,16 @@ class _OverviewApi(RestResource):
         self.allowed_methods = ('GET',)
 
     def get(self):
-        wanted_languages = get_wanted_languages()
         movies = MovieDetailsDb().get_all_movies()
         total_movies = len(movies)
 
         total_subtitles_wanted = 0
         total_subtitles_available = 0
         total_subtitles_missing = 0
+        movie_settings_db = MovieSettingsDb()
         for movie in movies:
+            movie_settings = movie_settings_db.get_movie_settings(movie.imdb_id)
+            wanted_languages = movie_settings.wanted_languages
             total_subtitles_wanted += len(wanted_languages)
             total_subtitles_missing += len(movie.missing_languages)
             total_subtitles_available += len(wanted_languages) - len(movie.missing_languages)

@@ -130,7 +130,6 @@ class _OverviewApi(RestResource):
         self.allowed_methods = ('GET',)
 
     def get(self):
-        wanted_languages = get_wanted_languages()
         shows = ShowDetailsDb().get_all_shows()
         total_shows = len(shows)
 
@@ -138,9 +137,12 @@ class _OverviewApi(RestResource):
         total_subtitles_wanted = 0
         total_subtitles_available = 0
         total_subtitles_missing = 0
+        show_settings_db = ShowSettingsDb()
         show_details_db = ShowEpisodeDetailsDb()
         for show in shows:
+            show_settings = show_settings_db.get_show_settings(show.tvdb_id)
             show_episodes = show_details_db.get_show_episodes(show.tvdb_id, available_only=True, subtitles=False)
+            wanted_languages = show_settings.wanted_languages
             for show_episode in show_episodes:
                 total_episodes += 1
                 total_subtitles_wanted += len(wanted_languages)
