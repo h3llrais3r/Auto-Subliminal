@@ -35,12 +35,20 @@ function init() {
         },
         mounted: function () {
             //console.log('mounted');
-            this.getMovieDetails();
+            var self = this;
+            self.getMovieDetails();
         },
         updated: function () {
             //console.log('updated');
-            styleProgressBar();
+            var self = this;
+            styleProgressBar(self.movieProgressPercentage);
             enableVueBootstrapToggle();
+        },
+        computed: {
+            movieProgressPercentage: function () {
+                var self = this;
+                return self.movie.total_subtitles_available / self.movie.total_subtitles_wanted * 100;
+            }
         },
         methods: {
             getMovieDetails: function () {
@@ -50,9 +58,6 @@ function init() {
                     self.movie = data;
                     self.movieSettings = self.movie.settings;
                 });
-            },
-            getProcessPercentage: function (movie) {
-                return movie.total_subtitles_available / movie.total_subtitles_wanted * 100;
             },
             getPlayVideoUrl: constructPlayVideoUrl,
             getLanguages: convertToLanguages,

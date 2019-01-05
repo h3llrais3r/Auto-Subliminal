@@ -390,15 +390,22 @@ function runProcessOnServer(process_name) {
 }
 
 // Function to style a vue progress bar
-function styleProgressBar() {
+function styleProgressBar(progressPercentage) {
     $('.vue-simple-progress-bar').each(function () {
         var self = $(this);
-        var percentage = Math.round(parseInt(self.css('width')) / parseInt(self.prev('.vue-simple-progress-text').css('width')) * 100);
-        var progressPercentage = 100;
-        while (percentage > 0 && percentage < progressPercentage) {
-            progressPercentage -= 5;
+        var percentage = progressPercentage;
+        if (percentage == null) {
+            percentage = parseInt(self.css('width')) / parseInt(self.prev('.vue-simple-progress-text').css('width')) * 100;
         }
-        self.addClass('progress-' + progressPercentage);
+        percentage = Math.round(percentage);
+        var progressBarPercentage = 100;
+        while (percentage > 0 && percentage < progressBarPercentage) {
+            progressBarPercentage -= 5;
+        }
+        self.removeClass(function (index, className) {
+            return (className.match(/\bprogress-\S+/g) || []).join(' ');
+        });
+        self.addClass('progress-' + progressBarPercentage);
     });
 }
 
