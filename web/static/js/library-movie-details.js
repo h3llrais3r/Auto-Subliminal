@@ -7,6 +7,13 @@ PubSub.subscribe(SETTINGS_LOADED, settingsLoaded);
 
 // Init after settings are loaded
 function init() {
+    // Check if the library scanner is running
+    checkLibraryScannerRunning();
+
+    // Subscribe to library scanner events
+    PubSub.subscribe(PROCESS_STARTED, libraryScannerStartedEventSubscriber);
+    PubSub.subscribe(PROCESS_FINISHED, libraryScannerFinishedEventSubscriber);
+
     // Init vue component
     Vue.component('library-movie-details', {
         data: function () {

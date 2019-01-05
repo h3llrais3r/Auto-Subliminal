@@ -20,6 +20,15 @@
 
                 <div class="panel-body">
 
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="alert alert-info library-scanner-running hidden" role="alert">
+                                <i class="fa fa-spinner fa-spin"></i>
+                                Scanning library...
+                            </div>
+                        </div>
+                    </div>
+
                     <div v-cloak v-if="movie">
 
                         <div class="details-container">
