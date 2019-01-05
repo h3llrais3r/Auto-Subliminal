@@ -149,7 +149,7 @@ class _SettingsApi(RestResource):
             movie_settings.utf8_encoding = utf8_encoding
             db.update_movie_settings(movie_settings)
 
-            return True
+            return self._no_content()
 
         return self._bad_request('Missing data')
 
@@ -203,6 +203,6 @@ class _HardcodedApi(RestResource):
             subtitles_db.delete_movie_subtitles(imdb_id)
             subtitles_db.set_movie_subtitles(imdb_id, subtitles)
 
-            return True
+            return self._no_content()
 
         return self._bad_request('Missing data')

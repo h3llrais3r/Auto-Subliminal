@@ -187,7 +187,7 @@ class _SettingsApi(RestResource):
             show_settings.utf8_encoding = utf8_encoding
             db.update_show_settings(show_settings)
 
-            return True
+            return self._no_content()
 
         return self._bad_request('Missing data')
 
@@ -241,6 +241,6 @@ class _HardcodedApi(RestResource):
             subtitles_db.delete_show_episode_subtitles(tvdb_id)
             subtitles_db.set_show_episode_subtitles(tvdb_id, subtitles)
 
-            return True
+            return self._no_content()
 
         return self._bad_request('Missing data')
