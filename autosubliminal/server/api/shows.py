@@ -244,9 +244,6 @@ class _HardcodedApi(RestResource):
         """Save the list of hardcoded subtitles for a show episode file."""
         input_json = cherrypy.request.json
 
-        if not tvdb_id:
-            return self._bad_request('Tvdb_id required')
-
         if all(k in input_json for k in ('file_location', 'file_name', 'languages')):
             # Save to file
             file_location = input_json['file_location']
