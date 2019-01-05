@@ -37,6 +37,9 @@
                                                 <a :href="imdbUrl + movie.imdb_id" target="_blank">
                                                     <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
                                                 </a>
+                                                <a href="#" @click="openSettingsModal($event)">
+                                                    <i class="fa fa-wrench" aria-hidden="true" title="Click to edit settings"></i>
+                                                </a>
                                             </span>
                                             <hr>
                                         </div>
@@ -111,6 +114,7 @@
 
                     </div>
 
+                    <%include file="/library/inc_library-movie-settings-modal.mako"/>
                     <%include file="/library/inc_library-subtitles-modal.mako"/>
 
                 </div>

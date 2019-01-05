@@ -487,20 +487,7 @@ table.tablesorter .filtered {
     display: table-cell;
 }
 
-/* Style poster on small devices */
-@media (max-width: 767px) {
-    .details-poster-container {
-        width: 100%;
-        float: left;
-        text-align: center;
-    }
-}
-
-.details-poster-container {
-    display: table-cell;
-}
-
-.details-poster-container .details-poster-image {
+.details-poster-image {
     width: 150px;
 }
 
@@ -508,13 +495,6 @@ table.tablesorter .filtered {
     display: table-cell;
     width: 100%;
     vertical-align: top;
-}
-
-/* Style details info on small devices */
-@media (max-width: 767px) {
-    .details-info-container {
-        padding-top: 20px;
-    }
 }
 
 .details-info-title {
@@ -558,6 +538,98 @@ table.tablesorter .filtered {
 .details-files-file {
     color: #333333;
     text-decoration: none !important;
+}
+
+/* Style on small devices */
+@media (max-width: 767px) {
+    .details-poster-container {
+        width: 100%;
+        float: left;
+        text-align: center;
+    }
+
+    .details-info-container {
+        padding-top: 20px;
+    }
+
+    .details-info-title {
+        text-align: center;
+    }
+}
+
+/*******************************
+ * MOVIE/SHOW SETTINGS STYLING *
+ *******************************/
+
+.settings-container {
+    display: table;
+    width: 100%;
+}
+
+.settings-poster-container {
+    display: table-cell;
+}
+
+.settings-poster-image {
+    width: 175px;
+}
+
+.settings-info-container {
+    display: table-cell;
+    width: 100%;
+    vertical-align: top;
+}
+
+.settings-info-title {
+    font-size: 20px;
+    padding-right: 0px;
+}
+
+.settings-info-settings {
+    padding-right: 0px;
+}
+
+.settings-info-settings .row {
+    padding: 5px;
+}
+
+/* Style on small devices */
+@media (max-width: 767px) {
+    .settings-poster-container {
+        width: 100%;
+        float: left;
+        text-align: center;
+    }
+
+    .settings-poster-image {
+        width: 100px;
+    }
+
+    .settings-info-container {
+        display: table;
+        padding-top: 20px;
+    }
+
+    .settings-info-title {
+        text-align: center;
+        padding-left: 0px;
+    }
+
+    .settings-info-settings {
+        padding-left: 0px;
+    }
+
+    .settings-info-settings .vertical-center .row {
+        display: block;
+        padding: 5px 0px;
+    }
+}
+
+/* Style on larger devices */
+@media (min-width: 768px) {
+    .settings-modal {
+        width: 750px;
+    }
 }
 
 /***********************
@@ -906,6 +978,11 @@ table.tablesorter .filtered {
 
 .table-filter .table-filter-label {
     font-weight: bold;
+}
+
+.vertical-center .row {
+    display: flex;
+    align-items: center;
 }
 
 .weighted {

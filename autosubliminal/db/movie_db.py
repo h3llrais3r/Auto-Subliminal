@@ -223,8 +223,8 @@ class MovieSettingsDb(object):
     def __init__(self):
         self._query_get = 'SELECT * FROM movie_settings WHERE imdb_id=?'
         self._query_set = 'INSERT INTO movie_settings VALUES(?,?,?,?,?)'
-        self._query_update = 'UPDATE movie_settings SET languages=?, refine=?, hearing_impaired=?, utf8_encoding=? ' \
-                             'WHERE imdb_id=?'
+        self._query_update = 'UPDATE movie_settings SET wanted_languages=?, refine=?, hearing_impaired=?, ' \
+                             'utf8_encoding=? WHERE imdb_id=?'
 
     def get_movie_settings(self, imdb_id):
         """Get the movie settings by its imdb id.

@@ -8,7 +8,7 @@ import cherrypy
 from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
 from autosubliminal.db import MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import get_wanted_languages
+from autosubliminal.util.common import get_boolean, get_wanted_languages
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 
 log = logging.getLogger(__name__)
@@ -25,6 +25,7 @@ class MoviesApi(RestResource):
 
         # Add all sub paths here: /api/movies/...
         self.overview = _OverviewApi()
+        self.settings = _SettingsApi()
         self.subtitles = _SubtitlesApi()
 
         # Set the allowed methods
@@ -114,6 +115,44 @@ class _OverviewApi(RestResource):
             'total_subtitles_missing': total_subtitles_missing,
             'total_subtitles_available': total_subtitles_available
         }
+
+
+@cherrypy.popargs('imdb_id')
+class _SettingsApi(RestResource):
+    """
+    Rest resource for handling the /api/movies/settings path.
+    """
+
+    def __init__(self):
+        super(_SettingsApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('POST',)
+
+    def post(self, imdb_id):
+        """Save the settings for a movie."""
+        input_json = cherrypy.request.json
+
+        if not imdb_id:
+            return self._bad_request('Imdb_id required')
+
+        if all(k in input_json for k in ('wanted_languages', 'refine', 'hearing_impaired', 'utf8_encoding')):
+            wanted_languages = input_json['wanted_languages']
+            refine = get_boolean(input_json['refine'])
+            hearing_impaired = get_boolean(input_json['hearing_impaired'])
+            utf8_encoding = get_boolean(input_json['utf8_encoding'])
+
+            db = MovieSettingsDb()
+            movie_settings = db.get_movie_settings(imdb_id)
+            movie_settings.wanted_languages = wanted_languages
+            movie_settings.refine = refine
+            movie_settings.hearing_impaired = hearing_impaired
+            movie_settings.utf8_encoding = utf8_encoding
+            db.update_movie_settings(movie_settings)
+
+            return True
+
+        return self._bad_request('Invalid settings provided')
 
 
 class _SubtitlesApi(RestResource):

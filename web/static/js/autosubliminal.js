@@ -386,3 +386,8 @@ function styleProgressBar() {
         self.addClass('progress-' + progressPercentage);
     });
 }
+
+// Function to enable vue bootstrap toggle (add class="vue-toggle" to checkbox to enable it)
+function enableVueBootstrapToggle() {
+    $('.vue-toggle').bootstrapToggle();
+}
