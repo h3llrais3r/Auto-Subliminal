@@ -28,13 +28,6 @@ class LibraryScanner(ScheduledProcess):
 
     def __init__(self):
         super(LibraryScanner, self).__init__(run_lock=False, force_run_lock=False)
-        self.show_db = ShowDetailsDb()
-        self.show_episodes_db = ShowEpisodeDetailsDb()
-        self.show_settings_db = ShowSettingsDb()
-        self.movie_db = MovieDetailsDb()
-        self.movie_settings_db = MovieSettingsDb()
-        self.show_indexer = ShowIndexer()
-        self.movie_indexer = MovieIndexer()
 
     def run(self, force_run):
         paths = autosubliminal.LIBRARYPATHS
@@ -50,9 +43,10 @@ class LibraryScanner(ScheduledProcess):
             return
 
         # Walk through paths and store info in db
+        path_scanner = LibraryPathScanner()
         for path in paths:
             try:
-                self.scan_path(path)
+                path_scanner.scan_path(path)
             except Exception:
                 log.exception('Could not scan the path (%s), skipping it', path)
 
@@ -60,6 +54,17 @@ class LibraryScanner(ScheduledProcess):
         send_websocket_event(PAGE_RELOAD, data={'name': 'library'})
 
         log.info('Finished round of library scanning')
+
+
+class LibraryPathScanner(object):
+    def __init__(self):
+        self.show_db = ShowDetailsDb()
+        self.show_episodes_db = ShowEpisodeDetailsDb()
+        self.show_settings_db = ShowSettingsDb()
+        self.movie_db = MovieDetailsDb()
+        self.movie_settings_db = MovieSettingsDb()
+        self.show_indexer = ShowIndexer()
+        self.movie_indexer = MovieIndexer()
 
     def scan_path(self, path):
         log.info('Scanning path: %s', path)

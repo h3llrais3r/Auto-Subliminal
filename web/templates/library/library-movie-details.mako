@@ -29,6 +29,15 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="alert alert-info refresh-running hidden" role="alert">
+                                <i class="fa fa-spinner fa-spin"></i>
+                                Refreshing movie...
+                            </div>
+                        </div>
+                    </div>
+
                     <div v-cloak v-if="movie">
 
                         <div class="details-container">

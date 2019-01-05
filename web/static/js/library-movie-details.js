@@ -90,11 +90,17 @@ function init() {
                 var self = this;
                 var data = self.movieSettings;
                 data.wanted_languages = self.getAlpha2Languages(self.movieSettingsWantedLanguages);
-                $.putJson(getUrl('/api/movies/settings/' + self.movie.imdb_id), data, function (data) {
+                $.putJson(getUrl('/api/movies/' + self.movie.imdb_id + '/settings'), data, function (data) {
                     // Close modal on success
                     $('#settingsModal').modal('hide');
-                    // Get movie details again to get the updates
-                    self.getMovieDetails();
+                    // Show refresh indication
+                    $('.refresh-running').removeClass('hidden');
+                    $.putJson(getUrl('/api/movies/' + self.movie.imdb_id + '/refresh'), null, function (data) {
+                        // Get movie details again to get the updates
+                        self.getMovieDetails();
+                        // Hide refresh indication
+                        $('.refresh-running').addClass('hidden');
+                    });
                 });
             },
             saveHardcodedSubtitles: function (event) {

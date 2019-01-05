@@ -7,6 +7,7 @@ import cherrypy
 
 from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
 from autosubliminal.db import MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb
+from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import get_boolean, get_wanted_languages
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
@@ -25,6 +26,7 @@ class MoviesApi(RestResource):
 
         # Add all sub paths here: /api/movies/...
         self.overview = _OverviewApi()
+        self.refresh = _RefreshApi()
         self.settings = _SettingsApi()
         self.subtitles = _SubtitlesApi()
 
@@ -89,6 +91,10 @@ class MoviesApi(RestResource):
 
 
 class _OverviewApi(RestResource):
+    """
+    Rest resource for handling the /api/movies/overview path.
+    """
+
     def __init__(self):
         super(_OverviewApi, self).__init__()
 
@@ -117,9 +123,32 @@ class _OverviewApi(RestResource):
 
 
 @cherrypy.popargs('imdb_id')
+class _RefreshApi(RestResource):
+    """
+    Rest resource for handling the /api/movies/{imdb_id}/refresh path.
+    """
+
+    def __init__(self):
+        super(_RefreshApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('PUT',)
+
+    def put(self, imdb_id):
+        """Refresh/rescan a movie."""
+        movie = MovieDetailsDb().get_movie(imdb_id)
+        movie_path, _ = os.path.split(movie.path)
+
+        # Refresh/rescan the movie path
+        LibraryPathScanner().scan_path(movie_path)
+
+        return self._no_content()
+
+
+@cherrypy.popargs('imdb_id')
 class _SettingsApi(RestResource):
     """
-    Rest resource for handling the /api/movies/settings path.
+    Rest resource for handling the /api/movies/{imdb_id}/settings path.
     """
 
     def __init__(self):
@@ -131,9 +160,6 @@ class _SettingsApi(RestResource):
     def put(self, imdb_id):
         """Save the settings for a movie."""
         input_json = cherrypy.request.json
-
-        if not imdb_id:
-            return self._bad_request('Imdb_id required')
 
         if all(k in input_json for k in ('wanted_languages', 'refine', 'hearing_impaired', 'utf8_encoding')):
             wanted_languages = input_json['wanted_languages']

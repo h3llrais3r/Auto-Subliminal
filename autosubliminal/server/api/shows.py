@@ -7,6 +7,7 @@ import cherrypy
 
 from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
 from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb, ShowSettingsDb
+from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import natural_keys
 from autosubliminal.util.common import get_boolean, get_wanted_languages
@@ -26,6 +27,7 @@ class ShowsApi(RestResource):
 
         # Add all sub paths here: /api/shows/...
         self.overview = _OverviewApi()
+        self.refresh = _RefreshApi()
         self.settings = _SettingsApi()
         self.subtitles = _SubtitlesApi()
 
@@ -155,9 +157,31 @@ class _OverviewApi(RestResource):
 
 
 @cherrypy.popargs('tvdb_id')
+class _RefreshApi(RestResource):
+    """
+    Rest resource for handling the /api/shows/{tvdb_id}/refresh path.
+    """
+
+    def __init__(self):
+        super(_RefreshApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('PUT',)
+
+    def put(self, tvdb_id):
+        """Refresh/rescan a show."""
+        show = ShowDetailsDb().get_show(tvdb_id)
+
+        # Refresh/rescan the movie path
+        LibraryPathScanner().scan_path(show.path)
+
+        return self._no_content()
+
+
+@cherrypy.popargs('tvdb_id')
 class _SettingsApi(RestResource):
     """
-    Rest resource for handling the /api/shows/settings path.
+    Rest resource for handling the /api/shows/{tvdb_id}/settings path.
     """
 
     def __init__(self):
@@ -169,9 +193,6 @@ class _SettingsApi(RestResource):
     def put(self, tvdb_id):
         """Save the settings for a movie."""
         input_json = cherrypy.request.json
-
-        if not tvdb_id:
-            return self._bad_request('Tvdb_id required')
 
         if all(k in input_json for k in ('wanted_languages', 'refine', 'hearing_impaired', 'utf8_encoding')):
             wanted_languages = input_json['wanted_languages']
