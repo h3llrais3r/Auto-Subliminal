@@ -16,6 +16,8 @@ function init() {
                 posterFullSizeUrl: getUrl('/artwork/tvdb/poster/fullsize/'),
                 posterThumbnailUrl: getUrl('/artwork/tvdb/poster/thumbnail/'),
                 languages: LANGUAGES,
+                showSettings: null,
+                showSettingsWantedLanguages: [],
                 selectedEpisodeTvdbId: null,
                 selectedFileLocation: null,
                 selectedFileName: null,
@@ -32,6 +34,7 @@ function init() {
         updated: function () {
             //console.log('updated');
             styleProgressBar();
+            enableVueBootstrapToggle();
         },
         methods: {
             getShowDetails: function () {
@@ -39,6 +42,7 @@ function init() {
                 var tvdbId = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
                 $.get('/api/shows/' + tvdbId, function (data) {
                     self.show = data;
+                    self.showSettings = self.show.settings;
                 });
             },
             getProcessPercentage: function (show) {
@@ -55,6 +59,15 @@ function init() {
                 }
                 return available;
             },
+            openSettingsModal: function (event) {
+                event.preventDefault();
+                // Set default values
+                var self = this;
+                self.showSettings = self.show.settings;
+                self.showSettingsWantedLanguages = self.getLanguages(self.show.settings.wanted_languages);
+                // Open modal
+                $('#settingsModal').modal('show');
+            },
             openSubtitlesModal: function (fileLocation, fileName, hardcodedLanguages, episodeTvdbId, event) {
                 event.preventDefault();
                 // Set selected video file and clear language selection
@@ -65,6 +78,19 @@ function init() {
                 self.selectedHardcodedLanguages = self.getLanguages(hardcodedLanguages);
                 // Open modal
                 $('#subtitlesModal').modal('show');
+            },
+            saveSettings: function (event) {
+                event.preventDefault();
+                // Get data
+                var self = this;
+                var data = self.showSettings;
+                data.wanted_languages = self.getAlpha2Languages(self.showSettingsWantedLanguages);
+                $.postJson(getUrl('/api/shows/settings/' + self.show.tvdb_id), data, function (data) {
+                    // Close modal on success
+                    $('#settingsModal').modal('hide');
+                    // Get movie details again to get the updates
+                    self.getShowDetails();
+                });
             },
             saveHardcodedSubtitles: function (event) {
                 event.preventDefault();

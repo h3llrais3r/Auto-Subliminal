@@ -316,8 +316,8 @@ class ShowSettingsDb(object):
     def __init__(self):
         self._query_get = 'SELECT * FROM show_settings WHERE tvdb_id=?'
         self._query_set = 'INSERT INTO show_settings VALUES(?,?,?,?,?)'
-        self._query_update = 'UPDATE show_settings SET languages=?, refine=?, hearing_impaired=?, utf8_encoding=? ' \
-                             'WHERE tvdb_id=?'
+        self._query_update = 'UPDATE show_settings SET wanted_languages=?, refine=?, hearing_impaired=?, ' \
+                             'utf8_encoding=? WHERE tvdb_id=?'
 
     def get_show_settings(self, tvdb_id):
         """Get the show settings by its tvdb id.

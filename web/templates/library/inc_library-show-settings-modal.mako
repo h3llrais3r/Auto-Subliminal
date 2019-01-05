@@ -6,19 +6,19 @@
 
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3 class="modal-title">Movie settings</h3>
+                <h3 class="modal-title">Show settings</h3>
             </div>
 
-            <div v-if="movie" class="modal-body">
+            <div v-if="show" class="modal-body">
                 <div class="settings-container">
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="settings-poster-container">
-                                <img class="settings-poster-image" :src="posterThumbnailUrl + movie.imdb_id">
+                                <img class="settings-poster-image" :src="posterThumbnailUrl + show.tvdb_id">
                             </div>
                             <div class="settings-info-container">
                                 <div class="col-xs-12 settings-info-title">
-                                    <span>{{ movie.title + ' (' + movie.year + ')' }}</span>
+                                    <span>{{ show.title + ' (' + show.year + ')' }}</span>
                                     <hr>
                                 </div>
                                 <div class="col-xs-12 settings-info-settings">
@@ -32,15 +32,15 @@
                                                         </a>
                                                         <ul class="dropdown-menu has-tip info-list">
                                                             <li>
-                                                                The list of wanted subtitle languages for the movie.<br>
-                                                                This replaces the globally configured languages, but only for this movie.
+                                                                The list of wanted subtitle languages for the show.<br>
+                                                                This replaces the globally configured languages, but only for this show.
                                                             </li>
                                                         </ul>
                                                     </span>
                                                 </label>
                                             </div>
                                             <div class="col-xs-12 col-sm-8">
-                                                <multiselect v-model="movieSettingsWantedLanguages"
+                                                <multiselect v-model="showSettingsWantedLanguages"
                                                              :options="languages"
                                                              :multiple="true"
                                                              :taggable="true"
@@ -69,7 +69,7 @@
                                                 </label>
                                             </div>
                                             <div class="col-xs-12 col-sm-2">
-                                                <input type="checkbox" class="vue-toggle" v-model="movieSettings.refine">
+                                                <input type="checkbox" class="vue-toggle" v-model="showSettings.refine">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -86,7 +86,7 @@
                                                 </label>
                                             </div>
                                             <div class="col-xs-12 col-sm-2">
-                                                <input type="checkbox" class="vue-toggle" v-model="movieSettings.hearing_impaired">
+                                                <input type="checkbox" class="vue-toggle" v-model="showSettings.hearing_impaired">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -106,7 +106,7 @@
                                                 </label>
                                             </div>
                                             <div class="col-xs-12 col-sm-2">
-                                                <input type="checkbox" class="vue-toggle" v-model="movieSettings.utf8_encoding">
+                                                <input type="checkbox" class="vue-toggle" v-model="showSettings.utf8_encoding">
                                             </div>
                                         </div>
                                     </div>

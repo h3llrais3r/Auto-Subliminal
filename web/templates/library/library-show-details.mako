@@ -37,6 +37,9 @@
                                                 <a :href="tvdbUrl + show.tvdb_id" target="_blank">
                                                     <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
                                                 </a>
+                                                <a href="#" @click="openSettingsModal($event)">
+                                                    <i class="fa fa-wrench" aria-hidden="true" title="Click to edit settings"></i>
+                                                </a>
                                             </span>
                                             <hr>
                                         </div>
@@ -144,6 +147,7 @@
 
                     </div>
 
+                    <%include file="/library/inc_library-show-settings-modal.mako"/>
                     <%include file="/library/inc_library-subtitles-modal.mako"/>
 
                 </div>
