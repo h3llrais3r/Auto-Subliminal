@@ -115,11 +115,21 @@ function init() {
                     if (files[i].type == 'subtitle' && files[i].language != null && files[i].language == language) {
                         // A subtitle file can have only 1 language
                         subtitleCount++;
-                    } else if (files[i].type == 'video' && files[i].languages != null) {
-                        // A video file can have multiple embedded languages, so we need to check if it contains it
-                        for (var j = 0; files[i].languages[j]; j++) {
-                            if (files[i].languages[j] == language) {
-                                subtitleCount++;
+                    } else if (files[i].type == 'video') {
+                        // A video file can have multiple hardcoded languages
+                        if (files[i].hardcoded_languages != null) {
+                            for (var j = 0; files[i].hardcoded_languages[j]; j++) {
+                                if (files[i].hardcoded_languages[j] == language) {
+                                    subtitleCount++;
+                                }
+                            }
+                        }
+                        // A video file can have multiple embedded languages
+                        if (files[i].embedded_languages != null) {
+                            for (var j = 0; files[i].embedded_languages[j]; j++) {
+                                if (files[i].embedded_languages[j] == language) {
+                                    subtitleCount++;
+                                }
                             }
                         }
                     }
