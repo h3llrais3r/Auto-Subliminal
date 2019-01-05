@@ -164,9 +164,9 @@ class _SettingsApi(RestResource):
         super(_SettingsApi, self).__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('POST',)
+        self.allowed_methods = ('PUT',)
 
-    def post(self, tvdb_id):
+    def put(self, tvdb_id):
         """Save the settings for a movie."""
         input_json = cherrypy.request.json
 

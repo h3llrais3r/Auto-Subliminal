@@ -90,7 +90,7 @@ function init() {
                 var self = this;
                 var data = self.movieSettings;
                 data.wanted_languages = self.getAlpha2Languages(self.movieSettingsWantedLanguages);
-                $.postJson(getUrl('/api/movies/settings/' + self.movie.imdb_id), data, function (data) {
+                $.putJson(getUrl('/api/movies/settings/' + self.movie.imdb_id), data, function (data) {
                     // Close modal on success
                     $('#settingsModal').modal('hide');
                     // Get movie details again to get the updates

@@ -92,7 +92,7 @@ function init() {
                 var self = this;
                 var data = self.showSettings;
                 data.wanted_languages = self.getAlpha2Languages(self.showSettingsWantedLanguages);
-                $.postJson(getUrl('/api/shows/settings/' + self.show.tvdb_id), data, function (data) {
+                $.putJson(getUrl('/api/shows/settings/' + self.show.tvdb_id), data, function (data) {
                     // Close modal on success
                     $('#settingsModal').modal('hide');
                     // Get movie details again to get the updates

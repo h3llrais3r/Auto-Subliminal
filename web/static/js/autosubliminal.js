@@ -57,6 +57,21 @@ $.postJson = function (url, data, success, dataType) {
     });
 };
 
+// Jquery wrapper to put with json content-type
+$.putJson = function (url, data, success, dataType) {
+    if (typeof data != 'string') {
+        data = JSON.stringify(data);
+    }
+    $.ajax({
+        url: url,
+        type: 'put',
+        data: data,
+        dataType: dataType || 'json',
+        contentType: 'application/json; charset=utf-8',
+        success: success
+    });
+};
+
 /* =============
  * Load settings
  * ============= */
