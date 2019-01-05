@@ -11,11 +11,13 @@
 
             <div class="modal-body">
                 <span>Select 1 or more hardcoded subtitle languages</span>
-                <br>
+                <br><br>
                 <multiselect v-model="selectedHardcodedLanguages"
                              :options="languages"
                              :multiple="true"
                              :taggable="true"
+                             :show-labels="false"
+                             placeholder="Select a language"
                              tag-placeholder=""
                              label="name"
                              track-by="alpha2">
