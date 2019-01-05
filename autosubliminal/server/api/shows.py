@@ -49,6 +49,7 @@ class ShowsApi(RestResource):
 
     def _to_show_json(self, show, show_settings, details=False):
         show_json = show.to_json()
+        show_json['settings'] = show_settings.to_json()
 
         # Calculate totals based on available episodes
         total_subtitles_wanted = 0
@@ -60,11 +61,9 @@ class ShowsApi(RestResource):
             total_subtitles_wanted += len(wanted_languages)
             total_subtitles_missing += len(episode.missing_languages)
             total_subtitles_available += len(wanted_languages) - len(episode.missing_languages)
-        show_json['wanted_languages'] = wanted_languages
         show_json['total_subtitles_wanted'] = total_subtitles_wanted
         show_json['total_subtitles_missing'] = total_subtitles_missing
         show_json['total_subtitles_available'] = total_subtitles_available
-        show_json['settings'] = show_settings.to_json()
 
         if details:
             show_json['files'] = self._get_show_episode_files(episodes)

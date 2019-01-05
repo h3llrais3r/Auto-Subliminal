@@ -25,23 +25,21 @@ movies_json = '[{"imdb_id": "tt1", ' \
               '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, "wanted_languages": ["en", "nl"]}, ' \
               '"title": "title1", ' \
               '"total_subtitles_available": 1, "total_subtitles_missing": 1, "total_subtitles_wanted": 2, ' \
-              '"wanted_languages": ["en", "nl"], "year": 2018}, ' \
+              '"year": 2018}, ' \
               '{"imdb_id": "tt2", ' \
               '"overview": "overview2", "path": "/path/to/movie2", "poster": true, "settings": ' \
               '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, "wanted_languages": ["en", "nl"]}, ' \
               '"title": "title2", ' \
               '"total_subtitles_available": 0, "total_subtitles_missing": 2, "total_subtitles_wanted": 2, ' \
-              '"wanted_languages": ["en", "nl"], "year": 2019}]'
+              '"year": 2019}]'
 
-movie_1_json = '{"available_languages": ["nl"], ' \
-               '"files": [{"embedded_languages": [], "filename": "movie1.mkv", "hardcoded_languages": [], ' \
+movie_1_json = '{"files": [{"embedded_languages": [], "filename": "movie1.mkv", "hardcoded_languages": [], ' \
                '"type": "video"}, {"filename": "subtitle1.srt", "language": "nl", "type": "subtitle"}], ' \
-               '"imdb_id": "tt1", "missing_languages": ["en"], "overview": "overview1", "path": "/path/to/movie1", ' \
-               '"poster": true, ' \
+               '"imdb_id": "tt1", "overview": "overview1", "path": "/path/to/movie1", "poster": true, ' \
                '"settings": {"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
                '"wanted_languages": ["en", "nl"]}, ' \
                '"title": "title1", "total_subtitles_available": 1, "total_subtitles_missing": 1, ' \
-               '"total_subtitles_wanted": 2, "wanted_languages": ["en", "nl"], "year": 2018}'
+               '"total_subtitles_wanted": 2, "year": 2018}'
 
 
 def test_get_movies(monkeypatch, mocker):

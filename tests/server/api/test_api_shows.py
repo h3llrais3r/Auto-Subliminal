@@ -36,11 +36,11 @@ show_episode_details_2_2 = ShowEpisodeDetails(path='/path/to/show2/s01e02.mkv', 
 shows_json = '[{"banner": true, "overview": "overview1", "path": "/path/to/show1", "poster": true, "settings": ' \
              '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, "wanted_languages": ["en", "nl"]}, ' \
              '"title": "title1", "total_subtitles_available": 1, "total_subtitles_missing": 1, ' \
-             '"total_subtitles_wanted": 2, "tvdb_id": 1, "wanted_languages": ["en", "nl"], "year": 2018}, ' \
+             '"total_subtitles_wanted": 2, "tvdb_id": 1, "year": 2018}, ' \
              '{"banner": true, "overview": "overview2", "path": "/path/to/show2", "poster": true, "settings": ' \
              '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, "wanted_languages": ["en", "nl"]}, ' \
              '"title": "title2", "total_subtitles_available": 1, "total_subtitles_missing": 3, ' \
-             '"total_subtitles_wanted": 4, "tvdb_id": 2, "wanted_languages": ["en", "nl"], "year": 2019}]'
+             '"total_subtitles_wanted": 4, "tvdb_id": 2, "year": 2019}]'
 
 show_1_json = '{"banner": true, "files": ' \
               '[{"season_files": [{"embedded_languages": [], "filename": "s01e01.mkv", "hardcoded_languages": [], ' \
@@ -50,7 +50,7 @@ show_1_json = '{"banner": true, "files": ' \
               '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, "wanted_languages": ["en", "nl"]}, ' \
               '"title": "title1", ' \
               '"total_subtitles_available": 1, "total_subtitles_missing": 1, "total_subtitles_wanted": 2, ' \
-              '"tvdb_id": 1, "wanted_languages": ["en", "nl"], "year": 2018}'
+              '"tvdb_id": 1, "year": 2018}'
 
 
 def test_get_shows(monkeypatch, mocker):

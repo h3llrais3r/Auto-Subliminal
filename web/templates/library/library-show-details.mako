@@ -53,7 +53,7 @@
                                                 <tr>
                                                     <td>Wanted languages:</td>
                                                     <td>
-                                                        <span v-for="language in show.wanted_languages" class="language-badge">{{ language }}</span>
+                                                        <span v-for="language in show.settings.wanted_languages" class="language-badge">{{ language }}</span>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -100,7 +100,7 @@
                                                                 </span>
                                                             </td>
                                                             <td class="text-right">
-                                                                <span v-for="language in show.wanted_languages" class="btn btn-sm btn-static">
+                                                                <span v-for="language in show.settings.wanted_languages" class="btn btn-sm btn-static">
                                                                     {{ language }}
                                                                     <span class="badge">{{ getNrOfSubtitles(file.season_files, language) }}</span>
                                                                 </span>

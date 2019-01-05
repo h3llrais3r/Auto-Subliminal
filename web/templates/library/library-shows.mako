@@ -79,7 +79,7 @@
                                 <span class="path">{{ show.path }}</span>
                             </td>
                             <td>
-                                <span v-for="language in show.wanted_languages" class="language-badge">{{ language }}</span>
+                                <span v-for="language in show.settings.wanted_languages" class="language-badge">{{ language }}</span>
                             </td>
                             <td>
                                 <vue-simple-progress

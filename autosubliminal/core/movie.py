@@ -48,7 +48,7 @@ class MovieDetails(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_json(self, details=False):
+    def to_json(self):
         """Convert to its json representation."""
         json_dict = to_dict(self, 'path', 'poster', 'missing_languages', 'subtitles')
 
@@ -58,11 +58,6 @@ class MovieDetails(object):
 
         # Indicate if artwork is available or not
         json_dict['poster'] = True if self.poster else False
-
-        # Add details if needed
-        if details:
-            json_dict['missing_languages'] = self.missing_languages
-            json_dict['available_languages'] = [s.language for s in self.subtitles]
 
         return json_dict
 

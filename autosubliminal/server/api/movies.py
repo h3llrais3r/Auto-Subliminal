@@ -47,17 +47,16 @@ class MoviesApi(RestResource):
             return movies
 
     def _to_movie_json(self, movie, movie_settings, details=False):
-        movie_json = movie.to_json(details=details)
+        movie_json = movie.to_json()
+        movie_json['settings'] = movie_settings.to_json()
 
         wanted_languages = movie_settings.wanted_languages
         total_subtitles_wanted = len(wanted_languages)
         total_subtitles_missing = len(movie.missing_languages)
         total_subtitles_available = len(wanted_languages) - len(movie.missing_languages)
-        movie_json['wanted_languages'] = wanted_languages
         movie_json['total_subtitles_wanted'] = total_subtitles_wanted
         movie_json['total_subtitles_missing'] = total_subtitles_missing
         movie_json['total_subtitles_available'] = total_subtitles_available
-        movie_json['settings'] = movie_settings.to_json()
 
         if details:
             movie_json['files'] = self._get_movie_files(movie)

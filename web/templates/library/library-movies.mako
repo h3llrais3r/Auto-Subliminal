@@ -88,7 +88,7 @@
                                 <span class="path">{{ movie.path }}</span>
                             </td>
                             <td>
-                                <span v-for="language in movie.wanted_languages" class="language-badge">{{ language }}</span>
+                                <span v-for="language in movie.settings.wanted_languages" class="language-badge">{{ language }}</span>
                             </td>
                             <td>
                                 <vue-simple-progress
