@@ -38,7 +38,7 @@ function init() {
         methods: {
             getShows: function () {
                 var self = this;
-                $.get('/api/shows', function (data) {
+                $.get(getUrl('/api/shows'), function (data) {
                     self.shows = data;
                 });
             },

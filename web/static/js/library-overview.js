@@ -37,13 +37,13 @@ function init() {
         methods: {
             getShowsOverview: function () {
                 var self = this;
-                $.get('/api/shows/overview', function (data) {
+                $.get(getUrl('/api/shows/overview'), function (data) {
                     self.showsOverview = data;
                 });
             },
             getMoviesOverview: function () {
                 var self = this;
-                $.get('/api/movies/overview', function (data) {
+                $.get(getUrl('/api/movies/overview'), function (data) {
                     self.moviesOverview = data;
                 });
             },

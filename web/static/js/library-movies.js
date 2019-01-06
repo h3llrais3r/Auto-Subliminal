@@ -37,7 +37,7 @@ function init() {
         methods: {
             getMovies: function () {
                 var self = this;
-                $.get('/api/movies', function (data) {
+                $.get(getUrl('/api/movies'), function (data) {
                     self.movies = data;
                 });
             },

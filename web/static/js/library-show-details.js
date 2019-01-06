@@ -55,7 +55,7 @@ function init() {
             getShowDetails: function () {
                 var self = this;
                 var tvdbId = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
-                $.get('/api/shows/' + tvdbId, function (data) {
+                $.get(getUrl('/api/shows/' + tvdbId), function (data) {
                     self.show = data;
                     self.showSettings = self.show.settings;
                 });
