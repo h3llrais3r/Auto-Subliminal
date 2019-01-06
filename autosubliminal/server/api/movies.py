@@ -9,7 +9,7 @@ from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
 from autosubliminal.db import MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import get_boolean, get_wanted_languages
+from autosubliminal.util.common import get_boolean
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 
 log = logging.getLogger(__name__)

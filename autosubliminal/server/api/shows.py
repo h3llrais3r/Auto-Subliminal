@@ -10,7 +10,7 @@ from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSu
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import natural_keys
-from autosubliminal.util.common import get_boolean, get_wanted_languages
+from autosubliminal.util.common import get_boolean
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 
 log = logging.getLogger(__name__)
