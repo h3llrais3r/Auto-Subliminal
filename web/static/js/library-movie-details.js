@@ -70,6 +70,18 @@ function init() {
                 }
                 return available;
             },
+            refreshMovieDetails: function (event) {
+                event.preventDefault();
+                var self = this;
+                // Show refresh indication
+                $('.refresh-running').removeClass('hidden');
+                $.putJson(getUrl('/api/movies/' + self.movie.imdb_id + '/refresh'), null, function (data) {
+                    // Get movie details again to get the updates
+                    self.getMovieDetails();
+                    // Hide refresh indication
+                    $('.refresh-running').addClass('hidden');
+                });
+            },
             openSettingsModal: function (event) {
                 event.preventDefault();
                 // Set default values
@@ -98,14 +110,8 @@ function init() {
                 $.putJson(getUrl('/api/movies/' + self.movie.imdb_id + '/settings'), data, function (data) {
                     // Close modal on success
                     $('#settingsModal').modal('hide');
-                    // Show refresh indication
-                    $('.refresh-running').removeClass('hidden');
-                    $.putJson(getUrl('/api/movies/' + self.movie.imdb_id + '/refresh'), null, function (data) {
-                        // Get movie details again to get the updates
-                        self.getMovieDetails();
-                        // Hide refresh indication
-                        $('.refresh-running').addClass('hidden');
-                    });
+                    // Refresh movie details
+                    self.refreshMovieDetails(event);
                 });
             },
             saveHardcodedSubtitles: function (event) {

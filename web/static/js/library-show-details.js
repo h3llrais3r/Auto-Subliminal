@@ -71,6 +71,18 @@ function init() {
                 }
                 return available;
             },
+            refreshShowDetails: function (event) {
+                event.preventDefault();
+                var self = this;
+                // Show refresh indication
+                $('.refresh-running').removeClass('hidden');
+                $.putJson(getUrl('/api/shows/' + self.show.tvdb_id + '/refresh'), null, function (data) {
+                    // Get show details again to get the updates
+                    self.getShowDetails();
+                    // Hide refresh indication
+                    $('.refresh-running').addClass('hidden');
+                });
+            },
             openSettingsModal: function (event) {
                 event.preventDefault();
                 // Set default values
@@ -100,14 +112,8 @@ function init() {
                 $.putJson(getUrl('/api/shows/' + self.show.tvdb_id + '/settings'), data, function (data) {
                     // Close modal on success
                     $('#settingsModal').modal('hide');
-                    // Show refresh indication
-                    $('.refresh-running').removeClass('hidden');
-                    $.putJson(getUrl('/api/shows/' + self.show.tvdb_id + '/refresh'), null, function (data) {
-                        // Get show details again to get the updates
-                        self.getShowDetails();
-                        // Hide refresh indication
-                        $('.refresh-running').addClass('hidden');
-                    });
+                    // Refresh show details
+                    self.refreshShowDetails(event);
                 });
             },
             saveHardcodedSubtitles: function (event) {

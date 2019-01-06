@@ -56,7 +56,10 @@
                                                     <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
                                                 </a>
                                                 <a href="#" @click="openSettingsModal($event)">
-                                                    <i class="fa fa-wrench" aria-hidden="true" title="Click to edit settings"></i>
+                                                    <i class="fa fa-wrench" aria-hidden="true" title="Click to edit show settings"></i>
+                                                </a>
+                                                <a href="#" @click="refreshShowDetails($event)">
+                                                    <i class="fa fa-repeat" aria-hidden="true" title="Click to refresh show details"></i>
                                                 </a>
                                             </span>
                                             <hr>

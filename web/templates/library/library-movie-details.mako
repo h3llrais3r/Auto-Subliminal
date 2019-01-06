@@ -56,7 +56,10 @@
                                                     <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
                                                 </a>
                                                 <a href="#" @click="openSettingsModal($event)">
-                                                    <i class="fa fa-wrench" aria-hidden="true" title="Click to edit settings"></i>
+                                                    <i class="fa fa-wrench" aria-hidden="true" title="Click to edit movie settings"></i>
+                                                </a>
+                                                <a href="#" @click="refreshMovieDetails($event)">
+                                                    <i class="fa fa-repeat" aria-hidden="true" title="Click to refresh movie details"></i>
                                                 </a>
                                             </span>
                                             <hr>
