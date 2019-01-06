@@ -96,7 +96,7 @@ function init() {
             getMovieDetailsUrl: function (imdbId) {
                 return getUrl('/library/movies/' + imdbId);
             },
-            getProcessPercentage: function (movie) {
+            getMovieProgressPercentage: function (movie) {
                 return movie.total_subtitles_available / movie.total_subtitles_wanted * 100;
             }
         }

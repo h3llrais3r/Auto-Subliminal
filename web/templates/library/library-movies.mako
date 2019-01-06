@@ -93,7 +93,7 @@
                             <td>
                                 <vue-simple-progress
                                         size="medium"
-                                        :val="getProcessPercentage(movie)"
+                                        :val="getMovieProgressPercentage(movie)"
                                         :text="movie.total_subtitles_available + ' of ' + movie.total_subtitles_wanted"
                                         text-position="middle"
                                         bar-color="transparent">

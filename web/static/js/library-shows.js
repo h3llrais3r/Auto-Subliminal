@@ -97,7 +97,7 @@ function init() {
             getShowDetailsUrl: function (tvdbId) {
                 return getUrl('/library/shows/' + tvdbId);
             },
-            getProcessPercentage: function (show) {
+            getShowProgressPercentage: function (show) {
                 return show.total_subtitles_available / show.total_subtitles_wanted * 100;
             }
         }

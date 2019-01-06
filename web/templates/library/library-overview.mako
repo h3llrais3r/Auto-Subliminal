@@ -55,7 +55,7 @@
                                             <div class="col-xs-12">
                                                 <vue-simple-progress
                                                         size="small"
-                                                        :val="getProcessPercentage(showsOverview)"
+                                                        :val="getProgressPercentage(showsOverview)"
                                                         :text="showsOverview.total_subtitles_available + ' of ' + showsOverview.total_subtitles_wanted"
                                                         text-position="middle"
                                                         bar-color="transparent">

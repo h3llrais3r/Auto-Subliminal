@@ -47,7 +47,7 @@ function init() {
                     self.moviesOverview = data;
                 });
             },
-            getProcessPercentage: function (overview) {
+            getProgressPercentage: function (overview) {
                 return overview.total_subtitles_available / overview.total_subtitles_wanted * 100;
             }
         }
