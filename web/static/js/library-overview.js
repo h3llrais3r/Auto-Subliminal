@@ -2,6 +2,8 @@
  * Javascript needed on the library overview page
  */
 
+'use strict';
+
 // Wait until settings are loaded
 PubSub.subscribe(SETTINGS_LOADED, settingsLoaded);
 
