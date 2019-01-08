@@ -158,7 +158,6 @@ class _OverviewApi(RestResource):
         }
 
 
-@cherrypy.popargs('tvdb_id')
 class _RefreshApi(RestResource):
     """
     Rest resource for handling the /api/shows/{tvdb_id}/refresh path.
@@ -180,7 +179,6 @@ class _RefreshApi(RestResource):
         return self._no_content()
 
 
-@cherrypy.popargs('tvdb_id')
 class _SettingsApi(RestResource):
     """
     Rest resource for handling the /api/shows/{tvdb_id}/settings path.
@@ -217,7 +215,7 @@ class _SettingsApi(RestResource):
 
 class _SubtitlesApi(RestResource):
     """
-    Rest resource for handling the /api/shows/subtitles path.
+    Rest resource for handling the /api/shows/{tvdb_id}/subtitles path.
     """
 
     def __init__(self):
@@ -230,10 +228,10 @@ class _SubtitlesApi(RestResource):
         self.hardcoded = _HardcodedApi()
 
 
-@cherrypy.popargs('tvdb_id')
+@cherrypy.popargs('episode_tvdb_id')
 class _HardcodedApi(RestResource):
     """
-    Rest resource for handling the /api/shows/subtitles/hardcoded path.
+    Rest resource for handling the /api/shows/{tvdb_id}/subtitles/hardcoded path.
     """
 
     def __init__(self):
@@ -242,7 +240,7 @@ class _HardcodedApi(RestResource):
         # Set the allowed methods
         self.allowed_methods = ('PUT',)
 
-    def put(self, tvdb_id):
+    def put(self, tvdb_id, episode_tvdb_id):
         """Save the list of hardcoded subtitles for a show episode file."""
         input_json = cherrypy.request.json
 
@@ -258,8 +256,8 @@ class _HardcodedApi(RestResource):
             for language in languages:
                 subtitles.append(Subtitle(HARDCODED, language, path=os.path.join(file_location, file_name)))
             subtitles_db = ShowEpisodeSubtitlesDb()
-            subtitles_db.delete_show_episode_subtitles(tvdb_id)
-            subtitles_db.set_show_episode_subtitles(tvdb_id, subtitles)
+            subtitles_db.delete_show_episode_subtitles(episode_tvdb_id)
+            subtitles_db.set_show_episode_subtitles(episode_tvdb_id, subtitles)
 
             return self._no_content()
 

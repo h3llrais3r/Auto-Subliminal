@@ -125,7 +125,7 @@ function init() {
                     'file_name': self.selectedFileName,
                     'languages': self.getAlpha2Languages(self.selectedHardcodedLanguages)
                 };
-                $.putJson(getUrl('/api/movies/subtitles/hardcoded/' + self.movie.imdb_id), data, function (data) {
+                $.putJson(getUrl('/api/movies/' + self.movie.imdb_id + '/subtitles/hardcoded'), data, function (data) {
                     // Close modal on success
                     $('#subtitlesModal').modal('hide');
                     // Get movie details again to get the updates

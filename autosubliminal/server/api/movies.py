@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 @cherrypy.popargs('imdb_id')
 class MoviesApi(RestResource):
     """
-    Rest resource for handling the /movies path.
+    Rest resource for handling the /api/movies path.
     """
 
     def __init__(self):
@@ -124,7 +124,6 @@ class _OverviewApi(RestResource):
         }
 
 
-@cherrypy.popargs('imdb_id')
 class _RefreshApi(RestResource):
     """
     Rest resource for handling the /api/movies/{imdb_id}/refresh path.
@@ -147,7 +146,6 @@ class _RefreshApi(RestResource):
         return self._no_content()
 
 
-@cherrypy.popargs('imdb_id')
 class _SettingsApi(RestResource):
     """
     Rest resource for handling the /api/movies/{imdb_id}/settings path.
@@ -184,7 +182,7 @@ class _SettingsApi(RestResource):
 
 class _SubtitlesApi(RestResource):
     """
-    Rest resource for handling the /api/movies/subtitles path.
+    Rest resource for handling the /api/movies/{imdb_id}/subtitles path.
     """
 
     def __init__(self):
@@ -197,10 +195,9 @@ class _SubtitlesApi(RestResource):
         self.hardcoded = _HardcodedApi()
 
 
-@cherrypy.popargs('imdb_id')
 class _HardcodedApi(RestResource):
     """
-    Rest resource for handling the /api/movies/subtitles/hardcoded path.
+    Rest resource for handling the /api/movies/{imdb_id}/subtitles/hardcoded path.
     """
 
     def __init__(self):
