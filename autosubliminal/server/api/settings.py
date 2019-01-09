@@ -1,7 +1,10 @@
 # coding=utf-8
 
+import os
+
 import autosubliminal
 from autosubliminal.server.rest import RestResource
+from autosubliminal.util.common import get_alpha2_languages
 
 
 class SettingsApi(RestResource):
@@ -17,5 +20,11 @@ class SettingsApi(RestResource):
 
     def get(self):
         """Get the list of settings for the frontend."""
-        settings = {'timestampFormat': autosubliminal.TIMESTAMPFORMAT}
+        settings = {
+            'tvdbUrl': autosubliminal.DEREFERURL + autosubliminal.TVDBURL,
+            'imdbUrl': autosubliminal.DEREFERURL + autosubliminal.IMDBURL,
+            'timestampFormat': autosubliminal.TIMESTAMPFORMAT,
+            'pathSeparator': os.path.sep,
+            'languages': get_alpha2_languages()
+        }
         return settings

@@ -1,17 +1,22 @@
 # coding=utf-8
 
-import jsonpickle
-
 from autosubliminal.server.api.settings import SettingsApi
 
-settings_json = '{"timestampFormat": "%d-%m-%Y %H:%M:%S"}'
+from tests.server.api.test_api import pickle_api_result
+
+settings_json = '{"imdbUrl": "http://www.dereferer.org/?http://www.imdb.com/title/", ' \
+                '"languages": [{"alpha2": "nl", "name": "Dutch"}], ' \
+                '"pathSeparator": "/", ' \
+                '"timestampFormat": "%d-%m-%Y %H:%M:%S", ' \
+                '"tvdbUrl": "http://www.dereferer.org/?http://thetvdb.com/?tab=series&id="}'
 
 
-def test_get_settings(monkeypatch):
+def test_get_settings(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.DEREFERURL', 'http://www.dereferer.org/?')
+    monkeypatch.setattr('autosubliminal.TVDBURL', 'http://thetvdb.com/?tab=series&id=')
+    monkeypatch.setattr('autosubliminal.IMDBURL', 'http://www.imdb.com/title/')
     monkeypatch.setattr('autosubliminal.TIMESTAMPFORMAT', '%d-%m-%Y %H:%M:%S')
-    # Check conversion to json:
-    # - pickle ourselves because we don't use cherrypy.tools here
-    # - force sorted keys to be able to compare results (Python 3 sorts by default)
-    jsonpickle.set_encoder_options('simplejson', sort_keys=True)
-    json_out = jsonpickle.encode(SettingsApi().get())
-    assert settings_json == json_out
+    monkeypatch.setattr('autosubliminal.server.api.settings.os.path.sep', '/')
+    mocker.patch('autosubliminal.server.api.settings.get_alpha2_languages',
+                 return_value=[{'alpha2': 'nl', 'name': 'Dutch'}])
+    assert settings_json == pickle_api_result(SettingsApi().get())

@@ -9,6 +9,16 @@
 // Base url
 var baseUrl = window.location.protocol + '//' + window.location.host + webroot;
 
+// Scheduler names
+var DISK_SCANNER = 'DiskScanner';
+var SUB_CHECKER = 'SubChecker';
+var VERSION_CHECKER = 'VersionChecker';
+var LIBRARY_SCANNER = 'LibraryScanner';
+
+// Indexer urls
+var TVDB_URL = 'http://thetvdb.com/?tab=series&id=';
+var IMDB_URL = 'http://www.imdb.com/title/';
+
 // Default timestamp format
 var TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S';
 var DATE_FORMAT = TIMESTAMP_FORMAT.split(' ')[0];
@@ -16,6 +26,12 @@ var TIME_FORMAT = TIMESTAMP_FORMAT.split(' ')[1];
 
 // Tablesorter date format
 var TABLESORTER_DATE_FORMAT = 'yyyymmdd';
+
+// Path separator
+var PATH_SEPARTOR = '/';
+
+// Languages
+var LANGUAGES = [];
 
 /* ================
  * Global utilities
@@ -41,6 +57,21 @@ $.postJson = function (url, data, success, dataType) {
     });
 };
 
+// Jquery wrapper to put with json content-type
+$.putJson = function (url, data, success, dataType) {
+    if (typeof data != 'string') {
+        data = JSON.stringify(data);
+    }
+    $.ajax({
+        url: url,
+        type: 'put',
+        data: data,
+        dataType: dataType || 'json',
+        contentType: 'application/json; charset=utf-8',
+        success: success
+    });
+};
+
 /* =============
  * Load settings
  * ============= */
@@ -48,23 +79,29 @@ $.postJson = function (url, data, success, dataType) {
 var SETTINGS_LOADED = 'SETTINGS_LOADED';
 
 // Load global variables through settings api
-$.get(getUrl('/api/settings'), function (data) {
-    if (data) {
-        TIMESTAMP_FORMAT = data['timestampFormat'];
-        DATE_FORMAT = TIMESTAMP_FORMAT.split(' ')[0];
-        TIME_FORMAT = TIMESTAMP_FORMAT.split(' ')[1];
-        var datePattern = DATE_FORMAT.match(/[Ymd]+/g).join('');
-        if ('Ymd' == datePattern) {
-            TABLESORTER_DATE_FORMAT = 'yyyymmdd';
-        } else if ('mdY' == datePattern) {
-            TABLESORTER_DATE_FORMAT = 'mmddyyyy';
-        } else if ('dmY' == datePattern) {
-            TABLESORTER_DATE_FORMAT = 'ddmmyyyy';
+var loadSettings = function () {
+    $.get(getUrl('/api/settings'), function (data) {
+        if (data) {
+            TVDB_URL = data['tvdbUrl'];
+            IMDB_URL = data['imdbUrl'];
+            TIMESTAMP_FORMAT = data['timestampFormat'];
+            DATE_FORMAT = TIMESTAMP_FORMAT.split(' ')[0];
+            TIME_FORMAT = TIMESTAMP_FORMAT.split(' ')[1];
+            var datePattern = DATE_FORMAT.match(/[Ymd]+/g).join('');
+            if ('Ymd' == datePattern) {
+                TABLESORTER_DATE_FORMAT = 'yyyymmdd';
+            } else if ('mdY' == datePattern) {
+                TABLESORTER_DATE_FORMAT = 'mmddyyyy';
+            } else if ('dmY' == datePattern) {
+                TABLESORTER_DATE_FORMAT = 'ddmmyyyy';
+            }
+            PATH_SEPARTOR = data['pathSeparator'];
+            LANGUAGES = data['languages'];
+            // Publish the settings loaded event
+            PubSub.publish(SETTINGS_LOADED, null);
         }
-        // Publish the settings loaded event
-        PubSub.publish(SETTINGS_LOADED, null);
-    }
-});
+    });
+};
 
 // Function to trigger the initialization once the settings are loaded
 // This should ONLY be implemented ONCE on each page to prevent double calls
@@ -77,6 +114,9 @@ $.get(getUrl('/api/settings'), function (data) {
 var settingsLoaded = function (msg, data) {
     init();
 };
+
+// Load the settings
+loadSettings();
 
 /* ======
  * Navbar
@@ -212,9 +252,6 @@ var PAGE_RELOAD = 'PAGE_RELOAD';
 var PROCESS_STARTED = 'PROCESS_STARTED';
 var PROCESS_FINISHED = 'PROCESS_FINISHED';
 var RUN_PROCESS = 'RUN_PROCESS';
-var DISK_SCANNER = 'DiskScanner';
-var SUB_CHECKER = 'SubChecker';
-var VERSION_CHECKER = 'VersionChecker';
 
 // Setup the websocket system
 var websocketUrl = 'ws://' + window.location.host + webroot + '/system/websocket';
@@ -348,6 +385,31 @@ function runProcessOnServer(process_name) {
                 'name': process_name
             }
         }
-    }
+    };
     sendWebsocketMessage(JSON.stringify(event));
+}
+
+// Function to style a vue progress bar
+function styleProgressBar(progressPercentage) {
+    $('.vue-simple-progress-bar').each(function () {
+        var self = $(this);
+        var percentage = progressPercentage;
+        if (percentage == null) {
+            percentage = parseInt(self.css('width')) / parseInt(self.prev('.vue-simple-progress-text').css('width')) * 100;
+        }
+        percentage = Math.round(percentage);
+        var progressBarPercentage = 100;
+        while (percentage > 0 && percentage < progressBarPercentage) {
+            progressBarPercentage -= 5;
+        }
+        self.removeClass(function (index, className) {
+            return (className.match(/\bprogress-\S+/g) || []).join(' ');
+        });
+        self.addClass('progress-' + progressBarPercentage);
+    });
+}
+
+// Function to enable vue bootstrap toggle (add class="vue-toggle" to checkbox to enable it)
+function enableVueBootstrapToggle() {
+    $('.vue-toggle').bootstrapToggle();
 }

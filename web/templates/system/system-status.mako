@@ -25,6 +25,7 @@
                     <tr>
                         <th>Name</th>
                         <th>Alive</th>
+                        <th>Active</th>
                         <th>Interval</th>
                         <th>Last run</th>
                         <th>Next run</th>
@@ -33,12 +34,13 @@
 
                     <tbody>
                         % for scheduler in list(autosubliminal.SCHEDULERS.values()):
-                            <tr id="${scheduler.name}" class="<% 'status-scheduler-running' if scheduler.running else '' %>">
+                            <tr id="${scheduler.name}" ${'class="scheduler-running"' if scheduler.running else ''}>
                                 <td class="main-column">${scheduler.name}</td>
-                                <td class="alive">${safe_lowercase(safe_text(scheduler.alive))}</td>
-                                <td class="interval">${display_interval(scheduler.interval, True)}</td>
-                                <td class="last-run">${display_timestamp(scheduler.last_run)}</td>
-                                <td class="next-run">${display_timestamp(scheduler.next_run)}</td>
+                                <td class="scheduler-alive">${safe_lowercase(safe_text(scheduler.alive))}</td>
+                                <td class="scheduler-active">${safe_lowercase(safe_text(scheduler.active))}</td>
+                                <td class="scheduler-interval">${display_interval(scheduler.interval, True)}</td>
+                                <td class="scheduler-last-run">${display_timestamp(scheduler.last_run)}</td>
+                                <td class="scheduler-next-run">${'Running...' if scheduler.running else display_timestamp(scheduler.next_run)}</td>
                             </tr>
                         %endfor
                     </tbody>

@@ -1,0 +1,183 @@
+/**
+ * Javascript needed on the library show details page
+ */
+
+'use strict';
+
+// Wait until settings are loaded
+PubSub.subscribe(SETTINGS_LOADED, settingsLoaded);
+
+// Init after settings are loaded
+function init() {
+    // Check if the library scanner is running
+    checkLibraryScannerRunning();
+
+    // Subscribe to library scanner events
+    PubSub.subscribe(PROCESS_STARTED, libraryScannerStartedEventSubscriber);
+    PubSub.subscribe(PROCESS_FINISHED, libraryScannerFinishedEventSubscriber);
+
+    // Init vue component
+    Vue.component('library-show-details', {
+        data: function () {
+            return {
+                show: null,
+                tvdbUrl: TVDB_URL,
+                posterFullSizeUrl: getUrl('/artwork/tvdb/poster/fullsize/'),
+                posterThumbnailUrl: getUrl('/artwork/tvdb/poster/thumbnail/'),
+                languages: LANGUAGES,
+                showSettings: null,
+                showSettingsWantedLanguages: [],
+                selectedEpisodeTvdbId: null,
+                selectedFileLocation: null,
+                selectedFileName: null,
+                selectedHardcodedLanguages: []
+            }
+        },
+        created: function () {
+            //console.log('created');
+        },
+        mounted: function () {
+            //console.log('mounted');
+            var self = this;
+            self.getShowDetails();
+        },
+        updated: function () {
+            //console.log('updated');
+            var self = this;
+            styleProgressBar(self.showProgressPercentage);
+            enableVueBootstrapToggle();
+        },
+        computed: {
+            showProgressPercentage: function () {
+                var self = this;
+                return self.show.total_subtitles_available / self.show.total_subtitles_wanted * 100;
+            }
+        },
+        methods: {
+            getShowDetails: function () {
+                var self = this;
+                var tvdbId = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
+                $.get(getUrl('/api/shows/' + tvdbId), function (data) {
+                    self.show = data;
+                    self.showSettings = self.show.settings;
+                });
+            },
+            getPlayVideoUrl: constructPlayVideoUrl,
+            getLanguages: convertToLanguages,
+            getAlpha2Languages: convertToAlpha2Languages,
+            internalLanguagesAvailable: function (file) {
+                var available = false;
+                if ((file.hardcoded_languages && file.hardcoded_languages.length > 0) ||
+                    (file.embedded_languages && file.embedded_languages.length > 0)) {
+                    available = true;
+                }
+                return available;
+            },
+            refreshShowDetails: function (event) {
+                event.preventDefault();
+                var self = this;
+                // Show refresh indication
+                $('.refresh-running').removeClass('hidden');
+                $.putJson(getUrl('/api/shows/' + self.show.tvdb_id + '/refresh'), null, function (data) {
+                    // Get show details again to get the updates
+                    self.getShowDetails();
+                    // Hide refresh indication
+                    $('.refresh-running').addClass('hidden');
+                });
+            },
+            openSettingsModal: function (event) {
+                event.preventDefault();
+                // Set default values
+                var self = this;
+                self.showSettings = self.show.settings;
+                self.showSettingsWantedLanguages = self.getLanguages(self.show.settings.wanted_languages);
+                // Open modal
+                $('#settingsModal').modal('show');
+            },
+            openSubtitlesModal: function (fileLocation, fileName, hardcodedLanguages, episodeTvdbId, event) {
+                event.preventDefault();
+                // Set selected video file and clear language selection
+                var self = this;
+                self.selectedEpisodeTvdbId = episodeTvdbId;
+                self.selectedFileLocation = fileLocation;
+                self.selectedFileName = fileName;
+                self.selectedHardcodedLanguages = self.getLanguages(hardcodedLanguages);
+                // Open modal
+                $('#subtitlesModal').modal('show');
+            },
+            saveSettings: function (event) {
+                event.preventDefault();
+                // Get data
+                var self = this;
+                var data = self.showSettings;
+                data.wanted_languages = self.getAlpha2Languages(self.showSettingsWantedLanguages);
+                $.putJson(getUrl('/api/shows/' + self.show.tvdb_id + '/settings'), data, function (data) {
+                    // Close modal on success
+                    $('#settingsModal').modal('hide');
+                    // Refresh show details
+                    self.refreshShowDetails(event);
+                });
+            },
+            saveHardcodedSubtitles: function (event) {
+                event.preventDefault();
+                // Get data
+                var self = this;
+                var data = {
+                    'file_location': self.selectedFileLocation,
+                    'file_name': self.selectedFileName,
+                    'languages': self.getAlpha2Languages(self.selectedHardcodedLanguages)
+                };
+                $.putJson(getUrl('/api/shows/' + self.show.tvdb_id + '/subtitles/hardcoded/' + self.selectedEpisodeTvdbId), data, function (data) {
+                    // Close modal on success
+                    $('#subtitlesModal').modal('hide');
+                    // Get show details again to get the updates
+                    self.getShowDetails();
+                });
+            },
+            getNrOfSubtitles: function (files, language) {
+                var subtitleCount = 0;
+                for (var i = 0; i < files.length; i++) {
+                    if (files[i].type == 'subtitle' && files[i].language != null && files[i].language == language) {
+                        // A subtitle file can have only 1 language
+                        subtitleCount++;
+                    } else if (files[i].type == 'video') {
+                        // A video file can have multiple hardcoded languages
+                        if (files[i].hardcoded_languages != null) {
+                            for (var j = 0; files[i].hardcoded_languages[j]; j++) {
+                                if (files[i].hardcoded_languages[j] == language) {
+                                    subtitleCount++;
+                                }
+                            }
+                        }
+                        // A video file can have multiple embedded languages
+                        if (files[i].embedded_languages != null) {
+                            for (var j = 0; files[i].embedded_languages[j]; j++) {
+                                if (files[i].embedded_languages[j] == language) {
+                                    subtitleCount++;
+                                }
+                            }
+                        }
+                    }
+                }
+                return subtitleCount;
+            },
+            getNrOfVideos: function (files) {
+                var videoCount = 0;
+                for (var i = 0; i < files.length; i++) {
+                    if (files[i].type == 'video') {
+                        videoCount++;
+                    }
+                }
+                return videoCount;
+            }
+        }
+    });
+
+    // Init vue components
+    Vue.component('multiselect', window.VueMultiselect.default);
+
+    // Init vue app
+    new Vue({
+        el: '#app'
+    });
+}

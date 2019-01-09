@@ -17,6 +17,7 @@ import autosubliminal
 from autosubliminal.core.scheduler import Scheduler
 from autosubliminal.core.websocket import WebSocketBroadCaster, WebSocketHandler
 from autosubliminal.diskscanner import DiskScanner
+from autosubliminal.libraryscanner import LibraryScanner
 from autosubliminal.subchecker import SubChecker
 from autosubliminal.versionchecker import VersionChecker
 from autosubliminal.server.root import WebServerRoot
@@ -202,6 +203,8 @@ def start():
     autosubliminal.SCANDISK = Scheduler('DiskScanner', DiskScanner(), autosubliminal.SCANDISKINTERVAL, initial_run=True)
     autosubliminal.CHECKSUB = Scheduler('SubChecker', SubChecker(), autosubliminal.CHECKSUBINTERVAL)
     autosubliminal.CHECKVERSION = Scheduler('VersionChecker', VersionChecker(), autosubliminal.CHECKVERSIONINTERVAL)
+    autosubliminal.SCANLIBRARY = Scheduler('LibraryScanner', LibraryScanner(), autosubliminal.SCANLIBRARYINTERVAL,
+                                           active=autosubliminal.LIBRARYMODE)
 
     # Mark as started
     autosubliminal.STARTED = True
@@ -218,6 +221,7 @@ def stop(exit=True):
     autosubliminal.SCANDISK.stop()
     autosubliminal.CHECKSUB.stop()
     autosubliminal.CHECKVERSION.stop()
+    autosubliminal.SCANLIBRARY.stop()
 
     # Stop permanent threads
     autosubliminal.WEBSOCKETBROADCASTER.stop()

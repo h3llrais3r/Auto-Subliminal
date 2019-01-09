@@ -37,7 +37,16 @@ var vendor = {
         // bootstrap hover dropdown
         'node_modules/bootstrap-hover-dropdown/bootstrap-hover-dropdown.js',
         // bootstrap toggle
-        'node_modules/bootstrap-toggle/js/bootstrap-toggle.js'
+        'node_modules/bootstrap-toggle/js/bootstrap-toggle.js',
+        // vue
+        'node_modules/vue/dist/vue.js',
+        // vue-lazyload
+        'node_modules/vue-lazyload/vue-lazyload.js',
+        // vue-simple-progress
+        'node_modules/vue-simple-progress/dist/vue-simple-progress.js',
+        // vue-multiselect
+        'node_modules/vue-multiselect/dist/vue-multiselect.min.js'
+
     ],
     // ATTENTION: please keep files in correct order (f.e. bootstrap is default style so it must be loaded first!)
     css: [
@@ -53,7 +62,9 @@ var vendor = {
         'node_modules/pnotify/src/pnotify.buttons.css',
         'node_modules/pnotify/src/pnotify.css',
         // font awesome
-        'node_modules/font-awesome/css/font-awesome.css'
+        'node_modules/font-awesome/css/font-awesome.css',
+        // vue-multiselect
+        'node_modules/vue-multiselect/dist/vue-multiselect.min.css'
     ],
     // if the folders must be in specific subfolder, adapt copy:vendor_images task!
     images: [

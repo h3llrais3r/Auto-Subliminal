@@ -26,6 +26,26 @@
                         <i class="fa fa-home" aria-hidden="true"></i>&nbsp;Home
                     </a>
                 </li>
+                <!-- Library (only shown when enabled in config) -->
+                % if autosubliminal.LIBRARYMODE:
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" data-close-others="true" href="${autosubliminal.WEBROOT}/library/">
+                            <i class="fa fa-list" aria-hidden="true"></i>&nbsp;Library&nbsp;<b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-inverse">
+                            <li>
+                                <a href="${autosubliminal.WEBROOT}/library/overview"><i class="fa fa-list" aria-hidden="true"></i>&nbsp;Overview</a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="${autosubliminal.WEBROOT}/library/shows"><i class="fa fa-television" aria-hidden="true"></i>&nbsp;Shows</a>
+                            </li>
+                            <li>
+                                <a href="${autosubliminal.WEBROOT}/library/movies"><i class="fa fa-video-camera" aria-hidden="true"></i>&nbsp;Movies</a>
+                            </li>
+                        </ul>
+                    </li>
+                % endif
                 <!-- Config -->
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="500" data-close-others="true" href="${autosubliminal.WEBROOT}/config/">
@@ -34,6 +54,9 @@
                     <ul class="dropdown-menu dropdown-menu-inverse">
                         <li>
                             <a href="${autosubliminal.WEBROOT}/config/general"><i class="fa fa-cog" aria-hidden="true"></i>&nbsp;General</a>
+                        </li>
+                        <li>
+                            <a href="${autosubliminal.WEBROOT}/config/library"><i class="fa fa-cog" aria-hidden="true"></i>&nbsp;Library</a>
                         </li>
                         <li>
                             <a href="${autosubliminal.WEBROOT}/config/logging"><i class="fa fa-cog" aria-hidden="true"></i>&nbsp;Logging</a>
@@ -100,6 +123,9 @@
                         <li>
                             <a href="${autosubliminal.WEBROOT}/system" class="run-process" data-process-name="${autosubliminal.CHECKSUB.name}"><i class="fa fa-play" aria-hidden="true"></i>&nbsp;Check Subtitles</a>
                         </li>
+                        <li>
+                            <a href="${autosubliminal.WEBROOT}/system" class="run-process" data-process-name="${autosubliminal.SCANLIBRARY.name}"><i class="fa fa-play" aria-hidden="true"></i>&nbsp;Scan Library</a>
+                        </li>
                         <li class="divider"></li>
                         <li>
                             <a href="${autosubliminal.WEBROOT}/system/restart"><i class="fa fa-repeat" aria-hidden="true"></i>&nbsp;Restart</a>
@@ -127,6 +153,9 @@
                         </li>
                         <li>
                             <a href="${autosubliminal.WEBROOT}/system/flushLastDownloads"><i class="fa fa-times" aria-hidden="true"></i>&nbsp;Flush Downloaded</a>
+                        </li>
+                        <li>
+                            <a href="${autosubliminal.WEBROOT}/system/flushLibrary"><i class="fa fa-times" aria-hidden="true"></i>&nbsp;Flush Library</a>
                         </li>
                         <li class="divider"></li>
                         <li>

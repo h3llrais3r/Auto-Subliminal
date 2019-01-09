@@ -80,8 +80,7 @@ def read_config(check_upgrade=False):
 
         if cfg.has_option('general', 'checksub'):
             autosubliminal.CHECKSUBINTERVAL = cfg.getint('general', 'checksub')
-            # CHECKSUB may only be runed 6 times a day, to prevent the API key from being banned
-            # If you want new subtitles faster, you should decrease the CHECKSUB time
+            # CHECKSUB may only run max 6 times a day to prevent the API keys from being banned
             if autosubliminal.CHECKSUBINTERVAL < 21600:
                 print('WARNING: checksub variable is lower then 21600.')
                 print('WARNING: This is not allowed, this is to prevent our API-key from being banned.')
@@ -103,6 +102,11 @@ def read_config(check_upgrade=False):
             autosubliminal.SCANEMBEDDEDSUBS = cfg.getboolean('general', 'scanembeddedsubs')
         else:
             autosubliminal.SCANEMBEDDEDSUBS = False
+
+        if cfg.has_option('general', 'scanhardcodedsubs'):
+            autosubliminal.SCANHARDCODEDSUBS = cfg.getboolean('general', 'scanhardcodedsubs')
+        else:
+            autosubliminal.SCANHARDCODEDSUBS = False
 
         if cfg.has_option('general', 'skiphiddendirs'):
             autosubliminal.SKIPHIDDENDIRS = cfg.getboolean('general', 'skiphiddendirs')
@@ -152,6 +156,7 @@ def read_config(check_upgrade=False):
         autosubliminal.CHECKVERSIONINTERVAL = 43200
         autosubliminal.CHECKVERSIONAUTOUPDATE = False
         autosubliminal.SCANEMBEDDEDSUBS = False
+        autosubliminal.SCANHARDCODEDSUBS = False
         autosubliminal.SKIPHIDDENDIRS = False
         autosubliminal.DETECTINVALIDSUBLANGUAGE = False
         autosubliminal.DETECTEDLANGUAGEPROBABILITY = 0.9
@@ -163,6 +168,36 @@ def read_config(check_upgrade=False):
         if cfg.has_section('config'):
             if cfg.has_option('config', 'configversion'):
                 autosubliminal.CONFIGVERSION = cfg.getint('config', 'configversion')
+
+    if cfg.has_section('library'):
+        if cfg.has_option('library', 'librarymode'):
+            autosubliminal.LIBRARYMODE = cfg.getboolean('library', 'librarymode')
+        else:
+            autosubliminal.LIBRARYMODE = False
+
+        if cfg.has_option('library', 'librarypaths'):
+            library_paths = cfg.get('library', 'librarypaths')
+            if library_paths:
+                autosubliminal.LIBRARYPATHS = library_paths.split(',')
+            else:
+                autosubliminal.LIBRARYPATHS = []
+        else:
+            autosubliminal.LIBRARYPATHS = []
+
+        if cfg.has_option('library', 'scanlibrary'):
+            autosubliminal.SCANLIBRARYINTERVAL = cfg.getint('library', 'scanlibrary')
+            # SCANLIBRARY may only run max once a day to prevent too heavy system usage
+            if autosubliminal.SCANLIBRARYINTERVAL < 86400:
+                print('WARNING: scanlibrary variable is lower then 86400.')
+                print('WARNING: This is not allowed, this is to prevent too heavy system usage.')
+                autosubliminal.SCANLIBRARYINTERVAL = 86400  # Run every 24 hours
+        else:
+            autosubliminal.SCANLIBRARYINTERVAL = 86400  # Run every 24 hours
+    else:
+        # Library section is missing
+        autosubliminal.LIBRARYMODE = False
+        autosubliminal.LIBRARYPATHS = []
+        autosubliminal.SCANLIBRARYINTERVAL = 86400
 
     if cfg.has_section('logging'):
         if cfg.has_option('logging', 'logfile'):
@@ -762,6 +797,8 @@ def write_config(section=None):
 
     if section == 'general' or section is None:
         write_general_section()
+    if section == 'library' or section is None:
+        write_library_section()
     if section == 'logging' or section is None:
         write_logging_section()
     if section == 'webserver' or section is None:
@@ -811,6 +848,7 @@ def write_general_section():
     cfg.set(section, 'checkversion', text_type(autosubliminal.CHECKVERSIONINTERVAL))
     cfg.set(section, 'checkversionautoupdate', text_type(autosubliminal.CHECKVERSIONAUTOUPDATE))
     cfg.set(section, 'scanembeddedsubs', text_type(autosubliminal.SCANEMBEDDEDSUBS))
+    cfg.set(section, 'scanhardcodedsubs', text_type(autosubliminal.SCANHARDCODEDSUBS))
     cfg.set(section, 'skiphiddendirs', text_type(autosubliminal.SKIPHIDDENDIRS))
     cfg.set(section, 'detectinvalidsublanguage', text_type(autosubliminal.DETECTINVALIDSUBLANGUAGE))
     cfg.set(section, 'detectedlanguageprobability', text_type(autosubliminal.DETECTEDLANGUAGEPROBABILITY))
@@ -818,6 +856,28 @@ def write_general_section():
     cfg.set(section, 'maxdbresults', text_type(autosubliminal.MAXDBRESULTS))
     cfg.set(section, 'timestampformat', autosubliminal.TIMESTAMPFORMAT)
     cfg.set(section, 'configversion', text_type(autosubliminal.CONFIGVERSION))
+
+    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
+        cfg.write(f)
+
+
+def write_library_section():
+    """
+    Write the library section.
+    """
+    section = 'library'
+
+    cfg = _load_config_parser()
+
+    if not cfg.has_section(section):
+        cfg.add_section(section)
+
+    # convert lists to comma separated values
+    librarypaths = u'' if not autosubliminal.LIBRARYPATHS else ','.join(autosubliminal.LIBRARYPATHS)
+
+    cfg.set(section, 'librarymode', text_type(autosubliminal.LIBRARYMODE))
+    cfg.set(section, 'librarypaths', librarypaths)
+    cfg.set(section, 'scanlibrary', text_type(autosubliminal.SCANLIBRARYINTERVAL))
 
     with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
@@ -1302,6 +1362,7 @@ def _check_for_restart():
     scandiskinterval = 3600
     checksubinterval = 86400
     checkversioninterval = 43200
+    scanlibraryinterval = 86400
     logfile = u'AutoSubliminal.log'
     logsize = 0
     lognum = 0
@@ -1322,6 +1383,10 @@ def _check_for_restart():
 
         if cfg.has_option('general', 'checkversion'):
             checkversioninterval = cfg.getint('general', 'checkversion')
+
+    if cfg.has_section('library'):
+        if cfg.has_option('library', 'scanlibrary'):
+            scanlibraryinterval = cfg.getint('library', 'scanlibrary')
 
     if cfg.has_section('logging'):
         if cfg.has_option('logging', 'logfile'):
@@ -1350,6 +1415,7 @@ def _check_for_restart():
     if scandiskinterval != autosubliminal.SCANDISKINTERVAL \
             or checksubinterval != autosubliminal.CHECKSUBINTERVAL \
             or checkversioninterval != autosubliminal.CHECKVERSIONINTERVAL \
+            or scanlibraryinterval != autosubliminal.SCANLIBRARYINTERVAL \
             or logfile != autosubliminal.LOGFILE \
             or logsize != autosubliminal.LOGSIZE \
             or lognum != autosubliminal.LOGNUM \

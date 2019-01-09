@@ -2,12 +2,12 @@
 
 import pytest
 
-import jsonpickle
-
 import autosubliminal
 from autosubliminal.server.api.schedulers import SchedulersApi
 from autosubliminal.server.rest import BadRequest
 from autosubliminal.util.common import to_dict as convert_to_dict
+
+from tests.server.api.test_api import pickle_api_result
 
 
 class MyScheduler(object):
@@ -37,22 +37,12 @@ scheduler_json_list = '[' + scheduler_json + ']'
 
 def test_get_schedulers():
     autosubliminal.SCHEDULERS = {'MyScheduler1': MyScheduler('MyScheduler1')}
-    # Check conversion to json:
-    # - pickle ourselves because we don't use cherrypy.tools here
-    # - force sorted keys to be able to compare results (Python 3 sorts by default)
-    jsonpickle.set_encoder_options('simplejson', sort_keys=True)
-    json_out = jsonpickle.encode(SchedulersApi().get())
-    assert scheduler_json_list == json_out
+    assert scheduler_json_list == pickle_api_result(SchedulersApi().get())
 
 
 def test_get_scheduler():
     autosubliminal.SCHEDULERS = {'MyScheduler1': MyScheduler('MyScheduler1')}
-    # Check conversion to json:
-    # - pickle ourselves because we don't use cherrypy.tools here
-    # - force sorted keys to be able to compare results (Python 3 sorts by default)
-    jsonpickle.set_encoder_options('simplejson', sort_keys=True)
-    json_out = jsonpickle.encode(SchedulersApi().get('MyScheduler1'))
-    assert scheduler_json == json_out
+    assert scheduler_json == pickle_api_result(SchedulersApi().get('MyScheduler1'))
 
 
 def test_get_scheduler_bad_request():

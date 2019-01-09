@@ -11,13 +11,22 @@ from autosubliminal import version
 # Import from submodules here so we don't need to import it from the submodule itself!
 from .cache_db import ImdbIdCacheDb, TvdbIdCacheDb
 from .main_db import LastDownloadsDb, WantedItemsDb
+from .movie_db import MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb
+from .show_db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb, ShowSettingsDb
 
 # Reference all imports from the submodules here (to prevent unused imports errors)!
 __all__ = [
     'ImdbIdCacheDb',
     'TvdbIdCacheDb',
     'LastDownloadsDb',
-    'WantedItemsDb'
+    'WantedItemsDb',
+    'MovieDetailsDb',
+    'MovieSettingsDb',
+    'MovieSubtitlesDb',
+    'ShowDetailsDb',
+    'ShowEpisodeDetailsDb',
+    'ShowEpisodeSubtitlesDb',
+    'ShowSettingsDb'
 ]
 
 
@@ -44,6 +53,39 @@ def create():
         query = 'CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, season TEXT, ' \
                 'episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, ' \
                 'releasegrp TEXT, subtitle TEXT, provider TEXT)'
+        cursor.execute(query)
+        connection.commit()
+
+        query = 'CREATE TABLE show_details (tvdb_id INTEGER PRIMARY KEY, title TEXT, year TEXT, path TEXT, ' \
+                'overview TEXT, poster TEXT, banner TEXT)'
+        cursor.execute(query)
+        connection.commit()
+
+        query = 'CREATE TABLE show_episode_details (tvdb_id INTEGER PRIMARY KEY, show_tvdb_id INTEGER, title TEXT, ' \
+                'season TEXT, episode TEXT, path TEXT, missing_languages TEXT)'
+        cursor.execute(query)
+        connection.commit()
+
+        query = 'CREATE TABLE show_episode_subtitles (tvdb_id INTEGER, type TEXT, language TEXT, path TEXT)'
+        cursor.execute(query)
+        connection.commit()
+
+        query = 'CREATE TABLE show_settings (tvdb_id INTEGER PRIMARY KEY, wanted_languages TEXT, refine INTEGER, ' \
+                'hearing_impaired INTEGER, utf8_encoding INTEGER)'
+        cursor.execute(query)
+        connection.commit()
+
+        query = 'CREATE TABLE movie_details (imdb_id TEXT PRIMARY KEY, title TEXT, year TEXT, path TEXT, ' \
+                'overview TEXT, poster TEXT, missing_languages TEXT)'
+        cursor.execute(query)
+        connection.commit()
+
+        query = 'CREATE TABLE movie_subtitles (imdb_id TEXT, type TEXT, language TEXT, path TEXT)'
+        cursor.execute(query)
+        connection.commit()
+
+        query = 'CREATE TABLE movie_settings (imdb_id TEXT PRIMARY KEY, wanted_languages TEXT, refine INTEGER, ' \
+                'hearing_impaired INTEGER, utf8_encoding INTEGER)'
         cursor.execute(query)
         connection.commit()
 
@@ -164,6 +206,47 @@ def upgrade(from_version, to_version):
             )
             # Update database version
             cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (7, 6))
+            connection.commit()
+            connection.close()
+
+        if from_version == 7 and to_version == 8:
+            connection = sqlite3.connect(autosubliminal.DBFILE)
+            cursor = connection.cursor()
+            # Create show_details
+            cursor.execute(
+                'CREATE TABLE show_details (tvdb_id INTEGER PRIMARY KEY, title TEXT, year TEXT, path TEXT, '
+                'overview TEXT, poster TEXT, banner TEXT)'
+            )
+            # Create show_episode_details
+            cursor.execute(
+                'CREATE TABLE show_episode_details (tvdb_id INTEGER PRIMARY KEY, show_tvdb_id INTEGER, title TEXT, '
+                'season TEXT, episode TEXT, path TEXT, missing_languages TEXT)'
+            )
+            # Create show_subtitles
+            cursor.execute(
+                'CREATE TABLE show_episode_subtitles (tvdb_id INTEGER, type TEXT, language TEXT, path TEXT)'
+            )
+            # Create show_settings
+            cursor.execute(
+                'CREATE TABLE show_settings (tvdb_id INTEGER PRIMARY KEY, wanted_languages TEXT, refine INTEGER, '
+                'hearing_impaired INTEGER, utf8_encoding INTEGER)'
+            )
+            # Create movie_details
+            cursor.execute(
+                'CREATE TABLE movie_details (imdb_id TEXT PRIMARY KEY, title TEXT, year TEXT, path TEXT, '
+                'overview TEXT, poster TEXT, missing_languages TEXT)'
+            )
+            # Create movie_subtitles
+            cursor.execute(
+                'CREATE TABLE movie_subtitles (imdb_id TEXT, type TEXT, language TEXT, path TEXT)'
+            )
+            # Create movie_settings
+            cursor.execute(
+                'CREATE TABLE movie_settings (imdb_id TEXT PRIMARY KEY, wanted_languages TEXT, refine INTEGER, '
+                'hearing_impaired INTEGER, utf8_encoding INTEGER)'
+            )
+            # Update database version
+            cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (8, 7))
             connection.commit()
             connection.close()
 

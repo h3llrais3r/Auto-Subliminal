@@ -30,8 +30,8 @@ function init() {
         // console.log(msg, data);
         // Mark process as running on status page
         var scheduler_process_row = $('#scheduler').find('#' + data['name']);
-        scheduler_process_row.children('.next-run').text('Running...');
-        scheduler_process_row.addClass('status-scheduler-running');
+        scheduler_process_row.children('.scheduler-next-run').text('Running...');
+        scheduler_process_row.addClass('scheduler-running');
     };
     PubSub.subscribe(PROCESS_STARTED, processStartedEventSubscriber);
 
@@ -40,10 +40,11 @@ function init() {
         // console.log(msg, data);
         // Mark process as finished on status page
         var scheduler_process_row = $('#scheduler').find('#' + data['name']);
-        scheduler_process_row.children('.alive').text(data['alive']);
-        scheduler_process_row.children('.last-run').text(strftime(TIMESTAMP_FORMAT, new Date(data['last_run'])));
-        scheduler_process_row.children('.next-run').text(strftime(TIMESTAMP_FORMAT, new Date(data['next_run'])));
-        scheduler_process_row.removeClass('status-scheduler-running');
+        scheduler_process_row.children('.scheduler-alive').text(data['alive']);
+        scheduler_process_row.children('.scheduler-active').text(data['active']);
+        scheduler_process_row.children('.scheduler-last-run').text(strftime(TIMESTAMP_FORMAT, new Date(data['last_run'])));
+        scheduler_process_row.children('.scheduler-next-run').text(strftime(TIMESTAMP_FORMAT, new Date(data['next_run'])));
+        scheduler_process_row.removeClass('scheduler-running');
     };
     PubSub.subscribe(PROCESS_FINISHED, processFinishedEventSubscriber);
 }

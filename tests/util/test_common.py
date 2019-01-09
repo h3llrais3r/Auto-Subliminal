@@ -16,7 +16,7 @@ from autosubliminal.util.common import get_today, run_cmd, connect_url, wait_for
     to_list, to_obj_or_list, to_dict, get_boolean, safe_text, safe_lowercase, safe_uppercase, safe_trim, sanitize, \
     display_mapping_dict, display_list_single_line, display_list_multi_line, display_value, display_item_title, \
     display_item_name, display_interval, display_timestamp, convert_timestamp, humanize_bytes, get_common_path, \
-    get_root_path, get_file_size, set_rw_and_remove
+    get_root_path, get_file_size, set_rw_and_remove, atoi, natural_keys, get_wanted_languages, get_alpha2_languages
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -101,27 +101,43 @@ def test_wait_for_internet_connection_with_sleep(mocker):
 
 
 def test_to_obj():
+    value_0 = 0
     value_1 = 1
     value_2 = '2'
     assert to_obj(None) is None
+    assert to_obj(None, default_value='') == ''
+    assert to_obj(value_0) == '0'
+    assert to_obj(value_0, obj_type=bool) is False
     assert to_obj(value_1) == '1'
     assert to_obj(value_2, obj_type=int) == 2
 
 
 def test_to_text():
+    value_0 = 0
     value_1 = 1
     value_2 = [1, 2]
     assert to_text(None) is None
+    assert to_text(None, default_value='') == ''
+    assert to_text([]) is None
+    assert to_text([], default_value='') == ''
+    assert to_text(value_0) == '0'
     assert to_text(value_1) == '1'
     assert to_text(value_2) == '1,2'
 
 
 def test_to_list():
+    value_0 = 0
     value_1 = '1'
     value_2 = '1,2'
     value_3 = [1, 2, 3]
     value_4 = ['1', '2', '3', '4']
     assert to_list(None) is None
+    assert to_list([]) == []
+    assert to_list('') is None
+    assert to_list('', default_value=[]) == []
+    assert to_list(value_0) == ['0']
+    assert to_list(value_0, obj_type=int) == [0]
+    assert to_list(value_0, obj_type=bool) == [False]
     assert to_list(value_1) == ['1']
     assert to_list(value_2, obj_type=int) == [1, 2]
     assert to_list(value_3) == ['1', '2', '3']
@@ -129,10 +145,16 @@ def test_to_list():
 
 
 def test_to_obj_or_list():
+    value_0 = 0
     value_1 = '1'
     value_2 = '1,2'
     assert to_obj_or_list(None) is None
+    assert to_obj_or_list([]) == []
+    assert to_obj_or_list(value_0) == '0'
+    assert to_obj_or_list(value_0, obj_type=int) == 0
+    assert to_obj_or_list(value_0, obj_type=bool) is False
     assert to_obj_or_list(value_1) == '1'
+    assert to_obj_or_list(value_2) == ['1', '2']
     assert to_obj_or_list(value_2, obj_type=int) == [1, 2]
 
 
@@ -184,49 +206,49 @@ def test_save_text_default_value(mocker):
 
 def test_safe_lowercase():
     assert safe_lowercase(None) is None
-    assert safe_lowercase(None, 'n/a') == 'n/a'
+    assert safe_lowercase(None, default_value='n/a') == 'n/a'
     assert safe_lowercase(text_value_upper) == 'test'
     assert safe_lowercase(text_value_special_char_upper) == u'ù'
-    assert safe_lowercase(num_value) is None
-    assert safe_lowercase(num_value, 'n/a') == 'n/a'
-    assert safe_lowercase(long_value) is None
-    assert safe_lowercase(long_value, 'n/a') == 'n/a'
-    assert safe_lowercase(bool_value) is None
-    assert safe_lowercase(bool_value, 'n/a') == 'n/a'
-    assert safe_lowercase(list_value) is None
-    assert safe_lowercase(list_value, 'n/a') == 'n/a'
-    assert safe_lowercase(list_value_with_items, 'n/a') == 'n/a'
-    assert safe_lowercase(safe_text(list_value_with_items_upper), 'n/a') == '[\'a\', \'b\']'
-    assert safe_lowercase(dict_value) is None
-    assert safe_lowercase(dict_value, 'n/a') == 'n/a'
-    assert safe_lowercase(dict_value_with_items_upper, 'n/a') == 'n/a'
-    assert safe_lowercase(safe_text(dict_value_with_items_upper), 'n/a') == '{\'1\': \'a\'}'
+    assert safe_lowercase(num_value) is num_value
+    assert safe_lowercase(num_value, default_value='n/a') == 'n/a'
+    assert safe_lowercase(long_value) is long_value
+    assert safe_lowercase(long_value, default_value='n/a') == 'n/a'
+    assert safe_lowercase(bool_value) is bool_value
+    assert safe_lowercase(bool_value, default_value='n/a') == 'n/a'
+    assert safe_lowercase(list_value) is list_value
+    assert safe_lowercase(list_value, default_value='n/a') == 'n/a'
+    assert safe_lowercase(list_value_with_items, default_value='n/a') == 'n/a'
+    assert safe_lowercase(safe_text(list_value_with_items_upper), default_value='n/a') == '[\'a\', \'b\']'
+    assert safe_lowercase(dict_value) is dict_value
+    assert safe_lowercase(dict_value, default_value='n/a') == 'n/a'
+    assert safe_lowercase(dict_value_with_items_upper, default_value='n/a') == 'n/a'
+    assert safe_lowercase(safe_text(dict_value_with_items_upper), default_value='n/a') == '{\'1\': \'a\'}'
 
 
 def test_safe_uppercase():
     assert safe_uppercase(None) is None
-    assert safe_uppercase(None, 'N/A') == 'N/A'
+    assert safe_uppercase(None, default_value='N/A') == 'N/A'
     assert safe_uppercase(text_value) == 'TEST'
     assert safe_uppercase(text_value_special_char) == u'Ù'
-    assert safe_uppercase(num_value) is None
-    assert safe_uppercase(num_value, 'N/A') == 'N/A'
-    assert safe_uppercase(long_value) is None
-    assert safe_uppercase(long_value, 'N/A') == 'N/A'
-    assert safe_uppercase(bool_value) is None
-    assert safe_uppercase(bool_value, 'N/A') == 'N/A'
-    assert safe_uppercase(list_value) is None
-    assert safe_uppercase(list_value, 'N/A') == 'N/A'
-    assert safe_uppercase(list_value_with_items, 'N/A') == 'N/A'
-    assert safe_uppercase(safe_text(list_value_with_items), 'N/A') == '[\'A\', \'B\']'
-    assert safe_uppercase(dict_value) is None
-    assert safe_uppercase(dict_value, 'N/A') == 'N/A'
-    assert safe_uppercase(dict_value_with_items, 'N/A') == 'N/A'
-    assert safe_uppercase(safe_text(dict_value_with_items), 'N/A') == '{\'1\': \'A\'}'
+    assert safe_uppercase(num_value) is num_value
+    assert safe_uppercase(num_value, default_value='N/A') == 'N/A'
+    assert safe_uppercase(long_value) is long_value
+    assert safe_uppercase(long_value, default_value='N/A') == 'N/A'
+    assert safe_uppercase(bool_value) is bool_value
+    assert safe_uppercase(bool_value, default_value='N/A') == 'N/A'
+    assert safe_uppercase(list_value) is list_value
+    assert safe_uppercase(list_value, default_value='N/A') == 'N/A'
+    assert safe_uppercase(list_value_with_items, default_value='N/A') == 'N/A'
+    assert safe_uppercase(safe_text(list_value_with_items), default_value='N/A') == '[\'A\', \'B\']'
+    assert safe_uppercase(dict_value) is dict_value
+    assert safe_uppercase(dict_value, default_value='N/A') == 'N/A'
+    assert safe_uppercase(dict_value_with_items, default_value='N/A') == 'N/A'
+    assert safe_uppercase(safe_text(dict_value_with_items), default_value='N/A') == '{\'1\': \'A\'}'
 
 
 def test_safe_trim():
     assert safe_trim(None) is None
-    assert safe_trim(None, 'N/A') == 'N/A'
+    assert safe_trim(None, default_value='N/A') == 'N/A'
     assert safe_trim('test') == 'test'
     assert safe_trim(' test ') == 'test'
     assert safe_trim('\ntest\n') == 'test'
@@ -235,16 +257,16 @@ def test_safe_trim():
     assert safe_trim(' \n\r\ttest \n\r\t') == 'test'
     assert safe_trim(' \n\r\ttest and test \n\r\t') == 'test and test'
     assert safe_trim(' \n\r\ttest \n\r\tand \n\r\ttest \n\r\t') == 'test \n\r\tand \n\r\ttest'
-    assert safe_trim(num_value) is None
-    assert safe_trim(num_value, 'N/A') == 'N/A'
-    assert safe_trim(long_value) is None
-    assert safe_trim(long_value, 'N/A') == 'N/A'
-    assert safe_trim(bool_value) is None
-    assert safe_trim(bool_value, 'N/A') == 'N/A'
-    assert safe_trim(list_value) is None
-    assert safe_trim(list_value, 'N/A') == 'N/A'
-    assert safe_trim(dict_value) is None
-    assert safe_trim(dict_value, 'N/A') == 'N/A'
+    assert safe_trim(num_value) is num_value
+    assert safe_trim(num_value, default_value='N/A') == 'N/A'
+    assert safe_trim(long_value) is long_value
+    assert safe_trim(long_value, default_value='N/A') == 'N/A'
+    assert safe_trim(bool_value) is bool_value
+    assert safe_trim(bool_value, default_value='N/A') == 'N/A'
+    assert safe_trim(list_value) is list_value
+    assert safe_trim(list_value, default_value='N/A') == 'N/A'
+    assert safe_trim(dict_value) is dict_value
+    assert safe_trim(dict_value, default_value='N/A') == 'N/A'
 
 
 def test_sanitize():
@@ -379,6 +401,7 @@ def test_get_root_path():
 
 
 def test_get_file_size():
+    file_path = None
     try:
         fd, file_path = tempfile.mkstemp(text=True)
         file = open(file_path, 'w')
@@ -388,7 +411,8 @@ def test_get_file_size():
         size = get_file_size(file_path).split(' ')[0]
         assert float(size) > 0
     finally:
-        os.remove(file_path)
+        if os.path.exists(file_path):
+            os.remove(file_path)
 
 
 def test_get_file_size_exception():
@@ -396,6 +420,7 @@ def test_get_file_size_exception():
 
 
 def test_set_rw_and_remove():
+    file_path = None
     try:
         fd, file_path = tempfile.mkstemp(text=True)
         file = open(file_path, 'w')
@@ -407,3 +432,30 @@ def test_set_rw_and_remove():
     finally:
         if os.path.exists(file_path):
             os.remove(file_path)
+
+
+def test_atoi():
+    assert atoi('test') == 'test'
+    assert atoi('test01') == 'test01'
+    assert atoi('01') == 1
+    assert atoi('1') == 1
+
+
+def test_natural_keys():
+    my_list = ['season 23', 'season 15', 'season 30', 'season 05', 'season 01', 'root']
+    my_sorted_list = ['root', 'season 01', 'season 05', 'season 15', 'season 23', 'season 30']
+    assert sorted(my_list, key=natural_keys) == my_sorted_list
+
+
+def test_get_wanted_languages(monkeypatch):
+    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
+    monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en', 'fr'])
+    assert ['nl', 'en', 'fr'] == get_wanted_languages()
+
+
+def test_get_alpha2_languages():
+    languages = get_alpha2_languages()
+    nl_language = {'alpha2': 'nl', 'name': 'Dutch'}
+    assert isinstance(languages, list)
+    assert len(languages) == 184
+    assert nl_language in languages

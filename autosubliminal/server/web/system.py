@@ -6,7 +6,8 @@ import cherrypy
 
 import autosubliminal
 from autosubliminal import system
-from autosubliminal.db import ImdbIdCacheDb, LastDownloadsDb, TvdbIdCacheDb, WantedItemsDb
+from autosubliminal.db import ImdbIdCacheDb, LastDownloadsDb, MovieDetailsDb, ShowDetailsDb, ShowEpisodeDetailsDb, \
+    TvdbIdCacheDb, WantedItemsDb
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
 from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, \
@@ -76,6 +77,18 @@ class System(object):
         LastDownloadsDb().flush_last_downloads()
         send_websocket_notification('Flushed last downloads database.')
         redirect('/home')
+
+    @cherrypy.expose(alias='flushLibrary')
+    def flush_library(self):
+        if not autosubliminal.SCANLIBRARY.running:
+            ShowDetailsDb().flush_shows(episodes=True, subtitles=True)
+            MovieDetailsDb().flush_movies(subtitles=True)
+            send_websocket_notification('Flushed library database.')
+        else:
+            send_websocket_notification('Cannot flush library database when library scanner is running!',
+                                        type='notice')
+
+        redirect('/library')
 
     @cherrypy.expose(alias='isAlive')
     def is_alive(self, *args, **kwargs):

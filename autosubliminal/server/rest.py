@@ -64,6 +64,9 @@ class RestResource(object):
     def _bad_request(self, error_message):
         raise BadRequest(message=error_message)
 
+    def _no_content(self):
+        cherrypy.response.status = 204
+
 
 class BadRequest(cherrypy.HTTPError):
     """

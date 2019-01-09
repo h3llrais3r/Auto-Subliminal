@@ -7,8 +7,10 @@ import cherrypy
 
 from autosubliminal.server.api import Api
 from autosubliminal.server.web import redirect
+from autosubliminal.server.web.artwork import Artwork
 from autosubliminal.server.web.config import Config
 from autosubliminal.server.web.home import Home
+from autosubliminal.server.web.library import Library
 from autosubliminal.server.web.log import Log
 from autosubliminal.server.web.system import System
 from autosubliminal.templates.page import PageTemplate
@@ -42,10 +44,12 @@ class WebServerRoot(object):
     def __init__(self):
         # Create root tree (name of attribute defines name of path: f.e. home -> /home)
         self.home = Home()
+        self.library = Library()
         self.config = Config()
         self.log = Log()
         self.system = System()
         self.api = Api()
+        self.artwork = Artwork()
 
     @cherrypy.expose
     def index(self):

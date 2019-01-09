@@ -1,9 +1,11 @@
 # coding=utf-8
 
-from autosubliminal.server.rest import RestResource
 from autosubliminal.server.api.items import ItemsApi
+from autosubliminal.server.api.movies import MoviesApi
 from autosubliminal.server.api.schedulers import SchedulersApi
 from autosubliminal.server.api.settings import SettingsApi
+from autosubliminal.server.api.shows import ShowsApi
+from autosubliminal.server.rest import RestResource
 
 
 class Api(RestResource):
@@ -20,8 +22,10 @@ class Api(RestResource):
 
         # Add all sub paths here: /api/...
         self.items = ItemsApi()
+        self.movies = MoviesApi()
         self.schedulers = SchedulersApi()
         self.settings = SettingsApi()
+        self.shows = ShowsApi()
 
     def get(self, *args, **kwargs):
         return {'api': 'Welcome to the Auto-Subliminal REST api'}

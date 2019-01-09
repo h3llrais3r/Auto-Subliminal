@@ -53,7 +53,7 @@ stevedore==1.30.0
 git+https://github.com/Diaoul/subliminal.git@879c0c8d18618e32ad466bb63bd939edb268bc60#egg=subliminal
 tempora==1.14
 trans==2.1.0
-git+https://github.com/h3llrais3r/tvdb_api_v2.git@4698cc88ab8ddf9841bba92da59382fc6bee4c2e#egg=tvdb_api_v2
+git+https://github.com/h3llrais3r/tvdb_api_v2.git@7f02ecb9620017aed75973fd14d0197825c35140#egg=tvdb_api_v2
 unidecode==1.0.23
 urllib3==1.24.1
 webencodings==0.5.1

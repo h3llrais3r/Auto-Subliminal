@@ -10,6 +10,7 @@ import stat
 import subprocess
 import time
 
+import babelfish
 import requests
 from six import text_type
 
@@ -79,50 +80,65 @@ def wait_for_internet_connection():
         time.sleep(5)
 
 
-def to_obj(value, obj_type=text_type):
+def to_obj(value, obj_type=text_type, default_value=None):
     """Convert an object to an object value.
 
-    By default it converts it to a text value.
+    By default it converts it to text value.
     Optionally, it can be converted to the specified object type.
     """
-    return obj_type(value) if value else None
+    return obj_type(value) if value is not None else default_value
 
 
-def to_text(obj):
+def to_text(obj, default_value=None):
     """Convert an object to a text value.
 
-    When the object is a list, convert it to a comma separated text value.
+    If the object is None, the default value will be returned.
+    If the object is a list, convert it to a comma separated text value.
     If not, return the text representation of the object.
     """
-    if obj and isinstance(obj, list):
-        return ','.join(text_type(e) for e in obj)
+    if obj is not None:
+        if isinstance(obj, list):
+            return ','.join(text_type(e) for e in obj) if obj else default_value
+        else:
+            return text_type(obj)
+    else:
+        return default_value
 
-    return text_type(obj) if obj else None
 
-
-def to_list(value, obj_type=text_type):
+def to_list(value, obj_type=text_type, default_value=None):
     """Convert a value to a list.
 
-    Split the value on ',' and return the split values.
+    If the value is None, the default value will be returned.
+    If the value contains ',', return the split values.
+    By default it converts the value(s) to text value(s).
     Optionally, it can be converted to the specified object type.
     """
-    if value and isinstance(value, list):
-        return [obj_type(v) for v in value]
+    if value is not None:
+        if isinstance(value, list):
+            return [obj_type(v) for v in value]
+        elif ',' in text_type(value):
+            return [obj_type(v) for v in text_type(value).split(',')]
+        else:
+            return [obj_type(value)] if text_type(value) != '' else default_value
+    else:
+        return default_value
 
-    return [obj_type(v) for v in value.split(',')] if value else None
 
-
-def to_obj_or_list(value, obj_type=text_type):
+def to_obj_or_list(value, obj_type=text_type, default_value=None):
     """Convert a value to an object or a list.
 
-    Split the value on ',' if it contains it and return the split values.
-    If not return the value itself.
+    If the value is None, the default value will be returned.
+    If the value contains ',', return the split values.
+    By default it converts the value(s) to text value(s).
     Optionally, it can be converted to the specified object type.
     """
-    if value and ',' in value:
-        return to_list(value, obj_type=obj_type)
-
-    return obj_type(value) if value else None
+    if value is not None:
+        if isinstance(value, list) or ',' in text_type(value):
+            return to_list(value, obj_type=obj_type)
+        else:
+            return obj_type(value)
+    else:
+        return default_value
 
 
 def to_dict(obj, *args, **kwargs):
@@ -173,34 +189,34 @@ def safe_text(obj, default_value=None):
 def safe_lowercase(obj, default_value=None):
     """Return the object converted to lowercase.
 
-    When not possible return the default value.
+    When not possible return the obj itself, or the default value if specified.
     """
     try:
         return obj.lower()
     except Exception:
-        return default_value
+        return default_value or obj
 
 
 def safe_uppercase(obj, default_value=None):
     """Return the object converted to uppercase.
 
-    When not possible return the default value.
+    When not possible return the obj itself, or the default value if specified.
     """
     try:
         return obj.upper()
     except Exception:
-        return default_value
+        return default_value or obj
 
 
 def safe_trim(obj, default_value=None):
     """Return the object trimmed with leading and trailing spaces, tabs and newlines.
 
-    When not possible return the default value.
+    When not possible return the obj itself, or the default value if specified.
     """
     try:
         return obj.strip(' \n\r\t')
     except Exception:
-        return default_value
+        return default_value or obj
 
 
 def sanitize(string_value, ignore_characters=None):
@@ -264,7 +280,7 @@ def display_value(value, default_value='', uppercase=False):
     result = ','.join(text_type(v) for v in result) if isinstance(result, list) else result
     result = safe_text(result, default_value)
     if uppercase:
-        result = safe_uppercase(result, default_value)
+        result = safe_uppercase(result, default_value=default_value)
     return result
 
 
@@ -274,7 +290,7 @@ def display_item_title(item, default_value='N/A', uppercase=False):
     if not title == default_value and not year == default_value:
         title += ' (' + year + ')'
     if uppercase:
-        title = safe_uppercase(title, default_value)
+        title = safe_uppercase(title, default_value=default_value)
     return title
 
 
@@ -294,7 +310,7 @@ def display_item_name(item, default_value='N/A', uppercase=False):
             else:
                 name += 'E' + episode.zfill(2)
     if uppercase:
-        name = safe_uppercase(name, default_value)
+        name = safe_uppercase(name, default_value=default_value)
     return name
 
 
@@ -430,3 +446,44 @@ def get_disk_space_details(directory):
 def set_rw_and_remove(operation, name, exc):
     os.chmod(name, stat.S_IWRITE)
     os.remove(name)
+
+
+def atoi(text):
+    """Convert a text to int.
+
+    Returns the int value if the text contains digits, otherwise it returns the text.
+    """
+    return int(text) if text.isdigit() else text
+
+
+def natural_keys(text):
+    """ Sort by natural key order.
+
+    Sorts in human order (http://nedbatchelder.com/blog/200712/human_sorting.html).
+    Based on https://stackoverflow.com/questions/5967500/how-to-correctly-sort-a-string-with-a-number-inside
+    Usage:
+    - sorted(my_list, key=natural_keys)
+    - my_list.sort(key=natural_keys)
+    """
+    return [atoi(c) for c in re.split('(\d+)', text)]
+
+
+def get_wanted_languages():
+    """Get the default list of configured wanted languages."""
+    wanted_languages = []
+
+    if autosubliminal.DEFAULTLANGUAGE:
+        wanted_languages.append(autosubliminal.DEFAULTLANGUAGE)
+    if autosubliminal.ADDITIONALLANGUAGES:
+        wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES)
+
+    return wanted_languages
+
+
+def get_alpha2_languages():
+    """Get the list of iso languages in alpha2 format."""
+
+    def to_alpha2(language):
+        return {'alpha2': language.alpha2, 'name': language.name}
+
+    return list(map(to_alpha2, [language for language in babelfish.LANGUAGE_MATRIX if language.alpha2]))

@@ -27,14 +27,17 @@ class Scheduler(object):
     :type process: ScheduledProcess
     :param interval: interval in seconds between scheduled runs
     :type interval: int
-    :param initial_run: indicates if the process should run initially before starting the thread
+    :param active: indication if the scheduler is active or not
+    :type active: bool
+    :param initial_run: indication if the process should run initially before starting the thread
     :type initial_run: bool
     """
 
-    def __init__(self, name, process, interval, initial_run=False):
+    def __init__(self, name, process, interval, active=True, initial_run=False):
         self.name = name
         self.process = process
         self.interval = interval
+        self.active = active
         self.last_run = 0
         self._delay = 0
         self._force_run = False
@@ -49,7 +52,7 @@ class Scheduler(object):
         self._thread.start()
 
         # Initial run will block caller thread until process is executed the first time
-        if initial_run:
+        if self.active and initial_run:
             log.debug('Waiting for initial run of thread %s', self.name)
             while not self.last_run:
                 time.sleep(1)
@@ -80,16 +83,20 @@ class Scheduler(object):
             if self._force_stop:
                 break
 
-            # Check if we need to run the process
+            # Check if we need to run the process (only check if the scheduler is marked as active)
             run_needed = False
             current_time = time.time()
-            if self._force_run:
-                run_needed = True
-                if self._delay:
-                    log.info('Delaying thread %s with %s seconds', self.name, self._delay)
-                    time.sleep(self._delay)
-            if current_time - self.last_run > self.interval:
-                run_needed = True
+            if self.active:
+                if self._force_run:
+                    run_needed = True
+                    if self._delay:
+                        log.info('Delaying thread %s with %s seconds', self.name, self._delay)
+                        time.sleep(self._delay)
+                if current_time - self.last_run > self.interval:
+                    run_needed = True
+            elif self.last_run:
+                # Clear last_run if not active
+                self.last_run = 0
 
             # Run if needed
             if run_needed:
@@ -141,6 +148,16 @@ class Scheduler(object):
 
         self._force_stop = True
         self._thread.join(10)
+
+    def activate(self):
+        """Activate the scheduler."""
+        log.info('Activating scheduler %s', self.name)
+        self.active = True
+
+    def deactivate(self):
+        """Deactivate the scheduler."""
+        log.info('Deactivating scheduler %s', self.name)
+        self.active = False
 
     def run(self, delay=0):
         """Force run the scheduler."""
