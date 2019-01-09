@@ -4,6 +4,9 @@
 # Compiled files
 *.pyc
 
+# Windows related files
+*.pyd
+
 # Todo's
 TODO.txt
 
