@@ -399,6 +399,14 @@ def assign_params(func, namespace):
 	>>> assigned()
 	Traceback (most recent call last):
 	TypeError: func() ...argument...
+
+	It even works on methods:
+
+	>>> class Handler:
+	...     def meth(self, arg):
+	...         print(arg)
+	>>> assign_params(Handler().meth, dict(arg='crystal', foo='clear'))()
+	crystal
 	"""
 	try:
 		sig = inspect.signature(func)
