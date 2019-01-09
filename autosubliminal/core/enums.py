@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from enum import Enum
+from aenum import Enum
 
 
 class InstallType(Enum):
