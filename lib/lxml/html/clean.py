@@ -1,8 +1,12 @@
+# cython: language_level=2
+
 """A cleanup tool for HTML.
 
 Removes unwanted tags and content.  See the `Cleaner` class for
 details.
 """
+
+from __future__ import absolute_import
 
 import re
 import copy
@@ -27,11 +31,6 @@ try:
 except NameError:
     # Python 3
     unicode = str
-try:
-    bytes
-except NameError:
-    # Python < 2.6
-    bytes = str
 try:
     basestring
 except NameError:
@@ -213,7 +212,7 @@ class Cleaner(object):
     safe_attrs = defs.safe_attrs
     add_nofollow = False
     host_whitelist = ()
-    whitelist_tags = set(['iframe', 'embed'])
+    whitelist_tags = {'iframe', 'embed'}
 
     def __init__(self, **kw):
         for name, value in kw.items():

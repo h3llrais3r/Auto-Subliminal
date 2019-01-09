@@ -1,3 +1,5 @@
+# cython: language_level=2
+
 #
 # ElementTree
 # $Id: ElementPath.py 3375 2008-02-13 08:05:08Z fredrik $
@@ -52,6 +54,8 @@
 # to import this module directly; the <b>ElementTree</b> does this for
 # you, if needed.
 ##
+
+from __future__ import absolute_import
 
 import re
 
