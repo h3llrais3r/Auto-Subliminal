@@ -10,6 +10,8 @@ To use this module, set ``HTTPServer.ssl_adapter`` to an instance of
 from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
+import sys
+
 try:
     import ssl
 except ImportError:
@@ -27,6 +29,7 @@ import six
 
 from . import Adapter
 from .. import errors
+from .._compat import IS_ABOVE_OPENSSL10
 from ..makefile import StreamReader, StreamWriter
 
 if six.PY3:
@@ -37,6 +40,9 @@ else:
     del socket
 
 
+IS_BELOW_PY37 = sys.version_info[:2] < (3, 7)
+
+
 def _assert_ssl_exc_contains(exc, *msgs):
     """Check whether SSL exception contains either of messages provided."""
     if len(msgs) < 1:
@@ -44,7 +50,7 @@ def _assert_ssl_exc_contains(exc, *msgs):
             '_assert_ssl_exc_contains() requires '
             'at least one message to be passed.'
         )
-    err_msg_lower = exc.args[1].lower()
+    err_msg_lower = str(exc).lower()
     return any(m.lower() in err_msg_lower for m in msgs)
 
 
@@ -131,6 +137,7 @@ class BuiltinSSLAdapter(Adapter):
                     'wrong version number',
                     'no shared cipher', 'certificate unknown',
                     'ccs received early',
+                    'certificate verify failed',  # client cert w/o trusted CA
                 )
                 if _assert_ssl_exc_contains(ex, *_block_errors):
                     # Accepted error, let's pass
@@ -144,15 +151,19 @@ class BuiltinSSLAdapter(Adapter):
         except generic_socket_error as exc:
             """It is unclear why exactly this happens.
 
-            It's reproducible only under Python 2 with openssl>1.0 and stdlib
-            ``ssl`` wrapper, and only with CherryPy.
-            So it looks like some healthcheck tries to connect to this socket
-            during startup (from the same process).
+            It's reproducible only under Python<=3.6 with openssl>1.0
+            and stdlib ``ssl`` wrapper.
+            In CherryPy it's triggered by Checker plugin, which connects
+            to the app listening to the socket port in TLS mode via plain
+            HTTP during startup (from the same process).
 
 
             Ref: https://github.com/cherrypy/cherrypy/issues/1618
             """
-            if six.PY2 and exc.args == (0, 'Error'):
+            is_error0 = exc.args == (0, 'Error')
+            ssl_doesnt_handle_error0 = IS_ABOVE_OPENSSL10 and IS_BELOW_PY37
+
+            if is_error0 and ssl_doesnt_handle_error0:
                 return EMPTY_RESULT
             raise
         return s, self.get_environ(s)

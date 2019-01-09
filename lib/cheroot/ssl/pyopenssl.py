@@ -43,6 +43,11 @@ import six
 try:
     from OpenSSL import SSL
     from OpenSSL import crypto
+
+    try:
+        ssl_conn_type = SSL.Connection
+    except AttributeError:
+        ssl_conn_type = SSL.ConnectionType
 except ImportError:
     SSL = None
 
@@ -72,20 +77,21 @@ class SSLFileobjectMixin:
                 # the rest of the stack has no way of differentiating
                 # between a "new handshake" error and "client dropped".
                 # Note this isn't an endless loop: there's a timeout below.
+                # Ref: https://stackoverflow.com/a/5133568/595220
                 time.sleep(self.ssl_retry)
             except SSL.WantWriteError:
                 time.sleep(self.ssl_retry)
             except SSL.SysCallError as e:
                 if is_reader and e.args == (-1, 'Unexpected EOF'):
-                    return ''
+                    return b''
 
                 errnum = e.args[0]
                 if is_reader and errnum in errors.socket_errors_to_ignore:
-                    return ''
+                    return b''
                 raise socket.error(errnum)
             except SSL.Error as e:
                 if is_reader and e.args == (-1, 'Unexpected EOF'):
-                    return ''
+                    return b''
 
                 thirdarg = None
                 try:
@@ -107,6 +113,14 @@ class SSLFileobjectMixin:
         return self._safe_call(
             True,
             super(SSLFileobjectMixin, self).recv,
+            size,
+        )
+
+    def readline(self, size):
+        """Receive message of a size from the socket."""
+        return self._safe_call(
+            True,
+            super(SSLFileobjectMixin, self).readline,
             size,
         )
 
@@ -311,7 +325,7 @@ class pyOpenSSLAdapter(Adapter):
             if 'r' in mode else
             SSLFileobjectStreamWriter
         )
-        if SSL and isinstance(sock, SSL.ConnectionType):
+        if SSL and isinstance(sock, ssl_conn_type):
             wrapped_socket = cls(sock, mode, bufsize)
             wrapped_socket.ssl_timeout = sock.gettimeout()
             return wrapped_socket

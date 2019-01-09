@@ -96,11 +96,34 @@ __all__ = ('HTTPRequest', 'HTTPConnection', 'HTTPServer',
 
 
 IS_WINDOWS = platform.system() == 'Windows'
+"""Flag indicating whether the app is running under Windows."""
 
 
-if not IS_WINDOWS:
-    import grp
-    import pwd
+IS_GAE = os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/')
+"""Flag indicating whether the app is running in GAE env.
+
+Ref:
+https://cloud.google.com/appengine/docs/standard/python/tools
+/using-local-server#detecting_application_runtime_environment
+"""
+
+
+IS_UID_GID_RESOLVABLE = not IS_WINDOWS and not IS_GAE
+"""Indicates whether UID/GID resolution's available under current platform."""
+
+
+if IS_UID_GID_RESOLVABLE:
+    try:
+        import grp
+        import pwd
+    except ImportError:
+        """Unavailable in the current env.
+
+        This shouldn't be happening normally.
+        All of the known cases are excluded via the if clause.
+        """
+        IS_UID_GID_RESOLVABLE = False
+        grp, pwd = None, None
     import struct
 
 
@@ -1261,7 +1284,12 @@ class HTTPConnection:
         if not req or req.sent_headers:
             return
         # Unwrap wfile
-        self.wfile = StreamWriter(self.socket._sock, 'wb', self.wbufsize)
+        try:
+            resp_sock = self.socket._sock
+        except AttributeError:
+            # self.socket is of OpenSSL.SSL.Connection type
+            resp_sock = self.socket._socket
+        self.wfile = StreamWriter(resp_sock, 'wb', self.wbufsize)
         msg = (
             'The client sent a plain HTTP request, but '
             'this server only speaks HTTPS on this port.'
@@ -1326,6 +1354,8 @@ class HTTPConnection:
 
         try:
             peer_creds = self.socket.getsockopt(
+                # FIXME: Use LOCAL_CREDS for BSD-like OSs
+                # Ref: https://gist.github.com/LucaFilipozzi/e4f1e118202aff27af6aadebda1b5d91  # noqa
                 socket.SOL_SOCKET, socket.SO_PEERCRED,
                 struct.calcsize(PEERCRED_STRUCT_DEF)
             )
@@ -1371,9 +1401,11 @@ class HTTPConnection:
             RuntimeError: in case of UID/GID lookup unsupported or disabled
 
         """
-        if IS_WINDOWS:
+        if not IS_UID_GID_RESOLVABLE:
             raise NotImplementedError(
-                'UID/GID lookup can only be done under UNIX-like OS'
+                'UID/GID lookup is unavailable under current platform. '
+                'It can only be done under UNIX-like OS '
+                'but not under the Google App Engine'
             )
         elif not self.peercreds_resolve_enabled:
             raise RuntimeError(
@@ -1817,7 +1849,10 @@ class HTTPServer:
         try:
             """FreeBSD/macOS pre-populating fs mode permissions."""
             if not FS_PERMS_SET:
-                os.lchmod(bind_addr, fs_permissions)
+                try:
+                    os.lchmod(bind_addr, fs_permissions)
+                except AttributeError:
+                    os.chmod(bind_addr, fs_permissions, follow_symlinks=False)
                 FS_PERMS_SET = True
         except OSError:
             pass
@@ -1837,18 +1872,27 @@ class HTTPServer:
         """Create and prepare the socket object."""
         sock = socket.socket(family, type, proto)
         prevent_socket_inheritance(sock)
-        if not IS_WINDOWS:
-            # Windows has different semantics for SO_REUSEADDR,
-            # so don't set it.
-            # https://msdn.microsoft.com/en-us/library/ms740621(v=vs.85).aspx
+
+        host, port = bind_addr[:2]
+        IS_EPHEMERAL_PORT = port == 0
+
+        if not (IS_WINDOWS or IS_EPHEMERAL_PORT):
+            """Enable SO_REUSEADDR for the current socket.
+
+            Skip for Windows (has different semantics)
+            or ephemeral ports (can steal ports from others).
+
+            Refs:
+            * https://msdn.microsoft.com/en-us/library/ms740621(v=vs.85).aspx
+            * https://github.com/cherrypy/cheroot/issues/114
+            * https://gavv.github.io/blog/ephemeral-port-reuse/
+            """
             sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         if nodelay and not isinstance(bind_addr, str):
             sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
         if ssl_adapter is not None:
             sock = ssl_adapter.bind(sock)
-
-        host, port = bind_addr[:2]
 
         # If listening on the IPV6 any address ('::' = IN6ADDR_ANY),
         # activate dual-stack. See
@@ -2056,7 +2100,7 @@ class Gateway:
 
     def respond(self):
         """Process the current request. Must be overridden in a subclass."""
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
 
 # These may either be ssl.Adapter subclasses or the string names
