@@ -43,7 +43,7 @@ pytz==2018.9
 rarfile==3.0
 rebulk==1.0.0
 requests==2.21.0
-requests-oauthlib==1.0.0
+requests-oauthlib==1.1.0
 schema==0.6.8
 simplejson==3.16.0
 six==1.12.0
