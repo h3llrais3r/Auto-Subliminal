@@ -65,7 +65,12 @@ Libraries dependency tree
 |-- python-twitter
     |-- requests
     |-- requests-oauthlib
+        |-- chardet
+        |-- certify
+        |-- idna
         |-- oauthlib
+        |-- requests
+        |-- urllib3
 |-- schema
 |-- simplejson (if not added, fallback to default json library in python)
 |-- six
