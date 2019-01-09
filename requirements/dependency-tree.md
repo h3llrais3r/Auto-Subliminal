@@ -8,6 +8,8 @@ Libraries dependency tree
 |-- beautifulsoup4
     |-- html5lib (optional dependency)
     |-- lxml (optional dependency)
+    |-- soupsieve
+        |-- backports.functools_lru_cache
 |-- cherrypy
     |-- cheroot
         |-- backports.functools_lru_cache
