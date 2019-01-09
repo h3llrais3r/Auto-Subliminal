@@ -29,7 +29,6 @@ Libraries dependency tree
 |-- configparser
 |-- dogpile.cache
     |-- decorator
-|-- enum34
 |-- enzyme
 |-- gitpython
     |-- gitdb2
