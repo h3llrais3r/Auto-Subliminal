@@ -2,6 +2,8 @@
  * Javascript needed on the home-manualsearch page
  */
 
+'use strict';
+
 // Setup the manual search visit website link
 $('.manualsearch-visit-link').on('click', function (event) {
     // Prevent default behaviour

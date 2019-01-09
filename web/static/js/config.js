@@ -2,6 +2,8 @@
  * Javascript needed on the config pages
  */
 
+'use strict';
+
 // Setup the save buttons
 $('.btn-save').on('click', function (event) {
     // Prevent the actual click on the link

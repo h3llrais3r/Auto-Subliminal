@@ -2,6 +2,8 @@
  * Javascript for general Auto-Subliminal stuff
  */
 
+'use strict';
+
 /* ================
  * Global variables
  * ================ */

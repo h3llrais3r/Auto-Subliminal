@@ -2,6 +2,8 @@
  * Javascript needed on the restart page
  */
 
+'use strict';
+
 // Function to check if the system is alive
 function isAlive() {
     $.get(getUrl('/system/isAlive'), function (data) {
