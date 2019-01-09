@@ -1,0 +1,166 @@
+2.1.2
+=====
+
+when order is callable, save it for subclass use
+
+
+2.1.1
+=====
+
+correctly raise TypeError for non-Enum containment checks
+support combining names with | for Flag key access
+support _order_ being a callable
+
+
+2.1.0
+=====
+
+support Flags being combined with other data types:
+- add _create_pseudo_member_values_ 
+- add default __new__ and temporary _init_ 
+
+
+2.0.10
+======
+
+ensure _ignore_ is set when _settings_ specified in body which includes
+AutoValue
+
+make Flag members iterable
+
+
+2.0.9
+=====
+
+fix missing comma in __all__
+fix extend_enum with custom __new__ methods
+fix MultiValue with AutoNumber without _init_
+
+
+2.0.8
+=====
+
+extend_enum now handles aliases and multivalues correctly
+
+
+2.0.7
+=====
+
+support mixin types with extend_enum
+init and AutoNumber can now work together
+add test for new Enum using EnumMeta
+add tests for variations of multivalue and init
+prevent deletion of NamedConstant.constant
+
+
+2.0.6
+=====
+
+constants cannot be deleted (they already couldn't be changed)
+constants can be used to define other constants
+
+
+2.0.5
+=====
+
+_init_ and MultiValue can now work together
+
+
+2.0.4
+=====
+
+_init_ and AutoValue (and _generate_next_value_) can now work together to
+supply missing values even when some of the required values per member are
+absent
+
+
+2.0.3
+=====
+
+add _missing_value_ and _missing_name_ methods, deprecate _missing_
+make enum instances comparable
+
+
+2.0.2
+=====
+
+both EnumMeta.__getattr__ and Enum.__new__ fall back to _missing_
+
+
+2.0.1
+=====
+
+auto() now works with other data types
+AutoNumber supports legacy Enums (fixed regression)
+
+
+2.0.0
+=====
+
+Flag and IntFlag added.
+
+
+1.4.7
+=====
+
+fix %-interpolation bug
+defined SqlLiteEnum only if sqlite exists
+support pyflakes
+
+
+1.4.6
+=====
+
+version numbering error
+
+
+1.4.5
+=====
+
+revert AutoNumberEnum to custom __new__ instead of AutoNumber
+use _ignore_ to shield against AutoNumber magic
+inherit start and init settings from base Enums
+
+
+1.4.4
+=====
+
+enabled export as a decorator
+enabled _order_ to replace __order__
+enabled python2 support for settings, init, and start
+
+
+1.4.3
+=====
+
+support _ignore_ for dynamically creating class bodies
+
+
+1.4.2
+=====
+
+MultiValue, NoAlias, Unique, and init now work with Python 2
+
+
+1.4.1
+=====
+
+Py3: added Enum creation flags: Auto, MultiValue, NoAlias, Unique
+
+fixed extend_enum to honor Enum flags
+
+
+1.4.0
+=====
+
+When possible aenum inherits from Python's own enum.
+
+Breaking change: enum members now default to evaluating as True to maintain
+compatibility with the stdlib.
+
+Add your own __bool__ (__nonzero__ in Python 2) if need this behavior:
+
+    def __bool__(self):
+        return bool(self.value)
+    __nonzero__ = __bool__
+

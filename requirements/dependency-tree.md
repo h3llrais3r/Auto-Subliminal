@@ -4,6 +4,7 @@ Libraries dependency tree
 **First level dependencies are directly used/imported in Auto-Subliminal!**
 
 ```
+|-- aenum
 |-- babelfish
 |-- beautifulsoup4
     |-- html5lib (optional dependency)
