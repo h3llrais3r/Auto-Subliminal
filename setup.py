@@ -21,12 +21,10 @@ sys.path, remainder = sys.path[:1], sys.path[1:]
 site.addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
 
 # Insert libs that are only needed for certain python versions
-if PY34:
-    site.addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'libpy34')))
+if PY2:
+    site.addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'libpy2')))
 elif PY3:
     site.addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'libpy3')))
-elif PY2:
-    site.addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'libpy2')))
 else:
     pass
 
