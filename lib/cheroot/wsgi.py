@@ -125,7 +125,7 @@ class Gateway(server.Gateway):
 
     def get_environ(self):
         """Return a new environ dict targeting the given wsgi.version."""
-        raise NotImplementedError
+        raise NotImplementedError  # pragma: no cover
 
     def respond(self):
         """Process the current request.
@@ -404,7 +404,7 @@ class PathInfoDispatcher:
             # The apps list should be sorted by length, descending.
             if path.startswith(p + '/') or path == p:
                 environ = environ.copy()
-                environ['SCRIPT_NAME'] = environ['SCRIPT_NAME'] + p
+                environ['SCRIPT_NAME'] = environ.get('SCRIPT_NAME', '') + p
                 environ['PATH_INFO'] = path[len(p):]
                 return app(environ, start_response)
 
