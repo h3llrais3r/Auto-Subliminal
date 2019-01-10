@@ -20,7 +20,7 @@ def test_cache(monkeypatch):
     monkeypatch.setattr('autosubliminal.core.cache.SCAN_VIDEO_EXPIRATION_TIME', 1)
     filename = os.path.abspath(os.path.join(resource_path, 'test.autosubliminal.cache.dbm'))
     region.configure(backend='dogpile.cache.dbm', expiration_time=autosubliminal.core.cache.SCAN_VIDEO_EXPIRATION_TIME,
-                     arguments={'filename': filename, 'lock_factory': MutexFileLock})
+                     arguments={'filename': filename, 'lock_factory': MutexFileLock}, replace_existing_backend=True)
     region.set('KEY', 'VALUE')
     assert region.get('KEY') == 'VALUE'
     time.sleep(2)

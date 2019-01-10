@@ -18,6 +18,7 @@ TODO.txt
 *.db
 *.db.*
 *.dbm
+*.dbm.*
 
 # Config files
 config.properties*

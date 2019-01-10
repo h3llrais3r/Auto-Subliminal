@@ -19,9 +19,6 @@ log = logging.getLogger(__name__)
 # Expiration time for video scan
 SCAN_VIDEO_EXPIRATION_TIME = datetime.timedelta(days=1).total_seconds()
 
-# Mako cache location
-MAKO_CACHE_DIR = os.path.abspath(os.path.join(autosubliminal.CACHEDIR, 'mako'))
-
 
 # MutexFileLock: copied from subliminal.cli so we don't depend on subliminal for our cache
 class MutexFileLock(AbstractFileLock):
@@ -46,7 +43,8 @@ class MutexFileLock(AbstractFileLock):
 
 
 def clear_mako_cache():
-    shutil.rmtree(MAKO_CACHE_DIR, onerror=set_rw_and_remove)
+    mako_cache_dir = os.path.abspath(os.path.join(autosubliminal.CACHEDIR, 'mako'))
+    shutil.rmtree(mako_cache_dir, onerror=set_rw_and_remove)
 
 
 def cache_artwork(indexer_name, indexer_id, artwork_type, artwork_url, thumbnail=False):
