@@ -45,7 +45,7 @@ def cache_artwork(indexer_name, indexer_id, artwork_type, artwork_url, thumbnail
     try:
         img_data = requests.get(artwork_url).content
         file_path = get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=thumbnail)
-        with open(file_path, 'wb') as handler:
+        with open(file_path, mode='wb') as handler:
             handler.write(img_data)
     except Exception:
         log.exception('Unable to store artwork in cache')

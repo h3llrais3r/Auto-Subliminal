@@ -159,7 +159,7 @@ def get_embedded_subtitles(dirname, filename, log_scan=False):
     path = os.path.join(dirname, filename)
     try:
         if filename.endswith('.mkv'):
-            with open(path, 'rb') as f:
+            with open(path, mode='rb') as f:
                 mkv = MKV(f)
 
             # subtitle tracks

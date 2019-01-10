@@ -28,7 +28,7 @@ class Log(object):
     @cherrypy.expose(alias='clearLog')
     def clear_log(self):
         # Clear log file (open it in write mode and pass)
-        with open(autosubliminal.LOGFILE, 'w'):
+        with open(autosubliminal.LOGFILE, mode='w'):
             pass
         # Remove possible backup log files
         for f in [f for f in os.listdir('.') if os.path.isfile(f) and re.match(autosubliminal.LOGFILE + '.', f)]:

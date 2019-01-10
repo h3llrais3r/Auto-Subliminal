@@ -214,7 +214,7 @@ class CustomRotatingFileHandler(BaseRotatingHandler):
                 #######################################
                 shutil.copy(self.baseFilename, dfn)
                 # Clear base log file
-                with open(self.baseFilename, 'w'):
+                with open(self.baseFilename, mode='w'):
                     pass
                 #######################################
 
