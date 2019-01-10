@@ -154,9 +154,11 @@
                         <li>
                             <a href="${autosubliminal.WEBROOT}/system/flushLastDownloads"><i class="fa fa-times" aria-hidden="true"></i>&nbsp;Flush Downloaded</a>
                         </li>
-                        <li>
-                            <a href="${autosubliminal.WEBROOT}/system/flushLibrary"><i class="fa fa-times" aria-hidden="true"></i>&nbsp;Flush Library</a>
-                        </li>
+                        % if autosubliminal.LIBRARYMODE:
+                            <li>
+                                <a href="${autosubliminal.WEBROOT}/system/flushLibrary"><i class="fa fa-times" aria-hidden="true"></i>&nbsp;Flush Library</a>
+                            </li>
+                        %endif
                         <li class="divider"></li>
                         <li>
                             <a href="${autosubliminal.GITHUBURL}/issues" target="_blank"><i class="fa fa-github" aria-hidden="true"></i>&nbsp;Report issue</a>
