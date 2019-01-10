@@ -9,6 +9,7 @@ from autosubliminal.util.system import get_python_location, get_python_version_f
 
 python_executable = '/path/to/python/executable/python.exe'
 python_version = '2.7.15 (v2.7.15:ca079a3ea3, Apr 30 2018, 16:30:26) [MSC v.1500 64 bit (AMD64)]'
+python_version_info = (2, 7, 15, 'final', 0)
 
 
 def test_get_python_version_full(monkeypatch):
@@ -17,7 +18,7 @@ def test_get_python_version_full(monkeypatch):
 
 
 def test_get_python_version_strict(monkeypatch):
-    monkeypatch.setattr('sys.version', python_version)
+    monkeypatch.setattr('sys.version_info', python_version_info)
     assert get_python_version_strict() == StrictVersion('2.7.15')
 
 
