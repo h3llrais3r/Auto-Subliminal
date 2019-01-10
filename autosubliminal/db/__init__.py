@@ -245,6 +245,9 @@ def upgrade(from_version, to_version):
                 'CREATE TABLE movie_settings (imdb_id TEXT PRIMARY KEY, wanted_languages TEXT, refine INTEGER, '
                 'hearing_impaired INTEGER, utf8_encoding INTEGER)'
             )
+            # Update empty year values to NULL
+            cursor.execute('UPDATE last_downloads SET year = NULL WHERE year = ""')
+            cursor.execute('UPDATE wanted_items SET year = NULL WHERE year = ""')
             # Update database version
             cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (8, 7))
             connection.commit()
