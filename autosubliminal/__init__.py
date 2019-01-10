@@ -9,6 +9,7 @@ from six.moves import getcwd
 from autosubliminal import config, db, version
 from autosubliminal.core import logger
 from autosubliminal.indexer import MovieIndexer, ShowIndexer
+from autosubliminal.util.system import get_python_version_strict, get_stored_python_version, store_python_version
 
 # Config
 CONFIGFILE = None
@@ -50,6 +51,7 @@ DBVERSION = None
 DBTIMESTAMPFORMAT = None
 
 # Startup
+PYTHONVERSION = None
 EXECUTABLE = None
 ARGS = None
 DAEMON = None
@@ -187,7 +189,7 @@ def initialize():
         DEVELOPER, \
         TVDBAPIKEY, TVDBURL, IMDBURL, SHOWINDEXER, MOVIEINDEXER, \
         DBFILE, DBVERSION, DBTIMESTAMPFORMAT, \
-        DAEMON, STARTED, PID, UUID, \
+        PYTHONVERSION, DAEMON, STARTED, PID, UUID, \
         PATH, VIDEOPATHS, DEFAULTLANGUAGE, DEFAULTLANGUAGESUFFIX, ADDITIONALLANGUAGES, MANUALSEARCHWITHSCORING, \
         SCANDISKINTERVAL, CHECKSUBINTERVAL, CHECKVERSIONINTERVAL, CHECKVERSIONAUTOUPDATE, SCANEMBEDDEDSUBS, \
         SCANHARDCODEDSUBS, SKIPHIDDENDIRS, DETECTINVALIDSUBLANGUAGE, DETECTEDLANGUAGEPROBABILITY, MINVIDEOFILESIZE, \
@@ -216,6 +218,10 @@ def initialize():
 
     # Fake some entry points to get libraries working without installation
     _fake_entry_points()
+
+    # Check python version
+    PYTHONVERSION = get_python_version_strict()
+    python_version_changed = _check_python_version_change()
 
     # System settings
     PATH = os.path.abspath(getcwd())
@@ -258,10 +264,10 @@ def initialize():
     MOVIEMINMATCHSCOREDEFAULT = 90
 
     # Cache settings
-    _init_cache()
+    _init_cache(python_version_changed)
 
     # Subliminal settings
-    SUBLIMINALPROVIDERMANAGER = _init_subliminal()
+    SUBLIMINALPROVIDERMANAGER = _init_subliminal(python_version_changed)
     SUBLIMINALPROVIDERCONFIGS = {}
 
     # Langdetect settings
@@ -311,27 +317,44 @@ def _fake_entry_points():
     pkg_resources.working_set.add(distribution)
 
 
-def _init_cache():
+def _check_python_version_change():
+    """Check if the python version has changed or not."""
+    previous_python_version = get_stored_python_version()
+    current_python_version = get_python_version_strict()
+
+    python_version_changed = not previous_python_version or current_python_version != previous_python_version
+    if python_version_changed:
+        store_python_version(current_python_version)
+
+    return python_version_changed
+
+
+def _init_cache(replace):
     """
     Initialize internal cache.
     """
 
     # Imports
-    from autosubliminal.core.cache import MutexFileLock, region
+    from autosubliminal.core.cache import MutexFileLock, clear_mako_cache, region
 
     # Make sure the cache dir exists
     if not os.path.exists(CACHEDIR):
         os.makedirs(CACHEDIR)
+
+    # Clean mako cache
+    if replace:
+        clear_mako_cache()
 
     # Configure autosubliminal/dogpile cache
     # Use MutexFileLock otherwise it will not work due to fcntl module import error in windows
     # Do not reconfigure after a soft restart (without exiting main app) -> otherwise RegionAlreadyConfigured exception
     if not region.is_configured:
         cache_file = os.path.abspath(os.path.join(CACHEDIR, 'autosubliminal.cache.dbm'))
-        region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexFileLock})
+        region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexFileLock},
+                         replace_existing_backend=replace)
 
 
-def _init_subliminal():
+def _init_subliminal(replace):
     """
     Initialize subliminal.
     This must always be done AFTER the registration of our fake_entry_points.
@@ -350,7 +373,8 @@ def _init_subliminal():
     # Do not reconfigure after a soft restart (without exiting main app) -> otherwise RegionAlreadyConfigured exception
     if not region.is_configured:
         cache_file = os.path.abspath(os.path.join(CACHEDIR, 'subliminal.cache.dbm'))
-        region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexLock})
+        region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexLock},
+                         replace_existing_backend=replace)
 
     # Add our custom refiners to list of subliminal refiners
     manual_refiner = 'manual = autosubliminal.refiners.manual:refine'

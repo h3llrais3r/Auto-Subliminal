@@ -7,10 +7,10 @@ from mako.lookup import TemplateLookup
 from mako.template import Template
 
 import autosubliminal
+from autosubliminal.core.cache import MAKO_CACHE_DIR
 
-mako_path = os.path.abspath(os.path.join(autosubliminal.PATH, 'web/templates'))
-mako_cache = os.path.abspath(os.path.join(autosubliminal.CACHEDIR, 'mako'))
-mako_lookup = TemplateLookup(directories=[mako_path], module_directory=mako_cache)
+MAKO_TEMPLATES_DIR = os.path.abspath(os.path.join(autosubliminal.PATH, 'web/templates'))
+mako_lookup = TemplateLookup(directories=[MAKO_TEMPLATES_DIR], module_directory=MAKO_CACHE_DIR)
 
 
 class PageTemplate(Template):

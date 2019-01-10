@@ -3,6 +3,7 @@
 import datetime
 import logging
 import os
+import shutil
 
 import requests
 from dogpile.cache.backends.file import AbstractFileLock
@@ -11,11 +12,15 @@ from dogpile.util.readwrite_lock import ReadWriteMutex
 from six import text_type
 
 import autosubliminal
+from autosubliminal.util.common import set_rw_and_remove
 
 log = logging.getLogger(__name__)
 
-#: Expiration time for video scan
+# Expiration time for video scan
 SCAN_VIDEO_EXPIRATION_TIME = datetime.timedelta(days=1).total_seconds()
+
+# Mako cache location
+MAKO_CACHE_DIR = os.path.abspath(os.path.join(autosubliminal.CACHEDIR, 'mako'))
 
 
 # MutexFileLock: copied from subliminal.cli so we don't depend on subliminal for our cache
@@ -38,6 +43,10 @@ class MutexFileLock(AbstractFileLock):
 
     def release_write_lock(self):
         return self.mutex.release_write_lock()
+
+
+def clear_mako_cache():
+    shutil.rmtree(MAKO_CACHE_DIR, onerror=set_rw_and_remove)
 
 
 def cache_artwork(indexer_name, indexer_id, artwork_type, artwork_url, thumbnail=False):
