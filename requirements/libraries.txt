@@ -48,7 +48,7 @@ schema==0.6.8
 simplejson==3.16.0
 six==1.12.0
 smmap2==2.0.5
-soupsieve==1.6.2
+soupsieve==1.7
 stevedore==1.30.0
 git+https://github.com/Diaoul/subliminal.git@879c0c8d18618e32ad466bb63bd939edb268bc60#egg=subliminal
 tempora==1.14
