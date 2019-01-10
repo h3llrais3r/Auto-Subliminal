@@ -1,11 +1,11 @@
 <%!
-    import sys
     import os
     import platform
 
     import autosubliminal
     from autosubliminal import version
     from autosubliminal.core.enums import InstallType
+    from autosubliminal.util.system import get_python_location, get_python_version_full
 %>
 
 <%
@@ -75,12 +75,12 @@
 
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-2"><label>Python version</label></span>
-        <span class="col-xs-8 col-md-10 wrapped">${sys.version}</span>
+        <span class="col-xs-8 col-md-10 wrapped">${get_python_version_full()}</span>
     </div>
 
     <div class="form-group narrow">
         <span class="col-xs-4 col-md-2"><label>Python location</label></span>
-        <span class="col-xs-8 col-md-10 wrapped">${os.path.dirname(sys.executable)}</span>
+        <span class="col-xs-8 col-md-10 wrapped">${get_python_location()}</span>
     </div>
 
     <div class="form-group narrow">
