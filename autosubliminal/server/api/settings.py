@@ -21,6 +21,10 @@ class SettingsApi(RestResource):
     def get(self):
         """Get the list of settings for the frontend."""
         settings = {
+            'scanDisk': autosubliminal.SCANDISK.name,
+            'scanLibrary': autosubliminal.SCANLIBRARY.name,
+            'checkSub': autosubliminal.CHECKSUB.name,
+            'checkVersion': autosubliminal.CHECKVERSION.name,
             'tvdbUrl': autosubliminal.DEREFERURL + autosubliminal.TVDBURL,
             'imdbUrl': autosubliminal.DEREFERURL + autosubliminal.IMDBURL,
             'timestampFormat': autosubliminal.TIMESTAMPFORMAT,

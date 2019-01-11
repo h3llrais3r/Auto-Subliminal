@@ -4,14 +4,27 @@ from autosubliminal.server.api.settings import SettingsApi
 
 from tests.server.api.test_api import pickle_api_result
 
-settings_json = '{"imdbUrl": "http://www.dereferer.org/?http://www.imdb.com/title/", ' \
+settings_json = '{"checkSub": "SubChecker", ' \
+                '"checkVersion": "VersionChecker", ' \
+                '"imdbUrl": "http://www.dereferer.org/?http://www.imdb.com/title/", ' \
                 '"languages": [{"alpha2": "nl", "name": "Dutch"}], ' \
                 '"pathSeparator": "/", ' \
+                '"scanDisk": "DiskScanner", ' \
+                '"scanLibrary": "LibraryScanner", ' \
                 '"timestampFormat": "%d-%m-%Y %H:%M:%S", ' \
                 '"tvdbUrl": "http://www.dereferer.org/?http://thetvdb.com/?tab=series&id="}'
 
 
+class MyScheduler(object):
+    def __init__(self, name):
+        self.name = name
+
+
 def test_get_settings(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.SCANDISK', MyScheduler('DiskScanner'))
+    monkeypatch.setattr('autosubliminal.SCANLIBRARY', MyScheduler('LibraryScanner'))
+    monkeypatch.setattr('autosubliminal.CHECKSUB', MyScheduler('SubChecker'))
+    monkeypatch.setattr('autosubliminal.CHECKVERSION', MyScheduler('VersionChecker'))
     monkeypatch.setattr('autosubliminal.DEREFERURL', 'http://www.dereferer.org/?')
     monkeypatch.setattr('autosubliminal.TVDBURL', 'http://thetvdb.com/?tab=series&id=')
     monkeypatch.setattr('autosubliminal.IMDBURL', 'http://www.imdb.com/title/')
