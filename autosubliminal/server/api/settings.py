@@ -21,6 +21,7 @@ class SettingsApi(RestResource):
     def get(self):
         """Get the list of settings for the frontend."""
         settings = {
+            'webRoot': autosubliminal.WEBROOT,
             'scanDisk': autosubliminal.SCANDISK.name,
             'scanLibrary': autosubliminal.SCANLIBRARY.name,
             'checkSub': autosubliminal.CHECKSUB.name,

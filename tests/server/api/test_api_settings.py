@@ -12,7 +12,8 @@ settings_json = '{"checkSub": "SubChecker", ' \
                 '"scanDisk": "DiskScanner", ' \
                 '"scanLibrary": "LibraryScanner", ' \
                 '"timestampFormat": "%d-%m-%Y %H:%M:%S", ' \
-                '"tvdbUrl": "http://www.dereferer.org/?http://thetvdb.com/?tab=series&id="}'
+                '"tvdbUrl": "http://www.dereferer.org/?http://thetvdb.com/?tab=series&id=", ' \
+                '"webRoot": "mywebroot"}'
 
 
 class MyScheduler(object):
@@ -21,6 +22,7 @@ class MyScheduler(object):
 
 
 def test_get_settings(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.WEBROOT', 'mywebroot')
     monkeypatch.setattr('autosubliminal.SCANDISK', MyScheduler('DiskScanner'))
     monkeypatch.setattr('autosubliminal.SCANLIBRARY', MyScheduler('LibraryScanner'))
     monkeypatch.setattr('autosubliminal.CHECKSUB', MyScheduler('SubChecker'))
