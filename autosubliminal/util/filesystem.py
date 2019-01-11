@@ -200,7 +200,8 @@ def get_hardcoded_subtitles(dirname, filename):
     if os.path.exists(file_path):
         with codecs.open(file_path, mode='r', encoding='utf-8') as f:
             subtitles = f.readline().strip()
-            hardcoded_subtitle_languages = subtitles.split(',')  # Subs are comma separated on 1st line
+            if subtitles:
+                hardcoded_subtitle_languages = subtitles.split(',')  # Subs are comma separated on 1st line
 
     return [Subtitle(HARDCODED, language, path) for language in hardcoded_subtitle_languages]
 
