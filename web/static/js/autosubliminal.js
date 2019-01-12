@@ -9,6 +9,7 @@
  * ======================== */
 
 var autosubliminal = {
+    types: {},
     settings: {},
     notifications: {},
     websockets: {},
@@ -67,6 +68,127 @@ var autosubliminal = {
         return autosubliminal.BASE_URL + url;
     };
 
+    /* ========================
+     * Types (type definitions)
+     * ======================== */
+
+    var types = autosubliminal.types;
+
+    types.Settings = function () {
+        return {
+            developerMode: null,
+            webRoot: null,
+            scanDisk: null,
+            scanLibrary: null,
+            checkSub: null,
+            checkVersion: null,
+            tvdbUrl: null,
+            imdbUrl: null,
+            timestampFormat: null,
+            pathSeparator: null,
+            languages: null
+        };
+    };
+
+    // Websocket notification
+    types.WebsocketNotification = function () {
+        return {
+            type: autosubliminal.websockets.NOTIFICATION,
+            notification: {
+                message: null,
+                type: null,
+                sticky: null
+            }
+        };
+    };
+
+    // Websocket page reload event
+    types.WebsocketPageReloadEvent = function () {
+        return {
+            type: autosubliminal.websockets.EVENT,
+            event: {
+                type: autosubliminal.websockets.PAGE_RELOAD,
+                data: {
+                    name: null
+                }
+            }
+        };
+    };
+
+    // Websocket process started event
+    types.WebsocketProcessStartedEvent = function () {
+        return {
+            type: autosubliminal.websockets.EVENT,
+            event: {
+                type: autosubliminal.websockets.PROCESS_STARTED,
+                data: types.Process()
+            }
+        };
+    };
+
+    // Websocket process finished event
+    types.WebsocketProcessFinishedEvent = function () {
+        return {
+            type: autosubliminal.websockets.EVENT,
+            event: {
+                type: autosubliminal.websockets.PROCESS_FINISHED,
+                data: types.Process()
+            }
+        };
+    };
+
+    types.Process = function () {
+        return {
+            name: null,
+            interval: null,
+            active: null,
+            alive: null,
+            last_run: null,
+            next_run: null,
+            running: null
+        };
+    };
+
+    types.Show = function () {
+        return {
+            path: null,
+            tvdb_id: null,
+            title: null,
+            year: null,
+            overview: null,
+            poster: null,
+            banner: null,
+            settings: null,
+            total_subtitles_wanted: null,
+            total_subtitles_missing: null,
+            total_subtitles_available: null,
+            files: null
+        };
+    };
+
+    types.Movie = function () {
+        return {
+            path: null,
+            imdb_id: null,
+            title: null,
+            year: null,
+            overview: null,
+            poster: null,
+            settings: null,
+            total_subtitles_wanted: null,
+            total_subtitles_missing: null,
+            total_subtitles_available: null,
+            files: null
+        };
+    };
+
+    types.Alpha2Language = function () {
+        return {
+            alpha2: null,
+            name: null
+        };
+    };
+
     /* ========
      * Settings
      * ======== */
@@ -80,14 +202,14 @@ var autosubliminal = {
     settings.loadSettings = function () {
         $.get(autosubliminal.getUrl('/api/settings'), function (data) {
             if (!jQuery.isEmptyObject(data)) {
-                autosubliminal.DEVELOPER_MODE = data['developerMode'];
-                autosubliminal.SCAN_DISK = data['scanDisk'];
-                autosubliminal.SCAN_LIBRARY = data['scanLibrary'];
-                autosubliminal.CHECK_SUB = data['checkSub'];
-                autosubliminal.CHECK_VERSION = data['checkVersion'];
-                autosubliminal.TVDB_URL = data['tvdbUrl'];
-                autosubliminal.IMDB_URL = data['imdbUrl'];
-                autosubliminal.TIMESTAMP_FORMAT = data['timestampFormat'];
+                autosubliminal.DEVELOPER_MODE = data.developerMode;
+                autosubliminal.SCAN_DISK = data.scanDisk;
+                autosubliminal.SCAN_LIBRARY = data.scanLibrary;
+                autosubliminal.CHECK_SUB = data.checkSub;
+                autosubliminal.CHECK_VERSION = data.checkVersion;
+                autosubliminal.TVDB_URL = data.tvdbUrl;
+                autosubliminal.IMDB_URL = data.imdbUrl;
+                autosubliminal.TIMESTAMP_FORMAT = data.timestampFormat;
                 autosubliminal.DATE_FORMAT = autosubliminal.TIMESTAMP_FORMAT.split(' ')[0];
                 autosubliminal.TIME_FORMAT = autosubliminal.TIMESTAMP_FORMAT.split(' ')[1];
                 var datePattern = autosubliminal.DATE_FORMAT.match(/[Ymd]+/g).join('');
@@ -98,8 +220,8 @@ var autosubliminal = {
                 } else if ('dmY' == datePattern) {
                     autosubliminal.TABLESORTER_DATE_FORMAT = 'ddmmyyyy';
                 }
-                autosubliminal.PATH_SEPARTOR = data['pathSeparator'];
-                autosubliminal.LANGUAGES = data['languages'];
+                autosubliminal.PATH_SEPARTOR = data.pathSeparator;
+                autosubliminal.LANGUAGES = data.languages;
 
                 // Publish the settings loaded event
                 PubSub.publish(settings.LOADED, null);
@@ -185,10 +307,10 @@ var autosubliminal = {
 
     // Function to handle a websocket message
     var handleWebsocketMessage = function (message) {
-        if (message['type'] == websockets.NOTIFICATION) {
-            handleWebsocketNotification(message['notification']);
-        } else if (message['type'] == websockets.EVENT) {
-            handleWebsocketEvent(message['event']);
+        if (message.type == websockets.NOTIFICATION) {
+            handleWebsocketNotification(message.notification);
+        } else if (message.type == websockets.EVENT) {
+            handleWebsocketEvent(message.event);
         } else {
             console.error('Unsupported message: ' + message)
         }
@@ -196,9 +318,9 @@ var autosubliminal = {
 
     // Function to handle a websocket notification
     var handleWebsocketNotification = function (notification) {
-        var message = notification['message'];
-        var type = notification['type'];
-        var sticky = notification['sticky'];
+        var message = notification.message;
+        var type = notification.type;
+        var sticky = notification.sticky;
         // Sticky location - use stack_context
         if (sticky) {
             new PNotify({
@@ -208,7 +330,7 @@ var autosubliminal = {
                 hide: false, // Disable fading
                 width: 'auto',
                 addclass: 'container stack-context',
-                stack: stackContext,
+                stack: notifications.stackContext,
                 desktop: {
                     desktop: false // Disable desktop
                 }
@@ -226,12 +348,12 @@ var autosubliminal = {
 
     // Function to handle a websocket event
     var handleWebsocketEvent = function (event) {
-        var type = event['type'];
-        var data = event['data'];
-        if (type == websockets.PAGE_RELOAD) {
-            if (!jQuery.isEmptyObject(data)) {
+        var eventType = event.type;
+        var eventData = event.data;
+        if (eventType == websockets.PAGE_RELOAD) {
+            if (!jQuery.isEmptyObject(eventData)) {
                 // Only reload when we are actually on the specified page
-                if (window.location.pathname.indexOf('/' + data['name']) >= 0) {
+                if (window.location.pathname.indexOf('/' + eventData.name) >= 0) {
                     // Add delay of 1s to be sure it's not triggered immediately after a page redirect (or load)
                     // When redirecting and loading really fast after each other, it's possible that your websocket is not initialized in time and your websocket message is lost
                     setTimeout(function () {
@@ -246,38 +368,38 @@ var autosubliminal = {
                     window.location.reload();
                 }, 1000);
             }
-        } else if (type == websockets.PROCESS_STARTED) {
-            if (!jQuery.isEmptyObject(data)) {
+        } else if (eventType == websockets.PROCESS_STARTED) {
+            if (!jQuery.isEmptyObject(eventData)) {
                 // Publish the event asynchronously
-                PubSub.publish(websockets.PROCESS_STARTED, data);
+                PubSub.publish(websockets.PROCESS_STARTED, eventData);
                 // Update footer
                 var scanDiskNextRun = $('#scanDiskNextRun');
                 var checkSubNextRun = $('#checkSubNextRun');
-                if (data['name'] == autosubliminal.SCAN_DISK) {
+                if (eventData.name == autosubliminal.SCAN_DISK) {
                     // Mark disk scanner as running in footer
                     scanDiskNextRun.countdown('stop');
                     scanDiskNextRun.text('Running...');
-                } else if (data['name'] == autosubliminal.CHECK_SUB) {
+                } else if (eventData.name == autosubliminal.CHECK_SUB) {
                     // Mark sub checker as running in footer
                     checkSubNextRun.countdown('stop');
                     checkSubNextRun.text('Running...');
                 }
             }
-        } else if (type == websockets.PROCESS_FINISHED) {
-            if (!jQuery.isEmptyObject(data)) {
+        } else if (eventType == websockets.PROCESS_FINISHED) {
+            if (!jQuery.isEmptyObject(eventData)) {
                 // Publish the event asynchronously
-                PubSub.publish(websockets.PROCESS_FINISHED, data);
+                PubSub.publish(websockets.PROCESS_FINISHED, eventData);
                 // Update footer
-                if (data['name'] == autosubliminal.SCAN_DISK) {
+                if (eventData.name == autosubliminal.SCAN_DISK) {
                     // Restart disk scanner countdown in footer
-                    $('#scanDiskNextRun').countdown(data['next_run']);
-                } else if (data['name'] == autosubliminal.CHECK_SUB) {
+                    $('#scanDiskNextRun').countdown(eventData.next_run);
+                } else if (eventData.name == autosubliminal.CHECK_SUB) {
                     // Restart disk scanner countdown in footer
-                    $('#checkSubNextRun').countdown(data['next_run']);
+                    $('#checkSubNextRun').countdown(eventData.next_run);
                 }
             }
         } else {
-            console.error('Unsupported event: ' + type);
+            console.error('Unsupported event type: ' + eventType);
         }
     };
 
