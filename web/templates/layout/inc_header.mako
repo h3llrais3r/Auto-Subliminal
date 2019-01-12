@@ -16,5 +16,5 @@
 
 <script type="text/javascript">
     // Global webroot variable (can be used in Javascript files)
-    var webroot = "${autosubliminal.WEBROOT}";
+    var webRoot = '${autosubliminal.WEBROOT}';
 </script>

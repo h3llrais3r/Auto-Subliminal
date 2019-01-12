@@ -1,10 +1,20 @@
 /**
- * Javascript needed on the error pages
+ * Javascript needed on the error page
  */
 
 'use strict';
 
-// Setup the traceback link
-$('#tracebackLink').on('click', function () {
-    $('#traceback').toggleClass('hidden');
-});
+(function (autosubliminal) {
+
+    'use strict';
+
+    /* ==============
+     * Initialization
+     * ============== */
+
+    // Setup the traceback link
+    $('#tracebackLink').on('click', function () {
+        $('#traceback').toggleClass('hidden');
+    });
+
+}(autosubliminal));

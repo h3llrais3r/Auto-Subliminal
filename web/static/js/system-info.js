@@ -4,8 +4,18 @@
 
 'use strict';
 
-// Setup the info tabs
-$('#infoTabs a').on('click', function (event) {
-    event.preventDefault();
-    $(this).tab('show');
-});
+(function (autosubliminal) {
+
+    'use strict';
+
+    /* ==============
+     * Initialization
+     * ============== */
+
+    // Setup the info tabs
+    $('#infoTabs').find('a').on('click', function (event) {
+        event.preventDefault();
+        $(this).tab('show');
+    });
+
+}(autosubliminal));

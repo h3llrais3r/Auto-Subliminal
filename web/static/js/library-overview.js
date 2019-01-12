@@ -4,59 +4,70 @@
 
 'use strict';
 
-// Wait until settings are loaded
-PubSub.subscribe(SETTINGS_LOADED, settingsLoaded);
+(function (autosubliminal) {
 
-// Init after settings are loaded
-function init() {
-    // Check if the library scanner is running
-    checkLibraryScannerRunning();
+    'use strict';
 
-    // Subscribe to library scanner events
-    PubSub.subscribe(PROCESS_STARTED, libraryScannerStartedEventSubscriber);
-    PubSub.subscribe(PROCESS_FINISHED, libraryScannerFinishedEventSubscriber);
+    /* ==============
+     * Initialization
+     * ============== */
 
-    // Init vue component
-    Vue.component('library-overview', {
-        data: function () {
-            return {
-                showsOverview: null,
-                moviesOverview: null
-            }
-        },
-        created: function () {
-            //console.log('created');
-        },
-        mounted: function () {
-            //console.log('mounted');
-            this.getShowsOverview();
-            this.getMoviesOverview();
-        },
-        updated: function () {
-            //console.log('updated');
-            styleProgressBar();
-        },
-        methods: {
-            getShowsOverview: function () {
-                var self = this;
-                $.get(getUrl('/api/shows/overview'), function (data) {
-                    self.showsOverview = data;
-                });
+    var init = function () {
+
+        // Check if the library scanner is running
+        autosubliminal.library.checkScannerRunning();
+
+        // Subscribe to library scanner events
+        PubSub.subscribe(autosubliminal.websockets.PROCESS_STARTED, autosubliminal.library.scannerStartedEventSubscriber);
+        PubSub.subscribe(autosubliminal.websockets.PROCESS_FINISHED, autosubliminal.library.scannerFinishedEventSubscriber);
+
+        // Init vue component
+        window.Vue.component('library-overview', {
+            data: function () {
+                return {
+                    showsOverview: null,
+                    moviesOverview: null
+                }
             },
-            getMoviesOverview: function () {
-                var self = this;
-                $.get(getUrl('/api/movies/overview'), function (data) {
-                    self.moviesOverview = data;
-                });
+            created: function () {
+                //console.log('created');
             },
-            getProgressPercentage: function (overview) {
-                return overview.total_subtitles_available / overview.total_subtitles_wanted * 100;
+            mounted: function () {
+                //console.log('mounted');
+                this.getShowsOverview();
+                this.getMoviesOverview();
+            },
+            updated: function () {
+                //console.log('updated');
+                autosubliminal.vue.styleProgressBar();
+            },
+            methods: {
+                getShowsOverview: function () {
+                    var self = this;
+                    $.get(autosubliminal.getUrl('/api/shows/overview'), function (data) {
+                        self.showsOverview = data;
+                    });
+                },
+                getMoviesOverview: function () {
+                    var self = this;
+                    $.get(autosubliminal.getUrl('/api/movies/overview'), function (data) {
+                        self.moviesOverview = data;
+                    });
+                },
+                getProgressPercentage: function (overview) {
+                    return overview.total_subtitles_available / overview.total_subtitles_wanted * 100;
+                }
             }
-        }
-    });
+        });
 
-    // Init vue app
-    new Vue({
-        el: '#app'
-    });
-}
+        // Init vue app
+        new window.Vue({
+            el: '#app'
+        });
+
+    };
+
+    // Wait until settings are loaded to start initialization
+    PubSub.subscribe(autosubliminal.settings.LOADED, init);
+
+}(autosubliminal));
