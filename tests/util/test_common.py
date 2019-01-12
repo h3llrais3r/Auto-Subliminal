@@ -104,12 +104,17 @@ def test_to_obj():
     value_0 = 0
     value_1 = 1
     value_2 = '2'
+    value_empty = ''
     assert to_obj(None) is None
     assert to_obj(None, default_value='') == ''
     assert to_obj(value_0) == '0'
     assert to_obj(value_0, obj_type=bool) is False
     assert to_obj(value_1) == '1'
     assert to_obj(value_2, obj_type=int) == 2
+    assert to_obj(value_empty) == ''
+    assert to_obj(value_empty, obj_type=int) is None
+    assert to_obj(value_empty, obj_type=int, default_value=0) == 0
+    assert to_obj(value_empty, obj_type=bool) is False
 
 
 def test_to_text():

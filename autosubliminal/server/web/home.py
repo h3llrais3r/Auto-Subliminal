@@ -26,7 +26,7 @@ class Home(object):
         # Get wanted item
         wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
         # Update all keys that are passed
-        for key in kwargs if wanted_item else None:
+        for key in kwargs:
             wanted_item.set_attr(key, kwargs[key])
         # Only return updatable fields
         # These values will be shown in the view through jquery, so apply the display_value() on it!

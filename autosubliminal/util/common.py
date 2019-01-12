@@ -86,7 +86,10 @@ def to_obj(value, obj_type=text_type, default_value=None):
     By default it converts it to text value.
     Optionally, it can be converted to the specified object type.
     """
-    return obj_type(value) if value is not None else default_value
+    try:
+        return obj_type(value) if value is not None else default_value
+    except Exception:
+        return default_value
 
 
 def to_text(obj, default_value=None):
@@ -115,11 +118,11 @@ def to_list(value, obj_type=text_type, default_value=None):
     """
     if value is not None:
         if isinstance(value, list):
-            return [obj_type(v) for v in value]
+            return [to_obj(v, obj_type=obj_type) for v in value]
         elif ',' in text_type(value):
-            return [obj_type(v) for v in text_type(value).split(',')]
+            return [to_obj(v, obj_type=obj_type) for v in text_type(value).split(',')]
         else:
-            return [obj_type(value)] if text_type(value) != '' else default_value
+            return [to_obj(value, obj_type=obj_type)] if text_type(value) != '' else default_value
     else:
         return default_value
 
@@ -134,9 +137,9 @@ def to_obj_or_list(value, obj_type=text_type, default_value=None):
     """
     if value is not None:
         if isinstance(value, list) or ',' in text_type(value):
-            return to_list(value, obj_type=obj_type)
+            return to_list(value, obj_type=obj_type, default_value=default_value)
         else:
-            return obj_type(value)
+            return to_obj(value, obj_type=obj_type, default_value=default_value)
     else:
         return default_value
 
