@@ -6,6 +6,7 @@ from tests.server.api.test_api import pickle_api_result
 
 settings_json = '{"checkSub": "SubChecker", ' \
                 '"checkVersion": "VersionChecker", ' \
+                '"developerMode": true, ' \
                 '"imdbUrl": "http://www.dereferer.org/?http://www.imdb.com/title/", ' \
                 '"languages": [{"alpha2": "nl", "name": "Dutch"}], ' \
                 '"pathSeparator": "/", ' \
@@ -22,6 +23,7 @@ class MyScheduler(object):
 
 
 def test_get_settings(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.DEVELOPER', True)
     monkeypatch.setattr('autosubliminal.WEBROOT', 'mywebroot')
     monkeypatch.setattr('autosubliminal.SCANDISK', MyScheduler('DiskScanner'))
     monkeypatch.setattr('autosubliminal.SCANLIBRARY', MyScheduler('LibraryScanner'))
