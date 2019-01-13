@@ -7,7 +7,7 @@
  *********************/
 
 html, body {
-    background-color: #eeeeee;
+  background-color: #eeeeee;
 }
 
 /********************
@@ -15,39 +15,39 @@ html, body {
  ********************/
 
 textarea {
-    resize: vertical;
+  resize: vertical;
 }
 
 /******************
  * NAVBAR STYLING *
  ******************/
 nav {
-    min-width: 380px; /* Make sure the navbar does not become higher when screensize is too low */
+  min-width: 380px; /* Make sure the navbar does not become higher when screensize is too low */
 }
 
 /* Align navbar brand on all screen sizes */
 .navbar .navbar-brand {
-    margin-left: 0px !important;
+  margin-left: 0px !important;
 }
 
 @media (max-width: 767px) {
-    .navbar .navbar-brand {
-        margin-left: 15px !important;
-    }
+  .navbar .navbar-brand {
+    margin-left: 15px !important;
+  }
 }
 
 /* Resize brand to 40px (instead of 50px) on smaller screens */
 @media (max-width: 991px) {
-    .navbar-brand img {
-        height: 40px;
-        position: absolute;
-        top: 5px;
-    }
+  .navbar-brand img {
+    height: 40px;
+    position: absolute;
+    top: 5px;
+  }
 }
 
 .navbar-footer-small {
-    min-height: 0;
-    padding: 5px 0px;
+  min-height: 0;
+  padding: 5px 0px;
 }
 
 /*********************
@@ -55,13 +55,13 @@ nav {
  *********************/
 
 .jumbotron-global {
-    background-color: #eeeeee;
-    margin-bottom: 0px;
-    padding-top: 48px; /* Keep same bootstrap jumbotron padding when resizing screensize < 768px */
+  background-color: #eeeeee;
+  margin-bottom: 0px;
+  padding-top: 48px; /* Keep same bootstrap jumbotron padding when resizing screensize < 768px */
 }
 
 .jumbotron-body {
-    background-color: #eeeeee;
+  background-color: #eeeeee;
 }
 
 /*********************
@@ -69,7 +69,7 @@ nav {
  *********************/
 
 a:hover, a:active, a:focus, a:visited > .fa {
-    text-decoration: none; /* Remove underline after icon on hover, active, focus and visited */
+  text-decoration: none; /* Remove underline after icon on hover, active, focus and visited */
 }
 
 /********************
@@ -77,11 +77,11 @@ a:hover, a:active, a:focus, a:visited > .fa {
  ********************/
 
 .dropdown-toggle {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .dropdown-toggle:hover, .dropdown-toggle:active, .dropdown-toggle:focus, .dropdown-toggle:visited {
-    text-decoration: none; /* Remove underline after icon on hover, active, focus and visited */
+  text-decoration: none; /* Remove underline after icon on hover, active, focus and visited */
 }
 
 /*************************
@@ -89,73 +89,73 @@ a:hover, a:active, a:focus, a:visited > .fa {
  *************************/
 
 .dropdown-menu, .dropdown-hoverintent {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .dropdown-menu.info-list {
-    padding: 10px 10px;
-    white-space: nowrap;
-    font-weight: normal;
-    font-style: italic;
+  padding: 10px 10px;
+  white-space: nowrap;
+  font-weight: normal;
+  font-style: italic;
 }
 
 .dropdown-menu.info-list .info-list-label {
-    font-weight: bold;
-    font-style: normal;
+  font-weight: bold;
+  font-style: normal;
 }
 
 .dropdown-menu-inverse {
-    background-color: #222222;
-    border-color: #080808;
+  background-color: #222222;
+  border-color: #080808;
 }
 
 .dropdown-menu-inverse > li > a {
-    color: #999999;
+  color: #999999;
 }
 
 .dropdown-menu-inverse > li > a:hover {
-    background-color: #ffffff;
-    color: #000000;
+  background-color: #ffffff;
+  color: #000000;
 }
 
 .dropdown-menu-inverse > .divider {
-    background-color: #000000;
+  background-color: #000000;
 }
 
 .dropdown-menu.has-tip {
-    margin-top: 8px;
+  margin-top: 8px;
 }
 
 .dropdown-menu.has-tip:before {
-    position: absolute;
-    top: -6px;
-    left: 1px;
-    content: "";
-    border-right: 7px solid transparent;
-    border-left: 7px solid transparent;
-    border-bottom: 7px solid rgba(0, 0, 0, 0.2);
-    display: inline-block;
+  position: absolute;
+  top: -6px;
+  left: 1px;
+  content: "";
+  border-right: 7px solid transparent;
+  border-left: 7px solid transparent;
+  border-bottom: 7px solid rgba(0, 0, 0, 0.2);
+  display: inline-block;
 }
 
 .dropdown-menu.has-tip:after {
-    position: absolute;
-    top: -5px;
-    left: 2px;
-    content: '';
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-bottom: 6px solid #ffffff;
-    display: inline-block;
+  position: absolute;
+  top: -5px;
+  left: 2px;
+  content: '';
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid #ffffff;
+  display: inline-block;
 }
 
 .dropdown-menu.has-tip.anchor-right:before {
-    left: auto;
-    right: 1px;
+  left: auto;
+  right: 1px;
 }
 
 .dropdown-menu.has-tip.anchor-right:after {
-    left: auto;
-    right: 2px;
+  left: auto;
+  right: 2px;
 }
 
 /*****************
@@ -163,20 +163,20 @@ a:hover, a:active, a:focus, a:visited > .fa {
  *****************/
 
 .modal-dialog {
-    position: absolute;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    -ms-transform: translate(-50%, -50%) !important;
-    -webkit-transform: translate(-50%, -50%) !important;
+  position: absolute;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  -ms-transform: translate(-50%, -50%) !important;
+  -webkit-transform: translate(-50%, -50%) !important;
 }
 
 /* Style modal on small devices */
 @media (max-width: 767px) {
-    .modal-dialog {
-        width: 100%;
-        margin: 0px;
-    }
+  .modal-dialog {
+    width: 100%;
+    margin: 0px;
+  }
 }
 
 /***********************
@@ -193,26 +193,26 @@ a:hover, a:active, a:focus, a:visited > .fa {
 
 /* Hide the checkbox itself */
 .fa-checkbox input[type=checkbox] {
-    display: none;
+  display: none;
 }
 
 /* Label styling */
 .fa-checkbox input[type=checkbox] + label {
-    font-weight: normal;
+  font-weight: normal;
 }
 
 /* Unchecked icon styling */
 .fa-checkbox input[type=checkbox] + label:before {
-    font-family: FontAwesome;
-    display: inline-block;
-    content: "\f096";
-    letter-spacing: 7px;
+  font-family: FontAwesome;
+  display: inline-block;
+  content: "\f096";
+  letter-spacing: 7px;
 }
 
 /* Checked icon styling */
 .fa-checkbox input[type=checkbox]:checked + label:before {
-    content: "\f046";
-    letter-spacing: 5px;
+  content: "\f046";
+  letter-spacing: 5px;
 }
 
 /*******************
@@ -220,11 +220,11 @@ a:hover, a:active, a:focus, a:visited > .fa {
  *******************/
 
 .ui-pnotify.stack-context {
-    position: static;
-    /*center align*/
-    margin-left: auto;
-    margin-right: auto;
-    text-wrap: none;
+  position: static;
+  /*center align*/
+  margin-left: auto;
+  margin-right: auto;
+  text-wrap: none;
 }
 
 /*****************
@@ -233,65 +233,65 @@ a:hover, a:active, a:focus, a:visited > .fa {
 
 /* Always use bootstrap 'table' class by default on all tables to apply our styling! */
 table.table {
-    border: 1px solid #dddddd;
+  border: 1px solid #dddddd;
 }
 
 table.table thead tr th, table tfoot tr th {
-    background-color: #eeeeee;
-    border: 1px solid #dddddd;
-    padding: 5px 17px 5px 4px;
-    vertical-align: middle;
+  background-color: #eeeeee;
+  border: 1px solid #dddddd;
+  padding: 5px 17px 5px 4px;
+  vertical-align: middle;
 }
 
 table.table.table-no-column-borders thead th, table tfoot th {
-    border: none;
-    border-bottom: 1px solid #dddddd;;
+  border: none;
+  border-bottom: 1px solid #dddddd;;
 }
 
 /* Do not foresee space for sort icon */
 table.table.table-no-sort thead th, table tfoot th {
-    padding-right: 4px;
+  padding-right: 4px;
 }
 
 table.table tbody tr td {
-    border: 1px dotted #eeeeee;
-    vertical-align: middle;
+  border: 1px dotted #eeeeee;
+  vertical-align: middle;
 }
 
 table.table.table-no-column-borders tbody tr td {
-    border: none;
+  border: none;
 }
 
 /* Inactive rows - grey out and set background color */
 table.table tbody tr.inactive td {
-    color: rgb(0, 0, 0);
-    color: rgba(0, 0, 0, 0.5);
-    background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  color: rgba(0, 0, 0, 0.5);
+  background-color: #ffffff;
 }
 
 /* Inactive rows - grey out underlying items */
 table.table tbody tr.inactive td * {
-    color: rgb(0, 0, 0);
-    color: rgba(0, 0, 0, 0.5);
+  color: rgb(0, 0, 0);
+  color: rgba(0, 0, 0, 0.5);
 }
 
 /* Inactive rows - grey out images (rgba has no effect on images, so use opacity instead) */
 table.table tbody tr.inactive td img {
-    opacity: 0.5;
+  opacity: 0.5;
 }
 
 /* Striped settings by adding 'table-striped' class -> based on bootstrap classes */
 table.table.table-striped > tbody > tr:nth-of-type(even) {
-    background-color: #f6f6f6;
+  background-color: #f6f6f6;
 }
 
 table.table.table-striped > tbody > tr:nth-of-type(odd) {
-    background-color: #fafafa;
+  background-color: #fafafa;
 }
 
 /* Hover settings by adding 'table-hover' class -> based on bootstrap classes */
 table.table.table-hover > tbody > tr:hover {
-    background-color: #f3f3f3;
+  background-color: #f3f3f3;
 }
 
 /***********************
@@ -299,43 +299,43 @@ table.table.table-hover > tbody > tr:hover {
  ***********************/
 
 table.tablesorter thead tr .tablesorter-header {
-    /* black (unsorted) double arrow (with spacing!) */
-    background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
-    /* background-image: url(../images/vendor/tablesorter/black-unsorted.gif); */
-    background-repeat: no-repeat;
-    background-position: center right;
-    vertical-align: middle;
-    cursor: pointer;
+  /* black (unsorted) double arrow (with spacing!) */
+  background-image: url(data:image/gif;base64,R0lGODlhFQAJAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAkAAAIXjI+AywnaYnhUMoqt3gZXPmVg94yJVQAAOw==);
+  /* background-image: url(../images/vendor/tablesorter/black-unsorted.gif); */
+  background-repeat: no-repeat;
+  background-position: center right;
+  vertical-align: middle;
+  cursor: pointer;
 }
 
 table.tablesorter thead tr .tablesorter-headerAsc {
-    /* black asc arrow (with spacing!) */
-    background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
-    /* background-image: url(../images/vendor/tablesorter/black-asc.gif); */
-    background-color: #dddddd;
+  /* black asc arrow (with spacing!) */
+  background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
+  /* background-image: url(../images/vendor/tablesorter/black-asc.gif); */
+  background-color: #dddddd;
 }
 
 table.tablesorter thead tr .tablesorter-headerDesc {
-    /* black desc arrow (with spacing!) */
-    background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
-    /* background-image: url(../images/vendor/tablesorter/black-desc.gif); */
-    background-color: #dddddd;
+  /* black desc arrow (with spacing!) */
+  background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
+  /* background-image: url(../images/vendor/tablesorter/black-desc.gif); */
+  background-color: #dddddd;
 }
 
 table.tablesorter thead tr .sorter-false {
-    background-image: none;
-    cursor: default;
-    padding: 4px;
+  background-image: none;
+  cursor: default;
+  padding: 4px;
 }
 
 /* Needed to get the filtering working. */
 /* rows hidden by filtering (needed for child rows) */
 table.tablesorter .filtered {
-    display: none;
+  display: none;
 }
 
 .tablesorter-pager select {
-    border-radius: 3px;
+  border-radius: 3px;
 }
 
 /* Copied from https://mottie.github.io/tablesorter/docs/example-widget-reflow.html#required_css */
@@ -344,56 +344,56 @@ table.tablesorter .filtered {
 /* REQUIRED CSS: change your reflow breakpoint here (35em below) */
 @media ( max-width: 48em ) {
 
-    /* uncomment out the line below if you don't want the sortable headers to show */
-    /* table.ui-table-reflow thead { display: none; } */
-    /* css for reflow & reflow2 widgets */
-    .ui-table-reflow td,
-    .ui-table-reflow th {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        float: right;
-        /* if not using the stickyHeaders widget (not the css3 version)
-         * the "!important" flag, and "height: auto" can be removed */
-        width: 100% !important;
-        height: auto !important;
-    }
+  /* uncomment out the line below if you don't want the sortable headers to show */
+  /* table.ui-table-reflow thead { display: none; } */
+  /* css for reflow & reflow2 widgets */
+  .ui-table-reflow td,
+  .ui-table-reflow th {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: right;
+    /* if not using the stickyHeaders widget (not the css3 version)
+     * the "!important" flag, and "height: auto" can be removed */
+    width: 100% !important;
+    height: auto !important;
+  }
 
-    /* reflow widget only */
-    .ui-table-reflow tbody td[data-title]:before {
-        color: #469;
-        font-size: .9em;
-        content: attr(data-title);
-        float: left;
-        width: 50%;
-        white-space: pre-wrap;
-        vertical-align: bottom;
-        display: inline-block;
-    }
+  /* reflow widget only */
+  .ui-table-reflow tbody td[data-title]:before {
+    color: #469;
+    font-size: .9em;
+    content: attr(data-title);
+    float: left;
+    width: 50%;
+    white-space: pre-wrap;
+    vertical-align: bottom;
+    display: inline-block;
+  }
 
-    /* reflow2 widget only */
-    table.ui-table-reflow .ui-table-cell-label.ui-table-cell-label-top {
-        display: block;
-        padding: .4em 0;
-        margin: .4em 0;
-        text-transform: uppercase;
-        font-size: .9em;
-        font-weight: 400;
-    }
+  /* reflow2 widget only */
+  table.ui-table-reflow .ui-table-cell-label.ui-table-cell-label-top {
+    display: block;
+    padding: .4em 0;
+    margin: .4em 0;
+    text-transform: uppercase;
+    font-size: .9em;
+    font-weight: 400;
+  }
 
-    table.ui-table-reflow .ui-table-cell-label {
-        padding: .4em;
-        min-width: 30%;
-        display: inline-block;
-        margin: -.4em 1em -.4em -.4em;
-    }
+  table.ui-table-reflow .ui-table-cell-label {
+    padding: .4em;
+    min-width: 30%;
+    display: inline-block;
+    margin: -.4em 1em -.4em -.4em;
+  }
 }
 
 /* end media query */
 
 /* reflow2 widget */
 .ui-table-reflow .ui-table-cell-label {
-    display: none;
+  display: none;
 }
 
 /* End copy */
@@ -403,18 +403,18 @@ table.tablesorter .filtered {
  *********************/
 
 .form-group.narrow {
-    margin-top: 5px;
-    margin-bottom: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .form-group.section-title {
-    margin-top: 10px;
-    margin-bottom: 15px;
+  margin-top: 10px;
+  margin-bottom: 15px;
 }
 
 .form-group .checkbox-inline.aligned {
-    padding-top: 0px;
-    margin-bottom: 5px;
+  padding-top: 0px;
+  margin-bottom: 5px;
 }
 
 /************************
@@ -422,24 +422,24 @@ table.tablesorter .filtered {
  ************************/
 
 .container-manualsearch {
-    width: 750px;
-    text-align: center;
-    margin: 0px;
+  width: 750px;
+  text-align: center;
+  margin: 0px;
 }
 
 .container-manualsearch .subtitle-action:hover, .container-manualsearch .subtitle-action:active, .container-manualsearch .subtitle-action:focus, .container-manualsearch .subtitle-action:visited {
-    text-decoration: none; /* Remove underline after icon on hover, active, focus and visited */
+  text-decoration: none; /* Remove underline after icon on hover, active, focus and visited */
 }
 
 .container-manualsearch .subtitle-preview {
-    height: 100px;
-    overflow: scroll;
+  height: 100px;
+  overflow: scroll;
 }
 
 .container-manualsearch-link {
-    text-decoration: none !important;
-    font-weight: bold;
-    white-space: nowrap;
+  text-decoration: none !important;
+  font-weight: bold;
+  white-space: nowrap;
 }
 
 /****************************
@@ -447,31 +447,31 @@ table.tablesorter .filtered {
  ****************************/
 
 .overview-container {
-    border: 1px solid #101010;
-    border-radius: 5px;
-    margin: 15px 0px;
+  border: 1px solid #101010;
+  border-radius: 5px;
+  margin: 15px 0px;
 }
 
 .overview-container > div {
-    background-color: #333333;
-    border-radius: 3px;
-    padding: 15px;
+  background-color: #333333;
+  border-radius: 3px;
+  padding: 15px;
 }
 
 .overview-data {
-    padding: 5px;
-    color: #ffffff;
+  padding: 5px;
+  color: #ffffff;
 }
 
 /* Align left on smaller screens, even when it's set to align right */
 @media (max-width: 767px) {
-    .overview-data .text-right {
-        text-align: left;
-    }
+  .overview-data .text-right {
+    text-align: left;
+  }
 }
 
 .overview-image {
-    width: 100%;
+  width: 100%;
 }
 
 /******************************
@@ -479,82 +479,82 @@ table.tablesorter .filtered {
  *****************************/
 
 .details-container {
-    display: table;
-    width: 100%;
+  display: table;
+  width: 100%;
 }
 
 .details-poster-container {
-    display: table-cell;
+  display: table-cell;
 }
 
 .details-poster-image {
-    width: 150px;
+  width: 150px;
 }
 
 .details-info-container {
-    display: table-cell;
-    width: 100%;
-    vertical-align: top;
+  display: table-cell;
+  width: 100%;
+  vertical-align: top;
 }
 
 .details-info-title {
-    font-size: 24px;
+  font-size: 24px;
 }
 
 .details-info-summary {
-    margin-top: 20px;
-    width: 100%;
+  margin-top: 20px;
+  width: 100%;
 }
 
 .details-info-summary td {
-    padding-bottom: 5px;
-    vertical-align: middle;
+  padding-bottom: 5px;
+  vertical-align: middle;
 }
 
 .details-files-container {
-    display: table;
-    width: 100%;
+  display: table;
+  width: 100%;
 }
 
 .details-files-title {
-    display: table;
-    width: 100%;
-    font-size: 24px;
+  display: table;
+  width: 100%;
+  font-size: 24px;
 }
 
 .details-files-title > div {
-    display: table-cell;
-    vertical-align: middle;
+  display: table-cell;
+  vertical-align: middle;
 }
 
 .details-files-progress {
-    width: 150px;
+  width: 150px;
 }
 
 .details-files-season {
-    width: 100%;
+  width: 100%;
 }
 
 .details-files-file {
-    color: #333333;
-    text-decoration: none !important;
+  color: #333333;
+  text-decoration: none !important;
 }
 
 /* Style on small devices */
 @media (max-width: 767px) {
-    .details-poster-container {
-        width: 100%;
-        float: left;
-        text-align: center;
-    }
+  .details-poster-container {
+    width: 100%;
+    float: left;
+    text-align: center;
+  }
 
-    .details-info-container {
-        padding-top: 20px;
-    }
+  .details-info-container {
+    padding-top: 20px;
+  }
 
-    .details-info-title {
-        text-align: center;
-    }
+  .details-info-title {
+    text-align: center;
+  }
 }
 
 /*******************************
@@ -562,74 +562,74 @@ table.tablesorter .filtered {
  *******************************/
 
 .settings-container {
-    display: table;
-    width: 100%;
+  display: table;
+  width: 100%;
 }
 
 .settings-poster-container {
-    display: table-cell;
+  display: table-cell;
 }
 
 .settings-poster-image {
-    width: 175px;
+  width: 175px;
 }
 
 .settings-info-container {
-    display: table-cell;
-    width: 100%;
-    vertical-align: top;
+  display: table-cell;
+  width: 100%;
+  vertical-align: top;
 }
 
 .settings-info-title {
-    font-size: 20px;
-    padding-right: 0px;
+  font-size: 20px;
+  padding-right: 0px;
 }
 
 .settings-info-settings {
-    padding-right: 0px;
+  padding-right: 0px;
 }
 
 .settings-info-settings .row {
-    padding: 5px;
+  padding: 5px;
 }
 
 /* Style on small devices */
 @media (max-width: 767px) {
-    .settings-poster-container {
-        width: 100%;
-        float: left;
-        text-align: center;
-    }
+  .settings-poster-container {
+    width: 100%;
+    float: left;
+    text-align: center;
+  }
 
-    .settings-poster-image {
-        width: 100px;
-    }
+  .settings-poster-image {
+    width: 100px;
+  }
 
-    .settings-info-container {
-        display: table;
-        padding-top: 20px;
-    }
+  .settings-info-container {
+    display: table;
+    padding-top: 20px;
+  }
 
-    .settings-info-title {
-        text-align: center;
-        padding-left: 0px;
-    }
+  .settings-info-title {
+    text-align: center;
+    padding-left: 0px;
+  }
 
-    .settings-info-settings {
-        padding-left: 0px;
-    }
+  .settings-info-settings {
+    padding-left: 0px;
+  }
 
-    .settings-info-settings .vertical-center .row {
-        display: block;
-        padding: 5px 0px;
-    }
+  .settings-info-settings .vertical-center .row {
+    display: block;
+    padding: 5px 0px;
+  }
 }
 
 /* Style on larger devices */
 @media (min-width: 768px) {
-    .settings-modal {
-        width: 750px;
-    }
+  .settings-modal {
+    width: 750px;
+  }
 }
 
 /***********************
@@ -639,150 +639,150 @@ table.tablesorter .filtered {
 /* Based on https://stackoverflow.com/questions/7128675/from-green-to-red-color-depend-on-percentage */
 
 .progress-0 {
-    background-image: -moz-linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0)) !important;
-    background-image: linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0)) !important;
-    background-image: -o-linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0)) !important;
+  background-image: linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0)) !important;
+  background-image: -o-linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0)) !important;
 }
 
 .progress-5 {
-    background-image: -moz-linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0)) !important;
-    background-image: linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0)) !important;
-    background-image: -o-linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0)) !important;
+  background-image: linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0)) !important;
+  background-image: -o-linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0)) !important;
 }
 
 .progress-10 {
-    background-image: -moz-linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0)) !important;
-    background-image: linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0)) !important;
-    background-image: -o-linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0)) !important;
+  background-image: linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0)) !important;
+  background-image: -o-linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0)) !important;
 }
 
 .progress-15 {
-    background-image: -moz-linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0)) !important;
-    background-image: linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0)) !important;
-    background-image: -o-linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0)) !important;
+  background-image: linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0)) !important;
+  background-image: -o-linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0)) !important;
 }
 
 .progress-20 {
-    background-image: -moz-linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0)) !important;
-    background-image: linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0)) !important;
-    background-image: -o-linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0)) !important;
+  background-image: linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0)) !important;
+  background-image: -o-linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0)) !important;
 }
 
 .progress-25 {
-    background-image: -moz-linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0)) !important;
-    background-image: linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0)) !important;
-    background-image: -o-linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0)) !important;
+  background-image: linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0)) !important;
+  background-image: -o-linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0)) !important;
 }
 
 .progress-30 {
-    background-image: -moz-linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0)) !important;
-    background-image: linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0)) !important;
-    background-image: -o-linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0)) !important;
+  background-image: linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0)) !important;
+  background-image: -o-linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0)) !important;
 }
 
 .progress-35 {
-    background-image: -moz-linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0)) !important;
-    background-image: linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0)) !important;
-    background-image: -o-linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0)) !important;
+  background-image: linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0)) !important;
+  background-image: -o-linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0)) !important;
 }
 
 .progress-40 {
-    background-image: -moz-linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0)) !important;
-    background-image: linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0)) !important;
-    background-image: -o-linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0)) !important;
+  background-image: linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0)) !important;
+  background-image: -o-linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0)) !important;
 }
 
 .progress-45 {
-    background-image: -moz-linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0)) !important;
-    background-image: linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0)) !important;
-    background-image: -o-linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0)) !important;
+  background-image: linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0)) !important;
+  background-image: -o-linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0)) !important;
 }
 
 .progress-50 {
-    background-image: -moz-linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0)) !important;
-    background-image: linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0)) !important;
-    background-image: -o-linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0)) !important;
+  background-image: linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0)) !important;
+  background-image: -o-linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0)) !important;
 }
 
 .progress-55 {
-    background-image: -moz-linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0)) !important;
-    background-image: linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0)) !important;
-    background-image: -o-linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0)) !important;
+  background-image: linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0)) !important;
+  background-image: -o-linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0)) !important;
 }
 
 .progress-60 {
-    background-image: -moz-linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0)) !important;
-    background-image: linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0)) !important;
-    background-image: -o-linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0)) !important;
+  background-image: linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0)) !important;
+  background-image: -o-linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0)) !important;
 }
 
 .progress-65 {
-    background-image: -moz-linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0)) !important;
-    background-image: linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0)) !important;
-    background-image: -o-linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0)) !important;
+  background-image: linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0)) !important;
+  background-image: -o-linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0)) !important;
 }
 
 .progress-70 {
-    background-image: -moz-linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0)) !important;
-    background-image: linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0)) !important;
-    background-image: -o-linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0)) !important;
+  background-image: linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0)) !important;
+  background-image: -o-linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0)) !important;
 }
 
 .progress-75 {
-    background-image: -moz-linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0)) !important;
-    background-image: linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0)) !important;
-    background-image: -o-linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0)) !important;
+  background-image: linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0)) !important;
+  background-image: -o-linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0)) !important;
 }
 
 .progress-80 {
-    background-image: -moz-linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0)) !important;
-    background-image: linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0)) !important;
-    background-image: -o-linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0)) !important;
+  background-image: linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0)) !important;
+  background-image: -o-linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0)) !important;
 }
 
 .progress-85 {
-    background-image: -moz-linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0)) !important;
-    background-image: linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0)) !important;
-    background-image: -o-linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0)) !important;
+  background-image: linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0)) !important;
+  background-image: -o-linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0)) !important;
 }
 
 .progress-90 {
-    background-image: -moz-linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0)) !important;
-    background-image: linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0)) !important;
-    background-image: -o-linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0)) !important;
+  background-image: linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0)) !important;
+  background-image: -o-linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0)) !important;
 }
 
 .progress-95 {
-    background-image: -moz-linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0)) !important;
-    background-image: linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0)) !important;
-    background-image: -o-linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0)) !important;
+  background-image: linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0)) !important;
+  background-image: -o-linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0)) !important;
 }
 
 .progress-100 {
-    background-image: -moz-linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
-    background-image: linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
-    background-image: -webkit-linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
-    background-image: -o-linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
+  background-image: -moz-linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
+  background-image: linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
+  background-image: -webkit-linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
+  background-image: -o-linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
 }
 
 /*******************
@@ -791,224 +791,224 @@ table.tablesorter .filtered {
 
 /* Style a banner title in tablesorter reflow mode */
 @media (max-width: 48em) {
-    .title-banner-image, .path {
-        width: 50%;
-        float: right;
-    }
+  .title-banner-image, .path {
+    width: 50%;
+    float: right;
+  }
 }
 
 .btn-static {
-    background-color: white;
-    border: 1px solid lightgrey;
-    cursor: default;
+  background-color: white;
+  border: 1px solid lightgrey;
+  cursor: default;
 }
 
 .btn-gray {
-    background-color: #eeeeee;
+  background-color: #eeeeee;
 }
 
 .btn-static:active {
-    -moz-box-shadow: inset 0 0 0px white;
-    -webkit-box-shadow: inset 0 0 0px white;
-    box-shadow: inset 0 0 0px white;
+  -moz-box-shadow: inset 0 0 0px white;
+  -webkit-box-shadow: inset 0 0 0px white;
+  box-shadow: inset 0 0 0px white;
 }
 
 .datetime {
-    min-width: 90px;
+  min-width: 90px;
 }
 
 .error-traceback {
-    display: inline-block;
-    margin: 10px;
-    padding: 5px;
-    text-align: left;
-    white-space: pre; /* Needed to get \r\n working inside div */
+  display: inline-block;
+  margin: 10px;
+  padding: 5px;
+  text-align: left;
+  white-space: pre; /* Needed to get \r\n working inside div */
 }
 
 /* Based on boostrap label with background */
 .file-type-badge {
-    display: inline-block;
-    width: auto;
-    padding: 4px;
-    font-size: 75%;
-    font-weight: 700;
-    line-height: 1;
-    color: #000000;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    border-radius: 0.25em;
-    background-color: #dddddd;
-    margin-right: 8px;
+  display: inline-block;
+  width: auto;
+  padding: 4px;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  color: #000000;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  border-radius: 0.25em;
+  background-color: #dddddd;
+  margin-right: 8px;
 }
 
 .file-type-badge.right-aligned {
-    margin-right: 0px;
-    margin-left: 8px;
+  margin-right: 0px;
+  margin-left: 8px;
 }
 
 .img-notifier {
-    height: 24px;
-    width: 25px;
+  height: 24px;
+  width: 25px;
 }
 
 /* Based on boostrap label with background */
 .language-badge {
-    display: inline-block;
-    width: auto;
-    min-width: 25px;
-    padding: 4px;
-    font-size: 75%;
-    font-weight: 700;
-    line-height: 1;
-    color: #ffffff;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    border-radius: 0.25em;
-    background-color: #777777;
-    margin-right: 8px;
+  display: inline-block;
+  width: auto;
+  min-width: 25px;
+  padding: 4px;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  color: #ffffff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  border-radius: 0.25em;
+  background-color: #777777;
+  margin-right: 8px;
 }
 
 .language-badge.right-aligned {
-    margin-right: 0px;
-    margin-left: 8px;
+  margin-right: 0px;
+  margin-left: 8px;
 }
 
 /* Nested badge inside language badge to show number of subtitles for the language */
 .language-badge .badge {
-    color: #000000;
-    background-color: #dddddd;
+  color: #000000;
+  background-color: #dddddd;
 }
 
 .language-icon {
-    height: 18px;
-    width: auto;
+  height: 18px;
+  width: auto;
 }
 
 .library-scanner-running {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .main-column {
-    color: #333333;
-    font-weight: bold;
-    text-decoration: none !important;
+  color: #333333;
+  font-weight: bold;
+  text-decoration: none !important;
 }
 
 .title-poster-container {
-    display: table;
+  display: table;
 }
 
 .title-poster-cell {
-    display: table-cell;
-    vertical-align: middle;
+  display: table-cell;
+  vertical-align: middle;
 }
 
 .title-poster-image {
-    height: 55px;
+  height: 55px;
 }
 
 .title-poster-text {
-    margin-left: 10px;
+  margin-left: 10px;
 }
 
 .no-margin {
-    margin: 0px;
+  margin: 0px;
 }
 
 .no-padding {
-    padding: 0px;
+  padding: 0px;
 }
 
 .no-padding-top {
-    padding-top: 0px;
+  padding-top: 0px;
 }
 
 .no-padding-bottom {
-    padding-bottom: 0px;
+  padding-bottom: 0px;
 }
 
 .no-border-bottom {
-    border-bottom: 0px none transparent;
+  border-bottom: 0px none transparent;
 }
 
 .note {
-    font-size: 80%;
-    font-style: italic;
+  font-size: 80%;
+  font-style: italic;
 }
 
 .pre-scrollable-x {
-    word-wrap: normal;
-    overflow-x: scroll;
+  word-wrap: normal;
+  overflow-x: scroll;
 }
 
 .scheduler-running {
-    background-color: #dff0d8 !important; /* Bootstrap bg-success background color, but with !important */
+  background-color: #dff0d8 !important; /* Bootstrap bg-success background color, but with !important */
 }
 
 .separator {
-    padding: 0px 5px;
+  padding: 0px 5px;
 }
 
 .sticky-notification {
-    padding: 8px 0px 5px 0px;
+  padding: 8px 0px 5px 0px;
 }
 
 .table-filter {
-    text-align: center;
-    margin-bottom: 5px;
+  text-align: center;
+  margin-bottom: 5px;
 }
 
 /* Align table-filter on larger screens (same width as switch in bootstrap from xs to sm) */
 @media (min-width: 768px) {
-    .table-filter.left {
-        text-align: left;
-    }
+  .table-filter.left {
+    text-align: left;
+  }
 
-    .table-filter.right {
-        text-align: right;
-    }
+  .table-filter.right {
+    text-align: right;
+  }
 }
 
 .table-filter input, .table-filter select {
-    display: inline-block;
-    width: auto;
+  display: inline-block;
+  width: auto;
 }
 
 .table-filter .table-filter-label {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .vertical-center .row {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .weighted {
-    font-weight: 700;
+  font-weight: 700;
 }
 
 .wrapped {
-    word-wrap: break-word;
-    word-break: break-all;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .log-pagination {
-    display: inline-block;
-    padding: 0px;
-    margin: 0px;
+  display: inline-block;
+  padding: 0px;
+  margin: 0px;
 }
 
 .log-pagination .log-page.badge {
-    background-color: #ffffff;
-    font-weight: normal;
+  background-color: #ffffff;
+  font-weight: normal;
 }
 
 .log-pagination .log-page.badge.selected {
-    background-color: white;
-    font-weight: bold;
-    text-decoration: underline;
+  background-color: white;
+  font-weight: bold;
+  text-decoration: underline;
 }
 
 /*******************
@@ -1017,7 +1017,7 @@ table.tablesorter .filtered {
 
 /* Hide elements when being cloaked until it's loaded */
 [v-cloak] {
-    display: none;
+  display: none;
 }
 
 /*******************************
@@ -1026,26 +1026,26 @@ table.tablesorter .filtered {
 
 /* Make sure the vue progress bar is show when used inside other components and use rounded corners */
 .vue-simple-progress {
-    z-index: 0 !important;
-    border: 1px solid;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
+  z-index: 0 !important;
+  border: 1px solid;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 
 /* Style progress bar in tablesorter reflow mode */
 @media (max-width: 48em) {
-    .ui-table-reflow .vue-simple-progress {
-        width: 50%;
-        float: right;
-    }
+  .ui-table-reflow .vue-simple-progress {
+    width: 50%;
+    float: right;
+  }
 }
 
 .vue-simple-progress-bar {
-    background-color: rgb(238, 238, 238);
-    -webkit-border-radius: 1px;
-    -moz-border-radius: 1px;
-    border-radius: 1px;
+  background-color: rgb(238, 238, 238);
+  -webkit-border-radius: 1px;
+  -moz-border-radius: 1px;
+  border-radius: 1px;
 }
 
 /***************************
@@ -1053,13 +1053,13 @@ table.tablesorter .filtered {
  ***************************/
 
 .multiselect__tag, .multiselect__option--highlight, .multiselect__option--highlight:after {
-    background: #777777; /* Bootstrap badge color */
+  background: #777777; /* Bootstrap badge color */
 }
 
 .multiselect__tag-icon:focus, .multiselect__tag-icon:hover {
-    background: #333333;
+  background: #333333;
 }
 
 .multiselect__tag-icon:after {
-    color: #ffffff;
+  color: #ffffff;
 }
