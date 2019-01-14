@@ -3,6 +3,8 @@ var clean_css = require('gulp-clean-css');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
+var watch = require('gulp-watch');
+var sass = require('gulp-sass');
 var log = require('fancy-log');
 var del = require('del');
 
@@ -79,6 +81,16 @@ var vendor = {
     ]
 };
 
+/*************
+ Compile tasks
+ *************/
+
+gulp.task('compile:app_scss', function () {
+    return gulp.src('web/static/scss/*.scss')
+        .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
+        .pipe(gulp.dest('dist'));
+});
+
 /************
  Bundle tasks
  ************/
@@ -103,6 +115,13 @@ gulp.task('bundle:vendor_css', function () {
  Minify tasks
  ************/
 
+gulp.task('minify:app_css', function () {
+    return gulp.src('dist/autosubliminal.css')
+        .pipe(rename('autosubliminal.min.css'))
+        .pipe(clean_css())
+        .pipe(gulp.dest('dist'));
+});
+
 gulp.task('minify:vendor_js', function () {
     return gulp.src('dist/vendor.js')
         .pipe(rename('vendor.min.js'))
@@ -123,6 +142,8 @@ gulp.task('minify:vendor_css', function () {
 
 var cleanup_sources = [
     'dist',
+    'web/static/css/autosubliminal.css',
+    'web/static/css/autosubliminal.min.css',
     'web/static/js/vendor.js',
     'web/static/js/vendor.min.js',
     'web/static/css/vendor.css',
@@ -140,6 +161,11 @@ gulp.task('clean', function () {
 /**********
  Copy tasks
  **********/
+
+gulp.task('copy:app_css', function () {
+    return gulp.src(['dist/autosubliminal.css', 'dist/autosubliminal.min.css'])
+        .pipe(gulp.dest('web/static/css'));
+});
 
 gulp.task('copy:vendor_js', function () {
     return gulp.src(['dist/vendor.js', 'dist/vendor.min.js'])
@@ -169,6 +195,14 @@ gulp.task('copy:vendor_fonts', function () {
         .pipe(gulp.dest('web/static/fonts'));
 });
 
+/*****************
+ Application tasks
+ ****************/
+
+gulp.task('app_css', gulp.series('compile:app_scss', 'minify:app_css', 'copy:app_css'));
+
+gulp.task('app', gulp.series('app_css'));
+
 /************
  Vendor tasks
  ************/
@@ -178,17 +212,39 @@ gulp.task('vendor_css', gulp.series('bundle:vendor_css', 'minify:vendor_css', 'c
 gulp.task('vendor_images', gulp.series('copy:vendor_images'));
 gulp.task('vendor_fonts', gulp.series('copy:vendor_fonts'));
 
+gulp.task('vendor', gulp.series('vendor_js', 'vendor_css', 'vendor_images', 'vendor_fonts'));
+
 /************
  Install task
  ************/
 
-gulp.task('install', gulp.series('vendor_js', 'vendor_css', 'vendor_images', 'vendor_fonts'));
+gulp.task('install', gulp.series('app', 'vendor'));
 
 /**********
  Build task
  **********/
 
 gulp.task('build', gulp.series('clean', 'install'));
+
+/**********
+ Watch task
+ **********/
+
+/***********
+ Watch tasks
+ ***********/
+
+gulp.task('watch:scss-compile', function () {
+    return gulp.src('web/static/scss/*.scss')
+        .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
+        .pipe(gulp.dest('web/static/css'));
+});
+
+gulp.task('watch:scss', function () {
+    return watch('web/static/scss/*.scss', gulp.series('watch:scss-compile'));
+});
+
+gulp.task('watch', gulp.series('watch:scss'));
 
 /************
  Default task

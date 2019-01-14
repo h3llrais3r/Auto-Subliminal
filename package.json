@@ -22,7 +22,8 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "gulp build"
+    "build": "gulp build",
+    "watch": "gulp watch"
   },
   "dependencies": {
     "bootstrap": "3.4.0",
@@ -48,6 +49,8 @@
     "gulp-clean-css": "4.0.0",
     "gulp-concat": "2.6.1",
     "gulp-rename": "1.4.0",
-    "gulp-uglify": "3.0.1"
+    "gulp-sass": "4.0.2",
+    "gulp-uglify": "3.0.1",
+    "gulp-watch": "5.0.1"
   }
 }

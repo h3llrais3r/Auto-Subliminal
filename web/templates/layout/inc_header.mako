@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="${autosubliminal.WEBROOT}/css/${vendor_css}?v=${appUUID}" media="screen">
 
 <!-- Auto-Subliminal theme -->
-<link rel="stylesheet" href="${autosubliminal.WEBROOT}/css/autosubliminal.css?v=${appUUID}" media="screen">
+<% app_css = autosubliminal.DEVELOPER and "autosubliminal.css" or "autosubliminal.min.css" %>
+<link rel="stylesheet" href="${autosubliminal.WEBROOT}/css/${app_css}?v=${appUUID}" media="screen">
 
 <script type="text/javascript">
     // Global webroot variable (can be used in Javascript files)
