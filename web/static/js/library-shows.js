@@ -28,7 +28,7 @@
                     shows: [],
                     bannerThumbnailUrl: autosubliminal.getUrl('/artwork/tvdb/banner/thumbnail/'),
                     posterThumbnailUrl: autosubliminal.getUrl('/artwork/tvdb/poster/thumbnail/')
-                }
+                };
             },
             created: function () {
                 //console.log('created');
@@ -112,7 +112,7 @@
         });
 
         // Init vue plugins
-        window.Vue.use(VueLazyload);
+        window.Vue.use(window.VueLazyload);
 
         // Init vue app
         new window.Vue({

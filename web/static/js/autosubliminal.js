@@ -312,7 +312,7 @@ var autosubliminal = {
         } else if (message.type == websockets.EVENT) {
             handleWebsocketEvent(message.event);
         } else {
-            console.error('Unsupported message: ' + message)
+            console.error('Unsupported message: ' + message);
         }
     };
 

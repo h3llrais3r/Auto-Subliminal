@@ -35,7 +35,7 @@
                     selectedFileLocation: null,
                     selectedFileName: null,
                     selectedHardcodedLanguages: []
-                }
+                };
             },
             created: function () {
                 //console.log('created');
@@ -82,7 +82,7 @@
                     var self = this;
                     // Show refresh indication
                     $('.refresh-running').removeClass('hidden');
-                    $.putJson(autosubliminal.getUrl('/api/movies/' + self.movie.imdb_id + '/refresh'), null, function (data) {
+                    $.putJson(autosubliminal.getUrl('/api/movies/' + self.movie.imdb_id + '/refresh'), null, function () {
                         // Get movie details again to get the updates
                         self.getMovieDetails();
                         // Hide refresh indication
@@ -114,7 +114,7 @@
                     var self = this;
                     var data = self.movieSettings;
                     data.wanted_languages = self.getAlpha2Languages(self.movieSettingsWantedLanguages);
-                    $.putJson(autosubliminal.getUrl('/api/movies/' + self.movie.imdb_id + '/settings'), data, function (data) {
+                    $.putJson(autosubliminal.getUrl('/api/movies/' + self.movie.imdb_id + '/settings'), data, function () {
                         // Close modal on success
                         $('#settingsModal').modal('hide');
                         // Refresh movie details
@@ -130,7 +130,7 @@
                         'file_name': self.selectedFileName,
                         'languages': self.getAlpha2Languages(self.selectedHardcodedLanguages)
                     };
-                    $.putJson(autosubliminal.getUrl('/api/movies/' + self.movie.imdb_id + '/subtitles/hardcoded'), data, function (data) {
+                    $.putJson(autosubliminal.getUrl('/api/movies/' + self.movie.imdb_id + '/subtitles/hardcoded'), data, function () {
                         // Close modal on success
                         $('#subtitlesModal').modal('hide');
                         // Get movie details again to get the updates

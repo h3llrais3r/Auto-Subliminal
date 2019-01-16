@@ -1,0 +1,38 @@
+{
+  "env": {
+    "browser": true,
+    "jquery": true
+  },
+  "extends": "eslint:recommended",
+  "globals": {
+    "autosubliminal": false,
+    "PNotify": false,
+    "PubSub": false,
+    "strftime": false,
+    "webRoot": false
+  },
+  "parserOptions": {
+    "ecmaVersion": 5
+  },
+  "rules": {
+    "indent": [
+      "error",
+      4
+    ],
+    "no-console": "off",
+    "no-unused-vars": [
+      2,
+      {
+        "argsIgnorePattern": "^(autosubliminal|event|table|cellIndex)$"
+      }
+    ],
+    "quotes": [
+      "error",
+      "single"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ]
+  }
+}

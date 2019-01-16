@@ -36,7 +36,7 @@
                     selectedFileLocation: null,
                     selectedFileName: null,
                     selectedHardcodedLanguages: []
-                }
+                };
             },
             created: function () {
                 //console.log('created');
@@ -83,7 +83,7 @@
                     var self = this;
                     // Show refresh indication
                     $('.refresh-running').removeClass('hidden');
-                    $.putJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id + '/refresh'), null, function (data) {
+                    $.putJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id + '/refresh'), null, function () {
                         // Get show details again to get the updates
                         self.getShowDetails();
                         // Hide refresh indication
@@ -116,7 +116,7 @@
                     var self = this;
                     var data = self.showSettings;
                     data.wanted_languages = self.getAlpha2Languages(self.showSettingsWantedLanguages);
-                    $.putJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id + '/settings'), data, function (data) {
+                    $.putJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id + '/settings'), data, function () {
                         // Close modal on success
                         $('#settingsModal').modal('hide');
                         // Refresh show details
@@ -132,7 +132,7 @@
                         'file_name': self.selectedFileName,
                         'languages': self.getAlpha2Languages(self.selectedHardcodedLanguages)
                     };
-                    $.putJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id + '/subtitles/hardcoded/' + self.selectedEpisodeTvdbId), data, function (data) {
+                    $.putJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id + '/subtitles/hardcoded/' + self.selectedEpisodeTvdbId), data, function () {
                         // Close modal on success
                         $('#subtitlesModal').modal('hide');
                         // Get show details again to get the updates

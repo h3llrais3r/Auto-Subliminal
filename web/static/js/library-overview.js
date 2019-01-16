@@ -27,7 +27,7 @@
                 return {
                     showsOverview: null,
                     moviesOverview: null
-                }
+                };
             },
             created: function () {
                 //console.log('created');

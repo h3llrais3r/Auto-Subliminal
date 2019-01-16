@@ -27,7 +27,7 @@
                 return {
                     movies: [],
                     posterThumbnailUrl: autosubliminal.getUrl('/artwork/imdb/poster/thumbnail/')
-                }
+                };
             },
             created: function () {
                 //console.log('created');
@@ -111,7 +111,7 @@
         });
 
         // Init vue plugins
-        window.Vue.use(VueLazyload);
+        window.Vue.use(window.VueLazyload);
 
         // Init vue app
         new window.Vue({

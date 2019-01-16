@@ -37,6 +37,8 @@ matrix:
 # Caching
 cache:
   - '%LOCALAPPDATA%\pip\Cache'
+  - '%APPDATA%\npm-cache'
+  - 'node_modules'
 
 # Command(s) to execute before starting
 init:
@@ -62,6 +64,9 @@ install:
   - pip install coverage
 
 # Build command(s)
+before_test:
+  - npm run lint
+
 test_script:
   - coverage run --branch --source=autosubliminal setup.py test
   - coverage report

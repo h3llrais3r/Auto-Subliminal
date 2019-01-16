@@ -16,8 +16,10 @@ before_cache:
   - rm -f $HOME/.cache/pip/log/debug.log
 
 cache:
+  npm: true
   directories:
     - $HOME/.cache/pip
+    - node_modules
 
 # Install command(s)
 before_install:
@@ -30,6 +32,9 @@ install:
   - pip install coveralls
 
 # Build command(s)
+before_script:
+  - npm run lint
+
 script:
   - coverage run setup.py test # Coverage configuration is done in .coveragerc
   - coverage report

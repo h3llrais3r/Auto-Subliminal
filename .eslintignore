@@ -1,0 +1,8 @@
+# Ignore packaged vendor files
+web/static/js/vendor*.js
+
+# Ignore dist files
+dist/*.js
+
+# Ignore gulp file
+gulpfile.js
