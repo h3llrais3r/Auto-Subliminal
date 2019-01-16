@@ -226,10 +226,6 @@ gulp.task('install', gulp.series('app', 'vendor'));
 
 gulp.task('build', gulp.series('clean', 'install'));
 
-/**********
- Watch task
- **********/
-
 /***********
  Watch tasks
  ***********/
