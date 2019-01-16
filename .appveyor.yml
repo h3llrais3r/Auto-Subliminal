@@ -67,6 +67,7 @@ install:
 # Build command(s)
 before_test:
   - npm run eslint
+  - npm run stylelint
 
 test_script:
   - coverage run --branch --source=autosubliminal setup.py test

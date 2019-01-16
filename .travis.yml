@@ -35,6 +35,7 @@ install:
 # Build command(s)
 before_script:
   - npm run eslint
+  - npm run stylelint
 
 script:
   - coverage run setup.py test # Coverage configuration is done in .coveragerc

@@ -6,6 +6,8 @@ var uglify = require('gulp-uglify');
 var watch = require('gulp-watch');
 var sass = require('gulp-sass');
 var eslint = require('gulp-eslint');
+var stylelint = require('gulp-stylelint');
+var stylelintFormatter = require('stylelint-formatter-table');
 var log = require('fancy-log');
 var del = require('del');
 
@@ -231,6 +233,16 @@ gulp.task('build', gulp.series('clean', 'install'));
  Watch tasks
  ***********/
 
+gulp.task('watch:scss-stylelint', function () {
+    return gulp.src('web/static/scss/*.scss')
+        .pipe(stylelint({
+            reporters: [{
+                formatter: stylelintFormatter,
+                console: true
+            }]
+        }));
+});
+
 gulp.task('watch:scss-compile', function () {
     return gulp.src('web/static/scss/*.scss')
         .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
@@ -238,7 +250,7 @@ gulp.task('watch:scss-compile', function () {
 });
 
 gulp.task('watch:scss', function () {
-    return watch('web/static/scss/*.scss', gulp.series('watch:scss-compile'));
+    return watch('web/static/scss/*.scss', gulp.parallel('watch:scss-stylelint', 'watch:scss-compile'));
 });
 
 gulp.task('watch:js-eslint', function () {

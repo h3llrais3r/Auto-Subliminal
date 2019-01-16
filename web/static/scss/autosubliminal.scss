@@ -22,20 +22,242 @@ $var-from-width-lg: 992px;
 $var-till-width-xl: 1199px;
 $var-from-width-xl: 1200px;
 
-/*********************
- * HTML BODY STYLING *
- *********************/
+/*******************
+ * GENERAL STYLING *
+ *******************/
 
+// Set html body color
 html, body {
   background-color: #eeeeee;
 }
 
-/********************
- * TEXTAREA STYLING *
- ********************/
-
+// Set textarea resize
 textarea {
   resize: vertical;
+}
+
+.btn-gray {
+  background-color: #eeeeee;
+}
+
+.btn-static {
+  background-color: white;
+  border: 1px solid lightgrey;
+  cursor: default;
+
+  &:active {
+    -moz-box-shadow: inset 0 0 0 white;
+    -webkit-box-shadow: inset 0 0 0 white;
+    box-shadow: inset 0 0 0 white;
+  }
+}
+
+.datetime {
+  min-width: 90px;
+}
+
+.error-traceback {
+  display: inline-block;
+  margin: 10px;
+  padding: 5px;
+  text-align: left;
+  white-space: pre; // Needed to get \r\n working inside div
+}
+
+// Style a banner title in tablesorter reflow mode
+@media (max-width: 48em) {
+  .title-banner-image, .path {
+    width: 50%;
+    float: right;
+  }
+}
+
+// Based on boostrap label with background
+.file-type-badge {
+  display: inline-block;
+  width: auto;
+  padding: 4px;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  color: #000000;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  border-radius: 0.25em;
+  background-color: #dddddd;
+  margin-right: 8px;
+
+  &.right-aligned {
+    margin-right: 0;
+    margin-left: 8px;
+  }
+}
+
+.img-notifier {
+  height: 24px;
+  width: 25px;
+}
+
+// Based on boostrap label with background
+.language-badge {
+  display: inline-block;
+  width: auto;
+  min-width: 25px;
+  padding: 4px;
+  font-size: 75%;
+  font-weight: 700;
+  line-height: 1;
+  color: #ffffff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  border-radius: 0.25em;
+  background-color: #777777;
+  margin-right: 8px;
+
+  &.right-aligned {
+    margin-right: 0;
+    margin-left: 8px;
+  }
+
+  // Nested badge inside language badge to show number of subtitles for the language
+  .badge {
+    color: #000000;
+    background-color: #dddddd;
+  }
+}
+
+.language-icon {
+  height: 18px;
+  width: auto;
+}
+
+.library-scanner-running {
+  font-weight: bold;
+}
+
+.main-column {
+  color: #333333;
+  font-weight: bold;
+  text-decoration: none !important;
+}
+
+.title-poster-container {
+  display: table;
+
+  .title-poster-cell {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .title-poster-image {
+    height: 55px;
+  }
+
+  .title-poster-text {
+    margin-left: 10px;
+  }
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.no-padding {
+  padding: 0;
+
+  &-top {
+    padding-top: 0;
+  }
+
+  &-bottom {
+    padding-bottom: 0;
+  }
+}
+
+.no-border-bottom {
+  border-bottom: 0 none transparent;
+}
+
+.note {
+  font-size: 80%;
+  font-style: italic;
+}
+
+.pre-scrollable-x {
+  word-wrap: normal;
+  overflow-x: scroll;
+}
+
+.scheduler-running {
+  background-color: #dff0d8 !important; // Bootstrap bg-success background color, but with !important
+}
+
+.separator {
+  padding: 0 5px;
+}
+
+.sticky-notification {
+  padding: 8px 0 5px 0;
+}
+
+.table-filter {
+  text-align: center;
+  margin-bottom: 5px;
+
+  // Align table-filter on larger screens (same width as switch in bootstrap from xs to sm)
+  @media (min-width: $var-from-width-sm) {
+    &.left {
+      text-align: left;
+    }
+
+    &.right {
+      text-align: right;
+    }
+  }
+
+  input, select {
+    display: inline-block;
+    width: auto;
+  }
+
+  .table-filter-label {
+    font-weight: bold;
+  }
+}
+
+.vertical-center {
+  .row {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.weighted {
+  font-weight: 700;
+}
+
+.wrapped {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
+.log-pagination {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+
+  .log-page.badge {
+    background-color: #ffffff;
+    font-weight: normal;
+
+    &.selected {
+      background-color: white;
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  }
 }
 
 /******************
@@ -225,7 +447,7 @@ a {
 
       // Unchecked icon styling
       &:before {
-        font-family: FontAwesome;
+        font-family: FontAwesome, serif;
         display: inline-block;
         content: "\f096";
         letter-spacing: 7px;
@@ -251,86 +473,6 @@ a {
     margin-left: auto;
     margin-right: auto;
     text-wrap: none;
-  }
-}
-
-/*****************
- * TABLE STYLING *
- *****************/
-
-// Always use bootstrap 'table' class by default on all tables to apply our styling!
-table.table {
-  border: 1px solid #dddddd;
-
-  // No borders
-  &.table-no-column-borders {
-    thead th, table tfoot th {
-      border: none;
-      border-bottom: 1px solid #dddddd;;
-    }
-
-    tbody tr td {
-      border: none;
-    }
-  }
-
-  // Do not foresee space for sort icon
-  &.table-no-sort {
-    thead th, table tfoot th {
-      padding-right: 4px;
-    }
-  }
-
-  thead tr th, table tfoot tr th {
-    background-color: #eeeeee;
-    border: 1px solid #dddddd;
-    padding: 5px 17px 5px 4px;
-    vertical-align: middle;
-  }
-
-  tbody {
-    tr td {
-      border: 1px dotted #eeeeee;
-      vertical-align: middle;
-    }
-
-    // Inactive rows - grey out and set background color
-    tr.inactive td {
-      color: rgb(0, 0, 0);
-      color: rgba(0, 0, 0, 0.5);
-      background-color: #ffffff;
-
-      // Grey out underlying items
-      * {
-        color: rgb(0, 0, 0);
-        color: rgba(0, 0, 0, 0.5);
-      }
-
-      // Grey out images (rgba has no effect on images, so use opacity instead)
-      img {
-        opacity: 0.5;
-      }
-    }
-  }
-
-  // Striped settings by adding 'table-striped' class -> based on bootstrap classes
-  &.table-striped {
-    > tbody {
-      > tr {
-        &:nth-of-type(even) {
-          background-color: #f6f6f6;
-        }
-
-        &:nth-of-type(odd) {
-          background-color: #fafafa;
-        }
-      }
-    }
-  }
-
-  // Hover settings by adding 'table-hover' class -> based on bootstrap classes
-  &.table-hover > tbody > tr:hover {
-    background-color: #f3f3f3;
   }
 }
 
@@ -446,6 +588,86 @@ table.tablesorter {
 /************
  * End copy *
  ************/
+
+/*****************
+ * TABLE STYLING *
+ *****************/
+
+// Always use bootstrap 'table' class by default on all tables to apply our styling!
+table.table {
+  border: 1px solid #dddddd;
+
+  thead tr th, tfoot tr th {
+    background-color: #eeeeee;
+    border: 1px solid #dddddd;
+    padding: 5px 17px 5px 4px;
+    vertical-align: middle;
+  }
+
+  tbody {
+    tr td {
+      border: 1px dotted #eeeeee;
+      vertical-align: middle;
+    }
+
+    // Inactive rows - grey out and set background color
+    tr.inactive td {
+      color: rgb(0, 0, 0);
+      color: rgba(0, 0, 0, 0.5);
+      background-color: #ffffff;
+
+      // Grey out underlying items
+      * {
+        color: rgb(0, 0, 0);
+        color: rgba(0, 0, 0, 0.5);
+      }
+
+      // Grey out images (rgba has no effect on images, so use opacity instead)
+      img {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  // No borders
+  &.table-no-column-borders {
+    thead th, tfoot th {
+      border: none;
+      border-bottom: 1px solid #dddddd;
+    }
+
+    tbody tr td {
+      border: none;
+    }
+  }
+
+  // Do not foresee space for sort icon
+  &.table-no-sort {
+    thead th, tfoot th {
+      padding-right: 4px;
+    }
+  }
+
+  // Striped settings by adding 'table-striped' class -> based on bootstrap classes
+  &.table-striped {
+    tbody tr {
+      &:nth-of-type(even) {
+        background-color: #f6f6f6;
+      }
+
+      &:nth-of-type(odd) {
+        background-color: #fafafa;
+      }
+    }
+  }
+
+  // Hover settings by adding 'table-hover' class -> based on bootstrap classes
+  &.table-hover {
+    tbody tr:hover {
+      background-color: #f3f3f3;
+    }
+  }
+}
 
 /*********************
  * FORMGROUP STYLING *
@@ -834,234 +1056,6 @@ table.tablesorter {
   background-image: linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
   background-image: -webkit-linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
   background-image: -o-linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0)) !important;
-}
-
-/*******************
- * GENERAL STYLING *
- *******************/
-
-// Style a banner title in tablesorter reflow mode
-@media (max-width: 48em) {
-  .title-banner-image, .path {
-    width: 50%;
-    float: right;
-  }
-}
-
-.btn-gray {
-  background-color: #eeeeee;
-}
-
-.btn-static {
-  background-color: white;
-  border: 1px solid lightgrey;
-  cursor: default;
-
-  &:active {
-    -moz-box-shadow: inset 0 0 0 white;
-    -webkit-box-shadow: inset 0 0 0 white;
-    box-shadow: inset 0 0 0 white;
-  }
-}
-
-.datetime {
-  min-width: 90px;
-}
-
-.error-traceback {
-  display: inline-block;
-  margin: 10px;
-  padding: 5px;
-  text-align: left;
-  white-space: pre; // Needed to get \r\n working inside div
-}
-
-// Based on boostrap label with background
-.file-type-badge {
-  display: inline-block;
-  width: auto;
-  padding: 4px;
-  font-size: 75%;
-  font-weight: 700;
-  line-height: 1;
-  color: #000000;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  border-radius: 0.25em;
-  background-color: #dddddd;
-  margin-right: 8px;
-
-  &.right-aligned {
-    margin-right: 0;
-    margin-left: 8px;
-  }
-}
-
-.img-notifier {
-  height: 24px;
-  width: 25px;
-}
-
-// Based on boostrap label with background
-.language-badge {
-  display: inline-block;
-  width: auto;
-  min-width: 25px;
-  padding: 4px;
-  font-size: 75%;
-  font-weight: 700;
-  line-height: 1;
-  color: #ffffff;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  border-radius: 0.25em;
-  background-color: #777777;
-  margin-right: 8px;
-
-  &.right-aligned {
-    margin-right: 0;
-    margin-left: 8px;
-  }
-
-  // Nested badge inside language badge to show number of subtitles for the language
-  .badge {
-    color: #000000;
-    background-color: #dddddd;
-  }
-}
-
-.language-icon {
-  height: 18px;
-  width: auto;
-}
-
-.library-scanner-running {
-  font-weight: bold;
-}
-
-.main-column {
-  color: #333333;
-  font-weight: bold;
-  text-decoration: none !important;
-}
-
-.title-poster-container {
-  display: table;
-
-  .title-poster-cell {
-    display: table-cell;
-    vertical-align: middle;
-  }
-
-  .title-poster-image {
-    height: 55px;
-  }
-
-  .title-poster-text {
-    margin-left: 10px;
-  }
-}
-
-.no-margin {
-  margin: 0;
-}
-
-.no-padding {
-  padding: 0;
-
-  &-top {
-    padding-top: 0;
-  }
-
-  &-bottom {
-    padding-bottom: 0;
-  }
-}
-
-.no-border-bottom {
-  border-bottom: 0 none transparent;
-}
-
-.note {
-  font-size: 80%;
-  font-style: italic;
-}
-
-.pre-scrollable-x {
-  word-wrap: normal;
-  overflow-x: scroll;
-}
-
-.scheduler-running {
-  background-color: #dff0d8 !important; // Bootstrap bg-success background color, but with !important
-}
-
-.separator {
-  padding: 0 5px;
-}
-
-.sticky-notification {
-  padding: 8px 0 5px 0;
-}
-
-.table-filter {
-  text-align: center;
-  margin-bottom: 5px;
-
-  // Align table-filter on larger screens (same width as switch in bootstrap from xs to sm)
-  @media (min-width: $var-from-width-sm) {
-    &.left {
-      text-align: left;
-    }
-
-    &.right {
-      text-align: right;
-    }
-  }
-
-  input, select {
-    display: inline-block;
-    width: auto;
-  }
-
-  .table-filter-label {
-    font-weight: bold;
-  }
-}
-
-.vertical-center {
-  .row {
-    display: flex;
-    align-items: center;
-  }
-}
-
-.weighted {
-  font-weight: 700;
-}
-
-.wrapped {
-  word-wrap: break-word;
-  word-break: break-all;
-}
-
-.log-pagination {
-  display: inline-block;
-  padding: 0;
-  margin: 0;
-
-  .log-page.badge {
-    background-color: #ffffff;
-    font-weight: normal;
-
-    &.selected {
-      background-color: white;
-      font-weight: bold;
-      text-decoration: underline;
-    }
-  }
 }
 
 /*******************
