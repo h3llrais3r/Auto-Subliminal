@@ -5,6 +5,7 @@ var rename = require('gulp-rename');
 var uglify = require('gulp-uglify');
 var watch = require('gulp-watch');
 var sass = require('gulp-sass');
+var eslint = require('gulp-eslint');
 var log = require('fancy-log');
 var del = require('del');
 
@@ -240,7 +241,17 @@ gulp.task('watch:scss', function () {
     return watch('web/static/scss/*.scss', gulp.series('watch:scss-compile'));
 });
 
-gulp.task('watch', gulp.series('watch:scss'));
+gulp.task('watch:js-eslint', function () {
+    return gulp.src(['web/static/js/*.js', '!web/static/js/vendor*.js'])
+        .pipe(eslint())
+        .pipe(eslint.format('table'));
+});
+
+gulp.task('watch:js', function () {
+    return watch('web/static/js/*.js', gulp.series('watch:js-eslint'));
+});
+
+gulp.task('watch', gulp.parallel('watch:scss', 'watch:js'));
 
 /************
  Default task
