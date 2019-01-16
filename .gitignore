@@ -40,7 +40,8 @@ cache/
 .cache
 .pytest_cache
 
-#Coverage files
+#Coverage files (except coverage configuration file)
+!.coveragerc
 .coverage
 
 #Tox files
