@@ -109,12 +109,15 @@ def test_get_imdb_id():
     # By title
     assert indexer.get_imdb_id_and_year(u'Southpaw', force_search=True, store_id=False) == ('tt1798684', 2015)
     # By title and year
-    assert indexer.get_imdb_id_and_year(u'Southpaw', 2015, force_search=True, store_id=False) == ('tt1798684', 2015)
-    assert indexer.get_imdb_id_and_year(u'Joyeux Noël', 2005, force_search=True, store_id=False) == ('tt0424205', 2005)
+    assert indexer.get_imdb_id_and_year(u'Southpaw', year=2015, force_search=True, store_id=False) == (
+        'tt1798684', 2015)
+    assert indexer.get_imdb_id_and_year(u'Joyeux Noël', year=2005, force_search=True, store_id=False) == (
+        'tt0424205', 2005)
     # By alternative title
     assert indexer.get_imdb_id_and_year(u'Kyatapirâ', force_search=True, store_id=False) == ('tt1508290', 2010)
     # By alternative title and year
-    assert indexer.get_imdb_id_and_year(u'Kyatapirâ', 2010, force_search=True, store_id=False) == ('tt1508290', 2010)
+    assert indexer.get_imdb_id_and_year(u'Kyatapirâ', year=2010, force_search=True, store_id=False) == (
+        'tt1508290', 2010)
 
 
 def test_get_imdb_id_from_movie_name_mapping(monkeypatch):
@@ -171,6 +174,7 @@ def test_sanitize_imdb_title():
     assert MovieIndexer.sanitize_imdb_title(u'Aftermath (I)') == 'aftermath'
     assert MovieIndexer.sanitize_imdb_title(u'Aftermath') == 'aftermath'
     assert MovieIndexer.sanitize_imdb_title(u'(Aftermath)') == 'aftermath'
+    assert MovieIndexer.sanitize_imdb_title(u'The King is Dead!') == 'the king is dead'
 
 
 def test_get_artwork_thumbnail_url():
