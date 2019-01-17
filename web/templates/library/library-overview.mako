@@ -67,7 +67,7 @@
                             </div>
 
                             <!-- Movies overview -->
-                            <div v-if="showsOverview" class="col-xs-12 col-sm-6">
+                            <div v-if="moviesOverview" class="col-xs-12 col-sm-6">
                                 <div class="overview-container">
                                     <div>
                                         <div class="row">
