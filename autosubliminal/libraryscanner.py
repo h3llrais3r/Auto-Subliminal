@@ -10,7 +10,7 @@ from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.core.show import ShowSettings
 from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb, MovieDetailsDb, MovieSettingsDb
 from autosubliminal.fileprocessor import process_file
-from autosubliminal.indexer import ShowIndexer, MovieIndexer, TVDB_ID_UNKNOWN, IMDB_ID_UNKNOWN
+from autosubliminal.indexer import ShowIndexer, MovieIndexer
 from autosubliminal.util.common import safe_lowercase, get_wanted_languages
 from autosubliminal.util.filesystem import is_valid_video_file, is_skipped_dir, one_path_exists, get_available_subtitles
 from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
@@ -97,7 +97,7 @@ class LibraryPathScanner(object):
                                                                        force_search=True)
 
                 # Skip if no tvdb id is found
-                if wanted_item.tvdbid == TVDB_ID_UNKNOWN:
+                if not wanted_item.tvdbid:
                     log.warning('Skipping show episode file with unknown tvdb id: %s', os.path.join(dirname, filename))
                     return
 
@@ -156,7 +156,7 @@ class LibraryPathScanner(object):
                                                                                     force_search=True)
 
                 # Skip if no imdb id is found
-                if wanted_item.imdbid == IMDB_ID_UNKNOWN:
+                if not wanted_item.imdbid:
                     log.warning('Skipping movie file with unknown imdb id: %s', os.path.join(dirname, filename))
                     return
 
