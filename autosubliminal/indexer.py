@@ -249,7 +249,7 @@ class MovieIndexer(Indexer):
     def name(self):
         return 'imdb'
 
-    def _search(self, title, year=None):
+    def _search(self, title, year=None, fallback_search=False):
         """ Search the api for a movie.
 
         :param title: the title to search for
@@ -262,8 +262,13 @@ class MovieIndexer(Indexer):
         name = title
         if year:
             name += ' (' + text_type(year) + ')'
-        log.info('Searching imdb api for %s', name)
-        search_results = ImdbFacade().search_for_title(title)
+
+        if fallback_search:
+            log.info('Searching imdb api again with year included for %s', name)
+            search_results = ImdbFacade().search_for_title(name.strip('()'))
+        else:
+            log.info('Searching imdb api for %s', name)
+            search_results = ImdbFacade().search_for_title(title)
 
         # Find the first movie that matches the title (and year if present)
         for search_result in search_results:  # type: TitleSearchResult
@@ -296,6 +301,10 @@ class MovieIndexer(Indexer):
                         else:
                             return TitleSearchResult(imdb_id=best_match.imdb_id, title=best_match.title,
                                                      type=best_match.type, year=best_match.year)
+
+        # Fallback search in case nothing could be found
+        if not fallback_search:
+            return self._search(title, year=year, fallback_search=True)
 
         return None
 

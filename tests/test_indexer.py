@@ -118,6 +118,8 @@ def test_get_imdb_id():
     # By alternative title and year
     assert indexer.get_imdb_id_and_year(u'Kyatapirâ', year=2010, force_search=True, store_id=False) == (
         'tt1508290', 2010)
+    # By fallback search
+    assert indexer.get_imdb_id_and_year(u'Bullet', year=2014, force_search=True, store_id=False) == ('tt2544734', 2014)
 
 
 def test_get_imdb_id_from_movie_name_mapping(monkeypatch):
