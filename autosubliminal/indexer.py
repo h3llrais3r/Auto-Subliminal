@@ -265,7 +265,7 @@ class MovieIndexer(Indexer):
 
         if fallback_search:
             log.info('Searching imdb api again with year included for %s', name)
-            search_results = ImdbFacade().search_for_title(name.strip('()'))
+            search_results = ImdbFacade().search_for_title(re.sub('[()]', '', name))
         else:
             log.info('Searching imdb api for %s', name)
             search_results = ImdbFacade().search_for_title(title)
