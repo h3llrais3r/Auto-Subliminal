@@ -8,7 +8,6 @@ Libraries dependency tree
 |-- babelfish
 |-- beautifulsoup4
     |-- html5lib (optional dependency)
-    |-- lxml (optional dependency)
     |-- soupsieve
         |-- backports.functools_lru_cache
 |-- cherrypy
@@ -54,7 +53,6 @@ Libraries dependency tree
 |-- jsonpickle
 |-- langdetect
     |-- six
-|-- lxml (used to speed up some parsing, can be used by different libraries is available)
 |-- mako
     |-- markupsafe
 |-- pushbullet.py
