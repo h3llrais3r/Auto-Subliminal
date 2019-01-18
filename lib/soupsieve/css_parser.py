@@ -101,6 +101,11 @@ VALUE = r'''(?:"(?:\\.|[^\\"]+)*?"|'(?:\\.|[^\\']+)*?'|{ident}+)'''.format(ident
 ATTR = r'''
 (?:{ws}*(?P<cmp>[!~^|*$]?=){ws}*(?P<value>{value})(?:{ws}+(?P<case>[is]))?)?{ws}*\]
 '''.format(ws=WSC, value=VALUE)
+# Definitions for quirks mode
+QUIRKS_ATTR_IDENTIFIER = r'(?:(?:{esc}|(?!/\*)[^"\] \t\r\n\f])+?)'.format(esc=CSS_ESCAPES)
+QUIRKS_ATTR = r'''
+(?:{ws}*(?P<cmp>[!~^|*$]?=){ws}*(?P<value>{value})(?:{ws}+(?P<case>[is]))?)?{ws}*\]
+'''.format(ws=WSC, value=QUIRKS_ATTR_IDENTIFIER)
 
 # Selector patterns
 # IDs (`#id`)
@@ -111,6 +116,10 @@ PAT_CLASS = r'\.{ident}'.format(ident=IDENTIFIER)
 PAT_TAG = r'(?:(?:{ident}|\*)?\|)?(?:{ident}|\*)'.format(ident=IDENTIFIER)
 # Attributes (`[attr]`, `[attr=value]`, etc.)
 PAT_ATTR = r'\[{ws}*(?P<ns_attr>(?:(?:{ident}|\*)?\|)?{ident}){attr}'.format(ws=WSC, ident=IDENTIFIER, attr=ATTR)
+# Quirks attributes, like real attributes, but unquoted values can contain anything but whitespace and closing `]`.
+PAT_QUIRKS_ATTR = r'''
+\[{ws}*(?P<ns_attr>(?:(?:{ident}|\*)?\|)?{ident}){attr}
+'''.format(ws=WSC, ident=IDENTIFIER, attr=QUIRKS_ATTR)
 # Pseudo class (`:pseudo-class`, `:pseudo-class(`)
 PAT_PSEUDO_CLASS = r'(?P<name>:{ident})(?P<open>\({ws}*)?'.format(ws=WSC, ident=IDENTIFIER)
 # Closing pseudo group (`)`)
@@ -217,6 +226,15 @@ class SelectorPattern(object):
         return True
 
 
+class QuirkPattern(SelectorPattern):
+    """Selector pattern for quirk mode."""
+
+    def enabled(self, flags):
+        """Enabled if quirks flag is present."""
+
+        return flags & util._QUIRKS
+
+
 class _Selector(object):
     """
     Intermediate selector class.
@@ -304,6 +322,7 @@ class CSSParser(object):
             ("class", SelectorPattern(PAT_CLASS)),
             ("tag", SelectorPattern(PAT_TAG)),
             ("attribute", SelectorPattern(PAT_ATTR)),
+            ("quirks_attribute", QuirkPattern(PAT_QUIRKS_ATTR)),
             ("combine", SelectorPattern(PAT_COMBINE))
         ]
     )
@@ -314,8 +333,9 @@ class CSSParser(object):
         self.pattern = selector
         self.flags = flags
         self.debug = self.flags & util.DEBUG
+        self.quirks = self.flags & util._QUIRKS
 
-    def parse_attribute_selector(self, sel, m, has_selector):
+    def parse_attribute_selector(self, sel, m, has_selector, quirks):
         """Create attribute selector from the returned regex match."""
 
         op = m.group('cmp')
@@ -355,8 +375,9 @@ class CSSParser(object):
                 flags = 0
 
             if op:
+                is_quoted = m.group('value').startswith(('"', "'")) and not quirks
                 value = css_unescape(
-                    m.group('value')[1:-1] if m.group('value').startswith(('"', "'")) else m.group('value')
+                    m.group('value')[1:-1] if is_quoted else m.group('value')
                 )
             else:
                 value = None
@@ -586,9 +607,19 @@ class CSSParser(object):
         if not combinator:
             combinator = WS_COMBINATOR
         if not has_selector:
-            raise SyntaxError(
-                "The combinator '{}' at postion {}, must have a selector before it".format(combinator, index)
+            # The only way we don't fail is if we are at the root level and quirks mode is enabled,
+            # and we've found no other selectors yet in this compound selector.
+            if (not self.quirks or is_pseudo or combinator == COMMA_COMBINATOR or relations):
+                raise SyntaxError(
+                    "The combinator '{}' at postion {}, must have a selector before it".format(combinator, index)
+                )
+            util.warn_quirks(
+                'You have attempted to use a combinator without a selector before it at position {}.'.format(index),
+                'the :scope pseudo class (or another appropriate selector) should be placed before the combinator.',
+                self.pattern
             )
+            sel.flags |= ct.SEL_SCOPE
+
         if combinator == COMMA_COMBINATOR:
             if not sel.tag and not is_pseudo:
                 # Implied `*`
@@ -675,15 +706,15 @@ class CSSParser(object):
         relations = []
         rel_type = ":" + WS_COMBINATOR
         split_last = False
-        is_open = flags & FLG_OPEN
-        is_pseudo = flags & FLG_PSEUDO
-        is_relative = flags & FLG_RELATIVE
-        is_not = flags & FLG_NOT
-        is_html = flags & FLG_HTML
-        is_default = flags & FLG_DEFAULT
-        is_indeterminate = flags & FLG_INDETERMINATE
-        is_in_range = flags & FLG_IN_RANGE
-        is_out_of_range = flags & FLG_OUT_OF_RANGE
+        is_open = bool(flags & FLG_OPEN)
+        is_pseudo = bool(flags & FLG_PSEUDO)
+        is_relative = bool(flags & FLG_RELATIVE)
+        is_not = bool(flags & FLG_NOT)
+        is_html = bool(flags & FLG_HTML)
+        is_default = bool(flags & FLG_DEFAULT)
+        is_indeterminate = bool(flags & FLG_INDETERMINATE)
+        is_in_range = bool(flags & FLG_IN_RANGE)
+        is_out_of_range = bool(flags & FLG_OUT_OF_RANGE)
 
         if self.debug:  # pragma: no cover
             if is_pseudo:
@@ -749,8 +780,17 @@ class CSSParser(object):
                     split_last = True
                     index = m.end(0)
                     continue
-                elif key == 'attribute':
-                    has_selector = self.parse_attribute_selector(sel, m, has_selector)
+                elif key in ('attribute', 'quirks_attribute'):
+                    quirks = key == 'quirks_attribute'
+                    if quirks:
+                        temp_index = index + m.group(0).find('=') + 1
+                        util.warn_quirks(
+                            "You have attempted to use an attribute " +
+                            "value that should have been quoted at position {}.".format(temp_index),
+                            "the attribute value should be quoted.",
+                            self.pattern
+                        )
+                    has_selector = self.parse_attribute_selector(sel, m, has_selector, quirks)
                 elif key == 'tag':
                     if has_selector:
                         raise SyntaxError("Tag name found at position {} instead of at the start".format(m.start(0)))
@@ -808,6 +848,8 @@ class CSSParser(object):
         end = (m.start(0) - 1) if m else (len(pattern) - 1)
 
         if self.debug:  # pragma: no cover
+            if self.quirks:
+                print('## QUIRKS MODE: Throwing out the spec!')
             print('## PARSING: {!r}'.format(pattern))
         while index <= end:
             m = None
@@ -824,7 +866,7 @@ class CSSParser(object):
             if m is None:
                 c = pattern[index]
                 # If the character represents the start of one of the known selector types,
-                # throw an exception mentions that the known selector type in error;
+                # throw an exception mentioning that the known selector type is in error;
                 # otherwise, report the invalid character.
                 if c == '[':
                     msg = "Malformed attribute selector at position {}".format(index)
@@ -895,22 +937,16 @@ CSS_INDETERMINATE = CSSParser(
 # CSS pattern for `:disabled`
 CSS_DISABLED = CSSParser(
     '''
-    :is(input[type!=hidden], button, select, textarea, fieldset, optgroup, option)[disabled],
+    :is(input[type!=hidden], button, select, textarea, fieldset, optgroup, option, fieldset)[disabled],
     optgroup[disabled] > option,
-    fieldset[disabled] > :not(legend) :is(input[type!=hidden], button, select, textarea),
-    fieldset[disabled] > :is(input[type!=hidden], button, select, textarea)
+    fieldset[disabled] > :is(input[type!=hidden], button, select, textarea, fieldset),
+    fieldset[disabled] > :not(legend:nth-of-type(1)) :is(input[type!=hidden], button, select, textarea, fieldset)
     '''
 ).process_selectors(flags=FLG_PSEUDO | FLG_HTML)
 # CSS pattern for `:enabled`
 CSS_ENABLED = CSSParser(
     '''
-    :is(a, area, link)[href],
-    :is(fieldset, optgroup):not([disabled]),
-    option:not(optgroup[disabled] *):not([disabled]),
-    :is(input[type!=hidden], button, select, textarea):not(
-        fieldset[disabled] > :not(legend) *,
-        fieldset[disabled] > *
-    ):not([disabled])
+    :is(input[type!=hidden], button, select, textarea, fieldset, optgroup, option, fieldset):not(:disabled)
     '''
 ).process_selectors(flags=FLG_PSEUDO | FLG_HTML)
 # CSS pattern for `:required`
