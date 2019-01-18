@@ -20,6 +20,7 @@ log = logging.getLogger(__name__)
 
 SUBTITLE_EXTENSION = u'.srt'
 HARDCODED_SUBS_EXTENSION = u'.hardcoded.subs'
+VIDEO_EXTENSIONS = subliminal.video.VIDEO_EXTENSIONS
 
 
 def one_path_exists(paths, retry_delay=15):
@@ -50,10 +51,10 @@ def is_skipped_dir(dirname):
     return skipped
 
 
-def is_valid_video_file(filename):
+def is_valid_video_file(filename, video_extensions=VIDEO_EXTENSIONS):
     valid = False
     _, ext = os.path.splitext(filename)
-    if ext and ext in subliminal.video.VIDEO_EXTENSIONS:
+    if ext and ext in video_extensions:
         valid = True
         # Skip 'sample' videos
         if re.search('sample', filename, flags=re.IGNORECASE):

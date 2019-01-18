@@ -12,11 +12,14 @@ from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsD
 from autosubliminal.fileprocessor import process_file
 from autosubliminal.indexer import ShowIndexer, MovieIndexer
 from autosubliminal.util.common import safe_lowercase, get_wanted_languages
-from autosubliminal.util.filesystem import is_valid_video_file, is_skipped_dir, one_path_exists, get_available_subtitles
+from autosubliminal.util.filesystem import is_valid_video_file, is_skipped_dir, one_path_exists, \
+    get_available_subtitles, VIDEO_EXTENSIONS
 from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
 from tvdb_api_v2.utils.artwork import get_artwork_url
 
 log = logging.getLogger(__name__)
+
+EXTENDED_VIDEO_EXTENSIONS = VIDEO_EXTENSIONS + ('.iso',)  # Also iso files are supported in library mode
 
 
 class LibraryScanner(ScheduledProcess):
@@ -80,7 +83,7 @@ class LibraryPathScanner(object):
             # Check files
             for filename in filenames:
                 # Only scan valid video files
-                if is_valid_video_file(filename):
+                if is_valid_video_file(filename, video_extensions=EXTENDED_VIDEO_EXTENSIONS):
                     log.debug('Video file found: %s', filename)
                     try:
                         self._scan_file(dirname, filename)
