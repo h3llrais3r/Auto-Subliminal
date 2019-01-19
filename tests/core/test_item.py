@@ -25,14 +25,14 @@ def test_wanted_item_with_multi_episode():
 
 def test_wanted_item_with_multi_sources():
     # Example file: Inferno.2016.1080p.WEB.BluRay.x264-[GROUP1.AG].mp4
-    wanted_item_1 = WantedItem(type='movie', title='test', source=['WEB-DL', 'BluRay'])
-    assert wanted_item_1.source == ['WEB-DL', 'BluRay']
+    wanted_item_1 = WantedItem(type='movie', title='test', source=['Web', 'Blu-ray'])
+    assert wanted_item_1.source == ['Web', 'Blu-ray']
 
 
 def test_wanted_item_with_multi_codec():
     # Example file: Code.37.S03E02.NL.VLAAMS.720p.HDTV.x264-SHOWGEMiST_xvid.avi
-    wanted_item_1 = WantedItem(type='episode', title='test', season=1, episode=1, codec=['h264', 'XviD'])
-    assert wanted_item_1.codec == ['h264', 'XviD']
+    wanted_item_1 = WantedItem(type='episode', title='test', season=1, episode=1, codec=['H.264', 'Xvid'])
+    assert wanted_item_1.codec == ['H.264', 'Xvid']
 
 
 def test_wanted_item_trim_release_group():
@@ -45,18 +45,18 @@ def test_wanted_item_set_attr():
     wanted_item.set_attr('season', '1')
     wanted_item.set_attr('episode', '1,2')
     wanted_item.set_attr('year', '2018')
-    wanted_item.set_attr('source', 'WEB-DL')
+    wanted_item.set_attr('source', 'Web')
     wanted_item.set_attr('quality', '720p')
-    wanted_item.set_attr('codec', 'h264')
+    wanted_item.set_attr('codec', 'H.264')
     wanted_item.set_attr('tvdbid', '263365')
     wanted_item.set_attr('unknown', 'unknown')
     assert wanted_item.languages == ['nl', 'en']
     assert wanted_item.season == 1
     assert wanted_item.episode == [1, 2]
     assert wanted_item.year == 2018
-    assert wanted_item.source == 'WEB-DL'
+    assert wanted_item.source == 'Web'
     assert wanted_item.quality == '720p'
-    assert wanted_item.codec == 'h264'
+    assert wanted_item.codec == 'H.264'
     assert wanted_item.tvdbid == 263365
     assert not hasattr(wanted_item, 'unknown')
 

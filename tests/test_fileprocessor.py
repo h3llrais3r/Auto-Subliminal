@@ -35,7 +35,7 @@ def test_process_episode_file(mocker):
     assert wanted_item.episode == 3
     assert wanted_item.source == 'HDTV'
     assert wanted_item.quality == '720p'
-    assert wanted_item.codec == 'h264'
+    assert wanted_item.codec == 'H.264'
     assert wanted_item.releasegrp == 'AVS'
     assert wanted_item.tvdbid == 263365
 
@@ -52,7 +52,7 @@ def test_process_multi_episode_file(mocker):
     assert wanted_item.episode == [1, 2]
     assert wanted_item.source == 'HDTV'
     assert wanted_item.quality == '720p'
-    assert wanted_item.codec == 'h264'
+    assert wanted_item.codec == 'H.264'
     assert wanted_item.releasegrp == 'AVS'
     assert wanted_item.tvdbid == 263365
 
@@ -69,7 +69,7 @@ def test_process_episode_file_guess_by_filename(mocker):
     assert wanted_item.episode == 1
     assert wanted_item.source == 'HDTV'
     assert wanted_item.quality == '720p'
-    assert wanted_item.codec == 'h264'
+    assert wanted_item.codec == 'H.264'
     assert wanted_item.releasegrp == 'IMMERSE'
     assert wanted_item.tvdbid == 248741
 
@@ -103,9 +103,9 @@ def test_process_file_movie(mocker):
     assert wanted_item.type == 'movie'
     assert wanted_item.title == 'Southpaw'
     assert wanted_item.year == 2015
-    assert wanted_item.source == 'BluRay'
+    assert wanted_item.source == 'Blu-ray'
     assert wanted_item.quality == '1080p'
-    assert wanted_item.codec == 'h264'
+    assert wanted_item.codec == 'H.264'
     assert wanted_item.imdbid == '1798684'
 
 

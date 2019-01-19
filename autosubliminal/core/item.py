@@ -216,7 +216,7 @@ class WantedItem(_Item):
                        year=cls._property_from_guess(guess, 'year'),
                        season=cls._property_from_guess(guess, 'season'),
                        episode=cls._property_from_guess(guess, 'episode'),
-                       source=cls._property_from_guess(guess, 'format'),
+                       source=cls._property_from_guess(guess, 'source'),
                        quality=cls._property_from_guess(guess, 'screen_size'),
                        codec=cls._property_from_guess(guess, 'video_codec'),
                        releasegrp=cls._property_from_guess(guess, 'release_group'))
