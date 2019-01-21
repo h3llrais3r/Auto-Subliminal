@@ -1,6 +1,5 @@
 # coding=utf-8
 
-
 from guessit.api import default_api
 
 from autosubliminal.parsers.guessit.rules import rules
