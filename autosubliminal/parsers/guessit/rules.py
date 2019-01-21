@@ -131,7 +131,7 @@ class AppendPartToMovieTile(Rule):
             part = parts[0]
             previous = matches.previous(part, predicate=lambda match: match.name == 'title')
             if previous:
-                # Append part to title
+                # Append to title
                 title = previous[0]
                 title.value = cleanup(title.initiator.raw + s2n(' ') + part.initiator.raw)
                 to_remove.extend(parts)
@@ -200,9 +200,147 @@ class AppendLineToMovieTitle(Rule):
             if other.initiator.value == 'Line Audio':
                 previous = matches.previous(other, predicate=lambda match: match.name == 'title')
                 if previous:
-                    # Append part to title
+                    # Append to title
                     title = previous[0]
                     title.value = cleanup(title.initiator.raw + s2n(' ') + other.initiator.raw)
+                    to_remove.extend(others)
+                    to_append.append(title)
+
+        return to_remove, to_append
+
+
+class AppendUsToMovieTitle(Rule):
+    """Append 'Us' to the movie title.
+
+    Example:
+    guessit -t movie "Werewolf.The.Beast.Among.Us.2012.1080p.BluRay.x264.DTS-FGT.mkv"
+
+    without the rule:
+        For: Werewolf.The.Beast.Among.Us.2012.1080p.BluRay.x264.DTS-FGT.mkv
+        GuessIt found: {
+            "title": "Werewolf The Beast Among",
+            "country": "UNITED STATES",
+            "year": 2012,
+            "screen_size": "1080p",
+            "source": "Blu-ray",
+            "video_codec": "H.264",
+            "audio_codec": "DTS",
+            "release_group": "FGT",
+            "container": "mkv",
+            "type": "movie"
+        }
+
+    with the rule:
+        For: Werewolf.The.Beast.Among.Us.2012.1080p.BluRay.x264.DTS-FGT.mkv
+        GuessIt found: {
+            "title": "Werewolf The Beast Among Us",
+            "year": 2012,
+            "screen_size": "1080p",
+            "source": "Blu-ray",
+            "video_codec": "H.264",
+            "audio_codec": "DTS",
+            "release_group": "FGT",
+            "container": "mkv",
+            "type": "movie"
+        }
+    """
+
+    priority = POST_PROCESS
+    dependency = TypeProcessor  # To guess the type before
+    consequence = [RemoveMatch, AppendMatch]
+
+    def when(self, matches, context):
+        """Evaluate the rule.
+
+        :param matches:
+        :type matches: rebulk.match.Matches
+        :param context:
+        :type context: dict
+        :return:
+        """
+        if not matches.named('type', lambda m: m.value == 'movie'):
+            return
+
+        to_remove = []
+        to_append = []
+        countries = matches.named('country')
+        if countries:
+            country = countries[0]
+            if country.initiator.value == 'US':
+                previous = matches.previous(country, predicate=lambda match: match.name == 'title')
+                if previous:
+                    # Append to title
+                    title = previous[0]
+                    title.value = cleanup(title.initiator.raw + s2n(' ') + country.initiator.raw)
+                    to_remove.extend(countries)
+                    to_append.append(title)
+
+        return to_remove, to_append
+
+
+class PrependXxxToMovieTitle(Rule):
+    """Prepend 'Xxx' to the movie title.
+
+    Example:
+    guessit -t movie "xXx.Return.of.Xander.Cage.2017.1080p.BluRay.H264.AAC-RARBG.mkv"
+
+    without the rule:
+        For: xXx.Return.of.Xander.Cage.2017.1080p.BluRay.H264.AAC-RARBG.mkv
+        GuessIt found: {
+            "other": "XXX",
+            "title": "Return of Xander Cage",
+            "year": 2017,
+            "screen_size": "1080p",
+            "source": "Blu-ray",
+            "video_codec": "H.264",
+            "audio_codec": "AAC",
+            "release_group": "RARBG",
+            "container": "mkv",
+            "type": "movie"
+        }
+
+    with the rule:
+        For: xXx.Return.of.Xander.Cage.2017.1080p.BluRay.H264.AAC-RARBG.mkv
+        GuessIt found: {
+            "title": "xXx Return of Xander Cage",
+            "year": 2017,
+            "screen_size": "1080p",
+            "source": "Blu-ray",
+            "video_codec": "H.264",
+            "audio_codec": "AAC",
+            "release_group": "RARBG",
+            "container": "mkv",
+            "type": "movie"
+        }
+    """
+
+    priority = POST_PROCESS
+    dependency = TypeProcessor  # To guess the type before
+    consequence = [RemoveMatch, AppendMatch]
+
+    def when(self, matches, context):
+        """Evaluate the rule.
+
+        :param matches:
+        :type matches: rebulk.match.Matches
+        :param context:
+        :type context: dict
+        :return:
+        """
+        if not matches.named('type', lambda m: m.value == 'movie'):
+            return
+
+        to_remove = []
+        to_append = []
+        others = matches.named('other')
+        if others:
+            other = others[0]
+            if other.initiator.value == 'XXX':
+                next = matches.next(other, predicate=lambda match: match.name == 'title')
+                if next:
+                    # Prepend to title
+                    title = next[0]
+                    title.value = cleanup(other.initiator.raw + s2n(' ') + title.initiator.raw)
                     to_remove.extend(others)
                     to_append.append(title)
 
@@ -216,4 +354,5 @@ def rules():
     - DO NOT define priority or dependency in each rule. Just define order here.
     - Only allowed dependency is TypeProcessor because we want to apply rules for certain types only
     """
-    return Rebulk().rules(RenamePartsToEpisodeNumbers, AppendPartToMovieTile, AppendLineToMovieTitle)
+    return Rebulk().rules(RenamePartsToEpisodeNumbers, AppendPartToMovieTile, AppendLineToMovieTitle,
+                          AppendUsToMovieTitle, PrependXxxToMovieTitle)
