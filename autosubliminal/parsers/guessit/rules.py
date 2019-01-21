@@ -5,23 +5,23 @@ from guessit.rules.common.formatters import cleanup
 from guessit.rules.properties.type import TypeProcessor
 
 from rebulk import Rebulk
-from rebulk.match import Match
 from rebulk.processors import POST_PROCESS
 from rebulk.rules import AppendMatch, RemoveMatch, RenameMatch, Rule
 
 from autosubliminal.util.encoding import s2n
 
 
-class PartsAsEpisodeNumbers(Rule):
-    """Treat parts as episode numbers.
+class RenamePartsToEpisodeNumbers(Rule):
+    """Rename parts to episode numbers.
 
     Example:
-    guessit -t episode "Show.Name.Part.3.720p.HDTV.x264-Group.mkv"
+    guessit -t episode "Show.Name.Season.1.Part.3.720p.HDTV.x264-Group.mkv"
 
     without the rule:
-        For: Show.Name.Part.3.720p.HDTV.x264-Group.mkv
+        For: Show.Name.Season.1.Part.3.720p.HDTV.x264-Group.mkv
         GuessIt found: {
             "title": "Show Name",
+            "season": 1,
             "part": 3,
             "screen_size": "720p",
             "source": "HDTV",
@@ -32,7 +32,7 @@ class PartsAsEpisodeNumbers(Rule):
         }
 
     with the rule:
-        For: Show.Name.Part.3.720p.HDTV.x264-Group.mkv
+        For: Show.Name.Season.1.Part.3.720p.HDTV.x264-Group.mkv
         GuessIt found: {
             "title": "Show Name",
             "season": 1,
@@ -48,7 +48,7 @@ class PartsAsEpisodeNumbers(Rule):
 
     priority = POST_PROCESS
     dependency = TypeProcessor  # To guess the type before
-    consequence = RenameMatch('episode'), AppendMatch
+    consequence = RenameMatch('episode')
 
     def when(self, matches, context):
         """Evaluate the rule.
@@ -63,21 +63,19 @@ class PartsAsEpisodeNumbers(Rule):
             return
 
         to_rename = []
-        to_append = None
         file_parts = matches.markers.named('path')
         for file_part in marker_sorted(file_parts, matches):
             parts = matches.range(file_part.start, file_part.end, predicate=lambda match: match.name == 'part')
-            # Only apply when there's no season and no episode and assume it's season 1
+            # Only apply when there's no episode
             if parts and not matches.range(file_part.start, file_part.end,
-                                           predicate=lambda match: match.name in ('season', 'episode', 'date')):
+                                           predicate=lambda match: match.name == 'episode'):
                 to_rename.extend(parts)
-                to_append = Match(-1, -1, value=1, name='season')
 
-        return to_rename, to_append
+        return to_rename
 
 
-class PartAsMovieTile(Rule):
-    """Treat part as title for movies.
+class AppendPartToMovieTile(Rule):
+    """Append 'Part x' to the movie title.
 
     Example:
     guessit -t movie "The.Hunger.Games.Mockingjay.Part.2.2015.1080p.BluRay.x264-SPARKS.mkv"
@@ -126,8 +124,8 @@ class PartAsMovieTile(Rule):
         if not matches.named('type', lambda m: m.value == 'movie'):
             return
 
-        to_remove = None
-        to_append = None
+        to_remove = []
+        to_append = []
         parts = matches.named('part')
         if parts:
             part = parts[0]
@@ -135,9 +133,78 @@ class PartAsMovieTile(Rule):
             if previous:
                 # Append part to title
                 title = previous[0]
-                title.value = cleanup(title.initiator.value + s2n(' ') + part.initiator.value)
-                to_remove = part
-                to_append = title
+                title.value = cleanup(title.initiator.raw + s2n(' ') + part.initiator.raw)
+                to_remove.extend(parts)
+                to_append.append(title)
+
+        return to_remove, to_append
+
+
+class AppendLineToMovieTitle(Rule):
+    """Append 'Line' to the movie title.
+
+    Example:
+    guessit -t movie "The.Thin.Red.Line.1998.1080p.BluRay.H264.AAC-RARBG.mkv"
+
+    without the rule:
+        For: The.Thin.Red.Line.1998.1080p.BluRay.H264.AAC-RARBG.mkv
+        GuessIt found: {
+            "title": "The Thin Red",
+            "other": "Line Audio",
+            "year": 1998,
+            "screen_size": "1080p",
+            "source": "Blu-ray",
+            "video_codec": "H.264",
+            "audio_codec": "AAC",
+            "release_group": "SPARKS",
+            "container": "mkv",
+            "type": "movie"
+        }
+
+    with the rule:
+        For: The.Thin.Red.Line.1998.1080p.BluRay.H264.AAC-RARBG.mkv
+        GuessIt found: {
+            "title": "The Thin Red Line",
+            "year": 1998,
+            "screen_size": "1080p",
+            "source": "Blu-ray",
+            "video_codec": "H.264",
+            "audio_codec": "AAC",
+            "release_group": "SPARKS",
+            "container": "mkv",
+            "type": "movie"
+        }
+    """
+
+    priority = POST_PROCESS
+    dependency = TypeProcessor  # To guess the type before
+    consequence = [RemoveMatch, AppendMatch]
+
+    def when(self, matches, context):
+        """Evaluate the rule.
+
+        :param matches:
+        :type matches: rebulk.match.Matches
+        :param context:
+        :type context: dict
+        :return:
+        """
+        if not matches.named('type', lambda m: m.value == 'movie'):
+            return
+
+        to_remove = []
+        to_append = []
+        others = matches.named('other')
+        if others:
+            other = others[0]
+            if other.initiator.value == 'Line Audio':
+                previous = matches.previous(other, predicate=lambda match: match.name == 'title')
+                if previous:
+                    # Append part to title
+                    title = previous[0]
+                    title.value = cleanup(title.initiator.raw + s2n(' ') + other.initiator.raw)
+                    to_remove.extend(others)
+                    to_append.append(title)
 
         return to_remove, to_append
 
@@ -149,4 +216,4 @@ def rules():
     - DO NOT define priority or dependency in each rule. Just define order here.
     - Only allowed dependency is TypeProcessor because we want to apply rules for certain types only
     """
-    return Rebulk().rules(PartsAsEpisodeNumbers, PartAsMovieTile)
+    return Rebulk().rules(RenamePartsToEpisodeNumbers, AppendPartToMovieTile, AppendLineToMovieTitle)
