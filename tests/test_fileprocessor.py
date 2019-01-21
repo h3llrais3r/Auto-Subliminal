@@ -96,7 +96,7 @@ def test_process_episode_file_guess_by_file_path(mocker):
 
 def test_process_file_movie(mocker):
     mocker.patch.object(autosubliminal.MOVIEINDEXER, 'get_imdb_id_and_year')
-    autosubliminal.MOVIEINDEXER.get_imdb_id_and_year.return_value = '1798684', 2015
+    autosubliminal.MOVIEINDEXER.get_imdb_id_and_year.return_value = 'tt1798684', 2015
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
     wanted_item = process_file(dir_name, 'Southpaw.2015.1080p.BluRay.x264.mkv')
     assert wanted_item is not None
@@ -106,19 +106,19 @@ def test_process_file_movie(mocker):
     assert wanted_item.source == 'Blu-ray'
     assert wanted_item.quality == '1080p'
     assert wanted_item.codec == 'H.264'
-    assert wanted_item.imdbid == '1798684'
+    assert wanted_item.imdbid == 'tt1798684'
 
 
 def test_process_movie_file_special_chars(mocker):
     mocker.patch.object(autosubliminal.MOVIEINDEXER, 'get_imdb_id_and_year')
-    autosubliminal.MOVIEINDEXER.get_imdb_id_and_year.return_value = '0993789', 2008
+    autosubliminal.MOVIEINDEXER.get_imdb_id_and_year.return_value = 'tt0993789', 2008
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
     wanted_item = process_file(dir_name, u'Un conte de Noël (2008).mkv')
     assert wanted_item is not None
     assert wanted_item.type == 'movie'
     assert wanted_item.title == u'Un conte de Noël'
     assert wanted_item.year == 2008
-    assert wanted_item.imdbid == '0993789'
+    assert wanted_item.imdbid == 'tt0993789'
 
 
 def test_process_movie_file_insufficient_guess(mocker):
