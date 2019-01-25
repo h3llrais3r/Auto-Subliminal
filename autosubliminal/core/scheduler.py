@@ -113,7 +113,7 @@ class Scheduler(object):
             # Increase delay with 1 second each time the process cannot yet run
             self._delay += 1
             return
-        
+
         try:
             # Mark as running
             self.process.running = True
