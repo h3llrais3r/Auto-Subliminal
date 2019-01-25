@@ -10,14 +10,15 @@ from ..backend import json
 
 __all__ = ['register_handlers', 'unregister_handlers']
 
-class PandasProcessor():
+
+class PandasProcessor(object):
 
     def __init__(self, size_threshold=500, compression=zlib):
         """
         :param size_threshold: nonnegative int or None
             valid values for 'size_threshold' are all nonnegative
-            integers and None
-            if size_threshold is None, dataframes are always stored as csv strings
+            integers and None.  If size_threshold is None,
+            dataframes are always stored as csv strings
         :param compression: a compression module or None
             valid values for 'compression' are {zlib, bz2, None}
             if compresion is None, no compression is applied
@@ -48,41 +49,70 @@ class PandasProcessor():
             if data.get('comp', False):
                 buf = self.compression.decompress(buf).decode()
         meta = data.get('meta', {})
-        return buf,meta
+        return (buf, meta)
+
+
+def make_read_csv_params(meta):
+    meta_dtypes = meta.get('dtypes', {})
+
+    parse_dates = []
+    converters = {}
+    dtype = {}
+    for k, v in meta_dtypes.items():
+        if v.startswith('datetime'):
+            parse_dates.append(k)
+        elif v.startswith('complex'):
+            converters[k] = complex
+        else:
+            dtype[k] = v
+
+    return dict(dtype=dtype, parse_dates=parse_dates, converters=converters)
 
 
 class PandasDfHandler(BaseHandler):
     pp = PandasProcessor()
 
     def flatten(self, obj, data):
-        # TODO: handle multi-index
         dtype = obj.dtypes.to_dict()
-        meta = {'dtypes': {k:str(dtype[k]) for k in dtype}, 'index_col': 0}
+
+        # Handles named multi-indexes
+        index_col = list(obj.index.names) if list(obj.index.names) != [None] else 0
+
+        meta = {'dtypes': {k: str(dtype[k]) for k in dtype},
+                'index_col': index_col}
+
         data = self.pp.flatten_pandas(obj.to_csv(), data, meta)
         return data
 
     def restore(self, data):
-        csv,meta = self.pp.restore_pandas(data)
-        dtype = meta['dtypes'] if 'dtypes' in meta else None
-        df = pd.read_csv(StringIO(csv), index_col=meta.get('index_col', None), dtype=dtype)
+        csv, meta = self.pp.restore_pandas(data)
+        params = make_read_csv_params(meta)
+        df = pd.read_csv(StringIO(csv),
+                         index_col=meta.get('index_col', None),
+                         **params)
         return df
+
 
 class PandasSeriesHandler(BaseHandler):
     pp = PandasProcessor()
 
     def flatten(self, obj, data):
-        dtypes = {k:str(pd.np.dtype(type(obj[k]))) for k in obj.keys()}
+        dtypes = {k: str(pd.np.dtype(type(obj[k]))) for k in obj.keys()}
         meta = {'dtypes': dtypes, 'name': obj.name}
-        # Save series as two rows rather than two cols to make preserving type easier
+        # Save series as two rows rather than two cols to make preserving the
+        # type easier.
         data = self.pp.flatten_pandas(obj.to_frame().T.to_csv(), data, meta)
         return data
 
     def restore(self, data):
-        csv,meta = self.pp.restore_pandas(data)
-        dtypes = meta['dtypes'] if 'dtypes' in meta else None
-        df = pd.read_csv(StringIO(csv), dtype=dtypes)
-        ser = pd.Series(data=df.iloc[:,1:].values[0], index=df.columns[1:].values, name=meta.get('name', None))
+        csv, meta = self.pp.restore_pandas(data)
+        params = make_read_csv_params(meta)
+        df = pd.read_csv(StringIO(csv), **params)
+        ser = pd.Series(data=df.iloc[:, 1:].values[0],
+                        index=df.columns[1:].values,
+                        name=meta.get('name', None))
         return ser
+
 
 class PandasIndexHandler(BaseHandler):
     pp = PandasProcessor()
@@ -94,7 +124,7 @@ class PandasIndexHandler(BaseHandler):
         return data
 
     def restore(self, data):
-        buf,meta = self.pp.restore_pandas(data)
+        buf, meta = self.pp.restore_pandas(data)
         dtype = meta.get('dtype', None)
         name = meta.get('name', None)
         idx = pd.Index(json.loads(buf), dtype=dtype, name=name)
@@ -111,4 +141,3 @@ def unregister_handlers():
     unregister(pd.DataFrame)
     unregister(pd.Series)
     unregister(pd.Index)
-
