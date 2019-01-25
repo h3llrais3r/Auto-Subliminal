@@ -108,13 +108,13 @@ class Scheduler(object):
         # Check if the run needs a lock
         run_lock = self.process.force_run_lock if self._force_run else self.process.run_lock
 
+        # Delay process if lock cannot be acquired
+        if run_lock and not get_wanted_queue_lock():
+            # Increase delay with 1 second each time the process cannot yet run
+            self._delay += 1
+            return
+        
         try:
-            # Delay process if lock cannot be acquired
-            if run_lock and not get_wanted_queue_lock():
-                # Increase delay with 1 second each time the process cannot yet run
-                self._delay += 1
-                return
-
             # Mark as running
             self.process.running = True
             send_websocket_event(PROCESS_STARTED, data=self.to_json())
