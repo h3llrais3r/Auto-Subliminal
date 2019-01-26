@@ -20,7 +20,7 @@ class Artwork(object):
         return self._serve_artwork_image('imdb', artwork_type, resolution, imdb_id)
 
     def _serve_artwork_image(self, indexer_name, artwork_type, resolution, indexer_id):
-        if not resolution in self.resolutions:
+        if resolution not in self.resolutions:
             raise NotFound()
         thumbnail = resolution == 'thumbnail'
         return static.serve_file(get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=thumbnail))
