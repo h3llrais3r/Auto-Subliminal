@@ -9,6 +9,7 @@ from autosubliminal.db import WantedItemsDb
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
 from autosubliminal.util.common import display_value, display_item_title, run_cmd, sanitize
+from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock
 from autosubliminal.util.websocket import send_websocket_notification
 
 
@@ -23,41 +24,56 @@ class Home(object):
     @cherrypy.expose(alias='updateWantedItem')
     @cherrypy.tools.json_out()
     def update_wanted_item(self, wanted_item_index, **kwargs):
-        # Get wanted item
-        wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
-        # Update all keys that are passed
-        for key in kwargs:
-            wanted_item.set_attr(key, kwargs[key])
-        # Only return updatable fields
-        # These values will be shown in the view through jquery, so apply the display_value() on it!
-        return {'displaytitle': display_item_title(wanted_item),
-                'title': display_value(wanted_item.title),
-                'year': display_value(wanted_item.year),
-                'season': display_value(wanted_item.season),
-                'episode': display_value(wanted_item.episode),
-                'source': display_value(wanted_item.source, default_value='N/A', uppercase=True),
-                'quality': display_value(wanted_item.quality, default_value='N/A', uppercase=True),
-                'codec': display_value(wanted_item.codec, default_value='N/A', uppercase=True),
-                'releasegrp': display_value(wanted_item.releasegrp, default_value='N/A', uppercase=True)}
+        if get_wanted_queue_lock():
+            # Get wanted item and update all keys that are passed
+            wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+            for key in kwargs:
+                wanted_item.set_attr(key, kwargs[key])
+
+            # Release wanted queue lock
+            release_wanted_queue_lock()
+
+            # Only return updatable fields
+            # These values will be shown in the view through jquery, so apply the display_value() on it!
+            return {'displaytitle': display_item_title(wanted_item),
+                    'title': display_value(wanted_item.title),
+                    'year': display_value(wanted_item.year),
+                    'season': display_value(wanted_item.season),
+                    'episode': display_value(wanted_item.episode),
+                    'source': display_value(wanted_item.source, default_value='N/A', uppercase=True),
+                    'quality': display_value(wanted_item.quality, default_value='N/A', uppercase=True),
+                    'codec': display_value(wanted_item.codec, default_value='N/A', uppercase=True),
+                    'releasegrp': display_value(wanted_item.releasegrp, default_value='N/A', uppercase=True)}
+
+        # Show notification if wanted queue is in use
+        send_websocket_notification('Cannot update wanted item when wanted queue is in use!', type='notice')
 
     @cherrypy.expose(alias='resetWantedItem')
     @cherrypy.tools.json_out()
     def reset_wanted_item(self, wanted_item_index, **kwargs):
-        # Get wanted item
-        wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
-        wanted_item_db = WantedItemsDb().get_wanted_item(wanted_item.videopath)
-        wanted_item_db.copy_to(wanted_item)
-        # Only return updatable fields
-        # These values represent the original values, so apply default display_value() on it!
-        return {'displaytitle': display_item_title(wanted_item),
-                'title': display_value(wanted_item.title),
-                'year': display_value(wanted_item.year),
-                'season': display_value(wanted_item.season),
-                'episode': display_value(wanted_item.episode),
-                'source': display_value(wanted_item.source, default_value='N/A'),
-                'quality': display_value(wanted_item.quality, default_value='N/A'),
-                'codec': display_value(wanted_item.codec, default_value='N/A'),
-                'releasegrp': display_value(wanted_item.releasegrp, default_value='N/A')}
+        if get_wanted_queue_lock():
+            # Get wanted item and reset values
+            wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+            wanted_item_db = WantedItemsDb().get_wanted_item(wanted_item.videopath)
+            wanted_item_db.copy_to(wanted_item)
+
+            # Release wanted queue lock
+            release_wanted_queue_lock()
+
+            # Only return updatable fields
+            # These values represent the original values, so apply default display_value() on it!
+            return {'displaytitle': display_item_title(wanted_item),
+                    'title': display_value(wanted_item.title),
+                    'year': display_value(wanted_item.year),
+                    'season': display_value(wanted_item.season),
+                    'episode': display_value(wanted_item.episode),
+                    'source': display_value(wanted_item.source, default_value='N/A'),
+                    'quality': display_value(wanted_item.quality, default_value='N/A'),
+                    'codec': display_value(wanted_item.codec, default_value='N/A'),
+                    'releasegrp': display_value(wanted_item.releasegrp, default_value='N/A')}
+
+        # Show notification if wanted queue is in use
+        send_websocket_notification('Cannot reset wanted item when wanted queue is in use!', type='notice')
 
     @cherrypy.expose(alias='searchId')
     def force_id_search(self, wanted_item_index):
