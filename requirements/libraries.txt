@@ -21,7 +21,7 @@ futures==3.2.0 ; python_version < '3.0'
 gitdb2==2.0.5
 gitpython==2.1.11
 gntp==1.0.3
-guessit==2.1.4 # rq.filter: <3.0.0
+guessit==3.0.3
 html5lib==1.0.1
 idna==2.8
 imdbpie==5.6.3
@@ -49,7 +49,7 @@ six==1.12.0
 smmap2==2.0.5
 soupsieve==1.7.3
 stevedore==1.30.0
-git+https://github.com/Diaoul/subliminal.git@879c0c8d18618e32ad466bb63bd939edb268bc60#egg=subliminal
+git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a#egg=subliminal
 tempora==1.14
 trans==2.1.0
 git+https://github.com/h3llrais3r/tvdb_api_v2.git@7f02ecb9620017aed75973fd14d0197825c35140#egg=tvdb_api_v2

@@ -1500,7 +1500,7 @@ def _upgrade_config(from_version, to_version):
         # video.scores['season'] = 6
         # video.scores['year'] = 24
         # --> these 4 should always be matched by default -> not visible in GUI -> showminmatchscore = 60
-        # video.scores['format'] = 3
+        # video.scores['source'] = 3
         # video.scores['resolution'] = 2
         # video.scores['release_group'] = 6
         # video.scores['video_codec'] = 2
@@ -1532,7 +1532,7 @@ def _upgrade_config(from_version, to_version):
         # video.scores['episode'] = 11
         # --> these 4 should always be matched by default -> not visible in GUI -> showminmatchscore = 110
         # video.scores['release_group'] = 11
-        # video.scores['format'] = 6
+        # video.scores['source'] = 6
         # video.scores['resolution'] = 4
         # video.scores['video_codec'] = 4
         # --> these 4 are configurable -> max showminmatchscore = 110 + 11 + 6 + 4 + 4 = 135
@@ -1545,7 +1545,7 @@ def _upgrade_config(from_version, to_version):
         # video.scores['year'] = 12
         # --> these 2 should always be matched by default -> not visible in GUI -> showminmatchscore = 35
         # video.scores['release_group'] = 11
-        # video.scores['format'] = 6
+        # video.scores['source'] = 6
         # video.scores['resolution'] = 4
         # video.scores['video_codec'] = 4
         # --> these 4 are configurable -> max showminmatchscore = 35 + 11 + 6 + 4 + 4 = 60
@@ -1582,7 +1582,7 @@ def _upgrade_config(from_version, to_version):
         # 'episode': 30
         # --> these 4 should always be matched by default -> not visible in GUI -> showminmatchscore = 330
         # 'release_group': 15
-        # 'format': 7
+        # 'source': 7
         # 'resolution': 2
         # 'video_codec': 2
         # --> these 4 are configurable -> max showminmatchscore = 330 + 15 + 7 + 2 + 2 = 356
@@ -1599,7 +1599,7 @@ def _upgrade_config(from_version, to_version):
         # 'year': 30
         # --> these 2 should always be matched by default -> not visible in GUI -> showminmatchscore = 90
         # 'release_group': 15
-        # 'format': 7
+        # 'source': 7
         # 'resolution': 2
         # 'video_codec': 2
         # --> these 4 are configurable -> max showminmatchscore = 90 + 15 + 7 + 2 + 2 = 116

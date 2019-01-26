@@ -18,7 +18,7 @@ def refine(video, wanted_item, **kwargs):
       * :attr:`~subliminal.video.Episode.year`
       * :attr:`~subliminal.video.Episode.season`
       * :attr:`~subliminal.video.Episode.episode`
-      * :attr:`~subliminal.video.Episode.format`
+      * :attr:`~subliminal.video.Episode.source`
       * :attr:`~subliminal.video.Episode.resolution`
       * :attr:`~subliminal.video.Episode.video_codec`
       * :attr:`~subliminal.video.Episode.release_group`
@@ -27,7 +27,7 @@ def refine(video, wanted_item, **kwargs):
 
       * :attr:`~subliminal.video.Movie.title`
       * :attr:`~subliminal.video.Movie.year`
-      * :attr:`~subliminal.video.Movie.format`
+      * :attr:`~subliminal.video.Movie.source`
       * :attr:`~subliminal.video.Movie.resolution`
       * :attr:`~subliminal.video.Movie.video_codec`
       * :attr:`~subliminal.video.Movie.release_group`
@@ -44,7 +44,7 @@ def refine(video, wanted_item, **kwargs):
         video.year = _get_video_attr(wanted_item.year, video.year)
         video.season = _get_video_attr(wanted_item.season, video.season)
         video.episode = _get_video_attr(wanted_item.episode, video.episode)
-        video.format = _get_video_attr(wanted_item.source, video.format)
+        video.source = _get_video_attr(wanted_item.source, video.source)
         video.resolution = _get_video_attr(wanted_item.quality, video.resolution)
         video.video_codec = _get_video_attr(wanted_item.codec, video.video_codec)
         video.release_group = _get_video_attr(wanted_item.releasegrp, video.release_group)
@@ -55,7 +55,7 @@ def refine(video, wanted_item, **kwargs):
         logger.info('Refining movie video with data from wanted_item')
         video.title = _get_video_attr(wanted_item.title, video.title)
         video.year = _get_video_attr(wanted_item.year, video.year)
-        video.format = _get_video_attr(wanted_item.source, video.format)
+        video.source = _get_video_attr(wanted_item.source, video.source)
         video.resolution = _get_video_attr(wanted_item.quality, video.resolution)
         video.video_codec = _get_video_attr(wanted_item.codec, video.video_codec)
         video.release_group = _get_video_attr(wanted_item.releasegrp, video.release_group)

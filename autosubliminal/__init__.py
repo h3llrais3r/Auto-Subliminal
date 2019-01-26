@@ -266,6 +266,9 @@ def initialize():
     # Cache settings
     _init_cache(python_version_changed)
 
+    # Guessit settings
+    _init_guessit()
+
     # Subliminal settings
     SUBLIMINALPROVIDERMANAGER = _init_subliminal(python_version_changed)
     SUBLIMINALPROVIDERCONFIGS = {}
@@ -330,9 +333,7 @@ def _check_python_version_change():
 
 
 def _init_cache(replace):
-    """
-    Initialize internal cache.
-    """
+    """Initialize internal cache."""
 
     # Imports
     from autosubliminal.core.cache import MutexFileLock, clear_mako_cache, region
@@ -354,9 +355,23 @@ def _init_cache(replace):
                          replace_existing_backend=replace)
 
 
-def _init_subliminal(replace):
+def _init_guessit():
+    """Initialize guessit.
+
+    Make sure that guessit.guessit(...) always uses our custom version.
     """
-    Initialize subliminal.
+
+    # Imports
+    import guessit
+    from autosubliminal.parsers import guessit as custom_guessit
+
+    # Use our custom guessit parser by default
+    guessit.guessit = custom_guessit
+
+
+def _init_subliminal(replace):
+    """Initialize subliminal.
+
     This must always be done AFTER the registration of our fake_entry_points.
     Therefore the imports must be done here, otherwise the 'subliminal.providers' entry point is already initialized
     before we could register it ourselves.

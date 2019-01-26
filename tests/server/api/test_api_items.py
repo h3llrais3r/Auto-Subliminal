@@ -10,14 +10,14 @@ from autosubliminal.server.rest import BadRequest
 from tests.server.api.test_api import pickle_api_result
 
 wanted_item = {
-    'codec': u'h264',
+    'codec': u'H.264',
     'episode': u'6',
     'imdbid': None,
     'languages': [u'nl'],
     'quality': u'720p',
     'releasegrp': u'NTb',
     'season': u'1',
-    'source': u'WEB-DL',
+    'source': u'Web',
     'timestamp': u'2015-11-15 16:27:35',
     'title': u'Mr Robot',
     'type': u'episode',
@@ -26,15 +26,15 @@ wanted_item = {
     'year': None
 }
 
-wanted_item_json = '{"codec": "h264", "episode": "6", "imdbid": null, "languages": ["nl"], "quality": "720p",' \
-                   ' "releasegrp": "NTb", "season": "1", "source": "WEB-DL", "timestamp": "2015-11-15 16:27:35",' \
+wanted_item_json = '{"codec": "H.264", "episode": "6", "imdbid": null, "languages": ["nl"], "quality": "720p",' \
+                   ' "releasegrp": "NTb", "season": "1", "source": "Web", "timestamp": "2015-11-15 16:27:35",' \
                    ' "title": "Mr Robot", "tvdbid": "289590", "type": "episode",' \
                    ' "videopath": "Mr.Robot.S01E06.720p.WEB-DL.DD5.1.H.264-NTb.mkv", "year": null}'
 
 wanted_item_list_json = '[' + wanted_item_json + ']'
 
 downloaded_item = {
-    'codec': u'h264',
+    'codec': u'H.264',
     'episode': u'6',
     'id': u'1',
     'language': u'nl',
@@ -42,7 +42,7 @@ downloaded_item = {
     'quality': u'720p',
     'releasegrp': u'NTb',
     'season': u'1',
-    'source': u'WEB-DL',
+    'source': u'Web',
     'subtitle': u'Mr.Robot.S01E06.720p.WEB-DL.DD5.1.H.264-NTb',
     'timestamp': u'2015-11-15 16:27:35',
     'title': u'Mr Robot',
@@ -50,8 +50,8 @@ downloaded_item = {
     'year': None
 }
 
-downloaded_item_json = '{"codec": "h264", "episode": "6", "id": "1", "language": "nl", "provider": "shooter",' \
-                       ' "quality": "720p", "releasegrp": "NTb", "season": "1", "source": "WEB-DL",' \
+downloaded_item_json = '{"codec": "H.264", "episode": "6", "id": "1", "language": "nl", "provider": "shooter",' \
+                       ' "quality": "720p", "releasegrp": "NTb", "season": "1", "source": "Web",' \
                        ' "subtitle": "Mr.Robot.S01E06.720p.WEB-DL.DD5.1.H.264-NTb",' \
                        ' "timestamp": "2015-11-15 16:27:35", "title": "Mr Robot", "type": "episode", "year": null}'
 
