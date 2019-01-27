@@ -61,6 +61,9 @@
                                                 <a href="#" @click="refreshShowDetails($event)">
                                                     <i class="fa fa-repeat" aria-hidden="true" title="Click to refresh show details"></i>
                                                 </a>
+                                                <a href="#" @click="openDeleteModal($event)">
+                                                    <i class="fa fa-trash" aria-hidden="true" title="Click to delete show from the database"></i>
+                                                </a>
                                             </span>
                                             <hr>
                                         </div>
@@ -169,6 +172,7 @@
                     </div>
 
                     <%include file="/library/inc_library-show-settings-modal.mako"/>
+                    <%include file="/library/inc_library-show-delete-modal.mako"/>
                     <%include file="/library/inc_library-subtitles-modal.mako"/>
 
                 </div>

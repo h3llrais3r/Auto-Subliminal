@@ -39,6 +39,7 @@ class MovieDetailsDb(object):
         self._query_set = 'INSERT INTO movie_details VALUES (?,?,?,?,?,?,?)'
         self._query_update = 'UPDATE movie_details SET title=?, year=?, path=?, overview=?, poster=?, ' \
                              'missing_languages=? WHERE imdb_id=?'
+        self._query_delete = 'DELETE FROM movie_details WHERE imdb_id=?'
         self._query_flush = 'DELETE FROM movie_details'
 
     def get_all_movies(self, subtitles=False):
@@ -130,6 +131,22 @@ class MovieDetailsDb(object):
             subtitles_db = MovieSubtitlesDb(connection)
             subtitles_db.delete_movie_subtitles(movie.imdb_id)
             subtitles_db.set_movie_subtitles(movie.imdb_id, movie.subtitles)
+        connection.commit()
+        connection.close()
+
+    def delete_movie(self, imdb_id, subtitles=False):
+        """Delete a movie by its imdb id.
+
+        :param imdb_id: the imdb id
+        :type imdb_id: str
+        :param subtitles: indication if subtitles must be deleted or not
+        :type subtitles: bool
+        """
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_delete, [imdb_id])
+        if subtitles:
+            MovieSubtitlesDb(connection).delete_movie_subtitles(imdb_id)
         connection.commit()
         connection.close()
 
@@ -225,6 +242,7 @@ class MovieSettingsDb(object):
         self._query_set = 'INSERT INTO movie_settings VALUES(?,?,?,?,?)'
         self._query_update = 'UPDATE movie_settings SET wanted_languages=?, refine=?, hearing_impaired=?, ' \
                              'utf8_encoding=? WHERE imdb_id=?'
+        self._query_delete = 'DELETE FROM movie_settings WHERE imdb_id=?'
 
     def get_movie_settings(self, imdb_id):
         """Get the movie settings by its imdb id.
@@ -276,3 +294,15 @@ class MovieSettingsDb(object):
             movie_settings.imdb_id
         ])
         connection.commit()
+
+    def delete_movie_settings(self, imdb_id):
+        """Delete the movie settings by its imdb id.
+
+        :param imdb_id: the imdb id
+        :type imdb_id: str
+        """
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_delete, [imdb_id])
+        connection.commit()
+        connection.close()

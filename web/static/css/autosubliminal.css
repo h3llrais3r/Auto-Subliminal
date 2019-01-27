@@ -386,6 +386,10 @@ a:hover, a:active, a:focus, a:visited > .fa {
   }
 }
 
+.modal-dialog.auto-width {
+  width: auto;
+}
+
 /***********************
  * FA-CHECKBOX STYLING *
  ***********************/

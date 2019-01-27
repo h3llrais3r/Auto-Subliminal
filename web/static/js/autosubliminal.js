@@ -574,3 +574,18 @@ $.putJson = function (url, data, success, dataType) {
         success: success
     });
 };
+
+// Jquery wrapper to delete with json content-type
+$.deleteJson = function (url, data, success, dataType) {
+    if (typeof data != 'string') {
+        data = JSON.stringify(data);
+    }
+    $.ajax({
+        url: url,
+        type: 'delete',
+        data: data,
+        dataType: dataType || 'json',
+        contentType: 'application/json; charset=utf-8',
+        success: success
+    });
+};

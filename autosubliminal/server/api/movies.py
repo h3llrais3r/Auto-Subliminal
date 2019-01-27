@@ -31,7 +31,7 @@ class MoviesApi(RestResource):
         self.subtitles = _SubtitlesApi()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET',)
+        self.allowed_methods = ('GET', 'DELETE')
 
     def get(self, imdb_id=None):
         """Get the list of movies or the details of a single movie."""
@@ -47,6 +47,13 @@ class MoviesApi(RestResource):
                 db_movie_settings = movie_settings_db.get_movie_settings(db_movie.imdb_id)
                 movies.append(self._to_movie_json(db_movie, db_movie_settings))
             return movies
+
+    def delete(self, imdb_id):
+        # Delete from database
+        MovieDetailsDb().delete_movie(imdb_id, subtitles=True)
+        MovieSettingsDb().delete_movie_settings(imdb_id)
+
+        return self._no_content()
 
     def _to_movie_json(self, movie, movie_settings, details=False):
         movie_json = movie.to_json()

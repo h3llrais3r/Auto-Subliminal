@@ -99,6 +99,11 @@
                     // Open modal
                     $('#settingsModal').modal('show');
                 },
+                openDeleteModal: function (event) {
+                    event.preventDefault();
+                    // Open modal
+                    $('#deleteModal').modal('show');
+                },
                 openSubtitlesModal: function (fileLocation, fileName, hardcodedLanguages, episodeTvdbId, event) {
                     event.preventDefault();
                     // Set selected video file and clear language selection
@@ -121,6 +126,17 @@
                         $('#settingsModal').modal('hide');
                         // Refresh show details
                         self.refreshShowDetails(event);
+                    });
+                },
+                deleteShow: function (event) {
+                    event.preventDefault();
+                    // Delete the show
+                    var self = this;
+                    $.deleteJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id), null, function () {
+                        // Close modal on success
+                        $('#deleteModal').modal('hide');
+                        // Redirect to library shows view
+                        window.location = autosubliminal.getUrl('/library/shows');
                     });
                 },
                 saveHardcodedSubtitles: function (event) {

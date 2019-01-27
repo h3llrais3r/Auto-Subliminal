@@ -32,7 +32,7 @@ class ShowsApi(RestResource):
         self.subtitles = _SubtitlesApi()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET',)
+        self.allowed_methods = ('GET', 'DELETE')
 
     def get(self, tvdb_id=None):
         """Get the list of shows or the details of a single show."""
@@ -48,6 +48,13 @@ class ShowsApi(RestResource):
                 db_show_settings = show_settings_db.get_show_settings(db_show.tvdb_id)
                 shows.append(self._to_show_json(db_show, db_show_settings))
             return shows
+
+    def delete(self, tvdb_id):
+        # Delete from database
+        ShowDetailsDb().delete_show(tvdb_id, episodes=True, subtitles=True)
+        ShowSettingsDb().delete_show_settings(tvdb_id)
+
+        return self._no_content()
 
     def _to_show_json(self, show, show_settings, details=False):
         show_json = show.to_json()

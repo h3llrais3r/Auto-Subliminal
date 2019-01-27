@@ -44,6 +44,7 @@ class ShowDetailsDb(object):
         self._query_get_all = 'SELECT * FROM show_details'
         self._query_get = 'SELECT * FROM show_details WHERE tvdb_id=?'
         self._query_set = 'INSERT INTO show_details VALUES (?,?,?,?,?,?,?)'
+        self._query_delete = 'DELETE FROM show_details WHERE tvdb_id=?'
         self._query_flush = 'DELETE FROM show_details'
 
     def get_all_shows(self):
@@ -98,8 +99,32 @@ class ShowDetailsDb(object):
         connection.commit()
         connection.close()
 
+    def delete_show(self, tvdb_id, episodes=False, subtitles=False):
+        """Delete a show by its tvdb id.
+
+        :param tvdb_id: the tvdb id
+        :type tvdb_id: int
+        :param episodes: indication if episodes must be deleted or not
+        :type episodes: bool
+        :param subtitles: indication if subtitles must be deleted or not
+        :type subtitles: bool
+        """
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_delete, [tvdb_id])
+        if episodes:
+            ShowEpisodeDetailsDb(connection).delete_show_episodes(tvdb_id, subtitles=subtitles)
+        connection.commit()
+        connection.close()
+
     def flush_shows(self, episodes=False, subtitles=False):
-        """Flush all shows."""
+        """Flush all shows.
+
+        :param episodes: indication if episodes must be flushed or not
+        :type episodes: bool
+        :param subtitles: indication if subtitles must be flushed or not
+        :type subtitles: bool
+        """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self._query_flush)
@@ -120,6 +145,7 @@ class ShowEpisodeDetailsDb(object):
         self._query_set = 'INSERT INTO show_episode_details VALUES (?,?,?,?,?,?,?)'
         self._query_update = 'UPDATE show_episode_details SET show_tvdb_id=?, title=?, season=?, episode=?, path=?, ' \
                              'missing_languages=? WHERE tvdb_id=?'
+        self._query_delete = 'DELETE FROM show_episode_details WHERE show_tvdb_id=?'
         self._query_flush = 'DELETE FROM show_episode_details'
 
     def get_show_episodes(self, show_tvdb_id, available_only=False, subtitles=False):
@@ -225,6 +251,25 @@ class ShowEpisodeDetailsDb(object):
         connection.commit()
         connection.close()
 
+    def delete_show_episodes(self, show_tvdb_id, subtitles=False):
+        """Delete all show episodes by the show tvdb id.
+
+        :param show_tvdb_id: the tvdb id of the show
+        :type show_tvdb_id: int
+        :param subtitles: indication if subtitles must be deleted or not
+        :type subtitles: bool
+        """
+        connection = self.connection or sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_delete, [show_tvdb_id])
+        if subtitles:
+            episodes = self.get_show_episodes(show_tvdb_id)
+            for episode in episodes:
+                ShowEpisodeSubtitlesDb(connection).delete_show_episode_subtitles(episode.tvdb_id)
+        if not self.connection:
+            connection.commit()
+            connection.close()
+
     def flush_show_episodes(self, subtitles=False):
         """Flush all show episodes.
 
@@ -318,6 +363,7 @@ class ShowSettingsDb(object):
         self._query_set = 'INSERT INTO show_settings VALUES(?,?,?,?,?)'
         self._query_update = 'UPDATE show_settings SET wanted_languages=?, refine=?, hearing_impaired=?, ' \
                              'utf8_encoding=? WHERE tvdb_id=?'
+        self._query_delete = 'DELETE FROM show_settings WHERE tvdb_id=?'
 
     def get_show_settings(self, tvdb_id):
         """Get the show settings by its tvdb id.
@@ -370,3 +416,15 @@ class ShowSettingsDb(object):
             show_settings.tvdb_id
         ])
         connection.commit()
+
+    def delete_show_settings(self, tvdb_id):
+        """Delete the show settings by its tvdb id.
+
+        :param tvdb_id: the tvdb id
+        :type tvdb_id: int
+        """
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_delete, [tvdb_id])
+        connection.commit()
+        connection.close()

@@ -61,6 +61,9 @@
                                                 <a href="#" @click="refreshMovieDetails($event)">
                                                     <i class="fa fa-repeat" aria-hidden="true" title="Click to refresh movie details"></i>
                                                 </a>
+                                                <a href="#" @click="openDeleteModal($event)">
+                                                    <i class="fa fa-trash" aria-hidden="true" title="Click to delete movie from the database"></i>
+                                                </a>
                                             </span>
                                             <hr>
                                         </div>
@@ -136,6 +139,7 @@
                     </div>
 
                     <%include file="/library/inc_library-movie-settings-modal.mako"/>
+                    <%include file="/library/inc_library-movie-delete-modal.mako"/>
                     <%include file="/library/inc_library-subtitles-modal.mako"/>
 
                 </div>

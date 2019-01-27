@@ -98,6 +98,11 @@
                     // Open modal
                     $('#settingsModal').modal('show');
                 },
+                openDeleteModal: function (event) {
+                    event.preventDefault();
+                    // Open modal
+                    $('#deleteModal').modal('show');
+                },
                 openSubtitlesModal: function (fileLocation, fileName, hardcodedLanguages, event) {
                     event.preventDefault();
                     // Set selected video file and clear language selection
@@ -119,6 +124,17 @@
                         $('#settingsModal').modal('hide');
                         // Refresh movie details
                         self.refreshMovieDetails(event);
+                    });
+                },
+                deleteMovie: function (event) {
+                    event.preventDefault();
+                    // Delete the movie
+                    var self = this;
+                    $.deleteJson(autosubliminal.getUrl('/api/movies/' + self.movie.imdb_id), null, function () {
+                        // Close modal on success
+                        $('#deleteModal').modal('hide');
+                        // Redirect to library movies view
+                        window.location = autosubliminal.getUrl('/library/movies');
                     });
                 },
                 saveHardcodedSubtitles: function (event) {
