@@ -673,7 +673,7 @@ table.table {
 
   // Striped settings by adding 'table-striped' class -> based on bootstrap classes
   &.table-striped {
-    tbody tr {
+    > tbody > tr {
       &:nth-of-type(even) {
         background-color: $var-table-tr-striped-even-bg;
       }

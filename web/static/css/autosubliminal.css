@@ -570,11 +570,11 @@ table.table.table-no-sort thead th, table.table.table-no-sort tfoot th {
   padding-right: 4px;
 }
 
-table.table.table-striped tbody tr:nth-of-type(even) {
+table.table.table-striped > tbody > tr:nth-of-type(even) {
   background-color: #f6f6f6;
 }
 
-table.table.table-striped tbody tr:nth-of-type(odd) {
+table.table.table-striped > tbody > tr:nth-of-type(odd) {
   background-color: #fafafa;
 }
 
