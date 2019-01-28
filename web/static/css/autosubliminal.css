@@ -13,9 +13,9 @@ textarea {
 }
 
 .btn-static {
-  color: #333333;
+  color: #333;
   background-color: #ffffff;
-  border: 1px solid #d3d3d3;
+  border: 1px solid #ccc;
   cursor: default;
 }
 
@@ -82,7 +82,7 @@ textarea {
   font-size: 75%;
   font-weight: 700;
   line-height: 1;
-  color: #ffffff;
+  color: #fff;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
@@ -224,7 +224,7 @@ textarea {
 }
 
 .log-pagination .log-page.badge.selected {
-  background-color: white;
+  background-color: #ffffff;
   font-weight: bold;
   text-decoration: underline;
 }
@@ -302,17 +302,17 @@ a:hover, a:active, a:focus, a:visited > .fa {
 }
 
 .dropdown-menu.dropdown-menu-inverse {
-  background-color: #222222;
-  border-color: #080808;
+  background-color: #222;
+  border-color: #090909;
 }
 
 .dropdown-menu.dropdown-menu-inverse > li > a {
-  color: #999999;
+  color: #9d9d9d;
 }
 
 .dropdown-menu.dropdown-menu-inverse > li > a:hover {
-  background-color: #ffffff;
   color: #000000;
+  background-color: #ffffff;
 }
 
 .dropdown-menu.dropdown-menu-inverse > .divider {
@@ -526,18 +526,18 @@ table.tablesorter .filtered {
  * TABLE STYLING *
  *****************/
 table.table {
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
 }
 
 table.table thead tr th, table.table tfoot tr th {
   background-color: #eeeeee;
-  border: 1px solid #dddddd;
+  border: 1px solid #ddd;
   padding: 5px 17px 5px 4px;
   vertical-align: middle;
 }
 
 table.table tbody tr td {
-  border: 1px dotted #eeeeee;
+  border: 1px dotted #ddd;
   vertical-align: middle;
 }
 
@@ -553,12 +553,13 @@ table.table tbody tr.inactive td * {
 }
 
 table.table tbody tr.inactive td img {
+  filter: alpha(opacity=50);
   opacity: 0.5;
 }
 
 table.table.table-no-column-borders thead th, table.table.table-no-column-borders tfoot th {
   border: none;
-  border-bottom: 1px solid #dddddd;
+  border-bottom: 1px solid #ddd;
 }
 
 table.table.table-no-column-borders tbody tr td {
@@ -627,7 +628,7 @@ table.table.table-hover tbody tr:hover {
  * LIBRARY OVERVIEW STYLING *
  ****************************/
 .overview-container {
-  border: 1px solid #101010;
+  border: 1px solid #090909;
   border-radius: 5px;
   margin: 15px 0;
 }
@@ -640,7 +641,7 @@ table.table.table-hover tbody tr:hover {
 
 .overview-container .overview-data {
   padding: 5px;
-  color: #ffffff;
+  color: #fff;
 }
 
 @media (max-width: 767px) {
@@ -1006,21 +1007,21 @@ table.table.table-hover tbody tr:hover {
  * VUE MULTISELECT STYLING *
  ***************************/
 .multiselect .multiselect__tag {
-  background: #777777;
+  background-color: #777777;
 }
 
 .multiselect .multiselect__tag-icon:focus, .multiselect .multiselect__tag-icon:hover {
-  background: #333333;
+  background-color: #333333;
 }
 
 .multiselect .multiselect__tag-icon:after {
-  color: #ffffff;
+  color: #fff;
 }
 
 .multiselect .multiselect__option--highlight {
-  background: #777777;
+  background-color: #777777;
 }
 
 .multiselect .multiselect__option--highlight:after {
-  background: #777777;
+  background-color: #777777;
 }

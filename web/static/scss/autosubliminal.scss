@@ -1,26 +1,42 @@
 /*!
  * Auto-Subliminal style.
  */
+@import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables";
+@import "../../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/mixins/opacity";
 
 // *************
 // * Variables *
 // *************
 
-// Small devices (landscape phones, 480px and up)
-$var-till-width-xs: 479px;
-$var-from-width-xs: 480px;
+// Colors
+$var-color-white: #ffffff;
+$var-color-black: #000000;
+$var-color-gainsboro: #dddddd;
+$var-color-white-smoke: #f6f6f6;
+$var-color-white-smoke-darker: #f3f3f3;
+$var-color-snow: #fafafa;
 
-// Medium devices (tablets, 768px and up)
-$var-till-width-sm: 767px;
-$var-from-width-sm: 768px;
+$var-navbar-dropdown-inverse-color: $var-color-black;
+$var-navbar-dropdown-inverse-bg: $var-color-white;
+$var-navbar-dropdown-inverse-divider-bg: $var-color-black;
 
-// Large devices (desktops, 992px and up)
-$var-till-width-lg: 991px;
-$var-from-width-lg: 992px;
+$var-table-thead-bg: $gray-lighter;
+$var-table-thead-sorted-bg: $var-color-gainsboro;
+$var-table-tr-striped-even-bg: $var-color-white-smoke;
+$var-table-tr-striped-odd-bg: $var-color-snow;
+$var-table-tr-inactive-bg: $var-color-white;
+$var-table-tr-hover-bg: $var-color-white-smoke-darker;
 
-// Extra large devices (large desktops, 1200px and up)
-$var-till-width-xl: 1199px;
-$var-from-width-xl: 1200px;
+$var-btn-gray-bg: $gray-lighter;
+$var-btn-static-bg: $var-color-white;
+
+$var-badge-hover-bg: $gray-dark;
+$var-badge-inverse-color: $var-color-black;
+$var-badge-inverse-bg: $var-color-gainsboro;
+$var-badge-log-bg: $var-color-white;
+
+$var-container-dark-bg: $gray-dark;
+$var-container-dark-border: darken($gray-darker, 10%);
 
 /*******************
  * GENERAL STYLING *
@@ -28,7 +44,7 @@ $var-from-width-xl: 1200px;
 
 // Set html body color
 html, body {
-  background-color: #eeeeee;
+  background-color: $jumbotron-bg;
 }
 
 // Set textarea resize
@@ -37,19 +53,19 @@ textarea {
 }
 
 .btn-static {
-  color: #333333;
-  background-color: #ffffff;
-  border: 1px solid #d3d3d3;
+  color: $btn-default-color;
+  background-color: $var-btn-static-bg;
+  border: 1px solid $btn-default-border;
   cursor: default;
 
   &:active {
-    -moz-box-shadow: inset 0 0 0 #ffffff;
-    -webkit-box-shadow: inset 0 0 0 #ffffff;
-    box-shadow: inset 0 0 0 #ffffff;
+    -moz-box-shadow: inset 0 0 0 $var-btn-static-bg;
+    -webkit-box-shadow: inset 0 0 0 $var-btn-static-bg;
+    box-shadow: inset 0 0 0 $var-btn-static-bg;
   }
 
   &.btn-gray {
-    background-color: #eeeeee;
+    background-color: $var-btn-gray-bg;
   }
 }
 
@@ -81,12 +97,12 @@ textarea {
   font-size: 75%;
   font-weight: 700;
   line-height: 1;
-  color: #000000;
+  color: $var-badge-inverse-color;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   border-radius: 0.25em;
-  background-color: #dddddd;
+  background-color: $var-badge-inverse-bg;
   margin-right: 8px;
 
   &.right-aligned {
@@ -109,12 +125,12 @@ textarea {
   font-size: 75%;
   font-weight: 700;
   line-height: 1;
-  color: #ffffff;
+  color: $badge-color;
   text-align: center;
   white-space: nowrap;
   vertical-align: middle;
   border-radius: 0.25em;
-  background-color: #777777;
+  background-color: $badge-bg;
   margin-right: 8px;
 
   &.right-aligned {
@@ -124,8 +140,8 @@ textarea {
 
   // Nested badge inside language badge to show number of subtitles for the language
   .badge {
-    color: #000000;
-    background-color: #dddddd;
+    color: $var-badge-inverse-color;
+    background-color: $var-badge-inverse-bg;
   }
 }
 
@@ -139,7 +155,7 @@ textarea {
 }
 
 .main-column {
-  color: #333333;
+  color: $text-color;
   font-weight: bold;
   text-decoration: none !important;
 }
@@ -192,7 +208,7 @@ textarea {
 }
 
 .scheduler-running {
-  background-color: #dff0d8 !important; // Bootstrap bg-success background color, but with !important
+  background-color: $state-success-bg !important;
 }
 
 .separator {
@@ -208,7 +224,7 @@ textarea {
   margin-bottom: 5px;
 
   // Align table-filter on larger screens (same width as switch in bootstrap from xs to sm)
-  @media (min-width: $var-from-width-sm) {
+  @media (min-width: $screen-sm-min) {
     &.left {
       text-align: left;
     }
@@ -249,14 +265,16 @@ textarea {
   padding: 0;
   margin: 0;
 
-  .log-page.badge {
-    background-color: #ffffff;
-    font-weight: normal;
+  .log-page {
+    &.badge {
+      background-color: $var-badge-log-bg;
+      font-weight: normal;
 
-    &.selected {
-      background-color: white;
-      font-weight: bold;
-      text-decoration: underline;
+      &.selected {
+        background-color: $var-badge-log-bg;
+        font-weight: bold;
+        text-decoration: underline;
+      }
     }
   }
 }
@@ -279,13 +297,13 @@ nav {
   .navbar-brand {
     margin-left: 0 !important;
 
-    @media (max-width: $var-till-width-sm) {
+    @media (max-width: $screen-xs-max) {
       margin-left: 15px !important;
     }
   }
 
   // Resize brand to 40px (instead of 50px) on smaller screens
-  @media (max-width: $var-till-width-lg) {
+  @media (max-width: $screen-sm-max) {
     .navbar-brand img {
       height: 40px;
       position: absolute;
@@ -299,13 +317,13 @@ nav {
  *********************/
 
 .jumbotron-global {
-  background-color: #eeeeee;
+  background-color: $jumbotron-bg;
   margin-bottom: 0;
   padding-top: 48px; // Keep same bootstrap jumbotron padding when resizing screensize < 768px
 }
 
 .jumbotron-body {
-  background-color: #eeeeee;
+  background-color: $jumbotron-bg;
 }
 
 /*********************
@@ -342,20 +360,20 @@ a {
   cursor: pointer;
 
   &.dropdown-menu-inverse {
-    background-color: #222222;
-    border-color: #080808;
+    background-color: $navbar-inverse-bg;
+    border-color: $navbar-inverse-border;
 
     > li > a {
-      color: #999999;
+      color: $navbar-inverse-link-color;
 
       &:hover {
-        background-color: #ffffff;
-        color: #000000;
+        color: $var-navbar-dropdown-inverse-color;
+        background-color: $var-navbar-dropdown-inverse-bg;
       }
     }
 
     > .divider {
-      background-color: #000000;
+      background-color: $var-navbar-dropdown-inverse-divider-bg;
     }
   }
 
@@ -392,7 +410,7 @@ a {
       content: '';
       border-left: 6px solid transparent;
       border-right: 6px solid transparent;
-      border-bottom: 6px solid #ffffff;
+      border-bottom: 6px solid $var-color-white;
       display: inline-block;
     }
 
@@ -420,7 +438,7 @@ a {
   -ms-transform: translate(-50%, -50%) !important;
   -webkit-transform: translate(-50%, -50%) !important;
 
-  @media (max-width: $var-till-width-sm) {
+  @media (max-width: $screen-xs-max) {
     width: 100%;
     margin: 0;
   }
@@ -501,14 +519,14 @@ table.tablesorter {
       // Black asc arrow (with spacing!)
       background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjI8Bya2wnINUMopZAQA7);
       // background-image: url(../images/vendor/tablesorter/black-asc.gif);
-      background-color: #dddddd;
+      background-color: $var-table-thead-sorted-bg;
     }
 
     .tablesorter-headerDesc {
       // Black desc arrow (with spacing!)
       background-image: url(data:image/gif;base64,R0lGODlhFQAEAIAAACMtMP///yH5BAEAAAEALAAAAAAVAAQAAAINjB+gC+jP2ptn0WskLQA7);
       // background-image: url(../images/vendor/tablesorter/black-desc.gif);
-      background-color: #dddddd;
+      background-color: $var-table-thead-sorted-bg;
     }
 
     .sorter-false {
@@ -600,18 +618,18 @@ table.tablesorter {
 
 // Always use bootstrap 'table' class by default on all tables to apply our styling!
 table.table {
-  border: 1px solid #dddddd;
+  border: 1px solid $table-border-color;
 
   thead tr th, tfoot tr th {
-    background-color: #eeeeee;
-    border: 1px solid #dddddd;
+    background-color: $var-table-thead-bg;
+    border: 1px solid $table-border-color;
     padding: 5px 17px 5px 4px;
     vertical-align: middle;
   }
 
   tbody {
     tr td {
-      border: 1px dotted #eeeeee;
+      border: 1px dotted $table-border-color;
       vertical-align: middle;
     }
 
@@ -619,7 +637,7 @@ table.table {
     tr.inactive td {
       color: rgb(0, 0, 0);
       color: rgba(0, 0, 0, 0.5);
-      background-color: #ffffff;
+      background-color: $var-table-tr-inactive-bg;
 
       // Grey out underlying items
       * {
@@ -629,7 +647,7 @@ table.table {
 
       // Grey out images (rgba has no effect on images, so use opacity instead)
       img {
-        opacity: 0.5;
+        @include opacity(.5);
       }
     }
   }
@@ -638,7 +656,7 @@ table.table {
   &.table-no-column-borders {
     thead th, tfoot th {
       border: none;
-      border-bottom: 1px solid #dddddd;
+      border-bottom: 1px solid $table-border-color;
     }
 
     tbody tr td {
@@ -657,11 +675,11 @@ table.table {
   &.table-striped {
     tbody tr {
       &:nth-of-type(even) {
-        background-color: #f6f6f6;
+        background-color: $var-table-tr-striped-even-bg;
       }
 
       &:nth-of-type(odd) {
-        background-color: #fafafa;
+        background-color: $var-table-tr-striped-odd-bg;
       }
     }
   }
@@ -669,7 +687,7 @@ table.table {
   // Hover settings by adding 'table-hover' class -> based on bootstrap classes
   &.table-hover {
     tbody tr:hover {
-      background-color: #f3f3f3;
+      background-color: $var-table-tr-hover-bg;
     }
   }
 }
@@ -727,22 +745,22 @@ table.table {
  ****************************/
 
 .overview-container {
-  border: 1px solid #101010;
+  border: 1px solid $var-container-dark-border;
   border-radius: 5px;
   margin: 15px 0;
 
   > div {
-    background-color: #333333;
+    background-color: $var-container-dark-bg;
     border-radius: 3px;
     padding: 15px;
   }
 
   .overview-data {
     padding: 5px;
-    color: #ffffff;
+    color: $label-color;
 
     // Align left on smaller screens, even when it's set to align right
-    @media (max-width: $var-till-width-sm) {
+    @media (max-width: $screen-xs-max) {
       .text-right {
         text-align: left;
       }
@@ -765,7 +783,7 @@ table.table {
   .details-poster-container {
     display: table-cell;
 
-    @media (max-width: $var-till-width-sm) {
+    @media (max-width: $screen-xs-max) {
       width: 100%;
       float: left;
       text-align: center;
@@ -781,14 +799,14 @@ table.table {
     width: 100%;
     vertical-align: top;
 
-    @media (max-width: $var-till-width-sm) {
+    @media (max-width: $screen-xs-max) {
       padding-top: 20px;
     }
 
     .details-info-title {
       font-size: 24px;
 
-      @media (max-width: $var-till-width-sm) {
+      @media (max-width: $screen-xs-max) {
         text-align: center;
       }
     }
@@ -828,7 +846,7 @@ table.table {
     }
 
     .details-files-file {
-      color: #333333;
+      color: $text-color;
       text-decoration: none !important;
     }
   }
@@ -845,7 +863,7 @@ table.table {
   .settings-poster-container {
     display: table-cell;
 
-    @media (max-width: $var-till-width-sm) {
+    @media (max-width: $screen-xs-max) {
       width: 100%;
       float: left;
       text-align: center;
@@ -854,7 +872,7 @@ table.table {
     .settings-poster-image {
       width: 175px;
 
-      @media (max-width: $var-till-width-sm) {
+      @media (max-width: $screen-xs-max) {
         width: 100px;
       }
     }
@@ -865,7 +883,7 @@ table.table {
     width: 100%;
     vertical-align: top;
 
-    @media (max-width: $var-till-width-sm) {
+    @media (max-width: $screen-xs-max) {
       display: table;
       padding-top: 20px;
     }
@@ -874,7 +892,7 @@ table.table {
       font-size: 20px;
       padding-right: 0;
 
-      @media (max-width: $var-till-width-sm) {
+      @media (max-width: $screen-xs-max) {
         text-align: center;
         padding-left: 0;
       }
@@ -883,7 +901,7 @@ table.table {
     .settings-info-settings {
       padding-right: 0;
 
-      @media (max-width: $var-till-width-sm) {
+      @media (max-width: $screen-xs-max) {
         padding-left: 0;
       }
 
@@ -891,7 +909,7 @@ table.table {
         padding: 5px;
       }
 
-      @media (max-width: $var-till-width-sm) {
+      @media (max-width: $screen-xs-max) {
         .vertical-center {
           .row {
             display: block;
@@ -904,7 +922,7 @@ table.table {
 }
 
 // Style modal on larger devices
-@media (min-width: $var-from-width-sm) {
+@media (min-width: $screen-sm-min) {
   .settings-modal {
     width: 750px;
   }
@@ -1106,23 +1124,23 @@ table.table {
 
 .multiselect {
   .multiselect__tag {
-    background: #777777; // Bootstrap badge color
+    background-color: $badge-bg;
 
     &-icon {
       &:focus, &:hover {
-        background: #333333;
+        background-color: $var-badge-hover-bg;
       }
       &:after {
-        color: #ffffff;
+        color: $badge-color;
       }
     }
   }
 
   .multiselect__option--highlight {
-    background: #777777; // Bootstrap badge color
+    background-color: $badge-bg;
 
     &:after {
-      background: #777777; // Bootstrap badge color
+      background-color: $badge-bg;
     }
   }
 }
