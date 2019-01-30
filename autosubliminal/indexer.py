@@ -179,12 +179,14 @@ class ShowIndexer(Indexer):
         if tvdb_id:
             log.debug('Tvdb id from api: %s', tvdb_id)
             if store_id:
+                db.delete_tvdb_id(name)
                 db.set_tvdb_id(tvdb_id, name)
                 log.info('Tvdb id added to cache for %s: %s', name, tvdb_id)
             return int(tvdb_id)
         else:
             log.warning('Tvdb id not found for %s', name)
             if store_id:
+                db.delete_tvdb_id(name)
                 db.set_tvdb_id(TVDB_ID_UNKNOWN, name)
             return None
 
@@ -355,12 +357,14 @@ class MovieIndexer(Indexer):
         if imdb_id:
             log.debug('Imdb id from api: %s', imdb_id)
             if store_id:
+                db.delete_imdb_id(title, year)
                 db.set_imdb_id(imdb_id, title, year)
                 log.info('Imdb id added to cache for %s: %s', name, imdb_id)
             return imdb_id, year
         else:
             log.warning('Imdb id not found for %s', name)
             if store_id:
+                db.delete_imdb_id(title, year)
                 db.set_imdb_id(IMDB_ID_UNKNOWN, title, year)
             return None, year
 

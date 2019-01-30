@@ -9,8 +9,9 @@ class TvdbIdCacheDb(object):
     """Tvdb id cache db."""
 
     def __init__(self):
-        self._query_get = 'SELECT tvdb_id FROM tvdb_id_cache WHERE show_name = ?'
+        self._query_get = 'SELECT tvdb_id FROM tvdb_id_cache WHERE show_name=?'
         self._query_set = 'INSERT INTO tvdb_id_cache VALUES (?,?)'
+        self._query_delete = 'DELETE FROM tvdb_id_cache WHERE show_name=?'
         self._query_flush = 'DELETE FROM tvdb_id_cache'
 
     def get_tvdb_id(self, show_name):
@@ -46,6 +47,18 @@ class TvdbIdCacheDb(object):
         connection.commit()
         connection.close()
 
+    def delete_tvdb_id(self, show_name):
+        """Delete the tvdb id for a show.
+
+        :param show_name: the show name
+        :type show_name: str
+        """
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_delete, [show_name.upper()])
+        connection.commit()
+        connection.close()
+
     def flush_tvdb_ids(self):
         """Flush all tvdb id's."""
         connection = sqlite3.connect(autosubliminal.DBFILE)
@@ -59,8 +72,9 @@ class ImdbIdCacheDb(object):
     """Imdb id cache db."""
 
     def __init__(self):
-        self._query_get = 'SELECT imdb_id FROM imdb_id_cache WHERE title = ? AND year = ?'
+        self._query_get = 'SELECT imdb_id FROM imdb_id_cache WHERE title=? AND year=?'
         self._query_set = 'INSERT INTO imdb_id_cache VALUES (?,?,?)'
+        self._query_delete = 'DELETE FROM imdb_id_cache WHERE title=? AND year=?'
         self._query_flush = 'DELETE FROM imdb_id_cache'
 
     def get_imdb_id(self, title, year):
@@ -95,6 +109,20 @@ class ImdbIdCacheDb(object):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self._query_set, [imdb_id, title.upper(), year])
+        connection.commit()
+        connection.close()
+
+    def delete_imdb_id(self, title, year):
+        """Delete the imdb id for a movie title and year.
+
+        :param title: the movie title
+        :type title: str
+        :param year: the movie year
+        :type year: str | int
+        """
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_delete, [title.upper(), year])
         connection.commit()
         connection.close()
 
