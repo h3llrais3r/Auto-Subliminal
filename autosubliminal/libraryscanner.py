@@ -88,7 +88,7 @@ class LibraryPathScanner(object):
                     try:
                         self._scan_file(dirname, filename)
                     except Exception:
-                        log.error('Error while scanning video file: %s', os.path.join(dirname, filename))
+                        log.exception('Error while scanning video file: %s', os.path.join(dirname, filename))
 
     def _scan_file(self, dirname, filename):
         wanted_item = process_file(dirname, filename)

@@ -91,7 +91,7 @@ class DiskScanner(ScheduledProcess):
                     try:
                         wanted_item = self._scan_file(dirname, filename)
                     except Exception:
-                        log.exception('Could not scan the video file (%s), skipping it', filename)
+                        log.exception('Error while scanning video file: %s', os.path.join(dirname, filename))
 
                     # Add it to list of wanted items
                     if wanted_item:
