@@ -4,6 +4,11 @@ from time import time
 
 from autosubliminal.parsers.guessit import default_api
 
+# Expected release groups
+expected_groups = [
+    'CHD'
+]
+
 
 def guessit(string, options=None):
     """
@@ -17,6 +22,7 @@ def guessit(string, options=None):
     """
     start_time = time()
     custom_options = dict(options) if options else dict()
+    custom_options.update(dict(expected_group=expected_groups))
     result = default_api.guessit(string, options=custom_options)
     result['parsing_time'] = time() - start_time
 

@@ -66,3 +66,15 @@ def test_guessit_prepend_xxx_to_movie_title():
     assert guess['video_codec'] == 'H.264'
     assert guess['audio_codec'] == 'AAC'
     assert guess['release_group'] == 'RARBG'
+
+
+def test_guessit_vhs_as_movie_title():
+    guess = guessit('VHS 2012 BluRay 720p DTS x264-CHD.mkv')
+    assert guess is not None
+    assert guess['type'] == 'movie'
+    assert guess['title'] == 'VHS'
+    assert guess['year'] == 2012
+    assert guess['source'] == 'Blu-ray'
+    assert guess['screen_size'] == '720p'
+    assert guess['video_codec'] == 'H.264'
+    assert guess['release_group'] == 'CHD'

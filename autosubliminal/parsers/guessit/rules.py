@@ -347,6 +347,68 @@ class PrependXxxToMovieTitle(Rule):
         return to_remove, to_append
 
 
+class VhsAsMovieTitle(Rule):
+    """'VHS' as the movie title.
+
+    Example:
+    guessit -t movie "VHS 2012 BluRay 720p DTS x264-CHD.mkv"
+
+    without the rule:
+        For: VHS 2012 BluRay 720p DTS x264-CHD.mkv
+        GuessIt found: {
+            "source": [
+                "VHS",
+                "Blu-ray"
+            ],
+            "year": 2012,
+            "screen_size": "720p",
+            "audio_codec": "DTS",
+            "video_codec": "H.264",
+            "title": "CHD",
+            "container": "mkv",
+            "type": "movie"
+        }
+
+    with the rule:
+        For: VHS 2012 BluRay 720p DTS x264-CHD.mkv
+        GuessIt found: {
+            "title": "VHS",
+            "year": 2012,
+            "source": "Blu-ray"
+            "screen_size": "720p",
+            "audio_codec": "DTS",
+            "video_codec": "H.264",
+            "release_group": "CHD",
+            "container": "mkv",
+            "type": "movie"
+        }
+    """
+
+    priority = POST_PROCESS
+    dependency = TypeProcessor  # To guess the type before
+    consequence = RenameMatch('title')
+
+    def when(self, matches, context):
+        """Evaluate the rule.
+
+        :param matches:
+        :type matches: rebulk.match.Matches
+        :param context:
+        :type context: dict
+        :return:
+        """
+        if not matches.named('type', lambda m: m.value == 'movie'):
+            return
+
+        sources = matches.named('source')
+        if sources:
+            title = matches.named('title')
+            if not title:
+                for source in sources:
+                    if source.value == 'VHS' and matches.next(source, predicate=lambda match: match.name == 'year'):
+                        return source
+
+
 def rules():
     """Return all our custom rules to be applied to the guessit api.
 
@@ -355,4 +417,4 @@ def rules():
     - Only allowed dependency is TypeProcessor because we want to apply rules for certain types only
     """
     return Rebulk().rules(RenamePartsToEpisodeNumbers, AppendPartToMovieTile, AppendLineToMovieTitle,
-                          AppendUsToMovieTitle, PrependXxxToMovieTitle)
+                          AppendUsToMovieTitle, PrependXxxToMovieTitle, VhsAsMovieTitle)
