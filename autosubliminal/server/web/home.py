@@ -150,7 +150,7 @@ class Home(object):
         if not confirmed:
             wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
             video = wanted_item.videopath
-            return PageTemplate('/home/home-deleteVideo.mako').render(wanted_item_index=wanted_item_index, video=video)
+            return PageTemplate('/home/home-delete-video.mako').render(wanted_item_index=wanted_item_index, video=video)
         else:
             # Delete video
             deleted = subchecker.delete_video(wanted_item_index, cleanup)
