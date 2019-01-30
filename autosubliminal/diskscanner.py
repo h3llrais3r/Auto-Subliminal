@@ -87,7 +87,11 @@ class DiskScanner(ScheduledProcess):
                 # Only scan valid video files
                 if is_valid_video_file(filename):
                     log.debug('Video file found: %s', filename)
-                    wanted_item = self._scan_file(dirname, filename)
+                    wanted_item = None
+                    try:
+                        wanted_item = self._scan_file(dirname, filename)
+                    except Exception:
+                        log.exception('Could not scan the video file (%s), skipping it', filename)
 
                     # Add it to list of wanted items
                     if wanted_item:
