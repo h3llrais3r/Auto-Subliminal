@@ -6,7 +6,7 @@ import os
 import cherrypy
 
 from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
-from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb, ShowSettingsDb
+from autosubliminal.db import FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb, ShowSettingsDb
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import natural_keys
@@ -140,6 +140,8 @@ class _OverviewApi(RestResource):
         shows = ShowDetailsDb().get_all_shows()
         total_shows = len(shows)
 
+        failed_shows = FailedShowsDb().get_failed_shows()
+
         total_episodes = 0
         total_subtitles_wanted = 0
         total_subtitles_available = 0
@@ -161,7 +163,8 @@ class _OverviewApi(RestResource):
             'total_episodes': total_episodes,
             'total_subtitles_wanted': total_subtitles_wanted,
             'total_subtitles_missing': total_subtitles_missing,
-            'total_subtitles_available': total_subtitles_available
+            'total_subtitles_available': total_subtitles_available,
+            'failed_shows': failed_shows
         }
 
 

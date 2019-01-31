@@ -2,7 +2,7 @@
 
 from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails, ShowSettings
 from autosubliminal.core.subtitle import Subtitle, EXTERNAL
-from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb
+from autosubliminal.db import FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb
 from autosubliminal.server.api.shows import ShowsApi
 
 from tests.server.api.test_api import pickle_api_result
@@ -75,10 +75,11 @@ def test_get_show(mocker):
 
 
 def test_get_shows_overview(mocker):
+    mocker.patch.object(FailedShowsDb, 'get_failed_shows', return_value=['/path/to/failed/show'])
     mocker.patch.object(ShowDetailsDb, 'get_all_shows', return_value=[show_details_1, show_details_2])
     mocker.patch.object(ShowSettingsDb, 'get_show_settings', side_effect=[show_settings_1, show_settings_2])
     mocker.patch.object(ShowEpisodeDetailsDb, 'get_show_episodes',
                         side_effect=[[show_episode_details_1_1], [show_episode_details_2_1, show_episode_details_2_2]])
-    overview_json = '{"total_episodes": 3, "total_shows": 2, "total_subtitles_available": 2, ' \
-                    '"total_subtitles_missing": 4, "total_subtitles_wanted": 6}'
+    overview_json = '{"failed_shows": ["/path/to/failed/show"], "total_episodes": 3, "total_shows": 2, ' \
+                    '"total_subtitles_available": 2, "total_subtitles_missing": 4, "total_subtitles_wanted": 6}'
     assert overview_json == pickle_api_result(ShowsApi().overview.get())

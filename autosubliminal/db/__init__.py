@@ -10,6 +10,7 @@ from autosubliminal import version
 
 # Import from submodules here so we don't need to import it from the submodule itself!
 from .cache_db import ImdbIdCacheDb, TvdbIdCacheDb
+from .failed_db import FailedMoviesDb, FailedShowsDb
 from .main_db import LastDownloadsDb, WantedItemsDb
 from .movie_db import MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb
 from .show_db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb, ShowSettingsDb
@@ -26,7 +27,9 @@ __all__ = [
     'ShowDetailsDb',
     'ShowEpisodeDetailsDb',
     'ShowEpisodeSubtitlesDb',
-    'ShowSettingsDb'
+    'ShowSettingsDb',
+    'FailedMoviesDb',
+    'FailedShowsDb'
 ]
 
 
@@ -86,6 +89,14 @@ def create():
 
         query = 'CREATE TABLE movie_settings (imdb_id TEXT PRIMARY KEY, wanted_languages TEXT, refine INTEGER, ' \
                 'hearing_impaired INTEGER, utf8_encoding INTEGER)'
+        cursor.execute(query)
+        connection.commit()
+
+        query = 'CREATE TABLE failed_shows (path TEXT PRIMARY KEY)'
+        cursor.execute(query)
+        connection.commit()
+
+        query = 'CREATE TABLE failed_movies (path TEXT PRIMARY KEY)'
         cursor.execute(query)
         connection.commit()
 
@@ -246,10 +257,26 @@ def upgrade(from_version, to_version):
                 'hearing_impaired INTEGER, utf8_encoding INTEGER)'
             )
             # Update empty year values to NULL
-            cursor.execute('UPDATE last_downloads SET year = NULL WHERE year = ""')
-            cursor.execute('UPDATE wanted_items SET year = NULL WHERE year = ""')
+            cursor.execute('UPDATE last_downloads SET year = NULL WHERE year = \'\'')
+            cursor.execute('UPDATE wanted_items SET year = NULL WHERE year = \'\'')
             # Update database version
             cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (8, 7))
+            connection.commit()
+            connection.close()
+
+        if from_version == 8 and to_version == 9:
+            connection = sqlite3.connect(autosubliminal.DBFILE)
+            cursor = connection.cursor()
+            # Create failed_shows
+            cursor.execute('CREATE TABLE failed_shows (path TEXT PRIMARY KEY)')
+            # Create failed_movies
+            cursor.execute('CREATE TABLE failed_movies (path TEXT PRIMARY KEY)')
+            # Cleanup in tvdb_id_cache
+            cursor.execute('DELETE FROM tvdb_id_cache WHERE tvdb_id = -1')
+            # Cleanup imdb_id_cache
+            cursor.execute('DELETE FROM imdb_id_cache WHERE imdb_id = \'tt0000000\'')
+            # Update database version
+            cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (9, 8))
             connection.commit()
             connection.close()
 

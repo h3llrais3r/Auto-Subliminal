@@ -6,7 +6,7 @@ import os
 import cherrypy
 
 from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
-from autosubliminal.db import MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb
+from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import get_boolean
@@ -112,6 +112,8 @@ class _OverviewApi(RestResource):
         movies = MovieDetailsDb().get_all_movies()
         total_movies = len(movies)
 
+        failed_movies = FailedMoviesDb().get_failed_movies()
+
         total_subtitles_wanted = 0
         total_subtitles_available = 0
         total_subtitles_missing = 0
@@ -127,7 +129,8 @@ class _OverviewApi(RestResource):
             'total_movies': total_movies,
             'total_subtitles_wanted': total_subtitles_wanted,
             'total_subtitles_missing': total_subtitles_missing,
-            'total_subtitles_available': total_subtitles_available
+            'total_subtitles_available': total_subtitles_available,
+            'failed_movies': failed_movies
         }
 
 

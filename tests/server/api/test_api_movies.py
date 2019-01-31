@@ -2,7 +2,7 @@
 
 from autosubliminal.core.movie import MovieDetails, MovieSettings
 from autosubliminal.core.subtitle import Subtitle, EXTERNAL
-from autosubliminal.db import MovieDetailsDb, MovieSettingsDb
+from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb
 from autosubliminal.server.api.movies import MoviesApi
 
 from tests.server.api.test_api import pickle_api_result
@@ -59,8 +59,9 @@ def test_get_movie(mocker):
 
 
 def test_get_movies_overview(mocker):
+    mocker.patch.object(FailedMoviesDb, 'get_failed_movies', return_value=['/path/to/failed/movie'])
     mocker.patch.object(MovieDetailsDb, 'get_all_movies', return_value=[movie_details_1])
     mocker.patch.object(MovieSettingsDb, 'get_movie_settings', side_effect=[movie_settings_1, movie_settings_2])
-    overview_json = '{"total_movies": 1, "total_subtitles_available": 1, "total_subtitles_missing": 1, ' \
-                    '"total_subtitles_wanted": 2}'
+    overview_json = '{"failed_movies": ["/path/to/failed/movie"], "total_movies": 1, "total_subtitles_available": 1, ' \
+                    '"total_subtitles_missing": 1, "total_subtitles_wanted": 2}'
     assert overview_json == pickle_api_result(MoviesApi().overview.get())

@@ -8,7 +8,8 @@ from autosubliminal.core.cache import cache_artwork, is_artwork_cached
 from autosubliminal.core.movie import MovieSettings
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.core.show import ShowSettings
-from autosubliminal.db import ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb, MovieDetailsDb, MovieSettingsDb
+from autosubliminal.db import FailedMoviesDb, FailedShowsDb, MovieDetailsDb, MovieSettingsDb, ShowDetailsDb, \
+    ShowEpisodeDetailsDb, ShowSettingsDb
 from autosubliminal.fileprocessor import process_file
 from autosubliminal.indexer import ShowIndexer, MovieIndexer
 from autosubliminal.util.common import safe_lowercase, get_wanted_languages
@@ -45,6 +46,10 @@ class LibraryScanner(ScheduledProcess):
             log.error('None of the configured library paths (%r) exists, aborting...', paths)
             return
 
+        # Clear failed shows/movies before starting a full scan
+        FailedShowsDb().flush_failed_shows()
+        FailedMoviesDb().flush_failed_movies()
+
         # Walk through paths and store info in db
         path_scanner = LibraryPathScanner()
         for path in paths:
@@ -62,8 +67,10 @@ class LibraryScanner(ScheduledProcess):
 class LibraryPathScanner(object):
     def __init__(self):
         self.show_db = ShowDetailsDb()
+        self.failed_shows_db = FailedShowsDb()
         self.show_episodes_db = ShowEpisodeDetailsDb()
         self.show_settings_db = ShowSettingsDb()
+        self.failed_movies_db = FailedMoviesDb()
         self.movie_db = MovieDetailsDb()
         self.movie_settings_db = MovieSettingsDb()
         self.show_indexer = ShowIndexer()
@@ -102,6 +109,9 @@ class LibraryPathScanner(object):
                 # Skip if no tvdb id is found
                 if not wanted_item.tvdbid:
                     log.warning('Skipping show episode file with unknown tvdb id: %s', os.path.join(dirname, filename))
+                    show_path = self._get_show_path(dirname)
+                    if not self.failed_shows_db.get_failed_show(show_path):
+                        self.failed_shows_db.set_failed_show(show_path)
                     return
 
                 # Store default show settings if not yet available
@@ -161,6 +171,8 @@ class LibraryPathScanner(object):
                 # Skip if no imdb id is found
                 if not wanted_item.imdbid:
                     log.warning('Skipping movie file with unknown imdb id: %s', os.path.join(dirname, filename))
+                    if not self.failed_movies_db.get_failed_movie(dirname):
+                        self.failed_movies_db.set_failed_movie(dirname)
                     return
 
                 # Store default movie settings if not yet available
