@@ -78,3 +78,15 @@ def test_guessit_vhs_as_movie_title():
     assert guess['screen_size'] == '720p'
     assert guess['video_codec'] == 'H.264'
     assert guess['release_group'] == 'CHD'
+
+
+def test_guessit_title_exceptions():
+    guess = guessit('A Very Harold & Kumar 3D Christmas (2011).mkv')
+    assert guess is not None
+    assert guess['title'] == 'A Very Harold & Kumar 3D Christmas'
+
+
+def test_guessit_release_group_exceptions():
+    guess = guessit('VHS 2012 BluRay 720p DTS x264-CHD.mkv')
+    assert guess is not None
+    assert guess['release_group'] == 'CHD'

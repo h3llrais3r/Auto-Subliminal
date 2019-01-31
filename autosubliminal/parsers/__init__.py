@@ -3,11 +3,30 @@
 from time import time
 
 from autosubliminal.parsers.guessit import default_api
+from autosubliminal.util.common import connect_url
 
-# Expected release groups
-expected_groups = [
-    'CHD'
-]
+_base_url = 'https://raw.githubusercontent.com/h3llrais3r/Auto-Subliminal/gh-pages/guessit_exceptions/'
+_release_groups_url = _base_url + 'release_groups.txt'
+_titles_url = _base_url + 'titles.txt'
+
+# Load guessit exceptions
+expected_titles = []
+try:
+    print('INFO: Fetching guessit title exceptions.')
+    response = connect_url(_titles_url)
+    for line in response.text.splitlines():
+        expected_titles.append(line)
+except Exception:
+    print('ERROR: Cannot fetch guessit title exceptions!')
+
+expected_release_groups = []
+try:
+    print('INFO: Fetching guessit release groups exceptions.')
+    response = connect_url(_release_groups_url)
+    for line in response.text.splitlines():
+        expected_release_groups.append(line)
+except Exception:
+    print('ERROR: Cannot fetch guessit release group exceptions!')
 
 
 def guessit(string, options=None):
@@ -22,7 +41,7 @@ def guessit(string, options=None):
     """
     start_time = time()
     custom_options = dict(options) if options else dict()
-    custom_options.update(dict(expected_group=expected_groups))
+    custom_options.update(dict(expected_title=expected_titles, expected_group=expected_release_groups))
     result = default_api.guessit(string, options=custom_options)
     result['parsing_time'] = time() - start_time
 
