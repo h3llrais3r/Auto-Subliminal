@@ -276,7 +276,7 @@ def test_safe_trim():
 
 def test_sanitize():
     assert sanitize(None) is None
-    assert sanitize('(Mr.-Robot! :),') == 'mr robot'
+    assert sanitize('(Mr.-Robot! / :),') == 'mr robot'
 
 
 def test_display_list_single_line():

@@ -236,7 +236,7 @@ def sanitize(string_value, ignore_characters=None):
     if characters:
         string_value = re.sub(r'[%s]' % re.escape(''.join(characters)), ' ', string_value)
     # Remove some characters
-    characters = {'\''} - ignore_characters
+    characters = {'\'', '/'} - ignore_characters
     if characters:
         string_value = re.sub(r'[%s]' % re.escape(''.join(characters)), '', string_value)
     # Replace multiple spaces with one
