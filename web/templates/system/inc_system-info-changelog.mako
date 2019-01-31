@@ -9,7 +9,7 @@
     try:
         response = connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/master/changelog.html')
         page = BeautifulSoup(response.text, 'html5lib')
-        releases = page.find_all("div", "release")
+        releases = page.find_all('div', 'release')
     except Exception:
         parsed = False
 %>
@@ -27,9 +27,9 @@
         % for index, release in enumerate(releases):
 
         <%
-            version = release.find("div", "version").string
-            releasedate = release.find("div", "releasedate").string
-            changelog = release.find("ul", "changelog")
+            version = release.find('div', 'version').string
+            releasedate = release.find('div', 'releasedate').string
+            changelog = release.find('ul', 'changelog')
         %>
 
             <hr>
