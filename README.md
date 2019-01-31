@@ -11,7 +11,7 @@ Auto-Subliminal [![License](https://img.shields.io/github/license/h3llrais3r/Aut
 About
 -----
 
-Thank you for choosing Auto-Subliminal! The automated python subtitle downloader.
+Welcome to Auto-Subliminal, the automated python subtitle downloader!
 
 This is a modified version of the discontinued Auto-Sub Alpha 0.5.8 project (https://code.google.com/p/auto-sub/).
 It makes use of Subliminal (https://github.com/Diaoul/subliminal) for checking and downloading subtitles.
