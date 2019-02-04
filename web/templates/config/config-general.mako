@@ -154,7 +154,7 @@
 
                         <div class="form-group narrow">
                             <span class="col-xs-4 col-md-3">
-                                <label for="scandisk">Disk scan interval
+                                <label for="scandiskinterval">Disk scan interval
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
                                             <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
@@ -169,7 +169,7 @@
                                 </label>
                             </span>
                             <span class="col-xs-8 col-md-6">
-                                <input type="text" id="scandisk" name="scandisk" value="${autosubliminal.SCANDISKINTERVAL}" class="form-control input-sm">
+                                <input type="text" id="scandiskinterval" name="scandiskinterval" value="${autosubliminal.SCANDISKINTERVAL}" class="form-control input-sm">
                             </span>
                         </div>
 
@@ -191,13 +191,13 @@
                                 </label>
                             </span>
                             <span class="col-xs-8 col-md-6">
-                                <input type="text" id="checksub" name="checksub" value="${autosubliminal.CHECKSUBINTERVAL}" class="form-control input-sm">
+                                <input type="text" id="checksubinterval" name="checksubinterval" value="${autosubliminal.CHECKSUBINTERVAL}" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
                             <span class="col-xs-4 col-md-3">
-                                <label for="checksub">Version check interval
+                                <label for="checkversioninterval">Version check interval
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
                                             <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
@@ -212,7 +212,7 @@
                                 </label>
                             </span>
                             <span class="col-xs-8 col-md-6">
-                                <input type="text" id="checkversion" name="checkversion" value="${autosubliminal.CHECKVERSIONINTERVAL}" class="form-control input-sm">
+                                <input type="text" id="checkversioninterval" name="checkversioninterval" value="${autosubliminal.CHECKVERSIONINTERVAL}" class="form-control input-sm">
                             </span>
                         </div>
 

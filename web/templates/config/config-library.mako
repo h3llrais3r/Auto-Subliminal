@@ -74,7 +74,7 @@
 
                         <div class="form-group narrow">
                             <span class="col-xs-4 col-md-3">
-                                <label for="scanlibrary">Disk library interval
+                                <label for="scanlibraryinterval">Disk library interval
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
                                             <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
@@ -90,7 +90,7 @@
                                 </label>
                             </span>
                             <span class="col-xs-8 col-md-6">
-                                <input type="text" id="scanlibrary" name="scanlibrary" value="${autosubliminal.SCANLIBRARYINTERVAL}" class="form-control input-sm">
+                                <input type="text" id="scanlibraryinterval" name="scanlibraryinterval" value="${autosubliminal.SCANLIBRARYINTERVAL}" class="form-control input-sm">
                             </span>
                         </div>
 

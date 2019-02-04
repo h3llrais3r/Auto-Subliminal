@@ -57,18 +57,18 @@ class Config(object):
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
         def save(self, videopaths, defaultlanguage, defaultlanguagesuffix, additionallanguages, manualsearchwithscoring,
-                 scandisk, checksub, checkversion, checkversionautoupdate, scanembeddedsubs, scanhardcodedsubs,
-                 skiphiddendirs, detectinvalidsublanguage, detectedlanguageprobability, minvideofilesize, maxdbresults,
-                 timestampformat):
+                 scandiskinterval, checksubinterval, checkversioninterval, checkversionautoupdate, scanembeddedsubs,
+                 scanhardcodedsubs, skiphiddendirs, detectinvalidsublanguage, detectedlanguageprobability,
+                 minvideofilesize, maxdbresults, timestampformat):
             # Set general variables
             autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
             autosubliminal.DEFAULTLANGUAGE = defaultlanguage
             autosubliminal.DEFAULTLANGUAGESUFFIX = get_boolean(defaultlanguagesuffix)
             autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split(',')
             autosubliminal.MANUALSEARCHWITHSCORING = get_boolean(manualsearchwithscoring)
-            autosubliminal.SCANDISKINTERVAL = int(scandisk)
-            autosubliminal.CHECKSUBINTERVAL = int(checksub)
-            autosubliminal.CHECKVERSIONINTERVAL = int(checkversion)
+            autosubliminal.SCANDISKINTERVAL = int(scandiskinterval)
+            autosubliminal.CHECKSUBINTERVAL = int(checksubinterval)
+            autosubliminal.CHECKVERSIONINTERVAL = int(checkversioninterval)
             autosubliminal.CHECKVERSIONAUTOUPDATE = get_boolean(checkversionautoupdate)
             autosubliminal.SCANEMBEDDEDSUBS = get_boolean(scanembeddedsubs)
             autosubliminal.SCANHARDCODEDSUBS = get_boolean(scanhardcodedsubs)
@@ -93,11 +93,11 @@ class Config(object):
 
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
-        def save(self, librarymode, librarypaths, scanlibrary):
+        def save(self, librarymode, librarypaths, scanlibraryinterval):
             # Set library variables
             autosubliminal.LIBRARYMODE = get_boolean(librarymode)
             autosubliminal.LIBRARYPATHS = librarypaths.split('\r\n')
-            autosubliminal.SCANLIBRARYINTERVAL = int(scanlibrary)
+            autosubliminal.SCANLIBRARYINTERVAL = int(scanlibraryinterval)
 
             # Activate/deactivate scheduler
             if autosubliminal.LIBRARYMODE:
