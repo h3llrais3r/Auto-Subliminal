@@ -88,6 +88,22 @@ def read_config(check_upgrade=False):
         else:
             autosubliminal.CHECKSUBINTERVAL = 86400  # Run every 24 hours
 
+        if cfg.has_option('general', 'checksubdeadline'):
+            autosubliminal.CHECKSUBDEADLINE = cfg.getint('general', 'checksubdeadline')
+            if autosubliminal.CHECKSUBDEADLINE < 1:
+                print('WARNING: checksubdeadline variable cannot be lower than 1 week. Set it to 1 week.')
+                autosubliminal.CHECKSUBDEADLINE = 1
+        else:
+            autosubliminal.CHECKSUBDEADLINE = 4  # Default 4 weeks
+
+        if cfg.has_option('general', 'checksubdelta'):
+            autosubliminal.CHECKSUBDELTA = cfg.getint('general', 'checksubdelta')
+            if autosubliminal.CHECKSUBDELTA < 1:
+                print('WARNING: checksubdelta variable cannot be lower than 1 day. Set it to 1 day.')
+                autosubliminal.CHECKSUBDELTA = 1
+        else:
+            autosubliminal.CHECKSUBDELTA = 7  # Default once a week (every 7 days)
+
         if cfg.has_option('general', 'checkversioninterval'):
             autosubliminal.CHECKVERSIONINTERVAL = cfg.getint('general', 'checkversioninterval')
         else:
@@ -153,6 +169,8 @@ def read_config(check_upgrade=False):
         autosubliminal.MANUALSEARCHCHECKSCORE = True
         autosubliminal.SCANDISKINTERVAL = 3600
         autosubliminal.CHECKSUBINTERVAL = 86400
+        autosubliminal.CHECKSUBDEADLINE = 4
+        autosubliminal.CHECKSUBDELTA = 7
         autosubliminal.CHECKVERSIONINTERVAL = 43200
         autosubliminal.CHECKVERSIONAUTOUPDATE = False
         autosubliminal.SCANEMBEDDEDSUBS = False
@@ -845,6 +863,8 @@ def write_general_section():
     cfg.set(section, 'manualsearchwithscoring', text_type(autosubliminal.MANUALSEARCHWITHSCORING))
     cfg.set(section, 'scandiskinterval', text_type(autosubliminal.SCANDISKINTERVAL))
     cfg.set(section, 'checksubinterval', text_type(autosubliminal.CHECKSUBINTERVAL))
+    cfg.set(section, 'checksubdeadline', text_type(autosubliminal.CHECKSUBDEADLINE))
+    cfg.set(section, 'checksubdelta', text_type(autosubliminal.CHECKSUBDELTA))
     cfg.set(section, 'checkversioninterval', text_type(autosubliminal.CHECKVERSIONINTERVAL))
     cfg.set(section, 'checkversionautoupdate', text_type(autosubliminal.CHECKVERSIONAUTOUPDATE))
     cfg.set(section, 'scanembeddedsubs', text_type(autosubliminal.SCANEMBEDDEDSUBS))
@@ -1361,6 +1381,8 @@ def _check_for_restart():
     # Set the default values
     scandiskinterval = 3600
     checksubinterval = 86400
+    checksubdeadline = 4
+    checksubdelta = 7
     checkversioninterval = 43200
     scanlibraryinterval = 86400
     logfile = u'AutoSubliminal.log'
@@ -1380,6 +1402,12 @@ def _check_for_restart():
 
         if cfg.has_option('general', 'checksubinterval'):
             checksubinterval = cfg.getint('general', 'checksubinterval')
+
+        if cfg.has_option('general', 'checksubdeadline'):
+            checksubdeadline = cfg.getint('general', 'checksubdeadline')
+
+        if cfg.has_option('general', 'checksubdelta'):
+            checksubdelta = cfg.getint('general', 'checksubdelta')
 
         if cfg.has_option('general', 'checkversioninterval'):
             checkversioninterval = cfg.getint('general', 'checkversioninterval')
@@ -1414,6 +1442,8 @@ def _check_for_restart():
     # Now compare the values, if one differs a restart is required.
     if scandiskinterval != autosubliminal.SCANDISKINTERVAL \
             or checksubinterval != autosubliminal.CHECKSUBINTERVAL \
+            or checksubdeadline != autosubliminal.CHECKSUBDEADLINE \
+            or checksubdelta != autosubliminal.CHECKSUBDELTA \
             or checkversioninterval != autosubliminal.CHECKVERSIONINTERVAL \
             or scanlibraryinterval != autosubliminal.SCANLIBRARYINTERVAL \
             or logfile != autosubliminal.LOGFILE \

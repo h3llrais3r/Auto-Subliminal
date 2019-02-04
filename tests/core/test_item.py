@@ -68,31 +68,41 @@ def test_wanted_item_copy_to():
     assert wanted_item_1 == wanted_item_2
 
 
-def test_is_search_active_for_wanted_item_before_on_creation(mocker):
+def test_is_search_active_for_wanted_item_before_on_creation(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
+    monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 7)
     today = datetime.datetime(2018, 1, 1, 0, 0, 0)
     mocker.patch('autosubliminal.core.item.get_today', return_value=today)
     assert wanted_item.is_search_active
 
 
-def test_is_search_active_for_wanted_item_before_deadline(mocker):
+def test_is_search_active_for_wanted_item_before_deadline(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
+    monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 7)
     today = datetime.datetime(2018, 1, 2, 0, 0, 0)
     mocker.patch('autosubliminal.core.item.get_today', return_value=today)
     assert wanted_item.is_search_active
 
 
-def test_is_search_active_for_wanted_item_on_deadline(mocker):
+def test_is_search_active_for_wanted_item_on_deadline(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
+    monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 7)
     today = datetime.datetime(2018, 1, 29, 0, 0, 0)
     mocker.patch('autosubliminal.core.item.get_today', return_value=today)
     assert wanted_item.is_search_active
 
 
-def test_is_search_active_for_wanted_item_after_deadline(mocker):
+def test_is_search_active_for_wanted_item_after_deadline(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
+    monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 7)
     today = datetime.datetime(2018, 1, 30, 0, 0, 0)
     mocker.patch('autosubliminal.core.item.get_today', return_value=today)
     assert not wanted_item.is_search_active
 
 
-def test_is_search_active_for_wanted_item_after_deadline_on_delta(mocker):
+def test_is_search_active_for_wanted_item_after_deadline_on_delta(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
+    monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 7)
     today = datetime.datetime(2018, 2, 26, 0, 0, 0)
     mocker.patch('autosubliminal.core.item.get_today', return_value=today)
     assert wanted_item.is_search_active

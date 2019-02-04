@@ -4,13 +4,8 @@ import datetime
 import logging
 import re
 
+import autosubliminal
 from autosubliminal.util.common import get_today, to_list, to_obj, to_obj_or_list
-
-# A subtitle will be searched on each run, as long as the file is not older than 4 weeks
-search_deadline = datetime.timedelta(weeks=4)
-
-# Once a video file is older than the search deadline, it will only be searched once a week
-search_delta = datetime.timedelta(weeks=1)
 
 # Release group regex
 release_group_regex = re.compile(r'(.*)\[.*?\]')
@@ -169,12 +164,12 @@ class WantedItem(_Item):
         - once every week (calculated from file timestamp) when file age is more than 4 weeks
         """
         file_datetime = datetime.datetime.strptime(self.timestamp, '%Y-%m-%d %H:%M:%S')
-        file_search_deadline = file_datetime + search_deadline
+        file_search_deadline = file_datetime + datetime.timedelta(weeks=autosubliminal.CHECKSUBDEADLINE)
         today = get_today()
         file_age_in_days = (today.date() - file_search_deadline.date()).days
         if today.date() <= file_search_deadline.date():
             return True
-        elif file_age_in_days % search_delta.days == 0:
+        elif file_age_in_days % datetime.timedelta(days=autosubliminal.CHECKSUBDELTA).days == 0:
             return True
         else:
             return False

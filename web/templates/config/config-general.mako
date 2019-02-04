@@ -175,7 +175,7 @@
 
                         <div class="form-group narrow">
                             <span class="col-xs-4 col-md-3">
-                                <label for="checksub">Subtitle check interval
+                                <label for="checksubinterval">Subtitle check interval
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
                                             <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
@@ -184,7 +184,7 @@
                                             <li>
                                                 Subtitle check interval of the CheckSub thread. It checks if there is a match on the configured subliminal providers.<br>
                                                 Time is in seconds. Default value is 86400 seconds.<br>
-                                                Cannot not be set lower then 21600.
+                                                Cannot be set lower then 21600.
                                             </li>
                                         </ul>
                                     </span>
@@ -192,6 +192,50 @@
                             </span>
                             <span class="col-xs-8 col-md-6">
                                 <input type="text" id="checksubinterval" name="checksubinterval" value="${autosubliminal.CHECKSUBINTERVAL}" class="form-control input-sm">
+                            </span>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <span class="col-xs-4 col-md-3">
+                                <label for="checksubdeadline">Subtitle check deadline
+                                    <span class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                        </a>
+                                        <ul class="dropdown-menu has-tip info-list">
+                                            <li>
+                                                Subtitle check deadline in weeks for checking subtitles on daily basis.<br>
+                                                After this deadline, the daily search is replaced by a search every X days, defined by the parameter below.<br>
+                                                Default value is 4 weeks. Cannot be set lower than 1 week.<br>
+                                            </li>
+                                        </ul>
+                                    </span>
+                                </label>
+                            </span>
+                            <span class="col-xs-8 col-md-6">
+                                <input type="text" id="checksubdeadline" name="checksubdeadline" value="${autosubliminal.CHECKSUBDEADLINE}" class="form-control input-sm">
+                            </span>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <span class="col-xs-4 col-md-3">
+                                <label for="checksubdelta">Subtitle check delta
+                                    <span class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                        </a>
+                                        <ul class="dropdown-menu has-tip info-list">
+                                            <li>
+                                                Subtitle check delta in days for checking subtitles after deadline.<br>
+                                                After the deadline (parameter above) is passed, a subtitle is search every X days, defined by this parameter.<br>
+                                                Default value is 7 days (1 week). Cannot be set lower than 1 day.<br>
+                                            </li>
+                                        </ul>
+                                    </span>
+                                </label>
+                            </span>
+                            <span class="col-xs-8 col-md-6">
+                                <input type="text" id="checksubdelta" name="checksubdelta" value="${autosubliminal.CHECKSUBDELTA}" class="form-control input-sm">
                             </span>
                         </div>
 
