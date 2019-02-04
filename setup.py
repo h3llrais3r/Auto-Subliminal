@@ -12,7 +12,6 @@ from setuptools import setup, find_packages
 # Determine python version
 PY2 = sys.version_info[0] == 2
 PY3 = sys.version_info[0] == 3
-PY34 = sys.version_info[0:2] >= (3, 4)
 
 # Setup system path (include libraries at position 1 because position 0 must remain the current directory)
 sys.path, remainder = sys.path[:1], sys.path[1:]
