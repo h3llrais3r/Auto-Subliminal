@@ -9,7 +9,7 @@
                 <h3 class="modal-title">Show settings</h3>
             </div>
 
-            <div v-if="show" class="modal-body">
+            <div v-if="show && showSettings" class="modal-body">
                 <div class="settings-container">
                     <div class="row">
                         <div class="col-xs-12">

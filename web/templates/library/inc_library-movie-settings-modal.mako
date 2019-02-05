@@ -9,7 +9,7 @@
                 <h3 class="modal-title">Movie settings</h3>
             </div>
 
-            <div v-if="movie" class="modal-body">
+            <div v-if="movie && movieSettings" class="modal-body">
                 <div class="settings-container">
                     <div class="row">
                         <div class="col-xs-12">
