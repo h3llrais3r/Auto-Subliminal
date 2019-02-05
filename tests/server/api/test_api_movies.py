@@ -41,6 +41,9 @@ movie_1_json = '{"files": [{"embedded_languages": [], "filename": "movie1.mkv", 
                '"title": "title1", "total_subtitles_available": 1, "total_subtitles_missing": 1, ' \
                '"total_subtitles_wanted": 2, "year": 2018}'
 
+movie_settings_1_json = '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
+                        '"wanted_languages": ["en", "nl"]}'
+
 
 def test_get_movies(mocker):
     mocker.patch.object(MovieDetailsDb, 'get_all_movies', return_value=[movie_details_1, movie_details_2])
@@ -56,6 +59,11 @@ def test_get_movie(mocker):
                      {'filename': 'subtitle1.srt', 'type': 'subtitle', 'language': 'nl'}])
     mocker.patch.object(MovieSettingsDb, 'get_movie_settings', return_value=movie_settings_1)
     assert movie_1_json == pickle_api_result(MoviesApi().get('tt1'))
+
+
+def test_get_movie_settings(mocker):
+    mocker.patch.object(MovieSettingsDb, 'get_movie_settings', return_value=movie_settings_1)
+    assert movie_settings_1_json == pickle_api_result(MoviesApi().settings.get('tt1'))
 
 
 def test_get_movies_overview(mocker):

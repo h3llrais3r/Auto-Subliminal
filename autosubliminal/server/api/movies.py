@@ -5,6 +5,7 @@ import os
 
 import cherrypy
 
+from autosubliminal.core.movie import MovieSettings
 from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
 from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb
 from autosubliminal.libraryscanner import LibraryPathScanner
@@ -165,7 +166,18 @@ class _SettingsApi(RestResource):
         super(_SettingsApi, self).__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('PUT',)
+        self.allowed_methods = ('GET', 'PUT')
+
+    def get(self, imdb_id):
+        """Get the settings for a movie"""
+        movie_settings_db = MovieSettingsDb()
+        movie_settings = movie_settings_db.get_movie_settings(imdb_id)
+        # If no settings are defined yet, use the default settings
+        if not movie_settings:
+            movie_settings = MovieSettings.default_settings(imdb_id)
+            movie_settings_db.set_movie_settings(movie_settings)
+
+        return movie_settings.to_json()
 
     def put(self, imdb_id):
         """Save the settings for a movie."""

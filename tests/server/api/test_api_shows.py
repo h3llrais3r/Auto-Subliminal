@@ -52,6 +52,9 @@ show_1_json = '{"banner": true, "files": ' \
               '"total_subtitles_available": 1, "total_subtitles_missing": 1, "total_subtitles_wanted": 2, ' \
               '"tvdb_id": 1, "year": 2018}'
 
+show_settings_1_json = '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
+                       '"wanted_languages": ["en", "nl"]}'
+
 
 def test_get_shows(mocker):
     mocker.patch.object(ShowDetailsDb, 'get_all_shows', return_value=[show_details_1, show_details_2])
@@ -72,6 +75,11 @@ def test_get_show(mocker):
                      {'filename': 's01e01.srt', 'type': 'subtitle', 'language': 'nl'}
                  ]}])
     assert show_1_json == pickle_api_result(ShowsApi().get('1'))
+
+
+def test_get_show_settings(mocker):
+    mocker.patch.object(ShowSettingsDb, 'get_show_settings', return_value=show_settings_1)
+    assert show_settings_1_json == pickle_api_result(ShowsApi().settings.get('1'))
 
 
 def test_get_shows_overview(mocker):
