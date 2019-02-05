@@ -35,7 +35,7 @@ oauthlib==3.0.1
 portend==2.3
 pushbullet.py==0.11.0
 pysrt==1.1.1
-python-dateutil==2.7.5
+python-dateutil==2.8.0
 python-magic==0.4.15
 python-twitter==3.5
 pytz==2018.9
