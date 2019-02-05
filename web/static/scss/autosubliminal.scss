@@ -782,6 +782,8 @@ table.table {
   width: 100%;
 
   .details-poster-container {
+    background: url("../images/poster-placeholder.jpg") no-repeat center center;
+    background-size: cover;
     display: table-cell;
 
     @media (max-width: $screen-xs-max) {
@@ -791,6 +793,7 @@ table.table {
     }
 
     .details-poster-image {
+      display: block;
       width: 150px;
     }
   }
@@ -862,6 +865,8 @@ table.table {
   width: 100%;
 
   .settings-poster-container {
+    background: url("../images/poster-placeholder.jpg") no-repeat center center;
+    background-size: cover;
     display: table-cell;
 
     @media (max-width: $screen-xs-max) {
@@ -871,6 +876,7 @@ table.table {
     }
 
     .settings-poster-image {
+      display: block;
       width: 175px;
 
       @media (max-width: $screen-xs-max) {
