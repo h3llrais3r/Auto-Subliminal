@@ -66,9 +66,9 @@
                         self.movieSettings = self.movie.settings;
                     });
                 },
-                getPlayVideoUrl: autosubliminal.library.constructPlayVideoUrl,
-                getLanguages: autosubliminal.library.convertToLanguages,
-                getAlpha2Languages: autosubliminal.library.convertToAlpha2Languages,
+                getPlayVideoUrl: autosubliminal.constructPlayVideoUrl,
+                getLanguages: autosubliminal.convertToLanguages,
+                getAlpha2Languages: autosubliminal.convertToAlpha2Languages,
                 internalLanguagesAvailable: function (file) {
                     var available = false;
                     if ((file.hardcoded_languages && file.hardcoded_languages.length > 0) ||

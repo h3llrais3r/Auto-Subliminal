@@ -6,9 +6,14 @@
 
 <%block name="bodyContent">
 
-    <%include file="/home/inc_home-wanteditems.mako"/>
+    <!-- Vue app placeholder -->
+    <div id="app" class="container">
 
-    <%include file="/home/inc_home-lastdownloads.mako"/>
+        <%include file="/home/inc_home-wanteditems.mako"/>
+
+        <%include file="/home/inc_home-lastdownloads.mako"/>
+
+    </div>
 
 </%block>
 

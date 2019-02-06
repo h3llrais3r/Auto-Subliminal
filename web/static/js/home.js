@@ -211,6 +211,111 @@
             });
             return false;
         });
+
+        // Init vue component
+        window.Vue.component('settings', {
+            props: {
+                type: String, // tvdb or imdb
+                indexerId: String,
+                title: String,
+                settings: Object
+            },
+            data: function () {
+                return {
+                    languages: autosubliminal.LANGUAGES,
+                    wantedLanguages: []
+                };
+            },
+            computed: {
+                posterThumbnailUrl: function () {
+                    var self = this;
+                    var indexer = '';
+                    if (self.type == autosubliminal.EPISODE_TYPE) {
+                        indexer = 'tvdb';
+                    } else if (self.type == autosubliminal.MOVIE_TYPE) {
+                        indexer = 'imdb';
+                    }
+                    return autosubliminal.getUrl('/artwork/' + indexer + '/poster/thumbnail/');
+                }
+            },
+            watch: {
+                // Watch for settings being updated to convert the wanted languages
+                settings: function (newSettings) {
+                    var self = this;
+                    if (newSettings && newSettings.wanted_languages) {
+                        self.wantedLanguages = self.getLanguages(self.settings.wanted_languages);
+                    }
+                }
+            },
+            created: function () {
+                //console.log('created');
+            },
+            mounted: function () {
+                //console.log('mounted');
+            },
+            updated: function () {
+                //console.log('updated');
+                autosubliminal.vue.enableBootstrapToggle();
+            },
+            methods: {
+                getLanguages: autosubliminal.convertToLanguages,
+                getAlpha2Languages: autosubliminal.convertToAlpha2Languages,
+                saveSettings: function (event) {
+                    event.preventDefault();
+                    var self = this;
+                    var apiUrl = '';
+                    if (self.type == autosubliminal.EPISODE_TYPE) {
+                        apiUrl = autosubliminal.getUrl('/api/shows/' + self.indexerId + '/settings');
+                    } else if (self.type == autosubliminal.MOVIE_TYPE) {
+                        apiUrl = autosubliminal.getUrl('/api/shows/' + self.indexerId + '/settings');
+                    }
+                    var data = self.settings;
+                    data.wanted_languages = self.getAlpha2Languages(self.wantedLanguages);
+                    // Save settings
+                    $.putJson(apiUrl, data, function () {
+                        // Close modal on success
+                        $('#settingsModal').modal('hide');
+                    });
+                }
+            }
+        });
+
+        // Init vue components
+        window.Vue.component('multiselect', window.VueMultiselect.default);
+
+        // Init vue app
+        new window.Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    type: null,
+                    indexerId: null,
+                    title: null,
+                    settings: null
+                }
+            },
+            methods: {
+                openSettingsModal: function (event, type, indexerId, title) {
+                    event.preventDefault();
+                    var self = this;
+                    var apiUrl = '';
+                    if (type == autosubliminal.EPISODE_TYPE) {
+                        apiUrl = autosubliminal.getUrl('/api/shows/' + indexerId + '/settings');
+                    } else if (type == autosubliminal.MOVIE_TYPE) {
+                        apiUrl = autosubliminal.getUrl('/api/movies/' + indexerId + '/settings')
+                    }
+                    // Get settings
+                    $.get(apiUrl, function (data) {
+                        self.type = type;
+                        self.indexerId = indexerId;
+                        self.title = title;
+                        self.settings = data;
+                    });
+                    // Open modal
+                    $('#settingsModal').modal('show');
+                }
+            }
+        });
     };
 
     // Wait until settings are loaded to start initialization

@@ -139,6 +139,11 @@
                                                     <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
                                                 </a>
                                             </span>
+                                            <span>
+                                                <a href="#" @click="openSettingsModal($event, '${item.type}', '${item.tvdbid}', '${display_item_title(item)}')">
+                                                    <i class="fa fa-wrench" aria-hidden="true" title="Click to edit show settings"></i>
+                                                </a>
+                                            </span>
                                         % endif
                                     % elif item.is_movie:
                                         % if not item.imdbid:
@@ -156,6 +161,11 @@
                                             <span>
                                                 <a href="${autosubliminal.DEREFERURL}${autosubliminal.IMDBURL}${item.imdbid}" target="_blank">
                                                     <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
+                                                </a>
+                                            </span>
+                                            <span>
+                                                <a href="#" @click="openSettingsModal($event, '${item.type}', '${item.imdbid}', '${display_item_title(item)}')">
+                                                    <i class="fa fa-wrench" aria-hidden="true" title="Click to edit movie settings"></i>
                                                 </a>
                                             </span>
                                         % endif
@@ -296,5 +306,9 @@
         </div>
 
     </div>
+
+    <settings :type="type" :indexer-id="indexerId" :title="title" :settings="settings" inline-template>
+            <%include file="/home/inc_home-settings-modal.mako"/>
+    </settings>
 
 </%block>
