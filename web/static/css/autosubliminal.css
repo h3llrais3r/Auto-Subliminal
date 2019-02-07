@@ -394,6 +394,7 @@ a:hover, a:active, a:focus, a:visited > .fa {
 /***************************
  * SWITCH-CHECKBOX STYLING *
  ***************************/
+/* Based on https://bootsnipp.com/snippets/xp0QM */
 /* Usage: use bootstrap label class values for desired color. */
 /*
 <span class="switch-checkbox">
@@ -405,7 +406,7 @@ a:hover, a:active, a:focus, a:visited > .fa {
   cursor: pointer;
   height: 0;
   position: relative;
-  width: 40px;
+  width: 44px;
 }
 
 .switch-checkbox > label::before {
@@ -418,7 +419,7 @@ a:hover, a:active, a:focus, a:visited > .fa {
   position: absolute;
   opacity: 0.3;
   transition: all 0.4s ease-in-out;
-  width: 40px;
+  width: 44px;
 }
 
 .switch-checkbox > label::after {
@@ -427,12 +428,27 @@ a:hover, a:active, a:focus, a:visited > .fa {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
   content: '';
   height: 24px;
-  left: -4px;
   margin-top: -8px;
   position: absolute;
   top: -4px;
   transition: all 0.3s ease-in-out;
   width: 24px;
+}
+
+.switch-checkbox.sm > label {
+  width: 36px;
+}
+
+.switch-checkbox.sm > label::before {
+  height: 12px;
+  margin-top: -6px;
+  width: 36px;
+}
+
+.switch-checkbox.sm > label::after {
+  height: 20px;
+  margin-top: -6px;
+  width: 20px;
 }
 
 .switch-checkbox > input[type="checkbox"] {
@@ -447,6 +463,10 @@ a:hover, a:active, a:focus, a:visited > .fa {
 .switch-checkbox > input[type="checkbox"]:checked + label::after {
   background: inherit;
   left: 20px;
+}
+
+.switch-checkbox.sm > input[type="checkbox"]:checked + label::after {
+  left: 16px;
 }
 
 /***********************
