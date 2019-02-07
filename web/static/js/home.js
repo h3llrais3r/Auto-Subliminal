@@ -292,7 +292,7 @@
                     indexerId: null,
                     title: null,
                     settings: null
-                }
+                };
             },
             methods: {
                 openSettingsModal: function (event, type, indexerId, title) {
@@ -302,7 +302,7 @@
                     if (type == autosubliminal.EPISODE_TYPE) {
                         apiUrl = autosubliminal.getUrl('/api/shows/' + indexerId + '/settings');
                     } else if (type == autosubliminal.MOVIE_TYPE) {
-                        apiUrl = autosubliminal.getUrl('/api/movies/' + indexerId + '/settings')
+                        apiUrl = autosubliminal.getUrl('/api/movies/' + indexerId + '/settings');
                     }
                     // Get settings
                     $.get(apiUrl, function (data) {
