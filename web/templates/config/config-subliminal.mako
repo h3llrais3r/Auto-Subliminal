@@ -43,37 +43,61 @@
                             </span>
                             <span class="col-xs-8 col-md-6">
                                 <input type="hidden" name="showmmsdefault" value="1">
-                                <label class="checkbox-inline aligned">
-                                    % if autosubliminal.SHOWMATCHSOURCE:
-                                        <input type="checkbox" name="showmmssource" data-toggle="toggle" data-size="mini" checked>
-                                    % else:
-                                        <input type="checkbox" name="showmmssource" data-toggle="toggle" data-size="mini">
-                                    % endif
+                                <label class="switch-checkbox-inline">
                                     Source
-                                </label>
-                                <label class="checkbox-inline aligned">
-                                    % if autosubliminal.SHOWMATCHQUALITY:
-                                        <input type="checkbox" name="showmmsquality" data-toggle="toggle" data-size="mini" checked>
+                                    % if autosubliminal.SHOWMATCHSOURCE:
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="showmmssource" name="showmmssource" checked>
+                                            <label for="showmmssource" class="label-primary"></label>
+                                        </span>
                                     % else:
-                                        <input type="checkbox" name="showmmsquality" data-toggle="toggle" data-size="mini">
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="showmmssource" name="showmmssource">
+                                            <label for="showmmssource" class="label-primary"></label>
+                                        </span>
                                     % endif
+                                </label>
+                                <label class="switch-checkbox-inline">
                                     Quality
-                                </label>
-                                <label class="checkbox-inline aligned">
-                                    % if autosubliminal.SHOWMATCHCODEC:
-                                        <input type="checkbox" name="showmmscodec" data-toggle="toggle" data-size="mini" checked>
+                                    % if autosubliminal.SHOWMATCHQUALITY:
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="showmmsquality" name="showmmsquality" checked>
+                                            <label for="showmmsquality" class="label-primary"></label>
+                                        </span>
                                     % else:
-                                        <input type="checkbox" name="showmmscodec" data-toggle="toggle" data-size="mini">
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="showmmsquality" name="showmmsquality">
+                                            <label for="showmmsquality" class="label-primary"></label>
+                                        </span>
                                     % endif
+                                </label>
+                                <label class="switch-checkbox-inline">
                                     Codec
-                                </label>
-                                <label class="checkbox-inline aligned">
-                                    % if autosubliminal.SHOWMATCHRELEASEGROUP:
-                                        <input type="checkbox" name="showmmsreleasegroup" data-toggle="toggle" data-size="mini" checked>
+                                    % if autosubliminal.SHOWMATCHCODEC:
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="showmmscodec" name="showmmscodec" checked>
+                                            <label for="showmmscodec" class="label-primary"></label>
+                                        </span>
                                     % else:
-                                        <input type="checkbox" name="showmmsreleasegroup" data-toggle="toggle" data-size="mini">
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="showmmscodec" name="showmmscodec">
+                                            <label for="showmmscodec" class="label-primary"></label>
+                                        </span>
                                     % endif
+                                </label>
+                                <label class="switch-checkbox-inline">
                                     Group
+                                    % if autosubliminal.SHOWMATCHRELEASEGROUP:
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="showmmsreleasegroup" name="showmmsreleasegroup" checked>
+                                            <label for="showmmsreleasegroup" class="label-primary"></label>
+                                        </span>
+                                    % else:
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="showmmsreleasegroup" name="showmmsreleasegroup">
+                                            <label for="showmmsreleasegroup" class="label-primary"></label>
+                                        </span>
+                                    % endif
                                 </label>
                             </span>
                         </div>
@@ -93,37 +117,61 @@
                             </span>
                             <span class="col-xs-8 col-md-6">
                                 <input type="hidden" name="moviemmsdefault" value="1">
-                                <label class="checkbox-inline aligned">
-                                    % if autosubliminal.MOVIEMATCHSOURCE:
-                                        <input type="checkbox" name="moviemmssource" data-toggle="toggle" data-size="mini" checked>
-                                    % else:
-                                        <input type="checkbox" name="moviemmssource" data-toggle="toggle" data-size="mini">
-                                    % endif
+                                <label class="switch-checkbox-inline">
                                     Source
-                                </label>
-                                <label class="checkbox-inline aligned">
-                                    % if autosubliminal.MOVIEMATCHQUALITY:
-                                        <input type="checkbox" name="moviemmsquality" data-toggle="toggle" data-size="mini" checked>
+                                    % if autosubliminal.MOVIEMATCHSOURCE:
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="moviemmssource" name="moviemmssource" checked>
+                                            <label for="moviemmssource" class="label-primary"></label>
+                                        </span>
                                     % else:
-                                        <input type="checkbox" name="moviemmsquality" data-toggle="toggle" data-size="mini">
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="moviemmssource" name="moviemmssource">
+                                            <label for="moviemmssource" class="label-primary"></label>
+                                        </span>
                                     % endif
+                                </label>
+                                <label class="switch-checkbox-inline">
                                     Quality
-                                </label>
-                                <label class="checkbox-inline aligned">
-                                    % if autosubliminal.MOVIEMATCHCODEC:
-                                        <input type="checkbox" name="moviemmscodec" data-toggle="toggle" data-size="mini" checked>
+                                    % if autosubliminal.MOVIEMATCHQUALITY:
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="moviemmsquality" name="moviemmsquality" checked>
+                                            <label for="moviemmsquality" class="label-primary"></label>
+                                        </span>
                                     % else:
-                                        <input type="checkbox" name="moviemmscodec" data-toggle="toggle" data-size="mini">
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="moviemmsquality" name="moviemmsquality">
+                                            <label for="moviemmsquality" class="label-primary"></label>
+                                        </span>
                                     % endif
+                                </label>
+                                <label class="switch-checkbox-inline">
                                     Codec
-                                </label>
-                                <label class="checkbox-inline aligned">
-                                    % if autosubliminal.MOVIEMATCHRELEASEGROUP:
-                                        <input type="checkbox" name="moviemmsreleasegroup" data-toggle="toggle" data-size="mini" checked>
+                                    % if autosubliminal.MOVIEMATCHCODEC:
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="moviemmscodec" name="moviemmscodec" checked>
+                                            <label for="moviemmscodec" class="label-primary"></label>
+                                        </span>
                                     % else:
-                                        <input type="checkbox" name="moviemmsreleasegroup" data-toggle="toggle" data-size="mini">
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="moviemmscodec" name="moviemmscodec">
+                                            <label for="moviemmscodec" class="label-primary"></label>
+                                        </span>
                                     % endif
+                                </label>
+                                <label class="switch-checkbox-inline">
                                     Group
+                                    % if autosubliminal.MOVIEMATCHRELEASEGROUP:
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="moviemmsreleasegroup" name="moviemmsreleasegroup" checked>
+                                            <label for="moviemmsreleasegroup" class="label-primary"></label>
+                                        </span>
+                                    % else:
+                                        <span class="switch-checkbox">
+                                            <input type="checkbox" id="moviemmsreleasegroup" name="moviemmsreleasegroup">
+                                            <label for="moviemmsreleasegroup" class="label-primary"></label>
+                                        </span>
+                                    % endif
                                 </label>
                             </span>
                         </div>

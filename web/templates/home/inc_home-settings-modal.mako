@@ -69,7 +69,10 @@
                                                 </label>
                                             </div>
                                             <div class="col-xs-12 col-sm-2">
-                                                <input type="checkbox" class="vue-toggle" v-model="settings.refine">
+                                                <span class="switch-checkbox pull-right">
+                                                    <input type="checkbox" id="refineSwitch" v-model="settings.refine">
+                                                    <label for="refineSwitch" class="label-primary"></label>
+                                                </span>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -86,7 +89,10 @@
                                                 </label>
                                             </div>
                                             <div class="col-xs-12 col-sm-2">
-                                                <input type="checkbox" class="vue-toggle" v-model="settings.hearing_impaired">
+                                                <span class="switch-checkbox pull-right">
+                                                    <input type="checkbox" id="hearingImpairedSwitch" v-model="settings.hearing_impaired">
+                                                    <label for="hearingImpairedSwitch" class="label-primary"></label>
+                                                </span>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -106,7 +112,10 @@
                                                 </label>
                                             </div>
                                             <div class="col-xs-12 col-sm-2">
-                                                <input type="checkbox" class="vue-toggle" v-model="settings.utf8_encoding">
+                                                <span class="switch-checkbox pull-right">
+                                                    <input type="checkbox" id="utf8EncodingSwitch" v-model="settings.utf8_encoding">
+                                                    <label for="utf8EncodingSwitch" class="label-primary"></label>
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

@@ -49,7 +49,6 @@
             updated: function () {
                 //console.log('updated');
                 var self = this;
-                autosubliminal.vue.enableBootstrapToggle();
                 autosubliminal.vue.styleProgressBar(self.showProgressPercentage);
             },
             computed: {

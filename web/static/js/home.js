@@ -255,7 +255,6 @@
             },
             updated: function () {
                 //console.log('updated');
-                autosubliminal.vue.enableBootstrapToggle();
             },
             methods: {
                 getLanguages: autosubliminal.convertToLanguages,

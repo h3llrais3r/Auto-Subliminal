@@ -391,6 +391,64 @@ a:hover, a:active, a:focus, a:visited > .fa {
   width: auto;
 }
 
+/***************************
+ * SWITCH-CHECKBOX STYLING *
+ ***************************/
+/* Usage: use bootstrap label class values for desired color. */
+/*
+<span class="switch-checkbox">
+    <input type="checkbox" id="myCheckbox">
+    <label for="myCheckbox" class="label-primary"></label>
+</span>
+*/
+.switch-checkbox > label {
+  cursor: pointer;
+  height: 0;
+  position: relative;
+  width: 40px;
+}
+
+.switch-checkbox > label::before {
+  background: #000000;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  content: '';
+  height: 16px;
+  margin-top: -8px;
+  position: absolute;
+  opacity: 0.3;
+  transition: all 0.4s ease-in-out;
+  width: 40px;
+}
+
+.switch-checkbox > label::after {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  content: '';
+  height: 24px;
+  left: -4px;
+  margin-top: -8px;
+  position: absolute;
+  top: -4px;
+  transition: all 0.3s ease-in-out;
+  width: 24px;
+}
+
+.switch-checkbox > input[type="checkbox"] {
+  display: none;
+}
+
+.switch-checkbox > input[type="checkbox"]:checked + label::before {
+  background: inherit;
+  opacity: 0.5;
+}
+
+.switch-checkbox > input[type="checkbox"]:checked + label::after {
+  background: inherit;
+  left: 20px;
+}
+
 /***********************
  * FA-CHECKBOX STYLING *
  ***********************/
@@ -596,9 +654,12 @@ table.table.table-hover tbody tr:hover {
   margin-bottom: 15px;
 }
 
-.form-group .checkbox-inline.aligned {
-  padding-top: 0;
-  margin-bottom: 5px;
+.form-group .switch-checkbox-inline {
+  font-weight: normal;
+}
+
+.form-group .switch-checkbox-inline .switch-checkbox {
+  padding-right: 20px;
 }
 
 /************************

@@ -41,8 +41,6 @@ var vendor = {
         'node_modules/bootstrap/dist/js/bootstrap.js',
         // bootstrap hover dropdown
         'node_modules/bootstrap-hover-dropdown/bootstrap-hover-dropdown.js',
-        // bootstrap toggle
-        'node_modules/bootstrap-toggle/js/bootstrap-toggle.js',
         // vue
         'node_modules/vue/dist/vue.js',
         // vue-lazyload
@@ -58,8 +56,6 @@ var vendor = {
         // bootstrap
         'node_modules/bootstrap/dist/css/bootstrap.css',
         'node_modules/bootstrap/dist/css/bootstrap-theme.css',
-        // bootstrap toggle
-        'node_modules/bootstrap-toggle/css/bootstrap-toggle.css',
         // tablesorter
         'node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css',
         // pnotify

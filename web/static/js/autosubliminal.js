@@ -461,11 +461,6 @@ var autosubliminal = {
 
     var vue = autosubliminal.vue;
 
-    // Function to enable vue bootstrap toggle (add class="vue-toggle" to checkbox to enable it)
-    vue.enableBootstrapToggle = function () {
-        $('.vue-toggle').bootstrapToggle();
-    };
-
     // Function to style a vue progress bar
     vue.styleProgressBar = function (progressPercentage) {
         $('.vue-simple-progress-bar').each(function () {
