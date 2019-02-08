@@ -472,6 +472,10 @@ var autosubliminal = {
 
     var vue = autosubliminal.vue;
 
+    vue.setPosterPlaceholderUrl = function (event) {
+        event.target.src = autosubliminal.getUrl('/images/poster-placeholder.jpg');
+    };
+
     // Function to style a vue progress bar
     vue.styleProgressBar = function (progressPercentage) {
         $('.vue-simple-progress-bar').each(function () {

@@ -751,8 +751,6 @@ table.table.table-hover tbody tr:hover {
 }
 
 .details-container .details-poster-container {
-  background: url("../images/poster-placeholder.jpg") no-repeat center center;
-  background-size: cover;
   display: table-cell;
 }
 
@@ -765,7 +763,6 @@ table.table.table-hover tbody tr:hover {
 }
 
 .details-container .details-poster-container .details-poster-image {
-  display: block;
   width: 150px;
 }
 
@@ -839,8 +836,6 @@ table.table.table-hover tbody tr:hover {
 }
 
 .settings-container .settings-poster-container {
-  background: url("../images/poster-placeholder.jpg") no-repeat center center;
-  background-size: cover;
   display: table-cell;
 }
 
@@ -853,7 +848,6 @@ table.table.table-hover tbody tr:hover {
 }
 
 .settings-container .settings-poster-container .settings-poster-image {
-  display: block;
   width: 175px;
 }
 

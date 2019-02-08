@@ -45,7 +45,7 @@
                                 <div class="col-xs-12">
                                     <div class="details-poster-container">
                                         <a :href="posterFullSizeUrl + show.tvdb_id" target="_blank">
-                                            <img class="details-poster-image" :src="posterThumbnailUrl + show.tvdb_id">
+                                            <img class="details-poster-image" :src="posterThumbnailUrl + show.tvdb_id" @error="setPosterPlaceholderUrl($event)">
                                         </a>
                                     </div>
                                     <div class="details-info-container">

@@ -79,6 +79,7 @@
                         }
                     });
                 },
+                setPosterPlaceholderUrl: autosubliminal.vue.setPosterPlaceholderUrl,
                 getPlayVideoUrl: autosubliminal.constructPlayVideoUrl,
                 getLanguages: autosubliminal.convertToLanguages,
                 getAlpha2Languages: autosubliminal.convertToAlpha2Languages,

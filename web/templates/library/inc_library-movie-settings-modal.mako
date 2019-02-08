@@ -1,4 +1,4 @@
-<div id="settingsModal" class="modal fade" tabindex="-1" xmlns="http://www.w3.org/1999/html">
+<div id="settingsModal" class="modal fade" tabindex="-1">
 
     <div class="modal-dialog settings-modal">
 
@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="settings-poster-container">
-                                <img class="settings-poster-image" :src="posterThumbnailUrl + movie.imdb_id">
+                                <img class="settings-poster-image" :src="posterThumbnailUrl + movie.imdb_id" @error="setPosterPlaceholderUrl($event)">
                             </div>
                             <div class="settings-info-container">
                                 <div class="col-xs-12 settings-info-title">

@@ -257,6 +257,7 @@
                 //console.log('updated');
             },
             methods: {
+                setPosterPlaceholderUrl: autosubliminal.vue.setPosterPlaceholderUrl,
                 getLanguages: autosubliminal.convertToLanguages,
                 getAlpha2Languages: autosubliminal.convertToAlpha2Languages,
                 saveSettings: function (event) {
