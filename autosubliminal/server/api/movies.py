@@ -7,11 +7,12 @@ import cherrypy
 
 from autosubliminal.core.movie import MovieSettings
 from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
-from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb
+from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb, WantedItemsDb
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import get_boolean
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
+from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
 
@@ -172,6 +173,7 @@ class _SettingsApi(RestResource):
         """Get the settings for a movie"""
         movie_settings_db = MovieSettingsDb()
         movie_settings = movie_settings_db.get_movie_settings(imdb_id)
+
         # If no settings are defined yet, use the default settings
         if not movie_settings:
             movie_settings = MovieSettings.default_settings(imdb_id)
@@ -189,6 +191,7 @@ class _SettingsApi(RestResource):
             hearing_impaired = get_boolean(input_json['hearing_impaired'])
             utf8_encoding = get_boolean(input_json['utf8_encoding'])
 
+            # Update settings
             db = MovieSettingsDb()
             movie_settings = db.get_movie_settings(imdb_id)
             movie_settings.wanted_languages = wanted_languages
@@ -196,6 +199,12 @@ class _SettingsApi(RestResource):
             movie_settings.hearing_impaired = hearing_impaired
             movie_settings.utf8_encoding = utf8_encoding
             db.update_movie_settings(movie_settings)
+
+            # Delete wanted items for the movie so the new settings will be used in the next disk scan
+            WantedItemsDb().delete_wanted_items_for_movie(imdb_id)
+
+            # Send notification
+            send_websocket_notification('Settings will be applied on next disk scan.')
 
             return self._no_content()
 

@@ -6,7 +6,7 @@ import os
 import autosubliminal
 from autosubliminal import fileprocessor
 from autosubliminal.core.scheduler import ScheduledProcess
-from autosubliminal.db import WantedItemsDb
+from autosubliminal.db import MovieSettingsDb, ShowSettingsDb, WantedItemsDb
 from autosubliminal.util.filesystem import check_missing_subtitle_languages, is_skipped_dir, is_valid_video_file, \
     one_path_exists
 from autosubliminal.util.queue import release_wanted_queue_lock_on_exception
@@ -26,6 +26,8 @@ class DiskScanner(ScheduledProcess):
     def __init__(self):
         super(DiskScanner, self).__init__()
         self.wanted_db = WantedItemsDb()
+        self.show_settings_db = ShowSettingsDb()
+        self.movie_settings_db = MovieSettingsDb()
 
     @release_wanted_queue_lock_on_exception
     def run(self, force_run):
@@ -108,23 +110,38 @@ class DiskScanner(ScheduledProcess):
         else:
             log.debug('Video not found in wanted_items database, start scanning it')
 
-            # Check for missing subtitles (scan embedded and detect invalid if configured to do so)
-            languages = check_missing_subtitle_languages(dirname, filename,
-                                                         scan_embedded=autosubliminal.SCANEMBEDDEDSUBS,
-                                                         scan_hardcoded=autosubliminal.SCANHARDCODEDSUBS,
-                                                         detect_invalid=autosubliminal.DETECTINVALIDSUBLANGUAGE)
+            # Process file
+            wanted_item = fileprocessor.process_file(dirname, filename)
+            if wanted_item:
+                # Determine wanted languages
+                wanted_languages = []
+                if wanted_item.is_episode and wanted_item.tvdbid:
+                    settings = self.show_settings_db.get_show_settings(wanted_item.tvdbid)
+                    if settings and settings.wanted_languages:
+                        wanted_languages = settings.wanted_languages
+                elif wanted_item.is_movie and wanted_item.imdbid:
+                    settings = self.movie_settings_db.get_movie_settings(wanted_item.imdbid)
+                    if settings and settings.wanted_languages:
+                        wanted_languages = settings.wanted_languages
 
-            # Process the video file if there are missing subtitles
-            if len(languages) > 0:
-                wanted_item = fileprocessor.process_file(dirname, filename)
-                if wanted_item:
-                    # Add wanted languages and store in wanted_items database
+                # Check for missing subtitles (scan embedded and detect invalid if configured to do so)
+                languages = check_missing_subtitle_languages(dirname, filename,
+                                                             scan_embedded=autosubliminal.SCANEMBEDDEDSUBS,
+                                                             scan_hardcoded=autosubliminal.SCANHARDCODEDSUBS,
+                                                             detect_invalid=autosubliminal.DETECTINVALIDSUBLANGUAGE,
+                                                             wanted_languages=wanted_languages)
+
+                # Process the video file if there are missing subtitles
+                if len(languages) > 0:
+                    # Add missing languages and store in wanted_items database
                     wanted_item.languages = languages
                     self.wanted_db.set_wanted_item(wanted_item)
+
                 else:
+                    log.debug('Video has no missing subtitles')
                     return None
+
             else:
-                log.debug('Video has no missing subtitles')
                 return None
 
         # Check if we need to skip it and delete it from the database

@@ -7,12 +7,14 @@ import cherrypy
 
 from autosubliminal.core.show import ShowSettings
 from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
-from autosubliminal.db import FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb, ShowSettingsDb
+from autosubliminal.db import FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb, \
+    ShowSettingsDb, WantedItemsDb
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import natural_keys
 from autosubliminal.util.common import get_boolean
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
+from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
 
@@ -205,6 +207,7 @@ class _SettingsApi(RestResource):
         """Get the settings for a show"""
         show_settings_db = ShowSettingsDb()
         show_settings = show_settings_db.get_show_settings(tvdb_id)
+
         # If no settings are defined yet, use the default settings
         if not show_settings:
             show_settings = ShowSettings.default_settings(tvdb_id)
@@ -222,6 +225,7 @@ class _SettingsApi(RestResource):
             hearing_impaired = get_boolean(input_json['hearing_impaired'])
             utf8_encoding = get_boolean(input_json['utf8_encoding'])
 
+            # Update settings
             db = ShowSettingsDb()
             show_settings = db.get_show_settings(tvdb_id)
             show_settings.wanted_languages = wanted_languages
@@ -229,6 +233,12 @@ class _SettingsApi(RestResource):
             show_settings.hearing_impaired = hearing_impaired
             show_settings.utf8_encoding = utf8_encoding
             db.update_show_settings(show_settings)
+
+            # Delete wanted items for the show so the new settings will be used in the next disk scan
+            WantedItemsDb().delete_wanted_items_for_show(tvdb_id)
+
+            # Send notification
+            send_websocket_notification('Settings will be applied on next disk scan.')
 
             return self._no_content()
 

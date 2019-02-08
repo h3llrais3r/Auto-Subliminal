@@ -36,6 +36,8 @@ class WantedItemsDb(object):
                              'year=?, season=?, episode=?, quality=?, source=?, codec=?, releasegrp=?, tvdbid=?, ' \
                              'imdbid=? WHERE id=?'
         self._query_delete = 'DELETE FROM wanted_items WHERE videopath=?'
+        self._query_delete_by_tvdb_id = 'DELETE FROM wanted_items WHERE tvdbid=?'
+        self._query_delete_by_imdb_id = 'DELETE FROM wanted_items WHERE imdbid=?'
         self._query_flush = 'DELETE FROM wanted_items'
 
     def get_wanted_items(self):
@@ -105,6 +107,30 @@ class WantedItemsDb(object):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         cursor.execute(self._query_delete, [wanted_item.videopath])
+        connection.commit()
+        connection.close()
+
+    def delete_wanted_items_for_show(self, tvdb_id):
+        """Delete all of wanted items related to a show.
+
+        :param tvdb_id: the tvdb id of the show
+        :type tvdb_id: int
+        """
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_delete_by_tvdb_id, [tvdb_id])
+        connection.commit()
+        connection.close()
+
+    def delete_wanted_items_for_movie(self, imdb_id):
+        """Delete all of wanted items related to a movie.
+
+        :param imdb_id: the imdb id of the movie
+        :type imdb_id: str
+        """
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_delete_by_imdb_id, [imdb_id])
         connection.commit()
         connection.close()
 

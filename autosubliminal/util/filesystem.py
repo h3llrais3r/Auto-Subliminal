@@ -15,6 +15,7 @@ from six import text_type
 
 import autosubliminal
 from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED, EXTERNAL
+from autosubliminal.util.common import get_wanted_languages
 
 log = logging.getLogger(__name__)
 
@@ -74,7 +75,7 @@ def save_hardcoded_subtitle_languages(dirname, filename, hardcoded_subtitle_lang
 
 
 def check_missing_subtitle_languages(dirname, filename, scan_embedded=False, scan_hardcoded=False,
-                                     detect_invalid=False):
+                                     detect_invalid=False, wanted_languages=None):
     log.debug('Checking for missing subtitle(s)')
     missing_languages = []
 
@@ -88,10 +89,14 @@ def check_missing_subtitle_languages(dirname, filename, scan_embedded=False, sca
     if scan_hardcoded:
         hardcoded_languages = [s.language for s in get_hardcoded_subtitles(dirname, filename)]
 
+    # Determine list of languages to check
+    languages_to_check = set(wanted_languages or get_wanted_languages())
+
     # Check default language
     detect_language = False
-    if autosubliminal.DEFAULTLANGUAGE:
+    if autosubliminal.DEFAULTLANGUAGE and autosubliminal.DEFAULTLANGUAGE in languages_to_check:
         log.debug('Checking for missing default language')
+        languages_to_check.remove(autosubliminal.DEFAULTLANGUAGE)
         default_language = Language.fromietf(autosubliminal.DEFAULTLANGUAGE)
 
         # Check with or without alpha2 code suffix depending on configuration
@@ -118,11 +123,11 @@ def check_missing_subtitle_languages(dirname, filename, scan_embedded=False, sca
                 log.debug('No invalid default language detected')
 
     # Check additional languages
-    if autosubliminal.ADDITIONALLANGUAGES:
+    if languages_to_check:
         log.debug('Checking for missing additional language(s)')
 
         # Always check with alpha2 code suffix for additional languages
-        for language in autosubliminal.ADDITIONALLANGUAGES:
+        for language in languages_to_check:
             additional_language = Language.fromietf(language)
             srt_file = os.path.splitext(filename)[0] + u'.' + language + SUBTITLE_EXTENSION
             if not os.path.exists(os.path.join(dirname, srt_file)) and additional_language not in embedded_languages:
