@@ -63,6 +63,20 @@
                     $.get(autosubliminal.getUrl('/api/movies/' + imdbId), function (data) {
                         self.movie = data;
                         self.movieSettings = self.movie.settings;
+                    }).fail(function (response) {
+                        // Remove movie if it does not longer exists
+                        if (response.status == 404) {
+                            $.deleteJson(autosubliminal.getUrl('/api/movies/' + imdbId), null, function () {
+                                // Show notification
+                                var notification = autosubliminal.types.Notification();
+                                notification.message = 'Movie does not exist anymore and has been deleted from the library!';
+                                notification.type = autosubliminal.notifications.WARNING;
+                                notification.sticky = false;
+                                autosubliminal.notifications.showNotification(notification);
+                                // Redirect to library movies view
+                                window.location = autosubliminal.getUrl('/library/movies');
+                            });
+                        }
                     });
                 },
                 getPlayVideoUrl: autosubliminal.constructPlayVideoUrl,

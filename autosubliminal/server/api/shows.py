@@ -10,7 +10,7 @@ from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
 from autosubliminal.db import FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb, \
     ShowSettingsDb, WantedItemsDb
 from autosubliminal.libraryscanner import LibraryPathScanner
-from autosubliminal.server.rest import RestResource
+from autosubliminal.server.rest import RestResource, NotFound
 from autosubliminal.util.common import natural_keys
 from autosubliminal.util.common import get_boolean
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
@@ -42,7 +42,14 @@ class ShowsApi(RestResource):
         if tvdb_id:
             db_show = ShowDetailsDb().get_show(tvdb_id)
             db_show_settings = ShowSettingsDb().get_show_settings(tvdb_id)
+
+            # Return NotFound if movie does not longer exists on disk
+            if not os.path.exists(db_show.path):
+                raise NotFound()
+
+            # Return show details
             return self._to_show_json(db_show, db_show_settings, details=True)
+
         else:
             shows = []
             show_settings_db = ShowSettingsDb()
@@ -50,6 +57,7 @@ class ShowsApi(RestResource):
             for db_show in db_shows:
                 db_show_settings = show_settings_db.get_show_settings(db_show.tvdb_id)
                 shows.append(self._to_show_json(db_show, db_show_settings))
+
             return shows
 
     def delete(self, tvdb_id):

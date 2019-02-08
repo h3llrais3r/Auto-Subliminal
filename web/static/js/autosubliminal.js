@@ -122,15 +122,20 @@ var autosubliminal = {
         };
     };
 
+    // Notification
+    types.Notification = function () {
+        return {
+            message: null,
+            type: null,
+            sticky: null
+        };
+    };
+
     // Websocket notification
     types.WebsocketNotification = function () {
         return {
             type: autosubliminal.websockets.NOTIFICATION,
-            notification: {
-                message: null,
-                type: null,
-                sticky: null
-            }
+            notification: types.Notification()
         };
     };
 
@@ -270,6 +275,12 @@ var autosubliminal = {
 
     // By default we will use desktop notifications, but we also provide settings for fallback to browser notifications
 
+    // Notification types
+    notifications.INFO = 'info';
+    notifications.SUCCESS = 'success';
+    notifications.WARNING = 'notice';
+    notifications.ERROR = 'error';
+
     // Bottom right stack - to be aligned with desktop notifications at the right bottom
     notifications.stackBottomRight = {
         'dir1': 'up',
@@ -308,6 +319,36 @@ var autosubliminal = {
     PNotify.prototype.options.desktop.desktop = true; // Use desktop notifications
     PNotify.desktop.permission(); // Check for permission for desktop notifications
 
+    // Function to show a notification
+    notifications.showNotification = function (notification) {
+        var message = notification.message;
+        var type = notification.type;
+        var sticky = notification.sticky;
+        // Sticky location - use stack_context
+        if (sticky) {
+            new PNotify({
+                title: false, // Remove title
+                text: message,
+                type: type,
+                hide: false, // Disable fading
+                width: 'auto',
+                addclass: 'container stack-context',
+                stack: notifications.stackContext,
+                desktop: {
+                    desktop: false // Disable desktop
+                }
+            });
+        }
+        // Default location
+        else {
+            new PNotify({
+                title: 'Auto-Subliminal',
+                text: message,
+                type: type
+            });
+        }
+    };
+
     /* ==========
      * Websockets
      * ========== */
@@ -340,41 +381,11 @@ var autosubliminal = {
     // Function to handle a websocket message
     var handleWebsocketMessage = function (message) {
         if (message.type == websockets.NOTIFICATION) {
-            handleWebsocketNotification(message.notification);
+            notifications.showNotification(message.notification);
         } else if (message.type == websockets.EVENT) {
             handleWebsocketEvent(message.event);
         } else {
             console.error('Unsupported message: ' + message);
-        }
-    };
-
-    // Function to handle a websocket notification
-    var handleWebsocketNotification = function (notification) {
-        var message = notification.message;
-        var type = notification.type;
-        var sticky = notification.sticky;
-        // Sticky location - use stack_context
-        if (sticky) {
-            new PNotify({
-                title: false, // Remove title
-                text: message,
-                type: type,
-                hide: false, // Disable fading
-                width: 'auto',
-                addclass: 'container stack-context',
-                stack: notifications.stackContext,
-                desktop: {
-                    desktop: false // Disable desktop
-                }
-            });
-        }
-        // Default location
-        else {
-            new PNotify({
-                title: 'Auto-Subliminal',
-                text: message,
-                type: type
-            });
         }
     };
 

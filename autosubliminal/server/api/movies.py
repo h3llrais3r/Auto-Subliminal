@@ -9,7 +9,7 @@ from autosubliminal.core.movie import MovieSettings
 from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
 from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb, WantedItemsDb
 from autosubliminal.libraryscanner import LibraryPathScanner
-from autosubliminal.server.rest import RestResource
+from autosubliminal.server.rest import RestResource, NotFound
 from autosubliminal.util.common import get_boolean
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 from autosubliminal.util.websocket import send_websocket_notification
@@ -40,7 +40,14 @@ class MoviesApi(RestResource):
         if imdb_id:
             db_movie = MovieDetailsDb().get_movie(imdb_id, subtitles=True)
             db_movie_settings = MovieSettingsDb().get_movie_settings(imdb_id)
+
+            # Return NotFound if movie does not longer exists on disk
+            if not os.path.exists(db_movie.path):
+                raise NotFound()
+
+            # Return movie details
             return self._to_movie_json(db_movie, db_movie_settings, details=True)
+
         else:
             movies = []
             movie_settings_db = MovieSettingsDb()
@@ -48,6 +55,7 @@ class MoviesApi(RestResource):
             for db_movie in db_movies:
                 db_movie_settings = movie_settings_db.get_movie_settings(db_movie.imdb_id)
                 movies.append(self._to_movie_json(db_movie, db_movie_settings))
+
             return movies
 
     def delete(self, imdb_id):
