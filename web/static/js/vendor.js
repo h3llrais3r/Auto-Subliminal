@@ -21733,7 +21733,7 @@ if (typeof jQuery === 'undefined') {
 })(jQuery, window);
 
 /*!
- * Vue.js v2.6.3
+ * Vue.js v2.6.4
  * (c) 2014-2019 Evan You
  * Released under the MIT License.
  */
@@ -23602,7 +23602,11 @@ if (typeof jQuery === 'undefined') {
       try {
         return config.errorHandler.call(null, err, vm, info)
       } catch (e) {
-        logError(e, null, 'config.errorHandler');
+        // if the user intentionally throws the original error in the handler,
+        // do not log it twice
+        if (e !== err) {
+          logError(e, null, 'config.errorHandler');
+        }
       }
     }
     logError(err, vm, info);
@@ -24264,18 +24268,23 @@ if (typeof jQuery === 'undefined') {
 
   function normalizeScopedSlots (
     slots,
-    normalSlots
+    normalSlots,
+    prevSlots
   ) {
     var res;
     if (!slots) {
       res = {};
     } else if (slots._normalized) {
-      return slots
+      // fast path 1: child component re-render only, parent did not change
+      return slots._normalized
+    } else if (slots.$stable && prevSlots && prevSlots !== emptyObject) {
+      // fast path 2: stable scoped slots, only need to normalize once
+      return prevSlots
     } else {
       res = {};
       for (var key in slots) {
         if (slots[key] && key[0] !== '$') {
-          res[key] = normalizeScopedSlot(slots[key]);
+          res[key] = normalizeScopedSlot(normalSlots, key, slots[key]);
         }
       }
     }
@@ -24285,18 +24294,36 @@ if (typeof jQuery === 'undefined') {
         res[key$1] = proxyNormalSlot(normalSlots, key$1);
       }
     }
-    def(res, '_normalized', true);
+    // avoriaz seems to mock a non-extensible $scopedSlots object
+    // and when that is passed down this would cause an error
+    if (slots && Object.isExtensible(slots)) {
+      (slots)._normalized = res;
+    }
     def(res, '$stable', slots ? !!slots.$stable : true);
     return res
   }
 
-  function normalizeScopedSlot(fn) {
-    return function (scope) {
-      var res = fn(scope);
-      return res && typeof res === 'object' && !Array.isArray(res)
+  function normalizeScopedSlot(normalSlots, key, fn) {
+    var normalized = function (scope) {
+      var res = fn(scope || {});
+      res = res && typeof res === 'object' && !Array.isArray(res)
         ? [res] // single vnode
-        : normalizeChildren(res)
+        : normalizeChildren(res);
+      return res && res.length === 0
+        ? undefined
+        : res
+    };
+    // this is a slot using the new v-slot syntax without scope. although it is
+    // compiled as a scoped slot, render fn users would expect it to be present
+    // on this.$slots because the usage is semantically a normal slot.
+    if (fn.proxy) {
+      Object.defineProperty(normalSlots, key, {
+        get: normalized,
+        enumerable: true,
+        configurable: true
+      });
     }
+    return normalized
   }
 
   function proxyNormalSlot(slots, key) {
@@ -24576,6 +24603,10 @@ if (typeof jQuery === 'undefined') {
       if (Array.isArray(slot)) {
         resolveScopedSlots(slot, hasDynamicKeys, res);
       } else if (slot) {
+        // marker for reverse proxying v-slot without scope on this.$slots
+        if (slot.proxy) {
+          slot.fn.proxy = true;
+        }
         res[slot.key] = slot.fn;
       }
     }
@@ -24638,6 +24669,8 @@ if (typeof jQuery === 'undefined') {
     parent,
     Ctor
   ) {
+    var this$1 = this;
+
     var options = Ctor.options;
     // ensure the createElement function in functional components
     // gets a unique context - this is necessary for correct named slot check
@@ -24663,7 +24696,15 @@ if (typeof jQuery === 'undefined') {
     this.parent = parent;
     this.listeners = data.on || emptyObject;
     this.injections = resolveInject(options.inject, parent);
-    this.slots = function () { return resolveSlots(children, parent); };
+    this.slots = function () {
+      if (!this$1.$slots) {
+        normalizeScopedSlots(
+          data.scopedSlots,
+          this$1.$slots = resolveSlots(children, parent)
+        );
+      }
+      return this$1.$slots
+    };
 
     Object.defineProperty(this, 'scopedSlots', ({
       enumerable: true,
@@ -25189,7 +25230,8 @@ if (typeof jQuery === 'undefined') {
       if (_parentVnode) {
         vm.$scopedSlots = normalizeScopedSlots(
           _parentVnode.data.scopedSlots,
-          vm.$slots
+          vm.$slots,
+          vm.$scopedSlots
         );
       }
 
@@ -27069,7 +27111,7 @@ if (typeof jQuery === 'undefined') {
     value: FunctionalRenderContext
   });
 
-  Vue.version = '2.6.3';
+  Vue.version = '2.6.4';
 
   /*  */
 
@@ -32876,7 +32918,9 @@ if (typeof jQuery === 'undefined') {
           ? ("(" + (el.if) + ")?" + (genChildren(el, state) || 'undefined') + ":undefined")
           : genChildren(el, state) || 'undefined'
         : genElement(el, state)) + "}";
-    return ("{key:" + (el.slotTarget || "\"default\"") + ",fn:" + fn + "}")
+    // reverse proxy v-slot without scope on this.$slots
+    var reverseProxy = slotScope ? "" : ",proxy:true";
+    return ("{key:" + (el.slotTarget || "\"default\"") + ",fn:" + fn + reverseProxy + "}")
   }
 
   function genChildren (
