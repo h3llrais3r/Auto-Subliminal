@@ -66,6 +66,7 @@ def test_get_shows(mocker):
 
 def test_get_show(mocker):
     mocker.patch.object(ShowDetailsDb, 'get_show', return_value=show_details_1)
+    mocker.patch('os.path.exists', return_value=True)
     mocker.patch.object(ShowEpisodeDetailsDb, 'get_show_episodes', return_value=[show_episode_details_1_1])
     mocker.patch.object(ShowSettingsDb, 'get_show_settings', return_value=show_settings_1)
     mocker.patch('autosubliminal.server.api.shows.ShowsApi._get_show_episode_files',

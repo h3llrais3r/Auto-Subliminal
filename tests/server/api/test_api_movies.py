@@ -53,6 +53,7 @@ def test_get_movies(mocker):
 
 def test_get_movie(mocker):
     mocker.patch.object(MovieDetailsDb, 'get_movie', return_value=movie_details_1)
+    mocker.patch('os.path.exists', return_value=True)
     mocker.patch('autosubliminal.server.api.movies.MoviesApi._get_movie_files',
                  return_value=[
                      {'filename': 'movie1.mkv', 'type': 'video', 'embedded_languages': [], 'hardcoded_languages': []},
