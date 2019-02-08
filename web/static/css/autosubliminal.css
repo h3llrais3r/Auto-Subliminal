@@ -402,6 +402,12 @@ a:hover, a:active, a:focus, a:visited > .fa {
     <label for="myCheckbox" class="label-primary"></label>
 </span>
 */
+@media (max-width: 767px) {
+  .switch-checkbox.pull-right {
+    float: none !important;
+  }
+}
+
 .switch-checkbox > label {
   cursor: pointer;
   height: 0;

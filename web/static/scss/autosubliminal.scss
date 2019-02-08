@@ -464,6 +464,13 @@ a {
 */
 
 .switch-checkbox {
+  // No float on smaller screens to use normal alignment
+  @media (max-width: $screen-xs-max) {
+    &.pull-right {
+      float: none !important;
+    }
+  }
+
   > label {
     cursor: pointer;
     height: 0;
