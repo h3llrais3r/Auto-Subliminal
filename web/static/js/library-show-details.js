@@ -70,7 +70,7 @@
                             $.deleteJson(autosubliminal.getUrl('/api/shows/' + tvdbId), null, function () {
                                 // Show notification
                                 var notification = autosubliminal.types.Notification();
-                                notification.message = 'Show does not exist anymore and has been deleted from the library!';
+                                notification.message = 'Show does not exist anymore and has been removed from the library!';
                                 notification.type = autosubliminal.notifications.WARNING;
                                 notification.sticky = false;
                                 autosubliminal.notifications.showNotification(notification);
