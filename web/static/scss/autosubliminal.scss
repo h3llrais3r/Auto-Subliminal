@@ -81,9 +81,9 @@ textarea {
   white-space: pre; // Needed to get \r\n working inside div
 }
 
-// Style a banner title in tablesorter reflow mode
+// Style certain classes in tablesorter reflow mode
 @media (max-width: 48em) {
-  .title-banner-image, .path {
+  .title, .title-banner-image, .path {
     width: 50%;
     float: right;
   }

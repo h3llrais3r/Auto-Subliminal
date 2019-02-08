@@ -75,153 +75,155 @@
                             <tr class="${rowClass}">
                                 <td class="hidden">${item.type}</td>
                                 <td>
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle wanted-item-title main-column" data-toggle="dropdown" title="Click to skip">${display_item_title(item)}</a>
-                                        % if item.is_episode:
-                                            <ul class="dropdown-menu has-tip">
-                                                <li>
-                                                    <a href="${autosubliminal.WEBROOT}/home/postProcess/${index}">Skip and post process show</a>
-                                                </li>
-                                                <li>
-                                                    <a href="${autosubliminal.WEBROOT}/home/deleteVideo/${index}">Skip and delete show</a>
-                                                </li>
-                                                <li>
-                                                    <a href="${autosubliminal.WEBROOT}/home/skipShow/${index}/${item.title}">Skip show</a>
-                                                </li>
-                                                <li>
-                                                    <a href="${autosubliminal.WEBROOT}/home/skipShow/${index}/${item.title}/${item.season}">Skip season ${item.season}</a>
-                                                </li>
-                                            </ul>
-                                        % elif item.is_movie:
-                                            <ul class="dropdown-menu has-tip">
-                                                <li>
-                                                    <a href="${autosubliminal.WEBROOT}/home/postProcess/${index}">Skip and post process movie</a>
-                                                </li>
-                                                <li>
-                                                    <a href="${autosubliminal.WEBROOT}/home/deleteVideo/${index}">Skip and delete movie</a>
-                                                </li>
-                                                <li>
-                                                    <a href="${autosubliminal.WEBROOT}/home/skipMovie/${index}/${item.title}/${item.year}">Skip movie</a>
-                                                </li>
-                                            </ul>
-                                        % endif
-                                    </span>
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>
-                                                <span class="info-list-label">File name:</span>
-                                                <span>${os.path.basename(item.videopath)}</span>
-                                            </li>
-                                            <li>
-                                                <span class="info-list-label">File size:</span>
-                                                <span>${get_file_size(item.videopath)}</span>
-                                            </li>
-                                        </ul>
-                                    </span>
-                                    % if item.is_episode:
-                                        % if not item.tvdbid:
-                                            <span class="dropdown">
-                                                <a class="dropdown-toggle" data-toggle="dropdown">
-                                                    <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Tvdb id could not be found!"></i>
-                                                </a>
-                                                <ul class="dropdown-menu has-tip info-list">
+                                    <span class="title">
+                                        <span class="dropdown">
+                                            <a class="dropdown-toggle wanted-item-title main-column" data-toggle="dropdown" title="Click to skip">${display_item_title(item)}</a>
+                                            % if item.is_episode:
+                                                <ul class="dropdown-menu has-tip">
                                                     <li>
-                                                        <a href="${autosubliminal.WEBROOT}/home/searchId/${index}">Search tvdb id</a>
+                                                        <a href="${autosubliminal.WEBROOT}/home/postProcess/${index}">Skip and post process show</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="${autosubliminal.WEBROOT}/home/deleteVideo/${index}">Skip and delete show</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="${autosubliminal.WEBROOT}/home/skipShow/${index}/${item.title}">Skip show</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="${autosubliminal.WEBROOT}/home/skipShow/${index}/${item.title}/${item.season}">Skip season ${item.season}</a>
                                                     </li>
                                                 </ul>
-                                            </span>
-                                        % else:
-                                            <span>
-                                                <a href="${autosubliminal.DEREFERURL}${autosubliminal.TVDBURL}${item.tvdbid}" target="_blank">
-                                                    <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
-                                                </a>
-                                            </span>
-                                            <span>
-                                                <a href="#" @click="openSettingsModal($event, '${item.type}', '${item.tvdbid}', '${display_item_title(item)}')">
-                                                    <i class="fa fa-wrench" aria-hidden="true" title="Click to edit show settings"></i>
-                                                </a>
-                                            </span>
-                                        % endif
-                                    % elif item.is_movie:
-                                        % if not item.imdbid:
-                                            <span class="dropdown">
-                                                <a class="dropdown-toggle" data-toggle="dropdown">
-                                                    <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Imdb id could not be found!"></i>
-                                                </a>
-                                                <ul class="dropdown-menu has-tip info-list">
+                                            % elif item.is_movie:
+                                                <ul class="dropdown-menu has-tip">
                                                     <li>
-                                                        <a href="${autosubliminal.WEBROOT}/home/searchId/${index}">Search imdb id</a>
+                                                        <a href="${autosubliminal.WEBROOT}/home/postProcess/${index}">Skip and post process movie</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="${autosubliminal.WEBROOT}/home/deleteVideo/${index}">Skip and delete movie</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="${autosubliminal.WEBROOT}/home/skipMovie/${index}/${item.title}/${item.year}">Skip movie</a>
                                                     </li>
                                                 </ul>
-                                            </span>
-                                        % else:
-                                            <span>
-                                                <a href="${autosubliminal.DEREFERURL}${autosubliminal.IMDBURL}${item.imdbid}" target="_blank">
-                                                    <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
-                                                </a>
-                                            </span>
-                                            <span>
-                                                <a href="#" @click="openSettingsModal($event, '${item.type}', '${item.imdbid}', '${display_item_title(item)}')">
-                                                    <i class="fa fa-wrench" aria-hidden="true" title="Click to edit movie settings"></i>
-                                                </a>
-                                            </span>
-                                        % endif
-                                    % endif
-                                    % if autosubliminal.MANUALREFINEVIDEO:
+                                            % endif
+                                        </span>
                                         <span class="dropdown">
                                             <a class="dropdown-toggle" data-toggle="dropdown">
-                                                <i class="fa fa-pencil" aria-hidden="true" title="Click to manually update show/movie details"></i>
+                                                <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
                                             </a>
                                             <ul class="dropdown-menu has-tip info-list">
                                                 <li>
-                                                    <div class="panel panel-default">
-                                                        <div class="panel-heading text-center">
-                                                            <span class="info-list-label">Update show/movie details</span>
-                                                        </div>
-                                                        <div class="panel-body text-right">
-                                                            <div class="form-inline form-group narrow">
-                                                                <span class="info-list-label">Title:</span>
-                                                                <input type="text" value="${display_value(item.title)}" class="form-control input-sm update-wanted-item-title">
-                                                            </div>
-                                                            <div class="form-inline form-group narrow">
-                                                                <span class="info-list-label">Year:</span>
-                                                                <input type="text" value="${display_value(item.year)}" class="form-control input-sm update-wanted-item-year">
-                                                            </div>
-                                                            <div class="form-inline form-group narrow">
-                                                                <span class="info-list-label">Season:</span>
-                                                                <input type="text" value="${display_value(item.season)}" class="form-control input-sm update-wanted-item-season">
-                                                            </div>
-                                                            <div class="form-inline form-group narrow">
-                                                                <span class="info-list-label">Episode:</span>
-                                                                <input type="text" value="${display_value(item.episode)}" class="form-control input-sm update-wanted-item-episode">
-                                                            </div>
-                                                            <div class="form-inline form-group narrow">
-                                                                <span class="info-list-label">Source:</span>
-                                                                <input type="text" value="${display_value(item.source)}" class="form-control input-sm update-wanted-item-source">
-                                                            </div>
-                                                            <div class="form-inline form-group narrow">
-                                                                <span class="info-list-label">Quality:</span>
-                                                                <input type="text" value="${display_value(item.quality)}" class="form-control input-sm update-wanted-item-quality">
-                                                            </div>
-                                                            <div class="form-inline form-group narrow">
-                                                                <span class="info-list-label">Codec:</span>
-                                                                <input type="text" value="${display_value(item.codec)}" class="form-control input-sm update-wanted-item-codec">
-                                                            </div>
-                                                            <div class="form-inline form-group narrow">
-                                                                <span class="info-list-label">Group:</span>
-                                                                <input type="text" value="${display_value(item.releasegrp)}" class="form-control input-sm update-wanted-item-releasegrp">
-                                                            </div>
-                                                            <a href="${autosubliminal.WEBROOT}/home/resetWantedItem/${index}" class="btn btn-sm btn-default reset-wanted-item-link">Reset</a>
-                                                            <a href="${autosubliminal.WEBROOT}/home/updateWantedItem/${index}" class="btn btn-sm btn-default update-wanted-item-link">Update</a>
-                                                        </div>
-                                                    </div>
+                                                    <span class="info-list-label">File name:</span>
+                                                    <span>${os.path.basename(item.videopath)}</span>
+                                                </li>
+                                                <li>
+                                                    <span class="info-list-label">File size:</span>
+                                                    <span>${get_file_size(item.videopath)}</span>
                                                 </li>
                                             </ul>
                                         </span>
-                                    % endif
+                                        % if item.is_episode:
+                                            % if not item.tvdbid:
+                                                <span class="dropdown">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                                        <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Tvdb id could not be found!"></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu has-tip info-list">
+                                                        <li>
+                                                            <a href="${autosubliminal.WEBROOT}/home/searchId/${index}">Search tvdb id</a>
+                                                        </li>
+                                                    </ul>
+                                                </span>
+                                            % else:
+                                                <span>
+                                                    <a href="${autosubliminal.DEREFERURL}${autosubliminal.TVDBURL}${item.tvdbid}" target="_blank">
+                                                        <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
+                                                    </a>
+                                                </span>
+                                                <span>
+                                                    <a href="#" @click="openSettingsModal($event, '${item.type}', '${item.tvdbid}', '${display_item_title(item)}')">
+                                                        <i class="fa fa-wrench" aria-hidden="true" title="Click to edit show settings"></i>
+                                                    </a>
+                                                </span>
+                                            % endif
+                                        % elif item.is_movie:
+                                            % if not item.imdbid:
+                                                <span class="dropdown">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                                        <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Imdb id could not be found!"></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu has-tip info-list">
+                                                        <li>
+                                                            <a href="${autosubliminal.WEBROOT}/home/searchId/${index}">Search imdb id</a>
+                                                        </li>
+                                                    </ul>
+                                                </span>
+                                            % else:
+                                                <span>
+                                                    <a href="${autosubliminal.DEREFERURL}${autosubliminal.IMDBURL}${item.imdbid}" target="_blank">
+                                                        <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
+                                                    </a>
+                                                </span>
+                                                <span>
+                                                    <a href="#" @click="openSettingsModal($event, '${item.type}', '${item.imdbid}', '${display_item_title(item)}')">
+                                                        <i class="fa fa-wrench" aria-hidden="true" title="Click to edit movie settings"></i>
+                                                    </a>
+                                                </span>
+                                            % endif
+                                        % endif
+                                        % if autosubliminal.MANUALREFINEVIDEO:
+                                            <span class="dropdown">
+                                                <a class="dropdown-toggle" data-toggle="dropdown">
+                                                    <i class="fa fa-pencil" aria-hidden="true" title="Click to manually update show/movie details"></i>
+                                                </a>
+                                                <ul class="dropdown-menu has-tip info-list">
+                                                    <li>
+                                                        <div class="panel panel-default">
+                                                            <div class="panel-heading text-center">
+                                                                <span class="info-list-label">Update show/movie details</span>
+                                                            </div>
+                                                            <div class="panel-body text-right">
+                                                                <div class="form-inline form-group narrow">
+                                                                    <span class="info-list-label">Title:</span>
+                                                                    <input type="text" value="${display_value(item.title)}" class="form-control input-sm update-wanted-item-title">
+                                                                </div>
+                                                                <div class="form-inline form-group narrow">
+                                                                    <span class="info-list-label">Year:</span>
+                                                                    <input type="text" value="${display_value(item.year)}" class="form-control input-sm update-wanted-item-year">
+                                                                </div>
+                                                                <div class="form-inline form-group narrow">
+                                                                    <span class="info-list-label">Season:</span>
+                                                                    <input type="text" value="${display_value(item.season)}" class="form-control input-sm update-wanted-item-season">
+                                                                </div>
+                                                                <div class="form-inline form-group narrow">
+                                                                    <span class="info-list-label">Episode:</span>
+                                                                    <input type="text" value="${display_value(item.episode)}" class="form-control input-sm update-wanted-item-episode">
+                                                                </div>
+                                                                <div class="form-inline form-group narrow">
+                                                                    <span class="info-list-label">Source:</span>
+                                                                    <input type="text" value="${display_value(item.source)}" class="form-control input-sm update-wanted-item-source">
+                                                                </div>
+                                                                <div class="form-inline form-group narrow">
+                                                                    <span class="info-list-label">Quality:</span>
+                                                                    <input type="text" value="${display_value(item.quality)}" class="form-control input-sm update-wanted-item-quality">
+                                                                </div>
+                                                                <div class="form-inline form-group narrow">
+                                                                    <span class="info-list-label">Codec:</span>
+                                                                    <input type="text" value="${display_value(item.codec)}" class="form-control input-sm update-wanted-item-codec">
+                                                                </div>
+                                                                <div class="form-inline form-group narrow">
+                                                                    <span class="info-list-label">Group:</span>
+                                                                    <input type="text" value="${display_value(item.releasegrp)}" class="form-control input-sm update-wanted-item-releasegrp">
+                                                                </div>
+                                                                <a href="${autosubliminal.WEBROOT}/home/resetWantedItem/${index}" class="btn btn-sm btn-default reset-wanted-item-link">Reset</a>
+                                                                <a href="${autosubliminal.WEBROOT}/home/updateWantedItem/${index}" class="btn btn-sm btn-default update-wanted-item-link">Update</a>
+                                                            </div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </span>
+                                        % endif
+                                    </span>
                                 </td>
                                 <td class="wanted-item-season">
                                     ${display_value(item.season)}

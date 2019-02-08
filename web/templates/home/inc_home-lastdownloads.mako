@@ -68,25 +68,27 @@
                             <tr class="content-row hidden">
                                 <td class="hidden">${item.type}</td>
                                 <td>
-                                    <span class="main-column">${display_item_title(item)}</span>
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>
-                                                <span class="info-list-label">Subtitle:</span>
-                                                <span>
-                                                    ${display_value(item.subtitle, 'N/A')}
-                                                </span>
-                                            </li>
-                                            <li>
-                                                <span class="info-list-label">Provider:</span>
-                                                <span>
-                                                    ${display_value(item.provider, 'N/A')}
-                                                </span>
-                                            </li>
-                                        </ul>
+                                    <span class="title">
+                                        <span class="main-column">${display_item_title(item)}</span>
+                                        <span class="dropdown">
+                                            <a class="dropdown-toggle" data-toggle="dropdown">
+                                                <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                            </a>
+                                            <ul class="dropdown-menu has-tip info-list">
+                                                <li>
+                                                    <span class="info-list-label">Subtitle:</span>
+                                                    <span>
+                                                        ${display_value(item.subtitle, 'N/A')}
+                                                    </span>
+                                                </li>
+                                                <li>
+                                                    <span class="info-list-label">Provider:</span>
+                                                    <span>
+                                                        ${display_value(item.provider, 'N/A')}
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </span>
                                     </span>
                                 </td>
                                 <td>

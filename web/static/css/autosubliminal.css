@@ -42,7 +42,7 @@ textarea {
 }
 
 @media (max-width: 48em) {
-  .title-banner-image, .path {
+  .title, .title-banner-image, .path {
     width: 50%;
     float: right;
   }
