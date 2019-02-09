@@ -87,7 +87,7 @@ var vendor = {
 gulp.task('compile:app_scss', function () {
     return gulp.src('web/static/scss/*.scss')
         .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('build'));
 });
 
 /************
@@ -99,7 +99,7 @@ gulp.task('bundle:vendor_js', function () {
     log.info(vendor.js);
     return gulp.src(vendor.js)
         .pipe(concat('vendor.js'))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('build'));
 });
 
 gulp.task('bundle:vendor_css', function () {
@@ -107,7 +107,7 @@ gulp.task('bundle:vendor_css', function () {
     log.info(vendor.css);
     return gulp.src(vendor.css)
         .pipe(concat('vendor.css'))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('build'));
 });
 
 /************
@@ -115,24 +115,24 @@ gulp.task('bundle:vendor_css', function () {
  ************/
 
 gulp.task('minify:app_css', function () {
-    return gulp.src('dist/autosubliminal.css')
+    return gulp.src('build/autosubliminal.css')
         .pipe(rename('autosubliminal.min.css'))
         .pipe(clean_css())
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('build'));
 });
 
 gulp.task('minify:vendor_js', function () {
-    return gulp.src('dist/vendor.js')
+    return gulp.src('build/vendor.js')
         .pipe(rename('vendor.min.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('build'));
 });
 
 gulp.task('minify:vendor_css', function () {
-    return gulp.src('dist/vendor.css')
+    return gulp.src('build/vendor.css')
         .pipe(rename('vendor.min.css'))
         .pipe(clean_css())
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('build'));
 });
 
 /**********
@@ -140,7 +140,7 @@ gulp.task('minify:vendor_css', function () {
  **********/
 
 var cleanup_sources = [
-    'dist',
+    'build',
     'web/static/css/autosubliminal.css',
     'web/static/css/autosubliminal.min.css',
     'web/static/js/vendor.js',
@@ -162,17 +162,17 @@ gulp.task('clean', function () {
  **********/
 
 gulp.task('copy:app_css', function () {
-    return gulp.src(['dist/autosubliminal.css', 'dist/autosubliminal.min.css'])
+    return gulp.src(['build/autosubliminal.css', 'build/autosubliminal.min.css'])
         .pipe(gulp.dest('web/static/css'));
 });
 
 gulp.task('copy:vendor_js', function () {
-    return gulp.src(['dist/vendor.js', 'dist/vendor.min.js'])
+    return gulp.src(['build/vendor.js', 'build/vendor.min.js'])
         .pipe(gulp.dest('web/static/js'));
 });
 
 gulp.task('copy:vendor_css', function () {
-    return gulp.src(['dist/vendor.css', 'dist/vendor.min.css'])
+    return gulp.src(['build/vendor.css', 'build/vendor.min.css'])
         .pipe(gulp.dest('web/static/css'));
 });
 
