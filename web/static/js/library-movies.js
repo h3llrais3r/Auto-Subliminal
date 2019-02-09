@@ -106,6 +106,9 @@
                 },
                 getMovieProgressPercentage: function (movie) {
                     return movie.total_subtitles_available / movie.total_subtitles_wanted * 100;
+                },
+                getMovieProgressText: function (movie) {
+                    return movie.total_subtitles_available + ' of ' + movie.total_subtitles_wanted;
                 }
             }
         });

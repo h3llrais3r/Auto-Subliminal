@@ -107,6 +107,9 @@
                 },
                 getShowProgressPercentage: function (show) {
                     return show.total_subtitles_available / show.total_subtitles_wanted * 100;
+                },
+                getShowProgressText: function (show) {
+                    return show.total_subtitles_available + ' of ' + show.total_subtitles_wanted;
                 }
             }
         });

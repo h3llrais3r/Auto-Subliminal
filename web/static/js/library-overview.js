@@ -56,6 +56,9 @@
                 },
                 getProgressPercentage: function (overview) {
                     return overview.total_subtitles_available / overview.total_subtitles_wanted * 100;
+                },
+                getProgressText: function (overview) {
+                    return overview.total_subtitles_available + ' of ' + overview.total_subtitles_wanted;
                 }
             }
         });

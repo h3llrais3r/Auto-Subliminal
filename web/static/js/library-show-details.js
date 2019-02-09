@@ -55,6 +55,10 @@
                 showProgressPercentage: function () {
                     var self = this;
                     return self.show.total_subtitles_available / self.show.total_subtitles_wanted * 100;
+                },
+                showProgressText: function () {
+                    var self = this;
+                    return self.show.total_subtitles_available + ' of ' + self.show.total_subtitles_wanted;
                 }
             },
             methods: {

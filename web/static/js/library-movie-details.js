@@ -54,6 +54,10 @@
                 movieProgressPercentage: function () {
                     var self = this;
                     return self.movie.total_subtitles_available / self.movie.total_subtitles_wanted * 100;
+                },
+                movieProgressText: function () {
+                    var self = this;
+                    return self.movie.total_subtitles_available + ' of ' + self.movie.total_subtitles_wanted;
                 }
             },
             methods: {

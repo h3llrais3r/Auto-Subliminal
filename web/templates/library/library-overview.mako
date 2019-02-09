@@ -76,7 +76,7 @@
                                                 <vue-simple-progress
                                                         size="small"
                                                         :val="getProgressPercentage(showsOverview)"
-                                                        :text="showsOverview.total_subtitles_available + ' of ' + showsOverview.total_subtitles_wanted"
+                                                        :text="getProgressText(showsOverview)"
                                                         text-position="middle"
                                                         bar-color="transparent">
                                                 </vue-simple-progress>
@@ -125,7 +125,7 @@
                                                 <vue-simple-progress
                                                         size="small"
                                                         :val="getProgressPercentage(moviesOverview)"
-                                                        :text="moviesOverview.total_subtitles_available + ' of ' + moviesOverview.total_subtitles_wanted"
+                                                        :text="getProgressText(moviesOverview)"
                                                         text-position="middle"
                                                         bar-color="transparent">
                                                 </vue-simple-progress>
