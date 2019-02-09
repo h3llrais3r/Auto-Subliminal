@@ -21,7 +21,7 @@
                     <div class="form-horizontal">
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="webserverip">Webserver IP
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -36,13 +36,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.WEBSERVERIP}" id="webserverip" name="webserverip" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="webserverport">Webserver port
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -54,13 +54,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.WEBSERVERPORT}" id="webserverport" name="webserverport" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="webroot">Webserver webroot
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -75,13 +75,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.WEBROOT}" id="webroot" name="webroot" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="username">Username
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -97,13 +97,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.USERNAME}" id="username" name="username" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="password">Password
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -119,13 +119,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="password" value="${autosubliminal.PASSWORD}" id="password" name="password" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="launchbrowser">Launch browser
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -139,7 +139,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="launchbrowser" name="launchbrowser" class="form-control input-sm">
                                     % if autosubliminal.LAUNCHBROWSER:
                                         <option value="True" selected="selected">Enabled</option>
@@ -167,7 +167,9 @@
 
             </div>
 
-            <a href="${autosubliminal.WEBROOT}/config/webserver/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            <div class="btn-bar">
+                <a href="${autosubliminal.WEBROOT}/config/webserver/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            </div>
 
         </form>
 

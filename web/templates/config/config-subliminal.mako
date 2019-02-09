@@ -29,7 +29,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label>Show MinMatchScore
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -41,7 +41,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="hidden" name="showmmsdefault" value="1">
                                 <label class="switch-checkbox-inline">
                                     Source
@@ -103,7 +103,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label>Movie MinMatchScore
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -115,7 +115,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="hidden" name="moviemmsdefault" value="1">
                                 <label class="switch-checkbox-inline">
                                     Source
@@ -177,7 +177,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="subliminalproviders">Subliminal providers
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -192,7 +192,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <% providers = sorted(autosubliminal.SUBLIMINALPROVIDERMANAGER.names()) %>
                                 <select multiple="mutiple" id="subliminalproviders" name="subliminalproviders" size="${len(providers)}" class="form-control input-sm">
                                     % for provider in providers:
@@ -207,7 +207,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="subtitleutf8encoding">Save subtitles in utf-8 encoding
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -222,7 +222,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="subtitleutf8encoding" name="subtitleutf8encoding" class="form-control input-sm">
                                     % if autosubliminal.SUBTITLEUTF8ENCODING:
                                         <option value="True" selected="selected">Enabled</option>
@@ -236,7 +236,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="manualrefinevideo">Refine video manually
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -252,7 +252,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="manualrefinevideo" name="manualrefinevideo" class="form-control input-sm">
                                     % if autosubliminal.MANUALREFINEVIDEO:
                                         <option value="True" selected="selected">Enabled</option>
@@ -266,7 +266,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="refinevideo">Refine video
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -281,7 +281,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="refinevideo" name="refinevideo" class="form-control input-sm">
                                     % if autosubliminal.REFINEVIDEO:
                                         <option value="True" selected="selected">Enabled</option>
@@ -295,7 +295,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="preferhearingimpaired">Prefer hearing impaired subs
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -307,7 +307,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="preferhearingimpaired" name="preferhearingimpaired" class="form-control input-sm">
                                     % if autosubliminal.PREFERHEARINGIMPAIRED:
                                         <option value="True" selected="selected">Enabled</option>
@@ -333,7 +333,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="addic7edusername">Username
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -345,13 +345,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.ADDIC7EDUSERNAME}" id="addic7edusername" name="addic7edusername" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="addic7edpassword">Password
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -363,7 +363,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="password" value="${autosubliminal.ADDIC7EDPASSWORD}" id="addic7edpassword" name="addic7edpassword" class="form-control input-sm">
                             </span>
                         </div>
@@ -381,7 +381,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="opensubtitlesusername">Username
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -393,13 +393,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.OPENSUBTITLESUSERNAME}" id="opensubtitlesusername" name="opensubtitlesusername" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="opensubtitlespassword">Password
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -411,7 +411,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="password" value="${autosubliminal.OPENSUBTITLESPASSWORD}" id="opensubtitlespassword" name="opensubtitlespassword" class="form-control input-sm">
                             </span>
                         </div>
@@ -422,7 +422,9 @@
 
             </div>
 
-            <a href="${autosubliminal.WEBROOT}/config/subliminal/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            <div class="btn-bar">
+                <a href="${autosubliminal.WEBROOT}/config/subliminal/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            </div>
 
         </form>
 

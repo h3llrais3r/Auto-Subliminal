@@ -12,6 +12,10 @@ textarea {
   resize: vertical;
 }
 
+.btn-bar {
+  padding-bottom: 25px;
+}
+
 .btn-static {
   color: #333;
   background-color: #ffffff;

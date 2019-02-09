@@ -22,7 +22,7 @@
                     <div class="form-horizontal">
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="librarymode">Enable library mode
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -38,7 +38,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="librarymode" name="librarymode" class="form-control input-sm">
                                     % if autosubliminal.LIBRARYMODE:
                                         <option value="True" selected="selected">Enabled</option>
@@ -52,7 +52,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="librarypaths">Library paths
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -67,13 +67,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <textarea id="librarypaths" name="librarypaths" class="form-control input-sm">${display_list_multi_line(autosubliminal.LIBRARYPATHS)}</textarea>
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="scanlibraryinterval">Disk library interval
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -89,7 +89,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" id="scanlibraryinterval" name="scanlibraryinterval" value="${autosubliminal.SCANLIBRARYINTERVAL}" class="form-control input-sm">
                             </span>
                         </div>
@@ -100,7 +100,9 @@
 
             </div>
 
-            <a href="${autosubliminal.WEBROOT}/config/library/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            <div class="btn-bar">
+                <a href="${autosubliminal.WEBROOT}/config/library/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            </div>
 
         </form>
 

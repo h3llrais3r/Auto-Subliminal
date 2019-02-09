@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="notify">Notify
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -53,7 +53,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="notify" name="notify" class="form-control input-sm">
                                     % if autosubliminal.NOTIFY:
                                         <option value="True" selected="selected">Enabled</option>
@@ -67,8 +67,8 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3"></span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-4 col-md-3"></span>
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
                         </div>
@@ -81,7 +81,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="notifymail">Notify
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -93,7 +93,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="notifymail" name="notifymail" class="form-control input-sm">
                                     % if autosubliminal.NOTIFYMAIL:
                                         <option value="True" selected="selected">Enabled</option>
@@ -107,7 +107,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="mailsrv">Mail server
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -119,13 +119,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.MAILSRV}" id="mailsrv" name="mailsrv" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="mailfromaddr">Sender
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -137,13 +137,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="email" value="${autosubliminal.MAILFROMADDR}" id="mailfromaddr" name="mailfromaddr" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="mailtoaddr">Recipient
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -155,13 +155,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="email" value="${autosubliminal.MAILTOADDR}" id="mailtoaddr" name="mailtoaddr" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="mailusername">Username
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -173,13 +173,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.MAILUSERNAME}" id="mailusername" name="mailusername" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="mailpassword">Password
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -191,13 +191,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="password" value="${autosubliminal.MAILPASSWORD}" id="mailpassword" name="mailpassword" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="mailsubject">Subject
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -212,13 +212,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.MAILSUBJECT}" id="mailsubject" name="mailsubject" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="mailencryption">Encryption
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -230,13 +230,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.MAILENCRYPTION}" id="mailencryption" name="mailencryption" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="mailauth">Authentication
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -251,14 +251,14 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.MAILAUTH}" id="mailauth" name="mailauth" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3"></span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-4 col-md-3"></span>
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/mail" class="btn btn-sm btn-default btn-test">Test</a>
                                 <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
@@ -274,7 +274,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="notifytwitter">Notify
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -286,7 +286,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="notifytwitter" name="notifytwitter" class="form-control input-sm">
                                     % if autosubliminal.NOTIFYTWITTER:
                                         <option value="True" selected="selected">Enabled</option>
@@ -300,7 +300,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="twitterkey">API Key
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -312,13 +312,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.TWITTERKEY}" id="twitterkey" name="twitterkey" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="twittersecret">Secret code
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -330,14 +330,14 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.TWITTERSECRET}" id="twittersecret" name="twittersecret" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3"></span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-4 col-md-3"></span>
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/regTwitter" class="btn btn-sm btn-default">Register</a>
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/twitter" class="btn btn-sm btn-default btn-test">Test</a>
                                 <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
@@ -354,7 +354,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="notifypushalot">Notify
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -366,7 +366,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="notifypushalot" name="notifypushalot" class="form-control input-sm">
                                     % if autosubliminal.NOTIFYPUSHALOT:
                                         <option value="True" selected="selected">Enabled</option>
@@ -380,7 +380,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="pushalotapi">API key
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -392,14 +392,14 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.PUSHALOTAPI}" id="pushalotapi" name="pushalotapi" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3"></span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-4 col-md-3"></span>
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/pushalot" class="btn btn-sm btn-default btn-test">Test</a>
                                 <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
@@ -415,7 +415,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="notifypushover">Notify
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -427,7 +427,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="notifypushover" name="notifypushover" class="form-control input-sm">
                                     % if autosubliminal.NOTIFYPUSHOVER:
                                         <option value="True" selected="selected">Enabled</option>
@@ -441,7 +441,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="pushoverkey">User key
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -453,13 +453,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.PUSHOVERKEY}" id="pushoverkey" name="pushoverkey" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="pushoverapi">API key
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -471,13 +471,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.PUSHOVERAPI}" id="pushoverapi" name="pushoverapi" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="pushoverdevices">Devices
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -492,14 +492,14 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.PUSHOVERDEVICES}" id="pushoverdevices" name="pushoverdevices" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3"></span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-4 col-md-3"></span>
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/pushover" class="btn btn-sm btn-default btn-test">Test</a>
                                 <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
@@ -515,7 +515,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="notifygrowl">Notify
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -527,7 +527,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="notifygrowl" name="notifygrowl" class="form-control input-sm">
                                     % if autosubliminal.NOTIFYGROWL:
                                         <option value="True" selected="selected">Enabled</option>
@@ -541,7 +541,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="growlhost">Host server
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -553,13 +553,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.GROWLHOST}" id="growlhost" name="growlhost" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="growlport">Port
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -571,13 +571,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.GROWLPORT}" id="growlport" name="growlport" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="growlpass">Password
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -589,13 +589,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="password" value="${autosubliminal.GROWLPASS}" id="growlpass" name="growlpass" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="growlpriority">Priority
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -607,7 +607,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <% priormapper = {-2 : 'Very Low', -1 : 'Moderate', 0 : 'Normal', 1 : 'High', 2 : 'Emergency'} %>
                                 <select id="growlpriority" name="growlpriority" class="form-control input-sm">
                                     % for prior in list(range(-2, 3, 1)):
@@ -622,8 +622,8 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3"></span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-4 col-md-3"></span>
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/growl" class="btn btn-sm btn-default btn-test">Test</a>
                                 <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
@@ -639,7 +639,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="notifyprowl">Notify
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -651,7 +651,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="notifyprowl" name="notifyprowl" class="form-control input-sm">
                                     % if autosubliminal.NOTIFYPROWL:
                                         <option value="True" selected="selected">Enabled</option>
@@ -665,7 +665,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="prowlapi">API key
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -682,13 +682,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.PROWLAPI}" id="prowlapi" name="prowlapi" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="prowlpriority">Priority
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -700,7 +700,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <% priormapper = {-2 : 'Very Low', -1 : 'Moderate', 0 : 'Normal', 1 : 'High', 2 : 'Emergency'} %>
                                 <select id="prowlpriority" name="prowlpriority" class="form-control input-sm">
                                     % for prior in list(range(-2, 3, 1)):
@@ -715,8 +715,8 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3"></span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-4 col-md-3"></span>
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/prowl" class="btn btn-sm btn-default btn-test">Test</a>
                                 <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
@@ -732,7 +732,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="notifypushbullet">Notify
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -744,7 +744,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="notifypushbullet" name="notifypushbullet" class="form-control input-sm">
                                     % if autosubliminal.NOTIFYPUSHBULLET:
                                         <option value="True" selected="selected">Enabled</option>
@@ -758,7 +758,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="pushbulletapi">API key
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -772,14 +772,14 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.PUSHBULLETAPI}" id="pushbulletapi" name="pushbulletapi" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3"></span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-4 col-md-3"></span>
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/pushbullet" class="btn btn-sm btn-default btn-test">Test</a>
                                 <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
@@ -795,7 +795,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="notifytelegram">Notify
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -807,7 +807,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="notifytelegram" name="notifytelegram" class="form-control input-sm">
                                     % if autosubliminal.NOTIFYTELEGRAM:
                                         <option value="True" selected="selected">Enabled</option>
@@ -821,7 +821,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="telegrambotapi">Bot API key (token)
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -839,13 +839,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.TELEGRAMBOTAPI}" id="telegrambotapi" name="telegrambotapi" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="telegramchatid">Chat id
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -860,14 +860,14 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.TELEGRAMCHATID}" id="telegramchatid" name="telegramchatid" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3"></span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-4 col-md-3"></span>
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/telegram" class="btn btn-sm btn-default btn-test">Test</a>
                                 <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
@@ -879,7 +879,9 @@
 
             </div>
 
-            <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
+            <div class="btn-bar">
+                <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
+            </div>
 
         </form>
 

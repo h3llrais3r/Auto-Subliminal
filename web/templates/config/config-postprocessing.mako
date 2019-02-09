@@ -27,7 +27,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="postprocess">Post-process
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -39,7 +39,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="postprocess" name="postprocess" class="form-control input-sm">
                                     % if autosubliminal.POSTPROCESS:
                                         <option value="True" selected="selected">Enabled</option>
@@ -53,7 +53,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="postprocessindividual">Individual
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -68,7 +68,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="postprocessindividual" name="postprocessindividual" class="form-control input-sm">
                                     % if autosubliminal.POSTPROCESSINDIVIDUAL:
                                         <option value="True" selected="selected">Enabled</option>
@@ -82,7 +82,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="postprocessutf8encoding">UTF-8 encoding
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -97,7 +97,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="postprocessutf8encoding" name="postprocessutf8encoding" class="form-control input-sm">
                                     % if autosubliminal.POSTPROCESSUTF8ENCODING:
                                         <option value="True" selected="selected">Enabled</option>
@@ -117,7 +117,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="showpostprocesscmd">Post-process command
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -129,13 +129,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.SHOWPOSTPROCESSCMD}" id="showpostprocesscmd" name="showpostprocesscmd" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="showpostprocesscmdargs">Post-process argument(s)
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -147,7 +147,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.SHOWPOSTPROCESSCMDARGS}" id="showpostprocesscmdargs" name="showpostprocesscmdargs" class="form-control input-sm">
                             </span>
                         </div>
@@ -159,7 +159,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="moviepostprocesscmd">Post-process command
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -171,13 +171,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.MOVIEPOSTPROCESSCMD}" id="moviepostprocesscmd" name="moviepostprocesscmd" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="moviepostprocesscmdargs">Post-process argument(s)
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -189,7 +189,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.MOVIEPOSTPROCESSCMDARGS}" id="moviepostprocesscmdargs" name="moviepostprocesscmdargs" class="form-control input-sm">
                             </span>
                         </div>
@@ -200,7 +200,9 @@
 
             </div>
 
-            <a href="${autosubliminal.WEBROOT}/config/postprocessing/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            <div class="btn-bar">
+                <a href="${autosubliminal.WEBROOT}/config/postprocessing/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            </div>
 
         </form>
 

@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="shownamemapping">Show name mapping
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -51,13 +51,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <textarea rows="5" id="shownamemapping" name="shownamemapping" class="form-control input-sm">${display_mapping_dict(autosubliminal.SHOWNAMEMAPPING)}</textarea>
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="addic7edshownamemapping">Addic7ed show name mapping
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -74,13 +74,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <textarea rows="5" id="addic7edshownamemapping" name="addic7edshownamemapping" class="form-control input-sm">${display_mapping_dict(autosubliminal.ADDIC7EDSHOWNAMEMAPPING)}</textarea>
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="alternativeshownamemapping">Alternative show name mapping
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -97,7 +97,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <textarea rows="5" id="alternativeshownamemapping" name="alternativeshownamemapping" class="form-control input-sm">${display_mapping_dict(autosubliminal.ALTERNATIVESHOWNAMEMAPPING)}</textarea>
                             </span>
                         </div>
@@ -109,7 +109,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="movienamemapping">Movie name mapping
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -126,13 +126,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <textarea rows="5" id="movienamemapping" name="movienamemapping" class="form-control input-sm">${display_mapping_dict(autosubliminal.MOVIENAMEMAPPING)}</textarea>
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="alternativemovienamemapping">Alternative movie name mapping
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -149,7 +149,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <textarea rows="5" id="alternativemovienamemapping" name="alternativemovienamemapping" class="form-control input-sm">${display_mapping_dict(autosubliminal.ALTERNATIVEMOVIENAMEMAPPING)}</textarea>
                             </span>
                         </div>
@@ -160,7 +160,9 @@
 
             </div>
 
-            <a href="${autosubliminal.WEBROOT}/config/namemapping/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            <div class="btn-bar">
+                <a href="${autosubliminal.WEBROOT}/config/namemapping/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            </div>
 
         </form>
 

@@ -28,7 +28,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="skipshow">Skip show mapping
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -47,7 +47,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <textarea rows="5" id="skipshow" name="skipshow" class="form-control input-sm">${display_mapping_dict(autosubliminal.SKIPSHOW)}</textarea>
                             </span>
                         </div>
@@ -59,7 +59,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="skipmovie">Skip movie mapping
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -76,7 +76,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <textarea rows="5" id="skipmovie" name="skipmovie" class="form-control input-sm">${display_mapping_dict(autosubliminal.SKIPMOVIE)}</textarea>
                             </span>
                         </div>
@@ -87,7 +87,9 @@
 
             </div>
 
-            <a href="${autosubliminal.WEBROOT}/config/skipmapping/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            <div class="btn-bar">
+                <a href="${autosubliminal.WEBROOT}/config/skipmapping/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            </div>
 
         </form>
 

@@ -26,7 +26,7 @@
                     <div class="form-horizontal">
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="videopaths">Video paths
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -41,13 +41,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <textarea id="videopaths" name="videopaths" class="form-control input-sm">${display_list_multi_line(autosubliminal.VIDEOPATHS)}</textarea>
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="defaultlanguage">Default language
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -59,7 +59,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="defaultlanguage" name="defaultlanguage" class="form-control input-sm">
                                     % for language in babelfish.LANGUAGE_MATRIX:
                                         % if language.alpha2:
@@ -76,7 +76,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="defaultlanguagesuffix">Use language suffix
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -88,7 +88,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="defaultlanguagesuffix" name="defaultlanguagesuffix" class="form-control input-sm">
                                     % if autosubliminal.DEFAULTLANGUAGESUFFIX:
                                         <option value="True" selected="selected">Enabled</option>
@@ -102,7 +102,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="additionallanguages">Additional languages
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -117,13 +117,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" id="additionallanguages" name="additionallanguages" value="${display_list_single_line(autosubliminal.ADDITIONALLANGUAGES)}" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="manualsearchwithscoring">Manual search with scoring
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -139,7 +139,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="manualsearchwithscoring" name="manualsearchwithscoring" class="form-control input-sm">
                                     % if autosubliminal.MANUALSEARCHWITHSCORING:
                                         <option value="True" selected="selected">Enabled</option>
@@ -153,7 +153,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="scandiskinterval">Disk scan interval
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -168,13 +168,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" id="scandiskinterval" name="scandiskinterval" value="${autosubliminal.SCANDISKINTERVAL}" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="checksubinterval">Subtitle check interval
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -190,13 +190,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" id="checksubinterval" name="checksubinterval" value="${autosubliminal.CHECKSUBINTERVAL}" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="checksubdeadline">Subtitle check deadline
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -212,13 +212,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" id="checksubdeadline" name="checksubdeadline" value="${autosubliminal.CHECKSUBDEADLINE}" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="checksubdelta">Subtitle check delta
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -234,13 +234,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" id="checksubdelta" name="checksubdelta" value="${autosubliminal.CHECKSUBDELTA}" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="checkversioninterval">Version check interval
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -255,13 +255,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" id="checkversioninterval" name="checkversioninterval" value="${autosubliminal.CHECKVERSIONINTERVAL}" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="checkversionautoupdate">Version check auto update
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -275,7 +275,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="checkversionautoupdate" name="checkversionautoupdate" class="form-control input-sm">
                                     % if autosubliminal.CHECKVERSIONAUTOUPDATE:
                                         <option value="True" selected="selected">Enabled</option>
@@ -289,7 +289,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="scanembeddedsubs">Scan for embedded subtitles
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -303,7 +303,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="scanembeddedsubs" name="scanembeddedsubs" class="form-control input-sm">
                                     % if autosubliminal.SCANEMBEDDEDSUBS:
                                         <option value="True" selected="selected">Enabled</option>
@@ -317,7 +317,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="scanhardcodedsubs">Scan for hardcoded subtitles
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -331,7 +331,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="scanhardcodedsubs" name="scanhardcodedsubs" class="form-control input-sm">
                                     % if autosubliminal.SCANHARDCODEDSUBS:
                                         <option value="True" selected="selected">Enabled</option>
@@ -345,7 +345,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="skiphiddendirs">Skip hidden directories
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -360,7 +360,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="skiphiddendirs" name="skiphiddendirs" class="form-control input-sm">
                                     % if autosubliminal.SKIPHIDDENDIRS:
                                         <option value="True" selected="selected">Enabled</option>
@@ -374,7 +374,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="detectinvalidsublanguage">Detect invalid subtitle language
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -389,7 +389,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="detectinvalidsublanguage" name="detectinvalidsublanguage" class="form-control input-sm">
                                     % if autosubliminal.DETECTINVALIDSUBLANGUAGE:
                                         <option value="True" selected="selected">Enabled</option>
@@ -403,7 +403,7 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="detectedlanguageprobability">Language detection probability
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -418,13 +418,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" id="detectedlanguageprobability" name="detectedlanguageprobability" value="${autosubliminal.DETECTEDLANGUAGEPROBABILITY}" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="minvideofilesize">Min video file size
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -440,13 +440,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" id="minvideofilesize" name="minvideofilesize" value="${autosubliminal.MINVIDEOFILESIZE}" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="maxdbresults">Max db results
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -461,13 +461,13 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" id="maxdbresults" name="maxdbresults" value="${autosubliminal.MAXDBRESULTS}" class="form-control input-sm">
                             </span>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-4 col-md-3">
+                            <span class="col-xs-12 col-sm-4 col-md-3">
                                 <label for="timestampformat">Timestamp format
                                     <span class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown">
@@ -482,7 +482,7 @@
                                     </span>
                                 </label>
                             </span>
-                            <span class="col-xs-8 col-md-6">
+                            <span class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="timestampformat" name="timestampformat" class="form-control input-sm">
                                     % for format in SUPPORTED_TIMESTAMP_FORMATS:
                                         <% name = (language.name[:language.name.find('(') if language.name.find('(') != -1 else len(language.name)]) + ' (' + language.alpha2 + ')' %>
@@ -502,7 +502,9 @@
 
             </div>
 
-            <a href="${autosubliminal.WEBROOT}/config/general/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            <div class="btn-bar">
+                <a href="${autosubliminal.WEBROOT}/config/general/save" class="btn btn-sm btn-primary btn-save">Save</a>
+            </div>
 
         </form>
 
