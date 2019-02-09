@@ -412,6 +412,20 @@ a:hover, a:active, a:focus, a:visited > .fa {
     <label for="myCheckbox" class="label-primary"></label>
 </span>
 */
+.switch-checkbox-inline-row {
+  margin-right: 0;
+  margin-left: -15px;
+}
+
+.switch-checkbox-inline-row .switch-checkbox-inline {
+  padding-right: 0;
+}
+
+.switch-checkbox-inline-row .switch-checkbox-inline .switch-checkbox-inline-label {
+  font-weight: normal;
+  min-width: 45px;
+}
+
 @media (max-width: 767px) {
   .switch-checkbox.pull-right {
     float: none !important;
@@ -688,14 +702,6 @@ table.table.table-hover tbody tr:hover {
 .form-group.section-title {
   margin-top: 10px;
   margin-bottom: 15px;
-}
-
-.form-group .switch-checkbox-inline {
-  font-weight: normal;
-}
-
-.form-group .switch-checkbox-inline .switch-checkbox {
-  padding-right: 20px;
 }
 
 /************************

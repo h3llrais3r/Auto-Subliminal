@@ -473,6 +473,20 @@ a {
 </span>
 */
 
+.switch-checkbox-inline-row {
+  margin-right: 0;
+  margin-left: -15px;
+
+  .switch-checkbox-inline {
+    padding-right: 0;
+
+    .switch-checkbox-inline-label {
+      font-weight: normal;
+      min-width: 45px; // To make sure that all labels are the same width to have proper responsive behaviour
+    }
+  }
+}
+
 .switch-checkbox {
   // No float on smaller screens to use normal alignment
   @media (max-width: $screen-xs-max) {
@@ -808,14 +822,6 @@ table.table {
   &.section-title {
     margin-top: 10px;
     margin-bottom: 15px;
-  }
-
-  .switch-checkbox-inline {
-    font-weight: normal;
-
-    .switch-checkbox {
-      padding-right: 20px;
-    }
   }
 }
 
