@@ -13,7 +13,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand no-padding" href="${autosubliminal.WEBROOT}/home/" title="Auto-Subliminal homepage">
+            <a class="navbar-brand no-padding" href="${autosubliminal.WEBROOT}/home" title="Auto-Subliminal homepage">
                 <img src="${autosubliminal.WEBROOT}/images/autosubliminal.png" alt="Auto-Subliminal" title="Auto-Subliminal">
             </a>
         </div>
