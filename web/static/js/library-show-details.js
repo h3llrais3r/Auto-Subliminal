@@ -65,6 +65,9 @@
                 getShowDetails: function () {
                     var self = this;
                     var tvdbId = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
+                    // Show loading icon
+                    $('.loading').removeClass('hidden');
+                    // Get show details
                     $.get(autosubliminal.getUrl('/api/shows/' + tvdbId), function (data) {
                         self.show = data;
                         self.showSettings = self.show.settings;
@@ -82,6 +85,9 @@
                                 window.location = autosubliminal.getUrl('/library/shows');
                             });
                         }
+                    }).always(function () {
+                        // Hide loading icon
+                        $('.loading').addClass('hidden');
                     });
                 },
                 setPosterPlaceholderUrl: autosubliminal.vue.setPosterPlaceholderUrl,

@@ -12,7 +12,10 @@
         <div class="panel panel-default">
 
             <div class="panel-heading">
-                <span class="h3 weighted">Movie details</span>
+                <span class="h3 weighted">
+                    <span>Movie details</span>
+                    <i class="fa fa-refresh fa-spin fa-fw loading hidden" aria-hidden="true" title="Loading..."></i>
+                </span>
             </div>
 
             <!-- Vue template for library movie details -->

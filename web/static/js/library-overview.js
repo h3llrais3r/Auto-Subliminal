@@ -34,8 +34,14 @@
             },
             mounted: function () {
                 //console.log('mounted');
+                var loadingIcon = $('.loading');
+                // Show loading icon
+                loadingIcon.removeClass('hidden');
+                // Get overview
                 this.getShowsOverview();
                 this.getMoviesOverview();
+                // Hide loading icon
+                loadingIcon.addClass('hidden');
             },
             updated: function () {
                 //console.log('updated');

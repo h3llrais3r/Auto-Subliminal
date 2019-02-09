@@ -64,6 +64,9 @@
                 getMovieDetails: function () {
                     var self = this;
                     var imdbId = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
+                    // Show loading icon
+                    $('.loading').removeClass('hidden');
+                    // Get movie details
                     $.get(autosubliminal.getUrl('/api/movies/' + imdbId), function (data) {
                         self.movie = data;
                         self.movieSettings = self.movie.settings;
@@ -81,6 +84,9 @@
                                 window.location = autosubliminal.getUrl('/library/movies');
                             });
                         }
+                    }).always(function () {
+                        // Hide loading icon
+                        $('.loading').addClass('hidden');
                     });
                 },
                 setPosterPlaceholderUrl: autosubliminal.vue.setPosterPlaceholderUrl,
