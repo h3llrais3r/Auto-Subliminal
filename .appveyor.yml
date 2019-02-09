@@ -70,5 +70,5 @@ before_test:
   - npm run stylelint
 
 test_script:
-  - coverage run --branch --source=autosubliminal setup.py test
+  - coverage run setup.py test
   - coverage report
