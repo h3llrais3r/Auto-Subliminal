@@ -70,7 +70,7 @@ class Scheduler(object):
                     suffix = int(scheduler_name_suffix)
                     suffix += 1
                     scheduler_name = scheduler_name[:suffix_index] + '-' + text_type(suffix)
-                except Exception:
+                except Exception:  # pragma: no cover
                     scheduler_name = scheduler_name + '-' + text_type(suffix)
             else:
                 scheduler_name = scheduler_name + '-' + text_type(suffix)
@@ -89,7 +89,7 @@ class Scheduler(object):
             if self.active:
                 if self._force_run:
                     run_needed = True
-                    if self._delay:
+                    if self._delay:  # pragma: no cover
                         log.info('Delaying thread %s with %s seconds', self.name, self._delay)
                         time.sleep(self._delay)
                 if current_time - self.last_run > self.interval:
@@ -109,7 +109,7 @@ class Scheduler(object):
         run_lock = self.process.force_run_lock if self._force_run else self.process.run_lock
 
         # Delay process if lock cannot be acquired
-        if run_lock and not get_wanted_queue_lock():
+        if run_lock and not get_wanted_queue_lock():  # pragma: no cover
             # Increase delay with 1 second each time the process cannot yet run
             self._delay += 1
             return
@@ -139,7 +139,7 @@ class Scheduler(object):
 
         finally:
             # Release lock if needed
-            if run_lock:
+            if run_lock:  # pragma: no cover
                 release_wanted_queue_lock()
 
     def stop(self):
