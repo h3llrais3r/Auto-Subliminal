@@ -116,6 +116,11 @@ textarea {
   text-decoration: none !important;
 }
 
+.title-banner-image {
+  height: 55px;
+  width: 300px;
+}
+
 .title-poster-container {
   display: table;
 }
