@@ -69,7 +69,7 @@
                         <div class="form-group narrow">
                             <span class="col-xs-4 col-md-3"></span>
                             <span class="col-xs-8 col-md-6">
-                                <a href="${saveUrl}" class="btn btn-sm btn-default btn-save">Save</a>
+                                <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
                         </div>
 
@@ -260,7 +260,7 @@
                             <span class="col-xs-4 col-md-3"></span>
                             <span class="col-xs-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/mail" class="btn btn-sm btn-default btn-test">Test</a>
-                                <a href="${saveUrl}" class="btn btn-sm btn-default btn-save">Save</a>
+                                <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
                         </div>
 
@@ -338,9 +338,9 @@
                         <div class="form-group narrow">
                             <span class="col-xs-4 col-md-3"></span>
                             <span class="col-xs-8 col-md-6">
+                                <a href="${autosubliminal.WEBROOT}/config/notification/regTwitter" class="btn btn-sm btn-default">Register</a>
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/twitter" class="btn btn-sm btn-default btn-test">Test</a>
-                                <a href="${saveUrl}" class="btn btn-sm btn-default btn-save">Save</a>
-                                <input type="button" value="Register" class="btn btn-sm btn-default" onClick="parent.location='${autosubliminal.WEBROOT}/config/notification/regTwitter'">
+                                <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
                         </div>
 
@@ -401,7 +401,7 @@
                             <span class="col-xs-4 col-md-3"></span>
                             <span class="col-xs-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/pushalot" class="btn btn-sm btn-default btn-test">Test</a>
-                                <a href="${saveUrl}" class="btn btn-sm btn-default btn-save">Save</a>
+                                <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
                         </div>
 
@@ -501,7 +501,7 @@
                             <span class="col-xs-4 col-md-3"></span>
                             <span class="col-xs-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/pushover" class="btn btn-sm btn-default btn-test">Test</a>
-                                <a href="${saveUrl}" class="btn btn-sm btn-default btn-save">Save</a>
+                                <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
                         </div>
 
@@ -625,7 +625,7 @@
                             <span class="col-xs-4 col-md-3"></span>
                             <span class="col-xs-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/growl" class="btn btn-sm btn-default btn-test">Test</a>
-                                <a href="${saveUrl}" class="btn btn-sm btn-default btn-save">Save</a>
+                                <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
                         </div>
 
@@ -718,7 +718,7 @@
                             <span class="col-xs-4 col-md-3"></span>
                             <span class="col-xs-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/prowl" class="btn btn-sm btn-default btn-test">Test</a>
-                                <a href="${saveUrl}" class="btn btn-sm btn-default btn-save">Save</a>
+                                <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
                         </div>
 
@@ -781,7 +781,7 @@
                             <span class="col-xs-4 col-md-3"></span>
                             <span class="col-xs-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/pushbullet" class="btn btn-sm btn-default btn-test">Test</a>
-                                <a href="${saveUrl}" class="btn btn-sm btn-default btn-save">Save</a>
+                                <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
                         </div>
 
@@ -869,7 +869,7 @@
                             <span class="col-xs-4 col-md-3"></span>
                             <span class="col-xs-8 col-md-6">
                                 <a href="${autosubliminal.WEBROOT}/config/notification/test/telegram" class="btn btn-sm btn-default btn-test">Test</a>
-                                <a href="${saveUrl}" class="btn btn-sm btn-default btn-save">Save</a>
+                                <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
                             </span>
                         </div>
 
@@ -879,7 +879,7 @@
 
             </div>
 
-            <a href="${saveUrl}" class="btn btn-sm btn-default btn-save">Save</a>
+            <a href="${saveUrl}" class="btn btn-sm btn-primary btn-save">Save</a>
 
         </form>
 

@@ -39,7 +39,7 @@
                             <input type="text" id="token_pin" name="token_pin" class="form-control input-sm">
                         </span>
                         <span class="col-xs-4 col-md-2">
-                            <input type="submit" value="ok" class="btn btn-sm btn-default">
+                            <input type="submit" value="ok" class="btn btn-sm btn-primary">
                         </span>
                     </div>
                     <input type="hidden" id="token_key" name="token_key" value="${token_key}">

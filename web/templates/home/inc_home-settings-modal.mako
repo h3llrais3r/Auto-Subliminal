@@ -128,7 +128,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-default" @click="saveSettings($event)">Save</button>
+                <button type="button" class="btn btn-primary" @click="saveSettings($event)">Save</button>
             </div>
 
         </div>

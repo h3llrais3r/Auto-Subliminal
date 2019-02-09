@@ -26,7 +26,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-default" @click="saveHardcodedSubtitles($event)">Save</button>
+                <button type="button" class="btn btn-primary" @click="saveHardcodedSubtitles($event)">Save</button>
             </div>
 
         </div>

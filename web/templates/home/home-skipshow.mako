@@ -25,8 +25,8 @@
                             <input type="text" name="season" class="form-control input-sm">
                         </span>
                         <span class="col-xs-6 col-md-2">
-                            <input type="submit" value="Skip" class="btn btn-sm btn-default">
-                            <input type="button" value="Cancel" class="btn btn-sm btn-default" onClick="parent.location='${autosubliminal.WEBROOT}/home'">
+                            <a href="${autosubliminal.WEBROOT}/home" class="btn btn-sm btn-default">Cancel</a>
+                            <input type="submit" value="Skip" class="btn btn-sm btn-primary">
                         </span>
                     </div>
                     <input type="hidden" name="wanted_item_index" value="${wanted_item_index}">

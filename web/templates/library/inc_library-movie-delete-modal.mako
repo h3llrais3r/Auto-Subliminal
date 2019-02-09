@@ -15,7 +15,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-default" @click="deleteMovie($event)">Delete</button>
+                <button type="button" class="btn btn-primary" @click="deleteMovie($event)">Delete</button>
             </div>
 
         </div>

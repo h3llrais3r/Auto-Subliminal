@@ -216,7 +216,7 @@
                                                                     <input type="text" value="${display_value(item.releasegrp)}" class="form-control input-sm update-wanted-item-releasegrp">
                                                                 </div>
                                                                 <a href="${autosubliminal.WEBROOT}/home/resetWantedItem/${index}" class="btn btn-sm btn-default reset-wanted-item-link">Reset</a>
-                                                                <a href="${autosubliminal.WEBROOT}/home/updateWantedItem/${index}" class="btn btn-sm btn-default update-wanted-item-link">Update</a>
+                                                                <a href="${autosubliminal.WEBROOT}/home/updateWantedItem/${index}" class="btn btn-sm btn-primary update-wanted-item-link">Update</a>
                                                             </div>
                                                         </div>
                                                     </li>

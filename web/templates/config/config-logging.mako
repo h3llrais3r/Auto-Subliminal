@@ -298,7 +298,7 @@
 
             </div>
 
-            <a href="${autosubliminal.WEBROOT}/config/logging/save" class="btn btn-sm btn-default btn-save">Save</a>
+            <a href="${autosubliminal.WEBROOT}/config/logging/save" class="btn btn-sm btn-primary btn-save">Save</a>
 
         </form>
 

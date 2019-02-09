@@ -160,7 +160,7 @@
 
             </div>
 
-            <a href="${autosubliminal.WEBROOT}/config/namemapping/save" class="btn btn-sm btn-default btn-save">Save</a>
+            <a href="${autosubliminal.WEBROOT}/config/namemapping/save" class="btn btn-sm btn-primary btn-save">Save</a>
 
         </form>
 

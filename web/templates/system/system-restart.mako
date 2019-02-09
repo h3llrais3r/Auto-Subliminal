@@ -18,7 +18,7 @@
                     <br>
                     <span>
                         If your page doesn't reload, click
-                        <a href='${autosubliminal.WEBROOT}/home' class="btn btn-sm btn-default" role="button" aria-pressed="true">here</a>
+                        <a href='${autosubliminal.WEBROOT}/home' class="btn btn-sm btn-primary" role="button" aria-pressed="true">here</a>
                     </span>
                 </div>
             </div>
