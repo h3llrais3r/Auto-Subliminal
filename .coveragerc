@@ -1,6 +1,6 @@
 [run]
-# Enable branch coverage
-branch = True
+# Disable branch coverage
+branch = False
 
 # Set source
 source = autosubliminal
