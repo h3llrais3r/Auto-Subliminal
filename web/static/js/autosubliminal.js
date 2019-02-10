@@ -100,14 +100,6 @@ var autosubliminal = {
         return alpha2Languages;
     };
 
-    // Function to keep certain dropdowns open (don't close it when clicking inside the dropdown itself)
-    autosubliminal.keepDropDownOpen = function () {
-        $('.dropdown .dropdown-menu.keep-open,.dropdown-menu.info-list').on('click', function (event) {
-            event.stopPropagation();
-        });
-    };
-    autosubliminal.keepDropDownOpen();
-
     /* ========================
      * Types (type definitions)
      * ======================== */
@@ -554,6 +546,18 @@ var autosubliminal = {
         }
         $(this).parent().next('input[type=hidden]').val(target);
     });
+
+    /* =========
+     * Dropdowns
+     * ========= */
+
+    // Keep certain dropdowns open (don't close it when clicking inside the dropdown itself)
+    autosubliminal.keepDropdownsOpen = function () {
+        $('.dropdown .dropdown-menu.keep-open,.dropdown-menu.info-list').on('click', function (event) {
+            event.stopPropagation();
+        });
+    };
+    autosubliminal.keepDropdownsOpen();
 
     /* ========
      * Popovers

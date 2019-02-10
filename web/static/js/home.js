@@ -102,7 +102,7 @@
             methods: {
                 setupHome: function () {
                     // Keep dropdowns open (need to call it again because we are inside a vue app)
-                    autosubliminal.keepDropDownOpen();
+                    autosubliminal.keepDropdownsOpen();
 
                     // Setup the wanted items table
                     $('#wanteditems')
