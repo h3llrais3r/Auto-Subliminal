@@ -57,6 +57,7 @@
             },
             updated: function () {
                 //console.log('updated');
+                autosubliminal.keepDropdownsOpen();
             },
             methods: {
                 setPosterPlaceholderUrl: autosubliminal.vue.setPosterPlaceholderUrl,
@@ -96,8 +97,15 @@
                     settings: null
                 };
             },
+            created: function () {
+                //console.log('created');
+            },
             mounted: function () {
+                //console.log('mounted');
                 this.setupHome();
+            },
+            updated: function () {
+                //console.log('updated');
             },
             methods: {
                 setupHome: function () {
