@@ -25,19 +25,18 @@
                                     <div class="vertical-center">
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-4">
-                                                <label>Wanted languages
-                                                    <span class="dropdown">
-                                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                                        </a>
-                                                        <ul class="dropdown-menu has-tip info-list">
-                                                            <li>
-                                                                The list of wanted subtitle languages for the show/movie.<br>
-                                                                This replaces the globally configured languages, but only for this show/movie.
-                                                            </li>
-                                                        </ul>
-                                                    </span>
-                                                </label>
+                                                <label>Wanted languages</label>
+                                                <div class="dropdown dropdown-icon">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu has-tip info-list">
+                                                        <li>
+                                                            The list of wanted subtitle languages for the show/movie.<br>
+                                                            This replaces the globally configured languages, but only for this show/movie.
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-8">
                                                 <multiselect v-model="wantedLanguages"
@@ -54,19 +53,18 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-10">
-                                                <label>Refine video
-                                                    <span class="dropdown">
-                                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                                        </a>
-                                                        <ul class="dropdown-menu has-tip info-list">
-                                                            <li>
-                                                                When enabled, subliminal will enable 'refiners' to enrich the video meta-data before searching for subtitles.<br>
-                                                                This can result in a higher score matching and thus a higher automatic subtitle download.
-                                                            </li>
-                                                        </ul>
-                                                    </span>
-                                                </label>
+                                                <label>Refine video</label>
+                                                <div class="dropdown dropdown-icon">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu has-tip info-list">
+                                                        <li>
+                                                            When enabled, subliminal will enable 'refiners' to enrich the video meta-data before searching for subtitles.<br>
+                                                            This can result in a higher score matching and thus a higher automatic subtitle download.
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-2">
                                                 <label class="switch-checkbox pull-right">
@@ -77,16 +75,15 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-10">
-                                                <label>Prefer hearing impaired subs
-                                                    <span class="dropdown">
-                                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                                        </a>
-                                                        <ul class="dropdown-menu has-tip info-list">
-                                                            <li>When enabled, 'hearing impaired' subtitles will be preferred over 'regular' subtitles.</li>
-                                                        </ul>
-                                                    </span>
-                                                </label>
+                                                <label>Prefer hearing impaired subs</label>
+                                                <div class="dropdown dropdown-icon">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu has-tip info-list">
+                                                        <li>When enabled, 'hearing impaired' subtitles will be preferred over 'regular' subtitles.</li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-2">
                                                 <label class="switch-checkbox pull-right">
@@ -97,19 +94,18 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-xs-12 col-sm-10">
-                                                <label>Save subtitles in utf-8 encoding
-                                                    <span class="dropdown">
-                                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                                        </a>
-                                                        <ul class="dropdown-menu has-tip info-list">
-                                                            <li>
-                                                                When enabled, all subtitles will be saved in utf-8 encoding.<br>
-                                                                When disabled, the original encoding of the subtitle is used.
-                                                            </li>
-                                                        </ul>
-                                                    </span>
-                                                </label>
+                                                <label>Save subtitles in utf-8 encoding</label>
+                                                <div class="dropdown dropdown-icon">
+                                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu has-tip info-list">
+                                                        <li>
+                                                            When enabled, all subtitles will be saved in utf-8 encoding.<br>
+                                                            When disabled, the original encoding of the subtitle is used.
+                                                        </li>
+                                                    </ul>
+                                                </div>
                                             </div>
                                             <div class="col-xs-12 col-sm-2">
                                                 <label class="switch-checkbox pull-right">

@@ -54,7 +54,7 @@
                                     <div class="details-info-container">
                                         <div class="col-xs-12 details-info-title">
                                             <span>{{ show.title + ' (' + show.year + ')' }}</span>
-                                            <span>
+                                            <div class="icon-group">
                                                 <a :href="tvdbUrl + show.tvdb_id" target="_blank">
                                                     <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
                                                 </a>
@@ -67,7 +67,7 @@
                                                 <a href="#" @click="openDeleteModal($event)">
                                                     <i class="fa fa-trash" aria-hidden="true" title="Click to delete show from the database"></i>
                                                 </a>
-                                            </span>
+                                            </div>
                                             <hr>
                                         </div>
                                         <div class="col-xs-12">{{ show.overview }}</div>
@@ -117,14 +117,14 @@
                                                         <tr>
                                                             <td>
                                                                 <span>{{ file.season_name }}</span>
-                                                                <span class="dropdown">
+                                                                <div class="dropdown dropdown-icon">
                                                                     <a class="dropdown-toggle" data-toggle="dropdown">
                                                                         <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
                                                                     </a>
                                                                     <ul class="dropdown-menu has-tip info-list">
                                                                         <li>{{ file.season_path }}</li>
                                                                     </ul>
-                                                                </span>
+                                                                </div>
                                                             </td>
                                                             <td class="text-right">
                                                                 <span v-for="language in show.settings.wanted_languages" class="btn btn-sm btn-static">

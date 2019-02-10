@@ -336,9 +336,13 @@ nav {
   background-color: $jumbotron-bg;
 }
 
-/*********************
- * ICON LINK STYLING *
- *********************/
+/****************
+ * ICON STYLING *
+ ****************/
+
+.icon-group {
+  display: inline-block;
+}
 
 a {
   &:hover, &:active, &:focus, &:visited > .fa {
@@ -350,11 +354,17 @@ a {
  * DROPDOWN STYLING *
  ********************/
 
-.dropdown-toggle {
-  cursor: pointer;
+.dropdown {
+  &.dropdown-icon, &.dropdown-title {
+    display: inline-block;
+  }
 
-  &:hover, &:active, &:focus, &:visited {
-    text-decoration: none; // Remove underline after icon on hover, active, focus and visited
+  .dropdown-toggle {
+    cursor: pointer;
+
+    &:hover, &:active, &:focus, &:visited {
+      text-decoration: none; // Remove underline after icon on hover, active, focus and visited
+    }
   }
 }
 

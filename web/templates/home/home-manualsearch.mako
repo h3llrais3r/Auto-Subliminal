@@ -30,10 +30,10 @@
                             <tr>
                                 <td class="text-left">${sub['score']}</td>
                                 <td>
-                                    <span class="dropdown">
-                                        <span class="dropdown-toggle dropdown-hoverintent" data-toggle="dropdown" data-hover="dropdown">
+                                    <div class="dropdown">
+                                        <div class="dropdown-toggle dropdown-hoverintent" data-toggle="dropdown" data-hover="dropdown">
                                             ${sub['provider_name']}
-                                        </span>
+                                        </div>
                                         <ul class="dropdown-menu has-tip info-list">
                                             <li>
                                                 <span class="info-list-label">Supported releases:</span>
@@ -44,7 +44,7 @@
                                                 </ul>
                                             </li>
                                         </ul>
-                                    </span>
+                                    </div>
                                 </td>
                                 <td class="text-left">
                                     <div class="subtitle-preview">${sub['content_preview']}</div>

@@ -23,40 +23,38 @@
                     <div class="form-horizontal">
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="logfile">Logfile name
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>
-                                                The location and the name of the logfile.<br>
-                                                When not set, AutoSubliminal.log will be used.
-                                            </li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="logfile">Logfile name</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            The location and the name of the logfile.<br>
+                                            When not set, AutoSubliminal.log will be used.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.LOGFILE}" id="logfile" name="logfile" class="form-control input-sm">
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="loglevel">Log level
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>The level of logging in the logfile.</li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="loglevel">Log level</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The level of logging in the logfile.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="loglevel" name="loglevel" class="form-control input-sm">
                                     % if logging.getLevelName(autosubliminal.LOGLEVEL).lower() == 'info':
                                         <option value=${logging.INFO} selected="selected">Info</option>
@@ -90,65 +88,62 @@
                                         <option value=${logging.DEBUG} selected="selected">Debug</option>
                                     % endif
                                 </select>
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="lognum">Max number of backup log files
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>
-                                                The maximum number of backup log files.<br>
-                                                Use 0 for no backup log files.
-                                            </li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="lognum">Max number of backup log files</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            The maximum number of backup log files.<br>
+                                            Use 0 for no backup log files.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.LOGNUM}" id="lognum" name="lognum" class="form-control input-sm">
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="logsize">Max log size
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>
-                                                The maximum size of the log file(s) in MB.<br>
-                                                Use 0 for unlimited size.
-                                            </li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="logsize">Max log size</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            The maximum size of the log file(s) in MB.<br>
+                                            Use 0 for unlimited size.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.LOGSIZE}" id="logsize" name="logsize" class="form-control input-sm">
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="loghttpaccess">Log HTTP access
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>When enabled, also http access calls will be logged.</li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="loghttpaccess">Log HTTP access</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>When enabled, also http access calls will be logged.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="loghttpaccess" name="loghttpaccess" class="form-control input-sm">
                                     % if autosubliminal.LOGHTTPACCESS:
                                         <option value="True" selected="selected">Enabled</option>
@@ -158,26 +153,25 @@
                                         <option value="False" selected="selected">Disabled</option>
                                     % endif
                                 </select>
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="logexternallibs">Log external libs
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>
-                                                When enabled, also external libs will be logged.<br>
-                                                This only works in combination with the 'Log detailed format' option.
-                                            </li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="logexternallibs">Log external libs</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            When enabled, also external libs will be logged.<br>
+                                            This only works in combination with the 'Log detailed format' option.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="logexternallibs" name="logexternallibs" class="form-control input-sm">
                                     % if autosubliminal.LOGEXTERNALLIBS:
                                         <option value="True" selected="selected">Enabled</option>
@@ -187,23 +181,22 @@
                                         <option value="False" selected="selected">Disabled</option>
                                     % endif
                                 </select>
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="logdetailedformat">Log detailed format
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>When enabled, the detailed log format will be used.</li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="logdetailedformat">Log detailed format</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>When enabled, the detailed log format will be used.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="logdetailedformat" name="logdetailedformat" class="form-control input-sm">
                                     % if autosubliminal.LOGDETAILEDFORMAT:
                                         <option value="True" selected="selected">Enabled</option>
@@ -213,23 +206,22 @@
                                         <option value="False" selected="selected">Disabled</option>
                                     % endif
                                 </select>
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="logreversed">Log reversed
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>When enabled, the log output will be shown in reversed order (newest at the top) in the application.</li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="logreversed">Log reversed</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>When enabled, the log output will be shown in reversed order (newest at the top) in the application.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="logreversed" name="logreversed" class="form-control input-sm">
                                     % if autosubliminal.LOGREVERSED:
                                         <option value="True" selected="selected">Enabled</option>
@@ -239,23 +231,22 @@
                                         <option value="False" selected="selected">Disabled</option>
                                     % endif
                                 </select>
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="loglevelconsole">Console log level
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>The level of logging in the console output.</li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="loglevelconsole">Console log level</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The level of logging in the console output.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="loglevelconsole" name="loglevelconsole" class="form-control input-sm">
                                     % if logging.getLevelName(autosubliminal.LOGLEVELCONSOLE).lower() == 'info':
                                         <option value=${logging.INFO} selected="selected">Info</option>
@@ -289,7 +280,7 @@
                                         <option value=${logging.DEBUG} selected="selected">Debug</option>
                                     % endif
                                 </select>
-                            </span>
+                            </div>
                         </div>
 
                     </div>

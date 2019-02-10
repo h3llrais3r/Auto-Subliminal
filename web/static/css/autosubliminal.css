@@ -282,9 +282,13 @@ nav {
   background-color: #eeeeee;
 }
 
-/*********************
- * ICON LINK STYLING *
- *********************/
+/****************
+ * ICON STYLING *
+ ****************/
+.icon-group {
+  display: inline-block;
+}
+
 a:hover, a:active, a:focus, a:visited > .fa {
   text-decoration: none;
 }
@@ -292,11 +296,15 @@ a:hover, a:active, a:focus, a:visited > .fa {
 /********************
  * DROPDOWN STYLING *
  ********************/
-.dropdown-toggle {
+.dropdown.dropdown-icon, .dropdown.dropdown-title {
+  display: inline-block;
+}
+
+.dropdown .dropdown-toggle {
   cursor: pointer;
 }
 
-.dropdown-toggle:hover, .dropdown-toggle:active, .dropdown-toggle:focus, .dropdown-toggle:visited {
+.dropdown .dropdown-toggle:hover, .dropdown .dropdown-toggle:active, .dropdown .dropdown-toggle:focus, .dropdown .dropdown-toggle:visited {
   text-decoration: none;
 }
 

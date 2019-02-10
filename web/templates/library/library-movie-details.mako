@@ -54,7 +54,7 @@
                                     <div class="details-info-container">
                                         <div class="col-xs-12 details-info-title">
                                             <span>{{ movie.title + ' (' + movie.year + ')' }}</span>
-                                            <span>
+                                            <div class="icon-group">
                                                 <a :href="imdbUrl + movie.imdb_id" target="_blank">
                                                     <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
                                                 </a>
@@ -67,7 +67,7 @@
                                                 <a href="#" @click="openDeleteModal($event)">
                                                     <i class="fa fa-trash" aria-hidden="true" title="Click to delete movie from the database"></i>
                                                 </a>
-                                            </span>
+                                            </div>
                                             <hr>
                                         </div>
                                         <div class="col-xs-12">{{ movie.overview }}</div>

@@ -29,25 +29,22 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label>Show MinMatchScore
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>The items that must match before a show subtitle is downloaded.</li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label>Show MinMatchScore</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The items that must match before a show subtitle is downloaded.</li>
+                                    </ul>
+                                </div>
+                            </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="hidden" name="showmmsdefault" value="1">
                                 <div class="switch-checkbox-inline-row">
                                     <div class="switch-checkbox-inline col-xs-3">
-                                        <label class="switch-checkbox-inline-label">
-                                            Source
-                                        </label>
+                                        <label class="switch-checkbox-inline-label">Source</label>
                                         % if autosubliminal.SHOWMATCHSOURCE:
                                             <span class="switch-checkbox">
                                                 <input type="checkbox" id="showmmssource" name="showmmssource" checked>
@@ -61,9 +58,7 @@
                                         % endif
                                     </div>
                                     <div class="switch-checkbox-inline col-xs-3">
-                                        <label class="switch-checkbox-inline-label">
-                                            Quality
-                                        </label>
+                                        <label class="switch-checkbox-inline-label">Quality</label>
                                         % if autosubliminal.SHOWMATCHQUALITY:
                                             <span class="switch-checkbox">
                                                 <input type="checkbox" id="showmmsquality" name="showmmsquality" checked>
@@ -77,9 +72,7 @@
                                         % endif
                                     </div>
                                     <div class="switch-checkbox-inline col-xs-3">
-                                        <label class="switch-checkbox-inline-label">
-                                            Codec
-                                        </label>
+                                        <label class="switch-checkbox-inline-label">Codec</label>
                                         % if autosubliminal.SHOWMATCHCODEC:
                                             <span class="switch-checkbox">
                                                 <input type="checkbox" id="showmmscodec" name="showmmscodec" checked>
@@ -93,9 +86,7 @@
                                         % endif
                                     </div>
                                     <div class="switch-checkbox-inline col-xs-3">
-                                        <label class="switch-checkbox-inline-label">
-                                            Group
-                                        </label>
+                                        <label class="switch-checkbox-inline-label">Group</label>
                                         % if autosubliminal.SHOWMATCHRELEASEGROUP:
                                             <span class="switch-checkbox">
                                                 <input type="checkbox" id="showmmsreleasegroup" name="showmmsreleasegroup" checked>
@@ -113,25 +104,22 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label>Movie MinMatchScore
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>The items that must match before a movie subtitle is downloaded.</li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label>Movie MinMatchScore</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The items that must match before a movie subtitle is downloaded.</li>
+                                    </ul>
+                                </div>
+                            </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="hidden" name="moviemmsdefault" value="1">
                                 <div class="switch-checkbox-inline-row">
                                     <div class="switch-checkbox-inline col-xs-3">
-                                        <label class="switch-checkbox-inline-label">
-                                            Source
-                                        </label>
+                                        <label class="switch-checkbox-inline-label">Source</label>
                                         % if autosubliminal.MOVIEMATCHSOURCE:
                                             <span class="switch-checkbox">
                                                 <input type="checkbox" id="moviemmssource" name="moviemmssource" checked>
@@ -145,9 +133,7 @@
                                         % endif
                                     </div>
                                     <div class="switch-checkbox-inline col-xs-3">
-                                        <label class="switch-checkbox-inline-label">
-                                            Quality
-                                        </label>
+                                        <label class="switch-checkbox-inline-label">Quality</label>
                                         % if autosubliminal.MOVIEMATCHQUALITY:
                                             <span class="switch-checkbox">
                                                 <input type="checkbox" id="moviemmsquality" name="moviemmsquality" checked>
@@ -161,9 +147,7 @@
                                         % endif
                                     </div>
                                     <div class="switch-checkbox-inline col-xs-3">
-                                        <label class="switch-checkbox-inline-label">
-                                            Codec
-                                        </label>
+                                        <label class="switch-checkbox-inline-label">Codec</label>
                                         % if autosubliminal.MOVIEMATCHCODEC:
                                             <span class="switch-checkbox">
                                                 <input type="checkbox" id="moviemmscodec" name="moviemmscodec" checked>
@@ -177,9 +161,7 @@
                                         % endif
                                     </div>
                                     <div class="switch-checkbox-inline col-xs-3">
-                                        <label class="switch-checkbox-inline-label">
-                                            Group
-                                        </label>
+                                        <label class="switch-checkbox-inline-label">Group</label>
                                         % if autosubliminal.MOVIEMATCHRELEASEGROUP:
                                             <span class="switch-checkbox">
                                                 <input type="checkbox" id="moviemmsreleasegroup" name="moviemmsreleasegroup" checked>
@@ -197,22 +179,21 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="subliminalproviders">Subliminal providers
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>
-                                                The subliminal providers that must be used for searching and downloading subtitles.<br>
-                                                Multiple providers can be selected.
-                                            </li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="subliminalproviders">Subliminal providers</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            The subliminal providers that must be used for searching and downloading subtitles.<br>
+                                            Multiple providers can be selected.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <% providers = sorted(autosubliminal.SUBLIMINALPROVIDERMANAGER.names()) %>
                                 <select multiple="multiple" id="subliminalproviders" name="subliminalproviders" size="${len(providers)}" class="form-control input-sm">
                                     % for provider in providers:
@@ -223,26 +204,25 @@
                                         % endif
                                     % endfor
                                 </select>
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="subtitleutf8encoding">Save subtitles in utf-8 encoding
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>
-                                                When enabled, all subtitles will be saved in utf-8 encoding.<br>
-                                                When disabled, the original encoding of the subtitle is used.
-                                            </li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="subtitleutf8encoding">Save subtitles in utf-8 encoding</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            When enabled, all subtitles will be saved in utf-8 encoding.<br>
+                                            When disabled, the original encoding of the subtitle is used.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="subtitleutf8encoding" name="subtitleutf8encoding" class="form-control input-sm">
                                     % if autosubliminal.SUBTITLEUTF8ENCODING:
                                         <option value="True" selected="selected">Enabled</option>
@@ -252,27 +232,26 @@
                                         <option value="False" selected="selected">Disabled</option>
                                     % endif
                                 </select>
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="manualrefinevideo">Refine video manually
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>
-                                                When enabled, you will be able to edit the video meta-data before searching for subtitles.<br>
-                                                An edit icon will appear next to the show/movie name to edit the show/movie details.<br>
-                                                This only affects a manual search temporarily until the next disk scan.
-                                            </li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="manualrefinevideo">Refine video manually</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            When enabled, you will be able to edit the video meta-data before searching for subtitles.<br>
+                                            An edit icon will appear next to the show/movie name to edit the show/movie details.<br>
+                                            This only affects a manual search temporarily until the next disk scan.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="manualrefinevideo" name="manualrefinevideo" class="form-control input-sm">
                                     % if autosubliminal.MANUALREFINEVIDEO:
                                         <option value="True" selected="selected">Enabled</option>
@@ -282,26 +261,25 @@
                                         <option value="False" selected="selected">Disabled</option>
                                     % endif
                                 </select>
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="refinevideo">Refine video
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>
-                                                When enabled, subliminal will enable 'refiners' to enrich the video meta-data before searching for subtitles.<br>
-                                                This can result in a higher score matching and thus a higher automatic subtitle download.
-                                            </li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="refinevideo">Refine video</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>
+                                            When enabled, subliminal will enable 'refiners' to enrich the video meta-data before searching for subtitles.<br>
+                                            This can result in a higher score matching and thus a higher automatic subtitle download.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="refinevideo" name="refinevideo" class="form-control input-sm">
                                     % if autosubliminal.REFINEVIDEO:
                                         <option value="True" selected="selected">Enabled</option>
@@ -311,23 +289,22 @@
                                         <option value="False" selected="selected">Disabled</option>
                                     % endif
                                 </select>
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="preferhearingimpaired">Prefer hearing impaired subs
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>When enabled, 'hearing impaired' subtitles will be preferred over 'regular' subtitles.</li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="preferhearingimpaired">Prefer hearing impaired subs</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>When enabled, 'hearing impaired' subtitles will be preferred over 'regular' subtitles.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="preferhearingimpaired" name="preferhearingimpaired" class="form-control input-sm">
                                     % if autosubliminal.PREFERHEARINGIMPAIRED:
                                         <option value="True" selected="selected">Enabled</option>
@@ -337,7 +314,7 @@
                                         <option value="False" selected="selected">Disabled</option>
                                     % endif
                                 </select>
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group section-title">
@@ -353,39 +330,37 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="addic7edusername">Username
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>The username for your Addic7ed account.</li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="addic7edusername">Username</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The username for your Addic7ed account.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.ADDIC7EDUSERNAME}" id="addic7edusername" name="addic7edusername" class="form-control input-sm">
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="addic7edpassword">Password
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>The password for your Addic7ed account.</li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="addic7edpassword">Password</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The password for your Addic7ed account.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="password" value="${autosubliminal.ADDIC7EDPASSWORD}" id="addic7edpassword" name="addic7edpassword" class="form-control input-sm">
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group section-title">
@@ -401,39 +376,37 @@
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="opensubtitlesusername">Username
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>The username for your OpenSubtitles account.</li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="opensubtitlesusername">Username</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The username for your OpenSubtitles account.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="text" value="${autosubliminal.OPENSUBTITLESUSERNAME}" id="opensubtitlesusername" name="opensubtitlesusername" class="form-control input-sm">
-                            </span>
+                            </div>
                         </div>
 
                         <div class="form-group narrow">
-                            <span class="col-xs-12 col-sm-4 col-md-3">
-                                <label for="opensubtitlespassword">Password
-                                    <span class="dropdown">
-                                        <a class="dropdown-toggle" data-toggle="dropdown">
-                                            <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
-                                        </a>
-                                        <ul class="dropdown-menu has-tip info-list">
-                                            <li>The password for your OpenSubtitles account.</li>
-                                        </ul>
-                                    </span>
-                                </label>
-                            </span>
-                            <span class="col-xs-12 col-sm-8 col-md-6">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="opensubtitlespassword">Password</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The password for your OpenSubtitles account.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
                                 <input type="password" value="${autosubliminal.OPENSUBTITLESPASSWORD}" id="opensubtitlespassword" name="opensubtitlespassword" class="form-control input-sm">
-                            </span>
+                            </div>
                         </div>
 
                     </div>
