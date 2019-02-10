@@ -242,7 +242,7 @@
                                 <td class="wanted-item-languages">
                                     % for lang in item.languages:
                                     <% imageurl = autosubliminal.WEBROOT + "/images/flags/language/" + lang + ".png" %>
-                                        <div class="dropdown">
+                                        <div class="dropdown dropdown-icon">
                                             <a class="dropdown-toggle" data-toggle="dropdown">
                                                 <img src="${imageurl}" class="language-icon" alt="${lang}" title="Click to search manually">
                                             </a>
