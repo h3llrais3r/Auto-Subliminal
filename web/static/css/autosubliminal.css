@@ -415,6 +415,7 @@ a:hover, a:active, a:focus, a:visited > .fa {
 @media (max-width: 767px) {
   .modal-dialog {
     width: 100%;
+    height: 100%;
     margin: 0;
   }
 }
