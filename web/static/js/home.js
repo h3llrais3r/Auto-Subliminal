@@ -101,6 +101,9 @@
             },
             methods: {
                 setupHome: function () {
+                    // Keep dropdowns open (need to call it again because we are inside a vue app)
+                    autosubliminal.keepDropDownOpen();
+
                     // Setup the wanted items table
                     $('#wanteditems')
                         .tablesorter({
@@ -195,7 +198,7 @@
                     });
 
                     // Setup the manual search link
-                    $('.container-manualsearch-link').on('click', function (event) {
+                    $('.manualsearch-container-link').on('click', function (event) {
                         // Prevent default behaviour
                         event.preventDefault();
                         // Prevent multi clicks when already running

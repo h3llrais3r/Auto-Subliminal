@@ -173,7 +173,7 @@
                                                     </a>
                                                     <ul class="dropdown-menu has-tip info-list">
                                                         <li>
-                                                            <div class="panel panel-default">
+                                                            <div class="panel panel-default manualrefine-container">
                                                                 <div class="panel-heading text-center">
                                                                     <span class="info-list-label">Update show/movie details</span>
                                                                 </div>
@@ -246,11 +246,11 @@
                                             <a class="dropdown-toggle" data-toggle="dropdown">
                                                 <img src="${imageurl}" class="language-icon" alt="${lang}" title="Click to search manually">
                                             </a>
-                                            <ul class="dropdown-menu pull-right no-padding">
+                                            <ul class="dropdown-menu pull-right no-padding keep-open">
                                                 <li>
-                                                    <div class="panel panel-default container-manualsearch">
+                                                    <div class="panel panel-default manualsearch-container">
                                                         <div class="panel-heading">
-                                                            <a class="container-manualsearch-link" href="${autosubliminal.WEBROOT}/home/searchSubtitle/${index}/${lang}">
+                                                            <a class="manualsearch-container-link" href="${autosubliminal.WEBROOT}/home/searchSubtitle/${index}/${lang}">
                                                                 Manual search
                                                             </a>
                                                             <i class="fa fa-spinner fa-spin fa-fw invisible" title="Searching..."></i>

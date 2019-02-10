@@ -356,6 +356,7 @@ a:hover, a:active, a:focus, a:visited > .fa {
   font-weight: normal;
   font-style: italic;
   color: #333333;
+  cursor: default;
 }
 
 .dropdown-menu.info-list .info-list-label {
@@ -728,25 +729,33 @@ table.table.table-hover tbody tr:hover {
 /************************
  * MANUALSEARCH STYLING *
  ************************/
-.container-manualsearch {
+.manualsearch-container {
   width: 750px;
   text-align: center;
   margin: 0;
+  cursor: default;
 }
 
-.container-manualsearch .container-manualsearch-link {
+.manualsearch-container .manualsearch-container-link {
   text-decoration: none !important;
   font-weight: bold;
   white-space: nowrap;
 }
 
-.container-manualsearch .subtitle-action:hover, .container-manualsearch .subtitle-action:active, .container-manualsearch .subtitle-action:focus, .container-manualsearch .subtitle-action:visited {
+.manualsearch-container .subtitle-action:hover, .manualsearch-container .subtitle-action:active, .manualsearch-container .subtitle-action:focus, .manualsearch-container .subtitle-action:visited {
   text-decoration: none;
 }
 
-.container-manualsearch .subtitle-preview {
+.manualsearch-container .subtitle-preview {
   height: 100px;
   overflow: scroll;
+}
+
+/************************
+ * MANUALREFINE STYLING *
+ ************************/
+.manualrefine-container {
+  margin-bottom: 0;
 }
 
 /****************************

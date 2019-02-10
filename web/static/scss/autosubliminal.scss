@@ -415,6 +415,7 @@ a {
     font-weight: normal;
     font-style: italic;
     color: $text-color;
+    cursor: default;
 
     .info-list-label {
       font-weight: bold;
@@ -851,12 +852,13 @@ table.table {
  * MANUALSEARCH STYLING *
  ************************/
 
-.container-manualsearch {
+.manualsearch-container {
   width: 750px;
   text-align: center;
   margin: 0;
+  cursor: default;
 
-  .container-manualsearch-link {
+  .manualsearch-container-link {
     text-decoration: none !important;
     font-weight: bold;
     white-space: nowrap;
@@ -872,6 +874,14 @@ table.table {
     height: 100px;
     overflow: scroll;
   }
+}
+
+/************************
+ * MANUALREFINE STYLING *
+ ************************/
+
+.manualrefine-container {
+  margin-bottom: 0;
 }
 
 /****************************
