@@ -564,7 +564,24 @@ var autosubliminal = {
      * ======== */
 
     // Enable the popovers
-    $('[data-toggle=popover]').popover();
+    autosubliminal.enablePopovers = function () {
+        // Enable popovers
+        $('[data-toggle=popover]').popover();
+
+        // Only close on outside click
+        // See https://stackoverflow.com/questions/11703093/how-to-dismiss-a-twitter-bootstrap-popover-by-clicking-outside
+        $(document).on('click', function (event) {
+            $('[data-toggle="popover"],[data-original-title]').each(function () {
+                //The 'is' for buttons that trigger popups
+                //The 'has' for icons within a button that triggers a popup
+                if (!$(this).is(event.target) && $(this).has(event.target).length === 0 && $('.popover').has(event.target).length === 0) {
+                    (($(this).popover('hide').data('bs.popover') || {}).inState || {}).click = false; // fix for BS 3.3.6
+                }
+
+            });
+        });
+    };
+    autosubliminal.enablePopovers();
 
     /* ==========
      * Countdowns

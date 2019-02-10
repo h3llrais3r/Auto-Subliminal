@@ -11,8 +11,8 @@
     <input type="hidden" id="scanDiskNextRunTimeMs" value="${get_next_scheduler_run_in_ms(autosubliminal.SCANDISK)}">
     <input type="hidden" id="checkSubNextRunTimeMs" value="${get_next_scheduler_run_in_ms(autosubliminal.CHECKSUB)}">
     <!-- tabindex="0" is needed to get the data-trigger="focus" working -->
-    <i tabindex="0" class="fa fa-info-circle dropdown-toggle" aria-hidden="true" data-toggle="popover" data-placement="top"
-       data-trigger="focus" data-title="<h4>Technical details</h4>" data-html="true" data-content='
+    <i tabindex="0" class="fa fa-info-circle dropdown-toggle popover-toggle" aria-hidden="true" data-toggle="popover" data-placement="top"
+       data-title="<h4>Technical details</h4>" data-html="true" data-content='
         <ul class="list-unstyled">
             <li>
                 <span><strong>Application PID:</strong></span>

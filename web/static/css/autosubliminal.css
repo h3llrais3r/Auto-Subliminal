@@ -129,6 +129,10 @@ textarea {
   text-decoration: none !important;
 }
 
+.popover-toggle {
+  cursor: pointer;
+}
+
 .title-banner-image {
   height: 55px;
   width: 300px;
