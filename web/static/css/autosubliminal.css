@@ -289,6 +289,10 @@ nav {
   display: inline-block;
 }
 
+.icon-link {
+  cursor: pointer;
+}
+
 a:hover, a:active, a:focus, a:visited > .fa {
   text-decoration: none;
 }

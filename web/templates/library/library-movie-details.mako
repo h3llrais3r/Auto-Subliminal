@@ -58,13 +58,13 @@
                                                 <a :href="imdbUrl + movie.imdb_id" target="_blank">
                                                     <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
                                                 </a>
-                                                <a href="#" @click="openSettingsModal($event)">
+                                                <a class="icon-link" @click="openSettingsModal($event)">
                                                     <i class="fa fa-wrench" aria-hidden="true" title="Click to edit movie settings"></i>
                                                 </a>
-                                                <a href="#" @click="refreshMovieDetails($event)">
+                                                <a class="icon-link" @click="refreshMovieDetails($event)">
                                                     <i class="fa fa-repeat" aria-hidden="true" title="Click to refresh movie details"></i>
                                                 </a>
-                                                <a href="#" @click="openDeleteModal($event)">
+                                                <a class="icon-link" @click="openDeleteModal($event)">
                                                     <i class="fa fa-trash" aria-hidden="true" title="Click to delete movie from the database"></i>
                                                 </a>
                                             </div>
@@ -113,12 +113,14 @@
                                             <tr v-for="f in movie.files">
                                                 <td class="wrapped">
                                                     <span class="details-files-file">{{ f.filename }}</span>
-                                                    <a v-if="f.type == 'video'" href="#" @click="openSubtitlesModal(movie.path, f.filename, f.hardcoded_languages, $event)">
-                                                        <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
-                                                    </a>
-                                                    <a v-if="f.type == 'video'" :href="getPlayVideoUrl(movie.path, f.filename)">
-                                                        <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
-                                                    </a>
+                                                    <div class="icon-group">
+                                                        <a v-if="f.type == 'video'" class="icon-link" @click="openSubtitlesModal(movie.path, f.filename, f.hardcoded_languages, $event)">
+                                                            <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
+                                                        </a>
+                                                        <a v-if="f.type == 'video'" :href="getPlayVideoUrl(movie.path, f.filename)">
+                                                            <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
+                                                        </a>
+                                                    </div>
                                                 </td>
                                                 <td v-if="f.type == 'video'" class="text-right">
                                                     <!-- language is an array in case of video type -->

@@ -344,6 +344,10 @@ nav {
   display: inline-block;
 }
 
+.icon-link {
+  cursor: pointer;
+}
+
 a {
   &:hover, &:active, &:focus, &:visited > .fa {
     text-decoration: none; // Remove underline after icon on hover, active, focus and visited

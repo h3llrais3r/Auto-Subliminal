@@ -58,13 +58,13 @@
                                                 <a :href="tvdbUrl + show.tvdb_id" target="_blank">
                                                     <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
                                                 </a>
-                                                <a href="#" @click="openSettingsModal($event)">
+                                                <a class="icon-link" @click="openSettingsModal($event)">
                                                     <i class="fa fa-wrench" aria-hidden="true" title="Click to edit show settings"></i>
                                                 </a>
-                                                <a href="#" @click="refreshShowDetails($event)">
+                                                <a class="icon-link" @click="refreshShowDetails($event)">
                                                     <i class="fa fa-repeat" aria-hidden="true" title="Click to refresh show details"></i>
                                                 </a>
-                                                <a href="#" @click="openDeleteModal($event)">
+                                                <a class="icon-link" @click="openDeleteModal($event)">
                                                     <i class="fa fa-trash" aria-hidden="true" title="Click to delete show from the database"></i>
                                                 </a>
                                             </div>
@@ -145,12 +145,14 @@
                                             <tr v-for="f in file.season_files">
                                                 <td>
                                                     <span class="details-files-file">{{ f.filename }}</span>
-                                                    <a v-if="f.type == 'video'" href="#" @click="openSubtitlesModal(file.season_path, f.filename, f.hardcoded_languages, f.tvdb_id, $event)">
-                                                        <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
-                                                    </a>
-                                                    <a v-if="f.type == 'video'" :href="getPlayVideoUrl(file.season_path, f.filename)">
-                                                        <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
-                                                    </a>
+                                                    <div class="icon-group">
+                                                        <a v-if="f.type == 'video'" class="icon-link" @click="openSubtitlesModal(file.season_path, f.filename, f.hardcoded_languages, f.tvdb_id, $event)">
+                                                            <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
+                                                        </a>
+                                                        <a v-if="f.type == 'video'" :href="getPlayVideoUrl(file.season_path, f.filename)">
+                                                            <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
+                                                        </a>
+                                                    </div>
                                                 </td>
                                                 <td v-if="f.type == 'video'" class="text-right">
                                                     <!-- language is an array in case of video type -->

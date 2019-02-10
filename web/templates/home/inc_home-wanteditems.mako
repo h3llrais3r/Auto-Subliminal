@@ -138,16 +138,12 @@
                                                         </ul>
                                                     </div>
                                                 % else:
-                                                    <span>
-                                                        <a href="${autosubliminal.DEREFERURL}${autosubliminal.TVDBURL}${item.tvdbid}" target="_blank">
-                                                            <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
-                                                        </a>
-                                                    </span>
-                                                    <span>
-                                                        <a href="#" @click="openSettingsModal($event, '${item.type}', '${item.tvdbid}', '${display_item_title(item)}')">
-                                                            <i class="fa fa-wrench" aria-hidden="true" title="Click to edit show settings"></i>
-                                                        </a>
-                                                    </span>
+                                                    <a href="${autosubliminal.DEREFERURL}${autosubliminal.TVDBURL}${item.tvdbid}" target="_blank">
+                                                        <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
+                                                    </a>
+                                                    <a class="icon-link" @click="openSettingsModal($event, '${item.type}', '${item.tvdbid}', '${display_item_title(item)}')">
+                                                        <i class="fa fa-wrench" aria-hidden="true" title="Click to edit show settings"></i>
+                                                    </a>
                                                 % endif
                                             % elif item.is_movie:
                                                 % if not item.imdbid:
@@ -162,16 +158,12 @@
                                                         </ul>
                                                     </div>
                                                 % else:
-                                                    <span>
-                                                        <a href="${autosubliminal.DEREFERURL}${autosubliminal.IMDBURL}${item.imdbid}" target="_blank">
-                                                            <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
-                                                        </a>
-                                                    </span>
-                                                    <span>
-                                                        <a href="#" @click="openSettingsModal($event, '${item.type}', '${item.imdbid}', '${display_item_title(item)}')">
-                                                            <i class="fa fa-wrench" aria-hidden="true" title="Click to edit movie settings"></i>
-                                                        </a>
-                                                    </span>
+                                                    <a href="${autosubliminal.DEREFERURL}${autosubliminal.IMDBURL}${item.imdbid}" target="_blank">
+                                                        <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
+                                                    </a>
+                                                    <a class="icon-link" @click="openSettingsModal($event, '${item.type}', '${item.imdbid}', '${display_item_title(item)}')">
+                                                        <i class="fa fa-wrench" aria-hidden="true" title="Click to edit movie settings"></i>
+                                                    </a>
                                                 % endif
                                             % endif
                                             % if autosubliminal.MANUALREFINEVIDEO:
