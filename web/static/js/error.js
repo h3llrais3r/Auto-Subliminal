@@ -13,8 +13,8 @@
      * ============== */
 
     // Setup the traceback link
-    $('#tracebackLink').on('click', function () {
-        $('#traceback').toggleClass('hidden');
+    $('.traceback-link').on('click', function () {
+        $('.traceback-error').toggleClass('hidden');
     });
 
 }(autosubliminal));

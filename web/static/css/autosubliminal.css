@@ -37,12 +37,21 @@ textarea {
   min-width: 90px;
 }
 
-.error-traceback {
+.traceback .traceback-link {
+  cursor: pointer;
+}
+
+.traceback .traceback-error {
   display: inline-block;
   margin: 10px;
   padding: 5px;
   text-align: left;
-  white-space: pre;
+}
+
+@media (min-width: 768px) {
+  .traceback .traceback-error {
+    white-space: pre;
+  }
 }
 
 @media (max-width: 48em) {

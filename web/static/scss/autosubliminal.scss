@@ -77,12 +77,20 @@ textarea {
   min-width: 90px;
 }
 
-.error-traceback {
-  display: inline-block;
-  margin: 10px;
-  padding: 5px;
-  text-align: left;
-  white-space: pre; // Needed to get \r\n working inside div
+.traceback {
+  .traceback-link {
+    cursor: pointer;
+  }
+
+  .traceback-error {
+    display: inline-block;
+    margin: 10px;
+    padding: 5px;
+    text-align: left;
+    @media (min-width: $screen-sm-min) {
+      white-space: pre; // Needed to get \r\n working inside div
+    }
+  }
 }
 
 // Style certain classes in tablesorter reflow mode
