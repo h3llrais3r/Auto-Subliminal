@@ -75,23 +75,25 @@ def read_config(check_upgrade=False):
 
         if cfg.has_option('general', 'scandiskinterval'):
             autosubliminal.SCANDISKINTERVAL = cfg.getint('general', 'scandiskinterval')
+            if autosubliminal.SCANDISKINTERVAL < 1:
+                print('WARNING: scandiskinterval variable is lower then 1. Setting it to 1.')
+                autosubliminal.SCANDISKINTERVAL = 1  # Run every hour
         else:
-            autosubliminal.SCANDISKINTERVAL = 3600  # Run every hour
+            autosubliminal.SCANDISKINTERVAL = 1  # Run every hour
 
         if cfg.has_option('general', 'checksubinterval'):
             autosubliminal.CHECKSUBINTERVAL = cfg.getint('general', 'checksubinterval')
-            # CHECKSUB may only run max 6 times a day to prevent the API keys from being banned
-            if autosubliminal.CHECKSUBINTERVAL < 21600:
-                print('WARNING: checksubinterval variable is lower then 21600.')
-                print('WARNING: This is not allowed, this is to prevent our API-key from being banned.')
-                autosubliminal.CHECKSUBINTERVAL = 21600  # Run every 6 hours
+            if autosubliminal.CHECKSUBINTERVAL < 6:
+                print('WARNING: checksubinterval variable is lower then 6. Setting it to 6.')
+                print('WARNING: This is not allowed because this will result in being banned from the providers.')
+                autosubliminal.CHECKSUBINTERVAL = 6  # Run every 6 hours
         else:
-            autosubliminal.CHECKSUBINTERVAL = 86400  # Run every 24 hours
+            autosubliminal.CHECKSUBINTERVAL = 24  # Run every 24 hours
 
         if cfg.has_option('general', 'checksubdeadline'):
             autosubliminal.CHECKSUBDEADLINE = cfg.getint('general', 'checksubdeadline')
             if autosubliminal.CHECKSUBDEADLINE < 1:
-                print('WARNING: checksubdeadline variable cannot be lower than 1 week. Set it to 1 week.')
+                print('WARNING: checksubdeadline variable is lower then 1. Setting it to 1.')
                 autosubliminal.CHECKSUBDEADLINE = 1
         else:
             autosubliminal.CHECKSUBDEADLINE = 4  # Default 4 weeks
@@ -106,8 +108,11 @@ def read_config(check_upgrade=False):
 
         if cfg.has_option('general', 'checkversioninterval'):
             autosubliminal.CHECKVERSIONINTERVAL = cfg.getint('general', 'checkversioninterval')
+            if autosubliminal.CHECKVERSIONINTERVAL < 1:
+                print('WARNING: checkversioninterval variable is lower then 1. Setting it to 1.')
+                autosubliminal.CHECKVERSIONINTERVAL = 1  # Run every hour
         else:
-            autosubliminal.CHECKVERSIONINTERVAL = 43200  # Run every 12 hours
+            autosubliminal.CHECKVERSIONINTERVAL = 12  # Run every 12 hours
 
         if cfg.has_option('general', 'checkversionautoupdate'):
             autosubliminal.CHECKVERSIONAUTOUPDATE = cfg.getboolean('general', 'checkversionautoupdate')
@@ -167,11 +172,11 @@ def read_config(check_upgrade=False):
         autosubliminal.DEFAULTLANGUAGESUFFIX = False
         autosubliminal.ADDITIONALLANGUAGES = []
         autosubliminal.MANUALSEARCHCHECKSCORE = True
-        autosubliminal.SCANDISKINTERVAL = 3600
-        autosubliminal.CHECKSUBINTERVAL = 86400
+        autosubliminal.SCANDISKINTERVAL = 1
+        autosubliminal.CHECKSUBINTERVAL = 24
         autosubliminal.CHECKSUBDEADLINE = 4
         autosubliminal.CHECKSUBDELTA = 7
-        autosubliminal.CHECKVERSIONINTERVAL = 43200
+        autosubliminal.CHECKVERSIONINTERVAL = 12
         autosubliminal.CHECKVERSIONAUTOUPDATE = False
         autosubliminal.SCANEMBEDDEDSUBS = False
         autosubliminal.SCANHARDCODEDSUBS = False
@@ -205,17 +210,17 @@ def read_config(check_upgrade=False):
         if cfg.has_option('library', 'scanlibraryinterval'):
             autosubliminal.SCANLIBRARYINTERVAL = cfg.getint('library', 'scanlibraryinterval')
             # SCANLIBRARY may only run max once a day to prevent too heavy system usage
-            if autosubliminal.SCANLIBRARYINTERVAL < 86400:
-                print('WARNING: scanlibraryinterval variable is lower then 86400.')
-                print('WARNING: This is not allowed, this is to prevent too heavy system usage.')
-                autosubliminal.SCANLIBRARYINTERVAL = 86400  # Run every 24 hours
+            if autosubliminal.SCANLIBRARYINTERVAL < 24:
+                print('WARNING: scanlibraryinterval variable is lower then 24.')
+                print('WARNING: This is not allowed because it will result in too high system usage.')
+                autosubliminal.SCANLIBRARYINTERVAL = 24  # Run every 24 hours
         else:
-            autosubliminal.SCANLIBRARYINTERVAL = 86400  # Run every 24 hours
+            autosubliminal.SCANLIBRARYINTERVAL = 24  # Run every 24 hours
     else:
         # Library section is missing
         autosubliminal.LIBRARYMODE = False
         autosubliminal.LIBRARYPATHS = []
-        autosubliminal.SCANLIBRARYINTERVAL = 86400
+        autosubliminal.SCANLIBRARYINTERVAL = 24
 
     if cfg.has_section('logging'):
         if cfg.has_option('logging', 'logfile'):
@@ -1379,12 +1384,12 @@ def _check_for_restart():
     cfg = _load_config_parser()
 
     # Set the default values
-    scandiskinterval = 3600
-    checksubinterval = 86400
+    scandiskinterval = 1
+    checksubinterval = 24
     checksubdeadline = 4
     checksubdelta = 7
-    checkversioninterval = 43200
-    scanlibraryinterval = 86400
+    checkversioninterval = 12
+    scanlibraryinterval = 24
     logfile = u'AutoSubliminal.log'
     logsize = 0
     lognum = 0
@@ -1668,6 +1673,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification('Config upgraded. Please check or reconfigure you subliminal configuration!',
                                         type='notice', sticky=True)
+
         if from_version == 6 and to_version == 7:
             print('INFO: Upgrading log config. Please check/reconfigure your config!')
             autosubliminal.LOGNUM = 0
@@ -1677,6 +1683,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification('Config upgraded. Please check or reconfigure your logging configuration!',
                                         type='notice', sticky=True)
+
         if from_version == 7 and to_version == 8:
             print('INFO: Upgrading skip config. Please check/reconfigure your config!')
             # '00' means now skip all, '0' means skip season 0
@@ -1691,6 +1698,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification('Config upgraded. Please check or reconfigure your skip configuration!',
                                         type='notice', sticky=True)
+
         if from_version == 8 and to_version == 9:
             print('INFO: Renaming config, logfile and skip section. Please check/reconfigure your config!')
             # Read config file
@@ -1730,6 +1738,7 @@ def _upgrade_config(from_version, to_version):
             send_websocket_notification(
                 'Config upgraded. Please check or reconfigure your general, logging and notification configuration!',
                 type='notice', sticky=True)
+
         if from_version == 9 and to_version == 10:
             print('INFO: Removing old PATH config.')
             # Read config file
@@ -1750,6 +1759,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 10
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification('Config upgraded!', type='notice', sticky=True)
+
         if from_version == 10 and to_version == 11:
             print('INFO: Renaming interval config parameters.')
             # Read config file
@@ -1780,5 +1790,25 @@ def _upgrade_config(from_version, to_version):
                 cfg.write(f)
             print('INFO: Config upgraded to version 11.')
             autosubliminal.CONFIGVERSION = 11
+            autosubliminal.CONFIGUPGRADED = True
+            send_websocket_notification('Config upgraded!', type='notice', sticky=True)
+
+        if from_version == 11 and to_version == 12:
+            print('INFO: Converting interval config parameters to hours.')
+            # Read config file
+            cfg = _create_config_parser()
+            try:
+                with codecs.open(autosubliminal.CONFIGFILE, mode='r', encoding=ENCODING) as f:
+                    cfg.read_file(f)
+            except Exception:
+                # No config yet, just mark as upgraded
+                cfg = _create_config_parser()
+            # Updating intervals
+            autosubliminal.SCANDISKINTERVAL /= 3600
+            autosubliminal.CHECKSUBINTERVAL /= 3600
+            autosubliminal.CHECKVERSIONINTERVAL /= 3600
+            autosubliminal.SCANLIBRARYINTERVAL /= 3600
+            print('INFO: Config upgraded to version 12.')
+            autosubliminal.CONFIGVERSION = 12
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification('Config upgraded!', type='notice', sticky=True)

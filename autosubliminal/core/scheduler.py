@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import abc
+import datetime
 import logging
 import time
 import threading
@@ -25,7 +26,7 @@ class Scheduler(object):
     :type name: str
     :param process: process to schedule
     :type process: ScheduledProcess
-    :param interval: interval in seconds between scheduled runs
+    :param interval: interval in hours between scheduled runs
     :type interval: int
     :param active: indication if the scheduler is active or not
     :type active: bool
@@ -36,7 +37,7 @@ class Scheduler(object):
     def __init__(self, name, process, interval, active=True, initial_run=False):
         self.name = name
         self.process = process
-        self.interval = interval
+        self.interval = datetime.timedelta(hours=interval).total_seconds()  # Convert to seconds
         self.active = active
         self.last_run = 0
         self._delay = 0

@@ -80,8 +80,8 @@
                                     <ul class="dropdown-menu has-tip info-list">
                                         <li>
                                             Library scan interval of the ScanLibrary thread. It scans the complete library for generating an overview.<br>
-                                            Time is in seconds. Default value is 86400 seconds.<br>
-                                            Cannot not be set lower then 86400.
+                                            Time is in hours. Default value is 24 hours.<br>
+                                            Cannot not be set lower then 24 hours.
                                         </li>
                                     </ul>
                                 </div>

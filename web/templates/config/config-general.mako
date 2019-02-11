@@ -157,7 +157,8 @@
                                     <ul class="dropdown-menu has-tip info-list">
                                         <li>
                                             Disk scan interval of the ScanDisk thread. It scans the disk for missing subtitle files.<br>
-                                            Time is in seconds. Default value is 3600 seconds.
+                                            Time is in hours. Default value is 1 hour.<br>
+                                            Cannot be set lower then 1 hour.
                                         </li>
                                     </ul>
                                 </div>
@@ -177,8 +178,8 @@
                                     <ul class="dropdown-menu has-tip info-list">
                                         <li>
                                             Subtitle check interval of the CheckSub thread. It checks if there is a match on the configured subliminal providers.<br>
-                                            Time is in seconds. Default value is 86400 seconds.<br>
-                                            Cannot be set lower then 21600.
+                                            Time is in hours. Default value is 24 hours.<br>
+                                            Cannot be set lower then 6 hours.
                                         </li>
                                     </ul>
                                 </div>
@@ -240,7 +241,8 @@
                                     <ul class="dropdown-menu has-tip info-list">
                                         <li>
                                             Version check interval of the VersionCheck thread. It checks if there is a new version available.<br>
-                                            Time is in seconds. Default value is 43200 seconds.
+                                            Time is in hours. Default value is 12 hours.<br>
+                                            Cannot be set lower then 1 hour.
                                         </li>
                                     </ul>
                                 </div>
