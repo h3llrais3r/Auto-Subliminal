@@ -32,7 +32,7 @@ def test_scheduler_force_run(mocker):
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
-        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 10, initial_run=False)
+        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1, initial_run=False)
         scheduler.run(delay=1)
         time.sleep(2)  # Sleep to be sure that the run has been executed at least once
         assert process_run_mock.called
@@ -80,7 +80,7 @@ def test_scheduler_run_process_exception(mocker):
     try:  # Use try/finally block to make sure that the thread is stopped
         mocker.patch.object(MyScheduledProcess, 'run', side_effect=Exception)
         os_mock = mocker.patch('os._exit')
-        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 10, initial_run=False)
+        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1, initial_run=False)
         scheduler.last_run = time.time()
         scheduler.run()
         time.sleep(3)  # Sleep to be sure that the run exception been executed at least once
