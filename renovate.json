@@ -36,9 +36,9 @@
       },
       {
         "packageNames": [
-          "guessit"
+          "more-itertools"
         ],
-        "allowedVersions": "<3.0.0"
+        "allowedVersions": "<6.0.0"
       }
     ]
   }
