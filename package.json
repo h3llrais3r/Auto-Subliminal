@@ -28,7 +28,7 @@
     "stylelint": "stylelint **/*.scss --custom-formatter=node_modules/stylelint-formatter-table"
   },
   "dependencies": {
-    "bootstrap": "3.4.0",
+    "bootstrap": "3.4.1",
     "bootstrap-hover-dropdown": "2.2.1",
     "font-awesome": "4.7.0",
     "jquery": "3.3.1",
