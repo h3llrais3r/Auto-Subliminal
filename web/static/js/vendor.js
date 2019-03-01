@@ -10610,15 +10610,16 @@ return jQuery;
     };
 });
 /*!
- * hoverIntent v1.9.0 // 2017.09.01 // jQuery v1.7.0+
+ * hoverIntent v1.10.0 // 2019.02.25 // jQuery v1.7.0+
  * http://briancherne.github.io/jquery-hoverIntent/
  *
  * You may use hoverIntent under the terms of the MIT license. Basically that
  * means you are free to use hoverIntent as long as this header is left intact.
- * Copyright 2007-2017 Brian Cherne
+ * Copyright 2007-2019 Brian Cherne
  */
 
-/* hoverIntent is similar to jQuery's built-in "hover" method except that
+/**
+ * hoverIntent is similar to jQuery's built-in "hover" method except that
  * instead of firing the handlerIn function immediately, hoverIntent checks
  * to see if the user's mouse has slowed down (beneath the sensitivity
  * threshold) before firing the event. The handlerOut function is only
@@ -10645,6 +10646,8 @@ return jQuery;
     'use strict';
     if (typeof define === 'function' && define.amd) {
         define(['jquery'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = factory(require('jquery'));
     } else if (jQuery && !jQuery.fn.hoverIntent) {
         factory(jQuery);
     }
