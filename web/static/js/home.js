@@ -70,7 +70,7 @@
                     if (self.type == autosubliminal.EPISODE_TYPE) {
                         apiUrl = autosubliminal.getUrl('/api/shows/' + self.indexerId + '/settings');
                     } else if (self.type == autosubliminal.MOVIE_TYPE) {
-                        apiUrl = autosubliminal.getUrl('/api/shows/' + self.indexerId + '/settings');
+                        apiUrl = autosubliminal.getUrl('/api/movies/' + self.indexerId + '/settings');
                     }
                     var data = self.settings;
                     data.wanted_languages = self.getAlpha2Languages(self.wantedLanguages);
