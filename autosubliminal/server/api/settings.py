@@ -4,7 +4,7 @@ import os
 
 import autosubliminal
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import get_alpha2_languages
+from autosubliminal.util.language import get_alpha2_languages
 
 
 class SettingsApi(RestResource):

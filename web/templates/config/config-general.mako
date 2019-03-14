@@ -1,10 +1,9 @@
 <%inherit file="/layout/page.mako"/>
 
 <%!
-    import babelfish
-
     import autosubliminal
     from autosubliminal.util.common import display_list_multi_line, display_list_single_line
+    from autosubliminal.util.language import get_alpha2_languages
 
     SUPPORTED_TIMESTAMP_FORMATS = ['%Y-%m-%d %H:%M:%S', '%m-%d-%Y %H:%M:%S', '%d-%m-%Y %H:%M:%S']
 %>
@@ -59,7 +58,7 @@
                             </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="defaultlanguage" name="defaultlanguage" class="form-control input-sm">
-                                    % for language in babelfish.LANGUAGE_MATRIX:
+                                    % for language in get_alpha2_languages():
                                         % if language.alpha2:
                                             <% name = (language.name[:language.name.find('(') if language.name.find('(') != -1 else len(language.name)]) + ' (' + language.alpha2 + ')' %>
                                             % if language.alpha2 == autosubliminal.DEFAULTLANGUAGE:

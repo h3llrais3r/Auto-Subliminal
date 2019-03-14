@@ -10,7 +10,6 @@ import stat
 import subprocess
 import time
 
-import babelfish
 import requests
 from six import text_type
 
@@ -481,12 +480,3 @@ def get_wanted_languages():
         wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES)
 
     return wanted_languages
-
-
-def get_alpha2_languages():
-    """Get the list of iso languages in alpha2 format."""
-
-    def to_alpha2(language):
-        return {'alpha2': language.alpha2, 'name': language.name}
-
-    return list(map(to_alpha2, [language for language in babelfish.LANGUAGE_MATRIX if language.alpha2]))
