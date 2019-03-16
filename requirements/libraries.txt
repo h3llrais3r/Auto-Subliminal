@@ -13,7 +13,7 @@ cherrypy==17.4.1 # rq.filter: <18.0.0
 click==7.0
 configparser==3.7.3
 contextlib2=0.5.5
-decorator==4.3.2
+decorator==4.4.0
 diskcache==3.1.1
 dogpile.cache==0.7.1
 enzyme==0.4.1
