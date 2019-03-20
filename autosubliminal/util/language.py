@@ -1,7 +1,6 @@
 # coding=utf-8
 
 import babelfish
-from six import text_type
 
 
 class SubtitleLanguage(object):
