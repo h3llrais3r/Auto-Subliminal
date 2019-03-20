@@ -65,6 +65,7 @@ def launch_browser():
     url = 'http://%s:%d' % (host, int(port))
     url = url + wr
     try:
+        log.debug('Launching browser')
         webbrowser.open_new_tab(url)
     except Exception:
         try:
@@ -200,9 +201,16 @@ def start():
     autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
 
     # Schedule threads
-    autosubliminal.SCANDISK = Scheduler('DiskScanner', DiskScanner(), autosubliminal.SCANDISKINTERVAL, initial_run=True)
-    autosubliminal.CHECKSUB = Scheduler('SubChecker', SubChecker(), autosubliminal.CHECKSUBINTERVAL)
-    autosubliminal.CHECKVERSION = Scheduler('VersionChecker', VersionChecker(), autosubliminal.CHECKVERSIONINTERVAL)
+    # Order of CHECKVERSION, SCANDISK and CHECKSUB is important because they are all using the queue lock
+    # Make sure they are started in the specified order:
+    # - Start CHECKVERSION and wait to finish
+    # - Start SCANDISK
+    # - Start CHECKSUB with delay to be sure it doesn't get the queue lock before SCANDISK
+    # - Start SCANLIBRARY immediately because it doesn't use the queue lock
+    autosubliminal.CHECKVERSION = Scheduler('VersionChecker', VersionChecker(), autosubliminal.CHECKVERSIONINTERVAL,
+                                            initial_run=True)
+    autosubliminal.SCANDISK = Scheduler('DiskScanner', DiskScanner(), autosubliminal.SCANDISKINTERVAL)
+    autosubliminal.CHECKSUB = Scheduler('SubChecker', SubChecker(), autosubliminal.CHECKSUBINTERVAL, initial_delay=5)
     autosubliminal.SCANLIBRARY = Scheduler('LibraryScanner', LibraryScanner(), autosubliminal.SCANLIBRARYINTERVAL,
                                            active=autosubliminal.LIBRARYMODE)
 

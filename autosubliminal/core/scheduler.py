@@ -30,17 +30,19 @@ class Scheduler(object):
     :type interval: int
     :param active: indication if the scheduler is active or not
     :type active: bool
+    :param initial_delay: indication in seconds for the delay of the initial run of the thread process
+    :type initial_delay: int
     :param initial_run: indication if the process should run initially before starting the thread
     :type initial_run: bool
     """
 
-    def __init__(self, name, process, interval, active=True, initial_run=False):
+    def __init__(self, name, process, interval, active=True, initial_delay=0, initial_run=False):
         self.name = name
         self.process = process
         self.interval = datetime.timedelta(hours=interval).total_seconds()  # Convert to seconds
         self.active = active
         self.last_run = 0
-        self._delay = 0
+        self._delay = initial_delay
         self._force_run = False
         self._force_stop = False
 
@@ -48,13 +50,13 @@ class Scheduler(object):
         self._register_scheduler()
 
         # Start thread
-        log.info('Starting thread %s', self.name)
+        log.info('Starting %s thread', self.name)
         self._thread = threading.Thread(name=self.name, target=self._schedule_process)
         self._thread.start()
 
         # Initial run will block caller thread until process is executed the first time
         if self.active and initial_run:
-            log.debug('Waiting for initial run of thread %s', self.name)
+            log.debug('Waiting for initial run of %s thread', self.name)
             while not self.last_run:
                 time.sleep(1)
 
@@ -90,10 +92,7 @@ class Scheduler(object):
             if self.active:
                 if self._force_run:
                     run_needed = True
-                    if self._delay:
-                        log.info('Delaying thread %s with %s seconds', self.name, self._delay)
-                        time.sleep(self._delay)
-                if current_time - self.last_run > self.interval:
+                elif current_time - self.last_run > self.interval:
                     run_needed = True
             elif self.last_run:
                 # Clear last_run if not active
@@ -101,6 +100,9 @@ class Scheduler(object):
 
             # Run if needed
             if run_needed:
+                if self._delay:
+                    log.debug('Delaying %s thread process with %s seconds', self.name, self._delay)
+                    time.sleep(self._delay)
                 self._run_process(current_time)
 
             time.sleep(1)
@@ -120,14 +122,14 @@ class Scheduler(object):
             self.process.running = True
             send_websocket_event(PROCESS_STARTED, data=self.to_json())
 
-            log.debug('Running thread process')
+            log.debug('Running %s thread process', self.name)
             self.process.run(self._force_run)
 
             # Update process properties after process run
             self.last_run = current_time
+            self._delay = 0
             if self._force_run:
                 self._force_run = False
-                self._delay = 0
 
             # Mark as finished
             self.process.running = False
@@ -145,24 +147,24 @@ class Scheduler(object):
 
     def stop(self):
         """Stop the scheduler."""
-        log.info('Stopping thread %s', self.name)
+        log.info('Stopping %s thread', self.name)
 
         self._force_stop = True
         self._thread.join(10)
 
     def activate(self):
         """Activate the scheduler."""
-        log.info('Activating scheduler %s', self.name)
+        log.info('Activating %s scheduler', self.name)
         self.active = True
 
     def deactivate(self):
         """Deactivate the scheduler."""
-        log.info('Deactivating scheduler %s', self.name)
+        log.info('Deactivating %s scheduler', self.name)
         self.active = False
 
     def run(self, delay=0):
         """Force run the scheduler."""
-        log.info('Running thread %s', self.name)
+        log.info('Running %s thread', self.name)
 
         self._force_run = True
         self._delay = delay
