@@ -20,7 +20,7 @@
                              placeholder="Select a language"
                              tag-placeholder=""
                              label="name"
-                             track-by="alpha2">
+                             track-by="code">
                 </multiselect>
             </div>
 

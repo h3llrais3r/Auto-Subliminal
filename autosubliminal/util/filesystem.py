@@ -99,7 +99,7 @@ def check_missing_subtitle_languages(dirname, filename, scan_embedded=False, sca
         languages_to_check.remove(autosubliminal.DEFAULTLANGUAGE)
         default_language = Language.fromietf(autosubliminal.DEFAULTLANGUAGE)
 
-        # Check with or without alpha2 code suffix depending on configuration
+        # Check with or without language code suffix depending on configuration
         if autosubliminal.DEFAULTLANGUAGESUFFIX:
             srt_file = os.path.splitext(filename)[0] + u'.' + autosubliminal.DEFAULTLANGUAGE + SUBTITLE_EXTENSION
         else:
@@ -126,7 +126,7 @@ def check_missing_subtitle_languages(dirname, filename, scan_embedded=False, sca
     if languages_to_check:
         log.debug('Checking for missing additional language(s)')
 
-        # Always check with alpha2 code suffix for additional languages
+        # Always check with language code suffix for additional languages
         for language in languages_to_check:
             additional_language = Language.fromietf(language)
             srt_file = os.path.splitext(filename)[0] + u'.' + language + SUBTITLE_EXTENSION
@@ -193,7 +193,7 @@ def get_embedded_subtitles(dirname, filename, log_scan=False):
     except Exception:
         log_scan and log.error('Parsing video metadata with enzyme failed')
 
-    return [Subtitle(EMBEDDED, language.alpha2, path) for language in embedded_subtitle_languages if
+    return [Subtitle(EMBEDDED, text_type(language), path) for language in embedded_subtitle_languages if
             language != Language('und')]
 
 

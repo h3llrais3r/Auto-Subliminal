@@ -8,7 +8,7 @@ settings_json = '{"checkSub": "SubChecker", ' \
                 '"checkVersion": "VersionChecker", ' \
                 '"developerMode": true, ' \
                 '"imdbUrl": "http://www.dereferer.org/?http://www.imdb.com/title/", ' \
-                '"languages": [{"alpha2": "nl", "name": "Dutch"}], ' \
+                '"languages": [{"code": "nl", "name": "Dutch"}], ' \
                 '"pathSeparator": "/", ' \
                 '"scanDisk": "DiskScanner", ' \
                 '"scanLibrary": "LibraryScanner", ' \
@@ -34,6 +34,6 @@ def test_get_settings(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.IMDBURL', 'http://www.imdb.com/title/')
     monkeypatch.setattr('autosubliminal.TIMESTAMPFORMAT', '%d-%m-%Y %H:%M:%S')
     monkeypatch.setattr('autosubliminal.server.api.settings.os.path.sep', '/')
-    mocker.patch('autosubliminal.server.api.settings.get_alpha2_languages',
-                 return_value=[{'alpha2': 'nl', 'name': 'Dutch'}])
+    mocker.patch('autosubliminal.server.api.settings.get_subtitle_languages',
+                 return_value=[{'code': 'nl', 'name': 'Dutch'}])
     assert settings_json == pickle_api_result(SettingsApi().get())

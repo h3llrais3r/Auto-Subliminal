@@ -4,7 +4,7 @@ import os
 
 import autosubliminal
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.language import get_alpha2_languages
+from autosubliminal.util.language import get_subtitle_languages
 
 
 class SettingsApi(RestResource):
@@ -31,6 +31,6 @@ class SettingsApi(RestResource):
             'imdbUrl': autosubliminal.DEREFERURL + autosubliminal.IMDBURL,
             'timestampFormat': autosubliminal.TIMESTAMPFORMAT,
             'pathSeparator': os.path.sep,
-            'languages': get_alpha2_languages()
+            'languages': get_subtitle_languages()
         }
         return settings

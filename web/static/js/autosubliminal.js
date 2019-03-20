@@ -77,13 +77,13 @@ var autosubliminal = {
         return 'playvideo://' + filePath + autosubliminal.PATH_SEPARTOR + filename;
     };
 
-    // Function to convert a list of alpha2 language codes to a list of language objects
-    autosubliminal.convertToLanguages = function (alpha2Languages) {
+    // Function to convert a list of language codes to a list of language objects
+    autosubliminal.convertToLanguages = function (languageCodes) {
         var languages = [];
-        for (var i = 0; i < alpha2Languages.length; i++) {
-            var alpha2Language = alpha2Languages[i];
+        for (var i = 0; i < languageCodes.length; i++) {
+            var languageCode = languageCodes[i];
             for (var j = 0; j < autosubliminal.LANGUAGES.length; j++) {
-                if (autosubliminal.LANGUAGES[j].alpha2 == alpha2Language) {
+                if (autosubliminal.LANGUAGES[j].code == languageCode) {
                     languages.push(autosubliminal.LANGUAGES[j]);
                 }
             }
@@ -91,13 +91,13 @@ var autosubliminal = {
         return languages;
     };
 
-    // Function to convert a list of language objects to a list of alpha2 language codes
-    autosubliminal.convertToAlpha2Languages = function (languages) {
-        var alpha2Languages = [];
+    // Function to convert a list of language objects to a list of language codes
+    autosubliminal.convertToLanguageCodes = function (languages) {
+        var languageCodes = [];
         for (var i = 0; i < languages.length; i++) {
-            alpha2Languages.push(languages[i].alpha2);
+            languageCodes.push(languages[i].code);
         }
-        return alpha2Languages;
+        return languageCodes;
     };
 
     /* ========================
@@ -219,9 +219,9 @@ var autosubliminal = {
         };
     };
 
-    types.Alpha2Language = function () {
+    types.SubtitleLanguage = function () {
         return {
-            alpha2: null,
+            code: null,
             name: null
         };
     };

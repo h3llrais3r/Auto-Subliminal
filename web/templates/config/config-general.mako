@@ -3,7 +3,7 @@
 <%!
     import autosubliminal
     from autosubliminal.util.common import display_list_multi_line, display_list_single_line
-    from autosubliminal.util.language import get_alpha2_languages
+    from autosubliminal.util.language import get_subtitle_languages
 
     SUPPORTED_TIMESTAMP_FORMATS = ['%Y-%m-%d %H:%M:%S', '%m-%d-%Y %H:%M:%S', '%d-%m-%Y %H:%M:%S']
 %>
@@ -52,19 +52,19 @@
                                         <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
                                     </a>
                                     <ul class="dropdown-menu has-tip info-list">
-                                        <li>The default subtitle language (alpha2 code).</li>
+                                        <li>The default subtitle language (alpha2 code or ietf code).</li>
                                     </ul>
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="defaultlanguage" name="defaultlanguage" class="form-control input-sm">
-                                    % for language in get_alpha2_languages():
-                                        % if language.alpha2:
-                                            <% name = (language.name[:language.name.find('(') if language.name.find('(') != -1 else len(language.name)]) + ' (' + language.alpha2 + ')' %>
-                                            % if language.alpha2 == autosubliminal.DEFAULTLANGUAGE:
-                                                <option value="${language.alpha2}" selected="selected">${name}</option>
+                                    % for language in get_subtitle_languages():
+                                        % if language.code:
+                                            <% name = (language.name[:language.name.find('(') if language.name.find('(') != -1 else len(language.name)]) + ' (' + language.code + ')' %>
+                                            % if language.code == autosubliminal.DEFAULTLANGUAGE:
+                                                <option value="${language.code}" selected="selected">${name}</option>
                                             % else:
-                                                <option value="${language.alpha2}">${name}</option>
+                                                <option value="${language.code}">${name}</option>
                                             % endif
                                         % endif
                                     % endfor
@@ -80,7 +80,7 @@
                                         <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
                                     </a>
                                     <ul class="dropdown-menu has-tip info-list">
-                                        <li>When enabled, the default subtitle will be extended with the alpha2 code of the language (f.e. showname.en.srt).</li>
+                                        <li>When enabled, the default subtitle will be extended with the language code (f.e. showname.en.srt).</li>
                                     </ul>
                                 </div>
                             </div>
@@ -106,8 +106,8 @@
                                     </a>
                                     <ul class="dropdown-menu has-tip info-list">
                                         <li>
-                                            Comma separated list with the additional subtitle languages in alpha2 format.<br>
-                                            If additional languages are provided, subtitles will be extended with the alpha2 code of the language (f.e. showname.en.srt).
+                                            Comma separated list with the additional subtitle languages in alpha2 or ietf format.<br>
+                                            If additional languages are provided, subtitles will be extended with the language code (f.e. showname.en.srt).
                                         </li>
                                     </ul>
                                 </div>
@@ -467,7 +467,6 @@
                             <div class="col-xs-12 col-sm-8 col-md-6">
                                 <select id="timestampformat" name="timestampformat" class="form-control input-sm">
                                     % for format in SUPPORTED_TIMESTAMP_FORMATS:
-                                        <% name = (language.name[:language.name.find('(') if language.name.find('(') != -1 else len(language.name)]) + ' (' + language.alpha2 + ')' %>
                                         % if format == autosubliminal.TIMESTAMPFORMAT:
                                             <option value="${format}" selected="selected">${format}</option>
                                         % else:

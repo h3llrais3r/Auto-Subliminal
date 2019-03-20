@@ -7,6 +7,7 @@ import shutil
 
 import babelfish
 import subliminal
+from six import text_type
 from subliminal.core import ProviderPool
 from subliminal.providers.addic7ed import Addic7edSubtitle
 from subliminal.providers.legendastv import LegendasTVSubtitle
@@ -523,7 +524,7 @@ def _search_subtitles(video, lang, best_only, provider_pool):
         log.error('Invalid language specified: %s', lang)
         return
 
-    # Determine if language alpha2 code suffix is needed in srt file name (f.e. <episode_name>.nl.srt)
+    # Determine if language code suffix is needed in srt file name (f.e. <episode_name>.nl.srt)
     single = False
     if lang == autosubliminal.DEFAULTLANGUAGE and not autosubliminal.DEFAULTLANGUAGESUFFIX:
         single = True
@@ -600,7 +601,7 @@ def _construct_download_item(wanted_item, subtitles, language, single):
     subtitle_path = subliminal.subtitle.get_subtitle_path(download_item.video.name, None if single else language)
     download_item.subtitlepath = subtitle_path
     download_item.downloadLink = subtitle.page_link
-    download_item.downlang = language.alpha2
+    download_item.downlang = text_type(language)  # return alpha2 (f.e. 'nl') or ietf code (f.e. 'pt-BR')
     download_item.subtitle = os.path.split(download_item.subtitlepath)[1][:-4]
     download_item.provider = subtitle.provider_name
     download_item.subtitles = subtitles

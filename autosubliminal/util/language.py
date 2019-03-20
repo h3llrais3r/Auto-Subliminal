@@ -1,11 +1,12 @@
 # coding=utf-8
 
 import babelfish
+from six import text_type
 
 
-class Alpha2Language(object):
-    def __init__(self, alpha2, name):
-        self.alpha2 = alpha2
+class SubtitleLanguage(object):
+    def __init__(self, code, name):
+        self.code = code  # iso (f.e. 'nl') or ietf (f.e. 'pt-BR')
         self.name = name
 
     def __eq__(self, other):
@@ -24,16 +25,17 @@ class Alpha2Language(object):
         return hash(tuple(sorted(self.__dict__.items())))
 
 
-def get_alpha2_languages():
-    """Get the list of iso languages in alpha2 format."""
+def get_subtitle_languages():
+    """Get the list of subtitle languages (iso languages and special ietf languages)."""
 
-    def to_alpha2(language):
-        return Alpha2Language(language.alpha2, language.name)
+    def from_alpha2(language):
+        return SubtitleLanguage(language.alpha2, language.name)
 
-    languages = list(map(to_alpha2, [language for language in babelfish.LANGUAGE_MATRIX if language.alpha2]))
+    # Add all iso languages (alpha2)
+    languages = list(map(from_alpha2, [language for language in babelfish.LANGUAGE_MATRIX if language.alpha2]))
 
     # Add special cases here (f.e. languages in ietf format)
-    languages.append(Alpha2Language('pt-BR', 'Brazilian Portuguese'))
+    languages.append(SubtitleLanguage('pt-BR', 'Brazilian Portuguese'))
 
     # Return sorted on name
     return sorted(languages, key=lambda l: l.name)

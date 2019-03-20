@@ -62,7 +62,7 @@
             methods: {
                 setPosterPlaceholderUrl: autosubliminal.vue.setPosterPlaceholderUrl,
                 getLanguages: autosubliminal.convertToLanguages,
-                getAlpha2Languages: autosubliminal.convertToAlpha2Languages,
+                getLanguageCodes: autosubliminal.convertToLanguageCodes,
                 saveSettings: function (event) {
                     event.preventDefault();
                     var self = this;
@@ -73,7 +73,7 @@
                         apiUrl = autosubliminal.getUrl('/api/movies/' + self.indexerId + '/settings');
                     }
                     var data = self.settings;
-                    data.wanted_languages = self.getAlpha2Languages(self.wantedLanguages);
+                    data.wanted_languages = self.getLanguageCodes(self.wantedLanguages);
                     // Save settings
                     $.putJson(apiUrl, data, function () {
                         // Close modal on success

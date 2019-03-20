@@ -93,7 +93,7 @@
                 setPosterPlaceholderUrl: autosubliminal.vue.setPosterPlaceholderUrl,
                 getPlayVideoUrl: autosubliminal.constructPlayVideoUrl,
                 getLanguages: autosubliminal.convertToLanguages,
-                getAlpha2Languages: autosubliminal.convertToAlpha2Languages,
+                getLanguageCodes: autosubliminal.convertToLanguageCodes,
                 internalLanguagesAvailable: function (file) {
                     var available = false;
                     if ((file.hardcoded_languages && file.hardcoded_languages.length > 0) ||
@@ -143,7 +143,7 @@
                     // Get data
                     var self = this;
                     var data = self.movieSettings;
-                    data.wanted_languages = self.getAlpha2Languages(self.movieSettingsWantedLanguages);
+                    data.wanted_languages = self.getLanguageCodes(self.movieSettingsWantedLanguages);
                     $.putJson(autosubliminal.getUrl('/api/movies/' + self.movie.imdb_id + '/settings'), data, function () {
                         // Close modal on success
                         $('#settingsModal').modal('hide');
@@ -169,7 +169,7 @@
                     var data = {
                         'file_location': self.selectedFileLocation,
                         'file_name': self.selectedFileName,
-                        'languages': self.getAlpha2Languages(self.selectedHardcodedLanguages)
+                        'languages': self.getLanguageCodes(self.selectedHardcodedLanguages)
                     };
                     $.putJson(autosubliminal.getUrl('/api/movies/' + self.movie.imdb_id + '/subtitles/hardcoded'), data, function () {
                         // Close modal on success
