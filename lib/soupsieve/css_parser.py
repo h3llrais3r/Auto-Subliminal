@@ -7,6 +7,8 @@ from . import css_types as ct
 from collections import OrderedDict
 from .util import SelectorSyntaxError
 
+UNICODE_REPLACEMENT_CHAR = 0xFFFD
+
 # Simple pseudo classes that take no parameters
 PSEUDO_SIMPLE = {
     ":any-link",
@@ -92,8 +94,8 @@ COMMENTS = r'(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)'
 # Whitespace with comments included
 WSC = r'(?:{ws}|{comments})'.format(ws=WS, comments=COMMENTS)
 # CSS escapes
-CSS_ESCAPES = r'(?:\\[a-f0-9]{{1,6}}{ws}?|\\[^\r\n\f])'.format(ws=WS)
-CSS_STRING_ESCAPES = r'(?:\\[a-f0-9]{{1,6}}{ws}?|\\[^\r\n\f]|\\{nl})'.format(ws=WS, nl=NEWLINE)
+CSS_ESCAPES = r'(?:\\(?:[a-f0-9]{{1,6}}{ws}?|[^\r\n\f]|$))'.format(ws=WS)
+CSS_STRING_ESCAPES = r'(?:\\(?:[a-f0-9]{{1,6}}{ws}?|[^\r\n\f]|$|{nl}))'.format(ws=WS, nl=NEWLINE)
 # CSS Identifier
 IDENTIFIER = r'''
 (?:(?:-?(?:[^\x00-\x2f\x30-\x40\x5B-\x5E\x60\x7B-\x9f]|{esc})+|--)
@@ -149,25 +151,27 @@ PAT_PSEUDO_NTH_TYPE = r'''
 \({ws}*(?P<nth_type>{nth}|even|odd)){ws}*\)
 '''.format(ws=WSC, nth=NTH)
 # Pseudo class language (`:lang("*-de", en)`)
-PAT_PSEUDO_LANG = r':lang\({ws}*(?P<lang>{value}(?:{ws}*,{ws}*{value})*){ws}*\)'.format(ws=WSC, value=VALUE)
+PAT_PSEUDO_LANG = r':lang\({ws}*(?P<values>{value}(?:{ws}*,{ws}*{value})*){ws}*\)'.format(ws=WSC, value=VALUE)
 # Pseudo class direction (`:dir(ltr)`)
 PAT_PSEUDO_DIR = r':dir\({ws}*(?P<dir>ltr|rtl){ws}*\)'.format(ws=WSC)
 # Combining characters (`>`, `~`, ` `, `+`, `,`)
 PAT_COMBINE = r'{wsc}*?(?P<relation>[,+>~]|{ws}(?![,+>~])){wsc}*'.format(ws=WS, wsc=WSC)
 # Extra: Contains (`:contains(text)`)
-PAT_PSEUDO_CONTAINS = r':contains\({ws}*(?P<value>{value}){ws}*\)'.format(ws=WSC, value=VALUE)
+PAT_PSEUDO_CONTAINS = r':contains\({ws}*(?P<values>{value}(?:{ws}*,{ws}*{value})*){ws}*\)'.format(ws=WSC, value=VALUE)
 
 # Regular expressions
 # CSS escape pattern
-RE_CSS_ESC = re.compile(r'(?:(\\[a-f0-9]{{1,6}}{ws}?)|(\\[^\r\n\f]))'.format(ws=WSC), re.I)
-RE_CSS_STR_ESC = re.compile(r'(?:(\\[a-f0-9]{{1,6}}{ws}?)|(\\[^\r\n\f])|(\\{nl}))'.format(ws=WS, nl=NEWLINE), re.I)
+RE_CSS_ESC = re.compile(r'(?:(\\[a-f0-9]{{1,6}}{ws}?)|(\\[^\r\n\f])|(\\$))'.format(ws=WSC), re.I)
+RE_CSS_STR_ESC = re.compile(
+    r'(?:(\\[a-f0-9]{{1,6}}{ws}?)|(\\[^\r\n\f])|(\\$)|(\\{nl}))'.format(ws=WS, nl=NEWLINE), re.I
+)
 # Pattern to break up `nth` specifiers
 RE_NTH = re.compile(
     r'(?P<s1>[-+])?(?P<a>[0-9]+n?|n)(?:(?<=n){ws}*(?P<s2>[-+]){ws}*(?P<b>[0-9]+))?'.format(ws=WSC),
     re.I
 )
-# Pattern to iterate multiple languages.
-RE_LANG = re.compile(r'(?:(?P<value>{value})|(?P<split>{ws}*,{ws}*))'.format(ws=WSC, value=VALUE), re.X)
+# Pattern to iterate multiple values.
+RE_VALUES = re.compile(r'(?:(?P<value>{value})|(?P<split>{ws}*,{ws}*))'.format(ws=WSC, value=VALUE), re.X)
 # Whitespace checks
 RE_WS = re.compile(WS)
 RE_WS_BEGIN = re.compile('^{}*'.format(WSC))
@@ -240,21 +244,49 @@ def css_unescape(content, string=False):
     def replace(m):
         """Replace with the appropriate substitute."""
 
-        return util.uchr(int(m.group(1)[1:], 16)) if m.group(1) else m.group(2)[1:]
-
-    def replace_string(m):
-        """Replace with the appropriate substitute for a string."""
-
         if m.group(1):
-            value = util.uchr(int(m.group(1)[1:], 16))
+            codepoint = int(m.group(1)[1:], 16)
+            if codepoint == 0:
+                codepoint = UNICODE_REPLACEMENT_CHAR
+            value = util.uchr(codepoint)
         elif m.group(2):
             value = m.group(2)[1:]
+        elif m.group(3):
+            value = '\ufffd'
         else:
             value = ''
 
         return value
 
-    return RE_CSS_ESC.sub(replace, content) if not string else RE_CSS_STR_ESC.sub(replace_string, content)
+    return (RE_CSS_ESC if not string else RE_CSS_STR_ESC).sub(replace, content)
+
+
+def escape(ident):
+    """Escape identifier."""
+
+    string = []
+    length = len(ident)
+    start_dash = length > 0 and ident[0] == '-'
+    if length == 1 and start_dash:
+        # Need to escape identifier that is a single `-` with no other characters
+        string.append('\\{}'.format(ident))
+    else:
+        for index, c in enumerate(ident):
+            codepoint = util.uord(c)
+            if codepoint == 0x00:
+                string.append('\ufffd')
+            elif (0x01 <= codepoint <= 0x1F) or codepoint == 0x7F:
+                string.append('\\{:x} '.format(codepoint))
+            elif (index == 0 or (start_dash and index == 1)) and (0x30 <= codepoint <= 0x39):
+                string.append('\\{:x} '.format(codepoint))
+            elif (
+                codepoint in (0x2D, 0x5F) or codepoint >= 0x80 or (0x30 <= codepoint <= 0x39) or
+                (0x30 <= codepoint <= 0x39) or (0x41 <= codepoint <= 0x5A) or (0x61 <= codepoint <= 0x7A)
+            ):
+                string.append(c)
+            else:
+                string.append('\\{}'.format(c))
+    return ''.join(string)
 
 
 class SelectorPattern(object):
@@ -376,7 +408,7 @@ class CSSParser(object):
     def __init__(self, selector, custom=None, flags=0):
         """Initialize."""
 
-        self.pattern = selector
+        self.pattern = selector.replace('\x00', '\ufffd')
         self.flags = flags
         self.debug = self.flags & util.DEBUG
         self.quirks = self.flags & util._QUIRKS
@@ -751,21 +783,27 @@ class CSSParser(object):
     def parse_pseudo_contains(self, sel, m, has_selector):
         """Parse contains."""
 
-        content = m.group('value')
-        if content.startswith(("'", '"')):
-            content = css_unescape(content[1:-1], True)
-        else:
-            content = css_unescape(content)
-        sel.contains.append(content)
+        values = m.group('values')
+        patterns = []
+        for token in RE_VALUES.finditer(values):
+            if token.group('split'):
+                continue
+            value = token.group('value')
+            if value.startswith(("'", '"')):
+                value = css_unescape(value[1:-1], True)
+            else:
+                value = css_unescape(value)
+            patterns.append(value)
+        sel.contains.append(ct.SelectorContains(tuple(patterns)))
         has_selector = True
         return has_selector
 
     def parse_pseudo_lang(self, sel, m, has_selector):
         """Parse pseudo language."""
 
-        lang = m.group('lang')
+        values = m.group('values')
         patterns = []
-        for token in RE_LANG.finditer(lang):
+        for token in RE_VALUES.finditer(values):
             if token.group('split'):
                 continue
             value = token.group('value')
