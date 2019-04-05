@@ -811,10 +811,17 @@ class CSSMatch(Document, object):
         """Match element if it contains text."""
 
         match = True
-        for c in contains:
-            if c not in self.get_text(el):
+        content = None
+        for contain_list in contains:
+            if content is None:
+                content = self.get_text(el)
+            found = False
+            for text in contain_list.text:
+                if text in content:
+                    found = True
+                    break
+            if not found:
                 match = False
-                break
         return match
 
     def match_default(self, el):
@@ -1290,11 +1297,13 @@ class SoupSieve(ct.Immutable):
         else:
             return [node for node in iterable if not CSSMatch.is_navigable_string(node) and self.match(node)]
 
+    @util.deprecated("'comments' is not related to CSS selectors and will be removed in the future.")
     def comments(self, tag, limit=0):
         """Get comments only."""
 
-        return list(self.icomments(tag, limit))
+        return [comment for comment in CommentsMatch(tag).get_comments(limit)]
 
+    @util.deprecated("'icomments' is not related to CSS selectors and will be removed in the future.")
     def icomments(self, tag, limit=0):
         """Iterate comments only."""
 
