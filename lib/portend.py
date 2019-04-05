@@ -12,8 +12,12 @@ import argparse
 import sys
 import itertools
 import contextlib
-import collections
 import platform
+
+try:
+	from collections import abc
+except ImportError:
+	import collections as abc
 
 from tempora import timing
 
@@ -57,7 +61,7 @@ class Checker(object):
 
 		>>> Checker().assert_free('::', free_port)
 		"""
-		if port is None and isinstance(host, collections.Sequence):
+		if port is None and isinstance(host, abc.Sequence):
 			host, port = host[:2]
 		if platform.system() == 'Windows':
 			host = client_host(host)
@@ -163,8 +167,9 @@ def find_available_local_port():
 	>>> 0 < find_available_local_port() < 65536
 	True
 	"""
-	sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
-	addr = '', 0
+	infos = socket.getaddrinfo(None, 0, socket.AF_UNSPEC, socket.SOCK_STREAM)
+	family, proto, _, _, addr = next(iter(infos))
+	sock = socket.socket(family, proto)
 	sock.bind(addr)
 	addr, port = sock.getsockname()[:2]
 	sock.close()
