@@ -438,8 +438,9 @@ def parse_timedelta(str):
 
 	>>> now = datetime.datetime.now()
 	>>> later = now + parse_timedelta('1 year')
-	>>> later.replace(year=now.year) - now
-	datetime.timedelta(seconds=20940)
+	>>> diff = later.replace(year=now.year) - now
+	>>> diff.seconds
+	20940
 	"""
 	deltas = (_parse_timedelta_part(part.strip()) for part in str.split(','))
 	return sum(deltas, datetime.timedelta())
