@@ -13,6 +13,9 @@ datetime.timezone.utc
 >>> now().timestamp() - timestamp() < 0.1
 True
 
+>>> (now() - fromtimestamp(timestamp())).total_seconds() < 0.1
+True
+
 >>> datetime(2018, 6, 26, 0).tzinfo
 datetime.timezone.utc
 
