@@ -30,9 +30,9 @@ var vendor = {
         'node_modules/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js',
         'node_modules/tablesorter/dist/js/widgets/widget-reflow.min.js',
         // pnotify
-        'node_modules/pnotify/src/pnotify.js',
-        'node_modules/pnotify/src/pnotify.buttons.js',
-        'node_modules/pnotify/src/pnotify.desktop.js',
+        'node_modules/pnotify/dist/iife/PNotify.js',
+        'node_modules/pnotify/dist/iife/PNotifyButtons.js',
+        'node_modules/pnotify/dist/iife/PNotifyDesktop.js',
         // pubsub-js
         'node_modules/pubsub-js/src/pubsub.js',
         // strftime
@@ -59,9 +59,7 @@ var vendor = {
         // tablesorter
         'node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css',
         // pnotify
-        'node_modules/pnotify/src/pnotify.brighttheme.css',
-        'node_modules/pnotify/src/pnotify.buttons.css',
-        'node_modules/pnotify/src/pnotify.css',
+        'node_modules/pnotify/dist/PNotifyBrightTheme.css',
         // font awesome
         'node_modules/font-awesome/css/font-awesome.css',
         // vue-multiselect

@@ -296,55 +296,66 @@ var autosubliminal = {
         'dir1': 'down',
         'dir2': 'right',
         'firstpos1': 4,
-        'firstpos2': ($(window).width() / 2) - (Number(PNotify.prototype.options.width.replace(/\D/g, '')) / 2)
+        'firstpos2': ($(window).width() / 2) - (Number(PNotify.defaults.width.replace(/\D/g, '')) / 2)
     };
 
     // Handle the center stack when resizing the browser
     $(window).on('resize', function () {
-        notifications.stackCenter.firstpos2 = ($(window).width() / 2) - (Number(PNotify.prototype.options.width.replace(/\D/g, '')) / 2);
+        notifications.stackCenter.firstpos2 = ($(window).width() / 2) - (Number(PNotify.defaults.width.replace(/\D/g, '')) / 2);
     });
 
     // Alternative stack - context stack (fixed position)
     notifications.stackContext = {
         'dir1': 'down',
         'dir2': 'right',
-        'context': $('#stickyNotificationContext')
+        'context': document.getElementById('stickyNotificationContext')
     };
 
-    // PNotify default options
-    PNotify.prototype.options.stack = notifications.stackBottomRight;
-    PNotify.prototype.options.addclass = 'stack-bottomright';
-    PNotify.prototype.options.styling = 'bootstrap3';
-    PNotify.prototype.options.delay = 5000;
-    PNotify.prototype.options.desktop.desktop = true; // Use desktop notifications
-    PNotify.desktop.permission(); // Check for permission for desktop notifications
+    // PNotify default settings
+    PNotify.defaults.stack = notifications.stackBottomRight;
+    PNotify.defaults.addClass = 'stack-bottomright';
+    PNotify.defaults.styling = 'bootstrap3';
+    PNotify.defaults.icons = 'bootstrap3';
+    PNotify.defaults.delay = 5000;
+    PNotify.modules.Desktop.defaults.desktop = true; // Use desktop notifications
+    PNotify.modules.Desktop.permission(); // Check for permission for desktop notifications
 
     // Function to show a notification
     notifications.showNotification = function (notification) {
         var message = notification.message;
         var type = notification.type;
         var sticky = notification.sticky;
-        // Sticky location - use stack_context
+        // Sticky location - use stackContext
         if (sticky) {
             new PNotify({
-                title: false, // Remove title
-                text: message,
-                type: type,
-                hide: false, // Disable fading
-                width: 'auto',
-                addclass: 'container stack-context',
-                stack: notifications.stackContext,
-                desktop: {
-                    desktop: false // Disable desktop
+                target: document.body,
+                data: {
+                    title: false, // Remove title
+                    text: message,
+                    textTrusted: true, // Allow html inside text
+                    type: type,
+                    hide: false, // Disable fading
+                    width: 'auto',
+                    addClass: 'container stack-context',
+                    stack: notifications.stackContext,
+                    modules: {
+                        Desktop: {
+                            desktop: false // Disable desktop
+                        }
+                    }
                 }
             });
         }
         // Default location
         else {
             new PNotify({
-                title: 'Auto-Subliminal',
-                text: message,
-                type: type
+                target: document.body,
+                data: {
+                    title: 'Auto-Subliminal',
+                    text: message,
+                    textTrusted: true, // Allow html inside text
+                    type: type
+                }
             });
         }
     };
