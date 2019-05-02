@@ -40,7 +40,7 @@
     "tablesorter": "2.31.1",
     "vue": "2.6.10",
     "vue-lazyload": "1.2.6",
-    "vue-multiselect": "2.1.4",
+    "vue-multiselect": "2.1.6",
     "vue-simple-progress": "1.1.0"
   },
   "devDependencies": {
