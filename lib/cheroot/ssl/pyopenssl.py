@@ -116,8 +116,12 @@ class SSLFileobjectMixin:
             size,
         )
 
-    def readline(self, size):
-        """Receive message of a size from the socket."""
+    def readline(self, size=-1):
+        """Receive message of a size from the socket.
+
+        Matches the following interface:
+        https://docs.python.org/3/library/io.html#io.IOBase.readline
+        """
         return self._safe_call(
             True,
             super(SSLFileobjectMixin, self).readline,
@@ -239,13 +243,15 @@ class pyOpenSSLAdapter(Adapter):
 
     def __init__(
             self, certificate, private_key, certificate_chain=None,
-            ciphers=None):
+            ciphers=None,
+    ):
         """Initialize OpenSSL Adapter instance."""
         if SSL is None:
             raise ImportError('You must install pyOpenSSL to use HTTPS.')
 
         super(pyOpenSSLAdapter, self).__init__(
-            certificate, private_key, certificate_chain, ciphers)
+            certificate, private_key, certificate_chain, ciphers,
+        )
 
         self._environ = None
 
@@ -295,8 +301,10 @@ class pyOpenSSLAdapter(Adapter):
                 #   Validity of server's certificate (end time),
             })
 
-            for prefix, dn in [('I', cert.get_issuer()),
-                               ('S', cert.get_subject())]:
+            for prefix, dn in [
+                ('I', cert.get_issuer()),
+                ('S', cert.get_subject()),
+            ]:
                 # X509Name objects don't seem to have a way to get the
                 # complete DN string. Use str() and slice it instead,
                 # because str(dn) == "<X509Name object '/C=US/ST=...'>"
