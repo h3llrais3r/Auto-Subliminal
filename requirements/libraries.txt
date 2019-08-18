@@ -19,7 +19,7 @@ dogpile.cache==0.7.1
 enzyme==0.4.1
 futures==3.2.0 ; python_version < '3.0'
 gitdb2==2.0.5
-gitpython==2.1.11
+gitpython==2.1.14
 gntp==1.0.3
 guessit==3.0.3
 html5lib==1.0.1
