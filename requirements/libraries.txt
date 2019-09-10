@@ -31,7 +31,7 @@ langdetect==1.0.7
 mako==1.1.0
 markupsafe==1.1.1
 more-itertools==5.0.0 # rq.filter: <6.0.0
-oauthlib==3.0.1
+oauthlib==3.1.0
 portend==2.5
 pushbullet.py==0.11.0
 pysrt==1.1.1
