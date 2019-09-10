@@ -26,7 +26,7 @@ html5lib==1.0.1
 idna==2.8
 imdbpie==5.6.4
 jaraco.functools==2.0
-jsonpickle==1.1
+jsonpickle==1.2
 langdetect==1.0.7
 mako==1.1.0
 markupsafe==1.1.1
