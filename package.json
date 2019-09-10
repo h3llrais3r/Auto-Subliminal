@@ -46,7 +46,7 @@
   "devDependencies": {
     "bootstrap-sass": "3.4.1",
     "del": "5.1.0",
-    "eslint": "5.16.0",
+    "eslint": "6.3.0",
     "fancy-log": "1.3.3",
     "gulp": "4.0.2",
     "gulp-clean-css": "4.2.0",
