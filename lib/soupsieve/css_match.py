@@ -53,7 +53,7 @@ FEB_LEAP_MONTH = 29
 DAYS_IN_WEEK = 7
 
 
-class FakeParent(object):
+class _FakeParent(object):
     """
     Fake parent class.
 
@@ -73,7 +73,7 @@ class FakeParent(object):
         return len(self.contents)
 
 
-class Document(object):
+class _DocumentNav(object):
     """Navigate a Beautiful Soup document."""
 
     @classmethod
@@ -113,11 +113,11 @@ class Document(object):
         return isinstance(obj, bs4.Declaration)
 
     @staticmethod
-    def is_cdata(obj):  # pragma: no cover
+    def is_cdata(obj):
         """Is CDATA."""
 
         import bs4
-        return isinstance(obj, bs4.Declaration)
+        return isinstance(obj, bs4.CData)
 
     @staticmethod
     def is_processing_instruction(obj):  # pragma: no cover
@@ -138,7 +138,7 @@ class Document(object):
         """Is special string."""
 
         import bs4
-        return isinstance(obj, (bs4.Comment, bs4.Declaration, bs4.CData, bs4.ProcessingInstruction))
+        return isinstance(obj, (bs4.Comment, bs4.Declaration, bs4.CData, bs4.ProcessingInstruction, bs4.Doctype))
 
     @classmethod
     def is_content_string(cls, obj):
@@ -150,7 +150,7 @@ class Document(object):
     def create_fake_parent(el):
         """Create fake parent for a given element."""
 
-        return FakeParent(el)
+        return _FakeParent(el)
 
     @staticmethod
     def is_xml_tree(el):
@@ -217,10 +217,13 @@ class Document(object):
                 is_tag = self.is_tag(child)
 
                 if no_iframe and is_tag and self.is_iframe(child):
-                    last_child = child
-                    while self.is_tag(last_child) and last_child.contents:
-                        last_child = last_child.contents[-1]
-                    next_good = last_child.next_element
+                    if child.next_sibling is not None:
+                        next_good = child.next_sibling
+                    else:
+                        last_child = child
+                        while self.is_tag(last_child) and last_child.contents:
+                            last_child = last_child.contents[-1]
+                        next_good = last_child.next_element
                     yield child
                     if next_good is None:
                         break
@@ -250,21 +253,27 @@ class Document(object):
 
         return el.prefix
 
+    @staticmethod
+    def get_uri(el):
+        """Get namespace `URI`."""
+
+        return el.namespace
+
     @classmethod
-    def get_next_tag(cls, el):
+    def get_next(cls, el, tags=True):
         """Get next sibling tag."""
 
         sibling = el.next_sibling
-        while not cls.is_tag(sibling) and sibling is not None:
+        while tags and not cls.is_tag(sibling) and sibling is not None:
             sibling = sibling.next_sibling
         return sibling
 
     @classmethod
-    def get_previous_tag(cls, el):
+    def get_previous(cls, el, tags=True):
         """Get previous sibling tag."""
 
         sibling = el.previous_sibling
-        while not cls.is_tag(sibling) and sibling is not None:
+        while tags and not cls.is_tag(sibling) and sibling is not None:
             sibling = sibling.previous_sibling
         return sibling
 
@@ -428,7 +437,7 @@ class Inputs(object):
         return parsed
 
 
-class CSSMatch(Document, object):
+class _Match(object):
     """Perform CSS matching."""
 
     def __init__(self, selectors, scope, namespaces, flags):
@@ -476,7 +485,7 @@ class CSSMatch(Document, object):
 
         if self.supports_namespaces():
             namespace = ''
-            ns = el.namespace
+            ns = self.get_uri(el)
             if ns:
                 namespace = ns
         else:
@@ -660,12 +669,12 @@ class CSSMatch(Document, object):
             if parent:
                 found = self.match_selectors(parent, relation)
         elif relation[0].rel_type == REL_SIBLING:
-            sibling = self.get_previous_tag(el)
+            sibling = self.get_previous(el)
             while not found and sibling:
                 found = self.match_selectors(sibling, relation)
-                sibling = self.get_previous_tag(sibling)
+                sibling = self.get_previous(sibling)
         elif relation[0].rel_type == REL_CLOSE_SIBLING:
-            sibling = self.get_previous_tag(el)
+            sibling = self.get_previous(el)
             if sibling and self.is_tag(sibling):
                 found = self.match_selectors(sibling, relation)
         return found
@@ -690,12 +699,12 @@ class CSSMatch(Document, object):
         elif relation[0].rel_type == REL_HAS_CLOSE_PARENT:
             found = self.match_future_child(el, relation)
         elif relation[0].rel_type == REL_HAS_SIBLING:
-            sibling = self.get_next_tag(el)
+            sibling = self.get_next(el)
             while not found and sibling:
                 found = self.match_selectors(sibling, relation)
-                sibling = self.get_next_tag(sibling)
+                sibling = self.get_next(sibling)
         elif relation[0].rel_type == REL_HAS_CLOSE_SIBLING:
-            sibling = self.get_next_tag(el)
+            sibling = self.get_next(el)
             if sibling and self.is_tag(sibling):
                 found = self.match_selectors(sibling, relation)
         return found
@@ -736,7 +745,28 @@ class CSSMatch(Document, object):
     def match_root(self, el):
         """Match element as root."""
 
-        return self.is_root(el)
+        is_root = self.is_root(el)
+        if is_root:
+            sibling = self.get_previous(el, tags=False)
+            while is_root and sibling is not None:
+                if (
+                    self.is_tag(sibling) or (self.is_content_string(sibling) and sibling.strip()) or
+                    self.is_cdata(sibling)
+                ):
+                    is_root = False
+                else:
+                    sibling = self.get_previous(sibling, tags=False)
+        if is_root:
+            sibling = self.get_next(el, tags=False)
+            while is_root and sibling is not None:
+                if (
+                    self.is_tag(sibling) or (self.is_content_string(sibling) and sibling.strip()) or
+                    self.is_cdata(sibling)
+                ):
+                    is_root = False
+                else:
+                    sibling = self.get_next(sibling, tags=False)
+        return is_root
 
     def match_scope(self, el):
         """Match element as scope."""
@@ -1325,7 +1355,11 @@ class CSSMatch(Document, object):
         return not self.is_doc(el) and self.is_tag(el) and self.match_selectors(el, self.selectors)
 
 
-class CommentsMatch(Document, object):
+class CSSMatch(_DocumentNav, _Match):
+    """The Beautiful Soup CSS match class."""
+
+
+class CommentsMatch(_DocumentNav):
     """Comments matcher."""
 
     def __init__(self, el):
