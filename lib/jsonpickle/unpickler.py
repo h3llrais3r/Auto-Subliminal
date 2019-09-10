@@ -8,10 +8,11 @@ from __future__ import absolute_import, division, unicode_literals
 import quopri
 import sys
 
+from . import compat
 from . import util
 from . import tags
 from . import handlers
-from .compat import numeric_types, decodebytes
+from .compat import numeric_types
 from .backend import json
 
 
@@ -41,8 +42,12 @@ def decode(string, backend=None, context=None, keys=False, reset=True,
 
 
 def _safe_hasattr(obj, attr):
-    """A safe (but slow) hasattr() that avoids hasattr"""
-    return attr in dir(obj)
+    """Workaround unreliable hasattr() availability on sqlalchemy objects"""
+    try:
+        object.__getattribute__(obj, attr)
+        return True
+    except AttributeError:
+        return False
 
 
 class _Proxy(object):
@@ -168,6 +173,8 @@ class Unpickler(object):
     def _restore(self, obj):
         if has_tag(obj, tags.B64):
             restore = self._restore_base64
+        elif has_tag(obj, tags.B85):
+            restore = self._restore_base85
         elif has_tag(obj, tags.BYTES):  # Backwards compatibility
             restore = self._restore_quopri
         elif has_tag(obj, tags.ID):
@@ -200,7 +207,10 @@ class Unpickler(object):
         return restore(obj)
 
     def _restore_base64(self, obj):
-        return decodebytes(obj[tags.B64].encode('utf-8'))
+        return util.b64decode(obj[tags.B64].encode('utf-8'))
+
+    def _restore_base85(self, obj):
+        return util.b85decode(obj[tags.B85].encode('utf-8'))
 
     #: For backwards compatibility with bytes data produced by older versions
     def _restore_quopri(self, obj):
@@ -217,8 +227,10 @@ class Unpickler(object):
         """
         proxy = _Proxy()
         self._mkref(proxy)
-        reduce_val = obj[tags.REDUCE]
-        f, args, state, listitems, dictitems = map(self._restore, reduce_val)
+        reduce_val = list(map(self._restore, obj[tags.REDUCE]))
+        if len(reduce_val) < 5:
+            reduce_val.extend([None] * (5 - len(reduce_val)))
+        f, args, state, listitems, dictitems = reduce_val
 
         if f == tags.NEWOBJ or getattr(f, '__name__', '') == '__newobj__':
             # mandated special case
@@ -527,7 +539,9 @@ class Unpickler(object):
         return restore_key
 
     def _restore_pickled_key(self, key):
-        if key.startswith(tags.JSON_KEY):
+        """Restore a possibly pickled key"""
+        if (isinstance(key, compat.string_types) and
+                key.startswith(tags.JSON_KEY)):
             key = decode(key[len(tags.JSON_KEY):],
                          backend=self.backend, context=self,
                          keys=True, reset=False)
