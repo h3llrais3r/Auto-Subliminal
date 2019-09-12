@@ -39,6 +39,7 @@ Libraries dependency tree
         |-- six
     |-- rebulk
         |-- six
+    |-- six
 |-- html5lib (used as parser in combination with beautifulsoup4 for parsing html pages)
     |-- webencodings
 |-- imdbpie
