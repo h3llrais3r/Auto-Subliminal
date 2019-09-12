@@ -40,7 +40,7 @@ python-magic==0.4.15
 python-twitter==3.5
 pytz==2019.1
 rarfile==3.0
-rebulk==1.0.0
+rebulk==2.0.0
 requests==2.22.0
 requests-oauthlib==1.2.0
 schema==0.7.0
