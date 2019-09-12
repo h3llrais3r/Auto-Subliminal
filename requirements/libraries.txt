@@ -1,15 +1,15 @@
 # Mandatory (packaged) libraries
-aenum==2.1.2
+aenum==2.2.1
 appdirs==1.4.3
 attrs==19.1.0
 babelfish==0.5.5
 backports.functools_lru_cache=1.5 ; python_version < '3.0'
 beautifulsoup4==4.7.1 # different package for py2 and py3
 boto==2.49.0
-certifi==2019.3.9
+certifi==2019.6.16
 chardet==3.0.4
-cheroot==6.5.5
-cherrypy==17.4.1 # rq.filter: <18.0.0
+cheroot==6.5.8
+cherrypy==17.4.2 # rq.filter: <18.0.0
 click==7.0
 configparser==3.7.4
 contextlib2=0.5.5
@@ -26,34 +26,34 @@ html5lib==1.0.1
 idna==2.8
 imdbpie==5.6.4
 jaraco.functools==2.0
-jsonpickle==1.1
+jsonpickle==1.2
 langdetect==1.0.7
-mako==1.0.10
+mako==1.1.0
 markupsafe==1.1.1
 more-itertools==5.0.0 # rq.filter: <6.0.0
-oauthlib==3.0.1
-portend==2.4
+oauthlib==3.1.0
+portend==2.5
 pushbullet.py==0.11.0
 pysrt==1.1.1
 python-dateutil==2.8.0
 python-magic==0.4.15
 python-twitter==3.5
-pytz==2019.1
+pytz==2019.2
 rarfile==3.0
 rebulk==2.0.0
 requests==2.22.0
 requests-oauthlib==1.2.0
-schema==0.7.0
+schema==0.7.1
 simplejson==3.16.0
 six==1.12.0
 smmap2==2.0.5
-soupsieve==1.9.1
-stevedore==1.30.1
+soupsieve==1.9.3
+stevedore==1.31.0
 git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a#egg=subliminal
 tempora==1.14.1
 trans==2.1.0
 git+https://github.com/h3llrais3r/tvdb_api_v2.git@7f02ecb9620017aed75973fd14d0197825c35140#egg=tvdb_api_v2
-unidecode==1.0.23
+unidecode==1.1.1
 urllib3==1.25.2
 webencodings==0.5.1
 websocket-client==0.56.0

@@ -5,11 +5,11 @@
   },
   "extends": "eslint:recommended",
   "globals": {
-    "autosubliminal": false,
-    "PNotify": false,
-    "PubSub": false,
-    "strftime": false,
-    "webRoot": false
+    "autosubliminal": "readonly",
+    "PNotify": "readonly",
+    "PubSub": "readonly",
+    "strftime": "readonly",
+    "webRoot": "readonly"
   },
   "parserOptions": {
     "ecmaVersion": 5
@@ -20,6 +20,12 @@
       4
     ],
     "no-console": "off",
+    "no-redeclare": [
+      "error",
+      {
+        "builtinGlobals": false
+      }
+    ],
     "no-unused-vars": [
       2,
       {

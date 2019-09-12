@@ -20,8 +20,9 @@ def test_get_tvdb_id():
     # By name
     assert indexer.get_tvdb_id(u'The Big Bang Theory', force_search=True, store_id=False) == 80379
     assert indexer.get_tvdb_id(u'Mr Robot', force_search=True, store_id=False) == 289590
+    assert indexer.get_tvdb_id(u'Dragon Ball Kai', force_search=True, store_id=False) == 88031
     # By alias
-    assert indexer.get_tvdb_id(u'Big Bang', force_search=True, store_id=False) == 80379
+    assert indexer.get_tvdb_id(u'Dragon Ball Z Kai', force_search=True, store_id=False) == 88031
     # By name and year
     assert indexer.get_tvdb_id(u'The Americans', year=2013, force_search=True, store_id=False) == 261690
     # By name and language

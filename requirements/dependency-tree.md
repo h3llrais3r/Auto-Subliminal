@@ -73,6 +73,7 @@ Libraries dependency tree
         |-- requests
         |-- urllib3
 |-- schema
+    |-- contextlib2
 |-- simplejson (if not added, fallback to default json library in python)
 |-- six
 |-- subliminal
