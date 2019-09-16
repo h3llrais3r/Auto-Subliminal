@@ -173,6 +173,7 @@ class Config(object):
         @cherrypy.tools.json_out()
         def save(self, subtitleutf8encoding, manualrefinevideo, refinevideo, preferhearingimpaired,
                  addic7edusername, addic7edpassword, opensubtitlesusername, opensubtitlespassword,
+                 legendastvusername, legendastvpassword,
                  showmmsdefault=None, showmmssource=None, showmmsquality=None, showmmscodec=None,
                  showmmsreleasegroup=None,
                  moviemmsdefault=None, moviemmssource=None, moviemmsquality=None, moviemmscodec=None,
@@ -241,6 +242,9 @@ class Config(object):
             # OpenSubtitles provider
             autosubliminal.OPENSUBTITLESUSERNAME = opensubtitlesusername
             autosubliminal.OPENSUBTITLESPASSWORD = opensubtitlespassword
+            # Legendas.TV provider
+            autosubliminal.LEGENDASTVUSERNAME = legendastvusername
+            autosubliminal.LEGENDASTVPASSWORD = legendastvpassword
 
             # Now save to the configfile and restart if needed
             return Config.save_and_restart_if_needed(self.section)

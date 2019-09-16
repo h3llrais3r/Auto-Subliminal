@@ -465,6 +465,17 @@ def read_config(check_upgrade=False):
         else:
             autosubliminal.OPENSUBTITLESUSERNAME = u''
             autosubliminal.OPENSUBTITLESPASSWORD = u''
+
+        if cfg.has_option('subliminal', 'legendastvusername') and cfg.has_option('subliminal', 'legendastvpassword'):
+            autosubliminal.LEGENDASTVUSERNAME = cfg.get('subliminal', 'legendastvusername')
+            autosubliminal.LEGENDASTVPASSWORD = cfg.get('subliminal', 'legendastvpassword')
+            if autosubliminal.LEGENDASTVUSERNAME and autosubliminal.LEGENDASTVPASSWORD:
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['legendastv'] = {
+                    'username': autosubliminal.LEGENDASTVUSERNAME,
+                    'password': autosubliminal.LEGENDASTVPASSWORD}
+        else:
+            autosubliminal.LEGENDASTVUSERNAME = u''
+            autosubliminal.LEGENDASTVPASSWORD = u''
     else:
         # Subliminal section is missing
         autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
@@ -486,6 +497,8 @@ def read_config(check_upgrade=False):
         autosubliminal.ADDIC7EDPASSWORD = u''
         autosubliminal.OPENSUBTITLESUSERNAME = u''
         autosubliminal.OPENSUBTITLESPASSWORD = u''
+        autosubliminal.LEGENDASTVUSERNAME = u''
+        autosubliminal.LEGENDASTVPASSWORD = u''
 
     if cfg.has_section('shownamemapping'):
         autosubliminal.SHOWNAMEMAPPING = dict(cfg.items('shownamemapping'))
@@ -990,6 +1003,8 @@ def write_subliminal_section():
     cfg.set(section, 'addic7edpassword', autosubliminal.ADDIC7EDPASSWORD)
     cfg.set(section, 'opensubtitlesusername', autosubliminal.OPENSUBTITLESUSERNAME)
     cfg.set(section, 'opensubtitlespassword', autosubliminal.OPENSUBTITLESPASSWORD)
+    cfg.set(section, 'legendastvusername', autosubliminal.LEGENDASTVUSERNAME)
+    cfg.set(section, 'legendastvpassword', autosubliminal.LEGENDASTVPASSWORD)
 
     with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)

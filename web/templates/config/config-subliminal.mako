@@ -409,6 +409,52 @@
                             </div>
                         </div>
 
+                        <div class="form-group section-title">
+                            <div class="col-xs-12 col-md-9">
+                                <span class="badge">Legendas.TV provider</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <div class="col-xs-12 col-md-9">
+                                <span class="alert-warning">WARNING: Password is stored in plaintext!</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="legendastvusername">Username</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The username for your Legendas.TV account.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
+                                <input type="text" value="${autosubliminal.LEGENDASTVUSERNAME}" id="legendastvusername" name="legendastvusername" class="form-control input-sm">
+                            </div>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="legendastvpassword">Password</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The password for your Legendas.TV account.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
+                                <input type="password" value="${autosubliminal.LEGENDASTVPASSWORD}" id="legendastvpassword" name="legendastvpassword" class="form-control input-sm">
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
