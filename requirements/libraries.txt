@@ -11,7 +11,7 @@ chardet==3.0.4
 cheroot==6.5.8
 cherrypy==17.4.2 # rq.filter: <18.0.0
 click==7.0
-configparser==3.7.4
+configparser==4.0.2
 contextlib2=0.5.5
 decorator==4.4.0
 diskcache==3.1.1
