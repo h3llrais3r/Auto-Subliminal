@@ -43,6 +43,10 @@ from .util import (
     stream_copy,
 )
 
+try:
+    PermissionError
+except NameError:  # Python < 3.3
+    PermissionError = OSError
 
 execute_kwargs = {'istream', 'with_extended_output',
                   'with_exceptions', 'as_process', 'stdout_as_string',
@@ -78,7 +82,7 @@ def handle_process_output(process, stdout_handler, stderr_handler,
         Set it to False if `universal_newline == True` (then streams are in text-mode)
         or if decoding must happen later (i.e. for Diffs).
     """
-    # Use 2 "pupm" threads and wait for both to finish.
+    # Use 2 "pump" threads and wait for both to finish.
     def pump_stream(cmdline, name, stream, is_decode, handler):
         try:
             for line in stream:
@@ -211,22 +215,15 @@ class Git(LazyMixin):
 
         # test if the new git executable path is valid
 
-        if sys.version_info < (3,):
-            # - a GitCommandNotFound error is spawned by ourselves
-            # - a OSError is spawned if the git executable provided
-            #   cannot be executed for whatever reason
-            exceptions = (GitCommandNotFound, OSError)
-        else:
-            # - a GitCommandNotFound error is spawned by ourselves
-            # - a PermissionError is spawned if the git executable provided
-            #   cannot be executed for whatever reason
-            exceptions = (GitCommandNotFound, PermissionError)
-
+        # - a GitCommandNotFound error is spawned by ourselves
+        # - a PermissionError is spawned if the git executable provided
+        #   cannot be executed for whatever reason
+        
         has_git = False
         try:
             cls().version()
             has_git = True
-        except exceptions:
+        except (GitCommandNotFound, PermissionError):
             pass
 
         # warn or raise exception if test failed
@@ -718,8 +715,11 @@ class Git(LazyMixin):
         stdout_sink = (PIPE
                        if with_stdout
                        else getattr(subprocess, 'DEVNULL', None) or open(os.devnull, 'wb'))
-        log.debug("Popen(%s, cwd=%s, universal_newlines=%s, shell=%s)",
-                  command, cwd, universal_newlines, shell)
+        istream_ok = "None"
+        if istream:
+            istream_ok = "<valid stream>"
+        log.debug("Popen(%s, cwd=%s, universal_newlines=%s, shell=%s, istream=%s)",
+                  command, cwd, universal_newlines, shell, istream_ok)
         try:
             proc = Popen(command,
                          env=env,
@@ -794,7 +794,7 @@ class Git(LazyMixin):
             else:
                 max_chunk_size = max_chunk_size if max_chunk_size and max_chunk_size > 0 else io.DEFAULT_BUFFER_SIZE
                 stream_copy(proc.stdout, output_stream, max_chunk_size)
-                stdout_value = output_stream
+                stdout_value = proc.stdout.read()
                 stderr_value = proc.stderr.read()
                 # strip trailing "\n"
                 if stderr_value.endswith(b"\n"):
@@ -885,7 +885,7 @@ class Git(LazyMixin):
         if len(name) == 1:
             if value is True:
                 return ["-%s" % name]
-            elif type(value) is not bool:
+            elif value not in (False, None):
                 if split_single_char_options:
                     return ["-%s" % name, "%s" % value]
                 else:
@@ -893,7 +893,7 @@ class Git(LazyMixin):
         else:
             if value is True:
                 return ["--%s" % dashify(name)]
-            elif type(value) is not bool:
+            elif value is not False and value is not None:
                 return ["--%s=%s" % (dashify(name), value)]
         return []
 

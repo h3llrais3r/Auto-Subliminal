@@ -97,6 +97,7 @@ class Repo(object):
                 repo = Repo("/Users/mtrier/Development/git-python.git")
                 repo = Repo("~/Development/git-python.git")
                 repo = Repo("$REPOSITORIES/Development/git-python.git")
+                repo = Repo("C:\\Users\\mtrier\\Development\\git-python\\.git")
 
             - In *Cygwin*, path may be a `'cygdrive/...'` prefixed path.
             - If it evaluates to false, :envvar:`GIT_DIR` is used, and if this also evals to false,
@@ -140,7 +141,21 @@ class Repo(object):
             # removed. It's just cleaner.
             if is_git_dir(curpath):
                 self.git_dir = curpath
-                self._working_tree_dir = os.getenv('GIT_WORK_TREE', os.path.dirname(self.git_dir))
+                # from man git-config : core.worktree
+                # Set the path to the root of the working tree. If GIT_COMMON_DIR environment
+                # variable is set, core.worktree is ignored and not used for determining the
+                # root of working tree. This can be overridden by the GIT_WORK_TREE environment
+                # variable. The value can be an absolute path or relative to the path to the .git
+                # directory, which is either specified by GIT_DIR, or automatically discovered.
+                # If GIT_DIR is specified but none of GIT_WORK_TREE and core.worktree is specified,
+                # the current working directory is regarded as the top level of your working tree.
+                self._working_tree_dir = os.path.dirname(self.git_dir)
+                if os.environ.get('GIT_COMMON_DIR') is None:
+                    gitconf = self.config_reader("repository")
+                    if gitconf.has_option('core', 'worktree'):
+                        self._working_tree_dir = gitconf.get('core', 'worktree')
+                if 'GIT_WORK_TREE' in os.environ:
+                    self._working_tree_dir = os.getenv('GIT_WORK_TREE')
                 break
 
             dotgit = osp.join(curpath, '.git')
@@ -416,7 +431,7 @@ class Repo(object):
         elif config_level == "global":
             return osp.normpath(osp.expanduser("~/.gitconfig"))
         elif config_level == "repository":
-            return osp.normpath(osp.join(self.git_dir, "config"))
+            return osp.normpath(osp.join(self._common_dir or self.git_dir, "config"))
 
         raise ValueError("Invalid configuration level: %r" % config_level)
 
@@ -544,11 +559,11 @@ class Repo(object):
         return res
 
     def is_ancestor(self, ancestor_rev, rev):
-        """Check if a commit  is an ancestor of another
+        """Check if a commit is an ancestor of another
 
         :param ancestor_rev: Rev which should be an ancestor
         :param rev: Rev to test against ancestor_rev
-        :return: ``True``, ancestor_rev is an accestor to rev.
+        :return: ``True``, ancestor_rev is an ancestor to rev.
         """
         try:
             self.git.merge_base(ancestor_rev, rev, is_ancestor=True)
@@ -714,7 +729,10 @@ class Repo(object):
 
         stream = (line for line in data.split(b'\n') if line)
         while True:
-            line = next(stream)  # when exhausted, causes a StopIteration, terminating this function
+            try:
+                line = next(stream)  # when exhausted, causes a StopIteration, terminating this function
+            except StopIteration:
+                return
             hexsha, orig_lineno, lineno, num_lines = line.split()
             lineno = int(lineno)
             num_lines = int(num_lines)
@@ -724,7 +742,10 @@ class Repo(object):
                 # for this commit
                 props = {}
                 while True:
-                    line = next(stream)
+                    try:
+                        line = next(stream)
+                    except StopIteration:
+                        return
                     if line == b'boundary':
                         # "boundary" indicates a root commit and occurs
                         # instead of the "previous" tag
@@ -749,7 +770,10 @@ class Repo(object):
                 # Discard all lines until we find "filename" which is
                 # guaranteed to be the last line
                 while True:
-                    line = next(stream)  # will fail if we reach the EOF unexpectedly
+                    try:
+                        line = next(stream)  # will fail if we reach the EOF unexpectedly
+                    except StopIteration:
+                        return
                     tag, value = line.split(b' ', 1)
                     if tag == b'filename':
                         orig_filename = value
@@ -907,7 +931,7 @@ class Repo(object):
         return cls(path, odbt=odbt)
 
     @classmethod
-    def _clone(cls, git, url, path, odb_default_type, progress, **kwargs):
+    def _clone(cls, git, url, path, odb_default_type, progress, multi_options=None, **kwargs):
         if progress is not None:
             progress = to_progress_instance(progress)
 
@@ -929,7 +953,10 @@ class Repo(object):
         sep_dir = kwargs.get('separate_git_dir')
         if sep_dir:
             kwargs['separate_git_dir'] = Git.polish_url(sep_dir)
-        proc = git.clone(Git.polish_url(url), clone_path, with_extended_output=True, as_process=True,
+        multi = None
+        if multi_options:
+            multi = ' '.join(multi_options).split(' ')
+        proc = git.clone(multi, Git.polish_url(url), clone_path, with_extended_output=True, as_process=True,
                          v=True, universal_newlines=True, **add_progress(kwargs, git, progress))
         if progress:
             handle_process_output(proc, None, progress.new_message_handler(), finalize_process, decode_streams=False)
@@ -959,33 +986,38 @@ class Repo(object):
         # END handle remote repo
         return repo
 
-    def clone(self, path, progress=None, **kwargs):
+    def clone(self, path, progress=None, multi_options=None, **kwargs):
         """Create a clone from this repository.
 
         :param path: is the full path of the new repo (traditionally ends with ./<name>.git).
         :param progress: See 'git.remote.Remote.push'.
+        :param multi_options: A list of Clone options that can be provided multiple times.  One
+            option per list item which is passed exactly as specified to clone.
+            For example ['--config core.filemode=false', '--config core.ignorecase',
+                         '--recurse-submodule=repo1_path', '--recurse-submodule=repo2_path']
         :param kwargs:
             * odbt = ObjectDatabase Type, allowing to determine the object database
               implementation used by the returned Repo instance
             * All remaining keyword arguments are given to the git-clone command
 
         :return: ``git.Repo`` (the newly cloned repo)"""
-        return self._clone(self.git, self.common_dir, path, type(self.odb), progress, **kwargs)
+        return self._clone(self.git, self.common_dir, path, type(self.odb), progress, multi_options, **kwargs)
 
     @classmethod
-    def clone_from(cls, url, to_path, progress=None, env=None, **kwargs):
+    def clone_from(cls, url, to_path, progress=None, env=None, multi_options=None, **kwargs):
         """Create a clone from the given URL
 
         :param url: valid git url, see http://www.kernel.org/pub/software/scm/git/docs/git-clone.html#URLS
         :param to_path: Path to which the repository should be cloned to
         :param progress: See 'git.remote.Remote.push'.
         :param env: Optional dictionary containing the desired environment variables.
+        :param mutli_options: See ``clone`` method
         :param kwargs: see the ``clone`` method
         :return: Repo instance pointing to the cloned directory"""
         git = Git(os.getcwd())
         if env is not None:
             git.update_environment(**env)
-        return cls._clone(git, url, to_path, GitCmdObjectDB, progress, **kwargs)
+        return cls._clone(git, url, to_path, GitCmdObjectDB, progress, multi_options, **kwargs)
 
     def archive(self, ostream, treeish=None, prefix=None, **kwargs):
         """Archive the tree at the given revision.
