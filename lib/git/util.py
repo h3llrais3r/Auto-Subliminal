@@ -386,7 +386,7 @@ class RemoteProgress(object):
         # handle
         # Counting objects: 4, done.
         # Compressing objects:  50% (1/2)   \rCompressing objects: 100% (2/2)   \rCompressing objects: 100% (2/2), done.
-        self._cur_line = line
+        self._cur_line = line = line.decode('utf-8') if isinstance(line, bytes) else line
         if len(self.error_lines) > 0 or self._cur_line.startswith(('error:', 'fatal:')):
             self.error_lines.append(self._cur_line)
             return []
@@ -534,8 +534,8 @@ class Actor(object):
     can be committers and authors or anything with a name and an email as
     mentioned in the git log entries."""
     # PRECOMPILED REGEX
-    name_only_regex = re.compile(r'<(.+)>')
-    name_email_regex = re.compile(r'(.*) <(.+?)>')
+    name_only_regex = re.compile(r'<(.*)>')
+    name_email_regex = re.compile(r'(.*) <(.*?)>')
 
     # ENVIRONMENT VARIABLES
     # read when creating new commits
@@ -864,9 +864,12 @@ class IterableList(list):
 
     def __contains__(self, attr):
         # first try identity match for performance
-        rval = list.__contains__(self, attr)
-        if rval:
-            return rval
+        try:
+            rval = list.__contains__(self, attr)
+            if rval:
+                return rval
+        except (AttributeError, TypeError):
+            pass
         # END handle match
 
         # otherwise make a full name search

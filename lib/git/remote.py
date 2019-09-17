@@ -544,10 +544,9 @@ class Remote(LazyMixin, Iterable):
                 except GitCommandError as ex:
                     if any(msg in str(ex) for msg in ['correct access rights', 'cannot run ssh']):
                         # If ssh is not setup to access this repository, see issue 694
-                        result = Git().execute(
-                            ['git', 'config', '--get', 'remote.%s.url' % self.name]
-                        )
-                        yield result
+                        remote_details = self.repo.git.config('--get-all', 'remote.%s.url' % self.name)
+                        for line in remote_details.split('\n'):
+                            yield line
                     else:
                         raise ex
             else:
@@ -695,6 +694,8 @@ class Remote(LazyMixin, Iterable):
             msg += "Will ignore extra progress lines or fetch head lines."
             msg %= (l_fil, l_fhi)
             log.debug(msg)
+            log.debug("info lines: " + str(fetch_info_lines))
+            log.debug("head info : " + str(fetch_head_info))
             if l_fil < l_fhi:
                 fetch_head_info = fetch_head_info[:l_fil]
             else:

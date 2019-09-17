@@ -1160,7 +1160,7 @@ class Submodule(IndexObject, Iterable, Traversable):
         try:
             parser = cls._config_parser(repo, pc, read_only=True)
         except IOError:
-            raise StopIteration
+            return
         # END handle empty iterator
 
         rt = pc.tree                                # root tree
@@ -1184,8 +1184,9 @@ class Submodule(IndexObject, Iterable, Traversable):
                     entry = index.entries[index.entry_key(p, 0)]
                     sm = Submodule(repo, entry.binsha, entry.mode, entry.path)
                 except KeyError:
-                    raise InvalidGitRepositoryError(
-                        "Gitmodule path %r did not exist in revision of parent commit %s" % (p, parent_commit))
+                    # The submodule doesn't exist, probably it wasn't
+                    # removed from the .gitmodules file.
+                    continue
                 # END handle keyerror
             # END handle critical error
 
