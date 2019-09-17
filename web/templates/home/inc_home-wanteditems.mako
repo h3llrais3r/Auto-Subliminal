@@ -2,7 +2,7 @@
     import os
 
     import autosubliminal
-    from autosubliminal.util.common import convert_timestamp, display_value, display_item_title, get_file_size
+    from autosubliminal.util.common import convert_timestamp, display_value, display_item_title, escape_quotes, get_file_size
     from autosubliminal.util.queue import count_wanted_queue_items
 %>
 
@@ -141,7 +141,7 @@
                                                     <a href="${autosubliminal.DEREFERURL}${autosubliminal.TVDBURL}${item.tvdbid}" target="_blank">
                                                         <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
                                                     </a>
-                                                    <a class="icon-link" @click="openSettingsModal($event, '${item.type}', '${item.tvdbid}', '${display_item_title(item)}')">
+                                                    <a class="icon-link" @click="openSettingsModal($event, '${item.type}', '${item.tvdbid}', '${escape_quotes(display_item_title(item))}')">
                                                         <i class="fa fa-wrench" aria-hidden="true" title="Click to edit show settings"></i>
                                                     </a>
                                                 % endif
@@ -161,7 +161,7 @@
                                                     <a href="${autosubliminal.DEREFERURL}${autosubliminal.IMDBURL}${item.imdbid}" target="_blank">
                                                         <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
                                                     </a>
-                                                    <a class="icon-link" @click="openSettingsModal($event, '${item.type}', '${item.imdbid}', '${display_item_title(item)}')">
+                                                    <a class="icon-link" @click="openSettingsModal($event, '${item.type}', '${item.imdbid}', '${escape_quotes(display_item_title(item))}')">
                                                         <i class="fa fa-wrench" aria-hidden="true" title="Click to edit movie settings"></i>
                                                     </a>
                                                 % endif

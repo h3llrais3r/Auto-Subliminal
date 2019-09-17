@@ -244,6 +244,12 @@ def sanitize(string_value, ignore_characters=None):
     return string_value.strip().lower()
 
 
+def escape_quotes(value):
+    escaped_value = re.sub(r'\'', '\\\'', value)
+    escaped_value = re.sub(r'\"', '\\\"', escaped_value)
+    return escaped_value
+
+
 def display_list_single_line(list_object):
     """Return a single lined string (comma separated) containing all the values of the list."""
     s = ''
