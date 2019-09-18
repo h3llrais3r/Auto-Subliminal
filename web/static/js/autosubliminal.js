@@ -375,7 +375,11 @@ var autosubliminal = {
     websockets.RUN_PROCESS = 'RUN_PROCESS';
 
     // Setup the websocket system
-    var websocketUrl = 'ws://' + window.location.host + autosubliminal.WEB_ROOT + '/system/websocket';
+    var websocketProtocol = 'ws:';
+    if (window.location.protocol === 'https:') {
+        websocketProtocol = 'wss:'
+    }
+    var websocketUrl = websocketProtocol + '//' + window.location.host + autosubliminal.WEB_ROOT + '/system/websocket';
     websockets.ws = new WebSocket(websocketUrl);
 
     // Setup websocket message receival
