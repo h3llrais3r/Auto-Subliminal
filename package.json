@@ -60,6 +60,6 @@
     "stylelint": "10.1.0",
     "stylelint-config-recommended-scss": "3.3.0",
     "stylelint-formatter-table": "1.0.4",
-    "stylelint-scss": "3.10.1"
+    "stylelint-scss": "3.11.1"
   }
 }
