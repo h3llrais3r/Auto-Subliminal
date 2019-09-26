@@ -841,20 +841,12 @@ class CSSParser(object):
                 continue
             value = token.group('value')
             if value.startswith(('"', "'")):
-                parts = css_unescape(value[1:-1], True).split('-')
+                value = css_unescape(value[1:-1], True)
             else:
-                parts = css_unescape(value).split('-')
+                value = css_unescape(value)
 
-            new_parts = []
-            first = True
-            for part in parts:
-                if part == '*' and first:
-                    new_parts.append('(?!x\b)[a-z0-9]+?')
-                elif part != '*':
-                    new_parts.append(('' if first else '(-(?!x\b)[a-z0-9]+)*?\\-') + re.escape(part))
-                if first:
-                    first = False
-            patterns.append(re.compile(r'^{}(?:-.*)?$'.format(''.join(new_parts)), re.I))
+            patterns.append(value)
+
         sel.lang.append(ct.SelectorLang(patterns))
         has_selector = True
 
@@ -1074,8 +1066,7 @@ CSS_LINK = CSSParser(
 # CSS pattern for `:checked`
 CSS_CHECKED = CSSParser(
     '''
-    html|*:is(input[type=checkbox], input[type=radio])[checked],
-    html|select > html|option[selected]
+    html|*:is(input[type=checkbox], input[type=radio])[checked], html|option[selected]
     '''
 ).process_selectors(flags=FLG_PSEUDO | FLG_HTML)
 # CSS pattern for `:default` (must compile CSS_CHECKED first)
