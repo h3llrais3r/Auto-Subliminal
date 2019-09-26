@@ -1,5 +1,6 @@
 "Django-compatible disk and file backed cache."
 
+from functools import wraps
 from django.core.cache.backends.base import BaseCache
 
 try:
@@ -8,6 +9,7 @@ except ImportError:
     # For older versions of Django simply use 300 seconds.
     DEFAULT_TIMEOUT = 300
 
+from .core import ENOVAL, args_to_key, full_name
 from .fanout import FanoutCache
 
 
@@ -24,15 +26,23 @@ class DjangoCache(BaseCache):
         shards = params.get('SHARDS', 8)
         timeout = params.get('DATABASE_TIMEOUT', 0.010)
         options = params.get('OPTIONS', {})
-        self._directory = directory
         self._cache = FanoutCache(directory, shards, timeout, **options)
-        self.memoize = self._cache.memoize
 
 
     @property
     def directory(self):
         """Cache directory."""
-        return self._directory
+        return self._cache.directory
+
+
+    def cache(self, name):
+        """Return Cache with given `name` in subdirectory.
+
+        :param str name: subdirectory name for Cache
+        :return: Cache with given name
+
+        """
+        return self._cache.cache(name)
 
 
     def deque(self, name):
@@ -70,7 +80,7 @@ class DjangoCache(BaseCache):
         :param int version: key version number (default None, cache parameter)
         :param bool read: read value as bytes from file (default False)
         :param str tag: text to associate with key (default None)
-        :param bool retry: retry if database timeout expires (default True)
+        :param bool retry: retry if database timeout occurs (default True)
         :return: True if item was added
 
         """
@@ -93,7 +103,7 @@ class DjangoCache(BaseCache):
         :param float expire_time: if True, return expire_time in tuple
             (default False)
         :param tag: if True, return tag in tuple (default False)
-        :param bool retry: retry if database timeout expires (default False)
+        :param bool retry: retry if database timeout occurs (default False)
         :return: value for item if key is found else default
 
         """
@@ -127,7 +137,7 @@ class DjangoCache(BaseCache):
         :param int version: key version number (default None, cache parameter)
         :param bool read: read value as bytes from file (default False)
         :param str tag: text to associate with key (default None)
-        :param bool retry: retry if database timeout expires (default True)
+        :param bool retry: retry if database timeout occurs (default True)
         :return: True if item was set
 
         """
@@ -135,6 +145,24 @@ class DjangoCache(BaseCache):
         key = self.make_key(key, version=version)
         timeout = self.get_backend_timeout(timeout=timeout)
         return self._cache.set(key, value, timeout, read, tag, retry)
+
+
+    def touch(self, key, timeout=DEFAULT_TIMEOUT, version=None, retry=True):
+        """Touch a key in the cache. If timeout is given, that timeout will be
+        used for the key; otherwise the default cache timeout will be used.
+
+        :param key: key for item
+        :param float timeout: seconds until the item expires
+            (default 300 seconds)
+        :param int version: key version number (default None, cache parameter)
+        :param bool retry: retry if database timeout occurs (default True)
+        :return: True if key was touched
+
+        """
+        # pylint: disable=arguments-differ
+        key = self.make_key(key, version=version)
+        timeout = self.get_backend_timeout(timeout=timeout)
+        return self._cache.touch(key, timeout, retry)
 
 
     def pop(self, key, default=None, version=None, expire_time=False,
@@ -151,7 +179,7 @@ class DjangoCache(BaseCache):
         :param float expire_time: if True, return expire_time in tuple
             (default False)
         :param tag: if True, return tag in tuple (default False)
-        :param bool retry: retry if database timeout expires (default True)
+        :param bool retry: retry if database timeout occurs (default True)
         :return: value for item if key is found else default
 
         """
@@ -164,7 +192,7 @@ class DjangoCache(BaseCache):
 
         :param key: key for item
         :param int version: key version number (default None, cache parameter)
-        :param bool retry: retry if database timeout expires (default True)
+        :param bool retry: retry if database timeout occurs (default True)
         :return: True if item was deleted
 
         """
@@ -190,7 +218,7 @@ class DjangoCache(BaseCache):
         :param int delta: amount to increment (default 1)
         :param int version: key version number (default None, cache parameter)
         :param int default: value if key is missing (default None)
-        :param bool retry: retry if database timeout expires (default True)
+        :param bool retry: retry if database timeout occurs (default True)
         :return: new value for item on success else None
         :raises ValueError: if key is not found and default is None
 
@@ -223,7 +251,7 @@ class DjangoCache(BaseCache):
         :param int delta: amount to decrement (default 1)
         :param int version: key version number (default None, cache parameter)
         :param int default: value if key is missing (default None)
-        :param bool retry: retry if database timeout expires (default True)
+        :param bool retry: retry if database timeout occurs (default True)
         :return: new value for item on success else None
         :raises ValueError: if key is not found and default is None
 
@@ -267,9 +295,9 @@ class DjangoCache(BaseCache):
     def create_tag_index(self):
         """Create tag index on cache database.
 
-        It is better to initialize cache with `tag_index=True` than use this.
+        Better to initialize cache with `tag_index=True` than use this.
 
-        :raises Timeout: if database timeout expires
+        :raises Timeout: if database timeout occurs
 
         """
         self._cache.create_tag_index()
@@ -278,7 +306,7 @@ class DjangoCache(BaseCache):
     def drop_tag_index(self):
         """Drop tag index on cache database.
 
-        :raises Timeout: if database timeout expires
+        :raises Timeout: if database timeout occurs
 
         """
         self._cache.drop_tag_index()
@@ -327,3 +355,69 @@ class DjangoCache(BaseCache):
             # ticket 21147 - avoid time.time() related precision issues
             timeout = -1
         return None if timeout is None else timeout
+
+
+    def memoize(self, name=None, timeout=DEFAULT_TIMEOUT, version=None,
+                typed=False, tag=None):
+        """Memoizing cache decorator.
+
+        Decorator to wrap callable with memoizing function using cache.
+        Repeated calls with the same arguments will lookup result in cache and
+        avoid function evaluation.
+
+        If name is set to None (default), the callable name will be determined
+        automatically.
+
+        If typed is set to True, function arguments of different types will be
+        cached separately. For example, f(3) and f(3.0) will be treated as
+        distinct calls with distinct results.
+
+        The original underlying function is accessible through the __wrapped__
+        attribute. This is useful for introspection, for bypassing the cache,
+        or for rewrapping the function with a different cache.
+
+        An additional `__cache_key__` attribute can be used to generate the
+        cache key used for the given arguments.
+
+        Remember to call memoize when decorating a callable. If you forget,
+        then a TypeError will occur.
+
+        :param str name: name given for callable (default None, automatic)
+        :param float timeout: seconds until the item expires
+            (default 300 seconds)
+        :param int version: key version number (default None, cache parameter)
+        :param bool typed: cache different types separately (default False)
+        :param str tag: text to associate with arguments (default None)
+        :return: callable decorator
+
+        """
+        # Caution: Nearly identical code exists in Cache.memoize
+        if callable(name):
+            raise TypeError('name cannot be callable')
+
+        def decorator(func):
+            "Decorator created by memoize() for callable `func`."
+            base = (full_name(func),) if name is None else (name,)
+
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                "Wrapper for callable to cache arguments and return values."
+                key = wrapper.__cache_key__(*args, **kwargs)
+                result = self.get(key, ENOVAL, version, retry=True)
+
+                if result is ENOVAL:
+                    result = func(*args, **kwargs)
+                    self.set(
+                        key, result, timeout, version, tag=tag, retry=True,
+                    )
+
+                return result
+
+            def __cache_key__(*args, **kwargs):
+                "Make key for cache given function arguments."
+                return args_to_key(base, args, kwargs, typed)
+
+            wrapper.__cache_key__ = __cache_key__
+            return wrapper
+
+        return decorator
