@@ -99,7 +99,8 @@ class _Item(object):
 
     def __hash__(self):
         """Overrides the default implementation to allow comparison."""
-        return hash(tuple(sorted(self.__dict__.items())))
+        # Exclude items that have a value of type list, as they are not hashable
+        return hash(tuple(sorted(filter(lambda x: not isinstance(x[1], list), self.__dict__.items()))))
 
     def __repr__(self):
         """Overrides the default implementation to get readable representation of the object."""

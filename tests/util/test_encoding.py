@@ -40,17 +40,24 @@ def test_s2u():
 
 
 def test_s2n():
-    s1 = u'élà'
-    s2 = b'\xc3\xa9l\xc3\xa0'
+    s1 = 'élà'  # str (binary_type) in PY2,  str (text_type) in PY3
+    s2 = u'élà'
+    s3 = b'\xc3\xa9l\xc3\xa0'
     if PY2:
         assert s2n(s1) == b'\xc3\xa9l\xc3\xa0'
-        assert s2n(s1, validate=True) == b'\xc3\xa9l\xc3\xa0'
+        assert s2n(str(s1), validate=True) == b'\xc3\xa9l\xc3\xa0'
         assert isinstance(s2n(s1), binary_type)
         assert s2n(s2) == b'\xc3\xa9l\xc3\xa0'
+        assert s2n(s2, validate=True) == b'\xc3\xa9l\xc3\xa0'
         assert isinstance(s2n(s2), binary_type)
+        assert s2n(s3) == b'\xc3\xa9l\xc3\xa0'
+        assert isinstance(s2n(s3), binary_type)
     else:
         assert s2n(s1) == u'élà'
         assert s2n(s1, validate=True) == u'élà'
         assert isinstance(s2n(s1), text_type)
         assert s2n(s2) == u'élà'
+        assert s2n(s2, validate=True) == u'élà'
         assert isinstance(s2n(s2), text_type)
+        assert s2n(s3) == u'élà'
+        assert isinstance(s2n(s3), text_type)

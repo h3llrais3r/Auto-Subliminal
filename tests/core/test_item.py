@@ -12,9 +12,10 @@ def test_compare_wanted_items():
     wanted_item_1 = WantedItem(type='episode', title='testequal', season=1, episode=1)
     wanted_item_2 = WantedItem(type='episode', title='testequal', season=1, episode=1)
     wanted_item_3 = WantedItem(type='episode', title='testdifferent', season=1, episode=1)
-    assert wanted_item_1 == wanted_item_2
-    assert wanted_item_1 != wanted_item_3
-    assert wanted_item_2 != wanted_item_3
+    assert wanted_item_1.__eq__(None) is NotImplemented
+    assert wanted_item_1.__eq__(wanted_item_2)
+    assert wanted_item_1.__ne__(wanted_item_3)
+    assert wanted_item_1.__hash__() != wanted_item_3.__hash__()
 
 
 def test_wanted_item_with_multi_episode():

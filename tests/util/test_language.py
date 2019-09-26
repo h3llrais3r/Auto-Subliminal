@@ -3,6 +3,16 @@
 from autosubliminal.util.language import SubtitleLanguage, get_subtitle_languages
 
 
+def test_compare_subltitle_languages():
+    language_1 = SubtitleLanguage('nl', 'Dutch')
+    language_2 = SubtitleLanguage('nl', 'Dutch')
+    language_3 = SubtitleLanguage('pt-BR', 'Brazilian Portuguese')
+    assert language_1.__eq__(None) is NotImplemented
+    assert language_1.__eq__(language_2)
+    assert language_1.__ne__(language_3)
+    assert language_1.__hash__() != language_3.__hash__()
+
+
 def test_get_subtitle_languages():
     languages = get_subtitle_languages()
     nl_language = SubtitleLanguage('nl', 'Dutch')
