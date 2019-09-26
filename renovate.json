@@ -36,6 +36,12 @@
       },
       {
         "packageNames": [
+          "gitpython"
+        ],
+        "allowedVersions": "<3.0.0"
+      },
+      {
+        "packageNames": [
           "more-itertools"
         ],
         "allowedVersions": "<6.0.0"
