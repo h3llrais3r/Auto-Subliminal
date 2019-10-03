@@ -59,7 +59,8 @@ install:
   - python --version # Verify version
   - python -c "import struct; print(struct.calcsize('P') * 8)" # Verify architecture
   - python -m pip install --upgrade pip # Gives access denied error when not using 'python -m' prefix
-  - pip install --upgrade six # Upgrade six because Python 3.4 is packaged with 1.10.0 and we need at least 1.11.0
+  - pip install --upgrade six # Upgrade pytest to latest version to prevent build errors
+  - pip install --upgrade pytest # Upgrade pytest to latest version to prevent build errors
   - pip install -e .[dev,test]
   - pip install coverage
   - npm install

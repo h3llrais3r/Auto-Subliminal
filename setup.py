@@ -47,7 +47,7 @@ setup_requirements = ['pytest-runner'] if {'pytest', 'test', 'ptr'}.intersection
 
 install_requirements = []
 
-test_requirements = ['pytest>=4.3.1', 'pytest-mock', 'pytest-pep8', 'pytest-flakes', 'requests-mock', 'vcrpy']
+test_requirements = ['pytest', 'pytest-mock', 'pytest-pep8', 'pytest-flakes', 'requests-mock', 'vcrpy']
 
 dev_requirements = ['tox']
 
