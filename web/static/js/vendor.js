@@ -10844,7 +10844,7 @@ return jQuery;
     };
 });
 /*!
- * hoverIntent v1.10.0 // 2019.02.25 // jQuery v1.7.0+
+ * hoverIntent v1.10.1 // 2019.10.05 // jQuery v1.7.0+
  * http://briancherne.github.io/jquery-hoverIntent/
  *
  * You may use hoverIntent under the terms of the MIT license. Basically that
@@ -10930,7 +10930,10 @@ return jQuery;
 
     // triggers given `out` function at configured `timeout` after a mouseleave and clears state
     var delay = function(ev,$el,s,out) {
-        delete $el.data('hoverIntent')[s.id];
+        var data = $el.data('hoverIntent');
+        if (data) {
+            delete data[s.id];
+        }
         return out.apply($el[0],[ev]);
     };
 
