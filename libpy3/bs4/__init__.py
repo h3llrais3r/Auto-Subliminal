@@ -18,7 +18,7 @@ http://www.crummy.com/software/BeautifulSoup/bs4/doc/
 """
 
 __author__ = "Leonard Richardson (leonardr@segfault.org)"
-__version__ = "4.8.0"
+__version__ = "4.8.1"
 __copyright__ = "Copyright (c) 2004-2019 Leonard Richardson"
 # Use of this source code is governed by the MIT license.
 __license__ = "MIT"
@@ -63,7 +63,7 @@ class BeautifulSoup(Tag):
       handle_starttag(name, attrs) # See note about return value
       handle_endtag(name)
       handle_data(data) # Appends to the current data node
-      endData(containerClass=NavigableString) # Ends the current data node
+      endData(containerClass) # Ends the current data node
 
     No matter how complicated the underlying parser is, you should be
     able to build a tree using 'start tag' events, 'end tag' events,
@@ -78,14 +78,14 @@ class BeautifulSoup(Tag):
     # If the end-user gives no indication which tree builder they
     # want, look for one with these features.
     DEFAULT_BUILDER_FEATURES = ['html', 'fast']
-
+   
     ASCII_SPACES = '\x20\x0a\x09\x0c\x0d'
 
     NO_PARSER_SPECIFIED_WARNING = "No parser was explicitly specified, so I'm using the best available %(markup_type)s parser for this system (\"%(parser)s\"). This usually isn't a problem, but if you run this code on another system, or in a different virtual environment, it may use a different parser and behave differently.\n\nThe code that caused this warning is on line %(line_number)s of the file %(filename)s. To get rid of this warning, pass the additional argument 'features=\"%(parser)s\"' to the BeautifulSoup constructor.\n"
 
     def __init__(self, markup="", features=None, builder=None,
                  parse_only=None, from_encoding=None, exclude_encodings=None,
-                 **kwargs):
+                 element_classes=None, **kwargs):
         """Constructor.
 
         :param markup: A string or a file-like object representing
@@ -116,6 +116,12 @@ class BeautifulSoup(Tag):
         encodings known to be wrong. Pass this in if you don't know
         the document's encoding but you know Beautiful Soup's guess is
         wrong.
+
+        :param element_classes: A dictionary mapping BeautifulSoup
+        classes like Tag and NavigableString to other classes you'd
+        like to be instantiated instead as the parse tree is
+        built. This is useful for using subclasses to modify the
+        default behavior of Tag or NavigableString.
 
         :param kwargs: For backwards compatibility purposes, the
         constructor accepts certain keyword arguments used in
@@ -184,6 +190,8 @@ class BeautifulSoup(Tag):
         if from_encoding and isinstance(markup, str):
             warnings.warn("You provided Unicode markup but also provided a value for from_encoding. Your from_encoding will be ignored.")
             from_encoding = None
+
+        self.element_classes = element_classes or dict()
 
         # We need this information to track whether or not the builder
         # was specified well enough that we can omit the 'you need to
@@ -294,6 +302,8 @@ class BeautifulSoup(Tag):
                     ' Beautiful Soup.' % markup)
             self._check_markup_is_url(markup)
 
+        rejections = []
+        success = False
         for (self.markup, self.original_encoding, self.declared_html_encoding,
          self.contains_replacement_characters) in (
              self.builder.prepare_markup(
@@ -301,9 +311,17 @@ class BeautifulSoup(Tag):
             self.reset()
             try:
                 self._feed()
+                success = True
                 break
-            except ParserRejectedMarkup:
+            except ParserRejectedMarkup as e:
+                rejections.append(e)
                 pass
+
+        if not success:
+            other_exceptions = [str(e) for e in rejections]
+            raise ParserRejectedMarkup(
+                "The markup you provided was rejected by the parser. Trying a different parser or a different encoding may help.\n\nOriginal exception(s) from parser:\n " + "\n ".join(other_exceptions)
+            )
 
         # Clear out the markup and remove the builder's circular
         # reference to this object.
@@ -377,13 +395,20 @@ class BeautifulSoup(Tag):
         self.preserve_whitespace_tag_stack = []
         self.pushTag(self)
 
-    def new_tag(self, name, namespace=None, nsprefix=None, attrs={}, **kwattrs):
+    def new_tag(self, name, namespace=None, nsprefix=None, attrs={},
+                sourceline=None, sourcepos=None, **kwattrs):
         """Create a new tag associated with this soup."""
         kwattrs.update(attrs)
-        return Tag(None, self.builder, name, namespace, nsprefix, kwattrs)
+        return self.element_classes.get(Tag, Tag)(
+            None, self.builder, name, namespace, nsprefix, kwattrs,
+            sourceline=sourceline, sourcepos=sourcepos
+        )
 
-    def new_string(self, s, subclass=NavigableString):
+    def new_string(self, s, subclass=None):
         """Create a new NavigableString associated with this soup."""
+        subclass = subclass or self.element_classes.get(
+            NavigableString, NavigableString
+        )
         return subclass(s)
 
     def insert_before(self, successor):
@@ -410,7 +435,17 @@ class BeautifulSoup(Tag):
         if tag.name in self.builder.preserve_whitespace_tags:
             self.preserve_whitespace_tag_stack.append(tag)
 
-    def endData(self, containerClass=NavigableString):
+    def endData(self, containerClass=None):
+
+        # Default container is NavigableString.
+        containerClass = containerClass or NavigableString
+
+        # The user may want us to instantiate some alias for the
+        # container class.
+        containerClass = self.element_classes.get(
+            containerClass, containerClass
+        )
+        
         if self.current_data:
             current_data = ''.join(self.current_data)
             # If whitespace is not preserved, and this string contains
@@ -531,7 +566,8 @@ class BeautifulSoup(Tag):
 
         return most_recently_popped
 
-    def handle_starttag(self, name, namespace, nsprefix, attrs):
+    def handle_starttag(self, name, namespace, nsprefix, attrs, sourceline=None,
+                        sourcepos=None):
         """Push a start tag on to the stack.
 
         If this method returns None, the tag was rejected by the
@@ -548,8 +584,11 @@ class BeautifulSoup(Tag):
                  or not self.parse_only.search_tag(name, attrs))):
             return None
 
-        tag = Tag(self, self.builder, name, namespace, nsprefix, attrs,
-                  self.currentTag, self._most_recent_element)
+        tag = self.element_classes.get(Tag, Tag)(
+            self, self.builder, name, namespace, nsprefix, attrs,
+            self.currentTag, self._most_recent_element,
+            sourceline=sourceline, sourcepos=sourcepos
+        )
         if tag is None:
             return tag
         if self._most_recent_element is not None:
