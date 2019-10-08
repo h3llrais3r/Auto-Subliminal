@@ -8,6 +8,7 @@ except ImportError as e:
 import re
 import sys
 import warnings
+import collections
 try:
     import soupsieve
 except ImportError as e:
@@ -45,7 +46,12 @@ def _alias(attr):
 
 class NamespacedAttribute(str):
 
-    def __new__(cls, prefix, name, namespace=None):
+    def __new__(cls, prefix, name=None, namespace=None):
+        if not name:
+            # This is the default namespace. Its name "has no value"
+            # per https://www.w3.org/TR/xml-names/#defaulting
+            name = None
+
         if name is None:
             obj = str.__new__(cls, prefix)
         elif prefix is None:
@@ -158,7 +164,7 @@ class PageElement(object):
             c = XMLFormatter
         else:
             c = HTMLFormatter
-        if callable(formatter):
+        if isinstance(formatter, collections.Callable):
             return c(entity_substitution=formatter)
         return c.REGISTRY[formatter]
 
@@ -724,7 +730,10 @@ class Tag(PageElement):
 
     def __init__(self, parser=None, builder=None, name=None, namespace=None,
                  prefix=None, attrs=None, parent=None, previous=None,
-                 is_xml=None):
+                 is_xml=None, sourceline=None, sourcepos=None,
+                 can_be_empty_element=None, cdata_list_attributes=None,
+                 preserve_whitespace_tags=None
+    ):
         "Basic constructor."
 
         if parser is None:
@@ -738,6 +747,10 @@ class Tag(PageElement):
         self.name = name
         self.namespace = namespace
         self.prefix = prefix
+        if ((not builder or builder.store_line_numbers)
+            and (sourceline is not None or sourcepos is not None)):
+            self.sourceline = sourceline
+            self.sourcepos = sourcepos        
         if attrs is None:
             attrs = {}
         elif attrs:
@@ -761,10 +774,12 @@ class Tag(PageElement):
         self.hidden = False
 
         if builder is None:
-            # In the absence of a TreeBuilder, assume this tag is nothing
-            # special.
-            self.can_be_empty_element = False
-            self.cdata_list_attributes = None
+            # In the absence of a TreeBuilder, use whatever values were
+            # passed in here. They're probably None, unless this is a copy of some
+            # other tag.
+            self.can_be_empty_element = can_be_empty_element
+            self.cdata_list_attributes = cdata_list_attributes
+            self.preserve_whitespace_tags = preserve_whitespace_tags
         else:
             # Set up any substitutions for this tag, such as the charset in a META tag.
             builder.set_up_substitutions(self)
@@ -792,8 +807,14 @@ class Tag(PageElement):
         """A copy of a Tag is a new Tag, unconnected to the parse tree.
         Its contents are a copy of the old Tag's contents.
         """
-        clone = type(self)(None, self.builder, self.name, self.namespace,
-                           self.prefix, self.attrs, is_xml=self._is_xml)
+        clone = type(self)(
+            None, self.builder, self.name, self.namespace,
+            self.prefix, self.attrs, is_xml=self._is_xml,
+            sourceline=self.sourceline, sourcepos=self.sourcepos,
+            can_be_empty_element=self.can_be_empty_element,
+            cdata_list_attributes=self.cdata_list_attributes,
+            preserve_whitespace_tags=self.preserve_whitespace_tags
+        )
         for attr in ('can_be_empty_element', 'hidden'):
             setattr(clone, attr, getattr(self, attr))
         for child in self.contents:
@@ -1169,7 +1190,10 @@ class Tag(PageElement):
         """Should this tag be pretty-printed?"""
         return (
             indent_level is not None
-            and self.name not in self.preserve_whitespace_tags
+            and (
+                not self.preserve_whitespace_tags
+                or self.name not in self.preserve_whitespace_tags
+            )
         )
 
     def prettify(self, encoding=None, formatter="minimal"):

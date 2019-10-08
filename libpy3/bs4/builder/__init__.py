@@ -99,8 +99,13 @@ class TreeBuilder(object):
     DEFAULT_PRESERVE_WHITESPACE_TAGS = set()
     
     USE_DEFAULT = object()
+
+    # Most parsers don't keep track of line numbers.
+    TRACKS_LINE_NUMBERS = False
     
-    def __init__(self, multi_valued_attributes=USE_DEFAULT, preserve_whitespace_tags=USE_DEFAULT):
+    def __init__(self, multi_valued_attributes=USE_DEFAULT,
+                 preserve_whitespace_tags=USE_DEFAULT,
+                 store_line_numbers=USE_DEFAULT):
         """Constructor.
 
         :param multi_valued_attributes: If this is set to None, the
@@ -113,7 +118,17 @@ class TreeBuilder(object):
         probably doesn't make sense to an end-user, so the argument name
         is `multi_valued_attributes`.
 
-        :param preserve_whitespace_tags:
+        :param preserve_whitespace_tags: A list of tags to treat
+        the way <pre> tags are treated in HTML. Tags in this list
+        will have 
+
+        :param store_line_numbers: If the parser keeps track of the
+        line numbers and positions of the original markup, that
+        information will, by default, be stored in each corresponding
+        `Tag` object. You can turn this off by passing
+        store_line_numbers=False. If the parser you're using doesn't 
+        keep track of this information, then setting store_line_numbers=True
+        will do nothing.
         """
         self.soup = None
         if multi_valued_attributes is self.USE_DEFAULT:
@@ -122,7 +137,10 @@ class TreeBuilder(object):
         if preserve_whitespace_tags is self.USE_DEFAULT:
             preserve_whitespace_tags = self.DEFAULT_PRESERVE_WHITESPACE_TAGS
         self.preserve_whitespace_tags = preserve_whitespace_tags
-            
+        if store_line_numbers == self.USE_DEFAULT:
+            store_line_numbers = self.TRACKS_LINE_NUMBERS
+        self.store_line_numbers = store_line_numbers
+        
     def initialize_soup(self, soup):
         """The BeautifulSoup object has been initialized and is now
         being associated with the TreeBuilder.
@@ -157,8 +175,8 @@ class TreeBuilder(object):
         raise NotImplementedError()
 
     def prepare_markup(self, markup, user_specified_encoding=None,
-                       document_declared_encoding=None):
-        return markup, None, None, False
+                       document_declared_encoding=None, exclude_encodings=None):
+        yield markup, None, None, False
 
     def test_fragment_to_document(self, fragment):
         """Wrap an HTML fragment to make it look like a document.
@@ -345,8 +363,15 @@ def register_treebuilders_from(module):
             this_module.builder_registry.register(obj)
 
 class ParserRejectedMarkup(Exception):
-    pass
-
+    def __init__(self, message_or_exception):
+        """Explain why the parser rejected the given markup, either
+        with a textual explanation or another exception.
+        """
+        if isinstance(message_or_exception, Exception):
+            e = message_or_exception
+            message_or_exception = "%s: %s" % (e.__class__.__name__, str(e))
+        super(ParserRejectedMarkup, self).__init__(message_or_exception)
+            
 # Builders are registered in reverse order of priority, so that custom
 # builder registrations will take precedence. In general, we want lxml
 # to take precedence over html5lib, because it's faster. And we only

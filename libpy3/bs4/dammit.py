@@ -22,6 +22,8 @@ try:
     #  PyPI package: cchardet
     import cchardet
     def chardet_dammit(s):
+        if isinstance(s, str):
+            return None
         return cchardet.detect(s)['encoding']
 except ImportError:
     try:
@@ -30,6 +32,8 @@ except ImportError:
         #  PyPI package: chardet
         import chardet
         def chardet_dammit(s):
+            if isinstance(s, str):
+                return None
             return chardet.detect(s)['encoding']
         #import chardet.constants
         #chardet.constants._debug = 1
@@ -44,10 +48,19 @@ try:
 except ImportError:
     pass
 
-xml_encoding_re = re.compile(
-    '^<\\?.*encoding=[\'"](.*?)[\'"].*\\?>'.encode(), re.I)
-html_meta_re = re.compile(
-    '<\\s*meta[^>]+charset\\s*=\\s*["\']?([^>]*?)[ /;\'">]'.encode(), re.I)
+# Build bytestring and Unicode versions of regular expressions for finding
+# a declared encoding inside an XML or HTML document.
+xml_encoding = '^\s*<\\?.*encoding=[\'"](.*?)[\'"].*\\?>'
+html_meta = '<\\s*meta[^>]+charset\\s*=\\s*["\']?([^>]*?)[ /;\'">]'
+encoding_res = dict()
+encoding_res[bytes] = {
+    'html' : re.compile(html_meta.encode("ascii"), re.I),
+    'xml' : re.compile(xml_encoding.encode("ascii"), re.I),
+}
+encoding_res[str] = {
+    'html' : re.compile(html_meta, re.I),
+    'xml' : re.compile(xml_encoding, re.I)
+}
 
 class EntitySubstitution(object):
 
@@ -319,14 +332,22 @@ class EncodingDetector:
             xml_endpos = 1024
             html_endpos = max(2048, int(len(markup) * 0.05))
 
+        if isinstance(markup, bytes):
+            res = encoding_res[bytes]
+        else:
+            res = encoding_res[str]
+
+        xml_re = res['xml']
+        html_re = res['html']
         declared_encoding = None
-        declared_encoding_match = xml_encoding_re.search(markup, endpos=xml_endpos)
+        declared_encoding_match = xml_re.search(markup, endpos=xml_endpos)
         if not declared_encoding_match and is_html:
-            declared_encoding_match = html_meta_re.search(markup, endpos=html_endpos)
+            declared_encoding_match = html_re.search(markup, endpos=html_endpos)
         if declared_encoding_match is not None:
-            declared_encoding = declared_encoding_match.groups()[0].decode(
-                'ascii', 'replace')
+            declared_encoding = declared_encoding_match.groups()[0]
         if declared_encoding:
+            if isinstance(declared_encoding, bytes):
+                declared_encoding = declared_encoding.decode('ascii', 'replace')
             return declared_encoding.lower()
         return None
 
