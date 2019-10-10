@@ -4,6 +4,7 @@ from __future__ import absolute_import, division, print_function
 __metaclass__ = type
 
 
+import collections
 import threading
 import time
 import socket
@@ -107,14 +108,23 @@ class WorkerThread(threading.Thread):
                 if conn is _SHUTDOWNREQUEST:
                     return
 
+                # Just close the connection and move on.
+                if conn.closeable:
+                    conn.close()
+                    continue
+
                 self.conn = conn
                 is_stats_enabled = self.server.stats['Enabled']
                 if is_stats_enabled:
                     self.start_time = time.time()
+                keep_conn_open = False
                 try:
-                    conn.communicate()
+                    keep_conn_open = conn.communicate()
                 finally:
-                    conn.close()
+                    if keep_conn_open:
+                        self.server.connections.put(conn)
+                    else:
+                        conn.close()
                     if is_stats_enabled:
                         self.requests_seen += self.conn.requests_seen
                         self.bytes_read += self.conn.rfile.bytes_read
@@ -156,6 +166,7 @@ class ThreadPool:
         self._queue = queue.Queue(maxsize=accepted_queue_size)
         self._queue_put_timeout = accepted_queue_timeout
         self.get = self._queue.get
+        self._pending_shutdowns = collections.deque()
 
     def start(self):
         """Start the pool of threads."""
@@ -171,7 +182,8 @@ class ThreadPool:
     @property
     def idle(self):  # noqa: D401; irrelevant for properties
         """Number of worker threads which are idle. Read-only."""
-        return len([t for t in self._threads if t.conn is None])
+        idles = len([t for t in self._threads if t.conn is None])
+        return max(idles - len(self._pending_shutdowns), 0)
 
     def put(self, obj):
         """Put request into queue.
@@ -181,8 +193,15 @@ class ThreadPool:
                 waiting to be processed
         """
         self._queue.put(obj, block=True, timeout=self._queue_put_timeout)
-        if obj is _SHUTDOWNREQUEST:
-            return
+
+    def _clear_dead_threads(self):
+        # Remove any dead threads from our list
+        for t in [t for t in self._threads if not t.is_alive()]:
+            self._threads.remove(t)
+            try:
+                self._pending_shutdowns.popleft()
+            except IndexError:
+                pass
 
     def grow(self, amount):
         """Spawn new worker threads (not above self.max)."""
@@ -209,10 +228,10 @@ class ThreadPool:
         """Kill off worker threads (not below self.min)."""
         # Grow/shrink the pool if necessary.
         # Remove any dead threads from our list
-        for t in self._threads:
-            if not t.is_alive():
-                self._threads.remove(t)
-                amount -= 1
+        amount -= len(self._pending_shutdowns)
+        self._clear_dead_threads()
+        if amount <= 0:
+            return
 
         # calculate the number of threads above the minimum
         n_extra = max(len(self._threads) - self.min, 0)
@@ -224,6 +243,7 @@ class ThreadPool:
         # to remove. As each request is processed by a worker, that worker
         # will terminate and be culled from the list.
         for n in range(n_to_remove):
+            self._pending_shutdowns.append(None)
             self._queue.put(_SHUTDOWNREQUEST)
 
     def stop(self, timeout=5):

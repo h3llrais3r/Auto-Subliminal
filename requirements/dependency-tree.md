@@ -13,6 +13,7 @@ Libraries dependency tree
 |-- cherrypy
     |-- cheroot
         |-- backports.functools_lru_cache
+        |-- jaraco.functools
         |-- more-itertools
         |-- six
     |-- contextlib2
