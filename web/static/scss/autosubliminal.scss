@@ -784,8 +784,8 @@ table.table {
       color: rgba(0, 0, 0, 0.5);
       background-color: $var-table-tr-inactive-bg;
 
-      // Grey out underlying items
-      * {
+      // Grey out underlying items (except buttons)
+      *:not(.btn) {
         color: rgb(0, 0, 0);
         color: rgba(0, 0, 0, 0.5);
       }

@@ -683,7 +683,7 @@ table.table tbody tr.inactive td {
   background-color: #ffffff;
 }
 
-table.table tbody tr.inactive td * {
+table.table tbody tr.inactive td *:not(.btn) {
   color: black;
   color: rgba(0, 0, 0, 0.5);
 }
