@@ -8,8 +8,11 @@ import collections
 import threading
 import time
 import socket
+import warnings
 
 from six.moves import queue
+
+from jaraco.functools import pass_none
 
 
 __all__ = ('WorkerThread', 'ThreadPool')
@@ -252,44 +255,67 @@ class ThreadPool:
         Args:
             timeout (int): time to wait for threads to stop gracefully
         """
+        # for compatability, negative timeouts are treated like None
+        # TODO: treat negative timeouts like already expired timeouts
+        if timeout is not None and timeout < 0:
+            timeout = None
+            warnings.warning(
+                'In the future, negative timeouts to Server.stop() '
+                'will be equivalent to a timeout of zero.',
+                stacklevel=2,
+            )
+
+        if timeout is not None:
+            endtime = time.time() + timeout
+
         # Must shut down threads here so the code that calls
         # this method can know when all threads are stopped.
         for worker in self._threads:
             self._queue.put(_SHUTDOWNREQUEST)
 
-        # Don't join currentThread (when stop is called inside a request).
-        current = threading.currentThread()
-        if timeout is not None and timeout >= 0:
-            endtime = time.time() + timeout
-        while self._threads:
-            worker = self._threads.pop()
-            if worker is not current and worker.is_alive():
-                try:
-                    if timeout is None or timeout < 0:
-                        worker.join()
-                    else:
-                        remaining_time = endtime - time.time()
-                        if remaining_time > 0:
-                            worker.join(remaining_time)
-                        if worker.is_alive():
-                            # We exhausted the timeout.
-                            # Forcibly shut down the socket.
-                            c = worker.conn
-                            if c and not c.rfile.closed:
-                                try:
-                                    c.socket.shutdown(socket.SHUT_RD)
-                                except TypeError:
-                                    # pyOpenSSL sockets don't take an arg
-                                    c.socket.shutdown()
-                            worker.join()
-                except (
-                    AssertionError,
-                    # Ignore repeated Ctrl-C.
-                    # See
-                    # https://github.com/cherrypy/cherrypy/issues/691.
-                    KeyboardInterrupt,
-                ):
-                    pass
+        ignored_errors = (
+            # TODO: explain this exception.
+            AssertionError,
+            # Ignore repeated Ctrl-C. See cherrypy#691.
+            KeyboardInterrupt,
+        )
+
+        for worker in self._clear_threads():
+            remaining_time = timeout and endtime - time.time()
+            try:
+                worker.join(remaining_time)
+                if worker.is_alive():
+                    # Timeout exhausted; forcibly shut down the socket.
+                    self._force_close(worker.conn)
+                    worker.join()
+            except ignored_errors:
+                pass
+
+    @staticmethod
+    @pass_none
+    def _force_close(conn):
+        if conn.rfile.closed:
+            return
+        try:
+            try:
+                conn.socket.shutdown(socket.SHUT_RD)
+            except TypeError:
+                # pyOpenSSL sockets don't take an arg
+                conn.socket.shutdown()
+        except OSError:
+            # shutdown sometimes fails (race with 'closed' check?)
+            # ref #238
+            pass
+
+    def _clear_threads(self):
+        """Clear self._threads and yield all joinable threads."""
+        # threads = pop_all(self._threads)
+        threads, self._threads[:] = self._threads[:], []
+        return (
+            thread
+            for thread in threads
+            if thread is not threading.currentThread()
+        )
 
     @property
     def qsize(self):
