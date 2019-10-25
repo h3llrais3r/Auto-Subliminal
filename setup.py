@@ -49,7 +49,7 @@ install_requirements = []
 
 test_requirements = ['pytest', 'pytest-mock', 'pytest-pep8', 'pytest-flakes', 'requests-mock', 'vcrpy']
 
-dev_requirements = ['tox']
+dev_requirements = ['isort', 'tox']
 
 # Setup
 setup(name='Auto-Subliminal',

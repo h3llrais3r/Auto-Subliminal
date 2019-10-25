@@ -6,12 +6,12 @@ import cherrypy
 
 import autosubliminal
 from autosubliminal import system
-from autosubliminal.db import ImdbIdCacheDb, LastDownloadsDb, MovieDetailsDb, ShowDetailsDb, TvdbIdCacheDb, \
-    WantedItemsDb
+from autosubliminal.db import (ImdbIdCacheDb, LastDownloadsDb, MovieDetailsDb, ShowDetailsDb, TvdbIdCacheDb,
+                               WantedItemsDb)
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
-from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, \
-    release_wanted_queue_lock_on_exception
+from autosubliminal.util.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
+                                       release_wanted_queue_lock_on_exception)
 from autosubliminal.util.websocket import send_websocket_notification
 
 

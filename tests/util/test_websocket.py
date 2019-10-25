@@ -3,8 +3,8 @@
 import time
 
 import autosubliminal
-from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD, \
-    PROCESS_STARTED, PROCESS_FINISHED
+from autosubliminal.util.websocket import (PAGE_RELOAD, PROCESS_FINISHED, PROCESS_STARTED, send_websocket_event,
+                                           send_websocket_notification)
 
 
 def test_send_websocket_event_page_reload(monkeypatch):

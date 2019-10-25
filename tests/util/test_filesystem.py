@@ -2,11 +2,12 @@
 
 import os
 
-from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
-from autosubliminal.util.filesystem import is_skipped_dir, is_valid_video_file, one_path_exists, \
-    check_missing_subtitle_languages, get_available_subtitles, get_embedded_subtitles, get_external_subtitles, \
-    get_hardcoded_subtitles
 from enzyme.mkv import SubtitleTrack
+
+from autosubliminal.core.subtitle import EMBEDDED, HARDCODED, Subtitle
+from autosubliminal.util.filesystem import (check_missing_subtitle_languages, get_available_subtitles,
+                                            get_embedded_subtitles, get_external_subtitles, get_hardcoded_subtitles,
+                                            is_skipped_dir, is_valid_video_file, one_path_exists)
 
 
 def test_one_path_exists():

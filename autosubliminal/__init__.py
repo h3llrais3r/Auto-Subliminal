@@ -1,8 +1,8 @@
 # coding=utf-8
 
 import os
-import uuid
 import pkg_resources
+import uuid
 
 from six.moves import getcwd
 

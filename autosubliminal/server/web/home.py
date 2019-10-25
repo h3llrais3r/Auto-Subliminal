@@ -8,7 +8,7 @@ from autosubliminal import config, subchecker
 from autosubliminal.db import WantedItemsDb
 from autosubliminal.server.web import redirect
 from autosubliminal.templates.page import PageTemplate
-from autosubliminal.util.common import display_value, display_item_title, run_cmd, sanitize
+from autosubliminal.util.common import display_item_title, display_value, run_cmd, sanitize
 from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock
 from autosubliminal.util.websocket import send_websocket_notification
 

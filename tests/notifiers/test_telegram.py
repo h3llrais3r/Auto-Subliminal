@@ -4,7 +4,7 @@ import requests_mock
 
 import autosubliminal
 from autosubliminal.core.item import DownloadItem, WantedItem
-from autosubliminal.notifiers.telegram import TelegramNotifier, TELEGRAMURL
+from autosubliminal.notifiers.telegram import TELEGRAMURL, TelegramNotifier
 
 autosubliminal.TELEGRAMBOTAPI = 'myapikey'
 autosubliminal.TELEGRAMCHATID = 'mychatid'

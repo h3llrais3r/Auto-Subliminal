@@ -1,8 +1,8 @@
 # coding=utf-8
 
-from six import PY2, text_type, binary_type
+from six import PY2, binary_type, text_type
 
-from autosubliminal.util.encoding import b2u, u2b, s2b, s2u, s2n
+from autosubliminal.util.encoding import b2u, s2b, s2n, s2u, u2b
 
 
 def test_b2u():

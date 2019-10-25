@@ -7,7 +7,7 @@ import autosubliminal
 from autosubliminal import version
 from autosubliminal.core.movie import MovieDetails
 from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails
-from autosubliminal.indexer import MovieIndexer, ShowIndexer, IMDB_ID_UNKNOWN, TVDB_ID_UNKNOWN
+from autosubliminal.indexer import IMDB_ID_UNKNOWN, TVDB_ID_UNKNOWN, MovieIndexer, ShowIndexer
 
 autosubliminal.USERAGENT = 'Auto-Subliminal/' + version.RELEASE_VERSION
 autosubliminal.TVDBAPIKEY = '76F2D5362F45C5EC'

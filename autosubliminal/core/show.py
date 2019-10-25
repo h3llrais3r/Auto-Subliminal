@@ -9,7 +9,7 @@ from tvdb_api_v2.models.series_image_query_result import SeriesImageQueryResult
 from tvdb_api_v2.models.series_search_result import SeriesSearchResult
 
 import autosubliminal
-from autosubliminal.util.common import to_dict, to_list, to_obj, get_wanted_languages
+from autosubliminal.util.common import get_wanted_languages, to_dict, to_list, to_obj
 
 log = logging.getLogger(__name__)
 

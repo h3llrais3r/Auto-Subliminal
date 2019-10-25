@@ -1,11 +1,11 @@
 # coding=utf-8
 
+from tests.server.api.test_api import pickle_api_result
+
 from autosubliminal.core.movie import MovieDetails, MovieSettings
-from autosubliminal.core.subtitle import Subtitle, EXTERNAL
+from autosubliminal.core.subtitle import EXTERNAL, Subtitle
 from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb
 from autosubliminal.server.api.movies import MoviesApi
-
-from tests.server.api.test_api import pickle_api_result
 
 movie_details_1 = MovieDetails(path='/path/to/movie1/movie1.mkv', imdb_id='tt1', title='title1', year=2018,
                                overview='overview1', poster='poster1.jpg', missing_languages=['en'],

@@ -4,8 +4,8 @@ import pytest
 
 import autosubliminal
 from autosubliminal.core.item import WantedItem
-from autosubliminal.util.queue import count_wanted_queue_items, get_wanted_queue_lock, release_wanted_queue_lock, \
-    release_wanted_queue_lock_on_exception
+from autosubliminal.util.queue import (count_wanted_queue_items, get_wanted_queue_lock, release_wanted_queue_lock,
+                                       release_wanted_queue_lock_on_exception)
 
 
 def test_wanted_queue_lock():

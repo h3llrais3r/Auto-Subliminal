@@ -1,9 +1,9 @@
 # coding=utf-8
 
 import autosubliminal
-from autosubliminal.util.mapping import get_show_name_mapping, get_addic7ed_show_name_mapping, \
-    get_alternative_show_name_mapping, get_movie_name_mapping, get_alternative_movie_name_mapping, \
-    mapping_string_to_dict
+from autosubliminal.util.mapping import (get_addic7ed_show_name_mapping, get_alternative_movie_name_mapping,
+                                         get_alternative_show_name_mapping, get_movie_name_mapping,
+                                         get_show_name_mapping, mapping_string_to_dict)
 
 
 def test_mapping_string_to_dict():

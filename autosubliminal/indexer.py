@@ -16,11 +16,11 @@ from tvdb_api_v2.client import TvdbClient
 from unidecode import unidecode
 
 import autosubliminal
-from autosubliminal.db import ImdbIdCacheDb, TvdbIdCacheDb
 from autosubliminal.core.movie import MovieDetails
 from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails
-from autosubliminal.util.encoding import s2n
+from autosubliminal.db import ImdbIdCacheDb, TvdbIdCacheDb
 from autosubliminal.util.common import sanitize
+from autosubliminal.util.encoding import s2n
 from autosubliminal.util.mapping import get_movie_name_mapping, get_show_name_mapping
 
 log = logging.getLogger(__name__)

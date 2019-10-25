@@ -3,7 +3,7 @@
 import jsonpickle
 
 from autosubliminal.util.encoding import s2b
-from autosubliminal.util.json import from_json, to_json, json_out_handler
+from autosubliminal.util.json import from_json, json_out_handler, to_json
 
 
 class MyClass(object):

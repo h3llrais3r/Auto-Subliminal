@@ -3,9 +3,9 @@
 import abc
 import datetime
 import logging
-import time
-import threading
 import os
+import threading
+import time
 import traceback
 
 from six import add_metaclass, text_type
@@ -13,7 +13,7 @@ from six import add_metaclass, text_type
 import autosubliminal
 from autosubliminal.util.common import to_dict
 from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock
-from autosubliminal.util.websocket import send_websocket_event, PROCESS_STARTED, PROCESS_FINISHED
+from autosubliminal.util.websocket import PROCESS_FINISHED, PROCESS_STARTED, send_websocket_event
 
 log = logging.getLogger(__name__)
 

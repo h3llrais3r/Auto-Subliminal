@@ -1,15 +1,15 @@
 # coding=utf-8
 
 import os
+import shutil
 import time
 
 import pytest
 import requests_mock
-import shutil
 from dogpile.cache.api import NoValue
 
 import autosubliminal
-from autosubliminal.core.cache import cache_artwork, get_artwork_cache_path, is_artwork_cached, MutexFileLock, region
+from autosubliminal.core.cache import MutexFileLock, cache_artwork, get_artwork_cache_path, is_artwork_cached, region
 from autosubliminal.util.common import set_rw_and_remove
 
 resource_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'resources'))

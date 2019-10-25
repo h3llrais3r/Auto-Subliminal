@@ -7,11 +7,11 @@ import autosubliminal
 from autosubliminal import fileprocessor
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import MovieSettingsDb, ShowSettingsDb, WantedItemsDb
-from autosubliminal.util.filesystem import check_missing_subtitle_languages, is_skipped_dir, is_valid_video_file, \
-    one_path_exists
+from autosubliminal.util.filesystem import (check_missing_subtitle_languages, is_skipped_dir, is_valid_video_file,
+                                            one_path_exists)
 from autosubliminal.util.queue import release_wanted_queue_lock_on_exception
 from autosubliminal.util.skip import skip_movie, skip_show
-from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
+from autosubliminal.util.websocket import PAGE_RELOAD, send_websocket_event, send_websocket_notification
 
 log = logging.getLogger(__name__)
 

@@ -6,13 +6,12 @@ import os
 import cherrypy
 
 from autosubliminal.core.show import ShowSettings
-from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED
-from autosubliminal.db import FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb, \
-    ShowSettingsDb, WantedItemsDb
+from autosubliminal.core.subtitle import EMBEDDED, HARDCODED, Subtitle
+from autosubliminal.db import (FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb,
+                               ShowSettingsDb, WantedItemsDb)
 from autosubliminal.libraryscanner import LibraryPathScanner
-from autosubliminal.server.rest import RestResource, NotFound
-from autosubliminal.util.common import natural_keys
-from autosubliminal.util.common import get_boolean
+from autosubliminal.server.rest import NotFound, RestResource
+from autosubliminal.util.common import get_boolean, natural_keys
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 from autosubliminal.util.websocket import send_websocket_notification
 

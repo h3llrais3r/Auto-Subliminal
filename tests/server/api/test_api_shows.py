@@ -1,11 +1,11 @@
 # coding=utf-8
 
+from tests.server.api.test_api import pickle_api_result
+
 from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails, ShowSettings
-from autosubliminal.core.subtitle import Subtitle, EXTERNAL
+from autosubliminal.core.subtitle import EXTERNAL, Subtitle
 from autosubliminal.db import FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb
 from autosubliminal.server.api.shows import ShowsApi
-
-from tests.server.api.test_api import pickle_api_result
 
 show_details_1 = ShowDetails(path='/path/to/show1', tvdb_id=1, title='title1', year=2018, overview='overview1',
                              poster='poster1.jpg', banner='banner1.jpg')

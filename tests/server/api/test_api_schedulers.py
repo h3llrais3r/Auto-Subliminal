@@ -1,13 +1,12 @@
 # coding=utf-8
 
 import pytest
+from tests.server.api.test_api import pickle_api_result
 
 import autosubliminal
 from autosubliminal.server.api.schedulers import SchedulersApi
 from autosubliminal.server.rest import BadRequest
 from autosubliminal.util.common import to_dict as convert_to_dict
-
-from tests.server.api.test_api import pickle_api_result
 
 
 class MyScheduler(object):

@@ -1,13 +1,12 @@
 # coding=utf-8
 
 import pytest
+from tests.server.api.test_api import pickle_api_result
 
 import autosubliminal
 from autosubliminal.db import LastDownloadsDb
 from autosubliminal.server.api.items import ItemsApi
 from autosubliminal.server.rest import BadRequest
-
-from tests.server.api.test_api import pickle_api_result
 
 wanted_item = {
     'codec': u'H.264',

@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import os
+
 import pytest
 
 from autosubliminal.util.packaging import get_libraries, get_library_version

@@ -2,7 +2,7 @@
 
 import os
 
-from subliminal.video import Movie, Episode
+from subliminal.video import Episode, Movie
 
 import autosubliminal
 from autosubliminal.refiners.namemapping import refine

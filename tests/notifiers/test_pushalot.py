@@ -3,7 +3,7 @@
 import requests_mock
 
 from autosubliminal.core.item import DownloadItem, WantedItem
-from autosubliminal.notifiers.pushalot import PushalotNotifier, PUSHALOTURL
+from autosubliminal.notifiers.pushalot import PUSHALOTURL, PushalotNotifier
 
 notifier_name = 'Pushalot'
 

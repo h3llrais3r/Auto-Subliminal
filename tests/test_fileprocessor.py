@@ -4,7 +4,7 @@ import os
 
 import autosubliminal
 from autosubliminal.fileprocessor import process_file
-from autosubliminal.indexer import ShowIndexer, MovieIndexer
+from autosubliminal.indexer import MovieIndexer, ShowIndexer
 
 autosubliminal.SHOWINDEXER = ShowIndexer()
 autosubliminal.MOVIEINDEXER = MovieIndexer()

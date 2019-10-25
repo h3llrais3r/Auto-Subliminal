@@ -5,6 +5,7 @@ import logging
 import re
 from distutils import version
 
+# isort:imports-thirdparty
 from six import add_metaclass, text_type
 
 try:
@@ -13,13 +14,14 @@ except ImportError:
     # GitPython throws import error when no git is available on the system
     pass
 
+# isort:imports-firstparty
 import autosubliminal
 from autosubliminal import system
 from autosubliminal.core.enums import InstallType
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.util.common import connect_url, wait_for_internet_connection
-from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, \
-    release_wanted_queue_lock_on_exception
+from autosubliminal.util.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
+                                       release_wanted_queue_lock_on_exception)
 from autosubliminal.util.websocket import send_websocket_notification
 from autosubliminal.version import RELEASE_VERSION
 

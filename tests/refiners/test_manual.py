@@ -2,7 +2,7 @@
 
 import os
 
-from subliminal.video import Movie, Episode
+from subliminal.video import Episode, Movie
 
 from autosubliminal.core.item import WantedItem
 from autosubliminal.refiners.manual import refine

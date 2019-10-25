@@ -3,7 +3,6 @@
 from guessit.rules.common.comparators import marker_sorted
 from guessit.rules.common.formatters import cleanup
 from guessit.rules.properties.type import TypeProcessor
-
 from rebulk import Rebulk
 from rebulk.processors import POST_PROCESS
 from rebulk.rules import AppendMatch, RemoveMatch, RenameMatch, Rule

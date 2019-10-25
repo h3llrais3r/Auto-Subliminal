@@ -9,12 +9,13 @@ import time
 import langdetect
 import pysrt
 import subliminal
-from babelfish import Error as BabelfishError, Language
+from babelfish import Error as BabelfishError
+from babelfish import Language
 from enzyme.mkv import MKV
 from six import text_type
 
 import autosubliminal
-from autosubliminal.core.subtitle import Subtitle, EMBEDDED, HARDCODED, EXTERNAL
+from autosubliminal.core.subtitle import EMBEDDED, EXTERNAL, HARDCODED, Subtitle
 from autosubliminal.util.common import get_wanted_languages
 
 log = logging.getLogger(__name__)

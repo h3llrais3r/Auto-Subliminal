@@ -12,11 +12,13 @@ from vcr import VCR
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.core.item import WantedItem
-from autosubliminal.util.common import get_today, run_cmd, connect_url, wait_for_internet_connection, to_obj, to_text, \
-    to_list, to_obj_or_list, to_dict, get_boolean, safe_text, safe_lowercase, safe_uppercase, safe_trim, sanitize, \
-    escape_quotes, display_mapping_dict, display_list_single_line, display_list_multi_line, display_value, \
-    display_item_title, display_item_name, display_interval, display_timestamp, convert_timestamp, humanize_bytes, \
-    get_common_path, get_root_path, get_file_size, set_rw_and_remove, atoi, natural_keys, get_wanted_languages
+from autosubliminal.util.common import (atoi, connect_url, convert_timestamp, display_interval, display_item_name,
+                                        display_item_title, display_list_multi_line, display_list_single_line,
+                                        display_mapping_dict, display_timestamp, display_value, escape_quotes,
+                                        get_boolean, get_common_path, get_file_size, get_root_path, get_today,
+                                        get_wanted_languages, humanize_bytes, natural_keys, run_cmd, safe_lowercase,
+                                        safe_text, safe_trim, safe_uppercase, sanitize, set_rw_and_remove, to_dict,
+                                        to_list, to_obj, to_obj_or_list, to_text, wait_for_internet_connection)
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',

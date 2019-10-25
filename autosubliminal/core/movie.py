@@ -6,7 +6,7 @@ import os
 from imdbpie.objects import Title
 
 import autosubliminal
-from autosubliminal.util.common import to_dict, to_obj, to_list, get_wanted_languages
+from autosubliminal.util.common import get_wanted_languages, to_dict, to_list, to_obj
 
 log = logging.getLogger(__name__)
 

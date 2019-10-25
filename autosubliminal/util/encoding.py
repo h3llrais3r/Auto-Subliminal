@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from six import binary_type, text_type, PY2
+from six import PY2, binary_type, text_type
 
 
 def b2u(b, encoding='utf-8', fallback_error_mode='replace'):

@@ -4,8 +4,8 @@ import os
 import tempfile
 from distutils.version import StrictVersion
 
-from autosubliminal.util.system import get_python_location, get_python_version_full, get_python_version_strict, \
-    store_python_version, get_stored_python_version
+from autosubliminal.util.system import (get_python_location, get_python_version_full, get_python_version_strict,
+                                        get_stored_python_version, store_python_version)
 
 python_executable = '/path/to/python/executable/python.exe'
 python_version = '2.7.15 (v2.7.15:ca079a3ea3, Apr 30 2018, 16:30:26) [MSC v.1500 64 bit (AMD64)]'

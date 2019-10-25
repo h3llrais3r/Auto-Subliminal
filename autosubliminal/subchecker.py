@@ -1,8 +1,8 @@
 # coding=utf-8
 
 import logging
-import os
 import operator
+import os
 import shutil
 
 import babelfish
@@ -28,9 +28,9 @@ from autosubliminal.providers import provider_cache
 from autosubliminal.providers.addic7ed import Addic7edSubtitle as Addic7edSubtitleRandomUserAgent
 from autosubliminal.subdownloader import SubDownloader
 from autosubliminal.util.common import set_rw_and_remove, wait_for_internet_connection
-from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, \
-    release_wanted_queue_lock_on_exception
-from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
+from autosubliminal.util.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
+                                       release_wanted_queue_lock_on_exception)
+from autosubliminal.util.websocket import PAGE_RELOAD, send_websocket_event, send_websocket_notification
 
 log = logging.getLogger(__name__)
 

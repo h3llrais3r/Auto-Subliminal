@@ -3,7 +3,7 @@
 import requests_mock
 
 from autosubliminal.core.item import DownloadItem, WantedItem
-from autosubliminal.notifiers.prowl import ProwlNotifier, PROWLURL
+from autosubliminal.notifiers.prowl import PROWLURL, ProwlNotifier
 
 notifier_name = 'Prowl'
 

@@ -1,8 +1,8 @@
 # coding=utf-8
 
-from autosubliminal.server.api.settings import SettingsApi
-
 from tests.server.api.test_api import pickle_api_result
+
+from autosubliminal.server.api.settings import SettingsApi
 
 settings_json = '{"checkSub": "SubChecker", ' \
                 '"checkVersion": "VersionChecker", ' \

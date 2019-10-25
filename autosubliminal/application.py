@@ -18,12 +18,12 @@ from autosubliminal.core.scheduler import Scheduler
 from autosubliminal.core.websocket import WebSocketBroadCaster, WebSocketHandler
 from autosubliminal.diskscanner import DiskScanner
 from autosubliminal.libraryscanner import LibraryScanner
-from autosubliminal.subchecker import SubChecker
-from autosubliminal.versionchecker import VersionChecker
 from autosubliminal.server.root import WebServerRoot
+from autosubliminal.subchecker import SubChecker
 from autosubliminal.util.encoding import s2n
 from autosubliminal.util.json import json_out_handler
 from autosubliminal.util.packaging import get_library_version
+from autosubliminal.versionchecker import VersionChecker
 
 log = logging.getLogger(__name__)
 

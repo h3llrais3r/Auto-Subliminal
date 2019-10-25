@@ -3,20 +3,21 @@
 import logging
 import os
 
+from tvdb_api_v2.utils.artwork import get_artwork_url
+
 import autosubliminal
 from autosubliminal.core.cache import cache_artwork, is_artwork_cached
 from autosubliminal.core.movie import MovieSettings
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.core.show import ShowSettings
-from autosubliminal.db import FailedMoviesDb, FailedShowsDb, MovieDetailsDb, MovieSettingsDb, ShowDetailsDb, \
-    ShowEpisodeDetailsDb, ShowSettingsDb
+from autosubliminal.db import (FailedMoviesDb, FailedShowsDb, MovieDetailsDb, MovieSettingsDb, ShowDetailsDb,
+                               ShowEpisodeDetailsDb, ShowSettingsDb)
 from autosubliminal.fileprocessor import process_file
-from autosubliminal.indexer import ShowIndexer, MovieIndexer
-from autosubliminal.util.common import safe_lowercase, get_wanted_languages
-from autosubliminal.util.filesystem import is_valid_video_file, is_skipped_dir, one_path_exists, \
-    get_available_subtitles, VIDEO_EXTENSIONS
-from autosubliminal.util.websocket import send_websocket_event, send_websocket_notification, PAGE_RELOAD
-from tvdb_api_v2.utils.artwork import get_artwork_url
+from autosubliminal.indexer import MovieIndexer, ShowIndexer
+from autosubliminal.util.common import get_wanted_languages, safe_lowercase
+from autosubliminal.util.filesystem import (VIDEO_EXTENSIONS, get_available_subtitles, is_skipped_dir,
+                                            is_valid_video_file, one_path_exists)
+from autosubliminal.util.websocket import PAGE_RELOAD, send_websocket_event, send_websocket_notification
 
 log = logging.getLogger(__name__)
 

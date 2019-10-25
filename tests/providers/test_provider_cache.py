@@ -5,8 +5,9 @@ import os
 from subliminal.cache import region
 from subliminal.cli import MutexLock
 
-from autosubliminal.providers.provider_cache import fill_addic7ed_show_id_cache, ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX, \
-    CUSTOM_ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX
+from autosubliminal.providers.provider_cache import (ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX,
+                                                     CUSTOM_ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX,
+                                                     fill_addic7ed_show_id_cache)
 
 
 def test_fill_addic7ed_show_id_cache(monkeypatch):
