@@ -4,6 +4,7 @@ import datetime
 import logging
 import os
 import shutil
+import tempfile
 
 import requests
 from dogpile.cache.backends.file import AbstractFileLock
@@ -45,6 +46,14 @@ class MutexFileLock(AbstractFileLock):
 def clear_mako_cache():
     mako_cache_dir = os.path.abspath(os.path.join(autosubliminal.CACHEDIR, 'mako'))
     shutil.rmtree(mako_cache_dir, onerror=set_rw_and_remove)
+
+
+def clear_imdbpie_cache():
+    # Cache is created by imdbpie in temp location (see auth.py in imdbpie)
+    # Cleanup is required when switching between python versions
+    # If not, 'ValueError: unsupported pickle protocol' is thrown
+    imdb_cache_file = os.path.abspath(os.path.join(tempfile.gettempdir(), 'cache.db'))
+    os.remove(imdb_cache_file)
 
 
 def cache_artwork(indexer_name, indexer_id, artwork_type, artwork_url, thumbnail=False):
