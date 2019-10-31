@@ -1,5 +1,10 @@
 # PyCharm IDE files
 .idea
+.vscode
+.history
+
+# Virtual environments
+.venv
 
 # Compiled files
 *.pyc
