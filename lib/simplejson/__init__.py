@@ -87,7 +87,6 @@ Specializing JSON object encoding::
     >>> ''.join(json.JSONEncoder(default=encode_complex).iterencode(2 + 1j))
     '[2.0, 1.0]'
 
-
 Using simplejson.tool from the shell to validate and pretty-print::
 
     $ echo '{"json":"obj"}' | python -m simplejson.tool
@@ -96,9 +95,30 @@ Using simplejson.tool from the shell to validate and pretty-print::
     }
     $ echo '{ 1.2:3.4}' | python -m simplejson.tool
     Expecting property name: line 1 column 3 (char 2)
+
+Parsing multiple documents serialized as JSON lines (newline-delimited JSON)::
+
+    >>> import simplejson as json
+    >>> def loads_lines(docs):
+    ...     for doc in docs.splitlines():
+    ...         yield json.loads(doc)
+    ...
+    >>> sum(doc["count"] for doc in loads_lines('{"count":1}\n{"count":2}\n{"count":3}\n'))
+    6
+
+Serializing multiple objects to JSON lines (newline-delimited JSON)::
+
+    >>> import simplejson as json
+    >>> def dumps_lines(objs):
+    ...     for obj in objs:
+    ...         yield json.dumps(obj, separators=(',',':')) + '\n'
+    ...
+    >>> ''.join(dumps_lines([{'count': 1}, {'count': 2}, {'count': 3}]))
+    '{"count":1}\n{"count":2}\n{"count":3}\n'
+
 """
 from __future__ import absolute_import
-__version__ = '3.16.0'
+__version__ = '3.17.0'
 __all__ = [
     'dump', 'dumps', 'load', 'loads',
     'JSONDecoder', 'JSONDecodeError', 'JSONEncoder',
@@ -160,18 +180,12 @@ def dump(obj, fp, skipkeys=False, ensure_ascii=True, check_circular=True,
     ``.write()``-supporting file-like object).
 
     If *skipkeys* is true then ``dict`` keys that are not basic types
-    (``str``, ``unicode``, ``int``, ``long``, ``float``, ``bool``, ``None``)
+    (``str``, ``int``, ``long``, ``float``, ``bool``, ``None``)
     will be skipped instead of raising a ``TypeError``.
 
-    If *ensure_ascii* is false, then the some chunks written to ``fp``
-    may be ``unicode`` instances, subject to normal Python ``str`` to
-    ``unicode`` coercion rules. Unless ``fp.write()`` explicitly
-    understands ``unicode`` (as in ``codecs.getwriter()``) this is likely
-    to cause an error.
-
-    If *check_circular* is false, then the circular reference check
-    for container types will be skipped and a circular reference will
-    result in an ``OverflowError`` (or worse).
+    If *ensure_ascii* is false (default: ``True``), then the output may
+    contain non-ASCII characters, so long as they do not need to be escaped
+    by JSON. When it is true, all non-ASCII characters are escaped.
 
     If *allow_nan* is false, then it will be a ``ValueError`` to
     serialize out of range ``float`` values (``nan``, ``inf``, ``-inf``)
@@ -182,9 +196,7 @@ def dump(obj, fp, skipkeys=False, ensure_ascii=True, check_circular=True,
     If *indent* is a string, then JSON array elements and object members
     will be pretty-printed with a newline followed by that string repeated
     for each level of nesting. ``None`` (the default) selects the most compact
-    representation without any newlines. For backwards compatibility with
-    versions of simplejson earlier than 2.1.0, an integer is also accepted
-    and is converted to a string with that many spaces.
+    representation without any newlines.
 
     If specified, *separators* should be an
     ``(item_separator, key_separator)`` tuple.  The default is ``(', ', ': ')``
@@ -289,12 +301,12 @@ def dumps(obj, skipkeys=False, ensure_ascii=True, check_circular=True,
     """Serialize ``obj`` to a JSON formatted ``str``.
 
     If ``skipkeys`` is false then ``dict`` keys that are not basic types
-    (``str``, ``unicode``, ``int``, ``long``, ``float``, ``bool``, ``None``)
+    (``str``, ``int``, ``long``, ``float``, ``bool``, ``None``)
     will be skipped instead of raising a ``TypeError``.
 
-    If ``ensure_ascii`` is false, then the return value will be a
-    ``unicode`` instance subject to normal Python ``str`` to ``unicode``
-    coercion rules instead of being escaped to an ASCII ``str``.
+    If *ensure_ascii* is false (default: ``True``), then the output may
+    contain non-ASCII characters, so long as they do not need to be escaped
+    by JSON. When it is true, all non-ASCII characters are escaped.
 
     If ``check_circular`` is false, then the circular reference check
     for container types will be skipped and a circular reference will
@@ -318,7 +330,8 @@ def dumps(obj, skipkeys=False, ensure_ascii=True, check_circular=True,
     compact JSON representation, you should specify ``(',', ':')`` to eliminate
     whitespace.
 
-    ``encoding`` is the character encoding for str instances, default is UTF-8.
+    ``encoding`` is the character encoding for bytes instances, default is
+    UTF-8.
 
     ``default(obj)`` is a function that should return a serializable version
     of obj or raise TypeError. The default simply raises TypeError.
@@ -408,14 +421,11 @@ def load(fp, encoding=None, cls=None, object_hook=None, parse_float=None,
         use_decimal=False, namedtuple_as_object=True, tuple_as_array=True,
         **kw):
     """Deserialize ``fp`` (a ``.read()``-supporting file-like object containing
-    a JSON document) to a Python object.
+    a JSON document as `str` or `bytes`) to a Python object.
 
     *encoding* determines the encoding used to interpret any
-    :class:`str` objects decoded by this instance (``'utf-8'`` by
-    default).  It has no effect when decoding :class:`unicode` objects.
-
-    Note that currently only encodings that are a superset of ASCII work,
-    strings of other encodings should be passed in as :class:`unicode`.
+    `bytes` objects decoded by this instance (``'utf-8'`` by
+    default). It has no effect when decoding `str` objects.
 
     *object_hook*, if specified, will be called with the result of every
     JSON object decoded and its return value will be used in place of the
@@ -468,11 +478,8 @@ def loads(s, encoding=None, cls=None, object_hook=None, parse_float=None,
     document) to a Python object.
 
     *encoding* determines the encoding used to interpret any
-    :class:`str` objects decoded by this instance (``'utf-8'`` by
-    default).  It has no effect when decoding :class:`unicode` objects.
-
-    Note that currently only encodings that are a superset of ASCII work,
-    strings of other encodings should be passed in as :class:`unicode`.
+    :class:`bytes` objects decoded by this instance (``'utf-8'`` by
+    default). It has no effect when decoding :class:`unicode` objects.
 
     *object_hook*, if specified, will be called with the result of every
     JSON object decoded and its return value will be used in place of the
