@@ -54,7 +54,7 @@
     "gulp-eslint": "6.0.0",
     "gulp-rename": "1.4.0",
     "gulp-sass": "4.0.2",
-    "gulp-stylelint": "10.0.0",
+    "gulp-stylelint": "11.0.0",
     "gulp-uglify": "3.0.2",
     "gulp-watch": "5.0.1",
     "stylelint": "11.1.1",
