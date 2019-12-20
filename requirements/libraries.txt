@@ -50,7 +50,7 @@ smmap2==2.0.5
 soupsieve==1.9.5
 stevedore==1.31.0
 git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a#egg=subliminal
-tempora==1.14.1
+tempora==2.0.0
 trans==2.1.0
 git+https://github.com/h3llrais3r/tvdb_api_v2.git@7f02ecb9620017aed75973fd14d0197825c35140#egg=tvdb_api_v2
 unidecode==1.1.1
