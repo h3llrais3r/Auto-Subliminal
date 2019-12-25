@@ -57,7 +57,7 @@
     "gulp-stylelint": "11.0.0",
     "gulp-uglify": "3.0.2",
     "gulp-watch": "5.0.1",
-    "stylelint": "12.0.0",
+    "stylelint": "12.0.1",
     "stylelint-config-recommended-scss": "4.1.0",
     "stylelint-formatter-table": "1.0.4",
     "stylelint-scss": "3.13.0"
