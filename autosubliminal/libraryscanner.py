@@ -3,7 +3,7 @@
 import logging
 import os
 
-from tvdb_api_v2.utils.artwork import get_artwork_url
+from tvdb_api.utils.artwork import get_artwork_url
 
 import autosubliminal
 from autosubliminal.core.cache import cache_artwork, is_artwork_cached

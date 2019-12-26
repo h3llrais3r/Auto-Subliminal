@@ -103,7 +103,7 @@ Libraries dependency tree
     |-- six
     |-- stevedore
         |-- six
-|-- tvdb_api_v2
+|-- tvdb_api
     |-- certifi
     |-- python-dateutil
         |-- six

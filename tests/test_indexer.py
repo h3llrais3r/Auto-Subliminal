@@ -1,7 +1,7 @@
 # coding=utf-8
 
 from imdbpie.objects import TitleSearchResult
-from tvdb_api_v2.models.series_search_result import SeriesSearchResult
+from tvdb_api.models.series_search_result import SeriesSearchResult
 
 import autosubliminal
 from autosubliminal import version

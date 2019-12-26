@@ -12,7 +12,7 @@ from imdbpie.facade import ImdbFacade
 from imdbpie.objects import TitleSearchResult
 from six import add_metaclass, text_type
 from six.moves.urllib.parse import urlparse, urlunparse
-from tvdb_api_v2.client import TvdbClient
+from tvdb_api.client import TvdbClient
 from unidecode import unidecode
 
 import autosubliminal
@@ -103,7 +103,7 @@ class ShowIndexer(Indexer):
         :param language: the language to search for
         :type language: str
         :return: the search result or None if not found
-        :rtype : tvdb_api_v2.models.series_search_result.SeriesSearchResult or None
+        :rtype : tvdb_api.models.series_search_result.SeriesSearchResult or None
         """
         name = title
         if year:
@@ -135,7 +135,7 @@ class ShowIndexer(Indexer):
         :param language: the language to search for
         :type language: str
         :return: the show details or None if not found
-        :rtype : tvdb_api_v2.models.series.Series or None
+        :rtype : tvdb_api.models.series.Series or None
         """
         log.info('Querying tvdb api for id %s', id)
         series_data = self._client.get_series(id, language=language)
