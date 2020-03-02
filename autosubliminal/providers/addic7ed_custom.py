@@ -5,7 +5,7 @@ import random
 import re
 import time
 
-from babelfish import Language, language_converters
+from babelfish import Language
 from guessit import guessit
 from requests import Session
 from subliminal import __short_version__
