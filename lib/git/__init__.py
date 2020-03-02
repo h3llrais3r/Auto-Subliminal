@@ -12,13 +12,13 @@ import sys
 import os.path as osp
 
 
-__version__ = '2.1.14'
+__version__ = '2.1.15'
 
 
 #{ Initialization
 def _init_externals():
     """Initialize external projects by putting them into the path"""
-    if __version__ == '2.1.14':
+    if __version__ == '2.1.15':
         sys.path.insert(0, osp.join(osp.dirname(__file__), 'ext', 'gitdb'))
 
     try:
