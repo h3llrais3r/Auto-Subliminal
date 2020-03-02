@@ -7,7 +7,7 @@ from autosubliminal.util.encoding import s2n
 
 # Addic7ed _search_show_id prefix (provide it for both subliminal version and our custom version)
 ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX = 'subliminal.providers.addic7ed:_search_show_id'
-CUSTOM_ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX = 'autosubliminal.providers.addic7ed:_search_show_id'
+CUSTOM_ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX = 'autosubliminal.providers.addic7ed_custom:_search_show_id'
 
 
 def fill_addic7ed_show_id_cache():

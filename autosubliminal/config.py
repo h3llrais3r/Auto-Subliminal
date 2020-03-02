@@ -436,23 +436,33 @@ def read_config(check_upgrade=False):
         else:
             autosubliminal.PREFERHEARINGIMPAIRED = False
 
+        if cfg.has_option('subliminal', 'anticaptchaclass'):
+            autosubliminal.ANTICAPTCHACLASS = cfg.get('subliminal', 'anticaptchaclass')
+        else:
+            autosubliminal.ANTICAPTCHACLASS = u''
+
+        if cfg.has_option('subliminal', 'anticaptchaclientkey'):
+            autosubliminal.ANTICAPTCHACLIENTKEY = cfg.get('subliminal', 'anticaptchaclientkey')
+        else:
+            autosubliminal.ANTICAPTCHACLIENTKEY = u''
+
         if cfg.has_option('subliminal', 'addic7edusername') and cfg.has_option('subliminal', 'addic7edpassword'):
             autosubliminal.ADDIC7EDUSERNAME = cfg.get('subliminal', 'addic7edusername')
             autosubliminal.ADDIC7EDPASSWORD = cfg.get('subliminal', 'addic7edpassword')
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'] = {}
-            autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_random_user_agent'] = {'random_user_agent': True}
+            autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_custom'] = {'random_user_agent': True}
             if autosubliminal.ADDIC7EDUSERNAME and autosubliminal.ADDIC7EDPASSWORD:
                 autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'].update({
                     'username': autosubliminal.ADDIC7EDUSERNAME,
                     'password': autosubliminal.ADDIC7EDPASSWORD})
-                autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_random_user_agent'].update({
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_custom'].update({
                     'username': autosubliminal.ADDIC7EDUSERNAME,
                     'password': autosubliminal.ADDIC7EDPASSWORD})
         else:
             autosubliminal.ADDIC7EDUSERNAME = u''
             autosubliminal.ADDIC7EDPASSWORD = u''
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'] = {}
-            autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_random_user_agent'] = {'random_user_agent': True}
+            autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_custom'] = {'random_user_agent': True}
 
         if cfg.has_option('subliminal', 'opensubtitlesusername') and cfg.has_option('subliminal',
                                                                                     'opensubtitlespassword'):
@@ -493,6 +503,8 @@ def read_config(check_upgrade=False):
         autosubliminal.MANUALREFINEVIDEO = False
         autosubliminal.REFINEVIDEO = False
         autosubliminal.PREFERHEARINGIMPAIRED = False
+        autosubliminal.ANTICAPTCHACLASS = u''
+        autosubliminal.ANTICAPTCHACLIENTKEY = u''
         autosubliminal.ADDIC7EDUSERNAME = u''
         autosubliminal.ADDIC7EDPASSWORD = u''
         autosubliminal.OPENSUBTITLESUSERNAME = u''
@@ -999,6 +1011,8 @@ def write_subliminal_section():
     cfg.set(section, 'manualrefinevideo', text_type(autosubliminal.MANUALREFINEVIDEO))
     cfg.set(section, 'refinevideo', text_type(autosubliminal.REFINEVIDEO))
     cfg.set(section, 'preferhearingimpaired', text_type(autosubliminal.PREFERHEARINGIMPAIRED))
+    cfg.set(section, 'anticaptchaclass', autosubliminal.ANTICAPTCHACLASS)
+    cfg.set(section, 'anticaptchaclientkey', autosubliminal.ANTICAPTCHACLIENTKEY)
     cfg.set(section, 'addic7edusername', autosubliminal.ADDIC7EDUSERNAME)
     cfg.set(section, 'addic7edpassword', autosubliminal.ADDIC7EDPASSWORD)
     cfg.set(section, 'opensubtitlesusername', autosubliminal.OPENSUBTITLESUSERNAME)
@@ -1827,3 +1841,29 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 12
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification('Config upgraded!', type='notice', sticky=True)
+
+        if from_version == 12 and to_version == 13:
+            print('INFO: Renaming provider addic7ed_random_user_agent to addic7ed_custom.')
+            # Read config file
+            cfg = _create_config_parser()
+            try:
+                with codecs.open(autosubliminal.CONFIGFILE, mode='r', encoding=ENCODING) as f:
+                    cfg.read_file(f)
+            except Exception:
+                # No config yet, just mark as upgraded
+                cfg = _create_config_parser()
+            # Rename provider
+            if cfg.has_section('subliminal'):
+                if cfg.has_option('subliminal', 'providers'):
+                    providers = cfg.get('subliminal', 'providers').replace('addic7ed_random_user_agent',
+                                                                           'addic7ed_custom')
+                    cfg.set('subliminal', 'providers', providers)
+                    autosubliminal.SUBLIMINALPROVIDERS = providers.lower().split(',')
+                    # Write to file
+                    with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
+                        cfg.write(f)
+            print('INFO: Config upgraded to version 13.')
+            autosubliminal.CONFIGVERSION = 13
+            autosubliminal.CONFIGUPGRADED = True
+            send_websocket_notification('Config upgraded. Please check or reconfigure you subliminal configuration!',
+                                        type='notice', sticky=True)

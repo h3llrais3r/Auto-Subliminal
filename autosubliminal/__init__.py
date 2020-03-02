@@ -124,6 +124,8 @@ SUBTITLEUTF8ENCODING = None
 MANUALREFINEVIDEO = None
 REFINEVIDEO = None
 PREFERHEARINGIMPAIRED = None
+ANTICAPTCHACLASS = None
+ANTICAPTCHACLIENTKEY = None
 ADDIC7EDUSERNAME = None
 ADDIC7EDPASSWORD = None
 OPENSUBTITLESUSERNAME = None
@@ -208,8 +210,8 @@ def initialize():
         MOVIEMATCHRELEASEGROUP, \
         SUBLIMINALPROVIDERMANAGER, SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERCONFIGS, \
         SUBTITLEUTF8ENCODING, MANUALREFINEVIDEO, REFINEVIDEO, PREFERHEARINGIMPAIRED, \
-        ADDIC7EDUSERNAME, ADDIC7EDPASSWORD, OPENSUBTITLESUSERNAME, OPENSUBTITLESPASSWORD, \
-        LEGENDASTVUSERNAME, LEGENDASTVPASSWORD, \
+        ANTICAPTCHACLASS, ANTICAPTCHACLIENTKEY, ADDIC7EDUSERNAME, ADDIC7EDPASSWORD, \
+        OPENSUBTITLESUSERNAME, OPENSUBTITLESPASSWORD, LEGENDASTVUSERNAME, LEGENDASTVPASSWORD,  \
         SHOWNAMEMAPPING, ADDIC7EDSHOWNAMEMAPPING, ALTERNATIVESHOWNAMEMAPPING, \
         MOVIENAMEMAPPING, ALTERNATIVEMOVIENAMEMAPPING, \
         SKIPSHOW, SKIPMOVIE, \
@@ -406,7 +408,7 @@ def _init_subliminal(replace):
         refiner_manager.register(namemapping_refiner)
 
     # Add our custom addic7ed provider to list of subliminal providers
-    provider = 'addic7ed_random_user_agent = autosubliminal.providers.addic7ed:Addic7edProvider'
+    provider = 'addic7ed_custom = autosubliminal.providers.addic7ed_custom:Addic7edProvider'
     if provider not in provider_manager.registered_extensions:
         provider_manager.register(provider)
 

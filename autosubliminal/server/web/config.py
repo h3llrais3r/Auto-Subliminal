@@ -172,8 +172,8 @@ class Config(object):
         @cherrypy.expose(alias='save')
         @cherrypy.tools.json_out()
         def save(self, subtitleutf8encoding, manualrefinevideo, refinevideo, preferhearingimpaired,
-                 addic7edusername, addic7edpassword, opensubtitlesusername, opensubtitlespassword,
-                 legendastvusername, legendastvpassword,
+                 anticaptchaclass, anticaptchaclientkey, addic7edusername, addic7edpassword,
+                 opensubtitlesusername, opensubtitlespassword, legendastvusername, legendastvpassword,
                  showmmsdefault=None, showmmssource=None, showmmsquality=None, showmmscodec=None,
                  showmmsreleasegroup=None,
                  moviemmsdefault=None, moviemmssource=None, moviemmsquality=None, moviemmscodec=None,
@@ -236,6 +236,9 @@ class Config(object):
             autosubliminal.REFINEVIDEO = get_boolean(refinevideo)
             # Hearing impaired
             autosubliminal.PREFERHEARINGIMPAIRED = get_boolean(preferhearingimpaired)
+            # Anti-captcha
+            autosubliminal.ANTICAPTCHACLASS = anticaptchaclass
+            autosubliminal.ANTICAPTCHACLIENTKEY = anticaptchaclientkey
             # Addic7ed provider
             autosubliminal.ADDIC7EDUSERNAME = addic7edusername
             autosubliminal.ADDIC7EDPASSWORD = addic7edpassword

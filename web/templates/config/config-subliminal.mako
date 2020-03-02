@@ -4,6 +4,7 @@
     import subliminal
 
     import autosubliminal
+    from autosubliminal.providers.pitcher import ANTI_CAPTCHA_PROVIDERS
 %>
 
 <%block name="bodyContent">
@@ -314,6 +315,70 @@
                                         <option value="False" selected="selected">Disabled</option>
                                     % endif
                                 </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group section-title">
+                            <div class="col-xs-12 col-md-9">
+                                <span class="badge">Anti-captcha</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <div class="col-xs-12 col-md-9">
+                                <span class="alert-warning">WARNING: Client key is stored in plaintext!</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="anticaptchaclass">Anti-captcha service</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The anti-captcha service.</li>
+                                        % for anti_captcha_provider in ANTI_CAPTCHA_PROVIDERS:
+                                            <li><a href="${autosubliminal.DEREFERURL}https://${anti_captcha_provider['source']}" target="_blank">${anti_captcha_provider['source'].capitalize()}</a></li>
+                                        % endfor
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
+                                <select id="anticaptchaclass" name="anticaptchaclass" class="form-control input-sm">
+                                    % if not autosubliminal.ANTICAPTCHACLASS:
+                                        <option value="" selected="selected">Disabled</option>
+                                    %else:
+                                        <option value="">Disabled</option>
+                                    % endif
+                                    % for anti_captcha_provider in ANTI_CAPTCHA_PROVIDERS:
+                                        % if anti_captcha_provider['class'] ==  autosubliminal.ANTICAPTCHACLASS:
+                                            <option selected="selected" value="${anti_captcha_provider['class']}">${anti_captcha_provider['source'].capitalize()}</option>
+                                        % else:
+                                            <option value="${anti_captcha_provider['class']}">${anti_captcha_provider['source'].capitalize()}</option>
+                                        % endif
+                                    % endfor
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group narrow">
+                            <div class="col-xs-12 col-sm-4 col-md-3">
+                                <label for="anticaptchaclientkey">Anti-captcha client key</label>
+                                <div class="dropdown dropdown-icon">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
+                                    </a>
+                                    <ul class="dropdown-menu has-tip info-list">
+                                        <li>The anti-captcha client key.</li>
+                                        <li>anti-captcha.com: account_key</li>
+                                        <li>deathbycaptcha.com: username:password</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-md-6">
+                                <input type="text" value="${autosubliminal.ANTICAPTCHACLIENTKEY}" id="anticaptchaclientkey" name="anticaptchaclientkey" class="form-control input-sm">
                             </div>
                         </div>
 

@@ -13,6 +13,7 @@ cherrypy==17.4.2 # rq.filter: <18.0.0
 click==7.0
 configparser==4.0.2
 contextlib2=0.5.5
+deathbycaptcha=0.1.1
 decorator==4.4.1
 diskcache==4.1.0
 dogpile.cache==0.9.0
@@ -35,6 +36,7 @@ oauthlib==3.1.0
 portend==2.6
 pushbullet.py==0.11.0
 pysrt==1.1.2
+python-anticaptcha==0.4.2
 python-dateutil==2.8.1
 python-magic==0.4.15
 python-twitter==3.5

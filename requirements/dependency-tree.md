@@ -27,6 +27,9 @@ Libraries dependency tree
     |-- six
     |-- zc.lockfile
 |-- configparser
+|-- deathbycaptcha
+    |-- requests
+    |-- simplejson
 |-- dogpile.cache
     |-- decorator
 |-- enzyme
@@ -64,6 +67,9 @@ Libraries dependency tree
         |-- six
 |-- pysrt
     |-- chardet
+|-- python-anticaptcha
+    |-- requests
+    |-- six
 |-- python-twitter
     |-- requests
     |-- requests-oauthlib

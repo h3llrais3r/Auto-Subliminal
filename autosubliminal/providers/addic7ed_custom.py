@@ -3,6 +3,7 @@
 import logging
 import random
 import re
+import time
 
 from babelfish import Language, language_converters
 from guessit import guessit
@@ -15,6 +16,9 @@ from subliminal.score import get_equivalent_release_groups
 from subliminal.subtitle import Subtitle, fix_line_ending, guess_matches
 from subliminal.utils import sanitize, sanitize_release_group
 from subliminal.video import Episode
+
+from autosubliminal.providers.exceptions import TooManyRequests
+from autosubliminal.providers.pitcher import pitchers, load_verification, store_verification
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +34,7 @@ series_year_re = re.compile(r'^(?P<series>[ \w\'.:(),*&!?-]+?)(?: \((?P<year>\d{
 
 class Addic7edSubtitle(Subtitle):
     """Addic7ed Subtitle."""
-    provider_name = 'addic7ed_random_user_agent'  # Needs to map to the name of the registered provider
+    provider_name = 'addic7ed_custom'  # Needs to map to the name of the registered provider
 
     def __init__(self, language, hearing_impaired, page_link, series, season, episode, title, year, version,
                  download_link):
@@ -91,7 +95,7 @@ class Addic7edProvider(Provider):
         'slk', 'slv', 'spa', 'sqi', 'srp', 'swe', 'tha', 'tur', 'ukr', 'vie', 'zho'
     ]}
     video_types = (Episode,)
-    server_url = 'http://www.addic7ed.com/'
+    server_url = 'https://www.addic7ed.com/'
     subtitle_class = Addic7edSubtitle
 
     def __init__(self, username=None, password=None, random_user_agent=False):
@@ -110,15 +114,81 @@ class Addic7edProvider(Provider):
 
         # login
         if self.username and self.password:
-            logger.info('Logging in')
-            data = {'username': self.username, 'password': self.password, 'Submit': 'Log in'}
-            r = self.session.post(self.server_url + 'dologin.php', data, allow_redirects=False, timeout=10)
+            def check_verification(cache_region):
+                rr = self.session.get(self.server_url + 'panel.php', allow_redirects=False, timeout=10,
+                                      headers={'Referer': self.server_url})
+                if rr.status_code == 302:
+                    logger.info('Addic7ed: Login expired')
+                    cache_region.delete('addic7ed_data')
+                else:
+                    logger.info('Addic7ed: Re-using old login')
+                    self.logged_in = True
+                    return True
 
-            if r.status_code != 302:
-                raise AuthenticationError(self.username)
+            if load_verification('addic7ed', self.session, callback=check_verification):
+                return
 
-            logger.debug('Logged in')
+            logger.info('Addic7ed: Logging in')
+            data = {'username': self.username, 'password': self.password, 'Submit': 'Log in', 'url': '',
+                    'remember': 'true'}
+
+            tries = 0
+            while tries <= 3:
+                tries += 1
+                r = self.session.get(self.server_url + 'login.php', timeout=10, headers={'Referer': self.server_url})
+                if 'g-recaptcha' in r.content or 'grecaptcha' in r.content:
+                    logger.info('Addic7ed: Solving captcha. This might take a couple of minutes, but should only '
+                                'happen once every so often')
+
+                    for g, s in (('g-recaptcha-response', r'g-recaptcha.+?data-sitekey=\"(.+?)\"'),
+                                 ('recaptcha_response', r'grecaptcha.execute\(\'(.+?)\',')):
+                        site_key = re.search(s, r.content).group(1)
+                        if site_key:
+                            break
+                    if not site_key:
+                        logger.error('Addic7ed: Captcha site-key not found!')
+                        return
+
+                    pitcher = pitchers.get_pitcher()('Addic7ed', self.server_url + 'login.php', site_key,
+                                                     user_agent=self.session.headers['User-Agent'],
+                                                     cookies=self.session.cookies.get_dict(),
+                                                     is_invisible=True)
+
+                    result = pitcher.throw()
+                    if not result:
+                        if tries >= 3:
+                            raise Exception('Addic7ed: Couldn\'t solve captcha!')
+                        logger.info('Addic7ed: Couldn\'t solve captcha! Retrying')
+                        time.sleep(4)
+                        continue
+
+                    data[g] = result
+
+                time.sleep(1)
+                r = self.session.post(self.server_url + 'dologin.php', data, allow_redirects=False, timeout=10,
+                                      headers={'Referer': self.server_url + 'login.php'})
+
+                if 'relax, slow down' in r.content:
+                    raise TooManyRequests(self.username)
+
+                if 'Wrong password' in r.content or 'doesn\'t exist' in r.content:
+                    raise AuthenticationError(self.username)
+
+                if r.status_code != 302:
+                    if tries >= 3:
+                        logger.error('Addic7ed: Something went wrong when logging in')
+                        raise AuthenticationError(self.username)
+                    logger.info('Addic7ed: Something went wrong when logging in; retrying')
+                    time.sleep(4)
+                    continue
+                break
+
+            store_verification('addic7ed', self.session)
+
+            logger.debug('Addic7ed: Logged in')
             self.logged_in = True
+
+            time.sleep(2)
 
     def terminate(self):
         # logout
