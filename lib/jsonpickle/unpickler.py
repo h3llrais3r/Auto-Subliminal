@@ -383,11 +383,13 @@ class Unpickler(object):
         if isinstance(instance, tuple):
             return instance
 
+        instance = self._restore_object_instance_variables(obj, instance)
+
         if (_safe_hasattr(instance, 'default_factory') and
                 isinstance(instance.default_factory, _Proxy)):
             instance.default_factory = instance.default_factory.get()
 
-        return self._restore_object_instance_variables(obj, instance)
+        return instance
 
     def _restore_from_dict(self, obj, instance, ignorereserved=True):
         restore_key = self._restore_key_fn()
@@ -627,7 +629,7 @@ def loadclass(module_and_name, classes=None):
             for class_name in names[up_to:]:
                 obj = getattr(obj, class_name)
             return obj
-        except (AttributeError, ImportError, ValueError) as ex:
+        except (AttributeError, ImportError, ValueError):
             continue
     return None
 
