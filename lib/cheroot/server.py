@@ -58,7 +58,6 @@ And now for a trivial doctest to exercise the test suite
 
 >>> 'HTTPServer' in globals()
 True
-
 """
 
 from __future__ import absolute_import, division, print_function
@@ -93,6 +92,7 @@ from .makefile import MakeFile, StreamWriter
 
 __all__ = (
     'HTTPRequest', 'HTTPConnection', 'HTTPServer',
+    'HeaderReader', 'DropUnderscoreHeaderReader',
     'SizeCheckWrapper', 'KnownLengthRFile', 'ChunkedRFile',
     'Gateway', 'get_ssl_adapter_class',
 )
@@ -156,7 +156,7 @@ EMPTY = b''
 ASTERISK = b'*'
 FORWARD_SLASH = b'/'
 QUOTED_SLASH = b'%2F'
-QUOTED_SLASH_REGEX = re.compile(b'(?i)' + QUOTED_SLASH)
+QUOTED_SLASH_REGEX = re.compile(b''.join((b'(?i)', QUOTED_SLASH)))
 
 
 comma_separated_headers = [
@@ -248,15 +248,14 @@ class DropUnderscoreHeaderReader(HeaderReader):
 
 
 class SizeCheckWrapper:
-    """Wraps a file-like object, raising MaxSizeExceeded if too large."""
+    """Wraps a file-like object, raising MaxSizeExceeded if too large.
+
+    :param rfile: ``file`` of a limited size
+    :param int maxlen: maximum length of the file being read
+    """
 
     def __init__(self, rfile, maxlen):
-        """Initialize SizeCheckWrapper instance.
-
-        Args:
-            rfile (file): file of a limited size
-            maxlen (int): maximum length of the file being read
-        """
+        """Initialize SizeCheckWrapper instance."""
         self.rfile = rfile
         self.maxlen = maxlen
         self.bytes_read = 0
@@ -266,14 +265,12 @@ class SizeCheckWrapper:
             raise errors.MaxSizeExceeded()
 
     def read(self, size=None):
-        """Read a chunk from rfile buffer and return it.
+        """Read a chunk from ``rfile`` buffer and return it.
 
-        Args:
-            size (int): amount of data to read
+        :param int size: amount of data to read
 
-        Returns:
-            bytes: Chunk from rfile, limited by size if specified.
-
+        :returns: chunk from ``rfile``, limited by size if specified
+        :rtype: bytes
         """
         data = self.rfile.read(size)
         self.bytes_read += len(data)
@@ -281,14 +278,12 @@ class SizeCheckWrapper:
         return data
 
     def readline(self, size=None):
-        """Read a single line from rfile buffer and return it.
+        """Read a single line from ``rfile`` buffer and return it.
 
-        Args:
-            size (int): minimum amount of data to read
+        :param int size: minimum amount of data to read
 
-        Returns:
-            bytes: One line from rfile.
-
+        :returns: one line from ``rfile``
+        :rtype: bytes
         """
         if size is not None:
             data = self.rfile.readline(size)
@@ -309,14 +304,12 @@ class SizeCheckWrapper:
                 return EMPTY.join(res)
 
     def readlines(self, sizehint=0):
-        """Read all lines from rfile buffer and return them.
+        """Read all lines from ``rfile`` buffer and return them.
 
-        Args:
-            sizehint (int): hint of minimum amount of data to read
+        :param int sizehint: hint of minimum amount of data to read
 
-        Returns:
-            list[bytes]: Lines of bytes read from rfile.
-
+        :returns: lines of bytes read from ``rfile``
+        :rtype: list[bytes]
         """
         # Shamelessly stolen from StringIO
         total = 0
@@ -331,7 +324,7 @@ class SizeCheckWrapper:
         return lines
 
     def close(self):
-        """Release resources allocated for rfile."""
+        """Release resources allocated for ``rfile``."""
         self.rfile.close()
 
     def __iter__(self):
@@ -349,28 +342,24 @@ class SizeCheckWrapper:
 
 
 class KnownLengthRFile:
-    """Wraps a file-like object, returning an empty string when exhausted."""
+    """Wraps a file-like object, returning an empty string when exhausted.
+
+    :param rfile: ``file`` of a known size
+    :param int content_length: length of the file being read
+    """
 
     def __init__(self, rfile, content_length):
-        """Initialize KnownLengthRFile instance.
-
-        Args:
-            rfile (file): file of a known size
-            content_length (int): length of the file being read
-
-        """
+        """Initialize KnownLengthRFile instance."""
         self.rfile = rfile
         self.remaining = content_length
 
     def read(self, size=None):
-        """Read a chunk from rfile buffer and return it.
+        """Read a chunk from ``rfile`` buffer and return it.
 
-        Args:
-            size (int): amount of data to read
+        :param int size: amount of data to read
 
-        Returns:
-            bytes: Chunk from rfile, limited by size if specified.
-
+        :rtype: bytes
+        :returns: chunk from ``rfile``, limited by size if specified
         """
         if self.remaining == 0:
             return b''
@@ -384,14 +373,12 @@ class KnownLengthRFile:
         return data
 
     def readline(self, size=None):
-        """Read a single line from rfile buffer and return it.
+        """Read a single line from ``rfile`` buffer and return it.
 
-        Args:
-            size (int): minimum amount of data to read
+        :param int size: minimum amount of data to read
 
-        Returns:
-            bytes: One line from rfile.
-
+        :returns: one line from ``rfile``
+        :rtype: bytes
         """
         if self.remaining == 0:
             return b''
@@ -405,14 +392,12 @@ class KnownLengthRFile:
         return data
 
     def readlines(self, sizehint=0):
-        """Read all lines from rfile buffer and return them.
+        """Read all lines from ``rfile`` buffer and return them.
 
-        Args:
-            sizehint (int): hint of minimum amount of data to read
+        :param int sizehint: hint of minimum amount of data to read
 
-        Returns:
-            list[bytes]: Lines of bytes read from rfile.
-
+        :returns: lines of bytes read from ``rfile``
+        :rtype: list[bytes]
         """
         # Shamelessly stolen from StringIO
         total = 0
@@ -427,7 +412,7 @@ class KnownLengthRFile:
         return lines
 
     def close(self):
-        """Release resources allocated for rfile."""
+        """Release resources allocated for ``rfile``."""
         self.rfile.close()
 
     def __iter__(self):
@@ -449,16 +434,14 @@ class ChunkedRFile:
     This class is intended to provide a conforming wsgi.input value for
     request entities that have been encoded with the 'chunked' transfer
     encoding.
+
+    :param rfile: file encoded with the 'chunked' transfer encoding
+    :param int maxlen: maximum length of the file being read
+    :param int bufsize: size of the buffer used to read the file
     """
 
     def __init__(self, rfile, maxlen, bufsize=8192):
-        """Initialize ChunkedRFile instance.
-
-        Args:
-            rfile (file): file encoded with the 'chunked' transfer encoding
-            maxlen (int): maximum length of the file being read
-            bufsize (int): size of the buffer used to read the file
-        """
+        """Initialize ChunkedRFile instance."""
         self.rfile = rfile
         self.maxlen = maxlen
         self.bytes_read = 0
@@ -484,7 +467,10 @@ class ChunkedRFile:
             chunk_size = line.pop(0)
             chunk_size = int(chunk_size, 16)
         except ValueError:
-            raise ValueError('Bad chunked transfer size: ' + repr(chunk_size))
+            raise ValueError(
+                'Bad chunked transfer size: {chunk_size!r}'.
+                format(chunk_size=chunk_size),
+            )
 
         if chunk_size <= 0:
             self.closed = True
@@ -507,14 +493,12 @@ class ChunkedRFile:
             )
 
     def read(self, size=None):
-        """Read a chunk from rfile buffer and return it.
+        """Read a chunk from ``rfile`` buffer and return it.
 
-        Args:
-            size (int): amount of data to read
+        :param int size: amount of data to read
 
-        Returns:
-            bytes: Chunk from rfile, limited by size if specified.
-
+        :returns: chunk from ``rfile``, limited by size if specified
+        :rtype: bytes
         """
         data = EMPTY
 
@@ -540,14 +524,12 @@ class ChunkedRFile:
                 self.buffer = EMPTY
 
     def readline(self, size=None):
-        """Read a single line from rfile buffer and return it.
+        """Read a single line from ``rfile`` buffer and return it.
 
-        Args:
-            size (int): minimum amount of data to read
+        :param int size: minimum amount of data to read
 
-        Returns:
-            bytes: One line from rfile.
-
+        :returns: one line from ``rfile``
+        :rtype: bytes
         """
         data = EMPTY
 
@@ -583,14 +565,12 @@ class ChunkedRFile:
                     self.buffer = self.buffer[newline_pos:]
 
     def readlines(self, sizehint=0):
-        """Read all lines from rfile buffer and return them.
+        """Read all lines from ``rfile`` buffer and return them.
 
-        Args:
-            sizehint (int): hint of minimum amount of data to read
+        :param int sizehint: hint of minimum amount of data to read
 
-        Returns:
-            list[bytes]: Lines of bytes read from rfile.
-
+        :returns: lines of bytes read from ``rfile``
+        :rtype: list[bytes]
         """
         # Shamelessly stolen from StringIO
         total = 0
@@ -635,7 +615,7 @@ class ChunkedRFile:
             yield line
 
     def close(self):
-        """Release resources allocated for rfile."""
+        """Release resources allocated for ``rfile``."""
         self.rfile.close()
 
 
@@ -845,7 +825,7 @@ class HTTPRequest:
 
             # `urlsplit()` above parses "example.com:3128" as path part of URI.
             # this is a workaround, which makes it detect netloc correctly
-            uri_split = urllib.parse.urlsplit(b'//' + uri)
+            uri_split = urllib.parse.urlsplit(b''.join((b'//', uri)))
             _scheme, _authority, _path, _qs, _fragment = uri_split
             _port = EMPTY
             try:
@@ -976,7 +956,13 @@ class HTTPRequest:
         return True
 
     def read_request_headers(self):
-        """Read self.rfile into self.inheaders. Return success."""
+        """Read ``self.rfile`` into ``self.inheaders``.
+
+        Ref: :py:attr:`self.inheaders <HTTPRequest.outheaders>`.
+
+        :returns: success status
+        :rtype: bool
+        """
         # then all the http headers
         try:
             self.header_reader(self.rfile, self.inheaders)
@@ -1054,8 +1040,10 @@ class HTTPRequest:
             # Don't use simple_response here, because it emits headers
             # we don't want. See
             # https://github.com/cherrypy/cherrypy/issues/951
-            msg = self.server.protocol.encode('ascii')
-            msg += b' 100 Continue\r\n\r\n'
+            msg = b''.join((
+                self.server.protocol.encode('ascii'), SPACE, b'100 Continue',
+                CRLF, CRLF,
+            ))
             try:
                 self.conn.wfile.write(msg)
             except socket.error as ex:
@@ -1141,7 +1129,8 @@ class HTTPRequest:
     def send_headers(self):
         """Assert, process, and send the HTTP response message-headers.
 
-        You must set self.status, and self.outheaders before calling this.
+        You must set ``self.status``, and :py:attr:`self.outheaders
+        <HTTPRequest.outheaders>` before calling this.
         """
         hkeys = [key.lower() for key, value in self.outheaders]
         status = int(self.status[:3])
@@ -1426,12 +1415,12 @@ class HTTPConnection:
         return gid
 
     def resolve_peer_creds(self):  # LRU cached on per-instance basis
-        """Return the username and group tuple of the peercreds if available.
+        """Look up the username and group tuple of the ``PEERCREDS``.
 
-        Raises:
-            NotImplementedError: in case of unsupported OS
-            RuntimeError: in case of UID/GID lookup unsupported or disabled
+        :returns: the username and group tuple of the ``PEERCREDS``
 
+        :raises NotImplementedError: if the OS is unsupported
+        :raises RuntimeError: if UID/GID lookup is unsupported or disabled
         """
         if not IS_UID_GID_RESOLVABLE:
             raise NotImplementedError(
@@ -1515,7 +1504,7 @@ class HTTPServer:
     timeout = 10
     """The timeout in seconds for accepted connections (default 10)."""
 
-    version = 'Cheroot/' + __version__
+    version = 'Cheroot/{version!s}'.format(version=__version__)
     """A version string for the HTTPServer."""
 
     software = None
@@ -1540,16 +1529,23 @@ class HTTPServer:
     """The class to use for handling HTTP connections."""
 
     ssl_adapter = None
-    """An instance of ssl.Adapter (or a subclass).
+    """An instance of ``ssl.Adapter`` (or a subclass).
 
-    You must have the corresponding SSL driver library installed.
+    Ref: :py:class:`ssl.Adapter <cheroot.ssl.Adapter>`.
+
+    You must have the corresponding TLS driver library installed.
     """
 
     peercreds_enabled = False
-    """If True, peer cred lookup can be performed via UNIX domain socket."""
+    """
+    If :py:data:`True`, peer creds will be looked up via UNIX domain socket.
+    """
 
     peercreds_resolve_enabled = False
-    """If True, username/group will be looked up in the OS from peercreds."""
+    """
+    If :py:data:`True`, username/group will be looked up in the OS from
+    ``PEERCREDS``-provided IDs.
+    """
 
     keep_alive_conn_limit = 10
     """The maximum number of waiting keep-alive connections that will be kept open.
@@ -1645,17 +1641,27 @@ class HTTPServer:
     def bind_addr(self):
         """Return the interface on which to listen for connections.
 
-        For TCP sockets, a (host, port) tuple. Host values may be any IPv4
-        or IPv6 address, or any valid hostname. The string 'localhost' is a
-        synonym for '127.0.0.1' (or '::1', if your hosts file prefers IPv6).
-        The string '0.0.0.0' is a special IPv4 entry meaning "any active
-        interface" (INADDR_ANY), and '::' is the similar IN6ADDR_ANY for
-        IPv6. The empty string or None are not allowed.
+        For TCP sockets, a (host, port) tuple. Host values may be any
+        :term:`IPv4` or :term:`IPv6` address, or any valid hostname.
+        The string 'localhost' is a synonym for '127.0.0.1' (or '::1',
+        if your hosts file prefers :term:`IPv6`).
+        The string '0.0.0.0' is a special :term:`IPv4` entry meaning
+        "any active interface" (INADDR_ANY), and '::' is the similar
+        IN6ADDR_ANY for :term:`IPv6`.
+        The empty string or :py:data:`None` are not allowed.
 
-        For UNIX sockets, supply the filename as a string.
+        For UNIX sockets, supply the file name as a string.
 
         Systemd socket activation is automatic and doesn't require tempering
         with this variable.
+
+        .. glossary::
+
+           :abbr:`IPv4 (Internet Protocol version 4)`
+              Internet Protocol version 4
+
+           :abbr:`IPv6 (Internet Protocol version 6)`
+              Internet Protocol version 6
         """
         return self._bind_addr
 
@@ -1804,7 +1810,7 @@ class HTTPServer:
             traceback (bool): add traceback to output or not
         """
         # Override this in subclasses as desired
-        sys.stderr.write(msg + '\n')
+        sys.stderr.write('{msg!s}\n'.format(msg=msg))
         sys.stderr.flush()
         if traceback:
             tblines = traceback_.format_exc()
@@ -1965,7 +1971,7 @@ class HTTPServer:
 
     @staticmethod
     def resolve_real_bind_addr(socket_):
-        """Retrieve actual bind addr from bound socket."""
+        """Retrieve actual bind address from bound socket."""
         # FIXME: keep requested bind_addr separate real bound_addr (port
         # is different in case of ephemeral port 0)
         bind_addr = socket_.getsockname()

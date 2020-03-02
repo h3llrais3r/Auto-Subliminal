@@ -176,7 +176,10 @@ class ThreadPool:
         for i in range(self.min):
             self._threads.append(WorkerThread(self.server))
         for worker in self._threads:
-            worker.setName('CP Server ' + worker.getName())
+            worker.setName(
+                'CP Server {worker_name!s}'.
+                format(worker_name=worker.getName()),
+            )
             worker.start()
         for worker in self._threads:
             while not worker.ready:
@@ -192,7 +195,7 @@ class ThreadPool:
         """Put request into queue.
 
         Args:
-            obj (cheroot.server.HTTPConnection): HTTP connection
+            obj (:py:class:`~cheroot.server.HTTPConnection`): HTTP connection
                 waiting to be processed
         """
         self._queue.put(obj, block=True, timeout=self._queue_put_timeout)
@@ -223,7 +226,10 @@ class ThreadPool:
 
     def _spawn_worker(self):
         worker = WorkerThread(self.server)
-        worker.setName('CP Server ' + worker.getName())
+        worker.setName(
+            'CP Server {worker_name!s}'.
+            format(worker_name=worker.getName()),
+        )
         worker.start()
         return worker
 
