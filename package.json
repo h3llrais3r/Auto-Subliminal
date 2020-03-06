@@ -34,7 +34,7 @@
     "jquery": "3.4.1",
     "jquery-countdown": "2.2.0",
     "jquery-hoverintent": "1.10.1",
-    "pnotify": "4.0.0",
+    "pnotify": "4.0.1",
     "pubsub-js": "1.8.0",
     "strftime": "0.10.0",
     "tablesorter": "2.31.3",
