@@ -113,13 +113,16 @@ class ShowIndexer(Indexer):
         search_results = self._client.search_series_by_name(s2n(name), language=language)
 
         # Only return 1 result or None
+        name_sanitized = sanitize(name)
         for search_result in search_results.data:
-            if sanitize(search_result.series_name) == sanitize(name):
+            if sanitize(search_result.series_name) == name_sanitized:
                 return search_result
+            elif search_result.slug and sanitize(search_result.slug) == name_sanitized:
+                    return search_result
             elif search_result.aliases:
                 # If no match, fallback to aliases (if aliases are available)
                 for alias in search_result.aliases:
-                    if sanitize(alias) == sanitize(name):
+                    if sanitize(alias) == name_sanitized:
                         return search_result
             else:
                 continue
