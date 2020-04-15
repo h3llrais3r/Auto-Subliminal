@@ -40,7 +40,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
-                                <textarea id="videopaths" name="videopaths" class="form-control input-sm">${display_list_multi_line(autosubliminal.VIDEOPATHS)}</textarea>
+                                <textarea id="videopaths" name="videopaths" class="form-control input-sm multi-input hidden">${display_list_multi_line(autosubliminal.VIDEOPATHS)}</textarea>
                             </div>
                         </div>
 

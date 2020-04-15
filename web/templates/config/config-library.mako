@@ -66,7 +66,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
-                                <textarea id="librarypaths" name="librarypaths" class="form-control input-sm">${display_list_multi_line(autosubliminal.LIBRARYPATHS)}</textarea>
+                                <textarea id="librarypaths" name="librarypaths" class="form-control input-sm multi-input hidden">${display_list_multi_line(autosubliminal.LIBRARYPATHS)}</textarea>
                             </div>
                         </div>
 

@@ -47,7 +47,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
-                                <textarea rows="5" id="skipshow" name="skipshow" class="form-control input-sm">${display_mapping_dict(autosubliminal.SKIPSHOW)}</textarea>
+                                <textarea id="skipshow" name="skipshow" class="form-control input-sm multi-input hidden">${display_mapping_dict(autosubliminal.SKIPSHOW)}</textarea>
                             </div>
                         </div>
 
@@ -75,7 +75,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
-                                <textarea rows="5" id="skipmovie" name="skipmovie" class="form-control input-sm">${display_mapping_dict(autosubliminal.SKIPMOVIE)}</textarea>
+                                <textarea id="skipmovie" name="skipmovie" class="form-control input-sm multi-input hidden">${display_mapping_dict(autosubliminal.SKIPMOVIE)}</textarea>
                             </div>
                         </div>
 

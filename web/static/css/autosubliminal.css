@@ -731,6 +731,13 @@ table.table.table-hover tbody tr:hover {
   margin-bottom: 15px;
 }
 
+/******************************
+ * MULTI-INPUT-FIELDS STYLING *
+ *****************************/
+.multi-input-fields .input-group .input-group-addon {
+  cursor: pointer;
+}
+
 /************************
  * MANUALSEARCH STYLING *
  ************************/

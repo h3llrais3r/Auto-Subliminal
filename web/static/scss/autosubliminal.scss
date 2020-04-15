@@ -853,6 +853,18 @@ table.table {
   }
 }
 
+/******************************
+ * MULTI-INPUT-FIELDS STYLING *
+ *****************************/
+
+.multi-input-fields {
+  .input-group {
+    .input-group-addon {
+      cursor: pointer;
+    }
+  }
+}
+
 /************************
  * MANUALSEARCH STYLING *
  ************************/

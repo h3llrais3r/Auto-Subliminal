@@ -51,7 +51,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
-                                <textarea rows="5" id="shownamemapping" name="shownamemapping" class="form-control input-sm">${display_mapping_dict(autosubliminal.SHOWNAMEMAPPING)}</textarea>
+                                <textarea id="shownamemapping" name="shownamemapping" class="form-control input-sm multi-input hidden">${display_mapping_dict(autosubliminal.SHOWNAMEMAPPING)}</textarea>
                             </div>
                         </div>
 
@@ -73,7 +73,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
-                                <textarea rows="5" id="addic7edshownamemapping" name="addic7edshownamemapping" class="form-control input-sm">${display_mapping_dict(autosubliminal.ADDIC7EDSHOWNAMEMAPPING)}</textarea>
+                                <textarea id="addic7edshownamemapping" name="addic7edshownamemapping" class="form-control input-sm multi-input hidden">${display_mapping_dict(autosubliminal.ADDIC7EDSHOWNAMEMAPPING)}</textarea>
                             </div>
                         </div>
 
@@ -95,7 +95,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
-                                <textarea rows="5" id="alternativeshownamemapping" name="alternativeshownamemapping" class="form-control input-sm">${display_mapping_dict(autosubliminal.ALTERNATIVESHOWNAMEMAPPING)}</textarea>
+                                <textarea id="alternativeshownamemapping" name="alternativeshownamemapping" class="form-control input-sm multi-input hidden">${display_mapping_dict(autosubliminal.ALTERNATIVESHOWNAMEMAPPING)}</textarea>
                             </div>
                         </div>
 
@@ -123,7 +123,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
-                                <textarea rows="5" id="movienamemapping" name="movienamemapping" class="form-control input-sm">${display_mapping_dict(autosubliminal.MOVIENAMEMAPPING)}</textarea>
+                                <textarea id="movienamemapping" name="movienamemapping" class="form-control input-sm multi-input hidden">${display_mapping_dict(autosubliminal.MOVIENAMEMAPPING)}</textarea>
                             </div>
                         </div>
 
@@ -145,7 +145,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
-                                <textarea rows="5" id="alternativemovienamemapping" name="alternativemovienamemapping" class="form-control input-sm">${display_mapping_dict(autosubliminal.ALTERNATIVEMOVIENAMEMAPPING)}</textarea>
+                                <textarea id="alternativemovienamemapping" name="alternativemovienamemapping" class="form-control input-sm multi-input hidden">${display_mapping_dict(autosubliminal.ALTERNATIVEMOVIENAMEMAPPING)}</textarea>
                             </div>
                         </div>
 

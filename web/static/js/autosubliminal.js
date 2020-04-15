@@ -624,6 +624,82 @@ var autosubliminal = {
         }
     });
 
+    /* ====================
+     * Multi-input textarea
+     * ==================== */
+
+    // Initialize a multi input textarea
+    var initMultiInputTextArea = function (element) {
+        // Hide textarea element
+        $(element).hide();
+        // Get the texarea values
+        var values = $(element).val().split('\n');
+        // Remove previous input fields wrapper (needed when initializing the component again)
+        $(element).next('div.multi-input-fields').remove();
+        // Create input fields wrapper
+        $(element).after('<div class="multi-input-fields"></div>');
+        var multiInputFields = $(element).next('div.multi-input-fields');
+        // Add separate input field for each value
+        for (var i = 0; i < values.length; i++) {
+            $(multiInputFields).append('<div class="input-group">' +
+                '<input type="text" class="form-control input-sm" value="' + values[i] + '">' +
+                '<span class="input-group-addon addon-remove">' +
+                '<i class="fa fa-times" aria-hidden="true"></i>' +
+                '</span>' +
+                '</div>');
+        }
+        // Add input field to add new value
+        $(multiInputFields).append('<div class="input-group">' +
+            '<input type="text" class="form-control input-sm" placeholder="New value">' +
+            '<span class="input-group-addon addon-add">' +
+            '<i class="fa fa-plus" aria-hidden="true"></i>' +
+            '</span>' +
+            '</div>');
+    };
+
+    // Init all the multi input fields
+    var initMultiInputTextAreas = function () {
+        $('textarea.multi-input').each(function () {
+            initMultiInputTextArea(this);
+        });
+    };
+    initMultiInputTextAreas();
+
+    // Enable the add button on a multi input field
+    $(document).on('click', '.multi-input-fields .input-group .addon-add', function () {
+        // Add the new value to the multi input textarea
+        var multiInputTextArea = $(this).parents('.multi-input-fields').siblings('.multi-input');
+        var values = $(multiInputTextArea).val().split('\n');
+        var value = $(this).siblings('input').val();
+        var existingValue = values.filter(function (val) {
+            return val === value;
+        });
+        // Only add if the new value is available and it doesn't exist yet
+        if (value && existingValue.length === 0) {
+            var newValues = values.concat([value]);
+            $(multiInputTextArea).val(newValues.join('\n'));
+            // Initialize the multi input textarea again
+            initMultiInputTextArea(multiInputTextArea);
+        } else {
+            // Clear value again
+            $(this).siblings('input').val('');
+        }
+    });
+
+    // Enable the remove button on a multi input field
+    $(document).on('click', '.multi-input-fields .input-group .addon-remove', function () {
+        // Remove the value from multi input textarea
+        var multiInputTextArea = $(this).parents('.multi-input-fields').siblings('.multi-input');
+        var values = multiInputTextArea.val().split('\n');
+        var value = $(this).siblings('input').val();
+        var newValues = values.filter(function (val) {
+            return val !== value;
+        });
+        multiInputTextArea.val(newValues.join('\n'));
+        // Initialize the multi input again
+        initMultiInputTextArea(multiInputTextArea);
+    });
+
 }(autosubliminal));
 
 
