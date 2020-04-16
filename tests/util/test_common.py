@@ -413,8 +413,8 @@ def test_find_path_in_paths():
     assert find_path_in_paths('path/to/dir1/sub/dir', paths, check_common_path=True) == 'path/to/dir1'
     assert find_path_in_paths('path/to/dir2', paths) is None
     assert find_path_in_paths('path/to/dir2', paths, check_common_path=True) is None
-    assert find_path_in_paths('path/to/dir2/sub/dir', paths) is 'path/to/dir2/sub/dir'
-    assert find_path_in_paths('path/to/dir2/sub/dir', paths, check_common_path=True) is 'path/to/dir2/sub/dir'
+    assert find_path_in_paths('path/to/dir2/sub/dir', paths) == 'path/to/dir2/sub/dir'
+    assert find_path_in_paths('path/to/dir2/sub/dir', paths, check_common_path=True) == 'path/to/dir2/sub/dir'
 
 
 def test_get_root_path():
