@@ -844,35 +844,35 @@ def write_config(section=None):
     restart = _check_for_restart()
 
     if section == 'general' or section is None:
-        write_general_section()
+        write_config_general_section()
     if section == 'library' or section is None:
-        write_library_section()
+        write_config_library_section()
     if section == 'logging' or section is None:
-        write_logging_section()
+        write_config_logging_section()
     if section == 'webserver' or section is None:
-        write_webserver_section()
+        write_config_webserver_section()
     if section == 'subliminal' or section is None:
-        write_subliminal_section()
+        write_config_subliminal_section()
     if section == 'namemapping' or section is None:
-        write_shownamemapping_section()
-        write_addic7edshownamemapping_section()
-        write_alternativeshownamemapping_section()
-        write_movienamemapping_section()
-        write_alternativemovienamemapping_section()
+        write_config_shownamemapping_section()
+        write_config_addic7edshownamemapping_section()
+        write_config_alternativeshownamemapping_section()
+        write_config_movienamemapping_section()
+        write_config_alternativemovienamemapping_section()
     if section == 'skipmapping' or section is None:
-        write_skipshow_section()
-        write_skipmovie_section()
+        write_config_skipshow_section()
+        write_config_skipmovie_section()
     if section == 'notification' or section is None:
-        write_notification_section()
+        write_config_notification_section()
     if section == 'postprocessing' or section is None:
-        write_postprocessing_section()
+        write_config_postprocessing_section()
 
     return restart
 
 
-def write_general_section():
+def write_config_general_section():
     """
-    Write the general section.
+    Write the config general section.
     """
     section = 'general'
 
@@ -911,9 +911,9 @@ def write_general_section():
         cfg.write(f)
 
 
-def write_library_section():
+def write_config_library_section():
     """
-    Write the library section.
+    Write the config library section.
     """
     section = 'library'
 
@@ -933,9 +933,9 @@ def write_library_section():
         cfg.write(f)
 
 
-def write_logging_section():
+def write_config_logging_section():
     """
-    Write the logging section.
+    Write the config logging section.
     """
     section = 'logging'
 
@@ -961,9 +961,9 @@ def write_logging_section():
     apply_logging()
 
 
-def write_webserver_section():
+def write_config_webserver_section():
     """
-    Write the webserver section.
+    Write the config webserver section.
     """
     section = 'webserver'
 
@@ -983,9 +983,9 @@ def write_webserver_section():
         cfg.write(f)
 
 
-def write_subliminal_section():
+def write_config_subliminal_section():
     """
-    Write the subliminal section.
+    Write the config subliminal section.
     """
     section = 'subliminal'
 
@@ -1027,9 +1027,9 @@ def write_subliminal_section():
     apply_subliminal()
 
 
-def write_shownamemapping_section():
+def write_config_shownamemapping_section():
     """
-    Write the shownamemapping section.
+    Write the config shownamemapping section.
     """
     section = 'shownamemapping'
 
@@ -1049,9 +1049,9 @@ def write_shownamemapping_section():
     apply_shownamemapping()
 
 
-def write_addic7edshownamemapping_section():
+def write_config_addic7edshownamemapping_section():
     """
-    Write the addic7edshownamemapping section.
+    Write the config addic7edshownamemapping section.
     """
     section = 'addic7edshownamemapping'
 
@@ -1071,9 +1071,9 @@ def write_addic7edshownamemapping_section():
     apply_addic7edshownamemapping()
 
 
-def write_alternativeshownamemapping_section():
+def write_config_alternativeshownamemapping_section():
     """
-    Write the alternativeshownamemapping section.
+    Write the config alternativeshownamemapping section.
     """
     section = 'alternativeshownamemapping'
 
@@ -1093,9 +1093,9 @@ def write_alternativeshownamemapping_section():
     apply_alternativeshownamemapping()
 
 
-def write_movienamemapping_section():
+def write_config_movienamemapping_section():
     """
-    Write the movienamemapping section.
+    Write the config movienamemapping section.
     """
     section = 'movienamemapping'
 
@@ -1115,9 +1115,9 @@ def write_movienamemapping_section():
     apply_movienamemapping()
 
 
-def write_alternativemovienamemapping_section():
+def write_config_alternativemovienamemapping_section():
     """
-    Write the alternativemovienamemapping section.
+    Write the config alternativemovienamemapping section.
     """
     section = 'alternativemovienamemapping'
 
@@ -1137,9 +1137,9 @@ def write_alternativemovienamemapping_section():
     apply_alternativemovienamemapping()
 
 
-def write_skipshow_section():
+def write_config_skipshow_section():
     """
-    Write the skipshow section.
+    Write the config skipshow section.
     """
     section = 'skipshow'
 
@@ -1159,9 +1159,9 @@ def write_skipshow_section():
     apply_skipshow()
 
 
-def write_skipmovie_section():
+def write_config_skipmovie_section():
     """
-    Write the skipmovie section.
+    Write the config skipmovie section.
     """
     section = 'skipmovie'
 
@@ -1181,9 +1181,9 @@ def write_skipmovie_section():
     apply_skipmovie()
 
 
-def write_notification_section():
+def write_config_notification_section():
     """
-    Write the notification section.
+    Write the config notification section.
     """
     section = 'notification'
 
@@ -1229,9 +1229,9 @@ def write_notification_section():
         cfg.write(f)
 
 
-def write_postprocessing_section():
+def write_config_postprocessing_section():
     """
-    Write the postprocessing section.
+    Write the config postprocessing section.
     """
     section = 'postprocessing'
 
