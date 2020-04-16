@@ -64,7 +64,7 @@ class Config(object):
             autosubliminal.VIDEOPATHS = videopaths.split('\r\n')
             autosubliminal.DEFAULTLANGUAGE = defaultlanguage
             autosubliminal.DEFAULTLANGUAGESUFFIX = get_boolean(defaultlanguagesuffix)
-            autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split(',')
+            autosubliminal.ADDITIONALLANGUAGES = additionallanguages.split('\r\n')
             autosubliminal.MANUALSEARCHWITHSCORING = get_boolean(manualsearchwithscoring)
             autosubliminal.SCANDISKINTERVAL = int(scandiskinterval)
             autosubliminal.CHECKSUBINTERVAL = int(checksubinterval)

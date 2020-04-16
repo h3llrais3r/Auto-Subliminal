@@ -113,7 +113,7 @@
                                 </div>
                             </div>
                             <div class="col-xs-12 col-sm-8 col-md-6">
-                                <input type="text" id="additionallanguages" name="additionallanguages" value="${display_list_single_line(autosubliminal.ADDITIONALLANGUAGES)}" class="form-control input-sm">
+                                <textarea id="additionallanguages" name="additionallanguages" class="form-control input-sm multi-input hidden">${display_list_multi_line(autosubliminal.ADDITIONALLANGUAGES)}</textarea>
                             </div>
                         </div>
 
