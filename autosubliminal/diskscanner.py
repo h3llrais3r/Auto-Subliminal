@@ -104,7 +104,7 @@ class DiskScanner(ScheduledProcess):
 
     def _scan_file(self, dirname, filename):
         # Check if video file has already been processed before, so we don't need to process it again
-        wanted_item = self.wanted_db.get_wanted_item(os.path.join(dirname, filename))
+        wanted_item = self.wanted_db.get_wanted_item(os.path.join(dirname, filename), ignore_case=True)
         if wanted_item:
             log.debug('Video found in wanted_items database, no need to scan it again')
         else:

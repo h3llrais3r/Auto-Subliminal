@@ -31,6 +31,7 @@ class WantedItemsDb(object):
     def __init__(self):
         self._query_get_all = 'SELECT * FROM wanted_items ORDER BY timestamp DESC'
         self._query_get = 'SELECT * FROM wanted_items WHERE videopath=?'
+        self._query_get_ignore_case = 'SELECT * FROM wanted_items WHERE videopath=? COLLATE nocase'
         self._query_set = 'INSERT INTO wanted_items VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
         self._query_update = 'UPDATE wanted_items SET videopath=?, timestamp=?, languages=?, type=?, title=?, ' \
                              'year=?, season=?, episode=?, quality=?, source=?, codec=?, releasegrp=?, tvdbid=?, ' \
@@ -55,7 +56,7 @@ class WantedItemsDb(object):
 
         return result_list
 
-    def get_wanted_item(self, video_path):
+    def get_wanted_item(self, video_path, ignore_case=False):
         """Get a wanted item by its video path.
 
         :param video_path: the video path
@@ -66,7 +67,7 @@ class WantedItemsDb(object):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         connection.row_factory = _wanted_item_factory
         cursor = connection.cursor()
-        cursor.execute(self._query_get, [video_path])
+        cursor.execute(self._query_get_ignore_case if ignore_case else self._query_get, [video_path])
         wanted_item = cursor.fetchone()
         connection.close()
 
