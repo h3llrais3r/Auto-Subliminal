@@ -33,30 +33,30 @@ show_episode_details_2_2 = ShowEpisodeDetails(path='/path/to/show2/s01e02.mkv', 
                                               title='title2_2', season=1, episode=2, missing_languages=['nl', 'en'],
                                               subtitles=[])
 
-shows_json = '[{"banner": true, "overview": "overview1", "path": "/path/to/show1", "poster": true, "settings": ' \
-             '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, "wanted_languages": ["en", "nl"]}, ' \
-             '"title": "title1", "total_subtitles_available": 1, "total_subtitles_missing": 1, ' \
-             '"total_subtitles_wanted": 2, "tvdb_id": 1, "year": 2018}, ' \
-             '{"banner": true, "overview": "overview2", "path": "/path/to/show2", "poster": true, "settings": ' \
-             '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, "wanted_languages": ["en", "nl"]}, ' \
-             '"title": "title2", "total_subtitles_available": 1, "total_subtitles_missing": 3, ' \
-             '"total_subtitles_wanted": 4, "tvdb_id": 2, "year": 2019}]'
+shows_json = '[{"banner": true, "overview": "overview1", "path": "/path/to/show1", "path_in_video_paths": false, ' \
+             '"poster": true, "settings": {"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
+             '"wanted_languages": ["en", "nl"]}, "title": "title1", "total_subtitles_available": 1, ' \
+             '"total_subtitles_missing": 1, "total_subtitles_wanted": 2, "tvdb_id": 1, "year": 2018}, ' \
+             '{"banner": true, "overview": "overview2", "path": "/path/to/show2", "path_in_video_paths": false, ' \
+             '"poster": true, "settings": {"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
+             '"wanted_languages": ["en", "nl"]}, "title": "title2", "total_subtitles_available": 1, ' \
+             '"total_subtitles_missing": 3, "total_subtitles_wanted": 4, "tvdb_id": 2, "year": 2019}]'
 
 show_1_json = '{"banner": true, "files": ' \
               '[{"season_files": [{"embedded_languages": [], "filename": "s01e01.mkv", "hardcoded_languages": [], ' \
               '"tvdb_id": 11, "type": "video"}, {"filename": "s01e01.srt", "language": "nl", "type": "subtitle"}], ' \
               '"season_name": "Season 01", "season_path": "/path/to/show1"}], ' \
-              '"overview": "overview1", "path": "/path/to/show1", "poster": true, "settings": ' \
-              '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, "wanted_languages": ["en", "nl"]}, ' \
-              '"title": "title1", ' \
-              '"total_subtitles_available": 1, "total_subtitles_missing": 1, "total_subtitles_wanted": 2, ' \
-              '"tvdb_id": 1, "year": 2018}'
+              '"overview": "overview1", "path": "/path/to/show1", "path_in_video_paths": false, "poster": true, ' \
+              '"settings": {"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
+              '"wanted_languages": ["en", "nl"]}, "title": "title1", "total_subtitles_available": 1, ' \
+              '"total_subtitles_missing": 1, "total_subtitles_wanted": 2, "tvdb_id": 1, "year": 2018}'
 
 show_settings_1_json = '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
                        '"wanted_languages": ["en", "nl"]}'
 
 
-def test_get_shows(mocker):
+def test_get_shows(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.VIDEOPATHS', [])
     mocker.patch.object(ShowDetailsDb, 'get_all_shows', return_value=[show_details_1, show_details_2])
     mocker.patch.object(ShowEpisodeDetailsDb, 'get_show_episodes',
                         side_effect=[[show_episode_details_1_1], [show_episode_details_2_1, show_episode_details_2_2]])
@@ -64,7 +64,8 @@ def test_get_shows(mocker):
     assert shows_json == pickle_api_result(ShowsApi().get())
 
 
-def test_get_show(mocker):
+def test_get_show(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.VIDEOPATHS', [])
     mocker.patch.object(ShowDetailsDb, 'get_show', return_value=show_details_1)
     mocker.patch('os.path.exists', return_value=True)
     mocker.patch.object(ShowEpisodeDetailsDb, 'get_show_episodes', return_value=[show_episode_details_1_1])

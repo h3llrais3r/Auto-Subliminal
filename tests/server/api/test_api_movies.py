@@ -21,37 +21,36 @@ movie_settings_2 = MovieSettings(imdb_id='tt2', wanted_languages=['en', 'nl'], r
                                  utf8_encoding=True)
 
 movies_json = '[{"imdb_id": "tt1", ' \
-              '"overview": "overview1", "path": "/path/to/movie1", "poster": true, "settings": ' \
-              '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, "wanted_languages": ["en", "nl"]}, ' \
-              '"title": "title1", ' \
-              '"total_subtitles_available": 1, "total_subtitles_missing": 1, "total_subtitles_wanted": 2, ' \
-              '"year": 2018}, ' \
+              '"overview": "overview1", "path": "/path/to/movie1", "path_in_video_paths": false, "poster": true, ' \
+              '"settings": {"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
+              '"wanted_languages": ["en", "nl"]}, "title": "title1", "total_subtitles_available": 1, ' \
+              '"total_subtitles_missing": 1, "total_subtitles_wanted": 2, "year": 2018}, ' \
               '{"imdb_id": "tt2", ' \
-              '"overview": "overview2", "path": "/path/to/movie2", "poster": true, "settings": ' \
-              '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, "wanted_languages": ["en", "nl"]}, ' \
-              '"title": "title2", ' \
-              '"total_subtitles_available": 0, "total_subtitles_missing": 2, "total_subtitles_wanted": 2, ' \
-              '"year": 2019}]'
+              '"overview": "overview2", "path": "/path/to/movie2", "path_in_video_paths": false, "poster": true, ' \
+              '"settings": {"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
+              '"wanted_languages": ["en", "nl"]}, "title": "title2", "total_subtitles_available": 0, ' \
+              '"total_subtitles_missing": 2, "total_subtitles_wanted": 2, "year": 2019}]'
 
 movie_1_json = '{"files": [{"embedded_languages": [], "filename": "movie1.mkv", "hardcoded_languages": [], ' \
                '"type": "video"}, {"filename": "subtitle1.srt", "language": "nl", "type": "subtitle"}], ' \
-               '"imdb_id": "tt1", "overview": "overview1", "path": "/path/to/movie1", "poster": true, ' \
-               '"settings": {"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
-               '"wanted_languages": ["en", "nl"]}, ' \
-               '"title": "title1", "total_subtitles_available": 1, "total_subtitles_missing": 1, ' \
-               '"total_subtitles_wanted": 2, "year": 2018}'
+               '"imdb_id": "tt1", "overview": "overview1", "path": "/path/to/movie1", "path_in_video_paths": false, ' \
+               '"poster": true, "settings": {"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
+               '"wanted_languages": ["en", "nl"]}, "title": "title1", "total_subtitles_available": 1, ' \
+               '"total_subtitles_missing": 1, "total_subtitles_wanted": 2, "year": 2018}'
 
 movie_settings_1_json = '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
                         '"wanted_languages": ["en", "nl"]}'
 
 
-def test_get_movies(mocker):
+def test_get_movies(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.VIDEOPATHS', [])
     mocker.patch.object(MovieDetailsDb, 'get_all_movies', return_value=[movie_details_1, movie_details_2])
     mocker.patch.object(MovieSettingsDb, 'get_movie_settings', side_effect=[movie_settings_1, movie_settings_2])
     assert movies_json == pickle_api_result(MoviesApi().get())
 
 
-def test_get_movie(mocker):
+def test_get_movie(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.VIDEOPATHS', [])
     mocker.patch.object(MovieDetailsDb, 'get_movie', return_value=movie_details_1)
     mocker.patch('os.path.exists', return_value=True)
     mocker.patch('autosubliminal.server.api.movies.MoviesApi._get_movie_files',
