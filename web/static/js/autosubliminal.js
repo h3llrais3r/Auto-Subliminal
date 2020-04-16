@@ -628,6 +628,9 @@ var autosubliminal = {
      * Multi-input textarea
      * ==================== */
 
+    // Usage:
+    // <textarea id="<id>" name="<name>" class="form-control input-sm multi-input hidden">${display_list_multi_line(<values>)}</textarea>
+
     // Initialize a multi input textarea
     var initMultiInputTextArea = function (element) {
         // Hide textarea element
@@ -643,17 +646,13 @@ var autosubliminal = {
         for (var i = 0; i < values.length; i++) {
             $(multiInputFields).append('<div class="input-group">' +
                 '<input type="text" class="form-control input-sm" value="' + values[i] + '">' +
-                '<span class="input-group-addon addon-remove">' +
-                '<i class="fa fa-times" aria-hidden="true"></i>' +
-                '</span>' +
+                '<span class="input-group-addon addon-remove"><i class="fa fa-times" aria-hidden="true"></i></span>' +
                 '</div>');
         }
         // Add input field to add new value
         $(multiInputFields).append('<div class="input-group">' +
             '<input type="text" class="form-control input-sm" placeholder="New value">' +
-            '<span class="input-group-addon addon-add">' +
-            '<i class="fa fa-plus" aria-hidden="true"></i>' +
-            '</span>' +
+            '<span class="input-group-addon addon-add"><i class="fa fa-plus" aria-hidden="true"></i></span>' +
             '</div>');
     };
 
