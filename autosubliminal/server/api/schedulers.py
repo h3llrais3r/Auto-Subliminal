@@ -9,7 +9,7 @@ from autosubliminal.server.rest import RestResource
 @cherrypy.popargs('scheduler_name')
 class SchedulersApi(RestResource):
     """
-    Rest resource for handling the /schedulers path.
+    Rest resource for handling the /api/schedulers path.
     """
 
     def __init__(self):

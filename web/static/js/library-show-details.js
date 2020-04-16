@@ -180,6 +180,18 @@
                         self.getShowDetails();
                     });
                 },
+                addShowPathToVideoPaths: function (event) {
+                    event.preventDefault();
+                    // Get data
+                    var self = this;
+                    var data = {
+                        'videoPath': self.show.path
+                    };
+                    $.putJson(autosubliminal.getUrl('/api/settings/general/videoPaths'), data, function () {
+                        // Get show details again to get the updates
+                        self.getShowDetails();
+                    });
+                },
                 getNrOfSubtitles: function (files, language) {
                     var subtitleCount = 0;
                     for (var i = 0; i < files.length; i++) {

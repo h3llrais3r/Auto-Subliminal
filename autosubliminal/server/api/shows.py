@@ -5,13 +5,14 @@ import os
 
 import cherrypy
 
+import autosubliminal
 from autosubliminal.core.show import ShowSettings
 from autosubliminal.core.subtitle import EMBEDDED, HARDCODED, Subtitle
 from autosubliminal.db import (FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb,
                                ShowSettingsDb, WantedItemsDb)
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import NotFound, RestResource
-from autosubliminal.util.common import get_boolean, natural_keys
+from autosubliminal.util.common import find_path_in_paths, get_boolean, natural_keys
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 from autosubliminal.util.websocket import send_websocket_notification
 
@@ -69,6 +70,10 @@ class ShowsApi(RestResource):
     def _to_show_json(self, show, show_settings, details=False):
         show_json = show.to_json()
         show_json['settings'] = show_settings.to_json()
+
+        # Check if the show path is listed in the video paths to scan
+        show_json['path_in_video_paths'] = True if find_path_in_paths(show.path, autosubliminal.VIDEOPATHS,
+                                                                      check_common_path=True) else False
 
         # Calculate totals based on available episodes
         total_subtitles_wanted = 0

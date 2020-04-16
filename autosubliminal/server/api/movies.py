@@ -5,12 +5,13 @@ import os
 
 import cherrypy
 
+import autosubliminal
 from autosubliminal.core.movie import MovieSettings
 from autosubliminal.core.subtitle import EMBEDDED, HARDCODED, Subtitle
 from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb, WantedItemsDb
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import NotFound, RestResource
-from autosubliminal.util.common import get_boolean
+from autosubliminal.util.common import find_path_in_paths, get_boolean
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 from autosubliminal.util.websocket import send_websocket_notification
 
@@ -69,6 +70,11 @@ class MoviesApi(RestResource):
         movie_json = movie.to_json()
         movie_json['settings'] = movie_settings.to_json()
 
+        # Check if the movie path is listed in the video paths to scan
+        movie_json['path_in_video_paths'] = True if find_path_in_paths(movie.path, autosubliminal.VIDEOPATHS,
+                                                                       check_common_path=True) else False
+
+        # Calculate totals
         wanted_languages = movie_settings.wanted_languages
         total_subtitles_wanted = len(wanted_languages)
         total_subtitles_missing = len(movie.missing_languages)

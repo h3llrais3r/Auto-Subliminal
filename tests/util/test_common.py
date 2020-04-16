@@ -15,10 +15,11 @@ from autosubliminal.core.item import WantedItem
 from autosubliminal.util.common import (atoi, connect_url, convert_timestamp, display_interval, display_item_name,
                                         display_item_title, display_list_multi_line, display_list_single_line,
                                         display_mapping_dict, display_timestamp, display_value, escape_quotes,
-                                        get_boolean, get_common_path, get_file_size, get_root_path, get_today,
-                                        get_wanted_languages, humanize_bytes, natural_keys, run_cmd, safe_lowercase,
-                                        safe_text, safe_trim, safe_uppercase, sanitize, set_rw_and_remove, to_dict,
-                                        to_list, to_obj, to_obj_or_list, to_text, wait_for_internet_connection)
+                                        find_path_in_paths, get_boolean, get_common_path, get_file_size, get_root_path,
+                                        get_today, get_wanted_languages, humanize_bytes, natural_keys, run_cmd,
+                                        safe_lowercase, safe_text, safe_trim, safe_uppercase, sanitize,
+                                        set_rw_and_remove, to_dict, to_list, to_obj, to_obj_or_list, to_text,
+                                        wait_for_internet_connection)
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -402,6 +403,18 @@ def test_get_common_path():
     separator = '\\'
     assert get_common_path(['c:\\temp\\test', 'c:\\temp\\video_path.ext'], separator) == 'c:\\temp'
     assert get_common_path(['c:\\temp', 'd:\\temp'], separator) is None
+
+
+def test_find_path_in_paths():
+    paths = ['path/to/dir1', 'path/to/dir2/sub/dir']
+    assert find_path_in_paths('path/to/dir1', paths) == 'path/to/dir1'
+    assert find_path_in_paths('path/to/dir1', paths, check_common_path=True) == 'path/to/dir1'
+    assert find_path_in_paths('path/to/dir1/sub/dir', paths) is None
+    assert find_path_in_paths('path/to/dir1/sub/dir', paths, check_common_path=True) == 'path/to/dir1'
+    assert find_path_in_paths('path/to/dir2', paths) is None
+    assert find_path_in_paths('path/to/dir2', paths, check_common_path=True) is None
+    assert find_path_in_paths('path/to/dir2/sub/dir', paths) is 'path/to/dir2/sub/dir'
+    assert find_path_in_paths('path/to/dir2/sub/dir', paths, check_common_path=True) is 'path/to/dir2/sub/dir'
 
 
 def test_get_root_path():

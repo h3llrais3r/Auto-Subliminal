@@ -196,6 +196,7 @@ var autosubliminal = {
             poster: null,
             banner: null,
             settings: null,
+            path_in_video_paths: null,
             total_subtitles_wanted: null,
             total_subtitles_missing: null,
             total_subtitles_available: null,
@@ -212,6 +213,7 @@ var autosubliminal = {
             overview: null,
             poster: null,
             settings: null,
+            path_in_video_paths: null,
             total_subtitles_wanted: null,
             total_subtitles_missing: null,
             total_subtitles_available: null,
@@ -237,7 +239,7 @@ var autosubliminal = {
 
     // Load settings through settings api
     settings.loadSettings = function () {
-        $.get(autosubliminal.getUrl('/api/settings'), function (data) {
+        $.get(autosubliminal.getUrl('/api/settings/frontend'), function (data) {
             if (!jQuery.isEmptyObject(data)) {
                 autosubliminal.DEVELOPER_MODE = data.developerMode;
                 autosubliminal.SCAN_DISK = data.scanDisk;

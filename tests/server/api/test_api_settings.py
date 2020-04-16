@@ -36,4 +36,4 @@ def test_get_settings(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.server.api.settings.os.path.sep', '/')
     mocker.patch('autosubliminal.server.api.settings.get_subtitle_languages',
                  return_value=[{'code': 'nl', 'name': 'Dutch'}])
-    assert settings_json == pickle_api_result(SettingsApi().get())
+    assert settings_json == pickle_api_result(SettingsApi().frontend.get())

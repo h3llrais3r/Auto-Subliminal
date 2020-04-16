@@ -177,6 +177,18 @@
                         // Get movie details again to get the updates
                         self.getMovieDetails();
                     });
+                },
+                addMoviePathToVideoPaths: function (event) {
+                    event.preventDefault();
+                    // Get data
+                    var self = this;
+                    var data = {
+                        'videoPath': self.movie.path
+                    };
+                    $.putJson(autosubliminal.getUrl('/api/settings/general/videoPaths'), data, function () {
+                        // Get movie details again to get the updates
+                        self.getMovieDetails();
+                    });
                 }
             }
         });

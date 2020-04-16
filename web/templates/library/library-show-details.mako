@@ -75,7 +75,12 @@
                                             <table class="details-info-summary">
                                                 <tr>
                                                     <td>Location:</td>
-                                                    <td class="wrapped">{{ show.path }}</td>
+                                                    <td class="wrapped">
+                                                        {{ show.path }}
+                                                        <a v-if="!show.path_in_video_paths" class="icon-link" @click="addShowPathToVideoPaths($event)">
+                                                            <i class="fa fa-plus" aria-hidden="true" title="Click to add the show path to the video paths to scan"></i>
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Wanted languages:</td>

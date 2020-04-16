@@ -384,6 +384,17 @@ def get_common_path(paths, separator=os.path.sep):
     return separator.join(cp) if cp else None
 
 
+def find_path_in_paths(path_to_find, paths, check_common_path=False):
+    # Normalize all paths before checking
+    n = lambda x: os.path.normcase(os.path.normpath(x))  # lambda to normalize the paths
+    # If check_common_path, also check if the path_to_find is a sub path of the paths to check (not the way around!)
+    if check_common_path:
+        paths_found = filter(lambda x: get_common_path([n(x), n(path_to_find)]) == n(x), paths)
+    else:
+        paths_found = filter(lambda x: n(x) == n(path_to_find), paths)
+    return paths_found[0] if paths_found else None
+
+
 def get_root_path(video_path, separator=os.path.sep):
     """Get the root path of a video path.
 

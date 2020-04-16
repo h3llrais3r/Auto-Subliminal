@@ -75,7 +75,12 @@
                                             <table class="details-info-summary">
                                                 <tr>
                                                     <td>Location:</td>
-                                                    <td class="wrapped">{{ movie.path }}</td>
+                                                    <td class="wrapped">
+                                                        {{ movie.path }}
+                                                        <a v-if="!movie.path_in_video_paths" class="icon-link" @click="addMoviePathToVideoPaths($event)">
+                                                            <i class="fa fa-plus" aria-hidden="true" title="Click to add the movie path to the video paths to scan"></i>
+                                                        </a>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Wanted languages:</td>
