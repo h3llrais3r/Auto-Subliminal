@@ -6,6 +6,7 @@ import base64
 PY_MAJOR = sys.version_info[0]
 PY2 = PY_MAJOR == 2
 PY3 = PY_MAJOR == 3
+PY3_ORDERED_DICT = PY3 and sys.version_info[1] >= 6  # Python 3.6+
 
 class_types = (type,)
 iterator_types = (type(iter('')),)
@@ -15,11 +16,13 @@ if PY3:
     import queue
     from base64 import encodebytes, decodebytes
     from collections.abc import Iterator as abc_iterator
+
     string_types = (str,)
     numeric_types = (int, float)
     ustr = str
 else:
     from collections import Iterator as abc_iterator  # noqa
+
     builtins = __import__('__builtin__')
     class_types += (types.ClassType,)
     encodebytes = base64.encodestring
