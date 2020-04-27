@@ -71,7 +71,8 @@ class _GeneralApi(RestResource):
         input_json = cherrypy.request.json
 
         # Add a video path to the existing list of video paths (if not already in it)
-        if general_setting_name == 'videoPaths' and 'videoPath' in input_json and os.path.isdir(input_json['videoPah']):
+        if general_setting_name == 'videoPaths' and 'videoPath' in input_json and os.path.isdir(
+                input_json['videoPath']):
             video_path = input_json['videoPath']
             if not find_path_in_paths(video_path, autosubliminal.VIDEOPATHS, check_common_path=True):
                 autosubliminal.VIDEOPATHS.append(video_path)
