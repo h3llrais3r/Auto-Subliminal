@@ -16,9 +16,10 @@ class PostProcessor(object):
     It launches the specified command and retrieves the arguments from the wanted_item (or download_item).
     Default arguments passed:
     - encoding
-    - video path
-    - subtitle path (can be empty, postprocessing is possible without a subtitle)
     - root video path (one of the video paths listed in autosubliminal.VIDEOPATHS, where video path is located in)
+    - video path (full video path)
+    - subtitle path (full subtitle path, can be empty when postprocessing is done without a subtitle)
+    - library path (library path, can be empty when the video path is not located inside a library path)
     Custom arguments can be added after the default arguments
 
     :param wanted_item: the :class:`WantedItem` or :class:`DownloadItem` object
