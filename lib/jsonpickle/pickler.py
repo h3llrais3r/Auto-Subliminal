@@ -19,20 +19,24 @@ from .backend import json
 from .compat import numeric_types, string_types, PY3, PY2
 
 
-def encode(value,
-           unpicklable=True,
-           make_refs=True,
-           keys=False,
-           max_depth=None,
-           reset=True,
-           backend=None,
-           warn=False,
-           context=None,
-           max_iter=None,
-           use_decimal=False,
-           numeric_keys=False,
-           use_base85=False,
-           fail_safe=None):
+def encode(
+    value,
+    unpicklable=True,
+    make_refs=True,
+    keys=False,
+    max_depth=None,
+    reset=True,
+    backend=None,
+    warn=False,
+    context=None,
+    max_iter=None,
+    use_decimal=False,
+    numeric_keys=False,
+    use_base85=False,
+    fail_safe=None,
+    indent=None,
+    separators=None,
+):
     """Return a JSON formatted representation of value, a Python object.
 
     :param unpicklable: If set to False then the output will not contain the
@@ -49,6 +53,14 @@ def encode(value,
         by calling repr() instead of recursing when make_refs is set False.
     :param keys: If set to True then jsonpickle will encode non-string
         dictionary keys instead of coercing them into strings via `repr()`.
+        This is typically what you want if you need to support Integer or
+        objects as dictionary keys.
+    :param numeric_keys: Only use this option if the backend supports integer
+        dict keys natively.  This flag tells jsonpickle to leave numeric keys
+        as-is rather than conforming them to json-friendly strings.
+        Using ``keys=True`` is the typical solution for integer keys, so only
+        use this if you have a specific use case where you want to allow the
+        backend to handle serialization of numeric dict keys.
     :param warn: If set to True then jsonpickle will warn when it
         returns None for an object which it cannot pickle
         (e.g. file descriptors).
@@ -74,6 +86,20 @@ def encode(value,
     :param fail_safe: If set to a function exceptions are ignored when pickling
         and if a exception happens the function is called and the return value
         is used as the value for the object that caused the error
+    :param indent: When `indent` is a non-negative integer, then JSON array
+        elements and object members will be pretty-printed with that indent
+        level.  An indent level of 0 will only insert newlines. ``None`` is
+        the most compact representation.  Since the default item separator is
+        ``(', ', ': ')``,  the output might include trailing whitespace when
+        ``indent`` is specified.  You can use ``separators=(',', ': ')`` to
+        avoid this.  This value is passed directly to the active JSON backend
+        library and not used by jsonpickle directly.
+    :param separators:
+        If ``separators`` is an ``(item_separator, dict_separator)`` tuple
+        then it will be used instead of the default ``(', ', ': ')``
+        separators.  ``(',', ':')`` is the most compact JSON representation.
+        This value is passed directly to the active JSON backend library and
+        not used by jsonpickle directly.
 
     >>> encode('my string') == '"my string"'
     True
@@ -87,34 +113,38 @@ def encode(value,
     """
     backend = backend or json
     context = context or Pickler(
-            unpicklable=unpicklable,
-            make_refs=make_refs,
-            keys=keys,
-            backend=backend,
-            max_depth=max_depth,
-            warn=warn,
-            max_iter=max_iter,
-            numeric_keys=numeric_keys,
-            use_decimal=use_decimal,
-            use_base85=use_base85,
-            fail_safe=fail_safe)
-    return backend.encode(context.flatten(value, reset=reset))
+        unpicklable=unpicklable,
+        make_refs=make_refs,
+        keys=keys,
+        backend=backend,
+        max_depth=max_depth,
+        warn=warn,
+        max_iter=max_iter,
+        numeric_keys=numeric_keys,
+        use_decimal=use_decimal,
+        use_base85=use_base85,
+        fail_safe=fail_safe,
+    )
+    return backend.encode(
+        context.flatten(value, reset=reset), indent=indent, separators=separators
+    )
 
 
 class Pickler(object):
-
-    def __init__(self,
-                 unpicklable=True,
-                 make_refs=True,
-                 max_depth=None,
-                 backend=None,
-                 keys=False,
-                 warn=False,
-                 max_iter=None,
-                 numeric_keys=False,
-                 use_decimal=False,
-                 use_base85=False,
-                 fail_safe=None):
+    def __init__(
+        self,
+        unpicklable=True,
+        make_refs=True,
+        max_depth=None,
+        backend=None,
+        keys=False,
+        warn=False,
+        max_iter=None,
+        numeric_keys=False,
+        use_decimal=False,
+        use_base85=False,
+        fail_safe=None,
+    ):
         self.unpicklable = unpicklable
         self.make_refs = make_refs
         self.backend = backend or json
@@ -435,9 +465,12 @@ class Pickler(object):
                 f, args, state, listitems, dictitems = rv_as_list
 
                 # check that getstate/setstate is sane
-                if not (state and hasattr(obj, '__getstate__')
-                        and not hasattr(obj, '__setstate__')
-                        and not isinstance(obj, dict)):
+                if not (
+                    state
+                    and hasattr(obj, '__getstate__')
+                    and not hasattr(obj, '__setstate__')
+                    and not isinstance(obj, dict)
+                ):
                     # turn iterators to iterables for convenient serialization
                     if rv_as_list[3]:
                         rv_as_list[3] = tuple(rv_as_list[3])
@@ -449,7 +482,7 @@ class Pickler(object):
                     last_index = len(reduce_args) - 1
                     while last_index >= 2 and reduce_args[last_index] is None:
                         last_index -= 1
-                    data[tags.REDUCE] = reduce_args[:last_index+1]
+                    data[tags.REDUCE] = reduce_args[: last_index + 1]
 
                     return data
 
@@ -458,8 +491,7 @@ class Pickler(object):
                 data[tags.OBJECT] = class_name
 
             if has_getnewargs_ex:
-                data[tags.NEWARGSEX] = list(
-                    map(self._flatten, obj.__getnewargs_ex__()))
+                data[tags.NEWARGSEX] = list(map(self._flatten, obj.__getnewargs_ex__()))
 
             if has_getnewargs and not has_getnewargs_ex:
                 data[tags.NEWARGS] = self._flatten(obj.__getnewargs__())
@@ -494,8 +526,7 @@ class Pickler(object):
 
         if util.is_iterator(obj):
             # force list in python 3
-            data[tags.ITERATOR] = list(
-                map(self._flatten, islice(obj, self._max_iter)))
+            data[tags.ITERATOR] = list(map(self._flatten, islice(obj, self._max_iter)))
             return data
 
         if has_dict:
@@ -532,9 +563,23 @@ class Pickler(object):
         if data is None:
             data = obj.__class__()
 
-        flatten = self._flatten_key_value_pair
-        for k, v in sorted(obj.items(), key=util.itemgetter):
-            flatten(k, v, data)
+        # If we allow non-string keys then we have to do a two-phase
+        # encoding to ensure that the reference IDs are deterministic.
+        if self.keys:
+            # Phase 1: serialize regular objects, ignore fancy keys.
+            flatten = self._flatten_string_key_value_pair
+            for k, v in util.items(obj):
+                flatten(k, v, data)
+
+            # Phase 2: serialize non-string keys.
+            flatten = self._flatten_non_string_key_value_pair
+            for k, v in util.items(obj):
+                flatten(k, v, data)
+        else:
+            # If we have string keys only then we only need a single pass.
+            flatten = self._flatten_key_value_pair
+            for k, v in util.items(obj):
+                flatten(k, v, data)
 
         # the collections.defaultdict protocol
         if hasattr(obj, 'default_factory') and callable(obj.default_factory):
@@ -549,8 +594,7 @@ class Pickler(object):
                     # We've never seen this object before so pickle it in-place.
                     # Create an instance from the factory and assume that the
                     # resulting instance is a suitable examplar.
-                    value = self._flatten_obj_instance(
-                        handlers.CloneFactory(factory()))
+                    value = self._flatten_obj_instance(handlers.CloneFactory(factory()))
                 else:
                     # We've seen this object before.
                     # Break the cycle by emitting a reference.
@@ -581,12 +625,15 @@ class Pickler(object):
     def _flatten_newstyle_with_slots(self, obj, data):
         """Return a json-friendly dict for new-style objects with __slots__.
         """
-        allslots = [_wrap_string_slot(getattr(cls, '__slots__', tuple()))
-                    for cls in obj.__class__.mro()]
+        allslots = [
+            _wrap_string_slot(getattr(cls, '__slots__', tuple()))
+            for cls in obj.__class__.mro()
+        ]
 
         if not self._flatten_obj_attrs(obj, chain(*allslots), data):
-            attrs = [x for x in dir(obj)
-                     if not x.startswith('__') and not x.endswith('__')]
+            attrs = [
+                x for x in dir(obj) if not x.startswith('__') and not x.endswith('__')
+            ]
             self._flatten_obj_attrs(obj, attrs, data)
 
         return data
@@ -595,8 +642,38 @@ class Pickler(object):
         """Flatten a key/value pair into the passed-in dictionary."""
         if not util.is_picklable(k, v):
             return data
+
+        if k is None:
+            k = 'null'  # for compatibility with common json encoders
+
+        if self.numeric_keys and isinstance(k, numeric_types):
+            pass
+        elif not isinstance(k, string_types):
+            try:
+                k = repr(k)
+            except Exception:
+                k = compat.ustr(k)
+
+        data[k] = self._flatten(v)
+        return data
+
+    def _flatten_non_string_key_value_pair(self, k, v, data):
+        """Flatten only non-string key/value pairs"""
+        if not util.is_picklable(k, v):
+            return data
+        if self.keys and not isinstance(k, string_types):
+            k = self._escape_key(k)
+            data[k] = self._flatten(v)
+        return data
+
+    def _flatten_string_key_value_pair(self, k, v, data):
+        """Flatten string key/value pairs only."""
+        if not util.is_picklable(k, v):
+            return data
         if self.keys:
-            if not isinstance(k, string_types) or k.startswith(tags.JSON_KEY):
+            if not isinstance(k, string_types):
+                return data
+            elif k.startswith(tags.JSON_KEY):
                 k = self._escape_key(k)
         else:
             if k is None:
@@ -625,10 +702,14 @@ class Pickler(object):
         return data
 
     def _escape_key(self, k):
-        return tags.JSON_KEY + encode(k,
-                                      reset=False, keys=True,
-                                      context=self, backend=self.backend,
-                                      make_refs=self.make_refs)
+        return tags.JSON_KEY + encode(
+            k,
+            reset=False,
+            keys=True,
+            context=self,
+            backend=self.backend,
+            make_refs=self.make_refs,
+        )
 
     def _getstate(self, obj, data):
         state = self._flatten(obj)
@@ -646,9 +727,7 @@ class Pickler(object):
 
 def _in_cycle(obj, objs, max_reached, make_refs):
     return (
-        max_reached or (
-            not make_refs and id(obj) in objs
-        )
+        max_reached or (not make_refs and id(obj) in objs)
     ) and not util.is_primitive(obj)
 
 

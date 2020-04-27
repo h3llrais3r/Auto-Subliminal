@@ -8,9 +8,12 @@ A handler can be bound to other types by calling
 
 """
 from __future__ import absolute_import, division, unicode_literals
+import array
 import copy
 import datetime
+import io
 import re
+import sys
 import threading
 import uuid
 
@@ -19,7 +22,6 @@ from . import util
 
 
 class Registry(object):
-
     def __init__(self):
         self._handlers = {}
         self._base_handlers = {}
@@ -60,16 +62,17 @@ class Registry(object):
 
         """
         if handler is None:
+
             def _register(handler_cls):
                 self.register(cls, handler=handler_cls, base=base)
                 return handler_cls
+
             return _register
         if not util.is_type(cls):
             raise TypeError('{!r} is not a class/type'.format(cls))
         # store both the name and the actual type for the ugly cases like
         # _sre.SRE_Pattern that cannot be loaded back directly
-        self._handlers[util.importable_name(cls)] = \
-            self._handlers[cls] = handler
+        self._handlers[util.importable_name(cls)] = self._handlers[cls] = handler
         if base:
             # only store the actual type for subclass checking
             self._base_handlers[cls] = handler
@@ -87,7 +90,6 @@ get = registry.get
 
 
 class BaseHandler(object):
-
     def __init__(self, context):
         """
         Initialize a new handler to handle a registered type.
@@ -116,16 +118,14 @@ class BaseHandler(object):
             json-friendly representation of `obj` once this method has
             finished.
         """
-        raise NotImplementedError('You must implement flatten() in %s' %
-                                  self.__class__)
+        raise NotImplementedError('You must implement flatten() in %s' % self.__class__)
 
     def restore(self, obj):
         """
         Restore an object of the registered type from the json-friendly
         representation `obj` and return it.
         """
-        raise NotImplementedError('You must implement restore() in %s' %
-                                  self.__class__)
+        raise NotImplementedError('You must implement restore() in %s' % self.__class__)
 
     @classmethod
     def handles(self, cls):
@@ -142,6 +142,25 @@ class BaseHandler(object):
         return cls
 
 
+class ArrayHandler(BaseHandler):
+    """Flatten and restore array.array objects"""
+
+    def flatten(self, obj, data):
+        data['typecode'] = obj.typecode
+        data['values'] = self.context.flatten(obj.tolist(), reset=False)
+        return data
+
+    def restore(self, data):
+        typecode = data['typecode']
+        values = self.context.restore(data['values'], reset=False)
+        if typecode == 'c':
+            values = [bytes(x) for x in values]
+        return array.array(typecode, values)
+
+
+ArrayHandler.handles(array.array)
+
+
 class DatetimeHandler(BaseHandler):
 
     """Custom handler for datetime objects
@@ -151,10 +170,15 @@ class DatetimeHandler(BaseHandler):
     object.
 
     """
+
     def flatten(self, obj, data):
         pickler = self.context
         if not pickler.unpicklable:
-            return compat.ustr(obj)
+            if hasattr(obj, 'isoformat'):
+                result = obj.isoformat()
+            else:
+                result = compat.ustr(obj)
+            return result
         cls, args = obj.__reduce__()
         flatten = pickler.flatten
         payload = util.b64encode(args[0])
@@ -198,6 +222,7 @@ class QueueHandler(BaseHandler):
     Construct a new Queue instance when restoring.
 
     """
+
     def flatten(self, obj, data):
         return data
 
@@ -219,9 +244,7 @@ class CloneFactory(object):
         return clone(self.exemplar)
 
     def __repr__(self):
-        return (
-            '<CloneFactory object at 0x{:x} ({})>'
-            .format(id(self), self.exemplar))
+        return '<CloneFactory object at 0x{:x} ({})>'.format(id(self), self.exemplar)
 
 
 class UUIDHandler(BaseHandler):
@@ -254,3 +277,18 @@ class LockHandler(BaseHandler):
 
 _lock = threading.Lock()
 LockHandler.handles(_lock.__class__)
+
+
+class TextIOHandler(BaseHandler):
+    """Serialize file descriptors as None because we cannot roundtrip"""
+
+    def flatten(self, obj, data):
+        return None
+
+    def restore(self, data):
+        """Restore should never get called because flatten() returns None"""
+        raise AssertionError('Restoring IO.TextIOHandler is not supported')
+
+
+if sys.version_info >= (3, 8):
+    TextIOHandler.handles(io.TextIOWrapper)
