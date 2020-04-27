@@ -41,6 +41,16 @@ def test_wanted_item_trim_release_group():
     assert wanted_item_1.releasegrp == 'KILLERS'
 
 
+def test_wanted_item_library_path(monkeypatch):
+    monkeypatch.setattr('autosubliminal.LIBRARYPATHS', ['path/to/library'])
+    wanted_item.set_attr('videopath', 'Path/to/Library/and/Video/file')
+    assert wanted_item.library_path == 'path/to/library'
+    monkeypatch.setattr('autosubliminal.LIBRARYPATHS', ['path/to/library2'])
+    assert wanted_item.library_path is None
+    monkeypatch.setattr('autosubliminal.LIBRARYPATHS', [])
+    assert wanted_item.library_path is None
+
+
 def test_wanted_item_set_attr():
     wanted_item.set_attr('languages', 'nl,en')
     wanted_item.set_attr('season', '1')

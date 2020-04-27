@@ -2,10 +2,11 @@
 
 import datetime
 import logging
+import os
 import re
 
 import autosubliminal
-from autosubliminal.util.common import get_today, to_list, to_obj, to_obj_or_list
+from autosubliminal.util.common import find_path_in_paths, get_today, to_list, to_obj, to_obj_or_list
 
 # Release group regex
 release_group_regex = re.compile(r'(.*)\[.*?\]')
@@ -174,6 +175,16 @@ class WantedItem(_Item):
             return True
         else:
             return False
+
+    @property
+    def library_path(self):
+        """Library path for the wanted item.
+
+        If library paths are available, we check if the wanted item is located in a library path or not.
+        If yes, return the library path, else return None
+        """
+        video_dir = os.path.dirname(self.videopath)
+        return find_path_in_paths(video_dir, autosubliminal.LIBRARYPATHS, check_common_path=True)
 
     def set_attr(self, key, value):
         """Set an attribute.

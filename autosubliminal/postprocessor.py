@@ -83,11 +83,21 @@ class PostProcessor(object):
 
             # Add subtitle path argument (can be empty if no subtitle was downloaded)
             subtitle_path = self._wanted_item.subtitlepath if isinstance(self._wanted_item, DownloadItem) else None
-            log.debug('subtitle path: %s', subtitle_path if subtitle_path else '')
-            process.append(self._convert_arg(subtitle_path if subtitle_path else ''))
+            subtitle_path = subtitle_path if subtitle_path else ''  # check because it can be empty on DownloadItem
+            log.debug('subtitle path: %s', subtitle_path)
+            process.append(self._convert_arg(subtitle_path))
 
-            # Add optional command arguments if needed
+            # Add library path argument
+            # Do not use single statement below to prevent double call to get the library_path!
+            # library_path = self._wanted_item.library_path if self._wanted_item.library_path else ''
+            library_path = self._wanted_item.library_path
+            library_path = library_path if library_path else ''
+            log.debug('library path: %s', library_path)
+            process.append(self._convert_arg(library_path))
+
+            # Add custom command arguments if needed
             if self._args:
+                log.debug('Custom arguments:')
                 for arg in self._args:
                     log.debug('%s', arg)
                     process.append(self._convert_arg(arg))
