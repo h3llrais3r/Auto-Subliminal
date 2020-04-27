@@ -43,7 +43,7 @@ def test_wanted_item_trim_release_group():
 
 def test_wanted_item_library_path(monkeypatch):
     monkeypatch.setattr('autosubliminal.LIBRARYPATHS', ['path/to/library'])
-    wanted_item.set_attr('videopath', 'Path/to/Library/and/Video/file')
+    wanted_item.set_attr('videopath', 'path/to/library/and/video/file')
     assert wanted_item.library_path == 'path/to/library'
     monkeypatch.setattr('autosubliminal.LIBRARYPATHS', ['path/to/library2'])
     assert wanted_item.library_path is None
