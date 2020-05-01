@@ -222,35 +222,31 @@ var autosubliminal = {
   notifications.SUCCESS = 'success';
   notifications.WARNING = 'notice';
   notifications.ERROR = 'error';
-  notifications.stackBottomRight = {
-    'dir1': 'up',
-    'dir2': 'left',
-    'firstpos1': 10,
-    'firstpos2': 10,
-    'spacing1': 10,
-    'spacing2': 10
-  };
-  notifications.stackCenter = {
-    'dir1': 'down',
-    'dir2': 'right',
-    'firstpos1': 4,
-    'firstpos2': $(window).width() / 2 - Number(PNotify.defaults.width.replace(/\D/g, '')) / 2
-  };
-  $(window).on('resize', function () {
-    notifications.stackCenter.firstpos2 = $(window).width() / 2 - Number(PNotify.defaults.width.replace(/\D/g, '')) / 2;
+  notifications.stackBottomRight = new PNotify.Stack({
+    dir1: 'up',
+    dir2: 'left',
+    firstpos1: 10,
+    firstpos2: 10,
+    spacing1: 10,
+    spacing2: 10
   });
-  notifications.stackContext = {
-    'dir1': 'down',
-    'dir2': 'right',
-    'context': document.getElementById('stickyNotificationContext')
-  };
+  notifications.stackContext = new PNotify.Stack({
+    dir1: 'down',
+    dir2: 'right',
+    context: document.getElementById('stickyNotificationContext')
+  });
   PNotify.defaults.stack = notifications.stackBottomRight;
   PNotify.defaults.addClass = 'stack-bottomright';
   PNotify.defaults.styling = 'bootstrap3';
   PNotify.defaults.icons = 'bootstrap3';
   PNotify.defaults.delay = 5000;
-  PNotify.modules.Desktop.defaults.desktop = true;
-  PNotify.modules.Desktop.permission();
+  PNotify.defaultModules.set(PNotifyBootstrap3, {});
+  PNotify.defaultModules.set(PNotifyGlyphicon, {});
+  PNotify.defaultModules.set(PNotifyMobile, {});
+  PNotify.defaultModules.set(PNotifyDesktop, {});
+  PNotifyDesktop.permission();
+  notifications.stackContextModules = new Map(Array.from(PNotify.defaultModules));
+  notifications.stackContextModules["delete"](PNotifyDesktop);
 
   notifications.showNotification = function (notification) {
     var message = notification.message;
@@ -258,33 +254,23 @@ var autosubliminal = {
     var sticky = notification.sticky;
 
     if (sticky) {
-      new PNotify({
-        target: document.body,
-        data: {
-          title: false,
-          text: message,
-          textTrusted: true,
-          type: type,
-          hide: false,
-          width: 'auto',
-          addClass: 'container stack-context',
-          stack: notifications.stackContext,
-          modules: {
-            Desktop: {
-              desktop: false
-            }
-          }
-        }
+      PNotify.alert({
+        title: false,
+        text: message,
+        textTrusted: true,
+        type: type,
+        hide: false,
+        width: 'auto',
+        addClass: 'container stack-context',
+        stack: notifications.stackContext,
+        modules: notifications.stackContextModules
       });
     } else {
-        new PNotify({
-          target: document.body,
-          data: {
-            title: 'Auto-Subliminal',
-            text: message,
-            textTrusted: true,
-            type: type
-          }
+        PNotify.alert({
+          title: 'Auto-Subliminal',
+          text: message,
+          textTrusted: true,
+          type: type
         });
       }
   };

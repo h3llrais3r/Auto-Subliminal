@@ -36,9 +36,11 @@ var vendor = {
         'node_modules/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js',
         'node_modules/tablesorter/dist/js/widgets/widget-reflow.min.js',
         // pnotify
-        'node_modules/pnotify/dist/iife/PNotify.js',
-        'node_modules/pnotify/dist/iife/PNotifyButtons.js',
-        'node_modules/pnotify/dist/iife/PNotifyDesktop.js',
+        'node_modules/@pnotify/core/dist/PNotify.js',
+        'node_modules/@pnotify/bootstrap3/dist/PNotifyBootstrap3.js',
+        'node_modules/@pnotify/glyphicon/dist/PNotifyGlyphicon.js',
+        'node_modules/@pnotify/mobile/dist/PNotifyMobile.js',
+        'node_modules/@pnotify/desktop/dist/PNotifyDesktop.js',
         // pubsub-js
         'node_modules/pubsub-js/src/pubsub.js',
         // strftime
@@ -65,7 +67,10 @@ var vendor = {
         // tablesorter
         'node_modules/tablesorter/dist/css/jquery.tablesorter.pager.min.css',
         // pnotify
-        'node_modules/pnotify/dist/PNotifyBrightTheme.css',
+        'node_modules/@pnotify/core/dist/PNotify.css',
+        'node_modules/@pnotify/bootstrap3/dist/PNotifyBootstrap3.css',
+        'node_modules/@pnotify/mobile/dist/PNotifyMobile.css',
+        'node_modules/@pnotify/desktop/dist/PNotifyDesktop.css',
         // font awesome
         'node_modules/font-awesome/css/font-awesome.css',
         // vue-multiselect

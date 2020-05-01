@@ -195,7 +195,7 @@ textarea {
 }
 
 .sticky-notification {
-  padding: 8px 0 5px 0;
+  padding: 8px 15px 5px 15px;
 }
 
 .table-filter {
@@ -559,11 +559,19 @@ a:hover, a:active, a:focus, a:visited > .fa {
 /*******************
  * PNOTIFY STYLING *
  *******************/
-.ui-pnotify.stack-context {
+.pnotify.stack-context {
   position: static;
   margin-left: auto;
   margin-right: auto;
   text-wrap: none;
+}
+
+.pnotify-icon > span {
+  margin-top: 4px;
+}
+
+.pnotify-title {
+  font-size: 18px;
 }
 
 /***********************

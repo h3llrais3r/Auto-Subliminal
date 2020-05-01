@@ -1,5 +1,6 @@
 {
   "env": {
+    "es6": true,
     "browser": true,
     "jquery": true
   },
@@ -7,12 +8,16 @@
   "globals": {
     "autosubliminal": "readonly",
     "PNotify": "readonly",
+    "PNotifyBootstrap3": "readonly",
+    "PNotifyDesktop": "readonly",
+    "PNotifyGlyphicon": "readonly",
+    "PNotifyMobile": "readonly",
     "PubSub": "readonly",
     "strftime": "readonly",
     "webRoot": "readonly"
   },
   "parserOptions": {
-    "ecmaVersion": 5
+    "ecmaVersion": 6
   },
   "rules": {
     "indent": [
