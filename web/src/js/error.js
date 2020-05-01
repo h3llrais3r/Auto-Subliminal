@@ -17,4 +17,4 @@
         $('.traceback-error').toggleClass('hidden');
     });
 
-}(autosubliminal));
+})(autosubliminal);

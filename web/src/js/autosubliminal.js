@@ -701,7 +701,7 @@ var autosubliminal = {
         initMultiInputTextArea(multiInputTextArea);
     });
 
-}(autosubliminal));
+})(autosubliminal);
 
 
 /* =========================

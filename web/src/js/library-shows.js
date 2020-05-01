@@ -127,4 +127,4 @@
     // Wait until settings are loaded to start initialization
     PubSub.subscribe(autosubliminal.settings.LOADED, init);
 
-}(autosubliminal));
+})(autosubliminal);

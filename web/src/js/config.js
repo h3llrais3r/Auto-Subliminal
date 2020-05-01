@@ -40,4 +40,4 @@
         $.get(testUrl);
     });
 
-}(autosubliminal));
+})(autosubliminal);

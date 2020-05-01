@@ -33,4 +33,4 @@
     // Start isAlive check
     isAlive();
 
-}(autosubliminal));
+})(autosubliminal);
