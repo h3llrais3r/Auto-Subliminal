@@ -15,12 +15,6 @@
           "bootstrap"
         ],
         "allowedVersions": "<4.0.0"
-      },
-      {
-        "packageNames": [
-          "pnotify"
-        ],
-        "allowedVersions": "<5.0.0"
       }
     ]
   },
