@@ -64,129 +64,96 @@ var autosubliminal = {
     return languageCodes;
   };
 
-  var types = autosubliminal.types;
-
-  types.Settings = function () {
-    return {
-      developerMode: null,
-      webRoot: null,
-      scanDisk: null,
-      scanLibrary: null,
-      checkSub: null,
-      checkVersion: null,
-      tvdbUrl: null,
-      imdbUrl: null,
-      timestampFormat: null,
-      pathSeparator: null,
-      languages: null
-    };
+  autosubliminal.types.Settings = {
+    developerMode: null,
+    webRoot: null,
+    scanDisk: null,
+    scanLibrary: null,
+    checkSub: null,
+    checkVersion: null,
+    tvdbUrl: null,
+    imdbUrl: null,
+    timestampFormat: null,
+    pathSeparator: null,
+    languages: null
   };
-
-  types.Notification = function () {
-    return {
-      message: null,
-      type: null,
-      sticky: null
-    };
+  autosubliminal.types.Notification = {
+    message: null,
+    type: null,
+    sticky: null
   };
-
-  types.WebsocketNotification = function () {
-    return {
-      type: autosubliminal.websockets.NOTIFICATION,
-      notification: types.Notification()
-    };
+  autosubliminal.types.WebsocketNotification = {
+    type: autosubliminal.websockets.NOTIFICATION,
+    notification: autosubliminal.types.Notification
   };
-
-  types.WebsocketPageReloadEvent = function () {
-    return {
-      type: autosubliminal.websockets.EVENT,
-      event: {
-        type: autosubliminal.websockets.PAGE_RELOAD,
-        data: {
-          name: null
-        }
+  autosubliminal.types.WebsocketPageReloadEvent = {
+    type: autosubliminal.websockets.EVENT,
+    event: {
+      type: autosubliminal.websockets.PAGE_RELOAD,
+      data: {
+        name: null
       }
-    };
+    }
   };
-
-  types.WebsocketProcessStartedEvent = function () {
-    return {
-      type: autosubliminal.websockets.EVENT,
-      event: {
-        type: autosubliminal.websockets.PROCESS_STARTED,
-        data: types.Process()
-      }
-    };
+  autosubliminal.types.WebsocketProcessStartedEvent = {
+    type: autosubliminal.websockets.EVENT,
+    event: {
+      type: autosubliminal.websockets.PROCESS_STARTED,
+      data: autosubliminal.types.Process
+    }
   };
-
-  types.WebsocketProcessFinishedEvent = function () {
-    return {
-      type: autosubliminal.websockets.EVENT,
-      event: {
-        type: autosubliminal.websockets.PROCESS_FINISHED,
-        data: types.Process()
-      }
-    };
+  autosubliminal.types.WebsocketProcessFinishedEvent = {
+    type: autosubliminal.websockets.EVENT,
+    event: {
+      type: autosubliminal.websockets.PROCESS_FINISHED,
+      data: autosubliminal.types.Process
+    }
   };
-
-  types.Process = function () {
-    return {
-      name: null,
-      interval: null,
-      active: null,
-      alive: null,
-      last_run: null,
-      next_run: null,
-      running: null
-    };
+  autosubliminal.types.Process = {
+    name: null,
+    interval: null,
+    active: null,
+    alive: null,
+    last_run: null,
+    next_run: null,
+    running: null
   };
-
-  types.Show = function () {
-    return {
-      path: null,
-      tvdb_id: null,
-      title: null,
-      year: null,
-      overview: null,
-      poster: null,
-      banner: null,
-      settings: null,
-      path_in_video_paths: null,
-      total_subtitles_wanted: null,
-      total_subtitles_missing: null,
-      total_subtitles_available: null,
-      files: null
-    };
+  autosubliminal.types.Show = {
+    path: null,
+    tvdb_id: null,
+    title: null,
+    year: null,
+    overview: null,
+    poster: null,
+    banner: null,
+    settings: null,
+    path_in_video_paths: null,
+    total_subtitles_wanted: null,
+    total_subtitles_missing: null,
+    total_subtitles_available: null,
+    files: null
   };
-
-  types.Movie = function () {
-    return {
-      path: null,
-      imdb_id: null,
-      title: null,
-      year: null,
-      overview: null,
-      poster: null,
-      settings: null,
-      path_in_video_paths: null,
-      total_subtitles_wanted: null,
-      total_subtitles_missing: null,
-      total_subtitles_available: null,
-      files: null
-    };
+  autosubliminal.types.Movie = {
+    path: null,
+    imdb_id: null,
+    title: null,
+    year: null,
+    overview: null,
+    poster: null,
+    settings: null,
+    path_in_video_paths: null,
+    total_subtitles_wanted: null,
+    total_subtitles_missing: null,
+    total_subtitles_available: null,
+    files: null
   };
-
-  types.SubtitleLanguage = function () {
-    return {
-      code: null,
-      name: null
-    };
+  autosubliminal.types.SubtitleLanguage = {
+    code: null,
+    name: null
   };
+  autosubliminal.settings.LOADED = 'SETTINGS_LOADED';
 
-  var settings = autosubliminal.settings;
-  settings.LOADED = 'SETTINGS_LOADED';
-
-  settings.loadSettings = function () {
+  autosubliminal.settings.loadSettings = function () {
     $.get(autosubliminal.getUrl('/api/settings/frontend'), function (data) {
       if (!jQuery.isEmptyObject(data)) {
         autosubliminal.DEVELOPER_MODE = data.developerMode;
@@ -211,18 +178,17 @@ var autosubliminal = {
 
         autosubliminal.PATH_SEPARTOR = data.pathSeparator;
         autosubliminal.LANGUAGES = data.languages;
-        PubSub.publish(settings.LOADED, null);
+        PubSub.publish(autosubliminal.settings.LOADED, null);
       }
     });
   };
 
-  settings.loadSettings();
-  var notifications = autosubliminal.notifications;
-  notifications.INFO = 'info';
-  notifications.SUCCESS = 'success';
-  notifications.WARNING = 'notice';
-  notifications.ERROR = 'error';
-  notifications.stackBottomRight = new PNotify.Stack({
+  autosubliminal.settings.loadSettings();
+  autosubliminal.notifications.INFO = 'info';
+  autosubliminal.notifications.SUCCESS = 'success';
+  autosubliminal.notifications.WARNING = 'notice';
+  autosubliminal.notifications.ERROR = 'error';
+  autosubliminal.notifications.stackBottomRight = new PNotify.Stack({
     dir1: 'up',
     dir2: 'left',
     firstpos1: 10,
@@ -230,12 +196,12 @@ var autosubliminal = {
     spacing1: 10,
     spacing2: 10
   });
-  notifications.stackContext = new PNotify.Stack({
+  autosubliminal.notifications.stackContext = new PNotify.Stack({
     dir1: 'down',
     dir2: 'right',
     context: document.getElementById('stickyNotificationContext')
   });
-  PNotify.defaults.stack = notifications.stackBottomRight;
+  PNotify.defaults.stack = autosubliminal.notifications.stackBottomRight;
   PNotify.defaults.addClass = 'stack-bottomright';
   PNotify.defaults.styling = 'bootstrap3';
   PNotify.defaults.icons = 'bootstrap3';
@@ -245,10 +211,10 @@ var autosubliminal = {
   PNotify.defaultModules.set(PNotifyMobile, {});
   PNotify.defaultModules.set(PNotifyDesktop, {});
   PNotifyDesktop.permission();
-  notifications.stackContextModules = new Map(Array.from(PNotify.defaultModules));
-  notifications.stackContextModules["delete"](PNotifyDesktop);
+  autosubliminal.notifications.stackContextModules = new Map(Array.from(PNotify.defaultModules));
+  autosubliminal.notifications.stackContextModules["delete"](PNotifyDesktop);
 
-  notifications.showNotification = function (notification) {
+  autosubliminal.notifications.showNotification = function (notification) {
     var message = notification.message;
     var type = notification.type;
     var sticky = notification.sticky;
@@ -262,8 +228,8 @@ var autosubliminal = {
         hide: false,
         width: 'auto',
         addClass: 'container stack-context',
-        stack: notifications.stackContext,
-        modules: notifications.stackContextModules
+        stack: autosubliminal.notifications.stackContext,
+        modules: autosubliminal.notifications.stackContextModules
       });
     } else {
         PNotify.alert({
@@ -275,13 +241,12 @@ var autosubliminal = {
       }
   };
 
-  var websockets = autosubliminal.websockets;
-  websockets.EVENT = 'EVENT';
-  websockets.NOTIFICATION = 'NOTIFICATION';
-  websockets.PAGE_RELOAD = 'PAGE_RELOAD';
-  websockets.PROCESS_STARTED = 'PROCESS_STARTED';
-  websockets.PROCESS_FINISHED = 'PROCESS_FINISHED';
-  websockets.RUN_PROCESS = 'RUN_PROCESS';
+  autosubliminal.websockets.EVENT = 'EVENT';
+  autosubliminal.websockets.NOTIFICATION = 'NOTIFICATION';
+  autosubliminal.websockets.PAGE_RELOAD = 'PAGE_RELOAD';
+  autosubliminal.websockets.PROCESS_STARTED = 'PROCESS_STARTED';
+  autosubliminal.websockets.PROCESS_FINISHED = 'PROCESS_FINISHED';
+  autosubliminal.websockets.RUN_PROCESS = 'RUN_PROCESS';
   var websocketProtocol = 'ws:';
 
   if (window.location.protocol === 'https:') {
@@ -289,32 +254,32 @@ var autosubliminal = {
   }
 
   var websocketUrl = websocketProtocol + '//' + window.location.host + autosubliminal.WEB_ROOT + '/system/websocket';
-  websockets.ws = new WebSocket(websocketUrl);
+  autosubliminal.websockets.ws = new WebSocket(websocketUrl);
 
-  websockets.ws.onmessage = function (message) {
+  autosubliminal.websockets.ws.onmessage = function (message) {
     var data = message.data;
 
     if (!jQuery.isEmptyObject(data)) {
       var dataJson = JSON.parse(data);
-      handleWebsocketMessage(dataJson);
+      autosubliminal.websockets.handleWebsocketMessage(dataJson);
     }
   };
 
-  var handleWebsocketMessage = function handleWebsocketMessage(message) {
-    if (message.type == websockets.NOTIFICATION) {
-      notifications.showNotification(message.notification);
-    } else if (message.type == websockets.EVENT) {
-      handleWebsocketEvent(message.event);
+  autosubliminal.websockets.handleWebsocketMessage = function (message) {
+    if (message.type == autosubliminal.websockets.NOTIFICATION) {
+      autosubliminal.notifications.showNotification(message.notification);
+    } else if (message.type == autosubliminal.websockets.EVENT) {
+      autosubliminal.websockets.handleWebsocketEvent(message.event);
     } else {
       console.error('Unsupported message: ' + message);
     }
   };
 
-  var handleWebsocketEvent = function handleWebsocketEvent(event) {
+  autosubliminal.websockets.handleWebsocketEvent = function (event) {
     var eventType = event.type;
     var eventData = event.data;
 
-    if (eventType == websockets.PAGE_RELOAD) {
+    if (eventType == autosubliminal.websockets.PAGE_RELOAD) {
       if (!jQuery.isEmptyObject(eventData)) {
         if (window.location.pathname.indexOf('/' + eventData.name) >= 0) {
           setTimeout(function () {
@@ -326,9 +291,9 @@ var autosubliminal = {
           window.location.reload();
         }, 1000);
       }
-    } else if (eventType == websockets.PROCESS_STARTED) {
+    } else if (eventType == autosubliminal.websockets.PROCESS_STARTED) {
       if (!jQuery.isEmptyObject(eventData)) {
-        PubSub.publish(websockets.PROCESS_STARTED, eventData);
+        PubSub.publish(autosubliminal.websockets.PROCESS_STARTED, eventData);
         var scanDiskNextRun = $('#scanDiskNextRun');
         var checkSubNextRun = $('#checkSubNextRun');
 
@@ -340,9 +305,9 @@ var autosubliminal = {
           checkSubNextRun.text('Running...');
         }
       }
-    } else if (eventType == websockets.PROCESS_FINISHED) {
+    } else if (eventType == autosubliminal.websockets.PROCESS_FINISHED) {
       if (!jQuery.isEmptyObject(eventData)) {
-        PubSub.publish(websockets.PROCESS_FINISHED, eventData);
+        PubSub.publish(autosubliminal.websockets.PROCESS_FINISHED, eventData);
 
         if (eventData.name == autosubliminal.SCAN_DISK) {
           $('#scanDiskNextRun').countdown(eventData.next_run);
@@ -355,30 +320,28 @@ var autosubliminal = {
     }
   };
 
-  websockets.sendWebsocketMessage = function (message) {
-    websockets.ws.send(message);
+  autosubliminal.websockets.sendWebsocketMessage = function (message) {
+    autosubliminal.websockets.ws.send(message);
   };
 
-  websockets.runProcessOnServer = function (process_name) {
+  autosubliminal.websockets.runProcessOnServer = function (process_name) {
     var event = {
-      'type': websockets.EVENT,
+      'type': autosubliminal.websockets.EVENT,
       'event': {
-        'type': websockets.RUN_PROCESS,
+        'type': autosubliminal.websockets.RUN_PROCESS,
         'data': {
           'name': process_name
         }
       }
     };
-    websockets.sendWebsocketMessage(JSON.stringify(event));
+    autosubliminal.websockets.sendWebsocketMessage(JSON.stringify(event));
   };
 
-  var vue = autosubliminal.vue;
-
-  vue.setPosterPlaceholderUrl = function (event) {
+  autosubliminal.vue.setPosterPlaceholderUrl = function (event) {
     event.target.src = autosubliminal.getUrl('/images/poster-placeholder.jpg');
   };
 
-  vue.styleProgressBar = function (progressPercentage) {
+  autosubliminal.vue.styleProgressBar = function (progressPercentage) {
     $('.vue-simple-progress-bar').each(function () {
       var self = $(this);
       var percentage = progressPercentage;
@@ -412,7 +375,7 @@ var autosubliminal = {
   $('.navbar .nav a.run-process').on('click', function (event) {
     event.preventDefault();
     var processName = $(this).data('process-name');
-    websockets.runProcessOnServer(processName);
+    autosubliminal.websockets.runProcessOnServer(processName);
   });
   $('input[type=checkbox][data-toggle=toggle][data-on=Enabled][data-off=Disabled]').on('change', function () {
     var target = $(this).parent().next('input[type=hidden]').val();
@@ -465,7 +428,7 @@ var autosubliminal = {
     }
   });
 
-  var initMultiInputTextArea = function initMultiInputTextArea(element) {
+  autosubliminal.initMultiInputTextArea = function (element) {
     $(element).hide();
     var values = $(element).val().split('\n');
     $(element).next('div.multi-input-fields').remove();
@@ -479,13 +442,13 @@ var autosubliminal = {
     $(multiInputFields).append('<div class="input-group">' + '<input type="text" class="form-control input-sm" placeholder="New value">' + '<span class="input-group-addon addon-add"><i class="fa fa-plus" aria-hidden="true"></i></span>' + '</div>');
   };
 
-  var initMultiInputTextAreas = function initMultiInputTextAreas() {
+  autosubliminal.initMultiInputTextAreas = function () {
     $('textarea.multi-input').each(function () {
-      initMultiInputTextArea(this);
+      autosubliminal.initMultiInputTextArea(this);
     });
   };
 
-  initMultiInputTextAreas();
+  autosubliminal.initMultiInputTextAreas();
   $(document).on('click', '.multi-input-fields .input-group .addon-add', function () {
     var multiInputTextArea = $(this).parents('.multi-input-fields').siblings('.multi-input');
     var values = $(multiInputTextArea).val().split('\n');
@@ -497,7 +460,7 @@ var autosubliminal = {
     if (value && existingValue.length === 0) {
       var newValues = values.concat([value]);
       $(multiInputTextArea).val(newValues.join('\n'));
-      initMultiInputTextArea(multiInputTextArea);
+      autosubliminal.initMultiInputTextArea(multiInputTextArea);
     } else {
       $(this).siblings('input').val('');
     }
@@ -510,7 +473,7 @@ var autosubliminal = {
       return val !== value;
     });
     multiInputTextArea.val(newValues.join('\n'));
-    initMultiInputTextArea(multiInputTextArea);
+    autosubliminal.initMultiInputTextArea(multiInputTextArea);
   });
 })(autosubliminal);
 

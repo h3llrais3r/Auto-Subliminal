@@ -103,141 +103,117 @@ var autosubliminal = {
      * Types (type definitions)
      * ======================== */
 
-    var types = autosubliminal.types;
-
-    types.Settings = function () {
-        return {
-            developerMode: null,
-            webRoot: null,
-            scanDisk: null,
-            scanLibrary: null,
-            checkSub: null,
-            checkVersion: null,
-            tvdbUrl: null,
-            imdbUrl: null,
-            timestampFormat: null,
-            pathSeparator: null,
-            languages: null
-        };
+    autosubliminal.types.Settings = {
+        developerMode: null,
+        webRoot: null,
+        scanDisk: null,
+        scanLibrary: null,
+        checkSub: null,
+        checkVersion: null,
+        tvdbUrl: null,
+        imdbUrl: null,
+        timestampFormat: null,
+        pathSeparator: null,
+        languages: null
     };
 
     // Notification
-    types.Notification = function () {
-        return {
-            message: null,
-            type: null,
-            sticky: null
-        };
+    autosubliminal.types.Notification = {
+        message: null,
+        type: null,
+        sticky: null
     };
 
     // Websocket notification
-    types.WebsocketNotification = function () {
-        return {
-            type: autosubliminal.websockets.NOTIFICATION,
-            notification: types.Notification()
-        };
+    autosubliminal.types.WebsocketNotification = {
+        type: autosubliminal.websockets.NOTIFICATION,
+        notification: autosubliminal.types.Notification
     };
 
     // Websocket page reload event
-    types.WebsocketPageReloadEvent = function () {
-        return {
-            type: autosubliminal.websockets.EVENT,
-            event: {
-                type: autosubliminal.websockets.PAGE_RELOAD,
-                data: {
-                    name: null
-                }
+    autosubliminal.types.WebsocketPageReloadEvent = {
+        type: autosubliminal.websockets.EVENT,
+        event: {
+            type: autosubliminal.websockets.PAGE_RELOAD,
+            data: {
+                name: null
             }
-        };
+        }
     };
 
     // Websocket process started event
-    types.WebsocketProcessStartedEvent = function () {
-        return {
-            type: autosubliminal.websockets.EVENT,
-            event: {
-                type: autosubliminal.websockets.PROCESS_STARTED,
-                data: types.Process()
-            }
-        };
+    autosubliminal.types.WebsocketProcessStartedEvent = {
+        type: autosubliminal.websockets.EVENT,
+        event: {
+            type: autosubliminal.websockets.PROCESS_STARTED,
+            data: autosubliminal.types.Process
+        }
     };
 
     // Websocket process finished event
-    types.WebsocketProcessFinishedEvent = function () {
-        return {
-            type: autosubliminal.websockets.EVENT,
-            event: {
-                type: autosubliminal.websockets.PROCESS_FINISHED,
-                data: types.Process()
-            }
-        };
+    autosubliminal.types.WebsocketProcessFinishedEvent = {
+        type: autosubliminal.websockets.EVENT,
+        event: {
+            type: autosubliminal.websockets.PROCESS_FINISHED,
+            data: autosubliminal.types.Process
+        }
     };
 
-    types.Process = function () {
-        return {
-            name: null,
-            interval: null,
-            active: null,
-            alive: null,
-            last_run: null,
-            next_run: null,
-            running: null
-        };
+    autosubliminal.types.Process = {
+        name: null,
+        interval: null,
+        active: null,
+        alive: null,
+        last_run: null,
+        next_run: null,
+        running: null
     };
 
-    types.Show = function () {
-        return {
-            path: null,
-            tvdb_id: null,
-            title: null,
-            year: null,
-            overview: null,
-            poster: null,
-            banner: null,
-            settings: null,
-            path_in_video_paths: null,
-            total_subtitles_wanted: null,
-            total_subtitles_missing: null,
-            total_subtitles_available: null,
-            files: null
-        };
+    autosubliminal.types.Show = {
+        path: null,
+        tvdb_id: null,
+        title: null,
+        year: null,
+        overview: null,
+        poster: null,
+        banner: null,
+        settings: null,
+        path_in_video_paths: null,
+        total_subtitles_wanted: null,
+        total_subtitles_missing: null,
+        total_subtitles_available: null,
+        files: null
     };
 
-    types.Movie = function () {
-        return {
-            path: null,
-            imdb_id: null,
-            title: null,
-            year: null,
-            overview: null,
-            poster: null,
-            settings: null,
-            path_in_video_paths: null,
-            total_subtitles_wanted: null,
-            total_subtitles_missing: null,
-            total_subtitles_available: null,
-            files: null
-        };
+    autosubliminal.types.Movie = {
+        path: null,
+        imdb_id: null,
+        title: null,
+        year: null,
+        overview: null,
+        poster: null,
+        settings: null,
+        path_in_video_paths: null,
+        total_subtitles_wanted: null,
+        total_subtitles_missing: null,
+        total_subtitles_available: null,
+        files: null
     };
 
-    types.SubtitleLanguage = function () {
-        return {
-            code: null,
-            name: null
-        };
+    autosubliminal.types.SubtitleLanguage = {
+        code: null,
+        name: null
     };
 
     /* ========
      * Settings
      * ======== */
 
-    var settings = autosubliminal.settings;
-
     // Constants
-    settings.LOADED = 'SETTINGS_LOADED';
+    autosubliminal.settings.LOADED = 'SETTINGS_LOADED';
 
     // Load settings through settings api
-    settings.loadSettings = function () {
+    autosubliminal.settings.loadSettings = function () {
         $.get(autosubliminal.getUrl('/api/settings/frontend'), function (data) {
             if (!jQuery.isEmptyObject(data)) {
                 autosubliminal.DEVELOPER_MODE = data.developerMode;
@@ -262,28 +238,26 @@ var autosubliminal = {
                 autosubliminal.LANGUAGES = data.languages;
 
                 // Publish the settings loaded event
-                PubSub.publish(settings.LOADED, null);
+                PubSub.publish(autosubliminal.settings.LOADED, null);
             }
         });
     };
-    settings.loadSettings();
+    autosubliminal.settings.loadSettings();
 
     /* =============
      * Notifications
      * ============= */
 
-    var notifications = autosubliminal.notifications;
-
     // By default we will use desktop notifications, but we also provide settings for fallback to browser notifications
 
     // Notification types
-    notifications.INFO = 'info';
-    notifications.SUCCESS = 'success';
-    notifications.WARNING = 'notice';
-    notifications.ERROR = 'error';
+    autosubliminal.notifications.INFO = 'info';
+    autosubliminal.notifications.SUCCESS = 'success';
+    autosubliminal.notifications.WARNING = 'notice';
+    autosubliminal.notifications.ERROR = 'error';
 
     // Bottom right stack - to be aligned with desktop notifications at the right bottom
-    notifications.stackBottomRight = new PNotify.Stack({
+    autosubliminal.notifications.stackBottomRight = new PNotify.Stack({
         dir1: 'up',
         dir2: 'left',
         firstpos1: 10,
@@ -293,14 +267,14 @@ var autosubliminal = {
     });
 
     // Alternative stack - context stack (fixed position)
-    notifications.stackContext = new PNotify.Stack({
+    autosubliminal.notifications.stackContext = new PNotify.Stack({
         dir1: 'down',
         dir2: 'right',
         context: document.getElementById('stickyNotificationContext')
     });
 
     // PNotify default settings
-    PNotify.defaults.stack = notifications.stackBottomRight;
+    PNotify.defaults.stack = autosubliminal.notifications.stackBottomRight;
     PNotify.defaults.addClass = 'stack-bottomright';
     PNotify.defaults.styling = 'bootstrap3';
     PNotify.defaults.icons = 'bootstrap3';
@@ -312,11 +286,11 @@ var autosubliminal = {
     PNotifyDesktop.permission(); // Check for permission for desktop notifications
 
     // Stack context modules (desktop notifications must be removed to use the stack context
-    notifications.stackContextModules = new Map(Array.from(PNotify.defaultModules));
-    notifications.stackContextModules.delete(PNotifyDesktop);
+    autosubliminal.notifications.stackContextModules = new Map(Array.from(PNotify.defaultModules));
+    autosubliminal.notifications.stackContextModules.delete(PNotifyDesktop);
 
     // Function to show a notification
-    notifications.showNotification = function (notification) {
+    autosubliminal.notifications.showNotification = function (notification) {
         var message = notification.message;
         var type = notification.type;
         var sticky = notification.sticky;
@@ -330,8 +304,8 @@ var autosubliminal = {
                 hide: false, // Disable fading
                 width: 'auto',
                 addClass: 'container stack-context',
-                stack: notifications.stackContext, // Special stack location for sticky notifications
-                modules: notifications.stackContextModules // Special modules for sticky notifications
+                stack: autosubliminal.notifications.stackContext, // Special stack location for sticky notifications
+                modules: autosubliminal.notifications.stackContextModules // Special modules for sticky notifications
             });
         }
         // Default location
@@ -350,15 +324,13 @@ var autosubliminal = {
      * Websockets
      * ========== */
 
-    var websockets = autosubliminal.websockets;
-
     // Constants
-    websockets.EVENT = 'EVENT';
-    websockets.NOTIFICATION = 'NOTIFICATION';
-    websockets.PAGE_RELOAD = 'PAGE_RELOAD';
-    websockets.PROCESS_STARTED = 'PROCESS_STARTED';
-    websockets.PROCESS_FINISHED = 'PROCESS_FINISHED';
-    websockets.RUN_PROCESS = 'RUN_PROCESS';
+    autosubliminal.websockets.EVENT = 'EVENT';
+    autosubliminal.websockets.NOTIFICATION = 'NOTIFICATION';
+    autosubliminal.websockets.PAGE_RELOAD = 'PAGE_RELOAD';
+    autosubliminal.websockets.PROCESS_STARTED = 'PROCESS_STARTED';
+    autosubliminal.websockets.PROCESS_FINISHED = 'PROCESS_FINISHED';
+    autosubliminal.websockets.RUN_PROCESS = 'RUN_PROCESS';
 
     // Setup the websocket system
     var websocketProtocol = 'ws:';
@@ -366,35 +338,35 @@ var autosubliminal = {
         websocketProtocol = 'wss:';
     }
     var websocketUrl = websocketProtocol + '//' + window.location.host + autosubliminal.WEB_ROOT + '/system/websocket';
-    websockets.ws = new WebSocket(websocketUrl);
+    autosubliminal.websockets.ws = new WebSocket(websocketUrl);
 
     // Setup websocket message receival
-    websockets.ws.onmessage = function (message) {
+    autosubliminal.websockets.ws.onmessage = function (message) {
         var data = message.data;
         // console.log('Received websocket message: ' + data);
         if (!jQuery.isEmptyObject(data)) {
             var dataJson = JSON.parse(data);
-            handleWebsocketMessage(dataJson);
+            autosubliminal.websockets.handleWebsocketMessage(dataJson);
         }
     };
     // console.log('Websocket ready to receive messages');
 
     // Function to handle a websocket message
-    var handleWebsocketMessage = function (message) {
-        if (message.type == websockets.NOTIFICATION) {
-            notifications.showNotification(message.notification);
-        } else if (message.type == websockets.EVENT) {
-            handleWebsocketEvent(message.event);
+    autosubliminal.websockets.handleWebsocketMessage = function (message) {
+        if (message.type == autosubliminal.websockets.NOTIFICATION) {
+            autosubliminal.notifications.showNotification(message.notification);
+        } else if (message.type == autosubliminal.websockets.EVENT) {
+            autosubliminal.websockets.handleWebsocketEvent(message.event);
         } else {
             console.error('Unsupported message: ' + message);
         }
     };
 
     // Function to handle a websocket event
-    var handleWebsocketEvent = function (event) {
+    autosubliminal.websockets.handleWebsocketEvent = function (event) {
         var eventType = event.type;
         var eventData = event.data;
-        if (eventType == websockets.PAGE_RELOAD) {
+        if (eventType == autosubliminal.websockets.PAGE_RELOAD) {
             if (!jQuery.isEmptyObject(eventData)) {
                 // Only reload when we are actually on the specified page
                 if (window.location.pathname.indexOf('/' + eventData.name) >= 0) {
@@ -412,10 +384,10 @@ var autosubliminal = {
                     window.location.reload();
                 }, 1000);
             }
-        } else if (eventType == websockets.PROCESS_STARTED) {
+        } else if (eventType == autosubliminal.websockets.PROCESS_STARTED) {
             if (!jQuery.isEmptyObject(eventData)) {
                 // Publish the event asynchronously
-                PubSub.publish(websockets.PROCESS_STARTED, eventData);
+                PubSub.publish(autosubliminal.websockets.PROCESS_STARTED, eventData);
                 // Update footer
                 var scanDiskNextRun = $('#scanDiskNextRun');
                 var checkSubNextRun = $('#checkSubNextRun');
@@ -429,10 +401,10 @@ var autosubliminal = {
                     checkSubNextRun.text('Running...');
                 }
             }
-        } else if (eventType == websockets.PROCESS_FINISHED) {
+        } else if (eventType == autosubliminal.websockets.PROCESS_FINISHED) {
             if (!jQuery.isEmptyObject(eventData)) {
                 // Publish the event asynchronously
-                PubSub.publish(websockets.PROCESS_FINISHED, eventData);
+                PubSub.publish(autosubliminal.websockets.PROCESS_FINISHED, eventData);
                 // Update footer
                 if (eventData.name == autosubliminal.SCAN_DISK) {
                     // Restart disk scanner countdown in footer
@@ -448,37 +420,35 @@ var autosubliminal = {
     };
 
     // Function to send a websocket message to the server
-    websockets.sendWebsocketMessage = function (message) {
-        websockets.ws.send(message);
+    autosubliminal.websockets.sendWebsocketMessage = function (message) {
+        autosubliminal.websockets.ws.send(message);
     };
 
     // Function to run a process on the server
-    websockets.runProcessOnServer = function (process_name) {
+    autosubliminal.websockets.runProcessOnServer = function (process_name) {
         // Construct the event
         var event = {
-            'type': websockets.EVENT,
+            'type': autosubliminal.websockets.EVENT,
             'event': {
-                'type': websockets.RUN_PROCESS,
+                'type': autosubliminal.websockets.RUN_PROCESS,
                 'data': {
                     'name': process_name
                 }
             }
         };
-        websockets.sendWebsocketMessage(JSON.stringify(event));
+        autosubliminal.websockets.sendWebsocketMessage(JSON.stringify(event));
     };
 
     /* ===
      * Vue
      * === */
 
-    var vue = autosubliminal.vue;
-
-    vue.setPosterPlaceholderUrl = function (event) {
+    autosubliminal.vue.setPosterPlaceholderUrl = function (event) {
         event.target.src = autosubliminal.getUrl('/images/poster-placeholder.jpg');
     };
 
     // Function to style a vue progress bar
-    vue.styleProgressBar = function (progressPercentage) {
+    autosubliminal.vue.styleProgressBar = function (progressPercentage) {
         $('.vue-simple-progress-bar').each(function () {
             var self = $(this);
             var percentage = progressPercentage;
@@ -525,7 +495,7 @@ var autosubliminal = {
         event.preventDefault();
         // Run the process
         var processName = $(this).data('process-name');
-        websockets.runProcessOnServer(processName);
+        autosubliminal.websockets.runProcessOnServer(processName);
     });
 
     /* ========
@@ -618,7 +588,7 @@ var autosubliminal = {
     // <textarea id="<id>" name="<name>" class="form-control input-sm multi-input hidden">${display_list_multi_line(<values>)}</textarea>
 
     // Initialize a multi input textarea
-    var initMultiInputTextArea = function (element) {
+    autosubliminal.initMultiInputTextArea = function (element) {
         // Hide textarea element
         $(element).hide();
         // Get the texarea values
@@ -643,12 +613,12 @@ var autosubliminal = {
     };
 
     // Init all the multi input fields
-    var initMultiInputTextAreas = function () {
+    autosubliminal.initMultiInputTextAreas = function () {
         $('textarea.multi-input').each(function () {
-            initMultiInputTextArea(this);
+            autosubliminal.initMultiInputTextArea(this);
         });
     };
-    initMultiInputTextAreas();
+    autosubliminal.initMultiInputTextAreas();
 
     // Enable the add button on a multi input field
     $(document).on('click', '.multi-input-fields .input-group .addon-add', function () {
@@ -664,7 +634,7 @@ var autosubliminal = {
             var newValues = values.concat([value]);
             $(multiInputTextArea).val(newValues.join('\n'));
             // Initialize the multi input textarea again
-            initMultiInputTextArea(multiInputTextArea);
+            autosubliminal.initMultiInputTextArea(multiInputTextArea);
         } else {
             // Clear value again
             $(this).siblings('input').val('');
@@ -682,7 +652,7 @@ var autosubliminal = {
         });
         multiInputTextArea.val(newValues.join('\n'));
         // Initialize the multi input again
-        initMultiInputTextArea(multiInputTextArea);
+        autosubliminal.initMultiInputTextArea(multiInputTextArea);
     });
 
 })(autosubliminal);
