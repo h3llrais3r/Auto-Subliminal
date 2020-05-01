@@ -25,13 +25,13 @@ var autosubliminal = {
      * Global constants
      * ================ */
 
-    /* Take the value that is set in the inc_header.mako */
+    // Take the value that is set in the inc_header.mako
     autosubliminal.WEB_ROOT = webRoot;
 
-    /* Base url */
+    // Base url
     autosubliminal.BASE_URL = window.location.protocol + '//' + window.location.host + autosubliminal.WEB_ROOT;
 
-    /* Developer mode */
+    // Developer mode
     autosubliminal.DEVELOPER_MODE = false;
 
     // Scheduler names
@@ -61,7 +61,6 @@ var autosubliminal = {
     // Video types
     autosubliminal.EPISODE_TYPE = 'episode';
     autosubliminal.MOVIE_TYPE = 'movie';
-
 
     /* ================
      * Global functions
@@ -284,34 +283,21 @@ var autosubliminal = {
     notifications.ERROR = 'error';
 
     // Bottom right stack - to be aligned with desktop notifications at the right bottom
-    notifications.stackBottomRight = {
-        'dir1': 'up',
-        'dir2': 'left',
-        'firstpos1': 10,
-        'firstpos2': 10,
-        'spacing1': 10,
-        'spacing2': 10
-    };
-
-    // Alternative stack - center stack - copied from https://github.com/sciactive/pnotify/issues/46
-    notifications.stackCenter = {
-        'dir1': 'down',
-        'dir2': 'right',
-        'firstpos1': 4,
-        'firstpos2': ($(window).width() / 2) - (Number(PNotify.defaults.width.replace(/\D/g, '')) / 2)
-    };
-
-    // Handle the center stack when resizing the browser
-    $(window).on('resize', function () {
-        notifications.stackCenter.firstpos2 = ($(window).width() / 2) - (Number(PNotify.defaults.width.replace(/\D/g, '')) / 2);
+    notifications.stackBottomRight = new PNotify.Stack({
+        dir1: 'up',
+        dir2: 'left',
+        firstpos1: 10,
+        firstpos2: 10,
+        spacing1: 10,
+        spacing2: 10
     });
 
     // Alternative stack - context stack (fixed position)
-    notifications.stackContext = {
-        'dir1': 'down',
-        'dir2': 'right',
-        'context': document.getElementById('stickyNotificationContext')
-    };
+    notifications.stackContext = new PNotify.Stack({
+        dir1: 'down',
+        dir2: 'right',
+        context: document.getElementById('stickyNotificationContext')
+    });
 
     // PNotify default settings
     PNotify.defaults.stack = notifications.stackBottomRight;
@@ -319,8 +305,15 @@ var autosubliminal = {
     PNotify.defaults.styling = 'bootstrap3';
     PNotify.defaults.icons = 'bootstrap3';
     PNotify.defaults.delay = 5000;
-    PNotify.modules.Desktop.defaults.desktop = true; // Use desktop notifications
-    PNotify.modules.Desktop.permission(); // Check for permission for desktop notifications
+    PNotify.defaultModules.set(PNotifyBootstrap3, {}); // Enable bootstrap3 by default
+    PNotify.defaultModules.set(PNotifyGlyphicon, {}); // Enable glyphicon icons by default for bootstrap3
+    PNotify.defaultModules.set(PNotifyMobile, {}); // Enable mobile support by default
+    PNotify.defaultModules.set(PNotifyDesktop, {}); // Enable desktop notifications by default
+    PNotifyDesktop.permission(); // Check for permission for desktop notifications
+
+    // Stack context modules (desktop notifications must be removed to use the stack context
+    notifications.stackContextModules = new Map(Array.from(PNotify.defaultModules));
+    notifications.stackContextModules.delete(PNotifyDesktop);
 
     // Function to show a notification
     notifications.showNotification = function (notification) {
@@ -329,35 +322,26 @@ var autosubliminal = {
         var sticky = notification.sticky;
         // Sticky location - use stackContext
         if (sticky) {
-            new PNotify({
-                target: document.body,
-                data: {
-                    title: false, // Remove title
-                    text: message,
-                    textTrusted: true, // Allow html inside text
-                    type: type,
-                    hide: false, // Disable fading
-                    width: 'auto',
-                    addClass: 'container stack-context',
-                    stack: notifications.stackContext,
-                    modules: {
-                        Desktop: {
-                            desktop: false // Disable desktop
-                        }
-                    }
-                }
+            PNotify.alert({
+                title: false, // Remove title
+                text: message,
+                textTrusted: true, // Allow html inside text
+                type: type,
+                hide: false, // Disable fading
+                width: 'auto',
+                addClass: 'container stack-context',
+                stack: notifications.stackContext, // Special stack location for sticky notifications
+                modules: notifications.stackContextModules // Special modules for sticky notifications
             });
         }
         // Default location
         else {
-            new PNotify({
-                target: document.body,
-                data: {
-                    title: 'Auto-Subliminal',
-                    text: message,
-                    textTrusted: true, // Allow html inside text
-                    type: type
-                }
+            PNotify.alert({
+                title: 'Auto-Subliminal',
+                text: message,
+                textTrusted: true, // Allow html inside text
+                type: type
+                //modules: new Map(Array.from(PNotify.defaultModules).concat([[PNotifyDesktop, {}]]))
             });
         }
     };
@@ -702,7 +686,6 @@ var autosubliminal = {
     });
 
 })(autosubliminal);
-
 
 /* =========================
  * Global namespace settings

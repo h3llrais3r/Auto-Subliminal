@@ -24,8 +24,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "gulp build",
     "watch": "gulp watch",
-    "eslint": "eslint **/*.js -f table",
-    "stylelint": "stylelint **/*.scss --custom-formatter=node_modules/stylelint-formatter-table"
+    "eslint": "eslint web/src/**/*.js -f table",
+    "stylelint": "stylelint web/src/**/*.scss --custom-formatter=node_modules/stylelint-formatter-table"
   },
   "dependencies": {
     "bootstrap": "3.4.1",
@@ -34,7 +34,7 @@
     "jquery": "3.4.1",
     "jquery-countdown": "2.2.0",
     "jquery-hoverintent": "1.10.1",
-    "pnotify": "4.0.1",
+    "pnotify": "5.1.2",
     "pubsub-js": "1.8.0",
     "strftime": "0.10.0",
     "tablesorter": "2.31.3",

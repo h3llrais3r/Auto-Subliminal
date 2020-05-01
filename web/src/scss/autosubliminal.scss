@@ -238,7 +238,7 @@ textarea {
 }
 
 .sticky-notification {
-  padding: 8px 0 5px 0;
+  padding: 8px 15px 5px 15px;
 }
 
 .table-filter {
@@ -634,13 +634,21 @@ a {
  * PNOTIFY STYLING *
  *******************/
 
-.ui-pnotify {
+.pnotify {
   &.stack-context {
     position: static;
     // create center align
     margin-left: auto;
     margin-right: auto;
     text-wrap: none;
+  }
+
+  &-icon > span {
+    margin-top: $font-size-h4 - $font-size-base;
+  }
+
+  &-title {
+    font-size: $font-size-h4;
   }
 }
 
