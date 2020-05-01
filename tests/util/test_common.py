@@ -3,6 +3,7 @@
 import os
 import tempfile
 import time
+import uuid
 from collections import OrderedDict
 from datetime import datetime
 
@@ -16,8 +17,8 @@ from autosubliminal.util.common import (atoi, connect_url, convert_timestamp, di
                                         display_item_title, display_list_multi_line, display_list_single_line,
                                         display_mapping_dict, display_timestamp, display_value, escape_quotes,
                                         find_path_in_paths, get_boolean, get_common_path, get_file_size, get_root_path,
-                                        get_today, get_wanted_languages, humanize_bytes, natural_keys, run_cmd,
-                                        safe_lowercase, safe_text, safe_trim, safe_uppercase, sanitize,
+                                        get_today, get_wanted_languages, get_web_file, humanize_bytes, natural_keys,
+                                        run_cmd, safe_lowercase, safe_text, safe_trim, safe_uppercase, sanitize,
                                         set_rw_and_remove, to_dict, to_list, to_obj, to_obj_or_list, to_text,
                                         wait_for_internet_connection)
 
@@ -379,6 +380,19 @@ def test_display_timestamp(monkeypatch):
     timestamp_float = time.mktime(time.strptime('01012016 0:00:00', '%d%m%Y %H:%M:%S')) - 1
     assert display_timestamp(timestamp_float) == '31-12-2015 23:59:59'
     assert display_timestamp(0.0) == 'N/A'
+
+
+def test_get_web_file(monkeypatch):
+    app_id = uuid.uuid4()
+    monkeypatch.setattr('autosubliminal.UUID', app_id)
+    monkeypatch.setattr('autosubliminal.WEBROOT', '')
+    monkeypatch.setattr('autosubliminal.DEVELOPER', True)
+    assert get_web_file('test.js') == '/js/test.js?v=' + app_id.hex
+    assert get_web_file('test.css') == '/css/test.css?v=' + app_id.hex
+    monkeypatch.setattr('autosubliminal.WEBROOT', 'autosubliminal')
+    monkeypatch.setattr('autosubliminal.DEVELOPER', False)
+    assert get_web_file('test.js') == 'autosubliminal/js/test.min.js?v=' + app_id.hex
+    assert get_web_file('test.css') == 'autosubliminal/css/test.min.css?v=' + app_id.hex
 
 
 def test_convert_timestamp(monkeypatch):

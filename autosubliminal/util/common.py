@@ -345,6 +345,17 @@ def display_timestamp(time_float, default_value='N/A'):
         return default_value
 
 
+def get_web_file(file_name):
+    # Return minified file name if not in developer mode, otherwise return normal file
+    name, ext = os.path.splitext(file_name)
+    sub_path = ext.strip('.')
+    version = autosubliminal.UUID.hex
+    if not autosubliminal.DEVELOPER:
+        return autosubliminal.WEBROOT + '/' + sub_path + '/' + name + '.min' + ext + '?v=' + version
+    else:
+        return autosubliminal.WEBROOT + '/' + sub_path + '/' + name + ext + '?v=' + version
+
+
 def get_next_scheduler_run_in_ms(scheduler):
     if not scheduler or scheduler.running:
         return 0

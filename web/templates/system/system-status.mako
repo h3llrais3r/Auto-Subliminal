@@ -2,7 +2,7 @@
 
 <%!
     import autosubliminal
-    from autosubliminal.util.common import display_interval, display_timestamp, get_disk_space_details, humanize_bytes, safe_lowercase, safe_text
+    from autosubliminal.util.common import display_interval, display_timestamp, get_disk_space_details, get_web_file, humanize_bytes, safe_lowercase, safe_text
 %>
 
 <%block name="bodyContent">
@@ -111,6 +111,6 @@
 
 <%block name="footerContent">
 
-    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/status.js?v=${appUUID}"></script>
+    <script type="text/javascript" src="${get_web_file('status.js')}"></script>
 
 </%block>

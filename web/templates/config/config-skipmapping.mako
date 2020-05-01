@@ -2,7 +2,7 @@
 
 <%!
     import autosubliminal
-    from autosubliminal.util.common import display_mapping_dict
+    from autosubliminal.util.common import display_mapping_dict, get_web_file
 %>
 
 <%block name="bodyContent">
@@ -97,6 +97,6 @@
 
 <%block name="footerContent">
 
-    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/config.js?v=${appUUID}"></script>
+    <script type="text/javascript" src="${get_web_file('config.js')}"></script>
 
 </%block>

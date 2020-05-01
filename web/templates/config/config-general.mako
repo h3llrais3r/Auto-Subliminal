@@ -2,7 +2,7 @@
 
 <%!
     import autosubliminal
-    from autosubliminal.util.common import display_list_multi_line, display_list_single_line
+    from autosubliminal.util.common import display_list_multi_line, display_list_single_line, get_web_file
     from autosubliminal.util.language import get_subtitle_languages
 
     SUPPORTED_TIMESTAMP_FORMATS = ['%Y-%m-%d %H:%M:%S', '%m-%d-%Y %H:%M:%S', '%d-%m-%Y %H:%M:%S']
@@ -495,6 +495,6 @@
 
 <%block name="footerContent">
 
-    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/config.js?v=${appUUID}"></script>
+    <script type="text/javascript" src="${get_web_file('config.js')}"></script>
 
 </%block>

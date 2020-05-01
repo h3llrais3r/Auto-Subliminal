@@ -1,82 +1,55 @@
-/**
- * Javascript needed on the library overview page
- */
-
 'use strict';
 
 (function (autosubliminal) {
+  'use strict';
 
-    'use strict';
+  var init = function init() {
+    autosubliminal.library.checkScannerRunning();
+    PubSub.subscribe(autosubliminal.websockets.PROCESS_STARTED, autosubliminal.library.scannerStartedEventSubscriber);
+    PubSub.subscribe(autosubliminal.websockets.PROCESS_FINISHED, autosubliminal.library.scannerFinishedEventSubscriber);
+    window.Vue.component('library-overview', {
+      data: function data() {
+        return {
+          showsOverview: null,
+          moviesOverview: null
+        };
+      },
+      created: function created() {},
+      mounted: function mounted() {
+        var loadingIcon = $('.loading');
+        loadingIcon.removeClass('hidden');
+        this.getShowsOverview();
+        this.getMoviesOverview();
+        loadingIcon.addClass('hidden');
+      },
+      updated: function updated() {
+        autosubliminal.vue.styleProgressBar();
+      },
+      methods: {
+        getShowsOverview: function getShowsOverview() {
+          var self = this;
+          $.get(autosubliminal.getUrl('/api/shows/overview'), function (data) {
+            self.showsOverview = data;
+          });
+        },
+        getMoviesOverview: function getMoviesOverview() {
+          var self = this;
+          $.get(autosubliminal.getUrl('/api/movies/overview'), function (data) {
+            self.moviesOverview = data;
+          });
+        },
+        getProgressPercentage: function getProgressPercentage(overview) {
+          return overview.total_subtitles_available / overview.total_subtitles_wanted * 100;
+        },
+        getProgressText: function getProgressText(overview) {
+          return overview.total_subtitles_available + ' of ' + overview.total_subtitles_wanted;
+        }
+      }
+    });
+    new window.Vue({
+      el: '#app'
+    });
+  };
 
-    /* ==============
-     * Initialization
-     * ============== */
-
-    var init = function () {
-
-        // Check if the library scanner is running
-        autosubliminal.library.checkScannerRunning();
-
-        // Subscribe to library scanner events
-        PubSub.subscribe(autosubliminal.websockets.PROCESS_STARTED, autosubliminal.library.scannerStartedEventSubscriber);
-        PubSub.subscribe(autosubliminal.websockets.PROCESS_FINISHED, autosubliminal.library.scannerFinishedEventSubscriber);
-
-        // Init vue component
-        window.Vue.component('library-overview', {
-            data: function () {
-                return {
-                    showsOverview: null,
-                    moviesOverview: null
-                };
-            },
-            created: function () {
-                //console.log('created');
-            },
-            mounted: function () {
-                //console.log('mounted');
-                var loadingIcon = $('.loading');
-                // Show loading icon
-                loadingIcon.removeClass('hidden');
-                // Get overview
-                this.getShowsOverview();
-                this.getMoviesOverview();
-                // Hide loading icon
-                loadingIcon.addClass('hidden');
-            },
-            updated: function () {
-                //console.log('updated');
-                autosubliminal.vue.styleProgressBar();
-            },
-            methods: {
-                getShowsOverview: function () {
-                    var self = this;
-                    $.get(autosubliminal.getUrl('/api/shows/overview'), function (data) {
-                        self.showsOverview = data;
-                    });
-                },
-                getMoviesOverview: function () {
-                    var self = this;
-                    $.get(autosubliminal.getUrl('/api/movies/overview'), function (data) {
-                        self.moviesOverview = data;
-                    });
-                },
-                getProgressPercentage: function (overview) {
-                    return overview.total_subtitles_available / overview.total_subtitles_wanted * 100;
-                },
-                getProgressText: function (overview) {
-                    return overview.total_subtitles_available + ' of ' + overview.total_subtitles_wanted;
-                }
-            }
-        });
-
-        // Init vue app
-        new window.Vue({
-            el: '#app'
-        });
-
-    };
-
-    // Wait until settings are loaded to start initialization
-    PubSub.subscribe(autosubliminal.settings.LOADED, init);
-
-}(autosubliminal));
+  PubSub.subscribe(autosubliminal.settings.LOADED, init);
+})(autosubliminal);

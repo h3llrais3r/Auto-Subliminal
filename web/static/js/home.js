@@ -1,339 +1,260 @@
-/**
- * Javascript needed on the home page
- */
-
 'use strict';
 
 (function (autosubliminal) {
+  'use strict';
 
-    'use strict';
+  var init = function init() {
+    window.Vue.component('settings', {
+      props: {
+        type: String,
+        indexerId: String,
+        title: String,
+        settings: Object
+      },
+      data: function data() {
+        return {
+          languages: autosubliminal.LANGUAGES,
+          wantedLanguages: []
+        };
+      },
+      computed: {
+        posterThumbnailUrl: function posterThumbnailUrl() {
+          var self = this;
+          var indexer = '';
 
-    /* ==============
-     * Initialization
-     * ============== */
+          if (self.type == autosubliminal.EPISODE_TYPE) {
+            indexer = 'tvdb';
+          } else if (self.type == autosubliminal.MOVIE_TYPE) {
+            indexer = 'imdb';
+          }
 
-    var init = function () {
+          return autosubliminal.getUrl('/artwork/' + indexer + '/poster/thumbnail/');
+        }
+      },
+      watch: {
+        settings: function settings(newSettings) {
+          var self = this;
 
-        // Init vue component
-        window.Vue.component('settings', {
-            props: {
-                type: String, // tvdb or imdb
-                indexerId: String,
-                title: String,
-                settings: Object
+          if (newSettings && newSettings.wanted_languages) {
+            self.wantedLanguages = self.getLanguages(self.settings.wanted_languages);
+          }
+        }
+      },
+      created: function created() {},
+      mounted: function mounted() {},
+      updated: function updated() {
+        autosubliminal.keepDropdownsOpen();
+      },
+      methods: {
+        setPosterPlaceholderUrl: autosubliminal.vue.setPosterPlaceholderUrl,
+        getLanguages: autosubliminal.convertToLanguages,
+        getLanguageCodes: autosubliminal.convertToLanguageCodes,
+        saveSettings: function saveSettings(event) {
+          event.preventDefault();
+          var self = this;
+          var apiUrl = '';
+
+          if (self.type == autosubliminal.EPISODE_TYPE) {
+            apiUrl = autosubliminal.getUrl('/api/shows/' + self.indexerId + '/settings');
+          } else if (self.type == autosubliminal.MOVIE_TYPE) {
+            apiUrl = autosubliminal.getUrl('/api/movies/' + self.indexerId + '/settings');
+          }
+
+          var data = self.settings;
+          data.wanted_languages = self.getLanguageCodes(self.wantedLanguages);
+          $.putJson(apiUrl, data, function () {
+            $('#settingsModal').modal('hide');
+          });
+        }
+      }
+    });
+    window.Vue.component('multiselect', window.VueMultiselect["default"]);
+    new window.Vue({
+      el: '#app',
+      data: function data() {
+        return {
+          type: null,
+          indexerId: null,
+          title: null,
+          settings: null
+        };
+      },
+      created: function created() {},
+      mounted: function mounted() {
+        this.setupHome();
+      },
+      updated: function updated() {},
+      methods: {
+        setupHome: function setupHome() {
+          autosubliminal.keepDropdownsOpen();
+          $('#wanteditems').tablesorter({
+            debug: false,
+            widgets: ['reflow', 'filter', 'saveSort'],
+            widgetOptions: {
+              filter_columnFilters: false,
+              filter_external: '.wanteditems-filter',
+              filter_searchDelay: 50,
+              filter_saveFilters: true,
+              filter_reset: '.wanteditems-filter-reset'
             },
-            data: function () {
-                return {
-                    languages: autosubliminal.LANGUAGES,
-                    wantedLanguages: []
-                };
+            dateFormat: autosubliminal.TABLESORTER_DATE_FORMAT,
+            headers: {
+              0: {
+                sorter: 'false'
+              },
+              1: {
+                sorter: 'text'
+              }
             },
-            computed: {
-                posterThumbnailUrl: function () {
-                    var self = this;
-                    var indexer = '';
-                    if (self.type == autosubliminal.EPISODE_TYPE) {
-                        indexer = 'tvdb';
-                    } else if (self.type == autosubliminal.MOVIE_TYPE) {
-                        indexer = 'imdb';
-                    }
-                    return autosubliminal.getUrl('/artwork/' + indexer + '/poster/thumbnail/');
-                }
-            },
-            watch: {
-                // Watch for settings being updated to convert the wanted languages
-                settings: function (newSettings) {
-                    var self = this;
-                    if (newSettings && newSettings.wanted_languages) {
-                        self.wantedLanguages = self.getLanguages(self.settings.wanted_languages);
-                    }
-                }
-            },
-            created: function () {
-                //console.log('created');
-            },
-            mounted: function () {
-                //console.log('mounted');
-            },
-            updated: function () {
-                //console.log('updated');
-                autosubliminal.keepDropdownsOpen();
-            },
-            methods: {
-                setPosterPlaceholderUrl: autosubliminal.vue.setPosterPlaceholderUrl,
-                getLanguages: autosubliminal.convertToLanguages,
-                getLanguageCodes: autosubliminal.convertToLanguageCodes,
-                saveSettings: function (event) {
-                    event.preventDefault();
-                    var self = this;
-                    var apiUrl = '';
-                    if (self.type == autosubliminal.EPISODE_TYPE) {
-                        apiUrl = autosubliminal.getUrl('/api/shows/' + self.indexerId + '/settings');
-                    } else if (self.type == autosubliminal.MOVIE_TYPE) {
-                        apiUrl = autosubliminal.getUrl('/api/movies/' + self.indexerId + '/settings');
-                    }
-                    var data = self.settings;
-                    data.wanted_languages = self.getLanguageCodes(self.wantedLanguages);
-                    // Save settings
-                    $.putJson(apiUrl, data, function () {
-                        // Close modal on success
-                        $('#settingsModal').modal('hide');
-                    });
-                }
+            sortList: [[9, 1]],
+            initialized: function initialized() {
+              var self = $('#wanteditems');
+              self.find('.loading-row').remove();
+              self.find('.content-row').removeClass('hidden');
+              self.trigger('update');
             }
-        });
-
-        // Init vue components
-        window.Vue.component('multiselect', window.VueMultiselect.default);
-
-        // Init vue app
-        new window.Vue({
-            el: '#app',
-            data: function () {
-                return {
-                    type: null,
-                    indexerId: null,
-                    title: null,
-                    settings: null
-                };
+          }).tablesorterPager({
+            container: $('#wanteditemsPager'),
+            output: '{startRow} to {endRow} ({filteredRows})'
+          });
+          $('.wanteditems-filter-reset').on('click', function () {
+            $(this).prev('input').val('').focus();
+            $.tablesorter.storage($('#wanteditems'), 'tablesorter-filters', '');
+          });
+          $('#lastdownloads').tablesorter({
+            debug: false,
+            widgets: ['reflow', 'filter', 'saveSort'],
+            widgetOptions: {
+              filter_columnFilters: false,
+              filter_external: '.lastdownloads-filter',
+              filter_searchDelay: 50,
+              filter_saveFilters: true,
+              filter_reset: '.lastdownloads-filter-reset'
             },
-            created: function () {
-                //console.log('created');
+            dateFormat: autosubliminal.TABLESORTER_DATE_FORMAT,
+            headers: {
+              1: {
+                sorter: 'text'
+              }
             },
-            mounted: function () {
-                //console.log('mounted');
-                this.setupHome();
-            },
-            updated: function () {
-                //console.log('updated');
-            },
-            methods: {
-                setupHome: function () {
-                    // Keep dropdowns open (need to call it again because we are inside a vue app)
-                    autosubliminal.keepDropdownsOpen();
-
-                    // Setup the wanted items table
-                    $('#wanteditems')
-                        .tablesorter({
-                            debug: false, // Put on true to debug
-                            // Enable widgets
-                            widgets: ['reflow', 'filter', 'saveSort'],
-                            widgetOptions: {
-                                // No column filters
-                                filter_columnFilters: false,
-                                // External filter selector
-                                filter_external: '.wanteditems-filter',
-                                // Search faster (default 300)
-                                filter_searchDelay: 50,
-                                // Save filters
-                                filter_saveFilters: true,
-                                // Reset filter selector
-                                filter_reset: '.wanteditems-filter-reset'
-                            },
-                            // Use configured date format
-                            dateFormat: autosubliminal.TABLESORTER_DATE_FORMAT,
-                            // Force text sorter in show/movie name column (this is needed due to img in table cell)
-                            // See https://github.com/Mottie/tablesorter/issues/1149
-                            headers: {
-                                0: {sorter: 'false'},
-                                1: {sorter: 'text'}
-                            },
-                            // Sort default by time desc
-                            sortList: [[9, 1]],
-                            // Remove loading indication and show content when initialized
-                            initialized: function () {
-                                var self = $('#wanteditems');
-                                self.find('.loading-row').remove();
-                                self.find('.content-row').removeClass('hidden');
-                                self.trigger('update'); // Trigger table update for the removed loading row
-                            }
-                        })
-                        .tablesorterPager({
-                            container: $('#wanteditemsPager'),
-                            output: '{startRow} to {endRow} ({filteredRows})'
-                        });
-
-                    // Setup the wanted items filter
-                    $('.wanteditems-filter-reset').on('click', function () {
-                        $(this).prev('input').val('').focus();
-                        $.tablesorter.storage($('#wanteditems'), 'tablesorter-filters', '');
-                    });
-
-                    // Setup the last downloads table
-                    $('#lastdownloads')
-                        .tablesorter({
-                            debug: false, // Put on true to debug
-                            // Enable widgets
-                            widgets: ['reflow', 'filter', 'saveSort'],
-                            widgetOptions: {
-                                // No column filters
-                                filter_columnFilters: false,
-                                // External filter selector
-                                filter_external: '.lastdownloads-filter',
-                                // Search faster (default 300)
-                                filter_searchDelay: 50,
-                                // Save filters
-                                filter_saveFilters: true,
-                                // Reset filter selector
-                                filter_reset: '.lastdownloads-filter-reset'
-                            },
-                            // Use configured date format
-                            dateFormat: autosubliminal.TABLESORTER_DATE_FORMAT,
-                            // Force text sorter in show/movie name column (this is needed due to img in table cell)
-                            // See https://github.com/Mottie/tablesorter/issues/1149
-                            headers: {
-                                1: {sorter: 'text'}
-                            },
-                            // Sort default by time desc
-                            sortList: [[9, 1]],
-                            // Remove loading indication and show content when initialized
-                            initialized: function () {
-                                var self = $('#lastdownloads');
-                                self.find('.loading-row').remove();
-                                self.find('.content-row').removeClass('hidden');
-                                self.trigger('update'); // Trigger table update for the removed loading row
-                            }
-                        })
-                        .tablesorterPager({
-                            container: $('#lastdownloadsPager'),
-                            output: '{startRow} to {endRow} ({filteredRows})'
-                        });
-
-                    // Setup the last downloads filter
-                    $('.lastdownloads-filter-reset').on('click', function () {
-                        $(this).prev('input').val('').focus();
-                        $.tablesorter.storage($('#lastdownloads'), 'tablesorter-filters', '');
-                    });
-
-                    // Setup the manual search link
-                    $('.manualsearch-container-link').on('click', function (event) {
-                        // Prevent default behaviour
-                        event.preventDefault();
-                        // Prevent multi clicks when already running
-                        var self = $(this);
-                        if (self.data('running')) {
-                            return false;
-                        }
-                        // Mark as running
-                        self.data('running', true);
-                        // Define variables
-                        var searchUrl = self.attr('href');
-                        var loadingIcon = self.next('i');
-                        var contentDiv = self.parent('div').next('div');
-                        // Show the loading icon
-                        loadingIcon.removeClass('invisible').addClass('visible');
-                        // Clear previous content
-                        contentDiv.empty();
-                        // Call the searchUrl
-                        $.get(searchUrl, function (data) {
-                            // Hide the loading icon
-                            loadingIcon.removeClass('visible').addClass('invisible');
-                            // Output the result
-                            contentDiv.append(data);
-                        }).always(function () {
-                            // Mark as finished
-                            self.data('running', false);
-                        });
-                        return false;
-                    });
-
-                    // Setup the update wanted items link
-                    $('.update-wanted-item-link').on('click', function (event) {
-                        // Prevent default behaviour
-                        event.preventDefault();
-                        // Define variables
-                        var self = $(this);
-                        var updateUrl = self.attr('href');
-                        var updatePanel = self.closest('.panel-body');
-                        var wantedItem = self.closest('.wanted-item');
-                        var updateObj = {
-                            'title': updatePanel.find('input.update-wanted-item-title').val(),
-                            'year': updatePanel.find('input.update-wanted-item-year').val(),
-                            'season': updatePanel.find('input.update-wanted-item-season').val(),
-                            'episode': updatePanel.find('input.update-wanted-item-episode').val(),
-                            'source': updatePanel.find('input.update-wanted-item-source').val(),
-                            'quality': updatePanel.find('input.update-wanted-item-quality').val(),
-                            'codec': updatePanel.find('input.update-wanted-item-codec').val(),
-                            'releasegrp': updatePanel.find('input.update-wanted-item-releasegrp').val()
-                        };
-                        // Call the updateUrl
-                        $.post(updateUrl, updateObj, function (data) {
-                            if (!jQuery.isEmptyObject(data)) {
-                                // Close the dropdown
-                                self.closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
-                                // Update wanted item
-                                wantedItem.find('.wanted-item-title').text(data['displaytitle']);
-                                wantedItem.find('.wanted-item-season').text(data['season']);
-                                wantedItem.find('.wanted-item-episode').text(data['episode']);
-                                wantedItem.find('.wanted-item-source').text(data['source']);
-                                wantedItem.find('.wanted-item-quality').text(data['quality']);
-                                wantedItem.find('.wanted-item-codec').text(data['codec']);
-                                wantedItem.find('.wanted-item-releasegrp').text(data['releasegrp']);
-                            }
-                        });
-                        return false;
-                    });
-
-                    // Setup the reset wanted items link
-                    $('.reset-wanted-item-link').on('click', function (event) {
-                        // Prevent default behaviour
-                        event.preventDefault();
-                        // Define variables
-                        var self = $(this);
-                        var resetUrl = self.attr('href');
-                        var updatePanel = self.closest('.panel-body');
-                        var wantedItem = self.closest('.wanted-item');
-                        // Call the resetUrl
-                        $.get(resetUrl, function (data) {
-                            if (!jQuery.isEmptyObject(data)) {
-                                // Close the dropdown
-                                self.closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
-                                // Update update panel
-                                updatePanel.find('input.update-wanted-item-title').val(data['title']);
-                                updatePanel.find('input.update-wanted-item-year').val(data['year']);
-                                updatePanel.find('input.update-wanted-item-season').val(data['season']);
-                                updatePanel.find('input.update-wanted-item-episode').val(data['episode']);
-                                updatePanel.find('input.update-wanted-item-source').val(data['source']);
-                                updatePanel.find('input.update-wanted-item-quality').val(data['quality']);
-                                updatePanel.find('input.update-wanted-item-codec').val(data['codec']);
-                                updatePanel.find('input.update-wanted-item-releasegrp').val(data['releasegrp']);
-                                // Update wanted item
-                                wantedItem.find('.wanted-item-title').text(data['displaytitle']);
-                                wantedItem.find('.wanted-item-season').text(data['season']);
-                                wantedItem.find('.wanted-item-episode').text(data['episode']);
-                                wantedItem.find('.wanted-item-source').text(data['source']);
-                                wantedItem.find('.wanted-item-quality').text(data['quality']);
-                                wantedItem.find('.wanted-item-codec').text(data['codec']);
-                                wantedItem.find('.wanted-item-releasegrp').text(data['releasegrp']);
-                            }
-                        });
-                        return false;
-                    });
-                },
-                openSettingsModal: function (event, type, indexerId, title) {
-                    event.preventDefault();
-                    var self = this;
-                    var apiUrl = '';
-                    if (type == autosubliminal.EPISODE_TYPE) {
-                        apiUrl = autosubliminal.getUrl('/api/shows/' + indexerId + '/settings');
-                    } else if (type == autosubliminal.MOVIE_TYPE) {
-                        apiUrl = autosubliminal.getUrl('/api/movies/' + indexerId + '/settings');
-                    }
-                    // Get settings
-                    $.get(apiUrl, function (data) {
-                        self.type = type;
-                        self.indexerId = indexerId;
-                        self.title = title;
-                        self.settings = data;
-                    });
-                    // Open modal
-                    $('#settingsModal').modal('show');
-                }
+            sortList: [[9, 1]],
+            initialized: function initialized() {
+              var self = $('#lastdownloads');
+              self.find('.loading-row').remove();
+              self.find('.content-row').removeClass('hidden');
+              self.trigger('update');
             }
-        });
-    };
+          }).tablesorterPager({
+            container: $('#lastdownloadsPager'),
+            output: '{startRow} to {endRow} ({filteredRows})'
+          });
+          $('.lastdownloads-filter-reset').on('click', function () {
+            $(this).prev('input').val('').focus();
+            $.tablesorter.storage($('#lastdownloads'), 'tablesorter-filters', '');
+          });
+          $('.manualsearch-container-link').on('click', function (event) {
+            event.preventDefault();
+            var self = $(this);
 
-    // Wait until settings are loaded to start initialization
-    PubSub.subscribe(autosubliminal.settings.LOADED, init);
+            if (self.data('running')) {
+              return false;
+            }
 
-}(autosubliminal));
+            self.data('running', true);
+            var searchUrl = self.attr('href');
+            var loadingIcon = self.next('i');
+            var contentDiv = self.parent('div').next('div');
+            loadingIcon.removeClass('invisible').addClass('visible');
+            contentDiv.empty();
+            $.get(searchUrl, function (data) {
+              loadingIcon.removeClass('visible').addClass('invisible');
+              contentDiv.append(data);
+            }).always(function () {
+              self.data('running', false);
+            });
+            return false;
+          });
+          $('.update-wanted-item-link').on('click', function (event) {
+            event.preventDefault();
+            var self = $(this);
+            var updateUrl = self.attr('href');
+            var updatePanel = self.closest('.panel-body');
+            var wantedItem = self.closest('.wanted-item');
+            var updateObj = {
+              'title': updatePanel.find('input.update-wanted-item-title').val(),
+              'year': updatePanel.find('input.update-wanted-item-year').val(),
+              'season': updatePanel.find('input.update-wanted-item-season').val(),
+              'episode': updatePanel.find('input.update-wanted-item-episode').val(),
+              'source': updatePanel.find('input.update-wanted-item-source').val(),
+              'quality': updatePanel.find('input.update-wanted-item-quality').val(),
+              'codec': updatePanel.find('input.update-wanted-item-codec').val(),
+              'releasegrp': updatePanel.find('input.update-wanted-item-releasegrp').val()
+            };
+            $.post(updateUrl, updateObj, function (data) {
+              if (!jQuery.isEmptyObject(data)) {
+                self.closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
+                wantedItem.find('.wanted-item-title').text(data['displaytitle']);
+                wantedItem.find('.wanted-item-season').text(data['season']);
+                wantedItem.find('.wanted-item-episode').text(data['episode']);
+                wantedItem.find('.wanted-item-source').text(data['source']);
+                wantedItem.find('.wanted-item-quality').text(data['quality']);
+                wantedItem.find('.wanted-item-codec').text(data['codec']);
+                wantedItem.find('.wanted-item-releasegrp').text(data['releasegrp']);
+              }
+            });
+            return false;
+          });
+          $('.reset-wanted-item-link').on('click', function (event) {
+            event.preventDefault();
+            var self = $(this);
+            var resetUrl = self.attr('href');
+            var updatePanel = self.closest('.panel-body');
+            var wantedItem = self.closest('.wanted-item');
+            $.get(resetUrl, function (data) {
+              if (!jQuery.isEmptyObject(data)) {
+                self.closest('.dropdown').find('.dropdown-toggle').dropdown('toggle');
+                updatePanel.find('input.update-wanted-item-title').val(data['title']);
+                updatePanel.find('input.update-wanted-item-year').val(data['year']);
+                updatePanel.find('input.update-wanted-item-season').val(data['season']);
+                updatePanel.find('input.update-wanted-item-episode').val(data['episode']);
+                updatePanel.find('input.update-wanted-item-source').val(data['source']);
+                updatePanel.find('input.update-wanted-item-quality').val(data['quality']);
+                updatePanel.find('input.update-wanted-item-codec').val(data['codec']);
+                updatePanel.find('input.update-wanted-item-releasegrp').val(data['releasegrp']);
+                wantedItem.find('.wanted-item-title').text(data['displaytitle']);
+                wantedItem.find('.wanted-item-season').text(data['season']);
+                wantedItem.find('.wanted-item-episode').text(data['episode']);
+                wantedItem.find('.wanted-item-source').text(data['source']);
+                wantedItem.find('.wanted-item-quality').text(data['quality']);
+                wantedItem.find('.wanted-item-codec').text(data['codec']);
+                wantedItem.find('.wanted-item-releasegrp').text(data['releasegrp']);
+              }
+            });
+            return false;
+          });
+        },
+        openSettingsModal: function openSettingsModal(event, type, indexerId, title) {
+          event.preventDefault();
+          var self = this;
+          var apiUrl = '';
+
+          if (type == autosubliminal.EPISODE_TYPE) {
+            apiUrl = autosubliminal.getUrl('/api/shows/' + indexerId + '/settings');
+          } else if (type == autosubliminal.MOVIE_TYPE) {
+            apiUrl = autosubliminal.getUrl('/api/movies/' + indexerId + '/settings');
+          }
+
+          $.get(apiUrl, function (data) {
+            self.type = type;
+            self.indexerId = indexerId;
+            self.title = title;
+            self.settings = data;
+          });
+          $('#settingsModal').modal('show');
+        }
+      }
+    });
+  };
+
+  PubSub.subscribe(autosubliminal.settings.LOADED, init);
+})(autosubliminal);

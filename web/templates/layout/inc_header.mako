@@ -1,5 +1,6 @@
 <%!
     import autosubliminal
+    from autosubliminal.util.common import get_web_file
 %>
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,12 +9,10 @@
 <title>Auto-Subliminal</title>
 
 <!-- Vendor theme -->
-<% vendor_css = autosubliminal.DEVELOPER and "vendor.css" or "vendor.min.css" %>
-<link rel="stylesheet" href="${autosubliminal.WEBROOT}/css/${vendor_css}?v=${appUUID}" media="screen">
+<link rel="stylesheet" href="${get_web_file('vendor.css')}" media="screen">
 
 <!-- Auto-Subliminal theme -->
-<% app_css = autosubliminal.DEVELOPER and "autosubliminal.css" or "autosubliminal.min.css" %>
-<link rel="stylesheet" href="${autosubliminal.WEBROOT}/css/${app_css}?v=${appUUID}" media="screen">
+<link rel="stylesheet" href="${get_web_file('autosubliminal.css')}" media="screen">
 
 <script type="text/javascript">
     // Global webroot variable (can be used in Javascript files)

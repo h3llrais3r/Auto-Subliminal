@@ -2,6 +2,7 @@
 
 <%!
     import autosubliminal
+    from autosubliminal.util.common import get_web_file
 %>
 
 <%block name="bodyContent">
@@ -126,7 +127,7 @@
 
 <%block name="footerContent">
 
-    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/library.js?v=${appUUID}"></script>
-    <script type="text/javascript" src="${autosubliminal.WEBROOT}/js/library-shows.js?v=${appUUID}"></script>
+    <script type="text/javascript" src="${get_web_file('library.js')}"></script>
+    <script type="text/javascript" src="${get_web_file('library-shows.js')}"></script>
 
 </%block>

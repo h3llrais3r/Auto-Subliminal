@@ -1,7 +1,10 @@
 var gulp = require('gulp');
+var debug = require('gulp-debug');
+var cached = require('gulp-cached');
 var clean_css = require('gulp-clean-css');
 var concat = require('gulp-concat');
 var rename = require('gulp-rename');
+var babel = require('gulp-babel');
 var uglify = require('gulp-uglify');
 var watch = require('gulp-watch');
 var sass = require('gulp-sass');
@@ -14,6 +17,9 @@ var del = require('del');
 /*************
  Configuration
  *************/
+
+var logPrefix = ' - ';
+var debugConfig = {title: ' -'};
 
 var vendor = {
     // ATTENTION: please keep files in correct order (f.e. bootstrap needs jquery so jquery must be loaded before!)
@@ -78,14 +84,27 @@ var vendor = {
     ]
 };
 
+/***************
+ Transpile tasks
+ ***************/
+
+gulp.task('transpile:app_js', function () {
+    return gulp.src('web/src/js/*.js')
+        .pipe(debug(debugConfig))
+        .pipe(babel())
+        .pipe(gulp.dest('build/app/js'));
+});
+
+
 /*************
  Compile tasks
  *************/
 
 gulp.task('compile:app_scss', function () {
-    return gulp.src('web/static/scss/*.scss')
+    return gulp.src('web/src/scss/*.scss')
+        .pipe(debug(debugConfig))
         .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
-        .pipe(gulp.dest('build'));
+        .pipe(gulp.dest('build/app/css'));
 });
 
 /************
@@ -93,44 +112,65 @@ gulp.task('compile:app_scss', function () {
  ************/
 
 gulp.task('bundle:vendor_js', function () {
-    log.info('Bundle vendor js:');
-    log.info(vendor.js);
     return gulp.src(vendor.js)
+        .pipe(debug(debugConfig))
         .pipe(concat('vendor.js'))
-        .pipe(gulp.dest('build'));
+        .pipe(gulp.dest('build/vendor/js'));
 });
 
 gulp.task('bundle:vendor_css', function () {
-    log.info('Bundle vendor css:');
-    log.info(vendor.css);
     return gulp.src(vendor.css)
+        .pipe(debug(debugConfig))
         .pipe(concat('vendor.css'))
-        .pipe(gulp.dest('build'));
+        .pipe(gulp.dest('build/vendor/css'));
 });
 
 /************
  Minify tasks
  ************/
 
+gulp.task('minify:app_js', function () {
+    return gulp.src('build/app/js/*.js')
+        .pipe(debug(debugConfig))
+        .pipe(rename(function (path) {
+            path.basename += ".min";
+            path.extname = ".js";
+        }))
+        .pipe(uglify())
+        .pipe(gulp.dest('build/app/js'));
+});
+
 gulp.task('minify:app_css', function () {
-    return gulp.src('build/autosubliminal.css')
-        .pipe(rename('autosubliminal.min.css'))
+    return gulp.src('build/app/css/*.css')
+        .pipe(debug(debugConfig))
+        .pipe(rename(function (path) {
+            path.basename += ".min";
+            path.extname = ".css";
+        }))
         .pipe(clean_css())
-        .pipe(gulp.dest('build'));
+        .pipe(gulp.dest('build/app/css'));
 });
 
 gulp.task('minify:vendor_js', function () {
-    return gulp.src('build/vendor.js')
-        .pipe(rename('vendor.min.js'))
+    return gulp.src('build/vendor/js/*.js')
+        .pipe(debug(debugConfig))
+        .pipe(rename(function (path) {
+            path.basename += ".min";
+            path.extname = ".js";
+        }))
         .pipe(uglify())
-        .pipe(gulp.dest('build'));
+        .pipe(gulp.dest('build/vendor/js'));
 });
 
 gulp.task('minify:vendor_css', function () {
-    return gulp.src('build/vendor.css')
-        .pipe(rename('vendor.min.css'))
+    return gulp.src('build/vendor/css/*.css')
+        .pipe(debug(debugConfig))
+        .pipe(rename(function (path) {
+            path.basename += ".min";
+            path.extname = ".css";
+        }))
         .pipe(clean_css())
-        .pipe(gulp.dest('build'));
+        .pipe(gulp.dest('build/vendor/css'));
 });
 
 /**********
@@ -139,19 +179,16 @@ gulp.task('minify:vendor_css', function () {
 
 var cleanup_sources = [
     'build',
-    'web/static/css/autosubliminal.css',
-    'web/static/css/autosubliminal.min.css',
-    'web/static/js/vendor.js',
-    'web/static/js/vendor.min.js',
-    'web/static/css/vendor.css',
-    'web/static/css/vendor.min.css',
+    'web/static/js/*.js',
+    'web/static/css/*.css',
     'web/static/images/vendor',
     'web/static/fonts'
 ];
 
 gulp.task('clean', function () {
-    log.info('Clean files/folders:');
-    log.info(cleanup_sources);
+    cleanup_sources.forEach(function (file) {
+        log.info(logPrefix + file);
+    });
     return del(cleanup_sources);
 });
 
@@ -159,23 +196,33 @@ gulp.task('clean', function () {
  Copy tasks
  **********/
 
+gulp.task('copy:app_js', function () {
+    return gulp.src('build/app/js/*.js')
+        .pipe(debug(debugConfig))
+        .pipe(gulp.dest('web/static/js'));
+});
+
 gulp.task('copy:app_css', function () {
-    return gulp.src(['build/autosubliminal.css', 'build/autosubliminal.min.css'])
+    return gulp.src('build/app/css/*.css')
+        .pipe(debug(debugConfig))
         .pipe(gulp.dest('web/static/css'));
 });
 
 gulp.task('copy:vendor_js', function () {
-    return gulp.src(['build/vendor.js', 'build/vendor.min.js'])
+    return gulp.src('build/vendor/js/*.js')
+        .pipe(debug(debugConfig))
         .pipe(gulp.dest('web/static/js'));
 });
 
 gulp.task('copy:vendor_css', function () {
-    return gulp.src(['build/vendor.css', 'build/vendor.min.css'])
+    return gulp.src('build/vendor/css/*.css')
+        .pipe(debug(debugConfig))
         .pipe(gulp.dest('web/static/css'));
 });
 
 gulp.task('copy:vendor_images', function () {
     return gulp.src(vendor.images)
+        .pipe(debug(debugConfig))
         .pipe(gulp.dest(function (path) {
             //log.info(JSON.stringify(path));
             // copy images in specific subfolder
@@ -189,6 +236,7 @@ gulp.task('copy:vendor_images', function () {
 
 gulp.task('copy:vendor_fonts', function () {
     return gulp.src(vendor.fonts)
+        .pipe(debug(debugConfig))
         .pipe(gulp.dest('web/static/fonts'));
 });
 
@@ -196,9 +244,11 @@ gulp.task('copy:vendor_fonts', function () {
  Application tasks
  ****************/
 
+gulp.task('app_js', gulp.series('transpile:app_js', 'minify:app_js', 'copy:app_js'));
+
 gulp.task('app_css', gulp.series('compile:app_scss', 'minify:app_css', 'copy:app_css'));
 
-gulp.task('app', gulp.series('app_css'));
+gulp.task('app', gulp.series('app_js', 'app_css'));
 
 /************
  Vendor tasks
@@ -228,7 +278,9 @@ gulp.task('build', gulp.series('clean', 'install'));
  ***********/
 
 gulp.task('watch:scss-stylelint', function () {
-    return gulp.src('web/static/scss/*.scss')
+    return gulp.src('web/src/scss/*.scss')
+        .pipe(cached('scss-stylelint'))
+        .pipe(debug(debugConfig))
         .pipe(stylelint({
             reporters: [{
                 formatter: stylelintFormatter,
@@ -238,23 +290,35 @@ gulp.task('watch:scss-stylelint', function () {
 });
 
 gulp.task('watch:scss-compile', function () {
-    return gulp.src('web/static/scss/*.scss')
+    return gulp.src('web/src/scss/*.scss')
+        .pipe(cached('scss-compile'))
+        .pipe(debug(debugConfig))
         .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
         .pipe(gulp.dest('web/static/css'));
 });
 
 gulp.task('watch:scss', function () {
-    return watch('web/static/scss/*.scss', gulp.parallel('watch:scss-stylelint', 'watch:scss-compile'));
+    return watch('web/src/scss/*.scss', gulp.parallel('watch:scss-stylelint', 'watch:scss-compile'));
 });
 
 gulp.task('watch:js-eslint', function () {
-    return gulp.src(['web/static/js/*.js', '!web/static/js/vendor*.js'])
+    return gulp.src('web/src/js/*.js')
+        .pipe(cached('js-eslint'))
+        .pipe(debug(debugConfig))
         .pipe(eslint())
         .pipe(eslint.format('table'));
 });
 
+gulp.task('watch:js-transpile', function () {
+    return gulp.src('web/src/js/*.js')
+        .pipe(cached('js-transpile'))
+        .pipe(debug(debugConfig))
+        .pipe(babel())
+        .pipe(gulp.dest('web/static/js'));
+});
+
 gulp.task('watch:js', function () {
-    return watch('web/static/js/*.js', gulp.series('watch:js-eslint'));
+    return watch(['web/src/js/*.js'], gulp.parallel('watch:js-eslint', 'watch:js-transpile'));
 });
 
 gulp.task('watch', gulp.parallel('watch:scss', 'watch:js'));

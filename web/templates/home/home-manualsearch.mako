@@ -1,5 +1,6 @@
 <%!
     import autosubliminal
+    from autosubliminal.util.common import get_web_file
 %>
 
 <div class="container">
@@ -92,4 +93,4 @@
 </div>
 
 <!-- Need to include it here because otherwise it's loaded too early which causes some functionality to fail -->
-<script type="text/javascript" src="${autosubliminal.WEBROOT}/js/home-manualsearch.js?v=${appUUID}"></script>
+<script type="text/javascript" src="${get_web_file('home-manualsearch.js')}"></script>

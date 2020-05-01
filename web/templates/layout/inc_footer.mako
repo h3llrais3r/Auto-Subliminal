@@ -3,7 +3,7 @@
 
     import autosubliminal
     from autosubliminal import version
-    from autosubliminal.util.common import get_next_scheduler_run_in_ms
+    from autosubliminal.util.common import get_next_scheduler_run_in_ms, get_web_file
 %>
 
 <!-- Footer -->
@@ -38,8 +38,7 @@
 </div>
 
 <!-- Vendor javascript -->
-<% vendor_js = autosubliminal.DEVELOPER and "vendor.js" or "vendor.min.js" %>
-<script type="text/javascript" src="${autosubliminal.WEBROOT}/js/${vendor_js}?v=${appUUID}"></script>
+<script type="text/javascript" src="${get_web_file('vendor.js')}"></script>
 
 <!-- Auto-Subliminal javascript (applies to all pages) -->
-<script type="text/javascript" src="${autosubliminal.WEBROOT}/js/autosubliminal.js?v=${appUUID}"></script>
+<script type="text/javascript" src="${get_web_file('autosubliminal.js')}"></script>
