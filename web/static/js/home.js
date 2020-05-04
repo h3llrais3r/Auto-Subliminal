@@ -28,7 +28,7 @@
             indexer = 'imdb';
           }
 
-          return autosubliminal.getUrl('/artwork/' + indexer + '/poster/thumbnail/');
+          return autosubliminal.getUrl("/artwork/".concat(indexer, "/poster/thumbnail/"));
         }
       },
       watch: {
@@ -55,9 +55,9 @@
           var apiUrl = '';
 
           if (self.type == autosubliminal.EPISODE_TYPE) {
-            apiUrl = autosubliminal.getUrl('/api/shows/' + self.indexerId + '/settings');
+            apiUrl = autosubliminal.getUrl("/api/shows/".concat(self.indexerId, "/settings"));
           } else if (self.type == autosubliminal.MOVIE_TYPE) {
-            apiUrl = autosubliminal.getUrl('/api/movies/' + self.indexerId + '/settings');
+            apiUrl = autosubliminal.getUrl("/api/movies/".concat(self.indexerId, "/settings"));
           }
 
           var data = self.settings;
@@ -239,9 +239,9 @@
           var apiUrl = '';
 
           if (type == autosubliminal.EPISODE_TYPE) {
-            apiUrl = autosubliminal.getUrl('/api/shows/' + indexerId + '/settings');
+            apiUrl = autosubliminal.getUrl("/api/shows/".concat(indexerId, "/settings"));
           } else if (type == autosubliminal.MOVIE_TYPE) {
-            apiUrl = autosubliminal.getUrl('/api/movies/' + indexerId + '/settings');
+            apiUrl = autosubliminal.getUrl("/api/movies/".concat(indexerId, "/settings"));
           }
 
           $.get(apiUrl, function (data) {

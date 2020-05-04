@@ -4,7 +4,7 @@
   'use strict';
 
   autosubliminal.library.checkScannerRunning = function () {
-    $.get(autosubliminal.getUrl('/api/schedulers/' + autosubliminal.SCAN_LIBRARY), function (data) {
+    $.get(autosubliminal.getUrl("/api/schedulers/".concat(autosubliminal.SCAN_LIBRARY)), function (data) {
       if (!jQuery.isEmptyObject(data) && data.running) {
         $('.library-scanner-running').removeClass('hidden');
       }

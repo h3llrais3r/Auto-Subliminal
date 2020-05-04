@@ -68,13 +68,13 @@
           });
         },
         getMovieDetailsUrl: function getMovieDetailsUrl(imdbId) {
-          return autosubliminal.getUrl('/library/movies/' + imdbId);
+          return autosubliminal.getUrl("/library/movies/".concat(imdbId));
         },
         getMovieProgressPercentage: function getMovieProgressPercentage(movie) {
           return movie.total_subtitles_available / movie.total_subtitles_wanted * 100;
         },
         getMovieProgressText: function getMovieProgressText(movie) {
-          return movie.total_subtitles_available + ' of ' + movie.total_subtitles_wanted;
+          return "".concat(movie.total_subtitles_available, " of ").concat(movie.total_subtitles_wanted);
         }
       }
     });

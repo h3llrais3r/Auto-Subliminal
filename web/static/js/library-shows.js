@@ -69,13 +69,13 @@
           });
         },
         getShowDetailsUrl: function getShowDetailsUrl(tvdbId) {
-          return autosubliminal.getUrl('/library/shows/' + tvdbId);
+          return autosubliminal.getUrl("/library/shows/".concat(tvdbId));
         },
         getShowProgressPercentage: function getShowProgressPercentage(show) {
           return show.total_subtitles_available / show.total_subtitles_wanted * 100;
         },
         getShowProgressText: function getShowProgressText(show) {
-          return show.total_subtitles_available + ' of ' + show.total_subtitles_wanted;
+          return "".concat(show.total_subtitles_available, " of ").concat(show.total_subtitles_wanted);
         }
       }
     });

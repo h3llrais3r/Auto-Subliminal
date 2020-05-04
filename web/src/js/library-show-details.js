@@ -12,7 +12,7 @@
      * Initialization
      * ============== */
 
-    var init = function () {
+    const init = function () {
 
         // Check if the library scanner is running
         autosubliminal.library.checkScannerRunning();
@@ -43,41 +43,41 @@
             },
             mounted: function () {
                 //console.log('mounted');
-                var self = this;
+                const self = this;
                 self.getShowDetails();
             },
             updated: function () {
                 //console.log('updated');
-                var self = this;
+                const self = this;
                 autosubliminal.keepDropdownsOpen();
                 autosubliminal.vue.styleProgressBar(self.showProgressPercentage);
             },
             computed: {
                 showProgressPercentage: function () {
-                    var self = this;
+                    const self = this;
                     return self.show.total_subtitles_available / self.show.total_subtitles_wanted * 100;
                 },
                 showProgressText: function () {
-                    var self = this;
-                    return self.show.total_subtitles_available + ' of ' + self.show.total_subtitles_wanted;
+                    const self = this;
+                    return `${self.show.total_subtitles_available} of ${self.show.total_subtitles_wanted}`;
                 }
             },
             methods: {
                 getShowDetails: function () {
-                    var self = this;
-                    var tvdbId = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
+                    const self = this;
+                    const tvdbId = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
                     // Show loading icon
                     $('.loading').removeClass('hidden');
                     // Get show details
-                    $.get(autosubliminal.getUrl('/api/shows/' + tvdbId), function (data) {
+                    $.get(autosubliminal.getUrl(`/api/shows/${tvdbId}`), function (data) {
                         self.show = data;
                         self.showSettings = self.show.settings;
                     }).fail(function (response) {
                         // Remove show if it does not longer exists
                         if (response.status == 404) {
-                            $.deleteJson(autosubliminal.getUrl('/api/shows/' + tvdbId), null, function () {
+                            $.deleteJson(autosubliminal.getUrl(`/api/shows/${tvdbId}`), null, function () {
                                 // Show notification
-                                var notification = autosubliminal.types.Notification();
+                                const notification = autosubliminal.types.Notification();
                                 notification.message = 'Show does not exist anymore and has been removed from the library!';
                                 notification.type = autosubliminal.notifications.WARNING;
                                 notification.sticky = false;
@@ -96,7 +96,7 @@
                 getLanguages: autosubliminal.convertToLanguages,
                 getLanguageCodes: autosubliminal.convertToLanguageCodes,
                 internalLanguagesAvailable: function (file) {
-                    var available = false;
+                    let available = false;
                     if ((file.hardcoded_languages && file.hardcoded_languages.length > 0) ||
                         (file.embedded_languages && file.embedded_languages.length > 0)) {
                         available = true;
@@ -105,10 +105,10 @@
                 },
                 refreshShowDetails: function (event) {
                     event.preventDefault();
-                    var self = this;
+                    const self = this;
                     // Show refresh indication
                     $('.refresh-running').removeClass('hidden');
-                    $.putJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id + '/refresh'), null, function () {
+                    $.putJson(autosubliminal.getUrl(`/api/shows/${self.show.tvdb_id}/refresh`), null, function () {
                         // Get show details again to get the updates
                         self.getShowDetails();
                         // Hide refresh indication
@@ -118,7 +118,7 @@
                 openSettingsModal: function (event) {
                     event.preventDefault();
                     // Set default values
-                    var self = this;
+                    const self = this;
                     self.showSettings = self.show.settings;
                     self.showSettingsWantedLanguages = self.getLanguages(self.show.settings.wanted_languages);
                     // Open modal
@@ -132,7 +132,7 @@
                 openSubtitlesModal: function (fileLocation, fileName, hardcodedLanguages, episodeTvdbId, event) {
                     event.preventDefault();
                     // Set selected video file and clear language selection
-                    var self = this;
+                    const self = this;
                     self.selectedEpisodeTvdbId = episodeTvdbId;
                     self.selectedFileLocation = fileLocation;
                     self.selectedFileName = fileName;
@@ -143,10 +143,10 @@
                 saveSettings: function (event) {
                     event.preventDefault();
                     // Get data
-                    var self = this;
-                    var data = self.showSettings;
+                    const self = this;
+                    const data = self.showSettings;
                     data.wanted_languages = self.getLanguageCodes(self.showSettingsWantedLanguages);
-                    $.putJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id + '/settings'), data, function () {
+                    $.putJson(autosubliminal.getUrl(`/api/shows/${self.show.tvdb_id}/settings`), data, function () {
                         // Close modal on success
                         $('#settingsModal').modal('hide');
                         // Refresh show details
@@ -156,8 +156,8 @@
                 deleteShow: function (event) {
                     event.preventDefault();
                     // Delete the show
-                    var self = this;
-                    $.deleteJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id), null, function () {
+                    const self = this;
+                    $.deleteJson(autosubliminal.getUrl(`/api/shows/${self.show.tvdb_id}`), null, function () {
                         // Close modal on success
                         $('#deleteModal').modal('hide');
                         // Redirect to library shows view
@@ -167,13 +167,13 @@
                 saveHardcodedSubtitles: function (event) {
                     event.preventDefault();
                     // Get data
-                    var self = this;
-                    var data = {
+                    const self = this;
+                    const data = {
                         'file_location': self.selectedFileLocation,
                         'file_name': self.selectedFileName,
                         'languages': self.getLanguageCodes(self.selectedHardcodedLanguages)
                     };
-                    $.putJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id + '/subtitles/hardcoded/' + self.selectedEpisodeTvdbId), data, function () {
+                    $.putJson(autosubliminal.getUrl(`/api/shows/${self.show.tvdb_id}/subtitles/hardcoded/${self.selectedEpisodeTvdbId}`), data, function () {
                         // Close modal on success
                         $('#subtitlesModal').modal('hide');
                         // Get show details again to get the updates
@@ -183,8 +183,8 @@
                 addShowPathToVideoPaths: function (event) {
                     event.preventDefault();
                     // Get data
-                    var self = this;
-                    var data = {
+                    const self = this;
+                    const data = {
                         'videoPath': self.show.path
                     };
                     $.putJson(autosubliminal.getUrl('/api/settings/general/videoPaths'), data, function () {
@@ -193,39 +193,39 @@
                     });
                 },
                 getNrOfSubtitles: function (files, language) {
-                    var subtitleCount = 0;
-                    for (var i = 0; i < files.length; i++) {
-                        if (files[i].type == 'subtitle' && files[i].language != null && files[i].language == language) {
+                    let subtitleCount = 0;
+                    files.forEach((file) => {
+                        if (file.type == 'subtitle' && file.language != null && file.language == language) {
                             // A subtitle file can have only 1 language
                             subtitleCount++;
-                        } else if (files[i].type == 'video') {
+                        } else if (file.type == 'video') {
                             // A video file can have multiple hardcoded languages
-                            if (files[i].hardcoded_languages != null) {
-                                for (var j = 0; files[i].hardcoded_languages[j]; j++) {
-                                    if (files[i].hardcoded_languages[j] == language) {
+                            if (file.hardcoded_languages != null) {
+                                file.hardcoded_languages.forEach((harcodedLanguage) => {
+                                    if (harcodedLanguage == language) {
                                         subtitleCount++;
                                     }
-                                }
+                                });
                             }
                             // A video file can have multiple embedded languages
-                            if (files[i].embedded_languages != null) {
-                                for (var k = 0; files[i].embedded_languages[k]; k++) {
-                                    if (files[i].embedded_languages[k] == language) {
+                            if (file.embedded_languages != null) {
+                                file.embedded_languages.forEach((embeddedLanguage)=> {
+                                    if (embeddedLanguage == language) {
                                         subtitleCount++;
                                     }
-                                }
+                                });
                             }
                         }
-                    }
+                    });
                     return subtitleCount;
                 },
                 getNrOfVideos: function (files) {
-                    var videoCount = 0;
-                    for (var i = 0; i < files.length; i++) {
-                        if (files[i].type == 'video') {
+                    let videoCount = 0;
+                    files.forEach((file) => {
+                        if (file.type == 'video') {
                             videoCount++;
                         }
-                    }
+                    });
                     return videoCount;
                 }
             }

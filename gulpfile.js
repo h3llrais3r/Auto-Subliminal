@@ -1,27 +1,27 @@
-var gulp = require('gulp');
-var debug = require('gulp-debug');
-var cached = require('gulp-cached');
-var clean_css = require('gulp-clean-css');
-var concat = require('gulp-concat');
-var rename = require('gulp-rename');
-var babel = require('gulp-babel');
-var uglify = require('gulp-uglify');
-var watch = require('gulp-watch');
-var sass = require('gulp-sass');
-var eslint = require('gulp-eslint');
-var stylelint = require('gulp-stylelint');
-var stylelintFormatter = require('stylelint-formatter-table');
-var log = require('fancy-log');
-var del = require('del');
+const gulp = require('gulp');
+const debug = require('gulp-debug');
+const cached = require('gulp-cached');
+const clean_css = require('gulp-clean-css');
+const concat = require('gulp-concat');
+const rename = require('gulp-rename');
+const babel = require('gulp-babel');
+const uglify = require('gulp-uglify');
+const watch = require('gulp-watch');
+const sass = require('gulp-sass');
+const eslint = require('gulp-eslint');
+const stylelint = require('gulp-stylelint');
+const stylelintFormatter = require('stylelint-formatter-table');
+const log = require('fancy-log');
+const del = require('del');
 
 /*************
  Configuration
  *************/
 
-var logPrefix = ' - ';
-var debugConfig = {title: ' -'};
+const logPrefix = ' - ';
+const debugConfig = {title: ' -'};
 
-var vendor = {
+const vendor = {
     // ATTENTION: please keep files in correct order (f.e. bootstrap needs jquery so jquery must be loaded before!)
     js: [
         // jquery
@@ -182,7 +182,7 @@ gulp.task('minify:vendor_css', function () {
  Clean task
  **********/
 
-var cleanup_sources = [
+const cleanup_sources = [
     'build',
     'web/static/js/*.js',
     'web/static/css/*.css',
@@ -192,7 +192,7 @@ var cleanup_sources = [
 
 gulp.task('clean', function () {
     cleanup_sources.forEach(function (file) {
-        log.info(logPrefix + file);
+        log.info(`${logPrefix}${file}`);
     });
     return del(cleanup_sources);
 });

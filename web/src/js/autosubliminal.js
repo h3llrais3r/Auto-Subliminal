@@ -8,7 +8,7 @@
  * Autosubliminal namespace
  * ======================== */
 
-var autosubliminal = {
+const autosubliminal = {
     types: {},
     settings: {},
     notifications: {},
@@ -29,7 +29,7 @@ var autosubliminal = {
     autosubliminal.WEB_ROOT = webRoot;
 
     // Base url
-    autosubliminal.BASE_URL = window.location.protocol + '//' + window.location.host + autosubliminal.WEB_ROOT;
+    autosubliminal.BASE_URL = `${window.location.protocol}//${window.location.host}${autosubliminal.WEB_ROOT}`;
 
     // Developer mode
     autosubliminal.DEVELOPER_MODE = false;
@@ -68,34 +68,33 @@ var autosubliminal = {
 
     // Function to get the url with the BASE_URL taken into account
     autosubliminal.getUrl = function (url) {
-        return autosubliminal.BASE_URL + url;
+        return `${autosubliminal.BASE_URL}${url}`;
     };
 
     // Function to construct a playvideo url
     autosubliminal.constructPlayVideoUrl = function (filePath, filename) {
-        return 'playvideo://' + filePath + autosubliminal.PATH_SEPARTOR + filename;
+        return `playvideo://${filePath}${autosubliminal.PATH_SEPARTOR}${filename}`;
     };
 
     // Function to convert a list of language codes to a list of language objects
     autosubliminal.convertToLanguages = function (languageCodes) {
-        var languages = [];
-        for (var i = 0; i < languageCodes.length; i++) {
-            var languageCode = languageCodes[i];
-            for (var j = 0; j < autosubliminal.LANGUAGES.length; j++) {
-                if (autosubliminal.LANGUAGES[j].code == languageCode) {
-                    languages.push(autosubliminal.LANGUAGES[j]);
+        const languages = [];
+        languageCodes.forEach((languageCode) => {
+            autosubliminal.LANGUAGES.forEach(function (language) {
+                if (language.code == languageCode) {
+                    languages.push(language);
                 }
-            }
-        }
+            });
+        });
         return languages;
     };
 
     // Function to convert a list of language objects to a list of language codes
     autosubliminal.convertToLanguageCodes = function (languages) {
-        var languageCodes = [];
-        for (var i = 0; i < languages.length; i++) {
-            languageCodes.push(languages[i].code);
-        }
+        const languageCodes = [];
+        languages.forEach((language) => {
+            languageCodes.push(language.code);
+        });
         return languageCodes;
     };
 
@@ -226,7 +225,7 @@ var autosubliminal = {
                 autosubliminal.TIMESTAMP_FORMAT = data.timestampFormat;
                 autosubliminal.DATE_FORMAT = autosubliminal.TIMESTAMP_FORMAT.split(' ')[0];
                 autosubliminal.TIME_FORMAT = autosubliminal.TIMESTAMP_FORMAT.split(' ')[1];
-                var datePattern = autosubliminal.DATE_FORMAT.match(/[Ymd]+/g).join('');
+                const datePattern = autosubliminal.DATE_FORMAT.match(/[Ymd]+/g).join('');
                 if ('Ymd' == datePattern) {
                     autosubliminal.TABLESORTER_DATE_FORMAT = 'yyyymmdd';
                 } else if ('mdY' == datePattern) {
@@ -291,9 +290,9 @@ var autosubliminal = {
 
     // Function to show a notification
     autosubliminal.notifications.showNotification = function (notification) {
-        var message = notification.message;
-        var type = notification.type;
-        var sticky = notification.sticky;
+        const message = notification.message;
+        const type = notification.type;
+        const sticky = notification.sticky;
         // Sticky location - use stackContext
         if (sticky) {
             PNotify.alert({
@@ -333,19 +332,19 @@ var autosubliminal = {
     autosubliminal.websockets.RUN_PROCESS = 'RUN_PROCESS';
 
     // Setup the websocket system
-    var websocketProtocol = 'ws:';
+    let websocketProtocol = 'ws:';
     if (window.location.protocol === 'https:') {
         websocketProtocol = 'wss:';
     }
-    var websocketUrl = websocketProtocol + '//' + window.location.host + autosubliminal.WEB_ROOT + '/system/websocket';
+    const websocketUrl = `${websocketProtocol}//${window.location.host}${autosubliminal.WEB_ROOT}/system/websocket`;
     autosubliminal.websockets.ws = new WebSocket(websocketUrl);
 
     // Setup websocket message receival
     autosubliminal.websockets.ws.onmessage = function (message) {
-        var data = message.data;
-        // console.log('Received websocket message: ' + data);
+        const data = message.data;
+        // console.log(`Received websocket message: ${data}`);
         if (!jQuery.isEmptyObject(data)) {
-            var dataJson = JSON.parse(data);
+            const dataJson = JSON.parse(data);
             autosubliminal.websockets.handleWebsocketMessage(dataJson);
         }
     };
@@ -358,18 +357,18 @@ var autosubliminal = {
         } else if (message.type == autosubliminal.websockets.EVENT) {
             autosubliminal.websockets.handleWebsocketEvent(message.event);
         } else {
-            console.error('Unsupported message: ' + message);
+            console.error(`Unsupported message: ${message}`);
         }
     };
 
     // Function to handle a websocket event
     autosubliminal.websockets.handleWebsocketEvent = function (event) {
-        var eventType = event.type;
-        var eventData = event.data;
+        const eventType = event.type;
+        const eventData = event.data;
         if (eventType == autosubliminal.websockets.PAGE_RELOAD) {
             if (!jQuery.isEmptyObject(eventData)) {
                 // Only reload when we are actually on the specified page
-                if (window.location.pathname.indexOf('/' + eventData.name) >= 0) {
+                if (window.location.pathname.indexOf(`/${eventData.name}`) >= 0) {
                     // Add delay of 1s to be sure it's not triggered immediately after a page redirect (or load)
                     // When redirecting and loading really fast after each other, it's possible that your websocket is not initialized in time and your websocket message is lost
                     setTimeout(function () {
@@ -389,8 +388,8 @@ var autosubliminal = {
                 // Publish the event asynchronously
                 PubSub.publish(autosubliminal.websockets.PROCESS_STARTED, eventData);
                 // Update footer
-                var scanDiskNextRun = $('#scanDiskNextRun');
-                var checkSubNextRun = $('#checkSubNextRun');
+                const scanDiskNextRun = $('#scanDiskNextRun');
+                const checkSubNextRun = $('#checkSubNextRun');
                 if (eventData.name == autosubliminal.SCAN_DISK) {
                     // Mark disk scanner as running in footer
                     scanDiskNextRun.countdown('stop');
@@ -415,7 +414,7 @@ var autosubliminal = {
                 }
             }
         } else {
-            console.error('Unsupported event type: ' + eventType);
+            console.error(`Unsupported event type: ${eventType}`);
         }
     };
 
@@ -427,7 +426,7 @@ var autosubliminal = {
     // Function to run a process on the server
     autosubliminal.websockets.runProcessOnServer = function (process_name) {
         // Construct the event
-        var event = {
+        const event = {
             'type': autosubliminal.websockets.EVENT,
             'event': {
                 'type': autosubliminal.websockets.RUN_PROCESS,
@@ -450,21 +449,21 @@ var autosubliminal = {
     // Function to style a vue progress bar
     autosubliminal.vue.styleProgressBar = function (progressPercentage) {
         $('.vue-simple-progress-bar').each(function () {
-            var self = $(this);
-            var percentage = progressPercentage;
+            const self = $(this);
+            let percentage = progressPercentage;
             // Calculate percentage if not provided
             if (percentage == null) {
                 percentage = parseInt(self.css('width')) / parseInt(self.prev('.vue-simple-progress-text').css('width')) * 100;
             }
             percentage = Math.round(percentage);
-            var progressBarPercentage = 100;
+            let progressBarPercentage = 100;
             while (percentage > 0 && percentage < progressBarPercentage) {
                 progressBarPercentage -= 5;
             }
             self.removeClass(function (index, className) {
                 return (className.match(/\bprogress-\S+/g) || []).join(' ');
             });
-            self.addClass('progress-' + progressBarPercentage);
+            self.addClass(`progress-${progressBarPercentage}`);
         });
     };
 
@@ -486,15 +485,15 @@ var autosubliminal = {
     });
 
     //Highlight the active navigation button (after page submit)
-    var basePath = '/' + location.pathname.replace(autosubliminal.WEB_ROOT, '').split('/')[1] + '/';
-    $('.navbar').find('.nav').find('a[href=\'' + basePath + '\']').closest('li').addClass('active');
+    const basePath = `/${location.pathname.replace(autosubliminal.WEB_ROOT, '').split('/')[1]}/`;
+    $('.navbar').find('.nav').find(`a[href="${basePath}"]`).closest('li').addClass('active');
 
     // Setup navigation links that trigger the run of a process on the server
     $('.navbar .nav a.run-process').on('click', function (event) {
         // Prevent default behaviour
         event.preventDefault();
         // Run the process
-        var processName = $(this).data('process-name');
+        const processName = $(this).data('process-name');
         autosubliminal.websockets.runProcessOnServer(processName);
     });
 
@@ -509,7 +508,7 @@ var autosubliminal = {
     // Handle the toggle checkbox values with a hidden field (to support both 'on' and 'off' values on submit)
     $('input[type=checkbox][data-toggle=toggle][data-on=Enabled][data-off=Disabled]').on('change', function () {
         // We need to get the parent first because bootstrap-toggle adds a toggle-group div around the checkbox
-        var target = $(this).parent().next('input[type=hidden]').val();
+        let target = $(this).parent().next('input[type=hidden]').val();
         if (target == 'False') {
             target = 'True';
         } else {
@@ -559,7 +558,7 @@ var autosubliminal = {
      * ========== */
 
     // Setup the countdown until scandisk next run date
-    var scanDiskNextRunDate = new Date();
+    const scanDiskNextRunDate = new Date();
     scanDiskNextRunDate.setTime($('#scanDiskNextRunTimeMs').val());
     $('#scanDiskNextRun').countdown(scanDiskNextRunDate, function (event) {
         if (event.strftime(autosubliminal.TIME_FORMAT) == '00:00:00') {
@@ -570,7 +569,7 @@ var autosubliminal = {
     });
 
     // Setup the countdown until checksub next run date
-    var checkSubNextRunDate = new Date();
+    const checkSubNextRunDate = new Date();
     checkSubNextRunDate.setTime($('#checkSubNextRunTimeMs').val());
     $('#checkSubNextRun').countdown(checkSubNextRunDate, function (event) {
         if (event.strftime(autosubliminal.TIME_FORMAT) == '00:00:00') {
@@ -592,24 +591,24 @@ var autosubliminal = {
         // Hide textarea element
         $(element).hide();
         // Get the texarea values
-        var values = $(element).val().split('\n');
+        const values = $(element).val().split('\n');
         // Remove previous input fields wrapper (needed when initializing the component again)
         $(element).next('div.multi-input-fields').remove();
         // Create input fields wrapper
         $(element).after('<div class="multi-input-fields"></div>');
-        var multiInputFields = $(element).next('div.multi-input-fields');
+        const multiInputFields = $(element).next('div.multi-input-fields');
         // Add separate input field for each value
-        for (var i = 0; i < values.length; i++) {
-            $(multiInputFields).append('<div class="input-group">' +
-                '<input type="text" class="form-control input-sm" value="' + values[i] + '">' +
-                '<span class="input-group-addon addon-remove"><i class="fa fa-times" aria-hidden="true"></i></span>' +
-                '</div>');
-        }
+        values.forEach((val) => {
+            $(multiInputFields).append(`<div class="input-group">
+                <input type="text" class="form-control input-sm" value="${val}">
+                <span class="input-group-addon addon-remove"><i class="fa fa-times" aria-hidden="true"></i></span>
+                </div>`);
+        });
         // Add input field to add new value
-        $(multiInputFields).append('<div class="input-group">' +
-            '<input type="text" class="form-control input-sm" placeholder="New value">' +
-            '<span class="input-group-addon addon-add"><i class="fa fa-plus" aria-hidden="true"></i></span>' +
-            '</div>');
+        $(multiInputFields).append(`<div class="input-group">
+            <input type="text" class="form-control input-sm" placeholder="New value">
+            <span class="input-group-addon addon-add"><i class="fa fa-plus" aria-hidden="true"></i></span>
+            </div>`);
     };
 
     // Init all the multi input fields
@@ -623,15 +622,15 @@ var autosubliminal = {
     // Enable the add button on a multi input field
     $(document).on('click', '.multi-input-fields .input-group .addon-add', function () {
         // Add the new value to the multi input textarea
-        var multiInputTextArea = $(this).parents('.multi-input-fields').siblings('.multi-input');
-        var values = $(multiInputTextArea).val().split('\n');
-        var value = $(this).siblings('input').val();
-        var existingValue = values.filter(function (val) {
+        const multiInputTextArea = $(this).parents('.multi-input-fields').siblings('.multi-input');
+        const values = $(multiInputTextArea).val().split('\n');
+        const value = $(this).siblings('input').val();
+        const existingValue = values.filter(function (val) {
             return val === value;
         });
         // Only add if the new value is available and it doesn't exist yet
         if (value && existingValue.length === 0) {
-            var newValues = values.concat([value]);
+            const newValues = values.concat([value]);
             $(multiInputTextArea).val(newValues.join('\n'));
             // Initialize the multi input textarea again
             autosubliminal.initMultiInputTextArea(multiInputTextArea);
@@ -644,10 +643,10 @@ var autosubliminal = {
     // Enable the remove button on a multi input field
     $(document).on('click', '.multi-input-fields .input-group .addon-remove', function () {
         // Remove the value from multi input textarea
-        var multiInputTextArea = $(this).parents('.multi-input-fields').siblings('.multi-input');
-        var values = multiInputTextArea.val().split('\n');
-        var value = $(this).siblings('input').val();
-        var newValues = values.filter(function (val) {
+        const multiInputTextArea = $(this).parents('.multi-input-fields').siblings('.multi-input');
+        const values = multiInputTextArea.val().split('\n');
+        const value = $(this).siblings('input').val();
+        const newValues = values.filter(function (val) {
             return val !== value;
         });
         multiInputTextArea.val(newValues.join('\n'));

@@ -21,8 +21,8 @@
         // Prevent the actual click on the link
         event.preventDefault();
         // Submit the form data asynchronously
-        var saveUrl = $(this).attr('href');
-        var form = $(this).closest('form');
+        const saveUrl = $(this).attr('href');
+        const form = $(this).closest('form');
         $.post(saveUrl, form.serialize(), function (data) {
             if (!jQuery.isEmptyObject(data) && data['restart']) {
                 // If restart is present, restart the system
@@ -36,7 +36,7 @@
         // Prevent the actual click on the link
         event.preventDefault();
         // Execute the link asynchronously
-        var testUrl = $(this).attr('href');
+        const testUrl = $(this).attr('href');
         $.get(testUrl);
     });
 

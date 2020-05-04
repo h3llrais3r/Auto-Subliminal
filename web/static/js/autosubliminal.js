@@ -13,7 +13,7 @@ var autosubliminal = {
   'use strict';
 
   autosubliminal.WEB_ROOT = webRoot;
-  autosubliminal.BASE_URL = window.location.protocol + '//' + window.location.host + autosubliminal.WEB_ROOT;
+  autosubliminal.BASE_URL = "".concat(window.location.protocol, "//").concat(window.location.host).concat(autosubliminal.WEB_ROOT);
   autosubliminal.DEVELOPER_MODE = false;
   autosubliminal.SCAN_DISK = 'DiskScanner';
   autosubliminal.SCAN_LIBRARY = 'LibraryScanner';
@@ -31,36 +31,30 @@ var autosubliminal = {
   autosubliminal.MOVIE_TYPE = 'movie';
 
   autosubliminal.getUrl = function (url) {
-    return autosubliminal.BASE_URL + url;
+    return "".concat(autosubliminal.BASE_URL).concat(url);
   };
 
   autosubliminal.constructPlayVideoUrl = function (filePath, filename) {
-    return 'playvideo://' + filePath + autosubliminal.PATH_SEPARTOR + filename;
+    return "playvideo://".concat(filePath).concat(autosubliminal.PATH_SEPARTOR).concat(filename);
   };
 
   autosubliminal.convertToLanguages = function (languageCodes) {
     var languages = [];
-
-    for (var i = 0; i < languageCodes.length; i++) {
-      var languageCode = languageCodes[i];
-
-      for (var j = 0; j < autosubliminal.LANGUAGES.length; j++) {
-        if (autosubliminal.LANGUAGES[j].code == languageCode) {
-          languages.push(autosubliminal.LANGUAGES[j]);
+    languageCodes.forEach(function (languageCode) {
+      autosubliminal.LANGUAGES.forEach(function (language) {
+        if (language.code == languageCode) {
+          languages.push(language);
         }
-      }
-    }
-
+      });
+    });
     return languages;
   };
 
   autosubliminal.convertToLanguageCodes = function (languages) {
     var languageCodes = [];
-
-    for (var i = 0; i < languages.length; i++) {
-      languageCodes.push(languages[i].code);
-    }
-
+    languages.forEach(function (language) {
+      languageCodes.push(language.code);
+    });
     return languageCodes;
   };
 
@@ -253,7 +247,7 @@ var autosubliminal = {
     websocketProtocol = 'wss:';
   }
 
-  var websocketUrl = websocketProtocol + '//' + window.location.host + autosubliminal.WEB_ROOT + '/system/websocket';
+  var websocketUrl = "".concat(websocketProtocol, "//").concat(window.location.host).concat(autosubliminal.WEB_ROOT, "/system/websocket");
   autosubliminal.websockets.ws = new WebSocket(websocketUrl);
 
   autosubliminal.websockets.ws.onmessage = function (message) {
@@ -271,7 +265,7 @@ var autosubliminal = {
     } else if (message.type == autosubliminal.websockets.EVENT) {
       autosubliminal.websockets.handleWebsocketEvent(message.event);
     } else {
-      console.error('Unsupported message: ' + message);
+      console.error("Unsupported message: ".concat(message));
     }
   };
 
@@ -281,7 +275,7 @@ var autosubliminal = {
 
     if (eventType == autosubliminal.websockets.PAGE_RELOAD) {
       if (!jQuery.isEmptyObject(eventData)) {
-        if (window.location.pathname.indexOf('/' + eventData.name) >= 0) {
+        if (window.location.pathname.indexOf("/".concat(eventData.name)) >= 0) {
           setTimeout(function () {
             window.location.reload();
           }, 1000);
@@ -316,7 +310,7 @@ var autosubliminal = {
         }
       }
     } else {
-      console.error('Unsupported event type: ' + eventType);
+      console.error("Unsupported event type: ".concat(eventType));
     }
   };
 
@@ -360,7 +354,7 @@ var autosubliminal = {
       self.removeClass(function (index, className) {
         return (className.match(/\bprogress-\S+/g) || []).join(' ');
       });
-      self.addClass('progress-' + progressBarPercentage);
+      self.addClass("progress-".concat(progressBarPercentage));
     });
   };
 
@@ -370,8 +364,8 @@ var autosubliminal = {
       $(this).parent().addClass('active');
     }
   });
-  var basePath = '/' + location.pathname.replace(autosubliminal.WEB_ROOT, '').split('/')[1] + '/';
-  $('.navbar').find('.nav').find('a[href=\'' + basePath + '\']').closest('li').addClass('active');
+  var basePath = "/".concat(location.pathname.replace(autosubliminal.WEB_ROOT, '').split('/')[1], "/");
+  $('.navbar').find('.nav').find("a[href=\"".concat(basePath, "\"]")).closest('li').addClass('active');
   $('.navbar .nav a.run-process').on('click', function (event) {
     event.preventDefault();
     var processName = $(this).data('process-name');
@@ -434,12 +428,10 @@ var autosubliminal = {
     $(element).next('div.multi-input-fields').remove();
     $(element).after('<div class="multi-input-fields"></div>');
     var multiInputFields = $(element).next('div.multi-input-fields');
-
-    for (var i = 0; i < values.length; i++) {
-      $(multiInputFields).append('<div class="input-group">' + '<input type="text" class="form-control input-sm" value="' + values[i] + '">' + '<span class="input-group-addon addon-remove"><i class="fa fa-times" aria-hidden="true"></i></span>' + '</div>');
-    }
-
-    $(multiInputFields).append('<div class="input-group">' + '<input type="text" class="form-control input-sm" placeholder="New value">' + '<span class="input-group-addon addon-add"><i class="fa fa-plus" aria-hidden="true"></i></span>' + '</div>');
+    values.forEach(function (val) {
+      $(multiInputFields).append("<div class=\"input-group\">\n                <input type=\"text\" class=\"form-control input-sm\" value=\"".concat(val, "\">\n                <span class=\"input-group-addon addon-remove\"><i class=\"fa fa-times\" aria-hidden=\"true\"></i></span>\n                </div>"));
+    });
+    $(multiInputFields).append("<div class=\"input-group\">\n            <input type=\"text\" class=\"form-control input-sm\" placeholder=\"New value\">\n            <span class=\"input-group-addon addon-add\"><i class=\"fa fa-plus\" aria-hidden=\"true\"></i></span>\n            </div>");
   };
 
   autosubliminal.initMultiInputTextAreas = function () {

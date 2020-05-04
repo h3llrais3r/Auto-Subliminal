@@ -40,7 +40,7 @@
         },
         showProgressText: function showProgressText() {
           var self = this;
-          return self.show.total_subtitles_available + ' of ' + self.show.total_subtitles_wanted;
+          return "".concat(self.show.total_subtitles_available, " of ").concat(self.show.total_subtitles_wanted);
         }
       },
       methods: {
@@ -48,12 +48,12 @@
           var self = this;
           var tvdbId = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
           $('.loading').removeClass('hidden');
-          $.get(autosubliminal.getUrl('/api/shows/' + tvdbId), function (data) {
+          $.get(autosubliminal.getUrl("/api/shows/".concat(tvdbId)), function (data) {
             self.show = data;
             self.showSettings = self.show.settings;
           }).fail(function (response) {
             if (response.status == 404) {
-              $.deleteJson(autosubliminal.getUrl('/api/shows/' + tvdbId), null, function () {
+              $.deleteJson(autosubliminal.getUrl("/api/shows/".concat(tvdbId)), null, function () {
                 var notification = autosubliminal.types.Notification();
                 notification.message = 'Show does not exist anymore and has been removed from the library!';
                 notification.type = autosubliminal.notifications.WARNING;
@@ -83,7 +83,7 @@
           event.preventDefault();
           var self = this;
           $('.refresh-running').removeClass('hidden');
-          $.putJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id + '/refresh'), null, function () {
+          $.putJson(autosubliminal.getUrl("/api/shows/".concat(self.show.tvdb_id, "/refresh")), null, function () {
             self.getShowDetails();
             $('.refresh-running').addClass('hidden');
           });
@@ -113,7 +113,7 @@
           var self = this;
           var data = self.showSettings;
           data.wanted_languages = self.getLanguageCodes(self.showSettingsWantedLanguages);
-          $.putJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id + '/settings'), data, function () {
+          $.putJson(autosubliminal.getUrl("/api/shows/".concat(self.show.tvdb_id, "/settings")), data, function () {
             $('#settingsModal').modal('hide');
             self.refreshShowDetails(event);
           });
@@ -121,7 +121,7 @@
         deleteShow: function deleteShow(event) {
           event.preventDefault();
           var self = this;
-          $.deleteJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id), null, function () {
+          $.deleteJson(autosubliminal.getUrl("/api/shows/".concat(self.show.tvdb_id)), null, function () {
             $('#deleteModal').modal('hide');
             window.location = autosubliminal.getUrl('/library/shows');
           });
@@ -134,7 +134,7 @@
             'file_name': self.selectedFileName,
             'languages': self.getLanguageCodes(self.selectedHardcodedLanguages)
           };
-          $.putJson(autosubliminal.getUrl('/api/shows/' + self.show.tvdb_id + '/subtitles/hardcoded/' + self.selectedEpisodeTvdbId), data, function () {
+          $.putJson(autosubliminal.getUrl("/api/shows/".concat(self.show.tvdb_id, "/subtitles/hardcoded/").concat(self.selectedEpisodeTvdbId)), data, function () {
             $('#subtitlesModal').modal('hide');
             self.getShowDetails();
           });
@@ -151,40 +151,36 @@
         },
         getNrOfSubtitles: function getNrOfSubtitles(files, language) {
           var subtitleCount = 0;
-
-          for (var i = 0; i < files.length; i++) {
-            if (files[i].type == 'subtitle' && files[i].language != null && files[i].language == language) {
+          files.forEach(function (file) {
+            if (file.type == 'subtitle' && file.language != null && file.language == language) {
               subtitleCount++;
-            } else if (files[i].type == 'video') {
-              if (files[i].hardcoded_languages != null) {
-                for (var j = 0; files[i].hardcoded_languages[j]; j++) {
-                  if (files[i].hardcoded_languages[j] == language) {
+            } else if (file.type == 'video') {
+              if (file.hardcoded_languages != null) {
+                file.hardcoded_languages.forEach(function (harcodedLanguage) {
+                  if (harcodedLanguage == language) {
                     subtitleCount++;
                   }
-                }
+                });
               }
 
-              if (files[i].embedded_languages != null) {
-                for (var k = 0; files[i].embedded_languages[k]; k++) {
-                  if (files[i].embedded_languages[k] == language) {
+              if (file.embedded_languages != null) {
+                file.embedded_languages.forEach(function (embeddedLanguage) {
+                  if (embeddedLanguage == language) {
                     subtitleCount++;
                   }
-                }
+                });
               }
             }
-          }
-
+          });
           return subtitleCount;
         },
         getNrOfVideos: function getNrOfVideos(files) {
           var videoCount = 0;
-
-          for (var i = 0; i < files.length; i++) {
-            if (files[i].type == 'video') {
+          files.forEach(function (file) {
+            if (file.type == 'video') {
               videoCount++;
             }
-          }
-
+          });
           return videoCount;
         }
       }

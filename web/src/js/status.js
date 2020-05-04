@@ -12,7 +12,7 @@
      * Initialization
      * ============== */
 
-    var init = function () {
+    const init = function () {
 
         // Setup the scheduler table
         $('#scheduler').tablesorter({
@@ -33,20 +33,20 @@
         });
 
         // Subscribe to process started events
-        var processStartedEventSubscriber = function (msg, data) {
+        const processStartedEventSubscriber = function (msg, data) {
             // console.log(msg, data);
             // Mark process as running on status page
-            var scheduler_process_row = $('#scheduler').find('#' + data.name);
+            const scheduler_process_row = $('#scheduler').find('#' + data.name);
             scheduler_process_row.children('.scheduler-next-run').text('Running...');
             scheduler_process_row.addClass('scheduler-running');
         };
         PubSub.subscribe(autosubliminal.websockets.PROCESS_STARTED, processStartedEventSubscriber);
 
         // Subscribe to process finished events
-        var processFinishedEventSubscriber = function (msg, data) {
+        const processFinishedEventSubscriber = function (msg, data) {
             // console.log(msg, data);
             // Mark process as finished on status page
-            var scheduler_process_row = $('#scheduler').find('#' + data.name);
+            const scheduler_process_row = $('#scheduler').find('#' + data.name);
             scheduler_process_row.children('.scheduler-alive').text(data.alive);
             scheduler_process_row.children('.scheduler-active').text(data.active);
             scheduler_process_row.children('.scheduler-last-run').text(strftime(autosubliminal.TIMESTAMP_FORMAT, new Date(data.last_run)));

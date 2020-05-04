@@ -13,7 +13,7 @@
      * ============== */
 
     // Function to empty the messages on the page
-    var emptyMessages = function () {
+    const emptyMessages = function () {
         $('#infoMessage').empty();
         $('#errorMessage').empty();
     };
@@ -23,7 +23,7 @@
         // Prevent default behaviour
         event.preventDefault();
         // Define variables
-        var url = $(this).attr('href');
+        const url = $(this).attr('href');
         // Visit page
         window.open(url, '_blank');
         return false;
@@ -34,7 +34,7 @@
         // Prevent default behaviour
         event.preventDefault();
         // Define variables
-        var url = $(this).attr('href');
+        const url = $(this).attr('href');
         // Call url
         $.get(url, function (data) {
             emptyMessages();
@@ -54,7 +54,7 @@
         // Prevent default behaviour
         event.preventDefault();
         // Define variables
-        var url = $(this).attr('href');
+        const url = $(this).attr('href');
         // Call url
         $.get(url, function (data) {
             emptyMessages();
@@ -75,7 +75,7 @@
         window.location = $(this).attr('href');
         // Show info message
         emptyMessages();
-        var infoMessage = $('#infoMessage');
+        const infoMessage = $('#infoMessage');
         infoMessage.append('Trying to play the video. ');
         infoMessage.append('If the video does not start, you\'ll need to install the \'playvideo://\' protocol first!');
         return false;
@@ -86,8 +86,8 @@
         // Prevent default behaviour
         event.preventDefault();
         // Define variables
-        var postProcessLink = $(this);
-        var url = $(this).attr('href');
+        const postProcessLink = $(this);
+        const url = $(this).attr('href');
         // Toggle postprocessing icon
         postProcessLink.find('i').toggleClass('hidden');
         // Call url

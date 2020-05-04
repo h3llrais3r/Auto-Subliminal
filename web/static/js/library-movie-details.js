@@ -39,7 +39,7 @@
         },
         movieProgressText: function movieProgressText() {
           var self = this;
-          return self.movie.total_subtitles_available + ' of ' + self.movie.total_subtitles_wanted;
+          return "".concat(self.movie.total_subtitles_available, " of ").concat(self.movie.total_subtitles_wanted);
         }
       },
       methods: {
@@ -47,12 +47,12 @@
           var self = this;
           var imdbId = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
           $('.loading').removeClass('hidden');
-          $.get(autosubliminal.getUrl('/api/movies/' + imdbId), function (data) {
+          $.get(autosubliminal.getUrl("/api/movies/".concat(imdbId)), function (data) {
             self.movie = data;
             self.movieSettings = self.movie.settings;
           }).fail(function (response) {
             if (response.status == 404) {
-              $.deleteJson(autosubliminal.getUrl('/api/movies/' + imdbId), null, function () {
+              $.deleteJson(autosubliminal.getUrl("/api/movies/".concat(imdbId)), null, function () {
                 var notification = autosubliminal.types.Notification();
                 notification.message = 'Movie does not exist anymore and has been removed from the library!';
                 notification.type = autosubliminal.notifications.WARNING;
@@ -82,7 +82,7 @@
           event.preventDefault();
           var self = this;
           $('.refresh-running').removeClass('hidden');
-          $.putJson(autosubliminal.getUrl('/api/movies/' + self.movie.imdb_id + '/refresh'), null, function () {
+          $.putJson(autosubliminal.getUrl("/api/movies/".concat(self.movie.imdb_id, "/refresh")), null, function () {
             self.getMovieDetails();
             $('.refresh-running').addClass('hidden');
           });
@@ -111,7 +111,7 @@
           var self = this;
           var data = self.movieSettings;
           data.wanted_languages = self.getLanguageCodes(self.movieSettingsWantedLanguages);
-          $.putJson(autosubliminal.getUrl('/api/movies/' + self.movie.imdb_id + '/settings'), data, function () {
+          $.putJson(autosubliminal.getUrl("/api/movies/".concat(self.movie.imdb_id, "/settings")), data, function () {
             $('#settingsModal').modal('hide');
             self.refreshMovieDetails(event);
           });
@@ -119,7 +119,7 @@
         deleteMovie: function deleteMovie(event) {
           event.preventDefault();
           var self = this;
-          $.deleteJson(autosubliminal.getUrl('/api/movies/' + self.movie.imdb_id), null, function () {
+          $.deleteJson(autosubliminal.getUrl("/api/movies/".concat(self.movie.imdb_id)), null, function () {
             $('#deleteModal').modal('hide');
             window.location = autosubliminal.getUrl('/library/movies');
           });
@@ -132,7 +132,7 @@
             'file_name': self.selectedFileName,
             'languages': self.getLanguageCodes(self.selectedHardcodedLanguages)
           };
-          $.putJson(autosubliminal.getUrl('/api/movies/' + self.movie.imdb_id + '/subtitles/hardcoded'), data, function () {
+          $.putJson(autosubliminal.getUrl("/api/movies/".concat(self.movie.imdb_id, "/subtitles/hardcoded")), data, function () {
             $('#subtitlesModal').modal('hide');
             self.getMovieDetails();
           });

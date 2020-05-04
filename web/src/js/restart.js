@@ -13,7 +13,7 @@
      * ============== */
 
     // Function to check if the system is alive
-    var isAlive = function () {
+    const isAlive = function () {
         $.get(autosubliminal.getUrl('/system/isAlive'), function (data) {
             // Not yet restarted -> wait
             if (!jQuery.isEmptyObject(data) && data['msg'] == 'False') {

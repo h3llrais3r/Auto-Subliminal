@@ -42,7 +42,7 @@
           return overview.total_subtitles_available / overview.total_subtitles_wanted * 100;
         },
         getProgressText: function getProgressText(overview) {
-          return overview.total_subtitles_available + ' of ' + overview.total_subtitles_wanted;
+          return "".concat(overview.total_subtitles_available, " of ").concat(overview.total_subtitles_wanted);
         }
       }
     });

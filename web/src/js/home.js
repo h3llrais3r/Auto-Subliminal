@@ -12,7 +12,7 @@
      * Initialization
      * ============== */
 
-    var init = function () {
+    const init = function () {
 
         // Init vue component
         window.Vue.component('settings', {
@@ -30,20 +30,20 @@
             },
             computed: {
                 posterThumbnailUrl: function () {
-                    var self = this;
-                    var indexer = '';
+                    const self = this;
+                    let indexer = '';
                     if (self.type == autosubliminal.EPISODE_TYPE) {
                         indexer = 'tvdb';
                     } else if (self.type == autosubliminal.MOVIE_TYPE) {
                         indexer = 'imdb';
                     }
-                    return autosubliminal.getUrl('/artwork/' + indexer + '/poster/thumbnail/');
+                    return autosubliminal.getUrl(`/artwork/${indexer}/poster/thumbnail/`);
                 }
             },
             watch: {
                 // Watch for settings being updated to convert the wanted languages
                 settings: function (newSettings) {
-                    var self = this;
+                    const self = this;
                     if (newSettings && newSettings.wanted_languages) {
                         self.wantedLanguages = self.getLanguages(self.settings.wanted_languages);
                     }
@@ -65,14 +65,14 @@
                 getLanguageCodes: autosubliminal.convertToLanguageCodes,
                 saveSettings: function (event) {
                     event.preventDefault();
-                    var self = this;
-                    var apiUrl = '';
+                    const self = this;
+                    let apiUrl = '';
                     if (self.type == autosubliminal.EPISODE_TYPE) {
-                        apiUrl = autosubliminal.getUrl('/api/shows/' + self.indexerId + '/settings');
+                        apiUrl = autosubliminal.getUrl(`/api/shows/${self.indexerId}/settings`);
                     } else if (self.type == autosubliminal.MOVIE_TYPE) {
-                        apiUrl = autosubliminal.getUrl('/api/movies/' + self.indexerId + '/settings');
+                        apiUrl = autosubliminal.getUrl(`/api/movies/${self.indexerId}/settings`);
                     }
-                    var data = self.settings;
+                    const data = self.settings;
                     data.wanted_languages = self.getLanguageCodes(self.wantedLanguages);
                     // Save settings
                     $.putJson(apiUrl, data, function () {
@@ -142,7 +142,7 @@
                             sortList: [[9, 1]],
                             // Remove loading indication and show content when initialized
                             initialized: function () {
-                                var self = $('#wanteditems');
+                                const self = $('#wanteditems');
                                 self.find('.loading-row').remove();
                                 self.find('.content-row').removeClass('hidden');
                                 self.trigger('update'); // Trigger table update for the removed loading row
@@ -188,7 +188,7 @@
                             sortList: [[9, 1]],
                             // Remove loading indication and show content when initialized
                             initialized: function () {
-                                var self = $('#lastdownloads');
+                                const self = $('#lastdownloads');
                                 self.find('.loading-row').remove();
                                 self.find('.content-row').removeClass('hidden');
                                 self.trigger('update'); // Trigger table update for the removed loading row
@@ -210,16 +210,16 @@
                         // Prevent default behaviour
                         event.preventDefault();
                         // Prevent multi clicks when already running
-                        var self = $(this);
+                        const self = $(this);
                         if (self.data('running')) {
                             return false;
                         }
                         // Mark as running
                         self.data('running', true);
                         // Define variables
-                        var searchUrl = self.attr('href');
-                        var loadingIcon = self.next('i');
-                        var contentDiv = self.parent('div').next('div');
+                        const searchUrl = self.attr('href');
+                        const loadingIcon = self.next('i');
+                        const contentDiv = self.parent('div').next('div');
                         // Show the loading icon
                         loadingIcon.removeClass('invisible').addClass('visible');
                         // Clear previous content
@@ -242,11 +242,11 @@
                         // Prevent default behaviour
                         event.preventDefault();
                         // Define variables
-                        var self = $(this);
-                        var updateUrl = self.attr('href');
-                        var updatePanel = self.closest('.panel-body');
-                        var wantedItem = self.closest('.wanted-item');
-                        var updateObj = {
+                        const self = $(this);
+                        const updateUrl = self.attr('href');
+                        const updatePanel = self.closest('.panel-body');
+                        const wantedItem = self.closest('.wanted-item');
+                        const updateObj = {
                             'title': updatePanel.find('input.update-wanted-item-title').val(),
                             'year': updatePanel.find('input.update-wanted-item-year').val(),
                             'season': updatePanel.find('input.update-wanted-item-season').val(),
@@ -279,10 +279,10 @@
                         // Prevent default behaviour
                         event.preventDefault();
                         // Define variables
-                        var self = $(this);
-                        var resetUrl = self.attr('href');
-                        var updatePanel = self.closest('.panel-body');
-                        var wantedItem = self.closest('.wanted-item');
+                        const self = $(this);
+                        const resetUrl = self.attr('href');
+                        const updatePanel = self.closest('.panel-body');
+                        const wantedItem = self.closest('.wanted-item');
                         // Call the resetUrl
                         $.get(resetUrl, function (data) {
                             if (!jQuery.isEmptyObject(data)) {
@@ -312,12 +312,12 @@
                 },
                 openSettingsModal: function (event, type, indexerId, title) {
                     event.preventDefault();
-                    var self = this;
-                    var apiUrl = '';
+                    const self = this;
+                    let apiUrl = '';
                     if (type == autosubliminal.EPISODE_TYPE) {
-                        apiUrl = autosubliminal.getUrl('/api/shows/' + indexerId + '/settings');
+                        apiUrl = autosubliminal.getUrl(`/api/shows/${indexerId}/settings`);
                     } else if (type == autosubliminal.MOVIE_TYPE) {
-                        apiUrl = autosubliminal.getUrl('/api/movies/' + indexerId + '/settings');
+                        apiUrl = autosubliminal.getUrl(`/api/movies/${indexerId}/settings`);
                     }
                     // Get settings
                     $.get(apiUrl, function (data) {

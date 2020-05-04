@@ -12,7 +12,7 @@
      * Initialization
      * ============== */
 
-    var init = function () {
+    const init = function () {
 
         // Check if the library scanner is running
         autosubliminal.library.checkScannerRunning();
@@ -34,7 +34,7 @@
             },
             mounted: function () {
                 //console.log('mounted');
-                var loadingIcon = $('.loading');
+                const loadingIcon = $('.loading');
                 // Show loading icon
                 loadingIcon.removeClass('hidden');
                 // Get overview
@@ -49,13 +49,13 @@
             },
             methods: {
                 getShowsOverview: function () {
-                    var self = this;
+                    const self = this;
                     $.get(autosubliminal.getUrl('/api/shows/overview'), function (data) {
                         self.showsOverview = data;
                     });
                 },
                 getMoviesOverview: function () {
-                    var self = this;
+                    const self = this;
                     $.get(autosubliminal.getUrl('/api/movies/overview'), function (data) {
                         self.moviesOverview = data;
                     });
@@ -64,7 +64,7 @@
                     return overview.total_subtitles_available / overview.total_subtitles_wanted * 100;
                 },
                 getProgressText: function (overview) {
-                    return overview.total_subtitles_available + ' of ' + overview.total_subtitles_wanted;
+                    return `${overview.total_subtitles_available} of ${overview.total_subtitles_wanted}`;
                 }
             }
         });
