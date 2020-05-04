@@ -44,6 +44,11 @@
     "semi": [
       "error",
       "always"
-    ]
+    ],
+    "arrow-parens": [
+      "error",
+      "always"
+    ],
+    "arrow-spacing": "error"
   }
 }
