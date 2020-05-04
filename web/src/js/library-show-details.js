@@ -209,7 +209,7 @@
                             }
                             // A video file can have multiple embedded languages
                             if (file.embedded_languages != null) {
-                                file.embedded_languages.forEach((embeddedLanguage)=> {
+                                file.embedded_languages.forEach((embeddedLanguage) => {
                                     if (embeddedLanguage == language) {
                                         subtitleCount++;
                                     }
