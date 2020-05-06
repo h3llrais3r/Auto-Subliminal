@@ -14,17 +14,15 @@ Usage:
 'PDF document, version 1.2'
 >>>
 
-
 """
 
 import sys
 import glob
-import os.path
 import ctypes
 import ctypes.util
 import threading
 
-from ctypes import c_char_p, c_int, c_size_t, c_void_p
+from ctypes import c_char_p, c_int, c_size_t, c_void_p, byref, POINTER
 
 
 class MagicException(Exception):
@@ -36,11 +34,10 @@ class MagicException(Exception):
 class Magic:
     """
     Magic is a wrapper around the libmagic C library.
-
     """
 
     def __init__(self, mime=False, magic_file=None, mime_encoding=False,
-                 keep_going=False, uncompress=False):
+                 keep_going=False, uncompress=False, raw=False):
         """
         Create a new libmagic wrapper.
 
@@ -49,22 +46,34 @@ class Magic:
         magic_file - use a mime database other than the system default
         keep_going - don't stop at the first match, keep going
         uncompress - Try to look inside compressed files.
+        raw - Do not try to decode "non-printable" chars.
         """
         self.flags = MAGIC_NONE
         if mime:
-            self.flags |= MAGIC_MIME
+            self.flags |= MAGIC_MIME_TYPE
         if mime_encoding:
             self.flags |= MAGIC_MIME_ENCODING
         if keep_going:
             self.flags |= MAGIC_CONTINUE
-
         if uncompress:
             self.flags |= MAGIC_COMPRESS
+        if raw:
+            self.flags |= MAGIC_RAW
 
         self.cookie = magic_open(self.flags)
         self.lock = threading.Lock()
-        
+
         magic_load(self.cookie, magic_file)
+
+
+        # For https://github.com/ahupp/python-magic/issues/190
+        # libmagic has fixed internal limits that some files exceed, causing
+        # an error.  We can avoid this (at least for the sample file given)
+        # by bumping the limit up.  It's not clear if this is a general solution
+        # or whether other internal limits should be increased, but given
+        # the lack of other reports I'll assume this is rare.
+        if _has_param:
+            self.setparam(MAGIC_PARAM_NAME_MAX, 64)
 
     def from_buffer(self, buf):
         """
@@ -76,7 +85,7 @@ class Magic:
                 # otherwise this string is passed as wchar*
                 # which is not what libmagic expects
                 if type(buf) == str and str != bytes:
-                   buf = buf.encode('utf-8', errors='replace')
+                    buf = buf.encode('utf-8', errors='replace')
                 return maybe_decode(magic_buffer(self.cookie, buf))
             except MagicException as e:
                 return self._handle509Bug(e)
@@ -95,11 +104,17 @@ class Magic:
         # libmagic 5.09 has a bug where it might fail to identify the
         # mimetype of a file and returns null from magic_file (and
         # likely _buffer), but also does not return an error message.
-        if e.message is None and (self.flags & MAGIC_MIME):
+        if e.message is None and (self.flags & MAGIC_MIME_TYPE):
             return "application/octet-stream"
         else:
             raise e
-        
+
+    def setparam(self, param, val):
+        return magic_setparam(self.cookie, param, val)
+
+    def getparam(self, param):
+        return magic_getparam(self.cookie, param)
+
     def __del__(self):
         # no _thread_check here because there can be no other
         # references to this object at this point.
@@ -117,11 +132,13 @@ class Magic:
 
 _instances = {}
 
+
 def _get_magic_type(mime):
     i = _instances.get(mime)
     if i is None:
         i = _instances[mime] = Magic(mime=mime)
     return i
+
 
 def from_file(filename, mime=False):
     """"
@@ -134,6 +151,7 @@ def from_file(filename, mime=False):
     """
     m = _get_magic_type(mime)
     return m.from_file(filename)
+
 
 def from_buffer(buffer, mime=False):
     """
@@ -148,25 +166,27 @@ def from_buffer(buffer, mime=False):
     return m.from_buffer(buffer)
 
 
-
-
 libmagic = None
 # Let's try to find magic or magic1
-dll = ctypes.util.find_library('magic') or ctypes.util.find_library('magic1') or ctypes.util.find_library('cygmagic-1')
+dll = ctypes.util.find_library('magic') \
+    or ctypes.util.find_library('magic1') \
+    or ctypes.util.find_library('cygmagic-1') \
+    or ctypes.util.find_library('libmagic-1') \
+    or ctypes.util.find_library('msys-magic-1') #for MSYS2
 
-# This is necessary because find_library returns None if it doesn't find the library
+# necessary because find_library returns None if it doesn't find the library
 if dll:
     libmagic = ctypes.CDLL(dll)
 
 if not libmagic or not libmagic._name:
-    windows_dlls = ['magic1.dll','cygmagic-1.dll']
+    windows_dlls = ['magic1.dll', 'cygmagic-1.dll', 'libmagic-1.dll', 'msys-magic-1.dll']
     platform_to_lib = {'darwin': ['/opt/local/lib/libmagic.dylib',
                                   '/usr/local/lib/libmagic.dylib'] +
-                         # Assumes there will only be one version installed
-                         glob.glob('/usr/local/Cellar/libmagic/*/lib/libmagic.dylib'),
+                       # Assumes there will only be one version installed
+                       glob.glob('/usr/local/Cellar/libmagic/*/lib/libmagic.dylib'),  # flake8:noqa
                        'win32': windows_dlls,
                        'cygwin': windows_dlls,
-                       'linux': ['libmagic.so.1'],    # fallback for some Linuxes (e.g. Alpine) where library search does not work
+                       'linux': ['libmagic.so.1'],  # fallback for some Linuxes (e.g. Alpine) where library search does not work # flake8:noqa
                       }
     platform = 'linux' if sys.platform.startswith('linux') else sys.platform
     for dll in platform_to_lib.get(platform, []):
@@ -182,6 +202,7 @@ if not libmagic or not libmagic._name:
 
 magic_t = ctypes.c_void_p
 
+
 def errorcheck_null(result, func, args):
     if result is None:
         err = magic_error(args[0])
@@ -189,8 +210,9 @@ def errorcheck_null(result, func, args):
     else:
         return result
 
+
 def errorcheck_negative_one(result, func, args):
-    if result is -1:
+    if result == -1:
         err = magic_error(args[0])
         raise MagicException(err)
     else:
@@ -204,13 +226,14 @@ def maybe_decode(s):
         return s
     else:
         return s.decode('utf-8')
-    
+
+
 def coerce_filename(filename):
     if filename is None:
         return None
 
     # ctypes will implicitly convert unicode strings to bytes with
-    # .encode('ascii').  If you use the filesystem encoding 
+    # .encode('ascii').  If you use the filesystem encoding
     # then you'll get inconsistent behavior (crashes) depending on the user's
     # LANG environment variable
     is_unicode = (sys.version_info[0] <= 2 and
@@ -221,6 +244,7 @@ def coerce_filename(filename):
         return filename.encode('utf-8', 'surrogateescape')
     else:
         return filename
+
 
 magic_open = libmagic.magic_open
 magic_open.restype = magic_t
@@ -243,6 +267,7 @@ _magic_file.restype = c_char_p
 _magic_file.argtypes = [magic_t, c_char_p]
 _magic_file.errcheck = errorcheck_null
 
+
 def magic_file(cookie, filename):
     return _magic_file(cookie, coerce_filename(filename))
 
@@ -250,6 +275,7 @@ _magic_buffer = libmagic.magic_buffer
 _magic_buffer.restype = c_char_p
 _magic_buffer.argtypes = [magic_t, c_void_p, c_size_t]
 _magic_buffer.errcheck = errorcheck_null
+
 
 def magic_buffer(cookie, buf):
     return _magic_buffer(cookie, buf, len(buf))
@@ -259,6 +285,7 @@ _magic_load = libmagic.magic_load
 _magic_load.restype = c_int
 _magic_load.argtypes = [magic_t, c_char_p]
 _magic_load.errcheck = errorcheck_negative_one
+
 
 def magic_load(cookie, filename):
     return _magic_load(cookie, coerce_filename(filename))
@@ -275,15 +302,55 @@ magic_compile = libmagic.magic_compile
 magic_compile.restype = c_int
 magic_compile.argtypes = [magic_t, c_char_p]
 
+_has_param = False
+if hasattr(libmagic, 'magic_setparam') and hasattr(libmagic, 'magic_getparam'):
+    _has_param = True
+    _magic_setparam = libmagic.magic_setparam
+    _magic_setparam.restype = c_int
+    _magic_setparam.argtypes = [magic_t, c_int, POINTER(c_size_t)]
+    _magic_setparam.errcheck = errorcheck_negative_one
 
+    _magic_getparam = libmagic.magic_getparam
+    _magic_getparam.restype = c_int
+    _magic_getparam.argtypes = [magic_t, c_int, POINTER(c_size_t)]
+    _magic_getparam.errcheck = errorcheck_negative_one
+
+def magic_setparam(cookie, param, val):
+    if not _has_param:
+        raise NotImplementedError("magic_setparam not implemented")
+    v = c_size_t(val)
+    return _magic_setparam(cookie, param, byref(v))
+
+def magic_getparam(cookie, param):
+    if not _has_param:
+        raise NotImplementedError("magic_getparam not implemented")
+    val = c_size_t()
+    _magic_getparam(cookie, param, byref(val))
+    return val.value
+
+_has_version = False
+if hasattr(libmagic, "magic_version"):
+    _has_version = True
+    magic_version = libmagic.magic_version
+    magic_version.restype = c_int
+    magic_version.argtypes = []
+
+def version():
+    if not _has_version:
+        raise NotImplementedError("magic_version not implemented")
+    return magic_version()
 
 MAGIC_NONE = 0x000000 # No flags
 MAGIC_DEBUG = 0x000001 # Turn on debugging
 MAGIC_SYMLINK = 0x000002 # Follow symlinks
 MAGIC_COMPRESS = 0x000004 # Check inside compressed files
 MAGIC_DEVICES = 0x000008 # Look at the contents of devices
-MAGIC_MIME = 0x000010 # Return a mime string
+MAGIC_MIME_TYPE = 0x000010 # Return a mime string
 MAGIC_MIME_ENCODING = 0x000400 # Return the MIME encoding
+# TODO:  should be
+# MAGIC_MIME = MAGIC_MIME_TYPE | MAGIC_MIME_ENCODING
+MAGIC_MIME = 0x000010 # Return a mime string
+
 MAGIC_CONTINUE = 0x000020 # Return all matches
 MAGIC_CHECK = 0x000040 # Print warnings to stderr
 MAGIC_PRESERVE_ATIME = 0x000080 # Restore access time on exit
@@ -299,3 +366,11 @@ MAGIC_NO_CHECK_ASCII = 0x020000 # Don't check for ascii files
 MAGIC_NO_CHECK_TROFF = 0x040000 # Don't check ascii/troff
 MAGIC_NO_CHECK_FORTRAN = 0x080000 # Don't check ascii/fortran
 MAGIC_NO_CHECK_TOKENS = 0x100000 # Don't check ascii/tokens
+
+MAGIC_PARAM_INDIR_MAX = 0 # Recursion limit for indirect magic
+MAGIC_PARAM_NAME_MAX = 1 # Use count limit for name/use magic
+MAGIC_PARAM_ELF_PHNUM_MAX = 2 # Max ELF notes processed
+MAGIC_PARAM_ELF_SHNUM_MAX = 3 # Max ELF program sections processed
+MAGIC_PARAM_ELF_NOTES_MAX = 4 # # Max ELF sections processed
+MAGIC_PARAM_REGEX_MAX = 5 # Length limit for regex searches
+MAGIC_PARAM_BYTES_MAX = 6 # Max number of bytes to read from file
