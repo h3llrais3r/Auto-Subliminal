@@ -138,8 +138,8 @@ gulp.task('minify:app_js', function () {
     return gulp.src('build/app/js/*.js')
         .pipe(debug(debugConfig))
         .pipe(rename(function (path) {
-            path.basename += ".min";
-            path.extname = ".js";
+            path.basename += '.min';
+            path.extname = '.js';
         }))
         .pipe(uglify())
         .pipe(gulp.dest('build/app/js'));
@@ -149,8 +149,8 @@ gulp.task('minify:app_css', function () {
     return gulp.src('build/app/css/*.css')
         .pipe(debug(debugConfig))
         .pipe(rename(function (path) {
-            path.basename += ".min";
-            path.extname = ".css";
+            path.basename += '.min';
+            path.extname = '.css';
         }))
         .pipe(clean_css())
         .pipe(gulp.dest('build/app/css'));
@@ -160,8 +160,8 @@ gulp.task('minify:vendor_js', function () {
     return gulp.src('build/vendor/js/*.js')
         .pipe(debug(debugConfig))
         .pipe(rename(function (path) {
-            path.basename += ".min";
-            path.extname = ".js";
+            path.basename += '.min';
+            path.extname = '.js';
         }))
         .pipe(uglify())
         .pipe(gulp.dest('build/vendor/js'));
@@ -171,8 +171,8 @@ gulp.task('minify:vendor_css', function () {
     return gulp.src('build/vendor/css/*.css')
         .pipe(debug(debugConfig))
         .pipe(rename(function (path) {
-            path.basename += ".min";
-            path.extname = ".css";
+            path.basename += '.min';
+            path.extname = '.css';
         }))
         .pipe(clean_css())
         .pipe(gulp.dest('build/vendor/css'));
