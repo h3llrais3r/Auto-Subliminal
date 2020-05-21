@@ -29,7 +29,7 @@ cache:
 # Install command(s)
 before_install:
   - export BOTO_CONFIG=/dev/null # FIXME: Workaround for https://github.com/travis-ci/travis-ci/issues/7940
-  # Install required node version from package.Json
+  # Install minimal required node version from package.json
   - nvm install "$(jq -r '.engines.node' package.json)"
   - node --version
   - npm --version
