@@ -24,8 +24,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "gulp build",
     "watch": "gulp watch",
-    "eslint": "eslint web/src/**/*.js -f table",
-    "stylelint": "stylelint web/src/**/*.scss --custom-formatter=node_modules/stylelint-formatter-table"
+    "eslint": "eslint \"web/src/**/*.js\" -f table",
+    "stylelint": "stylelint \"web/src/**/*.scss\" --custom-formatter=node_modules/stylelint-formatter-table"
   },
   "dependencies": {
     "bootstrap": "3.4.1",
