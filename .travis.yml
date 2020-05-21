@@ -29,6 +29,10 @@ cache:
 # Install command(s)
 before_install:
   - export BOTO_CONFIG=/dev/null # FIXME: Workaround for https://github.com/travis-ci/travis-ci/issues/7940
+  # Install required node version from package.Json
+  - nvm install "$(jq -r '.engines.node' package.json)"
+  - node --version
+  - npm --version
 
 install:
   - pip install --upgrade pip
@@ -36,8 +40,6 @@ install:
   - pip install --upgrade pytest # Upgrade pytest to latest version to prevent build errors
   - pip install -e .[dev,test]
   - pip install coveralls
-  - node --version
-  - npm --version
   - npm install
 
 # Build command(s)

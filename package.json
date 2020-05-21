@@ -66,5 +66,8 @@
     "stylelint-config-recommended-scss": "4.2.0",
     "stylelint-formatter-table": "1.0.4",
     "stylelint-scss": "3.17.2"
+  },
+  "engines": {
+    "node": ">=10.13.0"
   }
 }
