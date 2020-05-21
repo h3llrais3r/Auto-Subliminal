@@ -78,6 +78,7 @@ before_test:
   - npm run stylelint
 
 test_script:
-  -  setup.py test
+  - python --version
+  - python setup.py test
   #- coverage run setup.py test
   #- coverage report
