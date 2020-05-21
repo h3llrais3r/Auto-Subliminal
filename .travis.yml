@@ -36,6 +36,8 @@ install:
   - pip install --upgrade pytest # Upgrade pytest to latest version to prevent build errors
   - pip install -e .[dev,test]
   - pip install coveralls
+  - node --version
+  - npm --version
   - npm install
 
 # Build command(s)
