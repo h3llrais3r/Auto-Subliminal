@@ -66,7 +66,7 @@ install:
   - pip install coverage
   # Install minimal required node version from package.json
   - ps: $env:NODE_VERSION = (Get-Content -Raw -Path package.json | ConvertFrom-Json).engines.node
-  - ps: Install-Product node $(NODE_VERSION) x64
+  - ps: Install-Product node $env:NODE_VERSION x64
   - node --version
   - npm --version
   # Install npm dependencies
