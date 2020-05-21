@@ -80,9 +80,7 @@ before_test:
   - npm run stylelint
 
 test_script:
-  - python --version
-  - python setup.py test
-  - coverage run setup.py test
+  - coverage run setup.py test > output.txt
   - coverage report
 
 on_finish:
