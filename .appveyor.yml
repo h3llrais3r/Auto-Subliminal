@@ -79,4 +79,4 @@ before_test:
 
 test_script:
   - coverage run setup.py test
-  - coverage report
+  #- coverage report
