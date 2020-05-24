@@ -80,8 +80,9 @@ before_test:
   - npm run stylelint
 
 test_script:
-  - coverage run setup.py test > output.txt
+  - coverage run setup.py test
   - coverage report
 
-on_finish:
+# Block RDP on failure
+on_failure:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
