@@ -50,7 +50,7 @@ simplejson==3.17.0
 six==1.15.0
 smmap2==3.0.1
 soupsieve==1.9.6 # rq.filter: <2.0.0
-stevedore==1.32.0
+stevedore==2.0.0
 git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a#egg=subliminal
 tempora==1.14.1 # rq.filter: <2.0.0
 trans==2.1.0
