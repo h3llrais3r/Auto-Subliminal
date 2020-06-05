@@ -72,6 +72,12 @@
       },
       {
         "packageNames": [
+          "stevedore"
+        ],
+        "allowedVersions": "<2.0.0"
+      },
+      {
+        "packageNames": [
           "tempora"
         ],
         "allowedVersions": "<2.0.0"
