@@ -38,7 +38,7 @@ matrix:
 cache:
   - '%LOCALAPPDATA%\pip\Cache'
   - '%APPDATA%\npm-cache'
-  - 'node_modules'
+  #- 'node_modules'
 
 # Command(s) to execute before starting
 init:
