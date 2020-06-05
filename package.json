@@ -68,6 +68,6 @@
     "stylelint-scss": "3.17.2"
   },
   "engines": {
-    "node": "10.13.0"
+    "node": ">=10.13.0"
   }
 }
