@@ -76,7 +76,7 @@ install:
   - node --version
   - npm --version
   # Install npm dependencies
-  - ps: Remove-Item ./node_modules/.bin/acorn.cmd -force # Remove acorn from node_modules cache, as appveyor seems to have problems with it!
+  # - ps: Remove-Item ./node_modules/.bin/acorn.cmd -force # Remove acorn from node_modules cache, as appveyor seems to have problems with it!
   - npm install
 
 # Test command(s)
