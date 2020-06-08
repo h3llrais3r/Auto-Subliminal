@@ -38,13 +38,20 @@ class NoCaptchaTaskProxylessTask(BaseTask):
     websiteURL = None
     websiteKey = None
     websiteSToken = None
+    recaptchaDataSValue = None
 
     def __init__(
-        self, website_url, website_key, website_s_token=None, is_invisible=None
+        self,
+        website_url,
+        website_key,
+        website_s_token=None,
+        is_invisible=None,
+        recaptcha_data_s_value=None,
     ):
         self.websiteURL = website_url
         self.websiteKey = website_key
         self.websiteSToken = website_s_token
+        self.recaptchaDataSValue = recaptcha_data_s_value
         self.isInvisible = is_invisible
 
     def serialize(self):
@@ -57,6 +64,8 @@ class NoCaptchaTaskProxylessTask(BaseTask):
             data["websiteSToken"] = self.websiteSToken
         if self.isInvisible is not None:
             data["isInvisible"] = self.isInvisible
+        if self.recaptchaDataSValue is not None:
+            data["recaptchaDataSValue"] = self.recaptchaDataSValue
         return data
 
 
