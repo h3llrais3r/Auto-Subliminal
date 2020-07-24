@@ -1,5 +1,5 @@
 # Mandatory (packaged) libraries
-aenum==2.2.3
+aenum==2.2.4
 appdirs==1.4.4
 attrs==19.3.0
 babelfish==0.5.5
