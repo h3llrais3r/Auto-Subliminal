@@ -118,7 +118,7 @@ class ShowIndexer(Indexer):
             if sanitize(search_result.series_name) == name_sanitized:
                 return search_result
             elif search_result.slug and sanitize(search_result.slug) == name_sanitized:
-                    return search_result
+                return search_result
             elif search_result.aliases:
                 # If no match, fallback to aliases (if aliases are available)
                 for alias in search_result.aliases:
