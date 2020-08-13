@@ -38,6 +38,7 @@ else:
 __all__ = [
         'NamedConstant', 'constant', 'skip', 'nonmember', 'member', 'no_arg',
         'Enum', 'IntEnum', 'AutoNumberEnum', 'OrderedEnum', 'UniqueEnum',
+        'StrEnum', 'UpperStrEnum', 'LowerStrEnum',
         'Flag', 'IntFlag',
         'AutoNumber', 'MultiValue', 'NoAlias', 'Unique',
         'enum', 'extend_enum', 'unique', 'enum_property',
@@ -46,7 +47,7 @@ __all__ = [
 if sqlite3 is None:
     __all__.remove('SqliteEnum')
 
-version = 2, 2, 3
+version = 2, 2, 4
 
 try:
     any
@@ -105,11 +106,10 @@ class enum_property(object):
     through the enum class will look in the class' _member_map_.
     """
 
-    name = None  # set by metaclass
-
-    def __init__(self, fget=None, doc=None):
+    def __init__(self, fget=None, doc=None, name=None):
         self.fget = fget
         self.__doc__ = doc or fget.__doc__
+        self.name = name
 
     def __call__(self, func, doc=None):
         self.fget = func
@@ -120,12 +120,41 @@ class enum_property(object):
             try:
                 return ownerclass._member_map_[self.name]
             except KeyError:
-                raise AttributeError(self.name)
+                raise AttributeError('%r not found in %r' % (self.name, ownerclass.__name__))
         else:
-            return self.fget(instance)
+            if self.fget is not None:
+                return self.fget(instance)
+            else:
+                # search through mro
+                for base in ownerclass.__mro__[1:]:
+                    if self.name in base.__dict__:
+                        attr = base.__dict__[self.name]
+                        break
+                else:
+                    raise AttributeError('%r not found in %r' % (self.name, instance))
+                if isinstance(attr, classmethod):
+                    attr = attr.__func__
+                    return lambda *args, **kwds: attr(ownerclass, *args, **kwds)
+                elif isinstance(attr, staticmethod):
+                    return attr.__func__
+                elif isinstance(attr, (property, enum_property)):
+                    return attr.__get__(instance, ownerclass)
+                elif callable(attr):
+                    return lambda *arg, **kwds: attr(instance, *arg, **kwds)
+                else:
+                    return attr
 
     def __set__(self, instance, value):
-        raise AttributeError("can't set attribute %r" % (self.name, ))
+        ownerclass = instance.__class__
+        for base in ownerclass.__mro__[1:]:
+            if self.name in base.__dict__:
+                attr = base.__dict__[self.name]
+                if isinstance(attr, property):
+                    setter = attr.__set__
+                    if setter is not None:
+                        return setter(instance, value)
+        else:
+            raise AttributeError("can't set attribute %r" % (self.name, ))
 
     def __delete__(self, instance):
         raise AttributeError("can't delete attribute %r" % (self.name, ))
@@ -402,7 +431,15 @@ class NamedConstantMeta(type):
 temp_constant_dict = {}
 temp_constant_dict['__doc__'] = "NamedConstants protection.\n\n    Derive from this class to lock NamedConstants.\n\n"
 
-def __new__(cls, name, value, doc=None):
+def __new__(cls, name, value=None, doc=None):
+    if value is None:
+        # lookup, name is value
+        value = name
+        for name, obj in cls.__dict__.items():
+            if isinstance(obj, cls) and obj._value_ == value:
+                return obj
+        else:
+            raise ValueError('%r does not exist in %r' % (value, cls.__name__))
     cur_obj = cls.__dict__.get(name)
     if isinstance(cur_obj, NamedConstant):
         raise AttributeError('cannot rebind constant <%s.%s>' % (cur_obj.__class__.__name__, cur_obj._name_))
@@ -410,10 +447,13 @@ def __new__(cls, name, value, doc=None):
         doc = doc or value.__doc__
         value = value.value
     metacls = cls.__class__
+    if isinstance(value, NamedConstant):
+        # constants from other classes are reduced to their actual value
+        value = value._value_
     actual_type = type(value)
     value_type = cls._named_constant_cache_.get(actual_type)
     if value_type is None:
-        value_type = type(cls.__name__, (NamedConstant, type(value)), {})
+        value_type = type(cls.__name__, (cls, type(value)), {})
         cls._named_constant_cache_[type(value)] = value_type
     obj = actual_type.__new__(value_type, value)
     obj._name_ = name
@@ -429,6 +469,12 @@ def __repr__(self):
             self.__class__.__name__, self._name_, self._value_)
 temp_constant_dict['__repr__'] = __repr__
 del __repr__
+
+def __reduce_ex__(self, proto):
+    return getattr, (self.__class__, self._name_)
+temp_constant_dict['__reduce_ex__'] = __reduce_ex__
+del __reduce_ex__
+
 
 NamedConstant = NamedConstantMeta('NamedConstant', (object, ), temp_constant_dict)
 Constant = NamedConstant
@@ -1008,7 +1054,7 @@ class enum(object):
         kwds = ', '.join([('%s=%r') % (k, v) for k, v in enumsort(list(self.kwds.items()))])
         if kwds:
             final.append(kwds)
-        return 'enum(%s)' % ', '.join(final)
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(final))
 
 _auto_null = object()
 class auto(enum):
@@ -1384,8 +1430,8 @@ class _EnumDict(dict):
                 self._autovalue = allowed_settings['autovalue']
                 self._autonumber = allowed_settings['autonumber']
                 self._locked = not (self._autonumber or self._autovalue)
-                if self._autovalue and not self._ignore_init_done:
-                    self._ignore = ['property', 'classmethod', 'staticmethod']
+                if (self._autovalue or self._autonumber) and not self._ignore_init_done:
+                    self._ignore = ['property', 'classmethod', 'staticmethod', 'aenum', 'auto']
                 if self._autonumber and self._value is None:
                     self._value = 0
                 if self._autonumber and self._init and self._init[0:1] == ['value']:
@@ -1446,12 +1492,13 @@ class _EnumDict(dict):
                             target_length += 1
                         if len(value) != target_length:
                             value = (self._value + 1, ) + value
+                        if isinstance(value[0], auto):
+                            value = (self._value + 1, ) + value[1:]
                     else:
                         try:
                             value = (self._value + 1, ) + value
                         except TypeError:
                             pass
-                if self._autonumber:
                     self._value = value[0]
             elif self._autovalue and self._init and not isinstance(value, auto):
                 # call generate iff init is specified and calls for more values than are present
@@ -1893,25 +1940,13 @@ class EnumMeta(StdlibEnumMeta or type):
                     message = []
                     for name, aliases in nonunique.items():
                         bad_aliases = ','.join(aliases)
-                        message.append('%s --> %s' % (name, bad_aliases))
+                        message.append('%s --> %s [%r]' % (name, bad_aliases, enum_class[name].value))
                     raise ValueError(
                             'duplicate names found in %r: %s' %
                                 (cls, ';  '.join(message))
                             )
-            # performance boost for any member that would not shadow
-            # an enum_property
-            if member_name not in base_attributes:
-                setattr(enum_class, member_name, enum_member)
-            else:
-                # otherwise make sure the thing being shadowed /is/ an
-                # enum_property
-                for parent in enum_class.mro()[1:]:
-                    if member_name in parent.__dict__:
-                        obj = parent.__dict__[member_name]
-                        if not isinstance(obj, enum_property):
-                            raise TypeError('%r already used: %r' % (member_name, obj))
-                        # we're good
-                        break
+            # members are added as enum_property's
+            setattr(enum_class, member_name, enum_property(name=member_name))
             # now add to _member_map_
             enum_class._member_map_[member_name] = enum_member
             values = (value, ) + extra_mv_args
@@ -2597,9 +2632,6 @@ del _convert
 # members named `name`, `value`, etc..  This works because enumeration
 # members are not set directly on the enum class -- enum_property will
 # look them up in _member_map_.
-#
-# This method is also very slow, so EnumMeta will add members directlyi
-# to the Enum class if it won't shadow other instance attributes
 
 @enum_property
 def name(self):
@@ -2634,6 +2666,48 @@ del temp_enum_dict
 class IntEnum(int, Enum):
     """Enum where members are also (and must be) ints"""
 
+class StrEnum(str, Enum): 
+    """Enum where members are also (and must already be) strings
+    
+        default value is member name
+    """
+    def __new__(cls, value, *args, **kwds):
+        if args or kwds:
+            raise TypeError('only a single string value may be specified')
+        if not isinstance(value, str):
+            raise TypeError('values for StrEnum must be strings, not %r' % type(value))
+        obj = str.__new__(cls, value)
+        obj._value_ = value
+        return obj
+    def _generate_next_value_(name, start, count, last_values, *args, **kwds):
+        return name
+
+class LowerStrEnum(StrEnum):
+    """Enum where members are also (and must already be) lower-case strings
+    
+        default value is member name, lower-cased
+    """
+    def __new__(cls, value, *args, **kwds):
+        obj = StrEnum.__new_member__(cls, value, *args, **kwds)
+        if value != value.lower():
+            raise ValueError('%r is not lower-case' % value)
+        return obj
+    def _generate_next_value_(name, start, count, last_values, *args, **kwds):
+        return name.lower()
+
+class UpperStrEnum(StrEnum):
+    """Enum where members are also (and must already be) upper-case strings
+    
+        default value is member name, upper-cased
+    """
+    def __new__(cls, value, *args, **kwds):
+        obj = StrEnum.__new_member__(cls, value, *args, **kwds)
+        if value != value.upper():
+            raise ValueError('%r is not upper-case' % value)
+        return obj
+    def _generate_next_value_(name, start, count, last_values, *args, **kwds):
+        return name.upper()
+
 if pyver >= 3:
     class AutoEnum(Enum):
         """
@@ -2662,7 +2736,7 @@ class MultiValueEnum(Enum):
 
 class NoAliasEnum(Enum):
     """
-    Duplicate value members are distinct, and cannot be looked up by value.
+    Duplicate value members are distinct, but cannot be looked up by value.
     """
     _settings_ = NoAlias
 
