@@ -8,7 +8,7 @@ beautifulsoup4==4.9.1 # different package for py2 and py3
 boto==2.49.0
 certifi==2020.6.20
 chardet==3.0.4
-cheroot==8.3.0
+cheroot==8.4.4
 cherrypy==17.4.2 # rq.filter: <18.0.0
 click==7.1.2
 configparser==4.0.2 # rq.filter: <5.0.0
@@ -46,6 +46,7 @@ rebulk==2.0.1
 requests==2.24.0
 requests-oauthlib==1.3.0
 schema==0.7.2
+selectors2==2.0.2 ; python_version < '3.4'
 simplejson==3.17.2
 six==1.15.0
 smmap2==3.0.1

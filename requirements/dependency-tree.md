@@ -15,6 +15,7 @@ Libraries dependency tree
         |-- backports.functools_lru_cache
         |-- jaraco.functools
         |-- more-itertools
+        |-- selectors2
         |-- six
     |-- contextlib2
     |-- more-itertools
