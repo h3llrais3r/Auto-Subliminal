@@ -41,7 +41,7 @@ def test_check_missing_subtitle_languages(monkeypatch, mocker):
     dirname = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'resources'))
     missing_languages = ['de', 'fr']
     assert missing_languages == sorted(
-        l for l in check_missing_subtitle_languages(dirname, filename, scan_embedded=True, scan_hardcoded=True))
+        lang for lang in check_missing_subtitle_languages(dirname, filename, scan_embedded=True, scan_hardcoded=True))
 
 
 def test_check_missing_subtitle_languages_with_langdetect(monkeypatch, mocker):
