@@ -1,12 +1,12 @@
 # Mandatory (packaged) libraries
-aenum==2.2.3
+aenum==2.2.4
 appdirs==1.4.4
 attrs==19.3.0
 babelfish==0.5.5
 backports.functools_lru_cache=1.5 ; python_version < '3.0'
 beautifulsoup4==4.9.1 # different package for py2 and py3
 boto==2.49.0
-certifi==2020.4.5.2
+certifi==2020.6.20
 chardet==3.0.4
 cheroot==8.4.4
 cherrypy==17.4.2 # rq.filter: <18.0.0
@@ -23,8 +23,8 @@ gitdb2==2.0.6 # rq.filter: <3.0.0
 gitpython==2.1.15 # rq.filter: <3.0.0
 gntp==1.0.3
 guessit==3.1.1
-html5lib==1.0.1
-idna==2.9
+html5lib==1.1
+idna==2.10
 imdbpie==5.6.4
 jaraco.functools==2.0 # rq.filter: <3.0.0
 jsonpickle==1.4.1
@@ -36,18 +36,18 @@ oauthlib==3.1.0
 portend==2.6
 pushbullet.py==0.11.0
 pysrt==1.1.2
-python-anticaptcha==0.7.0
+python-anticaptcha==0.7.1
 python-dateutil==2.8.1
 python-magic==0.4.15
 python-twitter==3.5
 pytz==2020.1
-rarfile==3.1
+rarfile==3.3
 rebulk==2.0.1
-requests==2.23.0
+requests==2.24.0
 requests-oauthlib==1.3.0
 schema==0.7.2
 selectors2==2.0.2 ; python_version < '3.4'
-simplejson==3.17.0
+simplejson==3.17.2
 six==1.15.0
 smmap2==3.0.1
 soupsieve==1.9.6 # rq.filter: <2.0.0
@@ -57,7 +57,7 @@ tempora==1.14.1 # rq.filter: <2.0.0
 trans==2.1.0
 git+https://github.com/h3llrais3r/tvdb_api.git@1210df9dd5869ccc5b63149b1b80630310a14f40#egg=tvdb_api
 unidecode==1.1.1
-urllib3==1.25.9
+urllib3==1.25.10
 webencodings==0.5.1
 websocket-client==0.57.0
 ws4py==0.5.1
