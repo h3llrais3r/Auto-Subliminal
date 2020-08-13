@@ -8,7 +8,7 @@ beautifulsoup4==4.9.1 # different package for py2 and py3
 boto==2.49.0
 certifi==2020.4.5.2
 chardet==3.0.4
-cheroot==8.3.0
+cheroot==8.4.4
 cherrypy==17.4.2 # rq.filter: <18.0.0
 click==7.1.2
 configparser==4.0.2 # rq.filter: <5.0.0
