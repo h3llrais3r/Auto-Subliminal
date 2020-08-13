@@ -42,6 +42,12 @@
       },
       {
         "packageNames": [
+          "dogpile.cache"
+        ],
+        "allowedVersions": "<1.0.0"
+      },
+      {
+        "packageNames": [
           "gitdb2"
         ],
         "allowedVersions": "<3.0.0"
@@ -63,6 +69,12 @@
           "more-itertools"
         ],
         "allowedVersions": "<6.0.0"
+      },
+      {
+        "packageNames": [
+          "rarfile"
+        ],
+        "allowedVersions": "<3.2"
       },
       {
         "packageNames": [
