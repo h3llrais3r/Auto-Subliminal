@@ -73,6 +73,8 @@ import time
 import traceback as traceback_
 import logging
 import platform
+import contextlib
+import threading
 
 try:
     from functools import lru_cache
@@ -1157,6 +1159,12 @@ class HTTPRequest:
                     # Closing the conn is the only way to determine len.
                     self.close_connection = True
 
+        # Override the decision to not close the connection if the connection
+        # manager doesn't have space for it.
+        if not self.close_connection:
+            can_keep = self.server.connections.can_add_keepalive_connection
+            self.close_connection = not can_keep
+
         if b'connection' not in hkeys:
             if self.response_protocol == 'HTTP/1.1':
                 # Both server and client are HTTP/1.1 or better
@@ -1166,6 +1174,12 @@ class HTTPRequest:
                 # Server and/or client are HTTP/1.0
                 if not self.close_connection:
                     self.outheaders.append((b'Connection', b'Keep-Alive'))
+
+        if (b'Connection', b'Keep-Alive') in self.outheaders:
+            self.outheaders.append((
+                b'Keep-Alive',
+                u'timeout={}'.format(self.server.timeout).encode('ISO-8859-1'),
+            ))
 
         if (not self.close_connection) and (not self.chunked_read):
             # Read any remaining request body data on the socket.
@@ -1217,9 +1231,7 @@ class HTTPConnection:
     peercreds_resolve_enabled = False
 
     # Fields set by ConnectionManager.
-    closeable = False
     last_used = None
-    ready_with_data = False
 
     def __init__(self, server, sock, makefile=MakeFile):
         """Initialize HTTPConnection instance.
@@ -1573,7 +1585,7 @@ class HTTPServer:
         self.requests = threadpool.ThreadPool(
             self, min=minthreads or 1, max=maxthreads,
         )
-        self.connections = connections.ConnectionManager(self)
+        self.serving = False
 
         if not server_name:
             server_name = self.version
@@ -1612,12 +1624,16 @@ class HTTPServer:
                 [w['Work Time'](w) for w in s['Worker Threads'].values()], 0,
             ),
             'Read Throughput': lambda s: (not s['Enabled']) and -1 or sum(
-                [w['Bytes Read'](w) / (w['Work Time'](w) or 1e-6)
-                 for w in s['Worker Threads'].values()], 0,
+                [
+                    w['Bytes Read'](w) / (w['Work Time'](w) or 1e-6)
+                    for w in s['Worker Threads'].values()
+                ], 0,
             ),
             'Write Throughput': lambda s: (not s['Enabled']) and -1 or sum(
-                [w['Bytes Written'](w) / (w['Work Time'](w) or 1e-6)
-                 for w in s['Worker Threads'].values()], 0,
+                [
+                    w['Bytes Written'](w) / (w['Work Time'](w) or 1e-6)
+                    for w in s['Worker Threads'].values()
+                ], 0,
             ),
             'Worker Threads': {},
         }
@@ -1763,6 +1779,8 @@ class HTTPServer:
         self.socket.settimeout(1)
         self.socket.listen(self.request_queue_size)
 
+        self.connections = connections.ConnectionManager(self)
+
         # Create worker threads
         self.requests.start()
 
@@ -1771,6 +1789,7 @@ class HTTPServer:
 
     def serve(self):
         """Serve requests, after invoking :func:`prepare()`."""
+        self.serving = True
         while self.ready:
             try:
                 self.tick()
@@ -1782,12 +1801,7 @@ class HTTPServer:
                     traceback=True,
                 )
 
-            if self.interrupt:
-                while self.interrupt is True:
-                    # Wait for self.stop() to complete. See _set_interrupt.
-                    time.sleep(0.1)
-                if self.interrupt:
-                    raise self.interrupt
+        self.serving = False
 
     def start(self):
         """Run the server forever.
@@ -1800,6 +1814,18 @@ class HTTPServer:
         # trap those exceptions in whatever code block calls start().
         self.prepare()
         self.serve()
+
+    @contextlib.contextmanager
+    def _run_in_thread(self):
+        """Context manager for running this server in a thread."""
+        self.prepare()
+        thread = threading.Thread(target=self.serve)
+        thread.setDaemon(True)
+        thread.start()
+        try:
+            yield thread
+        finally:
+            self.stop()
 
     def error_log(self, msg='', level=20, traceback=False):
         """Write error message to log.
@@ -1993,10 +2019,7 @@ class HTTPServer:
 
     def tick(self):
         """Accept a new connection and put it on the Queue."""
-        if not self.ready:
-            return
-
-        conn = self.connections.get_conn(self.socket)
+        conn = self.connections.get_conn()
         if conn:
             try:
                 self.requests.put(conn)
@@ -2017,6 +2040,8 @@ class HTTPServer:
         self._interrupt = True
         self.stop()
         self._interrupt = interrupt
+        if self._interrupt:
+            raise self.interrupt
 
     def stop(self):
         """Gracefully shutdown a server that is serving forever."""
@@ -2024,6 +2049,10 @@ class HTTPServer:
         if self._start_time is not None:
             self._run_time += (time.time() - self._start_time)
         self._start_time = None
+
+        # ensure serve is no longer accessing socket, connections
+        while self.serving:
+            time.sleep(0.1)
 
         sock = getattr(self, 'socket', None)
         if sock:
@@ -2114,7 +2143,9 @@ def get_ssl_adapter_class(name='builtin'):
         try:
             adapter = getattr(mod, attr_name)
         except AttributeError:
-            raise AttributeError("'%s' object has no attribute '%s'"
-                                 % (mod_path, attr_name))
+            raise AttributeError(
+                "'%s' object has no attribute '%s'"
+                % (mod_path, attr_name),
+            )
 
     return adapter
