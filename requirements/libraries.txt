@@ -15,7 +15,7 @@ configparser==4.0.2 # rq.filter: <5.0.0
 contextlib2=0.5.5
 deathbycaptcha=0.1.1
 decorator==4.4.2
-diskcache==4.1.0
+diskcache==5.0.2
 dogpile.cache==0.9.2 # rq.filter: <1.0.0
 enzyme==0.4.1
 futures==3.3.0 ; python_version < '3.0'
