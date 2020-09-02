@@ -119,10 +119,7 @@ class Gateway(server.Gateway):
                 corresponding class
 
         """
-        return dict(
-            (gw.version, gw)
-            for gw in cls.__subclasses__()
-        )
+        return {gw.version: gw for gw in cls.__subclasses__()}
 
     def get_environ(self):
         """Return a new environ dict targeting the given wsgi.version."""
@@ -300,7 +297,11 @@ class Gateway_10(Gateway):
 
         # Request headers
         env.update(
-            ('HTTP_{!s}'.format(bton(k).upper().replace('-', '_')), bton(v))
+            (
+                'HTTP_{header_name!s}'.
+                format(header_name=bton(k).upper().replace('-', '_')),
+                bton(v),
+            )
             for k, v in req.inheaders.items()
         )
 

@@ -181,7 +181,7 @@ class HeaderReader:
     Interface and default implementation.
     """
 
-    def __call__(self, rfile, hdict=None):
+    def __call__(self, rfile, hdict=None):  # noqa: C901  # FIXME
         """
         Read headers from the given stream into the given header dict.
 
@@ -726,7 +726,7 @@ class HTTPRequest:
 
         self.ready = True
 
-    def read_request_line(self):
+    def read_request_line(self):  # noqa: C901  # FIXME
         """Read and parse first line of the HTTP request.
 
         Returns:
@@ -957,7 +957,7 @@ class HTTPRequest:
 
         return True
 
-    def read_request_headers(self):
+    def read_request_headers(self):  # noqa: C901  # FIXME
         """Read ``self.rfile`` into ``self.inheaders``.
 
         Ref: :py:attr:`self.inheaders <HTTPRequest.outheaders>`.
@@ -1128,7 +1128,7 @@ class HTTPRequest:
         else:
             self.conn.wfile.write(chunk)
 
-    def send_headers(self):
+    def send_headers(self):  # noqa: C901  # FIXME
         """Assert, process, and send the HTTP response message-headers.
 
         You must set ``self.status``, and :py:attr:`self.outheaders
@@ -1162,7 +1162,7 @@ class HTTPRequest:
         # Override the decision to not close the connection if the connection
         # manager doesn't have space for it.
         if not self.close_connection:
-            can_keep = self.server.connections.can_add_keepalive_connection
+            can_keep = self.server.can_add_keepalive_connection
             self.close_connection = not can_keep
 
         if b'connection' not in hkeys:
@@ -1178,7 +1178,9 @@ class HTTPRequest:
         if (b'Connection', b'Keep-Alive') in self.outheaders:
             self.outheaders.append((
                 b'Keep-Alive',
-                u'timeout={}'.format(self.server.timeout).encode('ISO-8859-1'),
+                u'timeout={connection_timeout}'.
+                format(connection_timeout=self.server.timeout).
+                encode('ISO-8859-1'),
             ))
 
         if (not self.close_connection) and (not self.chunked_read):
@@ -1260,7 +1262,7 @@ class HTTPConnection:
             lru_cache(maxsize=1)(self.get_peer_creds)
         )
 
-    def communicate(self):
+    def communicate(self):  # noqa: C901  # FIXME
         """Read each request and respond appropriately.
 
         Returns true if the connection should be kept open.
@@ -1611,29 +1613,29 @@ class HTTPServer:
             'Threads Idle': lambda s: getattr(self.requests, 'idle', None),
             'Socket Errors': 0,
             'Requests': lambda s: (not s['Enabled']) and -1 or sum(
-                [w['Requests'](w) for w in s['Worker Threads'].values()], 0,
+                (w['Requests'](w) for w in s['Worker Threads'].values()), 0,
             ),
             'Bytes Read': lambda s: (not s['Enabled']) and -1 or sum(
-                [w['Bytes Read'](w) for w in s['Worker Threads'].values()], 0,
+                (w['Bytes Read'](w) for w in s['Worker Threads'].values()), 0,
             ),
             'Bytes Written': lambda s: (not s['Enabled']) and -1 or sum(
-                [w['Bytes Written'](w) for w in s['Worker Threads'].values()],
+                (w['Bytes Written'](w) for w in s['Worker Threads'].values()),
                 0,
             ),
             'Work Time': lambda s: (not s['Enabled']) and -1 or sum(
-                [w['Work Time'](w) for w in s['Worker Threads'].values()], 0,
+                (w['Work Time'](w) for w in s['Worker Threads'].values()), 0,
             ),
             'Read Throughput': lambda s: (not s['Enabled']) and -1 or sum(
-                [
+                (
                     w['Bytes Read'](w) / (w['Work Time'](w) or 1e-6)
                     for w in s['Worker Threads'].values()
-                ], 0,
+                ), 0,
             ),
             'Write Throughput': lambda s: (not s['Enabled']) and -1 or sum(
-                [
+                (
                     w['Bytes Written'](w) / (w['Work Time'](w) or 1e-6)
                     for w in s['Worker Threads'].values()
-                ], 0,
+                ), 0,
             ),
             'Worker Threads': {},
         }
@@ -1717,7 +1719,7 @@ class HTTPServer:
             self.stop()
             raise
 
-    def prepare(self):
+    def prepare(self):  # noqa: C901  # FIXME
         """Prepare server to serving requests.
 
         It binds a socket's port, setups the socket to ``listen()`` and does
@@ -1779,7 +1781,8 @@ class HTTPServer:
         self.socket.settimeout(1)
         self.socket.listen(self.request_queue_size)
 
-        self.connections = connections.ConnectionManager(self)
+        # must not be accessed once stop() has been called
+        self._connections = connections.ConnectionManager(self)
 
         # Create worker threads
         self.requests.start()
@@ -1827,6 +1830,19 @@ class HTTPServer:
         finally:
             self.stop()
 
+    @property
+    def can_add_keepalive_connection(self):
+        """Flag whether it is allowed to add a new keep-alive connection."""
+        return self.ready and self._connections.can_add_keepalive_connection
+
+    def put_conn(self, conn):
+        """Put an idle connection back into the ConnectionManager."""
+        if self.ready:
+            self._connections.put(conn)
+        else:
+            # server is shutting down, just close it
+            conn.close()
+
     def error_log(self, msg='', level=20, traceback=False):
         """Write error message to log.
 
@@ -1854,7 +1870,7 @@ class HTTPServer:
         self.bind_addr = self.resolve_real_bind_addr(sock)
         return sock
 
-    def bind_unix_socket(self, bind_addr):
+    def bind_unix_socket(self, bind_addr):  # noqa: C901  # FIXME
         """Create (or recreate) a UNIX socket object."""
         if IS_WINDOWS:
             """
@@ -2019,7 +2035,7 @@ class HTTPServer:
 
     def tick(self):
         """Accept a new connection and put it on the Queue."""
-        conn = self.connections.get_conn()
+        conn = self._connections.get_conn()
         if conn:
             try:
                 self.requests.put(conn)
@@ -2027,7 +2043,7 @@ class HTTPServer:
                 # Just drop the conn. TODO: write 503 back?
                 conn.close()
 
-        self.connections.expire()
+        self._connections.expire()
 
     @property
     def interrupt(self):
@@ -2043,7 +2059,7 @@ class HTTPServer:
         if self._interrupt:
             raise self.interrupt
 
-    def stop(self):
+    def stop(self):  # noqa: C901  # FIXME
         """Gracefully shutdown a server that is serving forever."""
         self.ready = False
         if self._start_time is not None:
@@ -2095,7 +2111,7 @@ class HTTPServer:
                 sock.close()
             self.socket = None
 
-        self.connections.close()
+        self._connections.close()
         self.requests.stop(self.shutdown_timeout)
 
 
