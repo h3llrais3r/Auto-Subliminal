@@ -17434,7 +17434,8 @@ return jQuery.tablesorter;}));
     'use strict';
 
     var messages = {},
-        lastUid = -1;
+        lastUid = -1,
+        ALL_SUBSCRIBING_MSG = '*';
 
     function hasKeys(obj){
         var key;
@@ -17501,18 +17502,27 @@ return jQuery.tablesorter;}));
                 position = topic.lastIndexOf('.');
                 deliverMessage( message, topic, data, immediateExceptions );
             }
+
+            deliverMessage(message, ALL_SUBSCRIBING_MSG, data, immediateExceptions);
         };
+    }
+
+    function hasDirectSubscribersFor( message ) {
+        var topic = String( message ),
+            found = Boolean(messages.hasOwnProperty( topic ) && hasKeys(messages[topic]));
+
+        return found;
     }
 
     function messageHasSubscribers( message ){
         var topic = String( message ),
-            found = Boolean(messages.hasOwnProperty( topic ) && hasKeys(messages[topic])),
+            found = hasDirectSubscribersFor(topic) || hasDirectSubscribersFor(ALL_SUBSCRIBING_MSG),
             position = topic.lastIndexOf( '.' );
 
         while ( !found && position !== -1 ){
             topic = topic.substr( 0, position );
             position = topic.lastIndexOf( '.' );
-            found = Boolean(messages.hasOwnProperty( topic ) && hasKeys(messages[topic]));
+            found = hasDirectSubscribersFor(topic);
         }
 
         return found;
@@ -17587,6 +17597,10 @@ return jQuery.tablesorter;}));
         
         // return token for unsubscribing
         return token;
+    };
+
+    PubSub.subscribeAll = function( func ){
+        return PubSub.subscribe(ALL_SUBSCRIBING_MSG, func);
     };
 
     /**
