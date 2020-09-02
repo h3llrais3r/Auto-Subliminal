@@ -35,7 +35,7 @@
     "jquery-countdown": "2.2.0",
     "jquery-hoverintent": "1.10.1",
     "pnotify": "5.1.2",
-    "pubsub-js": "1.8.0",
+    "pubsub-js": "1.9.0",
     "strftime": "0.10.0",
     "tablesorter": "2.31.3",
     "vue": "2.6.12",
