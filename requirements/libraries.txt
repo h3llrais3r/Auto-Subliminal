@@ -1,7 +1,7 @@
 # Mandatory (packaged) libraries
 aenum==2.2.4
 appdirs==1.4.4
-attrs==20.1.0
+attrs==20.2.0
 babelfish==0.5.5
 backports.functools_lru_cache=1.5 ; python_version < '3.0'
 beautifulsoup4==4.9.1 # different package for py2 and py3
