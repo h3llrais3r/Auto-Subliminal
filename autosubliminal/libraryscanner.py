@@ -3,8 +3,6 @@
 import logging
 import os
 
-from tvdb_api.utils.artwork import get_artwork_url
-
 import autosubliminal
 from autosubliminal.core.cache import cache_artwork, is_artwork_cached
 from autosubliminal.core.movie import MovieSettings
@@ -137,22 +135,26 @@ class LibraryPathScanner(object):
                 if show_details:
                     # Poster
                     if show_details.poster:
-                        if not is_artwork_cached(self.show_indexer.name, show_details.tvdb_id, 'poster'):
-                            cache_artwork(self.show_indexer.name, show_details.tvdb_id, 'poster',
-                                          get_artwork_url(show_details.poster))
-                        if not is_artwork_cached(self.show_indexer.name, show_details.tvdb_id, 'poster',
+                        artwork_type = 'poster'
+                        if not is_artwork_cached(self.show_indexer.name, show_details.tvdb_id, artwork_type):
+                            artwork_url = show_details.get_artwork_url(artwork_type, thumbnail=False)
+                            cache_artwork(self.show_indexer.name, show_details.tvdb_id, artwork_type, artwork_url)
+                        if not is_artwork_cached(self.show_indexer.name, show_details.tvdb_id, artwork_type,
                                                  thumbnail=True):
-                            cache_artwork(self.show_indexer.name, show_details.tvdb_id, 'poster',
-                                          get_artwork_url(show_details.poster, thumbnail=True), thumbnail=True)
+                            artwork_url = show_details.get_artwork_url(artwork_type, thumbnail=True)
+                            cache_artwork(self.show_indexer.name, show_details.tvdb_id, artwork_type, artwork_url,
+                                          thumbnail=True)
                     # Banner
                     if show_details.banner:
-                        if not is_artwork_cached(self.show_indexer.name, show_details.tvdb_id, 'banner'):
-                            cache_artwork(self.show_indexer.name, show_details.tvdb_id, 'banner',
-                                          get_artwork_url(show_details.banner))
-                        if not is_artwork_cached(self.show_indexer.name, show_details.tvdb_id, 'banner',
+                        artwork_type = 'banner'
+                        if not is_artwork_cached(self.show_indexer.name, show_details.tvdb_id, artwork_type):
+                            artwork_url = show_details.get_artwork_url(artwork_type, thumbnail=False)
+                            cache_artwork(self.show_indexer.name, show_details.tvdb_id, artwork_type, artwork_url)
+                        if not is_artwork_cached(self.show_indexer.name, show_details.tvdb_id, artwork_type,
                                                  thumbnail=True):
-                            cache_artwork(self.show_indexer.name, show_details.tvdb_id, 'banner',
-                                          get_artwork_url(show_details.banner, thumbnail=True), thumbnail=True)
+                            artwork_url = show_details.get_artwork_url(artwork_type, thumbnail=True)
+                            cache_artwork(self.show_indexer.name, show_details.tvdb_id, artwork_type, artwork_url,
+                                          thumbnail=True)
 
                 # Check episode details
                 if isinstance(wanted_item.episode, list):
@@ -194,13 +196,14 @@ class LibraryPathScanner(object):
                 if movie_details:
                     # Poster
                     if movie_details.poster:
-                        if not is_artwork_cached(self.movie_indexer.name, movie_details.imdb_id, 'poster'):
-                            cache_artwork(self.movie_indexer.name, movie_details.imdb_id, 'poster',
-                                          movie_details.poster)
-                        if not is_artwork_cached(self.movie_indexer.name, movie_details.imdb_id, 'poster',
+                        artwork_type = 'poster'
+                        if not is_artwork_cached(self.movie_indexer.name, movie_details.imdb_id, artwork_type):
+                            artwork_url = movie_details.get_artwork_url(artwork_type, thumbnail=False)
+                            cache_artwork(self.movie_indexer.name, movie_details.imdb_id, artwork_type, artwork_url)
+                        if not is_artwork_cached(self.movie_indexer.name, movie_details.imdb_id, artwork_type,
                                                  thumbnail=True):
-                            cache_artwork(self.movie_indexer.name, movie_details.imdb_id, 'poster',
-                                          self.movie_indexer.get_artwork_thumbnail_url(movie_details.poster),
+                            artwork_url = movie_details.get_artwork_url(artwork_type, thumbnail=True)
+                            cache_artwork(self.movie_indexer.name, movie_details.imdb_id, artwork_type, artwork_url,
                                           thumbnail=True)
 
                 # Check movie details

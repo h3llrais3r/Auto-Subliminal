@@ -109,6 +109,22 @@ def test_get_show_episode():
     assert episode.episode == 1
 
 
+def test_get_show_artwork_url():
+    # Same test as in test_show.py but now with real data from show indexer
+    url_poster = 'https://www.thetvdb.com/banners/posters/80379-18.jpg'
+    url_poster_thumb = 'https://www.thetvdb.com/banners/_cache/posters/80379-18.jpg'
+    url_banner = 'https://www.thetvdb.com/banners/graphical/80379-g13.jpg'
+    url_banner_thumb = 'https://www.thetvdb.com/banners/_cache/graphical/80379-g13.jpg'
+    indexer = ShowIndexer()
+    show_details = indexer.get_show_details(80379)
+    assert show_details.get_artwork_url('poster', thumbnail=False) == url_poster
+    assert show_details.get_artwork_url('poster', thumbnail=True) == url_poster_thumb
+    assert show_details.get_artwork_url('banner', thumbnail=False) == url_banner
+    assert show_details.get_artwork_url('banner', thumbnail=True) == url_banner_thumb
+    assert show_details.get_artwork_url('unknown', thumbnail=False) is None
+    assert show_details.get_artwork_url('unknown', thumbnail=True) is None
+
+
 def test_get_imdb_id():
     indexer = MovieIndexer()
     # By title
@@ -188,9 +204,13 @@ def test_sanitize_imdb_title():
     assert MovieIndexer.sanitize_imdb_title(u'The King is Dead!') == 'the king is dead'
 
 
-def test_get_artwork_thumbnail_url():
-    url = 'https://m.media-amazon.com/images/M/MV5BMjI1MTcwODk0MV5BMl5BanBnXkFtZTgwMTgwMDM5NTE@._V1.jpg'
-    url_ = 'https://m.media-amazon.com/images/M/MV5BMjI1MTcwODk0MV5BMl5BanBnXkFtZTgwMTgwMDM5NTE@._V1_.jpg'
+def test_get_movie_artwork_url():
+    # Same test as in test_movie.py but now with real data from movie indexer
+    url = 'https://m.media-amazon.com/images/M/MV5BMjI1MTcwODk0MV5BMl5BanBnXkFtZTgwMTgwMDM5NTE@._V1_.jpg'
     url_thumb = 'https://m.media-amazon.com/images/M/MV5BMjI1MTcwODk0MV5BMl5BanBnXkFtZTgwMTgwMDM5NTE@._V1_SX300.jpg'
-    assert MovieIndexer.get_artwork_thumbnail_url(url) == url_thumb
-    assert MovieIndexer.get_artwork_thumbnail_url(url_) == url_thumb
+    indexer = MovieIndexer()
+    movie_details = indexer.get_movie_details('tt1798684')
+    assert movie_details.get_artwork_url('poster', thumbnail=False) == url
+    assert movie_details.get_artwork_url('poster', thumbnail=True) == url_thumb
+    assert movie_details.get_artwork_url('banner', thumbnail=False) is None  # banner not available
+    assert movie_details.get_artwork_url('banner', thumbnail=True) is None  # banner not available

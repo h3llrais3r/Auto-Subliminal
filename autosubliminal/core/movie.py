@@ -4,6 +4,7 @@ import logging
 import os
 
 from imdbpie.objects import Title
+from six.moves.urllib.parse import urlparse, urlunparse
 
 import autosubliminal
 from autosubliminal.util.common import get_wanted_languages, to_dict, to_list, to_obj
@@ -27,6 +28,37 @@ class MovieDetails(object):
         self.poster = poster
         self.missing_languages = missing_languages or []
         self.subtitles = subtitles or []
+
+    def get_artwork_url(self, artwork_type, thumbnail=False):
+        """Get the actual artwork url for download.
+
+        Returns the url of the full size artwork or the thumbnail version.
+        :param artwork_type: the artwork type
+        :type artwork_type: str
+        :param thumbnail: the indication to return the thumbnail version or not
+        :type thumbnail: bool
+        :return: the full artwork url
+        :rtype: str or None
+        """
+        artwork_url = None
+        artwork_name = getattr(self, artwork_type) if hasattr(self, artwork_type)else None
+        if artwork_name:
+            if thumbnail:
+                # Parse url (artwork name is already an url)
+                parsed_parts = urlparse(artwork_name)
+
+                # Reconstruct url but now with thumbnail suffix included
+                if parsed_parts.path:
+                    name, ext = os.path.splitext(parsed_parts.path)
+                    if not name.endswith('_'):
+                        name += '_'
+                    thumbnail_parts = parsed_parts._replace(path=name + 'SX300' + ext)
+                    artwork_url = urlunparse(thumbnail_parts)
+            else:
+                # Artwork name is already an url
+                artwork_url = artwork_name
+
+        return artwork_url
 
     def set_attr(self, key, value):
         """Set an attribute.

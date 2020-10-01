@@ -2,7 +2,6 @@
 
 import abc
 import logging
-import os
 import re
 from functools import wraps
 from time import time
@@ -11,7 +10,6 @@ from imdbpie import Imdb
 from imdbpie.facade import ImdbFacade
 from imdbpie.objects import TitleSearchResult
 from six import add_metaclass, text_type
-from six.moves.urllib.parse import urlparse, urlunparse
 from tvdb_api.client import TvdbClient
 from unidecode import unidecode
 
@@ -394,19 +392,3 @@ class MovieIndexer(Indexer):
 
         # Return sanitized title
         return sanitize(string_value, ignore_characters)
-
-    @staticmethod
-    def get_artwork_thumbnail_url(artwork_url):
-        if artwork_url:
-            # Parse url
-            parsed_parts = urlparse(artwork_url)
-
-            # Reconstruct url but now with thumbnail suffix included
-            if parsed_parts.path:
-                name, ext = os.path.splitext(parsed_parts.path)
-                if not name.endswith('_'):
-                    name += '_'
-                thumbnail_parts = parsed_parts._replace(path=name + 'SX300' + ext)
-                return urlunparse(thumbnail_parts)
-
-        return None

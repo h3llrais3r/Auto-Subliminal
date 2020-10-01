@@ -7,6 +7,7 @@ from tvdb_api.models.episode import Episode
 from tvdb_api.models.series import Series
 from tvdb_api.models.series_image_query_result import SeriesImageQueryResult
 from tvdb_api.models.series_search_result import SeriesSearchResult
+from tvdb_api.utils.artwork import get_artwork_url
 
 import autosubliminal
 from autosubliminal.util.common import get_wanted_languages, to_dict, to_list, to_obj
@@ -28,6 +29,24 @@ class ShowDetails(object):
         self.overview = overview
         self.poster = poster
         self.banner = banner
+
+    def get_artwork_url(self, artwork_type, thumbnail=False):
+        """Get the actual artwork url for download.
+
+        Returns the url of the full size artwork or the thumbnail version.
+        :param artwork_type: the artwork type
+        :type artwork_type: str
+        :param thumbnail: the indication to return the thumbnail version or not
+        :type thumbnail: bool
+        :return: the full artwork url
+        :rtype: str or None
+        """
+        artwork_url = None
+        artwork_name = getattr(self, artwork_type) if hasattr(self, artwork_type) else None
+        if artwork_name:
+            artwork_url = get_artwork_url(artwork_name, thumbnail=thumbnail)
+
+        return artwork_url
 
     def set_attr(self, key, value):
         """Set an attribute.
