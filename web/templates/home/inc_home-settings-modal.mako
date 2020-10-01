@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="settings-poster-container">
-                                <img class="settings-poster-image" :src="posterThumbnailUrl + indexerId" @error="setPosterPlaceholderUrl($event)">
+                                <img class="settings-poster-image" :src="posterThumbnailUrl + indexerId" @error="setPosterPlaceholderUrl($event)" :id="'settings-poster-image-' + indexerId">
                             </div>
                             <div class="settings-info-container">
                                 <div class="col-xs-12 settings-info-title">
