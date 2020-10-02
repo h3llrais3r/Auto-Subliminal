@@ -26,8 +26,8 @@
             data: function () {
                 return {
                     shows: [],
-                    bannerThumbnailUrl: autosubliminal.getUrl('/artwork/tvdb/banner/thumbnail/'),
-                    posterThumbnailUrl: autosubliminal.getUrl('/artwork/tvdb/poster/thumbnail/')
+                    bannerPlaceholderUrl: autosubliminal.vue.getBannerPlaceholderUrl(),
+                    posterPlaceholderUrl: autosubliminal.vue.getPosterPlaceholderUrl()
                 };
             },
             created: function () {
@@ -101,6 +101,12 @@
                         $(this).prev('input').val('').focus();
                         $.tablesorter.storage($('#shows'), 'tablesorter-filters', '');
                     });
+                },
+                getShowBannerThumbnailUrl: function (tvdbId) {
+                    return autosubliminal.getUrl(`/artwork/tvdb/banner/thumbnail/${tvdbId}`);
+                },
+                getShowPosterThumbnailUrl: function (tvdbId) {
+                    return autosubliminal.getUrl(`/artwork/tvdb/poster/thumbnail/${tvdbId}`);
                 },
                 getShowDetailsUrl: function (tvdbId) {
                     return autosubliminal.getUrl(`/library/shows/${tvdbId}`);

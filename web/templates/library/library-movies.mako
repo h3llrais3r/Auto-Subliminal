@@ -72,9 +72,9 @@
                         <tr v-for="movie in movies" :id="movie.imdb_id">
                             <td>
                                 <div class="title-poster-container">
-                                    <div class="title-poster-cell">
+                                    <div class="title-poster-cell" v-lazy-container>
                                         <a :href="getMovieDetailsUrl(movie.imdb_id)" :title="movie.title">
-                                            <img v-if="movie.poster" v-lazy="posterThumbnailUrl" :data-srcset="posterThumbnailUrl + movie.imdb_id" class="title-poster-image">
+                                            <img v-if="movie.poster" class="title-poster-image" :data-src="getMoviePosterThumbnailUrl(movie.imdb_id)" :data-loading="posterPlaceholderUrl" :data-error="posterPlaceholderUrl">
                                         </a>
                                     </div>
                                     <div class="title-poster-cell">

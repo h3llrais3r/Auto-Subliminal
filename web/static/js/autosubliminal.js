@@ -331,8 +331,16 @@ var autosubliminal = {
     autosubliminal.websockets.sendWebsocketMessage(JSON.stringify(event));
   };
 
-  autosubliminal.vue.setPosterPlaceholderUrl = function (event) {
-    event.target.src = autosubliminal.getUrl('/images/poster-placeholder.jpg');
+  autosubliminal.vue.getBannerPlaceholderUrl = function () {
+    return autosubliminal.getUrl('/images/banner-placeholder.jpg');
+  };
+
+  autosubliminal.vue.getPosterPlaceholderUrl = function () {
+    return autosubliminal.getUrl('/images/poster-placeholder.jpg');
+  };
+
+  autosubliminal.vue.getPosterLoadingUrl = function () {
+    return autosubliminal.getUrl('/images/poster-loading.jpg');
   };
 
   autosubliminal.vue.styleProgressBar = function (progressPercentage) {

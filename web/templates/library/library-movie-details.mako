@@ -47,9 +47,9 @@
                         <div class="details-container">
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <div class="details-poster-container">
-                                        <a :href="posterFullSizeUrl + movie.imdb_id" target="_blank">
-                                            <img class="details-poster-image" :src="posterThumbnailUrl + movie.imdb_id" @error="setPosterPlaceholderUrl($event)">
+                                    <div class="details-poster-container" v-lazy-container>
+                                        <a :href="moviePosterFullSizeUrl" target="_blank">
+                                            <img class="details-poster-image" :data-src="moviePosterThumbnailUrl" :data-loading="posterPlaceholderUrl" :data-error="posterPlaceholderUrl">
                                         </a>
                                     </div>
                                     <div class="details-info-container">

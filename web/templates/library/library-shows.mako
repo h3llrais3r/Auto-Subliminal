@@ -71,9 +71,11 @@
                         </tr>
                         <tr v-for="show in shows" :id="show.tvdb_id">
                             <td>
-                                <a :href="getShowDetailsUrl(show.tvdb_id)" :title="show.title">
-                                    <img v-if="show.banner" v-lazy="bannerThumbnailUrl" :data-srcset="bannerThumbnailUrl + show.tvdb_id" class="title-banner-image">
-                                </a>
+                                <div class="title-banner-container" v-lazy-container>
+                                    <a :href="getShowDetailsUrl(show.tvdb_id)" :title="show.title">
+                                        <img v-if="show.banner" class="title-banner-image" :data-src="getShowBannerThumbnailUrl(show.tvdb_id)" :data-loading="bannerPlaceholderUrl" :data-error="bannerPlaceholderUrl">
+                                    </a>
+                                </div>
                             </td>
                             <td>{{ show.year }}</td>
                             <td class="wrapped">

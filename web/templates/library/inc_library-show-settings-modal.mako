@@ -13,8 +13,8 @@
                 <div class="settings-container">
                     <div class="row">
                         <div class="col-xs-12">
-                            <div class="settings-poster-container">
-                                <img class="settings-poster-image" :src="posterThumbnailUrl + show.tvdb_id" @error="setPosterPlaceholderUrl($event)" :id="'settings-poster-image-' + show.tvdb_id">
+                            <div class="settings-poster-container" v-lazy-container>
+                                <img class="settings-poster-image" :data-src="showPosterThumbnailUrl" :data-loading="posterPlaceholderUrl" :data-error="posterPlaceholderUrl">
                             </div>
                             <div class="settings-info-container">
                                 <div class="col-xs-12 settings-info-title">

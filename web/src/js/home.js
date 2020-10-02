@@ -24,6 +24,7 @@
             },
             data: function () {
                 return {
+                    posterPlaceholderUrl: autosubliminal.vue.getPosterPlaceholderUrl(),
                     languages: autosubliminal.LANGUAGES,
                     wantedLanguages: []
                 };
@@ -37,7 +38,7 @@
                     } else if (self.type == autosubliminal.MOVIE_TYPE) {
                         indexer = 'imdb';
                     }
-                    return autosubliminal.getUrl(`/artwork/${indexer}/poster/thumbnail/`);
+                    return autosubliminal.getUrl(`/artwork/${indexer}/poster/thumbnail/${self.indexerId}`);
                 }
             },
             watch: {
@@ -60,7 +61,6 @@
                 autosubliminal.keepDropdownsOpen();
             },
             methods: {
-                setPosterPlaceholderUrl: autosubliminal.vue.setPosterPlaceholderUrl,
                 getLanguages: autosubliminal.convertToLanguages,
                 getLanguageCodes: autosubliminal.convertToLanguageCodes,
                 saveSettings: function (event) {
@@ -85,6 +85,7 @@
 
         // Init vue components
         window.Vue.component('multiselect', window.VueMultiselect.default);
+        window.Vue.use(window.VueLazyload);
 
         // Init vue app
         new window.Vue({
@@ -308,6 +309,10 @@
                             }
                         });
                         return false;
+                    });
+                    $('#settingsModal').on('hidden.bs.modal', function () {
+                        // Needed to remove the previous src url to prevent temporary view of previous image
+                        $(this).find('#settingsPosterImage').attr('src', autosubliminal.vue.getPosterPlaceholderUrl());
                     });
                 },
                 openSettingsModal: function (event, type, indexerId, title) {

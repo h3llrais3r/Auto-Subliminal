@@ -11,7 +11,7 @@
       data: function data() {
         return {
           movies: [],
-          posterThumbnailUrl: autosubliminal.getUrl('/artwork/imdb/poster/thumbnail/')
+          posterPlaceholderUrl: autosubliminal.vue.getPosterPlaceholderUrl()
         };
       },
       created: function created() {},
@@ -66,6 +66,9 @@
             $(this).prev('input').val('').focus();
             $.tablesorter.storage($('#movies'), 'tablesorter-filters', '');
           });
+        },
+        getMoviePosterThumbnailUrl: function getMoviePosterThumbnailUrl(imdbId) {
+          return autosubliminal.getUrl("/artwork/imdb/poster/thumbnail/".concat(imdbId));
         },
         getMovieDetailsUrl: function getMovieDetailsUrl(imdbId) {
           return autosubliminal.getUrl("/library/movies/".concat(imdbId));

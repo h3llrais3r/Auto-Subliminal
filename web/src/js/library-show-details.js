@@ -27,8 +27,7 @@
                 return {
                     show: null,
                     tvdbUrl: autosubliminal.TVDB_URL,
-                    posterFullSizeUrl: autosubliminal.getUrl('/artwork/tvdb/poster/fullsize/'),
-                    posterThumbnailUrl: autosubliminal.getUrl('/artwork/tvdb/poster/thumbnail/'),
+                    posterPlaceholderUrl: autosubliminal.vue.getPosterPlaceholderUrl(),
                     languages: autosubliminal.LANGUAGES,
                     showSettings: null,
                     showSettingsWantedLanguages: [],
@@ -53,6 +52,14 @@
                 autosubliminal.vue.styleProgressBar(self.showProgressPercentage);
             },
             computed: {
+                showPosterThumbnailUrl: function () {
+                    const self = this;
+                    return autosubliminal.getUrl(`/artwork/tvdb/poster/thumbnail/${self.show.tvdb_id}`);
+                },
+                showPosterFullSizeUrl: function () {
+                    const self = this;
+                    return autosubliminal.getUrl(`/artwork/tvdb/poster/fullsize/${self.show.tvdb_id}`);
+                },
                 showProgressPercentage: function () {
                     const self = this;
                     return self.show.total_subtitles_available / self.show.total_subtitles_wanted * 100;
@@ -91,7 +98,6 @@
                         $('.loading').addClass('hidden');
                     });
                 },
-                setPosterPlaceholderUrl: autosubliminal.vue.setPosterPlaceholderUrl,
                 getPlayVideoUrl: autosubliminal.constructPlayVideoUrl,
                 getLanguages: autosubliminal.convertToLanguages,
                 getLanguageCodes: autosubliminal.convertToLanguageCodes,
@@ -233,6 +239,7 @@
 
         // Init vue components
         window.Vue.component('multiselect', window.VueMultiselect.default);
+        window.Vue.use(window.VueLazyload);
 
         // Init vue app
         new window.Vue({

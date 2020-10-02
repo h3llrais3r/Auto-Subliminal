@@ -12,8 +12,7 @@
         return {
           movie: null,
           imdbUrl: autosubliminal.IMDB_URL,
-          posterFullSizeUrl: autosubliminal.getUrl('/artwork/imdb/poster/fullsize/'),
-          posterThumbnailUrl: autosubliminal.getUrl('/artwork/imdb/poster/thumbnail/'),
+          posterPlaceholderUrl: autosubliminal.vue.getPosterPlaceholderUrl(),
           languages: autosubliminal.LANGUAGES,
           movieSettings: null,
           movieSettingsWantedLanguages: [],
@@ -33,6 +32,14 @@
         autosubliminal.vue.styleProgressBar(self.movieProgressPercentage);
       },
       computed: {
+        moviePosterThumbnailUrl: function moviePosterThumbnailUrl() {
+          var self = this;
+          return autosubliminal.getUrl("/artwork/imdb/poster/thumbnail/".concat(self.movie.imdb_id));
+        },
+        moviePosterFullSizeUrl: function moviePosterFullSizeUrl() {
+          var self = this;
+          return autosubliminal.getUrl("/artwork/imdb/poster/fullsize/".concat(self.movie.imdb_id));
+        },
         movieProgressPercentage: function movieProgressPercentage() {
           var self = this;
           return self.movie.total_subtitles_available / self.movie.total_subtitles_wanted * 100;
@@ -65,7 +72,6 @@
             $('.loading').addClass('hidden');
           });
         },
-        setPosterPlaceholderUrl: autosubliminal.vue.setPosterPlaceholderUrl,
         getPlayVideoUrl: autosubliminal.constructPlayVideoUrl,
         getLanguages: autosubliminal.convertToLanguages,
         getLanguageCodes: autosubliminal.convertToLanguageCodes,
@@ -150,6 +156,7 @@
       }
     });
     window.Vue.component('multiselect', window.VueMultiselect["default"]);
+    window.Vue.use(window.VueLazyload);
     new window.Vue({
       el: '#app'
     });

@@ -13,6 +13,7 @@
       },
       data: function data() {
         return {
+          posterPlaceholderUrl: autosubliminal.vue.getPosterPlaceholderUrl(),
           languages: autosubliminal.LANGUAGES,
           wantedLanguages: []
         };
@@ -28,7 +29,7 @@
             indexer = 'imdb';
           }
 
-          return autosubliminal.getUrl("/artwork/".concat(indexer, "/poster/thumbnail/"));
+          return autosubliminal.getUrl("/artwork/".concat(indexer, "/poster/thumbnail/").concat(self.indexerId));
         }
       },
       watch: {
@@ -46,7 +47,6 @@
         autosubliminal.keepDropdownsOpen();
       },
       methods: {
-        setPosterPlaceholderUrl: autosubliminal.vue.setPosterPlaceholderUrl,
         getLanguages: autosubliminal.convertToLanguages,
         getLanguageCodes: autosubliminal.convertToLanguageCodes,
         saveSettings: function saveSettings(event) {
@@ -69,6 +69,7 @@
       }
     });
     window.Vue.component('multiselect', window.VueMultiselect["default"]);
+    window.Vue.use(window.VueLazyload);
     new window.Vue({
       el: '#app',
       data: function data() {
@@ -231,6 +232,9 @@
               }
             });
             return false;
+          });
+          $('#settingsModal').on('hidden.bs.modal', function () {
+            $(this).find('#settingsPosterImage').attr('src', autosubliminal.vue.getPosterPlaceholderUrl());
           });
         },
         openSettingsModal: function openSettingsModal(event, type, indexerId, title) {
