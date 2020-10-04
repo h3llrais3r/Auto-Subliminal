@@ -11,23 +11,24 @@ from autosubliminal.indexer import ShowIndexer, MovieIndexer
 class Artwork(object):
     def __init__(self):
         self.artwork_types = ['banner', 'poster']
-        self.resolutions = ['fullsize', 'thumbnail']
+        self.artwork_resolutions = ['fullsize', 'thumbnail']
         self.show_indexer = ShowIndexer()
         self.movie_indexer = MovieIndexer()
 
     @cherrypy.expose(alias='tvdb')
-    def tvdb(self, artwork_type, resolution, tvdb_id):
-        return self._serve_artwork_image('tvdb', artwork_type, resolution, tvdb_id)
+    def tvdb(self, artwork_type, artwork_resolution, tvdb_id):
+        return self._serve_artwork_image('tvdb', artwork_type, artwork_resolution, tvdb_id)
 
     @cherrypy.expose(alias='imdb')
-    def imdb(self, artwork_type, resolution, imdb_id):
-        return self._serve_artwork_image('imdb', artwork_type, resolution, imdb_id)
+    def imdb(self, artwork_type, artwork_resolution, imdb_id):
+        return self._serve_artwork_image('imdb', artwork_type, artwork_resolution, imdb_id)
 
-    def _serve_artwork_image(self, indexer_name, artwork_type, resolution, indexer_id):
+    def _serve_artwork_image(self, indexer_name, artwork_type, artwork_resolution, indexer_id):
         # Return not found when invalid data is passed
-        if artwork_type not in self.artwork_types or resolution not in self.resolutions:
+        if artwork_type not in self.artwork_types or artwork_resolution not in self.artwork_resolutions:
             raise NotFound()
-        thumbnail = resolution == 'thumbnail'
+
+        thumbnail = artwork_resolution == 'thumbnail'
 
         # If it's not cached, we don't have the artwork yet, so let's fetch it and cache it
         if not is_artwork_cached(indexer_name, indexer_id, artwork_type, thumbnail=thumbnail):
