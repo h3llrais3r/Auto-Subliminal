@@ -11,7 +11,7 @@ def test_calculate_disk_usage(mocker):
     assert diskusage.path == 'path'
     assert diskusage.free_space == '1.0 kB'
     assert diskusage.total_space == '2.0 kB'
-    assert diskusage.percentage_in_use == 50.0
+    assert diskusage.free_percentage == 50.0
 
 
 def test_calculate_disk_usage_no_result(mocker):
@@ -23,4 +23,4 @@ def test_calculate_disk_usage_no_result(mocker):
     assert diskusage.total_bytes == 0
     assert diskusage.free_space == '0 bytes'
     assert diskusage.total_space == '0 bytes'
-    assert diskusage.percentage_in_use == 0.0  # if total is 0, return percentage = 0 to avoid division by 0
+    assert diskusage.free_percentage == 0.0  # if total is 0, return percentage = 0 to avoid division by 0

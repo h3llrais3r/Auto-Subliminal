@@ -16,13 +16,13 @@ class DiskUsage(object):
         self.total_bytes = total_bytes
         self.free_space = humanize_bytes(self.free_bytes)
         self.total_space = humanize_bytes(self.total_bytes)
-        self.percentage_in_use = self._calculate_percentage()
+        self.free_percentage = self._calculate_free_percentage()
 
-    def _calculate_percentage(self):
+    def _calculate_free_percentage(self):
         return round((float(self.free_bytes) / float(self.total_bytes) * 100), 2) if self.total_bytes else 0.0
 
     def to_json(self):
-        return to_dict(self, False)
+        return to_dict(self, True)
 
     @classmethod
     def calculate_disk_usage(cls, name, path):

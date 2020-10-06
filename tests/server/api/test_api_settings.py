@@ -9,10 +9,10 @@ from autosubliminal.server.api.settings import SettingsApi
 diskusage_1 = DiskUsage('diskusage1', 'path1', 1024, 2048)
 diskusage_2 = DiskUsage('diskusage2', 'path2', 1024, 1024)
 
-diskusage_1_json = '{"free_bytes": 1024, "free_space": "1.0 kB", "name": "diskusage1", "path": "path1", ' \
-                   '"percentage_in_use": 50.0, "total_bytes": 2048, "total_space": "2.0 kB"}'
-diskusage_2_json = '{"free_bytes": 1024, "free_space": "1.0 kB", "name": "diskusage2", "path": "path2",' \
-                   ' "percentage_in_use": 100.0, "total_bytes": 1024, "total_space": "1.0 kB"}'
+diskusage_1_json = '{"freeBytes": 1024, "freePercentage": 50.0, "freeSpace": "1.0 kB", "name": "diskusage1", ' \
+                   '"path": "path1", "totalBytes": 2048, "totalSpace": "2.0 kB"}'
+diskusage_2_json = '{"freeBytes": 1024, "freePercentage": 100.0, "freeSpace": "1.0 kB", "name": "diskusage2", ' \
+                   '"path": "path2", "totalBytes": 1024, "totalSpace": "1.0 kB"}'
 
 diskusage_json_list = '[' + diskusage_1_json + ', ' + diskusage_2_json + ']'
 

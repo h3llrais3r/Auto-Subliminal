@@ -102,6 +102,16 @@ const autosubliminal = {
      * Types (type definitions)
      * ======================== */
 
+    autosubliminal.types.DiskUsage = {
+        freeBytes: null,
+        freeSpace: null,
+        name: null,
+        path: null,
+        percentageInUse: null,
+        totalBytes: null,
+        totalSpace: null
+    };
+
     autosubliminal.types.Settings = {
         developerMode: null,
         webRoot: null,

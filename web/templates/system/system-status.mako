@@ -59,7 +59,7 @@
                         <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Location</th>
+                            <th>Path</th>
                             <th>Free space</th>
                         </tr>
                         </thead>
@@ -74,8 +74,8 @@
                             <td class="main-column">{{ disk.name}}</td>
                             <td>{{ disk.path }}</td>
                             <td>
-                                {{ disk.free_space + ' of ' + disk.total_space + ' (' + disk.percentage_in_use + '%)' }}
-                                <i v-if="disk.percentage_in_use < 10" class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Low disk space"></i>
+                                {{ disk.freeSpace + ' of ' + disk.totalSpace + ' (' + disk.percentageInUse + '%)' }}
+                                <i v-if="disk.percentageInUse < 10" class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Low disk space"></i>
                             </td>
                         </tr>
                         </tbody>
