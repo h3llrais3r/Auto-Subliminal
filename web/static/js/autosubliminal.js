@@ -117,8 +117,8 @@ var autosubliminal = {
     interval: null,
     active: null,
     alive: null,
-    last_run: null,
-    next_run: null,
+    lastRun: null,
+    nextRun: null,
     running: null
   };
   autosubliminal.types.Show = {
@@ -313,9 +313,9 @@ var autosubliminal = {
         PubSub.publish(autosubliminal.websockets.PROCESS_FINISHED, eventData);
 
         if (eventData.name == autosubliminal.SCAN_DISK) {
-          $('#scanDiskNextRun').countdown(eventData.next_run);
+          $('#scanDiskNextRun').countdown(eventData.nextRun);
         } else if (eventData.name == autosubliminal.CHECK_SUB) {
-          $('#checkSubNextRun').countdown(eventData.next_run);
+          $('#checkSubNextRun').countdown(eventData.nextRun);
         }
       }
     } else {

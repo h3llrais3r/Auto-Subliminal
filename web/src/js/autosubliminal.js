@@ -173,8 +173,8 @@ const autosubliminal = {
         interval: null,
         active: null,
         alive: null,
-        last_run: null,
-        next_run: null,
+        lastRun: null,
+        nextRun: null,
         running: null
     };
 
@@ -417,10 +417,10 @@ const autosubliminal = {
                 // Update footer
                 if (eventData.name == autosubliminal.SCAN_DISK) {
                     // Restart disk scanner countdown in footer
-                    $('#scanDiskNextRun').countdown(eventData.next_run);
+                    $('#scanDiskNextRun').countdown(eventData.nextRun);
                 } else if (eventData.name == autosubliminal.CHECK_SUB) {
                     // Restart disk scanner countdown in footer
-                    $('#checkSubNextRun').countdown(eventData.next_run);
+                    $('#checkSubNextRun').countdown(eventData.nextRun);
                 }
             }
         } else {

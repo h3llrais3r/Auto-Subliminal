@@ -48,11 +48,11 @@ def test_send_websocket_event_process_finished(monkeypatch):
             'type': 'PROCESS_FINISHED',
             'data': {
                 'name': 'MyProcess',
-                'next_run': next_run
+                'nextRun': next_run
             }
         }
     }
-    send_websocket_event(PROCESS_FINISHED, data={'name': 'MyProcess', 'next_run': next_run})
+    send_websocket_event(PROCESS_FINISHED, data={'name': 'MyProcess', 'nextRun': next_run})
     assert len(autosubliminal.WEBSOCKETMESSAGEQUEUE) == 1
     assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
 

@@ -170,14 +170,13 @@ class Scheduler(object):
         self._delay = delay
 
     def to_json(self):
-        """Convert the scheduler to its json representation."""
-        json_dict = to_dict(self, False, 'process')
+        """Convert to its json representation."""
+        last_run_in_ms = self.last_run * 1000  # convert to ms for javascript date compatibility
+        next_run_in_ms = self.next_run * 1000  # convert to ms for javascript date compatibility
+        exclude_args = ['process', 'last_run', 'next_run']
+        include_kwargs = {'last_run': last_run_in_ms, 'next_run': next_run_in_ms}
 
-        # Convert timestamps to milliseconds for javascript Date compatibility
-        json_dict['last_run'] *= 1000
-        json_dict['next_run'] *= 1000
-
-        return json_dict
+        return to_dict(self, True, 'process', *exclude_args, **include_kwargs)
 
     @property
     def alive(self):

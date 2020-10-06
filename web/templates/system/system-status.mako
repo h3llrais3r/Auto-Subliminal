@@ -45,8 +45,8 @@
                             <td class="scheduler-alive">{{ scheduler.alive }}</td>
                             <td class="scheduler-active">{{ scheduler.active }}</td>
                             <td class="scheduler-interval">{{ formatDuration(scheduler.interval) }}</td>
-                            <td class="scheduler-last-run">{{ formatDateTime(scheduler.last_run) }}</td>
-                            <td class="scheduler-next-run">{{ scheduler.running ? 'Running...' : formatDateTime(scheduler.next_run) }}</td>
+                            <td class="scheduler-last-run">{{ formatDateTime(scheduler.lastRun) }}</td>
+                            <td class="scheduler-next-run">{{ scheduler.running ? 'Running...' : formatDateTime(scheduler.nextRun) }}</td>
                         </tr>
                         </tbody>
 

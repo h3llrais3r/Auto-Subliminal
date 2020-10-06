@@ -24,12 +24,12 @@ class MyScheduler(object):
         return self.last_run + self.interval
 
     def to_json(self):
-        return to_dict(self, False, 'process')
+        return to_dict(self, True, 'process')
 
 
 scheduler = MyScheduler('MyScheduler1')
 
-scheduler_json = '{"interval": 60, "last_run": 1, "name": "MyScheduler1", "next_run": 61}'
+scheduler_json = '{"interval": 60, "lastRun": 1, "name": "MyScheduler1", "nextRun": 61}'
 
 scheduler_json_list = '[' + scheduler_json + ']'
 
