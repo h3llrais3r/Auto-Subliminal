@@ -17,15 +17,15 @@ def from_json(value):
     return jsonpickle.loads(value)
 
 
-def to_json(value, unpickable=False):
+def to_json(obj, unpickable=False):
     """
     Convert an object to json.
 
-    :param value: the value to convert to json
+    :param obj: the object to convert to json
     :param unpickable: if set to true, the json will contain extra info to convert the json back to the object
     :return: the json string
     """
-    return jsonpickle.dumps(value, unpicklable=unpickable)
+    return jsonpickle.dumps(obj, unpicklable=unpickable)
 
 
 def json_out_handler(*args, **kwargs):
@@ -35,5 +35,5 @@ def json_out_handler(*args, **kwargs):
 
     Remark: cherrypy requires a bytes output, so make sure to convert it to bytes.
     """
-    value = cherrypy.serving.request._json_inner_handler(*args, **kwargs)
-    return s2b(jsonpickle.dumps(value, unpicklable=False))
+    obj = cherrypy.serving.request._json_inner_handler(*args, **kwargs)
+    return s2b(to_json(obj, unpickable=False))
