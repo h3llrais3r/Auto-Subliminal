@@ -104,10 +104,10 @@ const autosubliminal = {
 
     autosubliminal.types.DiskUsage = {
         freeBytes: null,
+        freePercentage: null,
         freeSpace: null,
         name: null,
         path: null,
-        percentageInUse: null,
         totalBytes: null,
         totalSpace: null
     };

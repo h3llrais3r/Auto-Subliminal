@@ -22,6 +22,7 @@ class DiskUsage(object):
         return round((float(self.free_bytes) / float(self.total_bytes) * 100), 2) if self.total_bytes else 0.0
 
     def to_json(self):
+        """Convert to its json representation."""
         return to_dict(self, True)
 
     @classmethod
