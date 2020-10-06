@@ -44,23 +44,23 @@ dict_value_with_items_upper = {'1': 'A'}
 
 class MyObject(object):
     def __init__(self):
-        self.key1 = 1
-        self.key2 = '2'
-        self.key3 = [3]
-        self._key4 = 4
+        self.my_key1 = 1
+        self.my_key2 = '2'
+        self.my_key3 = [3]
+        self._my_key4 = 4
 
     @property
-    def key5(self):
+    def my_key5(self):
         return {'5': 5}
 
     @property
-    def key6(self):
+    def my_key6(self):
         return 6
 
-    def method1(self):
+    def my_method1(self):
         pass
 
-    def _method2(self):
+    def _my_method2(self):
         pass
 
 
@@ -169,17 +169,32 @@ def test_to_obj_or_list():
 
 def test_to_dict():
     obj_dict = {
-        'key1': 1,
-        'key2': '2',
-        'key3': [3],
-        'key5': {'5': 5}
+        'my_key1': 1,
+        'my_key2': '2',
+        'my_key3': [3],
+        'my_key5': {'5': 5}
     }
     object_dict_with_key7 = dict(obj_dict)
-    object_dict_with_key7.update({'key7': 7})
-    my_args = ('key6',)
-    my_kwargs = {'key7': 7}
-    assert to_dict(MyObject(), 'key6') == obj_dict
-    assert to_dict(MyObject(), *my_args, **my_kwargs) == object_dict_with_key7  # test with predefined args and kwargs
+    object_dict_with_key7.update({'my_key7': 7})
+    my_args = ('my_key6',)
+    my_kwargs = {'my_key7': 7}
+    assert to_dict(MyObject(), False, 'my_key6') == obj_dict
+    assert to_dict(MyObject(), False, *my_args, **my_kwargs) == object_dict_with_key7
+
+
+def test_to_dict_camelized():
+    obj_dict = {
+        'myKey1': 1,
+        'myKey2': '2',
+        'myKey3': [3],
+        'myKey5': {'5': 5}
+    }
+    object_dict_with_key7 = dict(obj_dict)
+    object_dict_with_key7.update({'myKey7': 7})
+    my_args = ('my_key6',)
+    my_kwargs = {'my_key7': 7}
+    assert to_dict(MyObject(), True, 'my_key6') == obj_dict
+    assert to_dict(MyObject(), True, *my_args, **my_kwargs) == object_dict_with_key7
 
 
 def test_get_boolean():

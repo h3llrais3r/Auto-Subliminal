@@ -67,7 +67,7 @@ class ShowDetails(object):
 
     def to_json(self):
         """Convert to its json representation."""
-        json_dict = to_dict(self, 'poster', 'banner')
+        json_dict = to_dict(self, False, 'poster', 'banner')
 
         # Indicate if artwork is available or not
         json_dict['poster'] = True if self.poster else False
@@ -208,7 +208,7 @@ class ShowSettings(object):
 
     def to_json(self):
         """Convert to its json representation."""
-        return to_dict(self, 'tvdb_id')
+        return to_dict(self, False, 'tvdb_id')
 
     @classmethod
     def default_settings(cls, tvdb_id):

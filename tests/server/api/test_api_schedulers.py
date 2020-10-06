@@ -6,7 +6,7 @@ from tests.server.api.test_api import pickle_api_result
 import autosubliminal
 from autosubliminal.server.api.schedulers import SchedulersApi
 from autosubliminal.server.rest import BadRequest
-from autosubliminal.util.common import to_dict as convert_to_dict
+from autosubliminal.util.common import to_dict
 
 
 class MyScheduler(object):
@@ -24,7 +24,7 @@ class MyScheduler(object):
         return self.last_run + self.interval
 
     def to_json(self):
-        return convert_to_dict(self, 'process')
+        return to_dict(self, False, 'process')
 
 
 scheduler = MyScheduler('MyScheduler1')

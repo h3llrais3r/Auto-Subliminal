@@ -22,7 +22,7 @@ class DiskUsage(object):
         return round((float(self.free_bytes) / float(self.total_bytes) * 100), 2) if self.total_bytes else 0.0
 
     def to_json(self):
-        return to_dict(self)
+        return to_dict(self, False)
 
     @classmethod
     def calculate_disk_usage(cls, name, path):

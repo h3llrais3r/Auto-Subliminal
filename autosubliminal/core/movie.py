@@ -82,7 +82,7 @@ class MovieDetails(object):
 
     def to_json(self):
         """Convert to its json representation."""
-        json_dict = to_dict(self, 'path', 'poster', 'missing_languages', 'subtitles')
+        json_dict = to_dict(self, False, 'path', 'poster', 'missing_languages', 'subtitles')
 
         # Remove filename from path
         path, _ = os.path.split(self.path)
@@ -147,7 +147,7 @@ class MovieSettings(object):
 
     def to_json(self):
         """Convert to its json representation."""
-        return to_dict(self, 'imdb_id')
+        return to_dict(self, False, 'imdb_id')
 
     @classmethod
     def default_settings(cls, imdb_id):

@@ -171,7 +171,7 @@ class Scheduler(object):
 
     def to_json(self):
         """Convert the scheduler to its json representation."""
-        json_dict = to_dict(self, 'process')
+        json_dict = to_dict(self, False, 'process')
 
         # Convert timestamps to milliseconds for javascript Date compatibility
         json_dict['last_run'] *= 1000

@@ -2,6 +2,7 @@
 
 import ctypes
 import datetime
+import humps
 import logging
 import os
 import platform
@@ -143,12 +144,14 @@ def to_obj_or_list(value, obj_type=text_type, default_value=None):
         return default_value
 
 
-def to_dict(obj, *args, **kwargs):
+def to_dict(obj, camelize, *args, **kwargs):
     """Convert an object to a dict.
 
     Only public attributes are converted. Private attributes and callable attributes (methods) are not included.
     :param obj: the object to convert
     :type obj: object
+    :param camelize: if true, the keys of the dict are camelized (f.e. for javascript notation compatibility)
+    :type camelize: bool
     :param args: optional list of attributes not to include in the conversion
     :type args: tuple
     :param kwargs: optional dict with custom attributes to include in the conversion
@@ -161,11 +164,13 @@ def to_dict(obj, *args, **kwargs):
     for key in filter(lambda x: not x.startswith('_') and not callable(getattr(obj, x)), dir(obj)):
         # Filter out unwanted attributes
         if key not in args:
-            obj_dict[key] = getattr(obj, key)
+            dict_key = humps.camelize(key) if camelize else key
+            obj_dict[dict_key] = getattr(obj, key)
     # Add custom attributes
     if kwargs:
         for key in kwargs:
-            obj_dict[key] = kwargs[key]
+            dict_key = humps.camelize(key) if camelize else key
+            obj_dict[dict_key] = kwargs[key]
     return obj_dict
 
 
