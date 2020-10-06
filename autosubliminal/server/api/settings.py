@@ -1,13 +1,14 @@
 # coding=utf-8
 
 import os
-from autosubliminal.util.common import find_path_in_paths
 
 import cherrypy
 
 import autosubliminal
 from autosubliminal.config import write_config_general_section
+from autosubliminal.core.diskusage import DiskUsage
 from autosubliminal.server.rest import RestResource
+from autosubliminal.util.common import find_path_in_paths
 from autosubliminal.util.language import get_subtitle_languages
 from autosubliminal.util.websocket import send_websocket_notification
 
@@ -21,8 +22,29 @@ class SettingsApi(RestResource):
         super(SettingsApi, self).__init__()
 
         # Add all sub paths here: /api/settings/...
+        self.diskusage = _DiskUsageApi()
         self.frontend = _FrontendApi()
         self.general = _GeneralApi()
+
+
+class _DiskUsageApi(RestResource):
+    """
+    Rest resource for handling the /api/settings/diskusage path.
+    """
+
+    def __init__(self):
+        super(_DiskUsageApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('GET',)
+
+    def get(self):
+        """Get the diskusage details for all configured paths."""
+        diskusages = [DiskUsage.calculate_disk_usage('Auto-Subliminal path', autosubliminal.PATH).to_json()]
+        for index, video_path in enumerate(autosubliminal.VIDEOPATHS):
+            diskusages.append(DiskUsage.calculate_disk_usage('Video path %s' % (index + 1), video_path).to_json())
+
+        return diskusages
 
 
 class _FrontendApi(RestResource):

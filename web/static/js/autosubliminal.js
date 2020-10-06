@@ -331,6 +331,30 @@ var autosubliminal = {
     autosubliminal.websockets.sendWebsocketMessage(JSON.stringify(event));
   };
 
+  autosubliminal.vue.formatDate = function (timeInMilliSeconds) {
+    return strftime(autosubliminal.DATE_FORMAT, new Date(timeInMilliSeconds));
+  };
+
+  autosubliminal.vue.formatTime = function (timeInMilliSeconds) {
+    return strftime(autosubliminal.TIME_FORMAT, new Date(timeInMilliSeconds));
+  };
+
+  autosubliminal.vue.formatDateTime = function (timeInMilliSeconds) {
+    return strftime(autosubliminal.TIMESTAMP_FORMAT, new Date(timeInMilliSeconds));
+  };
+
+  autosubliminal.vue.formatDuration = function (durationInSeconds) {
+    var d = Math.floor(durationInSeconds / (3600 * 24));
+    var h = Math.floor(durationInSeconds % (3600 * 24) / 3600);
+    var m = Math.floor(durationInSeconds % 3600 / 60);
+    var s = Math.floor(durationInSeconds % 60);
+    var dText = d > 0 ? d + (d == 1 ? ' day ' : ' days ') : '';
+    var hText = h > 0 ? h + (h == 1 ? ' hour ' : ' hours ') : '';
+    var mText = m > 0 ? m + (m == 1 ? ' minute ' : ' minutes ') : '';
+    var sText = s > 0 ? s + (s == 1 ? ' second' : ' seconds') : '';
+    return dText + hText + mText + sText;
+  };
+
   autosubliminal.vue.getBannerPlaceholderUrl = function () {
     return autosubliminal.getUrl('/images/banner-placeholder.jpg');
   };
