@@ -9,7 +9,7 @@ PROCESS_FINISHED = 'PROCESS_FINISHED'
 SUPPORTED_EVENT_TYPES = [PAGE_RELOAD, PROCESS_STARTED, PROCESS_FINISHED]
 
 
-def send_websocket_event(type, data={}):
+def send_websocket_event(type, data=None):
     """ Send a websocket event message.
 
     :param type: the event type
