@@ -27,7 +27,7 @@ class DiskUsage(object):
         :param camelize_keys: if true, the keys of the dict are camelized
         :type camelize_keys: bool
         """
-        return to_dict(self, camelize_keys=camelize_keys)
+        return to_dict(self, camelize_keys)
 
     @classmethod
     def calculate_disk_usage(cls, name, path):
