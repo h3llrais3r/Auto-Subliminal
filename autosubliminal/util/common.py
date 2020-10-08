@@ -2,7 +2,6 @@
 
 import ctypes
 import datetime
-import humps
 import logging
 import os
 import platform
@@ -144,14 +143,14 @@ def to_obj_or_list(value, obj_type=text_type, default_value=None):
         return default_value
 
 
-def to_dict(obj, camelize, *args, **kwargs):
+def to_dict(obj, camelize_keys, *args, **kwargs):
     """Convert an object to a dict.
 
     Only public attributes are converted. Private attributes and callable attributes (methods) are not included.
     :param obj: the object to convert
     :type obj: object
-    :param camelize: if true, the keys of the dict are camelized (f.e. for javascript notation compatibility)
-    :type camelize: bool
+    :param camelize_keys: if true, the keys of the dict are camelized (f.e. for javascript notation compatibility)
+    :type camelize_keys: bool
     :param args: optional list of attributes not to include in the conversion
     :type args: tuple
     :param kwargs: optional dict with custom attributes to include in the conversion
@@ -164,12 +163,12 @@ def to_dict(obj, camelize, *args, **kwargs):
     for key in filter(lambda x: not x.startswith('_') and not callable(getattr(obj, x)), dir(obj)):
         # Filter out unwanted attributes
         if key not in args:
-            dict_key = humps.camelize(key) if camelize else key
+            dict_key = camelize(key) if camelize_keys else key
             obj_dict[dict_key] = getattr(obj, key)
     # Add custom attributes
     if kwargs:
         for key in kwargs:
-            dict_key = humps.camelize(key) if camelize else key
+            dict_key = camelize(key) if camelize_keys else key
             obj_dict[dict_key] = kwargs[key]
     return obj_dict
 
@@ -226,6 +225,30 @@ def safe_trim(obj, default_value=None):
         return default_value or obj
 
 
+def camelize(string_value, uppercase_first_letter=False):
+    """Camelize a string.
+
+    Return the original string if it cannot be camelized.
+    """
+    if string_value:
+        if uppercase_first_letter:
+            return re.sub(r'(?:^|_)(.)', lambda m: m.group(1).upper(), string_value)
+        return string_value[0].lower() + camelize(string_value.lower(), uppercase_first_letter=True)[1:]
+    return string_value
+
+
+def decamelize(string_value):
+    """Decamelize a string.
+
+    Return the original string if it cannot be decamelized.
+    """
+    if string_value:
+        decamelized = re.sub(r'([A-Z]+)([A-Z][a-z])', r'\1_\2', string_value)
+        decamelized = re.sub(r'([a-z\d])([A-Z])', r'\1_\2', decamelized)
+        return decamelized.lower()
+    return string_value
+
+
 def sanitize(string_value, ignore_characters=None):
     """Sanitize a string to strip special characters.
 
@@ -249,8 +272,8 @@ def sanitize(string_value, ignore_characters=None):
     return string_value.strip().lower()
 
 
-def escape_quotes(value):
-    escaped_value = re.sub(r'\'', '\\\'', value)
+def escape_quotes(string_value):
+    escaped_value = re.sub(r'\'', '\\\'', string_value)
     escaped_value = re.sub(r'\"', '\\\"', escaped_value)
     return escaped_value
 

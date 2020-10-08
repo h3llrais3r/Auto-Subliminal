@@ -66,7 +66,6 @@ Libraries dependency tree
     |-- requests
     |-- websocket-client
         |-- six
-|-- pyhumps
 |-- pysrt
     |-- chardet
 |-- python-anticaptcha

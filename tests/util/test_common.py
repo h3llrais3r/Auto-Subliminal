@@ -13,14 +13,14 @@ from vcr import VCR
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.core.item import WantedItem
-from autosubliminal.util.common import (atoi, connect_url, convert_timestamp, display_interval, display_item_name,
-                                        display_item_title, display_list_multi_line, display_list_single_line,
-                                        display_mapping_dict, display_timestamp, display_value, escape_quotes,
-                                        find_path_in_paths, get_boolean, get_common_path, get_file_size, get_root_path,
-                                        get_today, get_wanted_languages, get_web_file, humanize_bytes, natural_keys,
-                                        run_cmd, safe_lowercase, safe_text, safe_trim, safe_uppercase, sanitize,
-                                        set_rw_and_remove, to_dict, to_list, to_obj, to_obj_or_list, to_text,
-                                        wait_for_internet_connection)
+from autosubliminal.util.common import (atoi, connect_url, camelize, convert_timestamp, decamelize, display_interval,
+                                        display_item_name, display_item_title, display_list_multi_line,
+                                        display_list_single_line, display_mapping_dict, display_timestamp,
+                                        display_value, escape_quotes, find_path_in_paths, get_boolean, get_common_path,
+                                        get_file_size, get_root_path, get_today, get_wanted_languages, get_web_file,
+                                        humanize_bytes, natural_keys, run_cmd, safe_lowercase, safe_text, safe_trim,
+                                        safe_uppercase, sanitize, set_rw_and_remove, to_dict, to_list, to_obj,
+                                        to_obj_or_list, to_text, wait_for_internet_connection)
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -291,6 +291,22 @@ def test_safe_trim():
     assert safe_trim(list_value, default_value='N/A') == 'N/A'
     assert safe_trim(dict_value) is dict_value
     assert safe_trim(dict_value, default_value='N/A') == 'N/A'
+
+
+def test_camelize():
+    assert camelize('test_me_4') == 'testMe4'
+    assert camelize('TEST_me4') == 'testMe4'
+    assert camelize('utf_8_encoding') == 'utf8Encoding'
+    assert camelize('utf8_encoding') == 'utf8Encoding'
+    assert camelize('') == ''
+    assert camelize(None) is None
+
+
+def test_decamelize():
+    assert decamelize('testMe4') == 'test_me4'
+    assert decamelize('utf8Encoding') == 'utf8_encoding'
+    assert decamelize('') == ''
+    assert decamelize(None) is None
 
 
 def test_sanitize():
