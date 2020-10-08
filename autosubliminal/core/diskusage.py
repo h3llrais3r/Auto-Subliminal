@@ -21,7 +21,7 @@ class DiskUsage(object):
     def _calculate_free_percentage(self):
         return round((float(self.free_bytes) / float(self.total_bytes) * 100), 2) if self.total_bytes else 0.0
 
-    def to_dict(self, camelize_keys=False):
+    def to_dict(self, camelize_keys):
         """Convert the object to its dict representation.
 
         :param camelize_keys: if true, the keys of the dict are camelized

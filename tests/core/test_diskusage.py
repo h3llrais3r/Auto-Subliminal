@@ -38,4 +38,4 @@ def test_to_dict(mocker):
     }
     mocker.patch('autosubliminal.core.diskusage.get_disk_space_details', return_value=(0, 0))
     diskusage = DiskUsage.calculate_disk_usage('name', 'path')
-    assert diskusage_dict == diskusage.to_dict(camelize_keys=True)
+    assert diskusage_dict == diskusage.to_dict(True)
