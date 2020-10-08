@@ -21,13 +21,29 @@ class DiskUsage(object):
     def _calculate_free_percentage(self):
         return round((float(self.free_bytes) / float(self.total_bytes) * 100), 2) if self.total_bytes else 0.0
 
-    def to_dict(self, camelize_keys):
+    def to_dict(self, camelize_keys, *args, **kwargs):
         """Convert the object to its dict representation.
 
         :param camelize_keys: if true, the keys of the dict are camelized
         :type camelize_keys: bool
+        :param args: optional list of attributes not to include in the conversion
+        :type args: tuple
+        :param kwargs: optional dict with custom attributes to include in the conversion
+        :type args: dict
+        :return: the json dict
+        :rtype: dict
         """
-        return to_dict(self, camelize_keys)
+        # Define args to exclude
+        exclude_args = []
+        if args:
+            exclude_args.extend(list(args))
+
+        # Define kwargs to include
+        include_kwargs = {}
+        if kwargs:
+            include_kwargs.update(kwargs)
+
+        return to_dict(self, camelize_keys, *args, **kwargs)
 
     @classmethod
     def calculate_disk_usage(cls, name, path):
