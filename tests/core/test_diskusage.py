@@ -24,3 +24,18 @@ def test_calculate_disk_usage_no_result(mocker):
     assert diskusage.free_space == '0 bytes'
     assert diskusage.total_space == '0 bytes'
     assert diskusage.free_percentage == 0.0  # if total is 0, return percentage = 0 to avoid division by 0
+
+
+def test_to_dict(mocker):
+    diskusage_dict = {
+        'name': 'name',
+        'path': 'path',
+        'freeBytes': 0,
+        'freeSpace': '0 bytes',
+        'freePercentage': 0.0,
+        'totalBytes': 0,
+        'totalSpace': '0 bytes'
+    }
+    mocker.patch('autosubliminal.core.diskusage.get_disk_space_details', return_value=(0, 0))
+    diskusage = DiskUsage.calculate_disk_usage('name', 'path')
+    assert diskusage_dict == diskusage.to_dict(camelize_keys=True)

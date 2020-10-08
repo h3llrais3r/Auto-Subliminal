@@ -40,9 +40,12 @@ class _DiskUsageApi(RestResource):
 
     def get(self):
         """Get the diskusage details for all configured paths."""
-        diskusages = [DiskUsage.calculate_disk_usage('Auto-Subliminal path', autosubliminal.PATH).to_json()]
+        diskusages = []
+        diskusage = DiskUsage.calculate_disk_usage('Auto-Subliminal path', autosubliminal.PATH)
+        diskusages.append(diskusage.to_dict(camelize_keys=True))
         for index, video_path in enumerate(autosubliminal.VIDEOPATHS):
-            diskusages.append(DiskUsage.calculate_disk_usage('Video path %s' % (index + 1), video_path).to_json())
+            diskusage = DiskUsage.calculate_disk_usage('Video path %s' % (index + 1), video_path)
+            diskusages.append(diskusage.to_dict(camelize_keys=True))
 
         return diskusages
 
