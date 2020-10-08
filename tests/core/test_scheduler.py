@@ -4,9 +4,28 @@ import time
 
 import autosubliminal
 from autosubliminal.core.scheduler import ScheduledProcess, Scheduler
+from autosubliminal.util.common import to_dict
 
 autosubliminal.SCHEDULERS = {}
 autosubliminal.WEBSOCKETMESSAGEQUEUE = []
+
+
+class MyScheduler(object):
+    def __init__(self, name):
+        self.name = name
+        self.process = None
+        self.interval = 60
+        self.last_run = 1
+        self._delay = 0
+        self._force_run = False
+        self._force_stop = False
+
+    @property
+    def next_run(self):
+        return self.last_run + self.interval
+
+    def to_dict(self, camelize_keys):
+        return to_dict(self, camelize_keys, 'process')
 
 
 class MyScheduledProcess(ScheduledProcess):
@@ -127,6 +146,17 @@ def test_scheduler_deactivate(mocker):
         assert not scheduler.running
     finally:
         _assert_scheduler(scheduler)
+
+
+def test_scheduler_to_dict():
+    scheduler = MyScheduler('MyScheduler1')
+    scheduler_dict = {
+        'interval': 60,
+        'lastRun': 1,
+        'name': 'MyScheduler1',
+        'nextRun': 61
+    }
+    assert scheduler_dict == scheduler.to_dict(True)
 
 
 def _assert_scheduler(scheduler):

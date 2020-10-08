@@ -120,7 +120,7 @@ class Scheduler(object):
         try:
             # Mark as running
             self.process.running = True
-            send_websocket_event(PROCESS_STARTED, data=self.to_json())
+            send_websocket_event(PROCESS_STARTED, data=self.to_dict(True))
 
             log.debug('Running %s thread process', self.name)
             self.process.run(self._force_run)
@@ -133,7 +133,7 @@ class Scheduler(object):
 
             # Mark as finished
             self.process.running = False
-            send_websocket_event(PROCESS_FINISHED, data=self.to_json())
+            send_websocket_event(PROCESS_FINISHED, data=self.to_dict(True))
 
         except:
             print(traceback.format_exc())
@@ -169,14 +169,18 @@ class Scheduler(object):
         self._force_run = True
         self._delay = delay
 
-    def to_json(self):
-        """Convert to its json representation."""
+    def to_dict(self, camelize_keys):
+        """Convert the object to its dict representation.
+
+        :param camelize_keys: if true, the keys of the dict are camelized
+        :type camelize_keys: bool
+        """
         last_run_in_ms = self.last_run * 1000  # convert to ms for javascript date compatibility
         next_run_in_ms = self.next_run * 1000  # convert to ms for javascript date compatibility
         exclude_args = ['process', 'last_run', 'next_run']
         include_kwargs = {'last_run': last_run_in_ms, 'next_run': next_run_in_ms}
 
-        return to_dict(self, True, 'process', *exclude_args, **include_kwargs)
+        return to_dict(self, camelize_keys, *exclude_args, **include_kwargs)
 
     @property
     def alive(self):

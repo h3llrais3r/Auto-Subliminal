@@ -23,8 +23,8 @@ class MyScheduler(object):
     def next_run(self):
         return self.last_run + self.interval
 
-    def to_json(self):
-        return to_dict(self, True, 'process')
+    def to_dict(self, camelize_keys):
+        return to_dict(self, camelize_keys, 'process')
 
 
 scheduler = MyScheduler('MyScheduler1')
