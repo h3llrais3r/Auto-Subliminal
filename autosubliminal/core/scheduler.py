@@ -11,7 +11,7 @@ import traceback
 from six import add_metaclass, text_type
 
 import autosubliminal
-from autosubliminal.util.common import to_dict
+from autosubliminal.util.common import camelize, to_dict
 from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock
 from autosubliminal.util.websocket import PROCESS_FINISHED, PROCESS_STARTED, send_websocket_event
 
@@ -120,7 +120,7 @@ class Scheduler(object):
         try:
             # Mark as running
             self.process.running = True
-            send_websocket_event(PROCESS_STARTED, data=self.to_dict(True))
+            send_websocket_event(PROCESS_STARTED, data=self.to_dict(camelize))
 
             log.debug('Running %s thread process', self.name)
             self.process.run(self._force_run)
@@ -133,7 +133,7 @@ class Scheduler(object):
 
             # Mark as finished
             self.process.running = False
-            send_websocket_event(PROCESS_FINISHED, data=self.to_dict(True))
+            send_websocket_event(PROCESS_FINISHED, data=self.to_dict(camelize))
 
         except:
             print(traceback.format_exc())
@@ -169,11 +169,11 @@ class Scheduler(object):
         self._force_run = True
         self._delay = delay
 
-    def to_dict(self, camelize_keys, *args, **kwargs):
+    def to_dict(self, key_fn, *args, **kwargs):
         """Convert the object to its dict representation.
 
-        :param camelize_keys: if true, the keys of the dict are camelized
-        :type camelize_keys: bool
+        :param key_fn: the function that is executed on the keys when creating the dict
+        :type key_fn: function
         :param args: optional list of attributes not to include in the conversion
         :type args: tuple
         :param kwargs: optional dict with custom attributes to include in the conversion
@@ -192,7 +192,7 @@ class Scheduler(object):
         if kwargs:
             include_kwargs.update(kwargs)
 
-        return to_dict(self, camelize_keys, *exclude_args, **include_kwargs)
+        return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
     @property
     def alive(self):

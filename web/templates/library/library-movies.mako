@@ -69,16 +69,16 @@
                                 <i class="fa fa-refresh fa-spin fa-fw" aria-hidden="true" title="Loading..."></i>
                             </td>
                         </tr>
-                        <tr v-for="movie in movies" :id="movie.imdb_id">
+                        <tr v-for="movie in movies" :id="movie.imdbId">
                             <td>
                                 <div class="title-poster-container">
                                     <div class="title-poster-cell" v-lazy-container>
-                                        <a :href="getMovieDetailsUrl(movie.imdb_id)" :title="movie.title">
-                                            <img v-if="movie.poster" class="title-poster-image" :data-src="getMoviePosterThumbnailUrl(movie.imdb_id)" :data-loading="posterPlaceholderUrl" :data-error="posterPlaceholderUrl">
+                                        <a :href="getMovieDetailsUrl(movie.imdbId)" :title="movie.title">
+                                            <img v-if="movie.poster" class="title-poster-image" :data-src="getMoviePosterThumbnailUrl(movie.imdbId)" :data-loading="posterPlaceholderUrl" :data-error="posterPlaceholderUrl">
                                         </a>
                                     </div>
                                     <div class="title-poster-cell">
-                                        <a :href="getMovieDetailsUrl(movie.imdb_id)" :title="movie.title" class="main-column">
+                                        <a :href="getMovieDetailsUrl(movie.imdbId)" :title="movie.title" class="main-column">
                                             <div class="title-poster-text">{{ movie.title }}</div>
                                         </a>
                                     </div>
@@ -89,7 +89,7 @@
                                 <span class="path">{{ movie.path }}</span>
                             </td>
                             <td>
-                                <span v-for="language in movie.settings.wanted_languages" class="language-badge">{{ language }}</span>
+                                <span v-for="language in movie.settings.wantedLanguages" class="language-badge">{{ language }}</span>
                             </td>
                             <td>
                                 <vue-simple-progress

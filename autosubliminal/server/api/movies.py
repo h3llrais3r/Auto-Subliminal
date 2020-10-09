@@ -11,7 +11,7 @@ from autosubliminal.core.subtitle import EMBEDDED, HARDCODED, Subtitle
 from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb, WantedItemsDb
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import NotFound, RestResource
-from autosubliminal.util.common import find_path_in_paths, get_boolean
+from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, get_boolean, to_dict
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 from autosubliminal.util.websocket import send_websocket_notification
 
@@ -47,7 +47,7 @@ class MoviesApi(RestResource):
                 raise NotFound()
 
             # Return movie details
-            return self._to_movie_json(db_movie, db_movie_settings, details=True)
+            return self._to_movie_dict(db_movie, db_movie_settings, details=True)
 
         else:
             movies = []
@@ -55,7 +55,7 @@ class MoviesApi(RestResource):
             db_movies = MovieDetailsDb().get_all_movies()
             for db_movie in db_movies:
                 db_movie_settings = movie_settings_db.get_movie_settings(db_movie.imdb_id)
-                movies.append(self._to_movie_json(db_movie, db_movie_settings))
+                movies.append(self._to_movie_dict(db_movie, db_movie_settings))
 
             return movies
 
@@ -66,27 +66,31 @@ class MoviesApi(RestResource):
 
         return self._no_content()
 
-    def _to_movie_json(self, movie, movie_settings, details=False):
-        movie_json = movie.to_json()
-        movie_json['settings'] = movie_settings.to_json()
-
+    def _to_movie_dict(self, movie, movie_settings, details=False):
         # Check if the movie path is listed in the video paths to scan
-        movie_json['path_in_video_paths'] = True if find_path_in_paths(movie.path, autosubliminal.VIDEOPATHS,
-                                                                       check_common_path=True) else False
+        path_in_video_paths = True if find_path_in_paths(movie.path, autosubliminal.VIDEOPATHS,
+                                                         check_common_path=True) else False
 
         # Calculate totals
         wanted_languages = movie_settings.wanted_languages
         total_subtitles_wanted = len(wanted_languages)
         total_subtitles_missing = len(movie.missing_languages)
         total_subtitles_available = len(wanted_languages) - len(movie.missing_languages)
-        movie_json['total_subtitles_wanted'] = total_subtitles_wanted
-        movie_json['total_subtitles_missing'] = total_subtitles_missing
-        movie_json['total_subtitles_available'] = total_subtitles_available
 
+        # Set kwargs to include in json
+        include_kwargs = {
+            'settings': movie_settings.to_dict(camelize),
+            'path_in_video_paths': path_in_video_paths,
+            'total_subtitles_wanted': total_subtitles_wanted,
+            'total_subtitles_available': total_subtitles_available,
+            'total_subtitles_missing': total_subtitles_missing
+        }
+
+        # Add details if needed
         if details:
-            movie_json['files'] = self._get_movie_files(movie)
+            include_kwargs['files'] = self._get_movie_files(movie)
 
-        return movie_json
+        return movie.to_dict(camelize, **include_kwargs)
 
     def _get_movie_files(self, movie):
         # Movie files are supposed to be stored in the same dir
@@ -141,13 +145,15 @@ class _OverviewApi(RestResource):
             total_subtitles_missing += len(movie.missing_languages)
             total_subtitles_available += len(wanted_languages) - len(movie.missing_languages)
 
-        return {
+        overview = {
             'total_movies': total_movies,
             'total_subtitles_wanted': total_subtitles_wanted,
             'total_subtitles_missing': total_subtitles_missing,
             'total_subtitles_available': total_subtitles_available,
             'failed_movies': failed_movies
         }
+
+        return to_dict(overview, camelize)
 
 
 class _RefreshApi(RestResource):
@@ -193,17 +199,17 @@ class _SettingsApi(RestResource):
             movie_settings = MovieSettings.default_settings(imdb_id)
             movie_settings_db.set_movie_settings(movie_settings)
 
-        return movie_settings.to_json()
+        return movie_settings.to_dict(camelize)
 
     def put(self, imdb_id):
         """Save the settings for a movie."""
-        input_json = cherrypy.request.json
+        input_dict = to_dict(cherrypy.request.json, decamelize)
 
-        if all(k in input_json for k in ('wanted_languages', 'refine', 'hearing_impaired', 'utf8_encoding')):
-            wanted_languages = input_json['wanted_languages']
-            refine = get_boolean(input_json['refine'])
-            hearing_impaired = get_boolean(input_json['hearing_impaired'])
-            utf8_encoding = get_boolean(input_json['utf8_encoding'])
+        if all(k in input_dict for k in ('wanted_languages', 'refine', 'hearing_impaired', 'utf8_encoding')):
+            wanted_languages = input_dict['wanted_languages']
+            refine = get_boolean(input_dict['refine'])
+            hearing_impaired = get_boolean(input_dict['hearing_impaired'])
+            utf8_encoding = get_boolean(input_dict['utf8_encoding'])
 
             # Update settings
             db = MovieSettingsDb()
@@ -253,13 +259,13 @@ class _HardcodedApi(RestResource):
 
     def put(self, imdb_id):
         """Save the list of hardcoded subtitles for a movie file."""
-        input_json = cherrypy.request.json
+        input_dict = to_dict(cherrypy.request.json, decamelize)
 
-        if all(k in input_json for k in ('file_location', 'file_name', 'languages')):
+        if all(k in input_dict for k in ('file_location', 'file_name', 'languages')):
             # Save to file
-            file_location = input_json['file_location']
-            file_name = input_json['file_name']
-            languages = input_json['languages']
+            file_location = input_dict['file_location']
+            file_name = input_dict['file_name']
+            languages = input_dict['languages']
             save_hardcoded_subtitle_languages(file_location, file_name, languages)
 
             # Update in db

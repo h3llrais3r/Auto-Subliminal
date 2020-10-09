@@ -7,7 +7,7 @@ from imdbpie.objects import Title
 from six.moves.urllib.parse import urlparse, urlunparse
 
 import autosubliminal
-from autosubliminal.util.common import get_wanted_languages, to_dict, to_list, to_obj
+from autosubliminal.util.common import camelize, get_wanted_languages, to_dict, to_list, to_obj
 
 log = logging.getLogger(__name__)
 
@@ -80,18 +80,32 @@ class MovieDetails(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_json(self):
-        """Convert to its json representation."""
-        json_dict = to_dict(self, False, 'path', 'poster', 'missing_languages', 'subtitles')
+    def to_dict(self, key_fn, *args, **kwargs):
+        """Convert the object to its json representation.
 
-        # Remove filename from path
-        path, _ = os.path.split(self.path)
-        json_dict['path'] = path
+        :param key_fn: the function that is executed on the keys when creating the dict
+        :type key_fn: function
+        :param args: optional list of attributes not to include in the conversion
+        :type args: tuple
+        :param kwargs: optional dict with custom attributes to include in the conversion
+        :type args: dict
+        :return: the json dict
+        :rtype: dict
+        """
+        # Define args to exclude
+        exclude_args = ['path', 'poster', 'missing_languages', 'subtitles']
+        if args:
+            exclude_args.extend(list(args))
 
-        # Indicate if artwork is available or not
-        json_dict['poster'] = True if self.poster else False
+        # Define kwargs to include
+        path, _ = os.path.split(self.path)  # remove filename from path
+        poster_available = True if self.poster else False  # indication if poster is available
+        include_kwargs = {'path': path, 'poster': poster_available}
+        if kwargs:
+            include_kwargs.update(kwargs)
 
-        return json_dict
+        # Convert to json dict
+        return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
     @classmethod
     def from_indexer(cls, obj):
@@ -145,9 +159,30 @@ class MovieSettings(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_json(self):
-        """Convert to its json representation."""
-        return to_dict(self, False, 'imdb_id')
+    def to_dict(self, key_fn, *args, **kwargs):
+        """Convert the object to its json representation.
+
+        :param key_fn: the function that is executed on the keys when creating the dict
+        :type key_fn: function
+        :param args: optional list of attributes not to include in the conversion
+        :type args: tuple
+        :param kwargs: optional dict with custom attributes to include in the conversion
+        :type args: dict
+        :return: the json dict
+        :rtype: dict
+        """
+        # Define args to exclude
+        exclude_args = ['imdb_id']
+        if args:
+            exclude_args.extend(list(args))
+
+        # Define kwargs to include
+        include_kwargs = {}
+        if kwargs:
+            include_kwargs.update(kwargs)
+
+        # Convert to json dict
+        return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
     @classmethod
     def default_settings(cls, imdb_id):

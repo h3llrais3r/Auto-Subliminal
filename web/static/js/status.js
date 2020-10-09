@@ -65,20 +65,20 @@
   };
 
   var processStartedEventSubscriber = function processStartedEventSubscriber(msg, data) {
-    var scheduler_process_row = $('#scheduler').find('#' + data.name);
-    scheduler_process_row.children('.scheduler-next-run').text('Running...');
-    scheduler_process_row.addClass('scheduler-running');
+    var schedulerProcessRow = $('#scheduler').find('#' + data.name);
+    schedulerProcessRow.children('.scheduler-next-run').text('Running...');
+    schedulerProcessRow.addClass('scheduler-running');
   };
 
   PubSub.subscribe(autosubliminal.websockets.PROCESS_STARTED, processStartedEventSubscriber);
 
   var processFinishedEventSubscriber = function processFinishedEventSubscriber(msg, data) {
-    var scheduler_process_row = $('#scheduler').find('#' + data.name);
-    scheduler_process_row.children('.scheduler-alive').text(data.alive);
-    scheduler_process_row.children('.scheduler-active').text(data.active);
-    scheduler_process_row.children('.scheduler-last-run').text(strftime(autosubliminal.TIMESTAMP_FORMAT, new Date(data.lastRun)));
-    scheduler_process_row.children('.scheduler-next-run').text(strftime(autosubliminal.TIMESTAMP_FORMAT, new Date(data.nextRun)));
-    scheduler_process_row.removeClass('scheduler-running');
+    var schedulerProcessRow = $('#scheduler').find('#' + data.name);
+    schedulerProcessRow.children('.scheduler-alive').text(data.alive);
+    schedulerProcessRow.children('.scheduler-active').text(data.active);
+    schedulerProcessRow.children('.scheduler-last-run').text(strftime(autosubliminal.TIMESTAMP_FORMAT, new Date(data.lastRun)));
+    schedulerProcessRow.children('.scheduler-next-run').text(strftime(autosubliminal.TIMESTAMP_FORMAT, new Date(data.nextRun)));
+    schedulerProcessRow.removeClass('scheduler-running');
   };
 
   PubSub.subscribe(autosubliminal.websockets.PROCESS_FINISHED, processFinishedEventSubscriber);

@@ -50,8 +50,8 @@
                                         </div>
                                         <div class="row overview-data">
                                             <div class="col-xs-12 col-sm-6">
-                                                <span>Total shows: {{ showsOverview.total_shows }}</span>
-                                                <div class="dropdown dropdown-icon" v-if="showsOverview.failed_shows.length > 0">
+                                                <span>Total shows: {{ showsOverview.totalShows }}</span>
+                                                <div class="dropdown dropdown-icon" v-if="showsOverview.failedShows.length > 0">
                                                     <a class="dropdown-toggle" data-toggle="dropdown">
                                                         <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Failed shows!"></i>
                                                     </a>
@@ -62,13 +62,13 @@
                                                         <li>
                                                             <hr>
                                                         </li>
-                                                        <li v-for="failed_show in showsOverview.failed_shows">
-                                                            <span>{{ failed_show }}</span>
+                                                        <li v-for="failedShow in showsOverview.failedShows">
+                                                            <span>{{ failedShow }}</span>
                                                         </li>
                                                     </ul>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-sm-6 text-right">Total episodes: {{ showsOverview.total_episodes }}</div>
+                                            <div class="col-xs-12 col-sm-6 text-right">Total episodes: {{ showsOverview.totalEpisodes }}</div>
                                         </div>
                                         <div class="row overview-data">
                                             <div class="col-xs-12">Total subtitles available:</div>
@@ -101,8 +101,8 @@
                                         </div>
                                         <div class="row overview-data">
                                             <div class="col-xs-12">
-                                                <span>Total movies: {{ moviesOverview.total_movies }}</span>
-                                                <div class="dropdown dropdown-icon" v-if="moviesOverview.failed_movies.length > 0">
+                                                <span>Total movies: {{ moviesOverview.totalMovies }}</span>
+                                                <div class="dropdown dropdown-icon" v-if="moviesOverview.failedMovies.length > 0">
                                                     <a class="dropdown-toggle" data-toggle="dropdown">
                                                         <i class="fa fa-exclamation-triangle text-danger" aria-hidden="true" title="Failed movies!"></i>
                                                     </a>
@@ -110,8 +110,8 @@
                                                         <li>
                                                             <span class="info-list-label">List of failed movies:</span>
                                                         </li>
-                                                        <li v-for="failed_movie in moviesOverview.failed_movies">
-                                                            <span>{{ failed_movie }}</span>
+                                                        <li v-for="failedMovie in moviesOverview.failedMovies">
+                                                            <span>{{ failedMovie }}</span>
                                                         </li>
                                                     </ul>
                                                 </div>

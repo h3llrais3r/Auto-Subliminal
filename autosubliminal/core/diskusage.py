@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from autosubliminal.util.common import get_disk_space_details, humanize_bytes, to_dict
+from autosubliminal.util.common import camelize, get_disk_space_details, humanize_bytes, to_dict
 
 
 class DiskUsage(object):
@@ -21,11 +21,11 @@ class DiskUsage(object):
     def _calculate_free_percentage(self):
         return round((float(self.free_bytes) / float(self.total_bytes) * 100), 2) if self.total_bytes else 0.0
 
-    def to_dict(self, camelize_keys, *args, **kwargs):
+    def to_dict(self, key_fn, *args, **kwargs):
         """Convert the object to its dict representation.
 
-        :param camelize_keys: if true, the keys of the dict are camelized
-        :type camelize_keys: bool
+        :param key_fn: the function that is executed on the keys when creating the dict
+        :type key_fn: function
         :param args: optional list of attributes not to include in the conversion
         :type args: tuple
         :param kwargs: optional dict with custom attributes to include in the conversion
@@ -43,7 +43,7 @@ class DiskUsage(object):
         if kwargs:
             include_kwargs.update(kwargs)
 
-        return to_dict(self, camelize_keys, *args, **kwargs)
+        return to_dict(self, key_fn, *args, **kwargs)
 
     @classmethod
     def calculate_disk_usage(cls, name, path):

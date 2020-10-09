@@ -12,7 +12,8 @@ import time
 
 import requests
 from six import text_type
-
+from six.moves import builtins
+from six.moves.collections_abc import Mapping
 import autosubliminal
 
 log = logging.getLogger(__name__)
@@ -143,14 +144,14 @@ def to_obj_or_list(value, obj_type=text_type, default_value=None):
         return default_value
 
 
-def to_dict(obj, camelize_keys, *args, **kwargs):
+def to_dict(obj, key_fn, *args, **kwargs):
     """Convert an object to a dict.
 
     Only public attributes are converted. Private attributes and callable attributes (methods) are not included.
     :param obj: the object to convert
-    :type obj: object
-    :param camelize_keys: if true, the keys of the dict are camelized (f.e. for javascript notation compatibility)
-    :type camelize_keys: bool
+    :type obj: object or Mapping
+    :param key_fn: the function that is executed on the keys when creating the dict (f.e. camelize, decamelize, ...)
+    :type key_fn: function
     :param args: optional list of attributes not to include in the conversion
     :type args: tuple
     :param kwargs: optional dict with custom attributes to include in the conversion
@@ -158,18 +159,41 @@ def to_dict(obj, camelize_keys, *args, **kwargs):
     :return: the dict
     :rtype: dict
     """
-    obj_dict = {}
-    # Filter out private attributes (start with _) and callable attributes (methods)
-    for key in filter(lambda x: not x.startswith('_') and not callable(getattr(obj, x)), dir(obj)):
-        # Filter out unwanted attributes
+
+    # Internal helper to add a value to a dict
+    def _add_to_dict(obj_dict, key, value, key_fn, *args):
+        # Add to dict and filter out unwanted attributes
         if key not in args:
-            dict_key = camelize(key) if camelize_keys else key
-            obj_dict[dict_key] = getattr(obj, key)
+            dict_key = key_fn(key) if key_fn else key
+            obj_dict[dict_key] = _process_dict_value(value, to_dict, key_fn, *args)
+
+    # Internal helper to process a dict value
+    def _process_dict_value(val_or_iter, fn, *args):
+        """Process the dict value, which can be an class, dict, list, ... again."""
+        if type(val_or_iter).__module__ != type(builtins).__module__ or isinstance(val_or_iter, Mapping):
+            return fn(val_or_iter, *args)
+        elif isinstance(val_or_iter, list):
+            return [_process_dict_value(k, fn, *args) for k in val_or_iter]
+        else:
+            return val_or_iter
+
+    obj_dict = {}
+
+    # Convert to dict (if not from builtins module, we assume it's an custom class object)
+    if type(obj).__module__ != type(builtins).__module__:
+        # Filter out private attributes (start with _) and callable attributes (methods) fom a class object
+        for key in filter(lambda x: not x.startswith('_') and not callable(getattr(obj, x)), dir(obj)):
+            _add_to_dict(obj_dict, key, getattr(obj, key), key_fn, *args)
+    elif isinstance(obj, Mapping):
+        # Filter out private keys (start with _) from a Mapping object (dict, ...)
+        for key, value in filter(lambda x: not x[0].startswith('_'), obj.items()):
+            _add_to_dict(obj_dict, key, value, key_fn, *args)
+
     # Add custom attributes
     if kwargs:
-        for key in kwargs:
-            dict_key = camelize(key) if camelize_keys else key
-            obj_dict[dict_key] = kwargs[key]
+        for key, value in kwargs.items():
+            _add_to_dict(obj_dict, key, value, key_fn)  # do not pass *args to skip filtering
+
     return obj_dict
 
 
@@ -228,9 +252,9 @@ def safe_trim(obj, default_value=None):
 def camelize(string_value, uppercase_first_letter=False):
     """Camelize a string.
 
-    Return the original string if it cannot be camelized.
+    Return the original string if it cannot be camelized (empty or no underscores in it).
     """
-    if string_value:
+    if string_value and re.search(r'_', string_value):
         if uppercase_first_letter:
             return re.sub(r'(?:^|_)(.)', lambda m: m.group(1).upper(), string_value)
         return string_value[0].lower() + camelize(string_value.lower(), uppercase_first_letter=True)[1:]

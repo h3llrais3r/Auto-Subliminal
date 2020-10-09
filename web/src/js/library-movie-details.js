@@ -53,19 +53,19 @@
             computed: {
                 moviePosterThumbnailUrl: function () {
                     const self = this;
-                    return autosubliminal.getUrl(`/artwork/imdb/poster/thumbnail/${self.movie.imdb_id}`);
+                    return autosubliminal.getUrl(`/artwork/imdb/poster/thumbnail/${self.movie.imdbId}`);
                 },
                 moviePosterFullSizeUrl: function () {
                     const self = this;
-                    return autosubliminal.getUrl(`/artwork/imdb/poster/fullsize/${self.movie.imdb_id}`);
+                    return autosubliminal.getUrl(`/artwork/imdb/poster/fullsize/${self.movie.imdbId}`);
                 },
                 movieProgressPercentage: function () {
                     const self = this;
-                    return self.movie.total_subtitles_available / self.movie.total_subtitles_wanted * 100;
+                    return self.movie.totalSubtitlesAvailable / self.movie.totalSubtitlesWanted * 100;
                 },
                 movieProgressText: function () {
                     const self = this;
-                    return `${self.movie.total_subtitles_available} of ${self.movie.total_subtitles_wanted}`;
+                    return `${self.movie.totalSubtitlesAvailable} of ${self.movie.totalSubtitlesWanted}`;
                 }
             },
             methods: {
@@ -102,8 +102,8 @@
                 getLanguageCodes: autosubliminal.convertToLanguageCodes,
                 internalLanguagesAvailable: function (file) {
                     let available = false;
-                    if ((file.hardcoded_languages && file.hardcoded_languages.length > 0) ||
-                        (file.embedded_languages && file.embedded_languages.length > 0)) {
+                    if ((file.hardcodedLanguages && file.hardcodedLanguages.length > 0) ||
+                        (file.embeddedLanguages && file.embeddedLanguages.length > 0)) {
                         available = true;
                     }
                     return available;
@@ -113,7 +113,7 @@
                     const self = this;
                     // Show refresh indication
                     $('.refresh-running').removeClass('hidden');
-                    $.putJson(autosubliminal.getUrl(`/api/movies/${self.movie.imdb_id}/refresh`), null, function () {
+                    $.putJson(autosubliminal.getUrl(`/api/movies/${self.movie.imdbId}/refresh`), null, function () {
                         // Get movie details again to get the updates
                         self.getMovieDetails();
                         // Hide refresh indication
@@ -125,7 +125,7 @@
                     // Set default values
                     const self = this;
                     self.movieSettings = self.movie.settings;
-                    self.movieSettingsWantedLanguages = self.getLanguages(self.movie.settings.wanted_languages);
+                    self.movieSettingsWantedLanguages = self.getLanguages(self.movie.settings.wantedLanguages);
                     // Open modal
                     $('#settingsModal').modal('show');
                 },
@@ -149,8 +149,8 @@
                     // Get data
                     const self = this;
                     const data = self.movieSettings;
-                    data.wanted_languages = self.getLanguageCodes(self.movieSettingsWantedLanguages);
-                    $.putJson(autosubliminal.getUrl(`/api/movies/${self.movie.imdb_id}/settings`), data, function () {
+                    data.wantedLanguages = self.getLanguageCodes(self.movieSettingsWantedLanguages);
+                    $.putJson(autosubliminal.getUrl(`/api/movies/${self.movie.imdbId}/settings`), data, function () {
                         // Close modal on success
                         $('#settingsModal').modal('hide');
                         // Refresh movie details
@@ -161,7 +161,7 @@
                     event.preventDefault();
                     // Delete the movie
                     const self = this;
-                    $.deleteJson(autosubliminal.getUrl(`/api/movies/${self.movie.imdb_id}`), null, function () {
+                    $.deleteJson(autosubliminal.getUrl(`/api/movies/${self.movie.imdbId}`), null, function () {
                         // Close modal on success
                         $('#deleteModal').modal('hide');
                         // Redirect to library movies view
@@ -173,11 +173,11 @@
                     // Get data
                     const self = this;
                     const data = {
-                        'file_location': self.selectedFileLocation,
-                        'file_name': self.selectedFileName,
+                        'fileLocation': self.selectedFileLocation,
+                        'fileName': self.selectedFileName,
                         'languages': self.getLanguageCodes(self.selectedHardcodedLanguages)
                     };
-                    $.putJson(autosubliminal.getUrl(`/api/movies/${self.movie.imdb_id}/subtitles/hardcoded`), data, function () {
+                    $.putJson(autosubliminal.getUrl(`/api/movies/${self.movie.imdbId}/subtitles/hardcoded`), data, function () {
                         // Close modal on success
                         $('#subtitlesModal').modal('hide');
                         // Get movie details again to get the updates

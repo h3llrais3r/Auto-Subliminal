@@ -54,19 +54,19 @@
             computed: {
                 showPosterThumbnailUrl: function () {
                     const self = this;
-                    return autosubliminal.getUrl(`/artwork/tvdb/poster/thumbnail/${self.show.tvdb_id}`);
+                    return autosubliminal.getUrl(`/artwork/tvdb/poster/thumbnail/${self.show.tvdbId}`);
                 },
                 showPosterFullSizeUrl: function () {
                     const self = this;
-                    return autosubliminal.getUrl(`/artwork/tvdb/poster/fullsize/${self.show.tvdb_id}`);
+                    return autosubliminal.getUrl(`/artwork/tvdb/poster/fullsize/${self.show.tvdbId}`);
                 },
                 showProgressPercentage: function () {
                     const self = this;
-                    return self.show.total_subtitles_available / self.show.total_subtitles_wanted * 100;
+                    return self.show.totalSubtitlesAvailable / self.show.totalSubtitlesWanted * 100;
                 },
                 showProgressText: function () {
                     const self = this;
-                    return `${self.show.total_subtitles_available} of ${self.show.total_subtitles_wanted}`;
+                    return `${self.show.totalSubtitlesAvailable} of ${self.show.totalSubtitlesWanted}`;
                 }
             },
             methods: {
@@ -103,8 +103,8 @@
                 getLanguageCodes: autosubliminal.convertToLanguageCodes,
                 internalLanguagesAvailable: function (file) {
                     let available = false;
-                    if ((file.hardcoded_languages && file.hardcoded_languages.length > 0) ||
-                        (file.embedded_languages && file.embedded_languages.length > 0)) {
+                    if ((file.hardcodedLanguages && file.hardcodedLanguages.length > 0) ||
+                        (file.embeddedLanguages && file.embeddedLanguages.length > 0)) {
                         available = true;
                     }
                     return available;
@@ -114,7 +114,7 @@
                     const self = this;
                     // Show refresh indication
                     $('.refresh-running').removeClass('hidden');
-                    $.putJson(autosubliminal.getUrl(`/api/shows/${self.show.tvdb_id}/refresh`), null, function () {
+                    $.putJson(autosubliminal.getUrl(`/api/shows/${self.show.tvdbId}/refresh`), null, function () {
                         // Get show details again to get the updates
                         self.getShowDetails();
                         // Hide refresh indication
@@ -126,7 +126,7 @@
                     // Set default values
                     const self = this;
                     self.showSettings = self.show.settings;
-                    self.showSettingsWantedLanguages = self.getLanguages(self.show.settings.wanted_languages);
+                    self.showSettingsWantedLanguages = self.getLanguages(self.show.settings.wantedLanguages);
                     // Open modal
                     $('#settingsModal').modal('show');
                 },
@@ -151,8 +151,8 @@
                     // Get data
                     const self = this;
                     const data = self.showSettings;
-                    data.wanted_languages = self.getLanguageCodes(self.showSettingsWantedLanguages);
-                    $.putJson(autosubliminal.getUrl(`/api/shows/${self.show.tvdb_id}/settings`), data, function () {
+                    data.wantedLanguages = self.getLanguageCodes(self.showSettingsWantedLanguages);
+                    $.putJson(autosubliminal.getUrl(`/api/shows/${self.show.tvdbId}/settings`), data, function () {
                         // Close modal on success
                         $('#settingsModal').modal('hide');
                         // Refresh show details
@@ -163,7 +163,7 @@
                     event.preventDefault();
                     // Delete the show
                     const self = this;
-                    $.deleteJson(autosubliminal.getUrl(`/api/shows/${self.show.tvdb_id}`), null, function () {
+                    $.deleteJson(autosubliminal.getUrl(`/api/shows/${self.show.tvdbId}`), null, function () {
                         // Close modal on success
                         $('#deleteModal').modal('hide');
                         // Redirect to library shows view
@@ -175,11 +175,11 @@
                     // Get data
                     const self = this;
                     const data = {
-                        'file_location': self.selectedFileLocation,
-                        'file_name': self.selectedFileName,
+                        'fileLocation': self.selectedFileLocation,
+                        'fileName': self.selectedFileName,
                         'languages': self.getLanguageCodes(self.selectedHardcodedLanguages)
                     };
-                    $.putJson(autosubliminal.getUrl(`/api/shows/${self.show.tvdb_id}/subtitles/hardcoded/${self.selectedEpisodeTvdbId}`), data, function () {
+                    $.putJson(autosubliminal.getUrl(`/api/shows/${self.show.tvdbId}/subtitles/hardcoded/${self.selectedEpisodeTvdbId}`), data, function () {
                         // Close modal on success
                         $('#subtitlesModal').modal('hide');
                         // Get show details again to get the updates
@@ -206,16 +206,16 @@
                             subtitleCount++;
                         } else if (file.type == 'video') {
                             // A video file can have multiple hardcoded languages
-                            if (file.hardcoded_languages != null) {
-                                file.hardcoded_languages.forEach((harcodedLanguage) => {
+                            if (file.hardcodedLanguages != null) {
+                                file.hardcodedLanguages.forEach((harcodedLanguage) => {
                                     if (harcodedLanguage == language) {
                                         subtitleCount++;
                                     }
                                 });
                             }
                             // A video file can have multiple embedded languages
-                            if (file.embedded_languages != null) {
-                                file.embedded_languages.forEach((embeddedLanguage) => {
+                            if (file.embeddedLanguages != null) {
+                                file.embeddedLanguages.forEach((embeddedLanguage) => {
                                     if (embeddedLanguage == language) {
                                         subtitleCount++;
                                     }

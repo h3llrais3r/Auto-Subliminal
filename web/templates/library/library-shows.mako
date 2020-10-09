@@ -69,11 +69,11 @@
                                 <i class="fa fa-refresh fa-spin fa-fw" aria-hidden="true" title="Loading..."></i>
                             </td>
                         </tr>
-                        <tr v-for="show in shows" :id="show.tvdb_id">
+                        <tr v-for="show in shows" :id="show.tvdbId">
                             <td>
                                 <div class="title-banner-container" v-lazy-container>
-                                    <a :href="getShowDetailsUrl(show.tvdb_id)" :title="show.title">
-                                        <img v-if="show.banner" class="title-banner-image" :data-src="getShowBannerThumbnailUrl(show.tvdb_id)" :data-loading="bannerPlaceholderUrl" :data-error="bannerPlaceholderUrl">
+                                    <a :href="getShowDetailsUrl(show.tvdbId)" :title="show.title">
+                                        <img v-if="show.banner" class="title-banner-image" :data-src="getShowBannerThumbnailUrl(show.tvdbId)" :data-loading="bannerPlaceholderUrl" :data-error="bannerPlaceholderUrl">
                                     </a>
                                 </div>
                             </td>
@@ -82,7 +82,7 @@
                                 <span class="path">{{ show.path }}</span>
                             </td>
                             <td>
-                                <span v-for="language in show.settings.wanted_languages" class="language-badge">{{ language }}</span>
+                                <span v-for="language in show.settings.wantedLanguages" class="language-badge">{{ language }}</span>
                             </td>
                             <td>
                                 <vue-simple-progress

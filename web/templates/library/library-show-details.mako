@@ -56,7 +56,7 @@
                                         <div class="col-xs-12 details-info-title">
                                             <span>{{ show.title + ' (' + show.year + ')' }}</span>
                                             <div class="icon-group">
-                                                <a :href="tvdbUrl + show.tvdb_id" target="_blank">
+                                                <a :href="tvdbUrl + show.tvdbId" target="_blank">
                                                     <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
                                                 </a>
                                                 <a class="icon-link" @click="openSettingsModal($event)">
@@ -78,7 +78,7 @@
                                                     <td>Location:</td>
                                                     <td class="wrapped">
                                                         {{ show.path }}
-                                                        <a v-if="!show.path_in_video_paths" class="icon-link" @click="addShowPathToVideoPaths($event)">
+                                                        <a v-if="!show.pathInVideoPaths" class="icon-link" @click="addShowPathToVideoPaths($event)">
                                                             <i class="fa fa-plus" aria-hidden="true" title="Click to add the show path to the video paths to scan"></i>
                                                         </a>
                                                     </td>
@@ -86,7 +86,7 @@
                                                 <tr>
                                                     <td>Wanted languages:</td>
                                                     <td>
-                                                        <span v-for="language in show.settings.wanted_languages" class="language-badge">{{ language }}</span>
+                                                        <span v-for="language in show.settings.wantedLanguages" class="language-badge">{{ language }}</span>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -122,24 +122,24 @@
                                                     <table class="details-files-season">
                                                         <tr>
                                                             <td>
-                                                                <span>{{ file.season_name }}</span>
+                                                                <span>{{ file.seasonName }}</span>
                                                                 <div class="dropdown dropdown-icon">
                                                                     <a class="dropdown-toggle" data-toggle="dropdown">
                                                                         <i class="fa fa-info-circle" aria-hidden="true" title="Click for more info"></i>
                                                                     </a>
                                                                     <ul class="dropdown-menu has-tip info-list">
-                                                                        <li>{{ file.season_path }}</li>
+                                                                        <li>{{ file.seasonPath }}</li>
                                                                     </ul>
                                                                 </div>
                                                             </td>
                                                             <td class="text-right">
-                                                                <span v-for="language in show.settings.wanted_languages" class="btn btn-sm btn-static">
+                                                                <span v-for="language in show.settings.wantedLanguages" class="btn btn-sm btn-static">
                                                                     {{ language }}
-                                                                    <span class="badge">{{ getNrOfSubtitles(file.season_files, language) }}</span>
+                                                                    <span class="badge">{{ getNrOfSubtitles(file.seasonFiles, language) }}</span>
                                                                 </span>
                                                                 <span class="btn btn-sm btn-static">
                                                                     video
-                                                                    <span class="badge">{{ getNrOfVideos(file.season_files) }}</span>
+                                                                    <span class="badge">{{ getNrOfVideos(file.seasonFiles) }}</span>
                                                                 </span>
                                                             </td>
                                                         </tr>
@@ -148,22 +148,22 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr v-for="f in file.season_files">
+                                            <tr v-for="f in file.seasonFiles">
                                                 <td>
                                                     <span class="details-files-file">{{ f.filename }}</span>
                                                     <div class="icon-group">
-                                                        <a v-if="f.type == 'video'" class="icon-link" @click="openSubtitlesModal(file.season_path, f.filename, f.hardcoded_languages, f.tvdb_id, $event)">
+                                                        <a v-if="f.type == 'video'" class="icon-link" @click="openSubtitlesModal(file.seasonPath, f.filename, f.hardcodedLanguages, f.tvdbId, $event)">
                                                             <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
                                                         </a>
-                                                        <a v-if="f.type == 'video'" :href="getPlayVideoUrl(file.season_path, f.filename)">
+                                                        <a v-if="f.type == 'video'" :href="getPlayVideoUrl(file.seasonPath, f.filename)">
                                                             <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
                                                         </a>
                                                     </div>
                                                 </td>
                                                 <td v-if="f.type == 'video'" class="text-right">
                                                     <!-- language is an array in case of video type -->
-                                                    <span class="language-badge right-aligned" v-if="f.hardcoded_languages" v-for="language in f.hardcoded_languages">{{ language }}</span>
-                                                    <span class="language-badge right-aligned" v-if="f.embedded_languages" v-for="language in f.embedded_languages">{{ language }}</span>
+                                                    <span class="language-badge right-aligned" v-if="f.hardcodedLanguages" v-for="language in f.hardcodedLanguages">{{ language }}</span>
+                                                    <span class="language-badge right-aligned" v-if="f.embeddedLanguages" v-for="language in f.embeddedLanguages">{{ language }}</span>
                                                     <span class="language-badge right-aligned" v-if="internalLanguagesAvailable(f)">internal</span>
                                                     <span class="file-type-badge right-aligned">{{ f.type }}</span>
                                                 </td>

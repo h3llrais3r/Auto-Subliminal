@@ -4,7 +4,7 @@ import time
 
 import autosubliminal
 from autosubliminal.core.scheduler import ScheduledProcess, Scheduler
-from autosubliminal.util.common import to_dict
+from autosubliminal.util.common import camelize, to_dict
 
 autosubliminal.SCHEDULERS = {}
 autosubliminal.WEBSOCKETMESSAGEQUEUE = []
@@ -24,8 +24,8 @@ class MyScheduler(object):
     def next_run(self):
         return self.last_run + self.interval
 
-    def to_dict(self, camelize_keys):
-        return to_dict(self, camelize_keys, 'process')
+    def to_dict(self, key_fn):
+        return to_dict(self, key_fn, 'process')
 
 
 class MyScheduledProcess(ScheduledProcess):
@@ -156,7 +156,7 @@ def test_scheduler_to_dict():
         'name': 'MyScheduler1',
         'nextRun': 61
     }
-    assert scheduler_dict == scheduler.to_dict(True)
+    assert scheduler_dict == scheduler.to_dict(camelize)
 
 
 def _assert_scheduler(scheduler):

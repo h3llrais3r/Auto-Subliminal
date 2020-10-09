@@ -39,10 +39,10 @@
           });
         },
         getProgressPercentage: function getProgressPercentage(overview) {
-          return overview.total_subtitles_available / overview.total_subtitles_wanted * 100;
+          return overview.totalSubtitlesAvailable / overview.totalSubtitlesWanted * 100;
         },
         getProgressText: function getProgressText(overview) {
-          return "".concat(overview.total_subtitles_available, " of ").concat(overview.total_subtitles_wanted);
+          return "".concat(overview.totalSubtitlesAvailable, " of ").concat(overview.totalSubtitlesWanted);
         }
       }
     });

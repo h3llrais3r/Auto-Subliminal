@@ -65,15 +65,32 @@ class ShowDetails(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_json(self):
-        """Convert to its json representation."""
-        json_dict = to_dict(self, False, 'poster', 'banner')
+    def to_dict(self, key_fn, *args, **kwargs):
+        """Convert the object to its dict representation.
 
-        # Indicate if artwork is available or not
-        json_dict['poster'] = True if self.poster else False
-        json_dict['banner'] = True if self.banner else False
+        :param key_fn: the function that is executed on the keys when creating the dict
+        :type key_fn: function
+        :param args: optional list of attributes not to include in the conversion
+        :type args: tuple
+        :param kwargs: optional dict with custom attributes to include in the conversion
+        :type args: dict
+        :return: the json dict
+        :rtype: dict
+        """
+        # Define args to exclude
+        exclude_args = ['poster', 'banner']
+        if args:
+            exclude_args.extend(list(args))
 
-        return json_dict
+        # Define kwargs to include
+        poster_available = True if self.poster else False  # indication if poster is available
+        banner_available = True if self.banner else False  # indication if banner is available
+        include_kwargs = {'poster': poster_available, 'banner': banner_available}
+        if kwargs:
+            include_kwargs.update(kwargs)
+
+        # Convert to json dict
+        return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
     @classmethod
     def from_indexer(cls, obj, poster=None):
@@ -206,9 +223,30 @@ class ShowSettings(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_json(self):
-        """Convert to its json representation."""
-        return to_dict(self, False, 'tvdb_id')
+    def to_dict(self, key_fn, *args, **kwargs):
+        """Convert the object to its dict representation.
+
+        :param key_fn: the function that is executed on the keys when creating the dict
+        :type key_fn: function
+        :param args: optional list of attributes not to include in the conversion
+        :type args: tuple
+        :param kwargs: optional dict with custom attributes to include in the conversion
+        :type args: dict
+        :return: the json dict
+        :rtype: dict
+        """
+        # Define args to exclude
+        exclude_args = ['tvdb_id']
+        if args:
+            exclude_args.extend(list(args))
+
+        # Define kwargs to include
+        include_kwargs = {}
+        if kwargs:
+            include_kwargs.update(kwargs)
+
+        # Convert to json dict
+        return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
     @classmethod
     def default_settings(cls, tvdb_id):

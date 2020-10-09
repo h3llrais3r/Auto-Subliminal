@@ -87,7 +87,7 @@
                                             </div>
                                             <div class="col-xs-12 col-sm-2">
                                                 <label class="switch-checkbox pull-right">
-                                                    <input type="checkbox" id="hearingImpairedSwitch" v-model="movieSettings.hearing_impaired">
+                                                    <input type="checkbox" id="hearingImpairedSwitch" v-model="movieSettings.hearingImpaired">
                                                     <label for="hearingImpairedSwitch" class="label-primary"></label>
                                                 </label>
                                             </div>
@@ -109,7 +109,7 @@
                                             </div>
                                             <div class="col-xs-12 col-sm-2">
                                                 <label class="switch-checkbox pull-right">
-                                                    <input type="checkbox" id="utf8EncodingSwitch" v-model="movieSettings.utf8_encoding">
+                                                    <input type="checkbox" id="utf8EncodingSwitch" v-model="movieSettings.utf8Encoding">
                                                     <label for="utf8EncodingSwitch" class="label-primary"></label>
                                                 </label>
                                             </div>

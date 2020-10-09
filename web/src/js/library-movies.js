@@ -108,10 +108,10 @@
                     return autosubliminal.getUrl(`/library/movies/${imdbId}`);
                 },
                 getMovieProgressPercentage: function (movie) {
-                    return movie.total_subtitles_available / movie.total_subtitles_wanted * 100;
+                    return movie.totalSubtitlesAvailable / movie.totalSubtitlesWanted * 100;
                 },
                 getMovieProgressText: function (movie) {
-                    return `${movie.total_subtitles_available} of ${movie.total_subtitles_wanted}`;
+                    return `${movie.totalSubtitlesAvailable} of ${movie.totalSubtitlesWanted}`;
                 }
             }
         });

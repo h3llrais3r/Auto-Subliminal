@@ -45,8 +45,8 @@
                 // Watch for settings being updated to convert the wanted languages
                 settings: function (newSettings) {
                     const self = this;
-                    if (newSettings && newSettings.wanted_languages) {
-                        self.wantedLanguages = self.getLanguages(self.settings.wanted_languages);
+                    if (newSettings && newSettings.wantedLanguages) {
+                        self.wantedLanguages = self.getLanguages(self.settings.wantedLanguages);
                     }
                 }
             },
@@ -73,7 +73,7 @@
                         apiUrl = autosubliminal.getUrl(`/api/movies/${self.indexerId}/settings`);
                     }
                     const data = self.settings;
-                    data.wanted_languages = self.getLanguageCodes(self.wantedLanguages);
+                    data.wantedLanguages = self.getLanguageCodes(self.wantedLanguages);
                     // Save settings
                     $.putJson(apiUrl, data, function () {
                         // Close modal on success

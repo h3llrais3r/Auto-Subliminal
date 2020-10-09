@@ -36,8 +36,8 @@
         settings: function settings(newSettings) {
           var self = this;
 
-          if (newSettings && newSettings.wanted_languages) {
-            self.wantedLanguages = self.getLanguages(self.settings.wanted_languages);
+          if (newSettings && newSettings.wantedLanguages) {
+            self.wantedLanguages = self.getLanguages(self.settings.wantedLanguages);
           }
         }
       },
@@ -61,7 +61,7 @@
           }
 
           var data = self.settings;
-          data.wanted_languages = self.getLanguageCodes(self.wantedLanguages);
+          data.wantedLanguages = self.getLanguageCodes(self.wantedLanguages);
           $.putJson(apiUrl, data, function () {
             $('#settingsModal').modal('hide');
           });

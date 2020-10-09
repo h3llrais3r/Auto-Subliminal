@@ -56,7 +56,7 @@
                                         <div class="col-xs-12 details-info-title">
                                             <span>{{ movie.title + ' (' + movie.year + ')' }}</span>
                                             <div class="icon-group">
-                                                <a :href="imdbUrl + movie.imdb_id" target="_blank">
+                                                <a :href="imdbUrl + movie.imdbId" target="_blank">
                                                     <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
                                                 </a>
                                                 <a class="icon-link" @click="openSettingsModal($event)">
@@ -78,7 +78,7 @@
                                                     <td>Location:</td>
                                                     <td class="wrapped">
                                                         {{ movie.path }}
-                                                        <a v-if="!movie.path_in_video_paths" class="icon-link" @click="addMoviePathToVideoPaths($event)">
+                                                        <a v-if="!movie.pathInVideoPaths" class="icon-link" @click="addMoviePathToVideoPaths($event)">
                                                             <i class="fa fa-plus" aria-hidden="true" title="Click to add the movie path to the video paths to scan"></i>
                                                         </a>
                                                     </td>
@@ -86,7 +86,7 @@
                                                 <tr>
                                                     <td>Wanted languages:</td>
                                                     <td>
-                                                        <span v-for="language in movie.settings.wanted_languages" class="language-badge">{{ language }}</span>
+                                                        <span v-for="language in movie.settings.wantedLanguages" class="language-badge">{{ language }}</span>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -120,7 +120,7 @@
                                                 <td class="wrapped">
                                                     <span class="details-files-file">{{ f.filename }}</span>
                                                     <div class="icon-group">
-                                                        <a v-if="f.type == 'video'" class="icon-link" @click="openSubtitlesModal(movie.path, f.filename, f.hardcoded_languages, $event)">
+                                                        <a v-if="f.type == 'video'" class="icon-link" @click="openSubtitlesModal(movie.path, f.filename, f.hardcodedLanguages, $event)">
                                                             <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
                                                         </a>
                                                         <a v-if="f.type == 'video'" :href="getPlayVideoUrl(movie.path, f.filename)">
@@ -130,8 +130,8 @@
                                                 </td>
                                                 <td v-if="f.type == 'video'" class="text-right">
                                                     <!-- language is an array in case of video type -->
-                                                    <span class="language-badge right-aligned" v-if="f.hardcoded_languages" v-for="language in f.hardcoded_languages">{{ language }}</span>
-                                                    <span class="language-badge right-aligned" v-if="f.embedded_languages" v-for="language in f.embedded_languages">{{ language }}</span>
+                                                    <span class="language-badge right-aligned" v-if="f.hardcodedLanguages" v-for="language in f.hardcodedLanguages">{{ language }}</span>
+                                                    <span class="language-badge right-aligned" v-if="f.embeddedLanguages" v-for="language in f.embeddedLanguages">{{ language }}</span>
                                                     <span class="language-badge right-aligned" v-if="internalLanguagesAvailable(f)">internal</span>
                                                     <span class="file-type-badge right-aligned">{{ f.type }}</span>
                                                 </td>

@@ -51,7 +51,7 @@ class MyObject(object):
 
     @property
     def my_key5(self):
-        return {'5': 5}
+        return {'my_sub_key5': 5}
 
     @property
     def my_key6(self):
@@ -172,14 +172,16 @@ def test_to_dict():
         'my_key1': 1,
         'my_key2': '2',
         'my_key3': [3],
-        'my_key5': {'5': 5}
+        'my_key5': {'my_sub_key5': 5}
     }
     object_dict_with_key7 = dict(obj_dict)
     object_dict_with_key7.update({'my_key7': 7})
     my_args = ('my_key6',)
     my_kwargs = {'my_key7': 7}
-    assert to_dict(MyObject(), False, 'my_key6') == obj_dict
-    assert to_dict(MyObject(), False, *my_args, **my_kwargs) == object_dict_with_key7
+    assert to_dict(MyObject(), decamelize, 'my_key6') == obj_dict
+    assert to_dict(MyObject(), decamelize, *my_args, **my_kwargs) == object_dict_with_key7
+    assert to_dict(MyObject(), None, 'my_key6') == obj_dict
+    assert to_dict(MyObject(), None, decamelize, *my_args, **my_kwargs) == object_dict_with_key7
 
 
 def test_to_dict_camelized():
@@ -187,14 +189,14 @@ def test_to_dict_camelized():
         'myKey1': 1,
         'myKey2': '2',
         'myKey3': [3],
-        'myKey5': {'5': 5}
+        'myKey5': {'mySubKey5': 5}
     }
     object_dict_with_key7 = dict(obj_dict)
-    object_dict_with_key7.update({'myKey7': 7})
+    object_dict_with_key7.update({'myKey7': [{'mySubKey7a': '7a'}, {'mySubKey7b': '7b'}]})
     my_args = ('my_key6',)
-    my_kwargs = {'my_key7': 7}
-    assert to_dict(MyObject(), True, 'my_key6') == obj_dict
-    assert to_dict(MyObject(), True, *my_args, **my_kwargs) == object_dict_with_key7
+    my_kwargs = {'my_key7': [{'my_sub_key7a': '7a'}, {'my_sub_key7b': '7b'}]}
+    assert to_dict(MyObject(), camelize, 'my_key6') == obj_dict
+    assert to_dict(MyObject(), camelize, *my_args, **my_kwargs) == object_dict_with_key7
 
 
 def test_get_boolean():
@@ -299,12 +301,14 @@ def test_camelize():
     assert camelize('utf_8_encoding') == 'utf8Encoding'
     assert camelize('utf8_encoding') == 'utf8Encoding'
     assert camelize('') == ''
+    assert camelize('testMe') == 'testMe'
     assert camelize(None) is None
 
 
 def test_decamelize():
     assert decamelize('testMe4') == 'test_me4'
     assert decamelize('utf8Encoding') == 'utf8_encoding'
+    assert decamelize('utf8_encoding') == 'utf8_encoding'
     assert decamelize('') == ''
     assert decamelize(None) is None
 

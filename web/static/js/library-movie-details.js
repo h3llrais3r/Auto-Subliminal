@@ -34,19 +34,19 @@
       computed: {
         moviePosterThumbnailUrl: function moviePosterThumbnailUrl() {
           var self = this;
-          return autosubliminal.getUrl("/artwork/imdb/poster/thumbnail/".concat(self.movie.imdb_id));
+          return autosubliminal.getUrl("/artwork/imdb/poster/thumbnail/".concat(self.movie.imdbId));
         },
         moviePosterFullSizeUrl: function moviePosterFullSizeUrl() {
           var self = this;
-          return autosubliminal.getUrl("/artwork/imdb/poster/fullsize/".concat(self.movie.imdb_id));
+          return autosubliminal.getUrl("/artwork/imdb/poster/fullsize/".concat(self.movie.imdbId));
         },
         movieProgressPercentage: function movieProgressPercentage() {
           var self = this;
-          return self.movie.total_subtitles_available / self.movie.total_subtitles_wanted * 100;
+          return self.movie.totalSubtitlesAvailable / self.movie.totalSubtitlesWanted * 100;
         },
         movieProgressText: function movieProgressText() {
           var self = this;
-          return "".concat(self.movie.total_subtitles_available, " of ").concat(self.movie.total_subtitles_wanted);
+          return "".concat(self.movie.totalSubtitlesAvailable, " of ").concat(self.movie.totalSubtitlesWanted);
         }
       },
       methods: {
@@ -78,7 +78,7 @@
         internalLanguagesAvailable: function internalLanguagesAvailable(file) {
           var available = false;
 
-          if (file.hardcoded_languages && file.hardcoded_languages.length > 0 || file.embedded_languages && file.embedded_languages.length > 0) {
+          if (file.hardcodedLanguages && file.hardcodedLanguages.length > 0 || file.embeddedLanguages && file.embeddedLanguages.length > 0) {
             available = true;
           }
 
@@ -88,7 +88,7 @@
           event.preventDefault();
           var self = this;
           $('.refresh-running').removeClass('hidden');
-          $.putJson(autosubliminal.getUrl("/api/movies/".concat(self.movie.imdb_id, "/refresh")), null, function () {
+          $.putJson(autosubliminal.getUrl("/api/movies/".concat(self.movie.imdbId, "/refresh")), null, function () {
             self.getMovieDetails();
             $('.refresh-running').addClass('hidden');
           });
@@ -97,7 +97,7 @@
           event.preventDefault();
           var self = this;
           self.movieSettings = self.movie.settings;
-          self.movieSettingsWantedLanguages = self.getLanguages(self.movie.settings.wanted_languages);
+          self.movieSettingsWantedLanguages = self.getLanguages(self.movie.settings.wantedLanguages);
           $('#settingsModal').modal('show');
         },
         openDeleteModal: function openDeleteModal(event) {
@@ -116,8 +116,8 @@
           event.preventDefault();
           var self = this;
           var data = self.movieSettings;
-          data.wanted_languages = self.getLanguageCodes(self.movieSettingsWantedLanguages);
-          $.putJson(autosubliminal.getUrl("/api/movies/".concat(self.movie.imdb_id, "/settings")), data, function () {
+          data.wantedLanguages = self.getLanguageCodes(self.movieSettingsWantedLanguages);
+          $.putJson(autosubliminal.getUrl("/api/movies/".concat(self.movie.imdbId, "/settings")), data, function () {
             $('#settingsModal').modal('hide');
             self.refreshMovieDetails(event);
           });
@@ -125,7 +125,7 @@
         deleteMovie: function deleteMovie(event) {
           event.preventDefault();
           var self = this;
-          $.deleteJson(autosubliminal.getUrl("/api/movies/".concat(self.movie.imdb_id)), null, function () {
+          $.deleteJson(autosubliminal.getUrl("/api/movies/".concat(self.movie.imdbId)), null, function () {
             $('#deleteModal').modal('hide');
             window.location = autosubliminal.getUrl('/library/movies');
           });
@@ -134,11 +134,11 @@
           event.preventDefault();
           var self = this;
           var data = {
-            'file_location': self.selectedFileLocation,
-            'file_name': self.selectedFileName,
+            'fileLocation': self.selectedFileLocation,
+            'fileName': self.selectedFileName,
             'languages': self.getLanguageCodes(self.selectedHardcodedLanguages)
           };
-          $.putJson(autosubliminal.getUrl("/api/movies/".concat(self.movie.imdb_id, "/subtitles/hardcoded")), data, function () {
+          $.putJson(autosubliminal.getUrl("/api/movies/".concat(self.movie.imdbId, "/subtitles/hardcoded")), data, function () {
             $('#subtitlesModal').modal('hide');
             self.getMovieDetails();
           });

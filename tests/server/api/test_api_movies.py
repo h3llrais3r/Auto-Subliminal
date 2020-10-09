@@ -20,26 +20,26 @@ movie_settings_1 = MovieSettings(imdb_id='tt1', wanted_languages=['en', 'nl'], r
 movie_settings_2 = MovieSettings(imdb_id='tt2', wanted_languages=['en', 'nl'], refine=True, hearing_impaired=False,
                                  utf8_encoding=True)
 
-movies_json = '[{"imdb_id": "tt1", ' \
-              '"overview": "overview1", "path": "/path/to/movie1", "path_in_video_paths": false, "poster": true, ' \
-              '"settings": {"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
-              '"wanted_languages": ["en", "nl"]}, "title": "title1", "total_subtitles_available": 1, ' \
-              '"total_subtitles_missing": 1, "total_subtitles_wanted": 2, "year": 2018}, ' \
-              '{"imdb_id": "tt2", ' \
-              '"overview": "overview2", "path": "/path/to/movie2", "path_in_video_paths": false, "poster": true, ' \
-              '"settings": {"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
-              '"wanted_languages": ["en", "nl"]}, "title": "title2", "total_subtitles_available": 0, ' \
-              '"total_subtitles_missing": 2, "total_subtitles_wanted": 2, "year": 2019}]'
+movies_json = '[{"imdbId": "tt1", ' \
+              '"overview": "overview1", "path": "/path/to/movie1", "pathInVideoPaths": false, "poster": true, ' \
+              '"settings": {"hearingImpaired": false, "refine": true, "utf8Encoding": true, ' \
+              '"wantedLanguages": ["en", "nl"]}, "title": "title1", "totalSubtitlesAvailable": 1, ' \
+              '"totalSubtitlesMissing": 1, "totalSubtitlesWanted": 2, "year": 2018}, ' \
+              '{"imdbId": "tt2", ' \
+              '"overview": "overview2", "path": "/path/to/movie2", "pathInVideoPaths": false, "poster": true, ' \
+              '"settings": {"hearingImpaired": false, "refine": true, "utf8Encoding": true, ' \
+              '"wantedLanguages": ["en", "nl"]}, "title": "title2", "totalSubtitlesAvailable": 0, ' \
+              '"totalSubtitlesMissing": 2, "totalSubtitlesWanted": 2, "year": 2019}]'
 
-movie_1_json = '{"files": [{"embedded_languages": [], "filename": "movie1.mkv", "hardcoded_languages": [], ' \
+movie_1_json = '{"files": [{"embeddedLanguages": [], "filename": "movie1.mkv", "hardcodedLanguages": [], ' \
                '"type": "video"}, {"filename": "subtitle1.srt", "language": "nl", "type": "subtitle"}], ' \
-               '"imdb_id": "tt1", "overview": "overview1", "path": "/path/to/movie1", "path_in_video_paths": false, ' \
-               '"poster": true, "settings": {"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
-               '"wanted_languages": ["en", "nl"]}, "title": "title1", "total_subtitles_available": 1, ' \
-               '"total_subtitles_missing": 1, "total_subtitles_wanted": 2, "year": 2018}'
+               '"imdbId": "tt1", "overview": "overview1", "path": "/path/to/movie1", "pathInVideoPaths": false, ' \
+               '"poster": true, "settings": {"hearingImpaired": false, "refine": true, "utf8Encoding": true, ' \
+               '"wantedLanguages": ["en", "nl"]}, "title": "title1", "totalSubtitlesAvailable": 1, ' \
+               '"totalSubtitlesMissing": 1, "totalSubtitlesWanted": 2, "year": 2018}'
 
-movie_settings_1_json = '{"hearing_impaired": false, "refine": true, "utf8_encoding": true, ' \
-                        '"wanted_languages": ["en", "nl"]}'
+movie_settings_1_json = '{"hearingImpaired": false, "refine": true, "utf8Encoding": true, ' \
+                        '"wantedLanguages": ["en", "nl"]}'
 
 
 def test_get_movies(monkeypatch, mocker):
@@ -70,6 +70,6 @@ def test_get_movies_overview(mocker):
     mocker.patch.object(FailedMoviesDb, 'get_failed_movies', return_value=['/path/to/failed/movie'])
     mocker.patch.object(MovieDetailsDb, 'get_all_movies', return_value=[movie_details_1])
     mocker.patch.object(MovieSettingsDb, 'get_movie_settings', side_effect=[movie_settings_1, movie_settings_2])
-    overview_json = '{"failed_movies": ["/path/to/failed/movie"], "total_movies": 1, "total_subtitles_available": 1, ' \
-                    '"total_subtitles_missing": 1, "total_subtitles_wanted": 2}'
+    overview_json = '{"failedMovies": ["/path/to/failed/movie"], "totalMovies": 1, "totalSubtitlesAvailable": 1, ' \
+                    '"totalSubtitlesMissing": 1, "totalSubtitlesWanted": 2}'
     assert overview_json == pickle_api_result(MoviesApi().overview.get())

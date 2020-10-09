@@ -123,7 +123,7 @@ const autosubliminal = {
         imdbUrl: null,
         timestampFormat: null,
         pathSeparator: null,
-        languages: null
+        languages: []
     };
 
     // Notification
@@ -178,35 +178,69 @@ const autosubliminal = {
         running: null
     };
 
+    autosubliminal.types.ShowSettings = {
+        hearingImpaired: null,
+        refine: null,
+        utf8Encoding: null,
+        wantedLanguages: null
+    };
+
+    autosubliminal.types.ShowFiles = [{
+        seasonFiles: {
+            embeddedLanguages: [],
+            filename: null,
+            hardcodedLanguages: [],
+            tvdbId: null,
+            type: null
+        },
+        seasonName: null,
+        seasonPath: null
+    }];
+
     autosubliminal.types.Show = {
         path: null,
-        tvdb_id: null,
+        tvdbId: null,
         title: null,
         year: null,
         overview: null,
         poster: null,
         banner: null,
-        settings: null,
-        path_in_video_paths: null,
-        total_subtitles_wanted: null,
-        total_subtitles_missing: null,
-        total_subtitles_available: null,
-        files: null
+        settings: autosubliminal.types.ShowSettings,
+        pathInVideoPaths: null,
+        totalSubtitlesWanted: null,
+        totalSubtitlesMissing: null,
+        totalSubtitlesAvailable: null,
+        files: autosubliminal.types.ShowFiles
     };
+
+    autosubliminal.types.MovieSettings = {
+        hearingImpaired: null,
+        refine: null,
+        utf8Encoding: null,
+        wantedLanguages: []
+    };
+
+    autosubliminal.types.MovieFiles = [{
+        embeddedLanguages: [],
+        filename: null,
+        hardcodedLanguages: [],
+        language: null,
+        type: null
+    }];
 
     autosubliminal.types.Movie = {
         path: null,
-        imdb_id: null,
+        imdbId: null,
         title: null,
         year: null,
         overview: null,
         poster: null,
-        settings: null,
-        path_in_video_paths: null,
-        total_subtitles_wanted: null,
-        total_subtitles_missing: null,
-        total_subtitles_available: null,
-        files: null
+        settings: autosubliminal.types.MovieSettings,
+        pathInVideoPaths: null,
+        totalSubtitlesWanted: null,
+        totalSubtitlesMissing: null,
+        totalSubtitlesAvailable: null,
+        files: autosubliminal.types.MovieFiles
     };
 
     autosubliminal.types.SubtitleLanguage = {
@@ -434,14 +468,14 @@ const autosubliminal = {
     };
 
     // Function to run a process on the server
-    autosubliminal.websockets.runProcessOnServer = function (process_name) {
+    autosubliminal.websockets.runProcessOnServer = function (processName) {
         // Construct the event
         const event = {
             'type': autosubliminal.websockets.EVENT,
             'event': {
                 'type': autosubliminal.websockets.RUN_PROCESS,
                 'data': {
-                    'name': process_name
+                    'name': processName
                 }
             }
         };

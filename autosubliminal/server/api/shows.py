@@ -12,7 +12,7 @@ from autosubliminal.db import (FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsD
                                ShowSettingsDb, WantedItemsDb)
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import NotFound, RestResource
-from autosubliminal.util.common import find_path_in_paths, get_boolean, natural_keys
+from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, get_boolean, natural_keys, to_dict
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 from autosubliminal.util.websocket import send_websocket_notification
 
@@ -48,7 +48,7 @@ class ShowsApi(RestResource):
                 raise NotFound()
 
             # Return show details
-            return self._to_show_json(db_show, db_show_settings, details=True)
+            return self._to_show_dict(db_show, db_show_settings, details=True)
 
         else:
             shows = []
@@ -56,7 +56,7 @@ class ShowsApi(RestResource):
             db_shows = ShowDetailsDb().get_all_shows()
             for db_show in db_shows:
                 db_show_settings = show_settings_db.get_show_settings(db_show.tvdb_id)
-                shows.append(self._to_show_json(db_show, db_show_settings))
+                shows.append(self._to_show_dict(db_show, db_show_settings))
 
             return shows
 
@@ -67,13 +67,10 @@ class ShowsApi(RestResource):
 
         return self._no_content()
 
-    def _to_show_json(self, show, show_settings, details=False):
-        show_json = show.to_json()
-        show_json['settings'] = show_settings.to_json()
-
+    def _to_show_dict(self, show, show_settings, details=False):
         # Check if the show path is listed in the video paths to scan
-        show_json['path_in_video_paths'] = True if find_path_in_paths(show.path, autosubliminal.VIDEOPATHS,
-                                                                      check_common_path=True) else False
+        path_in_video_paths = True if find_path_in_paths(show.path, autosubliminal.VIDEOPATHS,
+                                                         check_common_path=True) else False
 
         # Calculate totals based on available episodes
         total_subtitles_wanted = 0
@@ -85,14 +82,21 @@ class ShowsApi(RestResource):
             total_subtitles_wanted += len(wanted_languages)
             total_subtitles_missing += len(episode.missing_languages)
             total_subtitles_available += len(wanted_languages) - len(episode.missing_languages)
-        show_json['total_subtitles_wanted'] = total_subtitles_wanted
-        show_json['total_subtitles_missing'] = total_subtitles_missing
-        show_json['total_subtitles_available'] = total_subtitles_available
 
+        # Set kwargs to include in json
+        include_kwargs = {
+            'settings': show_settings.to_dict(camelize),
+            'path_in_video_paths': path_in_video_paths,
+            'total_subtitles_wanted': total_subtitles_wanted,
+            'total_subtitles_available': total_subtitles_available,
+            'total_subtitles_missing': total_subtitles_missing
+        }
+
+        # Add details if needed
         if details:
-            show_json['files'] = self._get_show_episode_files(episodes)
+            include_kwargs['files'] = self._get_show_episode_files(episodes)
 
-        return show_json
+        return show.to_dict(camelize, **include_kwargs)
 
     def _get_show_episode_files(self, show_episodes):
         # Show episode files are supposed to be stored in individual season dirs or the root dir only
@@ -173,7 +177,7 @@ class _OverviewApi(RestResource):
                 total_subtitles_missing += len(show_episode.missing_languages)
                 total_subtitles_available += len(wanted_languages) - len(show_episode.missing_languages)
 
-        return {
+        overview = {
             'total_shows': total_shows,
             'total_episodes': total_episodes,
             'total_subtitles_wanted': total_subtitles_wanted,
@@ -181,6 +185,8 @@ class _OverviewApi(RestResource):
             'total_subtitles_available': total_subtitles_available,
             'failed_shows': failed_shows
         }
+
+        return to_dict(overview, camelize)
 
 
 class _RefreshApi(RestResource):
@@ -225,17 +231,17 @@ class _SettingsApi(RestResource):
             show_settings = ShowSettings.default_settings(tvdb_id)
             show_settings_db.set_show_settings(show_settings)
 
-        return show_settings.to_json()
+        return show_settings.to_dict(camelize)
 
     def put(self, tvdb_id):
         """Save the settings for a show."""
-        input_json = cherrypy.request.json
+        input_dict = to_dict(cherrypy.request.json, decamelize)
 
-        if all(k in input_json for k in ('wanted_languages', 'refine', 'hearing_impaired', 'utf8_encoding')):
-            wanted_languages = input_json['wanted_languages']
-            refine = get_boolean(input_json['refine'])
-            hearing_impaired = get_boolean(input_json['hearing_impaired'])
-            utf8_encoding = get_boolean(input_json['utf8_encoding'])
+        if all(k in input_dict for k in ('wanted_languages', 'refine', 'hearing_impaired', 'utf8_encoding')):
+            wanted_languages = input_dict['wanted_languages']
+            refine = get_boolean(input_dict['refine'])
+            hearing_impaired = get_boolean(input_dict['hearing_impaired'])
+            utf8_encoding = get_boolean(input_dict['utf8_encoding'])
 
             # Update settings
             db = ShowSettingsDb()
@@ -286,13 +292,13 @@ class _HardcodedApi(RestResource):
 
     def put(self, tvdb_id, episode_tvdb_id):
         """Save the list of hardcoded subtitles for a show episode file."""
-        input_json = cherrypy.request.json
+        input_dict = to_dict(cherrypy.request.json, decamelize)
 
-        if all(k in input_json for k in ('file_location', 'file_name', 'languages')):
+        if all(k in input_dict for k in ('file_location', 'file_name', 'languages')):
             # Save to file
-            file_location = input_json['file_location']
-            file_name = input_json['file_name']
-            languages = input_json['languages']
+            file_location = input_dict['file_location']
+            file_name = input_dict['file_name']
+            languages = input_dict['languages']
             save_hardcoded_subtitle_languages(file_location, file_name, languages)
 
             # Update in db

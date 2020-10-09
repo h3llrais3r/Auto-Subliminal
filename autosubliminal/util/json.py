@@ -11,8 +11,8 @@ def from_json(value):
     Convert json to an object. This will only work for objects which were converted to json with unpickable=True.
     In all other cases, the result will be a dict instead.
 
-    :param value: the value to convert to an object
-    :return: the object or dict
+    :param value: the json value to convert to a dict
+    :return: the dict
     """
     return jsonpickle.loads(value)
 

@@ -8,7 +8,7 @@ import autosubliminal
 from autosubliminal.config import write_config_general_section
 from autosubliminal.core.diskusage import DiskUsage
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import find_path_in_paths
+from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, to_dict
 from autosubliminal.util.language import get_subtitle_languages
 from autosubliminal.util.websocket import send_websocket_notification
 
@@ -42,10 +42,10 @@ class _DiskUsageApi(RestResource):
         """Get the diskusage details for all configured paths."""
         diskusages = []
         diskusage = DiskUsage.calculate_disk_usage('Auto-Subliminal path', autosubliminal.PATH)
-        diskusages.append(diskusage.to_dict(True))
+        diskusages.append(diskusage.to_dict(camelize))
         for index, video_path in enumerate(autosubliminal.VIDEOPATHS):
             diskusage = DiskUsage.calculate_disk_usage('Video path %s' % (index + 1), video_path)
-            diskusages.append(diskusage.to_dict(True))
+            diskusages.append(diskusage.to_dict(camelize))
 
         return diskusages
 
@@ -93,12 +93,12 @@ class _GeneralApi(RestResource):
 
     def put(self, general_setting_name):
         """Update a general setting."""
-        input_json = cherrypy.request.json
+        input_dict = to_dict(cherrypy.request.json, decamelize)
 
         # Add a video path to the existing list of video paths (if not already in it)
-        if general_setting_name == 'videoPaths' and 'videoPath' in input_json and os.path.isdir(
-                input_json['videoPath']):
-            video_path = input_json['videoPath']
+        if general_setting_name == 'videoPaths' and 'videoPath' in input_dict and os.path.isdir(
+                input_dict['videoPath']):
+            video_path = input_dict['videoPath']
             if not find_path_in_paths(video_path, autosubliminal.VIDEOPATHS, check_common_path=True):
                 autosubliminal.VIDEOPATHS.append(video_path)
                 write_config_general_section()

@@ -112,10 +112,10 @@
                     return autosubliminal.getUrl(`/library/shows/${tvdbId}`);
                 },
                 getShowProgressPercentage: function (show) {
-                    return show.total_subtitles_available / show.total_subtitles_wanted * 100;
+                    return show.totalSubtitlesAvailable / show.totalSubtitlesWanted * 100;
                 },
                 getShowProgressText: function (show) {
-                    return `${show.total_subtitles_available} of ${show.total_subtitles_wanted}`;
+                    return `${show.totalSubtitlesAvailable} of ${show.totalSubtitlesWanted}`;
                 }
             }
         });
