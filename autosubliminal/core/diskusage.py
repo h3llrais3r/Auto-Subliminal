@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from autosubliminal.util.common import camelize, get_disk_space_details, humanize_bytes, to_dict
+from autosubliminal.util.common import get_disk_space_details, humanize_bytes, to_dict
 
 
 class DiskUsage(object):
