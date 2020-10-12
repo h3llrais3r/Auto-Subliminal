@@ -53,8 +53,14 @@
                     <tr>
                         <th class="hidden">Type</th>
                         <th>Show/Movie name</th>
-                        <th>Season</th>
-                        <th>Episode</th>
+                        <th>
+                            <span class="visible-sm">Seas.</span>
+                            <span class="hidden-sm">Season</span>
+                        </th>
+                        <th>
+                            <span class="visible-sm">Ep.</span>
+                            <span class="hidden-sm">Episode</span>
+                        </th>
                         <th>Source</th>
                         <th>Quality</th>
                         <th>Codec</th>
