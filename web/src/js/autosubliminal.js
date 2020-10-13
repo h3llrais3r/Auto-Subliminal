@@ -112,7 +112,7 @@ const autosubliminal = {
                 scrollIcon.fadeOut();
             }
         });
-        // Enable click
+        // Enable scroll on icon click
         scrollIcon.click(function (event) {
             event.preventDefault();
             $('html, body').animate({scrollTop: $(document).height()}, 'slow');
@@ -123,7 +123,7 @@ const autosubliminal = {
     // Function to enable scroll to the top icon
     autosubliminal.enableScrollToTop = function () {
         const scrollIcon = $('#scrollToTop');
-        // Enable scroll icon
+        // Show icon when needed
         scrollIcon.removeClass('hidden');
         $(window).scroll(function () {
             var height = $(window).scrollTop();
