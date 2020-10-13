@@ -6,6 +6,7 @@
 
     import autosubliminal
     from autosubliminal.core.logger import count_backup_logfiles
+    from autosubliminal.util.common import get_web_file
 %>
 
 <%block name="bodyContent">
@@ -49,5 +50,11 @@ You can change the loglevel in your <a href="${autosubliminal.WEBROOT}/config/lo
             </div>
         </div>
     </div>
+
+</%block>
+
+<%block name="footerContent">
+
+    <script type="text/javascript" src="${get_web_file('log.js')}"></script>
 
 </%block>

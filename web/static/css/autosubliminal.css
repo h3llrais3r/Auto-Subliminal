@@ -190,6 +190,31 @@ textarea {
   background-color: #dff0d8 !important;
 }
 
+.scroll-icon {
+  overflow: hidden;
+  z-index: 999;
+  cursor: pointer;
+  position: fixed;
+  right: 10px;
+  background-color: #dddddd;
+  color: #333333;
+  border-radius: 8px;
+  padding: 5px;
+}
+
+.scroll-icon:hover {
+  background-color: #333333;
+  color: #dddddd;
+}
+
+.scroll-icon.bottom {
+  top: 60px;
+}
+
+.scroll-icon.top {
+  bottom: 60px;
+}
+
 .separator {
   padding: 0 5px;
 }

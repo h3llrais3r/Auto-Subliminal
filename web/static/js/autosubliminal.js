@@ -58,6 +58,49 @@ var autosubliminal = {
     return languageCodes;
   };
 
+  autosubliminal.enableScrollToBottom = function () {
+    var scrollIcon = $('#scrollToBottom');
+    scrollIcon.removeClass('hidden');
+    $(window).scroll(function () {
+      var height = $(window).scrollTop();
+      var maxScrollHeight = $(document).height() - $(window).height();
+
+      if (height < maxScrollHeight) {
+        scrollIcon.fadeIn();
+      } else {
+        scrollIcon.fadeOut();
+      }
+    });
+    scrollIcon.click(function (event) {
+      event.preventDefault();
+      $('html, body').animate({
+        scrollTop: $(document).height()
+      }, 'slow');
+      return false;
+    });
+  };
+
+  autosubliminal.enableScrollToTop = function () {
+    var scrollIcon = $('#scrollToTop');
+    scrollIcon.removeClass('hidden');
+    $(window).scroll(function () {
+      var height = $(window).scrollTop();
+
+      if (height > 100) {
+        scrollIcon.fadeIn();
+      } else {
+        scrollIcon.fadeOut();
+      }
+    });
+    scrollIcon.click(function (event) {
+      event.preventDefault();
+      $('html, body').animate({
+        scrollTop: 0
+      }, 'slow');
+      return false;
+    });
+  };
+
   autosubliminal.types.DiskUsage = {
     freeBytes: null,
     freePercentage: null,

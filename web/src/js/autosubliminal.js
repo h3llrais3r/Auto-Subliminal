@@ -98,6 +98,49 @@ const autosubliminal = {
         return languageCodes;
     };
 
+    // Function to enable scroll to the bottom icon
+    autosubliminal.enableScrollToBottom = function () {
+        const scrollIcon = $('#scrollToBottom');
+        // Show icon when needed
+        scrollIcon.removeClass('hidden');
+        $(window).scroll(function () {
+            var height = $(window).scrollTop();
+            var maxScrollHeight = $(document).height() - $(window).height();
+            if (height < maxScrollHeight) {
+                scrollIcon.fadeIn();
+            } else {
+                scrollIcon.fadeOut();
+            }
+        });
+        // Enable click
+        scrollIcon.click(function (event) {
+            event.preventDefault();
+            $('html, body').animate({scrollTop: $(document).height()}, 'slow');
+            return false;
+        });
+    };
+
+    // Function to enable scroll to the top icon
+    autosubliminal.enableScrollToTop = function () {
+        const scrollIcon = $('#scrollToTop');
+        // Enable scroll icon
+        scrollIcon.removeClass('hidden');
+        $(window).scroll(function () {
+            var height = $(window).scrollTop();
+            if (height > 100) {
+                scrollIcon.fadeIn();
+            } else {
+                scrollIcon.fadeOut();
+            }
+        });
+        // Enable scroll on icon click
+        scrollIcon.click(function (event) {
+            event.preventDefault();
+            $('html, body').animate({scrollTop: 0}, 'slow');
+            return false;
+        });
+    };
+
     /* ========================
      * Types (type definitions)
      * ======================== */

@@ -38,6 +38,11 @@ $var-badge-log-bg: $var-color-white;
 $var-container-dark-bg: $gray-dark;
 $var-container-dark-border: darken($gray-darker, 10%);
 
+$var-scroll-icon-bg: $var-color-gainsboro;
+$var-scroll-icon-color: $gray-dark;
+$var-scrol-icon-hover-bg: $gray-dark;
+$var-scrol-icon-hover-color: $var-color-gainsboro;
+
 /*******************
  * GENERAL STYLING *
  *******************/
@@ -231,6 +236,31 @@ textarea {
 
 .scheduler-running {
   background-color: $state-success-bg !important;
+}
+
+.scroll-icon {
+  overflow: hidden;
+  z-index: 999;
+  cursor: pointer;
+  position: fixed;
+  right: 10px;
+  background-color: $var-scroll-icon-bg;
+  color: $var-scroll-icon-color;
+  border-radius: 8px;
+  padding: 5px;
+
+  &:hover {
+    background-color: $var-scrol-icon-hover-bg;
+    color: $var-scrol-icon-hover-color;
+  }
+
+  &.bottom {
+    top: 60px;
+  }
+
+  &.top {
+    bottom: 60px;
+  }
 }
 
 .separator {
