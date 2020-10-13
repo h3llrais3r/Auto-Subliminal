@@ -100,20 +100,20 @@ const autosubliminal = {
 
     // Function to enable scroll to the bottom icon
     autosubliminal.enableScrollToBottom = function () {
-        const scrollIcon = $('#scrollToBottom');
+        const scrollIconBottom = $('.scroll-icon-bottom');
         // Show icon when needed
-        scrollIcon.removeClass('hidden');
+        scrollIconBottom.removeClass('hidden');
         $(window).scroll(function () {
             var height = $(window).scrollTop();
             var maxScrollHeight = $(document).height() - $(window).height();
             if (height < maxScrollHeight) {
-                scrollIcon.fadeIn();
+                scrollIconBottom.fadeIn();
             } else {
-                scrollIcon.fadeOut();
+                scrollIconBottom.fadeOut();
             }
         });
         // Enable scroll on icon click
-        scrollIcon.click(function (event) {
+        scrollIconBottom.click(function (event) {
             event.preventDefault();
             $('html, body').animate({scrollTop: $(document).height()}, 'slow');
             return false;
@@ -122,19 +122,19 @@ const autosubliminal = {
 
     // Function to enable scroll to the top icon
     autosubliminal.enableScrollToTop = function () {
-        const scrollIcon = $('#scrollToTop');
+        const scrollIconTop = $('.scroll-icon-top');
         // Show icon when needed
-        scrollIcon.removeClass('hidden');
+        scrollIconTop.removeClass('hidden');
         $(window).scroll(function () {
             var height = $(window).scrollTop();
             if (height > 100) {
-                scrollIcon.fadeIn();
+                scrollIconTop.fadeIn();
             } else {
-                scrollIcon.fadeOut();
+                scrollIconTop.fadeOut();
             }
         });
         // Enable scroll on icon click
-        scrollIcon.click(function (event) {
+        scrollIconTop.click(function (event) {
             event.preventDefault();
             $('html, body').animate({scrollTop: 0}, 'slow');
             return false;
@@ -419,11 +419,11 @@ const autosubliminal = {
     autosubliminal.websockets.RUN_PROCESS = 'RUN_PROCESS';
 
     // Setup the websocket system
-    let websocketProtocol = 'ws:';
+    autosubliminal.websockets.websocketProtocol = 'ws:';
     if (window.location.protocol === 'https:') {
-        websocketProtocol = 'wss:';
+        autosubliminal.websockets.websocketProtocol = 'wss:';
     }
-    const websocketUrl = `${websocketProtocol}//${window.location.host}${autosubliminal.WEB_ROOT}/system/websocket`;
+    const websocketUrl = `${autosubliminal.websockets.websocketProtocol}//${window.location.host}${autosubliminal.WEB_ROOT}/system/websocket`;
     autosubliminal.websockets.ws = new WebSocket(websocketUrl);
 
     // Setup websocket message receival

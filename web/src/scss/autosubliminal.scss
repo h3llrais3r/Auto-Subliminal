@@ -238,12 +238,23 @@ textarea {
   background-color: $state-success-bg !important;
 }
 
-.scroll-icon {
+.scroll-icons {
+  position: fixed;
+  right: 5px;
+
+  &.top {
+    top: 60px;
+  }
+
+  &.bottom {
+    bottom: 60px;
+  }
+}
+
+.scroll-icon-bottom, .scroll-icon-top {
   overflow: hidden;
   z-index: 999;
   cursor: pointer;
-  position: fixed;
-  right: 10px;
   background-color: $var-scroll-icon-bg;
   color: $var-scroll-icon-color;
   border-radius: 8px;
@@ -252,14 +263,6 @@ textarea {
   &:hover {
     background-color: $var-scrol-icon-hover-bg;
     color: $var-scrol-icon-hover-color;
-  }
-
-  &.bottom {
-    top: 60px;
-  }
-
-  &.top {
-    bottom: 60px;
   }
 }
 

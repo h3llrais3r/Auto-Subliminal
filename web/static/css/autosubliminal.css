@@ -190,29 +190,32 @@ textarea {
   background-color: #dff0d8 !important;
 }
 
-.scroll-icon {
+.scroll-icons {
+  position: fixed;
+  right: 5px;
+}
+
+.scroll-icons.top {
+  top: 60px;
+}
+
+.scroll-icons.bottom {
+  bottom: 60px;
+}
+
+.scroll-icon-bottom, .scroll-icon-top {
   overflow: hidden;
   z-index: 999;
   cursor: pointer;
-  position: fixed;
-  right: 10px;
   background-color: #dddddd;
   color: #333333;
   border-radius: 8px;
   padding: 5px;
 }
 
-.scroll-icon:hover {
+.scroll-icon-bottom:hover, .scroll-icon-top:hover {
   background-color: #333333;
   color: #dddddd;
-}
-
-.scroll-icon.bottom {
-  top: 60px;
-}
-
-.scroll-icon.top {
-  bottom: 60px;
 }
 
 .separator {

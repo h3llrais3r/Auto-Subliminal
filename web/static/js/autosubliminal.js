@@ -59,19 +59,19 @@ var autosubliminal = {
   };
 
   autosubliminal.enableScrollToBottom = function () {
-    var scrollIcon = $('#scrollToBottom');
-    scrollIcon.removeClass('hidden');
+    var scrollIconBottom = $('.scroll-icon-bottom');
+    scrollIconBottom.removeClass('hidden');
     $(window).scroll(function () {
       var height = $(window).scrollTop();
       var maxScrollHeight = $(document).height() - $(window).height();
 
       if (height < maxScrollHeight) {
-        scrollIcon.fadeIn();
+        scrollIconBottom.fadeIn();
       } else {
-        scrollIcon.fadeOut();
+        scrollIconBottom.fadeOut();
       }
     });
-    scrollIcon.click(function (event) {
+    scrollIconBottom.click(function (event) {
       event.preventDefault();
       $('html, body').animate({
         scrollTop: $(document).height()
@@ -81,18 +81,18 @@ var autosubliminal = {
   };
 
   autosubliminal.enableScrollToTop = function () {
-    var scrollIcon = $('#scrollToTop');
-    scrollIcon.removeClass('hidden');
+    var scrollIconTop = $('.scroll-icon-top');
+    scrollIconTop.removeClass('hidden');
     $(window).scroll(function () {
       var height = $(window).scrollTop();
 
       if (height > 100) {
-        scrollIcon.fadeIn();
+        scrollIconTop.fadeIn();
       } else {
-        scrollIcon.fadeOut();
+        scrollIconTop.fadeOut();
       }
     });
-    scrollIcon.click(function (event) {
+    scrollIconTop.click(function (event) {
       event.preventDefault();
       $('html, body').animate({
         scrollTop: 0
@@ -323,13 +323,13 @@ var autosubliminal = {
   autosubliminal.websockets.PROCESS_STARTED = 'PROCESS_STARTED';
   autosubliminal.websockets.PROCESS_FINISHED = 'PROCESS_FINISHED';
   autosubliminal.websockets.RUN_PROCESS = 'RUN_PROCESS';
-  var websocketProtocol = 'ws:';
+  autosubliminal.websockets.websocketProtocol = 'ws:';
 
   if (window.location.protocol === 'https:') {
-    websocketProtocol = 'wss:';
+    autosubliminal.websockets.websocketProtocol = 'wss:';
   }
 
-  var websocketUrl = "".concat(websocketProtocol, "//").concat(window.location.host).concat(autosubliminal.WEB_ROOT, "/system/websocket");
+  var websocketUrl = "".concat(autosubliminal.websockets.websocketProtocol, "//").concat(window.location.host).concat(autosubliminal.WEB_ROOT, "/system/websocket");
   autosubliminal.websockets.ws = new WebSocket(websocketUrl);
 
   autosubliminal.websockets.ws.onmessage = function (message) {
