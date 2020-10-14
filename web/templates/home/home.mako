@@ -8,7 +8,7 @@
 <%block name="bodyContent">
 
     <!-- Vue app placeholder -->
-    <div id="app" class="container">
+    <div id="app">
 
         <%include file="/home/inc_home-wanteditems.mako"/>
 
