@@ -3,6 +3,5 @@
 (function (autosubliminal) {
   'use strict';
 
-  autosubliminal.enableScrollToBottom();
-  autosubliminal.enableScrollToTop();
+  autosubliminal.enableScrollIcons();
 })(autosubliminal);

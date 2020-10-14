@@ -65,6 +65,7 @@ class _FrontendApi(RestResource):
         """Get the list of settings for the frontend."""
         settings = {
             'developerMode': autosubliminal.DEVELOPER,
+            'logReversed': autosubliminal.LOGREVERSED,
             'webRoot': autosubliminal.WEBROOT,
             'scanDisk': autosubliminal.SCANDISK.name,
             'scanLibrary': autosubliminal.SCANLIBRARY.name,

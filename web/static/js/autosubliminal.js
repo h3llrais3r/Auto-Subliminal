@@ -15,6 +15,7 @@ var autosubliminal = {
   autosubliminal.WEB_ROOT = webRoot;
   autosubliminal.BASE_URL = "".concat(window.location.protocol, "//").concat(window.location.host).concat(autosubliminal.WEB_ROOT);
   autosubliminal.DEVELOPER_MODE = false;
+  autosubliminal.LOG_REVERSED = false;
   autosubliminal.SCAN_DISK = 'DiskScanner';
   autosubliminal.SCAN_LIBRARY = 'LibraryScanner';
   autosubliminal.CHECK_SUB = 'SubChecker';
@@ -58,7 +59,18 @@ var autosubliminal = {
     return languageCodes;
   };
 
-  autosubliminal.enableScrollToBottom = function () {
+  autosubliminal.scrollToBottom = function (event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    $('html, body').animate({
+      scrollTop: $(document).height()
+    }, 'slow');
+    return false;
+  };
+
+  autosubliminal.enableScrollToBottomIcon = function () {
     var scrollIconBottom = $('.scroll-icon-bottom');
     scrollIconBottom.removeClass('hidden');
     $(window).scroll(function () {
@@ -71,16 +83,21 @@ var autosubliminal = {
         scrollIconBottom.fadeOut();
       }
     });
-    scrollIconBottom.click(function (event) {
-      event.preventDefault();
-      $('html, body').animate({
-        scrollTop: $(document).height()
-      }, 'slow');
-      return false;
-    });
+    scrollIconBottom.click(autosubliminal.scrollToBottom);
   };
 
-  autosubliminal.enableScrollToTop = function () {
+  autosubliminal.scrollToTop = function (event) {
+    if (event) {
+      event.preventDefault();
+    }
+
+    $('html, body').animate({
+      scrollTop: 0
+    }, 'slow');
+    return false;
+  };
+
+  autosubliminal.enableScrollToTopIcon = function () {
     var scrollIconTop = $('.scroll-icon-top');
     scrollIconTop.removeClass('hidden');
     $(window).scroll(function () {
@@ -92,13 +109,12 @@ var autosubliminal = {
         scrollIconTop.fadeOut();
       }
     });
-    scrollIconTop.click(function (event) {
-      event.preventDefault();
-      $('html, body').animate({
-        scrollTop: 0
-      }, 'slow');
-      return false;
-    });
+    scrollIconTop.click(autosubliminal.scrollToTop);
+  };
+
+  autosubliminal.enableScrollIcons = function () {
+    autosubliminal.enableScrollToBottomIcon();
+    autosubliminal.enableScrollToTopIcon();
   };
 
   autosubliminal.types.DiskUsage = {
@@ -111,7 +127,7 @@ var autosubliminal = {
     totalSpace: null
   };
   autosubliminal.types.Settings = {
-    developerMode: null,
+    developerMode: false,
     webRoot: null,
     scanDisk: null,
     scanLibrary: null,
@@ -121,12 +137,13 @@ var autosubliminal = {
     imdbUrl: null,
     timestampFormat: null,
     pathSeparator: null,
-    languages: []
+    languages: [],
+    logReversed: false
   };
   autosubliminal.types.Notification = {
     message: null,
     type: null,
-    sticky: null
+    sticky: false
   };
   autosubliminal.types.WebsocketNotification = {
     type: autosubliminal.websockets.NOTIFICATION,
@@ -158,17 +175,17 @@ var autosubliminal = {
   autosubliminal.types.Process = {
     name: null,
     interval: null,
-    active: null,
-    alive: null,
+    active: false,
+    alive: false,
     lastRun: null,
     nextRun: null,
-    running: null
+    running: false
   };
   autosubliminal.types.ShowSettings = {
-    hearingImpaired: null,
-    refine: null,
-    utf8Encoding: null,
-    wantedLanguages: null
+    hearingImpaired: false,
+    refine: false,
+    utf8Encoding: false,
+    wantedLanguages: []
   };
   autosubliminal.types.ShowFiles = [{
     seasonFiles: {
@@ -187,19 +204,19 @@ var autosubliminal = {
     title: null,
     year: null,
     overview: null,
-    poster: null,
-    banner: null,
+    poster: false,
+    banner: false,
     settings: autosubliminal.types.ShowSettings,
-    pathInVideoPaths: null,
+    pathInVideoPaths: false,
     totalSubtitlesWanted: null,
     totalSubtitlesMissing: null,
     totalSubtitlesAvailable: null,
     files: autosubliminal.types.ShowFiles
   };
   autosubliminal.types.MovieSettings = {
-    hearingImpaired: null,
-    refine: null,
-    utf8Encoding: null,
+    hearingImpaired: false,
+    refine: false,
+    utf8Encoding: false,
     wantedLanguages: []
   };
   autosubliminal.types.MovieFiles = [{
@@ -214,10 +231,10 @@ var autosubliminal = {
     imdbId: null,
     title: null,
     year: null,
-    overview: null,
-    poster: null,
+    overview: false,
+    poster: false,
     settings: autosubliminal.types.MovieSettings,
-    pathInVideoPaths: null,
+    pathInVideoPaths: false,
     totalSubtitlesWanted: null,
     totalSubtitlesMissing: null,
     totalSubtitlesAvailable: null,
@@ -233,6 +250,7 @@ var autosubliminal = {
     $.get(autosubliminal.getUrl('/api/settings/frontend'), function (data) {
       if (!jQuery.isEmptyObject(data)) {
         autosubliminal.DEVELOPER_MODE = data.developerMode;
+        autosubliminal.LOG_REVERSED = data.logReversed;
         autosubliminal.SCAN_DISK = data.scanDisk;
         autosubliminal.SCAN_LIBRARY = data.scanLibrary;
         autosubliminal.CHECK_SUB = data.checkSub;

@@ -93,7 +93,7 @@ def display_logfile(loglevel='all', lognum=None):
     if autosubliminal.LOGREVERSED:
         log_data = reversed(log_data)
     result = cgi.escape(''.join(log_data))
-    return result
+    return result.lstrip().rstrip()  # remove new lines from the beginning and end
 
 
 def get_logfile(lognum=None):

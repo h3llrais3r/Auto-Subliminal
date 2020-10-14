@@ -12,11 +12,7 @@
      * Initialization
      * ============== */
 
-    // Enable scrollToBottom icon
-    autosubliminal.enableScrollToBottom();
-
-    // Enable scrollToTop icon
-    autosubliminal.enableScrollToTop();
-
+    // Enable scroll icons
+    autosubliminal.enableScrollIcons();
 
 })(autosubliminal);

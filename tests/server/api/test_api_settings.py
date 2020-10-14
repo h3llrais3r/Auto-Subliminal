@@ -21,6 +21,7 @@ settings_json = '{"checkSub": "SubChecker", ' \
                 '"developerMode": true, ' \
                 '"imdbUrl": "http://www.dereferer.org/?http://www.imdb.com/title/", ' \
                 '"languages": [{"code": "nl", "name": "Dutch"}], ' \
+                '"logReversed": false, ' \
                 '"pathSeparator": "/", ' \
                 '"scanDisk": "DiskScanner", ' \
                 '"scanLibrary": "LibraryScanner", ' \
@@ -43,6 +44,7 @@ def test_get_diskusage(mocker):
 
 def test_get_frontend_settings(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.DEVELOPER', True)
+    monkeypatch.setattr('autosubliminal.LOGREVERSED', False)
     monkeypatch.setattr('autosubliminal.WEBROOT', 'mywebroot')
     monkeypatch.setattr('autosubliminal.SCANDISK', MyScheduler('DiskScanner'))
     monkeypatch.setattr('autosubliminal.SCANLIBRARY', MyScheduler('LibraryScanner'))

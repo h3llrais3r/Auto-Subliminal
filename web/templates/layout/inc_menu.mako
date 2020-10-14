@@ -107,6 +107,10 @@
                         </li>
                         <li class="divider"></li>
                         <li>
+                            <a href="${autosubliminal.WEBROOT}/log/tailLog"><i class="fa fa-refresh" aria-hidden="true"></i>&nbsp;Tail log</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li>
                             <a href="${autosubliminal.WEBROOT}/log/clearLog"><i class="fa fa-times" aria-hidden="true"></i>&nbsp;Clear log</a>
                         </li>
                     </ul>

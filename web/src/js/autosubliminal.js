@@ -34,6 +34,9 @@ const autosubliminal = {
     // Developer mode
     autosubliminal.DEVELOPER_MODE = false;
 
+    // Log settings
+    autosubliminal.LOG_REVERSED = false;
+
     // Scheduler names
     autosubliminal.SCAN_DISK = 'DiskScanner';
     autosubliminal.SCAN_LIBRARY = 'LibraryScanner';
@@ -98,8 +101,17 @@ const autosubliminal = {
         return languageCodes;
     };
 
+    // Function to scroll to bottom
+    autosubliminal.scrollToBottom = function (event) {
+        if (event) {
+            event.preventDefault();
+        }
+        $('html, body').animate({scrollTop: $(document).height()}, 'slow');
+        return false;
+    };
+
     // Function to enable scroll to the bottom icon
-    autosubliminal.enableScrollToBottom = function () {
+    autosubliminal.enableScrollToBottomIcon = function () {
         const scrollIconBottom = $('.scroll-icon-bottom');
         // Show icon when needed
         scrollIconBottom.removeClass('hidden');
@@ -113,15 +125,20 @@ const autosubliminal = {
             }
         });
         // Enable scroll on icon click
-        scrollIconBottom.click(function (event) {
+        scrollIconBottom.click(autosubliminal.scrollToBottom);
+    };
+
+    // Function to scroll to top
+    autosubliminal.scrollToTop = function (event) {
+        if (event) {
             event.preventDefault();
-            $('html, body').animate({scrollTop: $(document).height()}, 'slow');
-            return false;
-        });
+        }
+        $('html, body').animate({scrollTop: 0}, 'slow');
+        return false;
     };
 
     // Function to enable scroll to the top icon
-    autosubliminal.enableScrollToTop = function () {
+    autosubliminal.enableScrollToTopIcon = function () {
         const scrollIconTop = $('.scroll-icon-top');
         // Show icon when needed
         scrollIconTop.removeClass('hidden');
@@ -134,11 +151,13 @@ const autosubliminal = {
             }
         });
         // Enable scroll on icon click
-        scrollIconTop.click(function (event) {
-            event.preventDefault();
-            $('html, body').animate({scrollTop: 0}, 'slow');
-            return false;
-        });
+        scrollIconTop.click(autosubliminal.scrollToTop);
+    };
+
+    // Function to enable scroll icons
+    autosubliminal.enableScrollIcons = function () {
+        autosubliminal.enableScrollToBottomIcon();
+        autosubliminal.enableScrollToTopIcon();
     };
 
     /* ========================
@@ -156,7 +175,7 @@ const autosubliminal = {
     };
 
     autosubliminal.types.Settings = {
-        developerMode: null,
+        developerMode: false,
         webRoot: null,
         scanDisk: null,
         scanLibrary: null,
@@ -166,14 +185,15 @@ const autosubliminal = {
         imdbUrl: null,
         timestampFormat: null,
         pathSeparator: null,
-        languages: []
+        languages: [],
+        logReversed: false
     };
 
     // Notification
     autosubliminal.types.Notification = {
         message: null,
         type: null,
-        sticky: null
+        sticky: false
     };
 
     // Websocket notification
@@ -214,18 +234,18 @@ const autosubliminal = {
     autosubliminal.types.Process = {
         name: null,
         interval: null,
-        active: null,
-        alive: null,
+        active: false,
+        alive: false,
         lastRun: null,
         nextRun: null,
-        running: null
+        running: false
     };
 
     autosubliminal.types.ShowSettings = {
-        hearingImpaired: null,
-        refine: null,
-        utf8Encoding: null,
-        wantedLanguages: null
+        hearingImpaired: false,
+        refine: false,
+        utf8Encoding: false,
+        wantedLanguages: []
     };
 
     autosubliminal.types.ShowFiles = [{
@@ -246,10 +266,10 @@ const autosubliminal = {
         title: null,
         year: null,
         overview: null,
-        poster: null,
-        banner: null,
+        poster: false,
+        banner: false,
         settings: autosubliminal.types.ShowSettings,
-        pathInVideoPaths: null,
+        pathInVideoPaths: false,
         totalSubtitlesWanted: null,
         totalSubtitlesMissing: null,
         totalSubtitlesAvailable: null,
@@ -257,9 +277,9 @@ const autosubliminal = {
     };
 
     autosubliminal.types.MovieSettings = {
-        hearingImpaired: null,
-        refine: null,
-        utf8Encoding: null,
+        hearingImpaired: false,
+        refine: false,
+        utf8Encoding: false,
         wantedLanguages: []
     };
 
@@ -276,10 +296,10 @@ const autosubliminal = {
         imdbId: null,
         title: null,
         year: null,
-        overview: null,
-        poster: null,
+        overview: false,
+        poster: false,
         settings: autosubliminal.types.MovieSettings,
-        pathInVideoPaths: null,
+        pathInVideoPaths: false,
         totalSubtitlesWanted: null,
         totalSubtitlesMissing: null,
         totalSubtitlesAvailable: null,
@@ -303,6 +323,7 @@ const autosubliminal = {
         $.get(autosubliminal.getUrl('/api/settings/frontend'), function (data) {
             if (!jQuery.isEmptyObject(data)) {
                 autosubliminal.DEVELOPER_MODE = data.developerMode;
+                autosubliminal.LOG_REVERSED = data.logReversed;
                 autosubliminal.SCAN_DISK = data.scanDisk;
                 autosubliminal.SCAN_LIBRARY = data.scanLibrary;
                 autosubliminal.CHECK_SUB = data.checkSub;

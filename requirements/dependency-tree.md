@@ -110,6 +110,7 @@ Libraries dependency tree
     |-- six
     |-- stevedore
         |-- six
+|-- tailer
 |-- tvdb_api
     |-- certifi
     |-- python-dateutil

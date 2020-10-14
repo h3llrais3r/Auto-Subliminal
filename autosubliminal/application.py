@@ -15,7 +15,7 @@ from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool
 
 import autosubliminal
 from autosubliminal.core.scheduler import Scheduler
-from autosubliminal.core.websocket import WebSocketBroadCaster, WebSocketHandler
+from autosubliminal.core.websocket import WebSocketBroadCaster, WebSocketHandler, WebSocketLogHandler
 from autosubliminal.diskscanner import DiskScanner
 from autosubliminal.libraryscanner import LibraryScanner
 from autosubliminal.server.root import WebServerRoot
@@ -187,6 +187,10 @@ def _get_application_configuration():
         '/system/websocket': {
             'tools.websocket.on': True,
             'tools.websocket.handler_cls': WebSocketHandler
+        },
+        '/log/websocket': {
+            'tools.websocket.on': True,
+            'tools.websocket.handler_cls': WebSocketLogHandler
         }
     }
 

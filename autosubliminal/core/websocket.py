@@ -1,8 +1,10 @@
 # coding=utf-8
 
+import codecs
 import logging
 
 import cherrypy
+import tailer
 from schema import And, Schema, SchemaError, Use
 from ws4py.messaging import TextMessage
 from ws4py.websocket import WebSocket
@@ -78,3 +80,15 @@ class WebSocketBroadCaster(Runner):
             log.debug('Broadcasting websocket message: %r', message)
             # The message on the websocket queue is a dict, so convert it to a json string
             cherrypy.engine.publish('websocket-broadcast', to_json(message))
+
+
+class WebSocketLogHandler(WebSocket):
+    """
+    Websocket handler for log file tailing.
+    """
+
+    def opened(self):
+        cherrypy.log("WebSocketLogHandler opened, starting log file tailing...")
+        logfile = autosubliminal.LOGFILE
+        for line in tailer.follow(codecs.open(logfile, 'r', 'utf-8')):
+            self.send(TextMessage(line), False)
