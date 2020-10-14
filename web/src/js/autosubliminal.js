@@ -410,7 +410,7 @@ const autosubliminal = {
                 type: type,
                 hide: false, // Disable fading
                 width: 'auto',
-                addClass: 'container stack-context',
+                addClass: 'stack-context',
                 stack: autosubliminal.notifications.stackContext, // Special stack location for sticky notifications
                 modules: autosubliminal.notifications.stackContextModules // Special modules for sticky notifications
             });

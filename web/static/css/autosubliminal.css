@@ -594,10 +594,6 @@ a:hover, a:active, a:focus, a:visited > .fa {
   text-wrap: none;
 }
 
-.pnotify-icon > span {
-  margin-top: 4px;
-}
-
 .pnotify-title {
   font-size: 18px;
 }

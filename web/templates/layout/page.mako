@@ -20,7 +20,7 @@
         <div class="jumbotron jumbotron-global">
 
             <div class="jumbotron-body">
-                <div id="stickyNotificationContext" class="sticky-notification"></div>
+                <div id="stickyNotificationContext" class="container sticky-notification"></div>
                 <%block name="bodyContent"/>
             </div>
 

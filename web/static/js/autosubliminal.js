@@ -321,7 +321,7 @@ var autosubliminal = {
         type: type,
         hide: false,
         width: 'auto',
-        addClass: 'container stack-context',
+        addClass: 'stack-context',
         stack: autosubliminal.notifications.stackContext,
         modules: autosubliminal.notifications.stackContextModules
       });
