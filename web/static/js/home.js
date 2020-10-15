@@ -233,9 +233,6 @@
             });
             return false;
           });
-          $('#settingsModal').on('hidden.bs.modal', function () {
-            $(this).find('#settingsPosterImage').attr('src', autosubliminal.vue.getPosterPlaceholderUrl());
-          });
         },
         openSettingsModal: function openSettingsModal(event, type, indexerId, title) {
           event.preventDefault();

@@ -14,7 +14,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="settings-poster-container" v-lazy-container>
-                                <img class="settings-poster-image" :data-src="moviePosterThumbnailUrl" :data-loading="posterPlaceholderUrl" :data-error="posterPlaceholderUrl">
+                                <img class="settings-poster-image" :key="moviePosterThumbnailUrl" :data-src="moviePosterThumbnailUrl" :data-loading="posterPlaceholderUrl" :data-error="posterPlaceholderUrl">
                             </div>
                             <div class="settings-info-container">
                                 <div class="col-xs-12 settings-info-title">

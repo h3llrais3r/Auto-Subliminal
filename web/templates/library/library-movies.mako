@@ -74,7 +74,7 @@
                                 <div class="title-poster-container">
                                     <div class="title-poster-cell" v-lazy-container>
                                         <a :href="getMovieDetailsUrl(movie.imdbId)" :title="movie.title">
-                                            <img v-if="movie.poster" class="title-poster-image" :data-src="getMoviePosterThumbnailUrl(movie.imdbId)" :data-loading="posterPlaceholderUrl" :data-error="posterPlaceholderUrl">
+                                            <img v-if="movie.poster" class="title-poster-image" :key="getMoviePosterThumbnailUrl(movie.imdbId)" :data-src="getMoviePosterThumbnailUrl(movie.imdbId)" :data-loading="posterPlaceholderUrl" :data-error="posterPlaceholderUrl">
                                         </a>
                                     </div>
                                     <div class="title-poster-cell">

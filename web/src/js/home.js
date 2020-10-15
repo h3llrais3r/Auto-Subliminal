@@ -310,10 +310,6 @@
                         });
                         return false;
                     });
-                    $('#settingsModal').on('hidden.bs.modal', function () {
-                        // Needed to remove the previous src url to prevent temporary view of previous image
-                        $(this).find('#settingsPosterImage').attr('src', autosubliminal.vue.getPosterPlaceholderUrl());
-                    });
                 },
                 openSettingsModal: function (event, type, indexerId, title) {
                     event.preventDefault();

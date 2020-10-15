@@ -73,7 +73,7 @@
                             <td>
                                 <div class="title-banner-container" v-lazy-container>
                                     <a :href="getShowDetailsUrl(show.tvdbId)" :title="show.title">
-                                        <img v-if="show.banner" class="title-banner-image" :data-src="getShowBannerThumbnailUrl(show.tvdbId)" :data-loading="bannerPlaceholderUrl" :data-error="bannerPlaceholderUrl">
+                                        <img v-if="show.banner" class="title-banner-image" :key="getShowBannerThumbnailUrl(show.tvdbId)" :data-src="getShowBannerThumbnailUrl(show.tvdbId)" :data-loading="bannerPlaceholderUrl" :data-error="bannerPlaceholderUrl">
                                     </a>
                                 </div>
                             </td>
