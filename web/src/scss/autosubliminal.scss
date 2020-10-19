@@ -985,6 +985,7 @@ table.table {
   }
 
   .overview-image {
+    @extend .image-hover;
     width: 100%;
   }
 }

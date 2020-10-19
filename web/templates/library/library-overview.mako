@@ -42,7 +42,7 @@
                                     <div class="row">
                                         <div class="col-xs-12">
                                             <a href="${autosubliminal.WEBROOT}/library/shows">
-                                                <img src="${autosubliminal.WEBROOT}/images/shows.jpg" class="overview-image">
+                                                <img src="${autosubliminal.WEBROOT}/images/shows.jpg" class="overview-image" title="Click to view shows">
                                             </a>
                                         </div>
                                     </div>
@@ -93,7 +93,7 @@
                                     <div class="row">
                                         <div class="col-xs-12">
                                             <a href="${autosubliminal.WEBROOT}/library/movies">
-                                                <img src="${autosubliminal.WEBROOT}/images/movies.jpg" class="overview-image">
+                                                <img src="${autosubliminal.WEBROOT}/images/movies.jpg" class="overview-image" title="Click to view movies">
                                             </a>
                                         </div>
                                     </div>
