@@ -43,6 +43,8 @@ $var-scroll-icon-color: $gray-dark;
 $var-scrol-icon-hover-bg: $gray-dark;
 $var-scrol-icon-hover-color: $var-color-gainsboro;
 
+$var-image-box-shadow-color: $gray-light;
+
 /*******************
  * GENERAL STYLING *
  *******************/
@@ -128,6 +130,13 @@ textarea {
   }
 }
 
+.image-box {
+  border: 1px solid $var-color-black;
+  -moz-box-shadow: 3px 3px 3px $var-image-box-shadow-color;
+  -webkit-box-shadow: 3px 3px 3px $var-image-box-shadow-color;
+  box-shadow: 3px 3px 3px $var-image-box-shadow-color;
+}
+
 .img-notifier {
   height: 24px;
   width: 25px;
@@ -182,8 +191,9 @@ textarea {
 }
 
 .title-banner-image {
-  height: 55px;
-  width: 300px;
+  @extend .image-box;
+  height: 55px; // aspect ratio: 0.185
+  width: 297px;
 }
 
 .title-poster-container {
@@ -195,8 +205,9 @@ textarea {
   }
 
   .title-poster-image {
+    @extend .image-box;
     height: 55px;
-    width: 37px;
+    width: 37px; // aspect ratio 0.675
   }
 
   .title-poster-text {
@@ -988,7 +999,14 @@ table.table {
     }
 
     .details-poster-image {
-      width: 150px;
+      @extend .image-box;
+      height: 250px;
+      width: 167px; // aspect ratio 0.675
+
+      @media (max-width: $screen-xs-max) {
+        height: 150px;
+        width: 101px; // aspect ratio 0.675
+      }
     }
   }
 
@@ -1068,10 +1086,13 @@ table.table {
     }
 
     .settings-poster-image {
-      width: 175px;
+      @extend .image-box;
+      height: 250px;
+      width: 167px; // aspect ratio 0.675
 
       @media (max-width: $screen-xs-max) {
-        width: 100px;
+        height: 150px;
+        width: 101px; // aspect ratio 0.675
       }
     }
   }
