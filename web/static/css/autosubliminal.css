@@ -89,6 +89,10 @@ textarea {
   box-shadow: 3px 3px 3px #777777;
 }
 
+.image-hover:hover, .title-banner-image:hover, .title-poster-container .title-poster-image:hover, .details-container .details-poster-container .details-poster-image:hover {
+  filter: brightness(75%);
+}
+
 .img-notifier {
   height: 24px;
   width: 25px;

@@ -137,6 +137,12 @@ textarea {
   box-shadow: 3px 3px 3px $var-image-box-shadow-color;
 }
 
+.image-hover {
+  &:hover {
+    filter: brightness(75%);
+  }
+}
+
 .img-notifier {
   height: 24px;
   width: 25px;
@@ -192,6 +198,7 @@ textarea {
 
 .title-banner-image {
   @extend .image-box;
+  @extend .image-hover;
   height: 55px; // aspect ratio: 0.185
   width: 297px;
 }
@@ -206,6 +213,7 @@ textarea {
 
   .title-poster-image {
     @extend .image-box;
+    @extend .image-hover;
     height: 55px;
     width: 37px; // aspect ratio 0.675
   }
@@ -1000,6 +1008,7 @@ table.table {
 
     .details-poster-image {
       @extend .image-box;
+      @extend .image-hover;
       height: 250px;
       width: 167px; // aspect ratio 0.675
 

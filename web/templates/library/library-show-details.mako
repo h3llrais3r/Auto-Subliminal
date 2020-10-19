@@ -49,7 +49,7 @@
                                 <div class="col-xs-12">
                                     <div class="details-poster-container" v-lazy-container>
                                         <a :href="showPosterFullSizeUrl" target="_blank">
-                                            <img class="details-poster-image" :key="showPosterThumbnailUrl" :data-src="showPosterThumbnailUrl" :data-loading="posterPlaceholderUrl" :data-error="posterPlaceholderUrl">
+                                            <img class="details-poster-image" :key="showPosterThumbnailUrl" :data-src="showPosterThumbnailUrl" :data-loading="posterPlaceholderUrl" :data-error="posterPlaceholderUrl" title="Click to view full size">
                                         </a>
                                     </div>
                                     <div class="details-info-container">
