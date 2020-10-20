@@ -34,10 +34,20 @@
         autosubliminal.websockets.wsLog.onmessage = function (message) {
             const logContent = $('#logContent');
             if (autosubliminal.LOG_REVERSED) {
-                logContent.prepend(message.data + '\n');
+                let content = logContent.text().split('\n');
+                content.unshift(message.data);
+                if (content.length > 1000) {
+                    content = content.slice(0, 1000);
+                }
+                logContent.text(content.join('\n'));
                 autosubliminal.scrollToTop();
             } else {
-                logContent.append(message.data + '\n');
+                let content = logContent.text().split('\n');
+                content.push(message.data);
+                if (content.length > 1000) {
+                    content = content.slice(-1000);
+                }
+                logContent.text(content.join('\n'));
                 autosubliminal.scrollToBottom();
             }
         };

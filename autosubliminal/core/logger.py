@@ -62,7 +62,7 @@ def update_settings():
             handler.setLevel(autosubliminal.LOGLEVELCONSOLE)
 
 
-def display_logfile(loglevel='all', lognum=None):
+def display_logfile(loglevel='all', lines=0, lognum=None):
     # Read log file data
     data = []
     previous_loglevel = loglevel
@@ -89,6 +89,9 @@ def display_logfile(loglevel='all', lognum=None):
                     log_data.append(x)
         except Exception:
             continue
+    # Get last x lines
+    if lines and lines < len(log_data):
+        log_data = log_data[-lines:]
     # If reversed order is needed, use reversed(log_data)
     if autosubliminal.LOGREVERSED:
         log_data = reversed(log_data)

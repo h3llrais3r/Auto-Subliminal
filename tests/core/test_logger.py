@@ -78,6 +78,8 @@ def test_display_logfile():
         assert display_logfile(loglevel='debug') == lines_debug
         assert display_logfile(loglevel='info') == lines_info
         assert display_logfile(loglevel='error') == ''
+        assert display_logfile(loglevel='all', lines=10) == lines
+        assert display_logfile(loglevel='all', lines=2) == lines_debug  # last 2 lines
         autosubliminal.LOGREVERSED = True
         assert display_logfile(loglevel='debug') == lines_debug_reversed
     finally:

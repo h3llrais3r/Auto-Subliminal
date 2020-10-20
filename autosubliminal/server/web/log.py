@@ -22,7 +22,7 @@ class Log(object):
 
     @cherrypy.expose(alias='viewLog')
     def view_log(self, loglevel='all', lognum=None):
-        content = display_logfile(loglevel, lognum)
+        content = display_logfile(loglevel, lognum=lognum)
         return PageTemplate(self.template_file).render(loglevel=loglevel, lognum=lognum, content=content)
 
     @cherrypy.expose(alias='clearLog')
@@ -40,7 +40,7 @@ class Log(object):
     @cherrypy.expose(alias='tailLog')
     def tail_log(self):
         # Display all current logs
-        content = display_logfile()
+        content = display_logfile(lines=1000)
         return PageTemplate('/log/log-tail.mako').render(content=content)
 
     @cherrypy.expose

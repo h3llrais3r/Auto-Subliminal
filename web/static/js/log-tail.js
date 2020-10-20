@@ -21,10 +21,25 @@
       var logContent = $('#logContent');
 
       if (autosubliminal.LOG_REVERSED) {
-        logContent.prepend(message.data + '\n');
+        var content = logContent.text().split('\n');
+        content.unshift(message.data);
+
+        if (content.length > 1000) {
+          content = content.slice(0, 1000);
+        }
+
+        logContent.text(content.join('\n'));
         autosubliminal.scrollToTop();
       } else {
-        logContent.append(message.data + '\n');
+        var _content = logContent.text().split('\n');
+
+        _content.push(message.data);
+
+        if (_content.length > 1000) {
+          _content = _content.slice(-1000);
+        }
+
+        logContent.text(_content.join('\n'));
         autosubliminal.scrollToBottom();
       }
     };
