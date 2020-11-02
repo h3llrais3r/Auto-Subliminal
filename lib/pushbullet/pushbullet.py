@@ -2,19 +2,14 @@ import os
 import json
 import requests
 import warnings
+from requests import ConnectionError
 
 from .device import Device
 from .channel import Channel
 from .chat import Chat
-from .errors import PushbulletError, InvalidKeyError, PushError
+from .errors import PushbulletError, InvalidKeyError, PushError, NoEncryptionModuleError
 from .filetype import get_file_type
 from ._compat import standard_b64encode
-
-
-class NoEncryptionModuleError(Exception):
-    def __init__(self, msg):
-        super(NoEncryptionModuleError, self).__init__(
-            "cryptography is required for end-to-end encryption support and could not be imported: " + msg + "\nYou can install it by running 'pip install cryptography'")
 
 
 class Pushbullet(object):
@@ -62,7 +57,6 @@ class Pushbullet(object):
 
     def _get_data(self, url):
         resp = self._session.get(url)
-
         if resp.status_code in (401, 403):
             raise InvalidKeyError()
         elif resp.status_code == 429:
@@ -74,7 +68,6 @@ class Pushbullet(object):
 
     def _load_devices(self):
         self.devices = []
-
         resp_dict = self._get_data(self.DEVICES_URL)
         device_list = resp_dict.get("devices", [])
 
@@ -85,7 +78,6 @@ class Pushbullet(object):
 
     def _load_chats(self):
         self.chats = []
-
         resp_dict = self._get_data(self.CHATS_URL)
         chat_list = resp_dict.get("chats", [])
 
@@ -99,7 +91,6 @@ class Pushbullet(object):
 
     def _load_channels(self):
         self.channels = []
-
         resp_dict = self._get_data(self.CHANNELS_URL)
         channel_list = resp_dict.get("channels", [])
 
@@ -110,8 +101,7 @@ class Pushbullet(object):
 
     @staticmethod
     def _recipient(device=None, chat=None, email=None, channel=None):
-        data = dict()
-
+        data = {}
         if device:
             data["device_iden"] = device.device_iden
         elif chat:
@@ -158,7 +148,6 @@ class Pushbullet(object):
         else:
             raise PushbulletError(r.text)
 
-
     def edit_chat(self, chat, name, muted=None):
         data = {"name": name}
         if muted is not None:
@@ -172,7 +161,6 @@ class Pushbullet(object):
         else:
             raise PushbulletError(r.text)
 
-
     def remove_device(self, device):
         iden = device.device_iden
         r = self._session.delete("{}/{}".format(self.DEVICES_URL, iden))
@@ -180,7 +168,6 @@ class Pushbullet(object):
             self.devices.remove(device)
         else:
             raise PushbulletError(r.text)
-
 
     def remove_chat(self, chat):
         iden = chat.iden
@@ -193,7 +180,6 @@ class Pushbullet(object):
 
     def get_device(self, nickname):
         req_device = next((device for device in self.devices if device.nickname == nickname), None)
-
         if req_device is None:
             raise PushbulletError('No device found with nickname "{}"'.format(nickname))
 
@@ -201,7 +187,6 @@ class Pushbullet(object):
 
     def get_channel(self, channel_tag):
         req_channel = next((channel for channel in self.channels if channel.channel_tag == channel_tag), None)
-
         if req_channel is None:
             raise PushbulletError('No channel found with channel_tag "{}"'.format(channel_tag))
 
@@ -230,19 +215,16 @@ class Pushbullet(object):
     def dismiss_push(self, iden):
         data = {"dismissed": True}
         r = self._session.post("{}/{}".format(self.PUSH_URL, iden), data=json.dumps(data))
-
         if r.status_code != requests.codes.ok:
             raise PushbulletError(r.text)
 
     def delete_push(self, iden):
         r = self._session.delete("{}/{}".format(self.PUSH_URL, iden))
-
         if r.status_code != requests.codes.ok:
             raise PushbulletError(r.text)
 
     def delete_pushes(self):
         r = self._session.delete(self.PUSH_URL)
-
         if r.status_code != requests.codes.ok:
             raise PushbulletError(r.text)
 
@@ -252,9 +234,7 @@ class Pushbullet(object):
 
         data = {"file_name": file_name, "file_type": file_type}
 
-        # Request url for file upload
         r = self._session.post(self.UPLOAD_REQUEST_URL, data=json.dumps(data))
-
         if r.status_code != requests.codes.ok:
             raise PushbulletError(r.text)
 
@@ -270,7 +250,6 @@ class Pushbullet(object):
         data = {"type": "file", "file_type": file_type, "file_url": file_url, "file_name": file_name}
         if body:
             data["body"] = body
-
         if title:
             data["title"] = title
 
@@ -280,31 +259,25 @@ class Pushbullet(object):
 
     def push_note(self, title, body, device=None, chat=None, email=None, channel=None):
         data = {"type": "note", "title": title, "body": body}
-
         data.update(Pushbullet._recipient(device, chat, email, channel))
-
         return self._push(data)
-
-    def push_address(self, name, address, device=None, chat=None, email=None):
-        warnings.warn("Address push type is removed. This push will be sent as note.")
-        return self.push_note(name, address, device, chat, email)
-
-    def push_list(self, title, items, device=None, chat=None, email=None):
-        warnings.warn("List push type is removed. This push will be sent as note.")
-        return self.push_note(title, ",".join(items), device, chat, email)
 
     def push_link(self, title, url, body=None, device=None, chat=None, email=None, channel=None):
         data = {"type": "link", "title": title, "url": url, "body": body}
-
         data.update(Pushbullet._recipient(device, chat, email, channel))
-
         return self._push(data)
 
     def _push(self, data):
         r = self._session.post(self.PUSH_URL, data=json.dumps(data))
-
         if r.status_code == requests.codes.ok:
-            return r.json()
+            js = r.json()
+            rate_limit = {}
+            rate_limit['reset'] = r.headers.get('X-Ratelimit-Reset')
+            rate_limit['limit'] = r.headers.get('X-Ratelimit-Limit')
+            rate_limit['remaining'] = r.headers.get('X-Ratelimit-Remaining')
+
+            js["rate_limit"] = rate_limit
+            return js
         else:
             raise PushError(r.text)
 
