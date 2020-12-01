@@ -1,0 +1,33 @@
+@import '../variables';
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-size: $font-size;
+  color: $font-color;
+  background-color: $background-color;
+
+  @media screen and (max-width: $media-mobile-max-width) {
+    font-size: $font-size-sm;
+  }
+
+  .container {
+    .card {
+      background-color: $card-background-color;
+
+      .card-header {
+        font-size: 1.75rem;
+        background-color: rgba(0, 0, 0, 0.1); // darken
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+      }
+    }
+  }
+
+  a {
+    text-decoration: none !important; // hide underline for a by default
+  }
+}

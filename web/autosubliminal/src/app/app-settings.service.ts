@@ -1,0 +1,86 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Language } from './shared/models/language';
+
+class AppSettings {
+  appVersion: string;
+  appPID: number;
+  developerMode: boolean;
+  webRoot: string;
+  scanDisk: string;
+  scanDiskNextRunInMs: number;
+  scanLibrary: string;
+  checkSub: string;
+  checkSubNextRunInMs: string;
+  checkVersion: string;
+  logReversed: boolean;
+  tvdbUrl: string;
+  imdbUrl: string;
+  timestampFormat: string;
+  pathSeparator: string;
+  languages: Language[];
+
+  get timeFormat(): string {
+    return this.timestampFormat.split(' ')[0];
+  }
+
+  get dateFormat(): string {
+    return this.timestampFormat.split(' ')[1];
+  }
+
+  public fromSettings(obj: any): void {
+    Object.assign(this, obj);
+  }
+}
+
+export let appSettings = new AppSettings();
+
+export function appSettingsServiceFactory(appSettingsService: AppSettingsService): () => Promise<AppSettings> {
+  // A lambda is required here, otherwise `this` won't work inside AppSettingsService::load
+  return async () => {
+    // Wait for load to finish to be sure that the app is not bootstrapped before this is loaded (IE/Edge fix)
+    return await appSettingsService.load();
+  };
+}
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AppSettingsService {
+
+  private configLoaded = false;
+
+  constructor(private httpClient: HttpClient) { }
+
+  // The return value (Promise) of this method is used as an APP_INITIALIZER, so the application's initialization will not complete until the Promise resolves.
+  public async load(): Promise<AppSettings> {
+    if (this.configLoaded) {
+      // Return previously loaded config
+      return of(appSettings).toPromise();
+    } else {
+      // Use manual resolve, reject to be sure to not bootstrap the application in case of an error!
+      return new Promise((resolve, reject) => {
+        const settingsObservable = this.httpClient.get(`/api/settings/frontend`).pipe(map(settings => settings as AppSettings));
+        settingsObservable.subscribe(
+          settings => {
+            appSettings.fromSettings(settings);
+            this.configLoaded = true;
+            console.log('Application settings loaded');
+            resolve(appSettings);
+          },
+          error => {
+            // Use reject if you want to break the boostrapping of the app!
+            // reject(`Error while retrieving application settings: ${JSON.stringify(error)}`);
+            console.error(`Error while retrieving application settings: ${JSON.stringify(error)}`);
+            resolve(null);
+          });
+      });
+    }
+  }
+
+  public loaded(): boolean {
+    return this.configLoaded;
+  }
+}
