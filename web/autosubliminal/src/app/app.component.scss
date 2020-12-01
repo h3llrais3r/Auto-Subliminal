@@ -1,0 +1,25 @@
+@import '../scss/mixins/flexbox';
+
+.app-layout {
+  height: 100%;
+  @include flexbox;
+  @include flex-direction(column);
+
+  .app-header {
+    @include flex-grow(0);
+    @include flex-shrink(0);
+    margin-bottom: 1rem;
+  }
+
+  .app-content {
+    @include flex-grow(1);
+    @include flex-shrink(0);
+    @include flex-basis(auto);
+    margin-bottom: 1rem;
+  }
+
+  .app-footer {
+    @include flex-grow(0);
+    @include flex-shrink(0);
+  }
+}

@@ -8,9 +8,10 @@ import autosubliminal
 from autosubliminal.config import write_config_general_section
 from autosubliminal.core.diskusage import DiskUsage
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, to_dict
+from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, get_next_scheduler_run_in_ms, to_dict
 from autosubliminal.util.language import get_subtitle_languages
 from autosubliminal.util.websocket import send_websocket_notification
+from autosubliminal.version import RELEASE_VERSION
 
 
 class SettingsApi(RestResource):
@@ -64,13 +65,17 @@ class _FrontendApi(RestResource):
     def get(self):
         """Get the list of settings for the frontend."""
         settings = {
+            'appVersion': RELEASE_VERSION,
+            'appPID': autosubliminal.PID,
             'developerMode': autosubliminal.DEVELOPER,
-            'logReversed': autosubliminal.LOGREVERSED,
             'webRoot': autosubliminal.WEBROOT,
             'scanDisk': autosubliminal.SCANDISK.name,
+            'scanDiskNextRunInMs': get_next_scheduler_run_in_ms(autosubliminal.SCANDISK),
             'scanLibrary': autosubliminal.SCANLIBRARY.name,
             'checkSub': autosubliminal.CHECKSUB.name,
+            'checkSubNextRunInMs': get_next_scheduler_run_in_ms(autosubliminal.CHECKSUB),
             'checkVersion': autosubliminal.CHECKVERSION.name,
+            'logReversed': autosubliminal.LOGREVERSED,
             'tvdbUrl': autosubliminal.DEREFERURL + autosubliminal.TVDBURL,
             'imdbUrl': autosubliminal.DEREFERURL + autosubliminal.IMDBURL,
             'timestampFormat': autosubliminal.TIMESTAMPFORMAT,

@@ -1,0 +1,20 @@
+// Global variables (var(--xxxx)) are used from imported primeng styles
+
+// Colors
+
+// Font color
+$font-color: var(--text-color);
+
+// Background color
+$background-color: var(--surface-b);
+$card-background-color: var(--surface-a);
+
+// Font size:
+$font-size: 1rem;
+$font-size-sm: ($font-size * .875) !default;
+
+//Media boundaries
+$media-mobile-max-width: 767px;
+$media-tablet-min-width: 768px;
+$media-tablet-max-width: 991px;
+$media-desktop-min-width: 992px;

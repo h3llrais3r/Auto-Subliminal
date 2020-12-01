@@ -19,6 +19,7 @@ from autosubliminal.core.websocket import WebSocketBroadCaster, WebSocketHandler
 from autosubliminal.diskscanner import DiskScanner
 from autosubliminal.libraryscanner import LibraryScanner
 from autosubliminal.server.root import WebServerRoot
+from autosubliminal.server.tool import SPARedirectTool
 from autosubliminal.subchecker import SubChecker
 from autosubliminal.util.encoding import s2n
 from autosubliminal.util.json import json_out_handler
@@ -130,6 +131,9 @@ def _configure_server(restarting=False):
     # Configure our custom json_out_handler (Uncomment if it should be used for any @cherrypy.tools.json_out())
     # cherrypy.config.update({'tools.json_out.handler': json_out_handler})
 
+    # Enable spa redirect tool
+    cherrypy.tools.spa_redirect = SPARedirectTool('/autosubliminal/index.html')
+
     if not restarting:
         # Enable websocket plugin
         websocket_plugin = WebSocketPlugin(cherrypy.engine)
@@ -191,7 +195,17 @@ def _get_application_configuration():
         '/log/websocket': {
             'tools.websocket.on': True,
             'tools.websocket.handler_cls': WebSocketLogHandler
-        }
+        },
+        '/autosubliminal': {
+            'tools.staticdir.root': os.path.abspath(os.path.join(autosubliminal.PATH, 'web/autosubliminal/dist')),
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': 'autosubliminal',
+            'tools.spa_redirect.on': True,
+            # 'tools.expires.on': True,
+            # 'tools.expires.secs': 3600 * 24 * 7,
+            # 'error_page.404': os.path.abspath(
+            #     os.path.join(autosubliminal.PATH, 'web/autosubliminal/dist/autosubliminal/index.html'))
+        },
     }
 
     # Return config
