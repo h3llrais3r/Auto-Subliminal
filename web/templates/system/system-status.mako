@@ -44,9 +44,9 @@
                             <td class="main-column">{{ scheduler.name }}</td>
                             <td class="scheduler-alive">{{ scheduler.alive }}</td>
                             <td class="scheduler-active">{{ scheduler.active }}</td>
-                            <td class="scheduler-interval">{{ formatDuration(scheduler.interval) }}</td>
-                            <td class="scheduler-last-run">{{ formatDateTime(scheduler.lastRun) }}</td>
-                            <td class="scheduler-next-run">{{ scheduler.running ? 'Running...' : formatDateTime(scheduler.nextRun) }}</td>
+                            <td class="scheduler-interval">{{ scheduler.interval ? formatDuration(scheduler.interval) : 'N/A' }}</td>
+                            <td class="scheduler-last-run">{{ scheduler.lastRun ? formatDateTime(scheduler.lastRun) : 'N/A' }}</td>
+                            <td class="scheduler-next-run">{{ scheduler.running ? 'Running...' : scheduler.nextRun ? formatDateTime(scheduler.nextRun) : 'N/A' }}</td>
                         </tr>
                         </tbody>
 
