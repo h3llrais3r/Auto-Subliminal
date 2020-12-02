@@ -1,0 +1,64 @@
+<div class="container">
+  <p-tabView>
+    <p-tabPanel header="General">
+      <div class="info-wrapper">
+        <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">OS</div>
+          <div class="info col-sm-12 col-md-8">{{os}}</div>
+        </div>
+        <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">Version</div>
+          <div class="info col-sm-12 col-md-8">{{version}}</div>
+        </div>
+        <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">Git branch</div>
+          <div class="info col-sm-12 col-md-8"><a href="{{gitBranch}}" target="_blank">{{gitBranch}}</a></div>
+        </div>
+        <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">Git version</div>
+          <div class="info col-sm-12 col-md-8"><a href="{{gitVersion}}" target="_blank">{{gitVersion}}</a></div>
+        </div>
+        <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">System encoding</div>
+          <div class="info col-sm-12 col-md-8">{{systemEncoding}}</div>
+        </div>
+        <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">Python version</div>
+          <div class="info col-sm-12 col-md-8">{{pythonVersion}}</div>
+        </div>
+        <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">Python location</div>
+          <div class="info col-sm-12 col-md-8">{{pythonLocation}}</div>
+        </div>
+        <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">Config file</div>
+          <div class="info col-sm-12 col-md-8">{{configFile}}</div>
+        </div>
+        <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">Database file</div>
+          <div class="info col-sm-12 col-md-8">{{databaseFile}}</div>
+        </div>
+        <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">Log file</div>
+          <div class="info col-sm-12 col-md-8">{{logFile}}</div>
+        </div>
+        <hr class="separator">
+        <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">Source</div>
+          <div class="info col-sm-12 col-md-8"><a href="{{SOURCE_URL}}" target="_blank">{{SOURCE_URL}}</a></div>
+        </div>
+        <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">Issues</div>
+          <div class="info col-sm-12 col-md-8"><a href="{{ISSUES_URL}}" target="_blank">{{ISSUES_URL}}</a></div>
+        </div>
+        <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">Wiki</div>
+          <div class="info col-sm-12 col-md-8"><a href="{{WIKI_URL}}" target="_blank">{{WIKI_URL}}</a></div>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Changelog">
+      <div class="changelog-wrapper" [innerHTML]="changelog"></div>
+    </p-tabPanel>
+  </p-tabView>
+</div>

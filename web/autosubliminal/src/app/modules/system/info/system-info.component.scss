@@ -1,0 +1,37 @@
+.info-wrapper {
+  .info {
+    &-item {
+      margin-bottom: 1rem;
+    }
+
+    &-label {
+      font-weight: bold;
+    }
+  }
+}
+
+.changelog-wrapper ::ng-deep .release {
+  .version {
+    margin-bottom: 1rem;
+
+    &-label {
+      font-weight: bold;
+    }
+  }
+
+  .releasedate {
+    margin-bottom: 1rem;
+
+    &-label {
+      font-weight: bold;
+    }
+  }
+
+  .changelog {
+    margin-bottom: 1rem;
+
+    &-label {
+      font-weight: bold;
+    }
+  }
+}

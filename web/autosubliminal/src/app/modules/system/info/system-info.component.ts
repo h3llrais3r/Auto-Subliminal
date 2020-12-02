@@ -1,0 +1,63 @@
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-system-info',
+  templateUrl: './system-info.component.html',
+  styleUrls: ['./system-info.component.scss']
+})
+export class SystemInfoComponent implements OnInit {
+
+  private readonly NOT_AVAILABLE = 'N/A';
+  private readonly CHANGELOG_URL = 'https://raw.githubusercontent.com/h3llrais3r/Auto-Subliminal/master/changelog.html';
+
+  readonly SOURCE_URL = 'https://github.com/h3llrais3r/Auto-Subliminal';
+  readonly ISSUES_URL = `${this.SOURCE_URL}/issues`;
+  readonly WIKI_URL = `${this.SOURCE_URL}/wiki`;
+
+  os = this.NOT_AVAILABLE;
+  version = this.NOT_AVAILABLE;
+  gitBranch = this.NOT_AVAILABLE;
+  gitVersion = this.NOT_AVAILABLE;
+  systemEncoding = this.NOT_AVAILABLE;
+  pythonVersion = this.NOT_AVAILABLE;
+  pythonLocation = this.NOT_AVAILABLE;
+  configFile = this.NOT_AVAILABLE;
+  databaseFile = this.NOT_AVAILABLE;
+  logFile = this.NOT_AVAILABLE;
+  changelog = this.NOT_AVAILABLE;
+
+  constructor(private httpClient: HttpClient) { }
+
+  ngOnInit(): void {
+    // TODO: get values from backend
+
+    // Get changelog
+    this.httpClient.get(this.CHANGELOG_URL, { responseType: 'text' }).subscribe(
+      result => {
+        this.changelog = this.parseChangelog(result);
+      });
+  }
+
+  private parseChangelog(changelogHtml: string): string {
+    let result = '';
+    const parser = new DOMParser();
+    const parsedChangelog = parser.parseFromString(changelogHtml, 'text/html');
+    const releases = parsedChangelog.getElementsByClassName('release');
+    Array.from(releases).forEach((release, index) => {
+      const version = release.getElementsByClassName('version')[0];
+      const releaseDate = release.getElementsByClassName('releasedate')[0];
+      const changelog = release.getElementsByClassName('changelog')[0];
+      if (index > 0) {
+        result += '<hr class="separator">';
+      }
+      result += '<div class="release">';
+      result += '<div class="version-label">Version</div>' + version.outerHTML;
+      result += '<div class="releasedate-label">Release date</div>' + releaseDate.outerHTML;
+      result += '<div class="changelog-label">Changelog</div>' + changelog.outerHTML;
+      result += '</div>';
+    });
+    return result;
+  }
+
+}

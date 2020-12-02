@@ -2,8 +2,9 @@ import { formatDateTime, formatDuration } from '../utils/date-utils';
 
 export class Scheduler {
   name: string;
+  active: boolean;
   alive: boolean;
-  ative: boolean;
+  running: boolean;
   interval: number;
   lastRun: number;
   nextRun: number;
