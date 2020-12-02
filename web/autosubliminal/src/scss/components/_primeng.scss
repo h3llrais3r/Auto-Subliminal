@@ -18,10 +18,12 @@
     >.p-menuitem-link:not(.p-disabled) {
       padding: 1rem 0.5rem;
 
+      // Hide box shadow on focus
       &:focus {
         @include box-shadow(none);
       }
 
+      // Add hover styling
       &:hover {
         @include box-shadow(inset 0 0 0 1px var(--surface-d));
         @include border-radius(0);
@@ -34,6 +36,31 @@
   .p-submenu-list {
     right: 0;
     left: auto;
+  }
+
+  // Hide box shadow on focus
+  .p-menuitem-link {
+    &:focus {
+      @include box-shadow(none);
+    }
+  }
+}
+
+// Tab view
+.p-tabview {
+  .p-tabview-nav li {
+    .p-tabview-nav-link:not(.p-disabled) {
+
+      // Hide box shadow on focus
+      &:focus {
+        @include box-shadow(none);
+      }
+    }
+  }
+
+  .p-tabview-panels {
+    border: 1px solid var(--surface-d);
+    border-top: none;
   }
 }
 

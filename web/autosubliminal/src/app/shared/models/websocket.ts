@@ -1,13 +1,23 @@
 
 // System websocket event received from server
 
-export type SystemWebSocketServerEventTypes = 'PAGE_RELOAD' | 'PROCESS_STARTED' | 'PROCESS_FINISHED';
+import { Page } from './page';
+import { Scheduler } from './scheduler';
+
+// TODO: rename PROCESS_* to SCHEDULER_* once backend is also changed
+export enum SystemWebSocketServerEventType {
+  PAGE_RELOAD = 'PAGE_RELOAD',
+  SCHEDULER_STARTED = 'PROCESS_STARTED',
+  SCHEDULER_FINISHED = 'PROCESS_FINISHED'
+}
+
+export type SystemWebSocketServerEventData = Page | Scheduler;
 
 export class SystemWebSocketServerEvent {
-  type: 'EVENT';
+  type = 'EVENT';
   event: {
-    type: SystemWebSocketServerEventTypes;
-    data: any;
+    type: SystemWebSocketServerEventType;
+    data: SystemWebSocketServerEventData;
   };
 
   constructor(obj: any) {
@@ -17,12 +27,17 @@ export class SystemWebSocketServerEvent {
 
 // System websocket notification received from server
 
-export type SystemWebSocketServerNotificationTypes = 'info' | 'success' | 'notice' | 'error';
+export enum SystemWebSocketServerNotificationType {
+  INFO = 'info',
+  SUCCESS = 'succes',
+  NOTICE = 'notice',
+  ERROR = 'error'
+}
 
 export class SystemWebSocketServerNotification {
-  type: 'NOTIFICATION';
+  type = 'NOTIFICATION';
   notification: {
-    type: SystemWebSocketServerNotificationTypes;
+    type: SystemWebSocketServerNotificationType;
     sticky: boolean;
     message: string;
   };
@@ -33,18 +48,20 @@ export class SystemWebSocketServerNotification {
 }
 
 // Websocket event sent from client
-export type SystemWebSocketClientEventTypes = 'RUN_PROCESS';
+export enum SystemWebSocketClientEventType {
+  RUN_PROCESS = 'RUN_PROCESS'
+}
 
 export class SystemWebSocketClientEvent {
-  type: 'EVENT';
+  type = 'EVENT';
   event: {
-    type: SystemWebSocketClientEventTypes;
+    type: SystemWebSocketClientEventType;
     data: {
       name: string;
     }
   };
 
-  constructor(type: SystemWebSocketClientEventTypes, name: string) {
+  constructor(type: SystemWebSocketClientEventType, name: string) {
     this.event = {
       type,
       data: {
@@ -55,5 +72,7 @@ export class SystemWebSocketClientEvent {
 }
 
 export type SystemWebSocketServerMessage = SystemWebSocketServerEvent | SystemWebSocketServerNotification;
+
 export type SystemWebSocketClientMessage = SystemWebSocketClientEvent;
+
 export type SystemWebSocketMessage = SystemWebSocketServerMessage | SystemWebSocketClientMessage;

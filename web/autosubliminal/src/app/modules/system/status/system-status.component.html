@@ -7,18 +7,18 @@
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="name"><span>Name<p-sortIcon field="name"></p-sortIcon></span></th>
-            <th pSortableColumn="alive"><span>Alive<p-sortIcon field="alive"></p-sortIcon></span></th>
             <th pSortableColumn="active"><span>Active<p-sortIcon field="active"></p-sortIcon></span></th>
+            <th pSortableColumn="alive"><span>Alive<p-sortIcon field="alive"></p-sortIcon></span></th>
             <th pSortableColumn="interval"><span>Interval<p-sortIcon field="interval"></p-sortIcon></span></th>
             <th pSortableColumn="lastRun"><span>Last run<p-sortIcon field="lastRun"></p-sortIcon></span></th>
             <th pSortableColumn="nextRun"><span>Next run<p-sortIcon field="nextRun"></p-sortIcon></span></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-scheduler>
-          <tr>
+          <tr [ngClass]="{'scheduler-running': scheduler.running}">
             <td><span class="p-column-title">Name</span><span class="p-column-data">{{scheduler.name}}</span></td>
-            <td><span class="p-column-title">Alive</span><span class="p-column-data">{{scheduler.alive}}</span></td>
             <td><span class="p-column-title">Active</span><span class="p-column-data">{{scheduler.active}}</span></td>
+            <td><span class="p-column-title">Alive</span><span class="p-column-data">{{scheduler.alive}}</span></td>
             <td><span class="p-column-title">Interval</span><span class="p-column-data">{{scheduler.intervalFormatted}}</span></td>
             <td><span class="p-column-title">Last Run</span><span class="p-column-data">{{scheduler.lastRunFormatted}}</span></td>
             <td><span class="p-column-title">Next run</span><span class="p-column-data">{{scheduler.nextRunFormatted}}</span></td>

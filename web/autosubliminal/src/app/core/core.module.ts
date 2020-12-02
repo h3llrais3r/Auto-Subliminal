@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { CountdownModule } from 'ngx-countdown';
-import { SharedModule } from 'primeng/api';
+import { MessageService, SharedModule } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { PageFooterComponent } from './ui/page/footer/page-footer.component';
 import { PageHeaderComponent } from './ui/page/header/page-header.component';
@@ -28,6 +28,9 @@ import { PageHeaderComponent } from './ui/page/header/page-header.component';
   exports: [
     PageHeaderComponent,
     PageFooterComponent
+  ],
+  providers: [
+    MessageService
   ]
 })
 export class CoreModule {
