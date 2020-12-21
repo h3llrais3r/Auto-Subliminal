@@ -51,6 +51,19 @@ export class PageHeaderComponent implements OnInit {
         icon: 'pi pi-fw pi-cog',
         items: [
           {
+            label: 'Info',
+            icon: 'pi pi-fw pi-info-circle',
+            routerLink: '/system/info'
+          },
+          {
+            label: 'Status',
+            icon: 'pi pi-fw pi-info-circle',
+            routerLink: '/system/status'
+          },
+          {
+            separator: true
+          },
+          {
             label: 'Scan disk',
             icon: 'pi pi-fw pi-play',
             command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_PROCESS, appSettings.scanDisk))
@@ -69,22 +82,22 @@ export class PageHeaderComponent implements OnInit {
             separator: true
           },
           {
-            label: 'Info',
-            icon: 'pi pi-fw pi-info-circle',
-            routerLink: '/system/info'
-          },
-          {
-            label: 'Status',
-            icon: 'pi pi-fw pi-info-circle',
-            routerLink: '/system/status'
+            label: 'Check version',
+            icon: 'pi pi-fw pi-tag',
+            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_PROCESS, appSettings.checkVersion))
           },
           {
             separator: true
           },
           {
-            label: 'Check version',
-            icon: 'pi pi-fw pi-tag',
-            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_PROCESS, appSettings.checkVersion))
+            label: 'Restart',
+            icon: 'pi pi-fw pi-refresh',
+            routerLink: '/system/restart'
+          },
+          {
+            label: 'Shutdown',
+            icon: 'pi pi-fw pi-power-off',
+            routerLink: '/system/shutdown'
           },
           {
             separator: true
