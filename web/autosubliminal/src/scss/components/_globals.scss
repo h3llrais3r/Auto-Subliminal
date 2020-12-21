@@ -12,18 +12,12 @@ body {
     font-size: $font-size-sm;
   }
 
-  .container {
-    .card {
-      background-color: $card-background-color;
+  .panel-section {
+    margin-bottom: 2rem;
 
-      .card-header {
-        font-size: 1.75rem;
-        background-color: rgba(0, 0, 0, 0.1); // darken
-      }
-
-      .card-title {
-        font-size: 1.5rem;
-      }
+    .panel-section-header {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
     }
   }
 

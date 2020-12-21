@@ -76,3 +76,5 @@ export type SystemWebSocketServerMessage = SystemWebSocketServerEvent | SystemWe
 export type SystemWebSocketClientMessage = SystemWebSocketClientEvent;
 
 export type SystemWebSocketMessage = SystemWebSocketServerMessage | SystemWebSocketClientMessage;
+
+export type LogWebSocketMessage = string;

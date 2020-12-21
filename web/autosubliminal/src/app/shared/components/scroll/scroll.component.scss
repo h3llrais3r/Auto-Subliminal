@@ -1,0 +1,34 @@
+// Scrol
+$scroll-icon-bg: var(--surface-d);
+$scroll-icon-color: var(--text-color);
+$scrol-icon-hover-bg: var(--text-color);
+$scrol-icon-hover-color: var(--surface-d);
+
+.scroll-icons {
+  position: fixed;
+  right: 5px;
+
+  &.top {
+    top: 10px;
+  }
+
+  &.bottom {
+    bottom: 10px;
+  }
+}
+
+.scroll-icon-bottom,
+.scroll-icon-top {
+  overflow: hidden;
+  z-index: 999;
+  cursor: pointer;
+  background-color: $scroll-icon-bg;
+  color: $scroll-icon-color;
+  border-radius: 8px;
+  padding: 5px;
+
+  &:hover {
+    background-color: $scrol-icon-hover-bg;
+    color: $scrol-icon-hover-color;
+  }
+}
