@@ -6,9 +6,8 @@ import cherrypy
 
 import autosubliminal
 from autosubliminal.config import write_config_general_section
-from autosubliminal.core.diskusage import DiskUsage
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, get_next_scheduler_run_in_ms, to_dict
+from autosubliminal.util.common import decamelize, find_path_in_paths, get_next_scheduler_run_in_ms, to_dict
 from autosubliminal.util.language import get_subtitle_languages
 from autosubliminal.util.websocket import send_websocket_notification
 from autosubliminal.version import RELEASE_VERSION
@@ -23,32 +22,8 @@ class SettingsApi(RestResource):
         super(SettingsApi, self).__init__()
 
         # Add all sub paths here: /api/settings/...
-        self.diskusage = _DiskUsageApi()
         self.frontend = _FrontendApi()
         self.general = _GeneralApi()
-
-
-class _DiskUsageApi(RestResource):
-    """
-    Rest resource for handling the /api/settings/diskusage path.
-    """
-
-    def __init__(self):
-        super(_DiskUsageApi, self).__init__()
-
-        # Set the allowed methods
-        self.allowed_methods = ('GET',)
-
-    def get(self):
-        """Get the diskusage details for all configured paths."""
-        diskusages = []
-        diskusage = DiskUsage.calculate_disk_usage('Auto-Subliminal path', autosubliminal.PATH)
-        diskusages.append(diskusage.to_dict(camelize))
-        for index, video_path in enumerate(autosubliminal.VIDEOPATHS):
-            diskusage = DiskUsage.calculate_disk_usage('Video path %s' % (index + 1), video_path)
-            diskusages.append(diskusage.to_dict(camelize))
-
-        return diskusages
 
 
 class _FrontendApi(RestResource):
@@ -65,8 +40,8 @@ class _FrontendApi(RestResource):
     def get(self):
         """Get the list of settings for the frontend."""
         settings = {
-            'appVersion': RELEASE_VERSION,
             'appPID': autosubliminal.PID,
+            'appVersion': RELEASE_VERSION,
             'developerMode': autosubliminal.DEVELOPER,
             'webRoot': autosubliminal.WEBROOT,
             'scanDisk': autosubliminal.SCANDISK.name,

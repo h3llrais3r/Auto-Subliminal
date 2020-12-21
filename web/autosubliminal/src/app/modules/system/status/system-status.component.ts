@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { SchedulerService } from 'src/app/core/services/api/scheduler.service';
 import { Scheduler } from 'src/app/shared/models/scheduler';
-import { DiskUsageService } from '../../../core/services/api/diskusage.service';
+import { SystemService } from '../../../core/services/api/system.service';
 import { SystemEventService } from '../../../core/services/system-event.service';
-import { DiskUsage } from '../../../shared/models/diskusage';
+import { PathInfo } from '../../../shared/models/pathinfo';
 
 @Component({
   selector: 'app-system-status',
@@ -13,23 +12,22 @@ import { DiskUsage } from '../../../shared/models/diskusage';
 export class SystemStatusComponent implements OnInit {
 
   schedulers: Scheduler[];
-  diskUsages: DiskUsage[];
+  paths: PathInfo[];
 
   constructor(
-    private schedulerService: SchedulerService,
-    private diskUsageService: DiskUsageService,
+    private systemService: SystemService,
     private systemEventService: SystemEventService) { }
 
   ngOnInit(): void {
     // Get schedulers
-    this.schedulerService.getSchedulers().subscribe(
+    this.systemService.getSchedulers().subscribe(
       result => {
         this.schedulers = result;
       });
-    // Get diskusages
-    this.diskUsageService.getDiskUsages().subscribe(
+    // Get paths
+    this.systemService.getPaths().subscribe(
       result => {
-        this.diskUsages = result;
+        this.paths = result;
       });
     // Subscribe on scheduler started events
     this.systemEventService.schedulerStarted.subscribe(

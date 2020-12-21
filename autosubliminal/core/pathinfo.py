@@ -3,10 +3,10 @@
 from autosubliminal.util.common import get_disk_space_details, humanize_bytes, to_dict
 
 
-class DiskUsage(object):
-    """ Disk usage class.
+class PathInfo(object):
+    """ Path info class.
 
-    Contains the disk usage details for a path.
+    Contains the path info for a path.
     """
 
     def __init__(self, name=None, path=None, free_bytes=None, total_bytes=None):
@@ -46,6 +46,6 @@ class DiskUsage(object):
         return to_dict(self, key_fn, *args, **kwargs)
 
     @classmethod
-    def calculate_disk_usage(cls, name, path):
+    def get_path_info(cls, name, path):
         free_bytes, total_bytes = get_disk_space_details(path)
         return cls(name=name, path=path, free_bytes=free_bytes, total_bytes=total_bytes)
