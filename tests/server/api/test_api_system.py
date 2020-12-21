@@ -1,0 +1,67 @@
+# coding=utf-8
+
+import pytest
+from tests.server.api.test_api import pickle_api_result
+
+import autosubliminal
+from autosubliminal.core.pathinfo import PathInfo
+from autosubliminal.server.api.system import SystemApi
+from autosubliminal.server.rest import BadRequest
+from autosubliminal.util.common import to_dict
+
+
+class MyScheduler(object):
+    def __init__(self, name):
+        self.name = name
+        self.process = None
+        self.interval = 60
+        self.last_run = 1
+        self._delay = 0
+        self._force_run = False
+        self._force_stop = False
+
+    @property
+    def next_run(self):
+        return self.last_run + self.interval
+
+    def to_dict(self, key_fn):
+        return to_dict(self, key_fn, 'process')
+
+
+scheduler = MyScheduler('MyScheduler1')
+
+scheduler_json = '{"interval": 60, "lastRun": 1, "name": "MyScheduler1", "nextRun": 61}'
+
+scheduler_json_list = '[' + scheduler_json + ']'
+
+pathinfo_1 = PathInfo('pathinfo1', 'path1', 1024, 2048)
+pathinfo_2 = PathInfo('pathinfo2', 'path2', 1024, 1024)
+
+pathinfo_1_json = '{"freeBytes": 1024, "freePercentage": 50.0, "freeSpace": "1.0 kB", "name": "pathinfo1", ' \
+                  '"path": "path1", "totalBytes": 2048, "totalSpace": "2.0 kB"}'
+pathinfo_2_json = '{"freeBytes": 1024, "freePercentage": 100.0, "freeSpace": "1.0 kB", "name": "pathinfo2", ' \
+                  '"path": "path2", "totalBytes": 1024, "totalSpace": "1.0 kB"}'
+
+pathinfo_json_list = '[' + pathinfo_1_json + ', ' + pathinfo_2_json + ']'
+
+
+def test_get_schedulers():
+    autosubliminal.SCHEDULERS = {'MyScheduler1': MyScheduler('MyScheduler1')}
+    assert scheduler_json_list == pickle_api_result(SystemApi().schedulers.get())
+
+
+def test_get_scheduler():
+    autosubliminal.SCHEDULERS = {'MyScheduler1': MyScheduler('MyScheduler1')}
+    assert scheduler_json == pickle_api_result(SystemApi().schedulers.get('MyScheduler1'))
+
+
+def test_get_scheduler_bad_request():
+    with pytest.raises(BadRequest):
+        SystemApi().schedulers.get('InvalidSchedulerName')
+
+
+def test_get_paths(mocker):
+    autosubliminal.PATH = 'path1'
+    autosubliminal.VIDEOPATHS = ['path2']
+    mocker.patch.object(PathInfo, 'get_path_info', side_effect=[pathinfo_1, pathinfo_2])
+    assert pathinfo_json_list == pickle_api_result(SystemApi().paths.get())

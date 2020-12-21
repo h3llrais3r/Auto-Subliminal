@@ -1,5 +1,4 @@
-
-export class DiskUsage {
+export class PathInfo {
   freeBytes: number;
   freePercentage: number;
   freeSpace: string;

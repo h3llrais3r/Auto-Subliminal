@@ -26,10 +26,10 @@
         </ng-template>
       </p-table>
     </div>
-    <!-- Diskusage section -->
+    <!-- Paths section -->
     <div class="panel-section">
-      <div class="panel-section-header">Disk usage</div>
-      <p-table [value]="diskUsages" [autoLayout]="true" [rowHover]="true" styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
+      <div class="panel-section-header">Paths</div>
+      <p-table [value]="paths" [autoLayout]="true" [rowHover]="true" styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="name"><span>Name<p-sortIcon field="name"></p-sortIcon></span></th>
@@ -37,11 +37,11 @@
             <th pSortableColumn="freeBytes"><span>Free space<p-sortIcon field="freeBytes"></p-sortIcon></span></th>
           </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-scheduler>
+        <ng-template pTemplate="body" let-pathInfo>
           <tr>
-            <td><span class="p-column-title">Name</span><span class="p-column-data">{{scheduler.name}}</span></td>
-            <td><span class="p-column-title">Path</span><span class="p-column-data">{{scheduler.path}}</span></td>
-            <td><span class="p-column-title">Free space</span><span class="p-column-data">{{scheduler.freeSpaceFormatted}}<i *ngIf="scheduler.freePercentage < 10" class="pi pi-fw pi-vm pi-exclamation-triangle text-danger" title="Low disk space"></i></span>
+            <td><span class="p-column-title">Name</span><span class="p-column-data">{{pathInfo.name}}</span></td>
+            <td><span class="p-column-title">Path</span><span class="p-column-data">{{pathInfo.path}}</span></td>
+            <td><span class="p-column-title">Free space</span><span class="p-column-data">{{pathInfo.freeSpaceFormatted}}<i *ngIf="pathInfo.freePercentage < 10" class="pi pi-fw pi-vm pi-exclamation-triangle text-danger" title="Low disk space"></i></span>
             </td>
           </tr>
         </ng-template>

@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { PathInfo } from '../../../shared/models/pathinfo';
+import { Scheduler } from '../../../shared/models/scheduler';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -16,7 +18,7 @@ export class SystemService extends ApiServiceTemplate {
   }
 
   isAlive(): Observable<boolean> {
-    return this.httpClient.get<Alive>(`${this.URL}/alive`)
+    return this.httpClient.get<alive>(`${this.URL}/alive`)
       .pipe(map((result) => result.alive));
   }
 
@@ -29,9 +31,16 @@ export class SystemService extends ApiServiceTemplate {
     return this.httpClient.post<boolean>(`${this.URL}/shutdown`, {})
       .pipe(map(() => true));
   }
+
+  getPaths(): Observable<PathInfo[]> {
+    return this.httpClient.get<PathInfo[]>(`${this.URL}/paths`)
+      .pipe(map(result => result.map(obj => new PathInfo(obj))));
+  }
+
+  getSchedulers(): Observable<Scheduler[]> {
+    return this.httpClient.get<Scheduler[]>(`${this.URL}/schedulers`)
+      .pipe(map(result => result.map(obj => new Scheduler(obj))));
+  }
 }
 
-
-interface Alive {
-  alive: boolean;
-}
+type alive = { alive: boolean };
