@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
@@ -26,6 +27,7 @@ import { ScrollComponent } from './components/scroll/scroll.component';
     TabViewModule,
     ButtonModule,
     DropdownModule,
+    DialogModule,
     ScrollComponent
   ]
 })
