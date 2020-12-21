@@ -21,6 +21,7 @@
       // Hide box shadow on focus
       &:focus {
         @include box-shadow(none);
+        outline: 0;
       }
 
       // Add hover styling
@@ -42,7 +43,32 @@
   .p-menuitem-link {
     &:focus {
       @include box-shadow(none);
+      outline: 0;
     }
+  }
+}
+
+// Panel
+.p-panel {
+  .p-panel-header {
+    .p-panel-title {
+      font-size: 1.5rem;
+    }
+
+    .p-panel-title-dropdown {
+      padding: 0.1rem;
+    }
+
+    .w-100 {
+      @include flexbox;
+      @include align-items(center);
+
+      .p-panel-title {
+        @include flex-grow(1);
+        font-size: 1.5rem;
+      }
+    }
+
   }
 }
 
@@ -54,6 +80,7 @@
       // Hide box shadow on focus
       &:focus {
         @include box-shadow(none);
+        outline: 0;
       }
     }
   }
@@ -127,6 +154,42 @@
         }
       }
     }
+  }
+}
+
+// Dropdown
+.p-dropdown {
+  line-height: normal; // change lineheight to have a more slim dropdown
+
+  // Hide box shadow on focus
+  &:not(.p-disabled).p-focus {
+    @include box-shadow(none);
+    outline: 0;
+  }
+
+  // Align right
+  &.p-dropdown-ar {
+    .p-dropdown-panel {
+      right: 0;
+      left: auto !important;
+
+      .p-dropdown-items {
+        .p-dropdown-item {
+          text-align: right;
+        }
+      }
+    }
+  }
+}
+
+// Button
+.p-button {
+  line-height: normal; // change lineheight to have a more slim button
+
+  // Hide box shadow on focus
+  &:focus {
+    @include box-shadow(none);
+    outline: 0;
   }
 }
 

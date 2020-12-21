@@ -1,6 +1,7 @@
 # coding=utf-8
 
 from autosubliminal.server.api.items import ItemsApi
+from autosubliminal.server.api.logs import LogsApi
 from autosubliminal.server.api.movies import MoviesApi
 from autosubliminal.server.api.schedulers import SchedulersApi
 from autosubliminal.server.api.settings import SettingsApi
@@ -22,6 +23,7 @@ class Api(RestResource):
 
         # Add all sub paths here: /api/...
         self.items = ItemsApi()
+        self.logs = LogsApi()
         self.movies = MoviesApi()
         self.schedulers = SchedulersApi()
         self.settings = SettingsApi()

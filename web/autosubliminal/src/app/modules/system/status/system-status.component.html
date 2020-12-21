@@ -1,9 +1,9 @@
 <div class="container">
-  <div class="card">
-    <div class="card-header">Status</div>
-    <div class="card-body">
-      <div class="card-title">Schedulers</div>
-      <p-table [value]="schedulers" [autoLayout]="true" [rowHover]="true" styleClass="p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
+  <p-panel header="Status">
+    <!-- Schedulers section -->
+    <div class="panel-section">
+      <div class="panel-section-header">Schedulers</div>
+      <p-table [value]="schedulers" [autoLayout]="true" [rowHover]="true" styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="name"><span>Name<p-sortIcon field="name"></p-sortIcon></span></th>
@@ -26,9 +26,10 @@
         </ng-template>
       </p-table>
     </div>
-    <div class="card-body">
-      <div class="card-title">Disk usage</div>
-      <p-table [value]="diskUsages" [autoLayout]="true" [rowHover]="true" styleClass="p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
+    <!-- Diskusage section -->
+    <div class="panel-section">
+      <div class="panel-section-header">Disk usage</div>
+      <p-table [value]="diskUsages" [autoLayout]="true" [rowHover]="true" styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
         <ng-template pTemplate="header">
           <tr>
             <th pSortableColumn="name"><span>Name<p-sortIcon field="name"></p-sortIcon></span></th>
@@ -40,10 +41,11 @@
           <tr>
             <td><span class="p-column-title">Name</span><span class="p-column-data">{{scheduler.name}}</span></td>
             <td><span class="p-column-title">Path</span><span class="p-column-data">{{scheduler.path}}</span></td>
-            <td><span class="p-column-title">Free space</span><span class="p-column-data">{{scheduler.freeSpaceFormatted}}<i class="pi pi-fw pi-vm pi-exclamation-triangle text-danger" title="Low disk space"></i></span></td>
+            <td><span class="p-column-title">Free space</span><span class="p-column-data">{{scheduler.freeSpaceFormatted}}<i *ngIf="scheduler.freePercentage < 10" class="pi pi-fw pi-vm pi-exclamation-triangle text-danger" title="Low disk space"></i></span>
+            </td>
           </tr>
         </ng-template>
       </p-table>
     </div>
-  </div>
+  </p-panel>
 </div>

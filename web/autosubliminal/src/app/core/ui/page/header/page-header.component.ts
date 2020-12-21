@@ -30,6 +30,21 @@ export class PageHeaderComponent implements OnInit {
       {
         label: 'Log',
         icon: 'pi pi-fw pi-file',
+        items: [
+          {
+            label: 'View logs',
+            icon: 'pi pi-fw pi-file',
+            routerLink: '/log/view'
+          },
+          {
+            separator: true
+          },
+          {
+            label: 'Clear logs',
+            icon: 'pi pi-fw pi-times',
+            routerLink: '/log/clear'
+          },
+        ]
       },
       {
         label: 'System',

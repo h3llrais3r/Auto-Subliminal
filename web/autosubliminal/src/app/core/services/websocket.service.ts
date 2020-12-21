@@ -12,11 +12,11 @@ import { SystemEventService } from './system-event.service';
 })
 export class WebSocketService {
 
-  systemWebsocket: WebSocketSubject<SystemWebSocketMessage>;
+  private systemWebsocket: WebSocketSubject<SystemWebSocketMessage>;
 
   constructor(private messageService: MessageService, private systemEventService: SystemEventService) {
     this.systemWebsocket = this.createSystemWebSocket();
-    this.systemWebsocket.asObservable().subscribe(
+    this.systemWebsocket.subscribe(
       serverMessage => {
         if (serverMessage.type === 'EVENT') {
           const serverEvent = serverMessage as SystemWebSocketServerEvent;
