@@ -62,7 +62,7 @@ export class AppSettingsService {
     } else {
       // Use manual resolve, reject to be sure to not bootstrap the application in case of an error!
       return new Promise((resolve, reject) => {
-        const settingsObservable = this.httpClient.get(`/api/settings/frontend`).pipe(map(settings => settings as AppSettings));
+        const settingsObservable = this.httpClient.get(`/api/system/settings`).pipe(map(settings => settings as AppSettings));
         settingsObservable.subscribe(
           settings => {
             appSettings.fromSettings(settings);

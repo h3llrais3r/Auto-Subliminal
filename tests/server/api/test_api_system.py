@@ -24,13 +24,34 @@ class MyScheduler(object):
     def next_run(self):
         return self.last_run + self.interval
 
+    @property
+    def running(self):
+        return False
+
     def to_dict(self, key_fn):
         return to_dict(self, key_fn, 'process')
 
 
+settings_json = '{"appPID": 1, ' \
+                '"appVersion": "' + autosubliminal.version.RELEASE_VERSION + '", ' \
+                '"checkSub": "SubChecker", ' \
+                '"checkSubNextRunInMs": 61000, ' \
+                '"checkVersion": "VersionChecker", ' \
+                '"developerMode": true, ' \
+                '"imdbUrl": "http://www.dereferer.org/?http://www.imdb.com/title/", ' \
+                '"languages": [{"code": "nl", "name": "Dutch"}], ' \
+                '"logReversed": false, ' \
+                '"pathSeparator": "/", ' \
+                '"scanDisk": "DiskScanner", ' \
+                '"scanDiskNextRunInMs": 61000, ' \
+                '"scanLibrary": "LibraryScanner", ' \
+                '"timestampFormat": "%d-%m-%Y %H:%M:%S", ' \
+                '"tvdbUrl": "http://www.dereferer.org/?http://thetvdb.com/?tab=series&id=", ' \
+                '"webRoot": "mywebroot"}'
+
 scheduler = MyScheduler('MyScheduler1')
 
-scheduler_json = '{"interval": 60, "lastRun": 1, "name": "MyScheduler1", "nextRun": 61}'
+scheduler_json = '{"interval": 60, "lastRun": 1, "name": "MyScheduler1", "nextRun": 61, "running": false}'
 
 scheduler_json_list = '[' + scheduler_json + ']'
 
@@ -43,6 +64,25 @@ pathinfo_2_json = '{"freeBytes": 1024, "freePercentage": 100.0, "freeSpace": "1.
                   '"path": "path2", "totalBytes": 1024, "totalSpace": "1.0 kB"}'
 
 pathinfo_json_list = '[' + pathinfo_1_json + ', ' + pathinfo_2_json + ']'
+
+
+def test_get_settings(monkeypatch, mocker):
+    monkeypatch.setattr('autosubliminal.PID', 1)
+    monkeypatch.setattr('autosubliminal.DEVELOPER', True)
+    monkeypatch.setattr('autosubliminal.WEBROOT', 'mywebroot')
+    monkeypatch.setattr('autosubliminal.SCANDISK', MyScheduler('DiskScanner'))
+    monkeypatch.setattr('autosubliminal.SCANLIBRARY', MyScheduler('LibraryScanner'))
+    monkeypatch.setattr('autosubliminal.CHECKSUB', MyScheduler('SubChecker'))
+    monkeypatch.setattr('autosubliminal.CHECKVERSION', MyScheduler('VersionChecker'))
+    monkeypatch.setattr('autosubliminal.LOGREVERSED', False)
+    monkeypatch.setattr('autosubliminal.DEREFERURL', 'http://www.dereferer.org/?')
+    monkeypatch.setattr('autosubliminal.TVDBURL', 'http://thetvdb.com/?tab=series&id=')
+    monkeypatch.setattr('autosubliminal.IMDBURL', 'http://www.imdb.com/title/')
+    monkeypatch.setattr('autosubliminal.TIMESTAMPFORMAT', '%d-%m-%Y %H:%M:%S')
+    monkeypatch.setattr('autosubliminal.server.api.settings.os.path.sep', '/')
+    mocker.patch('autosubliminal.server.api.system.get_subtitle_languages',
+                 return_value=[{'code': 'nl', 'name': 'Dutch'}])
+    assert settings_json == pickle_api_result(SystemApi().settings.get())
 
 
 def test_get_schedulers():
