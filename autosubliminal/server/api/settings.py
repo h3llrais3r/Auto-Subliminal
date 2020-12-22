@@ -22,42 +22,7 @@ class SettingsApi(RestResource):
         super(SettingsApi, self).__init__()
 
         # Add all sub paths here: /api/settings/...
-        self.frontend = _FrontendApi()
         self.general = _GeneralApi()
-
-
-class _FrontendApi(RestResource):
-    """
-    Rest resource for handling the /api/settings/frontend path.
-    """
-
-    def __init__(self):
-        super(_FrontendApi, self).__init__()
-
-        # Set the allowed methods
-        self.allowed_methods = ('GET',)
-
-    def get(self):
-        """Get the list of settings for the frontend."""
-        settings = {
-            'appPID': autosubliminal.PID,
-            'appVersion': RELEASE_VERSION,
-            'developerMode': autosubliminal.DEVELOPER,
-            'webRoot': autosubliminal.WEBROOT,
-            'scanDisk': autosubliminal.SCANDISK.name,
-            'scanDiskNextRunInMs': get_next_scheduler_run_in_ms(autosubliminal.SCANDISK),
-            'scanLibrary': autosubliminal.SCANLIBRARY.name,
-            'checkSub': autosubliminal.CHECKSUB.name,
-            'checkSubNextRunInMs': get_next_scheduler_run_in_ms(autosubliminal.CHECKSUB),
-            'checkVersion': autosubliminal.CHECKVERSION.name,
-            'logReversed': autosubliminal.LOGREVERSED,
-            'tvdbUrl': autosubliminal.DEREFERURL + autosubliminal.TVDBURL,
-            'imdbUrl': autosubliminal.DEREFERURL + autosubliminal.IMDBURL,
-            'timestampFormat': autosubliminal.TIMESTAMPFORMAT,
-            'pathSeparator': os.path.sep,
-            'languages': get_subtitle_languages()
-        }
-        return settings
 
 
 @cherrypy.popargs('general_setting_name')

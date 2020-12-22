@@ -1,9 +1,13 @@
 # coding=utf-8
 
+import os
+
 import autosubliminal
 from autosubliminal.core.pathinfo import PathInfo
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import camelize
+from autosubliminal.util.common import camelize, get_next_scheduler_run_in_ms
+from autosubliminal.util.language import get_subtitle_languages
+from autosubliminal.version import RELEASE_VERSION
 
 
 class SystemApi(RestResource):
@@ -18,6 +22,7 @@ class SystemApi(RestResource):
         self.alive = _AliveApi()
         self.restart = _RestartApi()
         self.shutdown = _ShutdownApi()
+        self.settings = _SettingsApi()
         self.schedulers = _SchedulersApi()
         self.paths = _PathsApi()
 
@@ -77,6 +82,41 @@ class _ShutdownApi(RestResource):
         system.shutdown()
 
         return self._no_content()
+
+
+class _SettingsApi(RestResource):
+    """
+    Rest resource for handling the /api/system/settings path.
+    """
+
+    def __init__(self):
+        super(_SettingsApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('GET',)
+
+    def get(self):
+        """Get the list of settings for the frontend."""
+        settings = {
+            'appPID': autosubliminal.PID,
+            'appVersion': RELEASE_VERSION,
+            'developerMode': autosubliminal.DEVELOPER,
+            'webRoot': autosubliminal.WEBROOT,
+            'scanDisk': autosubliminal.SCANDISK.name,
+            'scanDiskNextRunInMs': get_next_scheduler_run_in_ms(autosubliminal.SCANDISK),
+            'scanLibrary': autosubliminal.SCANLIBRARY.name,
+            'checkSub': autosubliminal.CHECKSUB.name,
+            'checkSubNextRunInMs': get_next_scheduler_run_in_ms(autosubliminal.CHECKSUB),
+            'checkVersion': autosubliminal.CHECKVERSION.name,
+            'logReversed': autosubliminal.LOGREVERSED,
+            'tvdbUrl': autosubliminal.DEREFERURL + autosubliminal.TVDBURL,
+            'imdbUrl': autosubliminal.DEREFERURL + autosubliminal.IMDBURL,
+            'timestampFormat': autosubliminal.TIMESTAMPFORMAT,
+            'pathSeparator': os.path.sep,
+            'languages': get_subtitle_languages()
+        }
+
+        return settings
 
 
 class _SchedulersApi(RestResource):
