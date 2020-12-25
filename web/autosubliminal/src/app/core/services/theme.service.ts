@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class ThemeService {
 
-  private currentTheme = 'bootstrap4-light-blue';
+  private currentTheme = 'bootstrap4-dark-blue';
 
   changeTheme(theme: string) {
     let themeElement = document.getElementById('theme-link');
