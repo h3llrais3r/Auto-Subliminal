@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { appSettings } from '../../../../app-settings.service';
 import { SystemWebSocketClientEvent, SystemWebSocketClientEventType } from '../../../../shared/models/websocket';
+import { ThemeService } from '../../../services/theme.service';
 import { WebSocketService } from '../../../services/websocket.service';
 
 @Component({
@@ -15,7 +16,7 @@ export class PageHeaderComponent implements OnInit {
 
   menuItems: MenuItem[];
 
-  constructor(private webSocketService: WebSocketService) { }
+  constructor(private webSocketService: WebSocketService, private themeService: ThemeService) { }
 
   ngOnInit(): void {
     this.menuItems = [
@@ -25,7 +26,31 @@ export class PageHeaderComponent implements OnInit {
       },
       {
         label: 'Config',
-        icon: 'pi pi-fw pi-cog'
+        icon: 'pi pi-fw pi-cog',
+        items: [
+          {
+            label: 'Look & feel',
+            icon: 'pi pi-fw pi-eye',
+            items: [
+              {
+                label: 'Bootstrap light blue',
+                command: () => this.themeService.changeTheme('bootstrap4-light-blue')
+              },
+              {
+                label: 'Bootstrap light purple',
+                command: () => this.themeService.changeTheme('bootstrap4-light-purple')
+              },
+              {
+                label: 'Bootstrap dark blue',
+                command: () => this.themeService.changeTheme('bootstrap4-dark-blue')
+              },
+              {
+                label: 'Bootstrap dark purple',
+                command: () => this.themeService.changeTheme('bootstrap4-dark-purple')
+              }
+            ]
+          }
+        ]
       },
       {
         label: 'Log',
@@ -43,7 +68,7 @@ export class PageHeaderComponent implements OnInit {
             label: 'Clear logs',
             icon: 'pi pi-fw pi-times',
             routerLink: '/log/clear'
-          },
+          }
         ]
       },
       {
