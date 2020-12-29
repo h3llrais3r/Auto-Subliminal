@@ -5,7 +5,7 @@ import os
 import cherrypy
 
 import autosubliminal
-from autosubliminal.config import write_config_general_section
+from autosubliminal.config import write_config_general_section, write_config_logging_section
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, to_dict
 from autosubliminal.util.websocket import send_websocket_notification
@@ -21,6 +21,7 @@ class SettingsApi(RestResource):
 
         # Add all sub paths here: /api/settings/...
         self.general = _GeneralApi()
+        self.logging = _LoggingApi()
 
 
 @cherrypy.popargs('general_setting_name')
@@ -120,6 +121,69 @@ class _GeneralApi(RestResource):
 
             write_config_general_section()
             send_websocket_notification('General settings updated.')
+
+            return self._no_content()
+
+        return self._bad_request('Invalid data')
+
+
+class _LoggingApi(RestResource):
+    """
+    Rest resource for handling the /api/settings/logging path.
+    """
+
+    def __init__(self):
+        super(_LoggingApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('GET', 'PUT')
+
+    def get(self):
+        """Get general settings."""
+        settings = {
+            'log_file': autosubliminal.LOGFILE,
+            'log_level': autosubliminal.LOGLEVEL,
+            'log_num': autosubliminal.LOGNUM,
+            'log_size': autosubliminal.LOGSIZE,
+            'log_http_access': autosubliminal.LOGHTTPACCESS,
+            'log_external_libs': autosubliminal.LOGEXTERNALLIBS,
+            'log_detailed_format': autosubliminal.LOGDETAILEDFORMAT,
+            'log_reversed': autosubliminal.LOGREVERSED,
+            'log_level_console': autosubliminal.LOGLEVELCONSOLE
+        }
+
+        return to_dict(settings, camelize)
+
+    def put(self, log_setting_name=None):
+        """Update general settings."""
+        input_dict = to_dict(cherrypy.request.json, decamelize)
+
+        # Single setting update
+        if log_setting_name:
+            pass  # not yet implemented
+        else:
+            # Update all settings
+            if 'log_file' in input_dict:
+                autosubliminal.LOGFILE = input_dict['log_file']
+            if 'log_level' in input_dict:
+                autosubliminal.LOGLEVEL = input_dict['log_level']
+            if 'log_num' in input_dict:
+                autosubliminal.LOGNUM = input_dict['log_num']
+            if 'log_size' in input_dict:
+                autosubliminal.LOGSIZE = input_dict['log_size']
+            if 'log_http_access' in input_dict:
+                autosubliminal.LOGHTTPACCESS = input_dict['log_http_access']
+            if 'log_external_libs' in input_dict:
+                autosubliminal.LOGEXTERNALLIBS = input_dict['log_external_libs']
+            if 'log_detailed_format' in input_dict:
+                autosubliminal.LOGDETAILEDFORMAT = input_dict['log_detailed_format']
+            if 'log_reversed' in input_dict:
+                autosubliminal.LOGREVERSED = input_dict['log_reversed']
+            if 'log_level_console' in input_dict:
+                autosubliminal.LOGLEVELCONSOLE = input_dict['log_level_console']
+
+            write_config_logging_section()
+            send_websocket_notification('Log settings updated.')
 
             return self._no_content()
 
