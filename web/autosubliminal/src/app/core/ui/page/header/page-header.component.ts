@@ -34,6 +34,11 @@ export class PageHeaderComponent implements OnInit {
             routerLink: '/settings/general'
           },
           {
+            label: 'Logging',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/logging'
+          },
+          {
             separator: true
           },
           {

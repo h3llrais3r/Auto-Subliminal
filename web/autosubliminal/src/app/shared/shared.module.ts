@@ -11,17 +11,21 @@ import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
-import { InfoDropdownComponent } from './components/info-dropdown/info-dropdown.component';
-import { InputDropdownComponent } from './components/input/input-dropdown/input-dropdown.component';
-import { InputMultiTextComponent } from './components/input/input-multi-text/input-multi-text.component';
+import { InfoIconComponent } from './components/info-icon/info-icon.component';
+import { InputDropdownComponent } from './components/input/dropdown/input-dropdown.component';
+import { InputMultiTextComponent } from './components/input/multi-text/input-multi-text.component';
+import { InputNumberComponent } from './components/input/number/input-number.component';
+import { InputTextComponent } from './components/input/text/input-text.component';
 import { ScrollComponent } from './components/scroll/scroll.component';
 
 @NgModule({
   declarations: [
     ScrollComponent,
-    InfoDropdownComponent,
-    InputMultiTextComponent,
-    InputDropdownComponent
+    InfoIconComponent,
+    InputTextComponent,
+    InputNumberComponent,
+    InputDropdownComponent,
+    InputMultiTextComponent
   ],
   imports: [
     CommonModule,
@@ -29,6 +33,7 @@ import { ScrollComponent } from './components/scroll/scroll.component';
     ReactiveFormsModule,
     ButtonModule,
     InputTextModule,
+    InputNumberModule,
     DropdownModule
   ],
   exports: [
@@ -46,9 +51,11 @@ import { ScrollComponent } from './components/scroll/scroll.component';
     DialogModule,
     TooltipModule,
     ScrollComponent,
-    InfoDropdownComponent,
-    InputMultiTextComponent,
-    InputDropdownComponent
+    InfoIconComponent,
+    InputTextComponent,
+    InputNumberComponent,
+    InputDropdownComponent,
+    InputMultiTextComponent
   ]
 })
 export class SharedModule { }

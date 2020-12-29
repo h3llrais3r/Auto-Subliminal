@@ -23,3 +23,19 @@ export class GeneralSettings {
     Object.assign(this, obj);
   }
 }
+
+export class LogSettings {
+  logFile: string;
+  logLevel: number;
+  logNum: number;
+  logSize: number;
+  logHttpAccess: boolean;
+  logExternalLibs: boolean;
+  logDetailedFormat: boolean;
+  logReversed: boolean;
+  logLevelConsole: number;
+
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
+}
