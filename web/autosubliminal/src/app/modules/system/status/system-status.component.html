@@ -21,7 +21,7 @@
             <td><span class="p-column-title">Alive</span><span class="p-column-data">{{scheduler.alive}}</span></td>
             <td><span class="p-column-title">Interval</span><span class="p-column-data">{{scheduler.intervalFormatted}}</span></td>
             <td><span class="p-column-title">Last Run</span><span class="p-column-data">{{scheduler.lastRunFormatted}}</span></td>
-            <td><span class="p-column-title">Next run</span><span class="p-column-data">{{scheduler.nextRunFormatted}}</span></td>
+            <td><span class="p-column-title">Next run</span><span class="p-column-data">{{scheduler.running ? 'Running' : scheduler.nextRunFormatted}}</span></td>
           </tr>
         </ng-template>
       </p-table>
