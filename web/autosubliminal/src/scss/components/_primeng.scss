@@ -157,25 +157,63 @@
   }
 }
 
-// Dropdown
-.p-dropdown {
+.p-inputtext {
   line-height: normal; // change lineheight to have a more slim dropdown
 
   // Hide box shadow on focus
-  &:not(.p-disabled).p-focus {
+  &:not(.p-disabled):focus {
     @include box-shadow(none);
     outline: 0;
   }
 
-  // Align right
-  &.p-dropdown-ar {
-    .p-dropdown-panel {
-      right: 0;
-      left: auto !important;
+  &.invalid {
+    border-color: var(--danger);
 
-      .p-dropdown-items {
-        .p-dropdown-item {
-          text-align: right;
+    &:not(.p-disabled) {
+
+      &:focus,
+      &:hover {
+        border-color: var(--danger);
+      }
+    }
+  }
+}
+
+// .p-dropdown
+p-dropdown {
+  &.invalid {
+    .p-dropdown {
+      border-color: var(--danger);
+
+      &:not(.p-disabled) {
+
+        &.p-focus,
+        &:hover {
+          border-color: var(--danger);
+        }
+      }
+    }
+  }
+
+  .p-dropdown {
+    line-height: normal; // change lineheight to have a more slim dropdown
+
+    // Hide box shadow on focus
+    &:not(.p-disabled).p-focus {
+      @include box-shadow(none);
+      outline: 0;
+    }
+
+    // Align right
+    &.p-dropdown-ar {
+      .p-dropdown-panel {
+        right: 0;
+        left: auto !important;
+
+        .p-dropdown-items {
+          .p-dropdown-item {
+            text-align: right;
+          }
         }
       }
     }
@@ -191,9 +229,23 @@
     @include box-shadow(none);
     outline: 0;
   }
+
+  &.p-button-outlined {
+    border: 1px solid var(--surface-d); // change outlined border color
+
+    &.input-addon {
+      color: var(--text-color-secondary); // change text color when used as input addon
+    }
+  }
 }
 
 // Primeicons - vertical align: middle
 .pi-vm {
   vertical-align: middle;
+}
+
+// Missing secondary class for tags
+.p-tag.p-tag-secondary {
+  background-color: var(--secondary);
+  color: var(--white);
 }

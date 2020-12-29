@@ -18,27 +18,27 @@ export class SystemService extends ApiServiceTemplate {
   }
 
   isAlive(): Observable<boolean> {
-    return this.httpClient.get<alive>(`${this.URL}/alive`)
+    return this.httpClient.get<alive>(`${this.URL}/alive`, this.options)
       .pipe(map((result) => result.alive));
   }
 
   restart(): Observable<boolean> {
-    return this.httpClient.post<boolean>(`${this.URL}/restart`, {})
+    return this.httpClient.post<boolean>(`${this.URL}/restart`, {}, this.options)
       .pipe(map(() => true));
   }
 
   shutdown(): Observable<boolean> {
-    return this.httpClient.post<boolean>(`${this.URL}/shutdown`, {})
+    return this.httpClient.post<boolean>(`${this.URL}/shutdown`, {}, this.options)
       .pipe(map(() => true));
   }
 
   getPaths(): Observable<PathInfo[]> {
-    return this.httpClient.get<PathInfo[]>(`${this.URL}/paths`)
+    return this.httpClient.get<PathInfo[]>(`${this.URL}/paths`, this.options)
       .pipe(map(result => result.map(obj => new PathInfo(obj))));
   }
 
   getSchedulers(): Observable<Scheduler[]> {
-    return this.httpClient.get<Scheduler[]>(`${this.URL}/schedulers`)
+    return this.httpClient.get<Scheduler[]>(`${this.URL}/schedulers`, this.options)
       .pipe(map(result => result.map(obj => new Scheduler(obj))));
   }
 }

@@ -1,0 +1,31 @@
+// Use icons in combination with 'pi pi-fw' like primeng icons for proper alignment
+
+%icon {
+  content: '';
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 1rem;
+  height: 1rem;
+  width: 1rem;
+}
+
+.bootstrap4-dark-blue::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/bootstrap4-dark-blue/bootstrap4-dark-blue.svg);
+}
+
+.bootstrap4-dark-purple::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/bootstrap4-dark-purple/bootstrap4-dark-purple.svg);
+}
+
+.bootstrap4-light-blue::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/bootstrap4-light-blue/bootstrap4-light-blue.svg);
+}
+
+.bootstrap4-light-purple::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/bootstrap4-light-purple/bootstrap4-light-purple.svg);
+}

@@ -8,7 +8,7 @@ export class ThemeService {
   private currentTheme = 'bootstrap4-dark-blue';
 
   changeTheme(theme: string) {
-    let themeElement = document.getElementById('theme-link');
+    let themeElement = document.getElementById('currentTheme');
     themeElement.setAttribute('href', themeElement.getAttribute('href').replace(this.currentTheme, theme));
     this.currentTheme = theme;
   }

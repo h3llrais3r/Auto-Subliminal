@@ -25,28 +25,40 @@ export class PageHeaderComponent implements OnInit {
         icon: 'pi pi-fw pi-home'
       },
       {
-        label: 'Config',
+        label: 'Settings',
         icon: 'pi pi-fw pi-cog',
         items: [
           {
+            label: 'General',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/general'
+          },
+          {
+            separator: true
+          },
+          {
             label: 'Look & feel',
-            icon: 'pi pi-fw pi-eye',
+            icon: 'pi pi-fw pi-palette',
             items: [
               {
-                label: 'Bootstrap light blue',
-                command: () => this.themeService.changeTheme('bootstrap4-light-blue')
-              },
-              {
-                label: 'Bootstrap light purple',
-                command: () => this.themeService.changeTheme('bootstrap4-light-purple')
-              },
-              {
-                label: 'Bootstrap dark blue',
+                label: 'Dark blue',
+                icon: 'pi pi-fw bootstrap4-dark-blue',
                 command: () => this.themeService.changeTheme('bootstrap4-dark-blue')
               },
               {
-                label: 'Bootstrap dark purple',
+                label: 'Dark purple',
+                icon: 'pi pi-fw bootstrap4-dark-purple',
                 command: () => this.themeService.changeTheme('bootstrap4-dark-purple')
+              },
+              {
+                label: 'Light blue',
+                icon: 'pi pi-fw bootstrap4-light-blue',
+                command: () => this.themeService.changeTheme('bootstrap4-light-blue')
+              },
+              {
+                label: 'Light purple',
+                icon: 'pi pi-fw bootstrap4-light-purple',
+                command: () => this.themeService.changeTheme('bootstrap4-light-purple')
               }
             ]
           }

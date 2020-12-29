@@ -17,16 +17,16 @@ export class LogService extends ApiServiceTemplate {
 
   getLogs(lognum?: number): Observable<string[]> {
     const url = lognum ? `${this.URL}/${lognum}` : this.URL;
-    return this.httpClient.get<string>(url)
+    return this.httpClient.get<string>(url, this.options)
       .pipe(map(result => result.split('\\r\\n')));
   }
 
   clearLogs(): Observable<boolean> {
-    return this.httpClient.delete<void>(this.URL)
+    return this.httpClient.delete<void>(this.URL, this.options)
       .pipe(map(() => true));
   }
 
   getLogCount(): Observable<number> {
-    return this.httpClient.get<number>(`${this.URL}/count`);
+    return this.httpClient.get<number>(`${this.URL}/count`, this.options);
   }
 }
