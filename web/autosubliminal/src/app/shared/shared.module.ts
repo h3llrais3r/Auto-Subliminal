@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NgxMaskModule } from 'ngx-mask';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
@@ -31,6 +32,7 @@ import { ScrollComponent } from './components/scroll/scroll.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxMaskModule.forRoot(),
     ButtonModule,
     InputTextModule,
     InputNumberModule,
@@ -40,6 +42,7 @@ import { ScrollComponent } from './components/scroll/scroll.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    NgxMaskModule,
     ToastModule,
     PanelModule,
     TableModule,

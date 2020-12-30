@@ -39,3 +39,16 @@ export class LogSettings {
     Object.assign(this, obj);
   }
 }
+
+export class WebServerSettings {
+  webServerIp: string;
+  webServerPort: string;
+  webRoot: string;
+  userName: string;
+  password: string;
+  launchBrowser: boolean;
+
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
+}

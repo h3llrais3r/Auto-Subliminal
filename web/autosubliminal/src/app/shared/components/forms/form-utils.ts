@@ -1,5 +1,6 @@
 import { FormGroup } from '@angular/forms';
 import * as $ from 'jquery';
+import { SelectItem } from 'primeng/api';
 
 export class FormUtils {
 
@@ -54,5 +55,12 @@ export class FormUtils {
       const el = $(selector);
       $('html,body').animate({ scrollTop: el.offset().top - 30 }, 'smooth');
     }
+  }
+
+  static enabledOrDisabledSelectItems(): SelectItem[] {
+    const enabledOrDisabled = [];
+    enabledOrDisabled.push({ label: 'Enabled', value: true });
+    enabledOrDisabled.push({ label: 'Disabled', value: false });
+    return enabledOrDisabled;
   }
 }

@@ -5,7 +5,8 @@ import os
 import cherrypy
 
 import autosubliminal
-from autosubliminal.config import write_config_general_section, write_config_logging_section
+from autosubliminal.config import write_config_general_section, write_config_logging_section, \
+    write_config_webserver_section
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, to_dict
 from autosubliminal.util.websocket import send_websocket_notification
@@ -22,6 +23,7 @@ class SettingsApi(RestResource):
         # Add all sub paths here: /api/settings/...
         self.general = _GeneralApi()
         self.logging = _LoggingApi()
+        self.webserver = _WebserverApi()
 
 
 @cherrypy.popargs('general_setting_name')
@@ -155,7 +157,7 @@ class _LoggingApi(RestResource):
         return to_dict(settings, camelize)
 
     def put(self, log_setting_name=None):
-        """Update general settings."""
+        """Update log settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
         # Single setting update
@@ -184,6 +186,60 @@ class _LoggingApi(RestResource):
 
             write_config_logging_section()
             send_websocket_notification('Log settings updated.')
+
+            return self._no_content()
+
+        return self._bad_request('Invalid data')
+
+
+class _WebserverApi(RestResource):
+    """
+    Rest resource for handling the /api/settings/webserver path.
+    """
+
+    def __init__(self):
+        super(_WebserverApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('GET', 'PUT')
+
+    def get(self):
+        """Get general settings."""
+        settings = {
+            'web_server_ip': autosubliminal.WEBSERVERIP,
+            'web_server_port': autosubliminal.WEBSERVERPORT,
+            'web_root': autosubliminal.WEBROOT,
+            'user_name': autosubliminal.USERNAME,
+            'password': autosubliminal.PASSWORD,
+            'launch_browser': autosubliminal.LAUNCHBROWSER
+        }
+
+        return to_dict(settings, camelize)
+
+    def put(self, webserver_setting_name=None):
+        """Update webserver settings."""
+        input_dict = to_dict(cherrypy.request.json, decamelize)
+
+        # Single setting update
+        if webserver_setting_name:
+            pass  # not yet implemented
+        else:
+            # Update all settings
+            if 'web_server_ip' in input_dict:
+                autosubliminal.WEBSERVERIP = input_dict['web_server_ip']
+            if 'web_server_port' in input_dict:
+                autosubliminal.WEBSERVERPORT = input_dict['web_server_port']
+            if 'web_root' in input_dict:
+                autosubliminal.WEBROOT = input_dict['web_root']
+            if 'user_name' in input_dict:
+                autosubliminal.USERNAME = input_dict['user_name']
+            if 'password' in input_dict:
+                autosubliminal.PASSWORD = input_dict['password']
+            if 'launch_browser' in input_dict:
+                autosubliminal.LAUNCHBROWSER = input_dict['launch_browser']
+
+            write_config_webserver_section()
+            send_websocket_notification('Webserver settings updated.')
 
             return self._no_content()
 
