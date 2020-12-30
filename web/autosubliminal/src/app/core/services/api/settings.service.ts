@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GeneralSettings, LogSettings } from '../../../shared/models/settings';
+import { GeneralSettings, LogSettings, WebServerSettings } from '../../../shared/models/settings';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -16,6 +16,8 @@ export class SettingsService extends ApiServiceTemplate {
     super(httpClient);
   }
 
+  // General settings
+
   getGeneralSettings(): Observable<GeneralSettings> {
     return this.httpClient.get<string>(`${this.URL}/general`, this.options)
       .pipe(map(result => new GeneralSettings(result)));
@@ -26,6 +28,8 @@ export class SettingsService extends ApiServiceTemplate {
       .pipe(map(() => true));
   }
 
+  // Log settings
+
   getLogSettings(): Observable<LogSettings> {
     return this.httpClient.get<string>(`${this.URL}/logging`, this.options)
       .pipe(map(result => new LogSettings(result)));
@@ -33,6 +37,18 @@ export class SettingsService extends ApiServiceTemplate {
 
   updateLogSettings(logSettings: LogSettings): Observable<boolean> {
     return this.httpClient.put(`${this.URL}/logging`, JSON.stringify(logSettings), this.options)
+      .pipe(map(() => true));
+  }
+
+  // Webserver settings
+
+  getWebServerSettings(): Observable<WebServerSettings> {
+    return this.httpClient.get<string>(`${this.URL}/webserver`, this.options)
+      .pipe(map(result => new WebServerSettings(result)));
+  }
+
+  updateWebServerSettings(webServerSettings: WebServerSettings): Observable<boolean> {
+    return this.httpClient.put(`${this.URL}/webserver`, JSON.stringify(webServerSettings), this.options)
       .pipe(map(() => true));
   }
 }

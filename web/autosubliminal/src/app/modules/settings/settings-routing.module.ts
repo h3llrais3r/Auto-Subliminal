@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SettingsGeneralComponent } from './general/settings-general.component';
 import { SettingsLoggingComponent } from './logging/settings-logging.component';
+import { SettingsWebserverComponent } from './webserver/settings-webserver.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
   {
     path: 'logging',
     component: SettingsLoggingComponent
+  },
+  {
+    path: 'webserver',
+    component: SettingsWebserverComponent
   }
 ];
 

@@ -46,9 +46,7 @@ export class SettingsGeneralComponent implements OnInit {
 
   private buildSelectItems(): void {
     // Enabled or disabled
-    this.enabledOrDisabled = [];
-    this.enabledOrDisabled.push({ label: 'Enabled', value: true });
-    this.enabledOrDisabled.push({ label: 'Disabled', value: false });
+    this.enabledOrDisabled = FormUtils.enabledOrDisabledSelectItems();
     // Languages
     this.languages = [];
     this.languages.push({ label: 'Select a language', value: '' });

@@ -44,9 +44,7 @@ export class SettingsLoggingComponent implements OnInit {
 
   private buildSelectItems(): void {
     // Enabled or disabled
-    this.enabledOrDisabled = [];
-    this.enabledOrDisabled.push({ label: 'Enabled', value: true });
-    this.enabledOrDisabled.push({ label: 'Disabled', value: false });
+    this.enabledOrDisabled = FormUtils.enabledOrDisabledSelectItems();
     // Log levels (value corresponds to python log level)
     this.logLevels = [];
     this.logLevels.push({ label: 'Debug', value: 10 });
@@ -83,5 +81,4 @@ export class SettingsLoggingComponent implements OnInit {
     settings.logLevelConsole = FormUtils.getFormControlValue<number>(this.settingsForm, 'logLevelConsole');
     return settings;
   }
-
 }
