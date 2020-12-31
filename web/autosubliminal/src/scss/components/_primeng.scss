@@ -257,3 +257,10 @@ p-dropdown {
     padding: 0 0.4rem;
   }
 }
+
+// Messages
+.p-inline-message {
+  &.w-100 {
+    @include justify-content(left); // default left align
+  }
+}

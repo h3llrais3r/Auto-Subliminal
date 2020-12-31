@@ -1,6 +1,12 @@
 <div class="container">
   <p-panel header="Webserver settings">
     <form *ngIf="settingsForm" [formGroup]="settingsForm" class="form">
+      <!-- Warning -->
+      <div class="row form-row">
+        <div class="col-12">
+          <p-message severity="warn" text="Changing webserver settings will result in no automatic reload! You'll need to change the url manually in order to reload correctly!" styleClass="w-100"></p-message>
+        </div>
+      </div>
       <!-- Webserver ip -->
       <div class="row form-row">
         <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
