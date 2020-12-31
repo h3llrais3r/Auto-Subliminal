@@ -7,6 +7,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
@@ -43,6 +44,7 @@ import { ScrollComponent } from './components/scroll/scroll.component';
     FormsModule,
     ReactiveFormsModule,
     NgxMaskModule,
+    MessageModule,
     ToastModule,
     PanelModule,
     TableModule,
