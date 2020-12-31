@@ -4,12 +4,14 @@ import { SettingsGeneralComponent } from './general/settings-general.component';
 import { ConfigRoutingModule } from './settings-routing.module';
 import { SettingsLoggingComponent } from './logging/settings-logging.component';
 import { SettingsWebserverComponent } from './webserver/settings-webserver.component';
+import { SettingsPostprocessingComponent } from './postprocessing/settings-postprocessing.component';
 
 @NgModule({
   declarations: [
     SettingsGeneralComponent,
     SettingsLoggingComponent,
-    SettingsWebserverComponent
+    SettingsWebserverComponent,
+    SettingsPostprocessingComponent
   ],
   imports: [
     SharedModule,

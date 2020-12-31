@@ -44,6 +44,11 @@ export class PageHeaderComponent implements OnInit {
             routerLink: '/settings/webserver'
           },
           {
+            label: 'Postprocessing',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/postprocessing'
+          },
+          {
             separator: true
           },
           {

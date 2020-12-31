@@ -52,3 +52,17 @@ export class WebServerSettings {
     Object.assign(this, obj);
   }
 }
+
+export class PostProcessSettings {
+  postProcess: boolean;
+  postProcessIndividual: boolean;
+  postProcessUtf8Encoding: boolean;
+  showPostProcessCmd: string;
+  showPostProcessArgs: string;
+  moviePostProcessCmd: string;
+  moviePostProcessArgs: string;
+
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
+}
