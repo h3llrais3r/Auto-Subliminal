@@ -6,9 +6,11 @@ import cherrypy
 
 import autosubliminal
 from autosubliminal.config import write_config_general_section, write_config_logging_section, \
-    write_config_postprocessing_section, write_config_webserver_section
+    write_config_webserver_section, write_config_shownamemapping_section, write_config_addic7edshownamemapping_section, \
+    write_config_alternativeshownamemapping_section, write_config_movienamemapping_section, \
+    write_config_alternativemovienamemapping_section, write_config_postprocessing_section
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, to_dict
+from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, to_dict, dict_to_list, list_to_dict
 from autosubliminal.util.websocket import send_websocket_notification
 
 
@@ -24,6 +26,7 @@ class SettingsApi(RestResource):
         self.general = _GeneralApi()
         self.logging = _LoggingApi()
         self.webserver = _WebserverApi()
+        self.namemapping = _NameMappingApi()
         self.postprocessing = _PostProcessingApi()
 
 
@@ -241,6 +244,61 @@ class _WebserverApi(RestResource):
 
             write_config_webserver_section()
             send_websocket_notification('Webserver settings updated.')
+
+            return self._no_content()
+
+        return self._bad_request('Invalid data')
+
+
+class _NameMappingApi(RestResource):
+    """
+    Rest resource for handling the /api/settings/namemapping path.
+    """
+
+    def __init__(self):
+        super(_NameMappingApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('GET', 'PUT')
+
+    def get(self):
+        """Get general settings."""
+        settings = {
+            'show_name_mapping': dict_to_list(autosubliminal.SHOWNAMEMAPPING),
+            'addic7ed_show_name_mapping': dict_to_list(autosubliminal.ADDIC7EDSHOWNAMEMAPPING),
+            'alternative_show_name_mapping': dict_to_list(autosubliminal.ALTERNATIVESHOWNAMEMAPPING),
+            'movie_name_mapping': dict_to_list(autosubliminal.MOVIENAMEMAPPING),
+            'alternative_movie_name_mapping': dict_to_list(autosubliminal.ALTERNATIVEMOVIENAMEMAPPING)
+        }
+
+        return to_dict(settings, camelize)
+
+    def put(self, namemapping_setting_name=None):
+        """Update namemapping settings."""
+        input_dict = to_dict(cherrypy.request.json, decamelize)
+
+        # Single setting update
+        if namemapping_setting_name:
+            pass  # not yet implemented
+        else:
+            # Update all settings
+            if 'show_name_mapping' in input_dict:
+                autosubliminal.SHOWNAMEMAPPING = list_to_dict(input_dict['show_name_mapping'])
+            if 'addic7ed_show_name_mapping' in input_dict:
+                autosubliminal.ADDIC7EDSHOWNAMEMAPPING = list_to_dict(input_dict['addic7ed_show_name_mapping'])
+            if 'alternative_show_name_mapping' in input_dict:
+                autosubliminal.ALTERNATIVESHOWNAMEMAPPING = list_to_dict(input_dict['alternative_show_name_mapping'])
+            if 'movie_name_mapping' in input_dict:
+                autosubliminal.MOVIENAMEMAPPING = list_to_dict(input_dict['movie_name_mapping'])
+            if 'alternative_movie_name_mapping' in input_dict:
+                autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = list_to_dict(input_dict['alternative_movie_name_mapping'])
+
+            write_config_shownamemapping_section()
+            write_config_addic7edshownamemapping_section()
+            write_config_alternativeshownamemapping_section()
+            write_config_movienamemapping_section()
+            write_config_alternativemovienamemapping_section()
+            send_websocket_notification('Namemapping settings updated.')
 
             return self._no_content()
 

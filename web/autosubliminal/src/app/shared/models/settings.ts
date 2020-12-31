@@ -66,3 +66,15 @@ export class PostProcessSettings {
     Object.assign(this, obj);
   }
 }
+
+export class NameMappingSettings {
+  showNameMapping: string[];
+  addic7edShowNameMapping: string[];
+  alternativeShowNameMapping: string[];
+  movieNameMapping: string[];
+  alternativeMovieNameMapping: string[];
+
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
+}
