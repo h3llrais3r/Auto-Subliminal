@@ -6,7 +6,7 @@ import cherrypy
 
 import autosubliminal
 from autosubliminal.config import write_config_general_section, write_config_logging_section, \
-    write_config_webserver_section
+    write_config_postprocessing_section, write_config_webserver_section
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, to_dict
 from autosubliminal.util.websocket import send_websocket_notification
@@ -24,6 +24,7 @@ class SettingsApi(RestResource):
         self.general = _GeneralApi()
         self.logging = _LoggingApi()
         self.webserver = _WebserverApi()
+        self.postprocessing = _PostProcessingApi()
 
 
 @cherrypy.popargs('general_setting_name')
@@ -240,6 +241,63 @@ class _WebserverApi(RestResource):
 
             write_config_webserver_section()
             send_websocket_notification('Webserver settings updated.')
+
+            return self._no_content()
+
+        return self._bad_request('Invalid data')
+
+
+class _PostProcessingApi(RestResource):
+    """
+    Rest resource for handling the /api/settings/postprocessing path.
+    """
+
+    def __init__(self):
+        super(_PostProcessingApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('GET', 'PUT')
+
+    def get(self):
+        """Get general settings."""
+        settings = {
+            'post_process': autosubliminal.POSTPROCESS,
+            'post_process_individual': autosubliminal.POSTPROCESSINDIVIDUAL,
+            'post_process_utf8_encoding': autosubliminal.POSTPROCESSUTF8ENCODING,
+            'show_post_process_cmd': autosubliminal.SHOWPOSTPROCESSCMD,
+            'show_post_process_args': autosubliminal.SHOWPOSTPROCESSCMDARGS,
+            'movie_post_process_cmd': autosubliminal.MOVIEPOSTPROCESSCMD,
+            'movie_post_process_args': autosubliminal.MOVIEPOSTPROCESSCMDARGS
+        }
+
+        return to_dict(settings, camelize)
+
+    def put(self, postprocess_setting_name=None):
+        """Update postprocessing settings."""
+        input_dict = to_dict(cherrypy.request.json, decamelize)
+
+        # Single setting update
+        if postprocess_setting_name:
+            pass  # not yet implemented
+        else:
+            # Update all settings
+            if 'post_process' in input_dict:
+                autosubliminal.POSTPROCESS = input_dict['post_process']
+            if 'post_process_individual' in input_dict:
+                autosubliminal.POSTPROCESSINDIVIDUAL = input_dict['post_process_individual']
+            if 'post_process_utf8_encoding' in input_dict:
+                autosubliminal.POSTPROCESSUTF8ENCODING = input_dict['post_process_utf8_encoding']
+            if 'show_post_process_cmd' in input_dict:
+                autosubliminal.SHOWPOSTPROCESSCMD = input_dict['show_post_process_cmd']
+            if 'show_post_process_args' in input_dict:
+                autosubliminal.SHOWPOSTPROCESSCMDARGS = input_dict['show_post_process_args']
+            if 'movie_post_process_cmd' in input_dict:
+                autosubliminal.MOVIEPOSTPROCESSCMD = input_dict['movie_post_process_cmd']
+            if 'movie_post_process_args' in input_dict:
+                autosubliminal.MOVIEPOSTPROCESSCMDARGS = input_dict['movie_post_process_args']
+
+            write_config_postprocessing_section()
+            send_websocket_notification('Postprocessing settings updated.')
 
             return self._no_content()
 

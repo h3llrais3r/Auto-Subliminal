@@ -244,8 +244,16 @@ p-dropdown {
   vertical-align: middle;
 }
 
-// Missing secondary class for tags
-.p-tag.p-tag-secondary {
-  background-color: var(--secondary);
-  color: var(--white);
+// Tag
+.p-tag {
+
+  // Missing secondary class for tags
+  &.p-tag-secondary {
+    background-color: var(--secondary);
+    color: var(--white);
+  }
+
+  &.p-tag-small {
+    padding: 0 0.4rem;
+  }
 }
