@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GeneralSettings, LogSettings, PostProcessSettings, WebServerSettings } from '../../../shared/models/settings';
+import { GeneralSettings, LogSettings, NameMappingSettings, PostProcessSettings, WebServerSettings } from '../../../shared/models/settings';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -40,7 +40,7 @@ export class SettingsService extends ApiServiceTemplate {
       .pipe(map(() => true));
   }
 
-  // Webserver settings
+  // WebServer settings
 
   getWebServerSettings(): Observable<WebServerSettings> {
     return this.httpClient.get(`${this.URL}/webserver`, this.options)
@@ -52,7 +52,19 @@ export class SettingsService extends ApiServiceTemplate {
       .pipe(map(() => true));
   }
 
-  // Postprocess settings
+  // NameMapping settings
+
+  getNameMappingSettings(): Observable<NameMappingSettings> {
+    return this.httpClient.get(`${this.URL}/namemapping`, this.options)
+      .pipe(map(result => new NameMappingSettings(result)));
+  }
+
+  updateNameMappingSettings(nameMappingSettings: NameMappingSettings): Observable<boolean> {
+    return this.httpClient.put(`${this.URL}/namemapping`, JSON.stringify(nameMappingSettings), this.options)
+      .pipe(map(() => true));
+  }
+
+  // PostProcess settings
 
   getPostProcessSettings(): Observable<PostProcessSettings> {
     return this.httpClient.get(`${this.URL}/postprocessing`, this.options)

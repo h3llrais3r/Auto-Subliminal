@@ -197,6 +197,25 @@ def to_dict(obj, key_fn, *args, **kwargs):
     return obj_dict
 
 
+def dict_to_list(obj_dict):
+    """Return a dict as a list with key value pairs."""
+    obj_list = []
+    for (key, value) in obj_dict.items():
+        obj_list.append(key + ' = ' + value)
+
+    return obj_list
+
+
+def list_to_dict(obj_list):
+    """Return a key value pair list as a dict."""
+    obj_dict = {}
+    for item in obj_list:
+        item_split = item.split('=')
+        obj_dict[safe_trim(item_split[0])] = safe_trim(item_split[1])
+
+    return obj_dict
+
+
 # Based on ConfigParser.getboolean
 def get_boolean(value):
     v = text_type(value)
