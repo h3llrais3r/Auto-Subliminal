@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GeneralSettings, LogSettings, NameMappingSettings, PostProcessSettings, WebServerSettings } from '../../../shared/models/settings';
+import { GeneralSettings, LogSettings, NameMappingSettings, PostProcessSettings, SkipMappingSettings, WebServerSettings } from '../../../shared/models/settings';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -61,6 +61,18 @@ export class SettingsService extends ApiServiceTemplate {
 
   updateNameMappingSettings(nameMappingSettings: NameMappingSettings): Observable<boolean> {
     return this.httpClient.put(`${this.URL}/namemapping`, JSON.stringify(nameMappingSettings), this.options)
+      .pipe(map(() => true));
+  }
+
+  // SkipMapping settings
+
+  getSkipMappingSettings(): Observable<SkipMappingSettings> {
+    return this.httpClient.get(`${this.URL}/skipmapping`, this.options)
+      .pipe(map(result => new SkipMappingSettings(result)));
+  }
+
+  updateSkipMappingSettings(skipMappingSettings: SkipMappingSettings): Observable<boolean> {
+    return this.httpClient.put(`${this.URL}/skipmapping`, JSON.stringify(skipMappingSettings), this.options)
       .pipe(map(() => true));
   }
 
