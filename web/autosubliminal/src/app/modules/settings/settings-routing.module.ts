@@ -4,6 +4,7 @@ import { SettingsGeneralComponent } from './general/settings-general.component';
 import { SettingsLoggingComponent } from './logging/settings-logging.component';
 import { SettingsNamemappingComponent } from './namemapping/settings-namemapping.component';
 import { SettingsPostprocessingComponent } from './postprocessing/settings-postprocessing.component';
+import { SettingsSkipmappingComponent } from './skipmapping/settings-skipmapping.component';
 import { SettingsWebserverComponent } from './webserver/settings-webserver.component';
 
 const routes: Routes = [
@@ -27,6 +28,10 @@ const routes: Routes = [
   {
     path: 'namemapping',
     component: SettingsNamemappingComponent
+  },
+  {
+    path: 'skipmapping',
+    component: SettingsSkipmappingComponent
   },
   {
     path: 'postprocessing',

@@ -49,6 +49,11 @@ export class PageHeaderComponent implements OnInit {
             routerLink: '/settings/namemapping'
           },
           {
+            label: 'Skipmapping',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/skipmapping'
+          },
+          {
             label: 'Postprocessing',
             icon: 'pi pi-fw pi-cog',
             routerLink: '/settings/postprocessing'

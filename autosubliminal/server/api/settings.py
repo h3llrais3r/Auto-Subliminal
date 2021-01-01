@@ -8,7 +8,8 @@ import autosubliminal
 from autosubliminal.config import write_config_general_section, write_config_logging_section, \
     write_config_webserver_section, write_config_shownamemapping_section, write_config_addic7edshownamemapping_section, \
     write_config_alternativeshownamemapping_section, write_config_movienamemapping_section, \
-    write_config_alternativemovienamemapping_section, write_config_postprocessing_section
+    write_config_alternativemovienamemapping_section, write_config_postprocessing_section, write_config_skipshow_section, \
+    write_config_skipmovie_section
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, to_dict, dict_to_list, list_to_dict
 from autosubliminal.util.websocket import send_websocket_notification
@@ -27,6 +28,7 @@ class SettingsApi(RestResource):
         self.logging = _LoggingApi()
         self.webserver = _WebserverApi()
         self.namemapping = _NameMappingApi()
+        self.skipmapping = _SkipMappingApi()
         self.postprocessing = _PostProcessingApi()
 
 
@@ -299,6 +301,49 @@ class _NameMappingApi(RestResource):
             write_config_movienamemapping_section()
             write_config_alternativemovienamemapping_section()
             send_websocket_notification('Namemapping settings updated.')
+
+            return self._no_content()
+
+        return self._bad_request('Invalid data')
+
+
+class _SkipMappingApi(RestResource):
+    """
+    Rest resource for handling the /api/settings/skipmapping path.
+    """
+
+    def __init__(self):
+        super(_SkipMappingApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('GET', 'PUT')
+
+    def get(self):
+        """Get general settings."""
+        settings = {
+            'skip_show_mapping': dict_to_list(autosubliminal.SKIPSHOW),
+            'skip_movie_mapping': dict_to_list(autosubliminal.SKIPMOVIE),
+        }
+
+        return to_dict(settings, camelize)
+
+    def put(self, skipmapping_setting_name=None):
+        """Update skipmapping settings."""
+        input_dict = to_dict(cherrypy.request.json, decamelize)
+
+        # Single setting update
+        if skipmapping_setting_name:
+            pass  # not yet implemented
+        else:
+            # Update all settings
+            if 'skip_show_mapping' in input_dict:
+                autosubliminal.SKIPSHOW = list_to_dict(input_dict['skip_show_mapping'])
+            if 'skip_movie_mapping' in input_dict:
+                autosubliminal.SKIPMOVIE = list_to_dict(input_dict['skip_movie_mapping'])
+
+            write_config_skipshow_section()
+            write_config_skipmovie_section()
+            send_websocket_notification('Skipmapping settings updated.')
 
             return self._no_content()
 

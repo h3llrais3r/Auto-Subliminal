@@ -53,6 +53,27 @@ export class WebServerSettings {
   }
 }
 
+export class NameMappingSettings {
+  showNameMapping: string[];
+  addic7edShowNameMapping: string[];
+  alternativeShowNameMapping: string[];
+  movieNameMapping: string[];
+  alternativeMovieNameMapping: string[];
+
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
+}
+
+export class SkipMappingSettings {
+  skipShowMapping: string[];
+  skipMovieMapping: string[];
+
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
+}
+
 export class PostProcessSettings {
   postProcess: boolean;
   postProcessIndividual: boolean;
@@ -61,18 +82,6 @@ export class PostProcessSettings {
   showPostProcessArgs: string;
   moviePostProcessCmd: string;
   moviePostProcessArgs: string;
-
-  constructor(obj?: any) {
-    Object.assign(this, obj);
-  }
-}
-
-export class NameMappingSettings {
-  showNameMapping: string[];
-  addic7edShowNameMapping: string[];
-  alternativeShowNameMapping: string[];
-  movieNameMapping: string[];
-  alternativeMovieNameMapping: string[];
 
   constructor(obj?: any) {
     Object.assign(this, obj);
