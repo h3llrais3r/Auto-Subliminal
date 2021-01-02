@@ -53,6 +53,34 @@ export class WebServerSettings {
   }
 }
 
+export class SubliminalSettings {
+  showMatchSource: boolean;
+  showMatchQuality: boolean;
+  showMatchCodec: boolean;
+  showMatchReleaseGroup: boolean;
+  movieMatchSource: boolean;
+  movieMatchQuality: boolean;
+  movieMatchCodec: boolean;
+  movieMatchReleaseGroup: boolean;
+  subliminalProviders: string[];
+  subtitleUtf8Encoding: boolean;
+  refineVideo: boolean;
+  manualRefineVideo: boolean;
+  preferHearingImpaired: boolean;
+  antiCaptchaClass: string;
+  antiCaptchaClientKey: string;
+  addic7edUserName: string;
+  addic7edPassword: string;
+  opensubtitlesUserName: string;
+  opensubtitlesPassword: string;
+  legendastvUserName: string;
+  legendastvPassword: string;
+
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
+}
+
 export class NameMappingSettings {
   showNameMapping: string[];
   addic7edShowNameMapping: string[];

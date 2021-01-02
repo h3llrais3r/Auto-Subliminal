@@ -15,6 +15,9 @@ import { InputComponent } from '../input.component';
 export class InputTextComponent extends InputComponent implements OnInit {
 
   @Input()
+  type = 'text';
+
+  @Input()
   placeholder = '';
 
   @Input()

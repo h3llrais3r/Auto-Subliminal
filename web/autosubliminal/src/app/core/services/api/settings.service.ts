@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GeneralSettings, LogSettings, NameMappingSettings, PostProcessSettings, SkipMappingSettings, WebServerSettings } from '../../../shared/models/settings';
+import { GeneralSettings, LogSettings, NameMappingSettings, PostProcessSettings, SkipMappingSettings, SubliminalSettings, WebServerSettings } from '../../../shared/models/settings';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -49,6 +49,18 @@ export class SettingsService extends ApiServiceTemplate {
 
   updateWebServerSettings(webServerSettings: WebServerSettings): Observable<boolean> {
     return this.httpClient.put(`${this.URL}/webserver`, JSON.stringify(webServerSettings), this.options)
+      .pipe(map(() => true));
+  }
+
+  // Subliminal settings
+
+  getSubliminalSettings(): Observable<SubliminalSettings> {
+    return this.httpClient.get(`${this.URL}/subliminal`, this.options)
+      .pipe(map(result => new SubliminalSettings(result)));
+  }
+
+  updateSubliminalSettings(subliminalSettings: SubliminalSettings): Observable<boolean> {
+    return this.httpClient.put(`${this.URL}/subliminal`, JSON.stringify(subliminalSettings), this.options)
       .pipe(map(() => true));
   }
 

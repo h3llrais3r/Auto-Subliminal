@@ -44,6 +44,11 @@ export class PageHeaderComponent implements OnInit {
             routerLink: '/settings/webserver'
           },
           {
+            label: 'Subliminal',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/subliminal'
+          },
+          {
             label: 'Namemapping',
             icon: 'pi pi-fw pi-cog',
             routerLink: '/settings/namemapping'

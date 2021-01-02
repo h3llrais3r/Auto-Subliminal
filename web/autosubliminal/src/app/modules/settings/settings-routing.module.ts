@@ -5,6 +5,7 @@ import { SettingsLoggingComponent } from './logging/settings-logging.component';
 import { SettingsNamemappingComponent } from './namemapping/settings-namemapping.component';
 import { SettingsPostprocessingComponent } from './postprocessing/settings-postprocessing.component';
 import { SettingsSkipmappingComponent } from './skipmapping/settings-skipmapping.component';
+import { SettingsSubliminalComponent } from './subliminal/settings-subliminal.component';
 import { SettingsWebserverComponent } from './webserver/settings-webserver.component';
 
 const routes: Routes = [
@@ -24,6 +25,10 @@ const routes: Routes = [
   {
     path: 'webserver',
     component: SettingsWebserverComponent
+  },
+  {
+    path: 'subliminal',
+    component: SettingsSubliminalComponent
   },
   {
     path: 'namemapping',

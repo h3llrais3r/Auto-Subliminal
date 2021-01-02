@@ -2,11 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AntiCaptchaProvider } from './shared/models/captcha';
 import { Language } from './shared/models/language';
 
 class AppSettings {
   appVersion: string;
-  appPID: number;
+  appProcessId: number;
   developerMode: boolean;
   webRoot: string;
   scanDisk: string;
@@ -21,6 +22,8 @@ class AppSettings {
   timestampFormat: string;
   pathSeparator: string;
   languages: Language[];
+  subliminalProviders: string[];
+  antiCaptchaProviders: AntiCaptchaProvider[];
 
   get timeFormat(): string {
     return this.timestampFormat.split(' ')[0];
