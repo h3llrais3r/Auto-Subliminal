@@ -7,6 +7,7 @@ import { SettingsPostprocessingComponent } from './postprocessing/settings-postp
 import { ConfigRoutingModule } from './settings-routing.module';
 import { SettingsSkipmappingComponent } from './skipmapping/settings-skipmapping.component';
 import { SettingsWebserverComponent } from './webserver/settings-webserver.component';
+import { SettingsSubliminalComponent } from './subliminal/settings-subliminal.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { SettingsWebserverComponent } from './webserver/settings-webserver.compo
     SettingsWebserverComponent,
     SettingsNamemappingComponent,
     SettingsSkipmappingComponent,
-    SettingsPostprocessingComponent
+    SettingsPostprocessingComponent,
+    SettingsSubliminalComponent
   ],
   imports: [
     SharedModule,

@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import pytest
+from subliminal.extensions import RegistrableExtensionManager
 from tests.server.api.test_api import pickle_api_result
 
 import autosubliminal
@@ -32,7 +33,8 @@ class MyScheduler(object):
         return to_dict(self, key_fn, 'process')
 
 
-settings_json = '{"appPID": 1, ' \
+settings_json = '{"antiCaptchaProviders": [], ' \
+                '"appProcessId": 1, ' \
                 '"appVersion": "' + autosubliminal.version.RELEASE_VERSION + '", ' \
                 '"checkSub": "SubChecker", ' \
                 '"checkSubNextRunInMs": 61000, ' \
@@ -45,6 +47,7 @@ settings_json = '{"appPID": 1, ' \
                 '"scanDisk": "DiskScanner", ' \
                 '"scanDiskNextRunInMs": 61000, ' \
                 '"scanLibrary": "LibraryScanner", ' \
+                '"subliminalProviders": [], ' \
                 '"timestampFormat": "%d-%m-%Y %H:%M:%S", ' \
                 '"tvdbUrl": "http://www.dereferer.org/?http://thetvdb.com/?tab=series&id=", ' \
                 '"webRoot": "mywebroot"}'
@@ -79,9 +82,12 @@ def test_get_settings(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.TVDBURL', 'http://thetvdb.com/?tab=series&id=')
     monkeypatch.setattr('autosubliminal.IMDBURL', 'http://www.imdb.com/title/')
     monkeypatch.setattr('autosubliminal.TIMESTAMPFORMAT', '%d-%m-%Y %H:%M:%S')
-    monkeypatch.setattr('autosubliminal.server.api.settings.os.path.sep', '/')
+    monkeypatch.setattr('autosubliminal.server.api.system.os.path.sep', '/')
     mocker.patch('autosubliminal.server.api.system.get_subtitle_languages',
                  return_value=[{'code': 'nl', 'name': 'Dutch'}])
+    monkeypatch.setattr('autosubliminal.SUBLIMINALPROVIDERMANAGER',
+                        RegistrableExtensionManager('subliminal.providers', []))
+    mocker.patch('autosubliminal.server.api.system.ANTI_CAPTCHA_PROVIDERS', [])
     assert settings_json == pickle_api_result(SystemApi().settings.get())
 
 

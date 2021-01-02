@@ -4,8 +4,9 @@ import os
 
 import autosubliminal
 from autosubliminal.core.pathinfo import PathInfo
+from autosubliminal.providers.pitcher import ANTI_CAPTCHA_PROVIDERS
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import camelize, get_next_scheduler_run_in_ms
+from autosubliminal.util.common import camelize, get_next_scheduler_run_in_ms, to_dict
 from autosubliminal.util.language import get_subtitle_languages
 from autosubliminal.version import RELEASE_VERSION
 
@@ -98,25 +99,27 @@ class _SettingsApi(RestResource):
     def get(self):
         """Get the list of settings for the frontend."""
         settings = {
-            'appPID': autosubliminal.PID,
-            'appVersion': RELEASE_VERSION,
-            'developerMode': autosubliminal.DEVELOPER,
-            'webRoot': autosubliminal.WEBROOT,
-            'scanDisk': autosubliminal.SCANDISK.name,
-            'scanDiskNextRunInMs': get_next_scheduler_run_in_ms(autosubliminal.SCANDISK),
-            'scanLibrary': autosubliminal.SCANLIBRARY.name,
-            'checkSub': autosubliminal.CHECKSUB.name,
-            'checkSubNextRunInMs': get_next_scheduler_run_in_ms(autosubliminal.CHECKSUB),
-            'checkVersion': autosubliminal.CHECKVERSION.name,
-            'logReversed': autosubliminal.LOGREVERSED,
-            'tvdbUrl': autosubliminal.DEREFERURL + autosubliminal.TVDBURL,
-            'imdbUrl': autosubliminal.DEREFERURL + autosubliminal.IMDBURL,
-            'timestampFormat': autosubliminal.TIMESTAMPFORMAT,
-            'pathSeparator': os.path.sep,
-            'languages': get_subtitle_languages()
+            'app_version': RELEASE_VERSION,
+            'app_process_id': autosubliminal.PID,
+            'developer_mode': autosubliminal.DEVELOPER,
+            'web_root': autosubliminal.WEBROOT,
+            'scan_disk': autosubliminal.SCANDISK.name,
+            'scan_disk_next_run_in_ms': get_next_scheduler_run_in_ms(autosubliminal.SCANDISK),
+            'scan_library': autosubliminal.SCANLIBRARY.name,
+            'check_sub': autosubliminal.CHECKSUB.name,
+            'check_sub_next_run_in_ms': get_next_scheduler_run_in_ms(autosubliminal.CHECKSUB),
+            'check_version': autosubliminal.CHECKVERSION.name,
+            'log_reversed': autosubliminal.LOGREVERSED,
+            'tvdb_url': autosubliminal.DEREFERURL + autosubliminal.TVDBURL,
+            'imdb_url': autosubliminal.DEREFERURL + autosubliminal.IMDBURL,
+            'timestamp_format': autosubliminal.TIMESTAMPFORMAT,
+            'path_separator': os.path.sep,
+            'languages': get_subtitle_languages(),
+            'subliminal_providers': autosubliminal.SUBLIMINALPROVIDERMANAGER.names(),
+            'anti_captcha_providers': ANTI_CAPTCHA_PROVIDERS
         }
 
-        return settings
+        return to_dict(settings, camelize)
 
 
 class _SchedulersApi(RestResource):

@@ -9,7 +9,7 @@ from autosubliminal.config import write_config_general_section, write_config_log
     write_config_webserver_section, write_config_shownamemapping_section, write_config_addic7edshownamemapping_section, \
     write_config_alternativeshownamemapping_section, write_config_movienamemapping_section, \
     write_config_alternativemovienamemapping_section, write_config_postprocessing_section, write_config_skipshow_section, \
-    write_config_skipmovie_section
+    write_config_skipmovie_section, write_config_subliminal_section
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, to_dict, dict_to_list, list_to_dict
 from autosubliminal.util.websocket import send_websocket_notification
@@ -27,6 +27,7 @@ class SettingsApi(RestResource):
         self.general = _GeneralApi()
         self.logging = _LoggingApi()
         self.webserver = _WebserverApi()
+        self.subliminal = _SubliminalApi()
         self.namemapping = _NameMappingApi()
         self.skipmapping = _SkipMappingApi()
         self.postprocessing = _PostProcessingApi()
@@ -246,6 +247,105 @@ class _WebserverApi(RestResource):
 
             write_config_webserver_section()
             send_websocket_notification('Webserver settings updated.')
+
+            return self._no_content()
+
+        return self._bad_request('Invalid data')
+
+
+class _SubliminalApi(RestResource):
+    """
+    Rest resource for handling the /api/settings/subliminal path.
+    """
+
+    def __init__(self):
+        super(_SubliminalApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('GET', 'PUT')
+
+    def get(self):
+        """Get general settings."""
+        settings = {
+            'show_match_source': autosubliminal.SHOWMATCHSOURCE,
+            'show_match_quality': autosubliminal.SHOWMATCHQUALITY,
+            'show_match_codec': autosubliminal.SHOWMATCHCODEC,
+            'show_match_release_group': autosubliminal.SHOWMATCHRELEASEGROUP,
+            'movie_match_source': autosubliminal.MOVIEMATCHSOURCE,
+            'movie_match_quality': autosubliminal.MOVIEMATCHQUALITY,
+            'movie_match_codec': autosubliminal.MOVIEMATCHCODEC,
+            'movie_match_release_group': autosubliminal.MOVIEMATCHRELEASEGROUP,
+            'subliminal_providers': autosubliminal.SUBLIMINALPROVIDERS,
+            'subtitle_utf8_encoding': autosubliminal.SUBTITLEUTF8ENCODING,
+            'refine_video': autosubliminal.REFINEVIDEO,
+            'manual_refine_video': autosubliminal.MANUALREFINEVIDEO,
+            'prefer_hearing_impaired': autosubliminal.PREFERHEARINGIMPAIRED,
+            'anti_captcha_class': autosubliminal.ANTICAPTCHACLASS,
+            'anti_captcha_client_key': autosubliminal.ANTICAPTCHACLIENTKEY,
+            'addic7ed_user_name': autosubliminal.ADDIC7EDUSERNAME,
+            'addic7ed_password': autosubliminal.ADDIC7EDPASSWORD,
+            'opensubtitles_user_name': autosubliminal.OPENSUBTITLESUSERNAME,
+            'opensubtitles_password': autosubliminal.OPENSUBTITLESPASSWORD,
+            'legendastv_user_name': autosubliminal.LEGENDASTVUSERNAME,
+            'legendastv_password': autosubliminal.LEGENDASTVPASSWORD
+        }
+
+        return to_dict(settings, camelize)
+
+    def put(self, webserver_setting_name=None):
+        """Update webserver settings."""
+        input_dict = to_dict(cherrypy.request.json, decamelize)
+
+        # Single setting update
+        if webserver_setting_name:
+            pass  # not yet implemented
+        else:
+            # Update all settings
+            if 'show_match_source' in input_dict:
+                autosubliminal.SHOWMATCHSOURCE = input_dict['show_match_source']
+            if 'show_match_quality' in input_dict:
+                autosubliminal.SHOWMATCHQUALITY = input_dict['show_match_quality']
+            if 'show_match_codec' in input_dict:
+                autosubliminal.SHOWMATCHCODEC = input_dict['show_match_codec']
+            if 'show_match_release_group' in input_dict:
+                autosubliminal.SHOWMATCHRELEASEGROUP = input_dict['show_match_release_group']
+            if 'movie_match_source' in input_dict:
+                autosubliminal.MOVIEMATCHSOURCE = input_dict['movie_match_source']
+            if 'movie_match_quality' in input_dict:
+                autosubliminal.MOVIEMATCHQUALITY = input_dict['movie_match_quality']
+            if 'movie_match_codec' in input_dict:
+                autosubliminal.MOVIEMATCHCODEC = input_dict['movie_match_codec']
+            if 'movie_match_release_group' in input_dict:
+                autosubliminal.MOVIEMATCHRELEASEGROUP = input_dict['movie_match_release_group']
+            if 'subliminal_providers' in input_dict:
+                autosubliminal.SUBLIMINALPROVIDERS = input_dict['subliminal_providers']
+            if 'subtitle_utf8_encoding' in input_dict:
+                autosubliminal.SUBTITLEUTF8ENCODING = input_dict['subtitle_utf8_encoding']
+            if 'refine_video' in input_dict:
+                autosubliminal.REFINEVIDEO = input_dict['refine_video']
+            if 'manual_refine_video' in input_dict:
+                autosubliminal.MANUALREFINEVIDEO = input_dict['manual_refine_video']
+            if 'prefer_hearing_impaired' in input_dict:
+                autosubliminal.PREFERHEARINGIMPAIRED = input_dict['prefer_hearing_impaired']
+            if 'anti_captcha_class' in input_dict:
+                autosubliminal.ANTICAPTCHACLASS = input_dict['anti_captcha_class']
+            if 'anti_captcha_client_key' in input_dict:
+                autosubliminal.ANTICAPTCHACLIENTKEY = input_dict['anti_captcha_client_key']
+            if 'addic7ed_user_name' in input_dict:
+                autosubliminal.ADDIC7EDUSERNAME = input_dict['addic7ed_user_name']
+            if 'addic7ed_password' in input_dict:
+                autosubliminal.ADDIC7EDPASSWORD = input_dict['addic7ed_password']
+            if 'opensubtitles_user_name' in input_dict:
+                autosubliminal.OPENSUBTITLESUSERNAME = input_dict['opensubtitles_user_name']
+            if 'opensubtitles_password' in input_dict:
+                autosubliminal.OPENSUBTITLESPASSWORD = input_dict['opensubtitles_password']
+            if 'legendastv_user_name' in input_dict:
+                autosubliminal.LEGENDASTVUSERNAME = input_dict['legendastv_user_name']
+            if 'legendastv_password' in input_dict:
+                autosubliminal.LEGENDASTVPASSWORD = input_dict['legendastv_password']
+
+            write_config_subliminal_section()
+            send_websocket_notification('Subliminal settings updated.')
 
             return self._no_content()
 
