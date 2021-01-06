@@ -42,7 +42,7 @@ export class LogSettings {
 
 export class WebServerSettings {
   webServerIp: string;
-  webServerPort: string;
+  webServerPort: number;
   webRoot: string;
   userName: string;
   password: string;
@@ -96,6 +96,65 @@ export class NameMappingSettings {
 export class SkipMappingSettings {
   skipShowMapping: string[];
   skipMovieMapping: string[];
+
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
+}
+
+export class NotificationSettings {
+  notify: boolean;
+  notifyMail: boolean;
+  mailServer: string;
+  mailFrom: string;
+  mailTo: string;
+  mailUserName: string;
+  mailPassword: string;
+  mailSubject: string;
+  mailEncryption: string;
+  mailAuthentication: string;
+  notifyTwitter: boolean;
+  twitterKey: string;
+  twitterSecret: string;
+  notifyPushalot: boolean;
+  pushalotApi: string;
+  notifyPushover: boolean;
+  pushoverKey: string;
+  pushoverApi: string;
+  pushoverDevices: string;
+  notifyGrowl: boolean;
+  growlHost: string;
+  growlPort: number;
+  growlPassword: string;
+  growlPriority: number;
+  notifyProwl: boolean;
+  prowlApi: string;
+  prowlPriority: number;
+  notifyPushbullet: boolean;
+  pushbulletApi: string;
+  notifyTelegram: boolean;
+  telegramBotApi: string;
+  telegramChatId: string;
+
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
+}
+
+export class TwitterRegistration {
+  url: string;
+  tokenKey: string;
+  tokenSecret: string;
+  tokenPin?: string;
+
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
+}
+
+export class TwitterAutorization {
+  twitterKey: string;
+  twitterSecret: string;
 
   constructor(obj?: any) {
     Object.assign(this, obj);

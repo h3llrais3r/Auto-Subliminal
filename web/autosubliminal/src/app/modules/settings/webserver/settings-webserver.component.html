@@ -1,53 +1,53 @@
 <div class="container">
   <p-panel header="Webserver settings">
     <form *ngIf="settingsForm" [formGroup]="settingsForm" class="form">
-      <!-- Warning -->
+      <!-- Warning notification -->
       <div class="row form-row">
-        <div class="col-12">
+        <div class="col-12 form-row-notification">
           <p-message severity="warn" text="Changing webserver settings will result in no automatic reload! You'll need to change the url manually in order to reload correctly!" styleClass="w-100"></p-message>
         </div>
       </div>
       <!-- Webserver ip -->
       <div class="row form-row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
           <label for="webServerIp" class="label">Webserver IP</label>
           <app-info-icon>
             <li>The webserver IP.</li>
             <li>To allow hosts to connect to any IP number, use '0.0.0.0'.</li>
           </app-info-icon>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
           <app-input-text formControlName="webServerIp" mask="IP" dropSpecialCharacters="false" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Webserver port -->
       <div class="row form-row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
           <label for="webServerPort" class="label">Webserver port</label>
           <app-info-icon>
             <li>The webserver port.</li>
           </app-info-icon>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-          <app-input-text formControlName="webServerPort" [validationFeedback]="saveAttempt"></app-input-text>
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+          <app-input-number formControlName="webServerPort" [showButtons]="false" [validationFeedback]="saveAttempt"></app-input-number>
         </div>
       </div>
       <!-- Webroot -->
       <div class="row form-row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
           <label for="webRoot" class="label">Webserver webroot</label>
           <app-info-icon>
             <li>The webserver webroot for reverse proxying.</li>
             <li>Example: to proxy it to 'http://localhost/autosubliminal/' the webroot needs to be '/autosubliminal'.</li>
           </app-info-icon>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
           <app-input-text formControlName="webRoot" [validationFeedback]="saveAttempt" (onKeyup)="formatWebRoot()"></app-input-text>
         </div>
       </div>
       <!-- Username -->
       <div class="row form-row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
           <label for="userName" class="label">Webserver username</label>
           <app-info-icon>
             <li>The username for the webserver authentication.</li>
@@ -55,13 +55,13 @@
             <li>Otherwise no authentication is set or required.</li>
           </app-info-icon>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
           <app-input-text formControlName="userName" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Password -->
       <div class="row form-row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
           <label for="password" class="label">Webserver password</label>
           <app-info-icon>
             <li>The password for the webserver authentication.</li>
@@ -69,25 +69,25 @@
             <li>Otherwise no authentication is set or required.</li>
           </app-info-icon>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
           <app-input-text formControlName="password" type="password" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Launch browser -->
       <div class="row form-row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
           <label for="launchBrowser" class="label">Launch browser</label>
           <app-info-icon>
             <li>When enabled, the browser will start every time Auto-Subliminal starts.</li>
           </app-info-icon>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
           <app-input-dropdown formControlName="launchBrowser" [options]="enabledOrDisabled"></app-input-dropdown>
         </div>
       </div>
       <!-- Button -->
       <div class="row button-row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-10">
           <p-button label="Save" (onClick)="save()"></p-button>
         </div>
       </div>

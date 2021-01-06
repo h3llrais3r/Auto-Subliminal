@@ -1,18 +1,24 @@
 # coding=utf-8
 
+import logging
 import os
 
 import cherrypy
+from requests_oauthlib.oauth1_session import OAuth1Session
 
 import autosubliminal
+from autosubliminal import notifiers
 from autosubliminal.config import write_config_general_section, write_config_logging_section, \
-    write_config_webserver_section, write_config_shownamemapping_section, write_config_addic7edshownamemapping_section, \
-    write_config_alternativeshownamemapping_section, write_config_movienamemapping_section, \
-    write_config_alternativemovienamemapping_section, write_config_postprocessing_section, write_config_skipshow_section, \
-    write_config_skipmovie_section, write_config_subliminal_section
+    write_config_webserver_section, write_config_subliminal_section, write_config_shownamemapping_section, \
+    write_config_addic7edshownamemapping_section, write_config_alternativeshownamemapping_section, \
+    write_config_movienamemapping_section, write_config_alternativemovienamemapping_section, \
+    write_config_skipshow_section, write_config_skipmovie_section, write_config_notification_section, \
+    write_config_postprocessing_section
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, to_dict, dict_to_list, list_to_dict
 from autosubliminal.util.websocket import send_websocket_notification
+
+log = logging.getLogger(__name__)
 
 
 class SettingsApi(RestResource):
@@ -30,6 +36,7 @@ class SettingsApi(RestResource):
         self.subliminal = _SubliminalApi()
         self.namemapping = _NameMappingApi()
         self.skipmapping = _SkipMappingApi()
+        self.notification = _NotificationApi()
         self.postprocessing = _PostProcessingApi()
 
 
@@ -136,6 +143,7 @@ class _GeneralApi(RestResource):
         return self._bad_request('Invalid data')
 
 
+@cherrypy.popargs('log_setting_name')
 class _LoggingApi(RestResource):
     """
     Rest resource for handling the /api/settings/logging path.
@@ -148,7 +156,7 @@ class _LoggingApi(RestResource):
         self.allowed_methods = ('GET', 'PUT')
 
     def get(self):
-        """Get general settings."""
+        """Get log settings."""
         settings = {
             'log_file': autosubliminal.LOGFILE,
             'log_level': autosubliminal.LOGLEVEL,
@@ -199,6 +207,7 @@ class _LoggingApi(RestResource):
         return self._bad_request('Invalid data')
 
 
+@cherrypy.popargs('webserver_setting_name')
 class _WebserverApi(RestResource):
     """
     Rest resource for handling the /api/settings/webserver path.
@@ -211,7 +220,7 @@ class _WebserverApi(RestResource):
         self.allowed_methods = ('GET', 'PUT')
 
     def get(self):
-        """Get general settings."""
+        """Get webserver settings."""
         settings = {
             'web_server_ip': autosubliminal.WEBSERVERIP,
             'web_server_port': autosubliminal.WEBSERVERPORT,
@@ -253,6 +262,7 @@ class _WebserverApi(RestResource):
         return self._bad_request('Invalid data')
 
 
+@cherrypy.popargs('subliminal_setting_name')
 class _SubliminalApi(RestResource):
     """
     Rest resource for handling the /api/settings/subliminal path.
@@ -265,7 +275,7 @@ class _SubliminalApi(RestResource):
         self.allowed_methods = ('GET', 'PUT')
 
     def get(self):
-        """Get general settings."""
+        """Get subliminal settings."""
         settings = {
             'show_match_source': autosubliminal.SHOWMATCHSOURCE,
             'show_match_quality': autosubliminal.SHOWMATCHQUALITY,
@@ -292,12 +302,12 @@ class _SubliminalApi(RestResource):
 
         return to_dict(settings, camelize)
 
-    def put(self, webserver_setting_name=None):
-        """Update webserver settings."""
+    def put(self, subliminal_setting_name=None):
+        """Update subliminal settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
         # Single setting update
-        if webserver_setting_name:
+        if subliminal_setting_name:
             pass  # not yet implemented
         else:
             # Update all settings
@@ -352,6 +362,7 @@ class _SubliminalApi(RestResource):
         return self._bad_request('Invalid data')
 
 
+@cherrypy.popargs('namemapping_setting_name')
 class _NameMappingApi(RestResource):
     """
     Rest resource for handling the /api/settings/namemapping path.
@@ -364,7 +375,7 @@ class _NameMappingApi(RestResource):
         self.allowed_methods = ('GET', 'PUT')
 
     def get(self):
-        """Get general settings."""
+        """Get namemapping settings."""
         settings = {
             'show_name_mapping': dict_to_list(autosubliminal.SHOWNAMEMAPPING),
             'addic7ed_show_name_mapping': dict_to_list(autosubliminal.ADDIC7EDSHOWNAMEMAPPING),
@@ -407,6 +418,7 @@ class _NameMappingApi(RestResource):
         return self._bad_request('Invalid data')
 
 
+@cherrypy.popargs('skipmapping_setting_name')
 class _SkipMappingApi(RestResource):
     """
     Rest resource for handling the /api/settings/skipmapping path.
@@ -419,7 +431,7 @@ class _SkipMappingApi(RestResource):
         self.allowed_methods = ('GET', 'PUT')
 
     def get(self):
-        """Get general settings."""
+        """Get skipmapping settings."""
         settings = {
             'skip_show_mapping': dict_to_list(autosubliminal.SKIPSHOW),
             'skip_movie_mapping': dict_to_list(autosubliminal.SKIPMOVIE),
@@ -450,6 +462,210 @@ class _SkipMappingApi(RestResource):
         return self._bad_request('Invalid data')
 
 
+@cherrypy.popargs('notification_setting_name')
+class _NotificationApi(RestResource):
+    """
+    Rest resource for handling the /api/settings/notification path.
+    """
+
+    def __init__(self):
+        super(_NotificationApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('GET', 'PUT', 'POST', 'PATCH')
+
+    def get(self):
+        """Get notification settings."""
+        settings = {
+            'notify': autosubliminal.NOTIFY,
+            'notify_mail': autosubliminal.NOTIFYMAIL,
+            'mail_server': autosubliminal.MAILSRV,
+            'mail_from': autosubliminal.MAILFROMADDR,
+            'mail_to': autosubliminal.MAILTOADDR,
+            'mail_user_name': autosubliminal.MAILUSERNAME,
+            'mail_password': autosubliminal.MAILPASSWORD,
+            'mail_subject': autosubliminal.MAILSUBJECT,
+            'mail_encryption': autosubliminal.MAILENCRYPTION,
+            'mail_authentication': autosubliminal.MAILAUTH,
+            'notify_twitter': autosubliminal.NOTIFYTWITTER,
+            'twitter_key': autosubliminal.TWITTERKEY,
+            'twitter_secret': autosubliminal.TWITTERSECRET,
+            'notify_pushalot': autosubliminal.NOTIFYPUSHALOT,
+            'pushalot_api': autosubliminal.PUSHALOTAPI,
+            'notify_pushover': autosubliminal.NOTIFYPUSHOVER,
+            'pushover_key': autosubliminal.PUSHOVERKEY,
+            'pushover_api': autosubliminal.PUSHOVERAPI,
+            'pushover_devices': autosubliminal.PUSHOVERDEVICES,
+            'notify_growl': autosubliminal.NOTIFYGROWL,
+            'growl_host': autosubliminal.GROWLHOST,
+            'growl_port': autosubliminal.GROWLPORT,
+            'growl_password': autosubliminal.GROWLPASS,
+            'growl_priority': autosubliminal.GROWLPRIORITY,
+            'notify_prowl': autosubliminal.NOTIFYPROWL,
+            'prowl_api': autosubliminal.PROWLAPI,
+            'prowl_priority': autosubliminal.PROWLPRIORITY,
+            'notify_pushbullet': autosubliminal.NOTIFYPUSHBULLET,
+            'pushbullet_api': autosubliminal.PUSHBULLETAPI,
+            'notify_telegram': autosubliminal.NOTIFYTELEGRAM,
+            'telegram_bot_api': autosubliminal.TELEGRAMBOTAPI,
+            'telegram_chat_id': autosubliminal.TELEGRAMCHATID
+        }
+
+        return to_dict(settings, camelize)
+
+    def put(self, notification_setting_name=None):
+        """Update notification settings."""
+        input_dict = to_dict(cherrypy.request.json, decamelize)
+
+        # Single setting update
+        if notification_setting_name:
+            pass  # not yet implemented
+        else:
+            # Update all settings
+            if 'notify' in input_dict:
+                autosubliminal.NOTIFY = input_dict['notify']
+            if 'notify_mail' in input_dict:
+                autosubliminal.NOTIFYMAIL = input_dict['notify_mail']
+            if 'mail_server' in input_dict:
+                autosubliminal.MAILSRV = input_dict['mail_server']
+            if 'mail_from' in input_dict:
+                autosubliminal.MAILFROMADDR = input_dict['mail_from']
+            if 'mail_to' in input_dict:
+                autosubliminal.MAILTOADDR = input_dict['mail_to']
+            if 'mail_user_name' in input_dict:
+                autosubliminal.MAILUSERNAME = input_dict['mail_user_name']
+            if 'mail_password' in input_dict:
+                autosubliminal.MAILPASSWORD = input_dict['mail_password']
+            if 'mail_subject' in input_dict:
+                autosubliminal.MAILSUBJECT = input_dict['mail_subject']
+            if 'mail_encryption' in input_dict:
+                autosubliminal.MAILENCRYPTION = input_dict['mail_encryption']
+            if 'mail_authentication' in input_dict:
+                autosubliminal.MAILAUTH = input_dict['mail_authentication']
+            if 'notify_twitter' in input_dict:
+                autosubliminal.NOTIFYTWITTER = input_dict['notify_twitter']
+            if 'twitter_key' in input_dict:
+                autosubliminal.TWITTERKEY = input_dict['twitter_key']
+            if 'twitter_secret' in input_dict:
+                autosubliminal.TWITTERSECRET = input_dict['twitter_secret']
+            if 'notify_pushalot' in input_dict:
+                autosubliminal.NOTIFYPUSHALOT = input_dict['notify_pushalot']
+            if 'pushalot_api' in input_dict:
+                autosubliminal.PUSHALOTAPI = input_dict['pushalot_api']
+            if 'notify_pushover' in input_dict:
+                autosubliminal.NOTIFYPUSHOVER = input_dict['notify_pushover']
+            if 'pushover_key' in input_dict:
+                autosubliminal.PUSHOVERKEY = input_dict['pushover_key']
+            if 'pushover_api' in input_dict:
+                autosubliminal.PUSHOVERAPI = input_dict['pushover_api']
+            if 'pushover_devices' in input_dict:
+                autosubliminal.PUSHOVERDEVICES = input_dict['pushover_devices']
+            if 'notify_growl' in input_dict:
+                autosubliminal.NOTIFYGROWL = input_dict['notify_growl']
+            if 'growl_host' in input_dict:
+                autosubliminal.GROWLHOST = input_dict['growl_host']
+            if 'growl_port' in input_dict:
+                autosubliminal.GROWLPORT = input_dict['growl_port']
+            if 'growl_password' in input_dict:
+                autosubliminal.GROWLPASS = input_dict['growl_password']
+            if 'growl_priority' in input_dict:
+                autosubliminal.GROWLPRIORITY = input_dict['growl_priority']
+            if 'notify_prowl' in input_dict:
+                autosubliminal.NOTIFYPROWL = input_dict['notify_prowl']
+            if 'prowl_api' in input_dict:
+                autosubliminal.PROWLAPI = input_dict['prowl_api']
+            if 'prowl_priority' in input_dict:
+                autosubliminal.PROWLPRIORITY = input_dict['prowl_priority']
+            if 'notify_pushbullet' in input_dict:
+                autosubliminal.NOTIFYPUSHBULLET = input_dict['notify_pushbullet']
+            if 'pushbullet_api' in input_dict:
+                autosubliminal.PUSHBULLETAPI = input_dict['pushbullet_api']
+            if 'notify_telegram' in input_dict:
+                autosubliminal.NOTIFYTELEGRAM = input_dict['notify_telegram']
+            if 'telegram_bot_api' in input_dict:
+                autosubliminal.TELEGRAMBOTAPI = input_dict['telegram_bot_api']
+            if 'telegram_chat_id' in input_dict:
+                autosubliminal.TELEGRAMCHATID = input_dict['telegram_chat_id']
+
+            write_config_notification_section()
+            send_websocket_notification('Notification settings updated.')
+
+            return self._no_content()
+
+        return self._bad_request('Invalid data')
+
+    def post(self, notification_setting_name=None):
+        """Register a notifier."""
+        input_dict = to_dict(cherrypy.request.json, decamelize)
+
+        # Register a notifier (notification_setting_name is used as notifier name)
+        if notification_setting_name:
+            notifier_name = notification_setting_name
+            # Twitter registration
+            if notifier_name == 'twitter':
+                import autosubliminal.notifiers.twitter as twitter_notifier
+
+                # Getting request token
+                if not 'token_key' in input_dict and not 'token_secret' in input_dict:
+                    oauth_client = OAuth1Session(client_key=twitter_notifier.CONSUMER_KEY,
+                                                 client_secret=twitter_notifier.CONSUMER_SECRET)
+                    try:
+                        response = oauth_client.fetch_request_token(twitter_notifier.REQUEST_TOKEN_URL)
+                    except Exception:
+                        log.exception('Error while fetching twitter request token')
+                        send_websocket_notification('Twitter registration failed! Please check the log file!',
+                                                    type='error')
+                        return self._internal_server_error('Twitter registration failed')
+                    # Create result
+                    result = {
+                        'url': oauth_client.authorization_url(twitter_notifier.AUTHORIZATION_URL),
+                        'token_key': response.get('oauth_token'),
+                        'token_secret': response.get('oauth_token_secret')
+                    }
+                    return to_dict(result, camelize)
+
+                # Getting access token
+                if 'token_key' in input_dict and 'token_secret' in input_dict and 'token_pin' in input_dict:
+                    oauth_client = OAuth1Session(client_key=twitter_notifier.CONSUMER_KEY,
+                                                 client_secret=twitter_notifier.CONSUMER_SECRET,
+                                                 resource_owner_key=input_dict['token_key'],
+                                                 resource_owner_secret=input_dict['token_secret'],
+                                                 verifier=input_dict['token_pin'])
+                    try:
+                        response = oauth_client.fetch_access_token(twitter_notifier.ACCESS_TOKEN_URL)
+                    except Exception:
+                        log.exception('Error while fetching twitter access token')
+                        send_websocket_notification('Twitter registration failed! Please check the log file!',
+                                                    type='error')
+                        return self._internal_server_error('Twitter registration failed')
+                    # Create result
+                    result = {
+                        'twitter_key': response.get('oauth_token'),
+                        'twitter_secret': response.get('oauth_token_secret')
+                    }
+                    send_websocket_notification(
+                        'Twitter is now set up, remember to save your config and remember to test twitter.')
+                    return to_dict(result, camelize)
+
+        return self._bad_request('Invalid data')
+
+    def patch(self, notification_setting_name=None):
+        """Test a notifier."""
+
+        # Test a notifier (notification_setting_name is used as notifier name)
+        if notification_setting_name:
+            notifier_name = notification_setting_name
+            if notifiers.test_notifier(notifier_name):
+                send_websocket_notification('Test %s notification sent.' % notifier_name)
+                return self._no_content()
+            else:
+                send_websocket_notification('Test %s notification failed! Please check the log file!' % notifier_name,
+                                            type='error')
+                return self._internal_server_error('Test %s notification failed' % notifier_name)
+        else:
+            return self._bad_request('Invalid data')
+
+
 class _PostProcessingApi(RestResource):
     """
     Rest resource for handling the /api/settings/postprocessing path.
@@ -462,7 +678,7 @@ class _PostProcessingApi(RestResource):
         self.allowed_methods = ('GET', 'PUT')
 
     def get(self):
-        """Get general settings."""
+        """Get postprocessing settings."""
         settings = {
             'post_process': autosubliminal.POSTPROCESS,
             'post_process_individual': autosubliminal.POSTPROCESSINDIVIDUAL,

@@ -1,9 +1,9 @@
 <div class="container">
   <p-panel header="Namemapping settings">
     <form *ngIf="settingsForm" [formGroup]="settingsForm" class="form">
-      <!-- Warning -->
+      <!-- Warning notification -->
       <div class="row form-row">
-        <div class="col-12">
+        <div class="col-12 form-row-notification">
           <p-message severity="warn" text="Use the namemapping at own risk! Incorrect use of the namemapping may result in subtitles not being found!" styleClass="w-100"></p-message>
         </div>
       </div>
@@ -15,7 +15,7 @@
       </div>
       <!-- Show name mapping -->
       <div class="row form-row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
           <label for="showNameMapping" class="label">Show name mapping</label>
           <app-info-icon>
             <li>The local show name mapping to the TVDB ID.</li>
@@ -24,13 +24,13 @@
             <li>Show name 2 = 123456</li>
           </app-info-icon>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
           <app-input-multi-text formControlName="showNameMapping" [validationFeedback]="saveAttempt"></app-input-multi-text>
         </div>
       </div>
       <!-- Addic7ed show name mapping -->
       <div class="row form-row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
           <label for="addic7edShowNameMapping" class="label">Addic7ed show name mapping</label>
           <app-info-icon>
             <li>The local show name mapping to the Addic7ed ID.</li>
@@ -39,13 +39,13 @@
             <li>Show name 2 = 123456</li>
           </app-info-icon>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
           <app-input-multi-text formControlName="addic7edShowNameMapping" [validationFeedback]="saveAttempt"></app-input-multi-text>
         </div>
       </div>
       <!-- Alternative show name mapping -->
       <div class="row form-row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
           <label for="alternativeShowNameMapping" class="label">Alternative show name mapping</label>
           <app-info-icon>
             <li>List the alternative names of a show to increase subtitle matching.</li>
@@ -54,7 +54,7 @@
             <li>Show name 2 = Show name 2a</li>
           </app-info-icon>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
           <app-input-multi-text formControlName="alternativeShowNameMapping" [validationFeedback]="saveAttempt"></app-input-multi-text>
         </div>
       </div>
@@ -66,7 +66,7 @@
       </div>
       <!-- Movie name mapping -->
       <div class="row form-row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
           <label for="movieNameMapping" class="label">Movie name mapping</label>
           <app-info-icon>
             <li>The local movie name mapping to the IMDB ID.</li>
@@ -75,13 +75,13 @@
             <li>Movie title 2 (year) = 123456</li>
           </app-info-icon>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
           <app-input-multi-text formControlName="movieNameMapping" [validationFeedback]="saveAttempt"></app-input-multi-text>
         </div>
       </div>
       <!-- Alternative movie name mapping -->
       <div class="row form-row">
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
           <label for="alternativeMovieNameMapping" class="label">Alternative movie name mapping</label>
           <app-info-icon>
             <li>List the alternative titles of a movie to increase subtitle matching.</li>
@@ -90,13 +90,13 @@
             <li>Movie title 2 = Movie title 2a</li>
           </app-info-icon>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
           <app-input-multi-text formControlName="alternativeMovieNameMapping" [validationFeedback]="saveAttempt"></app-input-multi-text>
         </div>
       </div>
       <!-- Button -->
       <div class="row button-row">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-10">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-10">
           <p-button label="Save" (onClick)="save()"></p-button>
         </div>
       </div>
