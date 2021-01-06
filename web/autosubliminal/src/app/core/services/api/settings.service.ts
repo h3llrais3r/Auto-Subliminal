@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GeneralSettings, LogSettings, NameMappingSettings, PostProcessSettings, SkipMappingSettings, SubliminalSettings, WebServerSettings } from '../../../shared/models/settings';
+import { GeneralSettings, LogSettings, NameMappingSettings, NotificationSettings, PostProcessSettings, SkipMappingSettings, SubliminalSettings, TwitterAutorization, TwitterRegistration, WebServerSettings } from '../../../shared/models/settings';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -86,6 +86,33 @@ export class SettingsService extends ApiServiceTemplate {
   updateSkipMappingSettings(skipMappingSettings: SkipMappingSettings): Observable<boolean> {
     return this.httpClient.put(`${this.URL}/skipmapping`, JSON.stringify(skipMappingSettings), this.options)
       .pipe(map(() => true));
+  }
+
+  // Notification settings
+
+  getNotificationSettings(): Observable<NotificationSettings> {
+    return this.httpClient.get(`${this.URL}/notification`, this.options)
+      .pipe(map(result => new NotificationSettings(result)));
+  }
+
+  updateNotificationSettings(notificationSettings: NotificationSettings): Observable<boolean> {
+    return this.httpClient.put(`${this.URL}/notification`, JSON.stringify(notificationSettings), this.options)
+      .pipe(map(() => true));
+  }
+
+  testNotifier(notifierName: string): Observable<boolean> {
+    return this.httpClient.patch(`${this.URL}/notification/${notifierName}`, {}, this.options)
+      .pipe(map(() => true));
+  }
+
+  registerTwitter(): Observable<TwitterRegistration> {
+    return this.httpClient.post(`${this.URL}/notification/twitter`, {}, this.options)
+      .pipe(map((result) => new TwitterRegistration(result)));
+  }
+
+  authorizeTwitter(twitterRegistration: TwitterRegistration): Observable<TwitterAutorization> {
+    return this.httpClient.post(`${this.URL}/notification/twitter`, twitterRegistration, this.options)
+      .pipe(map((result) => new TwitterAutorization(result)));
   }
 
   // PostProcess settings

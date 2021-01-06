@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SettingsGeneralComponent } from './general/settings-general.component';
 import { SettingsLoggingComponent } from './logging/settings-logging.component';
 import { SettingsNamemappingComponent } from './namemapping/settings-namemapping.component';
+import { SettingsNotificationComponent } from './notification/settings-notification.component';
 import { SettingsPostprocessingComponent } from './postprocessing/settings-postprocessing.component';
 import { SettingsSkipmappingComponent } from './skipmapping/settings-skipmapping.component';
 import { SettingsSubliminalComponent } from './subliminal/settings-subliminal.component';
@@ -37,6 +38,10 @@ const routes: Routes = [
   {
     path: 'skipmapping',
     component: SettingsSkipmappingComponent
+  },
+  {
+    path: 'notification',
+    component: SettingsNotificationComponent
   },
   {
     path: 'postprocessing',

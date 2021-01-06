@@ -68,7 +68,7 @@ export class SettingsWebserverComponent implements OnInit {
   private getWebServerSettings(): WebServerSettings {
     const settings = new WebServerSettings();
     settings.webServerIp = FormUtils.getFormControlValue<string>(this.settingsForm, 'webServerIp');
-    settings.webServerPort = FormUtils.getFormControlValue<string>(this.settingsForm, 'webServerPort');
+    settings.webServerPort = FormUtils.getFormControlValue<number>(this.settingsForm, 'webServerPort');
     settings.webRoot = FormUtils.getFormControlValue<string>(this.settingsForm, 'webRoot');
     settings.userName = FormUtils.getFormControlValue<string>(this.settingsForm, 'userName');
     settings.password = FormUtils.getFormControlValue<string>(this.settingsForm, 'password');

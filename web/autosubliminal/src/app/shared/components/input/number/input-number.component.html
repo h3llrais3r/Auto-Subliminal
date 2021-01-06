@@ -2,11 +2,12 @@
 <p-inputNumber [id]="id || formControlName"
                [formControl]="control"
                [mode]="mode"
+               [useGrouping]="useGrouping"
                [step]="step"
                [min]="min"
                [max]="max"
                [suffix]="suffix"
-               [showButtons]="true"
+               [showButtons]="showButtons"
                decrementButtonClass="p-button-outlined input-addon"
                incrementButtonClass="p-button-outlined input-addon"
                styleClass="w-100">

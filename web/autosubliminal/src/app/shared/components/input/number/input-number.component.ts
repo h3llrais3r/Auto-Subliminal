@@ -18,6 +18,12 @@ export class InputNumberComponent extends InputComponent implements OnInit {
   mode = 'decimal'; // default decimal
 
   @Input()
+  useGrouping = false; // default no grouping
+
+  @Input()
+  showButtons = true; // default show buttons
+
+  @Input()
   step = 1; // default 1
 
   @Input()

@@ -59,6 +59,11 @@ export class PageHeaderComponent implements OnInit {
             routerLink: '/settings/skipmapping'
           },
           {
+            label: 'Notification',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/notification'
+          },
+          {
             label: 'Postprocessing',
             icon: 'pi pi-fw pi-cog',
             routerLink: '/settings/postprocessing'
