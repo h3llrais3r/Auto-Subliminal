@@ -21,20 +21,20 @@
       </div>
       <!-- Notify -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="notify" class="label">Notify</label>
           <app-info-icon>
             <li>When enabled, notification(s) will be sent when a subtitle has been downloaded.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="notify" [options]="enabledOrDisabled"></app-input-dropdown>
         </div>
       </div>
       <!-- Button -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label"></div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label"></div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <p-button label="Save" (onClick)="save()"></p-button>
         </div>
       </div>
@@ -47,117 +47,117 @@
       </div>
       <!-- Notify Mail -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="notifyMail" class="label">Notify</label>
           <app-info-icon>
             <li>When enabled, an email notification will be sent when a subtitle has been downloaded.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="notifyMail" [options]="enabledOrDisabled"></app-input-dropdown>
         </div>
       </div>
       <!-- Mail server -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="mailServer" class="label">Server</label>
           <app-info-icon>
             <li>The mail server address (and port if needed).</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="mailServer" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Mail from -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="mailFrom" class="label">Sender</label>
           <app-info-icon>
             <li>The email address from which the notification will be sent.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="mailFrom" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Mail to -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="mailTo" class="label">Receiver</label>
           <app-info-icon>
             <li>The email address(es) to which the notification will be sent.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="mailTo" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Mail username -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="mailUserName" class="label">Username</label>
           <app-info-icon>
             <li>The username on the mail server.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="mailUserName" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Mail password -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="mailPassword" class="label">Password</label>
           <app-info-icon>
             <li>The password for the username on the mail server.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="mailPassword" type="password" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Mail subject -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="mailSubject" class="label">Subject</label>
           <app-info-icon>
             <li>The email subject.</li>
             <li>If not provided, the default subject will be used.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="mailSubject" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Mail encryption -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="mailEncryption" class="label">Encryption</label>
           <app-info-icon>
             <li>The encryption method used by the mail server.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="mailEncryption" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Mail authentication -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="mailAuthentication" class="label">Authentication</label>
           <app-info-icon>
             <li>The authentication mechanism used by the mail server.</li>
             <li>Don't change this if you don't know what you are doing.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="mailAuthentication" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Button -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 offset-0 offset-sm-0 offset-md-6 offset-lg-4 form-row-buttons">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8 offset-0 offset-sm-0 offset-md-4 offset-lg-4 form-row-buttons">
           <p-button label="Test" styleClass="p-button-secondary" (onClick)="test('mail')"></p-button>
           <p-button label="Save" (onClick)="save()"></p-button>
         </div>
@@ -173,43 +173,43 @@
       </div>
       <!-- Notify Twitter -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="notifyTwitter" class="label">Notify</label>
           <app-info-icon>
             <li>When enabled, a Twitter notification will be sent when a subtitle has been downloaded.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="notifyTwitter" [options]="enabledOrDisabled"></app-input-dropdown>
         </div>
       </div>
       <!-- Twitter key -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="twitterKey" class="label">API key</label>
           <app-info-icon>
             <li>The API key for Twitter.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="twitterKey" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Twitter secret -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="twitterSecret" class="label">Secret code</label>
           <app-info-icon>
             <li>The secret code for Twitter.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="twitterSecret" type="password" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Button -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 offset-0 offset-sm-0 offset-md-6 offset-lg-4 form-row-buttons">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8 offset-0 offset-sm-0 offset-md-4 offset-lg-4 form-row-buttons">
           <p-button label="Register" styleClass="p-button-secondary" (onClick)="registerTwitter()"></p-button>
           <p-button label="Test" styleClass="p-button-secondary" (onClick)="test('twitter')"></p-button>
           <p-button label="Save" (onClick)="save()"></p-button>
@@ -226,31 +226,31 @@
       </div>
       <!-- Notify Pushalot -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="notifyPushalot" class="label">Notify</label>
           <app-info-icon>
             <li>When enabled, a Pushalot notification will be sent when a subtitle has been downloaded.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="notifyPushalot" [options]="enabledOrDisabled"></app-input-dropdown>
         </div>
       </div>
       <!-- Pushalot api -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="pushalotApi" class="label">API key</label>
           <app-info-icon>
             <li>The API key for Pushalot.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="pushalotApi" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Button -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 offset-0 offset-sm-0 offset-md-6 offset-lg-4 form-row-buttons">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8 offset-0 offset-sm-0 offset-md-4 offset-lg-4 form-row-buttons">
           <p-button label="Test" styleClass="p-button-secondary" (onClick)="test('pushalot')"></p-button>
           <p-button label="Save" (onClick)="save()"></p-button>
         </div>
@@ -266,56 +266,56 @@
       </div>
       <!-- Notify Pushover -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="notifyPushover" class="label">Notify</label>
           <app-info-icon>
             <li>When enabled, a Pushover notification will be sent when a subtitle has been downloaded.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="notifyPushover" [options]="enabledOrDisabled"></app-input-dropdown>
         </div>
       </div>
       <!-- Pushover key -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="pushoverKey" class="label">User key</label>
           <app-info-icon>
             <li>The user key for Pushover.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="pushoverKey" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Pushover api -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="pushoverApi" class="label">API key</label>
           <app-info-icon>
             <li>The API key for Pushover.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="pushoverApi" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Pushover devices -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="pushoverDevices" class="label">Devices</label>
           <app-info-icon>
             <li>The devices (comma separated list) used for Pushover notifications.</li>
             <li>If not provided, notifications will be sent to all your Pushover devices.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="pushoverDevices" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Button -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 offset-0 offset-sm-0 offset-md-6 offset-lg-4 form-row-buttons">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8 offset-0 offset-sm-0 offset-md-4 offset-lg-4 form-row-buttons">
           <p-button label="Test" styleClass="p-button-secondary" (onClick)="test('pushover')"></p-button>
           <p-button label="Save" (onClick)="save()"></p-button>
         </div>
@@ -331,67 +331,67 @@
       </div>
       <!-- Notify Growl -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="notifyGrowl" class="label">Notify</label>
           <app-info-icon>
             <li>When enabled, a Growl notification will be sent when a subtitle has been downloaded.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="notifyGrowl" [options]="enabledOrDisabled"></app-input-dropdown>
         </div>
       </div>
       <!-- Growl host -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="growlHost" class="label">Server</label>
           <app-info-icon>
             <li>The Growl host server address.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="growlHost" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Growl port -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="growlPort" class="label">Port</label>
           <app-info-icon>
             <li>The port of the Growl host server.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-number formControlName="growlPort" [showButtons]="false" [validationFeedback]="saveAttempt"></app-input-number>
         </div>
       </div>
       <!-- Growl password -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="growlPassword" class="label">Password</label>
           <app-info-icon>
             <li>The password on the growl host server.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="growlPassword" type="password" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Growl priority -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="growlPriority" class="label">Priority</label>
           <app-info-icon>
             <li>The priority for the Growl notification.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="growlPriority" [options]="growlProwlPriorities" [validationFeedback]="saveAttempt"></app-input-dropdown>
         </div>
       </div>
       <!-- Button -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 offset-0 offset-sm-0 offset-md-6 offset-lg-4 form-row-buttons">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8 offset-0 offset-sm-0 offset-md-4 offset-lg-4 form-row-buttons">
           <p-button label="Test" styleClass="p-button-secondary" (onClick)="test('growl')"></p-button>
           <p-button label="Save" (onClick)="save()"></p-button>
         </div>
@@ -407,44 +407,44 @@
       </div>
       <!-- Notify Prowl -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="notifyProwl" class="label">Notify</label>
           <app-info-icon>
             <li>When enabled, a Prowl notification will be sent when a subtitle has been downloaded.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="notifyProwl" [options]="enabledOrDisabled"></app-input-dropdown>
         </div>
       </div>
       <!-- Prowl api -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="prowlApi" class="label">API key</label>
           <app-info-icon>
             <li>The API key for Prowl.</li>
             <li>Your API key can be found by visiting: <a href="https://prowlapp.com/api_settings.php" target="_blank">https://prowlapp.com/api_settings.php</a></li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="prowlApi" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Prowl priority -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="prowlPriority" class="label">Priority</label>
           <app-info-icon>
             <li>The priority for the Prowl notification.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="prowlPriority" [options]="growlProwlPriorities" [validationFeedback]="saveAttempt"></app-input-dropdown>
         </div>
       </div>
       <!-- Button -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 offset-0 offset-sm-0 offset-md-6 offset-lg-4 form-row-buttons">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8 offset-0 offset-sm-0 offset-md-4 offset-lg-4 form-row-buttons">
           <p-button label="Test" styleClass="p-button-secondary" (onClick)="test('prowl')"></p-button>
           <p-button label="Save" (onClick)="save()"></p-button>
         </div>
@@ -460,31 +460,31 @@
       </div>
       <!-- Notify Pushbullet -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="notifyPushbullet" class="label">Notify</label>
           <app-info-icon>
             <li>When enabled, a Pushbullet notification will be sent when a subtitle has been downloaded.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="notifyPushbullet" [options]="enabledOrDisabled"></app-input-dropdown>
         </div>
       </div>
       <!-- Pushbullet api -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="pushbulletApi" class="label">API key</label>
           <app-info-icon>
             <li>The API key for Pushbullet.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="pushbulletApi" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Button -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 offset-0 offset-sm-0 offset-md-6 offset-lg-4 form-row-buttons">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8 offset-0 offset-sm-0 offset-md-4 offset-lg-4 form-row-buttons">
           <p-button label="Test" styleClass="p-button-secondary" (onClick)="test('pushbullet')"></p-button>
           <p-button label="Save" (onClick)="save()"></p-button>
         </div>
@@ -500,19 +500,19 @@
       </div>
       <!-- Notify Telegram -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="notifyTelegram" class="label">Notify</label>
           <app-info-icon>
             <li>When enabled, a Telegram notification will be sent when a subtitle has been downloaded.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="notifyTelegram" [options]="enabledOrDisabled"></app-input-dropdown>
         </div>
       </div>
       <!-- Telegram api -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="telegramBotApi" class="label">Bot API key (token)</label>
           <app-info-icon>
             <li>The bot API key (token) for Telegram.</li>
@@ -520,26 +520,26 @@
             <li>See <a href="https://core.telegram.org/bots" target="_blank">https://core.telegram.org/bots</a></li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="telegramBotApi" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Telegram chat id -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-4 form-row-label">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="telegramChatId" class="label">Chat ID</label>
           <app-info-icon>
             <li>Unique identifier for the target chat or username of the target channel (in the format @channelusername).</li>
             <li>Contact @myidbot on Telegram to get an ID.</li>
           </app-info-icon>
         </div>
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="telegramChatId" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Button -->
       <div class="row form-row">
-        <div class="col-12 col-sm-12 col-md-6 col-lg-6 offset-0 offset-sm-0 offset-md-6 offset-lg-4 form-row-buttons">
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8 offset-0 offset-sm-0 offset-md-4 offset-lg-4 form-row-buttons">
           <p-button label="Test" styleClass="p-button-secondary" (onClick)="test('telegram')"></p-button>
           <p-button label="Save" (onClick)="save()"></p-button>
         </div>
