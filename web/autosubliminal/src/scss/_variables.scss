@@ -1,14 +1,13 @@
 // Global variables (var(--xxxx)) are used from imported primeng styles
 
-// Font color
-$font-color: var(--text-color);
-
-// Background color
-$background-color: var(--surface-a);
-
-// Font size:
+// Font
 $font-size: 1rem;
 $font-size-sm: ($font-size * .875) !default;
+$font-bold: 500;
+$font-color: var(--text-color);
+
+// Background
+$background-color: var(--surface-a);
 
 //Media boundaries
 $media-mobile-max-width: 767px;

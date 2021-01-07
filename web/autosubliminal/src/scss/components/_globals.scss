@@ -29,6 +29,8 @@ body {
 
   .form {
     .form-row {
+      @include flexbox;
+      @include align-items(center);
       margin-bottom: 0.5rem;
 
       .form-row-buttons {
@@ -38,10 +40,8 @@ body {
       }
 
       .form-row-label {
-        margin-top: 0.375rem;
-        margin-bottom: 0.375rem;
-
         label {
+          font-weight: $font-bold;
           margin-bottom: 0;
         }
       }
@@ -52,7 +52,12 @@ body {
 
       .form-row-switches {
         @include flexbox;
+        @include align-items(center);
         @include justify-content(space-between);
+
+        .p-inputswitch {
+          display: block; // inline-block seems to add some margin at the bottom which gives issues for alignment with label
+        }
       }
     }
 
