@@ -15,7 +15,8 @@ from autosubliminal.config import write_config_general_section, write_config_log
     write_config_skipshow_section, write_config_skipmovie_section, write_config_notification_section, \
     write_config_postprocessing_section
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, to_dict, dict_to_list, list_to_dict
+from autosubliminal.util.common import camelize, decamelize, dict_to_list, find_path_in_paths, get_boolean, \
+    list_to_dict, to_dict
 from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
@@ -353,6 +354,30 @@ class _SubliminalApi(RestResource):
                 autosubliminal.LEGENDASTVUSERNAME = input_dict['legendastv_user_name']
             if 'legendastv_password' in input_dict:
                 autosubliminal.LEGENDASTVPASSWORD = input_dict['legendastv_password']
+
+            # Calculate show min match score
+            show_min_match_score = autosubliminal.SHOWMINMATCHSCOREDEFAULT  # default score, not editable
+            if get_boolean(input_dict['show_match_source']):
+                show_min_match_score += 7
+            if get_boolean(input_dict['show_match_quality']):
+                show_min_match_score += 2
+            if get_boolean(input_dict['show_match_codec']):
+                show_min_match_score += 2
+            if get_boolean(input_dict['show_match_release_group']):
+                show_min_match_score += 15
+            autosubliminal.SHOWMINMATCHSCORE = show_min_match_score
+
+            # Calculate movie min match score
+            movie_min_match_score = autosubliminal.MOVIEMINMATCHSCOREDEFAULT  # default score, not editable
+            if get_boolean(input_dict['movie_match_source']):
+                movie_min_match_score += 7
+            if get_boolean(input_dict['movie_match_quality']):
+                movie_min_match_score += 2
+            if get_boolean(input_dict['movie_match_codec']):
+                movie_min_match_score += 2
+            if get_boolean(input_dict['movie_match_release_group']):
+                movie_min_match_score += 15
+            autosubliminal.MOVIEMINMATCHSCORE = movie_min_match_score
 
             write_config_subliminal_section()
             send_websocket_notification('Subliminal settings updated.')
