@@ -9,7 +9,8 @@ body {
   color: $font-color;
   background-color: $background-color;
 
-  @media screen and (max-width: $media-mobile-max-width) {
+  // Smaller font size on tablets and mobile
+  @media screen and (max-width: $media-tablet-max-width) {
     font-size: $font-size-sm;
   }
 
