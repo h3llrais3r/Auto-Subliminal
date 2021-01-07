@@ -1,4 +1,5 @@
 @import '../variables';
+@import '../mixins/flexbox';
 
 html,
 body {
@@ -46,6 +47,11 @@ body {
 
       .form-row-notification {
         margin-bottom: 0.25rem;
+      }
+
+      .form-row-switches {
+        @include flexbox;
+        @include justify-content(space-between);
       }
     }
 
