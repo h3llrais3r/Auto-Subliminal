@@ -9,6 +9,7 @@ import { ConfigRoutingModule } from './settings-routing.module';
 import { SettingsSkipmappingComponent } from './skipmapping/settings-skipmapping.component';
 import { SettingsSubliminalComponent } from './subliminal/settings-subliminal.component';
 import { SettingsWebserverComponent } from './webserver/settings-webserver.component';
+import { SettingsLibraryComponent } from './library/settings-library.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { SettingsWebserverComponent } from './webserver/settings-webserver.compo
     SettingsNamemappingComponent,
     SettingsSkipmappingComponent,
     SettingsNotificationComponent,
-    SettingsPostprocessingComponent
+    SettingsPostprocessingComponent,
+    SettingsLibraryComponent
   ],
   imports: [
     SharedModule,

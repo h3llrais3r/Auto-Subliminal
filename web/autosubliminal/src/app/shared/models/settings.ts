@@ -24,6 +24,16 @@ export class GeneralSettings {
   }
 }
 
+export class LibrarySettings {
+  libraryMode: boolean;
+  libraryPaths: string[];
+  scanLibraryInterval: number;
+
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
+}
+
 export class LogSettings {
   logFile: string;
   logLevel: number;

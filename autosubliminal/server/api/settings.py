@@ -27,6 +27,7 @@ class SettingsApi(RestResource):
 
         # Add all sub paths here: /api/settings/...
         self.general = _GeneralApi()
+        self.library = _LibraryApi()
         self.logging = _LoggingApi()
         self.webserver = _WebserverApi()
         self.subliminal = _SubliminalApi()
@@ -139,6 +140,58 @@ class _GeneralApi(RestResource):
                 autosubliminal.MAXDBRESULTS = input_dict['max_db_results']
             if 'timestamp_format' in input_dict:
                 autosubliminal.TIMESTAMPFORMAT = input_dict['timestamp_format']
+
+            SettingsApi.save_and_restart_if_needed(self._section)
+
+            return self._no_content()
+
+        return self._bad_request('Invalid data')
+
+
+@cherrypy.popargs('library_setting_name')
+class _LibraryApi(RestResource):
+    """
+    Rest resource for handling the /api/settings/library path.
+    """
+
+    def __init__(self):
+        super(_LibraryApi, self).__init__()
+        self._section = 'library'
+
+        # Set the allowed methods
+        self.allowed_methods = ('GET', 'PUT')
+
+    def get(self):
+        """Get general settings."""
+        settings = {
+            'library_mode': autosubliminal.LIBRARYMODE,
+            'library_paths': autosubliminal.LIBRARYPATHS,
+            'scan_library_interval': autosubliminal.SCANLIBRARYINTERVAL
+        }
+
+        return to_dict(settings, camelize)
+
+    def put(self, library_setting_name=None):
+        """Update general settings."""
+        input_dict = to_dict(cherrypy.request.json, decamelize)
+
+        # Single setting update
+        if library_setting_name:
+            pass  # not yet implemented
+        else:
+            # Update all settings
+            if 'library_mode' in input_dict:
+                autosubliminal.LIBRARYMODE = input_dict['library_mode']
+            if 'library_paths' in input_dict:
+                autosubliminal.LIBRARYPATHS = input_dict['library_paths']
+            if 'scan_library_interval' in input_dict:
+                autosubliminal.SCANLIBRARYINTERVAL = input_dict['scan_library_interval']
+
+            # Activate/deactivate scheduler
+            if autosubliminal.LIBRARYMODE:
+                autosubliminal.SCANLIBRARY.activate()
+            else:
+                autosubliminal.SCANLIBRARY.deactivate()
 
             SettingsApi.save_and_restart_if_needed(self._section)
 

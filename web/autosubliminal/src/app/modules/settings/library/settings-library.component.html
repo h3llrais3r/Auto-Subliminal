@@ -1,0 +1,51 @@
+<div class="container">
+  <p-panel header="Log settings">
+    <form *ngIf="settingsForm" [formGroup]="settingsForm" class="form">
+      <!-- Library mode -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="libraryMode" class="label">Library mode</label>
+          <app-info-icon>
+            <li>When enabled, a libraryscanner thread will be enabled to scan your complete library.</li>
+            <li>This will enable a new menu link 'Library' from which you can view your complete library.</li>
+            <li>ATTENTION: this may cause a very long disk scan if your library is very big!</li>
+          </app-info-icon>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-dropdown formControlName="libraryMode" [options]="enabledOrDisabled"></app-input-dropdown>
+        </div>
+      </div>
+      <!-- Library paths -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="libraryPaths" class="label">Library paths</label>
+          <app-info-icon>
+            <li>The folders where your show/movie libraries are located.</li>
+          </app-info-icon>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-multi-text formControlName="libraryPaths" [validationFeedback]="saveAttempt"></app-input-multi-text>
+        </div>
+      </div>
+      <!-- Scan library interval -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="scanLibraryInterval" class="label">Scan library interval</label>
+          <app-info-icon>
+            <li>Library scan interval of the ScanLibrary thread. It scans the complete library for generating an overview.</li>
+            <li>Time is in hours. Default value is 24 hours. Cannot not be set lower then 24 hours.</li>
+          </app-info-icon>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-number formControlName="scanLibraryInterval" min="24" suffix=" hours"></app-input-number>
+        </div>
+      </div>
+      <!-- Button -->
+      <div class="row button-row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-10">
+          <p-button label="Save" (onClick)="save()"></p-button>
+        </div>
+      </div>
+    </form>
+  </p-panel>
+</div>

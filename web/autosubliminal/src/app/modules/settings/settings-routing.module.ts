@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SettingsGeneralComponent } from './general/settings-general.component';
+import { SettingsLibraryComponent } from './library/settings-library.component';
 import { SettingsLoggingComponent } from './logging/settings-logging.component';
 import { SettingsNamemappingComponent } from './namemapping/settings-namemapping.component';
 import { SettingsNotificationComponent } from './notification/settings-notification.component';
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: 'general',
     component: SettingsGeneralComponent
+  },
+  {
+    path: 'library',
+    component: SettingsLibraryComponent
   },
   {
     path: 'logging',
