@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { SettingsService } from '../../../core/services/api/settings.service';
+import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
 import { FormValidators } from '../../../shared/components/forms/form-validators';
 import { WebServerSettings } from '../../../shared/models/settings';
@@ -19,7 +20,7 @@ export class SettingsWebserverComponent implements OnInit {
 
   saveAttempt = false;
 
-  constructor(private fb: FormBuilder, private settingsService: SettingsService) { }
+  constructor(private fb: FormBuilder, private settingsService: SettingsService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.buildSelectItems();
@@ -41,9 +42,8 @@ export class SettingsWebserverComponent implements OnInit {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
       this.settingsService.updateWebServerSettings(this.getWebServerSettings()).subscribe(
-        result => {
-          // updated
-        });
+        () => this.messageService.showSuccessMessage('Webserver settings saved.'),
+        () => this.messageService.showErrorMessage('Error while saving webserver settings!'));
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

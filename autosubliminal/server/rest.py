@@ -67,6 +67,9 @@ class RestResource(object):
     def _bad_request(self, error_message):
         raise BadRequest(message=error_message)
 
+    def _conflict(self, error_message):
+        raise Conflict(message=error_message)
+
     def _internal_server_error(self, error_message=None):
         raise InternalServerError(message=error_message)
 
@@ -100,6 +103,16 @@ class MethodNotAllowed(cherrypy.HTTPError):
 
     def __init__(self):
         cherrypy.HTTPError.__init__(self, status=405, message='Method not allowed')
+
+
+class Conflict(cherrypy.HTTPError):
+    """
+    Exception raised for a conflict (409).
+    """
+
+    def __init__(self, message):
+        self.args = (message,)
+        cherrypy.HTTPError.__init__(self, status=409, message=message)
 
 
 class InternalServerError(cherrypy.HTTPError):

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { SettingsService } from '../../../core/services/api/settings.service';
+import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
 import { FormValidators } from '../../../shared/components/forms/form-validators';
 import { LogSettings } from '../../../shared/models/settings';
@@ -20,7 +21,7 @@ export class SettingsLoggingComponent implements OnInit {
 
   saveAttempt = false;
 
-  constructor(private fb: FormBuilder, private settingsService: SettingsService) { }
+  constructor(private fb: FormBuilder, private settingsService: SettingsService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.buildSelectItems();
@@ -34,9 +35,8 @@ export class SettingsLoggingComponent implements OnInit {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
       this.settingsService.updateLogSettings(this.getLogSettings()).subscribe(
-        result => {
-          // updated
-        });
+        () => this.messageService.showSuccessMessage('Log settings saved.'),
+        () => this.messageService.showErrorMessage('Error while saving log settings!'));
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

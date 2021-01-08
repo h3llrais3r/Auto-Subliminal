@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { appSettings } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
+import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
 import { SubliminalSettings } from '../../../shared/models/settings';
 
@@ -21,7 +22,7 @@ export class SettingsSubliminalComponent implements OnInit {
 
   saveAttempt = false;
 
-  constructor(private fb: FormBuilder, private settingsService: SettingsService) { }
+  constructor(private fb: FormBuilder, private settingsService: SettingsService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.buildSelectItems();
@@ -35,9 +36,8 @@ export class SettingsSubliminalComponent implements OnInit {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
       this.settingsService.updateSubliminalSettings(this.getSubliminalSettings()).subscribe(
-        result => {
-          // updated
-        });
+        () => this.messageService.showSuccessMessage('Subliminal settings saved.'),
+        () => this.messageService.showErrorMessage('Error while saving subliminal settings!'));
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }
@@ -57,14 +57,14 @@ export class SettingsSubliminalComponent implements OnInit {
 
   private buildForm(subliminalSettings: SubliminalSettings): void {
     this.settingsForm = this.fb.group({
-      showMatchSource: [subliminalSettings.showMatchSource, []],
-      showMatchQuality: [subliminalSettings.showMatchQuality, []],
-      showMatchCodec: [subliminalSettings.showMatchCodec, []],
-      showMatchReleaseGroup: [subliminalSettings.showMatchReleaseGroup, []],
-      movieMatchSource: [subliminalSettings.movieMatchSource, []],
-      movieMatchQuality: [subliminalSettings.movieMatchQuality, []],
-      movieMatchCodec: [subliminalSettings.movieMatchCodec, []],
-      movieMatchReleaseGroup: [subliminalSettings.movieMatchReleaseGroup, []],
+      showMatchSource: [subliminalSettings.showMatchSource, [Validators.required]],
+      showMatchQuality: [subliminalSettings.showMatchQuality, [Validators.required]],
+      showMatchCodec: [subliminalSettings.showMatchCodec, [Validators.required]],
+      showMatchReleaseGroup: [subliminalSettings.showMatchReleaseGroup, [Validators.required]],
+      movieMatchSource: [subliminalSettings.movieMatchSource, [Validators.required]],
+      movieMatchQuality: [subliminalSettings.movieMatchQuality, [Validators.required]],
+      movieMatchCodec: [subliminalSettings.movieMatchCodec, [Validators.required]],
+      movieMatchReleaseGroup: [subliminalSettings.movieMatchReleaseGroup, [Validators.required]],
       subliminalProviders: [subliminalSettings.subliminalProviders, []],
       subtitleUtf8Encoding: [subliminalSettings.subtitleUtf8Encoding, [Validators.required]],
       refineVideo: [subliminalSettings.refineVideo, [Validators.required]],

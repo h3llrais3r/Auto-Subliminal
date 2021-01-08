@@ -12,7 +12,7 @@ from autosubliminal.config import write_config_general_section
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import camelize, decamelize, dict_to_list, find_path_in_paths, get_boolean, \
     list_to_dict, to_dict
-from autosubliminal.util.websocket import send_websocket_notification, send_websocket_event, SYSTEM_RESTARTED
+from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
 
@@ -39,11 +39,9 @@ class SettingsApi(RestResource):
     def save_and_restart_if_needed(section):
         # Save to the config and restart if needed
         restart = config.write_config(section)
-        send_websocket_notification('%s settings updated.' % section.capitalize())
         if restart:
             from autosubliminal import system  # Import here to prevent api test from failing (circular import)
             system.restart()
-
 
 
 @cherrypy.popargs('general_setting_name')
@@ -626,6 +624,7 @@ class _NotificationApi(RestResource):
         # Register a notifier (notification_setting_name is used as notifier name)
         if notification_setting_name:
             notifier_name = notification_setting_name
+
             # Twitter registration
             if notifier_name == 'twitter':
                 import autosubliminal.notifiers.twitter as twitter_notifier
@@ -638,15 +637,15 @@ class _NotificationApi(RestResource):
                         response = oauth_client.fetch_request_token(twitter_notifier.REQUEST_TOKEN_URL)
                     except Exception:
                         log.exception('Error while fetching twitter request token')
-                        send_websocket_notification('Twitter registration failed! Please check the log file!',
-                                                    type='error')
                         return self._internal_server_error('Twitter registration failed')
+
                     # Create result
                     result = {
                         'url': oauth_client.authorization_url(twitter_notifier.AUTHORIZATION_URL),
                         'token_key': response.get('oauth_token'),
                         'token_secret': response.get('oauth_token_secret')
                     }
+
                     return to_dict(result, camelize)
 
                 # Getting access token
@@ -660,16 +659,14 @@ class _NotificationApi(RestResource):
                         response = oauth_client.fetch_access_token(twitter_notifier.ACCESS_TOKEN_URL)
                     except Exception:
                         log.exception('Error while fetching twitter access token')
-                        send_websocket_notification('Twitter registration failed! Please check the log file!',
-                                                    type='error')
                         return self._internal_server_error('Twitter registration failed')
+
                     # Create result
                     result = {
                         'twitter_key': response.get('oauth_token'),
                         'twitter_secret': response.get('oauth_token_secret')
                     }
-                    send_websocket_notification(
-                        'Twitter is now set up, remember to save your config and remember to test twitter.')
+
                     return to_dict(result, camelize)
 
         return self._bad_request('Invalid data')
@@ -681,11 +678,8 @@ class _NotificationApi(RestResource):
         if notification_setting_name:
             notifier_name = notification_setting_name
             if notifiers.test_notifier(notifier_name):
-                send_websocket_notification('Test %s notification sent.' % notifier_name)
                 return self._no_content()
             else:
-                send_websocket_notification('Test %s notification failed! Please check the log file!' % notifier_name,
-                                            type='error')
                 return self._internal_server_error('Test %s notification failed' % notifier_name)
         else:
             return self._bad_request('Invalid data')
