@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SettingsService } from '../../../core/services/api/settings.service';
+import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
 import { SkipMappingSettings } from '../../../shared/models/settings';
 
@@ -15,7 +16,7 @@ export class SettingsSkipmappingComponent implements OnInit {
 
   saveAttempt = false;
 
-  constructor(private fb: FormBuilder, private settingsService: SettingsService) { }
+  constructor(private fb: FormBuilder, private settingsService: SettingsService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.settingsService.getSkipMappingSettings().subscribe(
@@ -28,9 +29,8 @@ export class SettingsSkipmappingComponent implements OnInit {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
       this.settingsService.updateSkipMappingSettings(this.getSkipMappingSettings()).subscribe(
-        result => {
-          // updated
-        });
+        () => this.messageService.showSuccessMessage('Skipmapping settings saved.'),
+        () => this.messageService.showErrorMessage('Error while saving skipmapping settings!'));
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

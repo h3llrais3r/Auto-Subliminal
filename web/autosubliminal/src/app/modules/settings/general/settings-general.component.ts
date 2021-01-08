@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { appSettings } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
+import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
 import { FormValidators } from '../../../shared/components/forms/form-validators';
 import { GeneralSettings } from '../../../shared/models/settings';
@@ -14,7 +15,7 @@ import { GeneralSettings } from '../../../shared/models/settings';
 })
 export class SettingsGeneralComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private settingsService: SettingsService) { }
+  constructor(private fb: FormBuilder, private settingsService: SettingsService, private messageService: MessageService) { }
 
   settingsForm: FormGroup;
 
@@ -36,9 +37,8 @@ export class SettingsGeneralComponent implements OnInit {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
       this.settingsService.updateGeneralSettings(this.getGeneralSettings()).subscribe(
-        result => {
-          // updated
-        });
+        () => this.messageService.showSuccessMessage('General settings saved.'),
+        () => this.messageService.showErrorMessage('Error while saving general settings!'));
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Message, MessageService } from 'primeng/api';
 import { interval } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 import { appSettings } from '../../app-settings.service';
 import { Page } from '../../shared/models/page';
 import { Scheduler } from '../../shared/models/scheduler';
-import { SystemWebSocketClientMessage, SystemWebSocketMessage, SystemWebSocketServerEvent, SystemWebSocketServerEventType, SystemWebSocketServerMessage, SystemWebSocketServerNotification } from '../../shared/models/websocket';
+import { SystemWebSocketClientMessage, SystemWebSocketMessage, SystemWebSocketServerEvent, SystemWebSocketServerEventType, SystemWebSocketServerMessage, SystemWebSocketServerNotification, SystemWebSocketServerNotificationType } from '../../shared/models/websocket';
+import { MessageService, MessageSeverity } from './message.service';
 import { SystemEventService } from './system-event.service';
 
 @Injectable({
@@ -48,12 +48,7 @@ export class WebSocketService {
           }
         } else if (serverMessage.type === 'NOTIFICATION') {
           const serverNotification = serverMessage as SystemWebSocketServerNotification;
-          const message: Message = {
-            summary: 'Auto-Subliminal',
-            detail: serverNotification.notification.message,
-            severity: serverNotification.notification.type
-          };
-          this.messageService.add(message);
+          this.messageService.showMessage(serverNotification.notification.message, this.getMessageSeverity(serverNotification.notification.type));
         } else {
           console.error(`Invalid websocket server message type: ${serverMessage.type}`);
         }
@@ -87,5 +82,20 @@ export class WebSocketService {
       }
     };
     return webSocket(config);
+  }
+
+  private getMessageSeverity(type: SystemWebSocketServerNotificationType): MessageSeverity {
+    switch (type) {
+      case SystemWebSocketServerNotificationType.SUCCESS:
+        return MessageSeverity.SUCCESS;
+      case SystemWebSocketServerNotificationType.INFO:
+        return MessageSeverity.INFO;
+      case SystemWebSocketServerNotificationType.NOTICE:
+        return MessageSeverity.WARN;
+      case SystemWebSocketServerNotificationType.ERROR:
+        return MessageSeverity.ERROR;
+      default:
+        throw new Error(`Invalid message severity: ${type}`);
+    }
   }
 }

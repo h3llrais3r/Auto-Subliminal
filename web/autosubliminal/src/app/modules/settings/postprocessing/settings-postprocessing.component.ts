@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { SettingsService } from '../../../core/services/api/settings.service';
+import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
 import { PostProcessSettings } from '../../../shared/models/settings';
 
@@ -18,7 +19,7 @@ export class SettingsPostprocessingComponent implements OnInit {
 
   saveAttempt = false;
 
-  constructor(private fb: FormBuilder, private settingsService: SettingsService) { }
+  constructor(private fb: FormBuilder, private settingsService: SettingsService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.buildSelectItems();
@@ -32,9 +33,8 @@ export class SettingsPostprocessingComponent implements OnInit {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
       this.settingsService.updatePostProcessSettings(this.getPostProcessSettings()).subscribe(
-        result => {
-          // updated
-        });
+        () => this.messageService.showSuccessMessage('Postprocessing settings saved.'),
+        () => this.messageService.showErrorMessage('Error while saving postprocessing settings!'));
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SettingsService } from '../../../core/services/api/settings.service';
+import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
 import { NameMappingSettings } from '../../../shared/models/settings';
 
@@ -15,7 +16,7 @@ export class SettingsNamemappingComponent implements OnInit {
 
   saveAttempt = false;
 
-  constructor(private fb: FormBuilder, private settingsService: SettingsService) { }
+  constructor(private fb: FormBuilder, private settingsService: SettingsService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.settingsService.getNameMappingSettings().subscribe(
@@ -28,9 +29,8 @@ export class SettingsNamemappingComponent implements OnInit {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
       this.settingsService.updateNameMappingSettings(this.getNameMappingSettings()).subscribe(
-        result => {
-          // updated
-        });
+        () => this.messageService.showSuccessMessage('Namemapping settings saved.'),
+        () => this.messageService.showErrorMessage('Error while saving namemapping settings!'));
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { SettingsService } from '../../../core/services/api/settings.service';
+import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
 import { NotificationSettings, TwitterRegistration } from '../../../shared/models/settings';
 
@@ -22,7 +23,7 @@ export class SettingsNotificationComponent implements OnInit {
 
   saveAttempt = false;
 
-  constructor(private fb: FormBuilder, private settingsService: SettingsService) { }
+  constructor(private fb: FormBuilder, private settingsService: SettingsService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.buildSelectItems();
@@ -36,9 +37,8 @@ export class SettingsNotificationComponent implements OnInit {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
       this.settingsService.updateNotificationSettings(this.getNotificationSettings()).subscribe(
-        result => {
-          // updated
-        });
+        () => this.messageService.showSuccessMessage('Notification settings saved.'),
+        () => this.messageService.showErrorMessage('Error while saving notification settings!'));
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }
@@ -46,14 +46,8 @@ export class SettingsNotificationComponent implements OnInit {
 
   test(notifierName: string): void {
     this.settingsService.testNotifier(notifierName).subscribe(
-      result => {
-        // ok
-      },
-      error => {
-        // TODO: show error
-        console.error(error);
-      }
-    );
+      () => this.messageService.showSuccessMessage(`Test ${notifierName} notification sent.`),
+      () => this.messageService.showErrorMessage(`Error while testing ${notifierName} notification!`));
   }
 
   registerTwitter(): void {
@@ -62,7 +56,8 @@ export class SettingsNotificationComponent implements OnInit {
         // Show dialog to finish the registration
         this.twitterRegistration = result;
         this.twitterRegistrationDialog = true;
-      });
+      },
+      () => this.messageService.showErrorMessage('Twitter registration failed!'));
   }
 
   authorizeTwitter(): void {
@@ -71,7 +66,9 @@ export class SettingsNotificationComponent implements OnInit {
         // Update form with twitter key and secret
         FormUtils.setFormControlValue(this.settingsForm, 'twitterKey', result.twitterKey);
         FormUtils.setFormControlValue(this.settingsForm, 'twitterSecret', result.twitterSecret);
-      });
+        this.messageService.showSuccessMessage('Twitter registration successful. Please save and test Twitter.');
+      },
+      () => this.messageService.showErrorMessage('Twitter authorization failed!'));
   }
 
   private buildSelectItems(): void {
@@ -89,37 +86,37 @@ export class SettingsNotificationComponent implements OnInit {
   private buildForm(notificationSettings: NotificationSettings): void {
     this.settingsForm = this.fb.group({
       notify: [notificationSettings.notify, [Validators.required]],
-      notifyMail: [notificationSettings.notifyMail, [Validators.required]],
-      mailServer: [notificationSettings.mailServer, [Validators.required]],
-      mailFrom: [notificationSettings.mailFrom, [Validators.required]],
-      mailTo: [notificationSettings.mailTo, [Validators.required]],
-      mailUserName: [notificationSettings.mailUserName, [Validators.required]],
-      mailPassword: [notificationSettings.mailPassword, [Validators.required]],
-      mailSubject: [notificationSettings.mailSubject, [Validators.required]],
-      mailEncryption: [notificationSettings.mailEncryption, [Validators.required]],
-      mailAuthentication: [notificationSettings.mailAuthentication, [Validators.required]],
-      notifyTwitter: [notificationSettings.notifyTwitter, [Validators.required]],
-      twitterKey: [notificationSettings.twitterKey, [Validators.required]],
-      twitterSecret: [notificationSettings.twitterSecret, [Validators.required]],
-      notifyPushalot: [notificationSettings.notifyPushalot, [Validators.required]],
-      pushalotApi: [notificationSettings.pushalotApi, [Validators.required]],
-      notifyPushover: [notificationSettings.notifyPushover, [Validators.required]],
-      pushoverKey: [notificationSettings.pushoverKey, [Validators.required]],
-      pushoverApi: [notificationSettings.pushoverApi, [Validators.required]],
-      pushoverDevices: [notificationSettings.pushoverDevices, [Validators.required]],
-      notifyGrowl: [notificationSettings.notifyGrowl, [Validators.required]],
-      growlHost: [notificationSettings.growlHost, [Validators.required]],
-      growlPort: [notificationSettings.growlPort, [Validators.required]],
-      growlPassword: [notificationSettings.growlPassword, [Validators.required]],
-      growlPriority: [notificationSettings.growlPriority || 0, [Validators.required]],
-      notifyProwl: [notificationSettings.notifyProwl, [Validators.required]],
-      prowlApi: [notificationSettings.prowlApi, [Validators.required]],
-      prowlPriority: [notificationSettings.prowlPriority || 0, [Validators.required]],
-      notifyPushbullet: [notificationSettings.notifyPushbullet, [Validators.required]],
-      pushbulletApi: [notificationSettings.pushbulletApi, [Validators.required]],
-      notifyTelegram: [notificationSettings.notifyTelegram, [Validators.required]],
-      telegramBotApi: [notificationSettings.telegramBotApi, [Validators.required]],
-      telegramChatId: [notificationSettings.telegramChatId, [Validators.required]]
+      notifyMail: [notificationSettings.notifyMail, []],
+      mailServer: [notificationSettings.mailServer, []],
+      mailFrom: [notificationSettings.mailFrom, []],
+      mailTo: [notificationSettings.mailTo, []],
+      mailUserName: [notificationSettings.mailUserName, []],
+      mailPassword: [notificationSettings.mailPassword, []],
+      mailSubject: [notificationSettings.mailSubject, []],
+      mailEncryption: [notificationSettings.mailEncryption, []],
+      mailAuthentication: [notificationSettings.mailAuthentication, []],
+      notifyTwitter: [notificationSettings.notifyTwitter, []],
+      twitterKey: [notificationSettings.twitterKey, []],
+      twitterSecret: [notificationSettings.twitterSecret, []],
+      notifyPushalot: [notificationSettings.notifyPushalot, []],
+      pushalotApi: [notificationSettings.pushalotApi, []],
+      notifyPushover: [notificationSettings.notifyPushover, []],
+      pushoverKey: [notificationSettings.pushoverKey, []],
+      pushoverApi: [notificationSettings.pushoverApi, []],
+      pushoverDevices: [notificationSettings.pushoverDevices, []],
+      notifyGrowl: [notificationSettings.notifyGrowl, []],
+      growlHost: [notificationSettings.growlHost, []],
+      growlPort: [notificationSettings.growlPort, []],
+      growlPassword: [notificationSettings.growlPassword, []],
+      growlPriority: [notificationSettings.growlPriority || 0, []],
+      notifyProwl: [notificationSettings.notifyProwl, []],
+      prowlApi: [notificationSettings.prowlApi, []],
+      prowlPriority: [notificationSettings.prowlPriority || 0, []],
+      notifyPushbullet: [notificationSettings.notifyPushbullet, []],
+      pushbulletApi: [notificationSettings.pushbulletApi, []],
+      notifyTelegram: [notificationSettings.notifyTelegram, []],
+      telegramBotApi: [notificationSettings.telegramBotApi, []],
+      telegramChatId: [notificationSettings.telegramChatId, []]
     });
   }
 
