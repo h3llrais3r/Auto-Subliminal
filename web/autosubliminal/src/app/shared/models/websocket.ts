@@ -5,10 +5,12 @@ import { Page } from './page';
 import { Scheduler } from './scheduler';
 
 // TODO: rename PROCESS_* to SCHEDULER_* once backend is also changed
+// TODO: remove PAGE_RELOAD when completed moved to angular frontend
 export enum SystemWebSocketServerEventType {
   PAGE_RELOAD = 'PAGE_RELOAD',
   SCHEDULER_STARTED = 'PROCESS_STARTED',
-  SCHEDULER_FINISHED = 'PROCESS_FINISHED'
+  SCHEDULER_FINISHED = 'PROCESS_FINISHED',
+  SYSTEM_RESTARTED = 'SYSTEM_RESTARTED'
 }
 
 export type SystemWebSocketServerEventData = Page | Scheduler;

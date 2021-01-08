@@ -11,6 +11,7 @@ export class SystemEventService {
   pageReload: Subject<Page> = new Subject<Page>();
   schedulerStarted: Subject<Scheduler> = new Subject<Scheduler>();
   schedulerFinished: Subject<Scheduler> = new Subject<Scheduler>();
+  systemRestarted: Subject<boolean> = new Subject<boolean>();
 
   constructor() { }
 
@@ -24,5 +25,9 @@ export class SystemEventService {
 
   notifySchedulerFinished(scheduler: Scheduler): void {
     this.schedulerFinished.next(scheduler);
+  }
+
+  notifySystemRestarted(): void {
+    this.systemRestarted.next(true);
   }
 }

@@ -3,6 +3,7 @@
 import threading
 
 import autosubliminal.application
+from autosubliminal.util.websocket import send_websocket_event, SYSTEM_RESTARTED
 
 
 def restart(exit=False):
@@ -10,6 +11,7 @@ def restart(exit=False):
     Thread to restart the application.
     """
     threading.Thread(name='AppRestarter', target=autosubliminal.application.restart, kwargs={'exit': exit}).start()
+    send_websocket_event(SYSTEM_RESTARTED)
 
 
 def shutdown():

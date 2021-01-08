@@ -7,17 +7,12 @@ import cherrypy
 from requests_oauthlib.oauth1_session import OAuth1Session
 
 import autosubliminal
-from autosubliminal import notifiers
-from autosubliminal.config import write_config_general_section, write_config_logging_section, \
-    write_config_webserver_section, write_config_subliminal_section, write_config_shownamemapping_section, \
-    write_config_addic7edshownamemapping_section, write_config_alternativeshownamemapping_section, \
-    write_config_movienamemapping_section, write_config_alternativemovienamemapping_section, \
-    write_config_skipshow_section, write_config_skipmovie_section, write_config_notification_section, \
-    write_config_postprocessing_section
+from autosubliminal import config, notifiers
+from autosubliminal.config import write_config_general_section
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import camelize, decamelize, dict_to_list, find_path_in_paths, get_boolean, \
     list_to_dict, to_dict
-from autosubliminal.util.websocket import send_websocket_notification
+from autosubliminal.util.websocket import send_websocket_notification, send_websocket_event, SYSTEM_RESTARTED
 
 log = logging.getLogger(__name__)
 
@@ -40,6 +35,16 @@ class SettingsApi(RestResource):
         self.notification = _NotificationApi()
         self.postprocessing = _PostProcessingApi()
 
+    @staticmethod
+    def save_and_restart_if_needed(section):
+        # Save to the config and restart if needed
+        restart = config.write_config(section)
+        send_websocket_notification('%s settings updated.' % section.capitalize())
+        if restart:
+            from autosubliminal import system  # Import here to prevent api test from failing (circular import)
+            system.restart()
+
+
 
 @cherrypy.popargs('general_setting_name')
 class _GeneralApi(RestResource):
@@ -49,6 +54,7 @@ class _GeneralApi(RestResource):
 
     def __init__(self):
         super(_GeneralApi, self).__init__()
+        self._section = 'general'
 
         # Set the allowed methods
         self.allowed_methods = ('GET', 'PUT')
@@ -136,8 +142,7 @@ class _GeneralApi(RestResource):
             if 'timestamp_format' in input_dict:
                 autosubliminal.TIMESTAMPFORMAT = input_dict['timestamp_format']
 
-            write_config_general_section()
-            send_websocket_notification('General settings updated.')
+            SettingsApi.save_and_restart_if_needed(self._section)
 
             return self._no_content()
 
@@ -152,6 +157,7 @@ class _LoggingApi(RestResource):
 
     def __init__(self):
         super(_LoggingApi, self).__init__()
+        self._section = 'logging'
 
         # Set the allowed methods
         self.allowed_methods = ('GET', 'PUT')
@@ -200,8 +206,7 @@ class _LoggingApi(RestResource):
             if 'log_level_console' in input_dict:
                 autosubliminal.LOGLEVELCONSOLE = input_dict['log_level_console']
 
-            write_config_logging_section()
-            send_websocket_notification('Log settings updated.')
+            SettingsApi.save_and_restart_if_needed(self._section)
 
             return self._no_content()
 
@@ -216,6 +221,7 @@ class _WebserverApi(RestResource):
 
     def __init__(self):
         super(_WebserverApi, self).__init__()
+        self._section = 'webserver'
 
         # Set the allowed methods
         self.allowed_methods = ('GET', 'PUT')
@@ -255,8 +261,7 @@ class _WebserverApi(RestResource):
             if 'launch_browser' in input_dict:
                 autosubliminal.LAUNCHBROWSER = input_dict['launch_browser']
 
-            write_config_webserver_section()
-            send_websocket_notification('Webserver settings updated.')
+            SettingsApi.save_and_restart_if_needed(self._section)
 
             return self._no_content()
 
@@ -271,6 +276,7 @@ class _SubliminalApi(RestResource):
 
     def __init__(self):
         super(_SubliminalApi, self).__init__()
+        self._section = 'subliminal'
 
         # Set the allowed methods
         self.allowed_methods = ('GET', 'PUT')
@@ -379,8 +385,7 @@ class _SubliminalApi(RestResource):
                 movie_min_match_score += 15
             autosubliminal.MOVIEMINMATCHSCORE = movie_min_match_score
 
-            write_config_subliminal_section()
-            send_websocket_notification('Subliminal settings updated.')
+            SettingsApi.save_and_restart_if_needed(self._section)
 
             return self._no_content()
 
@@ -395,6 +400,7 @@ class _NameMappingApi(RestResource):
 
     def __init__(self):
         super(_NameMappingApi, self).__init__()
+        self._section = 'namemapping'
 
         # Set the allowed methods
         self.allowed_methods = ('GET', 'PUT')
@@ -431,12 +437,7 @@ class _NameMappingApi(RestResource):
             if 'alternative_movie_name_mapping' in input_dict:
                 autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = list_to_dict(input_dict['alternative_movie_name_mapping'])
 
-            write_config_shownamemapping_section()
-            write_config_addic7edshownamemapping_section()
-            write_config_alternativeshownamemapping_section()
-            write_config_movienamemapping_section()
-            write_config_alternativemovienamemapping_section()
-            send_websocket_notification('Namemapping settings updated.')
+            SettingsApi.save_and_restart_if_needed(self._section)
 
             return self._no_content()
 
@@ -451,6 +452,7 @@ class _SkipMappingApi(RestResource):
 
     def __init__(self):
         super(_SkipMappingApi, self).__init__()
+        self._section = 'skipmapping'
 
         # Set the allowed methods
         self.allowed_methods = ('GET', 'PUT')
@@ -478,9 +480,7 @@ class _SkipMappingApi(RestResource):
             if 'skip_movie_mapping' in input_dict:
                 autosubliminal.SKIPMOVIE = list_to_dict(input_dict['skip_movie_mapping'])
 
-            write_config_skipshow_section()
-            write_config_skipmovie_section()
-            send_websocket_notification('Skipmapping settings updated.')
+            SettingsApi.save_and_restart_if_needed(self._section)
 
             return self._no_content()
 
@@ -495,6 +495,7 @@ class _NotificationApi(RestResource):
 
     def __init__(self):
         super(_NotificationApi, self).__init__()
+        self._section = 'notification'
 
         # Set the allowed methods
         self.allowed_methods = ('GET', 'PUT', 'POST', 'PATCH')
@@ -612,8 +613,7 @@ class _NotificationApi(RestResource):
             if 'telegram_chat_id' in input_dict:
                 autosubliminal.TELEGRAMCHATID = input_dict['telegram_chat_id']
 
-            write_config_notification_section()
-            send_websocket_notification('Notification settings updated.')
+            SettingsApi.save_and_restart_if_needed(self._section)
 
             return self._no_content()
 
@@ -698,6 +698,7 @@ class _PostProcessingApi(RestResource):
 
     def __init__(self):
         super(_PostProcessingApi, self).__init__()
+        self._section = 'postprocessing'
 
         # Set the allowed methods
         self.allowed_methods = ('GET', 'PUT')
@@ -740,8 +741,7 @@ class _PostProcessingApi(RestResource):
             if 'movie_post_process_args' in input_dict:
                 autosubliminal.MOVIEPOSTPROCESSCMDARGS = input_dict['movie_post_process_args']
 
-            write_config_postprocessing_section()
-            send_websocket_notification('Postprocessing settings updated.')
+            SettingsApi.save_and_restart_if_needed(self._section)
 
             return self._no_content()
 
