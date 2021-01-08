@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { interval } from 'rxjs';
 import { SystemService } from '../../../core/services/api/system.service';
 
@@ -12,26 +12,34 @@ export class SystemRestartComponent implements OnInit {
 
   restarting = false;
 
-  constructor(private router: Router, private systemService: SystemService) { }
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private systemService: SystemService) { }
 
   ngOnInit(): void {
-    this.systemService.restart().subscribe(
-      result => {
-        this.restarting = result;
-        const check = interval(2000).subscribe(
-          () => {
-            this.systemService.isAlive().subscribe(
-              alive => {
-                if (alive) {
-                  this.restarting = false;
-                  this.router.navigateByUrl('/home');
-                  check.unsubscribe(); // stop the check
-                }
-                // continue the check
-              });
-          }
-        );
-      });
+    this.activatedRoute.queryParams.subscribe(params => {
+      // If restart is already triggered, just check when started
+      if (params.triggered) {
+        this.checkStarted();
+      } else {
+        // If restart is not yet triggered, trigger it and check when started
+        this.systemService.restart().subscribe(() => this.checkStarted());
+      }
+    });
   }
 
+  private checkStarted(): void {
+    this.restarting = true;
+    const check = interval(2000).subscribe(
+      () => {
+        this.systemService.isAlive().subscribe(
+          alive => {
+            if (alive) {
+              this.restarting = false;
+              this.router.navigateByUrl('/home');
+              check.unsubscribe(); // stop the check
+            }
+            // continue the check
+          });
+      }
+    );
+  }
 }

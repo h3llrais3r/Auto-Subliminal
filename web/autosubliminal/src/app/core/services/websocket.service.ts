@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Message, MessageService } from 'primeng/api';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import { interval } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
+import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 import { appSettings } from '../../app-settings.service';
 import { Page } from '../../shared/models/page';
 import { Scheduler } from '../../shared/models/scheduler';
@@ -15,6 +17,14 @@ export class WebSocketService {
   private systemWebsocket: WebSocketSubject<SystemWebSocketMessage>;
 
   constructor(private messageService: MessageService, private systemEventService: SystemEventService) {
+    this.connect();
+  }
+
+  public sendMessageThroughSystemWebSocket(systemWebSocketClientMessage: SystemWebSocketClientMessage): void {
+    this.systemWebsocket.next(systemWebSocketClientMessage);
+  }
+
+  private connect(): void {
     this.systemWebsocket = this.createSystemWebSocket();
     this.systemWebsocket.subscribe(
       serverMessage => {
@@ -30,6 +40,9 @@ export class WebSocketService {
             case SystemWebSocketServerEventType.SCHEDULER_FINISHED:
               this.systemEventService.notifySchedulerFinished(new Scheduler(serverEvent.event.data));
               break;
+            case SystemWebSocketServerEventType.SYSTEM_RESTARTED:
+              this.systemEventService.notifySystemRestarted();
+              break;
             default:
               console.error(`Invalid websocket server event type: ${serverEvent.event.type}`);
           }
@@ -44,11 +57,19 @@ export class WebSocketService {
         } else {
           console.error(`Invalid websocket server message type: ${serverMessage.type}`);
         }
+      },
+      () => {
+        console.error('Websocket connection error');
+        this.reconnect();
       });
   }
 
-  public sendMessageThroughSystemWebSocket(systemWebSocketClientMessage: SystemWebSocketClientMessage): void {
-    this.systemWebsocket.next(systemWebSocketClientMessage);
+  private reconnect(): void {
+    interval(2000).pipe(takeWhile(() => !this.systemWebsocket)).subscribe(
+      () => {
+        console.log('Reconnecting to websocket');
+        this.connect();
+      });
   }
 
   private createSystemWebSocket(): WebSocketSubject<SystemWebSocketServerMessage> {
@@ -56,7 +77,15 @@ export class WebSocketService {
     if (window.location.protocol === 'https:') {
       protocol = 'wss:';
     }
-    const url = `${protocol}//${window.location.host}${appSettings.webRoot}/system/websocket`;
-    return webSocket(url);
+    const config: WebSocketSubjectConfig<SystemWebSocketServerMessage> = {
+      url: `${protocol}//${window.location.host}${appSettings.webRoot}/system/websocket`,
+      closeObserver: {
+        next: () => {
+          this.systemWebsocket = null;
+          this.reconnect();
+        }
+      }
+    };
+    return webSocket(config);
   }
 }
