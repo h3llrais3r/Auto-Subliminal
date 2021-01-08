@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GeneralSettings, LogSettings, NameMappingSettings, NotificationSettings, PostProcessSettings, SkipMappingSettings, SubliminalSettings, TwitterAutorization, TwitterRegistration, WebServerSettings } from '../../../shared/models/settings';
+import { GeneralSettings, LibrarySettings, LogSettings, NameMappingSettings, NotificationSettings, PostProcessSettings, SkipMappingSettings, SubliminalSettings, TwitterAutorization, TwitterRegistration, WebServerSettings } from '../../../shared/models/settings';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -25,6 +25,18 @@ export class SettingsService extends ApiServiceTemplate {
 
   updateGeneralSettings(generalSettings: GeneralSettings): Observable<boolean> {
     return this.httpClient.put(`${this.URL}/general`, JSON.stringify(generalSettings), this.options)
+      .pipe(map(() => true));
+  }
+
+  // Library settings
+
+  getLibrarySettings(): Observable<LibrarySettings> {
+    return this.httpClient.get(`${this.URL}/library`, this.options)
+      .pipe(map(result => new LibrarySettings(result)));
+  }
+
+  updateLibrarySettings(librarySettings: LibrarySettings): Observable<boolean> {
+    return this.httpClient.put(`${this.URL}/library`, JSON.stringify(librarySettings), this.options)
       .pipe(map(() => true));
   }
 
