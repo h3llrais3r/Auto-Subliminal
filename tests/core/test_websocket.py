@@ -6,12 +6,12 @@ import autosubliminal
 from autosubliminal.core.websocket import WebSocketBroadCaster, WebSocketHandler
 
 
-class MyProcess(object):
+class MyScheduler(object):
     def run(self):
         pass
 
 
-autosubliminal.SCHEDULERS = {'MyProcess': MyProcess()}
+autosubliminal.SCHEDULERS = {'MyScheduler': MyScheduler()}
 
 
 def test_receive_message_text(mocker):
@@ -33,9 +33,9 @@ def test_handle_message_event_run_process():
     message = {
         'type': 'EVENT',
         'event': {
-            'type': 'RUN_PROCESS',
+            'type': 'RUN_SCHEDULER',
             'data': {
-                'name': 'MyProcess'
+                'name': 'MyScheduler'
             }
         }
     }
@@ -47,7 +47,7 @@ def test_handle_message_event_run_process_unsupported():
     message = {
         'type': 'event',
         'event': {
-            'type': 'RUN_PROCESS',
+            'type': 'RUN_SCHEDULER',
             'data': {
                 'name': 'NotSupportedProcess'
             }
@@ -61,9 +61,9 @@ def test_handle_message_event_invalid():
     message = {
         'type': 'EVENT',
         'event': {
-            'type': 'RUN_PROCESS',
+            'type': 'RUN_SCHEDULER',
             'data': {
-                'name': 'MyProcess'
+                'name': 'MyScheduler'
             }
         },
         'invalid': 'invalid'
@@ -77,9 +77,9 @@ def test_websocket_broadcaster(monkeypatch, mocker):
     message = {
         'type': 'EVENT',
         'event': {
-            'type': 'PROCESS_STARTED',
+            'type': 'SCHEDULER_START',
             'data': {
-                'name': 'MyProcess'
+                'name': 'MyScheduler'
             }
         }
     }
