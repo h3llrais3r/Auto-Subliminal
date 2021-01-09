@@ -42,6 +42,7 @@ settings_json = '{"antiCaptchaProviders": [], ' \
                 '"developerMode": true, ' \
                 '"imdbUrl": "http://www.dereferer.org/?http://www.imdb.com/title/", ' \
                 '"languages": [{"code": "nl", "name": "Dutch"}], ' \
+                '"libraryMode": false, ' \
                 '"logReversed": false, ' \
                 '"pathSeparator": "/", ' \
                 '"scanDisk": "DiskScanner", ' \
@@ -77,6 +78,7 @@ def test_get_settings(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.SCANLIBRARY', MyScheduler('LibraryScanner'))
     monkeypatch.setattr('autosubliminal.CHECKSUB', MyScheduler('SubChecker'))
     monkeypatch.setattr('autosubliminal.CHECKVERSION', MyScheduler('VersionChecker'))
+    monkeypatch.setattr('autosubliminal.LIBRARYMODE', False)
     monkeypatch.setattr('autosubliminal.LOGREVERSED', False)
     monkeypatch.setattr('autosubliminal.DEREFERURL', 'http://www.dereferer.org/?')
     monkeypatch.setattr('autosubliminal.TVDBURL', 'http://thetvdb.com/?tab=series&id=')

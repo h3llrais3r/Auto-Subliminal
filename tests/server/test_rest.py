@@ -42,6 +42,14 @@ def test_rest_put(monkeypatch):
         resource.default()
 
 
+def test_rest_patch(monkeypatch):
+    monkeypatch.setattr('cherrypy.request.method', 'PATCH')
+    resource = RestResource()
+    resource.allowed_methods = ('PATCH',)
+    with pytest.raises(MethodNotImplemented):
+        resource.default()
+
+
 def test_rest_delete(monkeypatch):
     monkeypatch.setattr('cherrypy.request.method', 'DELETE')
     resource = RestResource()

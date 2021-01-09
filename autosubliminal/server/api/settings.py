@@ -683,7 +683,7 @@ class _NotificationApi(RestResource):
                 import autosubliminal.notifiers.twitter as twitter_notifier
 
                 # Getting request token
-                if not 'token_key' in input_dict and not 'token_secret' in input_dict:
+                if 'token_key' not in input_dict and 'token_secret' not in input_dict:
                     oauth_client = OAuth1Session(client_key=twitter_notifier.CONSUMER_KEY,
                                                  client_secret=twitter_notifier.CONSUMER_SECRET)
                     try:
