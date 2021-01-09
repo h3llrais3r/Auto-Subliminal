@@ -22,16 +22,6 @@ export class SystemService extends ApiServiceTemplate {
       .pipe(map((result) => result.alive));
   }
 
-  restart(): Observable<boolean> {
-    return this.httpClient.post<boolean>(`${this.URL}/restart`, {}, this.options)
-      .pipe(map(() => true));
-  }
-
-  shutdown(): Observable<boolean> {
-    return this.httpClient.post<boolean>(`${this.URL}/shutdown`, {}, this.options)
-      .pipe(map(() => true));
-  }
-
   getPaths(): Observable<PathInfo[]> {
     return this.httpClient.get<PathInfo[]>(`${this.URL}/paths`, this.options)
       .pipe(map(result => result.map(obj => new PathInfo(obj))));

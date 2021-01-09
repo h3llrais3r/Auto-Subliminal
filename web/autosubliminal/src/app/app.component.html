@@ -4,7 +4,7 @@
     <app-page-header></app-page-header>
   </div>
   <div class="app-content">
-    <router-outlet *ngIf="appSettingsLoaded"></router-outlet>
+    <router-outlet *ngIf="appSettingsLoaded && systemStarted"></router-outlet>
   </div>
   <div class="app-footer">
     <app-page-footer></app-page-footer>
@@ -13,3 +13,55 @@
 
 <!-- Toast messages -->
 <p-toast position="bottom-right"></p-toast>
+
+<!-- System start dialog -->
+<p-dialog [(visible)]="systemStart"
+          [modal]="true"
+          [closable]="false"
+          [resizable]="false"
+          [showHeader]="false">
+  <div class="dialog-content">
+    <h2>Auto-Subliminal is starting...</h2>
+    <br>
+    <i class="pi pi-spin pi-spinner" aria-hidden="true" title="Starting..."></i>
+  </div>
+</p-dialog>
+
+<!-- System restart dialog -->
+<p-dialog [(visible)]="systemRestart"
+          [modal]="true"
+          [closable]="false"
+          [resizable]="false"
+          [showHeader]="false">
+  <div class="dialog-content">
+    <h2>Auto-Subliminal is restarting...</h2>
+    <br>
+    <i class="pi pi-spin pi-spinner" aria-hidden="true" title="Restarting..."></i>
+  </div>
+</p-dialog>
+
+<!-- System shutdown dialog -->
+<p-dialog [(visible)]="systemShutdown"
+          [modal]="true"
+          [closable]="false"
+          [resizable]="false"
+          [showHeader]="false">
+  <div class="dialog-content">
+    <h2>Auto-Subliminal is shutting down...</h2>
+    <br>
+    <i class="pi pi-spin pi-spinner" aria-hidden="true" title="Shutting down..."></i>
+  </div>
+</p-dialog>
+
+<!-- System shutdown finished dialog -->
+<p-dialog [(visible)]="systemShutdownFinished"
+          [modal]="true"
+          [closable]="false"
+          [resizable]="false"
+          [showHeader]="false">
+  <div class="dialog-content">
+    <h2>Auto-Subliminal has been shutdown</h2>
+    <br>
+    <i class="pi pi-power-off" aria-hidden="true" title="Shutdown"></i>
+  </div>
+</p-dialog>

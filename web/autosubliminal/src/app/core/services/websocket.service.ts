@@ -3,7 +3,6 @@ import { interval } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 import { appSettings } from '../../app-settings.service';
-import { Page } from '../../shared/models/page';
 import { Scheduler } from '../../shared/models/scheduler';
 import { SystemWebSocketClientMessage, SystemWebSocketMessage, SystemWebSocketServerEvent, SystemWebSocketServerEventType, SystemWebSocketServerMessage, SystemWebSocketServerNotification, SystemWebSocketServerNotificationType } from '../../shared/models/websocket';
 import { MessageService, MessageSeverity } from './message.service';
@@ -13,6 +12,8 @@ import { SystemEventService } from './system-event.service';
   providedIn: 'root'
 })
 export class WebSocketService {
+
+  private readonly RECONNECT_INTERVAL = 2000;
 
   private systemWebsocket: WebSocketSubject<SystemWebSocketMessage>;
 
@@ -31,17 +32,20 @@ export class WebSocketService {
         if (serverMessage.type === 'EVENT') {
           const serverEvent = serverMessage as SystemWebSocketServerEvent;
           switch (serverEvent.event.type) {
-            case SystemWebSocketServerEventType.PAGE_RELOAD:
-              this.systemEventService.notifyPageReload(new Page(serverEvent.event.data));
+            case SystemWebSocketServerEventType.SYSTEM_START:
+              this.systemEventService.notifySystemStart();
               break;
-            case SystemWebSocketServerEventType.SCHEDULER_STARTED:
-              this.systemEventService.notifySchedulerStarted(new Scheduler(serverEvent.event.data));
+            case SystemWebSocketServerEventType.SYSTEM_RESTART:
+              this.systemEventService.notifySystemRestart();
               break;
-            case SystemWebSocketServerEventType.SCHEDULER_FINISHED:
-              this.systemEventService.notifySchedulerFinished(new Scheduler(serverEvent.event.data));
+            case SystemWebSocketServerEventType.SYSTEM_SHUTDOWN:
+              this.systemEventService.notifySystemShutdown();
               break;
-            case SystemWebSocketServerEventType.SYSTEM_RESTARTED:
-              this.systemEventService.notifySystemRestarted();
+            case SystemWebSocketServerEventType.SCHEDULER_START:
+              this.systemEventService.notifySchedulerStart(new Scheduler(serverEvent.event.data));
+              break;
+            case SystemWebSocketServerEventType.SCHEDULER_FINISH:
+              this.systemEventService.notifySchedulerFinish(new Scheduler(serverEvent.event.data));
               break;
             default:
               console.error(`Invalid websocket server event type: ${serverEvent.event.type}`);
@@ -60,7 +64,7 @@ export class WebSocketService {
   }
 
   private reconnect(): void {
-    interval(2000).pipe(takeWhile(() => !this.systemWebsocket)).subscribe(
+    interval(this.RECONNECT_INTERVAL).pipe(takeWhile(() => !this.systemWebsocket)).subscribe(
       () => {
         console.log('Reconnecting to websocket');
         this.connect();

@@ -13,7 +13,7 @@ from six import add_metaclass, text_type
 import autosubliminal
 from autosubliminal.util.common import camelize, to_dict
 from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock
-from autosubliminal.util.websocket import PROCESS_FINISHED, PROCESS_STARTED, send_websocket_event
+from autosubliminal.util.websocket import send_websocket_event, SCHEDULER_START, SCHEDULER_FINISH
 
 log = logging.getLogger(__name__)
 
@@ -120,7 +120,7 @@ class Scheduler(object):
         try:
             # Mark as running
             self.process.running = True
-            send_websocket_event(PROCESS_STARTED, data=self.to_dict(camelize))
+            send_websocket_event(SCHEDULER_START, data=self.to_dict(camelize))
 
             log.debug('Running %s thread process', self.name)
             self.process.run(self._force_run)
@@ -133,7 +133,7 @@ class Scheduler(object):
 
             # Mark as finished
             self.process.running = False
-            send_websocket_event(PROCESS_FINISHED, data=self.to_dict(camelize))
+            send_websocket_event(SCHEDULER_FINISH, data=self.to_dict(camelize))
 
         except:
             print(traceback.format_exc())

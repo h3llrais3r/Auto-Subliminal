@@ -143,17 +143,18 @@ export class PageHeaderComponent implements OnInit {
           {
             label: 'Scan disk',
             icon: 'pi pi-fw pi-play',
-            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_PROCESS, appSettings.scanDisk))
+            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SCHEDULER, appSettings.scanDisk))
           },
           {
             label: 'Check subtitles',
             icon: 'pi pi-fw pi-play',
-            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_PROCESS, appSettings.checkSub))
+            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SCHEDULER, appSettings.checkSub))
           },
           {
             label: 'Scan library',
             icon: 'pi pi-fw pi-play',
-            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_PROCESS, appSettings.scanLibrary))
+            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SCHEDULER, appSettings.scanLibrary)),
+            visible: appSettings.libraryMode
           },
           {
             separator: true
@@ -161,7 +162,31 @@ export class PageHeaderComponent implements OnInit {
           {
             label: 'Check version',
             icon: 'pi pi-fw pi-tag',
-            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_PROCESS, appSettings.checkVersion))
+            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SCHEDULER, appSettings.checkVersion))
+          },
+          {
+            separator: true
+          },
+          {
+            label: 'Flush cache',
+            icon: 'pi pi-fw pi-times',
+            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushCache'))
+          },
+          {
+            label: 'Flush wanted items',
+            icon: 'pi pi-fw pi-times',
+            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushWantedItems'))
+          },
+          {
+            label: 'Flush last downloads',
+            icon: 'pi pi-fw pi-times',
+            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushLastDownloads'))
+          },
+          {
+            label: 'Flush library',
+            icon: 'pi pi-fw pi-times',
+            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushLibrary')),
+            visible: appSettings.libraryMode
           },
           {
             separator: true
@@ -169,12 +194,12 @@ export class PageHeaderComponent implements OnInit {
           {
             label: 'Restart',
             icon: 'pi pi-fw pi-refresh',
-            routerLink: '/system/restart'
+            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'restart'))
           },
           {
             label: 'Shutdown',
             icon: 'pi pi-fw pi-power-off',
-            routerLink: '/system/shutdown'
+            command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'shutdown'))
           },
           {
             separator: true
@@ -189,4 +214,6 @@ export class PageHeaderComponent implements OnInit {
       }
     ];
   }
+
+
 }

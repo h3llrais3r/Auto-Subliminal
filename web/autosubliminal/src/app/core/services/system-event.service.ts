@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { Page } from '../../shared/models/page';
 import { Scheduler } from '../../shared/models/scheduler';
 
 @Injectable({
@@ -8,26 +7,31 @@ import { Scheduler } from '../../shared/models/scheduler';
 })
 export class SystemEventService {
 
-  pageReload: Subject<Page> = new Subject<Page>();
-  schedulerStarted: Subject<Scheduler> = new Subject<Scheduler>();
-  schedulerFinished: Subject<Scheduler> = new Subject<Scheduler>();
-  systemRestarted: Subject<boolean> = new Subject<boolean>();
+  systemStart: Subject<boolean> = new Subject<boolean>();
+  systemRestart: Subject<boolean> = new Subject<boolean>();
+  systemShutdown: Subject<boolean> = new Subject<boolean>();
+  schedulerStart: Subject<Scheduler> = new Subject<Scheduler>();
+  schedulerFinish: Subject<Scheduler> = new Subject<Scheduler>();
 
   constructor() { }
 
-  notifyPageReload(page: Page): void {
-    this.pageReload.next(page);
+  notifySystemStart(): void {
+    this.systemStart.next(true);
   }
 
-  notifySchedulerStarted(scheduler: Scheduler): void {
-    this.schedulerStarted.next(scheduler);
+  notifySystemRestart(): void {
+    this.systemRestart.next(true);
   }
 
-  notifySchedulerFinished(scheduler: Scheduler): void {
-    this.schedulerFinished.next(scheduler);
+  notifySystemShutdown(): void {
+    this.systemShutdown.next(true);
   }
 
-  notifySystemRestarted(): void {
-    this.systemRestarted.next(true);
+  notifySchedulerStart(scheduler: Scheduler): void {
+    this.schedulerStart.next(scheduler);
+  }
+
+  notifySchedulerFinish(scheduler: Scheduler): void {
+    this.schedulerFinish.next(scheduler);
   }
 }

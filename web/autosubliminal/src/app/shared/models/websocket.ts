@@ -4,13 +4,12 @@
 import { Page } from './page';
 import { Scheduler } from './scheduler';
 
-// TODO: rename PROCESS_* to SCHEDULER_* once backend is also changed
-// TODO: remove PAGE_RELOAD when completed moved to angular frontend
 export enum SystemWebSocketServerEventType {
-  PAGE_RELOAD = 'PAGE_RELOAD',
-  SCHEDULER_STARTED = 'PROCESS_STARTED',
-  SCHEDULER_FINISHED = 'PROCESS_FINISHED',
-  SYSTEM_RESTARTED = 'SYSTEM_RESTARTED'
+  SYSTEM_START = 'SYSTEM_START',
+  SYSTEM_RESTART = 'SYSTEM_RESTART',
+  SYSTEM_SHUTDOWN = 'SYSTEM_SHUTDOWN',
+  SCHEDULER_START = 'SCHEDULER_START',
+  SCHEDULER_FINISH = 'SCHEDULER_FINISH'
 }
 
 export type SystemWebSocketServerEventData = Page | Scheduler;
@@ -51,7 +50,8 @@ export class SystemWebSocketServerNotification {
 
 // Websocket event sent from client
 export enum SystemWebSocketClientEventType {
-  RUN_PROCESS = 'RUN_PROCESS'
+  RUN_SCHEDULER = 'RUN_SCHEDULER',
+  RUN_SYSTEM_PROCESS = 'RUN_SYSTEM_PROCESS'
 }
 
 export class SystemWebSocketClientEvent {
