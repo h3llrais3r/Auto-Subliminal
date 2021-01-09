@@ -125,7 +125,7 @@ export class PageHeaderComponent implements OnInit {
       },
       {
         label: 'System',
-        icon: 'pi pi-fw pi-cog',
+        icon: 'pi pi-fw pi-desktop',
         items: [
           {
             label: 'Info',
@@ -173,12 +173,12 @@ export class PageHeaderComponent implements OnInit {
             command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushCache'))
           },
           {
-            label: 'Flush wanted items',
+            label: 'Flush wanted',
             icon: 'pi pi-fw pi-times',
             command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushWantedItems'))
           },
           {
-            label: 'Flush last downloads',
+            label: 'Flush downloads',
             icon: 'pi pi-fw pi-times',
             command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushLastDownloads'))
           },
