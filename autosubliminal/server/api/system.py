@@ -21,8 +21,6 @@ class SystemApi(RestResource):
 
         # Add all sub paths here: /api/system/...
         self.alive = _AliveApi()
-        self.restart = _RestartApi()
-        self.shutdown = _ShutdownApi()
         self.settings = _SettingsApi()
         self.schedulers = _SchedulersApi()
         self.paths = _PathsApi()
@@ -45,44 +43,6 @@ class _AliveApi(RestResource):
             return {'alive': True}
         else:
             return {'alive': False}
-
-
-class _RestartApi(RestResource):
-    """
-    Rest resource for handling the /api/system/restart path.
-    """
-
-    def __init__(self):
-        super(_RestartApi, self).__init__()
-
-        # Set the allowed methods
-        self.allowed_methods = ('POST',)
-
-    def post(self):
-        """Restart the system."""
-        from autosubliminal import system  # Import here to prevent api test from failing (circular import)
-        system.restart()
-
-        return self._no_content()
-
-
-class _ShutdownApi(RestResource):
-    """
-    Rest resource for handling the /api/system/shutdown path.
-    """
-
-    def __init__(self):
-        super(_ShutdownApi, self).__init__()
-
-        # Set the allowed methods
-        self.allowed_methods = ('POST',)
-
-    def post(self):
-        """Shutdown the system."""
-        from autosubliminal import system  # Import here to prevent api test from failing (circular import)
-        system.shutdown()
-
-        return self._no_content()
 
 
 class _SettingsApi(RestResource):
@@ -109,6 +69,7 @@ class _SettingsApi(RestResource):
             'check_sub': autosubliminal.CHECKSUB.name,
             'check_sub_next_run_in_ms': get_next_scheduler_run_in_ms(autosubliminal.CHECKSUB),
             'check_version': autosubliminal.CHECKVERSION.name,
+            'library_mode': autosubliminal.LIBRARYMODE,
             'log_reversed': autosubliminal.LOGREVERSED,
             'tvdb_url': autosubliminal.DEREFERURL + autosubliminal.TVDBURL,
             'imdb_url': autosubliminal.DEREFERURL + autosubliminal.IMDBURL,

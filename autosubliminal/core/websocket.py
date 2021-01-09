@@ -10,15 +10,17 @@ from ws4py.messaging import TextMessage
 from ws4py.websocket import WebSocket
 
 import autosubliminal
+from autosubliminal import system
 from autosubliminal.core.runner import Runner
 from autosubliminal.util.encoding import b2u
 from autosubliminal.util.json import from_json, to_json
 
 log = logging.getLogger(__name__)
 
-RUN_PROCESS = 'RUN_PROCESS'
+RUN_SCHEDULER = 'RUN_SCHEDULER'
+RUN_SYSTEM_PROCESS = 'RUN_SYSTEM_PROCESS'
 
-SUPPORTED_EVENT_TYPES = [RUN_PROCESS]
+SUPPORTED_EVENT_TYPES = [RUN_SCHEDULER, RUN_SYSTEM_PROCESS]
 
 MESSAGE_SCHEMA = Schema({
     'type': 'EVENT',
@@ -47,12 +49,35 @@ class WebSocketHandler(WebSocket):
         handled = False
         # Check for a valid event message structure
         if self.check_message_structure(message):
-            # Handle a RUN_PROCESS event
             event = message['event']
-            if event['type'] == RUN_PROCESS:
+
+            # Handle a RUN_SCHEDULER event
+            if event['type'] == RUN_SCHEDULER:
                 name = event['data']['name']
                 if name in autosubliminal.SCHEDULERS:
                     autosubliminal.SCHEDULERS[name].run()
+                    handled = True
+
+            # Handle a RUN_SYSTEM_PROCESS event
+            elif event['type'] == RUN_SYSTEM_PROCESS:
+                name = event['data']['name']
+                if name == 'restart':
+                    system.restart()
+                    handled = True
+                elif name == 'shutdown':
+                    system.shutdown()
+                    handled = True
+                elif name == 'flushCache':
+                    system.flush_cache()
+                    handled = True
+                elif name == 'flushWantedItems':
+                    system.flush_wanted_items()
+                    handled = True
+                elif name == 'flushLastDownloads':
+                    system.flush_last_downloads()
+                    handled = True
+                elif name == 'flushLibrary':
+                    system.flush_library()
                     handled = True
 
         if not handled:

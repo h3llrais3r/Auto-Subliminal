@@ -21,25 +21,25 @@ export class SystemStatusComponent implements OnInit {
   ngOnInit(): void {
     // Get schedulers
     this.systemService.getSchedulers().subscribe(
-      result => {
-        this.schedulers = result;
+      schedulers => {
+        this.schedulers = schedulers;
+        // Subscribe on scheduler start events
+        this.systemEventService.schedulerStart.subscribe(
+          result => {
+            // Replace started scheduler in list of schedulers
+            this.schedulers = this.schedulers.map(scheduler => scheduler.name === result.name ? result : scheduler);
+          });
+        // Subscribe on scheduler finish events
+        this.systemEventService.schedulerFinish.subscribe(
+          result => {
+            // Replace finished scheduler in list of schedulers
+            this.schedulers = this.schedulers.map(scheduler => scheduler.name === result.name ? result : scheduler);
+          });
       });
     // Get paths
     this.systemService.getPaths().subscribe(
       result => {
         this.paths = result;
-      });
-    // Subscribe on scheduler started events
-    this.systemEventService.schedulerStarted.subscribe(
-      result => {
-        // Replace started scheduler in list of schedulers
-        this.schedulers = this.schedulers.map(scheduler => scheduler.name === result.name ? result : scheduler);
-      });
-    // Subscribe on scheduler finished events
-    this.systemEventService.schedulerFinished.subscribe(
-      result => {
-        // Replace finished scheduler in list of schedulers
-        this.schedulers = this.schedulers.map(scheduler => scheduler.name === result.name ? result : scheduler);
       });
   }
 

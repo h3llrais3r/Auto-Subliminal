@@ -5,6 +5,7 @@ import os
 import signal
 import subprocess
 import sys
+import time
 import webbrowser
 
 import cherrypy
@@ -24,6 +25,7 @@ from autosubliminal.subchecker import SubChecker
 from autosubliminal.util.encoding import s2n
 from autosubliminal.util.json import json_out_handler
 from autosubliminal.util.packaging import get_library_version
+from autosubliminal.util.websocket import send_websocket_event, SYSTEM_RESTART, SYSTEM_SHUTDOWN, SYSTEM_START
 from autosubliminal.versionchecker import VersionChecker
 
 log = logging.getLogger(__name__)
@@ -218,6 +220,10 @@ def start():
     # Start permanent threads
     autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
 
+    # Sleep 2 seconds before sending the start event trough websocket (client websockets reconnect every 2 seconds)
+    time.sleep(3)
+    send_websocket_event(SYSTEM_START)
+
     # Schedule threads
     # Order of CHECKVERSION, SCANDISK and CHECKSUB is important because they are all using the queue lock
     # Make sure they are started in the specified order:
@@ -238,6 +244,8 @@ def start():
 
 def stop(exit=True):
     log.info('Stopping')
+    if exit:
+        send_websocket_event(SYSTEM_SHUTDOWN)
 
     # Mark as stopped
     autosubliminal.STARTED = False
@@ -259,6 +267,8 @@ def stop(exit=True):
 
 def restart(exit=False):
     log.info('Restarting')
+    send_websocket_event(SYSTEM_RESTART)
+
     if exit:
         # Exit current process and restart a new one with the same args
         # Get executable and args

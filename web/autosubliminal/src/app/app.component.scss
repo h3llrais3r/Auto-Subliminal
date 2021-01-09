@@ -23,3 +23,12 @@
     @include flex-shrink(0);
   }
 }
+
+.dialog-content {
+  text-align: center;
+
+  .pi-spin,
+  .pi-power-off {
+    font-size: 3em;
+  }
+}

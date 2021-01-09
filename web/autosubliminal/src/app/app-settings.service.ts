@@ -16,6 +16,7 @@ class AppSettings {
   checkSub: string;
   checkSubNextRunInMs: string;
   checkVersion: string;
+  libraryMode: boolean;
   logReversed: boolean;
   tvdbUrl: string;
   imdbUrl: string;
