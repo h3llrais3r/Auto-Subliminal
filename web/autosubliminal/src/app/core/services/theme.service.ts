@@ -1,15 +1,25 @@
 import { Injectable } from '@angular/core';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeService {
 
-  private currentTheme = 'bootstrap4-dark-blue';
+  private currentTheme = 'bootstrap4-dark-blue'; // default theme (as set in index.html)
 
-  changeTheme(theme: string) {
-    let themeElement = document.getElementById('currentTheme');
+  constructor(private storageService: StorageService) {
+    // Set the current theme from storage or use default theme
+    const theme = this.storageService.getTheme() || this.currentTheme;
+    if (theme !== this.currentTheme) {
+      this.changeTheme(theme);
+    }
+  }
+
+  changeTheme(theme: string): void {
+    const themeElement = document.getElementById('currentTheme');
     themeElement.setAttribute('href', themeElement.getAttribute('href').replace(this.currentTheme, theme));
+    this.storageService.storeTheme(theme);
     this.currentTheme = theme;
   }
 }
