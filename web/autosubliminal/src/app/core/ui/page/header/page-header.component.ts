@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { appSettings } from '../../../../app-settings.service';
 import { SystemWebSocketClientEvent, SystemWebSocketClientEventType } from '../../../../shared/models/websocket';
@@ -16,13 +17,14 @@ export class PageHeaderComponent implements OnInit {
 
   menuItems: MenuItem[];
 
-  constructor(private webSocketService: WebSocketService, private themeService: ThemeService) { }
+  constructor(private router: Router, private webSocketService: WebSocketService, private themeService: ThemeService) { }
 
   ngOnInit(): void {
     this.menuItems = [
       {
         label: 'Home',
-        icon: 'pi pi-fw pi-home'
+        icon: 'pi pi-fw pi-home',
+        routerLink: '/home'
       },
       {
         label: 'Settings',
@@ -298,5 +300,7 @@ export class PageHeaderComponent implements OnInit {
     ];
   }
 
-
+  goHome(): void {
+    this.router.navigateByUrl('/home');
+  }
 }
