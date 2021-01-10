@@ -29,3 +29,63 @@
   @extend %icon;
   background-image: url(../../assets/themes/bootstrap4-light-purple/bootstrap4-light-purple.svg);
 }
+
+.arya-blue::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/arya-blue/arya-blue.png);
+}
+
+.arya-green::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/arya-green/arya-green.png);
+}
+
+.arya-orange::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/arya-orange/arya-orange.png);
+}
+
+.arya-purple::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/arya-purple/arya-purple.png);
+}
+
+.saga-blue::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/saga-blue/saga-blue.png);
+}
+
+.saga-green::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/saga-green/saga-green.png);
+}
+
+.saga-orange::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/saga-orange/saga-orange.png);
+}
+
+.saga-purple::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/saga-purple/saga-purple.png);
+}
+
+.vela-blue::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/vela-blue/vela-blue.png);
+}
+
+.vela-green::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/vela-green/vela-green.png);
+}
+
+.vela-orange::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/vela-orange/vela-orange.png);
+}
+
+.vela-purple::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/vela-purple/vela-purple.png);
+}

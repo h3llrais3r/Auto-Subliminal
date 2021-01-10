@@ -81,6 +81,13 @@ export class PageHeaderComponent implements OnInit {
             icon: 'pi pi-fw pi-palette',
             items: [
               {
+                label: 'Bootstrap 4',
+                disabled: true
+              },
+              {
+                separator: true
+              },
+              {
                 label: 'Dark blue',
                 icon: 'pi pi-fw bootstrap4-dark-blue',
                 command: () => this.themeService.changeTheme('bootstrap4-dark-blue')
@@ -99,6 +106,82 @@ export class PageHeaderComponent implements OnInit {
                 label: 'Light purple',
                 icon: 'pi pi-fw bootstrap4-light-purple',
                 command: () => this.themeService.changeTheme('bootstrap4-light-purple')
+              },
+              {
+                separator: true
+              },
+              {
+                label: 'Primeone',
+                disabled: true
+              },
+              {
+                separator: true
+              },
+              {
+                label: 'Arya blue',
+                icon: 'pi pi-fw arya-blue',
+                command: () => this.themeService.changeTheme('arya-blue')
+              },
+              {
+                label: 'Arya green',
+                icon: 'pi pi-fw arya-green',
+                command: () => this.themeService.changeTheme('arya-green')
+              },
+              {
+                label: 'Arya orange',
+                icon: 'pi pi-fw arya-orange',
+                command: () => this.themeService.changeTheme('arya-orange')
+              },
+              {
+                label: 'Arya purple',
+                icon: 'pi pi-fw arya-purple',
+                command: () => this.themeService.changeTheme('arya-purple')
+              },
+              {
+                separator: true
+              },
+              {
+                label: 'Saga blue',
+                icon: 'pi pi-fw saga-blue',
+                command: () => this.themeService.changeTheme('saga-blue')
+              },
+              {
+                label: 'Saga green',
+                icon: 'pi pi-fw saga-green',
+                command: () => this.themeService.changeTheme('saga-green')
+              },
+              {
+                label: 'Saga orange',
+                icon: 'pi pi-fw saga-orange',
+                command: () => this.themeService.changeTheme('saga-orange')
+              },
+              {
+                label: 'Saga purple',
+                icon: 'pi pi-fw saga-purple',
+                command: () => this.themeService.changeTheme('saga-purple')
+              },
+              {
+                separator: true
+              },
+              {
+                label: 'Vela blue',
+                icon: 'pi pi-fw vela-blue',
+                command: () => this.themeService.changeTheme('vela-blue')
+              },
+              {
+                label: 'Vela green',
+                icon: 'pi pi-fw vela-green',
+                command: () => this.themeService.changeTheme('vela-green')
+              },
+              {
+                label: 'Vela orange',
+                icon: 'pi pi-fw vela-orange',
+                command: () => this.themeService.changeTheme('vela-orange')
+              },
+              {
+                label: 'Vela purple',
+                icon: 'pi pi-fw vela-purple',
+                command: () => this.themeService.changeTheme('vela-purple')
               }
             ]
           }
