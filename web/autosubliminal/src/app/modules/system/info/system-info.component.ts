@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { SystemService } from '../../../core/services/api/system.service';
+import { SystemInfo, SystemInstallType } from '../../../shared/models/systeminfo';
 
 @Component({
   selector: 'app-system-info',
@@ -15,22 +17,29 @@ export class SystemInfoComponent implements OnInit {
   readonly ISSUES_URL = `${this.SOURCE_URL}/issues`;
   readonly WIKI_URL = `${this.SOURCE_URL}/wiki`;
 
-  os = this.NOT_AVAILABLE;
-  version = this.NOT_AVAILABLE;
-  gitBranch = this.NOT_AVAILABLE;
-  gitVersion = this.NOT_AVAILABLE;
-  systemEncoding = this.NOT_AVAILABLE;
-  pythonVersion = this.NOT_AVAILABLE;
-  pythonLocation = this.NOT_AVAILABLE;
-  configFile = this.NOT_AVAILABLE;
-  databaseFile = this.NOT_AVAILABLE;
-  logFile = this.NOT_AVAILABLE;
-  changelog = this.NOT_AVAILABLE;
+  systemInfo: SystemInfo;
+  changelog: string;
+  version: string;
+  versionUrl: string;
+  gitInstall = false;
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient, private systemService: SystemService) { }
 
   ngOnInit(): void {
-    // TODO: get values from backend
+    // Get system info
+    this.systemService.getSystemInfo().subscribe(
+      result => {
+        this.systemInfo = result;
+        if (this.systemInfo.installType === SystemInstallType.SOURCE) {
+          this.version = this.systemInfo.currentVersion;
+          this.versionUrl = this.systemInfo.currentVersionUrl;
+        } else if (this.systemInfo.installType === SystemInstallType.GIT) {
+          this.version = this.systemInfo.releaseVersion;
+          this.gitInstall = true;
+        } else {
+          this.version = this.NOT_AVAILABLE;
+        }
+      });
 
     // Get changelog
     this.httpClient.get(this.CHANGELOG_URL, { responseType: 'text' }).subscribe(

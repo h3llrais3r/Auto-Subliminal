@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import os
+import platform
 
 import autosubliminal
 from autosubliminal.core.pathinfo import PathInfo
@@ -8,6 +9,7 @@ from autosubliminal.providers.pitcher import ANTI_CAPTCHA_PROVIDERS
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import camelize, get_next_scheduler_run_in_ms, to_dict
 from autosubliminal.util.language import get_subtitle_languages
+from autosubliminal.util.system import get_python_version_full, get_python_location
 from autosubliminal.version import RELEASE_VERSION
 
 
@@ -21,6 +23,7 @@ class SystemApi(RestResource):
 
         # Add all sub paths here: /api/system/...
         self.alive = _AliveApi()
+        self.info = _InfoApi()
         self.settings = _SettingsApi()
         self.schedulers = _SchedulersApi()
         self.paths = _PathsApi()
@@ -43,6 +46,41 @@ class _AliveApi(RestResource):
             return {'alive': True}
         else:
             return {'alive': False}
+
+
+class _InfoApi(RestResource):
+    """
+    Rest resource for handling the /api/system/info path.
+    """
+
+    def __init__(self):
+        super(_InfoApi, self).__init__()
+
+        # Set the allowed methods
+        self.allowed_methods = ('GET',)
+
+    def get(self):
+        """Return the system info."""
+        info = {
+            'os': platform.platform(),
+            'release_version': RELEASE_VERSION,
+            'install_type': autosubliminal.CHECKVERSION.process.install_type.name,
+            'current_version': autosubliminal.CHECKVERSION.process.current_version,
+            'current_version_url': autosubliminal.CHECKVERSION.process.current_version_url,
+            'current_branch': autosubliminal.CHECKVERSION.process.current_branch,
+            'current_branch_url': autosubliminal.CHECKVERSION.process.current_branch_url,
+            'system_encoding': autosubliminal.SYSENCODING,
+            'python_version': get_python_version_full(),
+            'python_location': get_python_location(),
+            'config_file': autosubliminal.CONFIGFILE if os.path.split(autosubliminal.CONFIGFILE)[0] else os.path.join(
+                autosubliminal.PATH, autosubliminal.CONFIGFILE),
+            'database_file': autosubliminal.DBFILE if os.path.split(autosubliminal.DBFILE)[0] else os.path.join(
+                autosubliminal.PATH, autosubliminal.DBFILE),
+            'log_file': autosubliminal.LOGFILE if os.path.split(autosubliminal.LOGFILE)[0] else os.path.join(
+                autosubliminal.PATH, autosubliminal.LOGFILE),
+        }
+
+        return to_dict(info, camelize)
 
 
 class _SettingsApi(RestResource):

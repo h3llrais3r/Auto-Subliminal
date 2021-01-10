@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PathInfo } from '../../../shared/models/pathinfo';
 import { Scheduler } from '../../../shared/models/scheduler';
+import { SystemInfo } from '../../../shared/models/systeminfo';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -20,6 +21,11 @@ export class SystemService extends ApiServiceTemplate {
   isAlive(): Observable<boolean> {
     return this.httpClient.get<alive>(`${this.URL}/alive`, this.options)
       .pipe(map((result) => result.alive));
+  }
+
+  getSystemInfo(): Observable<SystemInfo> {
+    return this.httpClient.get<SystemInfo>(`${this.URL}/info`, this.options)
+      .pipe(map(result => new SystemInfo(result)));
   }
 
   getPaths(): Observable<PathInfo[]> {
