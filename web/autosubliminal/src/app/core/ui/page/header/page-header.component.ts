@@ -29,54 +29,6 @@ export class PageHeaderComponent implements OnInit {
         icon: 'pi pi-fw pi-cog',
         items: [
           {
-            label: 'General',
-            icon: 'pi pi-fw pi-cog',
-            routerLink: '/settings/general'
-          },
-          {
-            label: 'Library',
-            icon: 'pi pi-fw pi-cog',
-            routerLink: '/settings/library'
-          },
-          {
-            label: 'Logging',
-            icon: 'pi pi-fw pi-cog',
-            routerLink: '/settings/logging'
-          },
-          {
-            label: 'Webserver',
-            icon: 'pi pi-fw pi-cog',
-            routerLink: '/settings/webserver'
-          },
-          {
-            label: 'Subliminal',
-            icon: 'pi pi-fw pi-cog',
-            routerLink: '/settings/subliminal'
-          },
-          {
-            label: 'Namemapping',
-            icon: 'pi pi-fw pi-cog',
-            routerLink: '/settings/namemapping'
-          },
-          {
-            label: 'Skipmapping',
-            icon: 'pi pi-fw pi-cog',
-            routerLink: '/settings/skipmapping'
-          },
-          {
-            label: 'Notification',
-            icon: 'pi pi-fw pi-cog',
-            routerLink: '/settings/notification'
-          },
-          {
-            label: 'Postprocessing',
-            icon: 'pi pi-fw pi-cog',
-            routerLink: '/settings/postprocessing'
-          },
-          {
-            separator: true
-          },
-          {
             label: 'Look & feel',
             icon: 'pi pi-fw pi-palette',
             items: [
@@ -184,6 +136,54 @@ export class PageHeaderComponent implements OnInit {
                 command: () => this.themeService.changeTheme('vela-purple')
               }
             ]
+          },
+          {
+            separator: true
+          },
+          {
+            label: 'General',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/general'
+          },
+          {
+            label: 'Library',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/library'
+          },
+          {
+            label: 'Logging',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/logging'
+          },
+          {
+            label: 'Webserver',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/webserver'
+          },
+          {
+            label: 'Subliminal',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/subliminal'
+          },
+          {
+            label: 'Namemapping',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/namemapping'
+          },
+          {
+            label: 'Skipmapping',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/skipmapping'
+          },
+          {
+            label: 'Notification',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/notification'
+          },
+          {
+            label: 'Postprocessing',
+            icon: 'pi pi-fw pi-cog',
+            routerLink: '/settings/postprocessing'
           }
         ]
       },

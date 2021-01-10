@@ -2,46 +2,49 @@
   <p-tabView>
     <!-- Info tab -->
     <p-tabPanel header="General">
-      <div class="info-wrapper">
+      <div class="info-wrapper" *ngIf="systemInfo">
         <div class="info-item row">
           <div class="info-label col-sm-12 col-md-4">OS</div>
-          <div class="info col-sm-12 col-md-8">{{os}}</div>
+          <div class="info col-sm-12 col-md-8">{{systemInfo.os}}</div>
         </div>
         <div class="info-item row">
           <div class="info-label col-sm-12 col-md-4">Version</div>
-          <div class="info col-sm-12 col-md-8">{{version}}</div>
+          <div class="info col-sm-12 col-md-8" *ngIf="!versionUrl">{{version}}</div>
+          <div class="info col-sm-12 col-md-8" *ngIf="versionUrl"><a href="{{versionUrl}}" target="_blank">{{version}}</a></div>
         </div>
-        <div class="info-item row">
+        <!-- Only show git branch when installed through git -->
+        <div class="info-item row" *ngIf="gitInstall">
           <div class="info-label col-sm-12 col-md-4">Git branch</div>
-          <div class="info col-sm-12 col-md-8"><a href="{{gitBranch}}" target="_blank">{{gitBranch}}</a></div>
+          <div class="info col-sm-12 col-md-8"><a href="{{systemInfo.currentBranchUrl}}" target="_blank">{{systemInfo.currentBranch}}</a></div>
         </div>
-        <div class="info-item row">
-          <div class="info-label col-sm-12 col-md-4">Git version</div>
-          <div class="info col-sm-12 col-md-8"><a href="{{gitVersion}}" target="_blank">{{gitVersion}}</a></div>
+        <!-- Only show git version when installed through git -->
+        <div class="info-item row" *ngIf="gitInstall">
+          <div class=" info-label col-sm-12 col-md-4">Git version</div>
+          <div class="info col-sm-12 col-md-8"><a href="{{systemInfo.currentVersionUrl}}" target="_blank">{{systemInfo.currentVersion}}</a></div>
         </div>
         <div class="info-item row">
           <div class="info-label col-sm-12 col-md-4">System encoding</div>
-          <div class="info col-sm-12 col-md-8">{{systemEncoding}}</div>
+          <div class="info col-sm-12 col-md-8">{{systemInfo.systemEncoding}}</div>
         </div>
         <div class="info-item row">
           <div class="info-label col-sm-12 col-md-4">Python version</div>
-          <div class="info col-sm-12 col-md-8">{{pythonVersion}}</div>
+          <div class="info col-sm-12 col-md-8">{{systemInfo.pythonVersion}}</div>
         </div>
         <div class="info-item row">
           <div class="info-label col-sm-12 col-md-4">Python location</div>
-          <div class="info col-sm-12 col-md-8">{{pythonLocation}}</div>
+          <div class="info col-sm-12 col-md-8">{{systemInfo.pythonLocation}}</div>
         </div>
         <div class="info-item row">
           <div class="info-label col-sm-12 col-md-4">Config file</div>
-          <div class="info col-sm-12 col-md-8">{{configFile}}</div>
+          <div class="info col-sm-12 col-md-8">{{systemInfo.configFile}}</div>
         </div>
         <div class="info-item row">
           <div class="info-label col-sm-12 col-md-4">Database file</div>
-          <div class="info col-sm-12 col-md-8">{{databaseFile}}</div>
+          <div class="info col-sm-12 col-md-8">{{systemInfo.databaseFile}}</div>
         </div>
         <div class="info-item row">
           <div class="info-label col-sm-12 col-md-4">Log file</div>
-          <div class="info col-sm-12 col-md-8">{{logFile}}</div>
+          <div class="info col-sm-12 col-md-8">{{systemInfo.logFile}}</div>
         </div>
         <hr class="separator">
         <div class="info-item row">
@@ -60,7 +63,7 @@
     </p-tabPanel>
     <!--- Changelog tab -->
     <p-tabPanel header="Changelog">
-      <div class="changelog-wrapper" [innerHTML]="changelog"></div>
+      <div class="changelog-wrapper" *ngIf="changelog" [innerHTML]="changelog"></div>
     </p-tabPanel>
   </p-tabView>
 </div>
