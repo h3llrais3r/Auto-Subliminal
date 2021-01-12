@@ -1,0 +1,47 @@
+<div class="container">
+  <p-panel header="Show library">
+    <p-table [value]="shows" [autoLayout]="true" [rowHover]="true" styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="title"><span>Title<p-sortIcon field="title"></p-sortIcon></span></th>
+          <th pSortableColumn="year"><span>Year<p-sortIcon field="year"></p-sortIcon></span></th>
+          <th pSortableColumn="path"><span>Path<p-sortIcon field="path"></p-sortIcon></span></th>
+          <th pSortableColumn="settings.wantedLanguages"><span>Wanted subtitles<p-sortIcon field="settings.wantedLanguages"></p-sortIcon></span></th>
+          <th pSortableColumn="totalSubtitlesAvailable"><span>Subtitles<p-sortIcon field="totalSubtitlesAvailable"></p-sortIcon></span></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-show>
+        <tr>
+          <td>
+            <span class="p-column-title">Title</span>
+            <span class="p-column-data">
+              <span class="title-banner">
+                <a [routerLink]="['/library/show/detail',show.tvdbId]" [title]="show.title">
+                  <img *ngIf="show.banner" class="title-banner-image" [lazyLoad]="getShowBannerUrl(show.tvdbId)" [defaultImage]="getDefaultBannerUrl()">
+                </a>
+              </span>
+            </span>
+          </td>
+          <td>
+            <span class="p-column-title">Year</span>
+            <span class="p-column-data">{{show.year}}</span>
+          </td>
+          <td>
+            <span class="p-column-title">Path</span>
+            <span class="p-column-data">{{show.path}}</span>
+          </td>
+          <td>
+            <span class="p-column-title">Wanted subtitles</span>
+            <span class="p-column-data"><span *ngFor="let lang of show.settings.wantedLanguages" class="p-tag p-tag-small p-tag-secondary mr-2">{{lang}}</span></span>
+          </td>
+          <td>
+            <span class="p-column-title">Subtitles</span>
+            <span class="p-column-data">
+              <app-progress-bar class="w-100" [value]="show.totalSubtitlesAvailable" [total]="show.totalSubtitlesWanted"></app-progress-bar>
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-panel>
+</div>

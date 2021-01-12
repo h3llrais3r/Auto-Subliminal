@@ -17,8 +17,8 @@
       <div *ngIf="showsOverview" class="col-12 col-sm-12 col-md-6 col-lg-6 mb-3 mb-sm-3 mb-md-0 mb-lg-0">
         <div class="overview-container">
           <div class="overview-data">
-            <a [routerLink]="['/library/shows']">
-              <img src="assets/shows.jpg" class="overview-image image-hover" title="Click to view shows">
+            <a [routerLink]="['/library/show/overview']">
+              <img src="assets/shows.jpg" class="overview-image" title="Click to view shows">
             </a>
           </div>
           <div class="overview-data">
@@ -44,7 +44,7 @@
       <div *ngIf="moviesOverview" class="col-12 col-sm-12 col-md-6 col-lg-6">
         <div class="overview-container">
           <div class="overview-data">
-            <a [routerLink]="['/library/movies']">
+            <a [routerLink]="['/library/movie/overview']">
               <img src="assets/movies.jpg" class="overview-image image-hover" title="Click to view movies">
             </a>
           </div>

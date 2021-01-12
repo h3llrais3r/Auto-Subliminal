@@ -1,6 +1,5 @@
 @import '../variables';
 @import '../mixins/flexbox';
-@import '../mixins/filter';
 
 html,
 body {
@@ -64,12 +63,6 @@ body {
 
     .button-row {
       margin-top: 1rem;
-    }
-  }
-
-  .image-hover {
-    &:hover {
-      @include filter(brightness(75%));
     }
   }
 

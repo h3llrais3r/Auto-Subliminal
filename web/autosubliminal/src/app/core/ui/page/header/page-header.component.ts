@@ -34,6 +34,19 @@ export class PageHeaderComponent implements OnInit {
             label: 'Overview',
             icon: 'pi pi-fw pi-list',
             routerLink: '/library/overview'
+          },
+          {
+            separator: true
+          },
+          {
+            label: 'Shows',
+            icon: 'pi pi-fw pi-desktop',
+            routerLink: '/library/show/overview'
+          },
+          {
+            label: 'Movies',
+            icon: 'pi pi-fw pi-video',
+            routerLink: '/library/show/overview'
           }
         ],
         visible: appSettings.libraryMode
