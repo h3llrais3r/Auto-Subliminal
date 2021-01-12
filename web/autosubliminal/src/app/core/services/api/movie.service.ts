@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { MoviesOverview } from '../../../shared/models/movie';
+import { map } from 'rxjs/operators';
+import { Movie, MoviesOverview } from '../../../shared/models/movie';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -17,5 +18,10 @@ export class MovieService extends ApiServiceTemplate {
 
   getMoviesOverview(): Observable<MoviesOverview> {
     return this.httpClient.get<MoviesOverview>(`${this.URL}/overview`, this.options);
+  }
+
+  getMovies(): Observable<Movie[]> {
+    return this.httpClient.get<Movie[]>(this.URL, this.options)
+      .pipe(map(result => result.map(obj => new Movie(obj))));
   }
 }

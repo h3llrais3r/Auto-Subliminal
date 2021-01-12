@@ -26,7 +26,7 @@ export class Show {
   totalSubtitlesMissing: number;
   totalSubtitlesWanted: number;
   settings: ShowSettings;
-  files: ShowFiles[];
+  files?: ShowFiles[]; // only loaded for details
 
   constructor(obj?: any) {
     Object.assign(this, obj);
@@ -60,6 +60,7 @@ export class ShowSeasonFiles {
   type: FileType;
   embeddedLanguages: string[];
   hardcodedLanguages: string[];
+  language?: string; // only used for type = SUBTITLE
 
   constructor(obj?: any) {
     Object.assign(this, obj);
