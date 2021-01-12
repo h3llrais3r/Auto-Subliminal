@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NgxMaskModule } from 'ngx-mask';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -53,6 +54,7 @@ import { ScrollComponent } from './components/scroll/scroll.component';
     FormsModule,
     ReactiveFormsModule,
     NgxMaskModule,
+    LazyLoadImageModule,
     MessageModule,
     MessagesModule,
     ToastModule,

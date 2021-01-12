@@ -1,0 +1,8 @@
+@import '../../../../../scss/components/images';
+
+.title-banner-image {
+  @extend .image-box;
+  @extend .image-hover;
+  height: 55px; // aspect ratio: 0.185
+  width: 297px;
+}

@@ -29,6 +29,7 @@
     "bootstrap": "4.5.3",
     "jquery": "3.5.1",
     "moment": "2.24.0",
+    "ng-lazyload-image": "9.1.0",
     "ngx-countdown": "10.0.1",
     "ngx-webstorage": "7.0.1",
     "primeicons": "4.0.0",
