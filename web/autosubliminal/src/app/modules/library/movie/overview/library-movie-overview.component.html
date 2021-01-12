@@ -1,0 +1,50 @@
+<div class="container">
+  <p-panel header="Movie library">
+    <p-table [value]="movies" [autoLayout]="true" [rowHover]="true" styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="title"><span>Title<p-sortIcon field="title"></p-sortIcon></span></th>
+          <th pSortableColumn="year"><span>Year<p-sortIcon field="year"></p-sortIcon></span></th>
+          <th pSortableColumn="path"><span>Path<p-sortIcon field="path"></p-sortIcon></span></th>
+          <th pSortableColumn="settings.wantedLanguages"><span>Wanted subtitles<p-sortIcon field="settings.wantedLanguages"></p-sortIcon></span></th>
+          <th pSortableColumn="totalSubtitlesAvailable"><span>Subtitles<p-sortIcon field="totalSubtitlesAvailable"></p-sortIcon></span></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-movie>
+        <tr>
+          <td>
+            <span class="p-column-title">Title</span>
+            <span class="p-column-data title-container">
+              <span class="title-poster">
+                <a [routerLink]="['/library/movie/detail',movie.imdbId]" [title]="movie.title">
+                  <img *ngIf="movie.poster" class="title-poster-image" [lazyLoad]="getMoviePosterUrl(movie.imdbId)" [defaultImage]="getDefaultPosterUrl()">
+                </a>
+              </span>
+              <span class="title-text">
+                <a [routerLink]="['/library/movie/detail',movie.imdbId]">{{movie.title}}</a>
+              </span>
+            </span>
+          </td>
+          <td>
+            <span class="p-column-title">Year</span>
+            <span class="p-column-data">{{movie.year}}</span>
+          </td>
+          <td>
+            <span class="p-column-title">Path</span>
+            <span class="p-column-data">{{movie.path}}</span>
+          </td>
+          <td>
+            <span class="p-column-title">Wanted subtitles</span>
+            <span class="p-column-data"><span *ngFor="let lang of movie.settings.wantedLanguages" class="p-tag p-tag-small p-tag-secondary mr-2">{{lang}}</span></span>
+          </td>
+          <td>
+            <span class="p-column-title">Subtitles</span>
+            <span class="p-column-data">
+              <app-progress-bar class="w-100" [value]="movie.totalSubtitlesAvailable" [total]="movie.totalSubtitlesWanted"></app-progress-bar>
+            </span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-panel>
+</div>

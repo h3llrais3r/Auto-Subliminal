@@ -25,5 +25,4 @@ export class LibraryShowOverviewComponent implements OnInit {
   getDefaultBannerUrl(): string {
     return 'assets/banner-placeholder.jpg';
   }
-
 }

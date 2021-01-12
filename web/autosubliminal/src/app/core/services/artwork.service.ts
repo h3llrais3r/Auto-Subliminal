@@ -13,4 +13,8 @@ export class ArtworkService {
   getShowPosterThumbnailUrl(tvdbId: number): string {
     return `${appSettings.webRoot}/artwork/tvdb/poster/thumbnail/${tvdbId}`;
   }
+
+  getMoviePosterThumbnailUrl(imdbId: string): string {
+    return `${appSettings.webRoot}/artwork/imdb/poster/thumbnail/${imdbId}`;
+  }
 }

@@ -1,0 +1,25 @@
+@import '../../../../../scss/variables';
+@import '../../../../../scss/mixins/flexbox';
+@import '../../../../../scss/components/images';
+
+.title-container {
+  @include flexbox;
+  @include align-items(center);
+
+  .title-poster-image {
+    @extend .image-box;
+    @extend .image-hover;
+    height: 55px;
+    width: 37px; // aspect ratio 0.675
+  }
+
+  .title-text {
+    margin-left: 0.5rem;
+    font-weight: $font-bold;
+
+    a {
+      color: var(--text-color);
+    }
+  }
+
+}
