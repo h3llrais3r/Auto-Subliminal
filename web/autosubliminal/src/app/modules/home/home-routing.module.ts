@@ -6,6 +6,10 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent
+  },
+  {
+    path: '**', // wildcard to match any non matching routes
+    redirectTo: ''
   }
 ];
 

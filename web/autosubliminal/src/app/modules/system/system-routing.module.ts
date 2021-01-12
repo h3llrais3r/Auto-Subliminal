@@ -16,6 +16,10 @@ const routes: Routes = [
   {
     path: 'status',
     component: SystemStatusComponent
+  },
+  {
+    path: '**', // wildcard to match any non matching routes
+    redirectTo: 'info'
   }
 ];
 

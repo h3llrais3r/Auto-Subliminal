@@ -5,9 +5,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="videoPaths" class="label">Video paths</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The folders where your videos are located.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-multi-text formControlName="videoPaths" [validationFeedback]="saveAttempt"></app-input-multi-text>
@@ -17,9 +17,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="defaultLanguage" class="label">Default language</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The default subtitle language.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="defaultLanguage" [options]="languages" [validationFeedback]="saveAttempt"></app-input-dropdown>
@@ -29,9 +29,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="defaultLanguageSuffix" class="label">Default language suffix</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>When enabled, the default subtitle will be extended with the language code (f.e. showname.en.srt).</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="defaultLanguageSuffix" [options]="enabledOrDisabled"></app-input-dropdown>
@@ -41,10 +41,10 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="additionalLanguages" class="label">Additional languages</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The addditional subtitle languages in alpha2 or ietf format.</li>
             <li>If additional languages are provided, subtitles will be extended with the language code (f.e. showname.en.srt).</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-multi-text formControlName="additionalLanguages" [options]="languages"></app-input-multi-text>
@@ -54,11 +54,11 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="manualSearchWithScoring" class="label">Manual search with scoring</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>When enabled, only subtitles matching the minimum default score will be returned.</li>
             <li>When disabled, all found subtitles will be returned.</li>
             <li>REMARK: Disable it at your own risk because it might return even unrelated subtitles!</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="manualSearchWithScoring" [options]="enabledOrDisabled"></app-input-dropdown>
@@ -68,10 +68,10 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="scanDiskInterval" class="label">Disk scan interval</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>Disk scan interval of the ScanDisk thread. It scans the disk for missing subtitle files.</li>
             <li>Default value is 1 hour. Cannot be set lower then 1 hour.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-number formControlName="scanDiskInterval" min="1" suffix=" hour(s)"></app-input-number>
@@ -81,10 +81,10 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="checkSubInterval" class="label">Subtitle check interval</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>Subtitle check interval of the CheckSub thread. It checks if there is a match on the configured subliminal providers.</li>
             <li>Default value is 24 hours. Cannot be set lower then 6 hours.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-number formControlName="checkSubInterval" min="6" suffix=" hours"></app-input-number>
@@ -94,11 +94,11 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="checkSubDeadline" class="label">Subtitle check deadline</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>Subtitle check deadline in weeks for checking subtitles on daily basis.</li>
             <li>After this deadline, the daily search is replaced by a search every X days, defined by the parameter below.</li>
             <li>Default value is 4 weeks. Cannot be set lower than 1 week.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-number formControlName="checkSubDeadline" min="1" suffix=" week(s)"></app-input-number>
@@ -108,11 +108,11 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="checkSubDelta" class="label">Subtitle check delta</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>Subtitle check delta in days for checking subtitles after deadline.</li>
             <li>After the deadline (parameter above) is passed, a subtitle is search every X days, defined by this parameter.</li>
             <li>Default value is 7 days (1 week). Cannot be set lower than 1 day.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-number formControlName="checkSubDelta" min="1" suffix=" day(s)"></app-input-number>
@@ -122,10 +122,10 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="checkVersionInterval" class="label">Version check interval</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>Version check interval of the VersionCheck thread. It checks if there is a new version available.</li>
             <li>Default value is 12 hours. Cannot be set lower then 1 hour.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-number formControlName="checkVersionInterval" min="1" suffix=" hour(s)"></app-input-number>
@@ -135,9 +135,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="checkVersionAutoUpdate" class="label">Version check auto update</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>When enabled, the version check will also try to auto update the system.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="checkVersionAutoUpdate" [options]="enabledOrDisabled"></app-input-dropdown>
@@ -147,9 +147,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="scanEmbeddedSubs" class="label">Scan for embedded subtitles</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>When enabled, the video files will be scanned for embedded subtitles.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="scanEmbeddedSubs" [options]="enabledOrDisabled"></app-input-dropdown>
@@ -159,9 +159,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="scanHardcodedSubs" class="label">Scan for hardcoded subtitles</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>When enabled, the video files will be scanned for hardcoded subtitles.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="scanHardcodedSubs" [options]="enabledOrDisabled"></app-input-dropdown>
@@ -171,10 +171,10 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="skipHiddenDirs" class="label">Skip hidden directories</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>When enabled, also hidden directories (directories that start with a dot, f.e. .config) are scanned.</li>
             <li>REMARK: Doesn't work for Windows style hidden directories.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="skipHiddenDirs" [options]="enabledOrDisabled"></app-input-dropdown>
@@ -184,10 +184,10 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="detectInvalidSubLanguage" class="label">Detect invalid subtitle</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>When enabled, the language of a subtitle, without a language suffix, will be detected.</li>
             <li>If the language does not match the default language, the subtitle will be deleted from the system in order to search a new one.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="detectInvalidSubLanguage" [options]="enabledOrDisabled"></app-input-dropdown>
@@ -197,10 +197,10 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="detectedLanguageProbability" class="label">Language detection probability</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The minimum required probability for the invalid language detection functionality.</li>
             <li>The probability must be at least this value before the language is accepted as the detected language of the subtitle.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-number formControlName="detectedLanguageProbability" min="1" max="100" suffix=" %"></app-input-number>
@@ -210,11 +210,11 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="minVideoFileSize" class="label">Min video file size</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The mininum file size in MB that a video must be before it's including in the scanning.</li>
             <li>Files with a size lower than this value will be ignored in the scanning.</li>
             <li>Use 0 to disable this limit.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-number formControlName="minVideoFileSize" min="0" suffix=" MB"></app-input-number>
@@ -224,10 +224,10 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="maxDbResults" class="label">Max db results</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The maximum number of results returned from the database.</li>
             <li>Use 0 to return all the results.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-number formControlName="maxDbResults" mode="decimal" min="0" suffix=" results"></app-input-number>
@@ -237,9 +237,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="timestampFormat" class="label">Timestamp format</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The format in which timestamps are displayed.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="timestampFormat" [options]="timestampFormats"></app-input-dropdown>

@@ -11,10 +11,10 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="webServerIp" class="label">IP address</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The webserver IP address.</li>
             <li>To allow hosts to connect to any IP address, use '0.0.0.0'.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="webServerIp" mask="IP" dropSpecialCharacters="false" [validationFeedback]="saveAttempt"></app-input-text>
@@ -24,9 +24,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="webServerPort" class="label">Port</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The webserver port.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-number formControlName="webServerPort" [showButtons]="false" [validationFeedback]="saveAttempt"></app-input-number>
@@ -36,10 +36,10 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="webRoot" class="label">Webroot</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The webserver webroot for reverse proxying.</li>
             <li>Example: to proxy it to 'http://localhost/autosubliminal/' the webroot needs to be '/autosubliminal'.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="webRoot" [validationFeedback]="saveAttempt" (onKeyup)="formatWebRoot()"></app-input-text>
@@ -49,11 +49,11 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="userName" class="label">Username</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The username for the webserver authentication.</li>
             <li>If a username and password are set, the webserver requires authentication.</li>
             <li>Otherwise no authentication is set or required.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="userName" [validationFeedback]="saveAttempt"></app-input-text>
@@ -63,11 +63,11 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="password" class="label">Password</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The password for the webserver authentication.</li>
             <li>If a username and password are set, the webserver requires authentication.</li>
             <li>Otherwise no authentication is set or required.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="password" type="password" [validationFeedback]="saveAttempt"></app-input-text>
@@ -77,9 +77,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="launchBrowser" class="label">Launch browser</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>When enabled, the browser will start every time Auto-Subliminal starts.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="launchBrowser" [options]="enabledOrDisabled"></app-input-dropdown>

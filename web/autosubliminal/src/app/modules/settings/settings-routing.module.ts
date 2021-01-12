@@ -51,6 +51,10 @@ const routes: Routes = [
   {
     path: 'postprocessing',
     component: SettingsPostprocessingComponent
+  },
+  {
+    path: '**', // wildcard to match any non matching routes
+    redirectTo: 'general'
   }
 ];
 

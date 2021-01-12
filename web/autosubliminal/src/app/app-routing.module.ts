@@ -12,6 +12,10 @@ const routes: Routes = [
     loadChildren: () => import('./modules/home/home.module').then(m => m.HomeModule)
   },
   {
+    path: 'library',
+    loadChildren: () => import('./modules/library/library.module').then(m => m.LibraryModule)
+  },
+  {
     path: 'settings',
     loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule)
   },
@@ -22,6 +26,10 @@ const routes: Routes = [
   {
     path: 'system',
     loadChildren: () => import('./modules/system/system.module').then(m => m.SystemModule)
+  },
+  {
+    path: '**', // wildcard to match any non matching routes
+    redirectTo: 'home'
   }
 ];
 

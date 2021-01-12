@@ -55,6 +55,10 @@
       font-size: 1.5rem;
     }
 
+    .p-panel-title-icon {
+      margin-left: 0.5rem;
+    }
+
     .p-panel-title-dropdown {
       padding: 0.1rem;
     }
@@ -240,8 +244,10 @@ p-dropdown {
 }
 
 // Primeicons - vertical align: middle
-.pi-vm {
-  vertical-align: middle;
+.pi {
+  &.pi-vm {
+    vertical-align: middle;
+  }
 }
 
 // Tag
@@ -258,7 +264,12 @@ p-dropdown {
   }
 }
 
-// Messages
+// Message
+.p-message {
+  margin: 0; // remove default margins as they are too big
+}
+
+// Inline message
 .p-inline-message {
   &.w-100 {
     @include justify-content(left); // default left align

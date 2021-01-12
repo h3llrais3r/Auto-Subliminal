@@ -17,9 +17,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label class="label">Show MinMatchScore</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The items that must match before a show subtitle is downloaded.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8 form-row-switches">
           <app-input-switch formControlName="showMatchSource" label="Source"></app-input-switch>
@@ -32,9 +32,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label class="label">Movie MinMatchScore</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The items that must match before a movie subtitle is downloaded.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8 form-row-switches">
           <app-input-switch formControlName="movieMatchSource" label="Source"></app-input-switch>
@@ -47,10 +47,10 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label class="label">Movie MinMatchScore</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The subliminal providers that must be used for searching and downloading subtitles.</li>
             <li>Multiple providers can be selected (use ctrl key).</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8 form-row-label">
           <p-listbox formControlName="subliminalProviders" [options]="subliminalProviders" [multiple]="true"></p-listbox>
@@ -60,10 +60,10 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="subtitleUtf8Encoding" class="label">Subtitles in utf-8 encoding</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>When enabled, all subtitles will be saved in utf-8 encoding.</li>
             <li>When disabled, the original encoding of the subtitle is used.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="subtitleUtf8Encoding" [options]="enabledOrDisabled" [validationFeedback]="saveAttempt"></app-input-dropdown>
@@ -73,10 +73,10 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="refineVideo" class="label">Refine video</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>When enabled, subliminal will enable 'refiners' to enrich the video meta-data before searching for subtitles.</li>
             <li>This can result in a higher score matching and thus a higher automatic subtitle download.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="refineVideo" [options]="enabledOrDisabled" [validationFeedback]="saveAttempt"></app-input-dropdown>
@@ -86,11 +86,11 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="manualRefineVideo" class="label">Refine video manually</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>When enabled, you will be able to edit the video meta-data before searching for subtitles.</li>
             <li>An edit icon will appear next to the show/movie name to edit the show/movie details.</li>
             <li>This only affects a manual search temporarily until the next disk scan.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="manualRefineVideo" [options]="enabledOrDisabled" [validationFeedback]="saveAttempt"></app-input-dropdown>
@@ -100,9 +100,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="preferHearingImpaired" class="label">Prefer hearing impaired subs</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>When enabled, 'hearing impaired' subtitles will be preferred over 'regular' subtitles.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="preferHearingImpaired" [options]="enabledOrDisabled" [validationFeedback]="saveAttempt"></app-input-dropdown>
@@ -118,9 +118,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="antiCaptchaClass" class="label">Anti-captcha service</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The anti-captcha service.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-dropdown formControlName="antiCaptchaClass" [options]="antiCaptchaProviders" [validationFeedback]="saveAttempt"></app-input-dropdown>
@@ -130,11 +130,11 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="antiCaptchaClientKey" class="label">Anti-captcha client key</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The anti-captcha client key.</li>
             <li>anti-captcha.com: account_key</li>
             <li>deathbycaptcha.com: username:password</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="antiCaptchaClientKey" [validationFeedback]="saveAttempt"></app-input-text>
@@ -150,9 +150,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="addic7edUserName" class="label">Username</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The username for your Addic7ed account.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="addic7edUserName" [validationFeedback]="saveAttempt"></app-input-text>
@@ -162,9 +162,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="addic7edPassword" class="label">Password</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The password for your Addic7ed account.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="addic7edPassword" type="password" [validationFeedback]="saveAttempt"></app-input-text>
@@ -180,9 +180,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="opensubtitlesUserName" class="label">Username</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The username for your OpenSubtitles account.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="opensubtitlesUserName" [validationFeedback]="saveAttempt"></app-input-text>
@@ -192,9 +192,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="opensubtitlesPassword" class="label">Password</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The password for your OpenSubtitles account.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="opensubtitlesPassword" type="password" [validationFeedback]="saveAttempt"></app-input-text>
@@ -210,9 +210,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="legendastvUserName" class="label">Username</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The username for your Legendas.TV account.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="legendastvUserName" [validationFeedback]="saveAttempt"></app-input-text>
@@ -222,9 +222,9 @@
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="legendastvPassword" class="label">Password</label>
-          <app-info-icon>
+          <app-icon-dropdown>
             <li>The password for your Legendas.TV account.</li>
-          </app-info-icon>
+          </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="legendastvPassword" type="password" [validationFeedback]="saveAttempt"></app-input-text>

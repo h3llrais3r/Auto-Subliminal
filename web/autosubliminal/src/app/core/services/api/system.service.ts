@@ -37,6 +37,11 @@ export class SystemService extends ApiServiceTemplate {
     return this.httpClient.get<Scheduler[]>(`${this.URL}/schedulers`, this.options)
       .pipe(map(result => result.map(obj => new Scheduler(obj))));
   }
+
+  getScheduler(schedulerName: string): Observable<Scheduler> {
+    return this.httpClient.get<Scheduler>(`${this.URL}/schedulers/${schedulerName}`, this.options)
+      .pipe(map(result => new Scheduler(result)));
+  }
 }
 
 type alive = { alive: boolean };
