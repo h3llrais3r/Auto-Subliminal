@@ -27,6 +27,18 @@ export class PageHeaderComponent implements OnInit {
         routerLink: '/home'
       },
       {
+        label: 'Library',
+        icon: 'pi pi-fw pi-list',
+        items: [
+          {
+            label: 'Overview',
+            icon: 'pi pi-fw pi-list',
+            routerLink: '/library/overview'
+          }
+        ],
+        visible: appSettings.libraryMode
+      },
+      {
         label: 'Settings',
         icon: 'pi pi-fw pi-cog',
         items: [

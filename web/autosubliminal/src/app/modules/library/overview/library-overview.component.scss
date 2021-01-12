@@ -1,0 +1,17 @@
+@import '../../../../scss/variables';
+@import '../../../../scss/mixins/flexbox';
+
+.overview-container {
+  border: 1px solid var(--surface-d);
+  border-radius: 0.25rem;
+  padding: 1rem;
+
+  .overview-image {
+    width: 100%;
+  }
+
+  .overview-data {
+    @include flexbox;
+    @include justify-content(space-between);
+  }
+}

@@ -1,25 +1,20 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LogClearComponent } from './clear/log-clear.component';
-import { LogViewComponent } from './view/log-view.component';
+import { LibraryOverviewComponent } from './overview/library-overview.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'view',
+    redirectTo: 'overview',
     pathMatch: 'full'
   },
   {
-    path: 'view',
-    component: LogViewComponent
-  },
-  {
-    path: 'clear',
-    component: LogClearComponent
+    path: 'overview',
+    component: LibraryOverviewComponent
   },
   {
     path: '**', // wildcard to match any non matching routes
-    redirectTo: 'view'
+    redirectTo: 'overview'
   }
 ];
 
@@ -27,4 +22,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class LogRoutingModule { }
+export class LibraryRoutingModule { }

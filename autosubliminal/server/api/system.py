@@ -3,6 +3,8 @@
 import os
 import platform
 
+import cherrypy
+
 import autosubliminal
 from autosubliminal.core.pathinfo import PathInfo
 from autosubliminal.providers.pitcher import ANTI_CAPTCHA_PROVIDERS
@@ -121,6 +123,7 @@ class _SettingsApi(RestResource):
         return to_dict(settings, camelize)
 
 
+@cherrypy.popargs('scheduler_name')
 class _SchedulersApi(RestResource):
     """
     Rest resource for handling the /api/system/schedulers path.
