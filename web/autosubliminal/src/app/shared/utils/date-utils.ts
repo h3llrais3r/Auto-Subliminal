@@ -10,7 +10,7 @@ export function formatDateTime(timeInMilliSeconds: number, defaultValue = 'N/A')
 }
 
 export function formatDate(timeInMilliSeconds: number, defaultValue = 'N/A'): string {
-  if (name) {
+  if (timeInMilliSeconds) {
     return strftime(appSettings.dateFormat, new Date(timeInMilliSeconds));
   } else {
     return defaultValue;
@@ -18,7 +18,7 @@ export function formatDate(timeInMilliSeconds: number, defaultValue = 'N/A'): st
 }
 
 export function formatTime(timeInMilliSeconds: number, defaultValue = 'N/A'): string {
-  if (name) {
+  if (timeInMilliSeconds) {
     return strftime(appSettings.timeFormat, new Date(timeInMilliSeconds));
   } else {
     return defaultValue;

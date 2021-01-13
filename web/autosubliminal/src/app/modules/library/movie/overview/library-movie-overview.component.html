@@ -1,6 +1,27 @@
 <div class="container">
   <p-panel header="Movie library">
-    <p-table [value]="movies" [autoLayout]="true" [rowHover]="true" styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
+    <p-table #movieTable
+             [value]="movies"
+             [loading]="loading"
+             [autoLayout]="true"
+             [rowHover]="true"
+             [paginator]="true"
+             [rows]="10"
+             [rowsPerPageOptions]="[10,25,50,{showAll:'All'}]"
+             [showCurrentPageReport]="true"
+             [globalFilterFields]="globalFilterFields"
+             [customSort]="true"
+             (sortFunction)="sort($event)"
+             currentPageReportTemplate="{first} to {last} of {totalRecords}"
+             styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
+      <ng-template pTemplate="caption">
+        <div class="caption" *ngIf="movies">
+          <p-button [label]="movies.length + ' movies'" styleClass="p-button-static p-button-outlined"></p-button>
+          <span class="ml-auto">
+            <app-table-filter [table]="movieTable" matchMode='contains'></app-table-filter>
+          </span>
+        </div>
+      </ng-template>
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="title"><span>Title<p-sortIcon field="title"></p-sortIcon></span></th>
