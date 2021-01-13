@@ -1,5 +1,5 @@
 import { FormGroup } from '@angular/forms';
-import * as $ from 'jquery';
+import $ from 'jquery';
 import { SelectItem } from 'primeng/api';
 
 export class FormUtils {

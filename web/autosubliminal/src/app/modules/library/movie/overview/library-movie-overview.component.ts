@@ -13,7 +13,9 @@ import { naturalSort } from '../../../../shared/utils/table-utils';
 export class LibraryMovieOverviewComponent implements OnInit {
 
   movies: Movie[];
+  nrOfMovies = 0;
   globalFilterFields = ['title', 'year', 'path', 'settings.wantedLanguages', 'totalSubtitlesAvailable'];
+  tableStateKey = 'autosubliminal-library-movie-overview-table';
   loading = false;
 
   constructor(private movieService: MovieService, private artworkService: ArtworkService) { }
@@ -22,6 +24,7 @@ export class LibraryMovieOverviewComponent implements OnInit {
     this.loading = true;
     this.movieService.getMovies().subscribe(result => {
       this.movies = result;
+      this.nrOfMovies = this.movies.length;
       this.loading = false;
     });
   }

@@ -13,7 +13,9 @@ import { naturalSort } from '../../../../shared/utils/table-utils';
 export class LibraryShowOverviewComponent implements OnInit {
 
   shows: Show[];
+  nrOfShows = 0;
   globalFilterFields = ['title', 'year', 'path', 'settings.wantedLanguages', 'totalSubtitlesAvailable'];
+  tableStateKey = 'autosubliminal-library-show-overview-table';
   loading = false;
 
   constructor(private showService: ShowService, private artworkService: ArtworkService) { }
@@ -22,6 +24,7 @@ export class LibraryShowOverviewComponent implements OnInit {
     this.loading = true;
     this.showService.getShows().subscribe(result => {
       this.shows = result;
+      this.nrOfShows = this.shows.length;
       this.loading = false;
     });
   }
