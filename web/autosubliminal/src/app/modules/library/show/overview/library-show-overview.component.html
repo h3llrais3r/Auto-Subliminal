@@ -2,6 +2,7 @@
   <p-panel header="Show library">
     <p-table #showTable
              [value]="shows"
+             [stateKey]="tableStateKey"
              [loading]="loading"
              [autoLayout]="true"
              [rowHover]="true"
@@ -12,13 +13,14 @@
              [globalFilterFields]="globalFilterFields"
              [customSort]="true"
              (sortFunction)="sort($event)"
+             stateStorage="local"
              currentPageReportTemplate="{first} to {last} of {totalRecords}"
              styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
       <ng-template pTemplate="caption">
-        <div class="caption" *ngIf="shows">
-          <p-button [label]="shows.length + ' shows'" styleClass="p-button-static p-button-outlined"></p-button>
+        <div class="caption">
+          <p-button [label]="nrOfShows + ' shows'" styleClass="p-button-static p-button-outlined"></p-button>
           <span class="ml-auto">
-            <app-table-filter [table]="showTable" matchMode='contains'></app-table-filter>
+            <app-table-filter [table]="showTable" [tableStateKey]="tableStateKey" matchMode='contains'></app-table-filter>
           </span>
         </div>
       </ng-template>

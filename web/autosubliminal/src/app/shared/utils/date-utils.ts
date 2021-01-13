@@ -1,4 +1,4 @@
-import * as strftime from 'strftime';
+import strftime from 'strftime';
 import { appSettings } from '../../app-settings.service';
 
 export function formatDateTime(timeInMilliSeconds: number, defaultValue = 'N/A'): string {
