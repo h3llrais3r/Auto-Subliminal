@@ -26,6 +26,7 @@ import { InputSwitchComponent } from './components/input/switch/input-switch.com
 import { InputTextComponent } from './components/input/text/input-text.component';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { ScrollComponent } from './components/scroll/scroll.component';
+import { TableFilterComponent } from './components/table-filter/table-filter.component';
 
 @NgModule({
   declarations: [
@@ -36,13 +37,15 @@ import { ScrollComponent } from './components/scroll/scroll.component';
     InputSwitchComponent,
     InputDropdownComponent,
     InputMultiTextComponent,
-    ProgressBarComponent
+    ProgressBarComponent,
+    TableFilterComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     NgxMaskModule.forRoot(),
+    TableModule,
     ButtonModule,
     InputTextModule,
     InputNumberModule,
@@ -77,7 +80,8 @@ import { ScrollComponent } from './components/scroll/scroll.component';
     InputSwitchComponent,
     InputDropdownComponent,
     InputMultiTextComponent,
-    ProgressBarComponent
+    ProgressBarComponent,
+    TableFilterComponent
   ]
 })
 export class SharedModule { }

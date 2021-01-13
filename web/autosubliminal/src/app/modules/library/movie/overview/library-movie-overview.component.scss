@@ -2,15 +2,22 @@
 @import '../../../../../scss/mixins/flexbox';
 @import '../../../../../scss/components/images';
 
+.caption {
+  @include flexbox;
+  @include align-items(center);
+}
+
 .title-container {
   @include flexbox;
   @include align-items(center);
 
-  .title-poster-image {
-    @extend .image-box;
-    @extend .image-hover;
-    height: 55px;
-    width: 37px; // aspect ratio 0.675
+  .title-poster {
+    .title-poster-image {
+      @extend .image-box;
+      @extend .image-hover;
+      height: 55px;
+      width: 37px; // aspect ratio 0.675
+    }
   }
 
   .title-text {

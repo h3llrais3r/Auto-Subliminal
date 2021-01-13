@@ -1,6 +1,27 @@
 <div class="container">
   <p-panel header="Show library">
-    <p-table [value]="shows" [autoLayout]="true" [rowHover]="true" styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
+    <p-table #showTable
+             [value]="shows"
+             [loading]="loading"
+             [autoLayout]="true"
+             [rowHover]="true"
+             [paginator]="true"
+             [rows]="10"
+             [rowsPerPageOptions]="[10,25,50,{showAll:'All'}]"
+             [showCurrentPageReport]="true"
+             [globalFilterFields]="globalFilterFields"
+             [customSort]="true"
+             (sortFunction)="sort($event)"
+             currentPageReportTemplate="{first} to {last} of {totalRecords}"
+             styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
+      <ng-template pTemplate="caption">
+        <div class="caption" *ngIf="shows">
+          <p-button [label]="shows.length + ' shows'" styleClass="p-button-static p-button-outlined"></p-button>
+          <span class="ml-auto">
+            <app-table-filter [table]="showTable" matchMode='contains'></app-table-filter>
+          </span>
+        </div>
+      </ng-template>
       <ng-template pTemplate="header">
         <tr>
           <th pSortableColumn="title"><span>Title<p-sortIcon field="title"></p-sortIcon></span></th>
@@ -14,7 +35,7 @@
         <tr>
           <td>
             <span class="p-column-title">Title</span>
-            <span class="p-column-data">
+            <span class="p-column-data title-banner-container">
               <span class="title-banner">
                 <a [routerLink]="['/library/show/detail',show.tvdbId]" [title]="show.title">
                   <img *ngIf="show.banner" class="title-banner-image" [lazyLoad]="getShowBannerUrl(show.tvdbId)" [defaultImage]="getDefaultBannerUrl()">
