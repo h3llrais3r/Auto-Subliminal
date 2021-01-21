@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
-import { appSettings } from '../../../../app-settings.service';
 import { SettingsService } from '../../../../core/services/api/settings.service';
 import { ShowService } from '../../../../core/services/api/show.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
 import { FileType } from '../../../../shared/models/filetype';
 import { Show, ShowFile } from '../../../../shared/models/show';
 import { VideoSubtitles } from '../../../../shared/models/video';
+import { getPlayVideoUrl, getPosterPlaceholderUrl, getTvdbUrl } from '../../../../shared/utils/common-utils';
 
 @Component({
   selector: 'app-library-show-detail',
@@ -27,7 +27,7 @@ export class LibraryShowDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private fb: FormBuilder,
+    private domSanitizer: DomSanitizer,
     private showService: ShowService,
     private artworkService: ArtworkService,
     private settingsService: SettingsService,
@@ -51,15 +51,15 @@ export class LibraryShowDetailComponent implements OnInit {
   }
 
   getPosterPlaceholderUrl(): string {
-    return 'assets/poster-placeholder.jpg';
+    return getPosterPlaceholderUrl();
   }
 
   getTvdbUrl(): string {
-    return `${appSettings.tvdbUrl}${this.show.tvdbId}`;
+    return getTvdbUrl(this.show.tvdbId);
   }
 
-  getPlayVideoUrl(filePath: string, fileName: string): string {
-    return `playvideo://${filePath}${appSettings.pathSeparator}${fileName}`;
+  getPlayVideoUrl(filePath: string, fileName: string): SafeResourceUrl {
+    return this.domSanitizer.bypassSecurityTrustResourceUrl(getPlayVideoUrl(filePath, fileName));
   }
 
   openSettingsDialog(): void {
