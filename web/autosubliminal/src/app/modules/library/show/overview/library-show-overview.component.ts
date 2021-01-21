@@ -6,6 +6,7 @@ import { ShowService } from '../../../../core/services/api/show.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
 import { SystemEventService } from '../../../../core/services/system-event.service';
 import { Show } from '../../../../shared/models/show';
+import { getBannerPlaceholderUrl } from '../../../../shared/utils/common-utils';
 import { naturalSort } from '../../../../shared/utils/table-utils';
 
 @Component({
@@ -62,6 +63,6 @@ export class LibraryShowOverviewComponent implements OnInit, OnDestroy {
   }
 
   getBannerPlaceholderUrl(): string {
-    return 'assets/banner-placeholder.jpg';
+    return getBannerPlaceholderUrl();
   }
 }

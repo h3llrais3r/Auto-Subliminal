@@ -87,8 +87,8 @@
                   </app-icon-dropdown>
                 </div>
                 <div class="ml-auto">
-                  <p-button *ngFor="let language of show.settings.wantedLanguages" [label]="language" [badge]="getNrOfSubtitles(season.files, language)" styleClass="p-button-static p-button-secondary p-button-outlined p-button-sm ml-2"></p-button>
-                  <p-button label="video" [badge]="getNrOfVideos(season.files)" styleClass="p-button-static p-button-secondary p-button-outlined p-button-sm ml-2"></p-button>
+                  <p-button *ngFor="let language of show.settings.wantedLanguages" [label]="language" [badge]="getNrOfSubtitles(season.files, language)" styleClass="p-button-static p-button-outlined p-button-sm ml-2"></p-button>
+                  <p-button label="video" [badge]="getNrOfVideos(season.files)" styleClass="p-button-static p-button-outlined p-button-sm ml-2"></p-button>
                 </div>
               </div>
             </ng-template>
