@@ -35,7 +35,7 @@ export class InputMultiTextComponent extends InputComponent implements OnInit {
     // Replace original value with change value
     const changedValue = event.value;
     if (changedValue) {
-      this.control.setValue(this.values.map(val => val === originalValue ? changedValue.trim() : val));
+      this.control.setValue(this.values.map((val) => val === originalValue ? changedValue.trim() : val));
     }
   }
 
@@ -43,13 +43,13 @@ export class InputMultiTextComponent extends InputComponent implements OnInit {
     // Replace original value with change value
     const changedValue = (event.target as HTMLInputElement).value;
     if (changedValue && changedValue.trim()) {
-      this.control.setValue(this.values.map(val => val === originalValue ? changedValue.trim() : val));
+      this.control.setValue(this.values.map((val) => val === originalValue ? changedValue.trim() : val));
     }
   }
 
   removeValue(value: string): void {
     // Remove value
-    this.control.setValue(this.values.filter(val => val !== value));
+    this.control.setValue(this.values.filter((val) => val !== value));
   }
 
   onNewValueChange(event: { event: MouseEvent, value: string }): void { // event model exposed by p-dropdown onchange

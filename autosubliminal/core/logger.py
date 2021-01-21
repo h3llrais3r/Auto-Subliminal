@@ -99,6 +99,43 @@ def display_logfile(loglevel='all', lines=0, lognum=None):
     return result.lstrip().rstrip()  # remove new lines from the beginning and end
 
 
+def get_log_lines(loglevel='all', lines=0, lognum=None):
+    # Read log file data
+    data = []
+    previous_loglevel = loglevel
+    logfile = get_logfile(lognum)
+    if logfile:
+        f = codecs.open(logfile, 'r', 'utf-8')
+        data = f.readlines()
+        f.close()
+    # Log data
+    log_data = []
+    for x in data:
+        try:
+            matches = LOG_PARSER.search(x)
+            match_dict = matches.groupdict() if matches else None
+            if match_dict:
+                # Check if the record matches the requested loglevel
+                if (loglevel == 'all') or (match_dict['loglevel'] == loglevel.upper()):
+                    log_data.append(x.rstrip())  # strip newline
+                # Store record loglevel as previous loglevel (needed for log records without match_dict)
+                previous_loglevel = match_dict['loglevel']
+            else:
+                # When no match is found (f.e. traceback logging) assume it's the same loglevel as the previous record
+                if (loglevel == 'all') or (previous_loglevel.upper() == loglevel.upper()):
+                    log_data.append(x.rstrip())  # strip newline
+        except Exception:
+            continue
+    # Get last x lines
+    if lines and lines < len(log_data):
+        log_data = log_data[-lines:]
+    # If reversed order is needed, reverse log_data
+    if autosubliminal.LOGREVERSED:
+        log_data.reverse()
+    # Return log lines
+    return log_data
+
+
 def get_logfile(lognum=None):
     logfile = autosubliminal.LOGFILE
     if lognum:

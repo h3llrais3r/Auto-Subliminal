@@ -42,7 +42,7 @@ export class AppComponent {
       const check = interval(this.ALIVE_CHECK_INTERVAL).subscribe(
         () => {
           this.systemService.isAlive().subscribe(
-            alive => {
+            (alive) => {
               if (alive) {
                 this.systemStart = false;
                 this.systemStarted = true;
@@ -62,7 +62,7 @@ export class AppComponent {
     const check = interval(this.ALIVE_CHECK_INTERVAL).subscribe(
       () => {
         this.systemService.isAlive().subscribe(
-          alive => {
+          (alive) => {
             if (alive) {
               this.systemRestart = false;
               this.systemStarted = true;

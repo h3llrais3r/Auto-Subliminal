@@ -26,8 +26,8 @@ export class SettingsLoggingComponent implements OnInit {
   ngOnInit(): void {
     this.buildSelectItems();
     this.settingsService.getLogSettings().subscribe(
-      result => {
-        this.buildForm(result);
+      (logSettings) => {
+        this.buildForm(logSettings);
       });
   }
 

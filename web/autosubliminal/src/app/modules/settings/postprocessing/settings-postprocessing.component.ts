@@ -24,8 +24,8 @@ export class SettingsPostprocessingComponent implements OnInit {
   ngOnInit(): void {
     this.buildSelectItems();
     this.settingsService.getPostProcessSettings().subscribe(
-      result => {
-        this.buildForm(result);
+      (postProcessSettings) => {
+        this.buildForm(postProcessSettings);
       });
   }
 

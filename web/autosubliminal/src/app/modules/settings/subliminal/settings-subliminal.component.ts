@@ -27,8 +27,8 @@ export class SettingsSubliminalComponent implements OnInit {
   ngOnInit(): void {
     this.buildSelectItems();
     this.settingsService.getSubliminalSettings().subscribe(
-      result => {
-        this.buildForm(result);
+      (subliminalSettings) => {
+        this.buildForm(subliminalSettings);
       });
   }
 
@@ -48,11 +48,11 @@ export class SettingsSubliminalComponent implements OnInit {
     this.enabledOrDisabled = FormUtils.enabledOrDisabledSelectItems();
     // Subliminal providers
     this.subliminalProviders = [];
-    appSettings.subliminalProviders.forEach(provider => this.subliminalProviders.push({ label: provider, value: provider }));
+    appSettings.subliminalProviders.forEach((provider) => this.subliminalProviders.push({ label: provider, value: provider }));
     // Anti-Captcha providers
     this.antiCaptchaProviders = [];
     this.antiCaptchaProviders.push({ label: 'Disabled', value: '' });
-    appSettings.antiCaptchaProviders.forEach(provider => this.antiCaptchaProviders.push({ label: provider.source, value: provider.class }));
+    appSettings.antiCaptchaProviders.forEach((provider) => this.antiCaptchaProviders.push({ label: provider.source, value: provider.class }));
   }
 
   private buildForm(subliminalSettings: SubliminalSettings): void {

@@ -66,15 +66,15 @@ export class AppSettingsService {
     } else {
       // Use manual resolve, reject to be sure to not bootstrap the application in case of an error!
       return new Promise((resolve, reject) => {
-        const settingsObservable = this.httpClient.get(`/api/system/settings`).pipe(map(settings => settings as AppSettings));
+        const settingsObservable = this.httpClient.get(`/api/system/settings`).pipe(map((settings) => settings as AppSettings));
         settingsObservable.subscribe(
-          settings => {
+          (settings) => {
             appSettings.fromSettings(settings);
             this.configLoaded = true;
             console.log('Application settings loaded');
             resolve(appSettings);
           },
-          error => {
+          (error) => {
             // Use reject if you want to break the boostrapping of the app!
             // reject(`Error while retrieving application settings: ${JSON.stringify(error)}`);
             console.error(`Error while retrieving application settings: ${JSON.stringify(error)}`);

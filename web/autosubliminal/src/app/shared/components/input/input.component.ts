@@ -28,6 +28,7 @@ export abstract class InputComponent implements ControlValueAccessor {
   @Input()
   disabled = false;
 
+  // tslint:disable-next-line: no-output-native
   @Output()
   keyup: EventEmitter<any> = new EventEmitter(); // allows custom onKeyup functionality (keyup)="..." when component is created
 
@@ -69,6 +70,7 @@ export abstract class InputComponent implements ControlValueAccessor {
     }
     return validationClass;
   }
+
 
   onKeyup(event: KeyboardEvent): void {
     this.keyup.emit(event);
