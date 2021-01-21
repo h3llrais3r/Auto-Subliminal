@@ -1,16 +1,7 @@
 <div class="container">
   <p-panel header="Library overview">
-    <!-- Library scanner running -->
-    <div class="row" *ngIf="scanningInProgress">
-      <div class="col-12 mb-3">
-        <p-messages severity="info">
-          <ng-template pTemplate>
-            <i class="pi pi-spin pi-spinner mr-2" aria-hidden="true"></i>
-            <span>Scanning library...</span>
-          </ng-template>
-        </p-messages>
-      </div>
-    </div>
+    <!-- Library scanning message -->
+    <app-library-scanning></app-library-scanning>
     <!-- Overview -->
     <div class="row">
       <!-- Shows overview -->

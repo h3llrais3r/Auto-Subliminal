@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SortEvent } from 'primeng/api';
+import { Subscription } from 'rxjs';
+import { appSettings } from '../../../../app-settings.service';
 import { ShowService } from '../../../../core/services/api/show.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
+import { SystemEventService } from '../../../../core/services/system-event.service';
 import { Show } from '../../../../shared/models/show';
 import { naturalSort } from '../../../../shared/utils/table-utils';
 
@@ -10,7 +13,7 @@ import { naturalSort } from '../../../../shared/utils/table-utils';
   templateUrl: './library-show-overview.component.html',
   styleUrls: ['./library-show-overview.component.scss']
 })
-export class LibraryShowOverviewComponent implements OnInit {
+export class LibraryShowOverviewComponent implements OnInit, OnDestroy {
 
   shows: Show[];
   nrOfShows = 0;
@@ -18,12 +21,33 @@ export class LibraryShowOverviewComponent implements OnInit {
   tableStateKey = 'autosubliminal-library-show-overview-table';
   loading = false;
 
-  constructor(private showService: ShowService, private artworkService: ArtworkService) { }
+  private scanLibrarySubscription: Subscription;
+
+  constructor(
+    private systemEventService: SystemEventService,
+    private showService: ShowService,
+    private artworkService: ArtworkService) { }
 
   ngOnInit(): void {
+    // Load overview
+    this.loadOverview();
+    // Subscribe on scanLibrary finish events to reload the overview
+    this.scanLibrarySubscription = this.systemEventService.schedulerStart.subscribe(
+      (scheduler) => {
+        if (scheduler.name === appSettings.scanLibrary) {
+          this.loadOverview();
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.scanLibrarySubscription.unsubscribe();
+  }
+
+  private loadOverview(): void {
     this.loading = true;
-    this.showService.getShows().subscribe(result => {
-      this.shows = result;
+    this.showService.getShows().subscribe((shows) => {
+      this.shows = shows;
       this.nrOfShows = this.shows.length;
       this.loading = false;
     });
@@ -33,11 +57,11 @@ export class LibraryShowOverviewComponent implements OnInit {
     naturalSort(event);
   }
 
-  getShowBannerUrl(tvdbId: number): string {
+  getShowBannerThumbnailUrl(tvdbId: number): string {
     return this.artworkService.getShowBannerThumbnailUrl(tvdbId);
   }
 
-  getDefaultBannerUrl(): string {
+  getBannerPlaceholderUrl(): string {
     return 'assets/banner-placeholder.jpg';
   }
 }

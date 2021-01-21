@@ -50,6 +50,7 @@
               "node_modules/bootstrap/dist/css/bootstrap.css",
               "node_modules/primeng/resources/primeng.css",
               "node_modules/primeicons/primeicons.css",
+              "node_modules/font-awesome/css/font-awesome.css",
               "src/styles.scss"
             ],
             "scripts": [

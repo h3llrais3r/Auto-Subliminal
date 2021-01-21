@@ -1,0 +1,115 @@
+@import '../variables';
+@import '../mixins/flexbox';
+@import './images';
+
+// Shared styling for library detail pages
+
+.library-overview-container {
+
+  .title-container {
+    @include flexbox;
+    @include align-items(center);
+
+    .title-poster-container {
+      .title-poster-image {
+        @extend .image-box;
+        @extend .image-hover;
+        height: 55px;
+        width: 37px; // aspect ratio 0.675
+      }
+    }
+
+    .title-text {
+      margin-left: 0.5rem;
+      font-weight: $font-bold;
+
+      a {
+        color: var(--text-color);
+      }
+    }
+  }
+
+  .title-banner-container {
+    .title-banner {
+      .title-banner-image {
+        @extend .image-box;
+        @extend .image-hover;
+        height: 55px; // aspect ratio: 0.185
+        width: 297px;
+      }
+    }
+  }
+}
+
+.library-details-container {
+
+  .library-details-info-container {
+    @include flexbox;
+
+    @media (max-width: $media-mobile-max-width) {
+      display: block; // poster and info must be on new lines
+    }
+
+    .library-details-info-poster {
+      @include flexbox;
+      @include justify-content(center);
+      @include align-items(flex-start);
+
+      .library-details-info-poster-image {
+        @extend .image-box;
+        @extend .image-hover;
+        height: 250px;
+        width: 167px; // aspect ratio 0.675
+
+        @media (max-width: $media-mobile-max-width) {
+          height: 150px;
+          width: 101px; // aspect ratio 0.675
+        }
+      }
+    }
+
+    .library-details-info {
+      @include flex-grow(1);
+      padding-left: 15px; // to be in sync with bootstrap default col padding
+
+      @media (max-width: $media-mobile-max-width) {
+        padding-left: 0; // settings info is on new line so no padding needed
+      }
+
+      .library-details-info-title {
+        @include flexbox;
+        font-size: 1.5rem;
+
+        @media (max-width: $media-mobile-max-width) {
+          @include justify-content(center);
+          padding-left: 0;
+        }
+      }
+    }
+  }
+
+  .library-details-files-summary {
+    @include flexbox;
+    @include align-items(center);
+    padding: 0 0.5rem; // to be aligned with header title of table
+
+    .summary-title {
+      font-size: 1.5rem;
+    }
+
+    .summary-progress-bar {
+      width: 10rem;
+    }
+  }
+
+  .library-details-files {
+    .table-caption {
+      @include flexbox;
+      @include align-items(center);
+
+      .table-caption-title {
+        font-size: 1.25rem;
+      }
+    }
+  }
+}

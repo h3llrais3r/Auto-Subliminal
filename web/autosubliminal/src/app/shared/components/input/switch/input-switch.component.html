@@ -1,6 +1,8 @@
-<span class="input-switch">
-  <span *ngIf="label" class="label">{{label}}</span>
-  <span>
-    <p-inputSwitch [id]="id || formControlName" [formControl]="control"></p-inputSwitch>
+<span class="input-switch-container">
+  <span class="input-switch">
+    <span *ngIf="label" class="label">{{label}}</span>
+    <span>
+      <p-inputSwitch [id]="id || formControlName" [formControl]="control"></p-inputSwitch>
+    </span>
   </span>
 </span>

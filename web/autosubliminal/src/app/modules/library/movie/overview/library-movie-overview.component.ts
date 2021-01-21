@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { SortEvent } from 'primeng/api';
+import { Subscription } from 'rxjs';
+import { appSettings } from '../../../../app-settings.service';
 import { MovieService } from '../../../../core/services/api/movie.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
+import { SystemEventService } from '../../../../core/services/system-event.service';
 import { Movie } from '../../../../shared/models/movie';
 import { naturalSort } from '../../../../shared/utils/table-utils';
 
@@ -10,20 +13,41 @@ import { naturalSort } from '../../../../shared/utils/table-utils';
   templateUrl: './library-movie-overview.component.html',
   styleUrls: ['./library-movie-overview.component.scss']
 })
-export class LibraryMovieOverviewComponent implements OnInit {
+export class LibraryMovieOverviewComponent implements OnInit, OnDestroy {
 
+  loading = false;
   movies: Movie[];
   nrOfMovies = 0;
   globalFilterFields = ['title', 'year', 'path', 'settings.wantedLanguages', 'totalSubtitlesAvailable'];
   tableStateKey = 'autosubliminal-library-movie-overview-table';
-  loading = false;
 
-  constructor(private movieService: MovieService, private artworkService: ArtworkService) { }
+  private scanLibrarySubscription: Subscription;
+
+  constructor(
+    private systemEventService: SystemEventService,
+    private movieService: MovieService,
+    private artworkService: ArtworkService) { }
 
   ngOnInit(): void {
+    // Load overview
+    this.loadOverview();
+    // Subscribe on scanLibrary finish events to reload the overview
+    this.scanLibrarySubscription = this.systemEventService.schedulerStart.subscribe(
+      (scheduler) => {
+        if (scheduler.name === appSettings.scanLibrary) {
+          this.loadOverview();
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.scanLibrarySubscription.unsubscribe();
+  }
+
+  private loadOverview(): void {
     this.loading = true;
-    this.movieService.getMovies().subscribe(result => {
-      this.movies = result;
+    this.movieService.getMovies().subscribe((movies) => {
+      this.movies = movies;
       this.nrOfMovies = this.movies.length;
       this.loading = false;
     });
@@ -33,11 +57,11 @@ export class LibraryMovieOverviewComponent implements OnInit {
     naturalSort(event);
   }
 
-  getMoviePosterUrl(imdbId: string): string {
+  getMoviePosterThumbnailUrl(imdbId: string): string {
     return this.artworkService.getMoviePosterThumbnailUrl(imdbId);
   }
 
-  getDefaultPosterUrl(): string {
+  getPosterPlaceholderUrl(): string {
     return 'assets/poster-placeholder.jpg';
   }
 }

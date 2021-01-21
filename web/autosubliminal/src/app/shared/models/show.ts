@@ -26,10 +26,20 @@ export class Show {
   totalSubtitlesMissing: number;
   totalSubtitlesWanted: number;
   settings: ShowSettings;
-  files?: ShowFiles[]; // only loaded for details
+  seasons?: ShowSeason[]; // only loaded for details
 
   constructor(obj?: any) {
     Object.assign(this, obj);
+    if (this.settings) {
+      this.settings = new ShowSettings(this.settings);
+    }
+    if (this.seasons) {
+      this.seasons = this.seasons.map((season) => new ShowSeason(season));
+    }
+  }
+
+  get name(): string {
+    return `${this.title} (${this.year})`;
   }
 }
 
@@ -44,17 +54,20 @@ export class ShowSettings {
   }
 }
 
-export class ShowFiles {
+export class ShowSeason {
   seasonName: string;
   seasonPath: string;
-  seasonFiles: ShowSeasonFiles[];
+  files: ShowFile[];
 
   constructor(obj?: any) {
     Object.assign(this, obj);
+    if (this.files) {
+      this.files = this.files.map((file) => new ShowFile(file));
+    }
   }
 }
 
-export class ShowSeasonFiles {
+export class ShowFile {
   tvdbId: number;
   filename: string;
   type: FileType;
@@ -64,5 +77,21 @@ export class ShowSeasonFiles {
 
   constructor(obj?: any) {
     Object.assign(this, obj);
+  }
+
+  get isVideo(): boolean {
+    return this.type === FileType.VIDEO;
+  }
+
+  get isSubtitle(): boolean {
+    return this.type === FileType.SUBTITLE;
+  }
+
+  get internalLanguagesAvailable(): boolean {
+    let available = false;
+    if ((this.hardcodedLanguages && this.hardcodedLanguages.length > 0) || (this.embeddedLanguages && this.embeddedLanguages.length > 0)) {
+      available = true;
+    }
+    return available;
   }
 }

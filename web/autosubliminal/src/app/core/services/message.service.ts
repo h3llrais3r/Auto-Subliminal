@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Message, MessageService as PrimeNgMessageService } from 'primeng/api';
+import { MessageSeverity } from '../../shared/models/message';
 
 @Injectable({
   providedIn: 'root'
@@ -32,11 +33,4 @@ export class MessageService {
     };
     this.primeNgMessageService.add(message);
   }
-}
-
-export enum MessageSeverity {
-  SUCCESS = 'success',
-  INFO = 'info',
-  WARN = 'warn',
-  ERROR = 'error'
 }

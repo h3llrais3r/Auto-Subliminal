@@ -579,3 +579,16 @@ def get_wanted_languages():
         wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES)
 
     return wanted_languages
+
+
+def get_missing_languages(available_subtitles, wanted_languages=None):
+    """Get the missing subtitle languages."""
+    if wanted_languages is None:
+        wanted_languages = get_wanted_languages()
+
+    available_languages = []
+    for subtitle in available_subtitles:
+        available_languages.append(subtitle.language)
+
+    # Return the missing languages (= not in available languages)
+    return [language for language in wanted_languages if language not in available_languages]
