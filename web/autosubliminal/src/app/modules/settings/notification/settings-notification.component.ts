@@ -28,8 +28,8 @@ export class SettingsNotificationComponent implements OnInit {
   ngOnInit(): void {
     this.buildSelectItems();
     this.settingsService.getNotificationSettings().subscribe(
-      result => {
-        this.buildForm(result);
+      (notificationSettings) => {
+        this.buildForm(notificationSettings);
       });
   }
 
@@ -52,9 +52,9 @@ export class SettingsNotificationComponent implements OnInit {
 
   registerTwitter(): void {
     this.settingsService.registerTwitter().subscribe(
-      result => {
+      (twitterRegistration) => {
         // Show dialog to finish the registration
-        this.twitterRegistration = result;
+        this.twitterRegistration = twitterRegistration;
         this.twitterRegistrationDialog = true;
       },
       () => this.messageService.showErrorMessage('Twitter registration failed!'));
@@ -62,10 +62,10 @@ export class SettingsNotificationComponent implements OnInit {
 
   authorizeTwitter(): void {
     this.settingsService.authorizeTwitter(this.twitterRegistration).subscribe(
-      result => {
+      (twitterAuthorization) => {
         // Update form with twitter key and secret
-        FormUtils.setFormControlValue(this.settingsForm, 'twitterKey', result.twitterKey);
-        FormUtils.setFormControlValue(this.settingsForm, 'twitterSecret', result.twitterSecret);
+        FormUtils.setFormControlValue(this.settingsForm, 'twitterKey', twitterAuthorization.twitterKey);
+        FormUtils.setFormControlValue(this.settingsForm, 'twitterSecret', twitterAuthorization.twitterSecret);
         this.messageService.showSuccessMessage('Twitter registration successful. Please save and test Twitter.');
       },
       () => this.messageService.showErrorMessage('Twitter authorization failed!'));

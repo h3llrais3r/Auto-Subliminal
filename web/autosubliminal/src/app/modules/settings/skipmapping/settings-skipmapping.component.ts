@@ -20,8 +20,8 @@ export class SettingsSkipmappingComponent implements OnInit {
 
   ngOnInit(): void {
     this.settingsService.getSkipMappingSettings().subscribe(
-      result => {
-        this.buildForm(result);
+      (skipMappingSettings) => {
+        this.buildForm(skipMappingSettings);
       });
   }
 

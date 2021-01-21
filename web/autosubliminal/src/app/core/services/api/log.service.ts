@@ -17,8 +17,7 @@ export class LogService extends ApiServiceTemplate {
 
   getLogs(lognum?: number): Observable<string[]> {
     const url = lognum ? `${this.URL}/${lognum}` : this.URL;
-    return this.httpClient.get<string>(url, this.options)
-      .pipe(map(result => result.split('\\r\\n')));
+    return this.httpClient.get<string[]>(url, this.options);
   }
 
   clearLogs(): Observable<boolean> {
@@ -27,6 +26,9 @@ export class LogService extends ApiServiceTemplate {
   }
 
   getLogCount(): Observable<number> {
-    return this.httpClient.get<number>(`${this.URL}/count`, this.options);
+    return this.httpClient.get<Count>(`${this.URL}/count`, this.options)
+      .pipe(map((count) => count.count));
   }
 }
+
+type Count = { count: number };

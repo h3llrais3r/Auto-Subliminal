@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { GeneralSettings, LibrarySettings, LogSettings, NameMappingSettings, NotificationSettings, PostProcessSettings, SkipMappingSettings, SubliminalSettings, TwitterAutorization, TwitterRegistration, WebServerSettings } from '../../../shared/models/settings';
+import { GeneralSettings, LibrarySettings, LogSettings, NameMappingSettings, NotificationSettings, PostProcessSettings, SkipMappingSettings, SubliminalSettings, TwitterAuthorization, TwitterRegistration, WebServerSettings } from '../../../shared/models/settings';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -124,12 +124,12 @@ export class SettingsService extends ApiServiceTemplate {
 
   registerTwitter(): Observable<TwitterRegistration> {
     return this.httpClient.post(`${this.URL}/notification/twitter`, {}, this.options)
-      .pipe(map((settings) => new TwitterRegistration(settings)));
+      .pipe(map((twitterRegistration) => new TwitterRegistration(twitterRegistration)));
   }
 
-  authorizeTwitter(twitterRegistration: TwitterRegistration): Observable<TwitterAutorization> {
+  authorizeTwitter(twitterRegistration: TwitterRegistration): Observable<TwitterAuthorization> {
     return this.httpClient.post(`${this.URL}/notification/twitter`, twitterRegistration, this.options)
-      .pipe(map((result) => new TwitterAutorization(result)));
+      .pipe(map((twitterAuthorization) => new TwitterAuthorization(twitterAuthorization)));
   }
 
   // PostProcess settings

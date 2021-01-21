@@ -20,8 +20,8 @@ export class SettingsNamemappingComponent implements OnInit {
 
   ngOnInit(): void {
     this.settingsService.getNameMappingSettings().subscribe(
-      result => {
-        this.buildForm(result);
+      (nameMappingSettings) => {
+        this.buildForm(nameMappingSettings);
       });
   }
 

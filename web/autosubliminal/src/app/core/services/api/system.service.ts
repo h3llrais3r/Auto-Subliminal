@@ -19,29 +19,29 @@ export class SystemService extends ApiServiceTemplate {
   }
 
   isAlive(): Observable<boolean> {
-    return this.httpClient.get<alive>(`${this.URL}/alive`, this.options)
-      .pipe(map((result) => result.alive));
+    return this.httpClient.get<Alive>(`${this.URL}/alive`, this.options)
+      .pipe(map((alive) => alive.alive));
   }
 
   getSystemInfo(): Observable<SystemInfo> {
     return this.httpClient.get<SystemInfo>(`${this.URL}/info`, this.options)
-      .pipe(map(result => new SystemInfo(result)));
+      .pipe(map((systemInfo) => new SystemInfo(systemInfo)));
   }
 
   getPaths(): Observable<PathInfo[]> {
     return this.httpClient.get<PathInfo[]>(`${this.URL}/paths`, this.options)
-      .pipe(map(result => result.map(obj => new PathInfo(obj))));
+      .pipe(map((pathInfos) => pathInfos.map((pathInfo) => new PathInfo(pathInfo))));
   }
 
   getSchedulers(): Observable<Scheduler[]> {
     return this.httpClient.get<Scheduler[]>(`${this.URL}/schedulers`, this.options)
-      .pipe(map(result => result.map(obj => new Scheduler(obj))));
+      .pipe(map((schedulers) => schedulers.map((scheduler) => new Scheduler(scheduler))));
   }
 
   getScheduler(schedulerName: string): Observable<Scheduler> {
     return this.httpClient.get<Scheduler>(`${this.URL}/schedulers/${schedulerName}`, this.options)
-      .pipe(map(result => new Scheduler(result)));
+      .pipe(map((scheduler) => new Scheduler(scheduler)));
   }
 }
 
-type alive = { alive: boolean };
+type Alive = { alive: boolean };

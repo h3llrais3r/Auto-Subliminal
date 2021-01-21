@@ -6,7 +6,7 @@ import re
 import cherrypy
 
 import autosubliminal
-from autosubliminal.core.logger import count_backup_logfiles, display_logfile
+from autosubliminal.core.logger import count_backup_logfiles, get_log_lines
 from autosubliminal.server.rest import RestResource
 
 
@@ -26,8 +26,8 @@ class LogsApi(RestResource):
         self.allowed_methods = ('GET', 'DELETE')
 
     def get(self, lognum=None):
-        """Get the logs for a logfile."""
-        return display_logfile(loglevel='all', lines=1000, lognum=lognum)
+        """Get the log lines for a logfile."""
+        return get_log_lines(loglevel='all', lines=1000, lognum=lognum)
 
     def delete(self, lognum=None):
         """Delete the logs for a logfile."""
@@ -60,4 +60,5 @@ class _CountApi(RestResource):
 
     def get(self):
         """Get the number of backup logfiles."""
-        return count_backup_logfiles()
+        count = count_backup_logfiles()
+        return {'count': count}

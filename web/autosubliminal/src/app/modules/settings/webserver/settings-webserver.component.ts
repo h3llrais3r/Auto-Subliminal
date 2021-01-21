@@ -25,8 +25,8 @@ export class SettingsWebserverComponent implements OnInit {
   ngOnInit(): void {
     this.buildSelectItems();
     this.settingsService.getWebServerSettings().subscribe(
-      result => {
-        this.buildForm(result);
+      (webServerSettings) => {
+        this.buildForm(webServerSettings);
       });
   }
 

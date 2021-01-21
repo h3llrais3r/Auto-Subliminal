@@ -32,9 +32,7 @@ export class FormUtils {
 
   static markFormControlFieldsAsDirty(formGroup: FormGroup): void {
     // Mark all controls as dirty (it seems that formGroup.markAsDirty() is not doing the same thing)
-    Object.values(formGroup.controls).forEach(control => {
-      control.markAsDirty();
-    });
+    Object.values(formGroup.controls).forEach((control) => control.markAsDirty());
   }
 
   static scrollToTop(): void {

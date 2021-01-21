@@ -24,8 +24,8 @@ export class SettingsLibraryComponent implements OnInit {
   ngOnInit(): void {
     this.buildSelectItems();
     this.settingsService.getLibrarySettings().subscribe(
-      result => {
-        this.buildForm(result);
+      (librarySettings) => {
+        this.buildForm(librarySettings);
       });
   }
 

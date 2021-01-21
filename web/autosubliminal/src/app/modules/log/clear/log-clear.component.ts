@@ -13,7 +13,7 @@ export class LogClearComponent implements OnInit {
 
   ngOnInit(): void {
     this.logService.clearLogs().subscribe(
-      result => {
+      (result) => {
         // Redirect to log view after the logs are cleared
         if (result) {
           this.router.navigateByUrl('/log/view');

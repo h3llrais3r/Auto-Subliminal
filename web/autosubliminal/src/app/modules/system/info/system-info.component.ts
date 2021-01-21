@@ -28,8 +28,8 @@ export class SystemInfoComponent implements OnInit {
   ngOnInit(): void {
     // Get system info
     this.systemService.getSystemInfo().subscribe(
-      result => {
-        this.systemInfo = result;
+      (systemInfo) => {
+        this.systemInfo = systemInfo;
         if (this.systemInfo.installType === SystemInstallType.SOURCE) {
           this.version = this.systemInfo.currentVersion;
           this.versionUrl = this.systemInfo.currentVersionUrl;
@@ -43,8 +43,8 @@ export class SystemInfoComponent implements OnInit {
 
     // Get changelog
     this.httpClient.get(this.CHANGELOG_URL, { responseType: 'text' }).subscribe(
-      result => {
-        this.changelog = this.parseChangelog(result);
+      (changelog) => {
+        this.changelog = this.parseChangelog(changelog);
       });
   }
 

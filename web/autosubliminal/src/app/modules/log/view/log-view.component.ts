@@ -30,7 +30,7 @@ export class LogViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.loglevels = this.getLogLevels();
-    this.logService.getLogCount().subscribe(result => this.logNums = Array.from(Array(result).keys()).map(i => i + 1)); // get array starting from1
+    this.logService.getLogCount().subscribe((count) => this.logNums = Array.from(Array(count).keys()).map((i) => i + 1)); // get array starting from 1
     this.getLogs(0); // 0 = current logfile
   }
 
@@ -38,8 +38,8 @@ export class LogViewComponent implements OnInit {
     this.selectedLogNum = logNum;
     this.tailingDisabled = this.selectedLogNum !== 0; // tailing only allowed when on current logfile -> lognum = 0
     this.logService.getLogs(logNum).subscribe(
-      result => {
-        this.logMessages = result;
+      (logLines) => {
+        this.logMessages = logLines;
         this.handleLogTailing();
       });
   }
@@ -57,7 +57,7 @@ export class LogViewComponent implements OnInit {
   }
 
   get filteredLogMessages(): string[] {
-    return this.logMessages.filter(logMessage => {
+    return this.logMessages.filter((logMessage) => {
       if (this.selectedLoglevel) {
         const match = this.LOG_MESSAGE_REGEX.exec(logMessage);
         return match && match.groups.loglevel === this.selectedLoglevel;
@@ -74,7 +74,7 @@ export class LogViewComponent implements OnInit {
   private getLogLevels(): SelectItem[] {
     const logLevels: SelectItem[] = [];
     logLevels.push({ label: 'ALL', value: '' });
-    Object.entries(Loglevel).forEach(entry => logLevels.push({ label: entry[0], value: entry[1] }));
+    Object.entries(Loglevel).forEach((entry) => logLevels.push({ label: entry[0], value: entry[1] }));
     return logLevels;
   }
 
@@ -97,7 +97,7 @@ export class LogViewComponent implements OnInit {
       // Subscribe on new logs once loaded (only for current logfile -> logNum = 0)
       this.logWebsocket = this.createLogWebSocket(); // Need to create a new socket after unsubscribe
       this.logWebsocket.subscribe(
-        logMessage => {
+        (logMessage) => {
           this.logMessages.push(logMessage);
         });
       console.log('Log tailing enabled');

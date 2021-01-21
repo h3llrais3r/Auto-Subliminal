@@ -162,7 +162,7 @@ export class TwitterRegistration {
   }
 }
 
-export class TwitterAutorization {
+export class TwitterAuthorization {
   twitterKey: string;
   twitterSecret: string;
 

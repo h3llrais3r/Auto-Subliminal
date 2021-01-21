@@ -28,8 +28,8 @@ export class SettingsGeneralComponent implements OnInit {
   ngOnInit(): void {
     this.buildSelectItems();
     this.settingsService.getGeneralSettings().subscribe(
-      result => {
-        this.buildForm(result);
+      (generalSettings) => {
+        this.buildForm(generalSettings);
       });
   }
 
@@ -50,7 +50,7 @@ export class SettingsGeneralComponent implements OnInit {
     // Languages
     this.languages = [];
     this.languages.push({ label: 'Select a language', value: '' });
-    appSettings.languages.forEach(language => this.languages.push({ label: language.name, value: language.code }));
+    appSettings.languages.forEach((language) => this.languages.push({ label: language.name, value: language.code }));
     // Timestamp formats (python strftime() formats)
     this.timestampFormats = [];
     this.timestampFormats.push({ label: 'YYYY-MM-DD HH:MM:SS', value: '%Y-%m-%d %H:%M:%S' });
