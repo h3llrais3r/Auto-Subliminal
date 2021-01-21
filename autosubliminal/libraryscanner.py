@@ -12,7 +12,7 @@ from autosubliminal.db import (FailedMoviesDb, FailedShowsDb, MovieDetailsDb, Mo
                                ShowEpisodeDetailsDb, ShowSettingsDb)
 from autosubliminal.fileprocessor import process_file
 from autosubliminal.indexer import MovieIndexer, ShowIndexer
-from autosubliminal.util.common import get_wanted_languages, safe_lowercase
+from autosubliminal.util.common import get_wanted_languages, get_missing_languages, safe_lowercase
 from autosubliminal.util.filesystem import (VIDEO_EXTENSIONS, get_available_subtitles, is_skipped_dir,
                                             is_valid_video_file, one_path_exists)
 from autosubliminal.util.websocket import PAGE_RELOAD, send_websocket_event, send_websocket_notification
@@ -217,7 +217,7 @@ class LibraryPathScanner(object):
         return path
 
     def _update_episode_details(self, show_settings, dirname, filename, show_tvdb_id, season, episode):
-        episode_details = self.show_episodes_db.get_show_episode(show_tvdb_id, season, episode)
+        episode_details = self.show_episodes_db.get_show_episode_by_show(show_tvdb_id, season, episode)
 
         # If no episode is found, we need to fetch the episode details of the show
         # This is because the show is still on-going and we didn't got all episodes when the show was loaded
@@ -230,8 +230,8 @@ class LibraryPathScanner(object):
             # Set details
             available_subtitles = get_available_subtitles(dirname, filename, autosubliminal.SCANEMBEDDEDSUBS,
                                                           autosubliminal.SCANHARDCODEDSUBS)
-            missing_languages = self._get_missing_subtitle_languages(available_subtitles,
-                                                                     wanted_languages=show_settings.wanted_languages)
+            missing_languages = get_missing_languages(available_subtitles,
+                                                      wanted_languages=show_settings.wanted_languages)
             episode_details.subtitles = available_subtitles
             episode_details.missing_languages = missing_languages
             episode_details.path = os.path.abspath(os.path.join(dirname, filename))
@@ -245,22 +245,10 @@ class LibraryPathScanner(object):
             # Set details
             available_subtitles = get_available_subtitles(dirname, filename, autosubliminal.SCANEMBEDDEDSUBS,
                                                           autosubliminal.SCANHARDCODEDSUBS)
-            missing_languages = self._get_missing_subtitle_languages(available_subtitles,
-                                                                     wanted_languages=movie_settings.wanted_languages)
+            missing_languages = get_missing_languages(available_subtitles,
+                                                      wanted_languages=movie_settings.wanted_languages)
             movie_details.subtitles = available_subtitles
             movie_details.missing_languages = missing_languages
             movie_details.path = os.path.abspath(os.path.join(dirname, filename))
             # Update details in db
             self.movie_db.update_movie(movie_details, subtitles=True)
-
-    def _get_missing_subtitle_languages(self, available_subtitles, wanted_languages=None):
-        # Use custom wanted languages or globally configured wanted languages if not provided
-        if wanted_languages is None:
-            wanted_languages = get_wanted_languages()
-
-        available_languages = []
-        for subtitle in available_subtitles:
-            available_languages.append(subtitle.language)
-
-        # Return the missing languages (= not in available languages)
-        return [language for language in wanted_languages if language not in available_languages]

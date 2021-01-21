@@ -1,10 +1,14 @@
 @import '../../../../../scss/mixins/flexbox';
 
-.input-switch {
+.input-switch-container {
   @include flexbox;
-  @include align-content(center);
 
-  .label {
-    margin-right: 0.5rem;
+  .input-switch {
+    @include flexbox;
+    @include align-content(center);
+
+    .label {
+      margin-right: 0.5rem;
+    }
   }
 }

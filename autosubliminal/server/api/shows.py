@@ -12,7 +12,8 @@ from autosubliminal.db import (FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsD
                                ShowSettingsDb, WantedItemsDb)
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import NotFound, RestResource
-from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, get_boolean, natural_keys, to_dict
+from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, get_boolean, natural_keys, to_dict, \
+    get_missing_languages
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 from autosubliminal.util.websocket import send_websocket_notification
 
@@ -94,13 +95,13 @@ class ShowsApi(RestResource):
 
         # Add details if needed
         if details:
-            include_kwargs['files'] = self._get_show_episode_files(episodes)
+            include_kwargs['seasons'] = self._get_show_season_files(episodes)
 
         return show.to_dict(camelize, **include_kwargs)
 
-    def _get_show_episode_files(self, show_episodes):
-        # Show episode files are supposed to be stored in individual season dirs or the root dir only
-        files = {}
+    def _get_show_season_files(self, show_episodes):
+        # Show season files are supposed to be stored in individual season dirs or the root dir only
+        seasons = {}
 
         # Create episode dict, grouped by season
         season_episodes = {}
@@ -137,11 +138,11 @@ class ShowsApi(RestResource):
             # Sort season files
             if season_files:
                 sorted_files = sorted(season_files, key=lambda k: k['filename'])
-                files.update({season_name: {'path': season_path, 'files': sorted_files}})
+                seasons.update({season_name: {'path': season_path, 'files': sorted_files}})
 
         # Return sorted list of file dicts (grouped by season)
-        return [{'season_name': k, 'season_path': files[k]['path'], 'season_files': files[k]['files']} for k in
-                sorted(files.keys(), key=natural_keys)]
+        return [{'season_name': k, 'season_path': seasons[k]['path'], 'files': seasons[k]['files']} for k in
+                sorted(seasons.keys(), key=natural_keys)]
 
 
 class _OverviewApi(RestResource):
@@ -301,13 +302,21 @@ class _HardcodedApi(RestResource):
             languages = input_dict['languages']
             save_hardcoded_subtitle_languages(file_location, file_name, languages)
 
-            # Update in db
+            # Update subtitles
             subtitles = []
             for language in languages:
                 subtitles.append(Subtitle(HARDCODED, language, path=os.path.join(file_location, file_name)))
             subtitles_db = ShowEpisodeSubtitlesDb()
-            subtitles_db.delete_show_episode_subtitles(episode_tvdb_id)
+            subtitles_db.delete_show_episode_subtitles(episode_tvdb_id, type=HARDCODED)
             subtitles_db.set_show_episode_subtitles(episode_tvdb_id, subtitles)
+
+            # Update missing languages
+            show_episode_details_db = ShowEpisodeDetailsDb()
+            db_show_episode = show_episode_details_db.get_show_episode(tvdb_id, subtitles=True)
+            db_show_settings = ShowSettingsDb().get_show_settings(tvdb_id)
+            db_show_episode.missing_languages = get_missing_languages(db_show_episode.subtitles,
+                                                                      db_show_settings.wanted_languages)
+            show_episode_details_db.update_show_episode(db_show_episode)
 
             return self._no_content()
 

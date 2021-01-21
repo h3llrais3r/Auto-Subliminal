@@ -1,6 +1,7 @@
 @import '../variables';
 @import '../mixins/box-shadow';
 @import '../mixins/border-radius';
+@import '../mixins/flexbox';
 
 // Menubar
 .p-menubar {
@@ -98,6 +99,12 @@
 // Datatable
 .p-datatable {
 
+  // Custom caption
+  .caption {
+    @include flexbox;
+    @include align-items(center);
+  }
+
   // Darken header
   .p-datatable-thead>tr>th {
     background-color: rgba(0, 0, 0, 0.1); // darken
@@ -189,6 +196,13 @@
   padding-left: 2rem;
 }
 
+// Inputswitch
+p-inputswitch {
+  .p-inputswitch {
+    @include flexbox; // use flexbox for nice alignment
+  }
+}
+
 // Dropdown
 p-dropdown {
   &.invalid {
@@ -269,7 +283,23 @@ p-dropdown {
     color: var(--white);
   }
 
+  // Small tag
   &.p-tag-small {
+    padding: 0 0.4rem;
+  }
+
+  // Language tag
+  &.language {
+    background-color: var(--secondary);
+    color: var(--white);
+    padding: 0 0.4rem;
+  }
+
+  // Filetype tag
+  &.filetype {
+    border: 1px solid var(--surface-d);
+    background-color: var(--white);
+    color: var(--secondary);
     padding: 0 0.4rem;
   }
 }
@@ -283,5 +313,28 @@ p-dropdown {
 .p-inline-message {
   &.w-100 {
     @include justify-content(left); // default left align
+  }
+}
+
+// Dialog
+.p-dialog {
+  &.p-dialog-vw {
+    @media screen and (max-width: $media-mobile-max-width) {
+      width: 100vw;
+    }
+
+    @media screen and (min-width: $media-tablet-min-width) {
+      width: 75vw;
+    }
+
+    @media screen and (min-width: $media-desktop-min-width) {
+      width: 50vw;
+    }
+  }
+
+  .p-dialog-header {
+    .p-dialog-title {
+      font-size: 1.5rem; // to be in line with our panel title
+    }
   }
 }

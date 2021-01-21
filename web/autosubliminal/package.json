@@ -27,6 +27,7 @@
     "@angular/platform-browser-dynamic": "10.2.0",
     "@angular/router": "10.2.0",
     "bootstrap": "4.5.3",
+    "font-awesome": "4.7.0",
     "jquery": "3.5.1",
     "lodash-es": "4.17.20",
     "moment": "2.24.0",

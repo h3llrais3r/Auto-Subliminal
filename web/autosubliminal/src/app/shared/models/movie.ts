@@ -6,6 +6,10 @@ export class MoviesOverview {
   totalSubtitlesMissing: number;
   totalSubtitlesAvailable: number;
   failedMovies: string[]; // list of paths of failed movies
+
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
 }
 
 export class Movie {
@@ -20,10 +24,20 @@ export class Movie {
   totalSubtitlesMissing: number;
   totalSubtitlesWanted: number;
   settings: MovieSettings;
-  files?: MovieFiles[]; // only loaded for details
+  files?: MovieFile[]; // only loaded for details
 
   constructor(obj?: any) {
     Object.assign(this, obj);
+    if (this.settings) {
+      this.settings = new MovieSettings(this.settings);
+    }
+    if (this.files) {
+      this.files = this.files.map((file) => new MovieFile(file));
+    }
+  }
+
+  get name(): string {
+    return `${this.title} (${this.year})`;
   }
 }
 
@@ -38,7 +52,7 @@ export class MovieSettings {
   }
 }
 
-export class MovieFiles {
+export class MovieFile {
   imdbId: string;
   filename: string;
   type: FileType;
@@ -48,5 +62,21 @@ export class MovieFiles {
 
   constructor(obj?: any) {
     Object.assign(this, obj);
+  }
+
+  get isVideo(): boolean {
+    return this.type === FileType.VIDEO;
+  }
+
+  get isSubtitle(): boolean {
+    return this.type === FileType.SUBTITLE;
+  }
+
+  get internalLanguagesAvailable(): boolean {
+    let available = false;
+    if ((this.hardcodedLanguages && this.hardcodedLanguages.length > 0) || (this.embeddedLanguages && this.embeddedLanguages.length > 0)) {
+      available = true;
+    }
+    return available;
   }
 }

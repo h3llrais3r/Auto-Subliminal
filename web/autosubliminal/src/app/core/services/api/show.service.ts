@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Show, ShowsOverview } from '../../../shared/models/show';
+import { Show, ShowSettings, ShowsOverview } from '../../../shared/models/show';
+import { VideoSubtitles } from '../../../shared/models/video';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -17,11 +18,42 @@ export class ShowService extends ApiServiceTemplate {
   }
 
   getShowsOverview(): Observable<ShowsOverview> {
-    return this.httpClient.get<ShowsOverview>(`${this.URL}/overview`, this.options);
+    return this.httpClient.get<ShowsOverview>(`${this.URL}/overview`, this.options)
+      .pipe(map((showsOverview) => new ShowsOverview(showsOverview)));
   }
 
   getShows(): Observable<Show[]> {
     return this.httpClient.get<Show[]>(this.URL, this.options)
-      .pipe(map(result => result.map(obj => new Show(obj))));
+      .pipe(map((shows) => shows.map((show) => new Show(show))));
+  }
+
+  getShowDetails(tvdbId: number): Observable<Show> {
+    return this.httpClient.get<Show>(`${this.URL}/${tvdbId}`, this.options)
+      .pipe(map((show) => new Show(show)));
+  }
+
+  refreshShowDetails(tvdbId: number): Observable<boolean> {
+    return this.httpClient.put(`${this.URL}/${tvdbId}/refresh`, {}, this.options)
+      .pipe(map(() => true));
+  }
+
+  getShowSettings(tvdbId: number): Observable<ShowSettings> {
+    return this.httpClient.get<ShowSettings>(`${this.URL}/${tvdbId}/settings`, this.options)
+      .pipe(map((showSettings) => new ShowSettings(showSettings)));
+  }
+
+  saveShowSettings(tvdbId: number, showSettings: ShowSettings): Observable<boolean> {
+    return this.httpClient.put(`${this.URL}/${tvdbId}/settings`, JSON.stringify(showSettings), this.options)
+      .pipe(map(() => true));
+  }
+
+  saveShowHardcodedSubtitles(tvdbId: number, episodeTvdbId: number, videoSubtitles: VideoSubtitles): Observable<boolean> {
+    return this.httpClient.put(`${this.URL}/${tvdbId}/subtitles/hardcoded/${episodeTvdbId}`, JSON.stringify(videoSubtitles), this.options)
+      .pipe(map(() => true));
+  }
+
+  deleteShow(tvdbId: number): Observable<boolean> {
+    return this.httpClient.delete(`${this.URL}/${tvdbId}`, this.options)
+      .pipe(map(() => true));
   }
 }

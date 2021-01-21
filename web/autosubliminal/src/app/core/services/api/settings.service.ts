@@ -20,7 +20,7 @@ export class SettingsService extends ApiServiceTemplate {
 
   getGeneralSettings(): Observable<GeneralSettings> {
     return this.httpClient.get(`${this.URL}/general`, this.options)
-      .pipe(map(result => new GeneralSettings(result)));
+      .pipe(map((settings) => new GeneralSettings(settings)));
   }
 
   updateGeneralSettings(generalSettings: GeneralSettings): Observable<boolean> {
@@ -28,11 +28,16 @@ export class SettingsService extends ApiServiceTemplate {
       .pipe(map(() => true));
   }
 
+  updateGeneralSetting(settingName: string, value: any): Observable<boolean> {
+    return this.httpClient.patch(`${this.URL}/general/${settingName}`, JSON.stringify(value), this.options)
+      .pipe(map(() => true));
+  }
+
   // Library settings
 
   getLibrarySettings(): Observable<LibrarySettings> {
     return this.httpClient.get(`${this.URL}/library`, this.options)
-      .pipe(map(result => new LibrarySettings(result)));
+      .pipe(map((settings) => new LibrarySettings(settings)));
   }
 
   updateLibrarySettings(librarySettings: LibrarySettings): Observable<boolean> {
@@ -44,7 +49,7 @@ export class SettingsService extends ApiServiceTemplate {
 
   getLogSettings(): Observable<LogSettings> {
     return this.httpClient.get(`${this.URL}/logging`, this.options)
-      .pipe(map(result => new LogSettings(result)));
+      .pipe(map((settings) => new LogSettings(settings)));
   }
 
   updateLogSettings(logSettings: LogSettings): Observable<boolean> {
@@ -56,7 +61,7 @@ export class SettingsService extends ApiServiceTemplate {
 
   getWebServerSettings(): Observable<WebServerSettings> {
     return this.httpClient.get(`${this.URL}/webserver`, this.options)
-      .pipe(map(result => new WebServerSettings(result)));
+      .pipe(map((settings) => new WebServerSettings(settings)));
   }
 
   updateWebServerSettings(webServerSettings: WebServerSettings): Observable<boolean> {
@@ -68,7 +73,7 @@ export class SettingsService extends ApiServiceTemplate {
 
   getSubliminalSettings(): Observable<SubliminalSettings> {
     return this.httpClient.get(`${this.URL}/subliminal`, this.options)
-      .pipe(map(result => new SubliminalSettings(result)));
+      .pipe(map((settings) => new SubliminalSettings(settings)));
   }
 
   updateSubliminalSettings(subliminalSettings: SubliminalSettings): Observable<boolean> {
@@ -80,7 +85,7 @@ export class SettingsService extends ApiServiceTemplate {
 
   getNameMappingSettings(): Observable<NameMappingSettings> {
     return this.httpClient.get(`${this.URL}/namemapping`, this.options)
-      .pipe(map(result => new NameMappingSettings(result)));
+      .pipe(map((settings) => new NameMappingSettings(settings)));
   }
 
   updateNameMappingSettings(nameMappingSettings: NameMappingSettings): Observable<boolean> {
@@ -92,7 +97,7 @@ export class SettingsService extends ApiServiceTemplate {
 
   getSkipMappingSettings(): Observable<SkipMappingSettings> {
     return this.httpClient.get(`${this.URL}/skipmapping`, this.options)
-      .pipe(map(result => new SkipMappingSettings(result)));
+      .pipe(map((settings) => new SkipMappingSettings(settings)));
   }
 
   updateSkipMappingSettings(skipMappingSettings: SkipMappingSettings): Observable<boolean> {
@@ -104,7 +109,7 @@ export class SettingsService extends ApiServiceTemplate {
 
   getNotificationSettings(): Observable<NotificationSettings> {
     return this.httpClient.get(`${this.URL}/notification`, this.options)
-      .pipe(map(result => new NotificationSettings(result)));
+      .pipe(map((settings) => new NotificationSettings(settings)));
   }
 
   updateNotificationSettings(notificationSettings: NotificationSettings): Observable<boolean> {
@@ -119,7 +124,7 @@ export class SettingsService extends ApiServiceTemplate {
 
   registerTwitter(): Observable<TwitterRegistration> {
     return this.httpClient.post(`${this.URL}/notification/twitter`, {}, this.options)
-      .pipe(map((result) => new TwitterRegistration(result)));
+      .pipe(map((settings) => new TwitterRegistration(settings)));
   }
 
   authorizeTwitter(twitterRegistration: TwitterRegistration): Observable<TwitterAutorization> {
@@ -131,7 +136,7 @@ export class SettingsService extends ApiServiceTemplate {
 
   getPostProcessSettings(): Observable<PostProcessSettings> {
     return this.httpClient.get(`${this.URL}/postprocessing`, this.options)
-      .pipe(map(result => new PostProcessSettings(result)));
+      .pipe(map((settings) => new PostProcessSettings(settings)));
   }
 
   updatePostProcessSettings(postProcessSettings: PostProcessSettings): Observable<boolean> {

@@ -11,7 +11,8 @@ from autosubliminal.core.subtitle import EMBEDDED, HARDCODED, Subtitle
 from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb, WantedItemsDb
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import NotFound, RestResource
-from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, get_boolean, to_dict
+from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, get_boolean, to_dict, \
+    get_missing_languages
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 from autosubliminal.util.websocket import send_websocket_notification
 
@@ -268,13 +269,20 @@ class _HardcodedApi(RestResource):
             languages = input_dict['languages']
             save_hardcoded_subtitle_languages(file_location, file_name, languages)
 
-            # Update in db
+            # Update subtitles
             subtitles = []
             for language in languages:
                 subtitles.append(Subtitle(HARDCODED, language, path=os.path.join(file_location, file_name)))
             subtitles_db = MovieSubtitlesDb()
-            subtitles_db.delete_movie_subtitles(imdb_id)
+            subtitles_db.delete_movie_subtitles(imdb_id, type=HARDCODED)
             subtitles_db.set_movie_subtitles(imdb_id, subtitles)
+
+            # Update missing languages
+            movie_details_db = MovieDetailsDb()
+            db_movie = movie_details_db.get_movie(imdb_id, subtitles=True)
+            db_movie_settings = MovieSettingsDb().get_movie_settings(imdb_id)
+            db_movie.missing_languages = get_missing_languages(db_movie.subtitles, db_movie_settings.wanted_languages)
+            movie_details_db.update_movie(db_movie)
 
             return self._no_content()
 

@@ -3,12 +3,6 @@
   cursor: pointer;
 
   .dropdown-toggle {
-    color: var(--text-secondary-color);
-
-    &:hover {
-      color: var(--primary-color);
-    }
-
     i {
       margin-left: 0.125rem; // proper alignment with dropdown tip
     }

@@ -56,7 +56,7 @@ class _GeneralApi(RestResource):
         self._section = 'general'
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'PUT')
+        self.allowed_methods = ('GET', 'PUT', 'PATCH')
 
     def get(self):
         """Get general settings."""
@@ -87,21 +87,11 @@ class _GeneralApi(RestResource):
     def put(self, general_setting_name=None):
         """Update general settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
+        general_setting_name = decamelize(general_setting_name)
 
         # Single setting update
         if general_setting_name:
-            # Add a video path to the existing list of video paths (if not already in it)
-            if general_setting_name == 'videoPaths' and 'videoPath' in input_dict and os.path.isdir(
-                    input_dict['videoPath']):
-                video_path = input_dict['videoPath']
-                if not find_path_in_paths(video_path, autosubliminal.VIDEOPATHS, check_common_path=True):
-                    autosubliminal.VIDEOPATHS.append(video_path)
-                    write_config_general_section()
-                    send_websocket_notification('Path %s added to the video paths.' % video_path)
-                else:
-                    send_websocket_notification('Path %s already part of the video paths.' % video_path)
-
-                return self._no_content()
+            pass  # not yet implemented
         else:
             # Update all settings
             if 'video_paths' in input_dict:
@@ -147,6 +137,28 @@ class _GeneralApi(RestResource):
 
         return self._bad_request('Invalid data')
 
+    def patch(self, general_setting_name=None):
+        """Patch a general setting."""
+        input_dict = to_dict(cherrypy.request.json, decamelize)
+        general_setting_name = decamelize(general_setting_name)
+
+        # Single setting partial update
+        if general_setting_name:
+            # Add a video path to the existing list of video paths (if not already in it)
+            if general_setting_name == 'video_paths' and 'video_path' in input_dict and os.path.isdir(
+                    input_dict['video_path']):
+                video_path = input_dict['video_path']
+                if not find_path_in_paths(video_path, autosubliminal.VIDEOPATHS, check_common_path=True):
+                    autosubliminal.VIDEOPATHS.append(video_path)
+                    write_config_general_section()
+                    send_websocket_notification('Path %s added to the video paths.' % video_path)
+                else:
+                    send_websocket_notification('Path %s already part of the video paths.' % video_path)
+
+                return self._no_content()
+
+        return self._bad_request('Invalid data')
+
 
 @cherrypy.popargs('library_setting_name')
 class _LibraryApi(RestResource):
@@ -174,6 +186,7 @@ class _LibraryApi(RestResource):
     def put(self, library_setting_name=None):
         """Update general settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
+        library_setting_name = decamelize(library_setting_name)
 
         # Single setting update
         if library_setting_name:
@@ -232,6 +245,7 @@ class _LoggingApi(RestResource):
     def put(self, log_setting_name=None):
         """Update log settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
+        log_setting_name = decamelize(log_setting_name)
 
         # Single setting update
         if log_setting_name:
@@ -293,6 +307,7 @@ class _WebserverApi(RestResource):
     def put(self, webserver_setting_name=None):
         """Update webserver settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
+        webserver_setting_name = decamelize(webserver_setting_name)
 
         # Single setting update
         if webserver_setting_name:
@@ -363,6 +378,7 @@ class _SubliminalApi(RestResource):
     def put(self, subliminal_setting_name=None):
         """Update subliminal settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
+        subliminal_setting_name = decamelize(subliminal_setting_name)
 
         # Single setting update
         if subliminal_setting_name:
@@ -471,6 +487,7 @@ class _NameMappingApi(RestResource):
     def put(self, namemapping_setting_name=None):
         """Update namemapping settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
+        namemapping_setting_name = decamelize(namemapping_setting_name)
 
         # Single setting update
         if namemapping_setting_name:
@@ -520,6 +537,7 @@ class _SkipMappingApi(RestResource):
     def put(self, skipmapping_setting_name=None):
         """Update skipmapping settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
+        skipmapping_setting_name = decamelize(skipmapping_setting_name)
 
         # Single setting update
         if skipmapping_setting_name:
@@ -593,6 +611,7 @@ class _NotificationApi(RestResource):
     def put(self, notification_setting_name=None):
         """Update notification settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
+        notification_setting_name = decamelize(notification_setting_name)
 
         # Single setting update
         if notification_setting_name:
@@ -767,6 +786,7 @@ class _PostProcessingApi(RestResource):
     def put(self, postprocess_setting_name=None):
         """Update postprocessing settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
+        postprocess_setting_name = decamelize(postprocess_setting_name)
 
         # Single setting update
         if postprocess_setting_name:

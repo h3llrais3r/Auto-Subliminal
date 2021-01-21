@@ -1,6 +1,7 @@
 import { FormGroup } from '@angular/forms';
 import $ from 'jquery';
 import { SelectItem } from 'primeng/api';
+import { appSettings } from '../../../app-settings.service';
 
 export class FormUtils {
 
@@ -58,9 +59,15 @@ export class FormUtils {
   }
 
   static enabledOrDisabledSelectItems(): SelectItem[] {
-    const enabledOrDisabled = [];
+    const enabledOrDisabled: SelectItem[] = [];
     enabledOrDisabled.push({ label: 'Enabled', value: true });
     enabledOrDisabled.push({ label: 'Disabled', value: false });
     return enabledOrDisabled;
+  }
+
+  static languageSelectItems(): SelectItem[] {
+    const languages: SelectItem[] = [];
+    appSettings.languages.forEach((language) => languages.push({ label: language.name, value: language.code }));
+    return languages;
   }
 }

@@ -42,11 +42,11 @@ shows_json = '[{"banner": true, "overview": "overview1", "path": "/path/to/show1
              '"wantedLanguages": ["en", "nl"]}, "title": "title2", "totalSubtitlesAvailable": 1, ' \
              '"totalSubtitlesMissing": 3, "totalSubtitlesWanted": 4, "tvdbId": 2, "year": 2019}]'
 
-show_1_json = '{"banner": true, "files": ' \
-              '[{"seasonFiles": [{"embeddedLanguages": [], "filename": "s01e01.mkv", "hardcodedLanguages": [], ' \
+show_1_json = '{"banner": true, ' \
+              '"overview": "overview1", "path": "/path/to/show1", "pathInVideoPaths": false, "poster": true, ' \
+              '"seasons": [{"files": [{"embeddedLanguages": [], "filename": "s01e01.mkv", "hardcodedLanguages": [], ' \
               '"tvdbId": 11, "type": "video"}, {"filename": "s01e01.srt", "language": "nl", "type": "subtitle"}], ' \
               '"seasonName": "Season 01", "seasonPath": "/path/to/show1"}], ' \
-              '"overview": "overview1", "path": "/path/to/show1", "pathInVideoPaths": false, "poster": true, ' \
               '"settings": {"hearingImpaired": false, "refine": true, "utf8Encoding": true, ' \
               '"wantedLanguages": ["en", "nl"]}, "title": "title1", "totalSubtitlesAvailable": 1, ' \
               '"totalSubtitlesMissing": 1, "totalSubtitlesWanted": 2, "tvdbId": 1, "year": 2018}'
@@ -70,8 +70,8 @@ def test_get_show(monkeypatch, mocker):
     mocker.patch('os.path.exists', return_value=True)
     mocker.patch.object(ShowEpisodeDetailsDb, 'get_show_episodes', return_value=[show_episode_details_1_1])
     mocker.patch.object(ShowSettingsDb, 'get_show_settings', return_value=show_settings_1)
-    mocker.patch('autosubliminal.server.api.shows.ShowsApi._get_show_episode_files',
-                 return_value=[{'seasonName': 'Season 01', 'seasonPath': '/path/to/show1', 'seasonFiles': [
+    mocker.patch('autosubliminal.server.api.shows.ShowsApi._get_show_season_files',
+                 return_value=[{'seasonName': 'Season 01', 'seasonPath': '/path/to/show1', 'files': [
                      {'filename': 's01e01.mkv', 'type': 'video', 'embeddedLanguages': [], 'hardcodedLanguages': [],
                       'tvdbId': 11},
                      {'filename': 's01e01.srt', 'type': 'subtitle', 'language': 'nl'}

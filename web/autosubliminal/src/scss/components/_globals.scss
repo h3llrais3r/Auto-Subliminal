@@ -25,6 +25,20 @@ body {
 
   a {
     text-decoration: none !important; // hide underline for a by default
+
+    // Icon link
+    &.icon-link {
+      color: inherit;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  hr {
+    border-color: var(--surface-d);
   }
 
   .form {
@@ -54,10 +68,6 @@ body {
         @include flexbox;
         @include align-items(center);
         @include justify-content(space-between);
-
-        .p-inputswitch {
-          display: block; // inline-block seems to add some margin at the bottom which gives issues for alignment with label
-        }
       }
     }
 
@@ -66,7 +76,23 @@ body {
     }
   }
 
+  // Icon group (use * since we don't know what element is used inside of the group)
+  .icon-group {
+    display: inline-block;
+
+    >* {
+      margin-left: 0.5rem;
+    }
+  }
+
+  // Title inside the icon-dropdown component
   .icon-dropdown-title {
     font-weight: $font-bold;
+  }
+
+  // Wrap text
+  .wrap-text {
+    word-wrap: break-word;
+    word-break: break-all;
   }
 }

@@ -3,9 +3,10 @@ import { interval } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 import { appSettings } from '../../app-settings.service';
+import { MessageSeverity } from '../../shared/models/message';
 import { Scheduler } from '../../shared/models/scheduler';
 import { SystemWebSocketClientMessage, SystemWebSocketMessage, SystemWebSocketServerEvent, SystemWebSocketServerEventType, SystemWebSocketServerMessage, SystemWebSocketServerNotification, SystemWebSocketServerNotificationType } from '../../shared/models/websocket';
-import { MessageService, MessageSeverity } from './message.service';
+import { MessageService } from './message.service';
 import { SystemEventService } from './system-event.service';
 
 @Injectable({
@@ -28,7 +29,7 @@ export class WebSocketService {
   private connect(): void {
     this.systemWebsocket = this.createSystemWebSocket();
     this.systemWebsocket.subscribe(
-      serverMessage => {
+      (serverMessage) => {
         if (serverMessage.type === 'EVENT') {
           const serverEvent = serverMessage as SystemWebSocketServerEvent;
           switch (serverEvent.event.type) {
