@@ -28,6 +28,7 @@ import { InputMultiTextComponent } from './components/input/multi-text/input-mul
 import { InputNumberComponent } from './components/input/number/input-number.component';
 import { InputSwitchComponent } from './components/input/switch/input-switch.component';
 import { InputTextComponent } from './components/input/text/input-text.component';
+import { LoadingComponent } from './components/loading/loading.component';
 import { MessageComponent } from './components/message/message.component';
 import { MovieSettingsComponent } from './components/movie-settings/movie-settings.component';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
@@ -37,6 +38,7 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
 
 @NgModule({
   declarations: [
+    LoadingComponent,
     ScrollComponent,
     IconDropdownComponent,
     InputTextComponent,
@@ -91,6 +93,7 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
     DialogModule,
     ConfirmDialogModule,
     TooltipModule,
+    LoadingComponent,
     ScrollComponent,
     IconDropdownComponent,
     InputTextComponent,

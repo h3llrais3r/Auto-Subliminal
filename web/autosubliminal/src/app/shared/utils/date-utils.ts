@@ -1,5 +1,11 @@
+import moment from 'moment';
 import strftime from 'strftime';
 import { appSettings } from '../../app-settings.service';
+
+// Requires format for moment
+export function getDateFromString(dateString: string, format?: string): Date {
+  return moment(dateString, format).toDate();
+}
 
 export function formatDateTime(timeInMilliSeconds: number, defaultValue = 'N/A'): string {
   if (timeInMilliSeconds) {

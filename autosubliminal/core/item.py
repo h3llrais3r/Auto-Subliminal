@@ -6,7 +6,8 @@ import os
 import re
 
 import autosubliminal
-from autosubliminal.util.common import find_path_in_paths, get_today, to_list, to_obj, to_obj_or_list
+from autosubliminal.util.common import find_path_in_paths, get_today, to_list, to_obj, to_obj_or_list, to_dict, \
+    get_file_size
 
 # Release group regex
 release_group_regex = re.compile(r'(.*)\[.*?\]')
@@ -176,6 +177,39 @@ class WantedItem(_Item):
         else:
             return False
 
+    def to_dict(self, key_fn, *args, **kwargs):
+        """Convert the object to its json representation.
+
+        :param key_fn: the function that is executed on the keys when creating the dict
+        :type key_fn: function
+        :param args: optional list of attributes not to include in the conversion
+        :type args: tuple
+        :param kwargs: optional dict with custom attributes to include in the conversion
+        :type args: dict
+        :return: the json dict
+        :rtype: dict
+        """
+        # Define args to exclude
+        exclude_args = ['releasegrp', 'videopath', 'tvdbid', 'imdbid']
+        if args:
+            exclude_args.extend(list(args))
+
+        # Define kwargs to include
+        file_name = os.path.basename(self.videopath)
+        file_size = get_file_size(self.videopath)
+        include_kwargs = {
+            'release_group': self.releasegrp,
+            'video_file_name': file_name,
+            'video_file_size': file_size,
+            'tvdb_id': self.tvdbid,
+            'imdb_id': self.imdbid
+        }
+        if kwargs:
+            include_kwargs.update(kwargs)
+
+        # Convert to json dict
+        return to_dict(self, key_fn, *exclude_args, **include_kwargs)
+
     @property
     def library_path(self):
         """Library path for the wanted item.
@@ -276,3 +310,28 @@ class DownloadedItem(_Item):
         self.timestamp = None  # Download timestamp string - format '%Y-%m-%d %H:%M:%S'
         self.subtitle = None
         self.provider = None
+
+    def to_dict(self, key_fn, *args, **kwargs):
+        """Convert the object to its json representation.
+
+        :param key_fn: the function that is executed on the keys when creating the dict
+        :type key_fn: function
+        :param args: optional list of attributes not to include in the conversion
+        :type args: tuple
+        :param kwargs: optional dict with custom attributes to include in the conversion
+        :type args: dict
+        :return: the json dict
+        :rtype: dict
+        """
+        # Define args to exclude
+        exclude_args = ['releasegrp']
+        if args:
+            exclude_args.extend(list(args))
+
+        # Define kwargs to include
+        include_kwargs = {'release_group': self.releasegrp}
+        if kwargs:
+            include_kwargs.update(kwargs)
+
+        # Convert to json dict
+        return to_dict(self, key_fn, *exclude_args, **include_kwargs)

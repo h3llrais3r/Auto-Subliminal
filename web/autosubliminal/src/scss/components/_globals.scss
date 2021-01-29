@@ -88,6 +88,7 @@ body {
   // Title inside the icon-dropdown component
   .icon-dropdown-title {
     font-weight: $font-bold;
+    margin-right: 0.25rem;
   }
 
   // Wrap text
@@ -95,4 +96,11 @@ body {
     word-wrap: break-word;
     word-break: break-all;
   }
+
+  // Loading
+  .loading {
+    text-align: center;
+    overflow: hidden;
+  }
+
 }

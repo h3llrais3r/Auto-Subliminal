@@ -25,7 +25,6 @@ export class TableFilterComponent implements OnInit {
   ngOnInit(): void {
     // Restore global filter when used with table state functionality
     if (this.tableStateKey) {
-
       const tableState = JSON.parse(localStorage.getItem(this.tableStateKey)) as TableState;
       if (tableState && tableState.filters && tableState.filters.global) {
         this.filterValue = tableState.filters.global.value;
@@ -38,5 +37,4 @@ export class TableFilterComponent implements OnInit {
     this.filterValue = '';
     this.table.filterGlobal(this.filterValue, this.matchMode);
   }
-
 }

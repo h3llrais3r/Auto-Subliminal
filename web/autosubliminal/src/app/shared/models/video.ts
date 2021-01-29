@@ -7,3 +7,8 @@ export class VideoSubtitles {
     Object.assign(this, obj);
   }
 }
+
+export enum VideoType {
+  EPISODE = 'episode',
+  MOVIE = 'movie'
+}

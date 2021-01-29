@@ -5,6 +5,7 @@ import cherrypy
 import autosubliminal
 from autosubliminal.db import LastDownloadsDb
 from autosubliminal.server.rest import RestResource
+from autosubliminal.util.common import camelize
 
 
 class ItemsApi(RestResource):
@@ -35,9 +36,12 @@ class _WantedApi(RestResource):
     def get(self, wanted_item_index=None):
         """Get the list of wanted items or a single wanted item."""
         if wanted_item_index is None:
-            return autosubliminal.WANTEDQUEUE
+            items = []
+            for item in autosubliminal.WANTEDQUEUE:
+                items.append(item.to_dict(camelize))
+            return items
         elif 0 <= int(wanted_item_index) < len(autosubliminal.WANTEDQUEUE):
-            return autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+            return autosubliminal.WANTEDQUEUE[int(wanted_item_index)].to_dict(camelize)
         else:
             return self._bad_request('Invalid wanted_item_index')
 
@@ -68,8 +72,14 @@ class _DownloadedApi(RestResource):
         """Get the list of downloaded items or the specified last number of downloaded items."""
         last_downloads = LastDownloadsDb().get_last_downloads()
         if number_of_items is None:
-            return last_downloads
+            items = []
+            for item in last_downloads:
+                items.append(item.to_dict(camelize))
+            return items
         elif 0 <= int(number_of_items) <= len(last_downloads):
-            return last_downloads[0:int(number_of_items)]  # Return the requested number of items
+            items = []
+            for item in last_downloads[0:int(number_of_items)]:  # Return the requested number of items
+                items.append(item.to_dict(camelize))
+            return items
         else:
             return self._bad_request('Invalid number_of_items')
