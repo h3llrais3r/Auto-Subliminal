@@ -63,7 +63,7 @@ export class SettingsGeneralComponent implements OnInit {
       videoPaths: [generalSettings.videoPaths || [], [Validators.required, FormValidators.notEmpty]],
       defaultLanguage: [generalSettings.defaultLanguage, [Validators.required]],
       defaultLanguageSuffix: [generalSettings.defaultLanguageSuffix, [Validators.required]],
-      additionalLanguages: [generalSettings.additionalLanguages || []],
+      additionalLanguages: [generalSettings.additionalLanguages || [], []],
       manualSearchWithScoring: [generalSettings.manualSearchWithScoring, [Validators.required]],
       scanDiskInterval: [generalSettings.scanDiskInterval, [Validators.required]],
       checkSubInterval: [generalSettings.checkSubInterval, [Validators.required]],

@@ -70,6 +70,11 @@
               <i class="fa fa-wrench" aria-hidden="true" title="Click to edit movie settings"></i>
             </a>
           </ng-container>
+          <ng-container *ngIf="manualRefineEnabled">
+            <a class="icon-link" (click)="openManualRefineDialog(wantedItem)">
+              <i class="fa fa-pencil" aria-hidden="true" title="Manually refine item details"></i>
+            </a>
+          </ng-container>
         </span>
       </td>
       <td><span class="p-column-title">Season</span><span class="p-column-data">{{wantedItem.season}}</span></td>
@@ -97,3 +102,10 @@
                     [imdbId]="selectedWantedItem.imdbId"
                     [title]="selectedWantedItem.name">
 </app-movie-settings>
+
+<!-- Manual refine dialog -->
+<app-manual-refine *ngIf="showManualRefine"
+                   [(visible)]="showManualRefine"
+                   [wantedItem]="selectedWantedItem"
+                   (wantedItemChange)="updateWantedItem($event)">
+</app-manual-refine>

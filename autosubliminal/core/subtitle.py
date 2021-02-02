@@ -15,7 +15,7 @@ class Subtitle(object):
         self.path = path
 
     def set_attr(self, key, value):
-        """Set an attribute.
+        """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
         :param key: the attribute key
@@ -23,6 +23,6 @@ class Subtitle(object):
         :param value: the attribute value
         :type value: str
         """
-        if hasattr(self, key):
+        if hasattr(self, key) and not hasattr(type(self), key):
             # Use default value
             setattr(self, key, value)

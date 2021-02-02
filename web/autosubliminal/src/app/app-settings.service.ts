@@ -18,6 +18,7 @@ class AppSettings {
   checkVersion: string;
   libraryMode: boolean;
   logReversed: boolean;
+  manualRefineVideo: boolean;
   tvdbUrl: string;
   imdbUrl: string;
   timestampFormat: string;

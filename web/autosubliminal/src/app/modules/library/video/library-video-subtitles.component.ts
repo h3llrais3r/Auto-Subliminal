@@ -37,7 +37,7 @@ export class LibraryVideoSubtitlesComponent implements OnInit {
     this.videoSubtitlesForm = this.fb.group({
       fileLocation: [this.videoSubtitles.fileLocation, []],
       fileName: [this.videoSubtitles.fileName, []],
-      languages: [this.videoSubtitles.languages, []]
+      languages: [this.videoSubtitles.languages || [], []]
     });
   }
 

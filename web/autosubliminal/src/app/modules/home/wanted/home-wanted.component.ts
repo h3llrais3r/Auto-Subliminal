@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SelectItem, SortEvent } from 'primeng/api';
+import { appSettings } from '../../../app-settings.service';
 import { ItemService } from '../../../core/services/api/item.service';
 import { WantedItem } from '../../../shared/models/item';
 import { VideoType } from '../../../shared/models/video';
@@ -25,6 +26,8 @@ export class HomeWantedComponent implements OnInit {
   selectedWantedItem: WantedItem;
   showShowSettings = false;
   showMovieSettings = false;
+  showManualRefine = false;
+  manualRefineEnabled = false;
   loading = false;
 
   globalFilterFields = ['name', 'season', 'episode', 'source', 'quality', 'codec', 'releaseGroup', 'languages', 'timestamp'];
@@ -33,6 +36,7 @@ export class HomeWantedComponent implements OnInit {
   constructor(private itemService: ItemService) { }
 
   ngOnInit(): void {
+    this.manualRefineEnabled = appSettings.manualRefineVideo;
     this.buildSelectItems();
     this.loadWantedItems();
   }
@@ -81,5 +85,15 @@ export class HomeWantedComponent implements OnInit {
   openMovieSettingsDialog(wantedItem: WantedItem): void {
     this.showMovieSettings = true;
     this.selectedWantedItem = wantedItem;
+  }
+
+  openManualRefineDialog(wantedItem: WantedItem): void {
+    this.showManualRefine = true;
+    this.selectedWantedItem = wantedItem;
+  }
+
+  updateWantedItem(wantedItem: WantedItem): void {
+    // Replace updated wanted item in list of wanted items
+    this.wantedItems = this.wantedItems.map((item) => item.id === wantedItem.id ? wantedItem : item);
   }
 }

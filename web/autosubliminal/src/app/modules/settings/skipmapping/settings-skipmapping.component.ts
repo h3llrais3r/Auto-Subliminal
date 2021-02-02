@@ -38,8 +38,8 @@ export class SettingsSkipmappingComponent implements OnInit {
 
   private buildForm(skipMappingSettings: SkipMappingSettings): void {
     this.settingsForm = this.fb.group({
-      skipShowMapping: [skipMappingSettings.skipShowMapping, []],
-      skipMovieMapping: [skipMappingSettings.skipMovieMapping, []],
+      skipShowMapping: [skipMappingSettings.skipShowMapping || [], []],
+      skipMovieMapping: [skipMappingSettings.skipMovieMapping || [], []],
     });
   }
 

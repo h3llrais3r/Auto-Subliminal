@@ -38,11 +38,11 @@ export class SettingsNamemappingComponent implements OnInit {
 
   private buildForm(nameMappingSettings: NameMappingSettings): void {
     this.settingsForm = this.fb.group({
-      showNameMapping: [nameMappingSettings.showNameMapping, []],
-      addic7edShowNameMapping: [nameMappingSettings.addic7edShowNameMapping, []],
-      alternativeShowNameMapping: [nameMappingSettings.alternativeShowNameMapping, []],
-      movieNameMapping: [nameMappingSettings.movieNameMapping, []],
-      alternativeMovieNameMapping: [nameMappingSettings.alternativeMovieNameMapping, []]
+      showNameMapping: [nameMappingSettings.showNameMapping || [], []],
+      addic7edShowNameMapping: [nameMappingSettings.addic7edShowNameMapping || [], []],
+      alternativeShowNameMapping: [nameMappingSettings.alternativeShowNameMapping || [], []],
+      movieNameMapping: [nameMappingSettings.movieNameMapping || [], []],
+      alternativeMovieNameMapping: [nameMappingSettings.alternativeMovieNameMapping || [], []]
     });
   }
 

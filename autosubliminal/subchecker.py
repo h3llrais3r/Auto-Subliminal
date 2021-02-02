@@ -111,7 +111,7 @@ class SubChecker(ScheduledProcess):
             while i >= 0:
                 wanted_item_to_delete = autosubliminal.WANTEDQUEUE.pop(to_delete_wanted_queue[i])
                 log.debug('Removed item from the wanted queue at index %s', to_delete_wanted_queue[i])
-                db.delete_wanted_item(wanted_item_to_delete)
+                db.delete_wanted_item(wanted_item_to_delete.id)
                 log.debug('Removed %s from wanted_items database', wanted_item_to_delete.videopath)
                 i -= 1
 
@@ -299,7 +299,7 @@ def delete_video(wanted_item_index, cleanup):
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
     autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
     log.debug('Removed item from the wanted queue at index %s', int(wanted_item_index))
-    WantedItemsDb().delete_wanted_item(wanted_item)
+    WantedItemsDb().delete_wanted_item(wanted_item.id)
     log.debug('Removed %s from wanted_items database', wanted_item.videopath)
 
     # Physically delete the video file (and optionally leftovers)
@@ -369,7 +369,7 @@ def skip_show(wanted_item_index, season):
     i = len(to_delete_wanted_queue) - 1
     while i >= 0:
         wanted_item_to_delete = autosubliminal.WANTEDQUEUE.pop(to_delete_wanted_queue[i])
-        WantedItemsDb().delete_wanted_item(wanted_item_to_delete)
+        WantedItemsDb().delete_wanted_item(wanted_item_to_delete.id)
         i -= 1
     log.info('Skipped show %s season %s', show, season)
 
@@ -389,7 +389,7 @@ def skip_movie(wanted_item_index):
 
     # Remove wanted item from queue and db
     wanted_item = autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
-    WantedItemsDb().delete_wanted_item(wanted_item)
+    WantedItemsDb().delete_wanted_item(wanted_item.id)
     movie = wanted_item.title
     if wanted_item.year:
         movie += ' (' + wanted_item.year + ')'
@@ -442,7 +442,7 @@ def post_process(wanted_item_index, subtitle_index):
                 # Remove wanted item
                 autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
                 log.debug('Removed item from the wanted queue at index %s', int(wanted_item_index))
-                WantedItemsDb().delete_wanted_item(wanted_item)
+                WantedItemsDb().delete_wanted_item(wanted_item.id)
                 log.debug('Removed %s from wanted_items database', wanted_item.videopath)
 
     else:
@@ -472,7 +472,7 @@ def post_process_no_subtitle(wanted_item_index):
     if processed:
         autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
         log.debug('Removed item from the wanted queue at index %s', int(wanted_item_index))
-        WantedItemsDb().delete_wanted_item(wanted_item)
+        WantedItemsDb().delete_wanted_item(wanted_item.id)
         log.debug('Removed %s from wanted_items database', wanted_item.videopath)
     else:
         send_websocket_notification('Unable to handle post processing! Please check the log file!', type='error')

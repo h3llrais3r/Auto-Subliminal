@@ -56,7 +56,7 @@ class DiskScanner(ScheduledProcess):
         log.debug('Checking for non existing wanted items in wanted_items database')
         for item in old_wanted_items:
             if item not in new_wanted_items:
-                self.wanted_db.delete_wanted_item(item)
+                self.wanted_db.delete_wanted_item(item.id)
                 log.debug('Deleted non existing wanted item: %s', item.videopath)
 
         # Populate WANTEDQUEUE with all items from wanted_items database
@@ -104,7 +104,7 @@ class DiskScanner(ScheduledProcess):
 
     def _scan_file(self, dirname, filename):
         # Check if video file has already been processed before, so we don't need to process it again
-        wanted_item = self.wanted_db.get_wanted_item(os.path.join(dirname, filename), ignore_case=True)
+        wanted_item = self.wanted_db.get_wanted_item_by_video_path(os.path.join(dirname, filename), ignore_case=True)
         if wanted_item:
             log.debug('Video found in wanted_items database, no need to scan it again')
         else:
@@ -152,7 +152,7 @@ class DiskScanner(ScheduledProcess):
                 title = wanted_item.title
                 season = wanted_item.season
                 if skip_show(title, season):
-                    self.wanted_db.delete_wanted_item(wanted_item)
+                    self.wanted_db.delete_wanted_item(wanted_item.id)
                     log.info('Skipping %s - Season %s', title, season)
                     return None
 
@@ -161,7 +161,7 @@ class DiskScanner(ScheduledProcess):
                 title = wanted_item.title
                 year = wanted_item.year
                 if skip_movie(title, year):
-                    self.wanted_db.delete_wanted_item(wanted_item)
+                    self.wanted_db.delete_wanted_item(wanted_item.id)
                     log.info('Skipping %s (%s)', title, year)
                     return None
 

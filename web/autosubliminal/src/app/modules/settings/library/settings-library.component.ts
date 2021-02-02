@@ -48,7 +48,7 @@ export class SettingsLibraryComponent implements OnInit {
   private buildForm(librarySettings: LibrarySettings): void {
     this.settingsForm = this.fb.group({
       libraryMode: [librarySettings.libraryMode, [Validators.required]],
-      libraryPaths: [librarySettings.libraryPaths, []],
+      libraryPaths: [librarySettings.libraryPaths || [], []],
       scanLibraryInterval: [librarySettings.scanLibraryInterval, [Validators.required]]
     });
   }

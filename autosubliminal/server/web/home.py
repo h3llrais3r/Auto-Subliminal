@@ -54,7 +54,7 @@ class Home(object):
         if get_wanted_queue_lock():
             # Get wanted item and reset values
             wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
-            wanted_item_db = WantedItemsDb().get_wanted_item(wanted_item.videopath)
+            wanted_item_db = WantedItemsDb().get_wanted_item_by_video_path(wanted_item.videopath)
             wanted_item_db.copy_to(wanted_item)
 
             # Release wanted queue lock

@@ -3,9 +3,11 @@
 import cherrypy
 
 import autosubliminal
-from autosubliminal.db import LastDownloadsDb
+from autosubliminal.db import WantedItemsDb, LastDownloadsDb
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import camelize
+from autosubliminal.util.common import camelize, decamelize, to_dict
+from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, find_wanted_item_in_queue, \
+    update_wanted_item_in_queue, release_wanted_queue_lock_on_exception
 
 
 class ItemsApi(RestResource):
@@ -21,7 +23,7 @@ class ItemsApi(RestResource):
         self.downloaded = _DownloadedApi()
 
 
-@cherrypy.popargs('wanted_item_index')
+@cherrypy.popargs('wanted_item_id')
 class _WantedApi(RestResource):
     """
     Rest resource for handling the /api/items/wanted path.
@@ -31,29 +33,59 @@ class _WantedApi(RestResource):
         super(_WantedApi, self).__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'DELETE')
+        self.allowed_methods = ('GET', 'DELETE', 'PUT', 'PATCH')
 
-    def get(self, wanted_item_index=None):
-        """Get the list of wanted items or a single wanted item."""
-        if wanted_item_index is None:
+    def get(self, wanted_item_id=None):
+        """Get the list of wanted items or a single wanted item from the wanted queue."""
+        if wanted_item_id:
+            wanted_item = find_wanted_item_in_queue(int(wanted_item_id))
+            if wanted_item:
+                return wanted_item.to_dict(camelize)
+            else:
+                return self._bad_request('Invalid wanted_item_id')
+        else:
             items = []
             for item in autosubliminal.WANTEDQUEUE:
                 items.append(item.to_dict(camelize))
             return items
-        elif 0 <= int(wanted_item_index) < len(autosubliminal.WANTEDQUEUE):
-            return autosubliminal.WANTEDQUEUE[int(wanted_item_index)].to_dict(camelize)
-        else:
-            return self._bad_request('Invalid wanted_item_index')
 
-    def delete(self, wanted_item_index):
-        """Delete a wanted item for the wanted queue."""
-        if wanted_item_index is None or not (0 <= int(wanted_item_index) < len(autosubliminal.WANTEDQUEUE)):
-            return self._bad_request('Invalid wanted_item_index')
+    @release_wanted_queue_lock_on_exception
+    def put(self, wanted_item_id):
+        """Update a wanted item in the wanted queue."""
+        input_dict = to_dict(cherrypy.request.json, decamelize)
 
-        # Remove wanted item
-        wanted_item = autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
+        if wanted_item_id:
+            wanted_item = find_wanted_item_in_queue(int(wanted_item_id))
+            if wanted_item:
+                if get_wanted_queue_lock():
+                    # Update wanted item (all keys that are passed) and update the wanted queue
+                    for key in input_dict:
+                        wanted_item.set_attr(key, input_dict[key])
+                    update_wanted_item_in_queue(wanted_item)
+                    release_wanted_queue_lock()
+                    return self._no_content()
+                else:
+                    return self._conflict('Wanted queue in use')
 
-        return wanted_item
+        return self._bad_request('Invalid wanted_item_id')
+
+    @release_wanted_queue_lock_on_exception
+    def patch(self, wanted_item_id):
+        """Reset a wanted item in the wanted queue."""
+
+        if wanted_item_id:
+            wanted_item = find_wanted_item_in_queue(int(wanted_item_id))
+            if wanted_item:
+                # Reset wanted item and update the wanted queue
+                if get_wanted_queue_lock():
+                    wanted_item = WantedItemsDb().get_wanted_item(int(wanted_item_id))
+                    update_wanted_item_in_queue(wanted_item)
+                    release_wanted_queue_lock()
+                    return self._no_content()
+                else:
+                    return self._conflict('Wanted queue in use')
+
+        return self._bad_request('Invalid wanted_item_id')
 
 
 @cherrypy.popargs('number_of_items')

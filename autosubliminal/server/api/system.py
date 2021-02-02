@@ -111,6 +111,7 @@ class _SettingsApi(RestResource):
             'check_version': autosubliminal.CHECKVERSION.name,
             'library_mode': autosubliminal.LIBRARYMODE,
             'log_reversed': autosubliminal.LOGREVERSED,
+            'manual_refine_video': autosubliminal.MANUALREFINEVIDEO,
             'tvdb_url': autosubliminal.DEREFERURL + autosubliminal.TVDBURL,
             'imdb_url': autosubliminal.DEREFERURL + autosubliminal.IMDBURL,
             'timestamp_format': autosubliminal.TIMESTAMPFORMAT,

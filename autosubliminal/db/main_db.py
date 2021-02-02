@@ -30,13 +30,14 @@ class WantedItemsDb(object):
 
     def __init__(self):
         self._query_get_all = 'SELECT * FROM wanted_items ORDER BY timestamp DESC'
-        self._query_get = 'SELECT * FROM wanted_items WHERE videopath=?'
-        self._query_get_ignore_case = 'SELECT * FROM wanted_items WHERE videopath=? COLLATE nocase'
+        self._query_get = 'SELECT * FROM wanted_items WHERE id=?'
+        self._query_get_by_video_path = 'SELECT * FROM wanted_items WHERE videopath=?'
+        self._query_get_by_video_path_ignore_case = 'SELECT * FROM wanted_items WHERE videopath=? COLLATE nocase'
         self._query_set = 'INSERT INTO wanted_items VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
         self._query_update = 'UPDATE wanted_items SET videopath=?, timestamp=?, languages=?, type=?, title=?, ' \
                              'year=?, season=?, episode=?, quality=?, source=?, codec=?, releasegrp=?, tvdbid=?, ' \
                              'imdbid=? WHERE id=?'
-        self._query_delete = 'DELETE FROM wanted_items WHERE videopath=?'
+        self._query_delete = 'DELETE FROM wanted_items WHERE id=?'
         self._query_delete_by_tvdb_id = 'DELETE FROM wanted_items WHERE tvdbid=?'
         self._query_delete_by_imdb_id = 'DELETE FROM wanted_items WHERE imdbid=?'
         self._query_flush = 'DELETE FROM wanted_items'
@@ -56,7 +57,24 @@ class WantedItemsDb(object):
 
         return result_list
 
-    def get_wanted_item(self, video_path, ignore_case=False):
+    def get_wanted_item(self, id):
+        """Get a wanted item by its video path.
+
+        :param id: the id
+        :type id: int
+        :return: the wanted item
+        :rtype: WantedItem
+        """
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        connection.row_factory = _wanted_item_factory
+        cursor = connection.cursor()
+        cursor.execute(self._query_get, [id])
+        wanted_item = cursor.fetchone()
+        connection.close()
+
+        return wanted_item
+
+    def get_wanted_item_by_video_path(self, video_path, ignore_case=False):
         """Get a wanted item by its video path.
 
         :param video_path: the video path
@@ -67,7 +85,8 @@ class WantedItemsDb(object):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         connection.row_factory = _wanted_item_factory
         cursor = connection.cursor()
-        cursor.execute(self._query_get_ignore_case if ignore_case else self._query_get, [video_path])
+        cursor.execute(self._query_get_by_video_path_ignore_case if ignore_case else self._query_get_by_video_path,
+                       [video_path])
         wanted_item = cursor.fetchone()
         connection.close()
 
@@ -99,15 +118,15 @@ class WantedItemsDb(object):
         connection.commit()
         connection.close()
 
-    def delete_wanted_item(self, wanted_item):
+    def delete_wanted_item(self, wanted_item_id):
         """Delete a wanted item.
 
-        :param wanted_item: the wanted item
-        :type wanted_item: WantedItem
+        :param wanted_item_id: the wanted item id
+        :type wanted_item_id: int
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_delete, [wanted_item.videopath])
+        cursor.execute(self._query_delete, [wanted_item_id])
         connection.commit()
         connection.close()
 

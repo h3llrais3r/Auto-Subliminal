@@ -56,7 +56,7 @@ export class ShowSettingsComponent implements OnInit {
       wantedLanguages: [showSettings.wantedLanguages || [], [Validators.required, FormValidators.notEmpty]],
       refine: [showSettings.refine, [Validators.required]],
       hearingImpaired: [showSettings.hearingImpaired, [Validators.required]],
-      utf8Encoding: [showSettings.utf8Encoding || [Validators.required]]
+      utf8Encoding: [showSettings.utf8Encoding, [Validators.required]]
     });
   }
 
@@ -69,11 +69,20 @@ export class ShowSettingsComponent implements OnInit {
   }
 
   saveShowSettings(): void {
-    this.showService.saveShowSettings(this.tvdbId, this.showSettings).subscribe(
+    this.showService.saveShowSettings(this.tvdbId, this.getShowSettings()).subscribe(
       () => {
         this.close();
       }
     );
+  }
+
+  private getShowSettings(): ShowSettings {
+    const showSettings = new ShowSettings();
+    showSettings.wantedLanguages = FormUtils.getFormControlValue<string[]>(this.settingsForm, 'wantedLanguages');
+    showSettings.refine = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'refine');
+    showSettings.hearingImpaired = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'hearingImpaired');
+    showSettings.utf8Encoding = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'utf8Encoding');
+    return showSettings;
   }
 
   close(): void {

@@ -66,7 +66,7 @@ class _Item(object):
         self.releasegrp = _releasegrp
 
     def set_attr(self, key, value):
-        """Set an attribute.
+        """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
         :param key: the attribute key
@@ -74,7 +74,7 @@ class _Item(object):
         :param value: the attribute value
         :type value: str
         """
-        if hasattr(self, key):
+        if hasattr(self, key) and not hasattr(type(self), key):
             if key in ['year', 'season']:
                 # Set as int
                 setattr(self, key, to_obj(value, int))
@@ -190,7 +190,7 @@ class WantedItem(_Item):
         :rtype: dict
         """
         # Define args to exclude
-        exclude_args = ['releasegrp', 'videopath', 'tvdbid', 'imdbid']
+        exclude_args = ['releasegrp', 'videopath', 'tvdbid', 'imdbid', 'is_episode', 'is_movie', 'is_search_active']
         if args:
             exclude_args.extend(list(args))
 
@@ -221,7 +221,7 @@ class WantedItem(_Item):
         return find_path_in_paths(video_dir, autosubliminal.LIBRARYPATHS, check_common_path=True)
 
     def set_attr(self, key, value):
-        """Set an attribute.
+        """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
         :param key: the attribute key
@@ -229,7 +229,7 @@ class WantedItem(_Item):
         :param value: the attribute value
         :type value: str
         """
-        if hasattr(self, key):
+        if hasattr(self, key) and not hasattr(type(self), key):
             if key in ['languages']:
                 # Must be returned as a list of values
                 setattr(self, key, to_list(value, default_value=[]))

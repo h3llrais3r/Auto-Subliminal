@@ -65,7 +65,7 @@ export class SettingsSubliminalComponent implements OnInit {
       movieMatchQuality: [subliminalSettings.movieMatchQuality, [Validators.required]],
       movieMatchCodec: [subliminalSettings.movieMatchCodec, [Validators.required]],
       movieMatchReleaseGroup: [subliminalSettings.movieMatchReleaseGroup, [Validators.required]],
-      subliminalProviders: [subliminalSettings.subliminalProviders, []],
+      subliminalProviders: [subliminalSettings.subliminalProviders || [], []],
       subtitleUtf8Encoding: [subliminalSettings.subtitleUtf8Encoding, [Validators.required]],
       refineVideo: [subliminalSettings.refineVideo, [Validators.required]],
       manualRefineVideo: [subliminalSettings.manualRefineVideo, [Validators.required]],

@@ -31,9 +31,6 @@ export class WantedItem extends Item {
   libraryPath: string;
   timestamp: string; // format: YYYY-MM-DD HH:MM:SS
   languages: string[];
-  isEpisode: boolean;
-  isSearchActive: boolean;
-  isMovie: boolean;
   tvdbId?: number;
   imdbId?: string;
 
@@ -43,6 +40,14 @@ export class WantedItem extends Item {
 
   get timestampFormatted(): string {
     return formatDateTime(getDateFromString(this.timestamp, 'YYYY-MM-DD hh:mm:ss').getTime());
+  }
+
+  get isEpisode(): boolean {
+    return this.type === VideoType.EPISODE;
+  }
+
+  get isMovie(): boolean {
+    return this.type === VideoType.MOVIE;
   }
 }
 

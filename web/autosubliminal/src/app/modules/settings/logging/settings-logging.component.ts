@@ -59,7 +59,7 @@ export class SettingsLoggingComponent implements OnInit {
       logFile: [logSettings.logFile, [Validators.required, FormValidators.notEmpty]],
       logLevel: [logSettings.logLevel, [Validators.required]],
       logNum: [logSettings.logNum, [Validators.required]],
-      logSize: [logSettings.logSize || [Validators.required]],
+      logSize: [logSettings.logSize, [Validators.required]],
       logHttpAccess: [logSettings.logHttpAccess, [Validators.required]],
       logExternalLibs: [logSettings.logExternalLibs, [Validators.required]],
       logDetailedFormat: [logSettings.logDetailedFormat, [Validators.required]],

@@ -69,11 +69,20 @@ export class MovieSettingsComponent implements OnInit {
   }
 
   saveMovieSettings(): void {
-    this.movieService.saveMovieSettings(this.imdbId, this.movieSettings).subscribe(
+    this.movieService.saveMovieSettings(this.imdbId, this.getMovieSettings()).subscribe(
       () => {
         this.close();
       }
     );
+  }
+
+  private getMovieSettings(): MovieSettings {
+    const movieSettings = new MovieSettings();
+    movieSettings.wantedLanguages = FormUtils.getFormControlValue<string[]>(this.settingsForm, 'wantedLanguages');
+    movieSettings.refine = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'refine');
+    movieSettings.hearingImpaired = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'hearingImpaired');
+    movieSettings.utf8Encoding = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'utf8Encoding');
+    return movieSettings;
   }
 
   close(): void {
