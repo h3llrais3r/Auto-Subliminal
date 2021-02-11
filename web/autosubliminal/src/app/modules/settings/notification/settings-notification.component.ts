@@ -38,7 +38,8 @@ export class SettingsNotificationComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateNotificationSettings(this.getNotificationSettings()).subscribe(
         () => this.messageService.showSuccessMessage('Notification settings saved.'),
-        () => this.messageService.showErrorMessage('Error while saving notification settings!'));
+        () => this.messageService.showErrorMessage('Error while saving notification settings!')
+      );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }
@@ -47,7 +48,8 @@ export class SettingsNotificationComponent implements OnInit {
   test(notifierName: string): void {
     this.settingsService.testNotifier(notifierName).subscribe(
       () => this.messageService.showSuccessMessage(`Test ${notifierName} notification sent.`),
-      () => this.messageService.showErrorMessage(`Error while testing ${notifierName} notification!`));
+      () => this.messageService.showErrorMessage(`Error while testing ${notifierName} notification!`)
+    );
   }
 
   registerTwitter(): void {
@@ -57,7 +59,8 @@ export class SettingsNotificationComponent implements OnInit {
         this.twitterRegistration = twitterRegistration;
         this.twitterRegistrationDialog = true;
       },
-      () => this.messageService.showErrorMessage('Twitter registration failed!'));
+      () => this.messageService.showErrorMessage('Twitter registration failed!')
+    );
   }
 
   authorizeTwitter(): void {
@@ -68,7 +71,8 @@ export class SettingsNotificationComponent implements OnInit {
         FormUtils.setFormControlValue(this.settingsForm, 'twitterSecret', twitterAuthorization.twitterSecret);
         this.messageService.showSuccessMessage('Twitter registration successful. Please save and test Twitter.');
       },
-      () => this.messageService.showErrorMessage('Twitter authorization failed!'));
+      () => this.messageService.showErrorMessage('Twitter authorization failed!')
+    );
   }
 
   private buildSelectItems(): void {

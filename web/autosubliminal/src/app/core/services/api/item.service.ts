@@ -31,8 +31,28 @@ export class ItemService extends ApiServiceTemplate {
       .pipe(map(() => true));
   }
 
+  searchWantedItemIndexerId(wantedItemId: number): Observable<boolean> {
+    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'searchIndexerId' }, this.options)
+      .pipe(map(() => true));
+  }
+
   resetWantedItem(wantedItemId: number): Observable<boolean> {
-    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, {}, this.options)
+    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'reset' }, this.options)
+      .pipe(map(() => true));
+  }
+
+  postProcessWantedItem(wantedItemId: number, subtitleIndex?: number): Observable<boolean> {
+    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'postProcess', subtitleIndex }, this.options)
+      .pipe(map(() => true));
+  }
+
+  deleteWantedItem(wantedItemId: number, cleanup?: boolean): Observable<boolean> {
+    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'delete', cleanup }, this.options)
+      .pipe(map(() => true));
+  }
+
+  skipWantedItem(wantedItemId: number, type: string, season?: string): Observable<boolean> {
+    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'skip', type, season }, this.options)
       .pipe(map(() => true));
   }
 

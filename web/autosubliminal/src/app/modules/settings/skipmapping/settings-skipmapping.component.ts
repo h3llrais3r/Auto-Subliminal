@@ -30,7 +30,8 @@ export class SettingsSkipmappingComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateSkipMappingSettings(this.getSkipMappingSettings()).subscribe(
         () => this.messageService.showSuccessMessage('Skipmapping settings saved.'),
-        () => this.messageService.showErrorMessage('Error while saving skipmapping settings!'));
+        () => this.messageService.showErrorMessage('Error while saving skipmapping settings!')
+      );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

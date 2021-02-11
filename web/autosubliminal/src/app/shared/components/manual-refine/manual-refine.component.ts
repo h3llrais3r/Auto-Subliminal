@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ItemService } from '../../../core/services/api/item.service';
+import { MessageService } from '../../../core/services/message.service';
 import { WantedItem } from '../../models/item';
 import { toNumber, toNumberList } from '../../utils/number-utils';
 import { FormUtils } from '../forms/form-utils';
@@ -29,7 +30,7 @@ export class ManualRefineComponent implements OnInit {
 
   updateAttempt = false;
 
-  constructor(private fb: FormBuilder, private itemService: ItemService) { }
+  constructor(private fb: FormBuilder, private itemService: ItemService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.buildForm(this.wantedItem);
@@ -57,6 +58,7 @@ export class ManualRefineComponent implements OnInit {
         this.itemService.getWantedItem(wantedItem.id).subscribe(
           (updatedWantedItem) => {
             this.wantedItemChange.emit(updatedWantedItem);
+            this.messageService.showSuccessMessage(`Restored ${updatedWantedItem.longName}.`);
             this.close();
           });
       });
@@ -73,6 +75,7 @@ export class ManualRefineComponent implements OnInit {
           this.itemService.getWantedItem(wantedItem.id).subscribe(
             (updatedWantedItem) => {
               this.wantedItemChange.emit(updatedWantedItem);
+              this.messageService.showSuccessMessage(`Updated ${updatedWantedItem.longName}.`);
               this.close();
             });
         });

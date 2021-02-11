@@ -30,7 +30,8 @@ export class SettingsNamemappingComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateNameMappingSettings(this.getNameMappingSettings()).subscribe(
         () => this.messageService.showSuccessMessage('Namemapping settings saved.'),
-        () => this.messageService.showErrorMessage('Error while saving namemapping settings!'));
+        () => this.messageService.showErrorMessage('Error while saving namemapping settings!')
+      );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

@@ -243,22 +243,31 @@ def force_id_search(wanted_item_index):
 
     # Get wanted queue lock
     if not get_wanted_queue_lock():
-        return
+        return False
 
     # Force id search
+    found = False
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
     title = wanted_item.title
     year = wanted_item.year
     if wanted_item.is_episode:
-        wanted_item.tvdbid = autosubliminal.SHOWINDEXER.get_tvdb_id(title, year, force_search=True)
-        WantedItemsDb().update_wanted_item(wanted_item)
+        tvdb_id = autosubliminal.SHOWINDEXER.get_tvdb_id(title, year, force_search=True)
+        if tvdb_id:
+            wanted_item.tvdbid = tvdb_id
+            WantedItemsDb().update_wanted_item(wanted_item)
+            found = True
     elif wanted_item.is_movie:
-        wanted_item.imdbid, wanted_item.year = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(title, year,
-                                                                                                force_search=True)
-        WantedItemsDb().update_wanted_item(wanted_item)
+        imdb_id, year = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(title, year, force_search=True)
+        if imdb_id:
+            wanted_item.imdbid = imdb_id
+            wanted_item.year = year
+            WantedItemsDb().update_wanted_item(wanted_item)
+            found = True
 
     # Release wanted queue lock
     release_wanted_queue_lock()
+
+    return found
 
 
 @release_wanted_queue_lock_on_exception

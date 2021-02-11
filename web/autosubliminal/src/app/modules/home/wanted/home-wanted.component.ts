@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { SelectItem, SortEvent } from 'primeng/api';
+import { ConfirmationService, SelectItem, SortEvent } from 'primeng/api';
 import { appSettings } from '../../../app-settings.service';
 import { ItemService } from '../../../core/services/api/item.service';
+import { MessageService } from '../../../core/services/message.service';
 import { WantedItem } from '../../../shared/models/item';
 import { VideoType } from '../../../shared/models/video';
 import { WantedTotals } from '../../../shared/models/wanted';
@@ -29,11 +30,17 @@ export class HomeWantedComponent implements OnInit {
   showManualRefine = false;
   manualRefineEnabled = false;
   loading = false;
+  confirmationType: 'delete' | 'skip';
+  cleanupOnDelete = false;
+  seasonToSkip = '00';
 
   globalFilterFields = ['name', 'season', 'episode', 'source', 'quality', 'codec', 'releaseGroup', 'languages', 'timestamp'];
   tableStateKey = 'autosubliminal-home-wanted-table';
 
-  constructor(private itemService: ItemService) { }
+  constructor(
+    private itemService: ItemService,
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService) { }
 
   ngOnInit(): void {
     this.manualRefineEnabled = appSettings.manualRefineVideo;
@@ -77,6 +84,22 @@ export class HomeWantedComponent implements OnInit {
     return getImdbUrl(wantedItem.imdbId);
   }
 
+  searchIndexerId(wantedItem: WantedItem): void {
+    const indexer = wantedItem.isEpisode ? 'tvdb id' : 'imdb id';
+    this.messageService.showInfoMessage(`Searching for ${indexer} for ${wantedItem.longName}.`);
+    this.itemService.searchWantedItemIndexerId(wantedItem.id).subscribe(
+      () => {
+        // Fetch the updated wanted item
+        this.itemService.getWantedItem(wantedItem.id).subscribe(
+          (updatedWantedItem) => {
+            this.messageService.showSuccessMessage(`${capitalizeFirstChar(indexer)} found for ${updatedWantedItem.longName}.`);
+            this.updateWantedItem(updatedWantedItem);
+          });
+      },
+      () => this.messageService.showErrorMessage(`Unable to search ${indexer}! Please check the log file!`)
+    );
+  }
+
   openShowSettingsDialog(wantedItem: WantedItem): void {
     this.showShowSettings = true;
     this.selectedWantedItem = wantedItem;
@@ -95,5 +118,72 @@ export class HomeWantedComponent implements OnInit {
   updateWantedItem(wantedItem: WantedItem): void {
     // Replace updated wanted item in list of wanted items
     this.wantedItems = this.wantedItems.map((item) => item.id === wantedItem.id ? wantedItem : item);
+  }
+
+  postProcessWantedItem(wantedItem: WantedItem): void {
+    this.itemService.postProcessWantedItem(wantedItem.id).subscribe(
+      () => {
+        this.removeWantedItemFromList(wantedItem);
+        this.messageService.showSuccessMessage(`Post processed ${wantedItem.longName}.`);
+      },
+      () => this.messageService.showErrorMessage('Unable to post process! Please check the log file!')
+    );
+  }
+
+  deleteWantedItem(wantedItem: WantedItem): void {
+    this.confirmationType = 'delete';
+    this.cleanupOnDelete = false;
+    this.confirmationService.confirm({
+      message: `Are you sure that you want to delete <b>${wantedItem.longName}</b>?<br><small><i>Toggle button if you want to cleanup leftovers as well.</i></small>`,
+      accept: () => {
+        this.itemService.deleteWantedItem(wantedItem.id, this.cleanupOnDelete).subscribe(
+          () => {
+            this.removeWantedItemFromList(wantedItem);
+            this.messageService.showSuccessMessage(`Deleted ${wantedItem.longName}.`);
+          },
+          () => this.messageService.showErrorMessage('Unable to delete! Please check the log file!')
+        );
+      }
+    });
+  }
+
+  skipShow(wantedItem: WantedItem): void {
+    this.confirmationType = 'skip';
+    this.seasonToSkip = '00';
+    this.confirmationService.confirm({
+      message: `Are you sure that you want to skip show <b>${wantedItem.longName}</b>?<br><small><i>Enter season(s) to skip (comma separated, 00 = all seasons, 0 = specials).</i></small>`,
+      accept: () => {
+        this.itemService.skipWantedItem(wantedItem.id, wantedItem.type, this.seasonToSkip).subscribe(
+          () => {
+            this.removeWantedItemFromList(wantedItem);
+            if (!this.seasonToSkip || this.seasonToSkip === '00') { // '00' or nothing means all seasons
+              this.messageService.showSuccessMessage(`Skipped show ${wantedItem.longName} all seasons.`);
+            } else {
+              this.messageService.showSuccessMessage(`Skipped show ${wantedItem.longName} season(s) ${this.seasonToSkip}.`);
+            }
+          },
+          () => this.messageService.showErrorMessage('Unable to skip show! Please check the log file!')
+        );
+      }
+    });
+  }
+
+  skipMovie(wantedItem: WantedItem): void {
+    this.confirmationService.confirm({
+      message: `Are you sure that you want to skip movie <b>${wantedItem.longName}</b>?`,
+      accept: () => {
+        this.itemService.skipWantedItem(wantedItem.id, wantedItem.type).subscribe(
+          () => {
+            this.removeWantedItemFromList(wantedItem);
+            this.messageService.showSuccessMessage(`Skipped movie ${wantedItem.longName}.`);
+          },
+          () => this.messageService.showErrorMessage('Unable to skip movie! Please check the log file!')
+        );
+      }
+    });
+  }
+
+  private removeWantedItemFromList(wantedItem: WantedItem): void {
+    this.wantedItems = this.wantedItems.filter((item) => item.id !== wantedItem.id);
   }
 }

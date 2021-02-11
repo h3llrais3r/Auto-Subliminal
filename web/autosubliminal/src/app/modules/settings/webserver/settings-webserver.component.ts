@@ -43,7 +43,8 @@ export class SettingsWebserverComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateWebServerSettings(this.getWebServerSettings()).subscribe(
         () => this.messageService.showSuccessMessage('Webserver settings saved.'),
-        () => this.messageService.showErrorMessage('Error while saving webserver settings!'));
+        () => this.messageService.showErrorMessage('Error while saving webserver settings!')
+      );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

@@ -34,7 +34,8 @@ export class SettingsLibraryComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateLibrarySettings(this.getLibrarySettings()).subscribe(
         () => this.messageService.showSuccessMessage('Library settings saved.'),
-        () => this.messageService.showErrorMessage('Error while saving library settings!'));
+        () => this.messageService.showErrorMessage('Error while saving library settings!')
+      );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

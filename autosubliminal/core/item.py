@@ -190,16 +190,18 @@ class WantedItem(_Item):
         :rtype: dict
         """
         # Define args to exclude
-        exclude_args = ['releasegrp', 'videopath', 'tvdbid', 'imdbid', 'is_episode', 'is_movie', 'is_search_active']
+        exclude_args = ['releasegrp', 'videopath', 'tvdbid', 'imdbid', 'is_episode', 'is_movie', 'is_search_active',
+                        'video']
         if args:
             exclude_args.extend(list(args))
 
         # Define kwargs to include
-        file_name = os.path.basename(self.videopath)
+        file_path, file_name = os.path.split(self.videopath)
         file_size = get_file_size(self.videopath)
         include_kwargs = {
             'release_group': self.releasegrp,
             'video_file_name': file_name,
+            'video_file_path': file_path,
             'video_file_size': file_size,
             'tvdb_id': self.tvdbid,
             'imdb_id': self.imdbid

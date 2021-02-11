@@ -36,7 +36,8 @@ export class SettingsLoggingComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateLogSettings(this.getLogSettings()).subscribe(
         () => this.messageService.showSuccessMessage('Log settings saved.'),
-        () => this.messageService.showErrorMessage('Error while saving log settings!'));
+        () => this.messageService.showErrorMessage('Error while saving log settings!')
+      );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

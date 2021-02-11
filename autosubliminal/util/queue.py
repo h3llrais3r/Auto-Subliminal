@@ -62,13 +62,19 @@ def count_wanted_queue_items(item_type=None):
     return size
 
 
-def find_wanted_item_in_queue(wanted_item_id):
+def find_wanted_item_in_queue(wanted_item_id, include_index=False):
     """
     Find a wanted item in the wanted queue.
     """
 
-    # Return the first item that matches or None if not found
-    return next((x for x in autosubliminal.WANTEDQUEUE if x.id == wanted_item_id), None)
+    if include_index:
+        for index, item in enumerate(autosubliminal.WANTEDQUEUE):
+            if item.id == wanted_item_id:
+                return item, index
+        raise RuntimeError('Wanted item id %s not found in WANTEDQUEUE' % wanted_item_id)
+    else:
+        # Return the first item that matches or None if not found
+        return next((x for x in autosubliminal.WANTEDQUEUE if x.id == wanted_item_id), None)
 
 
 def update_wanted_item_in_queue(wanted_item):

@@ -37,7 +37,8 @@ export class SettingsSubliminalComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateSubliminalSettings(this.getSubliminalSettings()).subscribe(
         () => this.messageService.showSuccessMessage('Subliminal settings saved.'),
-        () => this.messageService.showErrorMessage('Error while saving subliminal settings!'));
+        () => this.messageService.showErrorMessage('Error while saving subliminal settings!')
+      );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

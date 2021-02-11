@@ -293,6 +293,7 @@ p-dropdown {
     background-color: var(--secondary);
     color: var(--white);
     padding: 0 0.4rem;
+    white-space: nowrap; // do not wrap language (f.e. pt-BR)
   }
 
   // Filetype tag

@@ -38,7 +38,8 @@ export class SettingsGeneralComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateGeneralSettings(this.getGeneralSettings()).subscribe(
         () => this.messageService.showSuccessMessage('General settings saved.'),
-        () => this.messageService.showErrorMessage('Error while saving general settings!'));
+        () => this.messageService.showErrorMessage('Error while saving general settings!')
+      );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }
