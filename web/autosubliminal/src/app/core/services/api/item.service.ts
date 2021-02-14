@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DownloadedItem, WantedItem } from '../../../shared/models/item';
+import { Subtitle } from '../../../shared/models/subtitle';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -31,18 +32,8 @@ export class ItemService extends ApiServiceTemplate {
       .pipe(map(() => true));
   }
 
-  searchWantedItemIndexerId(wantedItemId: number): Observable<boolean> {
-    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'searchIndexerId' }, this.options)
-      .pipe(map(() => true));
-  }
-
   resetWantedItem(wantedItemId: number): Observable<boolean> {
     return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'reset' }, this.options)
-      .pipe(map(() => true));
-  }
-
-  postProcessWantedItem(wantedItemId: number, subtitleIndex?: number): Observable<boolean> {
-    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'postProcess', subtitleIndex }, this.options)
       .pipe(map(() => true));
   }
 
@@ -53,6 +44,31 @@ export class ItemService extends ApiServiceTemplate {
 
   skipWantedItem(wantedItemId: number, type: string, season?: string): Observable<boolean> {
     return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'skip', type, season }, this.options)
+      .pipe(map(() => true));
+  }
+
+  postProcessWantedItem(wantedItemId: number, subtitleIndex?: number): Observable<boolean> {
+    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'postProcess', subtitleIndex }, this.options)
+      .pipe(map(() => true));
+  }
+
+  searchWantedItemIndexerId(wantedItemId: number): Observable<boolean> {
+    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'searchIndexerId' }, this.options)
+      .pipe(map(() => true));
+  }
+
+  searchWantedItemSubtitles(wantedItemId: number, language: string): Observable<Subtitle[]> {
+    return this.httpClient.patch<Subtitle[]>(`${this.URL}/wanted/${wantedItemId}`, { action: 'searchSubtitles', language }, this.options)
+      .pipe(map((subtitles) => subtitles.map((subtitle) => new Subtitle(subtitle))));
+  }
+
+  saveWantedItemSubtitle(wantedItemId: number, subtitleIndex: number): Observable<boolean> {
+    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'saveSubtitle', subtitleIndex }, this.options)
+      .pipe(map(() => true));
+  }
+
+  deleteWantedItemSubtitle(wantedItemId: number): Observable<boolean> {
+    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'deleteSubtitle' }, this.options)
       .pipe(map(() => true));
   }
 

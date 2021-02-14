@@ -1,0 +1,4 @@
+// Allow dropdown overflow within table
+::ng-deep.p-datatable-auto-layout>.p-datatable-wrapper {
+  overflow-x: visible !important;
+}

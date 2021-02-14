@@ -1,8 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConfirmationService, SelectItem, SortEvent } from 'primeng/api';
+import { Subscription } from 'rxjs';
 import { appSettings } from '../../../app-settings.service';
 import { ItemService } from '../../../core/services/api/item.service';
 import { MessageService } from '../../../core/services/message.service';
+import { SystemEventService } from '../../../core/services/system-event.service';
 import { WantedItem } from '../../../shared/models/item';
 import { VideoType } from '../../../shared/models/video';
 import { WantedTotals } from '../../../shared/models/wanted';
@@ -15,7 +18,7 @@ import { naturalSort } from '../../../shared/utils/table-utils';
   templateUrl: './home-wanted.component.html',
   styleUrls: ['./home-wanted.component.scss']
 })
-export class HomeWantedComponent implements OnInit {
+export class HomeWantedComponent implements OnInit, OnDestroy {
 
   @Input()
   wantedItems: WantedItem[];
@@ -25,6 +28,7 @@ export class HomeWantedComponent implements OnInit {
 
   videoTypes: SelectItem[];
   selectedWantedItem: WantedItem;
+  selectedWantedItemLanguage: string;
   showShowSettings = false;
   showMovieSettings = false;
   showManualRefine = false;
@@ -37,8 +41,12 @@ export class HomeWantedComponent implements OnInit {
   globalFilterFields = ['name', 'season', 'episode', 'source', 'quality', 'codec', 'releaseGroup', 'languages', 'timestamp'];
   tableStateKey = 'autosubliminal-home-wanted-table';
 
+  private scanDiskSubscription: Subscription;
+
   constructor(
+    private router: Router,
     private itemService: ItemService,
+    private systemEventService: SystemEventService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService) { }
 
@@ -46,6 +54,17 @@ export class HomeWantedComponent implements OnInit {
     this.manualRefineEnabled = appSettings.manualRefineVideo;
     this.buildSelectItems();
     this.loadWantedItems();
+    // Subscribe on scanDisk finish events to reload the overview
+    this.scanDiskSubscription = this.systemEventService.schedulerFinish.subscribe(
+      (scheduler) => {
+        if (scheduler.name === appSettings.scanDisk) {
+          this.loadWantedItems();
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.scanDiskSubscription.unsubscribe();
   }
 
   private buildSelectItems(): void {
@@ -113,6 +132,10 @@ export class HomeWantedComponent implements OnInit {
   openManualRefineDialog(wantedItem: WantedItem): void {
     this.showManualRefine = true;
     this.selectedWantedItem = wantedItem;
+  }
+
+  goToManualSearch(wantedItem: WantedItem, language: string): void {
+    this.router.navigate(['/home/search'], { queryParams: { wantedItemId: wantedItem.id, language } });
   }
 
   updateWantedItem(wantedItem: WantedItem): void {

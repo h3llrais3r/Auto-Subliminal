@@ -109,6 +109,8 @@ body {
     cursor: pointer;
 
     .dropdown-toggle {
+      white-space: normal; // allow wrapping
+
       &::after {
         display: none; // Hide toggle
       }

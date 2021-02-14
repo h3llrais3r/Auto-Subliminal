@@ -131,7 +131,7 @@ def search_subtitle(wanted_item_index, lang):
 
     # Get wanted queue lock
     if not get_wanted_queue_lock():
-        return subs, 'Skipping! Cannot get a wanted queue lock because another thread is using the queues!'
+        return subs, 'Wanted queue in use'
 
     # Setup provider pool
     provider_pool = _get_provider_pool()
@@ -188,7 +188,6 @@ def search_subtitle(wanted_item_index, lang):
                                 content_preview += '<br>'
                                 content_preview += '...'
                                 content_preview += '<br>'
-                                content_preview += '<br>'
                                 # Last 30 lines
                                 content_preview += '<br>'.join(
                                     x.replace('"', '\'') for x in content_split[len(content_split) - 30:])
@@ -201,10 +200,7 @@ def search_subtitle(wanted_item_index, lang):
     release_wanted_queue_lock()
 
     if not provider_pool:
-        return subs, 'Skipping! No subliminal providers are configured!'
-
-    if not len(subs):
-        return subs, 'No subtitles could be found or downloaded!'
+        return subs, 'No subliminal providers configured'
 
     return subs, None
 

@@ -201,7 +201,7 @@ class WantedItem(_Item):
         include_kwargs = {
             'release_group': self.releasegrp,
             'video_file_name': file_name,
-            'video_file_path': file_path,
+            'video_file_path': file_path.rstrip(os.path.sep),  # make sure to trim trailing slashes
             'video_file_size': file_size,
             'tvdb_id': self.tvdbid,
             'imdb_id': self.imdbid

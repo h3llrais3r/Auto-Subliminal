@@ -8,12 +8,16 @@ export function getBannerPlaceholderUrl(): string {
   return 'assets/banner-placeholder.jpg';
 }
 
+export function getDereferUrl(url: string): string {
+  return `${appSettings.dereferUrl}${url}`;
+}
+
 export function getTvdbUrl(tvdbId: number): string {
-  return `${appSettings.tvdbUrl}${tvdbId}`;
+  return getDereferUrl(`${appSettings.tvdbUrl}${tvdbId}`);
 }
 
 export function getImdbUrl(imdbId: string): string {
-  return `${appSettings.imdbUrl}${imdbId}`;
+  return getDereferUrl(`${appSettings.imdbUrl}${imdbId}`);
 }
 
 export function getPlayVideoUrl(filePath: string, fileName: string): string {

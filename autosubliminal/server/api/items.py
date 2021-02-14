@@ -81,15 +81,49 @@ class _WantedApi(RestResource):
             if wanted_item:
                 if 'action' in input_dict:
                     action = input_dict['action']
-                    # Search id
+
+                    # Search indexer id
                     if action == 'searchIndexerId':
                         found = subchecker.force_id_search(wanted_item_index)
                         if found:
                             return self._no_content()
                         else:
-                            return self._conflict('Unable to search for id')
-                    # Reset wanted item
-                    if action == 'reset':
+                            return self._conflict('Unable to search indexer id')
+
+                    # Search subtitles
+                    elif action == 'searchSubtitles':
+                        language = input_dict['language'] if 'language' in input_dict else None
+                        if language:
+                            subs, error_message = subchecker.search_subtitle(wanted_item_index, language)
+                            if not error_message:
+                                return [to_dict(x, camelize) for x in subs]
+                            else:
+                                return self._conflict(error_message)
+
+                        return self._bad_request('Missing language')
+
+                    # Save subtitle
+                    elif action == 'saveSubtitle':
+                        subtitle_index = input_dict['subtitle_index'] if 'subtitle_index' in input_dict else None
+                        if subtitle_index is not None:
+                            saved = subchecker.save_subtitle(wanted_item_index, subtitle_index)
+                            if saved:
+                                return self._no_content()
+                            else:
+                                return self._conflict('Unable to save subtitle')
+
+                        return self._bad_request('Missing subtitle_index')
+
+                    # Delete subtitle
+                    elif action == 'deleteSubtitle':
+                        removed = subchecker.delete_subtitle(wanted_item_index)
+                        if removed:
+                            return self._no_content()
+                        else:
+                            return self._conflict('Unable to delete subtitle')
+
+                    # Reset a wanted item
+                    elif action == 'reset':
                         if get_wanted_queue_lock():
                             wanted_item = WantedItemsDb().get_wanted_item(int(wanted_item_id))
                             update_wanted_item_in_queue(wanted_item)

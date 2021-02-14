@@ -151,18 +151,18 @@
         border: 0 none;
 
         .p-column-title {
-          padding: .4rem;
           width: 40%;
           display: inline-block;
-          margin: -.4rem 0 -.4rem -.4rem;
+          word-break: break-all;
           font-weight: $font-bold;
+          vertical-align: top;
         }
 
         .p-column-data {
-          padding: .4rem;
+          padding-left: 0.4rem;
           width: 60%;
           display: inline-block;
-          margin: -.4rem 0 -.4rem -.4rem;
+          word-break: break-all;
         }
 
         &:last-child {
