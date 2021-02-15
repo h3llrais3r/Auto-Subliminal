@@ -148,6 +148,8 @@ class WantedItem(_Item):
 
         self.video = None  # Subliminal Video object
 
+        self.found_subtitles = None  # List of found subtitles after a manual search
+
     @property
     def is_episode(self):
         """Indication if the item is an episode."""
@@ -191,7 +193,7 @@ class WantedItem(_Item):
         """
         # Define args to exclude
         exclude_args = ['releasegrp', 'videopath', 'tvdbid', 'imdbid', 'is_episode', 'is_movie', 'is_search_active',
-                        'video']
+                        'video', 'found_subtitles']
         if args:
             exclude_args.extend(list(args))
 
