@@ -7,25 +7,25 @@ export function getDateFromString(dateString: string, format?: string): Date {
   return moment(dateString, format).toDate();
 }
 
-export function formatDateTime(timeInMilliSeconds: number, defaultValue = 'N/A'): string {
-  if (timeInMilliSeconds) {
-    return strftime(appSettings.timestampFormat, new Date(timeInMilliSeconds));
+export function formatDateTime(timeInMs: number, defaultValue = 'N/A'): string {
+  if (timeInMs) {
+    return strftime(appSettings.timestampFormat, new Date(timeInMs));
   } else {
     return defaultValue;
   }
 }
 
-export function formatDate(timeInMilliSeconds: number, defaultValue = 'N/A'): string {
-  if (timeInMilliSeconds) {
-    return strftime(appSettings.dateFormat, new Date(timeInMilliSeconds));
+export function formatDate(timeInMs: number, defaultValue = 'N/A'): string {
+  if (timeInMs) {
+    return strftime(appSettings.dateFormat, new Date(timeInMs));
   } else {
     return defaultValue;
   }
 }
 
-export function formatTime(timeInMilliSeconds: number, defaultValue = 'N/A'): string {
-  if (timeInMilliSeconds) {
-    return strftime(appSettings.timeFormat, new Date(timeInMilliSeconds));
+export function formatTime(timeInMs: number, defaultValue = 'N/A'): string {
+  if (timeInMs) {
+    return strftime(appSettings.timeFormat, new Date(timeInMs));
   } else {
     return defaultValue;
   }

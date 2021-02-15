@@ -14,7 +14,7 @@ class AppSettings {
   scanDiskNextRunInMs: number;
   scanLibrary: string;
   checkSub: string;
-  checkSubNextRunInMs: string;
+  checkSubNextRunInMs: number;
   checkVersion: string;
   libraryMode: boolean;
   logReversed: boolean;
