@@ -1,15 +1,17 @@
 <div class="page-footer">
-  <span>Auto-Subliminal version : {{appVersion}}</span>
-  <span class="separator">|</span>
-  <span>
-    Next disk scan in :
-    <span *ngIf="scanDiskRunning">Running...</span>
-    <countdown *ngIf="!scanDiskRunning" [config]="scanDiskCountdown"></countdown>
-  </span>
-  <span class="separator">|</span>
-  <span>
-    Next subtitle check in :
-    <span *ngIf="checkSubRunning">Running...</span>
-    <countdown *ngIf="!checkSubRunning" [config]="checkSubCountdown"></countdown>
-  </span>
+  <div class="container">
+    <span>Auto-Subliminal version : {{appVersion}}</span>
+    <span class="separator">|</span>
+    <span>
+      Next disk scan in :
+      <span *ngIf="scanDiskRunning">Running...</span>
+      <countdown *ngIf="!scanDiskRunning" [config]="scanDiskCountdown"></countdown>
+    </span>
+    <span class="separator">|</span>
+    <span>
+      Next subtitle check in :
+      <span *ngIf="checkSubRunning">Running...</span>
+      <countdown *ngIf="!checkSubRunning" [config]="checkSubCountdown"></countdown>
+    </span>
+  </div>
 </div>

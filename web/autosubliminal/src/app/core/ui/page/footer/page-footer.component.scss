@@ -1,8 +1,15 @@
+@import '../../../../../scss/mixins/flexbox';
+
 .page-footer {
   border-top: 1px solid var(--surface-d);
-  text-align: center;
 
-  .separator {
-    padding: 0 0.5rem;
+  .container {
+    @include flexbox;
+    @include justify-content(center);
+    text-align: center;
+
+    .separator {
+      padding: 0 0.5rem;
+    }
   }
 }
