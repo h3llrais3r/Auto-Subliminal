@@ -42,6 +42,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
   tableStateKey = 'autosubliminal-home-wanted-table';
 
   private scanDiskSubscription: Subscription;
+  private checkSubSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -61,10 +62,18 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
           this.loadWantedItems();
         }
       });
+    // Subscribe on checkSub finish events to reload the overview
+    this.checkSubSubscription = this.systemEventService.schedulerFinish.subscribe(
+      (scheduler) => {
+        if (scheduler.name === appSettings.checkSub) {
+          this.loadWantedItems();
+        }
+      });
   }
 
   ngOnDestroy(): void {
     this.scanDiskSubscription.unsubscribe();
+    this.checkSubSubscription.unsubscribe();
   }
 
   private buildSelectItems(): void {
