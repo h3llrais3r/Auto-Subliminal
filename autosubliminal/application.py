@@ -153,42 +153,12 @@ def _get_application_configuration():
     conf = {
         '/': {
             'tools.encode.encoding': 'utf-8',
-            'tools.decode.encoding': 'utf-8',
-            'tools.staticdir.root': os.path.abspath(os.path.join(autosubliminal.PATH, 'web/static')),
+            'tools.decode.encoding': 'utf-8'
         },
         '/api': {
             'tools.json_out.handler': json_out_handler,  # Use our custom json_out_handler for /api
             'tools.response_headers.on': True,  # Always force content-type
             'tools.response_headers.headers': [('Content-Type', 'application/json; charset=utf-8')]
-        },
-        '/css': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'css',
-            'tools.expires.on': True,
-            'tools.expires.secs': 3600 * 24 * 7
-        },
-        '/fonts': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'fonts',
-            'tools.expires.on': True,
-            'tools.expires.secs': 3600 * 24 * 7
-        },
-        '/images': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'images',
-            'tools.expires.on': True,
-            'tools.expires.secs': 3600 * 24 * 7
-        },
-        '/js': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'js',
-            'tools.expires.on': True,
-            'tools.expires.secs': 3600 * 24 * 7
-        },
-        '/favicon.ico': {
-            'tools.staticfile.on': True,
-            'tools.staticfile.filename': os.path.abspath(
-                os.path.join(autosubliminal.PATH, 'web/static/images/favicon.ico'))
         },
         '/websocket/system': {
             'tools.websocket.on': True,
@@ -204,9 +174,7 @@ def _get_application_configuration():
             'tools.staticdir.dir': 'autosubliminal',
             'tools.spa_redirect.on': True,
             # 'tools.expires.on': True,
-            # 'tools.expires.secs': 3600 * 24 * 7,
-            # 'error_page.404': os.path.abspath(
-            #     os.path.join(autosubliminal.PATH, 'web/autosubliminal/dist/autosubliminal/index.html'))
+            # 'tools.expires.secs': 3600 * 24 * 7
         },
     }
 
