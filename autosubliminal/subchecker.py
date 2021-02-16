@@ -64,11 +64,11 @@ class SubChecker(ScheduledProcess):
             # Process all items in wanted queue
             db = WantedItemsDb()
             for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
-                log.info('Searching subtitles for video: %s', wanted_item.videopath)
+                log.info('Searching subtitles for video: %s', wanted_item.video_path)
 
                 # Check if the search is currently active for the wanted_item
                 if not wanted_item.is_search_active:
-                    log.info('Search not active in this run for video: %s', wanted_item.videopath)
+                    log.info('Search not active in this run for video: %s', wanted_item.video_path)
                     continue
 
                 # Scan wanted_item for video, skip when no video could be determined
@@ -86,7 +86,7 @@ class SubChecker(ScheduledProcess):
                     try:
                         subtitles, language, single = _search_subtitles(video, lang, True, provider_pool)
                     except Exception:
-                        log.exception('Error while searching subtitles for video %r', wanted_item.videopath)
+                        log.exception('Error while searching subtitles for video %r', wanted_item.video_path)
                         continue
 
                     # Subtitle is found for the video
@@ -112,7 +112,7 @@ class SubChecker(ScheduledProcess):
                 wanted_item_to_delete = autosubliminal.WANTEDQUEUE.pop(to_delete_wanted_queue[i])
                 log.debug('Removed item from the wanted queue at index %s', to_delete_wanted_queue[i])
                 db.delete_wanted_item(wanted_item_to_delete.id)
-                log.debug('Removed %s from wanted_items database', wanted_item_to_delete.videopath)
+                log.debug('Removed %s from wanted_items database', wanted_item_to_delete.video_path)
                 i -= 1
 
         else:
@@ -140,7 +140,7 @@ def search_subtitle(wanted_item_index, lang):
 
         # Get wanted_item
         wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
-        log.info('Searching subtitles for video: %s', wanted_item.videopath)
+        log.info('Searching subtitles for video: %s', wanted_item.video_path)
 
         # Scan wanted_item for video
         video = _scan_wanted_item_for_video(wanted_item, is_manual=True)
@@ -249,13 +249,13 @@ def force_id_search(wanted_item_index):
     if wanted_item.is_episode:
         tvdb_id = autosubliminal.SHOWINDEXER.get_tvdb_id(title, year, force_search=True)
         if tvdb_id:
-            wanted_item.tvdbid = tvdb_id
+            wanted_item.tvdb_id = tvdb_id
             WantedItemsDb().update_wanted_item(wanted_item)
             found = True
     elif wanted_item.is_movie:
         imdb_id, year = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(title, year, force_search=True)
         if imdb_id:
-            wanted_item.imdbid = imdb_id
+            wanted_item.imdb_id = imdb_id
             wanted_item.year = year
             WantedItemsDb().update_wanted_item(wanted_item)
             found = True
@@ -305,11 +305,11 @@ def delete_video(wanted_item_index, cleanup):
     autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
     log.debug('Removed item from the wanted queue at index %s', int(wanted_item_index))
     WantedItemsDb().delete_wanted_item(wanted_item.id)
-    log.debug('Removed %s from wanted_items database', wanted_item.videopath)
+    log.debug('Removed %s from wanted_items database', wanted_item.video_path)
 
     # Physically delete the video file (and optionally leftovers)
     deleted = False
-    video_path = wanted_item.videopath
+    video_path = wanted_item.video_path
     # Delete with cleanup
     if cleanup:
         norm_video_path = os.path.normcase(os.path.normpath(video_path))
@@ -448,7 +448,7 @@ def post_process(wanted_item_index, subtitle_index):
                 autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
                 log.debug('Removed item from the wanted queue at index %s', int(wanted_item_index))
                 WantedItemsDb().delete_wanted_item(wanted_item.id)
-                log.debug('Removed %s from wanted_items database', wanted_item.videopath)
+                log.debug('Removed %s from wanted_items database', wanted_item.video_path)
 
     else:
         log.warning('No subtitle downloaded, skipping post processing')
@@ -478,7 +478,7 @@ def post_process_no_subtitle(wanted_item_index):
         autosubliminal.WANTEDQUEUE.pop(int(wanted_item_index))
         log.debug('Removed item from the wanted queue at index %s', int(wanted_item_index))
         WantedItemsDb().delete_wanted_item(wanted_item.id)
-        log.debug('Removed %s from wanted_items database', wanted_item.videopath)
+        log.debug('Removed %s from wanted_items database', wanted_item.video_path)
     else:
         send_websocket_notification('Unable to handle post processing! Please check the log file!', type='error')
 
@@ -489,7 +489,7 @@ def post_process_no_subtitle(wanted_item_index):
 
 
 def _scan_wanted_item_for_video(wanted_item, is_manual=False):
-    video_path = wanted_item.videopath
+    video_path = wanted_item.video_path
     log.info('Scanning video')
 
     try:
@@ -604,10 +604,10 @@ def _construct_download_item(wanted_item, subtitles, language, single):
     # Construct the download item
     download_item = DownloadItem(wanted_item)
     subtitle_path = subliminal.subtitle.get_subtitle_path(download_item.video.name, None if single else language)
-    download_item.subtitlepath = subtitle_path
-    download_item.downloadLink = subtitle.page_link
-    download_item.downlang = text_type(language)  # return alpha2 (f.e. 'nl') or ietf code (f.e. 'pt-BR')
-    download_item.subtitle = os.path.split(download_item.subtitlepath)[1][:-4]
+    download_item.subtitle_path = subtitle_path
+    download_item.subtitle_link = subtitle.page_link
+    download_item.language = text_type(language)  # return alpha2 (f.e. 'nl') or ietf code (f.e. 'pt-BR')
+    download_item.subtitle = os.path.split(download_item.subtitle_path)[1]
     download_item.provider = subtitle.provider_name
     download_item.subtitles = subtitles
     download_item.single = single
@@ -661,4 +661,4 @@ def _get_releases(subtitle):
 
 def _construct_playvideo_url(wanted_item):
     log.debug('Constructing \'playvideo://\' url')
-    return 'playvideo://' + wanted_item.videopath
+    return 'playvideo://' + wanted_item.video_path

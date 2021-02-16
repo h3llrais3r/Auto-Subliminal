@@ -88,7 +88,7 @@ export class ManualRefineComponent implements OnInit {
     wantedItem.year = FormUtils.getFormControlValue<number>(this.itemForm, 'year');
     wantedItem.season = FormUtils.getFormControlValue<number>(this.itemForm, 'season');
     const episode = FormUtils.getFormControlValue<string>(this.itemForm, 'episode');
-    wantedItem.episode = (episode && episode.indexOf(',') > 0) ? toNumberList(episode) : toNumber(episode);
+    wantedItem.episode = (episode && episode.indexOf(',') > 0) ? toNumberList(episode) : (episode ? toNumber(episode) : null);
     const source = FormUtils.getFormControlValue<string>(this.itemForm, 'source');
     wantedItem.source = (source && source.indexOf(',') > 0) ? source.split(',').map((s) => s.trim()) : source;
     wantedItem.quality = FormUtils.getFormControlValue<string>(this.itemForm, 'quality');

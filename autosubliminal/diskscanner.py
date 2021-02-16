@@ -57,13 +57,13 @@ class DiskScanner(ScheduledProcess):
         for item in old_wanted_items:
             if item not in new_wanted_items:
                 self.wanted_db.delete_wanted_item(item.id)
-                log.debug('Deleted non existing wanted item: %s', item.videopath)
+                log.debug('Deleted non existing wanted item: %s', item.video_path)
 
         # Populate WANTEDQUEUE with all items from wanted_items database
         log.info('Listing videos with missing subtitles:')
         autosubliminal.WANTEDQUEUE = []
         for item in self.wanted_db.get_wanted_items():
-            log.info('%s %s', item.videopath, item.languages)
+            log.info('%s %s', item.video_path, item.languages)
             autosubliminal.WANTEDQUEUE.append(item)
 
         # Send home page reload event
@@ -115,12 +115,12 @@ class DiskScanner(ScheduledProcess):
             if wanted_item:
                 # Determine wanted languages
                 wanted_languages = []
-                if wanted_item.is_episode and wanted_item.tvdbid:
-                    settings = self.show_settings_db.get_show_settings(wanted_item.tvdbid)
+                if wanted_item.is_episode and wanted_item.tvdb_id:
+                    settings = self.show_settings_db.get_show_settings(wanted_item.tvdb_id)
                     if settings and settings.wanted_languages:
                         wanted_languages = settings.wanted_languages
-                elif wanted_item.is_movie and wanted_item.imdbid:
-                    settings = self.movie_settings_db.get_movie_settings(wanted_item.imdbid)
+                elif wanted_item.is_movie and wanted_item.imdb_id:
+                    settings = self.movie_settings_db.get_movie_settings(wanted_item.imdb_id)
                     if settings and settings.wanted_languages:
                         wanted_languages = settings.wanted_languages
 

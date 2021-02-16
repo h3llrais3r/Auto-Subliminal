@@ -37,16 +37,12 @@ export class HomeSearchComponent implements OnInit {
       (queryParamMap) => {
         const wantedItemId = toNumber(queryParamMap.get('wantedItemId'));
         this.language = queryParamMap.get('language');
-        if (!this.wantedItem) {
-          this.itemService.getWantedItem(wantedItemId).subscribe(
-            (wantedItem) => {
-              this.wantedItem = wantedItem;
-              this.searchSubtitles();
-            }
-          );
-        } else {
-          this.searchSubtitles();
-        }
+        this.itemService.getWantedItem(wantedItemId).subscribe(
+          (wantedItem) => {
+            this.wantedItem = wantedItem;
+            this.searchSubtitles();
+          }
+        );
       });
   }
 

@@ -36,8 +36,8 @@ class MailNotifier(BaseNotifier):
     def _get_download_message(self, download_item):
         # Prepend extra info to default download message
         message = self.notification_title + '\n\n'
-        if download_item.videopath:
-            message += 'Video: %s\n' % os.path.basename(download_item.videopath)
+        if download_item.video_path:
+            message += 'Video: %s\n' % os.path.basename(download_item.video_path)
         message += super(MailNotifier, self)._get_download_message(download_item)
         return message
 
@@ -70,8 +70,8 @@ class MailNotifier(BaseNotifier):
         # Set subject
         subject = autosubliminal.MAILSUBJECT if autosubliminal.MAILSUBJECT else self.notification_title
         # Add subtitle from kwargs to subject if available
-        if download_item.subtitlepath:
-            subject += ' - ' + os.path.basename(download_item.subtitlepath)
+        if download_item.subtitle_path:
+            subject += ' - ' + os.path.basename(download_item.subtitle_path)
         # Call notify_download method of super class with the subject
         return super(MailNotifier, self).notify_download(download_item, subject=subject)
 

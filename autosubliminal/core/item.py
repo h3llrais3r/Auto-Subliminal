@@ -7,7 +7,7 @@ import re
 
 import autosubliminal
 from autosubliminal.util.common import find_path_in_paths, get_today, to_list, to_obj, to_obj_or_list, to_dict, \
-    get_file_size
+    humanize_bytes
 
 # Release group regex
 release_group_regex = re.compile(r'(.*)\[.*?\]')
@@ -36,23 +36,23 @@ class _Item(object):
     :type quality: str
     :param codec: the parsed video codec
     :type codec: str or list(str)
-    :param releasegrp: the parsed video release group
-    :type releasegrp: str
+    :param release_group: the parsed video release group
+    :type release_group: str
 
     All equivalence functions are written based on:
     https://stackoverflow.com/questions/390250/elegant-ways-to-support-equivalence-equality-in-python-classes
     """
 
     def __init__(self, type=None, title=None, year=None, season=None, episode=None, source=None, quality=None,
-                 codec=None, releasegrp=None):
+                 codec=None, release_group=None):
         # We need to trim the release group in some cases
-        _releasegrp = releasegrp
-        if releasegrp:
+        _release_group = release_group
+        if release_group:
             # Remove release group provider (part between []) if present (f.e. KILLERS[rarbg])
-            match = release_group_regex.match(releasegrp)
+            match = release_group_regex.match(release_group)
             if match:
                 # Return first parenthesized group (=release group without [] part)
-                _releasegrp = match.group(1)
+                _release_group = match.group(1)
 
         self.id = None
         self.type = type  # Type of video: 'episode' or 'movie'
@@ -63,7 +63,9 @@ class _Item(object):
         self.source = source
         self.quality = quality
         self.codec = codec
-        self.releasegrp = _releasegrp
+        self.release_group = _release_group
+        self.tvdb_id = None
+        self.imdb_id = None
 
     def set_attr(self, key, value):
         """Set an attribute (ignore/skip @property attributes).
@@ -75,12 +77,12 @@ class _Item(object):
         :type value: str
         """
         if hasattr(self, key) and not hasattr(type(self), key):
-            if key in ['year', 'season']:
+            if key in ['year', 'season', 'tvdb_id']:
                 # Set as int
-                setattr(self, key, to_obj(value, int))
+                setattr(self, key, to_obj(value, obj_type=int))
             elif key in ['episode']:
                 # Can be returned as a list of int values
-                setattr(self, key, to_obj_or_list(value, int))
+                setattr(self, key, to_obj_or_list(value, obj_type=int))
             elif key in ['source', 'codec']:
                 # Can be returned as a list of text values
                 setattr(self, key, to_obj_or_list(value))
@@ -130,24 +132,21 @@ class WantedItem(_Item):
     :type quality: str
     :param codec: the parsed video codec
     :type codec: str or list(str)
-    :param releasegrp: the parsed video release group
-    :type releasegrp: str
+    :param release_group: the parsed video release group
+    :type release_group: str
     """
 
     def __init__(self, type=None, title=None, year=None, season=None, episode=None, source=None, quality=None,
-                 codec=None, releasegrp=None):
+                 codec=None, release_group=None):
         super(WantedItem, self).__init__(type=type, title=title, year=year, season=season, episode=episode,
-                                         source=source, quality=quality, codec=codec, releasegrp=releasegrp)
+                                         source=source, quality=quality, codec=codec, release_group=release_group)
 
-        self.videopath = None
-        self.timestamp = None  # File timestamp string - format '%Y-%m-%d %H:%M:%S'
+        self.video_path = None
+        self.video_size = None
         self.languages = []  # List of languages
-
-        self.tvdbid = None
-        self.imdbid = None
+        self.timestamp = None  # File timestamp string - format '%Y-%m-%d %H:%M:%S'
 
         self.video = None  # Subliminal Video object
-
         self.found_subtitles = None  # List of found subtitles after a manual search
 
     @property
@@ -192,21 +191,17 @@ class WantedItem(_Item):
         :rtype: dict
         """
         # Define args to exclude
-        exclude_args = ['releasegrp', 'videopath', 'tvdbid', 'imdbid', 'is_episode', 'is_movie', 'is_search_active',
-                        'video', 'found_subtitles']
+        exclude_args = ['video_path', 'video_size', 'is_episode', 'is_movie', 'is_search_active', 'video',
+                        'found_subtitles']
         if args:
             exclude_args.extend(list(args))
 
         # Define kwargs to include
-        file_path, file_name = os.path.split(self.videopath)
-        file_size = get_file_size(self.videopath)
+        file_path, file_name = os.path.split(self.video_path)
         include_kwargs = {
-            'release_group': self.releasegrp,
             'video_file_name': file_name,
-            'video_file_path': file_path.rstrip(os.path.sep),  # make sure to trim trailing slashes
-            'video_file_size': file_size,
-            'tvdb_id': self.tvdbid,
-            'imdb_id': self.imdbid
+            'video_file_path': file_path.rstrip(os.path.sep),  # trim trailing slashes
+            'video_file_size': humanize_bytes(self.video_size)
         }
         if kwargs:
             include_kwargs.update(kwargs)
@@ -221,7 +216,7 @@ class WantedItem(_Item):
         If library paths are available, we check if the wanted item is located in a library path or not.
         If yes, return the library path, else return None
         """
-        video_dir = os.path.dirname(self.videopath)
+        video_dir = os.path.dirname(self.video_path)
         return find_path_in_paths(video_dir, autosubliminal.LIBRARYPATHS, check_common_path=True)
 
     def set_attr(self, key, value):
@@ -237,8 +232,6 @@ class WantedItem(_Item):
             if key in ['languages']:
                 # Must be returned as a list of values
                 setattr(self, key, to_list(value, default_value=[]))
-            elif key in ['tvdbid']:
-                setattr(self, key, to_obj(value, obj_type=int))
             else:
                 super(WantedItem, self).set_attr(key, value)
 
@@ -264,7 +257,7 @@ class WantedItem(_Item):
                        source=cls._property_from_guess(guess, 'source'),
                        quality=cls._property_from_guess(guess, 'screen_size'),
                        codec=cls._property_from_guess(guess, 'video_codec'),
-                       releasegrp=cls._property_from_guess(guess, 'release_group'))
+                       release_group=cls._property_from_guess(guess, 'release_group'))
         else:
             return None
 
@@ -292,11 +285,11 @@ class DownloadItem(WantedItem):
         # Copy all properties from wanted_item
         self.__dict__.update(wanted_item.__dict__)
 
-        self.subtitlepath = None
-        self.downloadLink = None
-        self.downlang = None
-        self.subtitle = None  # Filename without extension
+        self.subtitle_path = None
+        self.subtitle_link = None
+        self.language = None
         self.provider = None
+        self.subtitle = None  # Filename without extension
         self.subtitles = None
         self.single = None
 
@@ -310,10 +303,11 @@ class DownloadedItem(_Item):
     def __init__(self):
         super(DownloadedItem, self).__init__()
 
+        self.video_path = None
         self.language = None
-        self.timestamp = None  # Download timestamp string - format '%Y-%m-%d %H:%M:%S'
-        self.subtitle = None
         self.provider = None
+        self.subtitle = None
+        self.timestamp = None  # Download timestamp string - format '%Y-%m-%d %H:%M:%S'
 
     def to_dict(self, key_fn, *args, **kwargs):
         """Convert the object to its json representation.
@@ -328,12 +322,16 @@ class DownloadedItem(_Item):
         :rtype: dict
         """
         # Define args to exclude
-        exclude_args = ['releasegrp']
+        exclude_args = ['video_path']
         if args:
             exclude_args.extend(list(args))
 
-        # Define kwargs to include
-        include_kwargs = {'release_group': self.releasegrp}
+        # Define kwargs to include (video_path is added afterwards, so could be empty)
+        file_path, file_name = os.path.split(self.video_path) if self.video_path else (None, None)
+        include_kwargs = {
+            'video_file_name': file_name,
+            'video_file_path': file_path.rstrip(os.path.sep) if file_path else file_path  # trim trailing slashes
+        }
         if kwargs:
             include_kwargs.update(kwargs)
 

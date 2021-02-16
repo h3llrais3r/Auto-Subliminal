@@ -12,9 +12,9 @@ autosubliminal.TELEGRAMCHATID = 'mychatid'
 notifier_name = 'Telegram'
 
 download_item = DownloadItem(WantedItem())
-download_item.videopath = 'path/to/video'
-download_item.subtitlepath = 'path/to/subtitle'
-download_item.downlang = 'en'
+download_item.video_path = 'path/to/video'
+download_item.subtitle_path = 'path/to/subtitle'
+download_item.language = 'en'
 download_item.provider = 'provider'
 
 

@@ -37,10 +37,10 @@ class BaseNotifier(object):
 
     def _get_download_message(self, download_item):
         message = ''
-        if download_item.subtitlepath:
-            message += 'Subtitle: %s\n' % os.path.basename(download_item.subtitlepath)
-        if download_item.downlang:
-            message += 'Language: %s\n' % download_item.downlang
+        if download_item.subtitle_path:
+            message += 'Subtitle: %s\n' % os.path.basename(download_item.subtitle_path)
+        if download_item.language:
+            message += 'Language: %s\n' % download_item.language
         if download_item.provider:
             message += 'Provider: %s\n' % download_item.provider
         return message

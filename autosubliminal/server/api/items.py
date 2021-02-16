@@ -218,18 +218,11 @@ class _DownloadedApi(RestResource):
         # Set the allowed methods
         self.allowed_methods = ('GET',)
 
-    def get(self, number_of_items=None):
-        """Get the list of downloaded items or the specified last number of downloaded items."""
+    def get(self, ):
+        """Get the list of downloaded items."""
         last_downloads = LastDownloadsDb().get_last_downloads()
-        if number_of_items is None:
-            items = []
-            for item in last_downloads:
-                items.append(item.to_dict(camelize))
-            return items
-        elif 0 <= int(number_of_items) <= len(last_downloads):
-            items = []
-            for item in last_downloads[0:int(number_of_items)]:  # Return the requested number of items
-                items.append(item.to_dict(camelize))
-            return items
-        else:
-            return self._bad_request('Invalid number_of_items')
+        items = []
+        for item in last_downloads:
+            items.append(item.to_dict(camelize))
+
+        return items

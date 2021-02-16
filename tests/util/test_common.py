@@ -483,7 +483,7 @@ def test_get_file_size():
         file.write('test')
         file.close()
         os.close(fd)
-        size = get_file_size(file_path).split(' ')[0]
+        size = get_file_size(file_path)
         assert float(size) > 0
     finally:
         if os.path.exists(file_path):
@@ -491,7 +491,7 @@ def test_get_file_size():
 
 
 def test_get_file_size_exception():
-    assert get_file_size('path/does/not/exist') == '0 bytes'
+    assert get_file_size('path/does/not/exist') == 0
 
 
 def test_set_rw_and_remove():

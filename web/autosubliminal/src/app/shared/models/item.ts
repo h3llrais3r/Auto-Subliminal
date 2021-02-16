@@ -12,6 +12,8 @@ export class Item {
   quality: string;
   codec: string | string[];
   releaseGroup: string;
+  tvdbId?: number;
+  imdbId?: string;
 
   constructor(obj?: any) {
     Object.assign(this, obj);
@@ -51,8 +53,6 @@ export class WantedItem extends Item {
   libraryPath: string;
   timestamp: string; // format: YYYY-MM-DD HH:MM:SS
   languages: string[];
-  tvdbId?: number;
-  imdbId?: string;
 
   constructor(obj?: any) {
     super(obj);
@@ -64,6 +64,8 @@ export class WantedItem extends Item {
 }
 
 export class DownloadedItem extends Item {
+  videoFileName: string;
+  videoFilePath: string;
   language: string;
   timestamp: string; // format: YYYY-MM-DD HH:MM:SS
   subtitle: string;

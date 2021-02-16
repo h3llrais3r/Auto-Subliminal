@@ -44,6 +44,8 @@
         <span class="p-column-title">Name</span>
         <span class="p-column-data">{{downloadedItem.name}}</span>
         <app-icon-dropdown>
+          <li *ngIf="downloadedItem.videoFilePath"><span class="icon-dropdown-title">Video path:</span><span>{{downloadedItem.videoFilePath}}</span></li>
+          <li *ngIf="downloadedItem.videoFileName"><span class="icon-dropdown-title">Video name:</span><span>{{downloadedItem.videoFileName}}</span></li>
           <li><span class="icon-dropdown-title">Subtitle:</span><span>{{downloadedItem.subtitle}}</span></li>
           <li><span class="icon-dropdown-title">Provider:</span><span>{{downloadedItem.provider}}</span></li>
         </app-icon-dropdown>

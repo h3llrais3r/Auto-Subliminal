@@ -39,18 +39,20 @@ settings_json = '{"antiCaptchaProviders": [], ' \
                 '"checkSub": "SubChecker", ' \
                 '"checkSubNextRunInMs": 61000, ' \
                 '"checkVersion": "VersionChecker", ' \
+                '"dereferUrl": "http://www.dereferer.org/?", ' \
                 '"developerMode": true, ' \
-                '"imdbUrl": "http://www.dereferer.org/?http://www.imdb.com/title/", ' \
+                '"imdbUrl": "http://www.imdb.com/title/", ' \
                 '"languages": [{"code": "nl", "name": "Dutch"}], ' \
                 '"libraryMode": false, ' \
                 '"logReversed": false, ' \
+                '"manualRefineVideo": false, ' \
                 '"pathSeparator": "/", ' \
                 '"scanDisk": "DiskScanner", ' \
                 '"scanDiskNextRunInMs": 61000, ' \
                 '"scanLibrary": "LibraryScanner", ' \
                 '"subliminalProviders": [], ' \
                 '"timestampFormat": "%d-%m-%Y %H:%M:%S", ' \
-                '"tvdbUrl": "http://www.dereferer.org/?http://thetvdb.com/?tab=series&id=", ' \
+                '"tvdbUrl": "http://thetvdb.com/?tab=series&id=", ' \
                 '"webRoot": "mywebroot"}'
 
 scheduler = MyScheduler('MyScheduler1')
@@ -80,6 +82,7 @@ def test_get_settings(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.CHECKVERSION', MyScheduler('VersionChecker'))
     monkeypatch.setattr('autosubliminal.LIBRARYMODE', False)
     monkeypatch.setattr('autosubliminal.LOGREVERSED', False)
+    monkeypatch.setattr('autosubliminal.MANUALREFINEVIDEO', False)
     monkeypatch.setattr('autosubliminal.DEREFERURL', 'http://www.dereferer.org/?')
     monkeypatch.setattr('autosubliminal.TVDBURL', 'http://thetvdb.com/?tab=series&id=')
     monkeypatch.setattr('autosubliminal.IMDBURL', 'http://www.imdb.com/title/')
@@ -90,6 +93,9 @@ def test_get_settings(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.SUBLIMINALPROVIDERMANAGER',
                         RegistrableExtensionManager('subliminal.providers', []))
     mocker.patch('autosubliminal.server.api.system.ANTI_CAPTCHA_PROVIDERS', [])
+
+    print(settings_json)
+    print(pickle_api_result(SystemApi().settings.get()))
     assert settings_json == pickle_api_result(SystemApi().settings.get())
 
 

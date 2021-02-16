@@ -444,9 +444,8 @@ def get_file_size(path):
         byte_size = os.path.getsize(path)
     except Exception:
         # If size cannot be retrieved, it's most likely because the path doesn't exist anymore
-        # Occurs when displaying gui when a sub check is running and files are already moved by a postprocessor script
         byte_size = 0
-    return humanize_bytes(byte_size, 2)
+    return byte_size
 
 
 def get_common_path(paths, separator=os.path.sep):

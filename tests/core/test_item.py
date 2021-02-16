@@ -37,13 +37,13 @@ def test_wanted_item_with_multi_codec():
 
 
 def test_wanted_item_trim_release_group():
-    wanted_item_1 = WantedItem(type='episode', title='test', season=1, episode=1, releasegrp='KILLERS[rarbg]')
-    assert wanted_item_1.releasegrp == 'KILLERS'
+    wanted_item_1 = WantedItem(type='episode', title='test', season=1, episode=1, release_group='KILLERS[rarbg]')
+    assert wanted_item_1.release_group == 'KILLERS'
 
 
 def test_wanted_item_library_path(monkeypatch):
     monkeypatch.setattr('autosubliminal.LIBRARYPATHS', ['path/to/library'])
-    wanted_item.set_attr('videopath', 'path/to/library/and/video/file')
+    wanted_item.set_attr('video_path', 'path/to/library/and/video/file')
     assert wanted_item.library_path == 'path/to/library'
     monkeypatch.setattr('autosubliminal.LIBRARYPATHS', ['path/to/library2'])
     assert wanted_item.library_path is None
@@ -59,7 +59,7 @@ def test_wanted_item_set_attr():
     wanted_item.set_attr('source', 'Web')
     wanted_item.set_attr('quality', '720p')
     wanted_item.set_attr('codec', 'H.264')
-    wanted_item.set_attr('tvdbid', '263365')
+    wanted_item.set_attr('tvdb_id', '263365')
     wanted_item.set_attr('unknown', 'unknown')
     assert wanted_item.languages == ['nl', 'en']
     assert wanted_item.season == 1
@@ -68,7 +68,7 @@ def test_wanted_item_set_attr():
     assert wanted_item.source == 'Web'
     assert wanted_item.quality == '720p'
     assert wanted_item.codec == 'H.264'
-    assert wanted_item.tvdbid == 263365
+    assert wanted_item.tvdb_id == 263365
     assert not hasattr(wanted_item, 'unknown')
 
 

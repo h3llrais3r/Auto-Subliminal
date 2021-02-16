@@ -9,7 +9,7 @@ from six import text_type
 
 import autosubliminal
 from autosubliminal.core.item import WantedItem
-from autosubliminal.util.common import humanize_bytes
+from autosubliminal.util.common import get_file_size, humanize_bytes
 
 log = logging.getLogger(__name__)
 
@@ -23,8 +23,8 @@ def process_file(dirname, filename):
     file_path = os.path.join(dirname, filename)
 
     # Check minimal video file size if needed
+    file_size = get_file_size(file_path)
     if autosubliminal.MINVIDEOFILESIZE:
-        file_size = os.path.getsize(file_path)
         # MINVIDEOFILESIZE is size in MB
         if file_size < autosubliminal.MINVIDEOFILESIZE * 1024 * 1024:
             log.warning('File size (%s) is lower than %sMB, skipping', humanize_bytes(file_size),
@@ -40,7 +40,7 @@ def process_file(dirname, filename):
 
     # Enrich wanted item
     if wanted_item is not None:
-        _enrich_wanted_item(wanted_item, file_path)
+        _enrich_wanted_item(wanted_item, file_path, file_size)
 
     return wanted_item
 
@@ -89,7 +89,7 @@ def _property_from_guess(guess, property_name, default_value=None):
     return property_value
 
 
-def _enrich_wanted_item(wanted_item, file_path):
+def _enrich_wanted_item(wanted_item, file_path, file_size):
     """
     Enrich a wanted item.
 
@@ -101,17 +101,18 @@ def _enrich_wanted_item(wanted_item, file_path):
     log.debug('Enriching WantedItem with metadata')
 
     # Enrich with common data
-    wanted_item.videopath = file_path
+    wanted_item.video_path = file_path
+    wanted_item.video_size = file_size
     wanted_item.timestamp = text_type(
         time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(os.path.getctime(file_path))))
 
     # Enrich with episode data
     if wanted_item.is_episode:
-        wanted_item.tvdbid = autosubliminal.SHOWINDEXER.get_tvdb_id(wanted_item.title, wanted_item.year)
+        wanted_item.tvdb_id = autosubliminal.SHOWINDEXER.get_tvdb_id(wanted_item.title, wanted_item.year)
 
     # Enrich with movie data
     elif wanted_item.is_movie:
-        wanted_item.imdbid, wanted_item.year = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(wanted_item.title,
-                                                                                                wanted_item.year)
+        wanted_item.imdb_id, wanted_item.year = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(wanted_item.title,
+                                                                                                 wanted_item.year)
 
     log.debug('Enriched WantedItem: %r', wanted_item)

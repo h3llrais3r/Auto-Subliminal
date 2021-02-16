@@ -36,8 +36,8 @@ def test_process_episode_file(mocker):
     assert wanted_item.source == 'HDTV'
     assert wanted_item.quality == '720p'
     assert wanted_item.codec == 'H.264'
-    assert wanted_item.releasegrp == 'AVS'
-    assert wanted_item.tvdbid == 263365
+    assert wanted_item.release_group == 'AVS'
+    assert wanted_item.tvdb_id == 263365
 
 
 def test_process_multi_episode_file(mocker):
@@ -53,8 +53,8 @@ def test_process_multi_episode_file(mocker):
     assert wanted_item.source == 'HDTV'
     assert wanted_item.quality == '720p'
     assert wanted_item.codec == 'H.264'
-    assert wanted_item.releasegrp == 'AVS'
-    assert wanted_item.tvdbid == 263365
+    assert wanted_item.release_group == 'AVS'
+    assert wanted_item.tvdb_id == 263365
 
 
 def test_process_episode_file_guess_by_filename(mocker):
@@ -70,8 +70,8 @@ def test_process_episode_file_guess_by_filename(mocker):
     assert wanted_item.source == 'HDTV'
     assert wanted_item.quality == '720p'
     assert wanted_item.codec == 'H.264'
-    assert wanted_item.releasegrp == 'IMMERSE'
-    assert wanted_item.tvdbid == 248741
+    assert wanted_item.release_group == 'IMMERSE'
+    assert wanted_item.tvdb_id == 248741
 
 
 def test_process_episode_file_guess_by_file_path(mocker):
@@ -90,8 +90,8 @@ def test_process_episode_file_guess_by_file_path(mocker):
     assert wanted_item.source is None
     assert wanted_item.quality is None
     assert wanted_item.codec is None
-    assert wanted_item.releasegrp is None
-    assert wanted_item.tvdbid == 248741
+    assert wanted_item.release_group is None
+    assert wanted_item.tvdb_id == 248741
 
 
 def test_process_file_movie(mocker):
@@ -106,7 +106,7 @@ def test_process_file_movie(mocker):
     assert wanted_item.source == 'Blu-ray'
     assert wanted_item.quality == '1080p'
     assert wanted_item.codec == 'H.264'
-    assert wanted_item.imdbid == 'tt1798684'
+    assert wanted_item.imdb_id == 'tt1798684'
 
 
 def test_process_movie_file_special_chars(mocker):
@@ -118,7 +118,7 @@ def test_process_movie_file_special_chars(mocker):
     assert wanted_item.type == 'movie'
     assert wanted_item.title == u'Un conte de Noël'
     assert wanted_item.year == 2008
-    assert wanted_item.imdbid == 'tt0993789'
+    assert wanted_item.imdb_id == 'tt0993789'
 
 
 def test_process_movie_file_insufficient_guess(mocker):
