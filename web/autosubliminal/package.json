@@ -21,10 +21,9 @@
     "show"
   ],
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
+    "start": "npm run copy-themes && ng serve --host 0.0.0.0 --base-href=/autosubliminal/ --proxy-config proxy.localhost.conf.json",
+    "clean": "rimraf dist",
     "build": "npm run copy-themes && ng build --base-href=/autosubliminal/ --prod",
-    "watch": "npm run copy-themes && ng build --base-href=/autosubliminal/ --watch",
     "copy-themes": "concurrently -n w: npm:copy-themes-*",
     "copy-themes-bootstrap4": "copyfiles -u 4 \"./node_modules/primeng/resources/themes/bootstrap4-*/theme.css\" ./src/assets/themes",
     "copy-themes-arya": "copyfiles -u 4 \"./node_modules/primeng/resources/themes/arya-*/theme.css\" ./src/assets/themes",
@@ -84,6 +83,7 @@
     "karma-jasmine-html-reporter": "1.5.0",
     "ngx-mask": "9.1.0",
     "protractor": "7.0.0",
+    "rimraf": "3.0.2",
     "ts-node": "8.3.0",
     "tslint": "6.1.0",
     "typescript": "4.0.2"
