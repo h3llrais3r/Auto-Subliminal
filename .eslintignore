@@ -1,9 +1,0 @@
-# Ignore packaged vendor files
-web/static/js/vendor*.js
-
-# Ignore build/dist files
-build/*.js
-dist/*.js
-
-# Ignore gulp file
-gulpfile.js
