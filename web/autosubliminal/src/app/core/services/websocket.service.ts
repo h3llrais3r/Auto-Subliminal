@@ -78,7 +78,7 @@ export class WebSocketService {
       protocol = 'wss:';
     }
     const config: WebSocketSubjectConfig<SystemWebSocketServerMessage> = {
-      url: `${protocol}//${window.location.host}${appSettings.webRoot}/system/websocket`,
+      url: `${protocol}//${window.location.host}${appSettings.webRoot}/websocket/system`,
       closeObserver: {
         next: () => {
           this.systemWebsocket = null;

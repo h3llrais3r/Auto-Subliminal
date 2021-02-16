@@ -83,7 +83,7 @@ export class LogViewComponent implements OnInit {
     if (window.location.protocol === 'https:') {
       protocol = 'wss:';
     }
-    const url = `${protocol}//${window.location.host}${appSettings.webRoot}/log/websocket`;
+    const url = `${protocol}//${window.location.host}${appSettings.webRoot}/websocket/log`;
     const config: WebSocketSubjectConfig<string> = {
       url,
       deserializer: (e: MessageEvent) => e.data as string,
