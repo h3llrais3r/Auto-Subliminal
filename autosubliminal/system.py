@@ -33,6 +33,14 @@ def shutdown():
     timer.start()
 
 
+def update():
+    """
+    Update the system.
+    """
+    autosubliminal.CHECKVERSION.process.update(force_update=True)
+    restart(exit=True)
+
+
 def flush_cache():
     """
     Flush the cache db's.

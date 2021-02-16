@@ -67,6 +67,9 @@ class WebSocketHandler(WebSocket):
                 elif name == 'shutdown':
                     system.shutdown()
                     handled = True
+                elif name == 'update':
+                    system.update()
+                    handled = True
                 elif name == 'flushCache':
                     system.flush_cache()
                     handled = True

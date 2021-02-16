@@ -282,7 +282,7 @@ class GitVersionManager(BaseVersionManager):
         elif self.num_commits_behind > 0:
             log.info('New version found')
             send_websocket_notification(
-                'New version found. <a href=' + autosubliminal.WEBROOT + '/system/updateVersion>Update</a>!',
+                'New version found. <a href=' + autosubliminal.WEBROOT + '/system/update>Update</a>!',
                 type='notice', sticky=True)
             self.update_allowed = True
         else:
