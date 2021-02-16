@@ -31,23 +31,29 @@ before_install:
   - export BOTO_CONFIG=/dev/null # FIXME: Workaround for https://github.com/travis-ci/travis-ci/issues/7940
 
 install:
+  # Backend code
   # Install/upgrade python dependencies
   - pip install --upgrade pip
   - pip install --upgrade six # Upgrade pytest to latest version to prevent build errors
   - pip install --upgrade pytest # Upgrade pytest to latest version to prevent build errors
   - pip install -e .[dev,test]
   - pip install coveralls
+
+  # Frontend code
+  - cd web/autosubliminal
   # Install minimal required node version from package.json
   - nvm install "$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
   - node --version
   - npm --version
   # Install npm dependencies
   - npm install
+  - cd ../..
 
-# Build command(s)
+# Build & Test command(s)
 before_script:
-  - npm run eslint
-  - npm run stylelint
+  - cd web/autosubliminal
+  - npm run lint
+  - cd ../..
 
 script:
   - coverage run setup.py test # Coverage configuration is done in .coveragerc

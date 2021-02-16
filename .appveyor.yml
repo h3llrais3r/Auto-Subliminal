@@ -61,6 +61,7 @@ init:
 
 # Command(s) to install dependencies
 install:
+  # Backend code
   # Install/upgrade python dependencies
   - set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH% # Prepend newly installed Python to the PATH of this build
   - python --version # Verify version
@@ -70,6 +71,9 @@ install:
   - pip install --upgrade pytest # Upgrade pytest to latest version to prevent build errors
   - pip install -e .[dev,test]
   - pip install coverage
+
+  # Frontend code
+  - cd web/autosubliminal
   # Install minimal required node version from package.json
   - ps: $env:NODE_VERSION = (Get-Content -Raw -Path package.json | ConvertFrom-Json).engines.node -replace "[>=]"
   - ps: Install-Product node $env:NODE_VERSION x64
@@ -77,11 +81,13 @@ install:
   - npm --version
   # Install npm dependencies
   - npm install
+  - cd ../..
 
-# Test command(s)
+# Build & Test command(s)
 before_test:
-  - npm run eslint
-  - npm run stylelint
+  - cd web/autosubliminal
+  - npm run lint
+  - cd ../..
 
 test_script:
   - coverage run setup.py test
