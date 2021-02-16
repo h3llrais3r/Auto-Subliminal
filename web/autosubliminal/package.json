@@ -1,6 +1,25 @@
 {
   "name": "autosubliminal",
-  "version": "0.0.0",
+  "description": "Auto-Subliminal, the automated subliminal subtitle downloader",
+  "author": "h3llrais3r",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/h3llrais3r/Auto-Subliminal.git"
+  },
+  "homepage": "https://github.com/h3llrais3r/Auto-Subliminal#readme",
+  "bugs": {
+    "url": "https://github.com/h3llrais3r/Auto-Subliminal/issues"
+  },
+  "keywords": [
+    "subtitle",
+    "subtitles",
+    "video",
+    "movie",
+    "episode",
+    "tv",
+    "show"
+  ],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -68,5 +87,8 @@
     "ts-node": "8.3.0",
     "tslint": "6.1.0",
     "typescript": "4.0.2"
+  },
+  "engines": {
+    "node": ">=10.13.0"
   }
 }
