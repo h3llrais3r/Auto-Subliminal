@@ -1,59 +1,11 @@
 # coding=utf-8
 
-import json
-import re
-
-import cherrypy
-
 from autosubliminal.server.api import Api
-from autosubliminal.server.web import redirect
-from autosubliminal.server.web.artwork import Artwork
-from autosubliminal.server.web.config import Config
-from autosubliminal.server.web.home import Home
-from autosubliminal.server.web.library import Library
-from autosubliminal.server.web.log import Log
-from autosubliminal.server.web.system import System
-from autosubliminal.templates.page import PageTemplate
-
-
-def error_page(status, message, traceback, version):
-    """
-    Custom error page.
-
-    :param status: the http error status
-    :param message: the error message
-    :param traceback: the error traceback
-    :param version: the server version
-    :return: the error page or json error
-    """
-    # Do not show error page for json errors, show json error response instead
-    content_type = cherrypy.response.headers['Content-Type']
-    if content_type and 'application/json' in content_type.lower():
-        return json.dumps({'status': status, 'error': message})
-
-    # Parse status code (example status: '404 Not Found')
-    match = re.search(r'^(\d{3}).*$', status)
-
-    # Render template
-    status_code = int(match.group(1)) if match else 500
-    return PageTemplate('/general/error.mako').render(status_code=status_code, status=status, message=message,
-                                                      traceback=traceback)
+from autosubliminal.server.static.artwork import Artwork
 
 
 class WebServerRoot(object):
     def __init__(self):
-        # Create root tree (name of attribute defines name of path: f.e. home -> /home)
-        self.home = Home()
-        self.library = Library()
-        self.config = Config()
-        self.log = Log()
-        self.system = System()
+        # Create root tree (name of attribute defines name of path: f.e. api -> /api)
         self.api = Api()
         self.artwork = Artwork()
-
-    @cherrypy.expose
-    def index(self):
-        redirect('/home')
-
-    # Configure default error page
-    _cp_config = {'error_page.default': error_page}
