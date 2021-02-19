@@ -211,7 +211,7 @@ def initialize():
         SUBLIMINALPROVIDERMANAGER, SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERCONFIGS, \
         SUBTITLEUTF8ENCODING, MANUALREFINEVIDEO, REFINEVIDEO, PREFERHEARINGIMPAIRED, \
         ANTICAPTCHACLASS, ANTICAPTCHACLIENTKEY, ADDIC7EDUSERNAME, ADDIC7EDPASSWORD, \
-        OPENSUBTITLESUSERNAME, OPENSUBTITLESPASSWORD, LEGENDASTVUSERNAME, LEGENDASTVPASSWORD,  \
+        OPENSUBTITLESUSERNAME, OPENSUBTITLESPASSWORD, LEGENDASTVUSERNAME, LEGENDASTVPASSWORD, \
         SHOWNAMEMAPPING, ADDIC7EDSHOWNAMEMAPPING, ALTERNATIVESHOWNAMEMAPPING, \
         MOVIENAMEMAPPING, ALTERNATIVEMOVIENAMEMAPPING, \
         SKIPSHOW, SKIPMOVIE, \
@@ -343,7 +343,7 @@ def _init_cache(replace):
     """Initialize internal cache."""
 
     # Imports
-    from autosubliminal.core.cache import clear_imdbpie_cache, clear_mako_cache, MutexFileLock, region
+    from autosubliminal.core.cache import clear_imdbpie_cache, MutexFileLock, region
 
     # Make sure the cache dir exists
     if not os.path.exists(CACHEDIR):
@@ -351,7 +351,6 @@ def _init_cache(replace):
 
     # Clean mako cache
     if replace:
-        clear_mako_cache()
         clear_imdbpie_cache()
 
     # Configure autosubliminal/dogpile cache

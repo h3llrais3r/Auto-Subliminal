@@ -315,46 +315,7 @@ def sanitize(string_value, ignore_characters=None):
     return string_value.strip().lower()
 
 
-def escape_quotes(string_value):
-    escaped_value = re.sub(r'\'', '\\\'', string_value)
-    escaped_value = re.sub(r'\"', '\\\"', escaped_value)
-    return escaped_value
-
-
-def display_list_single_line(list_object):
-    """Return a single lined string (comma separated) containing all the values of the list."""
-    s = ''
-    for x in list_object:
-        if s == '':
-            s += x
-        else:
-            s += ',' + x
-    return s
-
-
-def display_list_multi_line(list_object):
-    """Return a multi lined string containing all values of the list."""
-    s = ''
-    for x in list_object:
-        if s == '':
-            s += x
-        else:
-            s += '\n' + x
-    return s
-
-
-def display_mapping_dict(mapping_dict):
-    """Return a multi lined string containing all mappings (key = value) from the mapping_dict."""
-    s = ''
-    for x in mapping_dict:
-        if s == '':
-            s += x + ' = ' + text_type(mapping_dict[x])
-        else:
-            s += '\n' + x + ' = ' + text_type(mapping_dict[x])
-    return s
-
-
-def display_value(value, default_value='', uppercase=False):
+def safe_value(value, default_value='', uppercase=False):
     result = value or default_value
     result = ','.join(text_type(v) for v in result) if isinstance(result, list) else result
     result = safe_text(result, default_value)
@@ -363,9 +324,9 @@ def display_value(value, default_value='', uppercase=False):
     return result
 
 
-def display_item_title(item, default_value='N/A', uppercase=False):
-    title = display_value(item.title, default_value, uppercase=False)
-    year = display_value(item.year, default_value, uppercase=False)
+def get_item_title(item, default_value='N/A', uppercase=False):
+    title = safe_value(item.title, default_value, uppercase=False)
+    year = safe_value(item.year, default_value, uppercase=False)
     if not title == default_value and not year == default_value:
         title += ' (' + year + ')'
     if uppercase:
@@ -373,16 +334,16 @@ def display_item_title(item, default_value='N/A', uppercase=False):
     return title
 
 
-def display_item_name(item, default_value='N/A', uppercase=False):
-    name = display_item_title(item, default_value, False)
+def get_item_name(item, default_value='N/A', uppercase=False):
+    name = get_item_title(item, default_value, False)
     if item.is_episode:
-        season = display_value(item.season, default_value, uppercase=False)
-        episode = display_value(item.episode, default_value, uppercase=False)
+        season = safe_value(item.season, default_value, uppercase=False)
+        episode = safe_value(item.episode, default_value, uppercase=False)
         if not season == default_value and not episode == default_value:
             name += ' S' + season.zfill(2)
             if isinstance(item.episode, list):
                 for idx, e in enumerate(item.episode):
-                    episode = display_value(e, default_value, uppercase=False)
+                    episode = safe_value(e, default_value, uppercase=False)
                     if idx > 0:
                         name += '-'
                     name += 'E' + episode.zfill(2)
@@ -391,40 +352,6 @@ def display_item_name(item, default_value='N/A', uppercase=False):
     if uppercase:
         name = safe_uppercase(name, default_value=default_value)
     return name
-
-
-def display_interval(seconds, textual=False):
-    """Display a number of seconds as an interval."""
-    time_delta = datetime.timedelta(seconds=seconds)
-    if not textual:
-        return str(time_delta)
-    else:
-        days = time_delta.days
-        hours, remainder = divmod(time_delta.seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        formatted_interval = '%d day%s' % (days, 's' if days > 1 else '') if days else ''
-        formatted_interval += ' %d hour%s' % (hours, 's' if hours > 1 else '') if hours else ''
-        formatted_interval += ' %d minute%s' % (minutes, 's' if minutes > 1 else '') if minutes else ''
-        formatted_interval += ' %d second%s' % (seconds, 's' if seconds > 1 else '') if seconds else ''
-        return formatted_interval.lstrip()
-
-
-def display_timestamp(time_float, default_value='N/A'):
-    if time_float > 0.0:
-        return time.strftime(autosubliminal.TIMESTAMPFORMAT, time.localtime(time_float))
-    else:
-        return default_value
-
-
-def get_web_file(file_name):
-    # Return minified file name if not in developer mode, otherwise return normal file
-    name, ext = os.path.splitext(file_name)
-    sub_path = ext.strip('.')
-    version = autosubliminal.UUID.hex
-    if not autosubliminal.DEVELOPER:
-        return autosubliminal.WEBROOT + '/' + sub_path + '/' + name + '.min' + ext + '?v=' + version
-    else:
-        return autosubliminal.WEBROOT + '/' + sub_path + '/' + name + ext + '?v=' + version
 
 
 def get_next_scheduler_run_in_ms(scheduler):

@@ -9,7 +9,7 @@ import autosubliminal
 from autosubliminal import notifiers
 from autosubliminal.db import LastDownloadsDb
 from autosubliminal.postprocessor import PostProcessor
-from autosubliminal.util.common import display_item_name
+from autosubliminal.util.common import get_item_name
 from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ class SubDownloader(object):
 
         # Save the subtitle
         if self.save():
-            name = display_item_name(self._download_item)
+            name = get_item_name(self._download_item)
 
             # Mark as downloaded
             self.mark_downloaded()
@@ -47,7 +47,7 @@ class SubDownloader(object):
 
             # Show success message
             language = self._download_item.language
-            name = display_item_name(self._download_item)
+            name = get_item_name(self._download_item)
             provider = self._download_item.provider
             send_websocket_notification(
                 'Downloaded \'%s\' subtitle for \'%s\' from \'%s\'.' % (language, name, provider), type='success')

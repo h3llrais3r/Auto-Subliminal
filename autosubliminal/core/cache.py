@@ -43,12 +43,6 @@ class MutexFileLock(AbstractFileLock):
         return self.mutex.release_write_lock()
 
 
-def clear_mako_cache():
-    mako_cache_dir = os.path.abspath(os.path.join(autosubliminal.CACHEDIR, 'mako'))
-    if os.path.exists(mako_cache_dir):
-        shutil.rmtree(mako_cache_dir, onerror=set_rw_and_remove)
-
-
 def clear_imdbpie_cache():
     # Cache is created by imdbpie in temp location (see auth.py in imdbpie)
     # Cleanup is required when switching between python versions

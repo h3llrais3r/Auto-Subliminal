@@ -14,11 +14,9 @@ import autosubliminal
 from autosubliminal import version
 from autosubliminal.core.item import WantedItem
 from autosubliminal.core.subtitle import Subtitle
-from autosubliminal.util.common import (atoi, connect_url, camelize, convert_timestamp, decamelize, display_interval,
-                                        display_item_name, display_item_title, display_list_multi_line,
-                                        display_list_single_line, display_mapping_dict, display_timestamp,
-                                        display_value, escape_quotes, find_path_in_paths, get_boolean, get_common_path,
-                                        get_file_size, get_root_path, get_today, get_wanted_languages, get_web_file,
+from autosubliminal.util.common import (atoi, connect_url, camelize, convert_timestamp, decamelize, get_item_name,
+                                        get_item_title, safe_value, find_path_in_paths, get_boolean,
+                                        get_common_path, get_file_size, get_root_path, get_today, get_wanted_languages,
                                         humanize_bytes, natural_keys, run_cmd, safe_lowercase, safe_text, safe_trim,
                                         safe_uppercase, sanitize, set_rw_and_remove, to_dict, to_list, to_obj,
                                         to_obj_or_list, to_text, wait_for_internet_connection, get_missing_languages)
@@ -319,116 +317,48 @@ def test_sanitize():
     assert sanitize('(Mr.-Robot! / :),') == 'mr robot'
 
 
-def test_escape_quotes():
-    assert escape_quotes('test\'') == 'test\\\''
-    assert escape_quotes('test"') == 'test\\"'
+def test_safe_value():
+    assert safe_value(None) == ''
+    assert safe_value('value') == 'value'
+    assert safe_value(u'ù') == u'ù'
+    assert safe_value('value', uppercase=True) == 'VALUE'
+    assert safe_value('', default_value='default') == 'default'
+    assert safe_value('', default_value='default', uppercase=True) == 'DEFAULT'
 
 
-def test_display_list_single_line():
-    list_object = ['item1']
-    assert display_list_single_line(list_object) == 'item1'
-    list_object.append('item2')
-    assert display_list_single_line(list_object) == 'item1,item2'
-
-
-def test_display_list_multi_line():
-    list_object = ['item1']
-    assert display_list_multi_line(list_object) == 'item1'
-    list_object.append('item2')
-    assert display_list_multi_line(list_object) == 'item1\nitem2'
-
-
-def test_display_mapping_dict():
-    # We only use an OrderedDict here to keep the order as entered to be able to match the result
-    mapping_dict = OrderedDict([('key1', 'value1')])
-    assert display_mapping_dict(mapping_dict) == 'key1 = value1'
-    mapping_dict.update({'key2': 'value2'})
-    assert display_mapping_dict(mapping_dict) == 'key1 = value1\nkey2 = value2'
-
-
-def test_display_value():
-    assert display_value(None) == ''
-    assert display_value('value') == 'value'
-    assert display_value(u'ù') == u'ù'
-    assert display_value('value', uppercase=True) == 'VALUE'
-    assert display_value('', default_value='default') == 'default'
-    assert display_value('', default_value='default', uppercase=True) == 'DEFAULT'
-
-
-def test_display_item_title():
+def test_get_item_title():
     wanted_item_1 = WantedItem(title='title1')
     wanted_item_2 = WantedItem(title='title2', year=2016)
     wanted_item_empty = WantedItem()
-    assert display_item_title(wanted_item_1) == 'title1'
-    assert display_item_title(wanted_item_1, uppercase=True) == 'TITLE1'
-    assert display_item_title(wanted_item_2) == 'title2 (2016)'
-    assert display_item_title(wanted_item_2, uppercase=True) == 'TITLE2 (2016)'
-    assert display_item_title(wanted_item_empty) == 'N/A'
-    assert display_item_title(wanted_item_empty, default_value='default') == 'default'
-    assert display_item_title(wanted_item_empty, default_value='default', uppercase=True) == 'DEFAULT'
+    assert get_item_title(wanted_item_1) == 'title1'
+    assert get_item_title(wanted_item_1, uppercase=True) == 'TITLE1'
+    assert get_item_title(wanted_item_2) == 'title2 (2016)'
+    assert get_item_title(wanted_item_2, uppercase=True) == 'TITLE2 (2016)'
+    assert get_item_title(wanted_item_empty) == 'N/A'
+    assert get_item_title(wanted_item_empty, default_value='default') == 'default'
+    assert get_item_title(wanted_item_empty, default_value='default', uppercase=True) == 'DEFAULT'
 
 
-def test_display_item_name():
+def test_get_item_name():
     wanted_item_1 = WantedItem(title='title1')
     wanted_item_2 = WantedItem(title='title2', year=2016, type='mmovie')
     wanted_item_3 = WantedItem(title='title3', type='episode', season=1, episode=1)
     wanted_item_4 = WantedItem(title='title4', year=2016, type='episode', season=1, episode=1)
     wanted_item_5 = WantedItem(title='title5', year=2016, type='episode', season=1, episode=[1, 2])
     wanted_item_empty = WantedItem()
-    assert display_item_name(wanted_item_1) == 'title1'
-    assert display_item_name(wanted_item_1, uppercase=True) == 'TITLE1'
-    assert display_item_name(wanted_item_2) == 'title2 (2016)'
-    assert display_item_name(wanted_item_2, uppercase=True) == 'TITLE2 (2016)'
-    assert display_item_name(wanted_item_3) == 'title3 S01E01'
-    assert display_item_name(wanted_item_3, uppercase=True) == 'TITLE3 S01E01'
-    assert display_item_name(wanted_item_4) == 'title4 (2016) S01E01'
-    assert display_item_name(wanted_item_4, uppercase=True) == 'TITLE4 (2016) S01E01'
-    assert display_item_name(wanted_item_5) == 'title5 (2016) S01E01-E02'
-    assert display_item_name(wanted_item_5, uppercase=True) == 'TITLE5 (2016) S01E01-E02'
-    assert display_item_name(wanted_item_empty) == 'N/A'
-    assert display_item_name(wanted_item_empty, default_value='default') == 'default'
-    assert display_item_name(wanted_item_empty, default_value='default', uppercase=True) == 'DEFAULT'
-
-
-def test_display_interval():
-    assert display_interval(1) == '0:00:01'
-    assert display_interval(1, True) == '1 second'
-    assert display_interval(30) == '0:00:30'
-    assert display_interval(30, True) == '30 seconds'
-    assert display_interval(60) == '0:01:00'
-    assert display_interval(60, True) == '1 minute'
-    assert display_interval(1800) == '0:30:00'
-    assert display_interval(1800, True) == '30 minutes'
-    assert display_interval(3600) == '1:00:00'
-    assert display_interval(3600, True) == '1 hour'
-    assert display_interval(43200) == '12:00:00'
-    assert display_interval(43200, True) == '12 hours'
-    assert display_interval(86400) == '1 day, 0:00:00'
-    assert display_interval(86400, True) == '1 day'
-    assert display_interval(172800) == '2 days, 0:00:00'
-    assert display_interval(172800, True) == '2 days'
-    assert display_interval(217830) == '2 days, 12:30:30'
-    assert display_interval(217830, True) == '2 days 12 hours 30 minutes 30 seconds'
-
-
-def test_display_timestamp(monkeypatch):
-    monkeypatch.setattr('autosubliminal.TIMESTAMPFORMAT', '%d-%m-%Y %H:%M:%S')
-    timestamp_float = time.mktime(time.strptime('01012016 0:00:00', '%d%m%Y %H:%M:%S')) - 1
-    assert display_timestamp(timestamp_float) == '31-12-2015 23:59:59'
-    assert display_timestamp(0.0) == 'N/A'
-
-
-def test_get_web_file(monkeypatch):
-    app_id = uuid.uuid4()
-    monkeypatch.setattr('autosubliminal.UUID', app_id)
-    monkeypatch.setattr('autosubliminal.WEBROOT', '')
-    monkeypatch.setattr('autosubliminal.DEVELOPER', True)
-    assert get_web_file('test.js') == '/js/test.js?v=' + app_id.hex
-    assert get_web_file('test.css') == '/css/test.css?v=' + app_id.hex
-    monkeypatch.setattr('autosubliminal.WEBROOT', 'autosubliminal')
-    monkeypatch.setattr('autosubliminal.DEVELOPER', False)
-    assert get_web_file('test.js') == 'autosubliminal/js/test.min.js?v=' + app_id.hex
-    assert get_web_file('test.css') == 'autosubliminal/css/test.min.css?v=' + app_id.hex
+    assert get_item_name(wanted_item_1) == 'title1'
+    assert get_item_name(wanted_item_1, uppercase=True) == 'TITLE1'
+    assert get_item_name(wanted_item_2) == 'title2 (2016)'
+    assert get_item_name(wanted_item_2, uppercase=True) == 'TITLE2 (2016)'
+    assert get_item_name(wanted_item_3) == 'title3 S01E01'
+    assert get_item_name(wanted_item_3, uppercase=True) == 'TITLE3 S01E01'
+    assert get_item_name(wanted_item_4) == 'title4 (2016) S01E01'
+    assert get_item_name(wanted_item_4, uppercase=True) == 'TITLE4 (2016) S01E01'
+    assert get_item_name(wanted_item_5) == 'title5 (2016) S01E01-E02'
+    assert get_item_name(wanted_item_5, uppercase=True) == 'TITLE5 (2016) S01E01-E02'
+    assert get_item_name(wanted_item_empty) == 'N/A'
+    assert get_item_name(wanted_item_empty, default_value='default') == 'default'
+    assert get_item_name(wanted_item_empty, default_value='default', uppercase=True) == 'DEFAULT'
 
 
 def test_convert_timestamp(monkeypatch):
