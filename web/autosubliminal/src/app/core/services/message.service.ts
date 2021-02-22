@@ -9,27 +9,28 @@ export class MessageService {
 
   constructor(private primeNgMessageService: PrimeNgMessageService) { }
 
-  public showSuccessMessage(messageText: string): void {
-    this.showMessage(messageText, MessageSeverity.SUCCESS);
+  public showSuccessMessage(messageText: string, sticky = false): void {
+    this.showMessage(messageText, MessageSeverity.SUCCESS, sticky);
   }
 
-  public showInfoMessage(messageText: string): void {
-    this.showMessage(messageText, MessageSeverity.INFO);
+  public showInfoMessage(messageText: string, sticky = false): void {
+    this.showMessage(messageText, MessageSeverity.INFO, sticky);
   }
 
-  public showWarningMessage(messageText: string): void {
-    this.showMessage(messageText, MessageSeverity.WARN);
+  public showWarningMessage(messageText: string, sticky = false): void {
+    this.showMessage(messageText, MessageSeverity.WARN, sticky);
   }
 
-  public showErrorMessage(messageText: string): void {
-    this.showMessage(messageText, MessageSeverity.ERROR);
+  public showErrorMessage(messageText: string, sticky = false): void {
+    this.showMessage(messageText, MessageSeverity.ERROR, sticky);
   }
 
-  public showMessage(messageText: string, messageSeverity: MessageSeverity): void {
+  public showMessage(messageText: string, messageSeverity: MessageSeverity, sticky = false): void {
     const message: Message = {
       summary: 'Auto-Subliminal',
       detail: messageText,
-      severity: messageSeverity
+      severity: messageSeverity,
+      sticky
     };
     this.primeNgMessageService.add(message);
   }

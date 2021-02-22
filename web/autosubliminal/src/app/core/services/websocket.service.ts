@@ -53,7 +53,7 @@ export class WebSocketService {
           }
         } else if (serverMessage.type === 'NOTIFICATION') {
           const serverNotification = serverMessage as SystemWebSocketServerNotification;
-          this.messageService.showMessage(serverNotification.notification.message, this.getMessageSeverity(serverNotification.notification.type));
+          this.messageService.showMessage(serverNotification.notification.message, this.getMessageSeverity(serverNotification.notification.type), serverNotification.notification.sticky);
         } else {
           console.error(`Invalid websocket server message type: ${serverMessage.type}`);
         }
@@ -95,7 +95,7 @@ export class WebSocketService {
         return MessageSeverity.SUCCESS;
       case SystemWebSocketServerNotificationType.INFO:
         return MessageSeverity.INFO;
-      case SystemWebSocketServerNotificationType.NOTICE:
+      case SystemWebSocketServerNotificationType.WARN:
         return MessageSeverity.WARN;
       case SystemWebSocketServerNotificationType.ERROR:
         return MessageSeverity.ERROR;
