@@ -31,7 +31,7 @@ export class SystemWebSocketServerEvent {
 export enum SystemWebSocketServerNotificationType {
   INFO = 'info',
   SUCCESS = 'succes',
-  NOTICE = 'notice',
+  WARN = 'warn',
   ERROR = 'error'
 }
 
