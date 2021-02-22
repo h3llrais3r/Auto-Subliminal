@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { interval } from 'rxjs';
 import { AppSettingsService } from './app-settings.service';
 import { SystemService } from './core/services/api/system.service';
+import { MessageService } from './core/services/message.service';
 import { SystemEventService } from './core/services/system-event.service';
 
 @Component({
@@ -20,7 +21,11 @@ export class AppComponent {
   systemShutdown = false;
   systemShutdownFinished = false;
 
-  constructor(private appSettingsService: AppSettingsService, private systemEventService: SystemEventService, private systemService: SystemService) {
+  constructor(
+    private appSettingsService: AppSettingsService,
+    private systemEventService: SystemEventService,
+    private systemService: SystemService,
+    private messageService: MessageService) {
     // Check if app settings are loaded
     this.appSettingsLoaded = this.appSettingsService.loaded();
     // Check if system is started (this is the case when the settings are loaded)
@@ -28,7 +33,10 @@ export class AppComponent {
     // Subscribe on system start events
     this.systemEventService.systemStart.subscribe(() => this.checkStart());
     // Subscribe on system restart events
-    this.systemEventService.systemRestart.subscribe(() => this.checkRestart());
+    this.systemEventService.systemRestart.subscribe(() => {
+      this.messageService.clearMessages(); // Clear messages
+      this.checkRestart();
+    });
     // Subscribe on system shutdown events
     this.systemEventService.systemShutdown.subscribe(() => this.checkShutdown());
   }

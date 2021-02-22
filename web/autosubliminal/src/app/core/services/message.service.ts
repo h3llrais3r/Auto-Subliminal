@@ -34,4 +34,8 @@ export class MessageService {
     };
     this.primeNgMessageService.add(message);
   }
+
+  public clearMessages(): void {
+    this.primeNgMessageService.clear();
+  }
 }
