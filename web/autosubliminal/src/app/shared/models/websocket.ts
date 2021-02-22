@@ -1,6 +1,7 @@
 
 // System websocket event received from server
 
+import { MessageSeverity } from './message';
 import { Page } from './page';
 import { Scheduler } from './scheduler';
 
@@ -28,17 +29,10 @@ export class SystemWebSocketServerEvent {
 
 // System websocket notification received from server
 
-export enum SystemWebSocketServerNotificationType {
-  INFO = 'info',
-  SUCCESS = 'succes',
-  WARN = 'warn',
-  ERROR = 'error'
-}
-
 export class SystemWebSocketServerNotification {
   type = 'NOTIFICATION';
   notification: {
-    type: SystemWebSocketServerNotificationType;
+    severity: MessageSeverity;
     sticky: boolean;
     message: string;
   };

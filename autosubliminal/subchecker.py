@@ -480,7 +480,7 @@ def post_process_no_subtitle(wanted_item_index):
         WantedItemsDb().delete_wanted_item(wanted_item.id)
         log.debug('Removed %s from wanted_items database', wanted_item.video_path)
     else:
-        send_websocket_notification('Unable to handle post processing! Please check the log file!', type='error')
+        send_websocket_notification('Unable to handle post processing! Please check the log file!', severity='error')
 
     # Release wanted queue lock
     release_wanted_queue_lock()

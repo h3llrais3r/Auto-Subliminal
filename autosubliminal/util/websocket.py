@@ -30,18 +30,18 @@ def send_websocket_event(type, data=None):
     autosubliminal.WEBSOCKETMESSAGEQUEUE.append(event)
 
 
-def send_websocket_notification(message, type='info', sticky=False):
+def send_websocket_notification(message, severity='info', sticky=False):
     """Send a websocket notification message.
 
     :param message: the notification message
     :type message: str
-    :param type: the notification type
-    Possible values for notification type are (to be in sync with PNotify jquery plugin):
+    :param severity: the notification message severity
+    Possible values for notification type are:
     - success (green)
     - info (blue)
     - warn (orange)
     - error (red)
-    :type type: str
+    :type severity: str
     :param sticky: indication if it will be shown at a fixed inline location and it will not fade
     :type sticky: bool
     """
@@ -49,7 +49,7 @@ def send_websocket_notification(message, type='info', sticky=False):
         'type': 'NOTIFICATION',
         'notification': {
             'message': message,
-            'type': type,
+            'severity': severity,
             'sticky': sticky}
     }
     autosubliminal.WEBSOCKETMESSAGEQUEUE.append(notification)

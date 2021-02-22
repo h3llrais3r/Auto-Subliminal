@@ -63,7 +63,7 @@ def flush_wanted_items():
         send_websocket_notification(
             'Flushed wanted items database. Please launch \'Scan Disk\' from the \'System\' menu.')
     else:
-        send_websocket_notification('Cannot flush wanted items database when wanted queue is in use!', type='warn')
+        send_websocket_notification('Cannot flush wanted items database when wanted queue is in use!', severity='warn')
 
 
 def flush_last_downloads():
@@ -83,4 +83,4 @@ def flush_library():
         MovieDetailsDb().flush_movies(subtitles=True)
         send_websocket_notification('Flushed library database.')
     else:
-        send_websocket_notification('Cannot flush library database when library scanner is running!', type='warn')
+        send_websocket_notification('Cannot flush library database when library scanner is running!', severity='warn')

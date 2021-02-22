@@ -43,14 +43,14 @@ class SubDownloader(object):
             processed = self.post_process()
             if not processed:
                 send_websocket_notification(
-                    'Unable to handle post processing for \'%s\'! Please check the log file!' % name, type='error')
+                    'Unable to handle post processing for \'%s\'! Please check the log file!' % name, severity='error')
 
             # Show success message
             language = self._download_item.language
             name = get_item_name(self._download_item)
             provider = self._download_item.provider
             send_websocket_notification(
-                'Downloaded \'%s\' subtitle for \'%s\' from \'%s\'.' % (language, name, provider), type='success')
+                'Downloaded \'%s\' subtitle for \'%s\' from \'%s\'.' % (language, name, provider), severity='success')
 
     def save(self):
         """

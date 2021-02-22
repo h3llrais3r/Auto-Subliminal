@@ -106,7 +106,7 @@ def test_send_websocket_notification(monkeypatch):
         'type': 'NOTIFICATION',
         'notification': {
             'message': 'test',
-            'type': 'info',
+            'severity': 'info',
             'sticky': False
         }
     }

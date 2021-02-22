@@ -3,9 +3,8 @@ import { interval } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 import { appSettings } from '../../app-settings.service';
-import { MessageSeverity } from '../../shared/models/message';
 import { Scheduler } from '../../shared/models/scheduler';
-import { SystemWebSocketClientMessage, SystemWebSocketMessage, SystemWebSocketServerEvent, SystemWebSocketServerEventType, SystemWebSocketServerMessage, SystemWebSocketServerNotification, SystemWebSocketServerNotificationType } from '../../shared/models/websocket';
+import { SystemWebSocketClientMessage, SystemWebSocketMessage, SystemWebSocketServerEvent, SystemWebSocketServerEventType, SystemWebSocketServerMessage, SystemWebSocketServerNotification } from '../../shared/models/websocket';
 import { MessageService } from './message.service';
 import { SystemEventService } from './system-event.service';
 
@@ -53,7 +52,7 @@ export class WebSocketService {
           }
         } else if (serverMessage.type === 'NOTIFICATION') {
           const serverNotification = serverMessage as SystemWebSocketServerNotification;
-          this.messageService.showMessage(serverNotification.notification.message, this.getMessageSeverity(serverNotification.notification.type), serverNotification.notification.sticky);
+          this.messageService.showMessage(serverNotification.notification.message, serverNotification.notification.severity, serverNotification.notification.sticky);
         } else {
           console.error(`Invalid websocket server message type: ${serverMessage.type}`);
         }
@@ -87,20 +86,5 @@ export class WebSocketService {
       }
     };
     return webSocket(config);
-  }
-
-  private getMessageSeverity(type: SystemWebSocketServerNotificationType): MessageSeverity {
-    switch (type) {
-      case SystemWebSocketServerNotificationType.SUCCESS:
-        return MessageSeverity.SUCCESS;
-      case SystemWebSocketServerNotificationType.INFO:
-        return MessageSeverity.INFO;
-      case SystemWebSocketServerNotificationType.WARN:
-        return MessageSeverity.WARN;
-      case SystemWebSocketServerNotificationType.ERROR:
-        return MessageSeverity.ERROR;
-      default:
-        throw new Error(`Invalid message severity: ${type}`);
-    }
   }
 }
