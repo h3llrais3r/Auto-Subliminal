@@ -1,3 +1,5 @@
+@import '../../../../scss/variables';
+
 // Scrol
 $scroll-icon-bg: var(--surface-d);
 $scroll-icon-color: var(--text-color);
@@ -6,14 +8,19 @@ $scrol-icon-hover-color: var(--surface-d);
 
 .scroll-icons {
   position: fixed;
-  right: 5px;
+  right: 0.25rem;
+  font-size: 1.5rem;
 
   &.top {
-    top: 10px;
+    top: 4.375rem;
   }
 
   &.bottom {
-    bottom: 10px;
+    bottom: 1.5rem;
+
+    @media screen and (max-width: $media-mobile-max-width) {
+      bottom: 2.5rem;
+    }
   }
 }
 
@@ -24,8 +31,9 @@ $scrol-icon-hover-color: var(--surface-d);
   cursor: pointer;
   background-color: $scroll-icon-bg;
   color: $scroll-icon-color;
-  border-radius: 8px;
-  padding: 5px;
+  font-size: 1.5rem;
+  border-radius: 0.5rem;
+  padding: 0.25rem;
 
   &:hover {
     background-color: $scrol-icon-hover-bg;
