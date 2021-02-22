@@ -2,9 +2,6 @@
 
 import os
 import tempfile
-import time
-import uuid
-from collections import OrderedDict
 from datetime import datetime
 
 import pytest

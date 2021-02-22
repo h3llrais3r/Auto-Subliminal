@@ -3,7 +3,6 @@
 import datetime
 import logging
 import os
-import shutil
 import tempfile
 
 import requests
@@ -13,7 +12,6 @@ from dogpile.util.readwrite_lock import ReadWriteMutex
 from six import text_type
 
 import autosubliminal
-from autosubliminal.util.common import set_rw_and_remove
 
 log = logging.getLogger(__name__)
 

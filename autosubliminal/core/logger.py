@@ -1,6 +1,5 @@
 # coding=utf-8
 
-import cgi
 import codecs
 import logging
 import os
