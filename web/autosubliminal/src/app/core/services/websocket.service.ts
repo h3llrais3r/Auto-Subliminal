@@ -4,6 +4,7 @@ import { takeWhile } from 'rxjs/operators';
 import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 import { appSettings } from '../../app-settings.service';
 import { Scheduler } from '../../shared/models/scheduler';
+import { SystemUpdate } from '../../shared/models/systemupdate';
 import { SystemWebSocketClientMessage, SystemWebSocketMessage, SystemWebSocketServerEvent, SystemWebSocketServerEventType, SystemWebSocketServerMessage, SystemWebSocketServerNotification } from '../../shared/models/websocket';
 import { MessageService } from './message.service';
 import { SystemEventService } from './system-event.service';
@@ -40,6 +41,9 @@ export class WebSocketService {
               break;
             case SystemWebSocketServerEventType.SYSTEM_SHUTDOWN:
               this.systemEventService.notifySystemShutdown();
+              break;
+            case SystemWebSocketServerEventType.SYSTEM_UPDATE:
+              this.systemEventService.notifySystemUpdate(new SystemUpdate(serverEvent.event.data));
               break;
             case SystemWebSocketServerEventType.SCHEDULER_START:
               this.systemEventService.notifySchedulerStart(new Scheduler(serverEvent.event.data));

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { appSettings } from '../../../../app-settings.service';
 import { SystemWebSocketClientEvent, SystemWebSocketClientEventType } from '../../../../shared/models/websocket';
+import { SystemEventService } from '../../../services/system-event.service';
 import { ThemeService } from '../../../services/theme.service';
 import { WebSocketService } from '../../../services/websocket.service';
 
@@ -16,11 +17,36 @@ export class PageHeaderComponent implements OnInit {
   private readonly APP_URL = 'https://github.com/h3llrais3r/Auto-Subliminal';
 
   menuItems: MenuItem[];
+  currentTheme: string;
+  systemUpdateAvailable = false;
 
-  constructor(private router: Router, private webSocketService: WebSocketService, private themeService: ThemeService) { }
+  constructor(
+    private router: Router,
+    private webSocketService: WebSocketService,
+    private systemEventService: SystemEventService,
+    private themeService: ThemeService) { }
 
   ngOnInit(): void {
     this.themeService.currentTheme.subscribe((theme) => {
+      this.currentTheme = theme;
+      this.buildMenu();
+    });
+    this.systemEventService.systemUpdate.subscribe((systemUpdate) => {
+      this.systemUpdateAvailable = systemUpdate.available;
+      this.buildMenu();
+    });
+  }
+
+  goHome(): void {
+    this.router.navigateByUrl('/home');
+  }
+
+  getThemeClass(theme: string, currentTheme: string): string {
+    return theme === currentTheme ? 'active' : '';
+  }
+
+  private buildMenu(): void {
+    {
       this.menuItems = [
         {
           label: 'Home',
@@ -71,25 +97,25 @@ export class PageHeaderComponent implements OnInit {
                   label: 'Dark blue',
                   icon: 'pi pi-fw bootstrap4-dark-blue',
                   command: () => this.themeService.changeTheme('bootstrap4-dark-blue'),
-                  styleClass: this.getThemeClass('bootstrap4-dark-blue', theme)
+                  styleClass: this.getThemeClass('bootstrap4-dark-blue', this.currentTheme)
                 },
                 {
                   label: 'Dark purple',
                   icon: 'pi pi-fw bootstrap4-dark-purple',
                   command: () => this.themeService.changeTheme('bootstrap4-dark-purple'),
-                  styleClass: this.getThemeClass('bootstrap4-dark-purple', theme)
+                  styleClass: this.getThemeClass('bootstrap4-dark-purple', this.currentTheme)
                 },
                 {
                   label: 'Light blue',
                   icon: 'pi pi-fw bootstrap4-light-blue',
                   command: () => this.themeService.changeTheme('bootstrap4-light-blue'),
-                  styleClass: this.getThemeClass('bootstrap4-light-blue', theme)
+                  styleClass: this.getThemeClass('bootstrap4-light-blue', this.currentTheme)
                 },
                 {
                   label: 'Light purple',
                   icon: 'pi pi-fw bootstrap4-light-purple',
                   command: () => this.themeService.changeTheme('bootstrap4-light-purple'),
-                  styleClass: this.getThemeClass('bootstrap4-light-purple', theme)
+                  styleClass: this.getThemeClass('bootstrap4-light-purple', this.currentTheme)
                 },
                 {
                   separator: true
@@ -105,25 +131,25 @@ export class PageHeaderComponent implements OnInit {
                   label: 'Arya blue',
                   icon: 'pi pi-fw arya-blue',
                   command: () => this.themeService.changeTheme('arya-blue'),
-                  styleClass: this.getThemeClass('arya-blue', theme)
+                  styleClass: this.getThemeClass('arya-blue', this.currentTheme)
                 },
                 {
                   label: 'Arya green',
                   icon: 'pi pi-fw arya-green',
                   command: () => this.themeService.changeTheme('arya-green'),
-                  styleClass: this.getThemeClass('arya-green', theme)
+                  styleClass: this.getThemeClass('arya-green', this.currentTheme)
                 },
                 {
                   label: 'Arya orange',
                   icon: 'pi pi-fw arya-orange',
                   command: () => this.themeService.changeTheme('arya-orange'),
-                  styleClass: this.getThemeClass('arya-orange', theme)
+                  styleClass: this.getThemeClass('arya-orange', this.currentTheme)
                 },
                 {
                   label: 'Arya purple',
                   icon: 'pi pi-fw arya-purple',
                   command: () => this.themeService.changeTheme('arya-purple'),
-                  styleClass: this.getThemeClass('arya-purple', theme)
+                  styleClass: this.getThemeClass('arya-purple', this.currentTheme)
                 },
                 {
                   separator: true
@@ -132,25 +158,25 @@ export class PageHeaderComponent implements OnInit {
                   label: 'Saga blue',
                   icon: 'pi pi-fw saga-blue',
                   command: () => this.themeService.changeTheme('saga-blue'),
-                  styleClass: this.getThemeClass('saga-blue', theme)
+                  styleClass: this.getThemeClass('saga-blue', this.currentTheme)
                 },
                 {
                   label: 'Saga green',
                   icon: 'pi pi-fw saga-green',
                   command: () => this.themeService.changeTheme('saga-green'),
-                  styleClass: this.getThemeClass('saga-green', theme)
+                  styleClass: this.getThemeClass('saga-green', this.currentTheme)
                 },
                 {
                   label: 'Saga orange',
                   icon: 'pi pi-fw saga-orange',
                   command: () => this.themeService.changeTheme('saga-orange'),
-                  styleClass: this.getThemeClass('saga-orange', theme)
+                  styleClass: this.getThemeClass('saga-orange', this.currentTheme)
                 },
                 {
                   label: 'Saga purple',
                   icon: 'pi pi-fw saga-purple',
                   command: () => this.themeService.changeTheme('saga-purple'),
-                  styleClass: this.getThemeClass('saga-purple', theme)
+                  styleClass: this.getThemeClass('saga-purple', this.currentTheme)
                 },
                 {
                   separator: true
@@ -159,25 +185,25 @@ export class PageHeaderComponent implements OnInit {
                   label: 'Vela blue',
                   icon: 'pi pi-fw vela-blue',
                   command: () => this.themeService.changeTheme('vela-blue'),
-                  styleClass: this.getThemeClass('vela-blue', theme)
+                  styleClass: this.getThemeClass('vela-blue', this.currentTheme)
                 },
                 {
                   label: 'Vela green',
                   icon: 'pi pi-fw vela-green',
                   command: () => this.themeService.changeTheme('vela-green'),
-                  styleClass: this.getThemeClass('vela-green', theme)
+                  styleClass: this.getThemeClass('vela-green', this.currentTheme)
                 },
                 {
                   label: 'Vela orange',
                   icon: 'pi pi-fw vela-orange',
                   command: () => this.themeService.changeTheme('vela-orange'),
-                  styleClass: this.getThemeClass('vela-orange', theme)
+                  styleClass: this.getThemeClass('vela-orange', this.currentTheme)
                 },
                 {
                   label: 'Vela purple',
                   icon: 'pi pi-fw vela-purple',
                   command: () => this.themeService.changeTheme('vela-purple'),
-                  styleClass: this.getThemeClass('vela-purple', theme)
+                  styleClass: this.getThemeClass('vela-purple', this.currentTheme)
                 }
               ]
             },
@@ -292,6 +318,12 @@ export class PageHeaderComponent implements OnInit {
               command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SCHEDULER, appSettings.checkVersion))
             },
             {
+              label: 'Update version',
+              icon: 'pi pi-fw pi-arrow-circle-up',
+              command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'update')),
+              visible: this.systemUpdateAvailable
+            },
+            {
               separator: true
             },
             {
@@ -340,14 +372,6 @@ export class PageHeaderComponent implements OnInit {
           ]
         }
       ];
-    });
-  }
-
-  goHome(): void {
-    this.router.navigateByUrl('/home');
-  }
-
-  getThemeClass(theme: string, currentTheme: string): string {
-    return theme === currentTheme ? 'active' : '';
+    }
   }
 }

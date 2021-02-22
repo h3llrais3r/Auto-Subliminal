@@ -4,16 +4,18 @@
 import { MessageSeverity } from './message';
 import { Page } from './page';
 import { Scheduler } from './scheduler';
+import { SystemUpdate } from './systemupdate';
 
 export enum SystemWebSocketServerEventType {
   SYSTEM_START = 'SYSTEM_START',
   SYSTEM_RESTART = 'SYSTEM_RESTART',
   SYSTEM_SHUTDOWN = 'SYSTEM_SHUTDOWN',
+  SYSTEM_UPDATE = 'SYSTEM_UPDATE',
   SCHEDULER_START = 'SCHEDULER_START',
   SCHEDULER_FINISH = 'SCHEDULER_FINISH'
 }
 
-export type SystemWebSocketServerEventData = Page | Scheduler;
+export type SystemWebSocketServerEventData = Page | Scheduler | SystemUpdate;
 
 export class SystemWebSocketServerEvent {
   type = 'EVENT';
