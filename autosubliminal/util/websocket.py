@@ -37,9 +37,9 @@ def send_websocket_notification(message, type='info', sticky=False):
     :type message: str
     :param type: the notification type
     Possible values for notification type are (to be in sync with PNotify jquery plugin):
-    - info (blue)
     - success (green)
-    - notice (orange)
+    - info (blue)
+    - warn (orange)
     - error (red)
     :type type: str
     :param sticky: indication if it will be shown at a fixed inline location and it will not fade

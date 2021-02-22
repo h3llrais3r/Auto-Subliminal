@@ -1701,7 +1701,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 6
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification('Config upgraded. Please check or reconfigure you subliminal configuration!',
-                                        type='notice', sticky=True)
+                                        type='warn', sticky=True)
 
         if from_version == 6 and to_version == 7:
             print('INFO: Upgrading log config. Please check/reconfigure your config!')
@@ -1711,7 +1711,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 7
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification('Config upgraded. Please check or reconfigure your logging configuration!',
-                                        type='notice', sticky=True)
+                                        type='warn', sticky=True)
 
         if from_version == 7 and to_version == 8:
             print('INFO: Upgrading skip config. Please check/reconfigure your config!')
@@ -1726,7 +1726,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 8
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification('Config upgraded. Please check or reconfigure your skip configuration!',
-                                        type='notice', sticky=True)
+                                        type='warn', sticky=True)
 
         if from_version == 8 and to_version == 9:
             print('INFO: Renaming config, logfile and skip section. Please check/reconfigure your config!')
@@ -1766,7 +1766,7 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification(
                 'Config upgraded. Please check or reconfigure your general, logging and notification configuration!',
-                type='notice', sticky=True)
+                type='warn', sticky=True)
 
         if from_version == 9 and to_version == 10:
             print('INFO: Removing old PATH config.')
@@ -1787,7 +1787,7 @@ def _upgrade_config(from_version, to_version):
             print('INFO: Config upgraded to version 10.')
             autosubliminal.CONFIGVERSION = 10
             autosubliminal.CONFIGUPGRADED = True
-            send_websocket_notification('Config upgraded!', type='notice', sticky=True)
+            send_websocket_notification('Config upgraded!', type='warn', sticky=True)
 
         if from_version == 10 and to_version == 11:
             print('INFO: Renaming interval config parameters.')
@@ -1820,7 +1820,7 @@ def _upgrade_config(from_version, to_version):
             print('INFO: Config upgraded to version 11.')
             autosubliminal.CONFIGVERSION = 11
             autosubliminal.CONFIGUPGRADED = True
-            send_websocket_notification('Config upgraded!', type='notice', sticky=True)
+            send_websocket_notification('Config upgraded!', type='warn', sticky=True)
 
         if from_version == 11 and to_version == 12:
             print('INFO: Converting interval config parameters to hours.')
@@ -1840,7 +1840,7 @@ def _upgrade_config(from_version, to_version):
             print('INFO: Config upgraded to version 12.')
             autosubliminal.CONFIGVERSION = 12
             autosubliminal.CONFIGUPGRADED = True
-            send_websocket_notification('Config upgraded!', type='notice', sticky=True)
+            send_websocket_notification('Config upgraded!', type='warn', sticky=True)
 
         if from_version == 12 and to_version == 13:
             print('INFO: Renaming provider addic7ed_random_user_agent to addic7ed_custom.')
@@ -1866,4 +1866,4 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.CONFIGVERSION = 13
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification('Config upgraded. Please check or reconfigure you subliminal configuration!',
-                                        type='notice', sticky=True)
+                                        type='warn', sticky=True)

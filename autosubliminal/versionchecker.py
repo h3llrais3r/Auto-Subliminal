@@ -188,7 +188,7 @@ class SourceVersionManager(BaseVersionManager):
             send_websocket_notification(
                 'New version found. '
                 'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and update!',
-                type='notice', sticky=True)
+                type='warn', sticky=True)
         else:
             log.info('Version up to date')
             # Show info message (only when run was forced manually)
@@ -283,7 +283,7 @@ class GitVersionManager(BaseVersionManager):
             log.info('New version found')
             send_websocket_notification(
                 'New version found. <a href=' + autosubliminal.WEBROOT + '/system/update>Update</a>!',
-                type='notice', sticky=True)
+                type='warn', sticky=True)
             self.update_allowed = True
         else:
             log.info('Version up to date')
