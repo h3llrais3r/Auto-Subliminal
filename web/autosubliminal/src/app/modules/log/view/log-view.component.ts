@@ -18,6 +18,7 @@ export class LogViewComponent implements OnInit {
   selectedLogNum = 0;
   loglevels: SelectItem[];
   selectedLoglevel = '';
+  loading = false;
   tailing = false;
   tailingDisabled = false;
   tailButtonLabel = 'Start tailing';
@@ -35,11 +36,13 @@ export class LogViewComponent implements OnInit {
   }
 
   getLogs(logNum: number): void {
+    this.loading = true;
     this.selectedLogNum = logNum;
     this.tailingDisabled = this.selectedLogNum !== 0; // tailing only allowed when on current logfile -> lognum = 0
     this.logService.getLogs(logNum).subscribe(
       (logLines) => {
         this.logMessages = logLines;
+        this.loading = false;
         this.handleLogTailing();
       });
   }
