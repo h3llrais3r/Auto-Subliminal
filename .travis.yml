@@ -24,7 +24,7 @@ cache:
   npm: true
   directories:
     - $HOME/.cache/pip
-    - node_modules
+    - web/autosubliminal/node_modules
 
 # Install command(s)
 before_install:
