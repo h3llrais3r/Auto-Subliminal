@@ -29,7 +29,7 @@ export class SettingsService extends ApiServiceTemplate {
   }
 
   updateGeneralSetting(settingName: string, value: any): Observable<boolean> {
-    return this.httpClient.patch<any>(`${this.URL}/general/${settingName}`, JSON.stringify(value), this.options)
+    return this.httpClient.patch<void>(`${this.URL}/general/${settingName}`, JSON.stringify(value), this.options)
       .pipe(map(() => true));
   }
 

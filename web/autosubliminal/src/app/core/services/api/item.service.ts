@@ -27,14 +27,14 @@ export class ItemService extends ApiServiceTemplate {
       .pipe(map((wantedItem) => new WantedItem(wantedItem)));
   }
 
-  updateWantedItem(wantedItem: WantedItem): Observable<boolean> {
+  updateWantedItem(wantedItem: WantedItem): Observable<WantedItem> {
     return this.httpClient.put<WantedItem>(`${this.URL}/wanted/${wantedItem.id}`, JSON.stringify(wantedItem), this.options)
-      .pipe(map(() => true));
+      .pipe(map((updatedWantedItem) => new WantedItem(updatedWantedItem)));
   }
 
-  resetWantedItem(wantedItemId: number): Observable<boolean> {
-    return this.httpClient.patch<void>(`${this.URL}/wanted/${wantedItemId}`, { action: 'reset' }, this.options)
-      .pipe(map(() => true));
+  resetWantedItem(wantedItemId: number): Observable<WantedItem> {
+    return this.httpClient.patch<WantedItem>(`${this.URL}/wanted/${wantedItemId}`, { action: 'reset' }, this.options)
+      .pipe(map((wantedItem) => new WantedItem(wantedItem)));
   }
 
   deleteWantedItem(wantedItemId: number, cleanup?: boolean): Observable<boolean> {
@@ -52,9 +52,9 @@ export class ItemService extends ApiServiceTemplate {
       .pipe(map(() => true));
   }
 
-  searchWantedItemIndexerId(wantedItemId: number): Observable<boolean> {
-    return this.httpClient.patch<void>(`${this.URL}/wanted/${wantedItemId}`, { action: 'searchIndexerId' }, this.options)
-      .pipe(map(() => true));
+  searchWantedItemIndexerId(wantedItemId: number): Observable<WantedItem> {
+    return this.httpClient.patch<WantedItem>(`${this.URL}/wanted/${wantedItemId}`, { action: 'searchIndexerId' }, this.options)
+      .pipe(map((wantedItem) => new WantedItem(wantedItem)));
   }
 
   searchWantedItemSubtitles(wantedItemId: number, language: string): Observable<Subtitle[]> {

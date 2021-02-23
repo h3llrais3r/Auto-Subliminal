@@ -53,16 +53,10 @@ export class ManualRefineComponent implements OnInit {
     const wantedItem = this.getWantedItem();
     // Reset the wanted item (restore it with the data from the db after it has been temporarily updated)
     this.itemService.resetWantedItem(wantedItem.id).subscribe(
-      () => {
-        // Fetch the wanted item again and emit it
-        this.itemService.getWantedItem(wantedItem.id).subscribe(
-          (updatedWantedItem) => {
-            this.wantedItemChange.emit(updatedWantedItem);
-            this.messageService.showSuccessMessage(`Restored ${updatedWantedItem.longName}.`);
-            this.close();
-          },
-          () => this.messageService.showErrorMessage(`Unable to get the wanted item with id ${wantedItem.id}`)
-        );
+      (updatedWantedItem) => {
+        this.wantedItemChange.emit(updatedWantedItem);
+        this.messageService.showSuccessMessage(`Restored ${updatedWantedItem.longName}.`);
+        this.close();
       },
       () => this.messageService.showErrorMessage(`Unable to restore ${wantedItem.longName}`)
     );
@@ -74,16 +68,10 @@ export class ManualRefineComponent implements OnInit {
       const wantedItem = this.getWantedItem();
       // Update the wanted item
       this.itemService.updateWantedItem(wantedItem).subscribe(
-        () => {
-          // Fetch the updated wanted item again and emit it
-          this.itemService.getWantedItem(wantedItem.id).subscribe(
-            (updatedWantedItem) => {
-              this.wantedItemChange.emit(updatedWantedItem);
-              this.messageService.showSuccessMessage(`Updated ${updatedWantedItem.longName}.`);
-              this.close();
-            },
-            () => this.messageService.showErrorMessage(`Unable to get the wanted item with id ${wantedItem.id}`)
-          );
+        (updatedWantedItem) => {
+          this.wantedItemChange.emit(updatedWantedItem);
+          this.messageService.showSuccessMessage(`Updated ${updatedWantedItem.longName}.`);
+          this.close();
         },
         () => this.messageService.showErrorMessage(`Unable to update ${wantedItem.longName}`)
       );

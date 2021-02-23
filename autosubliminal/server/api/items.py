@@ -65,7 +65,7 @@ class _WantedApi(RestResource):
                         wanted_item.set_attr(key, input_dict[key])
                     update_wanted_item_in_queue(wanted_item)
                     release_wanted_queue_lock()
-                    return self._no_content()
+                    return wanted_item.to_dict(camelize)
                 else:
                     return self._conflict('Wanted queue in use')
 
@@ -86,7 +86,8 @@ class _WantedApi(RestResource):
                     if action == 'searchIndexerId':
                         found = subchecker.force_id_search(wanted_item_index)
                         if found:
-                            return self._no_content()
+                            wanted_item = WantedItemsDb().get_wanted_item(int(wanted_item_id))
+                            return wanted_item.to_dict(camelize)
                         else:
                             return self._conflict('Unable to search indexer id')
 
@@ -128,7 +129,7 @@ class _WantedApi(RestResource):
                             wanted_item = WantedItemsDb().get_wanted_item(int(wanted_item_id))
                             update_wanted_item_in_queue(wanted_item)
                             release_wanted_queue_lock()
-                            return self._no_content()
+                            return wanted_item.to_dict(camelize)
                         else:
                             return self._conflict('Unable to reset item')
 

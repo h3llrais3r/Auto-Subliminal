@@ -118,15 +118,9 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
     const indexer = wantedItem.isEpisode ? 'tvdb id' : 'imdb id';
     this.messageService.showInfoMessage(`Searching for ${indexer} for ${wantedItem.longName}.`);
     this.itemService.searchWantedItemIndexerId(wantedItem.id).subscribe(
-      () => {
-        // Fetch the updated wanted item
-        this.itemService.getWantedItem(wantedItem.id).subscribe(
-          (updatedWantedItem) => {
-            this.messageService.showSuccessMessage(`${capitalizeFirstChar(indexer)} found for ${updatedWantedItem.longName}.`);
-            this.updateWantedItem(updatedWantedItem);
-          },
-          () => this.messageService.showErrorMessage(`Unable to get the wanted item with id ${wantedItem.id}`)
-        );
+      (updatedWantedItem) => {
+        this.updateWantedItem(updatedWantedItem);
+        this.messageService.showSuccessMessage(`${capitalizeFirstChar(indexer)} found for ${updatedWantedItem.longName}.`);
       },
       () => this.messageService.showErrorMessage(`Unable to search ${indexer} for ${wantedItem.longName}!`)
     );

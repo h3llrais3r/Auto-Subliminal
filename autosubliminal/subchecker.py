@@ -195,6 +195,7 @@ def search_subtitle(wanted_item_index, lang):
     release_wanted_queue_lock()
 
     if not provider_pool:
+        log.error('No subliminal providers configured')
         return subs, 'No subliminal providers configured'
 
     return subs, None
