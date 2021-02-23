@@ -271,7 +271,7 @@ export class PageHeaderComponent implements OnInit {
             },
             {
               label: 'Clear logs',
-              icon: 'pi pi-fw pi-times',
+              icon: 'pi pi-fw pi-trash',
               routerLink: '/log/clear'
             }
           ]
@@ -328,22 +328,22 @@ export class PageHeaderComponent implements OnInit {
             },
             {
               label: 'Flush cache',
-              icon: 'pi pi-fw pi-times',
+              icon: 'pi pi-fw pi-trash',
               command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushCache'))
             },
             {
               label: 'Flush wanted',
-              icon: 'pi pi-fw pi-times',
+              icon: 'pi pi-fw pi-trash',
               command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushWantedItems'))
             },
             {
               label: 'Flush downloads',
-              icon: 'pi pi-fw pi-times',
+              icon: 'pi pi-fw pi-trash',
               command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushLastDownloads'))
             },
             {
               label: 'Flush library',
-              icon: 'pi pi-fw pi-times',
+              icon: 'pi pi-fw pi-trash',
               command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushLibrary')),
               visible: appSettings.libraryMode
             },

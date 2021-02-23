@@ -3,6 +3,7 @@ import { SelectItem } from 'primeng/api';
 import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 import { appSettings } from '../../../app-settings.service';
 import { LogService } from '../../../core/services/api/log.service';
+import { MessageService } from '../../../core/services/message.service';
 import { Loglevel } from '../../../shared/models/loglevel';
 
 @Component({
@@ -27,7 +28,7 @@ export class LogViewComponent implements OnInit {
   private logWebsocket: WebSocketSubject<string>;
   private logMessages: string[] = [];
 
-  constructor(private logService: LogService) { }
+  constructor(private logService: LogService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.loglevels = this.getLogLevels();
@@ -44,7 +45,9 @@ export class LogViewComponent implements OnInit {
         this.logMessages = logLines;
         this.loading = false;
         this.handleLogTailing();
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to get the logs! Please check the log file!')
+    );
   }
 
   toggleTailing(): void {

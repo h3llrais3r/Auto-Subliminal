@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LogService } from '../../../core/services/api/log.service';
+import { MessageService } from '../../../core/services/message.service';
 
 @Component({
   selector: 'app-log-clear',
@@ -9,7 +10,7 @@ import { LogService } from '../../../core/services/api/log.service';
 })
 export class LogClearComponent implements OnInit {
 
-  constructor(private router: Router, private logService: LogService) { }
+  constructor(private router: Router, private logService: LogService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.logService.clearLogs().subscribe(
@@ -18,7 +19,8 @@ export class LogClearComponent implements OnInit {
         if (result) {
           this.router.navigateByUrl('/log/view');
         }
-      }
+      },
+      () => this.messageService.showErrorMessage(`Unable to clear the logs! Please check the log file!`)
     );
   }
 
