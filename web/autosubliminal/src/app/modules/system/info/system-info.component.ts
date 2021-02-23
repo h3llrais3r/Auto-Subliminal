@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { SystemService } from '../../../core/services/api/system.service';
+import { MessageService } from '../../../core/services/message.service';
 import { SystemInfo, SystemInstallType } from '../../../shared/models/systeminfo';
 
 @Component({
@@ -23,7 +24,7 @@ export class SystemInfoComponent implements OnInit {
   versionUrl: string;
   gitInstall = false;
 
-  constructor(private httpClient: HttpClient, private systemService: SystemService) { }
+  constructor(private httpClient: HttpClient, private systemService: SystemService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     // Get system info
@@ -39,13 +40,17 @@ export class SystemInfoComponent implements OnInit {
         } else {
           this.version = this.NOT_AVAILABLE;
         }
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to get system info! Please check the log file!')
+    );
 
     // Get changelog
     this.httpClient.get(this.CHANGELOG_URL, { responseType: 'text' }).subscribe(
       (changelog) => {
         this.changelog = this.parseChangelog(changelog);
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to get changelog!')
+    );
   }
 
   private parseChangelog(changelogHtml: string): string {

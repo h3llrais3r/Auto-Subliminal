@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Scheduler } from 'src/app/shared/models/scheduler';
 import { SystemService } from '../../../core/services/api/system.service';
+import { MessageService } from '../../../core/services/message.service';
 import { SystemEventService } from '../../../core/services/system-event.service';
 import { PathInfo } from '../../../shared/models/pathinfo';
 
@@ -14,7 +15,7 @@ export class SystemStatusComponent implements OnInit {
   schedulers: Scheduler[];
   paths: PathInfo[];
 
-  constructor(private systemService: SystemService, private systemEventService: SystemEventService) { }
+  constructor(private systemService: SystemService, private systemEventService: SystemEventService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     // Get schedulers
@@ -33,12 +34,16 @@ export class SystemStatusComponent implements OnInit {
             // Replace finished scheduler in list of schedulers
             this.schedulers = this.schedulers.map((scheduler) => scheduler.name === finishedScheduler.name ? finishedScheduler : scheduler);
           });
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to get the system schedulers! Please check the log file!')
+    );
     // Get paths
     this.systemService.getPaths().subscribe(
       (paths) => {
         this.paths = paths;
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to get the system paths! Please check the log file!')
+    );
   }
 
 }
