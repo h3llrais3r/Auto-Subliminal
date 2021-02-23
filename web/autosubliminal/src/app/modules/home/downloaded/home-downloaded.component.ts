@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SelectItem, SortEvent } from 'primeng/api';
 import { ItemService } from '../../../core/services/api/item.service';
+import { MessageService } from '../../../core/services/message.service';
 import { DownloadedItem } from '../../../shared/models/item';
 import { VideoType } from '../../../shared/models/video';
 import { capitalizeFirstChar, displayValue } from '../../../shared/utils/string-utils';
@@ -22,7 +23,7 @@ export class HomeDownloadedComponent implements OnInit {
   globalFilterFields = ['name', 'season', 'episode', 'source', 'quality', 'codec', 'releaseGroup', 'languages', 'timestamp'];
   tableStateKey = 'autosubliminal-home-downloaded-table';
 
-  constructor(private itemService: ItemService) { }
+  constructor(private itemService: ItemService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.buildSelectItems();
@@ -42,7 +43,9 @@ export class HomeDownloadedComponent implements OnInit {
       (downloadedItems) => {
         this.downloadedItems = downloadedItems;
         this.loading = false;
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to get the downloaded items')
+    );
   }
 
   sort(event: SortEvent): void {

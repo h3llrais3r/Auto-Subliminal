@@ -60,8 +60,12 @@ export class ManualRefineComponent implements OnInit {
             this.wantedItemChange.emit(updatedWantedItem);
             this.messageService.showSuccessMessage(`Restored ${updatedWantedItem.longName}.`);
             this.close();
-          });
-      });
+          },
+          () => this.messageService.showErrorMessage(`Unable to get the wanted item with id ${wantedItem.id}`)
+        );
+      },
+      () => this.messageService.showErrorMessage(`Unable to restore ${wantedItem.longName}`)
+    );
   }
 
   updateWantedItem(): void {
@@ -77,8 +81,12 @@ export class ManualRefineComponent implements OnInit {
               this.wantedItemChange.emit(updatedWantedItem);
               this.messageService.showSuccessMessage(`Updated ${updatedWantedItem.longName}.`);
               this.close();
-            });
-        });
+            },
+            () => this.messageService.showErrorMessage(`Unable to get the wanted item with id ${wantedItem.id}`)
+          );
+        },
+        () => this.messageService.showErrorMessage(`Unable to update ${wantedItem.longName}`)
+      );
     }
   }
 

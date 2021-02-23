@@ -41,7 +41,8 @@ export class HomeSearchComponent implements OnInit {
           (wantedItem) => {
             this.wantedItem = wantedItem;
             this.searchSubtitles();
-          }
+          },
+          () => this.messageService.showErrorMessage(`Unable to get the wanted item with id ${wantedItemId}`)
         );
       });
   }

@@ -93,7 +93,9 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
         const totalMovies = wantedItems.filter((wantedItem) => wantedItem.isMovie).length;
         this.totals.emit({ total, totalShows, totalMovies });
         this.loading = false;
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to get the wanted items')
+    );
   }
 
   sort(event: SortEvent): void {
@@ -122,7 +124,9 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
           (updatedWantedItem) => {
             this.messageService.showSuccessMessage(`${capitalizeFirstChar(indexer)} found for ${updatedWantedItem.longName}.`);
             this.updateWantedItem(updatedWantedItem);
-          });
+          },
+          () => this.messageService.showErrorMessage(`Unable to get the wanted item with id ${wantedItem.id}`)
+        );
       },
       () => this.messageService.showErrorMessage(`Unable to search ${indexer} for ${wantedItem.longName}!`)
     );
@@ -189,9 +193,9 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
           () => {
             this.removeWantedItemFromList(wantedItem);
             if (!this.seasonToSkip || this.seasonToSkip === '00') { // '00' or nothing means all seasons
-              this.messageService.showSuccessMessage(`Skipped show ${wantedItem.name} all seasons.`);
+              this.messageService.showSuccessMessage(`Skipped the show ${wantedItem.name} all seasons.`);
             } else {
-              this.messageService.showSuccessMessage(`Skipped show ${wantedItem.name} season(s) ${this.seasonToSkip}.`);
+              this.messageService.showSuccessMessage(`Skipped the show ${wantedItem.name} season(s) ${this.seasonToSkip}.`);
             }
           },
           () => this.messageService.showErrorMessage(`Unable to skip the show ${wantedItem.name}!`)
@@ -207,7 +211,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
         this.itemService.skipWantedItem(wantedItem.id, wantedItem.type).subscribe(
           () => {
             this.removeWantedItemFromList(wantedItem);
-            this.messageService.showSuccessMessage(`Skipped movie ${wantedItem.name}.`);
+            this.messageService.showSuccessMessage(`Skipped the movie ${wantedItem.name}.`);
           },
           () => this.messageService.showErrorMessage(`Unable to skip the movie ${wantedItem.name}!`)
         );

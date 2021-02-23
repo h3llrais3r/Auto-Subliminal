@@ -33,27 +33,27 @@ export class ItemService extends ApiServiceTemplate {
   }
 
   resetWantedItem(wantedItemId: number): Observable<boolean> {
-    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'reset' }, this.options)
+    return this.httpClient.patch<void>(`${this.URL}/wanted/${wantedItemId}`, { action: 'reset' }, this.options)
       .pipe(map(() => true));
   }
 
   deleteWantedItem(wantedItemId: number, cleanup?: boolean): Observable<boolean> {
-    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'delete', cleanup }, this.options)
+    return this.httpClient.patch<void>(`${this.URL}/wanted/${wantedItemId}`, { action: 'delete', cleanup }, this.options)
       .pipe(map(() => true));
   }
 
   skipWantedItem(wantedItemId: number, type: string, season?: string): Observable<boolean> {
-    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'skip', type, season }, this.options)
+    return this.httpClient.patch<void>(`${this.URL}/wanted/${wantedItemId}`, { action: 'skip', type, season }, this.options)
       .pipe(map(() => true));
   }
 
   postProcessWantedItem(wantedItemId: number, subtitleIndex?: number): Observable<boolean> {
-    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'postProcess', subtitleIndex }, this.options)
+    return this.httpClient.patch<void>(`${this.URL}/wanted/${wantedItemId}`, { action: 'postProcess', subtitleIndex }, this.options)
       .pipe(map(() => true));
   }
 
   searchWantedItemIndexerId(wantedItemId: number): Observable<boolean> {
-    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'searchIndexerId' }, this.options)
+    return this.httpClient.patch<void>(`${this.URL}/wanted/${wantedItemId}`, { action: 'searchIndexerId' }, this.options)
       .pipe(map(() => true));
   }
 
@@ -63,12 +63,12 @@ export class ItemService extends ApiServiceTemplate {
   }
 
   saveWantedItemSubtitle(wantedItemId: number, subtitleIndex: number): Observable<boolean> {
-    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'saveSubtitle', subtitleIndex }, this.options)
+    return this.httpClient.patch<void>(`${this.URL}/wanted/${wantedItemId}`, { action: 'saveSubtitle', subtitleIndex }, this.options)
       .pipe(map(() => true));
   }
 
   deleteWantedItemSubtitle(wantedItemId: number): Observable<boolean> {
-    return this.httpClient.patch(`${this.URL}/wanted/${wantedItemId}`, { action: 'deleteSubtitle' }, this.options)
+    return this.httpClient.patch<void>(`${this.URL}/wanted/${wantedItemId}`, { action: 'deleteSubtitle' }, this.options)
       .pipe(map(() => true));
   }
 
@@ -77,5 +77,3 @@ export class ItemService extends ApiServiceTemplate {
       .pipe(map((downloadedItems) => downloadedItems.map((downloadedItem) => new DownloadedItem(downloadedItem))));
   }
 }
-
-type Alive = { alive: boolean };
