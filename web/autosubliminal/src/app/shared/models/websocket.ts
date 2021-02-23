@@ -2,7 +2,6 @@
 // System websocket event received from server
 
 import { MessageSeverity } from './message';
-import { Page } from './page';
 import { Scheduler } from './scheduler';
 import { SystemUpdate } from './systemupdate';
 
@@ -15,7 +14,7 @@ export enum SystemWebSocketServerEventType {
   SCHEDULER_FINISH = 'SCHEDULER_FINISH'
 }
 
-export type SystemWebSocketServerEventData = Page | Scheduler | SystemUpdate;
+export type SystemWebSocketServerEventData = Scheduler | SystemUpdate;
 
 export class SystemWebSocketServerEvent {
   type = 'EVENT';

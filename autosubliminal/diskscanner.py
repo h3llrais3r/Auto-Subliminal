@@ -11,7 +11,7 @@ from autosubliminal.util.filesystem import (check_missing_subtitle_languages, is
                                             one_path_exists)
 from autosubliminal.util.queue import release_wanted_queue_lock_on_exception
 from autosubliminal.util.skip import skip_movie, skip_show
-from autosubliminal.util.websocket import PAGE_RELOAD, send_websocket_event, send_websocket_notification
+from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
 
@@ -33,10 +33,7 @@ class DiskScanner(ScheduledProcess):
     def run(self, force_run):
         paths = autosubliminal.VIDEOPATHS
         log.info('Starting round of local disk checking at %r', paths)
-
-        # Show info message (only when run was forced manually)
-        if force_run:
-            send_websocket_notification('Scanning disk...')
+        send_websocket_notification('Scanning disk...')
 
         # Check if a path exists to scan
         if not one_path_exists(paths):
@@ -66,9 +63,7 @@ class DiskScanner(ScheduledProcess):
             log.info('%s %s', item.video_path, item.languages)
             autosubliminal.WANTEDQUEUE.append(item)
 
-        # Send home page reload event
-        send_websocket_event(PAGE_RELOAD, data={'name': 'home'})
-
+        send_websocket_notification('Disk scan finished.')
         log.info('Finished round of local disk checking')
 
     def _scan_path(self, path):

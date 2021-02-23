@@ -4,7 +4,7 @@ import time
 
 import autosubliminal
 from autosubliminal.util.websocket import (SYSTEM_START, SYSTEM_RESTART, SYSTEM_SHUTDOWN, SCHEDULER_START,
-                                           SCHEDULER_FINISH, PAGE_RELOAD, send_websocket_event,
+                                           SCHEDULER_FINISH, SYSTEM_UPDATE, send_websocket_event,
                                            send_websocket_notification)
 
 
@@ -50,6 +50,22 @@ def test_send_websocket_event_system_shutdown(monkeypatch):
     assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
 
 
+def test_send_websocket_event_system_update(monkeypatch):
+    monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
+    message = {
+        'type': 'EVENT',
+        'event': {
+            'type': 'SYSTEM_UPDATE',
+            'data': {
+                'available': True
+            }
+        }
+    }
+    send_websocket_event(SYSTEM_UPDATE, data={'available': True})
+    assert len(autosubliminal.WEBSOCKETMESSAGEQUEUE) == 1
+    assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
+
+
 def test_send_websocket_event_scheduler_start(monkeypatch):
     monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
     message = {
@@ -80,22 +96,6 @@ def test_send_websocket_event_scheduler_finish(monkeypatch):
         }
     }
     send_websocket_event(SCHEDULER_FINISH, data={'name': 'MyScheduler', 'nextRun': next_run})
-    assert len(autosubliminal.WEBSOCKETMESSAGEQUEUE) == 1
-    assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
-
-
-def test_send_websocket_event_page_reload(monkeypatch):
-    monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
-    message = {
-        'type': 'EVENT',
-        'event': {
-            'type': 'PAGE_RELOAD',
-            'data': {
-                'name': 'home'
-            }
-        }
-    }
-    send_websocket_event(PAGE_RELOAD, data={'name': 'home'})
     assert len(autosubliminal.WEBSOCKETMESSAGEQUEUE) == 1
     assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
 

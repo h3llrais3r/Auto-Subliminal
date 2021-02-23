@@ -30,7 +30,7 @@ from autosubliminal.subdownloader import SubDownloader
 from autosubliminal.util.common import set_rw_and_remove, wait_for_internet_connection
 from autosubliminal.util.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
                                        release_wanted_queue_lock_on_exception)
-from autosubliminal.util.websocket import PAGE_RELOAD, send_websocket_event, send_websocket_notification
+from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
 
@@ -49,10 +49,7 @@ class SubChecker(ScheduledProcess):
 
         # Wait for internet connection
         wait_for_internet_connection()
-
-        # Show info message (only when run was forced manually)
-        if force_run:
-            send_websocket_notification('Checking subtitles...')
+        send_websocket_notification('Checking subtitles...')
 
         to_delete_wanted_queue = []
 
@@ -118,9 +115,7 @@ class SubChecker(ScheduledProcess):
         else:
             log.info('No subliminal providers configured, skipping')
 
-        # Send home page reload event
-        send_websocket_event(PAGE_RELOAD, data={'name': 'home'})
-
+        send_websocket_notification('Subtitle check finished.')
         log.info('Finished round of subtitle checking')
 
 

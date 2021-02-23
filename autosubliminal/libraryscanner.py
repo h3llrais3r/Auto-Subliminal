@@ -15,7 +15,7 @@ from autosubliminal.indexer import MovieIndexer, ShowIndexer
 from autosubliminal.util.common import get_missing_languages, safe_lowercase
 from autosubliminal.util.filesystem import (VIDEO_EXTENSIONS, get_available_subtitles, is_skipped_dir,
                                             is_valid_video_file, one_path_exists)
-from autosubliminal.util.websocket import PAGE_RELOAD, send_websocket_event, send_websocket_notification
+from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
 
@@ -35,10 +35,7 @@ class LibraryScanner(ScheduledProcess):
     def run(self, force_run):
         paths = autosubliminal.LIBRARYPATHS
         log.info('Starting round of library scanning at %r', paths)
-
-        # Show info message (only when run was forced manually)
-        if force_run:
-            send_websocket_notification('Scanning library...')
+        send_websocket_notification('Scanning library...')
 
         # Check if a path exists to scan
         if not one_path_exists(paths):
@@ -58,8 +55,7 @@ class LibraryScanner(ScheduledProcess):
                 log.exception('Could not scan the path (%s), skipping it', path)
 
         # Send library page reload event
-        send_websocket_event(PAGE_RELOAD, data={'name': 'library'})
-
+        send_websocket_notification('Library scan finished.')
         log.info('Finished round of library scanning')
 
 
