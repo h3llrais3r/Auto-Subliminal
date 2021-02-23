@@ -30,6 +30,7 @@ export class MessageService {
       summary: 'Auto-Subliminal',
       detail: messageText,
       severity: messageSeverity,
+      life: 5000,
       sticky
     };
     this.primeNgMessageService.add(message);
