@@ -305,6 +305,11 @@ p-dropdown {
   }
 }
 
+// Toast
+.p-toast {
+  word-break: break-word;
+}
+
 // Message
 .p-message {
   margin: 0; // remove default margins as they are too big

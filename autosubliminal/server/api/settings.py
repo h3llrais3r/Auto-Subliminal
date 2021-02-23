@@ -151,11 +151,9 @@ class _GeneralApi(RestResource):
                 if not find_path_in_paths(video_path, autosubliminal.VIDEOPATHS, check_common_path=True):
                     autosubliminal.VIDEOPATHS.append(video_path)
                     write_config_general_section()
-                    send_websocket_notification('Path %s added to the video paths.' % video_path)
+                    return self._no_content()
                 else:
-                    send_websocket_notification('Path %s already part of the video paths.' % video_path)
-
-                return self._no_content()
+                    return self._conflict('Path already added to the video paths')
 
         return self._bad_request('Invalid data')
 

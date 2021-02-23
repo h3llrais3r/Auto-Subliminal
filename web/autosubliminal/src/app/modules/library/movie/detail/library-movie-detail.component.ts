@@ -5,6 +5,7 @@ import { ConfirmationService } from 'primeng/api';
 import { MovieService } from '../../../../core/services/api/movie.service';
 import { SettingsService } from '../../../../core/services/api/settings.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
+import { MessageService } from '../../../../core/services/message.service';
 import { Movie } from '../../../../shared/models/movie';
 import { VideoSubtitles } from '../../../../shared/models/video';
 import { getImdbUrl, getPlayVideoUrl, getPosterPlaceholderUrl } from '../../../../shared/utils/common-utils';
@@ -30,6 +31,7 @@ export class LibraryMovieDetailComponent implements OnInit {
     private movieService: MovieService,
     private artworkService: ArtworkService,
     private settingsService: SettingsService,
+    private messageService: MessageService,
     private confirmationService: ConfirmationService) { }
 
   ngOnInit(): void {
@@ -90,7 +92,15 @@ export class LibraryMovieDetailComponent implements OnInit {
     const videoPath = { videoPath: this.movie.path };
     this.settingsService.updateGeneralSetting('videoPaths', videoPath).subscribe(
       () => {
+        this.messageService.showSuccessMessage(`Path ${this.movie.path} added to the video paths.`);
         this.getMovieDetails(this.movie.imdbId);
+      },
+      (error) => {
+        if (error.status && error.status === 409) {
+          this.messageService.showInfoMessage(`Path ${this.movie.path} already added to the video paths.`);
+        } else {
+          this.messageService.showErrorMessage(`Unable to add path ${this.movie.path} to the video paths! Please check the log file!`);
+        }
       });
   }
 

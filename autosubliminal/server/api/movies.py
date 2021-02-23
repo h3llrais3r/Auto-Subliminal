@@ -224,9 +224,6 @@ class _SettingsApi(RestResource):
             # Delete wanted items for the movie so the new settings will be used in the next disk scan
             WantedItemsDb().delete_wanted_items_for_movie(imdb_id)
 
-            # Send notification
-            send_websocket_notification('Settings will be applied on next disk scan.')
-
             return self._no_content()
 
         return self._bad_request('Missing data')

@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { MovieService } from '../../../core/services/api/movie.service';
 import { ArtworkService } from '../../../core/services/artwork.service';
+import { MessageService } from '../../../core/services/message.service';
 import { MovieSettings } from '../../models/movie';
 import { FormUtils } from '../forms/form-utils';
 import { FormValidators } from '../forms/form-validators';
@@ -35,7 +36,11 @@ export class MovieSettingsComponent implements OnInit {
 
   loaded = false;
 
-  constructor(private fb: FormBuilder, private movieService: MovieService, private artworkService: ArtworkService) { }
+  constructor(
+    private fb: FormBuilder,
+    private movieService: MovieService,
+    private artworkService: ArtworkService,
+    private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.languages = FormUtils.languageSelectItems();
@@ -71,8 +76,10 @@ export class MovieSettingsComponent implements OnInit {
   saveMovieSettings(): void {
     this.movieService.saveMovieSettings(this.imdbId, this.getMovieSettings()).subscribe(
       () => {
+        this.messageService.showSuccessMessage(`Move settings saved and will be applied on next disk scan.`);
         this.close();
-      }
+      },
+      () => this.messageService.showErrorMessage(`Unable to save movie settings! Please check the log file!`)
     );
   }
 

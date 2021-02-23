@@ -5,6 +5,7 @@ import { ConfirmationService } from 'primeng/api';
 import { SettingsService } from '../../../../core/services/api/settings.service';
 import { ShowService } from '../../../../core/services/api/show.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
+import { MessageService } from '../../../../core/services/message.service';
 import { FileType } from '../../../../shared/models/filetype';
 import { Show, ShowFile } from '../../../../shared/models/show';
 import { VideoSubtitles } from '../../../../shared/models/video';
@@ -31,6 +32,7 @@ export class LibraryShowDetailComponent implements OnInit {
     private showService: ShowService,
     private artworkService: ArtworkService,
     private settingsService: SettingsService,
+    private messageService: MessageService,
     private confirmationService: ConfirmationService) { }
 
   ngOnInit(): void {
@@ -91,7 +93,15 @@ export class LibraryShowDetailComponent implements OnInit {
     const videoPath = { videoPath: this.show.path };
     this.settingsService.updateGeneralSetting('videoPaths', videoPath).subscribe(
       () => {
+        this.messageService.showSuccessMessage(`Path ${this.show.path} added to the video paths.`);
         this.getShowDetails(this.show.tvdbId);
+      },
+      (error) => {
+        if (error.status && error.status === 409) {
+          this.messageService.showWarningMessage(`Path ${this.show.path} already added to the video paths.`);
+        } else {
+          this.messageService.showErrorMessage(`Unable to add path ${this.show.path} to the video paths! Please check the log file!`);
+        }
       });
   }
 

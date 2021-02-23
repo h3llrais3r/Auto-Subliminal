@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { ShowService } from '../../../core/services/api/show.service';
 import { ArtworkService } from '../../../core/services/artwork.service';
+import { MessageService } from '../../../core/services/message.service';
 import { ShowSettings } from '../../models/show';
 import { FormUtils } from '../forms/form-utils';
 import { FormValidators } from '../forms/form-validators';
@@ -35,7 +36,11 @@ export class ShowSettingsComponent implements OnInit {
 
   loaded = false;
 
-  constructor(private fb: FormBuilder, private showService: ShowService, private artworkService: ArtworkService) { }
+  constructor(
+    private fb: FormBuilder,
+    private showService: ShowService,
+    private artworkService: ArtworkService,
+    private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.languages = FormUtils.languageSelectItems();
@@ -71,8 +76,10 @@ export class ShowSettingsComponent implements OnInit {
   saveShowSettings(): void {
     this.showService.saveShowSettings(this.tvdbId, this.getShowSettings()).subscribe(
       () => {
+        this.messageService.showSuccessMessage(`Show settings saved and will be applied on next disk scan.`);
         this.close();
-      }
+      },
+      () => this.messageService.showErrorMessage(`Unable to save show settings! Please check the log file!`)
     );
   }
 
