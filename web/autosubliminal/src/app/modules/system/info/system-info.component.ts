@@ -41,7 +41,7 @@ export class SystemInfoComponent implements OnInit {
           this.version = this.NOT_AVAILABLE;
         }
       },
-      () => this.messageService.showErrorMessage('Unable to get system info! Please check the log file!')
+      () => this.messageService.showErrorMessage('Unable to get the system info!')
     );
 
     // Get changelog
@@ -49,7 +49,7 @@ export class SystemInfoComponent implements OnInit {
       (changelog) => {
         this.changelog = this.parseChangelog(changelog);
       },
-      () => this.messageService.showErrorMessage('Unable to get changelog!')
+      () => this.messageService.showErrorMessage('Unable to get the changelog!')
     );
   }
 

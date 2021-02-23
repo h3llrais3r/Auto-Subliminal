@@ -23,7 +23,7 @@ export class SettingsNamemappingComponent implements OnInit {
       (nameMappingSettings) => {
         this.buildForm(nameMappingSettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the namemapping settings! Please check the log file!')
+      () => this.messageService.showErrorMessage('Unable to get the namemapping settings!')
     );
   }
 
@@ -32,7 +32,7 @@ export class SettingsNamemappingComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateNameMappingSettings(this.getNameMappingSettings()).subscribe(
         () => this.messageService.showSuccessMessage('Namemapping settings saved.'),
-        () => this.messageService.showErrorMessage('Unable to save namemapping settings!')
+        () => this.messageService.showErrorMessage('Unable to save the namemapping settings!')
       );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);

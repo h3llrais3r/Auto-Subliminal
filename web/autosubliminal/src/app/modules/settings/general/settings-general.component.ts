@@ -31,7 +31,7 @@ export class SettingsGeneralComponent implements OnInit {
       (generalSettings) => {
         this.buildForm(generalSettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the general settings! Please check the log file!')
+      () => this.messageService.showErrorMessage('Unable to get the general settings!')
     );
   }
 
@@ -40,7 +40,7 @@ export class SettingsGeneralComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateGeneralSettings(this.getGeneralSettings()).subscribe(
         () => this.messageService.showSuccessMessage('General settings saved.'),
-        () => this.messageService.showErrorMessage('Unable to save general settings!')
+        () => this.messageService.showErrorMessage('Unable to save the general settings!')
       );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);

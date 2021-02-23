@@ -124,7 +124,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
             this.updateWantedItem(updatedWantedItem);
           });
       },
-      () => this.messageService.showErrorMessage(`Unable to search ${indexer}! Please check the log file!`)
+      () => this.messageService.showErrorMessage(`Unable to search ${indexer} for ${wantedItem.longName}!`)
     );
   }
 
@@ -158,7 +158,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
         this.removeWantedItemFromList(wantedItem);
         this.messageService.showSuccessMessage(`Post processed ${wantedItem.longName}.`);
       },
-      () => this.messageService.showErrorMessage('Unable to post process! Please check the log file!')
+      () => this.messageService.showErrorMessage(`Unable to post process ${wantedItem.longName}!`)
     );
   }
 
@@ -173,7 +173,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
             this.removeWantedItemFromList(wantedItem);
             this.messageService.showSuccessMessage(`Deleted ${wantedItem.longName}.`);
           },
-          () => this.messageService.showErrorMessage('Unable to delete! Please check the log file!')
+          () => this.messageService.showErrorMessage(`Unable to delete ${wantedItem.longName}!`)
         );
       }
     });
@@ -183,18 +183,18 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
     this.confirmationType = 'skip';
     this.seasonToSkip = '00';
     this.confirmationService.confirm({
-      message: `Are you sure that you want to skip show <b>${wantedItem.longName}</b>?<br><small><i>Enter season(s) to skip (comma separated, 00 = all seasons, 0 = specials).</i></small>`,
+      message: `Are you sure that you want to skip show <b>${wantedItem.name}</b>?<br><small><i>Enter season(s) to skip (comma separated, 00 = all seasons, 0 = specials).</i></small>`,
       accept: () => {
         this.itemService.skipWantedItem(wantedItem.id, wantedItem.type, this.seasonToSkip).subscribe(
           () => {
             this.removeWantedItemFromList(wantedItem);
             if (!this.seasonToSkip || this.seasonToSkip === '00') { // '00' or nothing means all seasons
-              this.messageService.showSuccessMessage(`Skipped show ${wantedItem.longName} all seasons.`);
+              this.messageService.showSuccessMessage(`Skipped show ${wantedItem.name} all seasons.`);
             } else {
-              this.messageService.showSuccessMessage(`Skipped show ${wantedItem.longName} season(s) ${this.seasonToSkip}.`);
+              this.messageService.showSuccessMessage(`Skipped show ${wantedItem.name} season(s) ${this.seasonToSkip}.`);
             }
           },
-          () => this.messageService.showErrorMessage('Unable to skip show! Please check the log file!')
+          () => this.messageService.showErrorMessage(`Unable to skip the show ${wantedItem.name}!`)
         );
       }
     });
@@ -202,14 +202,14 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
 
   skipMovie(wantedItem: WantedItem): void {
     this.confirmationService.confirm({
-      message: `Are you sure that you want to skip movie <b>${wantedItem.longName}</b>?`,
+      message: `Are you sure that you want to skip movie <b>${wantedItem.name}</b>?`,
       accept: () => {
         this.itemService.skipWantedItem(wantedItem.id, wantedItem.type).subscribe(
           () => {
             this.removeWantedItemFromList(wantedItem);
-            this.messageService.showSuccessMessage(`Skipped movie ${wantedItem.longName}.`);
+            this.messageService.showSuccessMessage(`Skipped movie ${wantedItem.name}.`);
           },
-          () => this.messageService.showErrorMessage('Unable to skip movie! Please check the log file!')
+          () => this.messageService.showErrorMessage(`Unable to skip the movie ${wantedItem.name}!`)
         );
       }
     });

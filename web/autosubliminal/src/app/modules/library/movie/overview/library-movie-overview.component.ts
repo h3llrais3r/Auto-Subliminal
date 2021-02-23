@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { appSettings } from '../../../../app-settings.service';
 import { MovieService } from '../../../../core/services/api/movie.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
+import { MessageService } from '../../../../core/services/message.service';
 import { SystemEventService } from '../../../../core/services/system-event.service';
 import { Movie } from '../../../../shared/models/movie';
 import { naturalSort } from '../../../../shared/utils/table-utils';
@@ -26,7 +27,8 @@ export class LibraryMovieOverviewComponent implements OnInit, OnDestroy {
   constructor(
     private systemEventService: SystemEventService,
     private movieService: MovieService,
-    private artworkService: ArtworkService) { }
+    private artworkService: ArtworkService,
+    private messageService: MessageService) { }
 
   ngOnInit(): void {
     // Load overview
@@ -46,11 +48,14 @@ export class LibraryMovieOverviewComponent implements OnInit, OnDestroy {
 
   private loadOverview(): void {
     this.loading = true;
-    this.movieService.getMovies().subscribe((movies) => {
-      this.movies = movies;
-      this.nrOfMovies = this.movies.length;
-      this.loading = false;
-    });
+    this.movieService.getMovies().subscribe(
+      (movies) => {
+        this.movies = movies;
+        this.nrOfMovies = this.movies.length;
+        this.loading = false;
+      },
+      () => this.messageService.showErrorMessage('Unable to get the movies!')
+    );
   }
 
   sort(event: SortEvent): void {

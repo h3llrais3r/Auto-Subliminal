@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { appSettings } from '../../../../app-settings.service';
 import { ShowService } from '../../../../core/services/api/show.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
+import { MessageService } from '../../../../core/services/message.service';
 import { SystemEventService } from '../../../../core/services/system-event.service';
 import { Show } from '../../../../shared/models/show';
 import { getBannerPlaceholderUrl } from '../../../../shared/utils/common-utils';
@@ -27,7 +28,8 @@ export class LibraryShowOverviewComponent implements OnInit, OnDestroy {
   constructor(
     private systemEventService: SystemEventService,
     private showService: ShowService,
-    private artworkService: ArtworkService) { }
+    private artworkService: ArtworkService,
+    private messageService: MessageService) { }
 
   ngOnInit(): void {
     // Load overview
@@ -47,11 +49,14 @@ export class LibraryShowOverviewComponent implements OnInit, OnDestroy {
 
   private loadOverview(): void {
     this.loading = true;
-    this.showService.getShows().subscribe((shows) => {
-      this.shows = shows;
-      this.nrOfShows = this.shows.length;
-      this.loading = false;
-    });
+    this.showService.getShows().subscribe(
+      (shows) => {
+        this.shows = shows;
+        this.nrOfShows = this.shows.length;
+        this.loading = false;
+      },
+      () => this.messageService.showErrorMessage('Unable to get the shows!')
+    );
   }
 
   sort(event: SortEvent): void {

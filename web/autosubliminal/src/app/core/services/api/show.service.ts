@@ -33,7 +33,7 @@ export class ShowService extends ApiServiceTemplate {
   }
 
   refreshShowDetails(tvdbId: number): Observable<boolean> {
-    return this.httpClient.put(`${this.URL}/${tvdbId}/refresh`, {}, this.options)
+    return this.httpClient.put<void>(`${this.URL}/${tvdbId}/refresh`, {}, this.options)
       .pipe(map(() => true));
   }
 
@@ -43,17 +43,17 @@ export class ShowService extends ApiServiceTemplate {
   }
 
   saveShowSettings(tvdbId: number, showSettings: ShowSettings): Observable<boolean> {
-    return this.httpClient.put(`${this.URL}/${tvdbId}/settings`, JSON.stringify(showSettings), this.options)
+    return this.httpClient.put<ShowSettings>(`${this.URL}/${tvdbId}/settings`, JSON.stringify(showSettings), this.options)
       .pipe(map(() => true));
   }
 
   saveShowHardcodedSubtitles(tvdbId: number, episodeTvdbId: number, videoSubtitles: VideoSubtitles): Observable<boolean> {
-    return this.httpClient.put(`${this.URL}/${tvdbId}/subtitles/hardcoded/${episodeTvdbId}`, JSON.stringify(videoSubtitles), this.options)
+    return this.httpClient.put<VideoSubtitles>(`${this.URL}/${tvdbId}/subtitles/hardcoded/${episodeTvdbId}`, JSON.stringify(videoSubtitles), this.options)
       .pipe(map(() => true));
   }
 
   deleteShow(tvdbId: number): Observable<boolean> {
-    return this.httpClient.delete(`${this.URL}/${tvdbId}`, this.options)
+    return this.httpClient.delete<void>(`${this.URL}/${tvdbId}`, this.options)
       .pipe(map(() => true));
   }
 }

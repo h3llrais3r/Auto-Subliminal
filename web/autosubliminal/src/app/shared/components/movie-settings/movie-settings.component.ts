@@ -49,7 +49,9 @@ export class MovieSettingsComponent implements OnInit {
         (movieSettings) => {
           this.buildForm(movieSettings);
           this.loaded = true;
-        });
+        },
+        () => this.messageService.showErrorMessage('Unable to get the movie settings!')
+      );
     } else {
       this.buildForm(this.movieSettings);
       this.loaded = true;
@@ -79,7 +81,7 @@ export class MovieSettingsComponent implements OnInit {
         this.messageService.showSuccessMessage(`Move settings saved and will be applied on next disk scan.`);
         this.close();
       },
-      () => this.messageService.showErrorMessage(`Unable to save movie settings! Please check the log file!`)
+      () => this.messageService.showErrorMessage(`Unable to save the movie settings!`)
     );
   }
 

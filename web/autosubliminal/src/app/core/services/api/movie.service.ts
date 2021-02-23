@@ -33,7 +33,7 @@ export class MovieService extends ApiServiceTemplate {
   }
 
   refreshMovieDetails(imdbId: string): Observable<boolean> {
-    return this.httpClient.put(`${this.URL}/${imdbId}/refresh`, {}, this.options)
+    return this.httpClient.put<void>(`${this.URL}/${imdbId}/refresh`, {}, this.options)
       .pipe(map(() => true));
   }
 
@@ -43,17 +43,17 @@ export class MovieService extends ApiServiceTemplate {
   }
 
   saveMovieSettings(imdbId: string, movieSettings: MovieSettings): Observable<boolean> {
-    return this.httpClient.put(`${this.URL}/${imdbId}/settings`, JSON.stringify(movieSettings), this.options)
+    return this.httpClient.put<MovieSettings>(`${this.URL}/${imdbId}/settings`, JSON.stringify(movieSettings), this.options)
       .pipe(map(() => true));
   }
 
   saveMovieHardcodedSubtitles(imdbId: string, videoSubtitles: VideoSubtitles): Observable<boolean> {
-    return this.httpClient.put(`${this.URL}/${imdbId}/subtitles/hardcoded`, JSON.stringify(videoSubtitles), this.options)
+    return this.httpClient.put<VideoSubtitles>(`${this.URL}/${imdbId}/subtitles/hardcoded`, JSON.stringify(videoSubtitles), this.options)
       .pipe(map(() => true));
   }
 
   deleteMovie(imdbId: string): Observable<boolean> {
-    return this.httpClient.delete(`${this.URL}/${imdbId}`, this.options)
+    return this.httpClient.delete<void>(`${this.URL}/${imdbId}`, this.options)
       .pipe(map(() => true));
   }
 }

@@ -20,7 +20,7 @@ export class LogClearComponent implements OnInit {
           this.router.navigateByUrl('/log/view');
         }
       },
-      () => this.messageService.showErrorMessage(`Unable to clear the logs! Please check the log file!`)
+      () => this.messageService.showErrorMessage(`Unable to clear the logs!`)
     );
   }
 

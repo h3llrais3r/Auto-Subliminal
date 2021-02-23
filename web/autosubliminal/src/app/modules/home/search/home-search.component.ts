@@ -57,7 +57,7 @@ export class HomeSearchComponent implements OnInit {
       },
       () => {
         this.searchInProgress = false;
-        this.messageService.showErrorMessage('Unable to search subtitles! Please check the log file!');
+        this.messageService.showErrorMessage('Unable to search subtitles!');
       }
     );
   }
@@ -77,7 +77,7 @@ export class HomeSearchComponent implements OnInit {
         this.savedSubtitle = subtitle;
         this.messageService.showInfoMessage('Subtitles saved.');
       },
-      () => this.messageService.showErrorMessage('Unable to save subtitle! Please check the log file!')
+      () => this.messageService.showErrorMessage('Unable to save the subtitle!')
     );
   }
 
@@ -87,7 +87,7 @@ export class HomeSearchComponent implements OnInit {
         this.savedSubtitle = null;
         this.messageService.showInfoMessage('Subtitles deleted.');
       },
-      () => this.messageService.showErrorMessage('Unable to delete subtitle! Please check the log file!')
+      () => this.messageService.showErrorMessage('Unable to delete the subtitle!')
     );
   }
 
@@ -105,7 +105,7 @@ export class HomeSearchComponent implements OnInit {
       },
       () => {
         this.postProcessInProgress = false;
-        this.messageService.showErrorMessage('Unable to post process! Please check the log file!');
+        this.messageService.showErrorMessage(`Unable to post process ${this.wantedItem.longName}!`);
       }
     );
   }

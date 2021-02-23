@@ -46,7 +46,7 @@ export class LogViewComponent implements OnInit {
         this.loading = false;
         this.handleLogTailing();
       },
-      () => this.messageService.showErrorMessage('Unable to get the logs! Please check the log file!')
+      () => this.messageService.showErrorMessage('Unable to get the logs!')
     );
   }
 

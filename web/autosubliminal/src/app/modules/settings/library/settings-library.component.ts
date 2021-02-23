@@ -27,7 +27,7 @@ export class SettingsLibraryComponent implements OnInit {
       (librarySettings) => {
         this.buildForm(librarySettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the library settings! Please check the log file!')
+      () => this.messageService.showErrorMessage('Unable to get the library settings!')
     );
   }
 
@@ -36,7 +36,7 @@ export class SettingsLibraryComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateLibrarySettings(this.getLibrarySettings()).subscribe(
         () => this.messageService.showSuccessMessage('Library settings saved.'),
-        () => this.messageService.showErrorMessage('Unable to save library settings!')
+        () => this.messageService.showErrorMessage('Unable to save the library settings!')
       );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);

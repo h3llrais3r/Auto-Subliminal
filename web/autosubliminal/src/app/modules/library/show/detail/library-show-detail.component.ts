@@ -74,7 +74,9 @@ export class LibraryShowDetailComponent implements OnInit {
       () => {
         this.getShowDetails(this.show.tvdbId);
         this.refreshInProgress = false;
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to refresh the show details!')
+    );
   }
 
   openDeleteDialog(): void {
@@ -84,7 +86,9 @@ export class LibraryShowDetailComponent implements OnInit {
         this.showService.deleteShow(this.show.tvdbId).subscribe(
           () => {
             this.router.navigateByUrl('/library/show');
-          });
+          },
+          () => this.messageService.showErrorMessage(`Unable to delete the show ${this.show.name}!`)
+        );
       }
     });
   }
@@ -100,7 +104,7 @@ export class LibraryShowDetailComponent implements OnInit {
         if (error.status && error.status === 409) {
           this.messageService.showWarningMessage(`Path ${this.show.path} already added to the video paths.`);
         } else {
-          this.messageService.showErrorMessage(`Unable to add path ${this.show.path} to the video paths! Please check the log file!`);
+          this.messageService.showErrorMessage(`Unable to add path ${this.show.path} to the video paths!`);
         }
       });
   }
@@ -123,7 +127,9 @@ export class LibraryShowDetailComponent implements OnInit {
       () => {
         this.closeVideoSubtitlesDialog();
         this.getShowDetails(this.show.tvdbId);
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to save the harcoded subtitles!')
+    );
   }
 
   getNrOfSubtitles(files: ShowFile[], language: string): string {
@@ -169,6 +175,8 @@ export class LibraryShowDetailComponent implements OnInit {
       (show) => {
         this.show = show;
         this.loading = false;
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to get the show details!')
+    );
   }
 }

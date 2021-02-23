@@ -49,7 +49,9 @@ export class ShowSettingsComponent implements OnInit {
         (showSettings) => {
           this.buildForm(showSettings);
           this.loaded = true;
-        });
+        },
+        () => this.messageService.showErrorMessage('Unable to get the show settings!')
+      );
     } else {
       this.buildForm(this.showSettings);
       this.loaded = true;
@@ -79,7 +81,7 @@ export class ShowSettingsComponent implements OnInit {
         this.messageService.showSuccessMessage(`Show settings saved and will be applied on next disk scan.`);
         this.close();
       },
-      () => this.messageService.showErrorMessage(`Unable to save show settings! Please check the log file!`)
+      () => this.messageService.showErrorMessage(`Unable to save the show settings!`)
     );
   }
 

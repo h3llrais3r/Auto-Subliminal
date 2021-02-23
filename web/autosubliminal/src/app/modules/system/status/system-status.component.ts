@@ -35,14 +35,14 @@ export class SystemStatusComponent implements OnInit {
             this.schedulers = this.schedulers.map((scheduler) => scheduler.name === finishedScheduler.name ? finishedScheduler : scheduler);
           });
       },
-      () => this.messageService.showErrorMessage('Unable to get the system schedulers! Please check the log file!')
+      () => this.messageService.showErrorMessage('Unable to get the system schedulers!')
     );
     // Get paths
     this.systemService.getPaths().subscribe(
       (paths) => {
         this.paths = paths;
       },
-      () => this.messageService.showErrorMessage('Unable to get the system paths! Please check the log file!')
+      () => this.messageService.showErrorMessage('Unable to get the system paths!')
     );
   }
 

@@ -3,6 +3,7 @@ import { forkJoin, Subscription } from 'rxjs';
 import { appSettings } from '../../../app-settings.service';
 import { MovieService } from '../../../core/services/api/movie.service';
 import { ShowService } from '../../../core/services/api/show.service';
+import { MessageService } from '../../../core/services/message.service';
 import { SystemEventService } from '../../../core/services/system-event.service';
 import { MoviesOverview } from '../../../shared/models/movie';
 import { ShowsOverview } from '../../../shared/models/show';
@@ -23,7 +24,8 @@ export class LibraryOverviewComponent implements OnInit, OnDestroy {
   constructor(
     private systemEventService: SystemEventService,
     private showService: ShowService,
-    private movieService: MovieService) { }
+    private movieService: MovieService,
+    private messageService: MessageService) { }
 
   ngOnInit(): void {
     // Load overview
@@ -49,7 +51,8 @@ export class LibraryOverviewComponent implements OnInit, OnDestroy {
         this.showsOverview = showsOverview;
         this.moviesOverview = moviesOverview;
         this.loading = false;
-      }
+      },
+      () => this.messageService.showErrorMessage('Unable to get the library overview!')
     );
   }
 }

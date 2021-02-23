@@ -73,7 +73,9 @@ export class LibraryMovieDetailComponent implements OnInit {
       () => {
         this.getMovieDetails(this.movie.imdbId);
         this.refreshInProgress = false;
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to refresh the movie details!')
+    );
   }
 
   openDeleteDialog(): void {
@@ -83,7 +85,9 @@ export class LibraryMovieDetailComponent implements OnInit {
         this.movieService.deleteMovie(this.movie.imdbId).subscribe(
           () => {
             this.router.navigateByUrl('/library/movie');
-          });
+          },
+          () => this.messageService.showErrorMessage(`Unable to delete the movie ${this.movie.name}!`)
+        );
       }
     });
   }
@@ -99,7 +103,7 @@ export class LibraryMovieDetailComponent implements OnInit {
         if (error.status && error.status === 409) {
           this.messageService.showInfoMessage(`Path ${this.movie.path} already added to the video paths.`);
         } else {
-          this.messageService.showErrorMessage(`Unable to add path ${this.movie.path} to the video paths! Please check the log file!`);
+          this.messageService.showErrorMessage(`Unable to add path ${this.movie.path} to the video paths!`);
         }
       });
   }
@@ -122,7 +126,9 @@ export class LibraryMovieDetailComponent implements OnInit {
       () => {
         this.closeVideoSubtitlesDialog();
         this.getMovieDetails(this.movie.imdbId);
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to save the hardcoded subtitles!')
+    );
   }
 
   private getMovieDetails(imdbId: string): void {
@@ -130,6 +136,8 @@ export class LibraryMovieDetailComponent implements OnInit {
       (movie) => {
         this.movie = movie;
         this.loading = false;
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to get the movie details!')
+    );
   }
 }

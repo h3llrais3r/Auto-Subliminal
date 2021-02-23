@@ -31,7 +31,7 @@ export class SettingsNotificationComponent implements OnInit {
       (notificationSettings) => {
         this.buildForm(notificationSettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the notification settings! Please check the log file!')
+      () => this.messageService.showErrorMessage('Unable to get the notification settings!')
     );
   }
 
@@ -40,7 +40,7 @@ export class SettingsNotificationComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateNotificationSettings(this.getNotificationSettings()).subscribe(
         () => this.messageService.showSuccessMessage('Notification settings saved.'),
-        () => this.messageService.showErrorMessage('Unable to save notification settings!')
+        () => this.messageService.showErrorMessage('Unable to save the notification settings!')
       );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);

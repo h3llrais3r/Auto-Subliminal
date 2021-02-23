@@ -29,7 +29,7 @@ export class SettingsLoggingComponent implements OnInit {
       (logSettings) => {
         this.buildForm(logSettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the log settings! Please check the log file!')
+      () => this.messageService.showErrorMessage('Unable to get the log settings!')
     );
   }
 
@@ -38,7 +38,7 @@ export class SettingsLoggingComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateLogSettings(this.getLogSettings()).subscribe(
         () => this.messageService.showSuccessMessage('Log settings saved.'),
-        () => this.messageService.showErrorMessage('Unable to save log settings!')
+        () => this.messageService.showErrorMessage('Unable to save the log settings!')
       );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
