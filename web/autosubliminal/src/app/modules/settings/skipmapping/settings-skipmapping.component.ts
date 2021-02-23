@@ -22,7 +22,9 @@ export class SettingsSkipmappingComponent implements OnInit {
     this.settingsService.getSkipMappingSettings().subscribe(
       (skipMappingSettings) => {
         this.buildForm(skipMappingSettings);
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to get the skipmapping settings! Please check the log file!')
+    );
   }
 
   save(): void {
@@ -30,7 +32,7 @@ export class SettingsSkipmappingComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateSkipMappingSettings(this.getSkipMappingSettings()).subscribe(
         () => this.messageService.showSuccessMessage('Skipmapping settings saved.'),
-        () => this.messageService.showErrorMessage('Error while saving skipmapping settings!')
+        () => this.messageService.showErrorMessage('Unable to save skipmapping settings!')
       );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);

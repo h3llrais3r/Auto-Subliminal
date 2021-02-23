@@ -30,7 +30,9 @@ export class SettingsNotificationComponent implements OnInit {
     this.settingsService.getNotificationSettings().subscribe(
       (notificationSettings) => {
         this.buildForm(notificationSettings);
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to get the notification settings! Please check the log file!')
+    );
   }
 
   save(): void {
@@ -38,7 +40,7 @@ export class SettingsNotificationComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateNotificationSettings(this.getNotificationSettings()).subscribe(
         () => this.messageService.showSuccessMessage('Notification settings saved.'),
-        () => this.messageService.showErrorMessage('Error while saving notification settings!')
+        () => this.messageService.showErrorMessage('Unable to save notification settings!')
       );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
@@ -48,7 +50,7 @@ export class SettingsNotificationComponent implements OnInit {
   test(notifierName: string): void {
     this.settingsService.testNotifier(notifierName).subscribe(
       () => this.messageService.showSuccessMessage(`Test ${notifierName} notification sent.`),
-      () => this.messageService.showErrorMessage(`Error while testing ${notifierName} notification!`)
+      () => this.messageService.showErrorMessage(`Test ${notifierName} notification failed!`)
     );
   }
 

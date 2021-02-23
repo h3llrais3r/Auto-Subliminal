@@ -27,7 +27,9 @@ export class SettingsWebserverComponent implements OnInit {
     this.settingsService.getWebServerSettings().subscribe(
       (webServerSettings) => {
         this.buildForm(webServerSettings);
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to get the webserver settings! Please check the log file!')
+    );
   }
 
   formatWebRoot(): void {
@@ -43,7 +45,7 @@ export class SettingsWebserverComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updateWebServerSettings(this.getWebServerSettings()).subscribe(
         () => this.messageService.showSuccessMessage('Webserver settings saved.'),
-        () => this.messageService.showErrorMessage('Error while saving webserver settings!')
+        () => this.messageService.showErrorMessage('Unable to save webserver settings!')
       );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);

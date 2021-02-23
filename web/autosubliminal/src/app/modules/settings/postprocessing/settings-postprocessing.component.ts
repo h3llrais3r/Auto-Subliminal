@@ -26,7 +26,9 @@ export class SettingsPostprocessingComponent implements OnInit {
     this.settingsService.getPostProcessSettings().subscribe(
       (postProcessSettings) => {
         this.buildForm(postProcessSettings);
-      });
+      },
+      () => this.messageService.showErrorMessage('Unable to get the postprocessing settings! Please check the log file!')
+    );
   }
 
   save(): void {
@@ -34,7 +36,7 @@ export class SettingsPostprocessingComponent implements OnInit {
     if (this.settingsForm.valid) {
       this.settingsService.updatePostProcessSettings(this.getPostProcessSettings()).subscribe(
         () => this.messageService.showSuccessMessage('Postprocessing settings saved.'),
-        () => this.messageService.showErrorMessage('Error while saving postprocessing settings!')
+        () => this.messageService.showErrorMessage('Unable to save postprocessing settings!')
       );
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
