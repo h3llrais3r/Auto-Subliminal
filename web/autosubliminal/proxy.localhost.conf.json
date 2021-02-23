@@ -4,6 +4,11 @@
     "secure": false,
     "logLevel": "debug"
   },
+  "/artwork": {
+    "target": "http://localhost:8084/",
+    "secure": false,
+    "logLevel": "debug"
+  },
   "/websocket": {
     "target": "ws://localhost:8084/",
     "secure": false,
