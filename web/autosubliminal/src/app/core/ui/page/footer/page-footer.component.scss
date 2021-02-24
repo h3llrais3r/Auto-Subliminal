@@ -1,15 +1,23 @@
+@import '../../../../../scss/variables';
 @import '../../../../../scss/mixins/flexbox';
 
 .page-footer {
   border-top: 1px solid var(--surface-d);
 
-  .container {
+  .container-lg {
     @include flexbox;
     @include justify-content(center);
     text-align: center;
 
     .separator {
       padding: 0 0.5rem;
+    }
+
+    @media screen and (max-width: $media-mobile-max-width) {
+      .info {
+        @include flexbox;
+        @include flex-direction(column);
+      }
     }
   }
 }
