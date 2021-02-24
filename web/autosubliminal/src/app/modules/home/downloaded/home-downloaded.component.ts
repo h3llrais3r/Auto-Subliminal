@@ -44,7 +44,10 @@ export class HomeDownloadedComponent implements OnInit {
         this.downloadedItems = downloadedItems;
         this.loading = false;
       },
-      () => this.messageService.showErrorMessage('Unable to get the downloaded items')
+      () => {
+        this.loading = false;
+        this.messageService.showErrorMessage('Unable to get the downloaded items');
+      }
     );
   }
 

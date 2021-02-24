@@ -8,12 +8,13 @@ import { SystemUpdate } from '../../shared/models/systemupdate';
 })
 export class SystemEventService {
 
-  systemStart: Subject<boolean> = new Subject<boolean>();
-  systemRestart: Subject<boolean> = new Subject<boolean>();
-  systemShutdown: Subject<boolean> = new Subject<boolean>();
-  systemUpdate: Subject<SystemUpdate> = new Subject<SystemUpdate>();
-  schedulerStart: Subject<Scheduler> = new Subject<Scheduler>();
-  schedulerFinish: Subject<Scheduler> = new Subject<Scheduler>();
+  systemStart = new Subject<boolean>();
+  systemRestart = new Subject<boolean>();
+  systemShutdown = new Subject<boolean>();
+  systemUpdate = new Subject<SystemUpdate>();
+  schedulerStart = new Subject<Scheduler>();
+  schedulerFinish = new Subject<Scheduler>();
+  webSocketConnectionFailure = new Subject<boolean>();
 
   constructor() { }
 
@@ -39,5 +40,9 @@ export class SystemEventService {
 
   notifySchedulerFinish(scheduler: Scheduler): void {
     this.schedulerFinish.next(scheduler);
+  }
+
+  notifyWebSocketConnectionFailure(failure: boolean): void {
+    this.webSocketConnectionFailure.next(failure);
   }
 }

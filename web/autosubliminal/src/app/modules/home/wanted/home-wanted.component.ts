@@ -94,7 +94,10 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
         this.totals.emit({ total, totalShows, totalMovies });
         this.loading = false;
       },
-      () => this.messageService.showErrorMessage('Unable to get the wanted items')
+      () => {
+        this.loading = false;
+        this.messageService.showErrorMessage('Unable to get the wanted items');
+      }
     );
   }
 

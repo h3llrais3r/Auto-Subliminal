@@ -188,7 +188,7 @@ def start():
     # Start permanent threads
     autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
 
-    # Sleep 2 seconds before sending the start event trough websocket (client websockets reconnect every 2 seconds)
+    # Sleep 3 seconds before sending the start event trough websocket (client websockets reconnect every 2 seconds)
     time.sleep(3)
     send_websocket_event(SYSTEM_START)
 
@@ -214,6 +214,7 @@ def stop(exit=True):
     log.info('Stopping')
     if exit:
         send_websocket_event(SYSTEM_SHUTDOWN)
+        time.sleep(2)  # Sleep 2 seconds to give the frontend to receive the event
 
     # Mark as stopped
     autosubliminal.STARTED = False
@@ -236,6 +237,7 @@ def stop(exit=True):
 def restart(exit=False):
     log.info('Restarting')
     send_websocket_event(SYSTEM_RESTART)
+    time.sleep(2)  # Sleep 2 seconds to give the frontend to receive the event
 
     if exit:
         # Exit current process and restart a new one with the same args

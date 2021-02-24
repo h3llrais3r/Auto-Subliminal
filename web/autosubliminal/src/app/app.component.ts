@@ -20,6 +20,7 @@ export class AppComponent {
   systemRestart = false;
   systemShutdown = false;
   systemShutdownFinished = false;
+  webSocketConnectionFailure = false;
 
   constructor(
     private appSettingsService: AppSettingsService,
@@ -39,6 +40,17 @@ export class AppComponent {
     });
     // Subscribe on system shutdown events
     this.systemEventService.systemShutdown.subscribe(() => this.checkShutdown());
+    // Subscribe on websocket connection failure events
+    this.systemEventService.webSocketConnectionFailure.subscribe((failure) => this.webSocketConnectionFailure = failure);
+  }
+
+  get connectionInterrupted(): boolean {
+    // Only show connection interrupted if not one of the other dialogs are shown
+    return this.webSocketConnectionFailure &&
+      !this.systemStart &&
+      !this.systemRestart &&
+      !this.systemShutdown &&
+      !this.systemShutdownFinished;
   }
 
   private checkStart(): void {
@@ -52,11 +64,17 @@ export class AppComponent {
           this.systemService.isAlive().subscribe(
             (alive) => {
               if (alive) {
-                this.systemStart = false;
-                this.systemStarted = true;
-                check.unsubscribe(); // stop the check
+                // If app is loaded, mark system is started
+                if (this.appSettingsLoaded) {
+                  this.systemStart = false;
+                  this.systemStarted = true;
+                  check.unsubscribe(); // stop the check
+                } else {
+                  // If iapp is not loaded, reload page to re-initialize the app
+                  document.location.reload();
+                }
               }
-              // continue the check
+              // Continue the check
             });
         }
       );

@@ -61,16 +61,14 @@ export class WebSocketService {
           console.error(`Invalid websocket server message type: ${serverMessage.type}`);
         }
       },
-      () => {
-        console.error('Websocket connection error');
-        this.reconnect();
-      });
+      () => { } // ignore, as it's already handled by closeObserver
+    );
   }
 
   private reconnect(): void {
     interval(this.RECONNECT_INTERVAL).pipe(takeWhile(() => !this.systemWebsocket)).subscribe(
       () => {
-        console.log('Reconnecting to websocket');
+        console.log('Reconnecting to websocket...');
         this.connect();
       });
   }
@@ -80,10 +78,19 @@ export class WebSocketService {
     if (window.location.protocol === 'https:') {
       protocol = 'wss:';
     }
+    const webRoot = appSettings.webRoot || '';
     const config: WebSocketSubjectConfig<SystemWebSocketServerMessage> = {
-      url: `${protocol}//${window.location.host}${appSettings.webRoot}/websocket/system`,
-      closeObserver: {
+      url: `${protocol}//${window.location.host}${webRoot}/websocket/system`,
+      openObserver: { // on connect
         next: () => {
+          console.log('Websocket connection established');
+          this.systemEventService.notifyWebSocketConnectionFailure(false); // connection established
+        }
+      },
+      closeObserver: { // try to reconnect on close
+        next: () => {
+          console.log('Websocket connection failed');
+          this.systemEventService.notifyWebSocketConnectionFailure(true); // connection interrupted
           this.systemWebsocket = null;
           this.reconnect();
         }
