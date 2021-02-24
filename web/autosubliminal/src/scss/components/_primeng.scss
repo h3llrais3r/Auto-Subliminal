@@ -137,6 +137,10 @@
   .p-datatable {
     &.p-datatable-responsive-mode {
 
+      .p-datatable-wrapper {
+        border: 1px solid var(--surface-d);
+      }
+
       .p-datatable-thead>tr>th,
       .p-datatable-tfoot>tr>td {
         display: none !important;
@@ -165,9 +169,10 @@
           word-break: break-all;
         }
 
-        &:last-child {
-          border-bottom: 1px solid var(--surface-d);
-        }
+        // Replaced by border on .p-datatable-wrapper
+        /*&:last-child {
+          border: 1px solid var(--surface-d);
+        }*/
       }
     }
   }
