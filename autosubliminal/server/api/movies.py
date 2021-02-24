@@ -14,7 +14,6 @@ from autosubliminal.server.rest import NotFound, RestResource
 from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, get_boolean, to_dict, \
     get_missing_languages
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
-from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
 

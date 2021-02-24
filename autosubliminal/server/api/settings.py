@@ -12,7 +12,6 @@ from autosubliminal.config import write_config_general_section
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import camelize, decamelize, dict_to_list, find_path_in_paths, get_boolean, \
     list_to_dict, to_dict
-from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
 
