@@ -34,10 +34,12 @@
     }
   }
 
-  // Align submenu to the right
+  // Submenu styling
   .p-submenu-list {
-    right: 0;
+    right: 0; // right align
     left: auto;
+    max-height: 50vh; // max height
+    overflow-y: auto;
   }
 
   // Hide box shadow on focus

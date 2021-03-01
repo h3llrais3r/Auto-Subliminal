@@ -83,134 +83,6 @@ export class PageHeaderComponent implements OnInit {
           icon: 'pi pi-fw pi-cog',
           items: [
             {
-              label: 'Look & feel',
-              icon: 'pi pi-fw pi-palette',
-              items: [
-                {
-                  label: 'Bootstrap 4',
-                  disabled: true
-                },
-                {
-                  separator: true
-                },
-                {
-                  label: 'Dark blue',
-                  icon: 'pi pi-fw bootstrap4-dark-blue',
-                  command: () => this.themeService.changeTheme('bootstrap4-dark-blue'),
-                  styleClass: this.getThemeClass('bootstrap4-dark-blue', this.currentTheme)
-                },
-                {
-                  label: 'Dark purple',
-                  icon: 'pi pi-fw bootstrap4-dark-purple',
-                  command: () => this.themeService.changeTheme('bootstrap4-dark-purple'),
-                  styleClass: this.getThemeClass('bootstrap4-dark-purple', this.currentTheme)
-                },
-                {
-                  label: 'Light blue',
-                  icon: 'pi pi-fw bootstrap4-light-blue',
-                  command: () => this.themeService.changeTheme('bootstrap4-light-blue'),
-                  styleClass: this.getThemeClass('bootstrap4-light-blue', this.currentTheme)
-                },
-                {
-                  label: 'Light purple',
-                  icon: 'pi pi-fw bootstrap4-light-purple',
-                  command: () => this.themeService.changeTheme('bootstrap4-light-purple'),
-                  styleClass: this.getThemeClass('bootstrap4-light-purple', this.currentTheme)
-                },
-                {
-                  separator: true
-                },
-                {
-                  label: 'Primeone',
-                  disabled: true
-                },
-                {
-                  separator: true
-                },
-                {
-                  label: 'Arya blue',
-                  icon: 'pi pi-fw arya-blue',
-                  command: () => this.themeService.changeTheme('arya-blue'),
-                  styleClass: this.getThemeClass('arya-blue', this.currentTheme)
-                },
-                {
-                  label: 'Arya green',
-                  icon: 'pi pi-fw arya-green',
-                  command: () => this.themeService.changeTheme('arya-green'),
-                  styleClass: this.getThemeClass('arya-green', this.currentTheme)
-                },
-                {
-                  label: 'Arya orange',
-                  icon: 'pi pi-fw arya-orange',
-                  command: () => this.themeService.changeTheme('arya-orange'),
-                  styleClass: this.getThemeClass('arya-orange', this.currentTheme)
-                },
-                {
-                  label: 'Arya purple',
-                  icon: 'pi pi-fw arya-purple',
-                  command: () => this.themeService.changeTheme('arya-purple'),
-                  styleClass: this.getThemeClass('arya-purple', this.currentTheme)
-                },
-                {
-                  separator: true
-                },
-                {
-                  label: 'Saga blue',
-                  icon: 'pi pi-fw saga-blue',
-                  command: () => this.themeService.changeTheme('saga-blue'),
-                  styleClass: this.getThemeClass('saga-blue', this.currentTheme)
-                },
-                {
-                  label: 'Saga green',
-                  icon: 'pi pi-fw saga-green',
-                  command: () => this.themeService.changeTheme('saga-green'),
-                  styleClass: this.getThemeClass('saga-green', this.currentTheme)
-                },
-                {
-                  label: 'Saga orange',
-                  icon: 'pi pi-fw saga-orange',
-                  command: () => this.themeService.changeTheme('saga-orange'),
-                  styleClass: this.getThemeClass('saga-orange', this.currentTheme)
-                },
-                {
-                  label: 'Saga purple',
-                  icon: 'pi pi-fw saga-purple',
-                  command: () => this.themeService.changeTheme('saga-purple'),
-                  styleClass: this.getThemeClass('saga-purple', this.currentTheme)
-                },
-                {
-                  separator: true
-                },
-                {
-                  label: 'Vela blue',
-                  icon: 'pi pi-fw vela-blue',
-                  command: () => this.themeService.changeTheme('vela-blue'),
-                  styleClass: this.getThemeClass('vela-blue', this.currentTheme)
-                },
-                {
-                  label: 'Vela green',
-                  icon: 'pi pi-fw vela-green',
-                  command: () => this.themeService.changeTheme('vela-green'),
-                  styleClass: this.getThemeClass('vela-green', this.currentTheme)
-                },
-                {
-                  label: 'Vela orange',
-                  icon: 'pi pi-fw vela-orange',
-                  command: () => this.themeService.changeTheme('vela-orange'),
-                  styleClass: this.getThemeClass('vela-orange', this.currentTheme)
-                },
-                {
-                  label: 'Vela purple',
-                  icon: 'pi pi-fw vela-purple',
-                  command: () => this.themeService.changeTheme('vela-purple'),
-                  styleClass: this.getThemeClass('vela-purple', this.currentTheme)
-                }
-              ]
-            },
-            {
-              separator: true
-            },
-            {
               label: 'General',
               icon: 'pi pi-fw pi-cog',
               routerLink: '/settings/general'
@@ -368,6 +240,131 @@ export class PageHeaderComponent implements OnInit {
               icon: 'pi pi-fw pi-github',
               url: `${this.APP_URL}/issues`,
               target: '_blank'
+            }
+          ]
+        },
+        {
+          label: 'Theme',
+          icon: 'pi pi-fw pi-palette',
+          items: [
+            {
+              label: 'Bootstrap 4',
+              disabled: true
+            },
+            {
+              separator: true
+            },
+            {
+              label: 'Dark blue',
+              icon: 'pi pi-fw bootstrap4-dark-blue',
+              command: () => this.themeService.changeTheme('bootstrap4-dark-blue'),
+              styleClass: this.getThemeClass('bootstrap4-dark-blue', this.currentTheme)
+            },
+            {
+              label: 'Dark purple',
+              icon: 'pi pi-fw bootstrap4-dark-purple',
+              command: () => this.themeService.changeTheme('bootstrap4-dark-purple'),
+              styleClass: this.getThemeClass('bootstrap4-dark-purple', this.currentTheme)
+            },
+            {
+              label: 'Light blue',
+              icon: 'pi pi-fw bootstrap4-light-blue',
+              command: () => this.themeService.changeTheme('bootstrap4-light-blue'),
+              styleClass: this.getThemeClass('bootstrap4-light-blue', this.currentTheme)
+            },
+            {
+              label: 'Light purple',
+              icon: 'pi pi-fw bootstrap4-light-purple',
+              command: () => this.themeService.changeTheme('bootstrap4-light-purple'),
+              styleClass: this.getThemeClass('bootstrap4-light-purple', this.currentTheme)
+            },
+            {
+              separator: true
+            },
+            {
+              label: 'Primeone',
+              disabled: true
+            },
+            {
+              separator: true
+            },
+            {
+              label: 'Arya blue',
+              icon: 'pi pi-fw arya-blue',
+              command: () => this.themeService.changeTheme('arya-blue'),
+              styleClass: this.getThemeClass('arya-blue', this.currentTheme)
+            },
+            {
+              label: 'Arya green',
+              icon: 'pi pi-fw arya-green',
+              command: () => this.themeService.changeTheme('arya-green'),
+              styleClass: this.getThemeClass('arya-green', this.currentTheme)
+            },
+            {
+              label: 'Arya orange',
+              icon: 'pi pi-fw arya-orange',
+              command: () => this.themeService.changeTheme('arya-orange'),
+              styleClass: this.getThemeClass('arya-orange', this.currentTheme)
+            },
+            {
+              label: 'Arya purple',
+              icon: 'pi pi-fw arya-purple',
+              command: () => this.themeService.changeTheme('arya-purple'),
+              styleClass: this.getThemeClass('arya-purple', this.currentTheme)
+            },
+            {
+              separator: true
+            },
+            {
+              label: 'Saga blue',
+              icon: 'pi pi-fw saga-blue',
+              command: () => this.themeService.changeTheme('saga-blue'),
+              styleClass: this.getThemeClass('saga-blue', this.currentTheme)
+            },
+            {
+              label: 'Saga green',
+              icon: 'pi pi-fw saga-green',
+              command: () => this.themeService.changeTheme('saga-green'),
+              styleClass: this.getThemeClass('saga-green', this.currentTheme)
+            },
+            {
+              label: 'Saga orange',
+              icon: 'pi pi-fw saga-orange',
+              command: () => this.themeService.changeTheme('saga-orange'),
+              styleClass: this.getThemeClass('saga-orange', this.currentTheme)
+            },
+            {
+              label: 'Saga purple',
+              icon: 'pi pi-fw saga-purple',
+              command: () => this.themeService.changeTheme('saga-purple'),
+              styleClass: this.getThemeClass('saga-purple', this.currentTheme)
+            },
+            {
+              separator: true
+            },
+            {
+              label: 'Vela blue',
+              icon: 'pi pi-fw vela-blue',
+              command: () => this.themeService.changeTheme('vela-blue'),
+              styleClass: this.getThemeClass('vela-blue', this.currentTheme)
+            },
+            {
+              label: 'Vela green',
+              icon: 'pi pi-fw vela-green',
+              command: () => this.themeService.changeTheme('vela-green'),
+              styleClass: this.getThemeClass('vela-green', this.currentTheme)
+            },
+            {
+              label: 'Vela orange',
+              icon: 'pi pi-fw vela-orange',
+              command: () => this.themeService.changeTheme('vela-orange'),
+              styleClass: this.getThemeClass('vela-orange', this.currentTheme)
+            },
+            {
+              label: 'Vela purple',
+              icon: 'pi pi-fw vela-purple',
+              command: () => this.themeService.changeTheme('vela-purple'),
+              styleClass: this.getThemeClass('vela-purple', this.currentTheme)
             }
           ]
         }
