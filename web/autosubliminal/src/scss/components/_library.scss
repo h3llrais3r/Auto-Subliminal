@@ -10,21 +10,27 @@
     @include flexbox;
     @include align-items(center);
 
-    .title-poster-container {
-      .title-poster-image {
-        @extend .image-box;
-        @extend .image-hover;
-        height: 55px;
-        width: 37px; // aspect ratio 0.675
+    // Properly align image and title when wrapped
+    .title-container-wrapper {
+      @include flexbox;
+      @include align-items(center);
+
+      .title-poster-container {
+        .title-poster-image {
+          @extend .image-box;
+          @extend .image-hover;
+          height: 55px;
+          width: 37px; // aspect ratio 0.675
+        }
       }
-    }
 
-    .title-text {
-      margin-left: 0.5rem;
-      font-weight: $font-bold;
+      .title-text {
+        margin-left: 0.5rem;
+        font-weight: $font-bold;
 
-      a {
-        color: var(--text-color);
+        a {
+          color: var(--text-color);
+        }
       }
     }
   }
@@ -36,6 +42,11 @@
         @extend .image-hover;
         height: 55px; // aspect ratio: 0.185
         width: 297px;
+
+        @media (max-width: $media-mobile-max-width) {
+          height: auto; // auto width
+          width: 100%;
+        }
       }
     }
   }

@@ -43,13 +43,15 @@
               <td>
                 <span class="p-column-title">Title</span>
                 <span class="p-column-data title-container">
-                  <span class="title-poster-container">
-                    <a [routerLink]="['/library/movie/detail',movie.imdbId]" [title]="movie.title">
-                      <img *ngIf="movie.poster" class="title-poster-image" [lazyLoad]="getMoviePosterThumbnailUrl(movie.imdbId)" [defaultImage]="getPosterPlaceholderUrl()">
-                    </a>
-                  </span>
-                  <span class="title-text">
-                    <a [routerLink]="['/library/movie/detail',movie.imdbId]">{{movie.title}}</a>
+                  <span class="title-container-wrapper">
+                    <span class="title-poster-container">
+                      <a [routerLink]="['/library/movie/detail',movie.imdbId]" [title]="movie.title">
+                        <img *ngIf="movie.poster" class="title-poster-image" [lazyLoad]="getMoviePosterThumbnailUrl(movie.imdbId)" [defaultImage]="getPosterPlaceholderUrl()">
+                      </a>
+                    </span>
+                    <span class="title-text">
+                      <a [routerLink]="['/library/movie/detail',movie.imdbId]">{{movie.title}}</a>
+                    </span>
                   </span>
                 </span>
               </td>
