@@ -47,7 +47,7 @@
             </div>
             <div class="row mb-2">
               <div class="col-3">Location:</div>
-              <div class="col-9">
+              <div class="col-9 wrap-text">
                 {{show.path}}
                 <a *ngIf="!show.pathInVideoPaths" class="icon-link" (click)="addShowPathToVideoPaths()">
                   <i class="fa fa-plus" aria-hidden="true" title="Click to add the show path to the video paths to scan"></i>
