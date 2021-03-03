@@ -22,6 +22,7 @@
       @include flexbox;
       @include justify-content(center);
       @include align-items(flex-start);
+      margin-bottom: 0.25rem; // to be sure the image box is shown properly
 
       .settings-info-poster-image {
         @extend .image-box;
