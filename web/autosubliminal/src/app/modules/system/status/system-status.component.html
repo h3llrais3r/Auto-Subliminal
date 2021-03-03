@@ -41,7 +41,7 @@
           <tr>
             <td><span class="p-column-title">Name</span><span class="p-column-data">{{pathInfo.name}}</span></td>
             <td><span class="p-column-title">Path</span><span class="p-column-data wrap-text">{{pathInfo.path}}</span></td>
-            <td><span class="p-column-title">Free space</span><span class="p-column-data">{{pathInfo.freeSpaceFormatted}}<i *ngIf="pathInfo.freePercentage < 10" class="pi pi-fw pi-vm pi-exclamation-triangle text-danger" title="Low disk space"></i></span>
+            <td><span class="p-column-title">Free space</span><span class="p-column-data">{{pathInfo.freeSpaceFormatted}}<i *ngIf="pathInfo.freePercentage < 10" class="fa fa-exclamation-triangle text-danger ml-1" title="Low disk space"></i></span>
             </td>
           </tr>
         </ng-template>
