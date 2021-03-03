@@ -101,6 +101,8 @@
                 <i class="fa fa-pencil" aria-hidden="true" title="Click to manually refine item details"></i>
               </a>
             </ng-container>
+            <i *ngIf="wantedItem.isSearchActive" class="fa fa-check-circle text-success" aria-hidden="true" title="Included in automatic search"></i>
+            <i *ngIf="!wantedItem.isSearchActive" class="fa fa-pause-circle text-warning" aria-hidden="true" title="Not included in automatic search"></i>
           </span>
         </span>
       </td>

@@ -191,8 +191,7 @@ class WantedItem(_Item):
         :rtype: dict
         """
         # Define args to exclude
-        exclude_args = ['video_path', 'video_size', 'is_episode', 'is_movie', 'is_search_active', 'video',
-                        'found_subtitles']
+        exclude_args = ['video_path', 'video_size', 'is_episode', 'is_movie', 'video', 'found_subtitles']
         if args:
             exclude_args.extend(list(args))
 

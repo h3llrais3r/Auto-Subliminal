@@ -53,6 +53,7 @@ export class WantedItem extends Item {
   libraryPath: string;
   timestamp: string; // format: YYYY-MM-DD HH:MM:SS
   languages: string[];
+  isSearchActive: boolean;
 
   constructor(obj?: any) {
     super(obj);
