@@ -17,7 +17,7 @@
   <ng-template pTemplate="caption">
     <div class="caption">
       <div class="p-inputgroup dropdown">
-        <span class="p-inputgroup-addon">Video type</span>
+        <span class="p-inputgroup-addon">Type</span>
         <p-dropdown [options]="videoTypes" (onChange)="downloadedTable.filter($event.value, 'type', 'equals')"></p-dropdown>
       </div>
       <span class="ml-auto">

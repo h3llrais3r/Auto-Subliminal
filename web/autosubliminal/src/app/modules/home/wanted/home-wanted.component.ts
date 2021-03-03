@@ -89,9 +89,9 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
       (wantedItems) => {
         this.wantedItems = wantedItems;
         const total = wantedItems.length;
-        const totalShows = wantedItems.filter((wantedItem) => wantedItem.isEpisode).length;
+        const totalEpisodes = wantedItems.filter((wantedItem) => wantedItem.isEpisode).length;
         const totalMovies = wantedItems.filter((wantedItem) => wantedItem.isMovie).length;
-        this.totals.emit({ total, totalShows, totalMovies });
+        this.totals.emit({ total, totalEpisodes, totalMovies });
         this.loading = false;
       },
       () => {

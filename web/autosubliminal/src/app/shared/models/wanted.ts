@@ -1,5 +1,5 @@
 export interface WantedTotals {
   total: number;
-  totalShows: number;
+  totalEpisodes: number;
   totalMovies: number;
 }

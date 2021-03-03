@@ -9,7 +9,7 @@ import { WantedTotals } from '../../shared/models/wanted';
 export class HomeComponent implements OnInit {
 
   total = 0;
-  totalShows = 0;
+  totalEpisodes = 0;
   totalMovies = 0;
 
   constructor() { }
@@ -18,11 +18,11 @@ export class HomeComponent implements OnInit {
 
   getTotals(wantedTotals: WantedTotals): void {
     this.total = wantedTotals.total;
-    this.totalShows = wantedTotals.totalShows;
+    this.totalEpisodes = wantedTotals.totalEpisodes;
     this.totalMovies = wantedTotals.totalMovies;
   }
 
   getWantedHeader(): string {
-    return `Wanted (${this.total}) - Shows (${this.totalShows}) - Movies (${this.totalMovies})`;
+    return `Wanted subtitles (${this.total}) - Episodes (${this.totalEpisodes}) - Movies (${this.totalMovies})`;
   }
 }
