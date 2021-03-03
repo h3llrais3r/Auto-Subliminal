@@ -74,6 +74,9 @@ export class AppSettingsService {
             appSettings.fromSettings(settings);
             this.configLoaded = true;
             console.log('Application settings loaded');
+            console.log(`Application version: ${appSettings.appVersion}`);
+            console.log(`Application PID: ${appSettings.appProcessId}`);
+            console.log(`Developer mode: ${appSettings.developerMode}`);
             resolve(appSettings);
           },
           (error) => {
