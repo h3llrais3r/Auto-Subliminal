@@ -1,5 +1,6 @@
 export class SystemInfo {
   os: string;
+  pid: number;
   releaseVersion: string;
   installType: SystemInstallType;
   currentVersion: string;

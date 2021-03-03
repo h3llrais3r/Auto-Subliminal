@@ -65,6 +65,7 @@ class _InfoApi(RestResource):
         """Return the system info."""
         info = {
             'os': platform.platform(),
+            'pid': autosubliminal.PID,
             'release_version': RELEASE_VERSION,
             'install_type': autosubliminal.CHECKVERSION.process.install_type.name,
             'current_version': autosubliminal.CHECKVERSION.process.current_version,

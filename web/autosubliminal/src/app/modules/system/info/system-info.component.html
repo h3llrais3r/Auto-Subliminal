@@ -8,6 +8,10 @@
           <div class="info col-sm-12 col-md-8">{{systemInfo.os}}</div>
         </div>
         <div class="info-item row">
+          <div class="info-label col-sm-12 col-md-4">PID</div>
+          <div class="info col-sm-12 col-md-8">{{systemInfo.pid}}</div>
+        </div>
+        <div class="info-item row">
           <div class="info-label col-sm-12 col-md-4">Version</div>
           <div class="info col-sm-12 col-md-8" *ngIf="!versionUrl">{{version}}</div>
           <div class="info col-sm-12 col-md-8" *ngIf="versionUrl"><a href="{{versionUrl}}" target="_blank">{{version}}</a></div>
