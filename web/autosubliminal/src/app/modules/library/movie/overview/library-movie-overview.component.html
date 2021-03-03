@@ -23,7 +23,9 @@
                  styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
           <ng-template pTemplate="caption">
             <div class="caption">
-              <p-button [label]="nrOfMovies + ' movies'" styleClass="p-button-static p-button-outlined"></p-button>
+              <span class="w-100">
+                <p-button [label]="nrOfMovies + ' movies'" styleClass="p-button-static p-button-outlined"></p-button>
+              </span>
               <span class="ml-auto">
                 <app-table-filter [table]="movieTable" [tableStateKey]="tableStateKey" matchMode='contains'></app-table-filter>
               </span>

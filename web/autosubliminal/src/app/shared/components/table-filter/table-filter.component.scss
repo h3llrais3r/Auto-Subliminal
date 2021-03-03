@@ -4,6 +4,6 @@
   min-width: 10rem;
 
   @media (max-width: $media-mobile-max-width) {
-    min-width: auto; // proper size on mobile
+    min-width: 8rem; // proper size on mobile
   }
 }
