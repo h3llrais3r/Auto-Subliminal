@@ -27,10 +27,10 @@ wanted_item.release_group = 'NTb'
 wanted_item.tvdb_id = 289590
 wanted_item.imdb_id = None
 
-wanted_item_json = '{"codec": "H.264", "episode": 6, "id": 1, "imdbId": null, "languages": ["nl"], ' \
-                   '"libraryPath": null, "quality": "720p", "releaseGroup": "NTb", "season": 1, "source": "Web", ' \
-                   '"timestamp": "2015-11-15 16:27:35", "title": "Mr Robot", "tvdbId": 289590, "type": "episode",' \
-                   ' "videoFileName": "Mr.Robot.S01E06.720p.WEB-DL.DD5.1.H.264-NTb.mkv", ' \
+wanted_item_json = '{"codec": "H.264", "episode": 6, "id": 1, "imdbId": null, "isSearchActive": true, ' \
+                   '"languages": ["nl"], "libraryPath": null, "quality": "720p", "releaseGroup": "NTb", "season": 1, ' \
+                   '"source": "Web", "timestamp": "2015-11-15 16:27:35", "title": "Mr Robot", "tvdbId": 289590, ' \
+                   '"type": "episode", "videoFileName": "Mr.Robot.S01E06.720p.WEB-DL.DD5.1.H.264-NTb.mkv", ' \
                    '"videoFilePath": "/path/to", "videoFileSize": "0 bytes", "year": null}'
 
 wanted_item_list_json = '[' + wanted_item_json + ']'
@@ -67,7 +67,7 @@ downloaded_item_list_json = '[' + downloaded_item_json + ']'
 def test_get_wanted_all_items(monkeypatch):
     monkeypatch.setattr('autosubliminal.LIBRARYPATHS', [])
     monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
-    monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 7)
+    monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 1)  # put on 1 to always return true on is_search_active
     autosubliminal.WANTEDQUEUE = []
     autosubliminal.WANTEDQUEUE.append(wanted_item)
     assert wanted_item_list_json == pickle_api_result(ItemsApi().wanted.get())
@@ -76,7 +76,7 @@ def test_get_wanted_all_items(monkeypatch):
 def test_get_wanted_single_item(monkeypatch):
     monkeypatch.setattr('autosubliminal.LIBRARYPATHS', [])
     monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
-    monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 7)
+    monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 1)  # put on 1 to always return true on is_search_active
     autosubliminal.WANTEDQUEUE = []
     autosubliminal.WANTEDQUEUE.append(wanted_item)
     assert wanted_item_json == pickle_api_result(ItemsApi().wanted.get(1))
