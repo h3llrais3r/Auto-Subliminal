@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { appSettings } from '../../../app-settings.service';
 import { GeneralSettings, LibrarySettings, LogSettings, NameMappingSettings, NotificationSettings, PostProcessSettings, SkipMappingSettings, SubliminalSettings, TwitterAuthorization, TwitterRegistration, WebServerSettings } from '../../../shared/models/settings';
 import { ApiServiceTemplate } from './api-service-template';
 
@@ -10,7 +11,7 @@ import { ApiServiceTemplate } from './api-service-template';
 })
 export class SettingsService extends ApiServiceTemplate {
 
-  private readonly URL = '/api/settings';
+  private readonly URL = `${appSettings.webRoot}/api/settings`;
 
   constructor(private httpClient: HttpClient) {
     super(httpClient);

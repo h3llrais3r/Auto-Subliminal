@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { appSettings } from '../../../app-settings.service';
 import { Show, ShowSettings, ShowsOverview } from '../../../shared/models/show';
 import { VideoSubtitles } from '../../../shared/models/video';
 import { ApiServiceTemplate } from './api-service-template';
@@ -11,7 +12,7 @@ import { ApiServiceTemplate } from './api-service-template';
 })
 export class ShowService extends ApiServiceTemplate {
 
-  private readonly URL = '/api/shows';
+  private readonly URL = `${appSettings.webRoot}/api/shows`;
 
   constructor(private httpClient: HttpClient) {
     super(httpClient);

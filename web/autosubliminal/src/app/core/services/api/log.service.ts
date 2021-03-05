@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { appSettings } from '../../../app-settings.service';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -9,7 +10,7 @@ import { ApiServiceTemplate } from './api-service-template';
 })
 export class LogService extends ApiServiceTemplate {
 
-  private readonly URL = '/api/logs';
+  private readonly URL = `${appSettings.webRoot}/api/logs`;
 
   constructor(private httpClient: HttpClient) {
     super(httpClient);

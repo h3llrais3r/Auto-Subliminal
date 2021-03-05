@@ -1,5 +1,6 @@
+import { APP_BASE_HREF } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AntiCaptchaProvider } from './shared/models/captcha';
@@ -57,8 +58,13 @@ export function appSettingsServiceFactory(appSettingsService: AppSettingsService
 export class AppSettingsService {
 
   private configLoaded = false;
+  private webRoot = '';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(@Inject(APP_BASE_HREF) private baseHref: string, private httpClient: HttpClient) {
+    // Get webroot from base href
+    this.webRoot = this.baseHref.slice(0, this.baseHref.indexOf('/autosubliminal/')); // webroot is the part before /autosubliminal/ in base path
+    console.log(`Webroot: ${this.webRoot}`);
+  }
 
   // The return value (Promise) of this method is used as an APP_INITIALIZER, so the application's initialization will not complete until the Promise resolves.
   public async load(): Promise<AppSettings> {
@@ -68,7 +74,7 @@ export class AppSettingsService {
     } else {
       // Use manual resolve, reject to be sure to not bootstrap the application in case of an error!
       return new Promise((resolve, reject) => {
-        const settingsObservable = this.httpClient.get(`/api/system/settings`).pipe(map((settings) => settings as AppSettings));
+        const settingsObservable = this.httpClient.get(`${this.webRoot}/api/system/settings`).pipe(map((settings) => settings as AppSettings));
         settingsObservable.subscribe(
           (settings) => {
             appSettings.fromSettings(settings);

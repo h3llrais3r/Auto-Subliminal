@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { appSettings } from '../../../app-settings.service';
 import { PathInfo } from '../../../shared/models/pathinfo';
 import { Scheduler } from '../../../shared/models/scheduler';
 import { SystemInfo } from '../../../shared/models/systeminfo';
@@ -12,7 +13,7 @@ import { ApiServiceTemplate } from './api-service-template';
 })
 export class SystemService extends ApiServiceTemplate {
 
-  private readonly URL = '/api/system';
+  private readonly URL = `${appSettings.webRoot}/api/system`;
 
   constructor(private httpClient: HttpClient) {
     super(httpClient);

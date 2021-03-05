@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { appSettings } from '../../../app-settings.service';
 import { DownloadedItem, WantedItem } from '../../../shared/models/item';
 import { Subtitle } from '../../../shared/models/subtitle';
 import { ApiServiceTemplate } from './api-service-template';
@@ -11,7 +12,7 @@ import { ApiServiceTemplate } from './api-service-template';
 })
 export class ItemService extends ApiServiceTemplate {
 
-  private readonly URL = '/api/items';
+  private readonly URL = `${appSettings.webRoot}/api/items`;
 
   constructor(private httpClient: HttpClient) {
     super(httpClient);
