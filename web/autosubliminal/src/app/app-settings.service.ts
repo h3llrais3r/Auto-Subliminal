@@ -1,6 +1,6 @@
-import { APP_BASE_HREF } from '@angular/common';
+import { PlatformLocation } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AntiCaptchaProvider } from './shared/models/captcha';
@@ -60,10 +60,13 @@ export class AppSettingsService {
   private configLoaded = false;
   private webRoot = '';
 
-  constructor(@Inject(APP_BASE_HREF) private baseHref: string, private httpClient: HttpClient) {
+  constructor(private platformLocation: PlatformLocation, private httpClient: HttpClient) {
+    // Get base href
+    const baseHref = this.platformLocation.getBaseHrefFromDOM();
+    console.log(`Application base href: ${baseHref}`);
     // Get webroot from base href
-    this.webRoot = this.baseHref.slice(0, this.baseHref.indexOf('/autosubliminal/')); // webroot is the part before /autosubliminal/ in base path
-    console.log(`Webroot: ${this.webRoot}`);
+    this.webRoot = baseHref.slice(0, baseHref.indexOf('/autosubliminal/')); // webroot is the part before /autosubliminal/ in base path
+    console.log(`Application web root: ${this.webRoot}`);
   }
 
   // The return value (Promise) of this method is used as an APP_INITIALIZER, so the application's initialization will not complete until the Promise resolves.
