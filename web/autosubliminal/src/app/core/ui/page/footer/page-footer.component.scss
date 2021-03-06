@@ -13,6 +13,14 @@
       padding: 0 0.5rem;
     }
 
+    .info {
+      span {
+        &:first-of-type {
+          margin-right: 0.25rem;
+        }
+      }
+    }
+
     @media screen and (max-width: $media-mobile-max-width) {
       .info {
         @include flexbox;
