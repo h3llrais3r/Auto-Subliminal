@@ -58,11 +58,20 @@ class RestResource(object):
     def put(self, *args, **kwargs):
         raise MethodNotImplemented()
 
+    def patch(self, *args, **kwargs):
+        raise MethodNotImplemented()
+
     def delete(self, *args, **kwargs):
         raise MethodNotImplemented()
 
     def _bad_request(self, error_message):
         raise BadRequest(message=error_message)
+
+    def _conflict(self, error_message):
+        raise Conflict(message=error_message)
+
+    def _internal_server_error(self, error_message=None):
+        raise InternalServerError(message=error_message)
 
     def _no_content(self):
         cherrypy.response.status = 204
@@ -94,6 +103,25 @@ class MethodNotAllowed(cherrypy.HTTPError):
 
     def __init__(self):
         cherrypy.HTTPError.__init__(self, status=405, message='Method not allowed')
+
+
+class Conflict(cherrypy.HTTPError):
+    """
+    Exception raised for a conflict (409).
+    """
+
+    def __init__(self, message):
+        self.args = (message,)
+        cherrypy.HTTPError.__init__(self, status=409, message=message)
+
+
+class InternalServerError(cherrypy.HTTPError):
+    """
+    Exception raised when the request return an internal server error (500).
+    """
+
+    def __init__(self, message=None):
+        cherrypy.HTTPError.__init__(self, status=500, message=message or 'Internal server error')
 
 
 class MethodNotImplemented(cherrypy.HTTPError):

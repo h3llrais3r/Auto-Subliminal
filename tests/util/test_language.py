@@ -3,7 +3,7 @@
 from autosubliminal.util.language import SubtitleLanguage, get_subtitle_languages
 
 
-def test_compare_subltitle_languages():
+def test_compare_subtitle_languages():
     language_1 = SubtitleLanguage('nl', 'Dutch')
     language_2 = SubtitleLanguage('nl', 'Dutch')
     language_3 = SubtitleLanguage('pt-BR', 'Brazilian Portuguese')

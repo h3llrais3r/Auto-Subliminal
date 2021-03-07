@@ -61,7 +61,7 @@ class MovieDetails(object):
         return artwork_url
 
     def set_attr(self, key, value):
-        """Set an attribute.
+        """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
         :param key: the attribute key
@@ -69,7 +69,7 @@ class MovieDetails(object):
         :param value: the attribute value
         :type value: str
         """
-        if hasattr(self, key):
+        if hasattr(self, key) and not hasattr(type(self), key):
             if key in ['year']:
                 # # Set as int
                 setattr(self, key, to_obj(value, obj_type=int))
@@ -140,7 +140,7 @@ class MovieSettings(object):
         self.utf8_encoding = utf8_encoding
 
     def set_attr(self, key, value):
-        """Set an attribute.
+        """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
         :param key: the attribute key
@@ -148,7 +148,7 @@ class MovieSettings(object):
         :param value: the attribute value
         :type value: str
         """
-        if hasattr(self, key):
+        if hasattr(self, key) and not hasattr(type(self), key):
             if key in ['wanted_languages']:
                 # Must be returned as a list of values
                 setattr(self, key, to_list(value, default_value=[]))

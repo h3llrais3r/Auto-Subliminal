@@ -1,0 +1,65 @@
+@import '../scss/variables';
+@import '../scss/mixins/flexbox';
+
+.app-layout {
+  height: 100%;
+  @include flexbox;
+  @include flex-direction(column);
+
+  .app-header {
+    @include flex-grow(0);
+    @include flex-shrink(0);
+    margin-bottom: 1rem;
+    background: var(--surface-a);
+  }
+
+  .app-content {
+    @include flex-grow(1);
+    @include flex-shrink(0);
+    @include flex-basis(auto);
+    margin-bottom: 1rem;
+  }
+
+  .app-footer {
+    @include flex-grow(0);
+    @include flex-shrink(0);
+    background: var(--surface-a);
+  }
+
+  &.fixed {
+    .app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+
+    .app-content {
+      padding-top: 5rem;
+      padding-bottom: 2.5rem;
+
+      @media screen and (max-width: $media-mobile-max-width) {
+        padding-bottom: 3.5rem;
+      }
+    }
+
+    .app-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+  }
+}
+
+.dialog-content {
+  text-align: center;
+
+  .pi-ban,
+  .pi-spin,
+  .pi-power-off {
+    font-size: 3rem;
+  }
+}

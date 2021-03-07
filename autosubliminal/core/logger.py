@@ -1,6 +1,5 @@
 # coding=utf-8
 
-import cgi
 import codecs
 import logging
 import os
@@ -62,7 +61,7 @@ def update_settings():
             handler.setLevel(autosubliminal.LOGLEVELCONSOLE)
 
 
-def display_logfile(loglevel='all', lines=0, lognum=None):
+def get_log_lines(loglevel='all', lines=0, lognum=None):
     # Read log file data
     data = []
     previous_loglevel = loglevel
@@ -80,23 +79,23 @@ def display_logfile(loglevel='all', lines=0, lognum=None):
             if match_dict:
                 # Check if the record matches the requested loglevel
                 if (loglevel == 'all') or (match_dict['loglevel'] == loglevel.upper()):
-                    log_data.append(x)
+                    log_data.append(x.rstrip())  # strip newline
                 # Store record loglevel as previous loglevel (needed for log records without match_dict)
                 previous_loglevel = match_dict['loglevel']
             else:
                 # When no match is found (f.e. traceback logging) assume it's the same loglevel as the previous record
                 if (loglevel == 'all') or (previous_loglevel.upper() == loglevel.upper()):
-                    log_data.append(x)
+                    log_data.append(x.rstrip())  # strip newline
         except Exception:
             continue
     # Get last x lines
     if lines and lines < len(log_data):
         log_data = log_data[-lines:]
-    # If reversed order is needed, use reversed(log_data)
+    # If reversed order is needed, reverse log_data
     if autosubliminal.LOGREVERSED:
-        log_data = reversed(log_data)
-    result = cgi.escape(''.join(log_data))
-    return result.lstrip().rstrip()  # remove new lines from the beginning and end
+        log_data.reverse()
+    # Return log lines
+    return log_data
 
 
 def get_logfile(lognum=None):

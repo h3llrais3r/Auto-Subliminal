@@ -280,6 +280,40 @@ def upgrade(from_version, to_version):
             connection.commit()
             connection.close()
 
+        if from_version == 9 and to_version == 10:
+            connection = sqlite3.connect(autosubliminal.DBFILE)
+            cursor = connection.cursor()
+            # Recreate last_downloads
+            cursor.execute(
+                'CREATE TABLE tmp_last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, '
+                'season TEXT, episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, '
+                'releasegrp TEXT, subtitle TEXT, provider TEXT)'
+            )
+            cursor.execute(
+                'INSERT INTO tmp_last_downloads SELECT id, type, title, year, season, episode, quality, source, '
+                'language, codec, timestamp, releasegrp, subtitle || \'.srt\', provider FROM last_downloads')
+            cursor.execute('DROP TABLE last_downloads')
+            cursor.execute(
+                'CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, video_path TEXT, language TEXT, provider TEXT, '
+                'subtitle TEXT, timestamp DATETIME, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, '
+                'quality TEXT, source TEXT, codec TEXT, release_group TEXT, tvdb_id INTEGER, imdb_id TEXT)'
+            )
+            cursor.execute('INSERT INTO last_downloads SELECT id, NULL, language, provider, subtitle, timestamp, type, '
+                           'title, year, season, episode, quality, source, codec, releasegrp, NULL, NULL '
+                           'FROM tmp_last_downloads')
+            cursor.execute('DROP TABLE tmp_last_downloads')
+            # Recreate wanted_items
+            cursor.execute('DROP TABLE wanted_items')
+            cursor.execute(
+                'CREATE TABLE wanted_items (id INTEGER PRIMARY KEY, video_path TEXT, video_size INTEGER, '
+                'languages TEXT, timestamp DATETIME, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, '
+                'quality TEXT, source TEXT, codec TEXT, release_group TEXT, tvdb_id TEXT, imdb_id TEXT)'
+            )
+            # Update database version
+            cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (10, 9))
+            connection.commit()
+            connection.close()
+
 
 def get_version():
     try:

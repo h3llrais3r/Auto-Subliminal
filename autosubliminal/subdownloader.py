@@ -9,7 +9,7 @@ import autosubliminal
 from autosubliminal import notifiers
 from autosubliminal.db import LastDownloadsDb
 from autosubliminal.postprocessor import PostProcessor
-from autosubliminal.util.common import display_item_name
+from autosubliminal.util.common import get_item_name
 from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ class SubDownloader(object):
 
         # Save the subtitle
         if self.save():
-            name = display_item_name(self._download_item)
+            name = get_item_name(self._download_item)
 
             # Mark as downloaded
             self.mark_downloaded()
@@ -43,14 +43,14 @@ class SubDownloader(object):
             processed = self.post_process()
             if not processed:
                 send_websocket_notification(
-                    'Unable to handle post processing for \'%s\'! Please check the log file!' % name, type='error')
+                    'Unable to handle post processing for \'%s\'! Please check the log file!' % name, severity='error')
 
             # Show success message
-            language = self._download_item.downlang
-            name = display_item_name(self._download_item)
+            language = self._download_item.language
+            name = get_item_name(self._download_item)
             provider = self._download_item.provider
             send_websocket_notification(
-                'Downloaded \'%s\' subtitle for \'%s\' from \'%s\'.' % (language, name, provider), type='success')
+                'Downloaded \'%s\' subtitle for \'%s\' from \'%s\'.' % (language, name, provider), severity='success')
 
     def save(self):
         """
@@ -104,7 +104,7 @@ class SubDownloader(object):
             # Global processing: only process when all subtitles are downloaded
             else:
                 wanted_languages = self._download_item.languages[:]
-                downloaded_language = self._download_item.downlang
+                downloaded_language = self._download_item.language
                 wanted_languages.remove(downloaded_language)
                 if len(wanted_languages) == 0:
                     return PostProcessor(self._download_item).run()

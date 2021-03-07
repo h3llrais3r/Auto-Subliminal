@@ -3,12 +3,7 @@
 import autosubliminal
 from autosubliminal.util.mapping import (get_addic7ed_show_name_mapping, get_alternative_movie_name_mapping,
                                          get_alternative_show_name_mapping, get_movie_name_mapping,
-                                         get_show_name_mapping, mapping_string_to_dict)
-
-
-def test_mapping_string_to_dict():
-    mapping_dict = {'show1': '111111,000000', 'show2': '222222'}
-    assert mapping_string_to_dict('show1 = 111111,000000\r\nshow2 = 222222') == mapping_dict
+                                         get_show_name_mapping)
 
 
 def test_get_show_name_mapping():

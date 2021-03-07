@@ -1,0 +1,10 @@
+<span class="dropdown">
+  <!-- Use static display to disable auto placement by popper.js -->
+  <a class="dropdown-toggle has-tip icon-link" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+    <i [class]="iconClass" aria-hidden="true" title="Click for more info"></i>
+  </a>
+  <ul class="dropdown-menu has-tip">
+    <!-- Placeholder for dynamic content (should be <li></li> items)-->
+    <ng-content></ng-content>
+  </ul>
+</span>

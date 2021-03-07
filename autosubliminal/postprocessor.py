@@ -73,7 +73,7 @@ class PostProcessor(object):
             process.append(self._convert_arg(self._encoding))
 
             # Add root video path argument
-            video_path = self._wanted_item.videopath
+            video_path = self._wanted_item.video_path
             root_path = get_root_path(video_path)
             log.debug('root path: %s', root_path)
             process.append(self._convert_arg(root_path))
@@ -83,7 +83,7 @@ class PostProcessor(object):
             process.append(self._convert_arg(video_path))
 
             # Add subtitle path argument (can be empty if no subtitle was downloaded)
-            subtitle_path = self._wanted_item.subtitlepath if isinstance(self._wanted_item, DownloadItem) else None
+            subtitle_path = self._wanted_item.subtitle_path if isinstance(self._wanted_item, DownloadItem) else None
             subtitle_path = subtitle_path if subtitle_path else ''  # check because it can be empty on DownloadItem
             log.debug('subtitle path: %s', subtitle_path)
             process.append(self._convert_arg(subtitle_path))

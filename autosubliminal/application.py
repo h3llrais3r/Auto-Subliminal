@@ -5,6 +5,7 @@ import os
 import signal
 import subprocess
 import sys
+import time
 import webbrowser
 
 import cherrypy
@@ -19,10 +20,12 @@ from autosubliminal.core.websocket import WebSocketBroadCaster, WebSocketHandler
 from autosubliminal.diskscanner import DiskScanner
 from autosubliminal.libraryscanner import LibraryScanner
 from autosubliminal.server.root import WebServerRoot
+from autosubliminal.server.tool import SPARedirectTool
 from autosubliminal.subchecker import SubChecker
 from autosubliminal.util.encoding import s2n
 from autosubliminal.util.json import json_out_handler
 from autosubliminal.util.packaging import get_library_version
+from autosubliminal.util.websocket import send_websocket_event, SYSTEM_RESTART, SYSTEM_SHUTDOWN, SYSTEM_START
 from autosubliminal.versionchecker import VersionChecker
 
 log = logging.getLogger(__name__)
@@ -130,6 +133,10 @@ def _configure_server(restarting=False):
     # Configure our custom json_out_handler (Uncomment if it should be used for any @cherrypy.tools.json_out())
     # cherrypy.config.update({'tools.json_out.handler': json_out_handler})
 
+    # Enable spa redirect tool (redirect to custom index.webroot.html which takes care of the webroot as well)
+    _setup_index_html()
+    cherrypy.tools.spa_redirect = SPARedirectTool('/autosubliminal/index.webroot.html')
+
     if not restarting:
         # Enable websocket plugin
         websocket_plugin = WebSocketPlugin(cherrypy.engine)
@@ -142,56 +149,47 @@ def _configure_server(restarting=False):
         cherrypy.server.httpserver = None
 
 
+def _setup_index_html():
+    # Read index.html and replace base href
+    with open('web/autosubliminal/static/index.html', mode='r') as f:
+        content = f.read()
+        content = content.replace('<base href="/autosubliminal/">',
+                                  '<base href="' + autosubliminal.WEBROOT + '/autosubliminal/">')
+
+    # Write index.webroot.html with changed base href
+    with open('web/autosubliminal/static/index.webroot.html', mode='w') as f:
+        f.truncate()  # clear before writing
+        f.write(content)
+
+
 def _get_application_configuration():
     # Configure application
     conf = {
         '/': {
             'tools.encode.encoding': 'utf-8',
-            'tools.decode.encoding': 'utf-8',
-            'tools.staticdir.root': os.path.abspath(os.path.join(autosubliminal.PATH, 'web/static')),
+            'tools.decode.encoding': 'utf-8'
         },
         '/api': {
             'tools.json_out.handler': json_out_handler,  # Use our custom json_out_handler for /api
             'tools.response_headers.on': True,  # Always force content-type
             'tools.response_headers.headers': [('Content-Type', 'application/json; charset=utf-8')]
         },
-        '/css': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'css',
-            'tools.expires.on': True,
-            'tools.expires.secs': 3600 * 24 * 7
-        },
-        '/fonts': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'fonts',
-            'tools.expires.on': True,
-            'tools.expires.secs': 3600 * 24 * 7
-        },
-        '/images': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'images',
-            'tools.expires.on': True,
-            'tools.expires.secs': 3600 * 24 * 7
-        },
-        '/js': {
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'js',
-            'tools.expires.on': True,
-            'tools.expires.secs': 3600 * 24 * 7
-        },
-        '/favicon.ico': {
-            'tools.staticfile.on': True,
-            'tools.staticfile.filename': os.path.abspath(
-                os.path.join(autosubliminal.PATH, 'web/static/images/favicon.ico'))
-        },
-        '/system/websocket': {
+        '/websocket/system': {
             'tools.websocket.on': True,
             'tools.websocket.handler_cls': WebSocketHandler
         },
-        '/log/websocket': {
+        '/websocket/log': {
             'tools.websocket.on': True,
             'tools.websocket.handler_cls': WebSocketLogHandler
-        }
+        },
+        '/autosubliminal': {
+            'tools.staticdir.root': os.path.abspath(os.path.join(autosubliminal.PATH, 'web/autosubliminal')),
+            'tools.staticdir.on': True,
+            'tools.staticdir.dir': 'static',
+            'tools.spa_redirect.on': True
+            # 'tools.expires.on': True,
+            # 'tools.expires.secs': 3600 * 24 * 7
+        },
     }
 
     # Return config
@@ -203,6 +201,10 @@ def start():
 
     # Start permanent threads
     autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
+
+    # Sleep 3 seconds before sending the start event trough websocket (client websockets reconnect every 2 seconds)
+    time.sleep(3)
+    send_websocket_event(SYSTEM_START)
 
     # Schedule threads
     # Order of CHECKVERSION, SCANDISK and CHECKSUB is important because they are all using the queue lock
@@ -224,6 +226,9 @@ def start():
 
 def stop(exit=True):
     log.info('Stopping')
+    if exit:
+        send_websocket_event(SYSTEM_SHUTDOWN)
+        time.sleep(2)  # Sleep 2 seconds to give the frontend to receive the event
 
     # Mark as stopped
     autosubliminal.STARTED = False
@@ -245,6 +250,9 @@ def stop(exit=True):
 
 def restart(exit=False):
     log.info('Restarting')
+    send_websocket_event(SYSTEM_RESTART)
+    time.sleep(2)  # Sleep 2 seconds to give the frontend to receive the event
+
     if exit:
         # Exit current process and restart a new one with the same args
         # Get executable and args

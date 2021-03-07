@@ -1,0 +1,10 @@
+<div class="container-lg">
+  <!-- Wanted items -->
+  <p-panel [header]="getWantedHeader()" styleClass="mb-3">
+    <app-home-wanted (totals)="getTotals($event)"></app-home-wanted>
+  </p-panel>
+  <!-- Downloaded items -->
+  <p-panel header="Downloaded subtitles">
+    <app-home-downloaded></app-home-downloaded>
+  </p-panel>
+</div>

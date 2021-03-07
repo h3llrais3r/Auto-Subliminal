@@ -1,0 +1,156 @@
+@import '../variables';
+@import '../mixins/flexbox';
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-size: $font-size;
+  color: $font-color;
+  background-color: $background-color;
+
+  // Smaller font size on tablets and mobile
+  @media screen and (max-width: $media-tablet-max-width) {
+    font-size: $font-size-sm;
+  }
+
+  .panel-section {
+    margin-bottom: 2rem;
+
+    .panel-section-header {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  a {
+    text-decoration: none !important; // hide underline for a by default
+
+    // Icon link
+    &.icon-link,
+    &.dropdown-link {
+      color: inherit;
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary-color);
+      }
+    }
+  }
+
+  hr {
+    border-color: var(--surface-d);
+  }
+
+  .form {
+    .form-row {
+      @include flexbox;
+      @include align-items(center);
+      margin-bottom: 0.5rem;
+
+      .form-row-buttons {
+        button {
+          margin-right: 0.5rem;
+        }
+      }
+
+      .form-row-label {
+        label {
+          font-weight: $font-bold;
+          margin-bottom: 0;
+        }
+      }
+
+      .form-row-notification {
+        margin-bottom: 0.25rem;
+      }
+
+      .form-row-switches {
+        @include flexbox;
+        @include align-items(center);
+        @include justify-content(space-between);
+      }
+    }
+
+    .button-row {
+      margin-top: 1rem;
+    }
+  }
+
+  // Icon group (use * since we don't know what element is used inside of the group)
+  .icon-group {
+    display: inline-block;
+
+    >:not(:first-child) {
+      margin-left: 0.25rem;
+    }
+  }
+
+  // Title inside the icon-dropdown component
+  .icon-dropdown-title {
+    font-weight: $font-bold;
+    margin-right: 0.25rem;
+  }
+
+  // Wrap text
+  .wrap-text {
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+
+  // Loading
+  .loading {
+    text-align: center;
+    overflow: hidden;
+  }
+
+  // Dropdown
+  .dropdown {
+    cursor: pointer;
+
+    .dropdown-toggle {
+      white-space: normal; // allow wrapping
+
+      &::after {
+        display: none; // Hide toggle
+      }
+    }
+
+    .dropdown-menu {
+      &.has-tip {
+        margin-top: 0.25rem;
+
+        &:before {
+          position: absolute;
+          top: -0.5rem;
+          left: 0.0625rem;
+          content: "";
+          border-right: 0.5rem solid transparent;
+          border-left: 0.5rem solid transparent;
+          border-bottom: 0.5rem solid rgba(0, 0, 0, 0.15);
+          display: inline-block;
+        }
+
+        &:after {
+          position: absolute;
+          top: -0.4375rem;
+          left: 0.0625rem;
+          content: '';
+          border-left: 0.5rem solid transparent;
+          border-right: 0.5rem solid transparent;
+          border-bottom: 0.5rem solid #ffffff;
+          display: inline-block;
+        }
+
+        &.anchor-right {
+
+          &:before,
+          &:after {
+            left: auto;
+            right: 0.0625rem;
+          }
+        }
+      }
+    }
+  }
+}

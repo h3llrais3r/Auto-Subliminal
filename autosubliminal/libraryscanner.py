@@ -12,10 +12,10 @@ from autosubliminal.db import (FailedMoviesDb, FailedShowsDb, MovieDetailsDb, Mo
                                ShowEpisodeDetailsDb, ShowSettingsDb)
 from autosubliminal.fileprocessor import process_file
 from autosubliminal.indexer import MovieIndexer, ShowIndexer
-from autosubliminal.util.common import get_wanted_languages, safe_lowercase
+from autosubliminal.util.common import get_missing_languages, safe_lowercase
 from autosubliminal.util.filesystem import (VIDEO_EXTENSIONS, get_available_subtitles, is_skipped_dir,
                                             is_valid_video_file, one_path_exists)
-from autosubliminal.util.websocket import PAGE_RELOAD, send_websocket_event, send_websocket_notification
+from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
 
@@ -35,10 +35,7 @@ class LibraryScanner(ScheduledProcess):
     def run(self, force_run):
         paths = autosubliminal.LIBRARYPATHS
         log.info('Starting round of library scanning at %r', paths)
-
-        # Show info message (only when run was forced manually)
-        if force_run:
-            send_websocket_notification('Scanning library...')
+        send_websocket_notification('Scanning library...')
 
         # Check if a path exists to scan
         if not one_path_exists(paths):
@@ -58,8 +55,7 @@ class LibraryScanner(ScheduledProcess):
                 log.exception('Could not scan the path (%s), skipping it', path)
 
         # Send library page reload event
-        send_websocket_event(PAGE_RELOAD, data={'name': 'library'})
-
+        send_websocket_notification('Library scan finished.')
         log.info('Finished round of library scanning')
 
 
@@ -101,12 +97,12 @@ class LibraryPathScanner(object):
         if wanted_item:
             if wanted_item.is_episode:
                 # Do a force search if no tvdb id found
-                if not wanted_item.tvdbid:
-                    wanted_item.tvdbid = self.show_indexer.get_tvdb_id(wanted_item.title, year=wanted_item.year,
-                                                                       force_search=True)
+                if not wanted_item.tvdb_id:
+                    wanted_item.tvdb_id = self.show_indexer.get_tvdb_id(wanted_item.title, year=wanted_item.year,
+                                                                        force_search=True)
 
                 # Skip if no tvdb id is found
-                if not wanted_item.tvdbid:
+                if not wanted_item.tvdb_id:
                     log.warning('Skipping show episode file with unknown tvdb id: %s', os.path.join(dirname, filename))
                     show_path = self._get_show_path(dirname)
                     if not self.failed_shows_db.get_failed_show(show_path):
@@ -114,19 +110,19 @@ class LibraryPathScanner(object):
                     return
 
                 # Store default show settings if not yet available
-                if not self.show_settings_db.get_show_settings(wanted_item.tvdbid):
-                    self.show_settings_db.set_show_settings(ShowSettings.default_settings(wanted_item.tvdbid))
-                show_settings = self.show_settings_db.get_show_settings(wanted_item.tvdbid)
+                if not self.show_settings_db.get_show_settings(wanted_item.tvdb_id):
+                    self.show_settings_db.set_show_settings(ShowSettings.default_settings(wanted_item.tvdb_id))
+                show_settings = self.show_settings_db.get_show_settings(wanted_item.tvdb_id)
 
                 # Get show details
-                show_details = self.show_db.get_show(wanted_item.tvdbid)
+                show_details = self.show_db.get_show(wanted_item.tvdb_id)
                 # Add show and episodes to db if not yet in db
                 if not show_details:
-                    show_details = self.show_indexer.get_show_details(wanted_item.tvdbid)
+                    show_details = self.show_indexer.get_show_details(wanted_item.tvdb_id)
                     if show_details:
                         show_details.path = self._get_show_path(dirname)
                         self.show_db.set_show(show_details)
-                        episodes = self.show_indexer.get_show_episodes(wanted_item.tvdbid)
+                        episodes = self.show_indexer.get_show_episodes(wanted_item.tvdb_id)
                         if episodes:
                             for episode in episodes:
                                 self.show_episodes_db.set_show_episode(episode)
@@ -159,35 +155,35 @@ class LibraryPathScanner(object):
                 # Check episode details
                 if isinstance(wanted_item.episode, list):
                     for episode in wanted_item.episode:
-                        self._update_episode_details(show_settings, dirname, filename, wanted_item.tvdbid,
+                        self._update_episode_details(show_settings, dirname, filename, wanted_item.tvdb_id,
                                                      wanted_item.season, episode)
                 else:
-                    self._update_episode_details(show_settings, dirname, filename, wanted_item.tvdbid,
+                    self._update_episode_details(show_settings, dirname, filename, wanted_item.tvdb_id,
                                                  wanted_item.season, wanted_item.episode)
             if wanted_item.is_movie:
                 # Do a force search if no imdb id found
-                if not wanted_item.imdbid:
-                    wanted_item.imdbid, _ = self.movie_indexer.get_imdb_id_and_year(wanted_item.title,
-                                                                                    year=wanted_item.year,
-                                                                                    force_search=True)
+                if not wanted_item.imdb_id:
+                    wanted_item.imdb_id, _ = self.movie_indexer.get_imdb_id_and_year(wanted_item.title,
+                                                                                     year=wanted_item.year,
+                                                                                     force_search=True)
 
                 # Skip if no imdb id is found
-                if not wanted_item.imdbid:
+                if not wanted_item.imdb_id:
                     log.warning('Skipping movie file with unknown imdb id: %s', os.path.join(dirname, filename))
                     if not self.failed_movies_db.get_failed_movie(dirname):
                         self.failed_movies_db.set_failed_movie(dirname)
                     return
 
                 # Store default movie settings if not yet available
-                if not self.movie_settings_db.get_movie_settings(wanted_item.imdbid):
-                    self.movie_settings_db.set_movie_settings(MovieSettings.default_settings(wanted_item.imdbid))
-                movie_settings = self.movie_settings_db.get_movie_settings(wanted_item.imdbid)
+                if not self.movie_settings_db.get_movie_settings(wanted_item.imdb_id):
+                    self.movie_settings_db.set_movie_settings(MovieSettings.default_settings(wanted_item.imdb_id))
+                movie_settings = self.movie_settings_db.get_movie_settings(wanted_item.imdb_id)
 
                 # Get movie details
-                movie_details = self.movie_db.get_movie(wanted_item.imdbid)
+                movie_details = self.movie_db.get_movie(wanted_item.imdb_id)
                 # Add movie to db if not yet in db
                 if not movie_details:
-                    movie_details = self.movie_indexer.get_movie_details(wanted_item.imdbid)
+                    movie_details = self.movie_indexer.get_movie_details(wanted_item.imdb_id)
                     if movie_details:
                         movie_details.path = dirname
                         self.movie_db.set_movie(movie_details)
@@ -207,7 +203,7 @@ class LibraryPathScanner(object):
                                           thumbnail=True)
 
                 # Check movie details
-                self._update_movie_details(movie_settings, dirname, filename, wanted_item.imdbid)
+                self._update_movie_details(movie_settings, dirname, filename, wanted_item.imdb_id)
 
     def _get_show_path(self, dirname):
         path = dirname
@@ -217,7 +213,7 @@ class LibraryPathScanner(object):
         return path
 
     def _update_episode_details(self, show_settings, dirname, filename, show_tvdb_id, season, episode):
-        episode_details = self.show_episodes_db.get_show_episode(show_tvdb_id, season, episode)
+        episode_details = self.show_episodes_db.get_show_episode_by_show(show_tvdb_id, season, episode)
 
         # If no episode is found, we need to fetch the episode details of the show
         # This is because the show is still on-going and we didn't got all episodes when the show was loaded
@@ -230,8 +226,8 @@ class LibraryPathScanner(object):
             # Set details
             available_subtitles = get_available_subtitles(dirname, filename, autosubliminal.SCANEMBEDDEDSUBS,
                                                           autosubliminal.SCANHARDCODEDSUBS)
-            missing_languages = self._get_missing_subtitle_languages(available_subtitles,
-                                                                     wanted_languages=show_settings.wanted_languages)
+            missing_languages = get_missing_languages(available_subtitles,
+                                                      wanted_languages=show_settings.wanted_languages)
             episode_details.subtitles = available_subtitles
             episode_details.missing_languages = missing_languages
             episode_details.path = os.path.abspath(os.path.join(dirname, filename))
@@ -245,22 +241,10 @@ class LibraryPathScanner(object):
             # Set details
             available_subtitles = get_available_subtitles(dirname, filename, autosubliminal.SCANEMBEDDEDSUBS,
                                                           autosubliminal.SCANHARDCODEDSUBS)
-            missing_languages = self._get_missing_subtitle_languages(available_subtitles,
-                                                                     wanted_languages=movie_settings.wanted_languages)
+            missing_languages = get_missing_languages(available_subtitles,
+                                                      wanted_languages=movie_settings.wanted_languages)
             movie_details.subtitles = available_subtitles
             movie_details.missing_languages = missing_languages
             movie_details.path = os.path.abspath(os.path.join(dirname, filename))
             # Update details in db
             self.movie_db.update_movie(movie_details, subtitles=True)
-
-    def _get_missing_subtitle_languages(self, available_subtitles, wanted_languages=None):
-        # Use custom wanted languages or globally configured wanted languages if not provided
-        if wanted_languages is None:
-            wanted_languages = get_wanted_languages()
-
-        available_languages = []
-        for subtitle in available_subtitles:
-            available_languages.append(subtitle.language)
-
-        # Return the missing languages (= not in available languages)
-        return [language for language in wanted_languages if language not in available_languages]

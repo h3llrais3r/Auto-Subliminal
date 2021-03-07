@@ -11,7 +11,7 @@ from autosubliminal.util.filesystem import (check_missing_subtitle_languages, is
                                             one_path_exists)
 from autosubliminal.util.queue import release_wanted_queue_lock_on_exception
 from autosubliminal.util.skip import skip_movie, skip_show
-from autosubliminal.util.websocket import PAGE_RELOAD, send_websocket_event, send_websocket_notification
+from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
 
@@ -33,10 +33,7 @@ class DiskScanner(ScheduledProcess):
     def run(self, force_run):
         paths = autosubliminal.VIDEOPATHS
         log.info('Starting round of local disk checking at %r', paths)
-
-        # Show info message (only when run was forced manually)
-        if force_run:
-            send_websocket_notification('Scanning disk...')
+        send_websocket_notification('Scanning disk...')
 
         # Check if a path exists to scan
         if not one_path_exists(paths):
@@ -56,19 +53,17 @@ class DiskScanner(ScheduledProcess):
         log.debug('Checking for non existing wanted items in wanted_items database')
         for item in old_wanted_items:
             if item not in new_wanted_items:
-                self.wanted_db.delete_wanted_item(item)
-                log.debug('Deleted non existing wanted item: %s', item.videopath)
+                self.wanted_db.delete_wanted_item(item.id)
+                log.debug('Deleted non existing wanted item: %s', item.video_path)
 
         # Populate WANTEDQUEUE with all items from wanted_items database
         log.info('Listing videos with missing subtitles:')
         autosubliminal.WANTEDQUEUE = []
         for item in self.wanted_db.get_wanted_items():
-            log.info('%s %s', item.videopath, item.languages)
+            log.info('%s %s', item.video_path, item.languages)
             autosubliminal.WANTEDQUEUE.append(item)
 
-        # Send home page reload event
-        send_websocket_event(PAGE_RELOAD, data={'name': 'home'})
-
+        send_websocket_notification('Disk scan finished.')
         log.info('Finished round of local disk checking')
 
     def _scan_path(self, path):
@@ -104,7 +99,7 @@ class DiskScanner(ScheduledProcess):
 
     def _scan_file(self, dirname, filename):
         # Check if video file has already been processed before, so we don't need to process it again
-        wanted_item = self.wanted_db.get_wanted_item(os.path.join(dirname, filename), ignore_case=True)
+        wanted_item = self.wanted_db.get_wanted_item_by_video_path(os.path.join(dirname, filename), ignore_case=True)
         if wanted_item:
             log.debug('Video found in wanted_items database, no need to scan it again')
         else:
@@ -115,12 +110,12 @@ class DiskScanner(ScheduledProcess):
             if wanted_item:
                 # Determine wanted languages
                 wanted_languages = []
-                if wanted_item.is_episode and wanted_item.tvdbid:
-                    settings = self.show_settings_db.get_show_settings(wanted_item.tvdbid)
+                if wanted_item.is_episode and wanted_item.tvdb_id:
+                    settings = self.show_settings_db.get_show_settings(wanted_item.tvdb_id)
                     if settings and settings.wanted_languages:
                         wanted_languages = settings.wanted_languages
-                elif wanted_item.is_movie and wanted_item.imdbid:
-                    settings = self.movie_settings_db.get_movie_settings(wanted_item.imdbid)
+                elif wanted_item.is_movie and wanted_item.imdb_id:
+                    settings = self.movie_settings_db.get_movie_settings(wanted_item.imdb_id)
                     if settings and settings.wanted_languages:
                         wanted_languages = settings.wanted_languages
 
@@ -152,7 +147,7 @@ class DiskScanner(ScheduledProcess):
                 title = wanted_item.title
                 season = wanted_item.season
                 if skip_show(title, season):
-                    self.wanted_db.delete_wanted_item(wanted_item)
+                    self.wanted_db.delete_wanted_item(wanted_item.id)
                     log.info('Skipping %s - Season %s', title, season)
                     return None
 
@@ -161,7 +156,7 @@ class DiskScanner(ScheduledProcess):
                 title = wanted_item.title
                 year = wanted_item.year
                 if skip_movie(title, year):
-                    self.wanted_db.delete_wanted_item(wanted_item)
+                    self.wanted_db.delete_wanted_item(wanted_item.id)
                     log.info('Skipping %s (%s)', title, year)
                     return None
 

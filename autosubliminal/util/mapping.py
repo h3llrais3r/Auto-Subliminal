@@ -10,27 +10,6 @@ from autosubliminal.util.common import sanitize
 log = logging.getLogger(__name__)
 
 
-def mapping_string_to_dict(mapping_string):
-    """
-    Return a dict from a string for the name mappings (key = value).
-    """
-    mapping_string = mapping_string.split('\r\n')
-    mapping_info_list = []
-
-    for mapping in mapping_string:
-        if mapping:
-            mapping_info = []
-            for x in mapping.split('='):
-                if x[-1:] == ' ':
-                    x = x[:-1]
-                elif x[:1] == ' ':
-                    x = x[1:]
-                mapping_info.append(x)
-            mapping_info = tuple(mapping_info)
-            mapping_info_list.append(mapping_info)
-    return dict(mapping_info_list)
-
-
 def get_show_name_mapping(show_name):
     """
     Get the tvdb show name mapping for a show.

@@ -49,7 +49,7 @@ class ShowDetails(object):
         return artwork_url
 
     def set_attr(self, key, value):
-        """Set an attribute.
+        """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
         :param key: the attribute key
@@ -57,7 +57,7 @@ class ShowDetails(object):
         :param value: the attribute value
         :type value: str
         """
-        if hasattr(self, key):
+        if hasattr(self, key) and not hasattr(type(self), key):
             if key in ['tvdb_id', 'year']:
                 # # Set as int
                 setattr(self, key, to_obj(value, obj_type=int))
@@ -148,7 +148,7 @@ class ShowEpisodeDetails(object):
         return self.path is not None
 
     def set_attr(self, key, value):
-        """Set an attribute.
+        """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
         :param key: the attribute key
@@ -156,7 +156,7 @@ class ShowEpisodeDetails(object):
         :param value: the attribute value
         :type value: str
         """
-        if hasattr(self, key):
+        if hasattr(self, key) and not hasattr(type(self), key):
             if key in ['tvdb_id', 'show_tvdb_id' 'year']:
                 # # Set as int
                 setattr(self, key, to_obj(value, obj_type=int))
@@ -201,7 +201,7 @@ class ShowSettings(object):
         self.utf8_encoding = utf8_encoding
 
     def set_attr(self, key, value):
-        """Set an attribute.
+        """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
         :param key: the attribute key
@@ -209,7 +209,7 @@ class ShowSettings(object):
         :param value: the attribute value
         :type value: str
         """
-        if hasattr(self, key):
+        if hasattr(self, key) and not hasattr(type(self), key):
             if key in ['tvdb_id']:
                 # # Set as int
                 setattr(self, key, to_obj(value, obj_type=int))

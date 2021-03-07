@@ -5,7 +5,7 @@ import os
 import tempfile
 
 import autosubliminal
-from autosubliminal.core.logger import count_backup_logfiles, display_logfile, get_logfile, initialize, update_settings
+from autosubliminal.core.logger import count_backup_logfiles, get_log_lines, get_logfile, initialize, update_settings
 
 
 def _mock_settings(monkeypatch):
@@ -57,31 +57,31 @@ def test_update_settings(monkeypatch):
     assert console_handler.level == logging.WARNING
 
 
-def test_display_logfile():
+def test_get_log_lines(monkeypatch):
+    monkeypatch.setattr('autosubliminal.LOGREVERSED', False)
     try:
-        linesep = os.linesep
         line1 = u'2016-06-06 20:32:15,509 INFO     [MainThread :: __main__] Running application with PID: 9944'
         line2 = u'traceback'
         line3 = u'2016-06-06 20:32:15,509 DEBUG    [MainThread :: __main__] System encoding: cp1252'
         line4 = u'2016-06-06 20:32:15,509 DEBUG    [MainThread :: __main__] Config version: 10'
-        lines = line1 + linesep + line2 + linesep + line3 + linesep + line4
-        lines_info = line1 + linesep + line2
-        lines_debug = line3 + linesep + line4
-        lines_debug_reversed = line4 + linesep + line3
+        lines = [line1, line2, line3, line4]
+        lines_info = [line1, line2]
+        lines_debug = [line3, line4]
+        lines_debug_reversed = list(reversed(lines_debug))
         fd, autosubliminal.LOGFILE = tempfile.mkstemp(text=True)
         file = open(autosubliminal.LOGFILE, 'w')
         file.write(line1 + '\n' + line2 + '\n' + line3 + '\n' + line4 + '\n')
         file.close()
         os.close(fd)
-        assert display_logfile() == lines
-        assert display_logfile(loglevel='all') == lines
-        assert display_logfile(loglevel='debug') == lines_debug
-        assert display_logfile(loglevel='info') == lines_info
-        assert display_logfile(loglevel='error') == ''
-        assert display_logfile(loglevel='all', lines=10) == lines
-        assert display_logfile(loglevel='all', lines=2) == lines_debug  # last 2 lines
-        autosubliminal.LOGREVERSED = True
-        assert display_logfile(loglevel='debug') == lines_debug_reversed
+        assert get_log_lines() == lines
+        assert get_log_lines(loglevel='all') == lines
+        assert get_log_lines(loglevel='debug') == lines_debug
+        assert get_log_lines(loglevel='info') == lines_info
+        assert get_log_lines(loglevel='error') == []
+        assert get_log_lines(loglevel='all', lines=10) == lines
+        assert get_log_lines(loglevel='all', lines=2) == lines_debug  # last 2 lines
+        monkeypatch.setattr('autosubliminal.LOGREVERSED', True)
+        assert get_log_lines(loglevel='debug') == lines_debug_reversed
     finally:
         os.remove(autosubliminal.LOGFILE)
 

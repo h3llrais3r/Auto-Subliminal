@@ -1,0 +1,105 @@
+<div class="container-lg">
+  <p-panel header="Namemapping settings">
+    <form *ngIf="settingsForm" [formGroup]="settingsForm" class="form">
+      <!-- Warning notification -->
+      <div class="row form-row">
+        <div class="col-12 form-row-notification">
+          <p-message severity="warn" text="Use the namemapping at own risk! Incorrect use of the namemapping may result in subtitles not being found!" styleClass="w-100"></p-message>
+        </div>
+      </div>
+      <!-- Show settings -->
+      <div class="row form-row">
+        <div class="col-12">
+          <span class="p-tag p-tag-rounded p-tag-small">Show</span>
+        </div>
+      </div>
+      <!-- Show name mapping -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="showNameMapping" class="label">Name mapping</label>
+          <app-icon-dropdown>
+            <li>The local show name mapping to the TVDB ID.</li>
+            <li>Examples:</li>
+            <li>Show name = 12345</li>
+            <li>Show name 2 = 123456</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-multi-text formControlName="showNameMapping" [validationFeedback]="saveAttempt"></app-input-multi-text>
+        </div>
+      </div>
+      <!-- Addic7ed show name mapping -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="addic7edShowNameMapping" class="label">Addic7ed name mapping</label>
+          <app-icon-dropdown>
+            <li>The local show name mapping to the Addic7ed ID.</li>
+            <li>Examples:</li>
+            <li>Show name = 12345</li>
+            <li>Show name 2 = 123456</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-multi-text formControlName="addic7edShowNameMapping" [validationFeedback]="saveAttempt"></app-input-multi-text>
+        </div>
+      </div>
+      <!-- Alternative show name mapping -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="alternativeShowNameMapping" class="label">Alternative name mapping</label>
+          <app-icon-dropdown>
+            <li>List the alternative names of a show to increase subtitle matching.</li>
+            <li>Examples:</li>
+            <li>Show name = Show name alternative 1a,Show name alternative 1b</li>
+            <li>Show name 2 = Show name 2a</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-multi-text formControlName="alternativeShowNameMapping" [validationFeedback]="saveAttempt"></app-input-multi-text>
+        </div>
+      </div>
+      <!-- Movie settings -->
+      <div class="row form-row">
+        <div class="col-12">
+          <span class="p-tag p-tag-rounded p-tag-small">Movie</span>
+        </div>
+      </div>
+      <!-- Movie name mapping -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="movieNameMapping" class="label">Name mapping</label>
+          <app-icon-dropdown>
+            <li>The local movie name mapping to the IMDB ID.</li>
+            <li>Examples:</li>
+            <li>Movie title (year) = 12345</li>
+            <li>Movie title 2 (year) = 123456</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-multi-text formControlName="movieNameMapping" [validationFeedback]="saveAttempt"></app-input-multi-text>
+        </div>
+      </div>
+      <!-- Alternative movie name mapping -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="alternativeMovieNameMapping" class="label">Alternative name mapping</label>
+          <app-icon-dropdown>
+            <li>List the alternative titles of a movie to increase subtitle matching.</li>
+            <li>Examples:</li>
+            <li>Movie title = Movie title alternative 1a,Movie title alternative 1b</li>
+            <li>Movie title 2 = Movie title 2a</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-multi-text formControlName="alternativeMovieNameMapping" [validationFeedback]="saveAttempt"></app-input-multi-text>
+        </div>
+      </div>
+      <!-- Button -->
+      <div class="row button-row">
+        <div class="col-12 col-sm-12 col-md-12 col-lg-10">
+          <p-button label="Save" (onClick)="save()"></p-button>
+        </div>
+      </div>
+    </form>
+  </p-panel>
+</div>

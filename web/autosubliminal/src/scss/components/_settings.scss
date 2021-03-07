@@ -1,0 +1,63 @@
+@import '../variables';
+@import '../mixins/flexbox';
+@import './images';
+
+// Shared styling for settings dialogs
+
+.dialog-settings {
+  width: 40rem;
+}
+
+.settings-container {
+  overflow-x: hidden; // in some resolutions there seems to be an overflow in the dialog due to row padding
+
+  .settings-info-container {
+    @include flexbox;
+
+    @media (max-width: $media-mobile-max-width) {
+      display: block; // poster and info must be on new lines
+    }
+
+    .settings-info-poster {
+      @include flexbox;
+      @include justify-content(center);
+      @include align-items(flex-start);
+      margin-bottom: 0.25rem; // to be sure the image box is shown properly
+
+      .settings-info-poster-image {
+        @extend .image-box;
+        height: 250px;
+        width: 167px; // aspect ratio 0.675
+
+        @media (max-width: $media-mobile-max-width) {
+          height: 150px;
+          width: 101px; // aspect ratio 0.675
+        }
+      }
+    }
+
+    .settings-info {
+      @include flex-grow(1);
+      padding-left: 15px; // to be in sync with bootstrap default col padding
+
+      @media (max-width: $media-mobile-max-width) {
+        padding-left: 0; // settings info is on new line so no padding needed
+      }
+
+      .settings-info-title {
+        @include flexbox;
+        font-size: 1.5rem;
+
+        @media (max-width: $media-mobile-max-width) {
+          @include justify-content(center);
+          padding-left: 0;
+        }
+      }
+
+      .flex-right {
+        @include flexbox;
+        @include justify-content(flex-end);
+      }
+    }
+  }
+}

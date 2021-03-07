@@ -22,7 +22,7 @@ from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.util.common import connect_url, wait_for_internet_connection
 from autosubliminal.util.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
                                        release_wanted_queue_lock_on_exception)
-from autosubliminal.util.websocket import send_websocket_notification
+from autosubliminal.util.websocket import send_websocket_notification, send_websocket_event, SYSTEM_UPDATE
 from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
@@ -182,13 +182,13 @@ class SourceVersionManager(BaseVersionManager):
             send_websocket_notification(
                 'Unknown version found! '
                 'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and reinstall!',
-                type='error', sticky=True)
+                severity='error', sticky=True)
         elif local_version < remote_version:
             log.info('New version found')
             send_websocket_notification(
                 'New version found. '
                 'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and update!',
-                type='notice', sticky=True)
+                severity='warn', sticky=True)
         else:
             log.info('Version up to date')
             # Show info message (only when run was forced manually)
@@ -276,14 +276,11 @@ class GitVersionManager(BaseVersionManager):
 
         if self.num_commits_ahead > 0:
             log.info('Unknown version found')
-            send_websocket_notification(
-                'Unknown version found! Check <a href=' + autosubliminal.GITHUBURL +
-                '/releases>Github</a> and reinstall!', type='error', sticky=True)
+            send_websocket_notification('Unknown version found! Please reinstall!', severity='error', sticky=True)
         elif self.num_commits_behind > 0:
             log.info('New version found')
-            send_websocket_notification(
-                'New version found. <a href=' + autosubliminal.WEBROOT + '/system/updateVersion>Update</a>!',
-                type='notice', sticky=True)
+            send_websocket_notification('New version found. Please update through the System menu!', sticky=True)
+            send_websocket_event(SYSTEM_UPDATE, data={'available': True})
             self.update_allowed = True
         else:
             log.info('Version up to date')
@@ -302,5 +299,6 @@ class GitVersionManager(BaseVersionManager):
                 self.clean()
                 log.info('Updated to the latest version')
                 send_websocket_notification('Updated to the latest version.')
+                send_websocket_event(SYSTEM_UPDATE, data={'available': False})
             except Exception:
                 log.exception('Could not update version')

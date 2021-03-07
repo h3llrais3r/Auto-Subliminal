@@ -47,7 +47,7 @@ def refine(video, wanted_item, **kwargs):
         video.source = _get_video_attr(wanted_item.source, video.source)
         video.resolution = _get_video_attr(wanted_item.quality, video.resolution)
         video.video_codec = _get_video_attr(wanted_item.codec, video.video_codec)
-        video.release_group = _get_video_attr(wanted_item.releasegrp, video.release_group)
+        video.release_group = _get_video_attr(wanted_item.release_group, video.release_group)
         return
 
     # refine movie
@@ -58,7 +58,7 @@ def refine(video, wanted_item, **kwargs):
         video.source = _get_video_attr(wanted_item.source, video.source)
         video.resolution = _get_video_attr(wanted_item.quality, video.resolution)
         video.video_codec = _get_video_attr(wanted_item.codec, video.video_codec)
-        video.release_group = _get_video_attr(wanted_item.releasegrp, video.release_group)
+        video.release_group = _get_video_attr(wanted_item.release_group, video.release_group)
         return
 
 

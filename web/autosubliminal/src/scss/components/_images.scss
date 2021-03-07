@@ -1,0 +1,13 @@
+@import '../mixins/box-shadow';
+@import '../mixins/filter';
+
+.image-box {
+  @include box-shadow(3px 3px 3px #000000);
+  border: 1px solid #000000;
+}
+
+.image-hover {
+  &:hover {
+    @include filter(brightness(75%));
+  }
+}

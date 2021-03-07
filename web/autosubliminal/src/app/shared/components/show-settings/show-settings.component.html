@@ -1,0 +1,86 @@
+<!-- Show settings dialog -->
+<p-dialog [(visible)]="visible && loaded"
+          [modal]="true"
+          [closable]="false"
+          [resizable]="false"
+          header="Show settings"
+          styleClass="dialog-settings">
+  <form *ngIf="settingsForm" [formGroup]="settingsForm" class="form">
+    <div class="settings-container">
+      <div class="row">
+        <div class="col-12 settings-info-container">
+          <div class="settings-info-poster">
+            <img class="settings-info-poster-image" [lazyLoad]="getShowPosterThumbnailUrl()" [defaultImage]="getPosterPlaceholderUrl()">
+          </div>
+          <div class="settings-info">
+            <div class="row form-row">
+              <div class="col-12 settings-info-title">
+                <div>{{title}}</div>
+              </div>
+            </div>
+            <div class="row form-row">
+              <div class="col-12">
+                <hr>
+              </div>
+            </div>
+            <div class="row form-row">
+              <div class="col-12">
+                <div class="row form-row">
+                  <div class="col-12 col-sm-5 form-row-label">
+                    <label for="wantedLanguages" class="label">Wanted languages</label>
+                    <app-icon-dropdown>
+                      <li>The list of wanted subtitle languages for the show.</li>
+                      <li>This replaces the globally configured languages, but only for this show.</li>
+                    </app-icon-dropdown>
+                  </div>
+                  <div class="col-12 col-sm-7">
+                    <app-input-multi-select [options]="languages" formControlName="wantedLanguages" placeholder="Select languages"></app-input-multi-select>
+                  </div>
+                </div>
+                <div class="row form-row">
+                  <div class="col-10 form-row-label">
+                    <label for="refine" class="label">Refine video</label>
+                    <app-icon-dropdown>
+                      <li>When enabled, subliminal will enable 'refiners' to enrich the video meta-data before searching for subtitles.</li>
+                      <li>This can result in a higher score matching and thus a higher automatic subtitle download.</li>
+                    </app-icon-dropdown>
+                  </div>
+                  <div class="col-2 flex-right">
+                    <app-input-switch formControlName="refine"></app-input-switch>
+                  </div>
+                </div>
+                <div class="row form-row">
+                  <div class="col-10 form-row-label">
+                    <label for="hearingImpaired" class="label">Prefer hearing impaired subs</label>
+                    <app-icon-dropdown>
+                      <li>When enabled, 'hearing impaired' subtitles will be preferred over 'regular' subtitles.</li>
+                    </app-icon-dropdown>
+                  </div>
+                  <div class="col-2 flex-right">
+                    <app-input-switch formControlName="hearingImpaired"></app-input-switch>
+                  </div>
+                </div>
+                <div class="row form-row">
+                  <div class="col-10 form-row-label">
+                    <label for="utf8Encoding" class="label">Save subtitles in utf-8 encoding</label>
+                    <app-icon-dropdown>
+                      <li>When enabled, all subtitles will be saved in utf-8 encoding.</li>
+                      <li>When disabled, the original encoding of the subtitle is used.</li>
+                    </app-icon-dropdown>
+                  </div>
+                  <div class="col-2 flex-right">
+                    <app-input-switch formControlName="utf8Encoding"></app-input-switch>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button icon="pi pi-times" label="Cancel" styleClass="p-button p-button-secondary" (click)="close()"></p-button>
+    <p-button icon="pi pi-check" label="Save" styleClass="p-button mr-0" (click)="saveShowSettings()"></p-button>
+  </ng-template>
+</p-dialog>

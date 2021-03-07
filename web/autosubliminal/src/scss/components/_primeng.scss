@@ -1,0 +1,373 @@
+@import '../variables';
+@import '../mixins/box-shadow';
+@import '../mixins/border-radius';
+@import '../mixins/flexbox';
+
+// Menubar
+.p-menubar {
+
+  // Auto grow to get rest aligned to the right
+  .p-menubar-start {
+    @include flex-grow(1);
+  }
+
+  // Menu item coloring
+  .p-menubar-root-list>.p-menuitem,
+  .p-menubar-root-list>.p-menuitem.p-menuitem-active {
+
+    >.p-menuitem-link,
+    >.p-menuitem-link:not(.p-disabled) {
+      padding: 1rem 0.5rem;
+
+      // Hide box shadow on focus
+      &:focus {
+        @include box-shadow(none);
+        outline: 0;
+      }
+
+      // Add hover styling
+      &:hover {
+        @include box-shadow(inset 0 0 0 1px var(--surface-d));
+        @include border-radius(0);
+        background-color: var(--surface-a);
+      }
+    }
+  }
+
+  // Submenu styling
+  .p-submenu-list {
+    right: 0; // right align
+    left: auto;
+    max-height: 50vh; // max height
+    overflow-y: auto;
+  }
+
+  // Hide box shadow on focus
+  .p-menuitem-link {
+    &:focus {
+      @include box-shadow(none);
+      outline: 0;
+    }
+  }
+
+  .p-menuitem-link.active {
+    background-color: var(--primary-color);
+  }
+}
+
+// Panel
+.p-panel {
+  .p-panel-header {
+    .p-panel-title {
+      font-size: 1.5rem;
+    }
+
+    .p-panel-title-icon {
+      margin-left: 0.5rem;
+    }
+
+    .p-panel-title-dropdown {
+      padding: 0.1rem;
+    }
+
+    .w-100 {
+      @include flexbox;
+      @include align-items(center);
+
+      .p-panel-title {
+        @include flex-grow(1);
+        font-size: 1.5rem;
+      }
+    }
+
+  }
+}
+
+// Tab view
+.p-tabview {
+  .p-tabview-nav li {
+    .p-tabview-nav-link:not(.p-disabled) {
+
+      // Hide box shadow on focus
+      &:focus {
+        @include box-shadow(none);
+        outline: 0;
+      }
+    }
+  }
+
+  .p-tabview-panels {
+    border: 1px solid var(--surface-d);
+    border-top: none;
+  }
+}
+
+// Datatable
+.p-datatable {
+
+  // Custom caption
+  .caption {
+    @include flexbox;
+    @include align-items(center);
+  }
+
+  // Header
+  .p-datatable-thead>tr>th {
+    // background-color: rgba(0, 0, 0, 0.1); // darken
+    background-color: var(--surface-b);
+    vertical-align: top;
+  }
+
+  // Sorted header
+  .p-sortable-column {
+    &.p-highlight {
+      // background-color: rgba(0, 0, 0, 0.2); // darken
+      background-color: var(--surface-b);
+    }
+  }
+
+  // Hide column title in body in responsive mode
+  &.p-datatable-responsive-mode {
+    .p-datatable-tbody>tr>td {
+      .p-column-title {
+        display: none;
+      }
+    }
+  }
+}
+
+// Responsive datatable
+@media screen and (max-width: $media-mobile-max-width) {
+  .p-datatable {
+    &.p-datatable-responsive-mode {
+
+      .p-datatable-wrapper {
+        border: 1px solid var(--surface-d);
+      }
+
+      .p-datatable-thead>tr>th,
+      .p-datatable-tfoot>tr>td {
+        display: none !important;
+      }
+
+      .p-datatable-tbody>tr>td {
+        text-align: left;
+        display: block;
+        width: 100%;
+        float: left;
+        clear: left;
+        border: 0 none;
+
+        .p-column-title {
+          width: 40%;
+          display: inline-block;
+          word-break: break-all;
+          font-weight: $font-bold;
+          vertical-align: top;
+        }
+
+        .p-column-data {
+          padding-left: 0.4rem;
+          width: 60%;
+          display: inline-block;
+          word-break: break-all;
+        }
+
+        // Replaced by border on .p-datatable-wrapper
+        /*&:last-child {
+          border: 1px solid var(--surface-d);
+        }*/
+      }
+    }
+  }
+}
+
+// Input text
+.p-inputtext {
+  line-height: normal; // change lineheight to have a more slim dropdown
+
+  // Hide box shadow on focus
+  &:not(.p-disabled):focus {
+    @include box-shadow(none);
+    outline: 0;
+  }
+
+  &.invalid {
+    border-color: var(--danger);
+
+    &:not(.p-disabled) {
+
+      &:focus,
+      &:hover {
+        border-color: var(--danger);
+      }
+    }
+  }
+}
+
+// Inputswitch
+p-inputswitch {
+  .p-inputswitch {
+    @include flexbox; // use flexbox for nice alignment
+  }
+}
+
+// Dropdown
+p-dropdown {
+  &.invalid {
+    .p-dropdown {
+      border-color: var(--danger);
+
+      &:not(.p-disabled) {
+
+        &.p-focus,
+        &:hover {
+          border-color: var(--danger);
+        }
+      }
+    }
+  }
+
+  .p-dropdown {
+    line-height: normal; // change lineheight to have a more slim dropdown
+
+    // Hide box shadow on focus
+    &:not(.p-disabled).p-focus {
+      @include box-shadow(none);
+      outline: 0;
+    }
+
+    // Align right
+    &.p-dropdown-ar {
+      .p-dropdown-panel {
+        right: 0;
+        left: auto !important;
+
+        .p-dropdown-items {
+          .p-dropdown-item {
+            text-align: right;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Button
+.p-button {
+  line-height: normal; // change lineheight to have a more slim button
+
+  // Hide box shadow on focus
+  &:focus {
+    @include box-shadow(none);
+    outline: 0;
+  }
+
+  &.p-button-outlined {
+    border: 1px solid var(--surface-d); // change outlined border color
+
+    &.input-addon {
+      color: var(--text-color-secondary); // change text color when used as input addon
+    }
+  }
+
+  &.p-button-static {
+    pointer-events: none; // static button without click/pointer events
+  }
+}
+
+// Primeicons - vertical align: middle
+.pi {
+  &.pi-vm {
+    vertical-align: middle;
+  }
+}
+
+// Tag
+.p-tag {
+
+  // Missing secondary class for tags
+  &.p-tag-secondary {
+    background-color: var(--secondary);
+    color: var(--white);
+  }
+
+  // Small tag
+  &.p-tag-small {
+    padding: 0 0.4rem;
+  }
+
+  // Language tag
+  &.language {
+    background-color: var(--secondary);
+    color: var(--white);
+    padding: 0 0.4rem;
+    white-space: nowrap; // do not wrap language (f.e. pt-BR)
+  }
+
+  // Filetype tag
+  &.filetype {
+    border: 1px solid var(--surface-d);
+    background-color: var(--white);
+    color: var(--secondary);
+    padding: 0 0.4rem;
+  }
+}
+
+// Toast
+.p-toast {
+  word-break: break-word;
+}
+
+// Message
+.p-message {
+  margin: 0; // remove default margins as they are too big
+}
+
+// Inline message
+.p-inline-message {
+  &.w-100 {
+    @include justify-content(left); // default left align
+  }
+}
+
+// Dialog
+.p-dialog {
+
+  // Transparent dialog
+  &.dialog-transparent {
+    border: 0;
+    background-color: transparent;
+    @include box-shadow(none);
+
+    .p-dialog-header,
+    .p-dialog-content {
+      background-color: transparent;
+    }
+  }
+
+  .p-dialog-header {
+    .p-dialog-title {
+      font-size: 1.5rem; // to be in line with our panel title
+    }
+  }
+}
+
+// Inputgroup
+.p-inputgroup {
+
+  // Custom support for dropdown
+  &.dropdown {
+    .p-inputgroup-addon {
+      line-height: normal;
+    }
+
+    .p-dropdown {
+      @include border-radius(0);
+
+      &:last-child {
+        @include border-radius(0 3px 3px 0); // in sync with radius of primeng
+      }
+    }
+  }
+}

@@ -141,7 +141,8 @@ class ShowEpisodeDetailsDb(object):
         self._query_get_all_for_show = 'SELECT * FROM show_episode_details WHERE show_tvdb_id=?'
         self._query_get_all_for_show_available = 'SELECT * FROM show_episode_details ' \
                                                  'WHERE show_tvdb_id=? AND path IS NOT NULL AND path!=""'
-        self._query_get = 'SELECT * FROM show_episode_details WHERE show_tvdb_id=? AND season=? AND episode=?'
+        self._query_get = 'SELECT * FROM show_episode_details WHERE tvdb_id=?'
+        self._query_get_by_show = 'SELECT * FROM show_episode_details WHERE show_tvdb_id=? AND season=? AND episode=?'
         self._query_set = 'INSERT INTO show_episode_details VALUES (?,?,?,?,?,?,?)'
         self._query_update = 'UPDATE show_episode_details SET show_tvdb_id=?, title=?, season=?, episode=?, path=?, ' \
                              'missing_languages=? WHERE tvdb_id=?'
@@ -176,7 +177,28 @@ class ShowEpisodeDetailsDb(object):
 
         return show_episodes
 
-    def get_show_episode(self, show_tvdb_id, season, show_episode, subtitles=False):
+    def get_show_episode(self, tvdb_id, subtitles=False):
+        """Get a show episode by its tvdb id.
+
+        :param tvdb_id: the tvdb id of the episode
+        :type tvdb_id: int
+        :param subtitles: indication if subtitles must be fetched or not
+        :type subtitles: bool
+        :return: the show episode
+        :rtype: ShowEpisodeDetails
+        """
+        connection = sqlite3.connect(autosubliminal.DBFILE)
+        connection.row_factory = _show_episode_details_factory
+        cursor = connection.cursor()
+        cursor.execute(self._query_get, [tvdb_id])
+        show_episode = cursor.fetchone()
+        if subtitles:
+            show_episode.subtitles = ShowEpisodeSubtitlesDb(connection).get_show_episode_subtitles(show_episode.tvdb_id)
+        connection.close()
+
+        return show_episode
+
+    def get_show_episode_by_show(self, show_tvdb_id, season, show_episode, subtitles=False):
         """Get a show episode by its show tvdb id, season and episode number.
 
         :param show_tvdb_id: the tvdb id of the show
@@ -193,7 +215,7 @@ class ShowEpisodeDetailsDb(object):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         connection.row_factory = _show_episode_details_factory
         cursor = connection.cursor()
-        cursor.execute(self._query_get, [show_tvdb_id, season, show_episode])
+        cursor.execute(self._query_get_by_show, [show_tvdb_id, season, show_episode])
         show_episode = cursor.fetchone()
         if subtitles:
             show_episode.subtitles = ShowEpisodeSubtitlesDb(connection).get_show_episode_subtitles(show_episode.tvdb_id)
@@ -293,6 +315,7 @@ class ShowEpisodeSubtitlesDb(object):
         self._query_get = 'SELECT * FROM show_episode_subtitles WHERE tvdb_id=?'
         self._query_set = 'INSERT INTO show_episode_subtitles VALUES (?,?,?,?)'
         self._query_delete = 'DELETE FROM show_episode_subtitles WHERE tvdb_id=?'
+        self._query_delete_by_type = ''
         self._query_flush = 'DELETE FROM show_episode_subtitles'
 
     def get_show_episode_subtitles(self, tvdb_id):
@@ -334,15 +357,21 @@ class ShowEpisodeSubtitlesDb(object):
             connection.commit()
             connection.close()
 
-    def delete_show_episode_subtitles(self, tvdb_id):
+    def delete_show_episode_subtitles(self, tvdb_id, type=None):
         """Delete the subtitles of a show episode.
+        If a type is specified, only the specified type is deleted.
 
         :param tvdb_id: the tvdb id of the show episode
         :type tvdb_id: int
+        :param type: the type of subtitle
+        :type type: str
         """
         connection = self.connection or sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_delete, [tvdb_id])
+        if type:
+            cursor.execute(self._query_delete_by_type, [tvdb_id, type])
+        else:
+            cursor.execute(self._query_delete, [tvdb_id])
         if not self.connection:
             connection.commit()
             connection.close()
