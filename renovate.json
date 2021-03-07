@@ -7,14 +7,14 @@
   ],
   "js": {
     "labels": [
-      "Update dep (JavaScript)"
+      "JS dependency"
     ],
     "packageRules": [
       {
         "packageNames": [
           "bootstrap"
         ],
-        "allowedVersions": "<4.0.0"
+        "allowedVersions": "<5.0.0"
       }
     ]
   },
@@ -25,7 +25,7 @@
   },
   "python": {
     "labels": [
-      "Update dep (Python)"
+      "Python dependency"
     ],
     "packageRules": [
       {
