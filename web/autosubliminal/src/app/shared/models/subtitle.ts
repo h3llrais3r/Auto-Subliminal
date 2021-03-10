@@ -1,6 +1,7 @@
 export class Subtitle {
   wantedItemIndex: number;
   subtitleIndex: number;
+  matches: string[];
   score: number;
   providerName: string;
   content: string;

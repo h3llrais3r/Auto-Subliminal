@@ -5,6 +5,7 @@ import os
 
 import cherrypy
 from requests_oauthlib.oauth1_session import OAuth1Session
+from subliminal.score import episode_scores, movie_scores
 
 import autosubliminal
 from autosubliminal import config, notifiers
@@ -428,25 +429,25 @@ class _SubliminalApi(RestResource):
             # Calculate show min match score
             show_min_match_score = autosubliminal.SHOWMINMATCHSCOREDEFAULT  # default score, not editable
             if get_boolean(input_dict['show_match_source']):
-                show_min_match_score += 7
+                show_min_match_score += episode_scores['source']
             if get_boolean(input_dict['show_match_quality']):
-                show_min_match_score += 2
+                show_min_match_score += episode_scores['resolution']
             if get_boolean(input_dict['show_match_codec']):
-                show_min_match_score += 2
+                show_min_match_score += episode_scores['video_codec']
             if get_boolean(input_dict['show_match_release_group']):
-                show_min_match_score += 15
+                show_min_match_score += episode_scores['release_group']
             autosubliminal.SHOWMINMATCHSCORE = show_min_match_score
 
             # Calculate movie min match score
             movie_min_match_score = autosubliminal.MOVIEMINMATCHSCOREDEFAULT  # default score, not editable
             if get_boolean(input_dict['movie_match_source']):
-                movie_min_match_score += 7
+                movie_min_match_score += movie_scores['source']
             if get_boolean(input_dict['movie_match_quality']):
-                movie_min_match_score += 2
+                movie_min_match_score += movie_scores['resolution']
             if get_boolean(input_dict['movie_match_codec']):
-                movie_min_match_score += 2
+                movie_min_match_score += movie_scores['video_codec']
             if get_boolean(input_dict['movie_match_release_group']):
-                movie_min_match_score += 15
+                movie_min_match_score += movie_scores['release_group']
             autosubliminal.MOVIEMINMATCHSCORE = movie_min_match_score
 
             SettingsApi.save_and_restart_if_needed(self._section)

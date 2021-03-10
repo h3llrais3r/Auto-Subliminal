@@ -1557,7 +1557,7 @@ def _upgrade_config(from_version, to_version):
 
         # use subliminal scores (see examples below on how it is calculated)
         #########################
-        # Suliminal version 0.8.0
+        # Subliminal version 0.8.0
         #########################
         # video.scores['episode'] = 6
         # video.scores['series'] = 24

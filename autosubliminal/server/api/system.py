@@ -4,6 +4,7 @@ import os
 import platform
 
 import cherrypy
+from subliminal.score import episode_scores, movie_scores
 
 import autosubliminal
 from autosubliminal.core.pathinfo import PathInfo
@@ -113,6 +114,7 @@ class _SettingsApi(RestResource):
             'library_mode': autosubliminal.LIBRARYMODE,
             'log_reversed': autosubliminal.LOGREVERSED,
             'manual_refine_video': autosubliminal.MANUALREFINEVIDEO,
+            'prefer_hearing_impaired': autosubliminal.PREFERHEARINGIMPAIRED,
             'derefer_url': autosubliminal.DEREFERURL,
             'tvdb_url': autosubliminal.TVDBURL,
             'imdb_url': autosubliminal.IMDBURL,
@@ -120,10 +122,44 @@ class _SettingsApi(RestResource):
             'path_separator': os.path.sep,
             'languages': get_subtitle_languages(),
             'subliminal_providers': autosubliminal.SUBLIMINALPROVIDERMANAGER.names(),
-            'anti_captcha_providers': ANTI_CAPTCHA_PROVIDERS
+            'anti_captcha_providers': ANTI_CAPTCHA_PROVIDERS,
+            'episode_scores': self._get_episode_scores(),
+            'movie_scores': self._get_movie_scores()
         }
 
         return to_dict(settings, camelize)
+
+    def _get_episode_scores(self):
+        return {
+            'hash': episode_scores['hash'],
+            'title': episode_scores['series'],
+            'year': episode_scores['year'],
+            'season': episode_scores['season'],
+            'episode': episode_scores['episode'],
+            'source': episode_scores['source'],
+            'quality': episode_scores['resolution'],
+            'codec': episode_scores['video_codec'],
+            'release_group': episode_scores['release_group'],
+            'hearing_impaired': episode_scores['hearing_impaired'],
+            'default': autosubliminal.SHOWMINMATCHSCOREDEFAULT,
+            'min': autosubliminal.SHOWMINMATCHSCORE,
+            'max': episode_scores['hash'] + episode_scores['hearing_impaired']
+        }
+
+    def _get_movie_scores(self):
+        return {
+            'hash': movie_scores['hash'],
+            'title': movie_scores['title'],
+            'year': movie_scores['year'],
+            'source': movie_scores['source'],
+            'quality': movie_scores['resolution'],
+            'codec': movie_scores['video_codec'],
+            'release_group': movie_scores['release_group'],
+            'hearing_impaired': movie_scores['hearing_impaired'],
+            'default': autosubliminal.MOVIEMINMATCHSCOREDEFAULT,
+            'min': autosubliminal.MOVIEMINMATCHSCORE,
+            'max': movie_scores['hash'] + movie_scores['hearing_impaired']
+        }
 
 
 @cherrypy.popargs('scheduler_name')

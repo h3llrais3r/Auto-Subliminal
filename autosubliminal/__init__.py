@@ -266,15 +266,14 @@ def initialize():
     # Webserver settings
     LAUNCHBROWSER = True
 
-    # Score settings
-    SHOWMINMATCHSCOREDEFAULT = 330
-    MOVIEMINMATCHSCOREDEFAULT = 90
-
     # Cache settings
     _init_cache(python_version_changed)
 
     # Guessit settings
     _init_guessit()
+
+    # Score settings
+    SHOWMINMATCHSCOREDEFAULT, MOVIEMINMATCHSCOREDEFAULT = _init_scores()
 
     # Subliminal settings
     SUBLIMINALPROVIDERMANAGER = _init_subliminal(python_version_changed)
@@ -374,6 +373,23 @@ def _init_guessit():
 
     # Use our custom guessit parser by default
     guessit.guessit = custom_guessit
+
+
+def _init_scores():
+    """Initialize scores.
+
+    Init scores based on scores from subliminal.
+    """
+
+    # Imports
+    from subliminal.score import episode_scores, movie_scores
+
+    # Calculate default scores (minimal score needed for a match)
+    show_min_score_default = episode_scores['series'] + episode_scores['year'] + episode_scores['season'] + \
+                             episode_scores['episode']  # currently 330
+    movie_min_score_default = movie_scores['title'] + movie_scores['year']  # currently 90
+
+    return show_min_score_default, movie_min_score_default
 
 
 def _init_subliminal(replace):

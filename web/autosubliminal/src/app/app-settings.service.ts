@@ -5,12 +5,13 @@ import { of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AntiCaptchaProvider } from './shared/models/captcha';
 import { Language } from './shared/models/language';
+import { EpisodeScores, MovieScores } from './shared/models/score';
 
 class AppSettings {
   appVersion: string;
   appProcessId: number;
   developerMode: boolean;
-  webRoot: string;
+  webRoot = ''; // Make sure it's a string as it's used to all url connections to the backend (if not set it becomes undefined, which gives 404 errors)
   scanDisk: string;
   scanDiskNextRunInMs: number;
   scanLibrary: string;
@@ -20,6 +21,7 @@ class AppSettings {
   libraryMode: boolean;
   logReversed: boolean;
   manualRefineVideo: boolean;
+  preferHearingImpaired: boolean;
   dereferUrl: string;
   tvdbUrl: string;
   imdbUrl: string;
@@ -28,6 +30,8 @@ class AppSettings {
   languages: Language[];
   subliminalProviders: string[];
   antiCaptchaProviders: AntiCaptchaProvider[];
+  episodeScores: EpisodeScores;
+  movieScores: MovieScores;
 
   get timeFormat(): string {
     return this.timestampFormat.split(' ')[0];

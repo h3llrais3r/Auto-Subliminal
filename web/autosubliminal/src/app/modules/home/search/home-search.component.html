@@ -64,7 +64,15 @@
         </ng-template>
         <ng-template pTemplate="body" let-subtitle>
           <tr>
-            <td><span class="p-column-title">Score</span><span class="p-column-data">{{subtitle.score}}</span></td>
+            <td>
+              <span class="p-column-title">Score</span>
+              <span class="p-column-data">
+                <span>{{subtitle.score}}</span>
+                <a class="icon-link" (click)="showScoreDetails(subtitle)">
+                  <i class="pi pi-fw pi-info-circle" aria-hidden="true" title="Click to show score details"></i>
+                </a>
+              </span>
+            </td>
             <td>
               <span class="p-column-title">Provider</span>
               <span class="p-column-data">
@@ -149,6 +157,34 @@
           header="Subtitle preview">
   <div class="dialog-content">
     <div [innerHTML]="subtitlePreview"></div>
+  </div>
+</p-dialog>
+
+<!-- Score details dialog -->
+<p-dialog [(visible)]="showScoreDetailsDialog"
+          [modal]="true"
+          [closable]="true"
+          [resizable]="false"
+          header="Score details">
+  <div *ngIf="matches" class="dialog-content">
+    <div>Matches:</div>
+    <ul>
+      <li *ngIf="matches.includes('hash')">Hash: {{scores.hash}}</li>
+      <li *ngIf="matches.includes('title')">Title: {{scores.title}}</li>
+      <li *ngIf="matches.includes('year')">Year: {{scores.year}}</li>
+      <li *ngIf="matches.includes('season')">Season: {{scores.season}}</li>
+      <li *ngIf="matches.includes('episode')">Episode: {{scores.episode}}</li>
+      <li *ngIf="matches.includes('source')">year: {{scores.source}}</li>
+      <li *ngIf="matches.includes('resolution')">Quality: {{scores.quality}}</li>
+      <li *ngIf="matches.includes('video_codec')">Codec: {{scores.codec}}</li>
+      <li *ngIf="matches.includes('release_group')">Release group: {{scores.releaseGroup}}</li>
+      <li *ngIf="matches.includes('hearing_impaired')">Hearing impaired: {{scores.hearingImpaired}}</li>
+    </ul>
+    <div><i class="pi pi-arrow-right" aria-hidden="true"></i>&nbsp;Calculated score: {{score}}</div>
+    <br>
+    <div>Minimum required default score: {{scores.default}}</div>
+    <div>Minimum required configured score: {{scores.min}}</div>
+    <div>Maximum score: {{scores.max}}</div>
   </div>
 </p-dialog>
 

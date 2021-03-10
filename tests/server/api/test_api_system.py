@@ -33,6 +33,12 @@ class MyScheduler(object):
         return to_dict(self, key_fn, 'process')
 
 
+episode_scores_json = '{"codec": 2, "default": 0, "episode": 30, "hash": 359, "hearingImpaired": 1, "max": 360, ' \
+                      '"min": 0, "quality": 2, "releaseGroup": 15, "season": 30, "source": 7, "title": 180, "year": 90}'
+
+movie_scores_json = '{"codec": 2, "default": 0, "hash": 119, "hearingImpaired": 1, "max": 120, "min": 0, ' \
+                    '"quality": 2, "releaseGroup": 15, "source": 7, "title": 60, "year": 30}'
+
 settings_json = '{"antiCaptchaProviders": [], ' \
                 '"appProcessId": 1, ' \
                 '"appVersion": "' + autosubliminal.version.RELEASE_VERSION + '", ' \
@@ -41,12 +47,15 @@ settings_json = '{"antiCaptchaProviders": [], ' \
                 '"checkVersion": "VersionChecker", ' \
                 '"dereferUrl": "http://www.dereferer.org/?", ' \
                 '"developerMode": true, ' \
+                '"episodeScores": ' + episode_scores_json + ', ' \
                 '"imdbUrl": "http://www.imdb.com/title/", ' \
                 '"languages": [{"code": "nl", "name": "Dutch"}], ' \
                 '"libraryMode": false, ' \
                 '"logReversed": false, ' \
                 '"manualRefineVideo": false, ' \
+                '"movieScores": ' + movie_scores_json + ', ' \
                 '"pathSeparator": "/", ' \
+                '"preferHearingImpaired": false, ' \
                 '"scanDisk": "DiskScanner", ' \
                 '"scanDiskNextRunInMs": 61000, ' \
                 '"scanLibrary": "LibraryScanner", ' \
@@ -93,6 +102,11 @@ def test_get_settings(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.SUBLIMINALPROVIDERMANAGER',
                         RegistrableExtensionManager('subliminal.providers', []))
     mocker.patch('autosubliminal.server.api.system.ANTI_CAPTCHA_PROVIDERS', [])
+    monkeypatch.setattr('autosubliminal.SHOWMINMATCHSCOREDEFAULT', 0)
+    monkeypatch.setattr('autosubliminal.SHOWMINMATCHSCORE', 0)
+    monkeypatch.setattr('autosubliminal.MOVIEMINMATCHSCOREDEFAULT', 0)
+    monkeypatch.setattr('autosubliminal.MOVIEMINMATCHSCORE', 0)
+    monkeypatch.setattr('autosubliminal.PREFERHEARINGIMPAIRED', False)
 
     print(settings_json)
     print(pickle_api_result(SystemApi().settings.get()))

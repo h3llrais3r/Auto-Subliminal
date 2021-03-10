@@ -78,9 +78,8 @@ export class WebSocketService {
     if (window.location.protocol === 'https:') {
       protocol = 'wss:';
     }
-    const webRoot = appSettings.webRoot || '';
     const config: WebSocketSubjectConfig<SystemWebSocketServerMessage> = {
-      url: `${protocol}//${window.location.host}${webRoot}/websocket/system`,
+      url: `${protocol}//${window.location.host}${appSettings.webRoot}/websocket/system`,
       openObserver: { // on connect
         next: () => {
           console.log('Websocket connection established');

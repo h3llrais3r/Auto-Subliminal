@@ -162,11 +162,16 @@ def search_subtitle(wanted_item_index, lang):
 
                     # Only add subtitle when content is found
                     if subtitle.content:
+                        # Get the matches (hearing_impaired is used for score increasing, so add it if matched)
+                        # This is to get the same behaviour as in the subliminal.compute_score()
+                        matches = subtitle.get_matches(video)
+                        if subtitle.hearing_impaired == autosubliminal.PREFERHEARINGIMPAIRED:
+                            matches.add('hearing_impaired')
                         # Create new sub dict for showing result
                         sub = {'subtitle_index': index, 'score': score, 'provider_name': subtitle.provider_name,
                                'content': subtitle.content, 'language': language, 'single': single,
                                'page_link': subtitle.page_link, 'releases': _get_releases(subtitle),
-                               'wanted_item_index': wanted_item_index,
+                               'matches': matches, 'wanted_item_index': wanted_item_index,
                                'playvideo_url': _construct_playvideo_url(wanted_item)}
                         # Get content preview (the first 28 lines and last 30 lines of the subtitle)
                         # Use the subtitle text (decoded content) instead of content to generate the preview

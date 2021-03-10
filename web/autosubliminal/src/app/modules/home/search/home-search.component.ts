@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { appSettings } from '../../../app-settings.service';
 import { ItemService } from '../../../core/services/api/item.service';
 import { MessageService } from '../../../core/services/message.service';
 import { WantedItem } from '../../../shared/models/item';
+import { EpisodeScores, MovieScores } from '../../../shared/models/score';
 import { Subtitle } from '../../../shared/models/subtitle';
 import { getDereferUrl, getPlayVideoUrl } from '../../../shared/utils/common-utils';
 import { toNumber } from '../../../shared/utils/number-utils';
@@ -23,7 +25,11 @@ export class HomeSearchComponent implements OnInit {
 
   searchInProgress = false;
   postProcessInProgress = false;
+  showScoreDetailsDialog = false;
   showSubtitlePreviewDialog = false;
+  scores: EpisodeScores | MovieScores;
+  matches: string[];
+  score: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,6 +46,7 @@ export class HomeSearchComponent implements OnInit {
         this.itemService.getWantedItem(wantedItemId).subscribe(
           (wantedItem) => {
             this.wantedItem = wantedItem;
+            this.scores = this.wantedItem.isEpisode ? appSettings.episodeScores : appSettings.movieScores;
             this.searchSubtitles();
           },
           () => this.messageService.showErrorMessage(`Unable to get the wanted item with id ${wantedItemId}`)
@@ -61,6 +68,12 @@ export class HomeSearchComponent implements OnInit {
         this.messageService.showErrorMessage('Unable to search subtitles!');
       }
     );
+  }
+
+  showScoreDetails(subtitle: Subtitle): void {
+    this.score = subtitle.score;
+    this.matches = subtitle.matches;
+    this.showScoreDetailsDialog = true;
   }
 
   showSubtitlePreview(subtitle: Subtitle): void {
