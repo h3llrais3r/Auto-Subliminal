@@ -38,7 +38,7 @@ python-anticaptcha==0.7.1
 python-dateutil==2.8.1
 python-magic==0.4.15
 python-twitter==3.5
-pytz==2020.4
+pytz==2020.5
 rarfile==3.1 # rq.filter: <3.2
 rebulk==2.0.1
 requests==2.24.0
