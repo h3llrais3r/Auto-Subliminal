@@ -348,7 +348,7 @@ def _init_cache(replace):
     if not os.path.exists(CACHEDIR):
         os.makedirs(CACHEDIR)
 
-    # Clean mako cache
+    # Clean cache
     if replace:
         clear_imdbpie_cache()
 

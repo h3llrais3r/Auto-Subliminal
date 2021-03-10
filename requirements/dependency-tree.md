@@ -59,8 +59,6 @@ Libraries dependency tree
 |-- jsonpickle
 |-- langdetect
     |-- six
-|-- mako
-    |-- markupsafe
 |-- pushbullet.py
     |-- python-magic
     |-- requests
