@@ -55,7 +55,7 @@ tailer==0.4.1
 tempora==1.14.1 # rq.filter: <2.0.0
 trans==2.1.0
 git+https://github.com/h3llrais3r/tvdb_api.git@1210df9dd5869ccc5b63149b1b80630310a14f40#egg=tvdb_api
-unidecode==1.1.1
+unidecode==1.2.0
 urllib3==1.26.3
 webencodings==0.5.1
 websocket-client==0.57.0
