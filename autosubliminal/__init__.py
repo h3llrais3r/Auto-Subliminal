@@ -385,9 +385,9 @@ def _init_scores():
     from subliminal.score import episode_scores, movie_scores
 
     # Calculate default scores (minimal score needed for a match)
-    show_min_score_default = episode_scores['series'] + episode_scores['year'] + episode_scores['season'] + \
-                             episode_scores['episode']  # currently 330
-    movie_min_score_default = movie_scores['title'] + movie_scores['year']  # currently 90
+    show_min_score_default = (
+        episode_scores['series'] + episode_scores['year'] + episode_scores['season'] + episode_scores['episode'])
+    movie_min_score_default = movie_scores['title'] + movie_scores['year']
 
     return show_min_score_default, movie_min_score_default
 
