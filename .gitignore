@@ -33,10 +33,12 @@ config.properties*
 
 # Installation files
 .eggs/
-Auto_Subliminal.egg-info/
+*.egg-info/
 build/
 dist/
+*.dist-info/
 node_modules/
+bin/
 
 # Application cache
 cache/
