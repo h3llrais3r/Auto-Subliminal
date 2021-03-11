@@ -10,7 +10,6 @@ chardet==3.0.4
 cheroot==8.4.5
 cherrypy==17.4.2 # rq.filter: <18.0.0
 click==7.1.2
-configparser==4.0.2 # rq.filter: <5.0.0
 contextlib2=0.5.5
 deathbycaptcha=0.1.1
 decorator==4.4.2
