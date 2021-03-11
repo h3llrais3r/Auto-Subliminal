@@ -8,24 +8,11 @@ import sys
 from setuptools import setup, find_packages
 
 # Integrated libraries - add them to the system path (needed for running tests)
-
-# Determine python version
-PY2 = sys.version_info[0] == 2
-PY3 = sys.version_info[0] == 3
-
-# Setup system path (include libraries at position 1 because position 0 must remain the current directory)
+# Include libraries at position 1 because position 0 must remain the current directory)
 sys.path, remainder = sys.path[:1], sys.path[1:]
 
 # Insert common libs for all python versions
 site.addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
-
-# Insert libs that are only needed for certain python versions
-if PY2:
-    site.addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'libpy2')))
-elif PY3:
-    site.addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'libpy3')))
-else:
-    pass
 
 # Add remainder of the system path
 sys.path.extend(remainder)
@@ -65,10 +52,9 @@ setup(name='Auto-Subliminal',
           'Development Status :: 5 - Production/Stable',
           'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
           'Operating System :: OS Independent',
-          'Programming Language :: Python :: 2.7',
-          'Programming Language :: Python :: 3.5',
           'Programming Language :: Python :: 3.6',
           'Programming Language :: Python :: 3.7',
+          'Programming Language :: Python :: 3.8'
           'Topic :: Multimedia :: Video'
       ],
       packages=find_packages(),
