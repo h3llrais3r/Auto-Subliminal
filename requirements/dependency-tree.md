@@ -26,7 +26,6 @@ Libraries dependency tree
                 |--backports.functools_lru_cache
     |-- six
     |-- zc.lockfile
-|-- configparser
 |-- deathbycaptcha
     |-- requests
     |-- simplejson
