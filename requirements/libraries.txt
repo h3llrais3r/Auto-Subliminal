@@ -10,7 +10,7 @@ cheroot==8.4.5
 cherrypy==17.4.2 # rq.filter: <18.0.0
 click==7.1.2
 contextlib2==0.5.5
-deathbycaptcha=0.1.1
+deathbycaptcha==0.1.1
 decorator==4.4.2
 diskcache==4.1.0 # rq.filter: <5.0.0
 dogpile.cache==0.9.2 # rq.filter: <1.0.0
