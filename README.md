@@ -29,13 +29,14 @@ What it does
 Dependencies
 ------------
 
- * To run Auto-Subliminal from source you need Python 2.7 (experimental support for Python 3)
+ * To run Auto-Subliminal from source you need Python 3.6 or higher
  * Packaged external libraries: see [libaries.txt](requirements/libraries.txt)
 
 How to use
 ----------
 
  * Install python
+ * On Windows: Install pywin32
  * Start the script: " python AutoSubliminal.py "
  * A web browser should now open
  * Go to the config menu, check the settings and make sure you set at least:
