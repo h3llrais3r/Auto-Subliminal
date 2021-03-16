@@ -87,13 +87,6 @@ except ImportError:
     except ImportError:
         from simplejson import loads as json_decode, dumps as json_encode
 
-try:
-    from urllib2 import build_opener, HTTPRedirectHandler, Request, HTTPError
-    from urllib import urlencode, urlopen
-except ImportError:
-    from urllib.request import build_opener, HTTPRedirectHandler, Request, urlopen
-    from urllib.error import HTTPError
-    from urllib.parse import urlencode
 
 # API version and unique software ID
 API_VERSION = 'DBC/Python v4.6'
