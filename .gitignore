@@ -38,7 +38,15 @@ build/
 dist/
 *.dist-info/
 node_modules/
-bin/
+lib/bin/
+lib/**/test/
+lib/**/tests/
+lib/**/tutorial/
+lib/**/example/
+lib/**/example2/
+lib/**/test*.py
+lib/**/tests*.py
+lib/**/*nspkg.pth
 
 # Application cache
 cache/
