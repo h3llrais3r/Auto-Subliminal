@@ -47,6 +47,7 @@ lib/**/example2/
 lib/**/test*.py
 lib/**/tests*.py
 lib/**/*nspkg.pth
+requirements/libraries-pigar.txt
 
 # Application cache
 cache/

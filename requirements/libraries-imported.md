@@ -1,5 +1,8 @@
 Directly imported libraries
 ---------------------------
+
+### Created based on output from _.build/find-imported-libs.bat_
+
 ```
 |-- babelfish
 |-- cherrypy
@@ -9,7 +12,7 @@ Directly imported libraries
 |-- gitpython
 |-- gntp
 |-- guessit
-|-- html5lib (used as optional parser in combination with beautifulsoup4 for parsing html pages)
+|-- html5lib (used as optional parser for beautifulsoup4)
 |-- imdbpie
 |-- jsonpickle
 |-- langdetect
