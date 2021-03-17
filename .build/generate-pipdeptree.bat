@@ -4,18 +4,21 @@ echo.
 cd ../.venv
 rmdir pipdeptree /s
 cd ..
+echo.
 echo Creating new venv
-echo.
 python -m venv .venv/pipdeptree
-echo Activating venv
 echo.
+echo Activating venv
 call .venv/pipdeptree/scripts/activate
+echo.
 echo Installing pipdeptree
 echo.
 python -m pip install pipdeptree
+echo.
 echo Installing libraries
 echo.
 python -m pip install -r requirements/libraries.txt
+echo.
 echo Generating pipdeptree
 echo.
 set file=requirements/libraries-pipdeptree.md
@@ -27,4 +30,7 @@ echo. >> %file%
 echo ``` >> %file%
 python -m pipdeptree -e pipdeptree -e pywin32 -e setuptools -e Auto-Subliminal >> %file%
 echo ``` >> %file%
+echo.
+echo Deactivating venv
+call .venv/pipdeptree/scripts/deactivate
 cd .build
