@@ -20,5 +20,5 @@ goto install
 set params=%params%
 :install
 cd ..
-pip install -t lib2 -r requirements/libraries.txt %params%
+python -m pip install -t lib2 -r requirements/libraries.txt %params%
 cd .build

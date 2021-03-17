@@ -5,7 +5,7 @@ import os
 import re
 import site
 import sys
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 # Integrated libraries - add them to the system path (needed for running tests)
 # Include libraries at position 1 because position 0 must remain the current directory)
@@ -36,7 +36,7 @@ install_requirements = []
 
 test_requirements = ['pytest', 'pytest-mock', 'pytest-flake8', 'requests-mock', 'vcrpy']
 
-dev_requirements = ['isort', 'tox']
+dev_requirements = ['isort', 'pigar', 'tox']
 
 # Setup
 setup(name='Auto-Subliminal',
