@@ -6,11 +6,12 @@ set /p deps=Include dependencies (y/[N]):
 if /I "%deps%"=="y" goto yes_deps
 goto no_deps
 :yes_deps
-set params=--no-deps
+set params=
 goto next
 :no_deps
-set params=
+set params=--no-deps
 :next
+echo.
 set /p deps=Force reinstall (y/[N]):
 if /I "%deps%"=="y" goto yes_reinstall
 goto no_reinstall
@@ -21,5 +22,5 @@ goto install
 set params=%params%
 :install
 cd ..
-python -m pip install -t lib2 -r requirements/libraries.txt %params%
+python -m pip install -t lib -r requirements/libraries.txt %params%
 cd .build
