@@ -2,13 +2,14 @@
 
 import pytest
 from subliminal.extensions import RegistrableExtensionManager
-from tests.server.api.test_api import pickle_api_result
 
 import autosubliminal
 from autosubliminal.core.pathinfo import PathInfo
 from autosubliminal.server.api.system import SystemApi
 from autosubliminal.server.rest import BadRequest
 from autosubliminal.util.common import to_dict
+
+from tests.server.api.test_api import pickle_api_result
 
 
 class MyScheduler(object):

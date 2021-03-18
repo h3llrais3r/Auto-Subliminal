@@ -11,12 +11,12 @@ import autosubliminal
 from autosubliminal import version
 from autosubliminal.core.item import WantedItem
 from autosubliminal.core.subtitle import Subtitle
-from autosubliminal.util.common import (atoi, connect_url, camelize, convert_timestamp, decamelize, get_item_name,
-                                        get_item_title, safe_value, find_path_in_paths, get_boolean,
-                                        get_common_path, get_file_size, get_root_path, get_today, get_wanted_languages,
+from autosubliminal.util.common import (atoi, camelize, connect_url, convert_timestamp, decamelize, find_path_in_paths,
+                                        get_boolean, get_common_path, get_file_size, get_item_name, get_item_title,
+                                        get_missing_languages, get_root_path, get_today, get_wanted_languages,
                                         humanize_bytes, natural_keys, run_cmd, safe_lowercase, safe_text, safe_trim,
-                                        safe_uppercase, sanitize, set_rw_and_remove, to_dict, to_list, to_obj,
-                                        to_obj_or_list, to_text, wait_for_internet_connection, get_missing_languages)
+                                        safe_uppercase, safe_value, sanitize, set_rw_and_remove, to_dict, to_list,
+                                        to_obj, to_obj_or_list, to_text, wait_for_internet_connection)
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',

@@ -1,13 +1,14 @@
 # coding=utf-8
 
 import pytest
-from autosubliminal.core.item import WantedItem, DownloadedItem
-from tests.server.api.test_api import pickle_api_result
 
 import autosubliminal
+from autosubliminal.core.item import DownloadedItem, WantedItem
 from autosubliminal.db import LastDownloadsDb
 from autosubliminal.server.api.items import ItemsApi
 from autosubliminal.server.rest import BadRequest
+
+from tests.server.api.test_api import pickle_api_result
 
 wanted_item = WantedItem()
 wanted_item.id = 1
@@ -90,6 +91,4 @@ def test_get_wanted_item_bad_request():
 
 def test_get_downloaded_items(mocker):
     mocker.patch.object(LastDownloadsDb, 'get_last_downloads', return_value=[downloaded_item])
-    print(downloaded_item_list_json)
-    print(pickle_api_result(ItemsApi().downloaded.get()))
     assert downloaded_item_list_json == pickle_api_result(ItemsApi().downloaded.get())
