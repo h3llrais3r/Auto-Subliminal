@@ -81,12 +81,13 @@ install:
 
 # Build & Test command(s)
 before_test:
-  - cd web/autosubliminal
+  - flake8 # Python linting, configuration is done in .flake8
+  - cd web/autosubliminal # Angular linting
   - npm run lint
   - cd ../..
 
 test_script:
-  - coverage run setup.py test
+  - coverage run setup.py test # Coverage configuration is done in .coveragerc
   - coverage report
 
 # On finish command(s)
