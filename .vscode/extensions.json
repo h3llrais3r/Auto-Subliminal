@@ -4,7 +4,7 @@
     "christian-kohler.npm-intellisense",
     "dbaeumer.vscode-eslint",
     "HookyQR.beautify",
-    "littlefoxteam.vscode-python-test-adapter",
+    //"littlefoxteam.vscode-python-test-adapter", // might be useful if you don't like the internal test explorer of th python extension
     "mikestead.dotenv",
     "msjsdiag.debugger-for-chrome",
     "ms-python.python",

@@ -81,7 +81,7 @@ install:
 
 # Build & Test command(s)
 before_test:
-  - flake8 # Python linting, configuration is done in .flake8
+  - flake8 -v # Python linting, configuration is done in .flake8
   - cd web/autosubliminal # Angular linting
   - npm run lint
   - cd ../..
