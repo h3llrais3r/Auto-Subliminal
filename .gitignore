@@ -1,12 +1,21 @@
 # PyCharm IDE files
 .idea
-.vscode
+
+# VSCode files
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# History files
 .history
 
 # Virtual environments
 .venv
 
 # Compiled files
+__pycache__
 *.pyc
 
 # Windows related files
