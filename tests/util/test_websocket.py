@@ -3,8 +3,8 @@
 import time
 
 import autosubliminal
-from autosubliminal.util.websocket import (SYSTEM_START, SYSTEM_RESTART, SYSTEM_SHUTDOWN, SCHEDULER_START,
-                                           SCHEDULER_FINISH, SYSTEM_UPDATE, send_websocket_event,
+from autosubliminal.util.websocket import (SCHEDULER_FINISH, SCHEDULER_START, SYSTEM_RESTART, SYSTEM_SHUTDOWN,
+                                           SYSTEM_START, SYSTEM_UPDATE, send_websocket_event,
                                            send_websocket_notification)
 
 
