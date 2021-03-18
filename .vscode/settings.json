@@ -1,0 +1,66 @@
+{
+  // VS Code settings
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true, // Fix lint issues on save
+    "source.organizeImports": true
+  },
+  // Do not include history in search (ctrl + p)
+  "search.quickOpen.includeHistory": false,
+  // File settings
+  "files.associations": {
+    "*.json": "jsonc" // Use json with comments by default
+  },
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  // Html settings
+  "html.format.endWithNewline": true,
+  "html.format.wrapLineLength": 0, // No auto wrap
+  "html.format.wrapAttributes": "preserve-aligned", // Keep manual wrapping, but align
+  // Javascript/Typescript settings
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.tsdk": "web\\autosubliminal\\node_modules\\typescript\\lib", // Use project typescript version instead of latest version packaged with VS Code
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  // Beautify settings (ignore formatting for json and html files, use built-in formatter instead)
+  "beautify.language": {
+    "js": {
+      "type": [
+        "javascript"
+        //"json",
+        //"jsonc"
+      ]
+    },
+    "css": [
+      "css",
+      "less",
+      "scss"
+    ],
+    "html": [
+      //"htm",
+      //"html"
+    ]
+  },
+  // Python settings
+  "python.venvPath": ".venv",
+  "python.pythonPath": ".venv\\dev\\Scripts\\python.exe",
+  "python.envFile": "${workspaceFolder}/.env",
+  "python.autoComplete.addBrackets": true,
+  "python.formatting.provider": "autopep8",
+  "python.linting.pylintEnabled": false,
+  "python.linting.flake8Enabled": true,
+  "python.linting.enabled": true,
+  "python.linting.lintOnSave": true,
+  "python.sortImports.args": [
+    "-sp isort.cfg"
+  ],
+  "python.testing.unittestEnabled": false,
+  "python.testing.nosetestsEnabled": false,
+  "python.testing.pytestEnabled": true
+}
