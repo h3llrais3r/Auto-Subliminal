@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import abc
-from inspect import getargspec
+from inspect import getfullargspec
 
 import cherrypy
 from six import add_metaclass
@@ -38,7 +38,7 @@ class RestResource(object):
 
         # Validate resource url
         method = getattr(self, self.http_method.lower())  # methods are defined in lower case
-        arg_spec = getargspec(method)
+        arg_spec = getfullargspec(method)
         defaults_count = len(arg_spec.defaults) if arg_spec.defaults else 0
         arg_spec_set = set(arg_spec.args[1:len(arg_spec.args) - defaults_count])
         arg_method_set = set(kwargs.keys())
