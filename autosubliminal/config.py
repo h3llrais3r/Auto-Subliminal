@@ -5,8 +5,8 @@ import logging
 import os
 import shutil
 import time
-
 from configparser import ConfigParser
+
 from six import text_type
 
 import autosubliminal

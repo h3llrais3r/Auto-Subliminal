@@ -342,7 +342,7 @@ def _init_cache(replace):
     """Initialize internal cache."""
 
     # Imports
-    from autosubliminal.core.cache import clear_imdbpie_cache, MutexFileLock, region
+    from autosubliminal.core.cache import MutexFileLock, clear_imdbpie_cache, region
 
     # Make sure the cache dir exists
     if not os.path.exists(CACHEDIR):
@@ -369,6 +369,7 @@ def _init_guessit():
 
     # Imports
     import guessit
+
     from autosubliminal.parsers import guessit as custom_guessit
 
     # Use our custom guessit parser by default

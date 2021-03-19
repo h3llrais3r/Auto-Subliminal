@@ -12,7 +12,7 @@ from autosubliminal.providers.pitcher import ANTI_CAPTCHA_PROVIDERS
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import camelize, get_next_scheduler_run_in_ms, to_dict
 from autosubliminal.util.language import get_subtitle_languages
-from autosubliminal.util.system import get_python_version_full, get_python_location
+from autosubliminal.util.system import get_python_location, get_python_version_full
 from autosubliminal.version import RELEASE_VERSION
 
 

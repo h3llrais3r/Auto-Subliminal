@@ -22,7 +22,7 @@ from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.util.common import connect_url, wait_for_internet_connection
 from autosubliminal.util.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
                                        release_wanted_queue_lock_on_exception)
-from autosubliminal.util.websocket import send_websocket_notification, send_websocket_event, SYSTEM_UPDATE
+from autosubliminal.util.websocket import SYSTEM_UPDATE, send_websocket_event, send_websocket_notification
 from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)

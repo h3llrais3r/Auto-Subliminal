@@ -5,11 +5,11 @@ from six import text_type
 
 import autosubliminal
 from autosubliminal import config, subchecker
-from autosubliminal.db import WantedItemsDb, LastDownloadsDb
+from autosubliminal.db import LastDownloadsDb, WantedItemsDb
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import camelize, decamelize, to_dict, sanitize
-from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, find_wanted_item_in_queue, \
-    update_wanted_item_in_queue, release_wanted_queue_lock_on_exception
+from autosubliminal.util.common import camelize, decamelize, sanitize, to_dict
+from autosubliminal.util.queue import (find_wanted_item_in_queue, get_wanted_queue_lock, release_wanted_queue_lock,
+                                       release_wanted_queue_lock_on_exception, update_wanted_item_in_queue)
 
 
 class ItemsApi(RestResource):

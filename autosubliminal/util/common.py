@@ -14,6 +14,7 @@ import requests
 from six import text_type
 from six.moves import builtins
 from six.moves.collections_abc import Mapping
+
 import autosubliminal
 
 log = logging.getLogger(__name__)
@@ -394,7 +395,9 @@ def get_common_path(paths, separator=os.path.sep):
 
 def find_path_in_paths(path_to_find, paths, check_common_path=False):
     # Normalize all paths before checking
-    n = lambda x: os.path.normcase(os.path.normpath(x))  # lambda to normalize the paths
+    def n(x):
+        return os.path.normcase(os.path.normpath(x))
+
     # If check_common_path, also check if the path_to_find is a sub path of the paths to check (not the way around!)
     if check_common_path:
         paths_found = list(filter(lambda x: get_common_path([n(x), n(path_to_find)]) == n(x), paths))

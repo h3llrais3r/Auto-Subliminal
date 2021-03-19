@@ -13,7 +13,7 @@ from six import add_metaclass, text_type
 import autosubliminal
 from autosubliminal.util.common import camelize, to_dict
 from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock
-from autosubliminal.util.websocket import send_websocket_event, SCHEDULER_START, SCHEDULER_FINISH
+from autosubliminal.util.websocket import SCHEDULER_FINISH, SCHEDULER_START, send_websocket_event
 
 log = logging.getLogger(__name__)
 

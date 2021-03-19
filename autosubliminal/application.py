@@ -25,7 +25,7 @@ from autosubliminal.subchecker import SubChecker
 from autosubliminal.util.encoding import s2n
 from autosubliminal.util.json import json_out_handler
 from autosubliminal.util.packaging import get_library_version
-from autosubliminal.util.websocket import send_websocket_event, SYSTEM_RESTART, SYSTEM_SHUTDOWN, SYSTEM_START
+from autosubliminal.util.websocket import SYSTEM_RESTART, SYSTEM_SHUTDOWN, SYSTEM_START, send_websocket_event
 from autosubliminal.versionchecker import VersionChecker
 
 log = logging.getLogger(__name__)
