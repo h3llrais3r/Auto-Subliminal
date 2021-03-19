@@ -48,6 +48,9 @@
     ]
   },
   // Python settings
+  "[python]": {
+    "editor.tabSize": 4 // PYthon uses 4 spaces for tab
+  },
   "python.venvPath": ".venv",
   "python.pythonPath": ".venv\\dev\\Scripts\\python.exe",
   "python.envFile": "${workspaceFolder}/.env",
