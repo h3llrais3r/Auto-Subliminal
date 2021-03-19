@@ -101,7 +101,7 @@ def test_get_settings(monkeypatch, mocker):
     mocker.patch('autosubliminal.server.api.system.get_subtitle_languages',
                  return_value=[{'code': 'nl', 'name': 'Dutch'}])
     monkeypatch.setattr('autosubliminal.SUBLIMINALPROVIDERMANAGER',
-                        RegistrableExtensionManager('subliminal.providers', []))
+                        RegistrableExtensionManager('subliminal.providers.dummy', []))
     mocker.patch('autosubliminal.server.api.system.ANTI_CAPTCHA_PROVIDERS', [])
     monkeypatch.setattr('autosubliminal.SHOWMINMATCHSCOREDEFAULT', 0)
     monkeypatch.setattr('autosubliminal.SHOWMINMATCHSCORE', 0)
