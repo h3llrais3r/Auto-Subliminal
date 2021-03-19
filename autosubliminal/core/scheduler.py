@@ -196,7 +196,7 @@ class Scheduler(object):
 
     @property
     def alive(self):
-        return self._thread.isAlive()
+        return self._thread.is_alive()
 
     @property
     def next_run(self):
