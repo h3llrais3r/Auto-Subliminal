@@ -1,10 +1,6 @@
-# -*- coding: utf-8 -*-
-
 """
 Classes for calling functions a schedule.
 """
-
-from __future__ import absolute_import
 
 import datetime
 import numbers
@@ -12,8 +8,6 @@ import abc
 import bisect
 
 import pytz
-
-__metaclass__ = type
 
 
 def now():
@@ -44,8 +38,13 @@ class DelayedCommand(datetime.datetime):
     @classmethod
     def from_datetime(cls, other):
         return cls(
-            other.year, other.month, other.day, other.hour,
-            other.minute, other.second, other.microsecond,
+            other.year,
+            other.month,
+            other.day,
+            other.hour,
+            other.minute,
+            other.second,
+            other.microsecond,
             other.tzinfo,
         )
 
@@ -91,6 +90,7 @@ class PeriodicCommand(DelayedCommand):
     Like a delayed command, but expect this command to run every delay
     seconds.
     """
+
     def _next_time(self):
         """
         Add delay to self, localized
@@ -117,8 +117,7 @@ class PeriodicCommand(DelayedCommand):
     def __setattr__(self, key, value):
         if key == 'delay' and not value > datetime.timedelta():
             raise ValueError(
-                "A PeriodicCommand must have a positive, "
-                "non-zero delay."
+                "A PeriodicCommand must have a positive, " "non-zero delay."
             )
         super(PeriodicCommand, self).__setattr__(key, value)
 
@@ -132,6 +131,11 @@ class PeriodicCommandFixedDelay(PeriodicCommand):
 
     @classmethod
     def at_time(cls, at, delay, target):
+        """
+        >>> cmd = PeriodicCommandFixedDelay.at_time(0, 30, None)
+        >>> cmd.delay.total_seconds()
+        30.0
+        """
         at = cls._from_timestamp(at)
         cmd = cls.from_datetime(at)
         if isinstance(delay, numbers.Number):
@@ -144,11 +148,18 @@ class PeriodicCommandFixedDelay(PeriodicCommand):
     def daily_at(cls, at, target):
         """
         Schedule a command to run at a specific time each day.
+
+        >>> from tempora import utc
+        >>> noon = utc.time(12, 0)
+        >>> cmd = PeriodicCommandFixedDelay.daily_at(noon, None)
+        >>> cmd.delay.total_seconds()
+        86400.0
         """
         daily = datetime.timedelta(days=1)
         # convert when to the next datetime matching this time
         when = datetime.datetime.combine(datetime.date.today(), at)
-        if when < now():
+        when -= daily
+        while when < now():
             when += daily
         return cls.at_time(cls._localize(when), daily, target)
 
@@ -158,6 +169,7 @@ class Scheduler:
     A rudimentary abstract scheduler accepting DelayedCommands
     and dispatching them on schedule.
     """
+
     def __init__(self):
         self.queue = []
 
@@ -186,6 +198,7 @@ class InvokeScheduler(Scheduler):
     """
     Command targets are functions to be invoked on schedule.
     """
+
     def run(self, command):
         command.target()
 
@@ -194,8 +207,9 @@ class CallbackScheduler(Scheduler):
     """
     Command targets are passed to a dispatch callable on schedule.
     """
+
     def __init__(self, dispatch):
-        super(CallbackScheduler, self).__init__()
+        super().__init__()
         self.dispatch = dispatch
 
     def run(self, command):

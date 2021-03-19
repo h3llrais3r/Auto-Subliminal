@@ -1,4 +1,3 @@
-# Packaged libraries
 appdirs==1.4.4
 attrs==20.3.0
 babelfish==0.5.5
@@ -6,8 +5,8 @@ beautifulsoup4==4.9.3
 boto==2.49.0
 certifi==2020.12.5
 chardet==3.0.4
-cheroot==8.4.5
-cherrypy==17.4.2
+cheroot==8.5.2
+CherryPy==18.6.0
 click==7.1.2
 contextlib2==0.5.5
 deathbycaptcha==0.1.1
@@ -16,27 +15,30 @@ diskcache==4.1.0
 dogpile.cache==0.9.2
 enzyme==0.4.1
 gitdb2==2.0.6
-gitpython==2.1.15
+GitPython==2.1.15
 gntp==1.0.3
 guessit==3.1.1
 html5lib==1.1
 idna==2.10
 imdbpie==5.6.4
 importlib-metadata==3.7.2
-jaraco.functools==2.0
+jaraco.classes==3.2.1
+jaraco.collections==3.2.0
+jaraco.functools==3.2.1
+jaraco.text==3.5.0
 jsonpickle==1.4.1
 langdetect==1.0.8
-more-itertools==5.0.0
+more-itertools==8.7.0
 oauthlib==3.1.0
 pbr==5.5.1
-portend==2.6
+portend==2.7.1
 pushbullet.py==0.12.0
 pysrt==1.1.2
 python-anticaptcha==0.7.1
 python-dateutil==2.8.1
 python-magic==0.4.15
 python-twitter==3.5
-pytz==2020.5
+pytz==2021.1
 rarfile==3.1
 rebulk==2.0.1
 requests==2.25.1
@@ -48,12 +50,12 @@ smmap==3.0.1
 smmap2==3.0.1
 soupsieve==1.9.6
 stevedore==1.32.0
-git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a#egg=subliminal
+subliminal @ git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a
 tailer==0.4.1
-tempora==1.14.1
+tempora==4.0.1
 trans==2.1.0
-git+https://github.com/h3llrais3r/tvdb_api.git@1210df9dd5869ccc5b63149b1b80630310a14f40#egg=tvdb_api
-unidecode==1.2.0
+tvdb-api @ git+https://github.com/h3llrais3r/tvdb_api.git@1210df9dd5869ccc5b63149b1b80630310a14f40
+Unidecode==1.2.0
 urllib3==1.26.4
 webencodings==0.5.1
 websocket-client==0.58.0
