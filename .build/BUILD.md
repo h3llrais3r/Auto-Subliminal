@@ -19,6 +19,8 @@ This virtual environment should be used to test the application with only the pa
 
 Run  `generate-pipdeptree.bat` to generate the `requirements/libraries-pipdeptree.md` file that contains the dependency tree for all packaged libraries.
 
+This should be run every time a package is added/updated.
+
 ## Find imported libraries
 
 Run  `find-imported-libs.bat` to generate a file `requirements/libraries-pigar.txt` that contains all imported libraries within the application.
@@ -46,7 +48,7 @@ Optionally you can add the following options:
 
 All packaged libraries and their versions are kept in the `requirements/libraries.txt`.
 
-Any new library or version upgrade must be added in this file.
+Any new library or version upgrade should be added in this file.
 
 In case we should regenerate the `requirements/libraries.txt` from scratch, we can do this in the `pipdeptree` virtual environment by running the command: `pip freeze --path lib > requirements/libraries.txt`.
 

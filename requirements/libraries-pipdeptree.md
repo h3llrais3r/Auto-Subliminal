@@ -31,7 +31,7 @@ deathbycaptcha==0.1.1
     - certifi [required: >=2017.4.17, installed: 2020.12.5]
     - chardet [required: >=3.0.2,<5, installed: 3.0.4]
     - idna [required: >=2.5,<3, installed: 2.10]
-    - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.3]
+    - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.4]
   - simplejson [required: Any, installed: 3.17.2]
 GitPython==2.1.15
   - gitdb2 [required: >=2,<3, installed: 2.0.6]
@@ -51,7 +51,7 @@ imdbpie==5.6.4
     - certifi [required: >=2017.4.17, installed: 2020.12.5]
     - chardet [required: >=3.0.2,<5, installed: 3.0.4]
     - idna [required: >=2.5,<3, installed: 2.10]
-    - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.3]
+    - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.4]
   - setuptools [required: >=39.0.1, installed: 47.1.0]
   - six [required: >=1.0.0,<2.0.0, installed: 1.15.0]
   - trans [required: >=2.1.0,<3.0.0, installed: 2.1.0]
@@ -69,15 +69,15 @@ pushbullet.py==0.12.0
     - certifi [required: >=2017.4.17, installed: 2020.12.5]
     - chardet [required: >=3.0.2,<5, installed: 3.0.4]
     - idna [required: >=2.5,<3, installed: 2.10]
-    - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.3]
-  - websocket-client [required: >=0.53.0, installed: 0.57.0]
+    - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.4]
+  - websocket-client [required: >=0.53.0, installed: 0.58.0]
     - six [required: Any, installed: 1.15.0]
 python-anticaptcha==0.7.1
   - requests [required: Any, installed: 2.25.1]
     - certifi [required: >=2017.4.17, installed: 2020.12.5]
     - chardet [required: >=3.0.2,<5, installed: 3.0.4]
     - idna [required: >=2.5,<3, installed: 2.10]
-    - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.3]
+    - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.4]
   - six [required: Any, installed: 1.15.0]
 python-twitter==3.5
   - future [required: Any, installed: 0.18.2]
@@ -85,14 +85,14 @@ python-twitter==3.5
     - certifi [required: >=2017.4.17, installed: 2020.12.5]
     - chardet [required: >=3.0.2,<5, installed: 3.0.4]
     - idna [required: >=2.5,<3, installed: 2.10]
-    - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.3]
+    - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.4]
   - requests-oauthlib [required: Any, installed: 1.3.0]
     - oauthlib [required: >=3.0.0, installed: 3.1.0]
     - requests [required: >=2.0.0, installed: 2.25.1]
       - certifi [required: >=2017.4.17, installed: 2020.12.5]
       - chardet [required: >=3.0.2,<5, installed: 3.0.4]
       - idna [required: >=2.5,<3, installed: 2.10]
-      - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.3]
+      - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.4]
 schema==0.7.2
   - contextlib2 [required: >=0.5.5, installed: 0.5.5]
 subliminal==2.1.0.dev0
@@ -120,7 +120,7 @@ subliminal==2.1.0.dev0
     - certifi [required: >=2017.4.17, installed: 2020.12.5]
     - chardet [required: >=3.0.2,<5, installed: 3.0.4]
     - idna [required: >=2.5,<3, installed: 2.10]
-    - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.3]
+    - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.4]
   - six [required: >=1.9.0, installed: 1.15.0]
   - stevedore [required: >=1.20.0, installed: 1.32.0]
     - pbr [required: >=2.0.0,!=2.1.0, installed: 5.5.1]
@@ -131,7 +131,7 @@ tvdb-api==3.0.0
   - python-dateutil [required: >=2.5.3, installed: 2.8.1]
     - six [required: >=1.5, installed: 1.15.0]
   - six [required: >=1.10.0, installed: 1.15.0]
-  - urllib3 [required: >=1.15.1, installed: 1.26.3]
-Unidecode==1.1.1
+  - urllib3 [required: >=1.15.1, installed: 1.26.4]
+Unidecode==1.2.0
 ws4py==0.5.1
 ``` 
