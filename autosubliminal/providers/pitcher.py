@@ -4,9 +4,10 @@ import json
 import logging
 import time
 
-from deathbycaptcha.deathbycaptcha import SocketClient as DBCClient, DEFAULT_TOKEN_TIMEOUT
+from deathbycaptcha.deathbycaptcha import DEFAULT_TOKEN_TIMEOUT
+from deathbycaptcha.deathbycaptcha import SocketClient as DBCClient
 from dogpile.cache.api import NO_VALUE
-from python_anticaptcha import AnticaptchaClient, NoCaptchaTaskProxylessTask, NoCaptchaTask, AnticaptchaException
+from python_anticaptcha import AnticaptchaClient, AnticaptchaException, NoCaptchaTask, NoCaptchaTaskProxylessTask
 from subliminal.cache import region
 
 import autosubliminal

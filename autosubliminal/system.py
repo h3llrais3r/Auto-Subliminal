@@ -7,8 +7,8 @@ from autosubliminal.db.cache_db import ImdbIdCacheDb, TvdbIdCacheDb
 from autosubliminal.db.main_db import LastDownloadsDb, WantedItemsDb
 from autosubliminal.db.movie_db import MovieDetailsDb
 from autosubliminal.db.show_db import ShowDetailsDb
-from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock, \
-    release_wanted_queue_lock_on_exception
+from autosubliminal.util.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
+                                       release_wanted_queue_lock_on_exception)
 from autosubliminal.util.websocket import send_websocket_notification
 
 

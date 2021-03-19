@@ -6,8 +6,8 @@ import os
 import re
 
 import autosubliminal
-from autosubliminal.util.common import find_path_in_paths, get_today, to_list, to_obj, to_obj_or_list, to_dict, \
-    humanize_bytes
+from autosubliminal.util.common import (find_path_in_paths, get_today, humanize_bytes, to_dict, to_list, to_obj,
+                                        to_obj_or_list)
 
 # Release group regex
 release_group_regex = re.compile(r'(.*)\[.*?\]')

@@ -12,8 +12,8 @@ from autosubliminal.db import (FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsD
                                ShowSettingsDb, WantedItemsDb)
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import NotFound, RestResource
-from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, get_boolean, natural_keys, to_dict, \
-    get_missing_languages
+from autosubliminal.util.common import (camelize, decamelize, find_path_in_paths, get_boolean, get_missing_languages,
+                                        natural_keys, to_dict)
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 
 log = logging.getLogger(__name__)

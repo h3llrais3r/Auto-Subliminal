@@ -18,7 +18,7 @@ from subliminal.utils import sanitize, sanitize_release_group
 from subliminal.video import Episode
 
 from autosubliminal.providers.exceptions import TooManyRequests
-from autosubliminal.providers.pitcher import pitchers, load_verification, store_verification
+from autosubliminal.providers.pitcher import load_verification, pitchers, store_verification
 
 logger = logging.getLogger(__name__)
 
