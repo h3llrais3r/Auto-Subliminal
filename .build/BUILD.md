@@ -44,6 +44,12 @@ Optionally you can add the following options:
 * `--no-compile` -> do not compile python files
 * `--no-cache-dir` -> do not use pip cache dir but force online check
 
+## Upgrade a single packaged library
+
+Run `pip install -t lib --upgrade <library>` to upgrade the library from pypi in the `lib` folder.
+Run `pip freeze --path lib > requirements/libraries.txt` to update the `requirements/libraries.txt` file. Be sure to run it in terminal which has `utf-8` encoding.
+Run `generate-pipdeptree.bat` to update the `requirements/libraries-pipdeptree.md` file.
+
 ## Packaged libaries
 
 All packaged libraries and their versions are kept in the `requirements/libraries.txt`.
