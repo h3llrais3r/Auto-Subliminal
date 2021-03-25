@@ -64,7 +64,7 @@ langdetect==1.0.8
 pipdeptree==2.0.0
   - pip [required: >=6.0.0, installed: 20.1.1]
 pushbullet.py==0.12.0
-  - python-magic [required: Any, installed: 0.4.15]
+  - python-magic [required: Any, installed: 0.4.22]
   - requests [required: >=1.0.0, installed: 2.25.1]
     - certifi [required: >=2017.4.17, installed: 2020.12.5]
     - chardet [required: >=3.0.2,<5, installed: 3.0.4]
