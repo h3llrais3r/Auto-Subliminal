@@ -55,6 +55,7 @@ imdbpie==5.6.4
   - six [required: >=1.0.0,<2.0.0, installed: 1.15.0]
   - trans [required: >=2.1.0,<3.0.0, installed: 2.1.0]
   - wheel [required: ==0.30.0, installed: 0.30.0]
+importlib-resources==5.1.2
 jsonpickle==1.4.1
   - importlib-metadata [required: Any, installed: 3.7.2]
     - zipp [required: >=0.5, installed: 3.4.1]
@@ -92,7 +93,7 @@ python-twitter==3.5
       - chardet [required: >=3.0.2,<5, installed: 3.0.4]
       - idna [required: >=2.5,<3, installed: 2.10]
       - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.4]
-schema==0.7.2
+schema==0.7.4
   - contextlib2 [required: >=0.5.5, installed: 0.5.5]
 subliminal==2.1.0.dev0
   - appdirs [required: >=1.3, installed: 1.4.4]
