@@ -21,7 +21,7 @@ guessit==3.1.1
 html5lib==1.1
 idna==2.10
 imdbpie==5.6.4
-importlib-metadata==3.7.2
+importlib-metadata==3.7.3
 importlib-resources==5.1.2; python_version < '3.7' # only needed for jaraco.text on python < 3.7
 jaraco.classes==3.2.1
 jaraco.collections==3.2.0
@@ -56,6 +56,7 @@ tailer==0.4.1
 tempora==4.0.1
 trans==2.1.0
 tvdb-api @ git+https://github.com/h3llrais3r/tvdb_api.git@1210df9dd5869ccc5b63149b1b80630310a14f40
+typing-extensions==3.7.4.3
 Unidecode==1.2.0
 urllib3==1.26.4
 webencodings==0.5.1
