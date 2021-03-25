@@ -55,10 +55,9 @@ imdbpie==5.6.4
   - six [required: >=1.0.0,<2.0.0, installed: 1.15.0]
   - trans [required: >=2.1.0,<3.0.0, installed: 2.1.0]
   - wheel [required: ==0.30.0, installed: 0.30.0]
-importlib-resources==5.1.2
-jsonpickle==1.4.1
-  - importlib-metadata [required: Any, installed: 3.7.2]
-    - zipp [required: >=0.5, installed: 3.4.1]
+importlib-metadata==3.7.3
+  - zipp [required: >=0.5, installed: 3.4.1]
+jsonpickle==2.0.0
 langdetect==1.0.8
   - six [required: Any, installed: 1.15.0]
 pipdeptree==2.0.0
@@ -132,6 +131,7 @@ tvdb-api==3.0.0
     - six [required: >=1.5, installed: 1.15.0]
   - six [required: >=1.10.0, installed: 1.15.0]
   - urllib3 [required: >=1.15.1, installed: 1.26.4]
+typing-extensions==3.7.4.3
 Unidecode==1.2.0
 ws4py==0.5.1
 ``` 
