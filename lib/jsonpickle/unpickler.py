@@ -31,6 +31,14 @@ def decode(
     can be used to give jsonpickle access to local classes that are not
     available through the global module import scope.
 
+    The keyword argument 'safe' defaults to False.
+    If set to True, eval() is avoided, but backwards-compatible
+    (pre-0.7.0) deserialization of repr-serialized objects is disabled.
+
+    The keyword argument 'backend' defaults to None.
+    If set to an instance of jsonpickle.backend.JSONBackend, jsonpickle
+    will use that backend for deserialization.
+
     >>> decode('"my string"') == 'my string'
     True
     >>> decode('36')
@@ -121,8 +129,7 @@ class Unpickler(object):
         self.reset()
 
     def reset(self):
-        """Resets the object's internal state.
-        """
+        """Resets the object's internal state."""
         # Map reference names to object instances
         self._namedict = {}
 
@@ -177,28 +184,49 @@ class Unpickler(object):
         self._proxies = []
 
     def _restore(self, obj):
+        # if obj isn't in these types, neither it nor nothing in it can have a tag
+        # don't change the tuple of types to a set, it won't work with isinstance
+        if not isinstance(obj, (str, list, dict, set, tuple)):
+
+            def restore(x):
+                return x
+
+        else:
+            restore = self._restore_tags(obj)
+        return restore(obj)
+
+    def _restore_tags(self, obj):
+        try:
+            if not tags.RESERVED <= set(obj) and not type(obj) in (list, dict):
+
+                def restore(x):
+                    return x
+
+                return restore
+        except TypeError:
+            pass
         if has_tag(obj, tags.B64):
             restore = self._restore_base64
         elif has_tag(obj, tags.B85):
             restore = self._restore_base85
-        elif has_tag(obj, tags.BYTES):  # Backwards compatibility
-            restore = self._restore_quopri
         elif has_tag(obj, tags.ID):
             restore = self._restore_id
-        elif has_tag(obj, tags.REF):  # Backwards compatibility
-            restore = self._restore_ref
         elif has_tag(obj, tags.ITERATOR):
             restore = self._restore_iterator
         elif has_tag(obj, tags.TYPE):
             restore = self._restore_type
-        elif has_tag(obj, tags.REPR):  # Backwards compatibility
-            restore = self._restore_repr
         elif has_tag(obj, tags.REDUCE):
             restore = self._restore_reduce
         elif has_tag(obj, tags.OBJECT):
             restore = self._restore_object
         elif has_tag(obj, tags.FUNCTION):
             restore = self._restore_function
+        elif has_tag(obj, tags.BYTES):  # Backwards compatibility
+            restore = self._restore_quopri
+        elif has_tag(obj, tags.REF):  # Backwards compatibility
+            restore = self._restore_ref
+        elif has_tag(obj, tags.REPR):  # Backwards compatibility
+            restore = self._restore_repr
         elif util.is_list(obj):
             restore = self._restore_list
         elif has_tag(obj, tags.TUPLE):
@@ -212,7 +240,7 @@ class Unpickler(object):
             def restore(x):
                 return x
 
-        return restore(obj)
+        return restore
 
     def _restore_base64(self, obj):
         return util.b64decode(obj[tags.B64].encode('utf-8'))
@@ -513,6 +541,7 @@ class Unpickler(object):
 
     def _restore_dict(self, obj):
         data = {}
+        self._mkref(data)
 
         # If we are decoding dicts that can have non-string keys then we
         # need to do a two-phase decode where the non-string keys are
