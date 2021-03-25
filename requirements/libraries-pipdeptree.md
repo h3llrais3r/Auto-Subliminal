@@ -14,6 +14,8 @@ CherryPy==18.6.0
     - jaraco.classes [required: Any, installed: 3.2.1]
       - more-itertools [required: Any, installed: 8.7.0]
     - jaraco.text [required: Any, installed: 3.5.0]
+      - importlib-resources [required: Any, installed: 5.1.2]
+        - zipp [required: >=0.4, installed: 3.4.1]
       - jaraco.functools [required: Any, installed: 3.2.1]
         - more-itertools [required: Any, installed: 8.7.0]
   - more-itertools [required: Any, installed: 8.7.0]
@@ -24,7 +26,7 @@ CherryPy==18.6.0
       - pytz [required: Any, installed: 2021.1]
   - pywin32 [required: Any, installed: 300]
   - zc.lockfile [required: Any, installed: 2.0]
-    - setuptools [required: Any, installed: 47.1.0]
+    - setuptools [required: Any, installed: 39.0.1]
 deathbycaptcha==0.1.1
   - requests [required: Any, installed: 2.25.1]
     - certifi [required: >=2017.4.17, installed: 2020.12.5]
@@ -51,17 +53,18 @@ imdbpie==5.6.4
     - chardet [required: >=3.0.2,<5, installed: 3.0.4]
     - idna [required: >=2.5,<3, installed: 2.10]
     - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.4]
-  - setuptools [required: >=39.0.1, installed: 47.1.0]
+  - setuptools [required: >=39.0.1, installed: 39.0.1]
   - six [required: >=1.0.0,<2.0.0, installed: 1.15.0]
   - trans [required: >=2.1.0,<3.0.0, installed: 2.1.0]
   - wheel [required: ==0.30.0, installed: 0.30.0]
-importlib-metadata==3.7.3
-  - zipp [required: >=0.5, installed: 3.4.1]
 jsonpickle==2.0.0
+  - importlib-metadata [required: Any, installed: 3.7.3]
+    - typing-extensions [required: >=3.6.4, installed: 3.7.4.3]
+    - zipp [required: >=0.5, installed: 3.4.1]
 langdetect==1.0.8
   - six [required: Any, installed: 1.15.0]
 pipdeptree==2.0.0
-  - pip [required: >=6.0.0, installed: 20.1.1]
+  - pip [required: >=6.0.0, installed: 10.0.1]
 pushbullet.py==0.12.0
   - python-magic [required: Any, installed: 0.4.22]
   - requests [required: >=1.0.0, installed: 2.25.1]
@@ -131,7 +134,6 @@ tvdb-api==3.0.0
     - six [required: >=1.5, installed: 1.15.0]
   - six [required: >=1.10.0, installed: 1.15.0]
   - urllib3 [required: >=1.15.1, installed: 1.26.4]
-typing-extensions==3.7.4.3
 Unidecode==1.2.0
 ws4py==0.5.1
 ``` 
