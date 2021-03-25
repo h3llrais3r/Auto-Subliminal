@@ -164,6 +164,8 @@ class Pickler(object):
         self._max_iter = max_iter
         # Whether to allow decimals to pass-through
         self._use_decimal = use_decimal
+        # A cache of objects that have already been flattened.
+        self._flattened = {}
 
         if self.use_base85:
             self._bytes_tag = tags.B85
@@ -179,10 +181,10 @@ class Pickler(object):
         self._objs = {}
         self._depth = -1
         self._seen = []
+        self._flattened = {}
 
     def _push(self):
-        """Steps down one level in the namespace.
-        """
+        """Steps down one level in the namespace."""
         self._depth += 1
 
     def _pop(self, value):
@@ -253,21 +255,29 @@ class Pickler(object):
         return self._flatten(obj)
 
     def _flatten(self, obj):
+        if self.unpicklable and self.make_refs:
+            result = self._flatten_impl(obj)
+        else:
+            try:
+                result = self._flattened[id(obj)]
+            except KeyError:
+                result = self._flattened[id(obj)] = self._flatten_impl(obj)
+        return result
 
+    def _flatten_impl(self, obj):
         #########################################
         # if obj is nonrecursive return immediately
         # for performance reasons we don't want to do recursive checks
         if PY2 and isinstance(obj, types.FileType):
             return self._flatten_file(obj)
 
-        if util.is_bytes(obj):
+        if type(obj) is bytes:
             return self._flatten_bytestring(obj)
 
-        if util.is_primitive(obj):
-            return obj
-
         # Decimal is a primitive when use_decimal is True
-        if self._use_decimal and isinstance(obj, decimal.Decimal):
+        if type(obj) in util.PRIMITIVES or (
+            self._use_decimal and isinstance(obj, decimal.Decimal)
+        ):
             return obj
         #########################################
 
@@ -309,37 +319,32 @@ class Pickler(object):
         return [self._flatten(v) for v in obj]
 
     def _get_flattener(self, obj):
-
-        list_recurse = self._list_recurse
-
-        if util.is_list(obj):
+        if type(obj) in (list, dict):
             if self._mkref(obj):
-                return list_recurse
+                return (
+                    self._list_recurse if type(obj) is list else self._flatten_dict_obj
+                )
             else:
                 self._push()
                 return self._getref
 
         # We handle tuples and sets by encoding them in a "(tuple|set)dict"
-        if util.is_tuple(obj):
+        elif type(obj) in (tuple, set):
             if not self.unpicklable:
-                return list_recurse
-            return lambda obj: {tags.TUPLE: [self._flatten(v) for v in obj]}
+                return self._list_recurse
+            return lambda obj: {
+                tags.TUPLE
+                if type(obj) is tuple
+                else tags.SET: [self._flatten(v) for v in obj]
+            }
 
-        if util.is_set(obj):
-            if not self.unpicklable:
-                return list_recurse
-            return lambda obj: {tags.SET: [self._flatten(v) for v in obj]}
-
-        if util.is_dictionary(obj):
-            return self._flatten_dict_obj
-
-        if util.is_type(obj):
-            return _mktyperef
-
-        if util.is_object(obj):
+        elif util.is_object(obj):
             return self._ref_obj_instance
 
-        if util.is_module_function(obj):
+        elif util.is_type(obj):
+            return _mktyperef
+
+        elif util.is_module_function(obj):
             return self._flatten_function
 
         # instance methods, lambdas, old style classes...
@@ -347,8 +352,7 @@ class Pickler(object):
         return None
 
     def _ref_obj_instance(self, obj):
-        """Reference an existing object or flatten if new
-        """
+        """Reference an existing object or flatten if new"""
         if self.unpicklable:
             if self._mkref(obj):
                 # We've never seen this object so return its
@@ -384,8 +388,7 @@ class Pickler(object):
         return {self._bytes_tag: self._bytes_encoder(obj)}
 
     def _flatten_obj_instance(self, obj):
-        """Recursively flatten an instance and return a json-friendly dict
-        """
+        """Recursively flatten an instance and return a json-friendly dict"""
         data = {}
         has_class = hasattr(obj, '__class__')
         has_dict = hasattr(obj, '__dict__')
@@ -558,8 +561,7 @@ class Pickler(object):
         return data
 
     def _flatten_dict_obj(self, obj, data=None):
-        """Recursively call flatten() and return json-friendly dict
-        """
+        """Recursively call flatten() and return json-friendly dict"""
         if data is None:
             data = obj.__class__()
 
@@ -623,8 +625,7 @@ class Pickler(object):
         return ok
 
     def _flatten_newstyle_with_slots(self, obj, data):
-        """Return a json-friendly dict for new-style objects with __slots__.
-        """
+        """Return a json-friendly dict for new-style objects with __slots__."""
         allslots = [
             _wrap_string_slot(getattr(cls, '__slots__', tuple()))
             for cls in obj.__class__.mro()
@@ -726,9 +727,12 @@ class Pickler(object):
 
 
 def _in_cycle(obj, objs, max_reached, make_refs):
+    """Detect cyclic structures that would lead to infinite recursion"""
     return (
-        max_reached or (not make_refs and id(obj) in objs)
-    ) and not util.is_primitive(obj)
+        (max_reached or (not make_refs and id(obj) in objs))
+        and not util.is_primitive(obj)
+        and not util.is_enum(obj)
+    )
 
 
 def _mktyperef(obj):
@@ -742,8 +746,7 @@ def _mktyperef(obj):
 
 
 def _wrap_string_slot(string):
-    """Converts __slots__ = 'a' into __slots__ = ('a',)
-    """
+    """Converts __slots__ = 'a' into __slots__ = ('a',)"""
     if isinstance(string, string_types):
         return (string,)
     return string
