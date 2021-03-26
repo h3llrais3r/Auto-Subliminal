@@ -50,11 +50,11 @@ from gitdb.fun import (
     stream_copy
 )
 
-from gitdb.utils.compat import MAXSIZE
 from gitdb.utils.encoding import force_bytes
 
 import tempfile
 import os
+import sys
 
 
 __all__ = ('LooseObjectDB', )
@@ -138,12 +138,12 @@ class LooseObjectDB(FileDBBase, ObjectDBR, ObjectDBW):
                 # try again without noatime
                 try:
                     return file_contents_ro_filepath(db_path)
-                except OSError:
-                    raise BadObject(sha)
+                except OSError as new_e:
+                    raise BadObject(sha) from new_e
                 # didn't work because of our flag, don't try it again
                 self._fd_open_flags = 0
             else:
-                raise BadObject(sha)
+                raise BadObject(sha) from e
             # END handle error
         # END exception handling
 
@@ -196,7 +196,7 @@ class LooseObjectDB(FileDBBase, ObjectDBR, ObjectDBW):
                 if istream.binsha is not None:
                     # copy as much as possible, the actual uncompressed item size might
                     # be smaller than the compressed version
-                    stream_copy(istream.read, writer.write, MAXSIZE, self.stream_chunk_size)
+                    stream_copy(istream.read, writer.write, sys.maxsize, self.stream_chunk_size)
                 else:
                     # write object with header, we have to make a new one
                     write_object(istream.type, istream.size, istream.read, writer.write,

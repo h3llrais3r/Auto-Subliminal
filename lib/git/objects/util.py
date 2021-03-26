@@ -105,6 +105,9 @@ class tzoffset(tzinfo):
         self._offset = timedelta(seconds=-secs_west_of_utc)
         self._name = name or 'fixed'
 
+    def __reduce__(self):
+        return tzoffset, (-self._offset.total_seconds(), self._name)
+
     def utcoffset(self, dt):
         return self._offset
 
@@ -132,6 +135,7 @@ def parse_date(string_date):
     """
     Parse the given date as one of the following
 
+        * aware datetime instance
         * Git internal format: timestamp offset
         * RFC 2822: Thu, 07 Apr 2005 22:13:13 +0200.
         * ISO 8601 2005-04-07T22:13:13
@@ -141,10 +145,16 @@ def parse_date(string_date):
     :raise ValueError: If the format could not be understood
     :note: Date can also be YYYY.MM.DD, MM/DD/YYYY and DD.MM.YYYY.
     """
+    if isinstance(string_date, datetime) and string_date.tzinfo:
+        offset = -int(string_date.utcoffset().total_seconds())
+        return int(string_date.astimezone(utc).timestamp()), offset
+
     # git time
     try:
         if string_date.count(' ') == 1 and string_date.rfind(':') == -1:
             timestamp, offset = string_date.split()
+            if timestamp.startswith('@'):
+                timestamp = timestamp[1:]
             timestamp = int(timestamp)
             return timestamp, utctz_to_altz(verify_utctz(offset))
         else:
@@ -198,8 +208,8 @@ def parse_date(string_date):
             # still here ? fail
             raise ValueError("no format matched")
         # END handle format
-    except Exception:
-        raise ValueError("Unsupported date format: %s" % string_date)
+    except Exception as e:
+        raise ValueError("Unsupported date format: %s" % string_date) from e
     # END handle exceptions
 
 

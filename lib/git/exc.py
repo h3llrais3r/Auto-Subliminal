@@ -5,8 +5,8 @@
 # the BSD License: http://www.opensource.org/licenses/bsd-license.php
 """ Module containing all exceptions thrown throughout the git package, """
 
-from gitdb.exc import *     # NOQA @UnusedWildImport
-from git.compat import UnicodeMixin, safe_decode, string_types
+from gitdb.exc import *     # NOQA @UnusedWildImport skipcq: PYL-W0401, PYL-W0614
+from git.compat import safe_decode
 
 
 class GitError(Exception):
@@ -25,7 +25,7 @@ class NoSuchPathError(GitError, OSError):
     """ Thrown if a path could not be access by the system. """
 
 
-class CommandError(UnicodeMixin, GitError):
+class CommandError(GitError):
     """Base class for exceptions thrown at every stage of `Popen()` execution.
 
     :param command:
@@ -34,8 +34,8 @@ class CommandError(UnicodeMixin, GitError):
 
     #: A unicode print-format with 2 `%s for `<cmdline>` and the rest,
     #:  e.g.
-    #:     u"'%s' failed%s"
-    _msg = u"Cmd('%s') failed%s"
+    #:     "'%s' failed%s"
+    _msg = "Cmd('%s') failed%s"
 
     def __init__(self, command, status=None, stderr=None, stdout=None):
         if not isinstance(command, (tuple, list)):
@@ -44,21 +44,21 @@ class CommandError(UnicodeMixin, GitError):
         self.status = status
         if status:
             if isinstance(status, Exception):
-                status = u"%s('%s')" % (type(status).__name__, safe_decode(str(status)))
+                status = "%s('%s')" % (type(status).__name__, safe_decode(str(status)))
             else:
                 try:
-                    status = u'exit code(%s)' % int(status)
+                    status = 'exit code(%s)' % int(status)
                 except (ValueError, TypeError):
                     s = safe_decode(str(status))
-                    status = u"'%s'" % s if isinstance(status, string_types) else s
+                    status = "'%s'" % s if isinstance(status, str) else s
 
         self._cmd = safe_decode(command[0])
-        self._cmdline = u' '.join(safe_decode(i) for i in command)
-        self._cause = status and u" due to: %s" % status or "!"
-        self.stdout = stdout and u"\n  stdout: '%s'" % safe_decode(stdout) or ''
-        self.stderr = stderr and u"\n  stderr: '%s'" % safe_decode(stderr) or ''
+        self._cmdline = ' '.join(safe_decode(i) for i in command)
+        self._cause = status and " due to: %s" % status or "!"
+        self.stdout = stdout and "\n  stdout: '%s'" % safe_decode(stdout) or ''
+        self.stderr = stderr and "\n  stderr: '%s'" % safe_decode(stderr) or ''
 
-    def __unicode__(self):
+    def __str__(self):
         return (self._msg + "\n  cmdline: %s%s%s") % (
             self._cmd, self._cause, self._cmdline, self.stdout, self.stderr)
 
@@ -68,7 +68,7 @@ class GitCommandNotFound(CommandError):
     the GIT_PYTHON_GIT_EXECUTABLE environment variable"""
     def __init__(self, command, cause):
         super(GitCommandNotFound, self).__init__(command, cause)
-        self._msg = u"Cmd('%s') not found%s"
+        self._msg = "Cmd('%s') not found%s"
 
 
 class GitCommandError(CommandError):
@@ -118,7 +118,7 @@ class HookExecutionError(CommandError):
 
     def __init__(self, command, status, stderr=None, stdout=None):
         super(HookExecutionError, self).__init__(command, status, stderr, stdout)
-        self._msg = u"Hook('%s') failed%s"
+        self._msg = "Hook('%s') failed%s"
 
 
 class RepositoryDirtyError(GitError):

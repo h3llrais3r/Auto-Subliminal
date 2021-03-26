@@ -15,12 +15,10 @@ import subprocess
 
 from git.cmd import PROC_CREATIONFLAGS, handle_process_output
 from git.compat import (
-    PY3,
     defenc,
     force_text,
     force_bytes,
     is_posix,
-    safe_encode,
     safe_decode,
 )
 from git.exc import (
@@ -73,7 +71,7 @@ def run_commit_hook(name, index, *args):
         return
 
     env = os.environ.copy()
-    env['GIT_INDEX_FILE'] = safe_decode(index.path) if PY3 else safe_encode(index.path)
+    env['GIT_INDEX_FILE'] = safe_decode(index.path)
     env['GIT_EDITOR'] = ':'
     try:
         cmd = subprocess.Popen([hp] + list(args),
@@ -84,7 +82,7 @@ def run_commit_hook(name, index, *args):
                                close_fds=is_posix,
                                creationflags=PROC_CREATIONFLAGS,)
     except Exception as ex:
-        raise HookExecutionError(hp, ex)
+        raise HookExecutionError(hp, ex) from ex
     else:
         stdout = []
         stderr = []
@@ -173,8 +171,7 @@ def entry_key(*entry):
     :param entry: One instance of type BaseIndexEntry or the path and the stage"""
     if len(entry) == 1:
         return (entry[0].path, entry[0].stage)
-    else:
-        return tuple(entry)
+    return tuple(entry)
     # END handle entry
 
 
@@ -265,7 +262,7 @@ def write_tree_from_cache(entries, odb, sl, si=0):
 
             # enter recursion
             # ci - 1 as we want to count our current item as well
-            sha, tree_entry_list = write_tree_from_cache(entries, odb, slice(ci - 1, xi), rbound + 1)  # @UnusedVariable
+            sha, _tree_entry_list = write_tree_from_cache(entries, odb, slice(ci - 1, xi), rbound + 1)
             tree_items_append((sha, S_IFDIR, base))
 
             # skip ahead

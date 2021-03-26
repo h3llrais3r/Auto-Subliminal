@@ -1,9 +1,6 @@
 import os
 
-from git.compat import (
-    string_types,
-    defenc
-)
+from git.compat import defenc
 from git.objects import Object, Commit
 from git.util import (
     join_path,
@@ -145,7 +142,7 @@ class SymbolicReference(object):
         tokens = None
         repodir = _git_dir(repo, ref_path)
         try:
-            with open(osp.join(repodir, ref_path), 'rt') as fp:
+            with open(osp.join(repodir, ref_path), 'rt', encoding='UTF-8') as fp:
                 value = fp.read().rstrip()
             # Don't only split on spaces, but on whitespace, which allows to parse lines like
             # 60b64ef992065e2600bfef6187a97f92398a9144                branch 'master' of git-server:/path/to/repo
@@ -222,8 +219,8 @@ class SymbolicReference(object):
         else:
             try:
                 invalid_type = self.repo.rev_parse(commit).type != Commit.type
-            except (BadObject, BadName):
-                raise ValueError("Invalid object: %s" % commit)
+            except (BadObject, BadName) as e:
+                raise ValueError("Invalid object: %s" % commit) from e
             # END handle exception
         # END verify type
 
@@ -300,12 +297,12 @@ class SymbolicReference(object):
         elif isinstance(ref, Object):
             obj = ref
             write_value = ref.hexsha
-        elif isinstance(ref, string_types):
+        elif isinstance(ref, str):
             try:
                 obj = self.repo.rev_parse(ref + "^{}")    # optionally deref tags
                 write_value = obj.hexsha
-            except (BadObject, BadName):
-                raise ValueError("Could not extract object from %s" % ref)
+            except (BadObject, BadName) as e:
+                raise ValueError("Could not extract object from %s" % ref) from e
             # END end try string
         else:
             raise ValueError("Unrecognized Value: %r" % ref)
@@ -448,12 +445,14 @@ class SymbolicReference(object):
                     made_change = False
                     dropped_last_line = False
                     for line in reader:
+                        line = line.decode(defenc)
+                        _, _, line_ref = line.partition(' ')
+                        line_ref = line_ref.strip()
                         # keep line if it is a comment or if the ref to delete is not
                         # in the line
                         # If we deleted the last line and this one is a tag-reference object,
                         # we drop it as well
-                        line = line.decode(defenc)
-                        if (line.startswith('#') or full_ref_path not in line) and \
+                        if (line.startswith('#') or full_ref_path != line_ref) and \
                                 (not dropped_last_line or dropped_last_line and not line.startswith('^')):
                             new_lines.append(line)
                             dropped_last_line = False
@@ -469,7 +468,7 @@ class SymbolicReference(object):
                     # write-binary is required, otherwise windows will
                     # open the file in text mode and change LF to CRLF !
                     with open(pack_file_path, 'wb') as fd:
-                        fd.writelines(l.encode(defenc) for l in new_lines)
+                        fd.writelines(line.encode(defenc) for line in new_lines)
 
             except (OSError, IOError):
                 pass  # it didn't exist at all
@@ -614,7 +613,7 @@ class SymbolicReference(object):
         # END for each directory to walk
 
         # read packed refs
-        for sha, rela_path in cls._iter_packed_refs(repo):  # @UnusedVariable
+        for _sha, rela_path in cls._iter_packed_refs(repo):
             if rela_path.startswith(common_path):
                 rela_paths.add(rela_path)
             # END relative path matches common path
