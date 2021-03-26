@@ -31,12 +31,12 @@ def streaming_service(config):  # pylint: disable=too-many-statements,unused-arg
         patterns = items if isinstance(items, list) else [items]
         for pattern in patterns:
             if isinstance(pattern, dict):
-                pattern_value = pattern.pop('pattern')
+                pattern_value = pattern.get('pattern')
                 kwargs = pattern
                 pattern = pattern_value
             else:
                 kwargs = {}
-            regex = kwargs.pop('regex', False)
+            regex = kwargs.get('regex', False)
             if regex or pattern.startswith(regex_prefix):
                 rebulk.regex(pattern[len(regex_prefix):], value=value, **kwargs)
             else:
