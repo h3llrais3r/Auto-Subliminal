@@ -100,7 +100,7 @@ subliminal==2.1.0.dev0
   - appdirs [required: >=1.3, installed: 1.4.4]
   - babelfish [required: >=0.5.2, installed: 0.5.5]
   - beautifulsoup4 [required: >=4.4.0, installed: 4.9.3]
-    - soupsieve [required: >1.2, installed: 1.9.6]
+    - soupsieve [required: >1.2, installed: 2.2.1]
   - chardet [required: >=2.3.0, installed: 4.0.0]
   - click [required: >=4.0, installed: 7.1.2]
   - dogpile.cache [required: >=0.6.0, installed: 1.1.2]

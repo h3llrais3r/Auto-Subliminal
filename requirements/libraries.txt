@@ -48,7 +48,7 @@ schema==0.7.4
 simplejson==3.17.2
 six==1.15.0
 smmap==4.0.0
-soupsieve==1.9.6
+soupsieve==2.2.1
 stevedore==3.3.0
 subliminal @ git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a
 tailer==0.4.1
