@@ -12,7 +12,7 @@ contextlib2==0.5.5
 deathbycaptcha==0.1.1
 decorator==4.4.2
 diskcache==4.1.0
-dogpile.cache==0.9.2
+dogpile.cache==1.1.2
 enzyme==0.4.1
 gitdb2==2.0.6
 GitPython==2.1.15
@@ -50,7 +50,7 @@ six==1.15.0
 smmap==3.0.1
 smmap2==3.0.1
 soupsieve==1.9.6
-stevedore==1.32.0
+stevedore==3.3.0
 subliminal @ git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a
 tailer==0.4.1
 tempora==4.0.1
