@@ -119,7 +119,7 @@ subliminal==2.1.0.dev0
   - pysrt [required: >=1.0.1, installed: 1.1.2]
     - chardet [required: Any, installed: 4.0.0]
   - pytz [required: >=2012c, installed: 2021.1]
-  - rarfile [required: >=2.7, installed: 3.1]
+  - rarfile [required: >=2.7, installed: 4.0]
   - requests [required: >=2.0, installed: 2.25.1]
     - certifi [required: >=2017.4.17, installed: 2020.12.5]
     - chardet [required: >=3.0.2,<5, installed: 4.0.0]
