@@ -1,12 +1,7 @@
 import re
 import time
 
-from git.compat import (
-    PY3,
-    xrange,
-    string_types,
-    defenc
-)
+from git.compat import defenc
 from git.objects.util import (
     parse_date,
     Serializable,
@@ -36,25 +31,19 @@ class RefLogEntry(tuple):
 
     def __repr__(self):
         """Representation of ourselves in git reflog format"""
-        res = self.format()
-        if PY3:
-            return res
-        else:
-            # repr must return a string, which it will auto-encode from unicode using the default encoding.
-            # This usually fails, so we encode ourselves
-            return res.encode(defenc)
+        return self.format()
 
     def format(self):
         """:return: a string suitable to be placed in a reflog file"""
         act = self.actor
         time = self.time
-        return u"{} {} {} <{}> {!s} {}\t{}\n".format(self.oldhexsha,
-                                                     self.newhexsha,
-                                                     act.name,
-                                                     act.email,
-                                                     time[0],
-                                                     altz_to_utctz_str(time[1]),
-                                                     self.message)
+        return "{} {} {} <{}> {!s} {}\t{}\n".format(self.oldhexsha,
+                                                    self.newhexsha,
+                                                    act.name,
+                                                    act.email,
+                                                    time[0],
+                                                    altz_to_utctz_str(time[1]),
+                                                    self.message)
 
     @property
     def oldhexsha(self):
@@ -85,7 +74,7 @@ class RefLogEntry(tuple):
         return self[4]
 
     @classmethod
-    def new(self, oldhexsha, newhexsha, actor, time, tz_offset, message):
+    def new(cls, oldhexsha, newhexsha, actor, time, tz_offset, message):  # skipcq: PYL-W0621
         """:return: New instance of a RefLogEntry"""
         if not isinstance(actor, Actor):
             raise ValueError("Need actor instance, got %s" % actor)
@@ -122,7 +111,7 @@ class RefLogEntry(tuple):
         # END handle missing end brace
 
         actor = Actor._from_string(info[82:email_end + 1])
-        time, tz_offset = parse_date(info[email_end + 2:])
+        time, tz_offset = parse_date(info[email_end + 2:])   # skipcq: PYL-W0621
 
         return RefLogEntry((oldhexsha, newhexsha, actor, (time, tz_offset), msg))
 
@@ -193,7 +182,7 @@ class RefLog(list, Serializable):
         :param stream: file-like object containing the revlog in its native format
             or basestring instance pointing to a file to read"""
         new_entry = RefLogEntry.from_line
-        if isinstance(stream, string_types):
+        if isinstance(stream, str):
             stream = file_contents_ro_filepath(stream)
         # END handle stream type
         while True:
@@ -217,19 +206,18 @@ class RefLog(list, Serializable):
             all other lines. Nonetheless, the whole file has to be read if
             the index is negative
         """
-        fp = open(filepath, 'rb')
-        if index < 0:
-            return RefLogEntry.from_line(fp.readlines()[index].strip())
-        else:
+        with open(filepath, 'rb') as fp:
+            if index < 0:
+                return RefLogEntry.from_line(fp.readlines()[index].strip())
             # read until index is reached
-            for i in xrange(index + 1):
+            for i in range(index + 1):
                 line = fp.readline()
                 if not line:
                     break
                 # END abort on eof
             # END handle runup
 
-            if i != index or not line:
+            if i != index or not line:  # skipcq:PYL-W0631
                 raise IndexError
             # END handle exception
 

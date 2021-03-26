@@ -13,12 +13,13 @@ import os
 def _init_externals():
     """Initialize external projects by putting them into the path"""
     for module in ('smmap',):
-        sys.path.append(os.path.join(os.path.dirname(__file__), 'ext', module))
+        if 'PYOXIDIZER' not in os.environ:
+            sys.path.append(os.path.join(os.path.dirname(__file__), 'ext', module))
 
         try:
             __import__(module)
-        except ImportError:
-            raise ImportError("'%s' could not be imported, assure it is located in your PYTHONPATH" % module)
+        except ImportError as e:
+            raise ImportError("'%s' could not be imported, assure it is located in your PYTHONPATH" % module) from e
         # END verify import
     # END handel imports
 
@@ -29,7 +30,7 @@ _init_externals()
 __author__ = "Sebastian Thiel"
 __contact__ = "byronimo@gmail.com"
 __homepage__ = "https://github.com/gitpython-developers/gitdb"
-version_info = (2, 0, 6)
+version_info = (4, 0, 7)
 __version__ = '.'.join(str(i) for i in version_info)
 
 

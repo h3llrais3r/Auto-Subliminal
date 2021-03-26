@@ -15,11 +15,8 @@ from git.cmd import (
     handle_process_output
 )
 from git.compat import (
-    text_type,
     defenc,
-    PY3,
     safe_decode,
-    range,
     is_win,
 )
 from git.config import GitConfigParser
@@ -76,6 +73,7 @@ class Repo(object):
     re_whitespace = re.compile(r'\s+')
     re_hexsha_only = re.compile('^[0-9A-Fa-f]{40}$')
     re_hexsha_shortened = re.compile('^[0-9A-Fa-f]{4,40}$')
+    re_envvars = re.compile(r'(\$(\{\s?)?[a-zA-Z_]\w*(\}\s?)?|%\s?[a-zA-Z_]\w*\s?%)')
     re_author_committer_start = re.compile(r'^(author|committer)')
     re_tab_full_line = re.compile(r'^\t(.*)$')
 
@@ -124,7 +122,7 @@ class Repo(object):
         epath = epath or path or os.getcwd()
         if not isinstance(epath, str):
             epath = str(epath)
-        if expand_vars and ("%" in epath or "$" in epath):
+        if expand_vars and re.search(self.re_envvars, epath):
             warnings.warn("The use of environment variables in paths is deprecated" +
                           "\nfor security reasons and may be removed in the future!!")
         epath = expand_path(epath, expand_vars)
@@ -272,9 +270,9 @@ class Repo(object):
 
     @property
     def common_dir(self):
-        """:return: The git dir that holds everything except possibly HEAD,
-        FETCH_HEAD, ORIG_HEAD, COMMIT_EDITMSG, index, and logs/ .
         """
+        :return: The git dir that holds everything except possibly HEAD,
+            FETCH_HEAD, ORIG_HEAD, COMMIT_EDITMSG, index, and logs/."""
         return self._common_dir or self.git_dir
 
     @property
@@ -343,8 +341,8 @@ class Repo(object):
         :raise ValueError: If no such submodule exists"""
         try:
             return self.submodules[name]
-        except IndexError:
-            raise ValueError("Didn't find submodule named %r" % name)
+        except IndexError as e:
+            raise ValueError("Didn't find submodule named %r" % name) from e
         # END exception handling
 
     def create_submodule(self, *args, **kwargs):
@@ -454,7 +452,7 @@ class Repo(object):
             files = [self._get_config_path(f) for f in self.config_level]
         else:
             files = [self._get_config_path(config_level)]
-        return GitConfigParser(files, read_only=True)
+        return GitConfigParser(files, read_only=True, repo=self)
 
     def config_writer(self, config_level="repository"):
         """
@@ -468,17 +466,18 @@ class Repo(object):
             One of the following values
             system = system wide configuration file
             global = user level configuration file
-            repository = configuration file for this repostory only"""
-        return GitConfigParser(self._get_config_path(config_level), read_only=False)
+            repository = configuration file for this repository only"""
+        return GitConfigParser(self._get_config_path(config_level), read_only=False, repo=self)
 
     def commit(self, rev=None):
         """The Commit object for the specified revision
+
         :param rev: revision specifier, see git-rev-parse for viable options.
-        :return: ``git.Commit``"""
+        :return: ``git.Commit``
+        """
         if rev is None:
             return self.head.commit
-        else:
-            return self.rev_parse(text_type(rev) + "^0")
+        return self.rev_parse(str(rev) + "^0")
 
     def iter_trees(self, *args, **kwargs):
         """:return: Iterator yielding Tree objects
@@ -500,8 +499,7 @@ class Repo(object):
             operations might have unexpected results."""
         if rev is None:
             return self.head.commit.tree
-        else:
-            return self.rev_parse(text_type(rev) + "^{tree}")
+        return self.rev_parse(str(rev) + "^{tree}")
 
     def iter_commits(self, rev=None, paths='', **kwargs):
         """A list of Commit objects representing the history of a given ref/commit
@@ -600,8 +598,7 @@ class Repo(object):
             with open(alternates_path, 'rb') as f:
                 alts = f.read().decode(defenc)
             return alts.strip().splitlines()
-        else:
-            return []
+        return []
 
     def _set_alternates(self, alts):
         """Sets the alternates
@@ -642,7 +639,7 @@ class Repo(object):
         if not submodules:
             default_args.append('--ignore-submodules')
         if path:
-            default_args.append(path)
+            default_args.extend(["--", path])
         if index:
             # diff index against HEAD
             if osp.isfile(self.index.path) and \
@@ -694,14 +691,24 @@ class Repo(object):
             # Special characters are escaped
             if filename[0] == filename[-1] == '"':
                 filename = filename[1:-1]
-                if PY3:
-                    # WHATEVER ... it's a mess, but works for me
-                    filename = filename.encode('ascii').decode('unicode_escape').encode('latin1').decode(defenc)
-                else:
-                    filename = filename.decode('string_escape').decode(defenc)
+                # WHATEVER ... it's a mess, but works for me
+                filename = filename.encode('ascii').decode('unicode_escape').encode('latin1').decode(defenc)
             untracked_files.append(filename)
         finalize_process(proc)
         return untracked_files
+
+    def ignored(self, *paths):
+        """Checks if paths are ignored via .gitignore
+        Doing so using the "git check-ignore" method.
+
+        :param paths: List of paths to check whether they are ignored or not
+        :return: subset of those paths which are ignored
+        """
+        try:
+            proc = self.git.check_ignore(*paths)
+        except GitCommandError:
+            return []
+        return proc.replace("\\\\", "\\").replace('"', "").split("\n")
 
     @property
     def active_branch(self):
@@ -994,7 +1001,7 @@ class Repo(object):
         :param multi_options: A list of Clone options that can be provided multiple times.  One
             option per list item which is passed exactly as specified to clone.
             For example ['--config core.filemode=false', '--config core.ignorecase',
-                         '--recurse-submodule=repo1_path', '--recurse-submodule=repo2_path']
+            '--recurse-submodule=repo1_path', '--recurse-submodule=repo2_path']
         :param kwargs:
             * odbt = ObjectDatabase Type, allowing to determine the object database
               implementation used by the returned Repo instance
@@ -1011,7 +1018,12 @@ class Repo(object):
         :param to_path: Path to which the repository should be cloned to
         :param progress: See 'git.remote.Remote.push'.
         :param env: Optional dictionary containing the desired environment variables.
-        :param mutli_options: See ``clone`` method
+            Note: Provided variables will be used to update the execution
+            environment for `git`. If some variable is not specified in `env`
+            and is defined in `os.environ`, value from `os.environ` will be used.
+            If you want to unset some variable, consider providing empty string
+            as its value.
+        :param multi_options: See ``clone`` method
         :param kwargs: see the ``clone`` method
         :return: Repo instance pointing to the cloned directory"""
         git = Git(os.getcwd())
@@ -1060,4 +1072,16 @@ class Repo(object):
     rev_parse = rev_parse
 
     def __repr__(self):
-        return '<git.Repo "%s">' % self.git_dir
+        clazz = self.__class__
+        return '<%s.%s %r>' % (clazz.__module__, clazz.__name__, self.git_dir)
+
+    def currently_rebasing_on(self):
+        """
+        :return: The commit which is currently being replayed while rebasing.
+
+        None if we are not currently rebasing.
+        """
+        rebase_head_file = osp.join(self.git_dir, "REBASE_HEAD")
+        if not osp.isfile(rebase_head_file):
+            return None
+        return self.commit(open(rebase_head_file, "rt").readline().strip())

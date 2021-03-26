@@ -11,12 +11,8 @@ import subprocess
 import tempfile
 
 from git.compat import (
-    izip,
-    xrange,
-    string_types,
     force_bytes,
     defenc,
-    mviter,
 )
 from git.exc import (
     GitCommandError,
@@ -158,7 +154,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
 
     def _deserialize(self, stream):
         """Initialize this instance with index values read from the given stream"""
-        self.version, self.entries, self._extension_data, conten_sha = read_cache(stream)  # @UnusedVariable
+        self.version, self.entries, self._extension_data, _conten_sha = read_cache(stream)
         return self
 
     def _entries_sorted(self):
@@ -223,7 +219,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         """Merge the given rhs treeish into the current index, possibly taking
         a common base treeish into account.
 
-        As opposed to the from_tree_ method, this allows you to use an already
+        As opposed to the :func:`IndexFile.from_tree` method, this allows you to use an already
         existing tree as the left side of the merge
 
         :param rhs:
@@ -272,8 +268,8 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
 
         inst = cls(repo)
         # convert to entries dict
-        entries = dict(izip(((e.path, e.stage) for e in base_entries),
-                            (IndexEntry.from_base(e) for e in base_entries)))
+        entries = dict(zip(((e.path, e.stage) for e in base_entries),
+                           (IndexEntry.from_base(e) for e in base_entries)))
 
         inst.entries = entries
         return inst
@@ -377,8 +373,8 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
                     continue
             # end check symlink
 
-            # resolve globs if possible
-            if '?' in path or '*' in path or '[' in path:
+            # if the path is not already pointing to an existing file, resolve globs if possible
+            if not os.path.exists(path) and ('?' in path or '*' in path or '[' in path):
                 resolved_paths = glob.glob(abs_path)
                 # not abs_path in resolved_paths:
                 #   a glob() resolving to the same path we are feeding it with
@@ -392,7 +388,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
                     continue
             # END glob handling
             try:
-                for root, dirs, files in os.walk(abs_path, onerror=raise_exc):  # @UnusedVariable
+                for root, _dirs, files in os.walk(abs_path, onerror=raise_exc):
                     for rela_file in files:
                         # add relative paths only
                         yield osp.join(root.replace(rs, ''), rela_file)
@@ -424,9 +420,9 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         rval = None
         try:
             proc.stdin.write(("%s\n" % filepath).encode(defenc))
-        except IOError:
+        except IOError as e:
             # pipe broke, usually because some error happened
-            raise fmakeexc()
+            raise fmakeexc() from e
         # END write exception handling
         proc.stdin.flush()
         if read_from_stdout:
@@ -442,7 +438,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             Function(t) returning True if tuple(stage, Blob) should be yielded by the
             iterator. A default filter, the BlobFilter, allows you to yield blobs
             only if they match a given list of paths. """
-        for entry in mviter(self.entries):
+        for entry in self.entries.values():
             blob = entry.to_blob(self.repo)
             blob.size = entry.size
             output = (entry.stage, blob)
@@ -467,8 +463,8 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         for stage, blob in self.iter_blobs(is_unmerged_blob):
             path_map.setdefault(blob.path, []).append((stage, blob))
         # END for each unmerged blob
-        for l in mviter(path_map):
-            l.sort()
+        for line in path_map.values():
+            line.sort()
         return path_map
 
     @classmethod
@@ -569,9 +565,12 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         """ Split the items into two lists of path strings and BaseEntries. """
         paths = []
         entries = []
+        # if it is a string put in list
+        if isinstance(items, str):
+            items = [items]
 
         for item in items:
-            if isinstance(item, string_types):
+            if isinstance(item, str):
                 paths.append(self._to_relative_path(item))
             elif isinstance(item, (Blob, Submodule)):
                 entries.append(BaseIndexEntry.from_blob(item))
@@ -580,7 +579,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             else:
                 raise TypeError("Invalid Type: %r" % item)
         # END for each item
-        return (paths, entries)
+        return paths, entries
 
     def _store_path(self, filepath, fprogress):
         """Store file at filepath in the database and return the base index entry
@@ -801,10 +800,14 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         """Returns a list of repo-relative paths from the given items which
         may be absolute or relative paths, entries or blobs"""
         paths = []
+        # if string put in list
+        if isinstance(items, str):
+            items = [items]
+
         for item in items:
             if isinstance(item, (BaseIndexEntry, (Blob, Submodule))):
                 paths.append(self._to_relative_path(item.path))
-            elif isinstance(item, string_types):
+            elif isinstance(item, str):
                 paths.append(self._to_relative_path(item))
             else:
                 raise TypeError("Invalid item type: %r" % item)
@@ -827,7 +830,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
                 to a path relative to the git repository directory containing
                 the working tree
 
-                The path string may include globs, such as *.c.
+                The path string may include globs, such as \\*.c.
 
             - Blob Object
                 Only the path portion is used in this case.
@@ -906,7 +909,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
 
         # parse result - first 0:n/2 lines are 'checking ', the remaining ones
         # are the 'renaming' ones which we parse
-        for ln in xrange(int(len(mvlines) / 2), len(mvlines)):
+        for ln in range(int(len(mvlines) / 2), len(mvlines)):
             tokens = mvlines[ln].split(' to ')
             assert len(tokens) == 2, "Too many tokens in %s" % mvlines[ln]
 
@@ -951,7 +954,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         if not skip_hooks:
             run_commit_hook('post-commit', self)
         return rval
-    
+
     def _write_commit_editmsg(self, message):
         with open(self._commit_editmsg_filepath(), "wb") as commit_editmsg_file:
             commit_editmsg_file.write(message.encode(defenc))
@@ -995,7 +998,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             If False, these will trigger a CheckoutError.
 
         :param fprogress:
-            see Index.add_ for signature and explanation.
+            see :func:`IndexFile.add` for signature and explanation.
             The provided progress information will contain None as path and item if no
             explicit paths are given. Otherwise progress information will be send
             prior and after a file has been checked out
@@ -1007,7 +1010,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             iterable yielding paths to files which have been checked out and are
             guaranteed to match the version stored in the index
 
-        :raise CheckoutError:
+        :raise exc.CheckoutError:
             If at least one file failed to be checked out. This is a summary,
             hence it will checkout as many files as it can anyway.
             If one of files or directories do not exist in the index
@@ -1025,6 +1028,10 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         if force:
             args.append("--force")
 
+        failed_files = []
+        failed_reasons = []
+        unknown_lines = []
+
         def handle_stderr(proc, iter_checked_out_files):
             stderr = proc.stderr.read()
             if not stderr:
@@ -1032,9 +1039,6 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             # line contents:
             stderr = stderr.decode(defenc)
             # git-checkout-index: this already exists
-            failed_files = []
-            failed_reasons = []
-            unknown_lines = []
             endings = (' already exists', ' is not in the cache', ' does not exist at stage', ' is unmerged')
             for line in stderr.splitlines():
                 if not line.startswith("git checkout-index: ") and not line.startswith("git-checkout-index: "):
@@ -1079,11 +1083,11 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
             proc = self.repo.git.checkout_index(*args, **kwargs)
             proc.wait()
             fprogress(None, True, None)
-            rval_iter = (e.path for e in mviter(self.entries))
+            rval_iter = (e.path for e in self.entries.values())
             handle_stderr(proc, rval_iter)
             return rval_iter
         else:
-            if isinstance(paths, string_types):
+            if isinstance(paths, str):
                 paths = [paths]
 
             # make sure we have our entries loaded before we start checkout_index
@@ -1110,7 +1114,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
                     folder = co_path
                     if not folder.endswith('/'):
                         folder += '/'
-                    for entry in mviter(self.entries):
+                    for entry in self.entries.values():
                         if entry.path.startswith(folder):
                             p = entry.path
                             self._write_path_to_stdin(proc, p, p, make_exc,
@@ -1127,7 +1131,13 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
                     checked_out_files.append(co_path)
                 # END path is a file
             # END for each path
-            self._flush_stdin_and_wait(proc, ignore_stdout=True)
+            try:
+                self._flush_stdin_and_wait(proc, ignore_stdout=True)
+            except GitCommandError:
+                # Without parsing stdout we don't know what failed.
+                raise CheckoutError(
+                    "Some files could not be checked out from the index, probably because they didn't exist.",
+                    failed_files, [], failed_reasons)
 
             handle_stderr(proc, checked_out_files)
             return checked_out_files
@@ -1220,7 +1230,7 @@ class IndexFile(LazyMixin, diff.Diffable, Serializable):
         # index against anything but None is a reverse diff with the respective
         # item. Handle existing -R flags properly. Transform strings to the object
         # so that we can call diff on it
-        if isinstance(other, string_types):
+        if isinstance(other, str):
             other = self.repo.rev_parse(other)
         # END object conversion
 

@@ -21,12 +21,8 @@ from collections import OrderedDict
 from textwrap import dedent
 
 from git.compat import (
-    string_types,
     defenc,
     force_bytes,
-    PY3,
-    # just to satisfy flake8 on py3
-    unicode,
     safe_decode,
     is_posix,
     is_win,
@@ -42,11 +38,6 @@ from .util import (
     LazyMixin,
     stream_copy,
 )
-
-try:
-    PermissionError
-except NameError:  # Python < 3.3
-    PermissionError = OSError
 
 execute_kwargs = {'istream', 'with_extended_output',
                   'with_exceptions', 'as_process', 'stdout_as_string',
@@ -67,7 +58,7 @@ __all__ = ('Git',)
 
 def handle_process_output(process, stdout_handler, stderr_handler,
                           finalizer=None, decode_streams=True):
-    """Registers for notifications to lean that process output is ready to read, and dispatches lines to
+    """Registers for notifications to learn that process output is ready to read, and dispatches lines to
     the respective line handlers.
     This function returns once the finalizer returns
 
@@ -92,7 +83,7 @@ def handle_process_output(process, stdout_handler, stderr_handler,
                     handler(line)
         except Exception as ex:
             log.error("Pumping %r of cmd(%s) failed due to: %r", name, cmdline, ex)
-            raise CommandError(['<%s-pump>' % name] + cmdline, ex)
+            raise CommandError(['<%s-pump>' % name] + cmdline, ex) from ex
         finally:
             stream.close()
 
@@ -330,6 +321,9 @@ class Git(LazyMixin):
             but git stops liking them as it will escape the backslashes.
             Hence we undo the escaping just to be sure.
             """
+            url = os.path.expandvars(url)
+            if url.startswith('~'):
+                url = os.path.expanduser(url)
             url = url.replace("\\\\", "\\").replace("\\", "/")
 
         return url
@@ -362,8 +356,11 @@ class Git(LazyMixin):
                 proc.stderr.close()
 
             # did the process finish already so we have a return code ?
-            if proc.poll() is not None:
-                return
+            try:
+                if proc.poll() is not None:
+                    return
+            except OSError as ex:
+                log.info("Ignored error after process had died: %r", ex)
 
             # can be that nothing really exists anymore ...
             if os is None or getattr(os, 'kill', None) is None:
@@ -375,7 +372,6 @@ class Git(LazyMixin):
                 proc.wait()    # ensure process goes away
             except OSError as ex:
                 log.info("Ignored error after process had died: %r", ex)
-                pass  # ignore error when process already died
             except AttributeError:
                 # try windows
                 # for some reason, providing None for stdout/stderr still prints something. This is why
@@ -396,7 +392,7 @@ class Git(LazyMixin):
             :raise GitCommandError: if the return status is not 0"""
             if stderr is None:
                 stderr = b''
-            stderr = force_bytes(stderr)
+            stderr = force_bytes(data=stderr, encoding='utf-8')
 
             status = self.proc.wait()
 
@@ -498,8 +494,12 @@ class Git(LazyMixin):
             # END readline loop
             return out
 
+        # skipcq: PYL-E0301
         def __iter__(self):
             return self
+        
+        def __next__(self):
+            return self.next()
 
         def next(self):
             line = self.readline()
@@ -735,7 +735,7 @@ class Git(LazyMixin):
                          **subprocess_kwargs
                          )
         except cmd_not_found_exception as err:
-            raise GitCommandNotFound(command, err)
+            raise GitCommandNotFound(command, err) from err
 
         if as_process:
             return self.AutoInterrupt(proc, command)
@@ -775,6 +775,7 @@ class Git(LazyMixin):
         status = 0
         stdout_value = b''
         stderr_value = b''
+        newline = "\n" if universal_newlines else b"\n"
         try:
             if output_stream is None:
                 if kill_after_timeout:
@@ -784,11 +785,13 @@ class Git(LazyMixin):
                     watchdog.cancel()
                     if kill_check.isSet():
                         stderr_value = ('Timeout: the command "%s" did not complete in %d '
-                                        'secs.' % (" ".join(command), kill_after_timeout)).encode(defenc)
+                                        'secs.' % (" ".join(command), kill_after_timeout))
+                        if not universal_newlines:
+                            stderr_value = stderr_value.encode(defenc)
                 # strip trailing "\n"
-                if stdout_value.endswith(b"\n"):
+                if stdout_value.endswith(newline):
                     stdout_value = stdout_value[:-1]
-                if stderr_value.endswith(b"\n"):
+                if stderr_value.endswith(newline):
                     stderr_value = stderr_value[:-1]
                 status = proc.returncode
             else:
@@ -797,7 +800,7 @@ class Git(LazyMixin):
                 stdout_value = proc.stdout.read()
                 stderr_value = proc.stderr.read()
                 # strip trailing "\n"
-                if stderr_value.endswith(b"\n"):
+                if stderr_value.endswith(newline):
                     stderr_value = stderr_value[:-1]
                 status = proc.wait()
             # END stdout handling
@@ -912,18 +915,12 @@ class Git(LazyMixin):
     @classmethod
     def __unpack_args(cls, arg_list):
         if not isinstance(arg_list, (list, tuple)):
-            # This is just required for unicode conversion, as subprocess can't handle it
-            # However, in any other case, passing strings (usually utf-8 encoded) is totally fine
-            if not PY3 and isinstance(arg_list, unicode):
-                return [arg_list.encode(defenc)]
             return [str(arg_list)]
 
         outlist = []
         for arg in arg_list:
             if isinstance(arg_list, (list, tuple)):
                 outlist.extend(cls.__unpack_args(arg))
-            elif not PY3 and isinstance(arg_list, unicode):
-                outlist.append(arg_list.encode(defenc))
             # END recursion
             else:
                 outlist.append(str(arg))
@@ -991,9 +988,9 @@ class Git(LazyMixin):
         else:
             try:
                 index = ext_args.index(insert_after_this_arg)
-            except ValueError:
+            except ValueError as err:
                 raise ValueError("Couldn't find argument '%s' in args %s to insert cmd options after"
-                                 % (insert_after_this_arg, str(ext_args)))
+                                 % (insert_after_this_arg, str(ext_args))) from err
             # end handle error
             args = ext_args[:index + 1] + opt_args + ext_args[index + 1:]
         # end handle opts_kwargs
@@ -1041,7 +1038,7 @@ class Git(LazyMixin):
         if isinstance(ref, bytes):
             # Assume 40 bytes hexsha - bin-to-ascii for some reason returns bytes, not text
             refstr = ref.decode('ascii')
-        elif not isinstance(ref, string_types):
+        elif not isinstance(ref, str):
             refstr = str(ref)               # could be ref-object
 
         if not refstr.endswith("\n"):

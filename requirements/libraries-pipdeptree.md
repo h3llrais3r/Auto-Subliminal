@@ -34,10 +34,9 @@ deathbycaptcha==0.1.1
     - idna [required: >=2.5,<3, installed: 2.10]
     - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.4]
   - simplejson [required: Any, installed: 3.17.2]
-GitPython==2.1.15
-  - gitdb2 [required: >=2,<3, installed: 2.0.6]
-    - smmap2 [required: >=2.0.0, installed: 3.0.1]
-      - smmap [required: >=3.0.1, installed: 3.0.1]
+GitPython==3.1.14
+  - gitdb [required: >=4.0.1,<5, installed: 4.0.7]
+    - smmap [required: >=3.0.1,<5, installed: 4.0.0]
 gntp==1.0.3
 html5lib==1.1
   - six [required: >=1.9, installed: 1.15.0]

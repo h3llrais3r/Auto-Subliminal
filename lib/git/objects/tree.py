@@ -11,17 +11,13 @@ from . import util
 from .base import IndexObject
 from .blob import Blob
 from .submodule.base import Submodule
-from git.compat import string_types
 
 from .fun import (
     tree_entries_from_data,
     tree_to_stream
 )
 
-from git.compat import PY3
-
-if PY3:
-    cmp = lambda a, b: (a > b) - (a < b)
+cmp = lambda a, b: (a > b) - (a < b)
 
 __all__ = ("TreeModifier", "Tree")
 
@@ -207,8 +203,8 @@ class Tree(IndexObject, diff.Diffable, util.Traversable, util.Serializable):
             path = join_path(self.path, name)
             try:
                 yield self._map_id_to_type[mode >> 12](self.repo, binsha, mode, path)
-            except KeyError:
-                raise TypeError("Unknown mode %o found in tree data for path '%s'" % (mode, path))
+            except KeyError as e:
+                raise TypeError("Unknown mode %o found in tree data for path '%s'" % (mode, path)) from e
         # END for each item
 
     def join(self, file):
@@ -293,7 +289,7 @@ class Tree(IndexObject, diff.Diffable, util.Traversable, util.Serializable):
             info = self._cache[item]
             return self._map_id_to_type[info[1] >> 12](self.repo, info[0], info[1], join_path(self.path, info[2]))
 
-        if isinstance(item, string_types):
+        if isinstance(item, str):
             # compatibility
             return self.join(item)
         # END index is basestring

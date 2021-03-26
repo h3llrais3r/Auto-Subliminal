@@ -5,28 +5,10 @@ import sys
 from mmap import mmap, ACCESS_READ
 from mmap import ALLOCATIONGRANULARITY
 
-__all__ = ["align_to_mmap", "is_64_bit", "buffer",
+__all__ = ["align_to_mmap", "is_64_bit",
            "MapWindow", "MapRegion", "MapRegionList", "ALLOCATIONGRANULARITY"]
 
 #{ Utilities
-
-try:
-    # Python 2
-    buffer = buffer
-except NameError:
-    # Python 3 has no `buffer`; only `memoryview`
-    def buffer(obj, offset, size):
-        # Actually, for gitpython this is fastest ... .
-        return memoryview(obj)[offset:offset+size]
-        # doing it directly is much faster !
-        # return obj[offset:offset + size]
-
-
-def string_types():
-    if sys.version_info[0] >= 3:
-        return str
-    else:
-        return basestring
 
 
 def align_to_mmap(num, round_up):
@@ -146,7 +128,7 @@ class MapRegion(object):
 
             self._size = len(self._mf)
         finally:
-            if isinstance(path_or_fd, string_types()):
+            if isinstance(path_or_fd, str):
                 os.close(fd)
             # END only close it if we opened it
         # END close file handle
@@ -229,7 +211,7 @@ class MapRegionList(list):
     def file_size(self):
         """:return: size of file we manager"""
         if self._file_size is None:
-            if isinstance(self._path_or_fd, string_types()):
+            if isinstance(self._path_or_fd, str):
                 self._file_size = os.stat(self._path_or_fd).st_size
             else:
                 self._file_size = os.fstat(self._path_or_fd).st_size

@@ -13,6 +13,7 @@ import subprocess
 import re
 import shutil
 import stat
+from sys import maxsize
 import time
 from unittest import SkipTest
 
@@ -31,11 +32,6 @@ from gitdb.util import (# NOQA @IgnorePep8
 from git.compat import is_win
 import os.path as osp
 
-from .compat import (
-    MAXSIZE,
-    defenc,
-    PY3
-)
 from .exc import InvalidGitRepositoryError
 
 
@@ -43,11 +39,11 @@ from .exc import InvalidGitRepositoryError
 # Handle once test-cases are back up and running.
 # Most of these are unused here, but are for use by git-python modules so these
 # don't see gitdb all the time. Flake of course doesn't like it.
-__all__ = ("stream_copy", "join_path", "to_native_path_windows", "to_native_path_linux",
+__all__ = ["stream_copy", "join_path", "to_native_path_linux",
            "join_path_native", "Stats", "IndexFileSHA1Writer", "Iterable", "IterableList",
            "BlockingLockFile", "LockFile", 'Actor', 'get_user_id', 'assure_directory_exists',
            'RemoteProgress', 'CallableRemoteProgress', 'rmtree', 'unbare_repo',
-           'HIDE_WINDOWS_KNOWN_ERRORS')
+           'HIDE_WINDOWS_KNOWN_ERRORS']
 
 log = logging.getLogger(__name__)
 
@@ -98,9 +94,8 @@ def rmtree(path):
             func(path)  # Will scream if still not possible to delete.
         except Exception as ex:
             if HIDE_WINDOWS_KNOWN_ERRORS:
-                raise SkipTest("FIXME: fails with: PermissionError\n  %s", ex)
-            else:
-                raise
+                raise SkipTest("FIXME: fails with: PermissionError\n  {}".format(ex)) from ex
+            raise
 
     return shutil.rmtree(path, False, onerror)
 
@@ -134,7 +129,7 @@ def join_path(a, *p):
     '/' instead of possibly '\' on windows."""
     path = a
     for b in p:
-        if len(b) == 0:
+        if not b:
             continue
         if b.startswith('/'):
             path += b[1:]
@@ -153,6 +148,7 @@ if is_win:
     def to_native_path_linux(path):
         return path.replace('\\', '/')
 
+    __all__.append("to_native_path_windows")
     to_native_path = to_native_path_windows
 else:
     # no need for any work on linux
@@ -179,7 +175,7 @@ def assure_directory_exists(path, is_file=False):
         path = osp.dirname(path)
     # END handle file
     if not osp.isdir(path):
-        os.makedirs(path)
+        os.makedirs(path, exist_ok=True)
         return True
     return False
 
@@ -380,101 +376,94 @@ class RemoteProgress(object):
 
         - Lines that do not contain progress info are stored in :attr:`other_lines`.
         - Lines that seem to contain an error (i.e. start with error: or fatal:) are stored
-        in :attr:`error_lines`.
-
-        :return: list(line, ...) list of lines that could not be processed"""
+        in :attr:`error_lines`."""
         # handle
         # Counting objects: 4, done.
-        # Compressing objects:  50% (1/2)   \rCompressing objects: 100% (2/2)   \rCompressing objects: 100% (2/2), done.
+        # Compressing objects:  50% (1/2)
+        # Compressing objects: 100% (2/2)
+        # Compressing objects: 100% (2/2), done.
         self._cur_line = line = line.decode('utf-8') if isinstance(line, bytes) else line
-        if len(self.error_lines) > 0 or self._cur_line.startswith(('error:', 'fatal:')):
+        if self.error_lines or self._cur_line.startswith(('error:', 'fatal:')):
             self.error_lines.append(self._cur_line)
-            return []
+            return
 
-        sub_lines = line.split('\r')
-        failed_lines = []
-        for sline in sub_lines:
-            # find escape characters and cut them away - regex will not work with
-            # them as they are non-ascii. As git might expect a tty, it will send them
-            last_valid_index = None
-            for i, c in enumerate(reversed(sline)):
-                if ord(c) < 32:
-                    # its a slice index
-                    last_valid_index = -i - 1
-                # END character was non-ascii
-            # END for each character in sline
-            if last_valid_index is not None:
-                sline = sline[:last_valid_index]
-            # END cut away invalid part
-            sline = sline.rstrip()
+        # find escape characters and cut them away - regex will not work with
+        # them as they are non-ascii. As git might expect a tty, it will send them
+        last_valid_index = None
+        for i, c in enumerate(reversed(line)):
+            if ord(c) < 32:
+                # its a slice index
+                last_valid_index = -i - 1
+            # END character was non-ascii
+        # END for each character in line
+        if last_valid_index is not None:
+            line = line[:last_valid_index]
+        # END cut away invalid part
+        line = line.rstrip()
 
-            cur_count, max_count = None, None
-            match = self.re_op_relative.match(sline)
-            if match is None:
-                match = self.re_op_absolute.match(sline)
+        cur_count, max_count = None, None
+        match = self.re_op_relative.match(line)
+        if match is None:
+            match = self.re_op_absolute.match(line)
 
-            if not match:
-                self.line_dropped(sline)
-                failed_lines.append(sline)
-                continue
-            # END could not get match
+        if not match:
+            self.line_dropped(line)
+            self.other_lines.append(line)
+            return
+        # END could not get match
 
-            op_code = 0
-            remote, op_name, percent, cur_count, max_count, message = match.groups()  # @UnusedVariable
+        op_code = 0
+        _remote, op_name, _percent, cur_count, max_count, message = match.groups()
 
-            # get operation id
-            if op_name == "Counting objects":
-                op_code |= self.COUNTING
-            elif op_name == "Compressing objects":
-                op_code |= self.COMPRESSING
-            elif op_name == "Writing objects":
-                op_code |= self.WRITING
-            elif op_name == 'Receiving objects':
-                op_code |= self.RECEIVING
-            elif op_name == 'Resolving deltas':
-                op_code |= self.RESOLVING
-            elif op_name == 'Finding sources':
-                op_code |= self.FINDING_SOURCES
-            elif op_name == 'Checking out files':
-                op_code |= self.CHECKING_OUT
-            else:
-                # Note: On windows it can happen that partial lines are sent
-                # Hence we get something like "CompreReceiving objects", which is
-                # a blend of "Compressing objects" and "Receiving objects".
-                # This can't really be prevented, so we drop the line verbosely
-                # to make sure we get informed in case the process spits out new
-                # commands at some point.
-                self.line_dropped(sline)
-                # Note: Don't add this line to the failed lines, as we have to silently
-                # drop it
-                self.other_lines.extend(failed_lines)
-                return failed_lines
-            # END handle op code
+        # get operation id
+        if op_name == "Counting objects":
+            op_code |= self.COUNTING
+        elif op_name == "Compressing objects":
+            op_code |= self.COMPRESSING
+        elif op_name == "Writing objects":
+            op_code |= self.WRITING
+        elif op_name == 'Receiving objects':
+            op_code |= self.RECEIVING
+        elif op_name == 'Resolving deltas':
+            op_code |= self.RESOLVING
+        elif op_name == 'Finding sources':
+            op_code |= self.FINDING_SOURCES
+        elif op_name == 'Checking out files':
+            op_code |= self.CHECKING_OUT
+        else:
+            # Note: On windows it can happen that partial lines are sent
+            # Hence we get something like "CompreReceiving objects", which is
+            # a blend of "Compressing objects" and "Receiving objects".
+            # This can't really be prevented, so we drop the line verbosely
+            # to make sure we get informed in case the process spits out new
+            # commands at some point.
+            self.line_dropped(line)
+            # Note: Don't add this line to the other lines, as we have to silently
+            # drop it
+            return
+        # END handle op code
 
-            # figure out stage
-            if op_code not in self._seen_ops:
-                self._seen_ops.append(op_code)
-                op_code |= self.BEGIN
-            # END begin opcode
+        # figure out stage
+        if op_code not in self._seen_ops:
+            self._seen_ops.append(op_code)
+            op_code |= self.BEGIN
+        # END begin opcode
 
-            if message is None:
-                message = ''
-            # END message handling
+        if message is None:
+            message = ''
+        # END message handling
 
-            message = message.strip()
-            if message.endswith(self.DONE_TOKEN):
-                op_code |= self.END
-                message = message[:-len(self.DONE_TOKEN)]
-            # END end message handling
-            message = message.strip(self.TOKEN_SEPARATOR)
+        message = message.strip()
+        if message.endswith(self.DONE_TOKEN):
+            op_code |= self.END
+            message = message[:-len(self.DONE_TOKEN)]
+        # END end message handling
+        message = message.strip(self.TOKEN_SEPARATOR)
 
-            self.update(op_code,
-                        cur_count and float(cur_count),
-                        max_count and float(max_count),
-                        message)
-        # END for each sub line
-        self.other_lines.extend(failed_lines)
-        return failed_lines
+        self.update(op_code,
+                    cur_count and float(cur_count),
+                    max_count and float(max_count),
+                    message)
 
     def new_message_handler(self):
         """
@@ -567,7 +556,7 @@ class Actor(object):
         return self.name
 
     def __repr__(self):
-        return u'<git.Actor "%s <%s>">' % (self.name, self.email)
+        return '<git.Actor "%s <%s>">' % (self.name, self.email)
 
     @classmethod
     def _from_string(cls, string):
@@ -585,32 +574,36 @@ class Actor(object):
             m = cls.name_only_regex.search(string)
             if m:
                 return Actor(m.group(1), None)
-            else:
-                # assume best and use the whole string as name
-                return Actor(string, None)
+            # assume best and use the whole string as name
+            return Actor(string, None)
             # END special case name
         # END handle name/email matching
 
     @classmethod
     def _main_actor(cls, env_name, env_email, config_reader=None):
         actor = Actor('', '')
-        default_email = get_user_id()
-        default_name = default_email.split('@')[0]
+        user_id = None  # We use this to avoid multiple calls to getpass.getuser()
+
+        def default_email():
+            nonlocal user_id
+            if not user_id:
+                user_id = get_user_id()
+            return user_id
+
+        def default_name():
+            return default_email().split('@')[0]
 
         for attr, evar, cvar, default in (('name', env_name, cls.conf_name, default_name),
                                           ('email', env_email, cls.conf_email, default_email)):
             try:
                 val = os.environ[evar]
-                if not PY3:
-                    val = val.decode(defenc)
-                # end assure we don't get 'invalid strings'
                 setattr(actor, attr, val)
             except KeyError:
                 if config_reader is not None:
-                    setattr(actor, attr, config_reader.get_value('user', cvar, default))
+                    setattr(actor, attr, config_reader.get_value('user', cvar, default()))
                 # END config-reader handling
                 if not getattr(actor, attr):
-                    setattr(actor, attr, default)
+                    setattr(actor, attr, default())
             # END handle name
         # END for each item to retrieve
         return actor
@@ -762,7 +755,7 @@ class LockFile(object):
             fd = os.open(lock_file, flags, 0)
             os.close(fd)
         except OSError as e:
-            raise IOError(str(e))
+            raise IOError(str(e)) from e
 
         self._owns_lock = True
 
@@ -796,7 +789,7 @@ class BlockingLockFile(LockFile):
         can never be obtained."""
     __slots__ = ("_check_interval", "_max_block_time")
 
-    def __init__(self, file_path, check_interval_s=0.3, max_block_time_s=MAXSIZE):
+    def __init__(self, file_path, check_interval_s=0.3, max_block_time_s=maxsize):
         """Configure the instance
 
         :param check_interval_s:
@@ -817,19 +810,19 @@ class BlockingLockFile(LockFile):
         while True:
             try:
                 super(BlockingLockFile, self)._obtain_lock()
-            except IOError:
+            except IOError as e:
                 # synity check: if the directory leading to the lockfile is not
                 # readable anymore, raise an exception
                 curtime = time.time()
                 if not osp.isdir(osp.dirname(self._lock_file_path())):
                     msg = "Directory containing the lockfile %r was not readable anymore after waiting %g seconds" % (
                         self._lock_file_path(), curtime - starttime)
-                    raise IOError(msg)
+                    raise IOError(msg) from e
                 # END handle missing directory
 
                 if curtime >= maxtime:
                     msg = "Waited %g seconds for lock at %r" % (maxtime - starttime, self._lock_file_path())
-                    raise IOError(msg)
+                    raise IOError(msg) from e
                 # END abort if we wait too long
                 time.sleep(self._check_interval)
             else:
@@ -894,8 +887,8 @@ class IterableList(list):
 
         try:
             return getattr(self, index)
-        except AttributeError:
-            raise IndexError("No item found with id %r" % (self._prefix + index))
+        except AttributeError as e:
+            raise IndexError("No item found with id %r" % (self._prefix + index)) from e
         # END handle getattr
 
     def __delitem__(self, index):
@@ -949,8 +942,3 @@ class Iterable(object):
 class NullHandler(logging.Handler):
     def emit(self, record):
         pass
-
-
-# In Python 2.6, there is no NullHandler yet. Let's monkey-patch it for a workaround.
-if not hasattr(logging, 'NullHandler'):
-    logging.NullHandler = NullHandler

@@ -12,19 +12,19 @@ import sys
 import os.path as osp
 
 
-__version__ = '2.1.15'
+__version__ = '3.1.14'
 
 
 #{ Initialization
 def _init_externals():
     """Initialize external projects by putting them into the path"""
-    if __version__ == '2.1.15':
-        sys.path.insert(0, osp.join(osp.dirname(__file__), 'ext', 'gitdb'))
+    if __version__ == '3.1.14' and 'PYOXIDIZER' not in os.environ:
+        sys.path.insert(1, osp.join(osp.dirname(__file__), 'ext', 'gitdb'))
 
     try:
         import gitdb
-    except ImportError:
-        raise ImportError("'gitdb' could not be found in your PYTHONPATH")
+    except ImportError as e:
+        raise ImportError("'gitdb' could not be found in your PYTHONPATH") from e
     # END verify import
 
 #} END initialization
@@ -54,7 +54,7 @@ try:
         rmtree,
     )
 except GitError as exc:
-    raise ImportError('%s: %s' % (exc.__class__.__name__, exc))
+    raise ImportError('%s: %s' % (exc.__class__.__name__, exc)) from exc
 
 #} END imports
 
@@ -82,5 +82,5 @@ def refresh(path=None):
 try:
     refresh()
 except Exception as exc:
-    raise ImportError('Failed to initialize: {0}'.format(exc))
+    raise ImportError('Failed to initialize: {0}'.format(exc)) from exc
 #################

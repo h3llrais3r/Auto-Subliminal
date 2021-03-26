@@ -6,13 +6,9 @@
 import re
 
 from git.cmd import handle_process_output
-from git.compat import (
-    defenc,
-    PY3
-)
+from git.compat import defenc
 from git.util import finalize_process, hex_to_bin
 
-from .compat import binary_type
 from .objects.blob import Blob
 from .objects.util import mode_str_to_int
 
@@ -28,10 +24,7 @@ _octal_byte_re = re.compile(b'\\\\([0-9]{3})')
 def _octal_repl(matchobj):
     value = matchobj.group(1)
     value = int(value, 8)
-    if PY3:
-        value = bytes(bytearray((value,)))
-    else:
-        value = chr(value)
+    value = bytes(bytearray((value,)))
     return value
 
 
@@ -115,6 +108,7 @@ class Diffable(object):
             args.append("-p")
         else:
             args.append("--raw")
+            args.append("-z")
 
         # in any way, assure we don't see colored output,
         # fixes https://github.com/gitpython-developers/GitPython/issues/172
@@ -167,7 +161,7 @@ class DiffIndex(list):
     # R = Renamed
     # M = Modified
     # T = Changed in the type
-    change_type = ("A", "D", "R", "M", "T")
+    change_type = ("A", "C", "D", "R", "M", "T")
 
     def iter_change_type(self, change_type):
         """
@@ -192,6 +186,8 @@ class DiffIndex(list):
             elif change_type == "A" and diff.new_file:
                 yield diff
             elif change_type == "D" and diff.deleted_file:
+                yield diff
+            elif change_type == "C" and diff.copied_file:
                 yield diff
             elif change_type == "R" and diff.renamed:
                 yield diff
@@ -235,7 +231,7 @@ class Diff(object):
     # precompiled regex
     re_header = re.compile(br"""
                                 ^diff[ ]--git
-                                    [ ](?P<a_path_fallback>"?a/.+?"?)[ ](?P<b_path_fallback>"?b/.+?"?)\n
+                                    [ ](?P<a_path_fallback>"?[ab]/.+?"?)[ ](?P<b_path_fallback>"?[ab]/.+?"?)\n
                                 (?:^old[ ]mode[ ](?P<old_mode>\d+)\n
                                    ^new[ ]mode[ ](?P<new_mode>\d+)(?:\n|$))?
                                 (?:^similarity[ ]index[ ]\d+%\n
@@ -243,6 +239,9 @@ class Diff(object):
                                    ^rename[ ]to[ ](?P<rename_to>.*)(?:\n|$))?
                                 (?:^new[ ]file[ ]mode[ ](?P<new_file_mode>.+)(?:\n|$))?
                                 (?:^deleted[ ]file[ ]mode[ ](?P<deleted_file_mode>.+)(?:\n|$))?
+                                (?:^similarity[ ]index[ ]\d+%\n
+                                   ^copy[ ]from[ ].*\n
+                                   ^copy[ ]to[ ](?P<copied_file_name>.*)(?:\n|$))?
                                 (?:^index[ ](?P<a_blob_id>[0-9A-Fa-f]+)
                                     \.\.(?P<b_blob_id>[0-9A-Fa-f]+)[ ]?(?P<b_mode>.+)?(?:\n|$))?
                                 (?:^---[ ](?P<a_path>[^\t\n\r\f\v]*)[\t\r\f\v]*(?:\n|$))?
@@ -253,18 +252,18 @@ class Diff(object):
     NULL_BIN_SHA = b"\0" * 20
 
     __slots__ = ("a_blob", "b_blob", "a_mode", "b_mode", "a_rawpath", "b_rawpath",
-                 "new_file", "deleted_file", "raw_rename_from", "raw_rename_to",
-                 "diff", "change_type", "score")
+                 "new_file", "deleted_file", "copied_file", "raw_rename_from",
+                 "raw_rename_to", "diff", "change_type", "score")
 
     def __init__(self, repo, a_rawpath, b_rawpath, a_blob_id, b_blob_id, a_mode,
-                 b_mode, new_file, deleted_file, raw_rename_from,
+                 b_mode, new_file, deleted_file, copied_file, raw_rename_from,
                  raw_rename_to, diff, change_type, score):
 
         self.a_mode = a_mode
         self.b_mode = b_mode
 
-        assert a_rawpath is None or isinstance(a_rawpath, binary_type)
-        assert b_rawpath is None or isinstance(b_rawpath, binary_type)
+        assert a_rawpath is None or isinstance(a_rawpath, bytes)
+        assert b_rawpath is None or isinstance(b_rawpath, bytes)
         self.a_rawpath = a_rawpath
         self.b_rawpath = b_rawpath
 
@@ -272,6 +271,15 @@ class Diff(object):
             self.a_mode = mode_str_to_int(self.a_mode)
         if self.b_mode:
             self.b_mode = mode_str_to_int(self.b_mode)
+
+        # Determine whether this diff references a submodule, if it does then
+        # we need to overwrite "repo" to the corresponding submodule's repo instead
+        if repo and a_rawpath:
+            for submodule in repo.submodules:
+                if submodule.path == a_rawpath.decode(defenc, 'replace'):
+                    if submodule.module_exists():
+                        repo = submodule.module()
+                    break
 
         if a_blob_id is None or a_blob_id == self.NULL_HEX_SHA:
             self.a_blob = None
@@ -285,10 +293,11 @@ class Diff(object):
 
         self.new_file = new_file
         self.deleted_file = deleted_file
+        self.copied_file = copied_file
 
         # be clear and use None instead of empty strings
-        assert raw_rename_from is None or isinstance(raw_rename_from, binary_type)
-        assert raw_rename_to is None or isinstance(raw_rename_to, binary_type)
+        assert raw_rename_from is None or isinstance(raw_rename_from, bytes)
+        assert raw_rename_to is None or isinstance(raw_rename_to, bytes)
         self.raw_rename_from = raw_rename_from or None
         self.raw_rename_to = raw_rename_to or None
 
@@ -336,6 +345,8 @@ class Diff(object):
             msg += '\nfile deleted in rhs'
         if self.new_file:
             msg += '\nfile added in rhs'
+        if self.copied_file:
+            msg += '\nfile %r copied from %r' % (self.b_path, self.a_path)
         if self.rename_from:
             msg += '\nfile renamed from %r' % self.rename_from
         if self.rename_to:
@@ -353,8 +364,6 @@ class Diff(object):
         # Python2 silliness: have to assure we convert our likely to be unicode object to a string with the
         # right encoding. Otherwise it tries to convert it using ascii, which may fail ungracefully
         res = h + msg
-        if not PY3:
-            res = res.encode(defenc)
         # end
         return res
 
@@ -415,15 +424,17 @@ class Diff(object):
         text = b''.join(text)
         index = DiffIndex()
         previous_header = None
-        for header in cls.re_header.finditer(text):
+        header = None
+        for _header in cls.re_header.finditer(text):
             a_path_fallback, b_path_fallback, \
                 old_mode, new_mode, \
                 rename_from, rename_to, \
-                new_file_mode, deleted_file_mode, \
+                new_file_mode, deleted_file_mode, copied_file_name, \
                 a_blob_id, b_blob_id, b_mode, \
-                a_path, b_path = header.groups()
+                a_path, b_path = _header.groups()
 
-            new_file, deleted_file = bool(new_file_mode), bool(deleted_file_mode)
+            new_file, deleted_file, copied_file = \
+                bool(new_file_mode), bool(deleted_file_mode), bool(copied_file_name)
 
             a_path = cls._pick_best_path(a_path, rename_from, a_path_fallback)
             b_path = cls._pick_best_path(b_path, rename_to, b_path_fallback)
@@ -431,7 +442,7 @@ class Diff(object):
             # Our only means to find the actual text is to see what has not been matched by our regex,
             # and then retro-actively assign it to our index
             if previous_header is not None:
-                index[-1].diff = text[previous_header.end():header.start()]
+                index[-1].diff = text[previous_header.end():_header.start()]
             # end assign actual diff
 
             # Make sure the mode is set if the path is set. Otherwise the resulting blob is invalid
@@ -445,12 +456,13 @@ class Diff(object):
                               b_blob_id and b_blob_id.decode(defenc),
                               a_mode and a_mode.decode(defenc),
                               b_mode and b_mode.decode(defenc),
-                              new_file, deleted_file,
+                              new_file, deleted_file, copied_file,
                               rename_from,
                               rename_to,
                               None, None, None))
 
-            previous_header = header
+            previous_header = _header
+            header = _header
         # end for each header we parse
         if index:
             index[-1].diff = text[header.end():]
@@ -467,49 +479,55 @@ class Diff(object):
 
         index = DiffIndex()
 
-        def handle_diff_line(line):
-            line = line.decode(defenc)
-            if not line.startswith(":"):
-                return
+        def handle_diff_line(lines):
+            lines = lines.decode(defenc)
 
-            meta, _, path = line[1:].partition('\t')
-            old_mode, new_mode, a_blob_id, b_blob_id, _change_type = meta.split(None, 4)
-            # Change type can be R100
-            # R: status letter
-            # 100: score (in case of copy and rename)
-            change_type = _change_type[0]
-            score_str = ''.join(_change_type[1:])
-            score = int(score_str) if score_str.isdigit() else None
-            path = path.strip()
-            a_path = path.encode(defenc)
-            b_path = path.encode(defenc)
-            deleted_file = False
-            new_file = False
-            rename_from = None
-            rename_to = None
+            for line in lines.split(':')[1:]:
+                meta, _, path = line.partition('\x00')
+                path = path.rstrip('\x00')
+                old_mode, new_mode, a_blob_id, b_blob_id, _change_type = meta.split(None, 4)
+                # Change type can be R100
+                # R: status letter
+                # 100: score (in case of copy and rename)
+                change_type = _change_type[0]
+                score_str = ''.join(_change_type[1:])
+                score = int(score_str) if score_str.isdigit() else None
+                path = path.strip()
+                a_path = path.encode(defenc)
+                b_path = path.encode(defenc)
+                deleted_file = False
+                new_file = False
+                copied_file = False
+                rename_from = None
+                rename_to = None
 
-            # NOTE: We cannot conclude from the existence of a blob to change type
-            # as diffs with the working do not have blobs yet
-            if change_type == 'D':
-                b_blob_id = None
-                deleted_file = True
-            elif change_type == 'A':
-                a_blob_id = None
-                new_file = True
-            elif change_type == 'R':
-                a_path, b_path = path.split('\t', 1)
-                a_path = a_path.encode(defenc)
-                b_path = b_path.encode(defenc)
-                rename_from, rename_to = a_path, b_path
-            elif change_type == 'T':
-                # Nothing to do
-                pass
-            # END add/remove handling
+                # NOTE: We cannot conclude from the existence of a blob to change type
+                # as diffs with the working do not have blobs yet
+                if change_type == 'D':
+                    b_blob_id = None
+                    deleted_file = True
+                elif change_type == 'A':
+                    a_blob_id = None
+                    new_file = True
+                elif change_type == 'C':
+                    copied_file = True
+                    a_path, b_path = path.split('\x00', 1)
+                    a_path = a_path.encode(defenc)
+                    b_path = b_path.encode(defenc)
+                elif change_type == 'R':
+                    a_path, b_path = path.split('\x00', 1)
+                    a_path = a_path.encode(defenc)
+                    b_path = b_path.encode(defenc)
+                    rename_from, rename_to = a_path, b_path
+                elif change_type == 'T':
+                    # Nothing to do
+                    pass
+                # END add/remove handling
 
-            diff = Diff(repo, a_path, b_path, a_blob_id, b_blob_id, old_mode, new_mode,
-                        new_file, deleted_file, rename_from, rename_to, '',
-                        change_type, score)
-            index.append(diff)
+                diff = Diff(repo, a_path, b_path, a_blob_id, b_blob_id, old_mode, new_mode,
+                            new_file, deleted_file, copied_file, rename_from, rename_to,
+                            '', change_type, score)
+                index.append(diff)
 
         handle_process_output(proc, handle_diff_line, None, finalize_process, decode_streams=False)
 
