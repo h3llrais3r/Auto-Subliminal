@@ -35,6 +35,12 @@
           "diskcache"
         ],
         "allowedVersions": "<5.0.0"
+      },
+      {
+        "packageNames": [
+          "idna"
+        ],
+        "allowedVersions": "<3.0.0"
       }
     ]
   }
