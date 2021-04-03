@@ -57,7 +57,7 @@ imdbpie==5.6.4
   - trans [required: >=2.1.0,<3.0.0, installed: 2.1.0]
   - wheel [required: ==0.30.0, installed: 0.30.0]
 jsonpickle==2.0.0
-  - importlib-metadata [required: Any, installed: 3.7.3]
+  - importlib-metadata [required: Any, installed: 3.10.0]
     - typing-extensions [required: >=3.6.4, installed: 3.7.4.3]
     - zipp [required: >=0.5, installed: 3.4.1]
 langdetect==1.0.8
@@ -106,7 +106,7 @@ subliminal==2.1.0.dev0
   - dogpile.cache [required: >=0.6.0, installed: 1.1.2]
     - decorator [required: >=4.0.0, installed: 4.4.2]
     - stevedore [required: >=3.0.0, installed: 3.3.0]
-      - importlib-metadata [required: >=1.7.0, installed: 3.7.3]
+      - importlib-metadata [required: >=1.7.0, installed: 3.10.0]
         - typing-extensions [required: >=3.6.4, installed: 3.7.4.3]
         - zipp [required: >=0.5, installed: 3.4.1]
       - pbr [required: >=2.0.0,!=2.1.0, installed: 5.5.1]
@@ -127,7 +127,7 @@ subliminal==2.1.0.dev0
     - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.4]
   - six [required: >=1.9.0, installed: 1.15.0]
   - stevedore [required: >=1.20.0, installed: 3.3.0]
-    - importlib-metadata [required: >=1.7.0, installed: 3.7.3]
+    - importlib-metadata [required: >=1.7.0, installed: 3.10.0]
       - typing-extensions [required: >=3.6.4, installed: 3.7.4.3]
       - zipp [required: >=0.5, installed: 3.4.1]
     - pbr [required: >=2.0.0,!=2.1.0, installed: 5.5.1]
