@@ -7,7 +7,8 @@
   ],
   "js": {
     "labels": [
-      "JS dependency"
+      "dependencies",
+      "javascript"
     ],
     "packageRules": [
       {
@@ -25,80 +26,15 @@
   },
   "python": {
     "labels": [
-      "Python dependency"
+      "dependencies",
+      "python"
     ],
     "packageRules": [
-      {
-        "packageNames": [
-          "cherrypy"
-        ],
-        "allowedVersions": "<18.0.0"
-      },
-      {
-        "packageNames": [
-          "configparser"
-        ],
-        "allowedVersions": "<5.0.0"
-      },
       {
         "packageNames": [
           "diskcache"
         ],
         "allowedVersions": "<5.0.0"
-      },
-      {
-        "packageNames": [
-          "dogpile.cache"
-        ],
-        "allowedVersions": "<1.0.0"
-      },
-      {
-        "packageNames": [
-          "gitdb2"
-        ],
-        "allowedVersions": "<3.0.0"
-      },
-      {
-        "packageNames": [
-          "gitpython"
-        ],
-        "allowedVersions": "<3.0.0"
-      },
-      {
-        "packageNames": [
-          "jaraco.functools"
-        ],
-        "allowedVersions": "<3.0.0"
-      },
-      {
-        "packageNames": [
-          "more-itertools"
-        ],
-        "allowedVersions": "<6.0.0"
-      },
-      {
-        "packageNames": [
-          "rarfile"
-        ],
-        "allowedVersions": "<3.2"
-      },
-      {
-        "packageNames": [
-          "soupsieve"
-        ],
-        "allowedVersions": "<2.0.0"
-      },
-      {
-        "packageNames": [
-          "stevedore"
-        ],
-        "allowedVersions": "<2.0.0"
-      },
-      {
-        "packageNames": [
-          "tempora"
-        ],
-        "allowedVersions": "<2.0.0"
       }
     ]
   }
