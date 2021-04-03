@@ -104,7 +104,7 @@ subliminal==2.1.0.dev0
   - chardet [required: >=2.3.0, installed: 4.0.0]
   - click [required: >=4.0, installed: 7.1.2]
   - dogpile.cache [required: >=0.6.0, installed: 1.1.2]
-    - decorator [required: >=4.0.0, installed: 4.4.2]
+    - decorator [required: >=4.0.0, installed: 5.0.4]
     - stevedore [required: >=3.0.0, installed: 3.3.0]
       - importlib-metadata [required: >=1.7.0, installed: 3.10.0]
         - typing-extensions [required: >=3.6.4, installed: 3.7.4.3]
