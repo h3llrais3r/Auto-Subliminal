@@ -6,7 +6,7 @@ Libraries dependency tree
 ``` 
 CherryPy==18.6.0
   - cheroot [required: >=8.2.1, installed: 8.5.2]
-    - jaraco.functools [required: Any, installed: 3.2.1]
+    - jaraco.functools [required: Any, installed: 3.3.0]
       - more-itertools [required: Any, installed: 8.7.0]
     - more-itertools [required: >=2.6, installed: 8.7.0]
     - six [required: >=1.11.0, installed: 1.15.0]
@@ -16,12 +16,12 @@ CherryPy==18.6.0
     - jaraco.text [required: Any, installed: 3.5.0]
       - importlib-resources [required: Any, installed: 5.1.2]
         - zipp [required: >=0.4, installed: 3.4.1]
-      - jaraco.functools [required: Any, installed: 3.2.1]
+      - jaraco.functools [required: Any, installed: 3.3.0]
         - more-itertools [required: Any, installed: 8.7.0]
   - more-itertools [required: Any, installed: 8.7.0]
   - portend [required: >=2.1.1, installed: 2.7.1]
     - tempora [required: >=1.8, installed: 4.0.1]
-      - jaraco.functools [required: >=1.20, installed: 3.2.1]
+      - jaraco.functools [required: >=1.20, installed: 3.3.0]
         - more-itertools [required: Any, installed: 8.7.0]
       - pytz [required: Any, installed: 2021.1]
   - pywin32 [required: Any, installed: 300]
