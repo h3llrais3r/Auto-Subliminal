@@ -961,3 +961,26 @@ def pop_all(items):
     """
     result, items[:] = items[:], []
     return result
+
+
+# mypy disabled for pytest-dev/pytest#8332
+class FreezableDefaultDict(collections.defaultdict):  # type: ignore
+    """
+    Often it is desirable to prevent the mutation of
+    a default dict after its initial construction, such
+    as to prevent mutation during iteration.
+
+    >>> dd = FreezableDefaultDict(list)
+    >>> dd[0].append('1')
+    >>> dd.freeze()
+    >>> dd[1]
+    []
+    >>> len(dd)
+    1
+    """
+
+    def __missing__(self, key):
+        return getattr(self, '_frozen', super().__missing__)(key)
+
+    def freeze(self):
+        self._frozen = lambda key: self.default_factory()
