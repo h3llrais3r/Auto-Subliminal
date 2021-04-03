@@ -138,6 +138,11 @@ def method_cache(method, cache_wrapper=None):
 
     >>> a.method.cache_clear()
 
+    Same for a method that hasn't yet been called.
+
+    >>> c = MyClass()
+    >>> c.method.cache_clear()
+
     Another cache wrapper may be supplied:
 
     >>> cache = functools.lru_cache(maxsize=2)
@@ -161,6 +166,9 @@ def method_cache(method, cache_wrapper=None):
         cached_method = cache_wrapper(bound_method)
         setattr(self, method.__name__, cached_method)
         return cached_method(*args, **kwargs)
+
+    # Support cache clear even before cache has been created.
+    wrapper.cache_clear = lambda: None
 
     return _special_method_cache(method, cache_wrapper) or wrapper
 

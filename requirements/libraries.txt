@@ -25,7 +25,7 @@ importlib-metadata==3.7.3
 importlib-resources==5.1.2
 jaraco.classes==3.2.1
 jaraco.collections==3.2.0
-jaraco.functools==3.2.1
+jaraco.functools==3.3.0
 jaraco.text==3.5.0
 jsonpickle==2.0.0
 langdetect==1.0.8
