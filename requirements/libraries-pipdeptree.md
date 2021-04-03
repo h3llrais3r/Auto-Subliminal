@@ -10,7 +10,7 @@ CherryPy==18.6.0
       - more-itertools [required: Any, installed: 8.7.0]
     - more-itertools [required: >=2.6, installed: 8.7.0]
     - six [required: >=1.11.0, installed: 1.15.0]
-  - jaraco.collections [required: Any, installed: 3.2.0]
+  - jaraco.collections [required: Any, installed: 3.3.0]
     - jaraco.classes [required: Any, installed: 3.2.1]
       - more-itertools [required: Any, installed: 8.7.0]
     - jaraco.text [required: Any, installed: 3.5.0]
