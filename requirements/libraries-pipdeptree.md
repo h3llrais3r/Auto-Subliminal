@@ -20,7 +20,7 @@ CherryPy==18.6.0
         - more-itertools [required: Any, installed: 8.7.0]
   - more-itertools [required: Any, installed: 8.7.0]
   - portend [required: >=2.1.1, installed: 2.7.1]
-    - tempora [required: >=1.8, installed: 4.0.1]
+    - tempora [required: >=1.8, installed: 4.0.2]
       - jaraco.functools [required: >=1.20, installed: 3.3.0]
         - more-itertools [required: Any, installed: 8.7.0]
       - pytz [required: Any, installed: 2021.1]
