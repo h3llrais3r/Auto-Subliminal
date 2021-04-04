@@ -52,7 +52,7 @@ soupsieve==2.2.1
 stevedore==3.3.0
 subliminal @ git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a
 tailer==0.4.1
-tempora==4.0.1
+tempora==4.0.2
 trans==2.1.0
 tvdb-api @ git+https://github.com/h3llrais3r/tvdb_api.git@1210df9dd5869ccc5b63149b1b80630310a14f40
 typing-extensions==3.7.4.3
