@@ -12,7 +12,7 @@ import time
 # Check minimal python version
 MIN_PYTHON_VERSION = (3, 6)
 if sys.version_info < MIN_PYTHON_VERSION:
-    print('Python 3.6 or higher is required. Exiting.')
+    print('ERROR: Python 3.6 or higher is required. Exiting.')
     os._exit(1)
 
 # Insert the lib folder at the beginning of the python system path
