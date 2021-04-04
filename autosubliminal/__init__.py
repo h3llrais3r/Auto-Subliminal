@@ -342,7 +342,7 @@ def _init_cache(replace):
     """Initialize internal cache."""
 
     # Imports
-    from autosubliminal.core.cache import MutexFileLock, clear_imdbpie_cache, region
+    from autosubliminal.core.cache import MutexFileLock, clear_cache, region
 
     # Make sure the cache dir exists
     if not os.path.exists(CACHEDIR):
@@ -350,7 +350,7 @@ def _init_cache(replace):
 
     # Clean cache
     if replace:
-        clear_imdbpie_cache()
+        clear_cache()
 
     # Configure autosubliminal/dogpile cache
     # Use MutexFileLock otherwise it will not work due to fcntl module import error in windows

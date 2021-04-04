@@ -41,15 +41,6 @@ class MutexFileLock(AbstractFileLock):
         return self.mutex.release_write_lock()
 
 
-def clear_imdbpie_cache():
-    # Cache is created by imdbpie in temp location (see auth.py in imdbpie)
-    # Cleanup is required when switching between python versions
-    # If not, 'ValueError: unsupported pickle protocol' is thrown
-    imdb_cache_file = os.path.abspath(os.path.join(tempfile.gettempdir(), 'cache.db'))
-    if os.path.exists(imdb_cache_file):
-        os.remove(imdb_cache_file)
-
-
 def cache_artwork(indexer_name, indexer_id, artwork_type, artwork_url, thumbnail=False):
     """Store the artwork in the cache."""
     try:
@@ -77,6 +68,34 @@ def get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=Fal
         os.makedirs(cache_path)
     # Return artwork cache path
     return os.path.abspath(os.path.join(cache_path, text_type(indexer_id) + '.jpg'))
+
+
+def clear_cache():
+    """Clear all caches."""
+    _clear_autosubliminal_cache()
+    _clear_subliminal_cache()
+    _clear_imdbpie_cache()
+
+
+def _clear_autosubliminal_cache():
+    cache_file = os.path.abspath(os.path.join(autosubliminal.CACHEDIR, 'autosubliminal.cache.dbm'))
+    if os.path.exists(cache_file):
+        os.remove(cache_file)
+
+
+def _clear_subliminal_cache():
+    cache_file = os.path.abspath(os.path.join(autosubliminal.CACHEDIR, 'subliminal.cache.dbm'))
+    if os.path.exists(cache_file):
+        os.remove(cache_file)
+
+
+def _clear_imdbpie_cache():
+    # Cache is created by imdbpie in temp location (see auth.py in imdbpie)
+    # Cleanup is required when switching between python versions
+    # If not, 'ValueError: unsupported pickle protocol' is thrown
+    cache_file = os.path.abspath(os.path.join(tempfile.gettempdir(), 'cache.db'))
+    if os.path.exists(cache_file):
+        os.remove(cache_file)
 
 
 # Global cache region
