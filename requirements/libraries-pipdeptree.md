@@ -64,15 +64,6 @@ langdetect==1.0.8
   - six [required: Any, installed: 1.15.0]
 pipdeptree==2.0.0
   - pip [required: >=6.0.0, installed: 10.0.1]
-pushbullet.py==0.12.0
-  - python-magic [required: Any, installed: 0.4.15]
-  - requests [required: >=1.0.0, installed: 2.25.1]
-    - certifi [required: >=2017.4.17, installed: 2020.12.5]
-    - chardet [required: >=3.0.2,<5, installed: 4.0.0]
-    - idna [required: >=2.5,<3, installed: 2.10]
-    - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.4]
-  - websocket-client [required: >=0.53.0, installed: 0.58.0]
-    - six [required: Any, installed: 1.15.0]
 python-anticaptcha==0.7.1
   - requests [required: Any, installed: 2.25.1]
     - certifi [required: >=2017.4.17, installed: 2020.12.5]
