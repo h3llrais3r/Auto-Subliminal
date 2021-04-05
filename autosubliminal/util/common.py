@@ -495,7 +495,7 @@ def natural_keys(text):
     - sorted(my_list, key=natural_keys)
     - my_list.sort(key=natural_keys)
     """
-    return [atoi(c) for c in re.split('(\d+)', text)]
+    return [atoi(c) for c in re.split(r'(\d+)', text)]
 
 
 def get_wanted_languages():

@@ -11,7 +11,7 @@ from six import PY3, text_type
 
 import autosubliminal
 
-LOG_PARSER = re.compile('^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
+LOG_PARSER = re.compile(r'^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
                         re.IGNORECASE)
 
 

@@ -1,12 +1,29 @@
 [flake8]
-exclude = .build .cache .eggs .git .github .history .idea .pytest_cache .venv .vscode .tox *.egg-info cache lib playvideo requirements web
-max-line-length = 120
+exclude =
+    .build,
+    .cache,
+    .eggs,
+    .git,
+    .github,
+    .history,
+    .idea,
+    .pytest_cache,
+    .tox,
+    .venv,
+    .vscode,
+    __pycache__,
+    *.egg-info,
+    cache,
+    lib,
+    playvideo,
+    requirements,
+    web
 ignore =
     W504
-    W605
 per-file-ignores =
-    autosubliminal/core/scheduler.py: E722
-    autosubliminal/providers/addic7ed_custom.py: F401, E741
-    autosubliminal/providers/pitcher.py: E722
-    autosubliminal/providers/useragents.py: E501
+    autosubliminal/core/scheduler.py: E722,
+    autosubliminal/providers/addic7ed_custom.py: F401, E741,
+    autosubliminal/providers/pitcher.py: E722,
+    autosubliminal/providers/useragents.py: E501,
     autosubliminal/util/common.py: E731
+max-line-length = 120

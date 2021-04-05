@@ -385,7 +385,7 @@ class MovieIndexer(Indexer):
     def sanitize_imdb_title(string_value, ignore_characters=None):
         # Remove (I), (II), ... from imdb titles (this is added when there are multiple titles with the same name)
         # Example response from imdb: see http://www.imdb.com/find?q=Aftermath&s=tt&mx=20
-        string_value = re.sub('^(.+)(\(\w+\))$', r'\1', string_value)
+        string_value = re.sub(r'^(.+)(\(\w+\))$', r'\1', string_value)
 
         # Sanitize on ascii level (replaces à by a)
         string_value = unidecode(string_value)
