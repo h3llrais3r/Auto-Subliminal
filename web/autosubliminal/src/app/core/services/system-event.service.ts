@@ -14,7 +14,7 @@ export class SystemEventService {
   systemUpdate = new Subject<SystemUpdate>();
   schedulerStart = new Subject<Scheduler>();
   schedulerFinish = new Subject<Scheduler>();
-  webSocketConnectionFailure = new Subject<boolean>();
+  webSocketConnectionInterrupted = new Subject<boolean>();
 
   constructor() { }
 
@@ -42,7 +42,7 @@ export class SystemEventService {
     this.schedulerFinish.next(scheduler);
   }
 
-  notifyWebSocketConnectionFailure(failure: boolean): void {
-    this.webSocketConnectionFailure.next(failure);
+  notifyWebSocketConnectionInterrupted(interrupted: boolean): void {
+    this.webSocketConnectionInterrupted.next(interrupted);
   }
 }

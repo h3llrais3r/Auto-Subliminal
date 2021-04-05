@@ -20,7 +20,7 @@ export class AppComponent {
   systemRestart = false;
   systemShutdown = false;
   systemShutdownFinished = false;
-  webSocketConnectionFailure = false;
+  webSocketConnectionInterrupted = false;
 
   constructor(
     private appSettingsService: AppSettingsService,
@@ -40,13 +40,13 @@ export class AppComponent {
     });
     // Subscribe on system shutdown events
     this.systemEventService.systemShutdown.subscribe(() => this.checkShutdown());
-    // Subscribe on websocket connection failure events
-    this.systemEventService.webSocketConnectionFailure.subscribe((failure) => this.webSocketConnectionFailure = failure);
+    // Subscribe on websocket connection interrupted events
+    this.systemEventService.webSocketConnectionInterrupted.subscribe((interrupted) => this.webSocketConnectionInterrupted = interrupted);
   }
 
   get connectionInterrupted(): boolean {
     // Only show connection interrupted if not one of the other dialogs are shown
-    return this.webSocketConnectionFailure &&
+    return this.webSocketConnectionInterrupted &&
       !this.systemStart &&
       !this.systemRestart &&
       !this.systemShutdown &&

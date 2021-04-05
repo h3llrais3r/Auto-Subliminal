@@ -83,13 +83,13 @@ export class WebSocketService {
       openObserver: { // on connect
         next: () => {
           console.log('Websocket connection established');
-          this.systemEventService.notifyWebSocketConnectionFailure(false); // connection established
+          this.systemEventService.notifyWebSocketConnectionInterrupted(false); // connection established
         }
       },
       closeObserver: { // try to reconnect on close
         next: () => {
           console.log('Websocket connection failed');
-          this.systemEventService.notifyWebSocketConnectionFailure(true); // connection interrupted
+          this.systemEventService.notifyWebSocketConnectionInterrupted(true); // connection interrupted
           this.systemWebsocket = null;
           this.reconnect();
         }
