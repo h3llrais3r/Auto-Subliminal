@@ -31,7 +31,7 @@ def notify(message, **kwargs):
     log.debug('Sending notifications for message %s', message)
 
     notified = False
-    for notifier in list(_notifiers.values()):
+    for notifier in _notifiers.values():
         notified |= notifier.notify(message, **kwargs)
 
     return notified
@@ -47,7 +47,7 @@ def notify_download(download_item, **kwargs):
     log.debug('Sending download notifications for %r', download_item)
 
     notified = False
-    for notifier in list(_notifiers.values()):
+    for notifier in _notifiers.values():
         notified |= notifier.notify_download(download_item, **kwargs)
 
     return notified
