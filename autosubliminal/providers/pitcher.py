@@ -168,7 +168,7 @@ class AntiCaptchaPitcher(AntiCaptchaProxyLessPitcher):
         self.user_agent = kwargs.pop('user_agent')
         cookies = kwargs.pop('cookies', {})
         if isinstance(cookies, dict):
-            self.cookies = ';'.join(['%s=%s' % (k, v) for k, v in cookies.iteritems()])
+            self.cookies = ';'.join(['%s=%s' % (k, v) for k, v in cookies.items()])
 
         super(AntiCaptchaPitcher, self).__init__(*args, **kwargs)
 
