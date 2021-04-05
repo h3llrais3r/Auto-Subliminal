@@ -113,10 +113,10 @@ def test_process_movie_file_special_chars(mocker):
     mocker.patch.object(autosubliminal.MOVIEINDEXER, 'get_imdb_id_and_year')
     autosubliminal.MOVIEINDEXER.get_imdb_id_and_year.return_value = 'tt0993789', 2008
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
-    wanted_item = process_file(dir_name, u'Un conte de Noël (2008).mkv')
+    wanted_item = process_file(dir_name, 'Un conte de Noël (2008).mkv')
     assert wanted_item is not None
     assert wanted_item.type == 'movie'
-    assert wanted_item.title == u'Un conte de Noël'
+    assert wanted_item.title == 'Un conte de Noël'
     assert wanted_item.year == 2008
     assert wanted_item.imdb_id == 'tt0993789'
 

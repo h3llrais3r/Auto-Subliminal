@@ -20,8 +20,8 @@ from autosubliminal.util.common import get_wanted_languages
 
 log = logging.getLogger(__name__)
 
-SUBTITLE_EXTENSION = u'.srt'
-HARDCODED_SUBS_EXTENSION = u'.hardcoded.subs'
+SUBTITLE_EXTENSION = '.srt'
+HARDCODED_SUBS_EXTENSION = '.hardcoded.subs'
 VIDEO_EXTENSIONS = subliminal.video.VIDEO_EXTENSIONS
 
 
@@ -41,7 +41,7 @@ def one_path_exists(paths, retry_delay=15):
 
 def is_skipped_dir(dirname):
     skipped = False
-    if autosubliminal.SKIPHIDDENDIRS and os.path.split(dirname)[1].startswith(u'.'):
+    if autosubliminal.SKIPHIDDENDIRS and os.path.split(dirname)[1].startswith('.'):
         log.debug('Skipping hidden directory: %s', dirname)
         skipped = True
     elif re.search('_unpack_', dirname, flags=re.IGNORECASE):
@@ -102,7 +102,7 @@ def check_missing_subtitle_languages(dirname, filename, scan_embedded=False, sca
 
         # Check with or without language code suffix depending on configuration
         if autosubliminal.DEFAULTLANGUAGESUFFIX:
-            srt_file = os.path.splitext(filename)[0] + u'.' + autosubliminal.DEFAULTLANGUAGE + SUBTITLE_EXTENSION
+            srt_file = os.path.splitext(filename)[0] + '.' + autosubliminal.DEFAULTLANGUAGE + SUBTITLE_EXTENSION
         else:
             srt_file = os.path.splitext(filename)[0] + SUBTITLE_EXTENSION
             detect_language = detect_invalid  # Only for default subtitle without suffix
@@ -130,7 +130,7 @@ def check_missing_subtitle_languages(dirname, filename, scan_embedded=False, sca
         # Always check with language code suffix for additional languages
         for language in languages_to_check:
             additional_language = Language.fromietf(language)
-            srt_file = os.path.splitext(filename)[0] + u'.' + language + SUBTITLE_EXTENSION
+            srt_file = os.path.splitext(filename)[0] + '.' + language + SUBTITLE_EXTENSION
             if not os.path.exists(os.path.join(dirname, srt_file)) and additional_language not in embedded_languages:
                 log.debug('Video is missing the additional language: %s', language)
                 missing_languages.append(language)

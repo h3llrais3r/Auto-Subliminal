@@ -25,8 +25,8 @@ vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
 
 text_value = 'test'
 text_value_upper = 'TEST'
-text_value_special_char = u'ù'
-text_value_special_char_upper = u'Ù'
+text_value_special_char = 'ù'
+text_value_special_char_upper = 'Ù'
 num_value = 1
 long_value = 1.0
 bool_value = True
@@ -211,7 +211,7 @@ def test_get_boolean():
 def test_save_text():
     assert safe_text(None) == 'None'
     assert safe_text(text_value) == 'test'
-    assert safe_text(text_value_special_char) == u'ù'
+    assert safe_text(text_value_special_char) == 'ù'
     assert safe_text(num_value) == '1'
     assert safe_text(long_value) == '1.0'
     assert safe_text(bool_value) == 'True'
@@ -230,7 +230,7 @@ def test_safe_lowercase():
     assert safe_lowercase(None) is None
     assert safe_lowercase(None, default_value='n/a') == 'n/a'
     assert safe_lowercase(text_value_upper) == 'test'
-    assert safe_lowercase(text_value_special_char_upper) == u'ù'
+    assert safe_lowercase(text_value_special_char_upper) == 'ù'
     assert safe_lowercase(num_value) is num_value
     assert safe_lowercase(num_value, default_value='n/a') == 'n/a'
     assert safe_lowercase(long_value) is long_value
@@ -251,7 +251,7 @@ def test_safe_uppercase():
     assert safe_uppercase(None) is None
     assert safe_uppercase(None, default_value='N/A') == 'N/A'
     assert safe_uppercase(text_value) == 'TEST'
-    assert safe_uppercase(text_value_special_char) == u'Ù'
+    assert safe_uppercase(text_value_special_char) == 'Ù'
     assert safe_uppercase(num_value) is num_value
     assert safe_uppercase(num_value, default_value='N/A') == 'N/A'
     assert safe_uppercase(long_value) is long_value
@@ -317,7 +317,7 @@ def test_sanitize():
 def test_safe_value():
     assert safe_value(None) == ''
     assert safe_value('value') == 'value'
-    assert safe_value(u'ù') == u'ù'
+    assert safe_value('ù') == 'ù'
     assert safe_value('value', uppercase=True) == 'VALUE'
     assert safe_value('', default_value='default') == 'default'
     assert safe_value('', default_value='default', uppercase=True) == 'DEFAULT'

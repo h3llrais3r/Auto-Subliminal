@@ -60,10 +60,10 @@ def test_update_settings(monkeypatch):
 def test_get_log_lines(monkeypatch):
     monkeypatch.setattr('autosubliminal.LOGREVERSED', False)
     try:
-        line1 = u'2016-06-06 20:32:15,509 INFO     [MainThread :: __main__] Running application with PID: 9944'
-        line2 = u'traceback'
-        line3 = u'2016-06-06 20:32:15,509 DEBUG    [MainThread :: __main__] System encoding: cp1252'
-        line4 = u'2016-06-06 20:32:15,509 DEBUG    [MainThread :: __main__] Config version: 10'
+        line1 = '2016-06-06 20:32:15,509 INFO     [MainThread :: __main__] Running application with PID: 9944'
+        line2 = 'traceback'
+        line3 = '2016-06-06 20:32:15,509 DEBUG    [MainThread :: __main__] System encoding: cp1252'
+        line4 = '2016-06-06 20:32:15,509 DEBUG    [MainThread :: __main__] Config version: 10'
         lines = [line1, line2, line3, line4]
         lines_info = [line1, line2]
         lines_debug = [line3, line4]
