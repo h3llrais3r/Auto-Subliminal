@@ -1,7 +1,9 @@
 # coding=utf-8
 
+import requests_mock
+
 from autosubliminal.core.item import DownloadItem, WantedItem
-from autosubliminal.notifiers.pushbullet import PushbulletNotifier
+from autosubliminal.notifiers.pushbullet import PUSHBULLETURL, PushbulletNotifier
 
 notifier_name = 'Pushbullet'
 
@@ -19,21 +21,34 @@ def test_pushbullet_disabled():
     assert notifier.notify_download(download_item) is False
 
 
+def test_pushbullet_error(monkeypatch):
+    monkeypatch.setattr('autosubliminal.NOTIFYPUSHBULLET', True)
+    with requests_mock.mock() as m:
+        # Mock erroneous request
+        m.register_uri('POST', PUSHBULLETURL, status_code=500)
+        notifier = PushbulletNotifier()
+        assert notifier.name == notifier_name
+        assert notifier.notify('test') is False
+        assert notifier.notify_download(download_item) is False
+
+
 def test_pushbullet_exception(monkeypatch):
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHBULLET', True)
-    monkeypatch.setattr('autosubliminal.PUSHBULLETAPI', '123456')  # Invalid api key
-    notifier = PushbulletNotifier()
-    assert notifier.name == notifier_name
-    assert notifier.notify('test') is False
-    assert notifier.notify_download(download_item) is False
+    with requests_mock.mock() as m:
+        # Mock exception request
+        m.register_uri('POST', PUSHBULLETURL, exc=Exception)
+        notifier = PushbulletNotifier()
+        assert notifier.name == notifier_name
+        assert notifier.notify('test') is False
+        assert notifier.notify_download(download_item) is False
 
 
-def test_pushbullet_notify_download(monkeypatch, mocker):
+def test_pushbullet_notify_download(monkeypatch):
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHBULLET', True)
-    # Mock successful push
-    mocker.patch('pushbullet.Pushbullet.__init__', return_value=None)
-    mocker.patch('pushbullet.Pushbullet.push_note', return_value={})
-    notifier = PushbulletNotifier()
-    assert notifier.name == notifier_name
-    assert notifier.notify('test') is True
-    assert notifier.notify_download(download_item) is True
+    with requests_mock.mock() as m:
+        # Mock successful request
+        m.register_uri('POST', PUSHBULLETURL, status_code=200)
+        notifier = PushbulletNotifier()
+        assert notifier.name == notifier_name
+        assert notifier.notify('test') is True
+        assert notifier.notify_download(download_item) is True
