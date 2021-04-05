@@ -16,7 +16,6 @@ Directly imported libraries
 |-- imdbpie
 |-- jsonpickle
 |-- langdetect
-|-- pushbullet.py
 |-- pysrt
 |-- python-anticaptcha
 |-- python-twitter
