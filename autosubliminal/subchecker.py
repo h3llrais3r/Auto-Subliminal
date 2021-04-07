@@ -41,7 +41,7 @@ class SubChecker(ScheduledProcess):
     """
 
     def __init__(self):
-        super(SubChecker, self).__init__()
+        super().__init__()
 
     @release_wanted_queue_lock_on_exception
     def run(self, force_run):

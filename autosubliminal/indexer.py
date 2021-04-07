@@ -1,15 +1,15 @@
 # coding=utf-8
 
-import abc
 import logging
 import re
+from abc import ABC, abstractmethod
 from functools import wraps
 from time import time
 
 from imdbpie import Imdb
 from imdbpie.facade import ImdbFacade
 from imdbpie.objects import TitleSearchResult
-from six import add_metaclass, text_type
+from six import text_type
 from tvdb_api.client import TvdbClient
 from unidecode import unidecode
 
@@ -43,21 +43,21 @@ def authenticate(func):
     return wrapper
 
 
-@add_metaclass(abc.ABCMeta)
-class Indexer(object):
+class Indexer(ABC):
     """
     Base class for all indexers.
     """
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def name(self):
         pass
 
-    @abc.abstractmethod
+    @abstractmethod
     def _search(self, title, year=None):
         pass
 
-    @abc.abstractmethod
+    @abstractmethod
     def _get_by_id(self, id):
         pass
 

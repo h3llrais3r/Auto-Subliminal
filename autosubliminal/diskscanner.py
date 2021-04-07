@@ -24,7 +24,7 @@ class DiskScanner(ScheduledProcess):
     """
 
     def __init__(self):
-        super(DiskScanner, self).__init__()
+        super().__init__()
         self.wanted_db = WantedItemsDb()
         self.show_settings_db = ShowSettingsDb()
         self.movie_settings_db = MovieSettingsDb()

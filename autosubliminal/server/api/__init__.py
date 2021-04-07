@@ -16,7 +16,7 @@ class Api(RestResource):
     """
 
     def __init__(self):
-        super(Api, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ('GET',)

@@ -18,7 +18,7 @@ class ItemsApi(RestResource):
     """
 
     def __init__(self):
-        super(ItemsApi, self).__init__()
+        super().__init__()
 
         # Add all sub paths here: /api/items/...
         self.wanted = _WantedApi()
@@ -32,7 +32,7 @@ class _WantedApi(RestResource):
     """
 
     def __init__(self):
-        super(_WantedApi, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ('GET', 'DELETE', 'PUT', 'PATCH')
@@ -214,7 +214,7 @@ class _DownloadedApi(RestResource):
     """
 
     def __init__(self):
-        super(_DownloadedApi, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ('GET',)

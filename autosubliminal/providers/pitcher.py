@@ -101,8 +101,7 @@ class AntiCaptchaProxyLessPitcher(Pitcher):
 
     def __init__(self, website_name, website_url, website_key, tries=3, host=None, language_pool=None,
                  use_ssl=True, is_invisible=False, *args, **kwargs):
-        super(AntiCaptchaProxyLessPitcher, self).__init__(website_name, website_url, website_key, tries=tries, *args,
-                                                          **kwargs)
+        super().__init__(website_name, website_url, website_key, tries=tries, *args, **kwargs)
         self.host = host or self.host
         self.language_pool = language_pool or self.language_pool
         self.use_ssl = use_ssl
@@ -119,7 +118,7 @@ class AntiCaptchaProxyLessPitcher(Pitcher):
     def _throw(self):
         for i in range(self.tries):
             try:
-                super(AntiCaptchaProxyLessPitcher, self)._throw()
+                super()._throw()
                 self.job.join()
                 ret = self.job.get_solution_response()
                 if ret:
@@ -170,7 +169,7 @@ class AntiCaptchaPitcher(AntiCaptchaProxyLessPitcher):
         if isinstance(cookies, dict):
             self.cookies = ';'.join(['%s=%s' % (k, v) for k, v in cookies.items()])
 
-        super(AntiCaptchaPitcher, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_job(self):
         task = NoCaptchaTask(website_url=self.website_url, website_key=self.website_key, proxy=self.proxy,
@@ -187,7 +186,7 @@ class DBCProxyLessPitcher(Pitcher):
 
     def __init__(self, website_name, website_url, website_key,
                  timeout=DEFAULT_TOKEN_TIMEOUT, tries=3, *args, **kwargs):
-        super(DBCProxyLessPitcher, self).__init__(website_name, website_url, website_key, tries=tries)
+        super().__init__(website_name, website_url, website_key, tries=tries)
 
         self.username, self.password = self.client_key.split(':', 1)
         self.timeout = timeout
@@ -206,7 +205,7 @@ class DBCProxyLessPitcher(Pitcher):
         }
 
     def _throw(self):
-        super(DBCProxyLessPitcher, self)._throw()
+        super()._throw()
         payload = json.dumps(self.payload_dict)
         for i in range(self.tries):
             try:
@@ -228,11 +227,11 @@ class DBCPitcher(DBCProxyLessPitcher):
 
     def __init__(self, *args, **kwargs):
         self.proxy = kwargs.pop('proxy')
-        super(DBCPitcher, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @property
     def payload_dict(self):
-        payload = super(DBCPitcher, self).payload_dict
+        payload = super().payload_dict
         payload.update({
             'proxytype': self.proxy_type,
             'proxy': self.proxy

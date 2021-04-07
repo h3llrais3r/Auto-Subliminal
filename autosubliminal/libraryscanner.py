@@ -30,7 +30,7 @@ class LibraryScanner(ScheduledProcess):
     """
 
     def __init__(self):
-        super(LibraryScanner, self).__init__(run_lock=False, force_run_lock=False)
+        super().__init__(run_lock=False, force_run_lock=False)
 
     def run(self, force_run):
         paths = autosubliminal.LIBRARYPATHS

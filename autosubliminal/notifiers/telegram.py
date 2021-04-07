@@ -18,7 +18,7 @@ class TelegramNotifier(BaseNotifier):
     """
 
     def __init__(self):
-        super(TelegramNotifier, self).__init__()
+        super().__init__()
 
     @property
     def log(self):

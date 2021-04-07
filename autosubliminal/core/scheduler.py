@@ -1,14 +1,14 @@
 # coding=utf-8
 
-import abc
 import datetime
 import logging
 import os
 import threading
 import time
 import traceback
+from abc import ABC, abstractmethod
 
-from six import add_metaclass, text_type
+from six import text_type
 
 import autosubliminal
 from autosubliminal.util.common import camelize, to_dict
@@ -210,8 +210,7 @@ class Scheduler(object):
         return self.process.running
 
 
-@add_metaclass(abc.ABCMeta)
-class ScheduledProcess(object):
+class ScheduledProcess(ABC):
     """
     Base class for all scheduled processes.
     """
@@ -221,6 +220,6 @@ class ScheduledProcess(object):
         self.run_lock = run_lock
         self.force_run_lock = force_run_lock
 
-    @abc.abstractmethod
+    @abstractmethod
     def run(self, force_run):
         pass

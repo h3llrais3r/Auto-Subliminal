@@ -1,13 +1,10 @@
 # coding=utf-8
 
-import abc
 import os
+from abc import ABC, abstractmethod
 
-from six import add_metaclass
 
-
-@add_metaclass(abc.ABCMeta)
-class BaseNotifier(object):
+class BaseNotifier(ABC):
     """
     Base class for all notifiers.
     """
@@ -18,19 +15,22 @@ class BaseNotifier(object):
         self.notification_title = self.application + ': ' + self.title
         self.test_message = 'Test notification from ' + self.application
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def log(self):
         pass
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def name(self):
         pass
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def enabled(self):
         pass
 
-    @abc.abstractmethod
+    @abstractmethod
     def _send_message(self, message, **kwargs):
         """Implementation of the notifier to send a message."""
         pass

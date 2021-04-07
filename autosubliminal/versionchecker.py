@@ -1,12 +1,12 @@
 # coding=utf-8
 
-import abc
 import logging
 import re
+from abc import ABC, abstractmethod
 from distutils import version
 
 # isort:imports-thirdparty
-from six import add_metaclass, text_type
+from six import text_type
 
 try:
     from git import Repo
@@ -37,7 +37,7 @@ class VersionChecker(ScheduledProcess):
     """
 
     def __init__(self):
-        super(VersionChecker, self).__init__(force_run_lock=False)
+        super().__init__(force_run_lock=False)
         try:
             Repo(autosubliminal.PATH)
             self.manager = GitVersionManager()
@@ -95,8 +95,7 @@ class VersionChecker(ScheduledProcess):
         return self.manager.current_version_url
 
 
-@add_metaclass(abc.ABCMeta)
-class BaseVersionManager(object):
+class BaseVersionManager(ABC):
     """
     Base class for all version manager classes.
     """
@@ -104,27 +103,31 @@ class BaseVersionManager(object):
     def __init__(self):
         self.update_allowed = False
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def current_branch(self):
         pass
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def current_branch_url(self):
         pass
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def current_version(self):
         pass
 
-    @abc.abstractproperty
+    @property
+    @abstractmethod
     def current_version_url(self):
         pass
 
-    @abc.abstractmethod
+    @abstractmethod
     def check_version(self, force_run=False):
         pass
 
-    @abc.abstractmethod
+    @abstractmethod
     def update_version(self):
         pass
 
@@ -135,7 +138,7 @@ class SourceVersionManager(BaseVersionManager):
     """
 
     def __init__(self):
-        super(SourceVersionManager, self).__init__()
+        super().__init__()
         self.current_strict_version = version.StrictVersion(RELEASE_VERSION)
 
     @property
@@ -207,7 +210,7 @@ class GitVersionManager(BaseVersionManager):
     """
 
     def __init__(self):
-        super(GitVersionManager, self).__init__()
+        super().__init__()
         self.repo = Repo(autosubliminal.PATH)
         self.current_git_branch = self.repo.active_branch
         self.current_git_commit = self.repo.head.commit

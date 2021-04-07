@@ -18,7 +18,7 @@ class PushalotNotifier(BaseNotifier):
     """
 
     def __init__(self):
-        super(PushalotNotifier, self).__init__()
+        super().__init__()
 
     @property
     def log(self):

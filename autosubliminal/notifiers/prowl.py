@@ -18,7 +18,7 @@ class ProwlNotifier(BaseNotifier):
     """
 
     def __init__(self):
-        super(ProwlNotifier, self).__init__()
+        super().__init__()
 
     @property
     def log(self):

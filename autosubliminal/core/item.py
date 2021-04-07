@@ -4,6 +4,7 @@ import datetime
 import logging
 import os
 import re
+from abc import ABC
 
 import autosubliminal
 from autosubliminal.util.common import (find_path_in_paths, get_today, humanize_bytes, to_dict, to_list, to_obj,
@@ -15,7 +16,7 @@ release_group_regex = re.compile(r'(.*)\[.*?\]')
 log = logging.getLogger(__name__)
 
 
-class _Item(object):
+class _Item(ABC):
     """ Base item class.
 
     Represents a base item from which all item related class should extend.
@@ -138,8 +139,8 @@ class WantedItem(_Item):
 
     def __init__(self, type=None, title=None, year=None, season=None, episode=None, source=None, quality=None,
                  codec=None, release_group=None):
-        super(WantedItem, self).__init__(type=type, title=title, year=year, season=season, episode=episode,
-                                         source=source, quality=quality, codec=codec, release_group=release_group)
+        super().__init__(type=type, title=title, year=year, season=season, episode=episode,
+                         source=source, quality=quality, codec=codec, release_group=release_group)
 
         self.video_path = None
         self.video_size = None
@@ -232,7 +233,7 @@ class WantedItem(_Item):
                 # Must be returned as a list of values
                 setattr(self, key, to_list(value, default_value=[]))
             else:
-                super(WantedItem, self).set_attr(key, value)
+                super().set_attr(key, value)
 
     def copy_to(self, wanted_item):
         """Copy all attributes to another wanted item."""
@@ -279,7 +280,7 @@ class DownloadItem(WantedItem):
     """
 
     def __init__(self, wanted_item):
-        super(DownloadItem, self).__init__()
+        super().__init__()
 
         # Copy all properties from wanted_item
         self.__dict__.update(wanted_item.__dict__)
@@ -300,7 +301,7 @@ class DownloadedItem(_Item):
     """
 
     def __init__(self):
-        super(DownloadedItem, self).__init__()
+        super().__init__()
 
         self.video_path = None
         self.language = None

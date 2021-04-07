@@ -1,17 +1,14 @@
 # coding=utf-8
 
-import abc
 import logging
 import threading
 import time
-
-from six import add_metaclass
+from abc import ABC, abstractmethod
 
 log = logging.getLogger(__name__)
 
 
-@add_metaclass(abc.ABCMeta)
-class Runner(object):
+class Runner(ABC):
     """
     Base Runner class. Extend this class for permanent thread runners.
 
@@ -33,7 +30,7 @@ class Runner(object):
             self.run()
             time.sleep(1)
 
-    @abc.abstractmethod
+    @abstractmethod
     def run(self):
         pass
 

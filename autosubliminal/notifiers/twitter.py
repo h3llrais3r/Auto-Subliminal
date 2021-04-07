@@ -25,7 +25,7 @@ class TwitterNotifier(BaseNotifier):
     """
 
     def __init__(self):
-        super(TwitterNotifier, self).__init__()
+        super().__init__()
 
     @property
     def log(self):
@@ -42,7 +42,7 @@ class TwitterNotifier(BaseNotifier):
     # Override of generic _get_download_message method
     def _get_download_message(self, download_item):
         # Prepend application title to default download message
-        return self.notification_title + '\n' + super(TwitterNotifier, self)._get_download_message(download_item)
+        return self.notification_title + '\n' + super()._get_download_message(download_item)
 
     def _send_message(self, message, **kwargs):
         try:

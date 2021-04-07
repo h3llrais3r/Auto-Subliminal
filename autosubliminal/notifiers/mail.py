@@ -18,7 +18,7 @@ class MailNotifier(BaseNotifier):
     """
 
     def __init__(self):
-        super(MailNotifier, self).__init__()
+        super().__init__()
 
     @property
     def log(self):
@@ -38,7 +38,7 @@ class MailNotifier(BaseNotifier):
         message = self.notification_title + '\n\n'
         if download_item.video_path:
             message += 'Video: %s\n' % os.path.basename(download_item.video_path)
-        message += super(MailNotifier, self)._get_download_message(download_item)
+        message += super()._get_download_message(download_item)
         return message
 
     def _send_message(self, message, **kwargs):
@@ -73,7 +73,7 @@ class MailNotifier(BaseNotifier):
         if download_item.subtitle_path:
             subject += ' - ' + os.path.basename(download_item.subtitle_path)
         # Call notify_download method of super class with the subject
-        return super(MailNotifier, self).notify_download(download_item, subject=subject)
+        return super().notify_download(download_item, subject=subject)
 
 
 __CLASS_NAME__ = MailNotifier.__name__

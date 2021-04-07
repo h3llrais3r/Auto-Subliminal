@@ -18,7 +18,7 @@ class PushbulletNotifier(BaseNotifier):
     """
 
     def __init__(self):
-        super(PushbulletNotifier, self).__init__()
+        super().__init__()
 
     @property
     def log(self):

@@ -23,7 +23,7 @@ class SettingsApi(RestResource):
     """
 
     def __init__(self):
-        super(SettingsApi, self).__init__()
+        super().__init__()
 
         # Add all sub paths here: /api/settings/...
         self.general = _GeneralApi()
@@ -52,7 +52,7 @@ class _GeneralApi(RestResource):
     """
 
     def __init__(self):
-        super(_GeneralApi, self).__init__()
+        super().__init__()
         self._section = 'general'
 
         # Set the allowed methods
@@ -165,7 +165,7 @@ class _LibraryApi(RestResource):
     """
 
     def __init__(self):
-        super(_LibraryApi, self).__init__()
+        super().__init__()
         self._section = 'library'
 
         # Set the allowed methods
@@ -218,7 +218,7 @@ class _LoggingApi(RestResource):
     """
 
     def __init__(self):
-        super(_LoggingApi, self).__init__()
+        super().__init__()
         self._section = 'logging'
 
         # Set the allowed methods
@@ -283,7 +283,7 @@ class _WebserverApi(RestResource):
     """
 
     def __init__(self):
-        super(_WebserverApi, self).__init__()
+        super().__init__()
         self._section = 'webserver'
 
         # Set the allowed methods
@@ -339,7 +339,7 @@ class _SubliminalApi(RestResource):
     """
 
     def __init__(self):
-        super(_SubliminalApi, self).__init__()
+        super().__init__()
         self._section = 'subliminal'
 
         # Set the allowed methods
@@ -464,7 +464,7 @@ class _NameMappingApi(RestResource):
     """
 
     def __init__(self):
-        super(_NameMappingApi, self).__init__()
+        super().__init__()
         self._section = 'namemapping'
 
         # Set the allowed methods
@@ -517,7 +517,7 @@ class _SkipMappingApi(RestResource):
     """
 
     def __init__(self):
-        super(_SkipMappingApi, self).__init__()
+        super().__init__()
         self._section = 'skipmapping'
 
         # Set the allowed methods
@@ -561,7 +561,7 @@ class _NotificationApi(RestResource):
     """
 
     def __init__(self):
-        super(_NotificationApi, self).__init__()
+        super().__init__()
         self._section = 'notification'
 
         # Set the allowed methods
@@ -761,7 +761,7 @@ class _PostProcessingApi(RestResource):
     """
 
     def __init__(self):
-        super(_PostProcessingApi, self).__init__()
+        super().__init__()
         self._section = 'postprocessing'
 
         # Set the allowed methods

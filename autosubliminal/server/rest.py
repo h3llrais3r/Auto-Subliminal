@@ -1,14 +1,12 @@
 # coding=utf-8
 
-import abc
+from abc import ABC
 from inspect import getfullargspec
 
 import cherrypy
-from six import add_metaclass
 
 
-@add_metaclass(abc.ABCMeta)
-class RestResource(object):
+class RestResource(ABC):
     """
     Base class for all REST resources.
     Based on https://gist.github.com/direct-fuel-injection/9c67d234a5ab1fd12c04.

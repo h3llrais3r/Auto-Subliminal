@@ -16,7 +16,7 @@ class GrowlNotifier(BaseNotifier):
     """
 
     def __init__(self):
-        super(GrowlNotifier, self).__init__()
+        super().__init__()
 
     @property
     def log(self):
@@ -69,7 +69,7 @@ class GrowlNotifier(BaseNotifier):
         if not self._register():
             return False
         # Notification
-        return super(GrowlNotifier, self).test()
+        return super().test()
 
 
 __CLASS_NAME__ = GrowlNotifier.__name__

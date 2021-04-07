@@ -15,6 +15,5 @@ omit =
 # Regexes for lines to exclude in coverage report
 exclude_lines =
     pragma: no cover
-    @abc.abstractproperty
-    @abc.abstractmethod
+    @abstractmethod
     class CustomRotatingFileHandler

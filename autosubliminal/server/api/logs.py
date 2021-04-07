@@ -17,7 +17,7 @@ class LogsApi(RestResource):
     """
 
     def __init__(self):
-        super(LogsApi, self).__init__()
+        super().__init__()
 
         # Add all sub paths here: /api/logs/...
         self.count = _CountApi()
@@ -53,7 +53,7 @@ class _CountApi(RestResource):
     """
 
     def __init__(self):
-        super(_CountApi, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ('GET',)

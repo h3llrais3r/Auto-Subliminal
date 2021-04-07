@@ -22,7 +22,7 @@ class SystemApi(RestResource):
     """
 
     def __init__(self):
-        super(SystemApi, self).__init__()
+        super().__init__()
 
         # Add all sub paths here: /api/system/...
         self.alive = _AliveApi()
@@ -38,7 +38,7 @@ class _AliveApi(RestResource):
     """
 
     def __init__(self):
-        super(_AliveApi, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ('GET',)
@@ -57,7 +57,7 @@ class _InfoApi(RestResource):
     """
 
     def __init__(self):
-        super(_InfoApi, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ('GET',)
@@ -93,7 +93,7 @@ class _SettingsApi(RestResource):
     """
 
     def __init__(self):
-        super(_SettingsApi, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ('GET',)
@@ -169,7 +169,7 @@ class _SchedulersApi(RestResource):
     """
 
     def __init__(self):
-        super(_SchedulersApi, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ('GET',)
@@ -190,7 +190,7 @@ class _PathsApi(RestResource):
     """
 
     def __init__(self):
-        super(_PathsApi, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ('GET',)

@@ -122,20 +122,20 @@ class _LogFormatter(logging.Formatter):
             # Add custom details
             self._custom_fmt += '%(customDetails)s '
         self._custom_fmt += '%(message)s'
-        super(_LogFormatter, self).__init__(self._custom_fmt)
+        super().__init__(self._custom_fmt)
 
     def format(self, record):
         # Add custom field(s) to the record to use it in the detailed format
         if self.detailed_format:
             record.customDetails = '[%s :: %s]' % (record.threadName, record.name)
-        return super(_LogFormatter, self).format(record)
+        return super().format(record)
 
 
 class _LogFilter(logging.Filter):
     def __init__(self, log_http_access=None, log_external_libs=None):
         self.log_http_access = log_http_access
         self.log_external_libs = log_external_libs
-        super(_LogFilter, self).__init__()
+        super().__init__()
 
     def filter(self, record):
         # Filter out http access

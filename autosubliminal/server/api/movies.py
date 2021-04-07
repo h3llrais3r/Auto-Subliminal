@@ -25,7 +25,7 @@ class MoviesApi(RestResource):
     """
 
     def __init__(self):
-        super(MoviesApi, self).__init__()
+        super().__init__()
 
         # Add all sub paths here: /api/movies/...
         self.overview = _OverviewApi()
@@ -123,7 +123,7 @@ class _OverviewApi(RestResource):
     """
 
     def __init__(self):
-        super(_OverviewApi, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ('GET',)
@@ -162,7 +162,7 @@ class _RefreshApi(RestResource):
     """
 
     def __init__(self):
-        super(_RefreshApi, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ('PUT',)
@@ -184,7 +184,7 @@ class _SettingsApi(RestResource):
     """
 
     def __init__(self):
-        super(_SettingsApi, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ('GET', 'PUT')
@@ -234,7 +234,7 @@ class _SubtitlesApi(RestResource):
     """
 
     def __init__(self):
-        super(_SubtitlesApi, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ()
@@ -249,7 +249,7 @@ class _HardcodedApi(RestResource):
     """
 
     def __init__(self):
-        super(_HardcodedApi, self).__init__()
+        super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ('PUT',)
