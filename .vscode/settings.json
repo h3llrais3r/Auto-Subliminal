@@ -51,6 +51,7 @@
   "[python]": {
     "editor.tabSize": 4 // Python uses 4 spaces for tab
   },
+  "python.languageServer": "JediLSP",
   "python.venvPath": "${workspaceFolder}/.venv",
   "python.pythonPath": "${workspaceFolder}/.venv\\dev\\Scripts\\python.exe",
   "python.envFile": "${workspaceFolder}/.env",
