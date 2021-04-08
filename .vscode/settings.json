@@ -49,10 +49,10 @@
   },
   // Python settings
   "[python]": {
-    "editor.tabSize": 4 // PYthon uses 4 spaces for tab
+    "editor.tabSize": 4 // Python uses 4 spaces for tab
   },
-  "python.venvPath": ".venv",
-  "python.pythonPath": ".venv\\dev\\Scripts\\python.exe",
+  "python.venvPath": "${workspaceFolder}/.venv",
+  "python.pythonPath": "${workspaceFolder}/.venv\\dev\\Scripts\\python.exe",
   "python.envFile": "${workspaceFolder}/.env",
   "python.autoComplete.addBrackets": true,
   "python.formatting.provider": "autopep8",

@@ -13,6 +13,7 @@
 
 # Virtual environments
 .venv
+.venv2
 
 # Compiled files
 __pycache__
