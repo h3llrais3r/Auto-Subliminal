@@ -95,7 +95,7 @@ class VersionChecker(ScheduledProcess):
         return self.manager.current_version_url
 
 
-class BaseVersionManager(ABC):
+class _BaseVersionManager(ABC):
     """
     Base class for all version manager classes.
     """
@@ -132,7 +132,7 @@ class BaseVersionManager(ABC):
         pass
 
 
-class SourceVersionManager(BaseVersionManager):
+class SourceVersionManager(_BaseVersionManager):
     """
     Source version manager. Used when you have installed from source by downloading it manually from Github.
     """
@@ -204,7 +204,7 @@ class SourceVersionManager(BaseVersionManager):
         log.info('Update version not supported')
 
 
-class GitVersionManager(BaseVersionManager):
+class GitVersionManager(_BaseVersionManager):
     """
     Git version manager. Used when you have installed from source via Git scm.
     """

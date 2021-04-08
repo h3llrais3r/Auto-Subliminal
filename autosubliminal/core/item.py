@@ -16,7 +16,7 @@ release_group_regex = re.compile(r'(.*)\[.*?\]')
 log = logging.getLogger(__name__)
 
 
-class _Item(ABC):
+class _BaseItem(ABC):
     """ Base item class.
 
     Represents a base item from which all item related class should extend.
@@ -112,7 +112,7 @@ class _Item(ABC):
         return '<%s [%r]>' % (self.__class__.__name__, self.__dict__)
 
 
-class WantedItem(_Item):
+class WantedItem(_BaseItem):
     """Wanted item class.
 
     Represents an item that still needs a subtitle.
@@ -294,7 +294,7 @@ class DownloadItem(WantedItem):
         self.single = None
 
 
-class DownloadedItem(_Item):
+class DownloadedItem(_BaseItem):
     """Downloaded item class.
 
     Represents an item that is completed and stored in the database to keep track of the downloaded items.
