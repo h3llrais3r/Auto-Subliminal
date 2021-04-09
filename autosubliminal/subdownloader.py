@@ -108,5 +108,7 @@ class SubDownloader(object):
                 wanted_languages.remove(downloaded_language)
                 if len(wanted_languages) == 0:
                     return PostProcessor(self._download_item).run()
+                else:
+                    log.debug('Not all subtitles are downloaded yet, skipping post processing')
 
         return True
