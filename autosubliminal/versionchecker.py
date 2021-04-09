@@ -5,9 +5,6 @@ import re
 from abc import ABC, abstractmethod
 from distutils import version
 
-# isort:imports-thirdparty
-from six import text_type
-
 try:
     from git import Repo
 except ImportError:
@@ -220,7 +217,7 @@ class GitVersionManager(_BaseVersionManager):
     @property
     def current_branch(self):
         # Get string representation of current git branch
-        return text_type(self.current_git_branch)
+        return str(self.current_git_branch)
 
     @property
     def current_branch_url(self):
@@ -229,7 +226,7 @@ class GitVersionManager(_BaseVersionManager):
     @property
     def current_version(self):
         # Get string representation of current git commit
-        return text_type(self.current_git_commit)
+        return str(self.current_git_commit)
 
     @property
     def current_version_url(self):

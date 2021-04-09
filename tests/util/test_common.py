@@ -222,7 +222,7 @@ def test_save_text():
 
 
 def test_save_text_default_value(mocker):
-    mocker.patch('autosubliminal.util.common.text_type', side_effect=Exception)
+    mocker.patch('autosubliminal.util.common.str', side_effect=Exception)
     assert safe_text(None, 'fallback') == 'fallback'
 
 

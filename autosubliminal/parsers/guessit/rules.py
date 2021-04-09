@@ -7,8 +7,6 @@ from rebulk import Rebulk
 from rebulk.processors import POST_PROCESS
 from rebulk.rules import AppendMatch, RemoveMatch, RenameMatch, Rule
 
-from autosubliminal.util.encoding import s2n
-
 
 class RenamePartsToEpisodeNumbers(Rule):
     """Rename parts to episode numbers.
@@ -132,7 +130,7 @@ class AppendPartToMovieTile(Rule):
             if previous:
                 # Append to title
                 title = previous[0]
-                title.value = cleanup(title.initiator.raw + s2n(' ') + part.initiator.raw)
+                title.value = cleanup(title.initiator.raw + ' ' + part.initiator.raw)
                 to_remove.extend(parts)
                 to_append.append(title)
 
@@ -201,7 +199,7 @@ class AppendLineToMovieTitle(Rule):
                 if previous:
                     # Append to title
                     title = previous[0]
-                    title.value = cleanup(title.initiator.raw + s2n(' ') + other.initiator.raw)
+                    title.value = cleanup(title.initiator.raw + ' ' + other.initiator.raw)
                     to_remove.extend(others)
                     to_append.append(title)
 
@@ -270,7 +268,7 @@ class AppendUsToMovieTitle(Rule):
                 if previous:
                     # Append to title
                     title = previous[0]
-                    title.value = cleanup(title.initiator.raw + s2n(' ') + country.initiator.raw)
+                    title.value = cleanup(title.initiator.raw + ' ' + country.initiator.raw)
                     to_remove.extend(countries)
                     to_append.append(title)
 
@@ -339,7 +337,7 @@ class PrependXxxToMovieTitle(Rule):
                 if next:
                     # Prepend to title
                     title = next[0]
-                    title.value = cleanup(other.initiator.raw + s2n(' ') + title.initiator.raw)
+                    title.value = cleanup(other.initiator.raw + ' ' + title.initiator.raw)
                     to_remove.extend(others)
                     to_append.append(title)
 

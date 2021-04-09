@@ -7,7 +7,6 @@ import shutil
 
 import babelfish
 import subliminal
-from six import text_type
 from subliminal.core import ProviderPool
 from subliminal.providers.addic7ed import Addic7edSubtitle
 from subliminal.providers.legendastv import LegendasTVSubtitle
@@ -607,7 +606,7 @@ def _construct_download_item(wanted_item, subtitles, language, single):
     subtitle_path = subliminal.subtitle.get_subtitle_path(download_item.video.name, None if single else language)
     download_item.subtitle_path = subtitle_path
     download_item.subtitle_link = subtitle.page_link
-    download_item.language = text_type(language)  # return alpha2 (f.e. 'nl') or ietf code (f.e. 'pt-BR')
+    download_item.language = str(language)  # return alpha2 (f.e. 'nl') or ietf code (f.e. 'pt-BR')
     download_item.subtitle = os.path.split(download_item.subtitle_path)[1]
     download_item.provider = subtitle.provider_name
     download_item.subtitles = subtitles

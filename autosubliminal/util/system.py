@@ -4,8 +4,6 @@ import os
 import sys
 from distutils.version import StrictVersion
 
-from six import text_type
-
 PYTHON_VERSION_FILE = '.pythonversion'
 
 
@@ -17,7 +15,7 @@ def get_python_version_full():
 def get_python_version_strict():
     """Return the python version as a distutils StrictVersion object."""
     version_tuple = sys.version_info[:3]
-    version_string = '.'.join(text_type(x) for x in version_tuple)
+    version_string = '.'.join(str(x) for x in version_tuple)
     return StrictVersion(version_string)
 
 
@@ -46,4 +44,4 @@ def get_stored_python_version():
 def store_python_version(python_version):
     """Store the currently used python version."""
     with open(PYTHON_VERSION_FILE, mode='w') as f:
-        f.write(text_type(python_version))
+        f.write(str(python_version))

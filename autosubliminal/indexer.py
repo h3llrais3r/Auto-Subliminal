@@ -9,7 +9,6 @@ from time import time
 from imdbpie import Imdb
 from imdbpie.facade import ImdbFacade
 from imdbpie.objects import TitleSearchResult
-from six import text_type
 from tvdb_api.client import TvdbClient
 from unidecode import unidecode
 
@@ -18,7 +17,6 @@ from autosubliminal.core.movie import MovieDetails
 from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails
 from autosubliminal.db import ImdbIdCacheDb, TvdbIdCacheDb
 from autosubliminal.util.common import sanitize
-from autosubliminal.util.encoding import s2n
 from autosubliminal.util.mapping import get_movie_name_mapping, get_show_name_mapping
 
 log = logging.getLogger(__name__)
@@ -105,10 +103,10 @@ class ShowIndexer(Indexer):
         """
         name = title
         if year:
-            name += ' (' + text_type(year) + ')'
+            name += ' (' + str(year) + ')'
         log.info('Searching tvdb api for %s', name)
         # Make sure to convert it to native string before searching (to prevent unicode encoding error)
-        search_results = self._client.search_series_by_name(s2n(name), language=language)
+        search_results = self._client.search_series_by_name(name, language=language)
 
         # Only return 1 result or None
         name_sanitized = sanitize(name)
@@ -147,7 +145,7 @@ class ShowIndexer(Indexer):
         tvdb_id = None
         name = title
         if year:
-            name += ' (' + text_type(year) + ')'
+            name += ' (' + str(year) + ')'
         log.debug('Getting tvdb id for %s', name)
 
         db = TvdbIdCacheDb()
@@ -264,7 +262,7 @@ class MovieIndexer(Indexer):
         """
         name = title
         if year:
-            name += ' (' + text_type(year) + ')'
+            name += ' (' + str(year) + ')'
 
         if fallback_search:
             log.info('Searching imdb api again with year included for %s', name)
@@ -328,7 +326,7 @@ class MovieIndexer(Indexer):
         imdb_id = None
         name = title
         if year:
-            name += ' (' + text_type(year) + ')'
+            name += ' (' + str(year) + ')'
         log.debug('Getting imdb info for %s', name)
 
         db = ImdbIdCacheDb()

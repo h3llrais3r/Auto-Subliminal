@@ -13,7 +13,6 @@ import time
 from collections.abc import Mapping
 
 import requests
-from six import text_type
 
 import autosubliminal
 
@@ -81,7 +80,7 @@ def wait_for_internet_connection():
         time.sleep(5)
 
 
-def to_obj(value, obj_type=text_type, default_value=None):
+def to_obj(value, obj_type=str, default_value=None):
     """Convert an object to an object value.
 
     By default it converts it to text value.
@@ -102,14 +101,14 @@ def to_text(obj, default_value=None):
     """
     if obj is not None:
         if isinstance(obj, list):
-            return ','.join(text_type(e) for e in obj) if obj else default_value
+            return ','.join(str(e) for e in obj) if obj else default_value
         else:
-            return text_type(obj)
+            return str(obj)
     else:
         return default_value
 
 
-def to_list(value, obj_type=text_type, default_value=None):
+def to_list(value, obj_type=str, default_value=None):
     """Convert a value to a list.
 
     If the value is None, the default value will be returned.
@@ -120,15 +119,15 @@ def to_list(value, obj_type=text_type, default_value=None):
     if value is not None:
         if isinstance(value, list):
             return [to_obj(v, obj_type=obj_type) for v in value]
-        elif ',' in text_type(value):
-            return [to_obj(v, obj_type=obj_type) for v in text_type(value).split(',')]
+        elif ',' in str(value):
+            return [to_obj(v, obj_type=obj_type) for v in str(value).split(',')]
         else:
-            return [to_obj(value, obj_type=obj_type)] if text_type(value) != '' else default_value
+            return [to_obj(value, obj_type=obj_type)] if str(value) != '' else default_value
     else:
         return default_value
 
 
-def to_obj_or_list(value, obj_type=text_type, default_value=None):
+def to_obj_or_list(value, obj_type=str, default_value=None):
     """Convert a value to an object or a list.
 
     If the value is None, the default value will be returned.
@@ -137,7 +136,7 @@ def to_obj_or_list(value, obj_type=text_type, default_value=None):
     Optionally, it can be converted to the specified object type.
     """
     if value is not None:
-        if isinstance(value, list) or ',' in text_type(value):
+        if isinstance(value, list) or ',' in str(value):
             return to_list(value, obj_type=obj_type, default_value=default_value)
         else:
             return to_obj(value, obj_type=obj_type, default_value=default_value)
@@ -219,7 +218,7 @@ def list_to_dict(obj_list):
 
 # Based on ConfigParser.getboolean
 def get_boolean(value):
-    v = text_type(value)
+    v = str(value)
     if v.lower() not in _boolean_states:
         raise ValueError('Not a boolean: %s' % v)
     return _boolean_states[v.lower()]
@@ -231,7 +230,7 @@ def safe_text(obj, default_value=None):
     When not possible return the default value.
     """
     try:
-        return text_type(obj)
+        return str(obj)
     except Exception:
         return default_value
 
@@ -318,7 +317,7 @@ def sanitize(string_value, ignore_characters=None):
 
 def safe_value(value, default_value='', uppercase=False):
     result = value or default_value
-    result = ','.join(text_type(v) for v in result) if isinstance(result, list) else result
+    result = ','.join(str(v) for v in result) if isinstance(result, list) else result
     result = safe_text(result, default_value)
     if uppercase:
         result = safe_uppercase(result, default_value=default_value)

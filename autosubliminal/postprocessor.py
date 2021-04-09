@@ -5,7 +5,7 @@ import logging
 import autosubliminal
 from autosubliminal.core.item import DownloadItem
 from autosubliminal.util.common import get_root_path, run_cmd, safe_trim
-from autosubliminal.util.encoding import b2u, s2n
+from autosubliminal.util.encoding import b2u, s2u
 
 log = logging.getLogger(__name__)
 
@@ -112,8 +112,8 @@ class PostProcessor(object):
         return process
 
     def _convert_arg(self, arg):
-        # Arguments should be sent in native strings (validate if the args can be sent in the specified encoding)
-        return s2n(arg, encoding=self._encoding, validate=True)
+        # Arguments should be sent as string values (validate if the args can be sent in the specified encoding)
+        return s2u(arg, encoding=self._encoding, validate=True)
 
     def _log_process_output(self, message, output, log_level):
         # Process output is always in bytes

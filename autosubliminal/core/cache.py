@@ -9,7 +9,6 @@ import requests
 from dogpile.cache.backends.file import AbstractFileLock
 from dogpile.cache.region import make_region
 from dogpile.util.readwrite_lock import ReadWriteMutex
-from six import text_type
 
 import autosubliminal
 
@@ -67,7 +66,7 @@ def get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=Fal
     if not os.path.exists(cache_path):
         os.makedirs(cache_path)
     # Return artwork cache path
-    return os.path.abspath(os.path.join(cache_path, text_type(indexer_id) + '.jpg'))
+    return os.path.abspath(os.path.join(cache_path, str(indexer_id) + '.jpg'))
 
 
 def clear_cache():

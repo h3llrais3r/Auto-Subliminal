@@ -7,8 +7,6 @@ import shutil
 import time
 from configparser import ConfigParser
 
-from six import text_type
-
 import autosubliminal
 from autosubliminal import version
 from autosubliminal.core import logger
@@ -888,24 +886,24 @@ def write_config_general_section():
 
     cfg.set(section, 'videopaths', videopaths)
     cfg.set(section, 'defaultlanguage', autosubliminal.DEFAULTLANGUAGE)
-    cfg.set(section, 'defaultlanguagesuffix', text_type(autosubliminal.DEFAULTLANGUAGESUFFIX))
+    cfg.set(section, 'defaultlanguagesuffix', str(autosubliminal.DEFAULTLANGUAGESUFFIX))
     cfg.set(section, 'additionallanguages', additionallanguages)
-    cfg.set(section, 'manualsearchwithscoring', text_type(autosubliminal.MANUALSEARCHWITHSCORING))
-    cfg.set(section, 'scandiskinterval', text_type(autosubliminal.SCANDISKINTERVAL))
-    cfg.set(section, 'checksubinterval', text_type(autosubliminal.CHECKSUBINTERVAL))
-    cfg.set(section, 'checksubdeadline', text_type(autosubliminal.CHECKSUBDEADLINE))
-    cfg.set(section, 'checksubdelta', text_type(autosubliminal.CHECKSUBDELTA))
-    cfg.set(section, 'checkversioninterval', text_type(autosubliminal.CHECKVERSIONINTERVAL))
-    cfg.set(section, 'checkversionautoupdate', text_type(autosubliminal.CHECKVERSIONAUTOUPDATE))
-    cfg.set(section, 'scanembeddedsubs', text_type(autosubliminal.SCANEMBEDDEDSUBS))
-    cfg.set(section, 'scanhardcodedsubs', text_type(autosubliminal.SCANHARDCODEDSUBS))
-    cfg.set(section, 'skiphiddendirs', text_type(autosubliminal.SKIPHIDDENDIRS))
-    cfg.set(section, 'detectinvalidsublanguage', text_type(autosubliminal.DETECTINVALIDSUBLANGUAGE))
-    cfg.set(section, 'detectedlanguageprobability', text_type(autosubliminal.DETECTEDLANGUAGEPROBABILITY))
-    cfg.set(section, 'minvideofilesize', text_type(autosubliminal.MINVIDEOFILESIZE))
-    cfg.set(section, 'maxdbresults', text_type(autosubliminal.MAXDBRESULTS))
+    cfg.set(section, 'manualsearchwithscoring', str(autosubliminal.MANUALSEARCHWITHSCORING))
+    cfg.set(section, 'scandiskinterval', str(autosubliminal.SCANDISKINTERVAL))
+    cfg.set(section, 'checksubinterval', str(autosubliminal.CHECKSUBINTERVAL))
+    cfg.set(section, 'checksubdeadline', str(autosubliminal.CHECKSUBDEADLINE))
+    cfg.set(section, 'checksubdelta', str(autosubliminal.CHECKSUBDELTA))
+    cfg.set(section, 'checkversioninterval', str(autosubliminal.CHECKVERSIONINTERVAL))
+    cfg.set(section, 'checkversionautoupdate', str(autosubliminal.CHECKVERSIONAUTOUPDATE))
+    cfg.set(section, 'scanembeddedsubs', str(autosubliminal.SCANEMBEDDEDSUBS))
+    cfg.set(section, 'scanhardcodedsubs', str(autosubliminal.SCANHARDCODEDSUBS))
+    cfg.set(section, 'skiphiddendirs', str(autosubliminal.SKIPHIDDENDIRS))
+    cfg.set(section, 'detectinvalidsublanguage', str(autosubliminal.DETECTINVALIDSUBLANGUAGE))
+    cfg.set(section, 'detectedlanguageprobability', str(autosubliminal.DETECTEDLANGUAGEPROBABILITY))
+    cfg.set(section, 'minvideofilesize', str(autosubliminal.MINVIDEOFILESIZE))
+    cfg.set(section, 'maxdbresults', str(autosubliminal.MAXDBRESULTS))
     cfg.set(section, 'timestampformat', autosubliminal.TIMESTAMPFORMAT)
-    cfg.set(section, 'configversion', text_type(autosubliminal.CONFIGVERSION))
+    cfg.set(section, 'configversion', str(autosubliminal.CONFIGVERSION))
 
     with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
@@ -925,9 +923,9 @@ def write_config_library_section():
     # convert lists to comma separated values
     librarypaths = '' if not autosubliminal.LIBRARYPATHS else ','.join(autosubliminal.LIBRARYPATHS)
 
-    cfg.set(section, 'librarymode', text_type(autosubliminal.LIBRARYMODE))
+    cfg.set(section, 'librarymode', str(autosubliminal.LIBRARYMODE))
     cfg.set(section, 'librarypaths', librarypaths)
-    cfg.set(section, 'scanlibraryinterval', text_type(autosubliminal.SCANLIBRARYINTERVAL))
+    cfg.set(section, 'scanlibraryinterval', str(autosubliminal.SCANLIBRARYINTERVAL))
 
     with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
@@ -946,12 +944,12 @@ def write_config_logging_section():
 
     cfg.set(section, 'logfile', autosubliminal.LOGFILE)
     cfg.set(section, 'loglevel', logging.getLevelName(int(autosubliminal.LOGLEVEL)).lower())
-    cfg.set(section, 'lognum', text_type(autosubliminal.LOGNUM))
-    cfg.set(section, 'logsize', text_type(autosubliminal.LOGSIZE))
-    cfg.set(section, 'loghttpaccess', text_type(autosubliminal.LOGHTTPACCESS))
-    cfg.set(section, 'logexternallibs', text_type(autosubliminal.LOGEXTERNALLIBS))
-    cfg.set(section, 'logdetailedformat', text_type(autosubliminal.LOGDETAILEDFORMAT))
-    cfg.set(section, 'logreversed', text_type(autosubliminal.LOGREVERSED))
+    cfg.set(section, 'lognum', str(autosubliminal.LOGNUM))
+    cfg.set(section, 'logsize', str(autosubliminal.LOGSIZE))
+    cfg.set(section, 'loghttpaccess', str(autosubliminal.LOGHTTPACCESS))
+    cfg.set(section, 'logexternallibs', str(autosubliminal.LOGEXTERNALLIBS))
+    cfg.set(section, 'logdetailedformat', str(autosubliminal.LOGDETAILEDFORMAT))
+    cfg.set(section, 'logreversed', str(autosubliminal.LOGREVERSED))
     cfg.set(section, 'loglevelconsole', logging.getLevelName(int(autosubliminal.LOGLEVELCONSOLE)).lower())
 
     with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
@@ -972,12 +970,12 @@ def write_config_webserver_section():
     if not cfg.has_section(section):
         cfg.add_section(section)
 
-    cfg.set(section, 'webserverip', text_type(autosubliminal.WEBSERVERIP))
-    cfg.set(section, 'webserverport', text_type(autosubliminal.WEBSERVERPORT))
+    cfg.set(section, 'webserverip', str(autosubliminal.WEBSERVERIP))
+    cfg.set(section, 'webserverport', str(autosubliminal.WEBSERVERPORT))
     cfg.set(section, 'webroot', autosubliminal.WEBROOT)
     cfg.set(section, 'username', autosubliminal.USERNAME)
     cfg.set(section, 'password', autosubliminal.PASSWORD)
-    cfg.set(section, 'launchbrowser', text_type(autosubliminal.LAUNCHBROWSER))
+    cfg.set(section, 'launchbrowser', str(autosubliminal.LAUNCHBROWSER))
 
     with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)
@@ -996,21 +994,21 @@ def write_config_subliminal_section():
 
     providers = '' if not autosubliminal.SUBLIMINALPROVIDERS else ','.join(autosubliminal.SUBLIMINALPROVIDERS)
 
-    cfg.set(section, 'showminmatchscore', text_type(autosubliminal.SHOWMINMATCHSCORE))
-    cfg.set(section, 'showmatchsource', text_type(autosubliminal.SHOWMATCHSOURCE))
-    cfg.set(section, 'showmatchquality', text_type(autosubliminal.SHOWMATCHQUALITY))
-    cfg.set(section, 'showmatchcodec', text_type(autosubliminal.SHOWMATCHCODEC))
-    cfg.set(section, 'showmatchreleasegroup', text_type(autosubliminal.SHOWMATCHRELEASEGROUP))
-    cfg.set(section, 'movieminmatchscore', text_type(autosubliminal.MOVIEMINMATCHSCORE))
-    cfg.set(section, 'moviematchsource', text_type(autosubliminal.MOVIEMATCHSOURCE))
-    cfg.set(section, 'moviematchquality', text_type(autosubliminal.MOVIEMATCHQUALITY))
-    cfg.set(section, 'moviematchcodec', text_type(autosubliminal.MOVIEMATCHCODEC))
-    cfg.set(section, 'moviematchreleasegroup', text_type(autosubliminal.MOVIEMATCHRELEASEGROUP))
+    cfg.set(section, 'showminmatchscore', str(autosubliminal.SHOWMINMATCHSCORE))
+    cfg.set(section, 'showmatchsource', str(autosubliminal.SHOWMATCHSOURCE))
+    cfg.set(section, 'showmatchquality', str(autosubliminal.SHOWMATCHQUALITY))
+    cfg.set(section, 'showmatchcodec', str(autosubliminal.SHOWMATCHCODEC))
+    cfg.set(section, 'showmatchreleasegroup', str(autosubliminal.SHOWMATCHRELEASEGROUP))
+    cfg.set(section, 'movieminmatchscore', str(autosubliminal.MOVIEMINMATCHSCORE))
+    cfg.set(section, 'moviematchsource', str(autosubliminal.MOVIEMATCHSOURCE))
+    cfg.set(section, 'moviematchquality', str(autosubliminal.MOVIEMATCHQUALITY))
+    cfg.set(section, 'moviematchcodec', str(autosubliminal.MOVIEMATCHCODEC))
+    cfg.set(section, 'moviematchreleasegroup', str(autosubliminal.MOVIEMATCHRELEASEGROUP))
     cfg.set(section, 'providers', providers)
-    cfg.set(section, 'subtitleutf8encoding', text_type(autosubliminal.SUBTITLEUTF8ENCODING))
-    cfg.set(section, 'manualrefinevideo', text_type(autosubliminal.MANUALREFINEVIDEO))
-    cfg.set(section, 'refinevideo', text_type(autosubliminal.REFINEVIDEO))
-    cfg.set(section, 'preferhearingimpaired', text_type(autosubliminal.PREFERHEARINGIMPAIRED))
+    cfg.set(section, 'subtitleutf8encoding', str(autosubliminal.SUBTITLEUTF8ENCODING))
+    cfg.set(section, 'manualrefinevideo', str(autosubliminal.MANUALREFINEVIDEO))
+    cfg.set(section, 'refinevideo', str(autosubliminal.REFINEVIDEO))
+    cfg.set(section, 'preferhearingimpaired', str(autosubliminal.PREFERHEARINGIMPAIRED))
     cfg.set(section, 'anticaptchaclass', autosubliminal.ANTICAPTCHACLASS)
     cfg.set(section, 'anticaptchaclientkey', autosubliminal.ANTICAPTCHACLIENTKEY)
     cfg.set(section, 'addic7edusername', autosubliminal.ADDIC7EDUSERNAME)
@@ -1192,8 +1190,8 @@ def write_config_notification_section():
     if not cfg.has_section(section):
         cfg.add_section(section)
 
-    cfg.set(section, 'notify', text_type(autosubliminal.NOTIFY))
-    cfg.set(section, 'notifymail', text_type(autosubliminal.NOTIFYMAIL))
+    cfg.set(section, 'notify', str(autosubliminal.NOTIFY))
+    cfg.set(section, 'notifymail', str(autosubliminal.NOTIFYMAIL))
     cfg.set(section, 'mailsrv', autosubliminal.MAILSRV)
     cfg.set(section, 'mailfromaddr', autosubliminal.MAILFROMADDR)
     cfg.set(section, 'mailtoaddr', autosubliminal.MAILTOADDR)
@@ -1202,26 +1200,26 @@ def write_config_notification_section():
     cfg.set(section, 'mailsubject', autosubliminal.MAILSUBJECT)
     cfg.set(section, 'mailencryption', autosubliminal.MAILENCRYPTION)
     cfg.set(section, 'mailauth', autosubliminal.MAILAUTH)
-    cfg.set(section, 'notifytwitter', text_type(autosubliminal.NOTIFYTWITTER))
+    cfg.set(section, 'notifytwitter', str(autosubliminal.NOTIFYTWITTER))
     cfg.set(section, 'twitterkey', autosubliminal.TWITTERKEY)
     cfg.set(section, 'twittersecret', autosubliminal.TWITTERSECRET)
-    cfg.set(section, 'notifypushalot', text_type(autosubliminal.NOTIFYPUSHALOT))
+    cfg.set(section, 'notifypushalot', str(autosubliminal.NOTIFYPUSHALOT))
     cfg.set(section, 'pushalotapi', autosubliminal.PUSHALOTAPI)
-    cfg.set(section, 'notifypushover', text_type(autosubliminal.NOTIFYPUSHOVER))
+    cfg.set(section, 'notifypushover', str(autosubliminal.NOTIFYPUSHOVER))
     cfg.set(section, 'pushoverkey', autosubliminal.PUSHOVERKEY)
     cfg.set(section, 'pushoverapi', autosubliminal.PUSHOVERAPI)
     cfg.set(section, 'pushoverdevices', autosubliminal.PUSHOVERDEVICES)
-    cfg.set(section, 'notifygrowl', text_type(autosubliminal.NOTIFYGROWL))
+    cfg.set(section, 'notifygrowl', str(autosubliminal.NOTIFYGROWL))
     cfg.set(section, 'growlhost', autosubliminal.GROWLHOST)
-    cfg.set(section, "growlport", text_type(autosubliminal.GROWLPORT))
+    cfg.set(section, "growlport", str(autosubliminal.GROWLPORT))
     cfg.set(section, 'growlpass', autosubliminal.GROWLPASS)
-    cfg.set(section, 'growlpriority', text_type(autosubliminal.GROWLPRIORITY))
-    cfg.set(section, 'notifyprowl', text_type(autosubliminal.NOTIFYPROWL))
+    cfg.set(section, 'growlpriority', str(autosubliminal.GROWLPRIORITY))
+    cfg.set(section, 'notifyprowl', str(autosubliminal.NOTIFYPROWL))
     cfg.set(section, 'prowlapi', autosubliminal.PROWLAPI)
-    cfg.set(section, 'prowlpriority', text_type(autosubliminal.PROWLPRIORITY))
-    cfg.set(section, 'notifypushbullet', text_type(autosubliminal.NOTIFYPUSHBULLET))
+    cfg.set(section, 'prowlpriority', str(autosubliminal.PROWLPRIORITY))
+    cfg.set(section, 'notifypushbullet', str(autosubliminal.NOTIFYPUSHBULLET))
     cfg.set(section, 'pushbulletapi', autosubliminal.PUSHBULLETAPI)
-    cfg.set(section, 'notifytelegram', text_type(autosubliminal.NOTIFYTELEGRAM))
+    cfg.set(section, 'notifytelegram', str(autosubliminal.NOTIFYTELEGRAM))
     cfg.set(section, 'telegrambotapi', autosubliminal.TELEGRAMBOTAPI)
     cfg.set(section, 'telegramchatid', autosubliminal.TELEGRAMCHATID)
 
@@ -1240,9 +1238,9 @@ def write_config_postprocessing_section():
     if not cfg.has_section(section):
         cfg.add_section(section)
 
-    cfg.set(section, 'postprocess', text_type(autosubliminal.POSTPROCESS))
-    cfg.set(section, 'postprocessindividual', text_type(autosubliminal.POSTPROCESSINDIVIDUAL))
-    cfg.set(section, 'postprocessutf8encoding', text_type(autosubliminal.POSTPROCESSUTF8ENCODING))
+    cfg.set(section, 'postprocess', str(autosubliminal.POSTPROCESS))
+    cfg.set(section, 'postprocessindividual', str(autosubliminal.POSTPROCESSINDIVIDUAL))
+    cfg.set(section, 'postprocessutf8encoding', str(autosubliminal.POSTPROCESSUTF8ENCODING))
     cfg.set(section, 'showpostprocesscmd', autosubliminal.SHOWPOSTPROCESSCMD)
     cfg.set(section, 'showpostprocesscmdargs', autosubliminal.SHOWPOSTPROCESSCMDARGS)
     cfg.set(section, 'moviepostprocesscmd', autosubliminal.MOVIEPOSTPROCESSCMD)
@@ -1548,7 +1546,7 @@ def _upgrade_config(from_version, to_version):
                 tvdb_id = autosubliminal.SHOWINDEXER.get_tvdb_id(x, force_search=True)
                 # Replace by tvdb id or remove namemapping
                 if tvdb_id:
-                    autosubliminal.SHOWNAMEMAPPING[x] = text_type(tvdb_id)
+                    autosubliminal.SHOWNAMEMAPPING[x] = str(tvdb_id)
                 else:
                     del autosubliminal.SHOWNAMEMAPPING[x]
             print('INFO: Config upgraded to version 3.')

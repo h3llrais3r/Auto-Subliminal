@@ -2,8 +2,6 @@
 
 import logging
 
-from six import text_type
-
 import autosubliminal
 from autosubliminal.util.common import sanitize
 
@@ -67,7 +65,7 @@ def get_movie_name_mapping(title, year):
     """
     movie = title
     if year:
-        movie += ' (' + text_type(year) + ')'
+        movie += ' (' + str(year) + ')'
     movie_sanitized = sanitize(movie)
     for x in autosubliminal.MOVIENAMEMAPPING:
         if movie_sanitized == sanitize(x):
@@ -86,7 +84,7 @@ def get_alternative_movie_name_mapping(title, year):
     """
     movie = title
     if year:
-        movie += ' (' + text_type(year) + ')'
+        movie += ' (' + str(year) + ')'
     movie_sanitized = sanitize(movie)
     for x in autosubliminal.ALTERNATIVEMOVIENAMEMAPPING:
         if movie_sanitized == sanitize(x):

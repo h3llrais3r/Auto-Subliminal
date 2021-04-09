@@ -2,8 +2,6 @@
 
 import logging
 
-from six import text_type
-
 import autosubliminal
 from autosubliminal.util.common import sanitize
 
@@ -29,7 +27,7 @@ def skip_movie(title, year):
     """Check if a movie should be skipped."""
     movie = title
     if year:
-        movie += ' (' + text_type(year) + ')'
+        movie += ' (' + str(year) + ')'
     movie_sanitized = sanitize(movie)
     for x in autosubliminal.SKIPMOVIE:
         if movie_sanitized == sanitize(x):

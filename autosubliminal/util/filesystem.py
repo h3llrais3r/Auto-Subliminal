@@ -12,7 +12,6 @@ import subliminal
 from babelfish import Error as BabelfishError
 from babelfish import Language
 from enzyme.mkv import MKV
-from six import text_type
 
 import autosubliminal
 from autosubliminal.core.subtitle import EMBEDDED, EXTERNAL, HARDCODED, Subtitle
@@ -194,7 +193,7 @@ def get_embedded_subtitles(dirname, filename, log_scan=False):
     except Exception:
         log_scan and log.error('Parsing video metadata with enzyme failed')
 
-    return [Subtitle(EMBEDDED, text_type(language), path) for language in embedded_subtitle_languages if
+    return [Subtitle(EMBEDDED, str(language), path) for language in embedded_subtitle_languages if
             language != Language('und')]
 
 
@@ -237,7 +236,7 @@ def get_subtitle_language(filename):
     # Check if language suffix is used in filename (f.e. <video_name>.nl)
     # If no language suffix is used, we assume it's the default language
     if video_name[-3:-2] == '.' and language:
-        return text_type(language)
+        return str(language)
     else:
         return autosubliminal.DEFAULTLANGUAGE
 

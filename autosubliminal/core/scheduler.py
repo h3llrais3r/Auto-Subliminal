@@ -8,8 +8,6 @@ import time
 import traceback
 from abc import ABC, abstractmethod
 
-from six import text_type
-
 import autosubliminal
 from autosubliminal.util.common import camelize, to_dict
 from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock
@@ -72,11 +70,11 @@ class Scheduler(object):
                 try:
                     suffix = int(scheduler_name_suffix)
                     suffix += 1
-                    scheduler_name = scheduler_name[:suffix_index] + '-' + text_type(suffix)
+                    scheduler_name = scheduler_name[:suffix_index] + '-' + str(suffix)
                 except Exception:
-                    scheduler_name = scheduler_name + '-' + text_type(suffix)
+                    scheduler_name = scheduler_name + '-' + str(suffix)
             else:
-                scheduler_name = scheduler_name + '-' + text_type(suffix)
+                scheduler_name = scheduler_name + '-' + str(suffix)
         self.name = scheduler_name
         autosubliminal.SCHEDULERS[scheduler_name] = self
 

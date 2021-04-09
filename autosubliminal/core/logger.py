@@ -7,8 +7,6 @@ import re
 import shutil
 from logging.handlers import BaseRotatingHandler
 
-from six import PY3, text_type
-
 import autosubliminal
 
 LOG_PARSER = re.compile(r'^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
@@ -30,7 +28,7 @@ def initialize():
                                             mode='a',
                                             maxBytes=autosubliminal.LOGSIZE * 1024 * 1024,
                                             backupCount=autosubliminal.LOGNUM,
-                                            encoding='utf-8' if PY3 else None)
+                                            encoding='utf-8')
     log_handler.addFilter(log_filter)
     log_handler.setFormatter(log_formatter)
     log_handler.setLevel(autosubliminal.LOGLEVEL)
@@ -101,7 +99,7 @@ def get_log_lines(loglevel='all', lines=0, lognum=None):
 def get_logfile(lognum=None):
     logfile = autosubliminal.LOGFILE
     if lognum:
-        logfile += '.' + text_type(lognum)
+        logfile += '.' + str(lognum)
     if os.path.isfile(logfile):
         return logfile
     return None

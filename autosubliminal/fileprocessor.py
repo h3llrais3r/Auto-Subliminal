@@ -5,7 +5,6 @@ import os
 import time
 
 from guessit import guessit
-from six import text_type
 
 import autosubliminal
 from autosubliminal.core.item import WantedItem
@@ -103,8 +102,7 @@ def _enrich_wanted_item(wanted_item, file_path, file_size):
     # Enrich with common data
     wanted_item.video_path = file_path
     wanted_item.video_size = file_size
-    wanted_item.timestamp = text_type(
-        time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(os.path.getctime(file_path))))
+    wanted_item.timestamp = str(time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(os.path.getctime(file_path))))
 
     # Enrich with episode data
     if wanted_item.is_episode:

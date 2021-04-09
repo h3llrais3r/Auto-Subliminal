@@ -21,7 +21,6 @@ from autosubliminal.libraryscanner import LibraryScanner
 from autosubliminal.server.root import WebServerRoot
 from autosubliminal.server.tool import SPARedirectTool
 from autosubliminal.subchecker import SubChecker
-from autosubliminal.util.encoding import s2n
 from autosubliminal.util.json import json_out_handler
 from autosubliminal.util.packaging import get_library_version
 from autosubliminal.util.websocket import SYSTEM_RESTART, SYSTEM_SHUTDOWN, SYSTEM_START, send_websocket_event
@@ -90,7 +89,7 @@ def start_server(restarting=False):
     if restarting:
         # Remove previous mount (in case webroot should change)
         del cherrypy.tree.apps[list(cherrypy.tree.apps)[0]]
-    cherrypy.tree.mount(WebServerRoot(), s2n(autosubliminal.WEBROOT), config=_get_application_configuration())
+    cherrypy.tree.mount(WebServerRoot(), autosubliminal.WEBROOT, config=_get_application_configuration())
 
     # Start cherrypy server
     log.info('Starting CherryPy webserver')
@@ -109,7 +108,7 @@ def _configure_server(restarting=False):
     cherrypy.config.update({'log.error_file': 'cherrypy.error.log'})
 
     # Configure server url
-    cherrypy.config.update({'server.socket_host': s2n(autosubliminal.WEBSERVERIP),
+    cherrypy.config.update({'server.socket_host': autosubliminal.WEBSERVERIP,
                             'server.socket_port': int(autosubliminal.WEBSERVERPORT)
                             })
 
@@ -122,7 +121,7 @@ def _configure_server(restarting=False):
 
     # Configure authentication in if a username and password is set by the user
     if autosubliminal.USERNAME and autosubliminal.PASSWORD:
-        users = {s2n(autosubliminal.USERNAME): s2n(autosubliminal.PASSWORD)}
+        users = {autosubliminal.USERNAME: autosubliminal.PASSWORD}
         cherrypy.config.update({'tools.auth_digest.on': True,
                                 'tools.auth_digest.realm': 'Auto-Subliminal website',
                                 'tools.auth_digest.get_ha1': auth_digest.get_ha1_dict_plain(users),

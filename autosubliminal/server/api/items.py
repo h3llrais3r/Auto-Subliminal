@@ -1,7 +1,6 @@
 # coding=utf-8
 
 import cherrypy
-from six import text_type
 
 import autosubliminal
 from autosubliminal import config, subchecker
@@ -149,7 +148,7 @@ class _WantedApi(RestResource):
                             if item_type == 'episode':
                                 season = input_dict['season'] if 'season' in input_dict else '00'  # defaults to all
                                 if not season == '00':
-                                    season = text_type(int(season))
+                                    season = str(int(season))
                                 config_season = season
                                 # Check if already skipped
                                 title_sanitized = sanitize(wanted_item.title)
