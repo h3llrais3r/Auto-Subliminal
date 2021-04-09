@@ -1,5 +1,5 @@
 # Version format
-version: '{build}'
+version: "{build}"
 
 # Build and deploy is not needed for Python
 build: off
@@ -44,10 +44,11 @@ init:
   # purpose but it is problematic because it tends to cancel builds pushed
   # directly to master instead of just PR builds (or the converse).
   # credits: JuliaLang developers.
-  - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
-        https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
-        Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
-          throw "There are newer queued builds for this pull request, failing early." }
+  - ps:
+      if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
+      https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
+      Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
+      throw "There are newer queued builds for this pull request, failing early." }
   # Enable RDP if environment variable is set (https://ci.appveyor.com/project/h3llrais3r/auto-subliminal/settings/environment)
   - ps: |
       if ($env:APPVEYOR_RDP -eq 'TRUE') {
@@ -63,7 +64,7 @@ install:
   - python --version # Verify version
   - python -c "import struct; print(struct.calcsize('P') * 8)" # Verify architecture
   - python -m pip install --upgrade pip # Gives access denied error when not using 'python -m' prefix
-  - pip install --upgrade six # Upgrade pytest to latest version to prevent build errors
+  - pip install --upgrade six # Upgrade six to latest version to prevent build errors
   - pip install --upgrade pytest # Upgrade pytest to latest version to prevent build errors
   - pip install -e .[dev,test]
   - pip install coverage
