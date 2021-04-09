@@ -1,4 +1,4 @@
-from six.moves.urllib_parse import urlparse
+from urllib.parse import urlparse
 
 
 class Proxy(object):

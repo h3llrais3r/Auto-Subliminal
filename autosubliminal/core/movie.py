@@ -2,9 +2,9 @@
 
 import logging
 import os
+from urllib.parse import urlparse, urlunparse
 
 from imdbpie.objects import Title
-from six.moves.urllib.parse import urlparse, urlunparse
 
 import autosubliminal
 from autosubliminal.util.common import get_wanted_languages, to_dict, to_list, to_obj
