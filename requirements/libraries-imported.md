@@ -1,5 +1,4 @@
-Directly imported libraries
----------------------------
+# Directly imported libraries
 
 ### Created based on output from _.build/find-imported-libs.bat_
 
@@ -25,7 +24,6 @@ Directly imported libraries
 |-- requests-oauthlib
 |-- schema
 |-- simplejson (if not added, fallback to default json library in python)
-|-- six
 |-- subliminal
 |-- tailer
 |-- tvdb_api
