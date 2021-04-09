@@ -10,7 +10,6 @@ import webbrowser
 
 import cherrypy
 from cherrypy.lib import auth_digest
-from six.moves import getcwd
 from ws4py.manager import WebSocketManager
 from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool
 
@@ -265,7 +264,7 @@ def restart(exit=False):
         # Shutdown
         _shutdown()
         # Start new process
-        subprocess.Popen(popen_list, cwd=getcwd())
+        subprocess.Popen(popen_list, cwd=os.getcwd())
         # Exit current process
         _exit()
     else:

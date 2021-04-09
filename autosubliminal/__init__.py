@@ -4,8 +4,6 @@ import os
 import pkg_resources
 import uuid
 
-from six.moves import getcwd
-
 from autosubliminal import config, db, version
 from autosubliminal.core import logger
 from autosubliminal.indexer import MovieIndexer, ShowIndexer
@@ -231,7 +229,7 @@ def initialize():
     python_version_changed = _check_python_version_change()
 
     # System settings
-    PATH = os.path.abspath(getcwd())
+    PATH = os.path.abspath(os.getcwd())
     CACHEDIR = os.path.abspath(os.path.join(PATH, 'cache'))
     DEREFERURL = 'http://www.dereferer.org/?'
     GITHUBURL = 'https://github.com/h3llrais3r/Auto-Subliminal'
