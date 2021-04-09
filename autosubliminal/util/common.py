@@ -1,5 +1,6 @@
 # coding=utf-8
 
+import builtins
 import ctypes
 import datetime
 import logging
@@ -9,11 +10,10 @@ import re
 import stat
 import subprocess
 import time
+from collections.abc import Mapping
 
 import requests
 from six import text_type
-from six.moves import builtins
-from six.moves.collections_abc import Mapping
 
 import autosubliminal
 
