@@ -1,5 +1,4 @@
-BUILD
-=====
+# BUILD
 
 ## Generate virtual environment for development
 
@@ -17,13 +16,13 @@ This virtual environment should be used to test the application with only the pa
 
 ## Generate libraries dependency tree
 
-Run  `generate-pipdeptree.bat` to generate the `requirements/libraries-pipdeptree.md` file that contains the dependency tree for all packaged libraries.
+Run `generate-pipdeptree.bat` to generate the `requirements/libraries-pipdeptree.md` file that contains the dependency tree for all packaged libraries.
 
 This should be run every time a package is added/updated.
 
 ## Find imported libraries
 
-Run  `find-imported-libs.bat` to generate a file `requirements/libraries-pigar.txt` that contains all imported libraries within the application.
+Run `find-imported-libs.bat` to generate a file `requirements/libraries-pigar.txt` that contains all imported libraries within the application.
 
 This file can be used as a base to keep track of all directly imported libraries in the file `requirements/libraries-imported.md`.
 
@@ -40,9 +39,10 @@ Run `pip install -t lib <library>` to install the library from pypi in the `lib`
 Run `pip install -t lib git+<github_url>@<branch>#egg=<folder>` to install the library from git in the `lib` folder.
 
 Optionally you can add the following options:
-* `--no-deps` -> skip dependencies
-* `--no-compile` -> do not compile python files
-* `--no-cache-dir` -> do not use pip cache dir but force online check
+
+- `--no-deps` -> skip dependencies
+- `--no-compile` -> do not compile python files
+- `--no-cache-dir` -> do not use pip cache dir but force online check
 
 ## Upgrade a single packaged library
 

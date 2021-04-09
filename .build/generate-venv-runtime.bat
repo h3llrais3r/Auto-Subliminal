@@ -19,7 +19,7 @@ set /p deactivate=Deactivate venv (y/[N]):
 if /I "%deactivate%"=="y" goto yes
 goto no
 :yes
-echo. 	
+echo.
 echo Deactivating venv
 call .venv/runtime/scripts/deactivate
 :no
