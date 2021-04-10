@@ -43,7 +43,7 @@ html5lib==1.1
 imdbpie==5.6.4
   - attrs [required: >=18.1.0,<19.0.0, installed: 20.3.0]
   - boto [required: ==2.48.0, installed: 2.49.0]
-  - diskcache [required: >=2.9.0,<3.0.0, installed: 4.1.0]
+  - diskcache [required: >=2.9.0,<3.0.0, installed: 5.2.1]
   - python-dateutil [required: >=2.6.1,<3.0.0, installed: 2.8.1]
     - six [required: >=1.5, installed: 1.15.0]
   - requests [required: >=0.10,<3.0.0, installed: 2.25.1]

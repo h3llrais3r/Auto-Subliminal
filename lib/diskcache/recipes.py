@@ -6,27 +6,13 @@ import functools
 import math
 import os
 import random
-import sys
 import threading
 import time
 
 from .core import ENOVAL, args_to_key, full_name
 
-############################################################################
-# BEGIN Python 2/3 Shims
-############################################################################
 
-if sys.hexversion < 0x03000000:
-    from thread import get_ident  # pylint: disable=import-error
-else:
-    from threading import get_ident
-
-############################################################################
-# END Python 2/3 Shims
-############################################################################
-
-
-class Averager(object):
+class Averager:
     """Recipe for calculating a running average.
 
     Sometimes known as "online statistics," the running average maintains the
@@ -46,6 +32,7 @@ class Averager(object):
     None
 
     """
+
     def __init__(self, cache, key, expire=None, tag=None):
         self._cache = cache
         self._key = key
@@ -59,7 +46,10 @@ class Averager(object):
             total += value
             count += 1
             self._cache.set(
-                self._key, (total, count), expire=self._expire, tag=self._tag,
+                self._key,
+                (total, count),
+                expire=self._expire,
+                tag=self._tag,
             )
 
     def get(self):
@@ -73,7 +63,7 @@ class Averager(object):
         return None if count == 0 else total / count
 
 
-class Lock(object):
+class Lock:
     """Recipe for cross-process and cross-thread lock.
 
     >>> import diskcache
@@ -85,6 +75,7 @@ class Lock(object):
     ...     pass
 
     """
+
     def __init__(self, cache, key, expire=None, tag=None):
         self._cache = cache
         self._key = key
@@ -95,7 +86,11 @@ class Lock(object):
         "Acquire lock using spin-lock algorithm."
         while True:
             added = self._cache.add(
-                self._key, None, expire=self._expire, tag=self._tag, retry=True,
+                self._key,
+                None,
+                expire=self._expire,
+                tag=self._tag,
+                retry=True,
             )
             if added:
                 break
@@ -105,6 +100,10 @@ class Lock(object):
         "Release lock by deleting key."
         self._cache.delete(self._key, retry=True)
 
+    def locked(self):
+        "Return true if the lock is acquired."
+        return self._key in self._cache
+
     def __enter__(self):
         self.acquire()
 
@@ -112,7 +111,7 @@ class Lock(object):
         self.release()
 
 
-class RLock(object):
+class RLock:
     """Recipe for cross-process and cross-thread re-entrant lock.
 
     >>> import diskcache
@@ -130,6 +129,7 @@ class RLock(object):
     AssertionError: cannot release un-acquired lock
 
     """
+
     def __init__(self, cache, key, expire=None, tag=None):
         self._cache = cache
         self._key = key
@@ -139,7 +139,7 @@ class RLock(object):
     def acquire(self):
         "Acquire lock by incrementing count using spin-lock algorithm."
         pid = os.getpid()
-        tid = get_ident()
+        tid = threading.get_ident()
         pid_tid = '{}-{}'.format(pid, tid)
 
         while True:
@@ -147,8 +147,10 @@ class RLock(object):
                 value, count = self._cache.get(self._key, default=(None, 0))
                 if pid_tid == value or count == 0:
                     self._cache.set(
-                        self._key, (pid_tid, count + 1),
-                        expire=self._expire, tag=self._tag,
+                        self._key,
+                        (pid_tid, count + 1),
+                        expire=self._expire,
+                        tag=self._tag,
                     )
                     return
             time.sleep(0.001)
@@ -156,7 +158,7 @@ class RLock(object):
     def release(self):
         "Release lock by decrementing count."
         pid = os.getpid()
-        tid = get_ident()
+        tid = threading.get_ident()
         pid_tid = '{}-{}'.format(pid, tid)
 
         with self._cache.transact(retry=True):
@@ -164,8 +166,10 @@ class RLock(object):
             is_owned = pid_tid == value and count > 0
             assert is_owned, 'cannot release un-acquired lock'
             self._cache.set(
-                self._key, (value, count - 1),
-                expire=self._expire, tag=self._tag,
+                self._key,
+                (value, count - 1),
+                expire=self._expire,
+                tag=self._tag,
             )
 
     def __enter__(self):
@@ -175,7 +179,7 @@ class RLock(object):
         self.release()
 
 
-class BoundedSemaphore(object):
+class BoundedSemaphore:
     """Recipe for cross-process and cross-thread bounded semaphore.
 
     >>> import diskcache
@@ -193,6 +197,7 @@ class BoundedSemaphore(object):
     AssertionError: cannot release un-acquired semaphore
 
     """
+
     def __init__(self, cache, key, value=1, expire=None, tag=None):
         self._cache = cache
         self._key = key
@@ -207,8 +212,10 @@ class BoundedSemaphore(object):
                 value = self._cache.get(self._key, default=self._value)
                 if value > 0:
                     self._cache.set(
-                        self._key, value - 1,
-                        expire=self._expire, tag=self._tag,
+                        self._key,
+                        value - 1,
+                        expire=self._expire,
+                        tag=self._tag,
                     )
                     return
             time.sleep(0.001)
@@ -220,7 +227,10 @@ class BoundedSemaphore(object):
             assert self._value > value, 'cannot release un-acquired semaphore'
             value += 1
             self._cache.set(
-                self._key, value, expire=self._expire, tag=self._tag,
+                self._key,
+                value,
+                expire=self._expire,
+                tag=self._tag,
             )
 
     def __enter__(self):
@@ -230,8 +240,16 @@ class BoundedSemaphore(object):
         self.release()
 
 
-def throttle(cache, count, seconds, name=None, expire=None, tag=None,
-             time_func=time.time, sleep_func=time.sleep):
+def throttle(
+    cache,
+    count,
+    seconds,
+    name=None,
+    expire=None,
+    tag=None,
+    time_func=time.time,
+    sleep_func=time.sleep,
+):
     """Decorator to throttle calls to function.
 
     >>> import diskcache, time
@@ -248,6 +266,7 @@ def throttle(cache, count, seconds, name=None, expire=None, tag=None,
     True
 
     """
+
     def decorator(func):
         rate = count / float(seconds)
         key = full_name(func) if name is None else name
@@ -304,6 +323,7 @@ def barrier(cache, lock_factory, name=None, expire=None, tag=None):
     >>> pool.terminate()
 
     """
+
     def decorator(func):
         key = full_name(func) if name is None else name
         lock = lock_factory(cache, key, expire=expire, tag=tag)
@@ -391,7 +411,10 @@ def memoize_stampede(cache, expire, name=None, typed=False, tag=None, beta=1):
             "Wrapper for callable to cache arguments and return values."
             key = wrapper.__cache_key__(*args, **kwargs)
             pair, expire_time = cache.get(
-                key, default=ENOVAL, expire_time=True, retry=True,
+                key,
+                default=ENOVAL,
+                expire_time=True,
+                retry=True,
             )
 
             if pair is not ENOVAL:
@@ -406,7 +429,10 @@ def memoize_stampede(cache, expire, name=None, typed=False, tag=None, beta=1):
 
                 thread_key = key + (ENOVAL,)
                 thread_added = cache.add(
-                    thread_key, None, expire=delta, retry=True,
+                    thread_key,
+                    None,
+                    expire=delta,
+                    retry=True,
                 )
 
                 if thread_added:
@@ -415,8 +441,13 @@ def memoize_stampede(cache, expire, name=None, typed=False, tag=None, beta=1):
                         with cache:
                             pair = timer(*args, **kwargs)
                             cache.set(
-                                key, pair, expire=expire, tag=tag, retry=True,
+                                key,
+                                pair,
+                                expire=expire,
+                                tag=tag,
+                                retry=True,
                             )
+
                     thread = threading.Thread(target=recompute)
                     thread.daemon = True
                     thread.start()

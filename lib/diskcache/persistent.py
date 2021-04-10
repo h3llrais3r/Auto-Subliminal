@@ -3,36 +3,23 @@
 """
 
 import operator as op
-import sys
-
 from collections import OrderedDict
+from collections.abc import (
+    ItemsView,
+    KeysView,
+    MutableMapping,
+    Sequence,
+    ValuesView,
+)
 from contextlib import contextmanager
 from shutil import rmtree
 
-from .core import BytesType, Cache, ENOVAL, TextType
-
-############################################################################
-# BEGIN Python 2/3 Shims
-############################################################################
-
-try:
-    from collections.abc import MutableMapping, Sequence
-    from collections.abc import KeysView, ValuesView, ItemsView
-except ImportError:
-    from collections import MutableMapping, Sequence
-    from collections import KeysView, ValuesView, ItemsView
-
-if sys.hexversion < 0x03000000:
-    from itertools import izip as zip  # pylint: disable=redefined-builtin,no-name-in-module,ungrouped-imports
-    range = xrange  # pylint: disable=redefined-builtin,invalid-name,undefined-variable
-
-############################################################################
-# END Python 2/3 Shims
-############################################################################
+from .core import ENOVAL, Cache
 
 
 def _make_compare(seq_op, doc):
     "Make compare method with Sequence semantics."
+
     def compare(self, that):
         "Compare method for deque and sequence."
         if not isinstance(that, Sequence):
@@ -88,6 +75,7 @@ class Deque(Sequence):
     [3, 2, 1, 0, 0, -1, -2, -3]
 
     """
+
     def __init__(self, iterable=(), directory=None):
         """Initialize deque instance.
 
@@ -99,9 +87,7 @@ class Deque(Sequence):
 
         """
         self._cache = Cache(directory, eviction_policy='none')
-        with self.transact():
-            self.extend(iterable)
-
+        self.extend(iterable)
 
     @classmethod
     def fromcache(cls, cache, iterable=()):
@@ -129,18 +115,15 @@ class Deque(Sequence):
         self.extend(iterable)
         return self
 
-
     @property
     def cache(self):
         "Cache used by deque."
         return self._cache
 
-
     @property
     def directory(self):
         "Directory path where deque is stored."
         return self._cache.directory
-
 
     def _index(self, index, func):
         len_self = len(self)
@@ -172,7 +155,6 @@ class Deque(Sequence):
 
         raise IndexError('deque index out of range')
 
-
     def __getitem__(self, index):
         """deque.__getitem__(index) <==> deque[index]
 
@@ -195,7 +177,6 @@ class Deque(Sequence):
         """
         return self._index(index, self._cache.__getitem__)
 
-
     def __setitem__(self, index, value):
         """deque.__setitem__(index, value) <==> deque[index] = value
 
@@ -214,9 +195,11 @@ class Deque(Sequence):
         :raises IndexError: if index out of range
 
         """
-        set_value = lambda key: self._cache.__setitem__(key, value)
-        self._index(index, set_value)
 
+        def _set_value(key):
+            return self._cache.__setitem__(key, value)
+
+        self._index(index, _set_value)
 
     def __delitem__(self, index):
         """deque.__delitem__(index) <==> del deque[index]
@@ -237,7 +220,6 @@ class Deque(Sequence):
         """
         self._index(index, self._cache.__delitem__)
 
-
     def __repr__(self):
         """deque.__repr__() <==> repr(deque)
 
@@ -247,14 +229,12 @@ class Deque(Sequence):
         name = type(self).__name__
         return '{0}(directory={1!r})'.format(name, self.directory)
 
-
     __eq__ = _make_compare(op.eq, 'equal to')
     __ne__ = _make_compare(op.ne, 'not equal to')
     __lt__ = _make_compare(op.lt, 'less than')
     __gt__ = _make_compare(op.gt, 'greater than')
     __le__ = _make_compare(op.le, 'less than or equal to')
     __ge__ = _make_compare(op.ge, 'greater than or equal to')
-
 
     def __iadd__(self, iterable):
         """deque.__iadd__(iterable) <==> deque += iterable
@@ -267,7 +247,6 @@ class Deque(Sequence):
         """
         self.extend(iterable)
         return self
-
 
     def __iter__(self):
         """deque.__iter__() <==> iter(deque)
@@ -283,7 +262,6 @@ class Deque(Sequence):
             except KeyError:
                 pass
 
-
     def __len__(self):
         """deque.__len__() <==> len(deque)
 
@@ -291,7 +269,6 @@ class Deque(Sequence):
 
         """
         return len(self._cache)
-
 
     def __reversed__(self):
         """deque.__reversed__() <==> reversed(deque)
@@ -315,14 +292,11 @@ class Deque(Sequence):
             except KeyError:
                 pass
 
-
     def __getstate__(self):
         return self.directory
 
-
     def __setstate__(self, state):
         self.__init__(directory=state)
-
 
     def append(self, value):
         """Add `value` to back of deque.
@@ -339,7 +313,6 @@ class Deque(Sequence):
         """
         self._cache.push(value, retry=True)
 
-
     def appendleft(self, value):
         """Add `value` to front of deque.
 
@@ -355,7 +328,6 @@ class Deque(Sequence):
         """
         self._cache.push(value, side='front', retry=True)
 
-
     def clear(self):
         """Remove all elements from deque.
 
@@ -368,7 +340,6 @@ class Deque(Sequence):
 
         """
         self._cache.clear(retry=True)
-
 
     def count(self, value):
         """Return number of occurrences of `value` in deque.
@@ -388,7 +359,6 @@ class Deque(Sequence):
         """
         return sum(1 for item in self if value == item)
 
-
     def extend(self, iterable):
         """Extend back side of deque with values from `iterable`.
 
@@ -397,7 +367,6 @@ class Deque(Sequence):
         """
         for value in iterable:
             self.append(value)
-
 
     def extendleft(self, iterable):
         """Extend front side of deque with value from `iterable`.
@@ -412,7 +381,6 @@ class Deque(Sequence):
         """
         for value in iterable:
             self.appendleft(value)
-
 
     def peek(self):
         """Peek at value at back of deque.
@@ -440,9 +408,8 @@ class Deque(Sequence):
             raise IndexError('peek from an empty deque')
         return value
 
-
     def peekleft(self):
-        """Peek at value at back of deque.
+        """Peek at value at front of deque.
 
         Faster than indexing deque at 0.
 
@@ -466,7 +433,6 @@ class Deque(Sequence):
         if value is ENOVAL:
             raise IndexError('peek from an empty deque')
         return value
-
 
     def pop(self):
         """Remove and return value at back of deque.
@@ -494,7 +460,6 @@ class Deque(Sequence):
             raise IndexError('pop from an empty deque')
         return value
 
-
     def popleft(self):
         """Remove and return value at front of deque.
 
@@ -518,7 +483,6 @@ class Deque(Sequence):
         if value is ENOVAL:
             raise IndexError('pop from an empty deque')
         return value
-
 
     def remove(self, value):
         """Remove first occurrence of `value` in deque.
@@ -557,7 +521,6 @@ class Deque(Sequence):
 
         raise ValueError('deque.remove(value): value not in deque')
 
-
     def reverse(self):
         """Reverse deque in place.
 
@@ -579,7 +542,6 @@ class Deque(Sequence):
         directory = temp.directory
         del temp
         rmtree(directory)
-
 
     def rotate(self, steps=1):
         """Rotate deque right by `steps`.
@@ -629,9 +591,7 @@ class Deque(Sequence):
                 else:
                     self.append(value)
 
-
-    __hash__ = None
-
+    __hash__ = None  # type: ignore
 
     @contextmanager
     def transact(self):
@@ -682,6 +642,7 @@ class Index(MutableMapping):
     ('c', 3)
 
     """
+
     def __init__(self, *args, **kwargs):
         """Initialize index in directory and update items.
 
@@ -699,7 +660,7 @@ class Index(MutableMapping):
         4
 
         """
-        if args and isinstance(args[0], (BytesType, TextType)):
+        if args and isinstance(args[0], (bytes, str)):
             directory = args[0]
             args = args[1:]
         else:
@@ -708,7 +669,6 @@ class Index(MutableMapping):
             directory = None
         self._cache = Cache(directory, eviction_policy='none')
         self.update(*args, **kwargs)
-
 
     @classmethod
     def fromcache(cls, cache, *args, **kwargs):
@@ -737,18 +697,15 @@ class Index(MutableMapping):
         self.update(*args, **kwargs)
         return self
 
-
     @property
     def cache(self):
         "Cache used by index."
         return self._cache
 
-
     @property
     def directory(self):
         "Directory path where items are stored."
         return self._cache.directory
-
 
     def __getitem__(self, key):
         """index.__getitem__(key) <==> index[key]
@@ -773,7 +730,6 @@ class Index(MutableMapping):
         """
         return self._cache[key]
 
-
     def __setitem__(self, key, value):
         """index.__setitem__(key, value) <==> index[key] = value
 
@@ -790,7 +746,6 @@ class Index(MutableMapping):
 
         """
         self._cache[key] = value
-
 
     def __delitem__(self, key):
         """index.__delitem__(key) <==> del index[key]
@@ -813,7 +768,6 @@ class Index(MutableMapping):
 
         """
         del self._cache[key]
-
 
     def setdefault(self, key, default=None):
         """Set and get value for `key` in index using `default`.
@@ -839,7 +793,6 @@ class Index(MutableMapping):
             except KeyError:
                 _cache.add(key, default, retry=True)
 
-
     def peekitem(self, last=True):
         """Peek at key and value item pair in index based on iteration order.
 
@@ -857,7 +810,6 @@ class Index(MutableMapping):
 
         """
         return self._cache.peekitem(last, retry=True)
-
 
     def pop(self, key, default=ENOVAL):
         """Remove corresponding item for `key` from index and return value.
@@ -889,7 +841,6 @@ class Index(MutableMapping):
             raise KeyError(key)
         return value
 
-
     def popitem(self, last=True):
         """Remove and return item pair.
 
@@ -915,7 +866,7 @@ class Index(MutableMapping):
         :raises KeyError: if index is empty
 
         """
-        # pylint: disable=arguments-differ
+        # pylint: disable=arguments-differ,unbalanced-tuple-unpacking
         _cache = self._cache
 
         with _cache.transact(retry=True):
@@ -923,7 +874,6 @@ class Index(MutableMapping):
             del _cache[key]
 
         return key, value
-
 
     def push(self, value, prefix=None, side='back'):
         """Push `value` onto `side` of queue in index identified by `prefix`.
@@ -955,7 +905,6 @@ class Index(MutableMapping):
 
         """
         return self._cache.push(value, prefix, side, retry=True)
-
 
     def pull(self, prefix=None, default=(None, None), side='front'):
         """Pull key and value item pair from `side` of queue in index.
@@ -997,7 +946,6 @@ class Index(MutableMapping):
         """
         return self._cache.pull(prefix, default, side, retry=True)
 
-
     def clear(self):
         """Remove all items from index.
 
@@ -1011,7 +959,6 @@ class Index(MutableMapping):
         """
         self._cache.clear(retry=True)
 
-
     def __iter__(self):
         """index.__iter__() <==> iter(index)
 
@@ -1019,7 +966,6 @@ class Index(MutableMapping):
 
         """
         return iter(self._cache)
-
 
     def __reversed__(self):
         """index.__reversed__() <==> reversed(index)
@@ -1037,7 +983,6 @@ class Index(MutableMapping):
         """
         return reversed(self._cache)
 
-
     def __len__(self):
         """index.__len__() <==> len(index)
 
@@ -1046,209 +991,55 @@ class Index(MutableMapping):
         """
         return len(self._cache)
 
+    def keys(self):
+        """Set-like object providing a view of index keys.
 
-    if sys.hexversion < 0x03000000:
-        def keys(self):
-            """List of index keys.
+        >>> index = Index()
+        >>> index.update({'a': 1, 'b': 2, 'c': 3})
+        >>> keys_view = index.keys()
+        >>> 'b' in keys_view
+        True
 
-            >>> index = Index()
-            >>> index.update([('a', 1), ('b', 2), ('c', 3)])
-            >>> index.keys()
-            ['a', 'b', 'c']
+        :return: keys view
 
-            :return: list of keys
+        """
+        return KeysView(self)
 
-            """
-            return list(self._cache)
+    def values(self):
+        """Set-like object providing a view of index values.
 
+        >>> index = Index()
+        >>> index.update({'a': 1, 'b': 2, 'c': 3})
+        >>> values_view = index.values()
+        >>> 2 in values_view
+        True
 
-        def values(self):
-            """List of index values.
+        :return: values view
 
-            >>> index = Index()
-            >>> index.update([('a', 1), ('b', 2), ('c', 3)])
-            >>> index.values()
-            [1, 2, 3]
+        """
+        return ValuesView(self)
 
-            :return: list of values
+    def items(self):
+        """Set-like object providing a view of index items.
 
-            """
-            return list(self.itervalues())
+        >>> index = Index()
+        >>> index.update({'a': 1, 'b': 2, 'c': 3})
+        >>> items_view = index.items()
+        >>> ('b', 2) in items_view
+        True
 
+        :return: items view
 
-        def items(self):
-            """List of index items.
+        """
+        return ItemsView(self)
 
-            >>> index = Index()
-            >>> index.update([('a', 1), ('b', 2), ('c', 3)])
-            >>> index.items()
-            [('a', 1), ('b', 2), ('c', 3)]
-
-            :return: list of items
-
-            """
-            return list(self.iteritems())
-
-
-        def iterkeys(self):
-            """Iterator of index keys.
-
-            >>> index = Index()
-            >>> index.update([('a', 1), ('b', 2), ('c', 3)])
-            >>> list(index.iterkeys())
-            ['a', 'b', 'c']
-
-            :return: iterator of keys
-
-            """
-            return iter(self._cache)
-
-
-        def itervalues(self):
-            """Iterator of index values.
-
-            >>> index = Index()
-            >>> index.update([('a', 1), ('b', 2), ('c', 3)])
-            >>> list(index.itervalues())
-            [1, 2, 3]
-
-            :return: iterator of values
-
-            """
-            _cache = self._cache
-
-            for key in _cache:
-                while True:
-                    try:
-                        yield _cache[key]
-                    except KeyError:
-                        pass
-                    break
-
-
-        def iteritems(self):
-            """Iterator of index items.
-
-            >>> index = Index()
-            >>> index.update([('a', 1), ('b', 2), ('c', 3)])
-            >>> list(index.iteritems())
-            [('a', 1), ('b', 2), ('c', 3)]
-
-            :return: iterator of items
-
-            """
-            _cache = self._cache
-
-            for key in _cache:
-                while True:
-                    try:
-                        yield key, _cache[key]
-                    except KeyError:
-                        pass
-                    break
-
-
-        def viewkeys(self):
-            """Set-like object providing a view of index keys.
-
-            >>> index = Index()
-            >>> index.update({'a': 1, 'b': 2, 'c': 3})
-            >>> keys_view = index.viewkeys()
-            >>> 'b' in keys_view
-            True
-
-            :return: keys view
-
-            """
-            return KeysView(self)
-
-
-        def viewvalues(self):
-            """Set-like object providing a view of index values.
-
-            >>> index = Index()
-            >>> index.update({'a': 1, 'b': 2, 'c': 3})
-            >>> values_view = index.viewvalues()
-            >>> 2 in values_view
-            True
-
-            :return: values view
-
-            """
-            return ValuesView(self)
-
-
-        def viewitems(self):
-            """Set-like object providing a view of index items.
-
-            >>> index = Index()
-            >>> index.update({'a': 1, 'b': 2, 'c': 3})
-            >>> items_view = index.viewitems()
-            >>> ('b', 2) in items_view
-            True
-
-            :return: items view
-
-            """
-            return ItemsView(self)
-
-
-    else:
-        def keys(self):
-            """Set-like object providing a view of index keys.
-
-            >>> index = Index()
-            >>> index.update({'a': 1, 'b': 2, 'c': 3})
-            >>> keys_view = index.keys()
-            >>> 'b' in keys_view
-            True
-
-            :return: keys view
-
-            """
-            return KeysView(self)
-
-
-        def values(self):
-            """Set-like object providing a view of index values.
-
-            >>> index = Index()
-            >>> index.update({'a': 1, 'b': 2, 'c': 3})
-            >>> values_view = index.values()
-            >>> 2 in values_view
-            True
-
-            :return: values view
-
-            """
-            return ValuesView(self)
-
-
-        def items(self):
-            """Set-like object providing a view of index items.
-
-            >>> index = Index()
-            >>> index.update({'a': 1, 'b': 2, 'c': 3})
-            >>> items_view = index.items()
-            >>> ('b', 2) in items_view
-            True
-
-            :return: items view
-
-            """
-            return ItemsView(self)
-
-
-    __hash__ = None
-
+    __hash__ = None  # type: ignore
 
     def __getstate__(self):
         return self.directory
 
-
     def __setstate__(self, state):
         self.__init__(state)
-
 
     def __eq__(self, other):
         """index.__eq__(other) <==> index == other
@@ -1283,7 +1074,6 @@ class Index(MutableMapping):
         else:
             return all(self[key] == other.get(key, ENOVAL) for key in self)
 
-
     def __ne__(self, other):
         """index.__ne__(other) <==> index != other
 
@@ -1306,7 +1096,6 @@ class Index(MutableMapping):
 
         """
         return not self == other
-
 
     def memoize(self, name=None, typed=False):
         """Memoizing cache decorator.
@@ -1364,7 +1153,6 @@ class Index(MutableMapping):
         """
         return self._cache.memoize(name, typed)
 
-
     @contextmanager
     def transact(self):
         """Context manager to perform a transaction by locking the index.
@@ -1391,7 +1179,6 @@ class Index(MutableMapping):
         """
         with self._cache.transact(retry=True):
             yield
-
 
     def __repr__(self):
         """index.__repr__() <==> repr(index)
