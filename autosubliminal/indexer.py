@@ -41,7 +41,7 @@ def authenticate(func):
     return wrapper
 
 
-class Indexer(ABC):
+class _BaseIndexer(ABC):
     """
     Base class for all indexers.
     """
@@ -60,7 +60,7 @@ class Indexer(ABC):
         pass
 
 
-class ShowIndexer(Indexer):
+class ShowIndexer(_BaseIndexer):
     """
     Indexer for tv shows, which uses the TVDB api.
     """
@@ -238,7 +238,7 @@ class ShowIndexer(Indexer):
         return ShowEpisodeDetails.from_indexer(api_obj) if episode else None
 
 
-class MovieIndexer(Indexer):
+class MovieIndexer(_BaseIndexer):
     """
     Indexer for movies, which uses the IMDB api.
     """
