@@ -68,11 +68,11 @@
               <span class="p-column-title">Score</span>
               <span class="p-column-data">
                 <span>{{subtitle.score}}</span>
-                <a *ngIf="subtitle.score < scores.min" class="icon-link" (click)="showScoreDetails(subtitle)">
-                  <i class="pi pi-fw pi-times-circle text-warning" aria-hidden="true" title="Click to show score details"></i>
+                <a *ngIf="subtitle.score < scores.min" class="icon-link ml-1" (click)="showScoreDetails(subtitle)">
+                  <i class="fa fa-times-circle text-warning" aria-hidden="true" title="Click to show score details"></i>
                 </a>
-                <a *ngIf="subtitle.score >= scores.min" class="icon-link" (click)="showScoreDetails(subtitle)">
-                  <i class="pi pi-fw pi-check-circle text-success" aria-hidden="true" title="Click to show score details"></i>
+                <a *ngIf="subtitle.score >= scores.min" class="icon-link ml-1" (click)="showScoreDetails(subtitle)">
+                  <i class="fa fa-check-circle text-success" aria-hidden="true" title="Click to show score details"></i>
                 </a>
               </span>
             </td>
@@ -175,10 +175,10 @@
       <li *ngFor="let scoreMatch of getScoreMatches()">{{scoreMatch}}</li>
     </ul>
     <div>
-      <i class="pi pi-arrow-right" aria-hidden="true"></i>
+      <i class="fa fa-arrow-right" aria-hidden="true"></i>
       Calculated score: {{score}}
-      <i *ngIf="score < scores.min" class="pi pi-times-circle text-warning" aria-hidden="true" title="Below minimum required configured score"></i>
-      <i *ngIf="score >= scores.min" class="pi pi-check-circle text-success" aria-hidden="true" title="Equal or more than minimum required configured score"></i>
+      <i *ngIf="score < scores.min" class="fa fa-times-circle text-warning" aria-hidden="true" title="Below minimum required configured score"></i>
+      <i *ngIf="score >= scores.min" class="fa fa-check-circle text-success" aria-hidden="true" title="Equal or more than minimum required configured score"></i>
     </div>
     <br>
     <div>Minimum required default score: {{scores.default}}</div>
