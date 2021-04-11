@@ -12,8 +12,18 @@ import time
 # Check minimal python version
 MIN_PYTHON_VERSION = (3, 6)
 if sys.version_info < MIN_PYTHON_VERSION:
-    print('ERROR: Python 3.6 or higher is required. Exiting.')
+    print('ERROR: Python 3.6 or higher is required.')
     os._exit(1)
+
+# Check if pywin32 is installed on Windows
+if os.name == 'nt':
+    try:
+        import win32api  # noqa: F401
+    except ImportError:
+        print('ERROR: Auto-Subliminal requires \'pywin32\' on Windows.')
+        print('ERROR: Please run \'pip install pywin32\' in your Python environment.')
+        os._exit(1)
+
 
 # Insert the lib folder at the beginning of the python system path
 # This to prevent installation of the libraries and to prevent the 'lib.' prefix when importing the libraries
@@ -83,7 +93,7 @@ def main(argv=None):
                 if os.path.exists(value):
                     autosubliminal.CONFIGFILE = value
                 else:
-                    print('ERROR: Configfile does not exists.')
+                    print('ERROR: Config file does not exist.')
                     os._exit(0)
             if option in ('-l', '--nolaunch'):
                 autosubliminal.LAUNCHBROWSER = False

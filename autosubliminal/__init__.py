@@ -294,7 +294,7 @@ def initialize():
     if os.path.exists(PATH):
         os.chdir(PATH)
     else:
-        print('ERROR: PATH does not exist, check config.')
+        print('ERROR: PATH does not exist. Please check your config.')
         os._exit(1)
 
     # Database settings

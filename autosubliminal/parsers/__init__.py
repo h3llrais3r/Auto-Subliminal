@@ -17,7 +17,7 @@ try:
     for line in response.text.splitlines():
         expected_titles.append(line)
 except Exception:
-    print('ERROR: Cannot fetch guessit title exceptions!')
+    print('ERROR: Cannot fetch guessit title exceptions.')
 
 expected_release_groups = []
 try:
@@ -26,7 +26,7 @@ try:
     for line in response.text.splitlines():
         expected_release_groups.append(line)
 except Exception:
-    print('ERROR: Cannot fetch guessit release group exceptions!')
+    print('ERROR: Cannot fetch guessit release group exceptions.')
 
 
 def guessit(string, options=None):

@@ -31,7 +31,7 @@ def read_config(check_upgrade=False):
             cfg.read_file(f)
     except Exception:
         print('***********************************************************************')
-        print('ERROR: No valid configuration file found! Using default values instead!')
+        print('ERROR: No valid configuration file found. Using default values instead.')
         print('***********************************************************************')
         cfg = _create_config_parser()
 
@@ -1498,7 +1498,7 @@ def _upgrade_config(from_version, to_version):
     try:
         shutil.copy(autosubliminal.CONFIGFILE, autosubliminal.CONFIGFILE + '.' + time.strftime('%Y%m%d%H%M%S'))
     except Exception:
-        print('ERROR: Unable to backup config file! Continuing without backup!')
+        print('ERROR: Unable to backup config file. Continuing without backup.')
     upgrades = to_version - from_version
     if upgrades != 1:
         print('INFO: More than 1 upgrade required. Starting subupgrades.')

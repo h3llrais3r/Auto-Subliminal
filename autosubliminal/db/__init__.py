@@ -126,7 +126,7 @@ def upgrade(from_version, to_version):
         backup_file = '%s.v%d.%s' % (autosubliminal.DBFILE, from_version, time.strftime('%Y%m%d%H%M%S'))
         shutil.copy(autosubliminal.DBFILE, backup_file)
     except Exception:
-        print('ERROR: Unable to backup database! Continuing without backup!')
+        print('ERROR: Unable to backup database. Continuing without backup.')
 
     upgrades = to_version - from_version
     if upgrades != 1:
