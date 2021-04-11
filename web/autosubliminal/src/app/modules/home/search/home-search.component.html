@@ -68,8 +68,11 @@
               <span class="p-column-title">Score</span>
               <span class="p-column-data">
                 <span>{{subtitle.score}}</span>
-                <a class="icon-link" (click)="showScoreDetails(subtitle)">
-                  <i class="pi pi-fw pi-info-circle" aria-hidden="true" title="Click to show score details"></i>
+                <a *ngIf="subtitle.score < scores.min" class="icon-link" (click)="showScoreDetails(subtitle)">
+                  <i class="pi pi-fw pi-times-circle text-warning" aria-hidden="true" title="Click to show score details"></i>
+                </a>
+                <a *ngIf="subtitle.score >= scores.min" class="icon-link" (click)="showScoreDetails(subtitle)">
+                  <i class="pi pi-fw pi-check-circle text-success" aria-hidden="true" title="Click to show score details"></i>
                 </a>
               </span>
             </td>
@@ -169,18 +172,14 @@
   <div *ngIf="matches" class="dialog-content">
     <div>Matches:</div>
     <ul>
-      <li *ngIf="matches.includes('hash')">Hash: {{scores.hash}}</li>
-      <li *ngIf="matches.includes('title')">Title: {{scores.title}}</li>
-      <li *ngIf="matches.includes('year')">Year: {{scores.year}}</li>
-      <li *ngIf="matches.includes('season')">Season: {{scores.season}}</li>
-      <li *ngIf="matches.includes('episode')">Episode: {{scores.episode}}</li>
-      <li *ngIf="matches.includes('source')">year: {{scores.source}}</li>
-      <li *ngIf="matches.includes('resolution')">Quality: {{scores.quality}}</li>
-      <li *ngIf="matches.includes('video_codec')">Codec: {{scores.codec}}</li>
-      <li *ngIf="matches.includes('release_group')">Release group: {{scores.releaseGroup}}</li>
-      <li *ngIf="matches.includes('hearing_impaired')">Hearing impaired: {{scores.hearingImpaired}}</li>
+      <li *ngFor="let scoreMatch of getScoreMatches()">{{scoreMatch}}</li>
     </ul>
-    <div><i class="pi pi-arrow-right" aria-hidden="true"></i>&nbsp;Calculated score: {{score}}</div>
+    <div>
+      <i class="pi pi-arrow-right" aria-hidden="true"></i>
+      Calculated score: {{score}}
+      <i *ngIf="score < scores.min" class="pi pi-times-circle text-warning" aria-hidden="true" title="Below minimum required configured score"></i>
+      <i *ngIf="score >= scores.min" class="pi pi-check-circle text-success" aria-hidden="true" title="Equal or more than minimum required configured score"></i>
+    </div>
     <br>
     <div>Minimum required default score: {{scores.default}}</div>
     <div>Minimum required configured score: {{scores.min}}</div>

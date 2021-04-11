@@ -27,7 +27,7 @@ export class HomeSearchComponent implements OnInit {
   postProcessInProgress = false;
   showScoreDetailsDialog = false;
   showSubtitlePreviewDialog = false;
-  scores: EpisodeScores | MovieScores;
+  scores: MovieScores | EpisodeScores;
   matches: string[];
   score: number;
 
@@ -74,6 +74,44 @@ export class HomeSearchComponent implements OnInit {
     this.score = subtitle.score;
     this.matches = subtitle.matches;
     this.showScoreDetailsDialog = true;
+  }
+
+  getScoreMatches(): string[] {
+    const matches: string[] = [];
+    if (this.matches.includes('hash')) {
+      matches.push(`Hash: ${this.scores.hash}`);
+    }
+    if (this.matches.includes('title')) {
+      matches.push(`Title: ${this.scores.title}`);
+    }
+    if (this.matches.includes('year')) {
+      matches.push(`Year: ${this.scores.year}`);
+    }
+    // Only available for episodes
+    if (this.wantedItem.isEpisode) {
+      if (this.matches.includes('season')) {
+        matches.push(`Season: ${(this.scores as EpisodeScores).season}`);
+      }
+      if (this.matches.includes('episode')) {
+        matches.push(`Episode: ${(this.scores as EpisodeScores).episode}`);
+      }
+    }
+    if (this.matches.includes('source')) {
+      matches.push(`Source: ${this.scores.source}`);
+    }
+    if (this.matches.includes('resolution')) {
+      matches.push(`Quality: ${this.scores.quality}`);
+    }
+    if (this.matches.includes('video_codec')) {
+      matches.push(`Codec: ${this.scores.codec}`);
+    }
+    if (this.matches.includes('release_group')) {
+      matches.push(`Release group: ${this.scores.releaseGroup}`);
+    }
+    if (this.matches.includes('hearing_impaired')) {
+      matches.push(`Hearing impaired: ${this.scores.hearingImpaired}`);
+    }
+    return matches;
   }
 
   showSubtitlePreview(subtitle: Subtitle): void {
