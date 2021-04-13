@@ -68,12 +68,12 @@
               </li>
             </ul>
           </span>
+          <app-icon-dropdown>
+            <li><span class="icon-dropdown-title">File name:</span><span>{{wantedItem.videoFileName}}</span></li>
+            <li><span class="icon-dropdown-title">File path:</span><span>{{wantedItem.videoFilePath}}</span></li>
+            <li><span class="icon-dropdown-title">File size:</span><span>{{wantedItem.videoFileSize}}</span></li>
+          </app-icon-dropdown>
           <span class="icon-group">
-            <app-icon-dropdown>
-              <li><span class="icon-dropdown-title">File name:</span><span>{{wantedItem.videoFileName}}</span></li>
-              <li><span class="icon-dropdown-title">File path:</span><span>{{wantedItem.videoFilePath}}</span></li>
-              <li><span class="icon-dropdown-title">File size:</span><span>{{wantedItem.videoFileSize}}</span></li>
-            </app-icon-dropdown>
             <ng-container *ngIf="wantedItem.isEpisode">
               <a *ngIf="!wantedItem.tvdbId" class="icon-link text-danger" (click)="searchIndexerId(wantedItem)">
                 <i class="fa fa-exclamation-triangle" aria-hidden="true" title="Click to search tvdb id"></i>

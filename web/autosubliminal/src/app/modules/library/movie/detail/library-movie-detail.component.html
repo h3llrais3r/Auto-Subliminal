@@ -21,7 +21,7 @@
             <div class="row">
               <div class="col-12 library-details-info-title">
                 <span>{{movie.name}}</span>
-                <span class="icon-group ml-1">
+                <span class="icon-group">
                   <a class="icon-link" [href]="getImdbUrl()" target="_blank">
                     <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
                   </a>
@@ -82,7 +82,7 @@
               <tr>
                 <td class="wrap-text">
                   <span>{{file.filename}}</span>
-                  <span class="icon-group ml-1">
+                  <span class="icon-group">
                     <a *ngIf="file.isVideo" class="icon-link" (click)="openVideoSubtitlesDialog(movie.path, file.filename, file.hardcodedLanguages)">
                       <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
                     </a>

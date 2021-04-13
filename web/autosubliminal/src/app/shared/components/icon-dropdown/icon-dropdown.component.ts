@@ -8,7 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 export class IconDropdownComponent implements OnInit {
 
   @Input()
-  iconClass = 'pi pi-info-circle';
+  iconClass = 'fa fa-info-circle';
 
   constructor() { }
 

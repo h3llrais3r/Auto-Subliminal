@@ -21,7 +21,7 @@
             <div class="row">
               <div class="col-12 library-details-info-title">
                 <span>{{show.name}}</span>
-                <span class="icon-group ml-1">
+                <span class="icon-group">
                   <a class="icon-link" [href]="getTvdbUrl()" target="_blank">
                     <i class="fa fa-television" aria-hidden="true" title="Click to visit Tvdb"></i>
                   </a>
@@ -96,7 +96,7 @@
               <tr>
                 <td class="wrap-text">
                   <span>{{file.filename}}</span>
-                  <span class="icon-group ml-1">
+                  <span class="icon-group">
                     <a *ngIf="file.isVideo" class="icon-link" (click)="openVideoSubtitlesDialog(season.seasonPath, file.filename, file.hardcodedLanguages, file.tvdbId)">
                       <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
                     </a>

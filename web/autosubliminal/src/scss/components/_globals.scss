@@ -81,7 +81,8 @@ body {
   .icon-group {
     display: inline-block;
 
-    >:not(:first-child) {
+    // Every direct child (icon)
+    >* {
       margin-left: 0.25rem;
     }
   }
