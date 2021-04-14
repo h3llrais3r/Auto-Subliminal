@@ -15,7 +15,7 @@
           <div class="overview-data">
             <span>
               <span>Total shows: {{showsOverview.totalShows}}</span>
-              <app-icon-dropdown iconClass="pi pi-fw pi-vm pi-exclamation-triangle text-danger" *ngIf="showsOverview.failedShows.length > 0">
+              <app-icon-dropdown iconClass="fa fa-exclamation-triangle text-danger" *ngIf="showsOverview.failedShows.length > 0">
                 <li><span class="icon-dropdown-title">List of failed shows:</span></li>
                 <hr>
                 <li *ngFor="let failedShow of showsOverview.failedShows"><span>{{failedShow}}</span></li>
@@ -42,7 +42,7 @@
           <div class="overview-data">
             <span>
               <span>Total movies: {{moviesOverview.totalMovies}}</span>
-              <app-icon-dropdown iconClass="pi pi-fw pi-vm pi-exclamation-triangle text-danger" *ngIf="moviesOverview.failedMovies.length > 0">
+              <app-icon-dropdown iconClass="fa fa-exclamation-triangle text-danger" *ngIf="moviesOverview.failedMovies.length > 0">
                 <li><span class="icon-dropdown-title">List of failed movies:</span></li>
                 <hr>
                 <li *ngFor="let failedMovie of moviesOverview.failedMovies"><span>{{failedMovie}}</span></li>
