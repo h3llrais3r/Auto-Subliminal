@@ -12,6 +12,10 @@ echo.
 echo Activating venv
 call .venv/runtime/scripts/activate
 echo.
+echo Upgrading pip and setuptools
+python -m pip install --upgrade pip
+python -m pip install --upgrade setuptools
+echo.
 echo Installing required windows dependencies
 echo.
 python -m pip install pywin32

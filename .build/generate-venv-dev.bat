@@ -12,6 +12,10 @@ echo.
 echo Activating venv
 call .venv/dev/scripts/activate
 echo.
+echo Upgrading pip and setuptools
+python -m pip install --upgrade pip
+python -m pip install --upgrade setuptools
+echo.
 echo Installing dev dependencies
 echo.
 python -m pip install -r requirements-dev.txt

@@ -11,6 +11,10 @@ echo.
 echo Activating venv
 call .venv/pipdeptree/scripts/activate
 echo.
+echo Upgrading pip and setuptools
+python -m pip install --upgrade pip
+python -m pip install --upgrade setuptools
+echo.
 echo Installing pipdeptree
 echo.
 python -m pip install pipdeptree
