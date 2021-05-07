@@ -28,7 +28,7 @@ jaraco.collections==3.3.0
 jaraco.functools==3.3.0
 jaraco.text==3.5.0
 jsonpickle==2.0.0
-langdetect==1.0.8
+langdetect==1.0.9
 more-itertools==8.7.0
 oauthlib==3.1.0
 pbr==5.5.1
