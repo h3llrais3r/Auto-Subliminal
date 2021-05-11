@@ -64,7 +64,7 @@
     "@angular-devkit/build-angular": "0.1002.0",
     "@angular/cli": "10.2.0",
     "@angular/compiler-cli": "10.2.0",
-    "@types/jasmine": "3.5.0",
+    "@types/jasmine": "3.7.2",
     "@types/jasminewd2": "2.0.3",
     "@types/jquery": "3.5.4",
     "@types/lodash-es": "4.17.4",
