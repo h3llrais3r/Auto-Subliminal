@@ -51,7 +51,7 @@
   "[python]": {
     "editor.tabSize": 4 // Python uses 4 spaces for tab
   },
-  "python.languageServer": "JediLSP",
+  "python.languageServer": "Pylance",
   "python.venvPath": "${workspaceFolder}/.venv",
   "python.pythonPath": "${workspaceFolder}/.venv\\dev\\Scripts\\python.exe",
   "python.envFile": "${workspaceFolder}/.env",
@@ -69,5 +69,9 @@
   ],
   "python.testing.unittestEnabled": false,
   "python.testing.nosetestsEnabled": false,
-  "python.testing.pytestEnabled": true
+  "python.testing.pytestEnabled": true,
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/lib"
+  ],
+  "python.analysis.completeFunctionParens": true
 }
