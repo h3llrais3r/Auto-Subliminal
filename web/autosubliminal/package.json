@@ -58,7 +58,7 @@
     "primeng": "10.0.3",
     "rxjs": "6.6.7",
     "strftime": "0.10.0",
-    "tslib": "2.0.0",
+    "tslib": "2.3.0",
     "zone.js": "0.10.3"
   },
   "devDependencies": {
