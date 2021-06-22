@@ -23,9 +23,7 @@ CherryPy==18.6.0
       - jaraco.functools [required: >=1.20, installed: 3.3.0]
         - more-itertools [required: Any, installed: 8.7.0]
       - pytz [required: Any, installed: 2021.1]
-  - pywin32 [required: Any, installed: 300]
   - zc.lockfile [required: Any, installed: 2.0]
-    - setuptools [required: Any, installed: 39.0.1]
 deathbycaptcha==0.1.1
   - requests [required: Any, installed: 2.25.1]
     - certifi [required: >=2017.4.17, installed: 2020.12.5]
@@ -51,18 +49,14 @@ imdbpie==5.6.4
     - chardet [required: >=3.0.2,<5, installed: 4.0.0]
     - idna [required: >=2.5,<3, installed: 2.10]
     - urllib3 [required: >=1.21.1,<1.27, installed: 1.26.4]
-  - setuptools [required: >=39.0.1, installed: 39.0.1]
   - six [required: >=1.0.0,<2.0.0, installed: 1.15.0]
   - trans [required: >=2.1.0,<3.0.0, installed: 2.1.0]
-  - wheel [required: ==0.30.0, installed: 0.30.0]
 jsonpickle==2.0.0
   - importlib-metadata [required: Any, installed: 3.10.0]
     - typing-extensions [required: >=3.6.4, installed: 3.7.4.3]
     - zipp [required: >=0.5, installed: 3.4.1]
 langdetect==1.0.8
   - six [required: Any, installed: 1.15.0]
-pipdeptree==2.0.0
-  - pip [required: >=6.0.0, installed: 10.0.1]
 python-anticaptcha==0.7.1
   - requests [required: Any, installed: 2.25.1]
     - certifi [required: >=2017.4.17, installed: 2020.12.5]

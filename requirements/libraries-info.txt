@@ -1,4 +1,4 @@
-# Extra info on libraries.text
+# Extra info for libraries.txt
 
 importlib-resources==5.1.2; python_version < "3.7" # only needed for jaraco.text on python < 3.7
 typing-extensions==3.7.4.3; python_version < "3.8" # only needed for import-metadata on python < 3.8
