@@ -67,12 +67,13 @@ jobs:
       run: |
         # Configuration is done in .coveragerc
         coverage run setup.py test
+        coverage report
 
-    - name: Generate python coverage report
+    - name: Publish python coverage report
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        flag-name: run-${{ matrix.test_number }}
+        flag-name: run-${{ matrix.python-version }}
         parallel: true
 
   ci-finish:
