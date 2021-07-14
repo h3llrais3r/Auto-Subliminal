@@ -36,14 +36,19 @@ jobs:
         pip install -e .[dev,test]
         pip install coveralls
 
-    - name: Install npm dependencies
+    - name: Set up npm
+      shell: bash -l {0} # nvm requires shell
       run: |
         cd web/autosubliminal
         # Install minimal required node version from package.json
         nvm install "$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
         node --version
         npm --version
-        # Install dependencies
+        cd ../..
+
+    - name: Install npm dependencies
+      run: |
+        cd web/autosubliminal
         npm install
         cd ../..
 
