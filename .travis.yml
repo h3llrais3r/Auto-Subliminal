@@ -61,4 +61,5 @@ script:
 
 # After success command(s)
 after_success:
-  - coveralls
+  - echo "Coveralls disabled"
+  # - coveralls
