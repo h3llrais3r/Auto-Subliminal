@@ -77,7 +77,7 @@ jobs:
 
   ci-finish:
 
-    needs: ci
+    needs: ci-linux
 
     runs-on: ubuntu-latest
 
