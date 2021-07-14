@@ -34,7 +34,7 @@ jobs:
         pip install --upgrade six
         pip install --upgrade pytest
         pip install -e .[dev,test]
-        pip install coveralls
+        pip install --upgrade coveralls
 
     - name: Set up npm
       shell: bash -l {0} # nvm requires shell
@@ -70,11 +70,12 @@ jobs:
         coverage report
 
     - name: Publish python coverage report
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        flag-name: run-${{ matrix.python-version }}
-        parallel: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
+        COVERALLS_PARALLEL: true
+      run: |
+        coveralls
 
   ci-finish:
 
@@ -83,8 +84,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: Install python dependencies
+      run: |
+        pip install --upgrade coveralls
+
     - name: Aggregate python coverage reports
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        parallel-finished: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        pip install --upgrade coveralls
+        coveralls --finish
