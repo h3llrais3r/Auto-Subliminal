@@ -75,6 +75,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         COVERALLS_FLAG_NAME: python${{ matrix.python-version }}
         COVERALLS_PARALLEL: true
+        # Set service name as work around -> https://github.com/TheKevJames/coveralls-python/issues/252
+        COVERALLS_SERVICE_NAME: github
       run: |
         coveralls
 
