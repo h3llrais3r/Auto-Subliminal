@@ -21,7 +21,8 @@ jobs:
         python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
 
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
@@ -72,7 +73,7 @@ jobs:
     - name: Publish python coverage report
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        COVERALLS_FLAG_NAME: ${{ matrix.python-version }}
+        COVERALLS_FLAG_NAME: python${{ matrix.python-version }}
         COVERALLS_PARALLEL: true
       run: |
         coveralls
@@ -93,5 +94,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        pip install --upgrade coveralls
         coveralls --finish
