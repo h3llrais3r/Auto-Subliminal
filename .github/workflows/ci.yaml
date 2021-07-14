@@ -69,5 +69,23 @@ jobs:
         coverage run setup.py test
 
     - name: Generate python coverage report
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        flag-name: run-${{ matrix.test_number }}
+        parallel: true
       run: |
         coveralls
+
+  ci-finish:
+
+    needs: ci
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Aggregate python coverage reports
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true
