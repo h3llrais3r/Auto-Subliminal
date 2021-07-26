@@ -46,7 +46,7 @@ settings_json = '{"antiCaptchaProviders": [], ' \
                 '"checkSub": "SubChecker", ' \
                 '"checkSubNextRunInMs": 61000, ' \
                 '"checkVersion": "VersionChecker", ' \
-                '"dereferUrl": "http://www.dereferer.org/?", ' \
+                '"dereferUrl": "https://dereferer.me/?", ' \
                 '"developerMode": true, ' \
                 '"episodeScores": ' + episode_scores_json + ', ' \
                 '"imdbUrl": "http://www.imdb.com/title/", ' \
@@ -93,7 +93,7 @@ def test_get_settings(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.LIBRARYMODE', False)
     monkeypatch.setattr('autosubliminal.LOGREVERSED', False)
     monkeypatch.setattr('autosubliminal.MANUALREFINEVIDEO', False)
-    monkeypatch.setattr('autosubliminal.DEREFERURL', 'http://www.dereferer.org/?')
+    monkeypatch.setattr('autosubliminal.DEREFERURL', 'https://dereferer.me/?')
     monkeypatch.setattr('autosubliminal.TVDBURL', 'http://thetvdb.com/?tab=series&id=')
     monkeypatch.setattr('autosubliminal.IMDBURL', 'http://www.imdb.com/title/')
     monkeypatch.setattr('autosubliminal.TIMESTAMPFORMAT', '%d-%m-%Y %H:%M:%S')

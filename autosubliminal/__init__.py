@@ -231,7 +231,7 @@ def initialize():
     # System settings
     PATH = os.path.abspath(os.getcwd())
     CACHEDIR = os.path.abspath(os.path.join(PATH, 'cache'))
-    DEREFERURL = 'http://www.dereferer.org/?'
+    DEREFERURL = 'https://dereferer.me/?'
     GITHUBURL = 'https://github.com/h3llrais3r/Auto-Subliminal'
     VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py'
     USERAGENT = 'Auto-Subliminal/' + version.RELEASE_VERSION
