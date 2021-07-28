@@ -88,10 +88,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
     this.itemService.getWantedItems().subscribe(
       (wantedItems) => {
         this.wantedItems = wantedItems;
-        const total = wantedItems.length;
-        const totalEpisodes = wantedItems.filter((wantedItem) => wantedItem.isEpisode).length;
-        const totalMovies = wantedItems.filter((wantedItem) => wantedItem.isMovie).length;
-        this.totals.emit({ total, totalEpisodes, totalMovies });
+        this.emitTotals();
         this.loading = false;
       },
       () => {
@@ -218,5 +215,13 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
 
   private removeWantedItemFromList(wantedItem: WantedItem): void {
     this.wantedItems = this.wantedItems.filter((item) => item.id !== wantedItem.id);
+    this.emitTotals();
+  }
+
+  private emitTotals(): void {
+    const total = this.wantedItems.length;
+    const totalEpisodes = this.wantedItems.filter((wantedItem) => wantedItem.isEpisode).length;
+    const totalMovies = this.wantedItems.filter((wantedItem) => wantedItem.isMovie).length;
+    this.totals.emit({ total, totalEpisodes, totalMovies });
   }
 }
