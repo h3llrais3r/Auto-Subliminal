@@ -70,7 +70,7 @@
     "@types/jquery": "3.5.6",
     "@types/lodash-es": "4.17.4",
     "@types/natural-compare": "1.4.0",
-    "@types/node": "12.20.16",
+    "@types/node": "12.20.17",
     "@types/strftime": "0.9.2",
     "codelyzer": "6.0.2",
     "concurrently": "6.2.0",
