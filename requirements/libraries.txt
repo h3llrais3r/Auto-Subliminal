@@ -59,4 +59,4 @@ urllib3==1.26.4
 webencodings==0.5.1
 ws4py==0.5.1
 zc.lockfile==2.0
-zipp==3.4.1
+zipp==3.5.0
