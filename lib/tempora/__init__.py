@@ -6,6 +6,7 @@ import re
 import numbers
 import functools
 import warnings
+import contextlib
 
 from jaraco.functools import once
 
@@ -459,33 +460,184 @@ def parse_timedelta(str):
     >>> diff = later.replace(year=now.year) - now
     >>> diff.seconds
     20940
-    """
-    deltas = (_parse_timedelta_part(part.strip()) for part in str.split(','))
-    return sum(deltas, datetime.timedelta())
 
-
-def _parse_timedelta_part(part):
-    """
-    >>> _parse_timedelta_part('foo')
+    >>> parse_timedelta('14 seconds foo')
     Traceback (most recent call last):
     ...
-    ValueError: Unable to parse 'foo' as a time delta
+    ValueError: Unexpected 'foo'
+
+    Supports abbreviations:
+
+    >>> parse_timedelta('1s')
+    datetime.timedelta(seconds=1)
+
+    >>> parse_timedelta('1sec')
+    datetime.timedelta(seconds=1)
+
+    >>> parse_timedelta('5min1sec')
+    datetime.timedelta(seconds=301)
+
+    >>> parse_timedelta('1 ms')
+    datetime.timedelta(microseconds=1000)
+
+    >>> parse_timedelta('1 µs')
+    datetime.timedelta(microseconds=1)
+
+    >>> parse_timedelta('1 us')
+    datetime.timedelta(microseconds=1)
+
+    And supports the common colon-separated duration:
+
+    >>> parse_timedelta('14:00:35.362')
+    datetime.timedelta(seconds=50435, microseconds=362000)
+
+    TODO: Should this be 14 hours or 14 minutes?
+    >>> parse_timedelta('14:00')
+    datetime.timedelta(seconds=50400)
+
+    >>> parse_timedelta('14:00 minutes')
+    Traceback (most recent call last):
+    ...
+    ValueError: Cannot specify units with composite delta
+
+    Nanoseconds get rounded to the nearest microsecond:
+
+    >>> parse_timedelta('600 ns')
+    datetime.timedelta(microseconds=1)
+
+    >>> parse_timedelta('.002 µs, 499 ns')
+    datetime.timedelta(microseconds=1)
     """
-    match = re.match(r'(?P<value>[\d.]+) (?P<unit>\w+)', part)
-    if not match:
-        msg = "Unable to parse {part!r} as a time delta".format(**locals())
-        raise ValueError(msg)
-    unit = match.group('unit').lower()
+    return _parse_timedelta_nanos(str).resolve()
+
+
+def _parse_timedelta_nanos(str):
+    parts = re.finditer(r'(?P<value>[\d.:]+)\s?(?P<unit>[^\W\d_]+)?', str)
+    chk_parts = _check_unmatched(parts, str)
+    deltas = map(_parse_timedelta_part, chk_parts)
+    return sum(deltas, _Saved_NS())
+
+
+def _check_unmatched(matches, text):
+    """
+    Ensure no words appear in unmatched text.
+    """
+
+    def check_unmatched(unmatched):
+        found = re.search(r'\w+', unmatched)
+        if found:
+            raise ValueError(f"Unexpected {found.group(0)!r}")
+
+    pos = 0
+    for match in matches:
+        check_unmatched(text[pos : match.start()])
+        yield match
+        pos = match.end()
+    check_unmatched(text[match.end() :])
+
+
+_unit_lookup = {
+    'µs': 'microsecond',
+    'µsec': 'microsecond',
+    'us': 'microsecond',
+    'usec': 'microsecond',
+    'micros': 'microsecond',
+    'ms': 'millisecond',
+    'msec': 'millisecond',
+    'millis': 'millisecond',
+    's': 'second',
+    'sec': 'second',
+    'h': 'hour',
+    'hr': 'hour',
+    'm': 'minute',
+    'min': 'minute',
+    'w': 'week',
+    'wk': 'week',
+    'd': 'day',
+    'ns': 'nanosecond',
+    'nsec': 'nanosecond',
+    'nanos': 'nanosecond',
+}
+
+
+def _resolve_unit(raw_match):
+    if raw_match is None:
+        return 'second'
+    text = raw_match.lower()
+    return _unit_lookup.get(text, text)
+
+
+def _parse_timedelta_composite(raw_value, unit):
+    if unit != 'seconds':
+        raise ValueError("Cannot specify units with composite delta")
+    values = raw_value.split(':')
+    units = 'hours', 'minutes', 'seconds'
+    composed = ' '.join(f'{value} {unit}' for value, unit in zip(values, units))
+    return _parse_timedelta_nanos(composed)
+
+
+def _parse_timedelta_part(match):
+    unit = _resolve_unit(match.group('unit'))
     if not unit.endswith('s'):
         unit += 's'
-    value = float(match.group('value'))
+    raw_value = match.group('value')
+    if ':' in raw_value:
+        return _parse_timedelta_composite(raw_value, unit)
+    value = float(raw_value)
     if unit == 'months':
         unit = 'years'
         value = value / 12
     if unit == 'years':
         unit = 'days'
         value = value * days_per_year
-    return datetime.timedelta(**{unit: value})
+    return _Saved_NS.derive(unit, value)
+
+
+class _Saved_NS:
+    """
+    Bundle a timedelta with nanoseconds.
+
+    >>> _Saved_NS.derive('microseconds', .001)
+    _Saved_NS(td=datetime.timedelta(0), nanoseconds=1)
+    """
+
+    td = datetime.timedelta()
+    nanoseconds = 0
+    multiplier = dict(
+        seconds=1000000000,
+        milliseconds=1000000,
+        microseconds=1000,
+    )
+
+    def __init__(self, **kwargs):
+        vars(self).update(kwargs)
+
+    @classmethod
+    def derive(cls, unit, value):
+        if unit == 'nanoseconds':
+            return _Saved_NS(nanoseconds=value)
+
+        res = _Saved_NS(td=datetime.timedelta(**{unit: value}))
+        with contextlib.suppress(KeyError):
+            res.nanoseconds = int(value * cls.multiplier[unit]) % 1000
+        return res
+
+    def __add__(self, other):
+        return _Saved_NS(
+            td=self.td + other.td, nanoseconds=self.nanoseconds + other.nanoseconds
+        )
+
+    def resolve(self):
+        """
+        Resolve any nanoseconds into the microseconds field,
+        discarding any nanosecond resolution (but honoring partial
+        microseconds).
+        """
+        addl_micros = round(self.nanoseconds / 1000)
+        return self.td + datetime.timedelta(microseconds=addl_micros)
+
+    def __repr__(self):
+        return f'_Saved_NS(td={self.td!r}, nanoseconds={self.nanoseconds!r})'
 
 
 def divide_timedelta(td1, td2):
