@@ -5,8 +5,19 @@
 # the BSD License: http://www.opensource.org/licenses/bsd-license.php
 """ Module containing all exceptions thrown throughout the git package, """
 
+from gitdb.exc import BadName  # NOQA @UnusedWildImport skipcq: PYL-W0401, PYL-W0614
 from gitdb.exc import *     # NOQA @UnusedWildImport skipcq: PYL-W0401, PYL-W0614
 from git.compat import safe_decode
+
+# typing ----------------------------------------------------
+
+from typing import List, Sequence, Tuple, Union, TYPE_CHECKING
+from git.types import PathLike
+
+if TYPE_CHECKING:
+    from git.repo.base import Repo
+
+# ------------------------------------------------------------------
 
 
 class GitError(Exception):
@@ -37,7 +48,10 @@ class CommandError(GitError):
     #:     "'%s' failed%s"
     _msg = "Cmd('%s') failed%s"
 
-    def __init__(self, command, status=None, stderr=None, stdout=None):
+    def __init__(self, command: Union[List[str], Tuple[str, ...], str],
+                 status: Union[str, int, None, Exception] = None,
+                 stderr: Union[bytes, str, None] = None,
+                 stdout: Union[bytes, str, None] = None) -> None:
         if not isinstance(command, (tuple, list)):
             command = command.split()
         self.command = command
@@ -55,10 +69,12 @@ class CommandError(GitError):
         self._cmd = safe_decode(command[0])
         self._cmdline = ' '.join(safe_decode(i) for i in command)
         self._cause = status and " due to: %s" % status or "!"
-        self.stdout = stdout and "\n  stdout: '%s'" % safe_decode(stdout) or ''
-        self.stderr = stderr and "\n  stderr: '%s'" % safe_decode(stderr) or ''
+        stdout_decode = safe_decode(stdout)
+        stderr_decode = safe_decode(stderr)
+        self.stdout = stdout_decode and "\n  stdout: '%s'" % stdout_decode or ''
+        self.stderr = stderr_decode and "\n  stderr: '%s'" % stderr_decode or ''
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (self._msg + "\n  cmdline: %s%s%s") % (
             self._cmd, self._cause, self._cmdline, self.stdout, self.stderr)
 
@@ -66,7 +82,8 @@ class CommandError(GitError):
 class GitCommandNotFound(CommandError):
     """Thrown if we cannot find the `git` executable in the PATH or at the path given by
     the GIT_PYTHON_GIT_EXECUTABLE environment variable"""
-    def __init__(self, command, cause):
+
+    def __init__(self, command: Union[List[str], Tuple[str], str], cause: Union[str, Exception]) -> None:
         super(GitCommandNotFound, self).__init__(command, cause)
         self._msg = "Cmd('%s') not found%s"
 
@@ -74,7 +91,11 @@ class GitCommandNotFound(CommandError):
 class GitCommandError(CommandError):
     """ Thrown if execution of the git command fails with non-zero status code. """
 
-    def __init__(self, command, status, stderr=None, stdout=None):
+    def __init__(self, command: Union[List[str], Tuple[str, ...], str],
+                 status: Union[str, int, None, Exception] = None,
+                 stderr: Union[bytes, str, None] = None,
+                 stdout: Union[bytes, str, None] = None,
+                 ) -> None:
         super(GitCommandError, self).__init__(command, status, stderr, stdout)
 
 
@@ -92,13 +113,15 @@ class CheckoutError(GitError):
     were checked out successfully and hence match the version stored in the
     index"""
 
-    def __init__(self, message, failed_files, valid_files, failed_reasons):
+    def __init__(self, message: str, failed_files: Sequence[PathLike], valid_files: Sequence[PathLike],
+                 failed_reasons: List[str]) -> None:
+
         Exception.__init__(self, message)
         self.failed_files = failed_files
         self.failed_reasons = failed_reasons
         self.valid_files = valid_files
 
-    def __str__(self):
+    def __str__(self) -> str:
         return Exception.__str__(self) + ":%s" % self.failed_files
 
 
@@ -116,7 +139,11 @@ class HookExecutionError(CommandError):
     """Thrown if a hook exits with a non-zero exit code. It provides access to the exit code and the string returned
     via standard output"""
 
-    def __init__(self, command, status, stderr=None, stdout=None):
+    def __init__(self, command: Union[List[str], Tuple[str, ...], str],
+                 status: Union[str, int, None, Exception],
+                 stderr: Union[bytes, str, None] = None,
+                 stdout: Union[bytes, str, None] = None) -> None:
+
         super(HookExecutionError, self).__init__(command, status, stderr, stdout)
         self._msg = "Hook('%s') failed%s"
 
@@ -124,9 +151,9 @@ class HookExecutionError(CommandError):
 class RepositoryDirtyError(GitError):
     """Thrown whenever an operation on a repository fails as it has uncommitted changes that would be overwritten"""
 
-    def __init__(self, repo, message):
+    def __init__(self, repo: 'Repo', message: str) -> None:
         self.repo = repo
         self.message = message
 
-    def __str__(self):
+    def __str__(self) -> str:
         return "Operation cannot be performed on %r: %s" % (self.repo, self.message)
