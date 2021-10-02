@@ -84,7 +84,7 @@ class FoldedCase(str):
     >>> FoldedCase('hello') in 'Hello World'
     False
 
-    In that case, use in_:
+    In that case, use ``in_``:
 
     >>> FoldedCase('hello').in_('Hello World')
     True
