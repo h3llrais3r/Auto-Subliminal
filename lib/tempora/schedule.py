@@ -1,5 +1,16 @@
 """
-Classes for calling functions a schedule.
+Classes for calling functions a schedule. Has time zone support.
+
+For example, to run a job at 08:00 every morning in 'Asia/Calcutta':
+
+>>> job = lambda: print("time is now", datetime.datetime())
+>>> time = datetime.time(8, tzinfo=pytz.timezone('Asia/Calcutta'))
+>>> cmd = PeriodicCommandFixedDelay.daily_at(time, job)
+>>> sched = InvokeScheduler()
+>>> sched.add(cmd)
+>>> while True:  # doctest: +SKIP
+...     sched.run_pending()
+...     time.sleep(.1)
 """
 
 import datetime
