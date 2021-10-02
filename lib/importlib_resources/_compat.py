@@ -5,9 +5,9 @@ import sys
 import pathlib
 from contextlib import suppress
 
-try:
+if sys.version_info >= (3, 10):
     from zipfile import Path as ZipPath  # type: ignore
-except ImportError:
+else:
     from zipp import Path as ZipPath  # type: ignore
 
 
@@ -29,6 +29,9 @@ class TraversableResourcesLoader:
     """
     Adapt loaders to provide TraversableResources and other
     compatibility.
+
+    Used primarily for Python 3.9 and earlier where the native
+    loaders do not yet implement TraversableResources.
     """
 
     def __init__(self, spec):
@@ -58,7 +61,11 @@ class TraversableResourcesLoader:
             return reader if hasattr(reader, 'files') else None
 
         def _file_reader(spec):
-            if pathlib.Path(self.path).exists():
+            try:
+                path = pathlib.Path(self.path)
+            except TypeError:
+                return None
+            if path.exists():
                 return readers.FileReader(self)
 
         return (
@@ -73,7 +80,8 @@ class TraversableResourcesLoader:
             or
             # local FileReader
             _file_reader(self.spec)
-            or _adapters.DegenerateFiles(self.spec)
+            # fallback - adapt the spec ResourceReader to TraversableReader
+            or _adapters.CompatibilityFiles(self.spec)
         )
 
 
@@ -81,6 +89,9 @@ def wrap_spec(package):
     """
     Construct a package spec with traversable compatibility
     on the spec/loader/reader.
+
+    Supersedes _adapters.wrap_spec to use TraversableResourcesLoader
+    from above for older Python compatibility (<3.10).
     """
     from . import _adapters
 
