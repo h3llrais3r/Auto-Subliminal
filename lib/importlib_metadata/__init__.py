@@ -14,26 +14,28 @@ import itertools
 import posixpath
 import collections
 
+from . import _adapters, _meta
 from ._collections import FreezableDefaultDict, Pair
 from ._compat import (
     NullFinder,
-    Protocol,
-    PyPy_repr,
     install,
+    pypy_partial,
 )
 from ._functools import method_cache
-from ._itertools import unique_everseen
+from ._itertools import always_iterable, unique_everseen
+from ._meta import PackageMetadata, SimplePath
 
 from contextlib import suppress
 from importlib import import_module
 from importlib.abc import MetaPathFinder
 from itertools import starmap
-from typing import Any, List, Mapping, Optional, TypeVar, Union
+from typing import List, Mapping, Optional, Union
 
 
 __all__ = [
     'Distribution',
     'DistributionFinder',
+    'PackageMetadata',
     'PackageNotFoundError',
     'distribution',
     'distributions',
@@ -50,8 +52,7 @@ class PackageNotFoundError(ModuleNotFoundError):
     """The package was not found."""
 
     def __str__(self):
-        tmpl = "No package metadata was found for {self.name}"
-        return tmpl.format(**locals())
+        return f"No package metadata was found for {self.name}"
 
     @property
     def name(self):
@@ -124,9 +125,33 @@ class Sectioned:
         return line and not line.startswith('#')
 
 
-class EntryPoint(
-    PyPy_repr, collections.namedtuple('EntryPointBase', 'name value group')
-):
+class DeprecatedTuple:
+    """
+    Provide subscript item access for backward compatibility.
+
+    >>> recwarn = getfixture('recwarn')
+    >>> ep = EntryPoint(name='name', value='value', group='group')
+    >>> ep[:]
+    ('name', 'value', 'group')
+    >>> ep[0]
+    'name'
+    >>> len(recwarn)
+    1
+    """
+
+    _warn = functools.partial(
+        warnings.warn,
+        "EntryPoint tuple interface is deprecated. Access members by name.",
+        DeprecationWarning,
+        stacklevel=pypy_partial(2),
+    )
+
+    def __getitem__(self, item):
+        self._warn()
+        return self._key()[item]
+
+
+class EntryPoint(DeprecatedTuple):
     """An entry point as defined by Python packaging conventions.
 
     See `the packaging docs on entry points
@@ -157,6 +182,9 @@ class EntryPoint(
 
     dist: Optional['Distribution'] = None
 
+    def __init__(self, name, value, group):
+        vars(self).update(name=name, value=value, group=group)
+
     def load(self):
         """Load the entry point from its definition. If only a module
         is indicated by the value, return that module. Otherwise,
@@ -183,7 +211,7 @@ class EntryPoint(
         return list(re.finditer(r'\w+', match.group('extras') or ''))
 
     def _for(self, dist):
-        self.dist = dist
+        vars(self).update(dist=dist)
         return self
 
     def __iter__(self):
@@ -197,18 +225,126 @@ class EntryPoint(
         warnings.warn(msg, DeprecationWarning)
         return iter((self.name, self))
 
-    def __reduce__(self):
-        return (
-            self.__class__,
-            (self.name, self.value, self.group),
-        )
-
     def matches(self, **params):
         attrs = (getattr(self, param) for param in params)
         return all(map(operator.eq, params.values(), attrs))
 
+    def _key(self):
+        return self.name, self.value, self.group
 
-class EntryPoints(tuple):
+    def __lt__(self, other):
+        return self._key() < other._key()
+
+    def __eq__(self, other):
+        return self._key() == other._key()
+
+    def __setattr__(self, name, value):
+        raise AttributeError("EntryPoint objects are immutable.")
+
+    def __repr__(self):
+        return (
+            f'EntryPoint(name={self.name!r}, value={self.value!r}, '
+            f'group={self.group!r})'
+        )
+
+    def __hash__(self):
+        return hash(self._key())
+
+
+class DeprecatedList(list):
+    """
+    Allow an otherwise immutable object to implement mutability
+    for compatibility.
+
+    >>> recwarn = getfixture('recwarn')
+    >>> dl = DeprecatedList(range(3))
+    >>> dl[0] = 1
+    >>> dl.append(3)
+    >>> del dl[3]
+    >>> dl.reverse()
+    >>> dl.sort()
+    >>> dl.extend([4])
+    >>> dl.pop(-1)
+    4
+    >>> dl.remove(1)
+    >>> dl += [5]
+    >>> dl + [6]
+    [1, 2, 5, 6]
+    >>> dl + (6,)
+    [1, 2, 5, 6]
+    >>> dl.insert(0, 0)
+    >>> dl
+    [0, 1, 2, 5]
+    >>> dl == [0, 1, 2, 5]
+    True
+    >>> dl == (0, 1, 2, 5)
+    True
+    >>> len(recwarn)
+    1
+    """
+
+    _warn = functools.partial(
+        warnings.warn,
+        "EntryPoints list interface is deprecated. Cast to list if needed.",
+        DeprecationWarning,
+        stacklevel=pypy_partial(2),
+    )
+
+    def __setitem__(self, *args, **kwargs):
+        self._warn()
+        return super().__setitem__(*args, **kwargs)
+
+    def __delitem__(self, *args, **kwargs):
+        self._warn()
+        return super().__delitem__(*args, **kwargs)
+
+    def append(self, *args, **kwargs):
+        self._warn()
+        return super().append(*args, **kwargs)
+
+    def reverse(self, *args, **kwargs):
+        self._warn()
+        return super().reverse(*args, **kwargs)
+
+    def extend(self, *args, **kwargs):
+        self._warn()
+        return super().extend(*args, **kwargs)
+
+    def pop(self, *args, **kwargs):
+        self._warn()
+        return super().pop(*args, **kwargs)
+
+    def remove(self, *args, **kwargs):
+        self._warn()
+        return super().remove(*args, **kwargs)
+
+    def __iadd__(self, *args, **kwargs):
+        self._warn()
+        return super().__iadd__(*args, **kwargs)
+
+    def __add__(self, other):
+        if not isinstance(other, tuple):
+            self._warn()
+            other = tuple(other)
+        return self.__class__(tuple(self) + other)
+
+    def insert(self, *args, **kwargs):
+        self._warn()
+        return super().insert(*args, **kwargs)
+
+    def sort(self, *args, **kwargs):
+        self._warn()
+        return super().sort(*args, **kwargs)
+
+    def __eq__(self, other):
+        if not isinstance(other, tuple):
+            self._warn()
+            other = tuple(other)
+
+        return tuple(self).__eq__(other)
+
+
+class EntryPoints(DeprecatedList):
     """
     An immutable collection of selectable EntryPoint objects.
     """
@@ -219,6 +355,14 @@ class EntryPoints(tuple):
         """
         Get the EntryPoint in self matching name.
         """
+        if isinstance(name, int):
+            warnings.warn(
+                "Accessing entry points by index is deprecated. "
+                "Cast to tuple if needed.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
+            return super().__getitem__(name)
         try:
             return next(iter(self.select(name=name)))
         except StopIteration:
@@ -236,7 +380,7 @@ class EntryPoints(tuple):
         """
         Return the set of all names of all entry points.
         """
-        return set(ep.name for ep in self)
+        return {ep.name for ep in self}
 
     @property
     def groups(self):
@@ -247,30 +391,18 @@ class EntryPoints(tuple):
         >>> EntryPoints().groups
         set()
         """
-        return set(ep.group for ep in self)
+        return {ep.group for ep in self}
 
     @classmethod
     def _from_text_for(cls, text, dist):
         return cls(ep._for(dist) for ep in cls._from_text(text))
 
-    @classmethod
-    def _from_text(cls, text):
-        return itertools.starmap(EntryPoint, cls._parse_groups(text or ''))
-
     @staticmethod
-    def _parse_groups(text):
+    def _from_text(text):
         return (
-            (item.value.name, item.value.value, item.name)
-            for item in Sectioned.section_pairs(text)
+            EntryPoint(name=item.value.name, value=item.value.value, group=item.name)
+            for item in Sectioned.section_pairs(text or '')
         )
-
-
-def flake8_bypass(func):
-    # defer inspect import as performance optimization.
-    import inspect
-
-    is_flake8 = any('flake8' in str(frame.filename) for frame in inspect.stack()[:5])
-    return func if not is_flake8 else lambda: None
 
 
 class Deprecated:
@@ -300,7 +432,7 @@ class Deprecated:
         warnings.warn,
         "SelectableGroups dict interface is deprecated. Use select.",
         DeprecationWarning,
-        stacklevel=2,
+        stacklevel=pypy_partial(2),
     )
 
     def __getitem__(self, name):
@@ -308,7 +440,7 @@ class Deprecated:
         return super().__getitem__(name)
 
     def get(self, name, default=None):
-        flake8_bypass(self._warn)()
+        self._warn()
         return super().get(name, default)
 
     def __iter__(self):
@@ -389,26 +521,7 @@ class FileHash:
         self.mode, _, self.value = spec.partition('=')
 
     def __repr__(self):
-        return '<FileHash mode: {} value: {}>'.format(self.mode, self.value)
-
-
-_T = TypeVar("_T")
-
-
-class PackageMetadata(Protocol):
-    def __len__(self) -> int:
-        ...  # pragma: no cover
-
-    def __contains__(self, item: str) -> bool:
-        ...  # pragma: no cover
-
-    def __getitem__(self, key: str) -> str:
-        ...  # pragma: no cover
-
-    def get_all(self, name: str, failobj: _T = ...) -> Union[List[Any], _T]:
-        """
-        Return all values associated with a possibly multi-valued key.
-        """
+        return f'<FileHash mode: {self.mode} value: {self.value}>'
 
 
 class Distribution:
@@ -495,7 +608,7 @@ class Distribution:
         return PathDistribution(zipp.Path(meta.build_as_zip(builder)))
 
     @property
-    def metadata(self) -> PackageMetadata:
+    def metadata(self) -> _meta.PackageMetadata:
         """Return the parsed metadata for this Distribution.
 
         The returned object will have keys that name the various bits of
@@ -509,12 +622,17 @@ class Distribution:
             # (which points to the egg-info file) attribute unchanged.
             or self.read_text('')
         )
-        return email.message_from_string(text)
+        return _adapters.Message(email.message_from_string(text))
 
     @property
     def name(self):
         """Return the 'Name' metadata for the distribution package."""
         return self.metadata['Name']
+
+    @property
+    def _normalized_name(self):
+        """Return a normalized version of the name."""
+        return Prepared.normalize(self.name)
 
     @property
     def version(self):
@@ -592,13 +710,13 @@ class Distribution:
         """
 
         def make_condition(name):
-            return name and 'extra == "{name}"'.format(name=name)
+            return name and f'extra == "{name}"'
 
         def parse_condition(section):
             section = section or ''
             extra, sep, markers = section.partition(':')
             if extra and markers:
-                markers = '({markers})'.format(markers=markers)
+                markers = f'({markers})'
             conditions = list(filter(None, [markers, make_condition(extra)]))
             return '; ' + ' and '.join(conditions) if conditions else ''
 
@@ -635,10 +753,11 @@ class DistributionFinder(MetaPathFinder):
         @property
         def path(self):
             """
-            The path that a distribution finder should search.
+            The sequence of directory path that a distribution finder
+            should search.
 
-            Typically refers to Python package paths and defaults
-            to ``sys.path``.
+            Typically refers to Python installed package paths such as
+            "site-packages" directories and defaults to ``sys.path``.
             """
             return vars(self).get('path', sys.path)
 
@@ -800,11 +919,10 @@ class MetadataPathFinder(NullFinder, DistributionFinder):
 
 
 class PathDistribution(Distribution):
-    def __init__(self, path):
-        """Construct a distribution from a path to the metadata directory.
+    def __init__(self, path: SimplePath):
+        """Construct a distribution.
 
-        :param path: A pathlib.Path or similar object supporting
-                     .joinpath(), __div__, .parent, and .read_text().
+        :param path: SimplePath indicating the metadata directory.
         """
         self._path = path
 
@@ -822,6 +940,22 @@ class PathDistribution(Distribution):
 
     def locate_file(self, path):
         return self._path.parent / path
+
+    @property
+    def _normalized_name(self):
+        """
+        Performance optimization: where possible, resolve the
+        normalized name from the file system path.
+        """
+        stem = os.path.basename(str(self._path))
+        return self._name_from_stem(stem) or super()._normalized_name
+
+    def _name_from_stem(self, stem):
+        name, ext = os.path.splitext(stem)
+        if ext not in ('.dist-info', '.egg-info'):
+            return
+        name, sep, rest = stem.partition('-')
+        return name
 
 
 def distribution(distribution_name):
@@ -841,7 +975,7 @@ def distributions(**kwargs):
     return Distribution.discover(**kwargs)
 
 
-def metadata(distribution_name) -> PackageMetadata:
+def metadata(distribution_name) -> _meta.PackageMetadata:
     """Get the metadata for the named package.
 
     :param distribution_name: The name of the distribution package to query.
@@ -877,7 +1011,8 @@ def entry_points(**params) -> Union[EntryPoints, SelectableGroups]:
 
     :return: EntryPoints or SelectableGroups for all installed packages.
     """
-    unique = functools.partial(unique_everseen, key=operator.attrgetter('name'))
+    norm_name = operator.attrgetter('_normalized_name')
+    unique = functools.partial(unique_everseen, key=norm_name)
     eps = itertools.chain.from_iterable(
         dist.entry_points for dist in unique(distributions())
     )
@@ -898,7 +1033,7 @@ def requires(distribution_name):
     Return a list of requirements for the named package.
 
     :return: An iterator of requirements, suitable for
-    packaging.requirement.Requirement.
+        packaging.requirement.Requirement.
     """
     return distribution(distribution_name).requires
 
@@ -915,6 +1050,18 @@ def packages_distributions() -> Mapping[str, List[str]]:
     """
     pkg_to_dist = collections.defaultdict(list)
     for dist in distributions():
-        for pkg in (dist.read_text('top_level.txt') or '').split():
+        for pkg in _top_level_declared(dist) or _top_level_inferred(dist):
             pkg_to_dist[pkg].append(dist.metadata['Name'])
     return dict(pkg_to_dist)
+
+
+def _top_level_declared(dist):
+    return (dist.read_text('top_level.txt') or '').split()
+
+
+def _top_level_inferred(dist):
+    return {
+        f.parts[0] if len(f.parts) > 1 else f.with_suffix('').name
+        for f in always_iterable(dist.files)
+        if f.suffix == ".py"
+    }

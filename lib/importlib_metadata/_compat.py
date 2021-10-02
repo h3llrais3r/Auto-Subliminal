@@ -1,7 +1,8 @@
 import sys
+import platform
 
 
-__all__ = ['install', 'NullFinder', 'PyPy_repr', 'Protocol']
+__all__ = ['install', 'NullFinder', 'Protocol']
 
 
 try:
@@ -65,22 +66,11 @@ class NullFinder:
     find_module = find_spec
 
 
-class PyPy_repr:
+def pypy_partial(val):
     """
-    Override repr for EntryPoint objects on PyPy to avoid __iter__ access.
-    Ref #97, #102.
+    Adjust for variable stacklevel on partial under PyPy.
+
+    Workaround for #327.
     """
-
-    affected = hasattr(sys, 'pypy_version_info')
-
-    def __compat_repr__(self):  # pragma: nocover
-        def make_param(name):
-            value = getattr(self, name)
-            return '{name}={value!r}'.format(**locals())
-
-        params = ', '.join(map(make_param, self._fields))
-        return 'EntryPoint({params})'.format(**locals())
-
-    if affected:  # pragma: nocover
-        __repr__ = __compat_repr__
-    del affected
+    is_pypy = platform.python_implementation() == 'PyPy'
+    return val + is_pypy
