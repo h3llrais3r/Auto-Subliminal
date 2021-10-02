@@ -24,12 +24,15 @@ from typing_extensions import ContextManager, Protocol, Type, overload
 
 # Type and type variable definitions
 _T = TypeVar('_T')
+_T1 = TypeVar('_T1')
+_T2 = TypeVar('_T2')
 _U = TypeVar('_U')
 _V = TypeVar('_V')
 _W = TypeVar('_W')
 _T_co = TypeVar('_T_co', covariant=True)
 _GenFn = TypeVar('_GenFn', bound=Callable[..., Iterator[object]])
 _Raisable = Union[BaseException, 'Type[BaseException]']
+
 @type_check_only
 class _SizedIterable(Protocol[_T_co], Sized, Iterable[_T_co]): ...
 
@@ -37,7 +40,7 @@ class _SizedIterable(Protocol[_T_co], Sized, Iterable[_T_co]): ...
 class _SizedReversible(Protocol[_T_co], Sized, Reversible[_T_co]): ...
 
 def chunked(
-    iterable: Iterable[_T], n: int, strict: bool = ...
+    iterable: Iterable[_T], n: Optional[int], strict: bool = ...
 ) -> Iterator[List[_T]]: ...
 @overload
 def first(iterable: Iterable[_T]) -> _T: ...
@@ -117,6 +120,9 @@ def spy(
 ) -> Tuple[List[_T], Iterator[_T]]: ...
 def interleave(*iterables: Iterable[_T]) -> Iterator[_T]: ...
 def interleave_longest(*iterables: Iterable[_T]) -> Iterator[_T]: ...
+def interleave_evenly(
+    iterables: List[Iterable[_T]], lengths: Optional[List[int]] = ...
+) -> Iterator[_T]: ...
 def collapse(
     iterable: Iterable[Any],
     base_type: Optional[type] = ...,
@@ -201,17 +207,72 @@ class UnequalIterablesError(ValueError):
         self, details: Optional[Tuple[int, int, int]] = ...
     ) -> None: ...
 
-def zip_equal(*iterables: Iterable[_T]) -> Iterator[Tuple[_T, ...]]: ...
+@overload
+def zip_equal(__iter1: Iterable[_T1]) -> Iterator[Tuple[_T1]]: ...
+@overload
+def zip_equal(
+    __iter1: Iterable[_T1], __iter2: Iterable[_T2]
+) -> Iterator[Tuple[_T1, _T2]]: ...
+@overload
+def zip_equal(
+    __iter1: Iterable[_T],
+    __iter2: Iterable[_T],
+    __iter3: Iterable[_T],
+    *iterables: Iterable[_T]
+) -> Iterator[Tuple[_T, ...]]: ...
 @overload
 def zip_offset(
-    *iterables: Iterable[_T], offsets: _SizedIterable[int], longest: bool = ...
-) -> Iterator[Tuple[Optional[_T], ...]]: ...
+    __iter1: Iterable[_T1],
+    *,
+    offsets: _SizedIterable[int],
+    longest: bool = ...,
+    fillvalue: None = None
+) -> Iterator[Tuple[Optional[_T1]]]: ...
 @overload
 def zip_offset(
+    __iter1: Iterable[_T1],
+    __iter2: Iterable[_T2],
+    *,
+    offsets: _SizedIterable[int],
+    longest: bool = ...,
+    fillvalue: None = None
+) -> Iterator[Tuple[Optional[_T1], Optional[_T2]]]: ...
+@overload
+def zip_offset(
+    __iter1: Iterable[_T],
+    __iter2: Iterable[_T],
+    __iter3: Iterable[_T],
     *iterables: Iterable[_T],
     offsets: _SizedIterable[int],
     longest: bool = ...,
-    fillvalue: _U
+    fillvalue: None = None
+) -> Iterator[Tuple[Optional[_T], ...]]: ...
+@overload
+def zip_offset(
+    __iter1: Iterable[_T1],
+    *,
+    offsets: _SizedIterable[int],
+    longest: bool = ...,
+    fillvalue: _U,
+) -> Iterator[Tuple[Union[_T1, _U]]]: ...
+@overload
+def zip_offset(
+    __iter1: Iterable[_T1],
+    __iter2: Iterable[_T2],
+    *,
+    offsets: _SizedIterable[int],
+    longest: bool = ...,
+    fillvalue: _U,
+) -> Iterator[Tuple[Union[_T1, _U], Union[_T2, _U]]]: ...
+@overload
+def zip_offset(
+    __iter1: Iterable[_T],
+    __iter2: Iterable[_T],
+    __iter3: Iterable[_T],
+    *iterables: Iterable[_T],
+    offsets: _SizedIterable[int],
+    longest: bool = ...,
+    fillvalue: _U,
 ) -> Iterator[Tuple[Union[_T, _U], ...]]: ...
 def sort_together(
     iterables: Iterable[Iterable[_T]],
@@ -418,6 +479,12 @@ def map_except(
     iterable: Iterable[_T],
     *exceptions: Type[BaseException]
 ) -> Iterator[_U]: ...
+def map_if(
+    iterable: Iterable[Any],
+    pred: Callable[[Any], bool],
+    func: Callable[[Any], Any],
+    func_else: Optional[Callable[[Any], Any]] = ...,
+) -> Iterator[Any]: ...
 def sample(
     iterable: Iterable[_T],
     k: int,
@@ -464,7 +531,7 @@ def nth_product(index: int, *args: Iterable[_T]) -> Tuple[_T, ...]: ...
 def nth_permutation(
     iterable: Iterable[_T], r: int, index: int
 ) -> Tuple[_T, ...]: ...
-def value_chain(*args: Iterable[Any]) -> Iterable[Any]: ...
+def value_chain(*args: Union[_T, Iterable[_T]]) -> Iterable[_T]: ...
 def product_index(element: Iterable[_T], *args: Iterable[_T]) -> int: ...
 def combination_index(
     element: Iterable[_T], iterable: Iterable[_T]
@@ -472,3 +539,18 @@ def combination_index(
 def permutation_index(
     element: Iterable[_T], iterable: Iterable[_T]
 ) -> int: ...
+def repeat_each(iterable: Iterable[_T], n: int = ...) -> Iterator[_T]: ...
+
+class countable(Generic[_T], Iterator[_T]):
+    def __init__(self, iterable: Iterable[_T]) -> None: ...
+    def __iter__(self) -> countable[_T]: ...
+    def __next__(self) -> _T: ...
+
+def chunked_even(iterable: Iterable[_T], n: int) -> Iterator[List[_T]]: ...
+def zip_broadcast(
+    *objects: Union[_T, Iterable[_T]],
+    scalar_types: Union[
+        type, Tuple[Union[type, Tuple[Any, ...]], ...], None
+    ] = ...,
+    strict: bool = ...
+) -> Iterable[Tuple[_T, ...]]: ...

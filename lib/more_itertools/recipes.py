@@ -401,13 +401,14 @@ def unique_everseen(iterable, key=None):
     ``key=lambda x: frozenset(x.items())`` can be used.
 
     """
-    key = key if key is not None else lambda x: x
     seenset = set()
     seenset_add = seenset.add
     seenlist = []
     seenlist_add = seenlist.append
+    use_key = key is not None
+
     for element in iterable:
-        k = key(element)
+        k = key(element) if use_key else element
         try:
             if k not in seenset:
                 seenset_add(k)
@@ -440,6 +441,16 @@ def iter_except(func, exception, first=None):
         >>> l = [0, 1, 2]
         >>> list(iter_except(l.pop, IndexError))
         [2, 1, 0]
+
+    Multiple exceptions can be specified as a stopping condition:
+
+        >>> l = [1, 2, 3, '...', 4, 5, 6]
+        >>> list(iter_except(lambda: 1 + l.pop(), (IndexError, TypeError)))
+        [7, 6, 5]
+        >>> list(iter_except(lambda: 1 + l.pop(), (IndexError, TypeError)))
+        [4, 3, 2]
+        >>> list(iter_except(lambda: 1 + l.pop(), (IndexError, TypeError)))
+        []
 
     """
     try:

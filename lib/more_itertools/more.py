@@ -43,11 +43,13 @@ __all__ = [
     'bucket',
     'callback_iter',
     'chunked',
+    'chunked_even',
     'circular_shifts',
     'collapse',
     'collate',
     'consecutive_groups',
     'consumer',
+    'countable',
     'count_cycle',
     'mark_ends',
     'difference',
@@ -62,6 +64,7 @@ __all__ = [
     'ilen',
     'interleave_longest',
     'interleave',
+    'interleave_evenly',
     'intersperse',
     'islice_extended',
     'iterate',
@@ -72,6 +75,7 @@ __all__ = [
     'lstrip',
     'make_decorator',
     'map_except',
+    'map_if',
     'map_reduce',
     'nth_or_last',
     'nth_permutation',
@@ -83,6 +87,7 @@ __all__ = [
     'partitions',
     'set_partitions',
     'peekable',
+    'repeat_each',
     'repeat_last',
     'replace',
     'rlocate',
@@ -118,6 +123,7 @@ __all__ = [
     'product_index',
     'combination_index',
     'permutation_index',
+    'zip_broadcast',
 ]
 
 _marker = object()
@@ -144,6 +150,8 @@ def chunked(iterable, n, strict=False):
     """
     iterator = iter(partial(take, n, iter(iterable)), [])
     if strict:
+        if n is None:
+            raise ValueError('n must not be None when using strict mode.')
 
         def ret():
             for chunk in iterator:
@@ -1016,6 +1024,72 @@ def interleave_longest(*iterables):
     return (x for x in i if x is not _marker)
 
 
+def interleave_evenly(iterables, lengths=None):
+    """
+    Interleave multiple iterables so that their elements are evenly distributed
+    throughout the output sequence.
+
+    >>> iterables = [1, 2, 3, 4, 5], ['a', 'b']
+    >>> list(interleave_evenly(iterables))
+    [1, 2, 'a', 3, 4, 'b', 5]
+
+    >>> iterables = [[1, 2, 3], [4, 5], [6, 7, 8]]
+    >>> list(interleave_evenly(iterables))
+    [1, 6, 4, 2, 7, 3, 8, 5]
+
+    This function requires iterables of known length. Iterables without
+    ``__len__()`` can be used by manually specifying lengths with *lengths*:
+
+    >>> from itertools import combinations, repeat
+    >>> iterables = [combinations(range(4), 2), ['a', 'b', 'c']]
+    >>> lengths = [4 * (4 - 1) // 2, 3]
+    >>> list(interleave_evenly(iterables, lengths=lengths))
+    [(0, 1), (0, 2), 'a', (0, 3), (1, 2), 'b', (1, 3), (2, 3), 'c']
+
+    Based on Bresenham's algorithm.
+    """
+    if lengths is None:
+        try:
+            lengths = [len(it) for it in iterables]
+        except TypeError:
+            raise ValueError(
+                'Iterable lengths could not be determined automatically. '
+                'Specify them with the lengths keyword.'
+            )
+    elif len(iterables) != len(lengths):
+        raise ValueError('Mismatching number of iterables and lengths.')
+
+    dims = len(lengths)
+
+    # sort iterables by length, descending
+    lengths_permute = sorted(
+        range(dims), key=lambda i: lengths[i], reverse=True
+    )
+    lengths_desc = [lengths[i] for i in lengths_permute]
+    iters_desc = [iter(iterables[i]) for i in lengths_permute]
+
+    # the longest iterable is the primary one (Bresenham: the longest
+    # distance along an axis)
+    delta_primary, deltas_secondary = lengths_desc[0], lengths_desc[1:]
+    iter_primary, iters_secondary = iters_desc[0], iters_desc[1:]
+    errors = [delta_primary // dims] * len(deltas_secondary)
+
+    to_yield = sum(lengths)
+    while to_yield:
+        yield next(iter_primary)
+        to_yield -= 1
+        # update errors for each secondary iterable
+        errors = [e - delta for e, delta in zip(errors, deltas_secondary)]
+
+        # those iterables for which the error is negative are yielded
+        # ("diagonal step" in Bresenham)
+        for i, e in enumerate(errors):
+            if e < 0:
+                yield next(iters_secondary[i])
+                to_yield -= 1
+                errors[i] += delta_primary
+
+
 def collapse(iterable, base_type=None, levels=None):
     """Flatten an iterable with multiple levels of nesting (e.g., a list of
     lists of tuples) into non-iterable types.
@@ -1234,7 +1308,8 @@ def split_before(iterable, pred, maxsplit=-1):
             buf = []
             maxsplit -= 1
         buf.append(item)
-    yield buf
+    if buf:
+        yield buf
 
 
 def split_after(iterable, pred, maxsplit=-1):
@@ -1395,6 +1470,15 @@ def padded(iterable, fillvalue=None, n=None, next_multiple=False):
             yield fillvalue
 
 
+def repeat_each(iterable, n=2):
+    """Repeat each element in *iterable* *n* times.
+
+    >>> list(repeat_each('ABC', 3))
+    ['A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C']
+    """
+    return chain.from_iterable(map(repeat, iterable, repeat(n)))
+
+
 def repeat_last(iterable, default=None):
     """After the *iterable* is exhausted, keep yielding its last element.
 
@@ -1488,6 +1572,14 @@ class UnequalIterablesError(ValueError):
         super().__init__(msg)
 
 
+def _zip_equal_generator(iterables):
+    for combo in zip_longest(*iterables, fillvalue=_marker):
+        for val in combo:
+            if val is _marker:
+                raise UnequalIterablesError()
+        yield combo
+
+
 def zip_equal(*iterables):
     """``zip`` the input *iterables* together, but raise
     ``UnequalIterablesError`` if they aren't all the same length.
@@ -1506,6 +1598,15 @@ def zip_equal(*iterables):
         lengths
 
     """
+    if hexversion >= 0x30A00A6:
+        warnings.warn(
+            (
+                'zip_equal will be removed in a future version of '
+                'more-itertools. Use the builtin zip function with '
+                'strict=True instead.'
+            ),
+            DeprecationWarning,
+        )
     # Check whether the iterables are all the same size.
     try:
         first_size = len(iterables[0])
@@ -1523,14 +1624,6 @@ def zip_equal(*iterables):
     # them until one runs out.
     except TypeError:
         return _zip_equal_generator(iterables)
-
-
-def _zip_equal_generator(iterables):
-    for combo in zip_longest(*iterables, fillvalue=_marker):
-        for val in combo:
-            if val is _marker:
-                raise UnequalIterablesError()
-        yield combo
 
 
 def zip_offset(*iterables, offsets, longest=False, fillvalue=None):
@@ -2463,41 +2556,32 @@ def consecutive_groups(iterable, ordering=lambda x: x):
 
 
 def difference(iterable, func=sub, *, initial=None):
-    """By default, compute the first difference of *iterable* using
-    :func:`operator.sub`.
+    """This function is the inverse of :func:`itertools.accumulate`. By default
+    it will compute the first difference of *iterable* using
+    :func:`operator.sub`:
 
-        >>> iterable = [0, 1, 3, 6, 10]
+        >>> from itertools import accumulate
+        >>> iterable = accumulate([0, 1, 2, 3, 4])  # produces 0, 1, 3, 6, 10
         >>> list(difference(iterable))
         [0, 1, 2, 3, 4]
 
-    This is the opposite of :func:`itertools.accumulate`'s default behavior:
-
-        >>> from itertools import accumulate
-        >>> iterable = [0, 1, 2, 3, 4]
-        >>> list(accumulate(iterable))
-        [0, 1, 3, 6, 10]
-        >>> list(difference(accumulate(iterable)))
-        [0, 1, 2, 3, 4]
-
-    By default *func* is :func:`operator.sub`, but other functions can be
+    *func* defaults to :func:`operator.sub`, but other functions can be
     specified. They will be applied as follows::
 
         A, B, C, D, ... --> A, func(B, A), func(C, B), func(D, C), ...
 
     For example, to do progressive division:
 
-        >>> iterable = [1, 2, 6, 24, 120]  # Factorial sequence
+        >>> iterable = [1, 2, 6, 24, 120]
         >>> func = lambda x, y: x // y
         >>> list(difference(iterable, func))
         [1, 2, 3, 4, 5]
 
-    Since Python 3.8, :func:`itertools.accumulate` can be supplied with an
-    *initial* keyword argument. If :func:`difference` is called with *initial*
-    set to something other than ``None``, it will skip the first element when
+    If the *initial* keyword is set, the first element will be skipped when
     computing successive differences.
 
-        >>> iterable = [10, 11, 13, 16]  # accumulate([1, 2, 3], initial=10)
-        >>> list(difference(iterable, initial=10))
+        >>> it = [10, 11, 13, 16]  # from accumulate([1, 2, 3], initial=10)
+        >>> list(difference(it, initial=10))
         [1, 2, 3]
 
     """
@@ -3259,7 +3343,7 @@ def map_except(function, iterable, *exceptions):
     result, unless *function* raises one of the specified *exceptions*.
 
     *function* is called to transform each item in *iterable*.
-    It should be a accept one argument.
+    It should accept one argument.
 
     >>> iterable = ['1', '2', 'three', '4', None]
     >>> list(map_except(int, iterable, ValueError, TypeError))
@@ -3273,6 +3357,28 @@ def map_except(function, iterable, *exceptions):
             yield function(item)
         except exceptions:
             pass
+
+
+def map_if(iterable, pred, func, func_else=lambda x: x):
+    """Evaluate each item from *iterable* using *pred*. If the result is
+    equivalent to ``True``, transform the item with *func* and yield it.
+    Otherwise, transform the item with *func_else* and yield it.
+
+    *pred*, *func*, and *func_else* should each be functions that accept
+    one argument. By default, *func_else* is the identity function.
+
+    >>> from math import sqrt
+    >>> iterable = list(range(-5, 5))
+    >>> iterable
+    [-5, -4, -3, -2, -1, 0, 1, 2, 3, 4]
+    >>> list(map_if(iterable, lambda x: x > 3, lambda x: 'toobig'))
+    [-5, -4, -3, -2, -1, 0, 1, 2, 3, 'toobig']
+    >>> list(map_if(iterable, lambda x: x >= 0,
+    ... lambda x: f'{sqrt(x):.2f}', lambda x: None))
+    [None, None, None, None, None, '0.00', '1.00', '1.41', '1.73', '2.00']
+    """
+    for item in iterable:
+        yield func(item) if pred(item) else func_else(item)
 
 
 def _sample_unweighted(iterable, k):
@@ -3345,7 +3451,7 @@ def sample(iterable, k, weights=None):
     >>> sample(iterable, 5)  # doctest: +SKIP
     [81, 60, 96, 16, 4]
 
-     An iterable with *weights* may also be given:
+    An iterable with *weights* may also be given:
 
     >>> iterable = range(100)
     >>> weights = (i * i + 1 for i in range(100))
@@ -3789,3 +3895,160 @@ def permutation_index(element, iterable):
         del pool[r]
 
     return index
+
+
+class countable:
+    """Wrap *iterable* and keep a count of how many items have been consumed.
+
+    The ``items_seen`` attribute starts at ``0`` and increments as the iterable
+    is consumed:
+
+        >>> iterable = map(str, range(10))
+        >>> it = countable(iterable)
+        >>> it.items_seen
+        0
+        >>> next(it), next(it)
+        ('0', '1')
+        >>> list(it)
+        ['2', '3', '4', '5', '6', '7', '8', '9']
+        >>> it.items_seen
+        10
+    """
+
+    def __init__(self, iterable):
+        self._it = iter(iterable)
+        self.items_seen = 0
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        item = next(self._it)
+        self.items_seen += 1
+
+        return item
+
+
+def chunked_even(iterable, n):
+    """Break *iterable* into lists of approximately length *n*.
+    Items are distributed such the lengths of the lists differ by at most
+    1 item.
+
+    >>> iterable = [1, 2, 3, 4, 5, 6, 7]
+    >>> n = 3
+    >>> list(chunked_even(iterable, n))  # List lengths: 3, 2, 2
+    [[1, 2, 3], [4, 5], [6, 7]]
+    >>> list(chunked(iterable, n))  # List lengths: 3, 3, 1
+    [[1, 2, 3], [4, 5, 6], [7]]
+
+    """
+
+    len_method = getattr(iterable, '__len__', None)
+
+    if len_method is None:
+        return _chunked_even_online(iterable, n)
+    else:
+        return _chunked_even_finite(iterable, len_method(), n)
+
+
+def _chunked_even_online(iterable, n):
+    buffer = []
+    maxbuf = n + (n - 2) * (n - 1)
+    for x in iterable:
+        buffer.append(x)
+        if len(buffer) == maxbuf:
+            yield buffer[:n]
+            buffer = buffer[n:]
+    yield from _chunked_even_finite(buffer, len(buffer), n)
+
+
+def _chunked_even_finite(iterable, N, n):
+    if N < 1:
+        return
+
+    # Lists are either size `full_size <= n` or `partial_size = full_size - 1`
+    q, r = divmod(N, n)
+    num_lists = q + (1 if r > 0 else 0)
+    q, r = divmod(N, num_lists)
+    full_size = q + (1 if r > 0 else 0)
+    partial_size = full_size - 1
+    num_full = N - partial_size * num_lists
+    num_partial = num_lists - num_full
+
+    buffer = []
+    iterator = iter(iterable)
+
+    # Yield num_full lists of full_size
+    for x in iterator:
+        buffer.append(x)
+        if len(buffer) == full_size:
+            yield buffer
+            buffer = []
+            num_full -= 1
+            if num_full <= 0:
+                break
+
+    # Yield num_partial lists of partial_size
+    for x in iterator:
+        buffer.append(x)
+        if len(buffer) == partial_size:
+            yield buffer
+            buffer = []
+            num_partial -= 1
+
+
+def zip_broadcast(*objects, scalar_types=(str, bytes), strict=False):
+    """A version of :func:`zip` that "broadcasts" any scalar
+    (i.e., non-iterable) items into output tuples.
+
+    >>> iterable_1 = [1, 2, 3]
+    >>> iterable_2 = ['a', 'b', 'c']
+    >>> scalar = '_'
+    >>> list(zip_broadcast(iterable_1, iterable_2, scalar))
+    [(1, 'a', '_'), (2, 'b', '_'), (3, 'c', '_')]
+
+    The *scalar_types* keyword argument determines what types are considered
+    scalar. It is set to ``(str, bytes)`` by default. Set it to ``None`` to
+    treat strings and byte strings as iterable:
+
+    >>> list(zip_broadcast('abc', 0, 'xyz', scalar_types=None))
+    [('a', 0, 'x'), ('b', 0, 'y'), ('c', 0, 'z')]
+
+    If the *strict* keyword argument is ``True``, then
+    ``UnequalIterablesError`` will be raised if any of the iterables have
+    different lengths.
+
+    """
+    if not objects:
+        return
+
+    iterables = []
+    all_scalar = True
+    for obj in objects:
+        # If the object is one of our scalar types, turn it into an iterable
+        # by wrapping it with itertools.repeat
+        if scalar_types and isinstance(obj, scalar_types):
+            iterables.append((repeat(obj), False))
+        # Otherwise, test to see whether the object is iterable.
+        # If it is, collect it. If it's not, treat it as a scalar.
+        else:
+            try:
+                iterables.append((iter(obj), True))
+            except TypeError:
+                iterables.append((repeat(obj), False))
+            else:
+                all_scalar = False
+
+    # If all the objects were scalar, we just emit them as a tuple.
+    # Otherwise we zip the collected iterable objects.
+    if all_scalar:
+        yield tuple(objects)
+    else:
+        yield from zip(*(it for it, is_it in iterables))
+
+        # For strict mode, we ensure that all the iterable objects have been
+        # exhausted.
+        if strict:
+            for it, is_it in filter(itemgetter(1), iterables):
+                if next(it, _marker) is not _marker:
+                    raise UnequalIterablesError
