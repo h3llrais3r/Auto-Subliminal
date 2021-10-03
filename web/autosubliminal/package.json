@@ -56,7 +56,7 @@
     "ngx-webstorage": "6.0.0",
     "primeicons": "4.1.0",
     "primeng": "10.0.3",
-    "rxjs": "6.6.7",
+    "rxjs": "7.3.1",
     "strftime": "0.10.0",
     "tslib": "2.0.0",
     "zone.js": "0.10.3"
