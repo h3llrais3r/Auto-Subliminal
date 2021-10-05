@@ -231,7 +231,7 @@ class BeautifulSoupHTMLParser(HTMLParser):
 
     def handle_entityref(self, name):
         """Handle a named entity reference by converting it to the
-        corresponding Unicode character and treating it as textual
+        corresponding Unicode character(s) and treating it as textual
         data.
 
         :param name: Name of the entity reference.
@@ -359,9 +359,24 @@ class HTMLParserTreeBuilder(HTMLTreeBuilder):
             return
 
         # Ask UnicodeDammit to sniff the most likely encoding.
+
+        # This was provided by the end-user; treat it as a known
+        # definite encoding per the algorithm laid out in the HTML5
+        # spec.  (See the EncodingDetector class for details.)
+        known_definite_encodings = [user_specified_encoding]
+
+        # This was found in the document; treat it as a slightly lower-priority
+        # user encoding.
+        user_encodings = [document_declared_encoding]
+
         try_encodings = [user_specified_encoding, document_declared_encoding]
-        dammit = UnicodeDammit(markup, try_encodings, is_html=True,
-                               exclude_encodings=exclude_encodings)
+        dammit = UnicodeDammit(
+            markup,
+            known_definite_encodings=known_definite_encodings,
+            user_encodings=user_encodings,
+            is_html=True,
+            exclude_encodings=exclude_encodings
+        )
         yield (dammit.markup, dammit.original_encoding,
                dammit.declared_html_encoding,
                dammit.contains_replacement_characters)

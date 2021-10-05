@@ -7,7 +7,7 @@ Beautiful Soup uses a pluggable XML or HTML parser to parse a
 provides methods and Pythonic idioms that make it easy to navigate,
 search, and modify the parse tree.
 
-Beautiful Soup works with Python 2.7 and up. It works better if lxml
+Beautiful Soup works with Python 3.5 and up. It works better if lxml
 and/or html5lib is installed.
 
 For more than you ever wanted to know about Beautiful Soup, see the
@@ -15,12 +15,13 @@ documentation: http://www.crummy.com/software/BeautifulSoup/bs4/doc/
 """
 
 __author__ = "Leonard Richardson (leonardr@segfault.org)"
-__version__ = "4.9.3"
-__copyright__ = "Copyright (c) 2004-2020 Leonard Richardson"
+__version__ = "4.10.0"
+__copyright__ = "Copyright (c) 2004-2021 Leonard Richardson"
 # Use of this source code is governed by the MIT license.
 __license__ = "MIT"
 
 __all__ = ['BeautifulSoup']
+
 
 from collections import Counter
 import os
@@ -28,6 +29,11 @@ import re
 import sys
 import traceback
 import warnings
+
+# The very first thing we do is give a useful error if someone is
+# running this code under Python 2.
+if sys.version_info.major < 3:
+    raise ImportError('You are trying to use a Python 3-specific version of Beautiful Soup under Python 2. This will not work. The final version of Beautiful Soup to support Python 2 was 4.9.3.')
 
 from .builder import builder_registry, ParserRejectedMarkup
 from .dammit import UnicodeDammit
@@ -48,10 +54,6 @@ from .element import (
     Tag,
     TemplateString,
     )
-
-# The very first thing we do is give a useful error if someone is
-# running this code under Python 3 without converting it.
-'You are trying to run the Python 2 version of Beautiful Soup under Python 3. This will not work.'!='You need to convert the code, either by installing it (`python setup.py install`) or by running 2to3 (`2to3 -w bs4`).'
 
 # Define some custom warnings.
 class GuessedAtParserWarning(UserWarning):
@@ -321,14 +323,26 @@ class BeautifulSoup(Tag):
             else:
                 possible_filename = markup
             is_file = False
+            is_directory = False
             try:
                 is_file = os.path.exists(possible_filename)
+                if is_file:
+                    is_directory = os.path.isdir(possible_filename)
             except Exception as e:
                 # This is almost certainly a problem involving
                 # characters not valid in filenames on this
                 # system. Just let it go.
                 pass
-            if is_file:
+            if is_directory:
+                warnings.warn(
+                    '"%s" looks like a directory name, not markup. You may'
+                    ' want to open a file found in this directory and pass'
+                    ' the filehandle into Beautiful Soup.' % (
+                        self._decode_markup(markup)
+                    ),
+                    MarkupResemblesLocatorWarning
+                )
+            elif is_file:
                 warnings.warn(
                     '"%s" looks like a filename, not markup. You should'
                     ' probably open this file and pass the filehandle into'
@@ -485,7 +499,7 @@ class BeautifulSoup(Tag):
 
         # On top of that, we may be inside a tag that needs a special
         # container class.
-        if self.string_container_stack:
+        if self.string_container_stack and container is NavigableString:
             container = self.builder.string_containers.get(
                 self.string_container_stack[-1].name, container
             )
@@ -541,9 +555,7 @@ class BeautifulSoup(Tag):
     def endData(self, containerClass=None):
         """Method called by the TreeBuilder when the end of a data segment
         occurs.
-        """
-        containerClass = self.string_container(containerClass)
-        
+        """       
         if self.current_data:
             current_data = ''.join(self.current_data)
             # If whitespace is not preserved, and this string contains
@@ -570,6 +582,7 @@ class BeautifulSoup(Tag):
                     not self.parse_only.search(current_data)):
                 return
 
+            containerClass = self.string_container(containerClass)
             o = containerClass(current_data)
             self.object_was_parsed(o)
 
