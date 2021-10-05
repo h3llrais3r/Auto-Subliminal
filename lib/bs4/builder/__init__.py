@@ -234,7 +234,8 @@ class TreeBuilder(object):
         :param markup: Some markup -- probably a bytestring.
         :param user_specified_encoding: The user asked to try this encoding.
         :param document_declared_encoding: The markup itself claims to be
-            in this encoding.
+            in this encoding. NOTE: This argument is not used by the
+            calling code and can probably be removed.
         :param exclude_encodings: The user asked _not_ to try any of
             these encodings.
 

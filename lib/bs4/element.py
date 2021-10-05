@@ -83,9 +83,9 @@ class NamespacedAttribute(str):
             # per https://www.w3.org/TR/xml-names/#defaulting
             name = None
 
-        if name is None:
+        if not name:
             obj = str.__new__(cls, prefix)
-        elif prefix is None:
+        elif not prefix:
             # Not really namespaced.
             obj = str.__new__(cls, name)
         else:
@@ -255,25 +255,67 @@ class PageElement(object):
     nextSibling = _alias("next_sibling")  # BS3
     previousSibling = _alias("previous_sibling")  # BS3
 
-    def replace_with(self, replace_with):
-        """Replace this PageElement with another one, keeping the rest of the
-        tree the same.
+    default = object()
+    def _all_strings(self, strip=False, types=default):
+        """Yield all strings of certain classes, possibly stripping them.
         
-        :param replace_with: A PageElement.
+        This is implemented differently in Tag and NavigableString.
+        """
+        raise NotImplementedError()
+   
+    @property
+    def stripped_strings(self):
+        """Yield all strings in this PageElement, stripping them first.
+
+        :yield: A sequence of stripped strings.
+        """
+        for string in self._all_strings(True):
+            yield string
+
+    def get_text(self, separator="", strip=False,
+                 types=default):
+        """Get all child strings of this PageElement, concatenated using the
+        given separator.
+
+        :param separator: Strings will be concatenated using this separator.
+
+        :param strip: If True, strings will be stripped before being
+            concatenated.
+
+        :param types: A tuple of NavigableString subclasses. Any
+            strings of a subclass not found in this list will be
+            ignored. Although there are exceptions, the default
+            behavior in most cases is to consider only NavigableString
+            and CData objects. That means no comments, processing
+            instructions, etc.
+
+        :return: A string.
+        """
+        return separator.join([s for s in self._all_strings(
+                    strip, types=types)])
+    getText = get_text
+    text = property(get_text)
+    
+    def replace_with(self, *args):
+        """Replace this PageElement with one or more PageElements, keeping the 
+        rest of the tree the same.
+        
+        :param args: One or more PageElements.
         :return: `self`, no longer part of the tree.
         """
         if self.parent is None:
             raise ValueError(
                 "Cannot replace one element with another when the "
                 "element to be replaced is not part of a tree.")
-        if replace_with is self:
+        if len(args) == 1 and args[0] is self:
             return
-        if replace_with is self.parent:
+        if any(x is self.parent for x in args):
             raise ValueError("Cannot replace a Tag with its parent.")
         old_parent = self.parent
         my_index = self.parent.index(self)
         self.extract(_self_index=my_index)
-        old_parent.insert(my_index, replace_with)
+        for idx, replace_with in enumerate(args, start=my_index):
+            old_parent.insert(idx, replace_with)
         return self
     replaceWith = replace_with  # BS3
 
@@ -945,7 +987,49 @@ class NavigableString(str, PageElement):
         """Prevent NavigableString.name from ever being set."""
         raise AttributeError("A NavigableString cannot be given a name.")
 
-    
+    def _all_strings(self, strip=False, types=PageElement.default):
+        """Yield all strings of certain classes, possibly stripping them.
+
+        This makes it easy for NavigableString to implement methods
+        like get_text() as conveniences, creating a consistent
+        text-extraction API across all PageElements.
+
+        :param strip: If True, all strings will be stripped before being
+            yielded.
+
+        :param types: A tuple of NavigableString subclasses. If this
+            NavigableString isn't one of those subclasses, the
+            sequence will be empty. By default, the subclasses
+            considered are NavigableString and CData objects. That
+            means no comments, processing instructions, etc.
+
+        :yield: A sequence that either contains this string, or is empty.
+
+        """
+        if types is self.default:
+            # This is kept in Tag because it's full of subclasses of
+            # this class, which aren't defined until later in the file.
+            types = Tag.DEFAULT_INTERESTING_STRING_TYPES
+
+        # Do nothing if the caller is looking for specific types of
+        # string, and we're of a different type.
+        my_type = type(self)
+        if types is not None:
+            if isinstance(types, type):
+                # Looking for a single type.
+                if my_type is not types:
+                    return
+            elif my_type not in types:
+                # Looking for one of a list of types.
+                return
+
+        value = self
+        if strip:
+            value = value.strip()
+        if len(value) > 0:
+            yield value
+    strings = property(_all_strings)
+
 class PreformattedString(NavigableString):
     """A NavigableString not subject to the normal formatting rules.
 
@@ -1069,7 +1153,8 @@ class Tag(PageElement):
                  prefix=None, attrs=None, parent=None, previous=None,
                  is_xml=None, sourceline=None, sourcepos=None,
                  can_be_empty_element=None, cdata_list_attributes=None,
-                 preserve_whitespace_tags=None
+                 preserve_whitespace_tags=None,
+                 interesting_string_types=None,
     ):
         """Basic constructor.
 
@@ -1095,6 +1180,13 @@ class Tag(PageElement):
             be treated as CDATA if they ever show up on this tag.
         :param preserve_whitespace_tags: A list of tag names whose contents
             should have their whitespace preserved.
+        :param interesting_string_types: This is a NavigableString
+            subclass or a tuple of them. When iterating over this
+            Tag's strings in methods like Tag.strings or Tag.get_text,
+            these are the types of strings that are interesting enough
+            to be considered. The default is to consider
+            NavigableString and CData the only interesting string
+            subtypes.
         """
         if parser is None:
             self.parser_class = None
@@ -1140,6 +1232,7 @@ class Tag(PageElement):
             self.can_be_empty_element = can_be_empty_element
             self.cdata_list_attributes = cdata_list_attributes
             self.preserve_whitespace_tags = preserve_whitespace_tags
+            self.interesting_string_types = interesting_string_types
         else:
             # Set up any substitutions for this tag, such as the charset in a META tag.
             builder.set_up_substitutions(self)
@@ -1160,6 +1253,13 @@ class Tag(PageElement):
             # Keep track of the names that might cause this tag to be treated as a
             # whitespace-preserved tag.
             self.preserve_whitespace_tags = builder.preserve_whitespace_tags
+
+            if self.name in builder.string_containers:
+                # This sort of tag uses a special string container
+                # subclass for most of its strings. When we ask the
+                self.interesting_string_types = builder.string_containers[self.name]
+            else:
+                self.interesting_string_types = self.DEFAULT_INTERESTING_STRING_TYPES
             
     parserClass = _alias("parser_class")  # BS3
 
@@ -1226,64 +1326,44 @@ class Tag(PageElement):
         self.clear()
         self.append(string.__class__(string))
 
-    def _all_strings(self, strip=False, types=(NavigableString, CData)):
+    DEFAULT_INTERESTING_STRING_TYPES = (NavigableString, CData)
+    def _all_strings(self, strip=False, types=PageElement.default):
         """Yield all strings of certain classes, possibly stripping them.
 
         :param strip: If True, all strings will be stripped before being
             yielded.
 
-        :types: A tuple of NavigableString subclasses. Any strings of
+        :param types: A tuple of NavigableString subclasses. Any strings of
             a subclass not found in this list will be ignored. By
-            default, this means only NavigableString and CData objects
-            will be considered. So no comments, processing instructions,
-            etc.
+            default, the subclasses considered are the ones found in
+            self.interesting_string_types. If that's not specified,
+            only NavigableString and CData objects will be
+            considered. That means no comments, processing
+            instructions, etc.
 
         :yield: A sequence of strings.
+
         """
+        if types is self.default:
+            types = self.interesting_string_types
+
         for descendant in self.descendants:
-            if (
-                (types is None and not isinstance(descendant, NavigableString))
-                or
-                (types is not None and type(descendant) not in types)):
+            if (types is None and not isinstance(descendant, NavigableString)):
+                continue
+            descendant_type = type(descendant)
+            if isinstance(types, type):
+                if descendant_type is not types:
+                    # We're not interested in strings of this type.
+                    continue
+            elif types is not None and descendant_type not in types:
+                # We're not interested in strings of this type.
                 continue
             if strip:
                 descendant = descendant.strip()
                 if len(descendant) == 0:
                     continue
             yield descendant
-
     strings = property(_all_strings)
-
-    @property
-    def stripped_strings(self):
-        """Yield all strings in the document, stripping them first.
-
-        :yield: A sequence of stripped strings.
-        """
-        for string in self._all_strings(True):
-            yield string
-
-    def get_text(self, separator="", strip=False,
-                 types=(NavigableString, CData)):
-        """Get all child strings, concatenated using the given separator.
-
-        :param separator: Strings will be concatenated using this separator.
-
-        :param strip: If True, strings will be stripped before being
-            concatenated.
-
-        :types: A tuple of NavigableString subclasses. Any strings of
-            a subclass not found in this list will be ignored. By
-            default, this means only NavigableString and CData objects
-            will be considered. So no comments, processing instructions,
-            stylesheets, etc.
-
-        :return: A string.
-        """
-        return separator.join([s for s in self._all_strings(
-                    strip, types=types)])
-    getText = get_text
-    text = property(get_text)
 
     def decompose(self):
         """Recursively destroys this PageElement and its children.
