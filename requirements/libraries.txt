@@ -33,7 +33,7 @@ langdetect==1.0.9
 more-itertools==8.10.0
 oauthlib==3.1.1
 pbr==5.6.0
-portend==2.7.1
+portend==2.7.2
 pysrt==1.1.2
 python-anticaptcha==0.7.1
 python-dateutil==2.8.2
