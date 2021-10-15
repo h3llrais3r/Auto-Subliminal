@@ -46,7 +46,7 @@ requests-oauthlib==1.3.0
 schema==0.7.4
 simplejson==3.17.5
 six==1.16.0
-smmap==4.0.0
+smmap==5.0.0
 soupsieve==2.2.1
 stevedore==3.4.0
 subliminal @ git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a
