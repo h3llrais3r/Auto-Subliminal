@@ -23,7 +23,7 @@ html5lib==1.1
 idna==3.3
 imdbpie==5.6.4
 importlib-metadata==4.8.1
-importlib-resources==5.2.2
+importlib-resources==5.3.0
 jaraco.classes==3.2.1
 jaraco.collections==3.4.0
 jaraco.functools==3.3.0
