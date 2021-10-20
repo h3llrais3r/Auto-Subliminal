@@ -38,15 +38,28 @@ jobs:
         pip install -e .[dev,test]
         pip install --upgrade coveralls
 
-    - name: Set up npm
-      shell: bash -l {0} # nvm requires shell
+    - name: Get node version
+      id: get-node-version
       run: |
+        # Get minimal required node version from package.json
         cd web/autosubliminal
-        # Install minimal required node version from package.json
-        nvm install "$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
+        if [ "$RUNNER_OS" == "Linux" ]; then
+          echo "::set-output name=node-version::$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
+        elif [ "$RUNNER_OS" == "Windows" ]; then
+          echo "::set-output name=node-version::(Get-Content -Raw -Path package.json | ConvertFrom-Json).engines.node -replace '[>=]'"
+        else
+          echo "$RUNNER_OS not supported"
+          exit 1
+        fi
+        cd ../..
+
+    - name: Set up node
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{steps.get-node-version.outputs.node-version}}
+      run: |
         node --version
         npm --version
-        cd ../..
 
     - name: Install npm dependencies
       run: |
