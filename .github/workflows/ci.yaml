@@ -111,7 +111,7 @@ jobs:
 
   ci-finish:
 
-    needs: ci-linux
+    needs: ci
 
     runs-on: ubuntu-latest
 
