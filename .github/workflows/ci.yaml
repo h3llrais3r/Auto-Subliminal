@@ -44,7 +44,7 @@ jobs:
 
     - name: Get node version (Linux)
       id: get-node-version-linux
-      if: runner.os == "Linux"
+      if: ${{ runner.os == 'Linux' }}
       run: |
         # Get minimal required node version from package.json
         cd web/autosubliminal
@@ -52,14 +52,14 @@ jobs:
         cd ../..
 
     - name: Set up node ${{steps.get-node-version.outputs.node-version}} (Linux)
-      if: runner.os == "Linux"
+      if: ${{ runner.os == 'Linux' }}
       uses: actions/setup-node@v2
       with:
         node-version: "${{steps.get-node-version-linux.outputs.node-version}}"
 
     - name: Get node version (Windows)
       id: get-node-version-windows
-      if: runner.os == "Windows"
+      if: ${{ runner.os == 'Windows' }}
       run: |
         # Get minimal required node version from package.json
         cd web/autosubliminal
@@ -67,7 +67,7 @@ jobs:
         cd ../..
 
     - name: Set up node ${{steps.get-node-version.outputs.node-version}} (Windows)
-      if: runner.os == "Windows"
+      if: ${{ runner.os == 'Windows' }}
       uses: actions/setup-node@v2
       with:
         node-version: "${{steps.get-node-version-windows.outputs.node-version}}"
