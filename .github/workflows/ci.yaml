@@ -42,17 +42,20 @@ jobs:
 
     - name: Get node version
       id: get-node-version
+      if: runner.os == "Linux"
       run: |
         # Get minimal required node version from package.json
         cd web/autosubliminal
-        if [ "$RUNNER_OS" == "Linux" ]; then
-          echo "::set-output name=node-version::$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
-        elif [ "$RUNNER_OS" == "Windows" ]; then
-          echo "::set-output name=node-version::(Get-Content -Raw -Path package.json | ConvertFrom-Json).engines.node -replace '[>=]'"
-        else
-          echo "$RUNNER_OS not supported"
-          exit 1
-        fi
+        echo "::set-output name=node-version::$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
+        cd ../..
+
+    - name: Get node version
+      id: get-node-version
+      if: runner.os == "Windows"
+      run: |
+        # Get minimal required node version from package.json
+        cd web/autosubliminal
+        echo "::set-output name=node-version::$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
         cd ../..
 
     - name: Set up node
