@@ -29,6 +29,8 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+
+    - name: Print Python version
       run: |
         python --version
 
@@ -55,13 +57,15 @@ jobs:
       run: |
         # Get minimal required node version from package.json
         cd web/autosubliminal
-        echo "::set-output name=node-version::$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
+        echo "::set-output name=node-version::(Get-Content -Raw -Path package.json | ConvertFrom-Json).engines.node -replace '[>=]'"
         cd ../..
 
-    - name: Set up node
+    - name: Set up node ${{steps.get-node-version.outputs.node-version}}
       uses: actions/setup-node@v2
       with:
         node-version: "${{steps.get-node-version.outputs.node-version}}"
+
+    - name: Print node version
       run: |
         node --version
         npm --version
