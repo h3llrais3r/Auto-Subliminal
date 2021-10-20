@@ -13,7 +13,7 @@ on:
       - master
 
 jobs:
-  ci-linux:
+  ci:
 
     runs-on: ${{ matrix.os }} # Use matrix os to run on multiple os
     strategy:
@@ -63,7 +63,7 @@ jobs:
       run: |
         # Get minimal required node version from package.json
         cd web/autosubliminal
-        echo "::set-output name=node-version::'(Get-Content -Raw -Path package.json | ConvertFrom-Json).engines.node -replace "[>=]"'"
+        echo "::set-output name=node-version::$((Get-Content -Raw -Path package.json | ConvertFrom-Json).engines.node -replace '[>=]')"
         cd ../..
 
     - name: Set up node (Windows)
