@@ -25,12 +25,12 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up python
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Print Python version
+    - name: Print python version
       run: |
         python --version
 
