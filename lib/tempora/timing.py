@@ -33,7 +33,7 @@ class Stopwatch:
     ...     assert isinstance(watch.split(), datetime.timedelta)
 
     In that case, the watch is stopped when the context is exited,
-    so to read the elapsed time::
+    so to read the elapsed time:
 
     >>> watch.elapsed
     datetime.timedelta(...)

@@ -492,6 +492,7 @@ def parse_timedelta(str):
     datetime.timedelta(seconds=50435, microseconds=362000)
 
     TODO: Should this be 14 hours or 14 minutes?
+
     >>> parse_timedelta('14:00')
     datetime.timedelta(seconds=50400)
 
