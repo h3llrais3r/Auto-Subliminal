@@ -128,9 +128,6 @@ def free(host, port, timeout=float('Inf')):
             time.sleep(0.1)
 
 
-wait_for_free_port = free
-
-
 def occupied(host, port, timeout=float('Inf')):
     """
     Wait for the specified port to become occupied (accepting requests).
@@ -165,9 +162,6 @@ def occupied(host, port, timeout=float('Inf')):
         except PortNotFree:
             # port is occupied
             return
-
-
-wait_for_occupied_port = occupied
 
 
 def find_available_local_port():
