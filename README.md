@@ -3,7 +3,7 @@ Auto-Subliminal [![License](https://img.shields.io/github/license/h3llrais3r/Aut
 
 | Status | Master | Development |
 | -------|:------:| -----------:|
-| CI | [![CI Status](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml) | [![CI Status](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml/badge.svg?branch=development)](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml) |
+| CI | [![CI Status](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml?query=branch:master) | [![CI Status](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml/badge.svg?branch=development)](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml?query=branch:development) |
 | Coverage | [![Coverage Status](https://coveralls.io/repos/github/h3llrais3r/Auto-Subliminal/badge.svg?branch=master)](https://coveralls.io/github/h3llrais3r/Auto-Subliminal?branch=master) | [![Coverage Status](https://coveralls.io/repos/github/h3llrais3r/Auto-Subliminal/badge.svg?branch=development)](https://coveralls.io/github/h3llrais3r/Auto-Subliminal?branch=development) |
 | Requirements | [![Requirements Status](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements.svg?branch=master)](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements/?branch=master) | [![Requirements Status](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements.svg?branch=development)](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements/?branch=development) |
 
