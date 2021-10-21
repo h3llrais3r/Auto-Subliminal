@@ -1,293 +1,323 @@
 <html>
+
 <head>
 </head>
+
 <body>
-<div class="master_changelog">
+  <div class="master_changelog">
     <div class="release">
-        <div class="version">3.0.0</div>
-        <div class="releasedate">25-03-2019</div>
-        <ul class="changelog">
-            <li class="change">Bugfixes</li>
-            <li class="change">Small improvements and refactoring</li>
-            <li class="change">Increase test coverage</li>
-            <li class="change">Add appveyor build</li>
-            <li class="change">Small layout changes</li>
-            <li class="change">Change thread initialization</li>
-            <li class="change">Add support for pt-BR language</li>
-            <li class="change">Add option to edit show/movie settings from wanted items list</li>
-            <li class="change">Make search deadline/delta configurable</li>
-            <li class="change">Switch to scss for styling</li>
-            <li class="change">Use custom guessit exceptions to fix specific cases that are not supported by guessit</li>
-            <li class="change">Upgrade subliminal to latest develop version (with guessit 3 support)</li>
-            <li class="change">Upgrade guessit to version 3.0.3</li>
-            <li class="change">Improve imdb search</li>
-            <li class="change">Use code linting (eslint and stylelint)</li>
-            <li class="change">Handle python version change</li>
-            <li class="change">Add library view (implemented in vue.js)</li>
-            <li class="change">Replace enum34 by aenum</li>
-            <li class="change">Refactoring db structure</li>
-            <li class="change">Create backup of db before upgrading</li>
-            <li class="change">Refactoring item class</li>
-            <li class="change">Refactoring javascript files</li>
-            <li class="change">Add settings api to fetch frontend settings</li>
-            <li class="change">Add alive property to scheduler</li>
-            <li class="change">Add schedulers rest api</li>
-            <li class="change">Refactor websocket events and notifications</li>
-            <li class="change">Add option to disable the scoring for manual search</li>
-            <li class="change">Remove NMA (NotifyMyAndroid) notifier</li>
-            <li class="change">Refactoring notifiers</li>
-            <li class="change">Upgrade python libraries to their latest version</li>
-            <li class="change">Upgrade javascript libraries</li>
-        </ul>
+      <div class="version">4.0.0</div>
+      <div class="releasedate">21-10-2021</div>
+      <ul class="changelog">
+        <li class="change">Drop python 2 support</li>
+        <li class="change">Add python 3 support</li>
+        <li class="change">Require python 3.6 or higher</li>
+        <li class="change">Upgrade python libraries to their latest version</li>
+        <li class="change">Rewrite frontend in angular 10</li>
+        <li class="change">Rewrite backend with rest api's</li>
+        <li class="change">Add option to add a show/movie path to the video paths</li>
+        <li class="change">Add library path to the default postprocessor arguments</li>
+        <li class="change">Create custom addic7ed provider with anti captcha functionality (not tested)</li>
+        <li class="change">Clear caches when switching between python versions</li>
+        <li class="change">Exit application if pywin32 is not installed on Windows</li>
+        <li class="change">Add option to set Legendas.TV credentials</li>
+        <li class="change">Add fallback to slug name matching in show indexer</li>
+        <li class="change">Refactor pushbullet notifier</li>
+        <li class="change">Add helper build scripts for development</li>
+        <li class="change">Small improvements and refactoring</li>
+        <li class="change">Bugfixes</li>
+        <li class="change">Switch to vscode for ide</li>
+        <li class="change">Drop travis build</li>
+        <li class="change">Drop appveyor build</li>
+        <li class="change">Add github actions build</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">2.6.1</div>
-        <div class="releasedate">11-12-2018</div>
-        <ul class="changelog">
-            <li class="change">Fix save subtitle when language suffix is used</li>
-        </ul>
+      <div class="version">3.0.0</div>
+      <div class="releasedate">25-03-2019</div>
+      <ul class="changelog">
+        <li class="change">Bugfixes</li>
+        <li class="change">Small improvements and refactoring</li>
+        <li class="change">Increase test coverage</li>
+        <li class="change">Add appveyor build</li>
+        <li class="change">Small layout changes</li>
+        <li class="change">Change thread initialization</li>
+        <li class="change">Add support for pt-BR language</li>
+        <li class="change">Add option to edit show/movie settings from wanted items list</li>
+        <li class="change">Make search deadline/delta configurable</li>
+        <li class="change">Switch to scss for styling</li>
+        <li class="change">Use custom guessit exceptions to fix specific cases that are not supported by guessit</li>
+        <li class="change">Upgrade subliminal to latest develop version (with guessit 3 support)</li>
+        <li class="change">Upgrade guessit to version 3.0.3</li>
+        <li class="change">Improve imdb search</li>
+        <li class="change">Use code linting (eslint and stylelint)</li>
+        <li class="change">Handle python version change</li>
+        <li class="change">Add library view (implemented in vue.js)</li>
+        <li class="change">Replace enum34 by aenum</li>
+        <li class="change">Refactoring db structure</li>
+        <li class="change">Create backup of db before upgrading</li>
+        <li class="change">Refactoring item class</li>
+        <li class="change">Refactoring javascript files</li>
+        <li class="change">Add settings api to fetch frontend settings</li>
+        <li class="change">Add alive property to scheduler</li>
+        <li class="change">Add schedulers rest api</li>
+        <li class="change">Refactor websocket events and notifications</li>
+        <li class="change">Add option to disable the scoring for manual search</li>
+        <li class="change">Remove NMA (NotifyMyAndroid) notifier</li>
+        <li class="change">Refactoring notifiers</li>
+        <li class="change">Upgrade python libraries to their latest version</li>
+        <li class="change">Upgrade javascript libraries</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">2.6.0</div>
-        <div class="releasedate">11-10-2018</div>
-        <ul class="changelog">
-            <li class="change">Bugfixes</li>
-            <li class="change">Small improvements and refactoring</li>
-            <li class="change">Configure renovate</li>
-            <li class="change">Upgrade python libraries to their latest version</li>
-            <li class="change">Convert item dict to item class</li>
-            <li class="change">Refactor websocket system</li>
-            <li class="change">Restructure code</li>
-            <li class="change">Upgrade subliminal to latest develop version</li>
-            <li class="change">Add initial rest api</li>
-        </ul>
+      <div class="version">2.6.1</div>
+      <div class="releasedate">11-12-2018</div>
+      <ul class="changelog">
+        <li class="change">Fix save subtitle when language suffix is used</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">2.5.0</div>
-        <div class="releasedate">19-03-2018</div>
-        <ul class="changelog">
-            <li class="change">Bugfixes</li>
-            <li class="change">Small improvements and refactoring</li>
-            <li class="change">Increase test coverage</li>
-            <li class="change">Layout changes</li>
-            <li class="change">Add telegram notifier</li>
-            <li class="change">Prevent app crash on unexpected subliminal error</li>
-            <li class="change">Prevent daily search for old videos (only search once a week when older than 4 weeks)</li>
-            <li class="change">Release wanted queue lock on unexpected error to prevent permanent lock</li>
-            <li class="change">Refactor post processor (root video path added to arguments)</li>
-            <li class="change">Add proper unicode handling</li>
-            <li class="change">Replace Cheetah by Mako</li>
-            <li class="change">Create custom error page</li>
-            <li class="change">Split libraries for each Python version</li>
-            <li class="change">Add initial support for Python 3</li>
-            <li class="change">Switch to Python 3 compatible libraries where needed</li>
-            <li class="change">Upgrade python libraries to their latest version</li>
-            <li class="change">Upgrade javascript libraries</li>
-            <li class="change">Remove mobile layout (default layout is responsive)</li>
-            <li class="change">Upgrade subliminal to latest develop version</li>
-            <li class="change">Save config per section</li>
-            <li class="change">Add alternative show name mapping (as refiner)</li>
-            <li class="change">Add custom Addic7ed show name mapping</li>
-            <li class="change">Don't search if no providers are configured instead of searching with all subliminal providers</li>
-            <li class="change">Fix provider registration on restart</li>
-        </ul>
+      <div class="version">2.6.0</div>
+      <div class="releasedate">11-10-2018</div>
+      <ul class="changelog">
+        <li class="change">Bugfixes</li>
+        <li class="change">Small improvements and refactoring</li>
+        <li class="change">Configure renovate</li>
+        <li class="change">Upgrade python libraries to their latest version</li>
+        <li class="change">Convert item dict to item class</li>
+        <li class="change">Refactor websocket system</li>
+        <li class="change">Restructure code</li>
+        <li class="change">Upgrade subliminal to latest develop version</li>
+        <li class="change">Add initial rest api</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">2.4.0</div>
-        <div class="releasedate">13-01-2018</div>
-        <ul class="changelog">
-            <li class="change">Remove discarded providers notification</li>
-            <li class="change">Clear discarded providers before each subtitle check</li>
-            <li class="change">Fix fileprocessor for multi episode series</li>
-            <li class="change">Sanitize series/movie names before matching on indexer</li>
-            <li class="change">Add custom Addic7ed provider (random user agent)</li>
-            <li class="change">Cleanup unused libraries</li>
-            <li class="change">Upgrade libraries to their latest version</li>
-        </ul>
+      <div class="version">2.5.0</div>
+      <div class="releasedate">19-03-2018</div>
+      <ul class="changelog">
+        <li class="change">Bugfixes</li>
+        <li class="change">Small improvements and refactoring</li>
+        <li class="change">Increase test coverage</li>
+        <li class="change">Layout changes</li>
+        <li class="change">Add telegram notifier</li>
+        <li class="change">Prevent app crash on unexpected subliminal error</li>
+        <li class="change">Prevent daily search for old videos (only search once a week when older than 4 weeks)</li>
+        <li class="change">Release wanted queue lock on unexpected error to prevent permanent lock</li>
+        <li class="change">Refactor post processor (root video path added to arguments)</li>
+        <li class="change">Add proper unicode handling</li>
+        <li class="change">Replace Cheetah by Mako</li>
+        <li class="change">Create custom error page</li>
+        <li class="change">Split libraries for each Python version</li>
+        <li class="change">Add initial support for Python 3</li>
+        <li class="change">Switch to Python 3 compatible libraries where needed</li>
+        <li class="change">Upgrade python libraries to their latest version</li>
+        <li class="change">Upgrade javascript libraries</li>
+        <li class="change">Remove mobile layout (default layout is responsive)</li>
+        <li class="change">Upgrade subliminal to latest develop version</li>
+        <li class="change">Save config per section</li>
+        <li class="change">Add alternative show name mapping (as refiner)</li>
+        <li class="change">Add custom Addic7ed show name mapping</li>
+        <li class="change">Don't search if no providers are configured instead of searching with all subliminal providers</li>
+        <li class="change">Fix provider registration on restart</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">2.3.1</div>
-        <div class="releasedate">07-01-2018</div>
-        <ul class="changelog">
-            <li class="change">Fix crash when git is not installed</li>
-        </ul>
+      <div class="version">2.4.0</div>
+      <div class="releasedate">13-01-2018</div>
+      <ul class="changelog">
+        <li class="change">Remove discarded providers notification</li>
+        <li class="change">Clear discarded providers before each subtitle check</li>
+        <li class="change">Fix fileprocessor for multi episode series</li>
+        <li class="change">Sanitize series/movie names before matching on indexer</li>
+        <li class="change">Add custom Addic7ed provider (random user agent)</li>
+        <li class="change">Cleanup unused libraries</li>
+        <li class="change">Upgrade libraries to their latest version</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">2.3.0</div>
-        <div class="releasedate">19-12-2017</div>
-        <ul class="changelog">
-            <li class="change">Bugfixes</li>
-            <li class="change">Small improvements and refactoring</li>
-            <li class="change">Upgrade dependencies to their latest version</li>
-            <li class="change">Clear log now also removes backup log files</li>
-            <li class="change">Add possibility to view all logfiles</li>
-            <li class="change">Force git clean during version update</li>
-            <li class="change">Add tox configuration</li>
-            <li class="change">Get rid of cheetah as install requirement (now included in lib folder)</li>
-            <li class="change">Upgrade javascript libraries to their latest version</li>
-            <li class="change">Use npm as package manager for javascript dependencies</li>
-            <li class="change">Add option to save subtitles in utf-8 encoding</li>
-            <li class="change">Show discarded providers of previous run on home page</li>
-            <li class="change">Use provider pool for subliminal (speed up the subtitle check run)</li>
-            <li class="change">Auto reload home page after disk scan or subtitle check run</li>
-            <li class="change">Refactoring websockets to support notifications and events</li>
-            <li class="change">Switch to tvdb api v2</li>
-            <li class="change">Add menu item 'scan disk' and 'check subtitle'</li>
-            <li class="change">Add option to manually refine videos for manual search</li>
-            <li class="change">Add option to manually override show/movie details</li>
-            <li class="change">Enable saveFilters on tablesorter tables with filters</li>
-            <li class="change">Use deferer url when linking to other sites</li>
-            <li class="change">Add link to tvdb for show and imdb for movie</li>
-        </ul>
+      <div class="version">2.3.1</div>
+      <div class="releasedate">07-01-2018</div>
+      <ul class="changelog">
+        <li class="change">Fix crash when git is not installed</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">2.2.1</div>
-        <div class="releasedate">17-02-2017</div>
-        <ul class="changelog">
-            <li class="change">Fix initial save</li>
-        </ul>
+      <div class="version">2.3.0</div>
+      <div class="releasedate">19-12-2017</div>
+      <ul class="changelog">
+        <li class="change">Bugfixes</li>
+        <li class="change">Small improvements and refactoring</li>
+        <li class="change">Upgrade dependencies to their latest version</li>
+        <li class="change">Clear log now also removes backup log files</li>
+        <li class="change">Add possibility to view all logfiles</li>
+        <li class="change">Force git clean during version update</li>
+        <li class="change">Add tox configuration</li>
+        <li class="change">Get rid of cheetah as install requirement (now included in lib folder)</li>
+        <li class="change">Upgrade javascript libraries to their latest version</li>
+        <li class="change">Use npm as package manager for javascript dependencies</li>
+        <li class="change">Add option to save subtitles in utf-8 encoding</li>
+        <li class="change">Show discarded providers of previous run on home page</li>
+        <li class="change">Use provider pool for subliminal (speed up the subtitle check run)</li>
+        <li class="change">Auto reload home page after disk scan or subtitle check run</li>
+        <li class="change">Refactoring websockets to support notifications and events</li>
+        <li class="change">Switch to tvdb api v2</li>
+        <li class="change">Add menu item 'scan disk' and 'check subtitle'</li>
+        <li class="change">Add option to manually refine videos for manual search</li>
+        <li class="change">Add option to manually override show/movie details</li>
+        <li class="change">Enable saveFilters on tablesorter tables with filters</li>
+        <li class="change">Use deferer url when linking to other sites</li>
+        <li class="change">Add link to tvdb for show and imdb for movie</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">2.2.0</div>
-        <div class="releasedate">12-02-2017</div>
-        <ul class="changelog">
-            <li class="change">Bugfixes</li>
-            <li class="change">Small improvements and refactoring</li>
-            <li class="change">Add option to refine videos with subliminal</li>
-            <li class="change">Use websockets for notifications instead of polling</li>
-            <li class="change">Upgrade cherrypy to 8.1.0</li>
-            <li class="change">Improve diskscanner and fileprocessor</li>
-            <li class="change">Add option to filter out third party library logging</li>
-            <li class="change">Fix postprocessing for multiple subtitles</li>
-            <li class="change">Keep track of wanted items in it's own db</li>
-            <li class="change">Filter out manual search results with too low score</li>
-            <li class="change">Use indexer for shows and movies</li>
-            <li class="change">New scoring logic (based on new subliminal version)</li>
-            <li class="change">Upgrade subliminal to 2.0.5 and add/upgrade dependencies</li>
-            <li class="change">Fix RotatingFileHandler on windows</li>
-            <li class="change">Integrate travis build with coverage</li>
-            <li class="change">Update tablesorter plugin</li>
-            <li class="change">Add video type filter on home screen</li>
-            <li class="change">Escape html characters in logging view</li>
-            <li class="change">Restart application after manual update</li>
-            <li class="change">Add option for invalid subtitle language detection</li>
-        </ul>
+      <div class="version">2.2.1</div>
+      <div class="releasedate">17-02-2017</div>
+      <ul class="changelog">
+        <li class="change">Fix initial save</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">2.1.2</div>
-        <div class="releasedate">17-10-2016</div>
-        <ul class="changelog">
-            <li class="change">Fix cherrypy unicode error</li>
-        </ul>
+      <div class="version">2.2.0</div>
+      <div class="releasedate">12-02-2017</div>
+      <ul class="changelog">
+        <li class="change">Bugfixes</li>
+        <li class="change">Small improvements and refactoring</li>
+        <li class="change">Add option to refine videos with subliminal</li>
+        <li class="change">Use websockets for notifications instead of polling</li>
+        <li class="change">Upgrade cherrypy to 8.1.0</li>
+        <li class="change">Improve diskscanner and fileprocessor</li>
+        <li class="change">Add option to filter out third party library logging</li>
+        <li class="change">Fix postprocessing for multiple subtitles</li>
+        <li class="change">Keep track of wanted items in it's own db</li>
+        <li class="change">Filter out manual search results with too low score</li>
+        <li class="change">Use indexer for shows and movies</li>
+        <li class="change">New scoring logic (based on new subliminal version)</li>
+        <li class="change">Upgrade subliminal to 2.0.5 and add/upgrade dependencies</li>
+        <li class="change">Fix RotatingFileHandler on windows</li>
+        <li class="change">Integrate travis build with coverage</li>
+        <li class="change">Update tablesorter plugin</li>
+        <li class="change">Add video type filter on home screen</li>
+        <li class="change">Escape html characters in logging view</li>
+        <li class="change">Restart application after manual update</li>
+        <li class="change">Add option for invalid subtitle language detection</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">2.1.1</div>
-        <div class="releasedate">12-04-2016</div>
-        <ul class="changelog">
-            <li class="change">Fix restart functionality</li>
-        </ul>
+      <div class="version">2.1.2</div>
+      <div class="releasedate">17-10-2016</div>
+      <ul class="changelog">
+        <li class="change">Fix cherrypy unicode error</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">2.1.0</div>
-        <div class="releasedate">09-04-2016</div>
-        <ul class="changelog">
-            <li class="change">Bugfixes</li>
-            <li class="change">Small improvements and refactoring</li>
-            <li class="change">Implement restart with kill of running process to have a clean restart</li>
-            <li class="change">Upgrade cherrypy server</li>
-            <li class="change">Upgrade and refactoring of notification libraries and added pushover and pushbullet support</li>
-            <li class="change">Show git version in config info screen (if installed from git)</li>
-            <li class="change">Layout improvements</li>
-            <li class="change">Implement version check and auto update</li>
-            <li class="change">Change menu layout</li>
-            <li class="change">Add support for notifications (desktop and jquery)</li>
-            <li class="change">Add option to scan for embedded subtitles</li>
-            <li class="change">Update tablesorter and use pager addon</li>
-            <li class="change">Add config option to limit db results</li>
-            <li class="change">Add countdown to next scheduler runs</li>
-            <li class="change">Add OpenSubtitles login configuration</li>
-            <li class="change">Upgrade subliminal to 1.1.1 and related dependencies to their required versions</li>
-        </ul>
+      <div class="version">2.1.1</div>
+      <div class="releasedate">12-04-2016</div>
+      <ul class="changelog">
+        <li class="change">Fix restart functionality</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">2.0.0</div>
-        <div class="releasedate">09-12-2015</div>
-        <ul class="changelog">
-            <li class="change">Bugfixes</li>
-            <li class="change">Remove releaseGroup suffix to improve matching</li>
-            <li class="change">Add status page</li>
-            <li class="change">Rework of scheduler and threads</li>
-            <li class="change">Add option to force search on tvdb id or imdb id</li>
-            <li class="change">Update screen translations</li>
-            <li class="change">Add option to skip and delete a show or movie</li>
-            <li class="change">Migrate to boostrap</li>
-            <li class="change">Rework postprocessor</li>
-            <li class="change">Add option to skip video with post processing</li>
-            <li class="change">Remove postprocessing script</li>
-            <li class="change">Rework screen layout</li>
-            <li class="change">Show all releases in changelog info screen</li>
-            <li class="change">Show file size of video in info dropdown</li>
-            <li class="change">Fix restart application after config change</li>
-            <li class="change">Remove api calls check</li>
-            <li class="change">Split config for shows and movies</li>
-            <li class="change">Add support for movies</li>
-            <li class="change">Cleanup old fileprocessor logic</li>
-            <li class="change">Fix Addic7ed provider configuration</li>
-            <li class="change">Upgrade dependencies to their latest version</li>
-        </ul>
+      <div class="version">2.1.0</div>
+      <div class="releasedate">09-04-2016</div>
+      <ul class="changelog">
+        <li class="change">Bugfixes</li>
+        <li class="change">Small improvements and refactoring</li>
+        <li class="change">Implement restart with kill of running process to have a clean restart</li>
+        <li class="change">Upgrade cherrypy server</li>
+        <li class="change">Upgrade and refactoring of notification libraries and added pushover and pushbullet support</li>
+        <li class="change">Show git version in config info screen (if installed from git)</li>
+        <li class="change">Layout improvements</li>
+        <li class="change">Implement version check and auto update</li>
+        <li class="change">Change menu layout</li>
+        <li class="change">Add support for notifications (desktop and jquery)</li>
+        <li class="change">Add option to scan for embedded subtitles</li>
+        <li class="change">Update tablesorter and use pager addon</li>
+        <li class="change">Add config option to limit db results</li>
+        <li class="change">Add countdown to next scheduler runs</li>
+        <li class="change">Add OpenSubtitles login configuration</li>
+        <li class="change">Upgrade subliminal to 1.1.1 and related dependencies to their required versions</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">1.1.0</div>
-        <div class="releasedate">06-07-2015</div>
-        <ul class="changelog">
-            <li class="change">Sort the wanted queue in reverse order to see the newest items at the top.</li>
-        </ul>
+      <div class="version">2.0.0</div>
+      <div class="releasedate">09-12-2015</div>
+      <ul class="changelog">
+        <li class="change">Bugfixes</li>
+        <li class="change">Remove releaseGroup suffix to improve matching</li>
+        <li class="change">Add status page</li>
+        <li class="change">Rework of scheduler and threads</li>
+        <li class="change">Add option to force search on tvdb id or imdb id</li>
+        <li class="change">Update screen translations</li>
+        <li class="change">Add option to skip and delete a show or movie</li>
+        <li class="change">Migrate to boostrap</li>
+        <li class="change">Rework postprocessor</li>
+        <li class="change">Add option to skip video with post processing</li>
+        <li class="change">Remove postprocessing script</li>
+        <li class="change">Rework screen layout</li>
+        <li class="change">Show all releases in changelog info screen</li>
+        <li class="change">Show file size of video in info dropdown</li>
+        <li class="change">Fix restart application after config change</li>
+        <li class="change">Remove api calls check</li>
+        <li class="change">Split config for shows and movies</li>
+        <li class="change">Add support for movies</li>
+        <li class="change">Cleanup old fileprocessor logic</li>
+        <li class="change">Fix Addic7ed provider configuration</li>
+        <li class="change">Upgrade dependencies to their latest version</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">1.0.1</div>
-        <div class="releasedate">07-05-2015</div>
-        <ul class="changelog">
-            <li class="change">Updated subliminal to my latest master-autosubliminal with fixes for addic7ed and podnapisi providers.</li>
-        </ul>
+      <div class="version">1.1.0</div>
+      <div class="releasedate">06-07-2015</div>
+      <ul class="changelog">
+        <li class="change">Sort the wanted queue in reverse order to see the newest items at the top.</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">1.0.0</div>
-        <div class="releasedate">07-10-2014</div>
-        <ul class="changelog">
-            <li class="change">Included dependencies in our own lib folder. No need to install the dependencies manually or with setup.py.</li>
-            <li class="change">Updated twitter keys</li>
-            <li class="change">Updated notifications</li>
-            <li class="change">Added restart option</li>
-            <li class="change">Removed fake entry points (no longer needed since upgrade to subliminal 0.8.0)</li>
-            <li class="change">Added source (format) for subtitle matching</li>
-            <li class="change">Added default quality 'SD' when no quality is found</li>
-            <li class="change">Added option to download hearing impaired subs</li>
-            <li class="change">Reworked subliminal config section</li>
-            <li class="change">Added subtitle provider indication when downloaded</li>
-            <li class="change">Added separate postprocessing config section</li>
-            <li class="change">Added option for utf-8 encoding for postprocessing (needed for file names with special characters)</li>
-            <li class="change">Added most languages (instead of only nl and en)</li>
-            <li class="change">Added manual search/save/delete subtitle functionality</li>
-            <li class="change">Added postprocessing script to interact with Sick-Beard</li>
-            <li class="change">Added remote play of a video (need to register a custom protocol handler)</li>
-            <li class="change">Updated version logic</li>
-            <li class="change">GUI optimizations</li>
-            <li class="change">Bug fixing</li>
-            <li class="change">Code cleanup and refactoring</li>
-        </ul>
+      <div class="version">1.0.1</div>
+      <div class="releasedate">07-05-2015</div>
+      <ul class="changelog">
+        <li class="change">Updated subliminal to my latest master-autosubliminal with fixes for addic7ed and podnapisi providers.</li>
+      </ul>
     </div>
     <div class="release">
-        <div class="version">Beta 0.6.0</div>
-        <div class="releasedate">14-01-2014</div>
-        <ul class="changelog">
-            <li class="change">Initial version</li>
-            <li class="change">Based on the discontinued Auto-Sub Alpha 0.5.8 project (<a href="http://code.google.com/p/auto-sub/">http://code.google.com/p/auto-sub/</a>)
-            </li>
-            <li class="change">Uses Subliminal (<a href=" https://github.com/Diaoul/subliminal">https://github.com/Diaoul/subliminal</a>) as subtitle provider
-            </li>
-            <li class="change">Code cleanup and refactoring</li>
-        </ul>
+      <div class="version">1.0.0</div>
+      <div class="releasedate">07-10-2014</div>
+      <ul class="changelog">
+        <li class="change">Included dependencies in our own lib folder. No need to install the dependencies manually or with setup.py.</li>
+        <li class="change">Updated twitter keys</li>
+        <li class="change">Updated notifications</li>
+        <li class="change">Added restart option</li>
+        <li class="change">Removed fake entry points (no longer needed since upgrade to subliminal 0.8.0)</li>
+        <li class="change">Added source (format) for subtitle matching</li>
+        <li class="change">Added default quality 'SD' when no quality is found</li>
+        <li class="change">Added option to download hearing impaired subs</li>
+        <li class="change">Reworked subliminal config section</li>
+        <li class="change">Added subtitle provider indication when downloaded</li>
+        <li class="change">Added separate postprocessing config section</li>
+        <li class="change">Added option for utf-8 encoding for postprocessing (needed for file names with special characters)</li>
+        <li class="change">Added most languages (instead of only nl and en)</li>
+        <li class="change">Added manual search/save/delete subtitle functionality</li>
+        <li class="change">Added postprocessing script to interact with Sick-Beard</li>
+        <li class="change">Added remote play of a video (need to register a custom protocol handler)</li>
+        <li class="change">Updated version logic</li>
+        <li class="change">GUI optimizations</li>
+        <li class="change">Bug fixing</li>
+        <li class="change">Code cleanup and refactoring</li>
+      </ul>
     </div>
-</div>
+    <div class="release">
+      <div class="version">Beta 0.6.0</div>
+      <div class="releasedate">14-01-2014</div>
+      <ul class="changelog">
+        <li class="change">Initial version</li>
+        <li class="change">Based on the discontinued Auto-Sub Alpha 0.5.8 project (<a href="http://code.google.com/p/auto-sub/">http://code.google.com/p/auto-sub/</a>)
+        </li>
+        <li class="change">Uses Subliminal (<a href=" https://github.com/Diaoul/subliminal">https://github.com/Diaoul/subliminal</a>) as subtitle provider
+        </li>
+        <li class="change">Code cleanup and refactoring</li>
+      </ul>
+    </div>
+  </div>
 </body>
+
 </html>
