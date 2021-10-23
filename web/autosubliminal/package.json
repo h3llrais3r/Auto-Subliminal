@@ -75,7 +75,7 @@
     "codelyzer": "6.0.2",
     "concurrently": "6.3.0",
     "copyfiles": "2.4.1",
-    "jasmine-core": "3.10.0",
+    "jasmine-core": "3.10.1",
     "jasmine-spec-reporter": "5.0.2",
     "karma": "5.2.3",
     "karma-chrome-launcher": "3.1.0",
