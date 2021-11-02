@@ -4,9 +4,9 @@ import textwrap
 import functools
 
 try:
-    from importlib import resources  # type: ignore
+    from importlib.resources import files  # type: ignore
 except ImportError:  # pragma: nocover
-    import importlib_resources as resources  # type: ignore
+    from importlib_resources import files  # type: ignore
 
 from jaraco.functools import compose, method_cache
 
@@ -109,7 +109,7 @@ class FoldedCase(str):
         return hash(self.lower())
 
     def __contains__(self, other):
-        return super(FoldedCase, self).lower().__contains__(other.lower())
+        return super().lower().__contains__(other.lower())
 
     def in_(self, other):
         "Does self appear in other?"
@@ -118,7 +118,7 @@ class FoldedCase(str):
     # cache lower since it's likely to be called frequently.
     @method_cache
     def lower(self):
-        return super(FoldedCase, self).lower()
+        return super().lower()
 
     def index(self, sub):
         return self.lower().index(sub.lower())
@@ -225,7 +225,7 @@ def unwrap(s):
     return '\n'.join(cleaned)
 
 
-lorem_ipsum = resources.read_text(__name__, 'Lorem ipsum.txt')  # type: ignore
+lorem_ipsum: str = files(__name__).joinpath('Lorem ipsum.txt').read_text()
 
 
 class Splitter(object):
