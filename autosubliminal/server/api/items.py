@@ -114,6 +114,14 @@ class _WantedApi(RestResource):
 
                         return self._bad_request('Missing subtitle_index')
 
+                    # Sync subtitle
+                    elif action == 'syncSubtitle':
+                        synced = subchecker.sync_subtitle(wanted_item_index)
+                        if synced:
+                            return self._no_content()
+                        else:
+                            return self._conflict('Unable to sync subtitle')
+
                     # Delete subtitle
                     elif action == 'deleteSubtitle':
                         removed = subchecker.delete_subtitle(wanted_item_index)
