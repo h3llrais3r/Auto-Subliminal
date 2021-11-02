@@ -13,8 +13,9 @@ def compose(*funcs):
     Compose any number of unary functions into a single unary function.
 
     >>> import textwrap
-    >>> stripped = str.strip(textwrap.dedent(compose.__doc__))
-    >>> compose(str.strip, textwrap.dedent)(compose.__doc__) == stripped
+    >>> expected = str.strip(textwrap.dedent(compose.__doc__))
+    >>> strip_and_dedent = compose(str.strip, textwrap.dedent)
+    >>> strip_and_dedent(compose.__doc__) == expected
     True
 
     Compose also allows the innermost function to take arbitrary arguments.
@@ -210,13 +211,16 @@ def apply(transform):
 
     >>> @apply(reversed)
     ... def get_numbers(start):
+    ...     "doc for get_numbers"
     ...     return range(start, start+3)
     >>> list(get_numbers(4))
     [6, 5, 4]
+    >>> get_numbers.__doc__
+    'doc for get_numbers'
     """
 
     def wrap(func):
-        return compose(transform, func)
+        return functools.wraps(func)(compose(transform, func))
 
     return wrap
 
@@ -232,6 +236,8 @@ def result_invoke(action):
     ... def add_two(a, b):
     ...     return a + b
     >>> x = add_two(2, 3)
+    5
+    >>> x
     5
     """
 
