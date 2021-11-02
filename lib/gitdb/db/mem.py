@@ -82,16 +82,14 @@ class MemoryDB(ObjectDBR, ObjectDBW):
         return len(self._cache)
 
     def sha_iter(self):
-        try:
-            return self._cache.iterkeys()
-        except AttributeError:
-            return self._cache.keys()
+        return self._cache.keys()
 
     #{ Interface
     def stream_copy(self, sha_iter, odb):
         """Copy the streams as identified by sha's yielded by sha_iter into the given odb
         The streams will be copied directly
         **Note:** the object will only be written if it did not exist in the target db
+
         :return: amount of streams actually copied into odb. If smaller than the amount
             of input shas, one or more objects did already exist in odb"""
         count = 0
