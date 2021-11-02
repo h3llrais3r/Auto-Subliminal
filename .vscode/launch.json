@@ -19,6 +19,14 @@
       "name": "Debug ui",
       "url": "http://localhost:8084", // Adapt port to the port your python server is running on
       "webRoot": "${workspaceFolder}/web/autosubliminal"
+    },
+    // Debug ui (dev)
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Debug ui (dev)",
+      "url": "http://localhost:4200/autosubliminal", // Adapt port to the port your python server is running on
+      "webRoot": "${workspaceFolder}/web/autosubliminal"
     }
   ]
 }
