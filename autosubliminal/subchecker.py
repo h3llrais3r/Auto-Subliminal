@@ -26,6 +26,7 @@ from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.providers import provider_cache
 from autosubliminal.providers.addic7ed_custom import Addic7edSubtitle as CustomAddic7edSubtitle
 from autosubliminal.subdownloader import SubDownloader
+from autosubliminal.subsynchronizer import SubSynchronizer
 from autosubliminal.util.common import set_rw_and_remove, wait_for_internet_connection
 from autosubliminal.util.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
                                        release_wanted_queue_lock_on_exception)
@@ -264,6 +265,31 @@ def force_id_search(wanted_item_index):
     release_wanted_queue_lock()
 
     return found
+
+
+@release_wanted_queue_lock_on_exception
+def sync_subtitle(wanted_item_index):
+    log.info('Synchronizing an individual subtitle')
+
+    # Get wanted queue lock
+    if not get_wanted_queue_lock():
+        return False
+
+    # Get wanted item
+    wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
+
+    # Synchronize subtitle
+    synced = False
+    subtitle_path = _get_subtitle_path(wanted_item)
+    try:
+        synced = SubSynchronizer().run(wanted_item.video_path, subtitle_path)
+    except Exception:
+        log.exception('Unable to synchronize subtitle: %s', subtitle_path)
+
+    # Release wanted queue lock
+    release_wanted_queue_lock()
+
+    return synced
 
 
 @release_wanted_queue_lock_on_exception
