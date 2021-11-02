@@ -15,6 +15,8 @@ export class GeneralSettings {
   skipHiddenDirs: boolean;
   detectInvalidSubLanguage: boolean;
   detectedLanguageProbability: number;
+  manualSubSync: boolean;
+  ffmpegPath: string;
   minVideoFileSize: number;
   maxDbResults: number;
   timestampFormat: string;

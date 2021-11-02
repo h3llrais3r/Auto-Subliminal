@@ -206,6 +206,31 @@
           <app-input-number formControlName="detectedLanguageProbability" [min]="1" [max]="100" suffix=" %"></app-input-number>
         </div>
       </div>
+      <!-- Manual sub sync -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="manualSubSync" class="label">Manual subtitle synchronization</label>
+          <app-icon-dropdown>
+            <li>When enabled, the manual search will have the option to synchronize a subtitle.</li>
+            <li>REMARK: This requires ffmpeg (https://www.ffmpeg.org/download.html) to be installed on your system.</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-dropdown formControlName="manualSubSync" [options]="enabledOrDisabled"></app-input-dropdown>
+        </div>
+      </div>
+      <!-- FFMPEG path -->
+      <div class="row form-row" *ngIf="showFfmpegPath()">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="ffmpegPath" class="label">FFMPEG path</label>
+          <app-icon-dropdown>
+            <li>Path to the FFMPEG installation.</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-text formControlName="ffmpegPath"></app-input-text>
+        </div>
+      </div>
       <!--Min video file size -->
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">

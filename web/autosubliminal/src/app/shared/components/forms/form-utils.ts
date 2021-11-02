@@ -1,4 +1,4 @@
-import { FormGroup } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
 import $ from 'jquery';
 import { SelectItem } from 'primeng/api';
 import { appSettings } from '../../../app-settings.service';
@@ -33,6 +33,36 @@ export class FormUtils {
   static markFormControlFieldsAsDirty(formGroup: FormGroup): void {
     // Mark all controls as dirty (it seems that formGroup.markAsDirty() is not doing the same thing)
     Object.values(formGroup.controls).forEach((control) => control.markAsDirty());
+  }
+
+  static addFormControlValidationErrors(control: AbstractControl, errors: ValidationErrors): void {
+    // Add all validation errors to control errors
+    if (control.errors) {
+      Object.keys(errors).forEach((key) => {
+        control.errors[key] = errors[key];
+      });
+    } else {
+      control.setErrors(errors);
+    }
+    control.markAsTouched();
+  }
+
+  static clearFormControlValidationErrors(control: AbstractControl, errors: ValidationErrors): void {
+    if (control.errors) {
+      let filtered: ValidationErrors = Object.keys(control.errors)
+        .filter((key) => {
+          return !(key in errors); // only keep keys that are not in the list of errors to clear
+        })
+        .reduce((obj, key) => {
+          obj[key] = control.errors[key];
+          return obj;
+        }, {});
+      if (Object.keys(filtered).length === 0) {
+        filtered = null; // if no validation errors, object should be null to make sure it's considered as valid!
+      }
+      control.setErrors(filtered);
+    }
+    control.markAsTouched();
   }
 
   static scrollToTop(): void {

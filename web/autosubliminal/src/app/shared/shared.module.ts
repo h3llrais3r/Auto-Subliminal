@@ -35,6 +35,7 @@ import { MovieSettingsComponent } from './components/movie-settings/movie-settin
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { ScrollComponent } from './components/scroll/scroll.component';
 import { ShowSettingsComponent } from './components/show-settings/show-settings.component';
+import { SubtitleSyncComponent } from './components/subtitle-sync/subtitle-sync.component';
 import { TableFilterComponent } from './components/table-filter/table-filter.component';
 
 @NgModule({
@@ -53,7 +54,8 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
     MessageComponent,
     MovieSettingsComponent,
     ShowSettingsComponent,
-    ManualRefineComponent
+    ManualRefineComponent,
+    SubtitleSyncComponent
   ],
   imports: [
     CommonModule,
@@ -109,7 +111,8 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
     MessageComponent,
     MovieSettingsComponent,
     ShowSettingsComponent,
-    ManualRefineComponent
+    ManualRefineComponent,
+    SubtitleSyncComponent
   ],
   providers: [
     ConfirmationService

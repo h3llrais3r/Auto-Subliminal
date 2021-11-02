@@ -27,6 +27,7 @@ export class HomeSearchComponent implements OnInit {
   postProcessInProgress = false;
   showScoreDetailsDialog = false;
   showSubtitlePreviewDialog = false;
+  showSubtitleSyncDialog = false;
   scores: MovieScores | EpisodeScores;
   matches: string[];
   score: number;
@@ -131,6 +132,10 @@ export class HomeSearchComponent implements OnInit {
       },
       () => this.messageService.showErrorMessage('Unable to save the subtitle!')
     );
+  }
+
+  syncSubtitle(): void {
+    this.showSubtitleSyncDialog = true;
   }
 
   deleteSubtitle(): void {

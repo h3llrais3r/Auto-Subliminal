@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { appSettings } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
@@ -47,6 +47,11 @@ export class SettingsGeneralComponent implements OnInit {
     }
   }
 
+  showFfmpegPath(): boolean {
+    // FFMPEG is required for manualSubSync
+    return FormUtils.getFormControlValue<boolean>(this.settingsForm, 'manualSubSync');
+  }
+
   private buildSelectItems(): void {
     // Enabled or disabled
     this.enabledOrDisabled = FormUtils.enabledOrDisabledSelectItems();
@@ -79,10 +84,25 @@ export class SettingsGeneralComponent implements OnInit {
       skipHiddenDirs: [generalSettings.skipHiddenDirs, [Validators.required]],
       detectInvalidSubLanguage: [generalSettings.detectInvalidSubLanguage, [Validators.required]],
       detectedLanguageProbability: [generalSettings.detectedLanguageProbability * 100, [Validators.required]], // as percentage
+      manualSubSync: [generalSettings.manualSubSync, [Validators.required]],
+      ffmpegPath: [generalSettings.ffmpegPath, []],
       minVideoFileSize: [generalSettings.minVideoFileSize, [Validators.required]],
       maxDbResults: [generalSettings.maxDbResults, [Validators.required]],
       timestampFormat: [generalSettings.timestampFormat, [Validators.required]]
-    });
+    }, { validator: this.globalFormValidator });
+  }
+
+  private globalFormValidator(formGroup: FormGroup): ValidationErrors | null {
+    // Return error ffmpegPath is not filled in when manualSubSync is enabled
+    const error: ValidationErrors = { ffmpegPathRequired: true };
+    const ffmpegPath = FormUtils.getFormControlValue<string>(formGroup, 'ffmpegPath');
+    if (FormUtils.getFormControlValue<boolean>(formGroup, 'manualSubSync') && (!ffmpegPath || !ffmpegPath.trim())) {
+      FormUtils.addFormControlValidationErrors(formGroup.controls.ffmpegPath, error);
+      FormUtils.markFormControlFieldsAsDirty(formGroup);
+      return error;
+    }
+    FormUtils.clearFormControlValidationErrors(formGroup.controls.ffmpegPath, error);
+    return null;
   }
 
   private getGeneralSettings(): GeneralSettings {
@@ -103,6 +123,8 @@ export class SettingsGeneralComponent implements OnInit {
     settings.skipHiddenDirs = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'skipHiddenDirs');
     settings.detectInvalidSubLanguage = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'detectInvalidSubLanguage');
     settings.detectedLanguageProbability = FormUtils.getFormControlValue<number>(this.settingsForm, 'detectedLanguageProbability') / 100; // percentage as decimal number
+    settings.manualSubSync = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'manualSubSync');
+    settings.ffmpegPath = FormUtils.getFormControlValue<string>(this.settingsForm, 'ffmpegPath');
     settings.minVideoFileSize = FormUtils.getFormControlValue<number>(this.settingsForm, 'minVideoFileSize');
     settings.maxDbResults = FormUtils.getFormControlValue<number>(this.settingsForm, 'maxDbResults');
     settings.timestampFormat = FormUtils.getFormControlValue<string>(this.settingsForm, 'timestampFormat');
