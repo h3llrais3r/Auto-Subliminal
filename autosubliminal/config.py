@@ -142,6 +142,16 @@ def read_config(check_upgrade=False):
         else:
             autosubliminal.DETECTEDLANGUAGEPROBABILITY = 0.9
 
+        if cfg.has_option('general', 'manualsubsync'):
+            autosubliminal.MANUALSUBSYNC = cfg.getboolean('general', 'manualsubsync')
+        else:
+            autosubliminal.MANUALSUBSYNC = False
+
+        if cfg.has_option('general', 'ffmpegpath'):
+            autosubliminal.FFMPEGPATH = cfg.get('general', 'ffmpegpath')
+        else:
+            autosubliminal.FFMPEGPATH = ''
+
         if cfg.has_option('general', 'minvideofilesize'):
             autosubliminal.MINVIDEOFILESIZE = cfg.getint('general', 'minvideofilesize')
         else:
@@ -169,7 +179,7 @@ def read_config(check_upgrade=False):
         autosubliminal.DEFAULTLANGUAGE = 'en'
         autosubliminal.DEFAULTLANGUAGESUFFIX = False
         autosubliminal.ADDITIONALLANGUAGES = []
-        autosubliminal.MANUALSEARCHCHECKSCORE = True
+        autosubliminal.MANUALSEARCHWITHSCORING = True
         autosubliminal.SCANDISKINTERVAL = 1
         autosubliminal.CHECKSUBINTERVAL = 24
         autosubliminal.CHECKSUBDEADLINE = 4
@@ -181,6 +191,8 @@ def read_config(check_upgrade=False):
         autosubliminal.SKIPHIDDENDIRS = False
         autosubliminal.DETECTINVALIDSUBLANGUAGE = False
         autosubliminal.DETECTEDLANGUAGEPROBABILITY = 0.9
+        autosubliminal.MANUALSUBSYNC = False
+        autosubliminal.FFMPEGPATH = ''
         autosubliminal.MINVIDEOFILESIZE = 0
         autosubliminal.MAXDBRESULTS = 0
         autosubliminal.TIMESTAMPFORMAT = '%Y-%m-%d %H:%M:%S'
@@ -900,6 +912,8 @@ def write_config_general_section():
     cfg.set(section, 'skiphiddendirs', str(autosubliminal.SKIPHIDDENDIRS))
     cfg.set(section, 'detectinvalidsublanguage', str(autosubliminal.DETECTINVALIDSUBLANGUAGE))
     cfg.set(section, 'detectedlanguageprobability', str(autosubliminal.DETECTEDLANGUAGEPROBABILITY))
+    cfg.set(section, 'manualsubsync', str(autosubliminal.MANUALSUBSYNC))
+    cfg.set(section, 'ffmpegpath', str(autosubliminal.FFMPEGPATH))
     cfg.set(section, 'minvideofilesize', str(autosubliminal.MINVIDEOFILESIZE))
     cfg.set(section, 'maxdbresults', str(autosubliminal.MAXDBRESULTS))
     cfg.set(section, 'timestampformat', autosubliminal.TIMESTAMPFORMAT)
