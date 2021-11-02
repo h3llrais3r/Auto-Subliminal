@@ -27,3 +27,5 @@ per-file-ignores =
     autosubliminal/providers/useragents.py: E501,
     autosubliminal/util/common.py: E731
 max-line-length = 120
+# Line below is required to get autopep8 formatting the code properly in vscode
+experimental = 1
