@@ -60,6 +60,7 @@
             <th></th>
             <th></th>
             <th></th>
+            <th></th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-subtitle>
@@ -113,6 +114,14 @@
                 <a class="icon-link" (click)="saveSubtitle(subtitle)">
                   <i *ngIf="subtitle !== savedSubtitle" class="fa fa-floppy-o" aria-hidden="true" title="Click to save subtitle"></i>
                   <i *ngIf="subtitle === savedSubtitle" class="fa fa-check-circle-o text-success" aria-hidden="true" title="Subtitle saved"></i>
+                </a>
+              </span>
+            </td>
+            <td class="subtitle-action">
+              <span class="p-column-title">Sync subtitle</span>
+              <span class="p-column-data">
+                <a class="icon-link" (click)="syncSubtitle()">
+                  <i class="fa fa-refresh" aria-hidden="true" title="Click to sync subtitle"></i>
                 </a>
               </span>
             </td>
@@ -186,6 +195,12 @@
     <div>Maximum score: {{scores.max}}</div>
   </div>
 </p-dialog>
+
+<!-- Subtitle sync dialog -->
+<app-subtitle-sync [(visible)]="showSubtitleSyncDialog"
+                   [videoFilePath]="wantedItem.videoFilePath"
+                   [videoFileName]="wantedItem.videoFileName">
+</app-subtitle-sync>
 
 <!-- Loading component -->
 <app-loading [visible]="postProcessInProgress"></app-loading>

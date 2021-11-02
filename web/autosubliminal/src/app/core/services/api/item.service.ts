@@ -68,6 +68,11 @@ export class ItemService extends ApiServiceTemplate {
       .pipe(map(() => true));
   }
 
+  syncWantedItemSubtitle(wantedItemId: number): Observable<boolean> {
+    return this.httpClient.patch<void>(`${this.URL}/wanted/${wantedItemId}`, { action: 'syncSubtitle' }, this.options)
+      .pipe(map(() => true));
+  }
+
   deleteWantedItemSubtitle(wantedItemId: number): Observable<boolean> {
     return this.httpClient.patch<void>(`${this.URL}/wanted/${wantedItemId}`, { action: 'deleteSubtitle' }, this.options)
       .pipe(map(() => true));
