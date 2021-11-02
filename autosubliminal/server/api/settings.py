@@ -77,6 +77,8 @@ class _GeneralApi(RestResource):
             'skip_hidden_dirs': autosubliminal.SKIPHIDDENDIRS,
             'detect_invalid_sub_language': autosubliminal.DETECTINVALIDSUBLANGUAGE,
             'detected_language_probability': autosubliminal.DETECTEDLANGUAGEPROBABILITY,
+            "manual_sub_sync": autosubliminal.MANUALSUBSYNC,
+            "ffmpeg_path": autosubliminal.FFMPEGPATH,
             'min_video_file_size': autosubliminal.MINVIDEOFILESIZE,
             'max_db_results': autosubliminal.MAXDBRESULTS,
             'timestamp_format': autosubliminal.TIMESTAMPFORMAT
@@ -124,6 +126,10 @@ class _GeneralApi(RestResource):
                 autosubliminal.DETECTINVALIDSUBLANGUAGE = input_dict['detect_invalid_sub_language']
             if 'detected_language_probability' in input_dict:
                 autosubliminal.DETECTEDLANGUAGEPROBABILITY = input_dict['detected_language_probability']
+            if 'manual_sub_sync' in input_dict:
+                autosubliminal.MANUALSUBSYNC = input_dict['manual_sub_sync']
+            if 'ffmpeg_path' in input_dict:
+                autosubliminal.FFMPEGPATH = input_dict['ffmpeg_path']
             if 'min_video_file_size' in input_dict:
                 autosubliminal.MINVIDEOFILESIZE = input_dict['min_video_file_size']
             if 'max_db_results' in input_dict:
