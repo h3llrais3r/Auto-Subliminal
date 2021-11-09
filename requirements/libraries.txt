@@ -30,7 +30,7 @@ jaraco.functools==3.4.0
 jaraco.text==3.6.0
 jsonpickle==2.0.0
 langdetect==1.0.9
-more-itertools==8.10.0
+more-itertools==8.11.0
 oauthlib==3.1.1
 pbr==5.6.0
 portend==3.0.0
