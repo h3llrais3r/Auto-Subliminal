@@ -37,7 +37,7 @@ install_requirements = []
 
 test_requirements = ['pytest', 'pytest-mock', 'pytest-flake8', 'requests-mock', 'vcrpy']
 
-dev_requirements = ['autopep8', 'flake8', 'isort', 'pigar', 'tox']
+dev_requirements = ['autopep8', 'flake8', 'isort', 'pigar']
 
 # Setup
 setup(name='Auto-Subliminal',
