@@ -54,6 +54,7 @@
   "python.languageServer": "Pylance",
   "python.venvPath": "${workspaceFolder}/.venv",
   "python.pythonPath": "${workspaceFolder}/.venv\\dev\\Scripts\\python.exe",
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv\\dev\\Scripts\\python.exe",
   "python.envFile": "${workspaceFolder}/.env",
   "python.autoComplete.addBrackets": true,
   "python.autoComplete.extraPaths": [
