@@ -1,19 +1,14 @@
 [flake8]
-exclude =
+ extend-exclude =
     .build,
     .cache,
-    .eggs,
-    .git,
     .github,
     .history,
     .idea,
     .pytest_cache,
     .venv,
     .vscode,
-    __pycache__,
-    *.egg-info,
     cache,
-    playvideo,
     requirements,
     web
 ignore =
