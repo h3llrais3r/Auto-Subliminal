@@ -1,11 +1,11 @@
 # coding=utf-8
 
-LIBRARY_LOCATION = 'requirements/libraries.txt'
+REQUIREMENTS_FILE = 'requirements.txt'
 
 
 def get_libraries():
     """Return the dict with the packaged libraries and their versions."""
-    libs = open(LIBRARY_LOCATION, 'r').read().split('\n')
+    libs = open(REQUIREMENTS_FILE, 'r').read().split('\n')
 
     # Only keep library and version (remove python dependencies and requires.io filters) and convert to dict
     requirements = filter(lambda x: x if '==' in x else None, list(map(lambda x: x.split(';')[0].split('#')[0], libs)))

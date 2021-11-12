@@ -53,8 +53,8 @@
   },
   "python.languageServer": "Pylance",
   "python.venvPath": "${workspaceFolder}/.venv",
-  "python.pythonPath": "${workspaceFolder}/.venv\\dev\\Scripts\\python.exe",
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv\\dev\\Scripts\\python.exe",
+  "python.pythonPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
   "python.envFile": "${workspaceFolder}/.env",
   "python.autoComplete.addBrackets": true,
   "python.autoComplete.extraPaths": [
@@ -71,8 +71,6 @@
   "python.testing.unittestEnabled": false,
   "python.testing.nosetestsEnabled": false,
   "python.testing.pytestEnabled": true,
-  "python.analysis.extraPaths": [
-    "${workspaceFolder}/lib"
-  ],
+  "python.analysis.extraPaths": [],
   "python.analysis.completeFunctionParens": true
 }

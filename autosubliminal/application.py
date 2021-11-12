@@ -22,7 +22,6 @@ from autosubliminal.server.root import WebServerRoot
 from autosubliminal.server.tool import SPARedirectTool
 from autosubliminal.subchecker import SubChecker
 from autosubliminal.util.json import json_out_handler
-from autosubliminal.util.packaging import get_library_version
 from autosubliminal.util.websocket import SYSTEM_RESTART, SYSTEM_SHUTDOWN, SYSTEM_START, send_websocket_event
 from autosubliminal.versionchecker import VersionChecker
 
@@ -115,9 +114,9 @@ def _configure_server(restarting=False):
     # Disable engine plugins (no need for autoreload plugin)
     cherrypy.config.update({'engine.autoreload.on': False})
 
-    # Read and store cherrypy server version (if not set, it returns CherryPy/Unknown because it's not installed)
-    server_header = 'CherryPy/%s' % get_library_version('cherrypy')
-    cherrypy.config.update({'response.headers.server': server_header})
+    # Read and store cherrypy server version (no longer needed as we are now using installed packages)
+    # server_header = 'CherryPy/%s' % get_library_version('cherrypy')
+    # cherrypy.config.update({'response.headers.server': server_header})
 
     # Configure authentication in if a username and password is set by the user
     if autosubliminal.USERNAME and autosubliminal.PASSWORD:

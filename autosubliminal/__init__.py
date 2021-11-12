@@ -2,12 +2,17 @@
 
 import os
 import pkg_resources
+import re
+import site
+import subprocess
+import sys
+import sysconfig
 import uuid
+from pathlib import Path
 
-from autosubliminal import config, db, version
-from autosubliminal.core import logger
-from autosubliminal.indexer import MovieIndexer, ShowIndexer
-from autosubliminal.util.system import get_python_version_strict, get_stored_python_version, store_python_version
+# Variables to handle dependencies installation in virtual environment (custom or internal one)
+SOURCE_PATH = Path(__file__).parent.parent.resolve()
+IN_VENV = hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
 
 # Config
 CONFIGFILE = None
@@ -221,6 +226,15 @@ def initialize():
         POSTPROCESS, POSTPROCESSINDIVIDUAL, POSTPROCESSUTF8ENCODING, SHOWPOSTPROCESSCMD, SHOWPOSTPROCESSCMDARGS, \
         MOVIEPOSTPROCESSCMD, MOVIEPOSTPROCESSCMDARGS
 
+    # Setup environment
+    _setup_env()
+
+    # Imports
+    from autosubliminal import config, db, version
+    from autosubliminal.core import logger
+    from autosubliminal.indexer import MovieIndexer, ShowIndexer
+    from autosubliminal.util.system import get_python_version_strict
+
     # Fake some entry points to get libraries working without installation
     _fake_entry_points()
 
@@ -306,12 +320,218 @@ def initialize():
     logger.initialize()
 
 
+def _setup_env():
+    print('INFO: Setting up environment.')
+    if not _check_env_writable():
+        print('ERROR: Current environment is not writable.')
+        if not os.access(SOURCE_PATH, os.W_OK):
+            print('ERROR: Source directory %s is not writable either. Exiting.' % SOURCE_PATH)
+            os._exit(1)
+        _make_venv_and_restart()
+
+    if not IN_VENV:
+        print('INFO: A virtual environment is required when running from source.')
+        _make_venv_and_restart()
+
+    print('INFO: Using python interpreter %s.' % sys.executable)
+
+    # Upgrade pip
+    _upgrade_pip()
+
+    # Install/upgrade install tools
+    _pip_install(['setuptools', 'wheel'])
+
+    # Install/upgrade requirements
+    print('INFO: Installing requirements.')
+    packages = SOURCE_PATH.joinpath('requirements.txt').read_text()
+    _pip_install(packages)
+
+    print('INFO: Environment setup finished.')
+
+
+def _check_env_writable():
+    """Check if we can install packages to the current environment."""
+
+    locations = []
+
+    # Get python site packages
+    try:
+        locations.append(sysconfig.get_path('purelib'))
+    except Exception:
+        pass
+
+    # Get user site packages
+    try:
+        if site.ENABLE_USER_SITE or site.check_enableusersite():
+            if site.USER_SITE:
+                locations.append(site.USER_SITE)
+            else:
+                locations.append(site.getusersitepackages())
+    except Exception:
+        pass
+
+    # Check if any location is writable
+    return any([os.access(location, os.W_OK) for location in set(locations)])
+
+
+def _make_venv_and_restart():
+    """
+    Create a virtual environment in the .venv/runtime dir in the project root if it doesn't exist yet.
+    Restart the application in the virtual environment.
+    """
+
+    venv_path = SOURCE_PATH.joinpath('.venv')
+    current_interpreter = Path(sys.executable).resolve()
+
+    # Check if virtual environment is not the same as the current environment
+    if str(venv_path) == str(sys.prefix):
+        if IN_VENV:
+            print('ERROR: Unable to install to the existing virtual environment located at %s.' % sys.prefix)
+            print('ERROR: Please check the permissions, and that it does not include global site packages.')
+        os._exit(1)
+
+    # Create virtual environment if it doesn't exist yet
+    if not venv_path.is_dir():
+        print('INFO: Creating a new virtual environment in %s.' % venv_path)
+        try:
+            import venv
+            venv.create(venv_path, system_site_packages=False, clear=True, symlinks=os.name != 'nt', with_pip=True)
+            print('INFO: Created new virtual environment in %s.' % venv_path)
+        except (ImportError, Exception):
+            print('ERROR: Cannot create virtual environment in %s.' % venv_path)
+            os._exit(1)
+
+    # Launch application in virtual environment
+    if venv_path.is_dir():
+        locations_to_check = []
+        locations_to_check.append(venv_path.joinpath('bin', current_interpreter.parts[-1]))
+        locations_to_check.append(venv_path.joinpath('Scripts', current_interpreter.parts[-1]))
+
+        for location in locations_to_check:
+            if location.is_file() and location.stat().st_mode & os.X_OK:
+                # Add original arguments to the launch command
+                new_path = str(location)
+                new_argv = [new_path] + sys.argv
+
+                print('INFO: Restarting Auto-Subliminal in virtual environment with %s.' % new_argv)
+                return os.execvp(new_path, new_argv)
+
+        print('ERROR: Could not find the virtual environment executable in %s. Exiting.' % venv_path)
+        os._exit(1)
+
+
+def _upgrade_pip():
+    """Upgrade pip."""
+
+    print('INFO: Upgrading pip.')
+    cmd = [
+        sys.executable,
+        '-m',
+        'pip',
+        'install',
+        'pip',
+        '--upgrade',
+        '--quiet',
+        '--no-input',
+        '--no-color',
+        '--disable-pip-version-check'
+    ]
+    result = _subprocess_call(cmd)
+    if result == 0:
+        print('INFO: Pip upgraded.')
+    else:
+        print('ERROR: Cannot upgrade pip. Exiting.')
+        os._exit(1)
+
+
+def _pip_install(packages):
+    if not isinstance(packages, list):
+        # Clean out Warning line in list (dirty clean)
+        packages = re.sub(r'Warning.*', '', packages)
+        packages = packages.strip().splitlines()
+
+    print('INFO: Installing package(s): %s' % ' '.join(packages))
+
+    # Default cmd
+    cmd = [
+        sys.executable,
+        '-m',
+        'pip',
+        'install',
+        '--upgrade',
+        '--quiet',
+        '--no-input',
+        '--no-color',
+        '--disable-pip-version-check',
+        '--no-python-version-warning'
+    ]
+
+    # OS specific helpers for pip install
+    os_id = _get_os_id()
+    if os_id in ('alpine', 'ubuntu'):
+        cmd.append('--find-links=https://wheel-index.linuxserver.io/%s/' % os_id)
+    if os_id == 'alpine':
+        cmd.append('--extra-index-url=https://alpine-wheels.github.io/index')
+    elif os_id in ('raspian', 'osmc'):
+        cmd.append('--extra-index-url=https://www.piwheels.org/simple')
+    syno_wheelhouse = SOURCE_PATH.with_name('wheelhouse')
+    if syno_wheelhouse.is_dir():
+        print('DEBUG: Found wheelhouse dir at %s.' % syno_wheelhouse)
+        cmd.append('--find-links=%s' % syno_wheelhouse)
+
+    # Final cmd
+    cmd += packages
+    print('DEBUG: Install cmd: %s' % ' '.join(cmd))
+
+    # Execute cmd (fallback to user site-packages)
+    result = _subprocess_call(cmd)
+    if result != 0:  # Not Ok
+        print('INFO: Trying user site-packages.')
+        result = _subprocess_call(cmd + ['--user'])
+        if result != 0:  # Not Ok
+            print('ERROR: Cannot install packages. Exiting.')
+            os._exit(1)
+
+
+def _get_os_id():
+    os_release = Path('/etc/os-release').resolve()
+    if os_release.is_file():
+        from configparser import ConfigParser
+
+        parser = ConfigParser()
+        parser.read_string('[DEFAULT]\n' + os_release.read_text())
+        try:
+            return parser['DEFAULT']['ID']
+        except (KeyError, IndexError):
+            pass
+
+
+def _subprocess_call(cmd_list):
+    try:
+        process = subprocess.Popen(cmd_list, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE, universal_newlines=True, cwd=os.getcwd())
+        stdout, stderr = process.communicate()
+        process.wait()
+        if stdout:
+            print('INFO: Sub process result: %s' % stdout)
+        if stderr:
+            print('ERROR: Sub process error: %s' % stderr)
+    except Exception as error:
+        print('ERROR: Unable to run sub process: %s' % error)
+        return 126
+
+    return process.returncode
+
+
 def _fake_entry_points():
     """
     Fake some entry points to get libraries working without installation.
     After setup, entry points can be retrieved by:
     pkg_resources.get_entry_info(dist='fake_entry_points', group=None, name='entry_point_namespace')
     """
+
+    # Imports
+    from autosubliminal import version
 
     # Do not normalize the path or the entry point will be loaded under the wrong entry_key
     # current_path = os.path.dirname(os.path.normpath(__file__))
@@ -326,6 +546,10 @@ def _fake_entry_points():
 
 def _check_python_version_change():
     """Check if the python version has changed or not."""
+
+    # Imports
+    from autosubliminal.util.system import get_python_version_strict, get_stored_python_version, store_python_version
+
     previous_python_version = get_stored_python_version()
     current_python_version = get_python_version_strict()
 

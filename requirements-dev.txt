@@ -1,2 +1,0 @@
-# Install in editable mode with dev and test requirements
--e .[dev,test]

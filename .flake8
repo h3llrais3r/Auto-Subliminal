@@ -8,13 +8,11 @@ exclude =
     .history,
     .idea,
     .pytest_cache,
-    .tox,
     .venv,
     .vscode,
     __pycache__,
     *.egg-info,
     cache,
-    lib,
     playvideo,
     requirements,
     web
