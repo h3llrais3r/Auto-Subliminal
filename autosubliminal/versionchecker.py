@@ -233,8 +233,8 @@ class GitVersionManager(_BaseVersionManager):
         return autosubliminal.GITHUBURL + '/commit/' + self.current_version
 
     def clean(self):
-        # call git clean to remove all untracked files (only in source and lib folders)
-        self.repo.git.execute('git clean -xdf autosubliminal lib web')
+        # call git clean to remove all untracked files (only in source folders)
+        self.repo.git.execute('git clean -xdf autosubliminal web')
 
     def check_version(self, force_run=False):
         # Reset update_allowed flag
