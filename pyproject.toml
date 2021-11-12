@@ -1,0 +1,78 @@
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
+
+[tool.poetry]
+name = "autosubliminal"
+version = "0.0.0"
+description = "Auto-Subliminal, the automated subliminal subtitle downloader"
+license = "GPL-3.0"
+authors = ["h3llrais3r <pooh_beer_1@hotmail.com>"]
+maintainers = ["h3llrais3r <pooh_beer_1@hotmail.com>"]
+readme = "README.md"
+homepage = "https://h3llrais3r.github.io/Auto-Subliminal"
+repository = "https://github.com/h3llrais3r/Auto-Subliminal"
+keywords = ["subtitle", "subtitles", "video", "movie", "tv", "show", "episode"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3.6",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Topic :: Multimedia :: Video",
+]
+packages = [{ include = "autosubliminal" }, { include = "AutoSubliminal.py" }]
+
+[tool.poetry.dependencies]
+# Python version
+python = ">=3.6,<4"
+
+# Runtime dependencies
+babelfish = "0.6.0"
+cherrypy = "18.6.1"
+deathbycaptcha = "0.1.1"
+"dogpile.cache" = "1.1.4"
+enzyme = "0.4.1"
+gitpython = "3.1.18"
+gntp = "1.0.3"
+guessit = "3.4.2"
+html5lib = "1.1"
+imdbpie = { git = "https://github.com/h3llrais3r/imdb-pie.git", rev = "75c300af1bf87c49baef09f17002a3e35b0ed3cc" }
+importlib-metadata = { version = "4.8.1", markers = "python_version < '3.8'" }
+jsonpickle = "2.0.0"
+langdetect = "1.0.9"
+pysrt = "1.1.2"
+python-anticaptcha = "0.7.1"
+python-dateutil = "2.8.2"
+python-twitter = "3.5"
+pywin32 = { version = "302", markers = "sys_platform == 'win32'" }
+rebulk = "3.1.0"
+requests = "2.26.0"
+requests-oauthlib = "1.3.0"
+schema = "0.7.4"
+simplejson = "3.17.5"
+subliminal = { git = "https://github.com/Diaoul/subliminal.git", rev = "6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a" }
+tailer = "0.4.1"
+tvdb_api = { git = "https://github.com/h3llrais3r/tvdb_api.git", rev = "1210df9dd5869ccc5b63149b1b80630310a14f40" }
+unidecode = "1.3.2"
+ws4py = "0.5.1"
+
+[tool.poetry.dev-dependencies]
+# Testing
+coverage = "6.1.2"
+coveralls = "3.3.1"
+pytest = "6.2.5"
+pytest-flake8 = "1.0.7"
+pytest-mock = "3.6.1"
+requests-mock = "1.9.3"
+vcrpy = "4.1.1"
+
+# Tooling
+autopep8 = "1.5.7"
+flake8 = "3.9.2"
+isort = "5.8.0"
+pigar = "0.10.0"
+
+[tool.flake8]

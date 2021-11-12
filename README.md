@@ -29,14 +29,17 @@ Dependencies
 ------------
 
  * To run Auto-Subliminal from source you need Python 3.6 or higher
- * Packaged external libraries: see [libaries.txt](requirements/libraries.txt)
+ * Required dependencies: see [requirements.txt](requirements.txt)
 
 How to use
 ----------
 
  * Install python
- * On Windows: Install pywin32
- * Start the script: " python AutoSubliminal.py "
+ * Create a virtual environment and activate it
+ * Install all requirements in the virtual environment: `pip install -r requirements.txt`
+ * Start the script: `python AutoSubliminal.py`
+ * If you didn't create a virutal environment, the script creates one for you with the name `.venv` in the project root and will restart the script in the virtual environment
+ * If you didn't install the requirements, the script will install them for you in the virtual environment
  * A web browser should now open
  * Go to the config menu, check the settings and make sure you set at least:
     * Video paths: The root folder(s) of your series and/or movies

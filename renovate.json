@@ -19,29 +19,11 @@
       }
     ]
   },
-  "pip_requirements": {
-    "fileMatch": [
-      "requirements/libraries.txt"
-    ]
-  },
   "python": {
     "labels": [
       "dependencies",
       "python"
     ],
-    "packageRules": [
-      {
-        "packageNames": [
-          "click"
-        ],
-        "allowedVersions": "<8.0.0"
-      },
-      {
-        "packageNames": [
-          "idna"
-        ],
-        "allowedVersions": "<3.0.0"
-      }
-    ]
+    "packageRules": []
   }
 }

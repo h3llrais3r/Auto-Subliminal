@@ -1,74 +1,58 @@
 # BUILD
 
-## Generate virtual environment for development
+## Install development tools
 
-Run `generate-venv-dev.bat` to create the `dev` virtual environment in the `.env` folder.
+Install `poetry` (check `pyproject.toml` for minminal required version) for python backend development globally on your system.
 
-This virtual environment should be used within your editor when developing.
+Install `nodejs` (check `package.json` for minimal required version) for nodejs/angular frontend development globally on your system.
 
-It contains all libraries for dev and test tools.
+Run `npm install -g @angular/cli@<version>` (check `package.json` for minimal required version) to install angular cli globally on your system.
 
-## Generate virtual environment for runtime
+## Python backend development
 
-Run `generate-venv-runtime.bat` to create the `runtime` virtual environment in the `.env` folder.
+### Install python dependencies
 
-This virtual environment should be used to test the application with only the packaged libraries.
+Run `poetry install --no-root` in the root of the project.
 
-## Generate libraries dependency tree
+This will create a virtual environment `.venv` in the root of the project with all runtime and dev dependencies.
 
-Run `generate-pipdeptree.bat` to generate the `requirements/libraries-pipdeptree.md` file that contains the dependency tree for all packaged libraries.
+### Install/upgrade python dependencies
+
+Run `poetry add <package>=<version>` to add/update a fixed version of a runtime dependency
+
+Run `poetry add <package>=<version> --dev` to add/update a fixed version of a dev dependency
+
+We always use fixed versions!
+
+### Generate python dependency files
+
+Run `generate-requirements.bat` to generate all python dependency files:
+* `requirements.txt` - contains all runtime dependencies
+* `.build/generated/requirements.md` - contains all runtime dependencies
+* `.build/generated/requirements-deptree.md` - contains dependency tree for all runtime dependencies
+* `.build/generated/requirements-imported.md` - contains all top level (imported) runtime dependencies
 
 This should be run every time a package is added/updated.
 
-## Find imported libraries
+## Nodejs/angular frontend development
 
-Run `find-imported-libs.bat` to generate a file `requirements/libraries-pigar.txt` that contains all imported libraries within the application.
+REMARK: Frontend located inside `web/autosubliminal` folder.
 
-This file can be used as a base to keep track of all directly imported libraries in the file `requirements/libraries-imported.md`.
+### Install nodejs dependencies
 
-## Install packaged libraries
+Run `npm install` in the `web/autosubliminal` folder of the project.
 
-Run `install-libs.bat` to install all packaged libraries in the `lib` folder.
+This will create a `node_modules` folder inside `web/autosubliminal` folder and install all runtime and dev dependencies.
 
-The script contains the option to force a clean install and to include the dependencies or not.
+### Install/upgrade frontend dependencies
 
-## Install a single packaged library
+Run `npm install -E <package>@<version>` to install a fixed version of a runtime dependency.
 
-Run `pip install -t lib <library>` to install the library from pypi in the `lib` folder.
+Run `npm install -E -D <package>@<version>` to install a fixed version of a dev dependency.
 
-Run `pip install -t lib git+<github_url>@<branch>#egg=<folder>` to install the library from git in the `lib` folder.
+You can omit the `@<version>` if you want to install the latest version.
 
-Optionally you can add the following options:
-
-- `--no-deps` -> skip dependencies
-- `--no-compile` -> do not compile python files
-- `--no-cache-dir` -> do not use pip cache dir but force online check
-
-## Upgrade a single packaged library
-
-Run `pip install -t lib --upgrade <library>` to upgrade the library from pypi in the `lib` folder.
-Run `pip freeze --path lib > requirements/libraries.txt` to update the `requirements/libraries.txt` file. Be sure to run it in terminal which has `utf-8` encoding.
-Run `generate-pipdeptree.bat` to update the `requirements/libraries-pipdeptree.md` file.
-
-## Packaged libaries
-
-All packaged libraries and their versions are kept in the `requirements/libraries.txt`.
-
-Any new library or version upgrade should be added in this file.
-
-In case we should regenerate the `requirements/libraries.txt` from scratch, we can do this in the `pipdeptree` virtual environment by running the command: `pip freeze --path lib > requirements/libraries.txt`.
-
-## Install a frontend library
-
-Frontend is located in the `web/autosubliminal` folder and is written in angular.
-
-Run `npm install -E <library>` to install a runtime dependency.
-
-Run `npm install -E -D <library>` to install a dev dependency.
-
-## Build frontend
-
-Frontend is located in the `web/autosubliminal` folder and is written in angular.
+### Build frontend
 
 Run `npm run build` to build the frontend after any frontend change.
 

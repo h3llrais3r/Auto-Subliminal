@@ -5,7 +5,6 @@ import locale
 import logging
 import os
 import signal
-import site
 import sys
 import time
 
@@ -14,27 +13,6 @@ MIN_PYTHON_VERSION = (3, 6)
 if sys.version_info < MIN_PYTHON_VERSION:
     print('ERROR: Python 3.6 or higher is required.')
     os._exit(1)
-
-# Check if pywin32 is installed on Windows
-if os.name == 'nt':
-    try:
-        import win32api  # noqa: F401
-    except ImportError:
-        print('ERROR: Auto-Subliminal requires \'pywin32\' on Windows.')
-        print('ERROR: Please run \'pip install pywin32\' in your Python environment.')
-        os._exit(1)
-
-
-# Insert the lib folder at the beginning of the python system path
-# This to prevent installation of the libraries and to prevent the 'lib.' prefix when importing the libraries
-# Include libraries at position 1 because position 0 must remain the current directory
-sys.path, remainder = sys.path[:1], sys.path[1:]
-
-# Insert common libs for all python versions
-site.addsitedir(os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib')))
-
-# Add remainder of the system path
-sys.path.extend(remainder)
 
 help_message = '''
 Usage:

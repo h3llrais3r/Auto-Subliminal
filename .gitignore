@@ -11,7 +11,7 @@
 # History files
 .history
 
-# Virtual environments
+# Virtual environment
 .venv
 
 # Compiled files
@@ -47,16 +47,6 @@ build/
 dist/
 *.dist-info/
 node_modules/
-lib/bin/
-lib/**/test/
-lib/**/tests/
-lib/**/tutorial/
-lib/**/example/
-lib/**/example2/
-lib/**/test*.py
-lib/**/tests*.py
-lib/**/*nspkg.pth
-requirements/libraries-pigar.txt
 
 # Application cache
 cache/
@@ -68,6 +58,3 @@ cache/
 #Coverage files (except coverage configuration file)
 !.coveragerc
 .coverage
-
-#Tox files
-.tox
