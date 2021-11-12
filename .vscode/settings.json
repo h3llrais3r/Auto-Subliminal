@@ -57,9 +57,7 @@
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
   "python.envFile": "${workspaceFolder}/.env",
   "python.autoComplete.addBrackets": true,
-  "python.autoComplete.extraPaths": [
-    "${workspaceFolder}/lib"
-  ],
+  "python.autoComplete.extraPaths": [],
   "python.formatting.provider": "autopep8",
   "python.linting.enabled": true,
   "python.linting.lintOnSave": true,

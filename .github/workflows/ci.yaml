@@ -93,7 +93,7 @@ jobs:
     - name: Lint python code
       run: |
         # Configuration is done in .flake8
-        poetry run flake8 -v
+        poetry run flake8 --verbose
 
     - name: Lint angular code
       run: |
@@ -104,7 +104,7 @@ jobs:
     - name: Test python code
       run: |
         # Configuration is done in .coveragerc
-        poetry run coverage run -m pytest
+        poetry run coverage run --module pytest
         poetry run coverage report
 
     - name: Publish python coverage report
