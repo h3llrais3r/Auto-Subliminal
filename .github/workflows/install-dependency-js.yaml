@@ -1,0 +1,54 @@
+# Workflow for PR with JS dependency change
+
+name: Install-dependency-js
+
+on:
+  pull_request:
+    branches:
+      - development
+    paths:
+      - 'web/autosubliminal/package.json'
+
+jobs:
+  install-dependency-js:
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: web/autosubliminal
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }} # required for PR (see https://github.com/stefanzweifel/git-auto-commit-action)
+
+    - name: Get node version
+      id: get-node-version
+      run: |
+        # Get minimal required node version from package.json
+        echo "::set-output name=node-version::$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
+
+    - name: Set up node
+      uses: actions/setup-node@v2
+      with:
+        node-version: "${{steps.get-node-version-linux.outputs.node-version}}"
+
+    - name: Install js dependency
+      run: |
+        npm install
+
+    - name: Build application
+      run: |
+        npm run build
+
+    - name: Auto commit changes
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Install dependency and build application
+        commit_user_name: h3llrais3r
+        commit_user_email: pooh_beer_1@hotmail.com
+        commit_author: h3llrais3r <pooh_beer_1@hotmail.com>
