@@ -39,6 +39,7 @@ config.properties*
 
 # Python version file
 .pythonversion
+.requirements
 
 # Installation files
 .eggs/
