@@ -1,8 +1,10 @@
 # coding=utf-8
 
+import filecmp
 import os
 import pkg_resources
 import re
+import shutil
 import site
 import subprocess
 import sys
@@ -322,6 +324,7 @@ def initialize():
 
 def _setup_env():
     print('INFO: Setting up environment.')
+    print('INFO: Checking if current environment is writable.')
     if not _check_env_writable():
         print('ERROR: Current environment is not writable.')
         if not os.access(SOURCE_PATH, os.W_OK):
@@ -335,16 +338,8 @@ def _setup_env():
 
     print('INFO: Using python interpreter %s.' % sys.executable)
 
-    # Upgrade pip
-    _upgrade_pip()
-
-    # Install/upgrade install tools
-    _pip_install(['setuptools', 'wheel'])
-
-    # Install/upgrade requirements
-    print('INFO: Installing requirements.')
-    packages = SOURCE_PATH.joinpath('requirements.txt').read_text()
-    _pip_install(packages)
+    # Install dependencies
+    _install_dependencies()
 
     print('INFO: Environment setup finished.')
 
@@ -376,6 +371,8 @@ def _check_env_writable():
 
 def _make_venv_and_restart():
     """
+    Create and restart in virtual environment.
+
     Create a virtual environment in the .venv/runtime dir in the project root if it doesn't exist yet.
     Restart the application in the virtual environment.
     """
@@ -420,6 +417,35 @@ def _make_venv_and_restart():
         os._exit(1)
 
 
+def _install_dependencies():
+    """
+    Install dependencies.
+
+    Install the runtime dependencies if they are not yet installed before, or when they have changed.
+    """
+
+    print('INFO: Installing dependencies.')
+
+    # Check if requirements are already installed and up to date
+    reqs = SOURCE_PATH.joinpath('requirements.txt')
+    reqs_installed = SOURCE_PATH.joinpath('.requirements')
+    if reqs.is_file() and reqs_installed.is_file() and filecmp.cmp(reqs, reqs_installed, False):
+        print('INFO: Dependencies already installed and up to date.')
+        return
+
+    # Upgrade pip
+    _upgrade_pip()
+
+    # Install/upgrade install tools
+    print('INFO: Installing installation tools.')
+    _pip_install(['setuptools', 'wheel'])
+
+    # Install/upgrade requirements
+    print('INFO: Installing requirements.')
+    _pip_install(reqs.read_text())
+    shutil.copy(reqs, reqs_installed)  # Keep copy of installed requirements
+
+
 def _upgrade_pip():
     """Upgrade pip."""
 
@@ -437,9 +463,7 @@ def _upgrade_pip():
         '--disable-pip-version-check'
     ]
     result = _subprocess_call(cmd)
-    if result == 0:
-        print('INFO: Pip upgraded.')
-    else:
+    if result != 0:
         print('ERROR: Cannot upgrade pip. Exiting.')
         os._exit(1)
 
@@ -478,10 +502,10 @@ def _pip_install(packages):
     if syno_wheelhouse.is_dir():
         print('DEBUG: Found wheelhouse dir at %s.' % syno_wheelhouse)
         cmd.append('--find-links=%s' % syno_wheelhouse)
+    print('DEBUG: Install cmd: %s %s' % (' '.join(cmd), '<packages>'))
 
     # Final cmd
     cmd += packages
-    print('DEBUG: Install cmd: %s' % ' '.join(cmd))
 
     # Execute cmd (fallback to user site-packages)
     result = _subprocess_call(cmd)
