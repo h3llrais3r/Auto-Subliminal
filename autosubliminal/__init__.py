@@ -336,7 +336,7 @@ def _setup_env():
         print('INFO: A virtual environment is required when running from source.')
         _make_venv_and_restart()
 
-    print('INFO: Using python interpreter %s.' % sys.executable)
+    print('INFO: Using environment python interpreter %s.' % sys.executable)
 
     # Install dependencies
     _install_dependencies()
