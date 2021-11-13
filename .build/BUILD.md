@@ -12,7 +12,7 @@ Run `npm install -g @angular/cli@<version>` (check `package.json` for minimal re
 
 ### Install python dependencies
 
-Run `poetry install --no-root` in the root of the project.
+Run `poetry install` in the root of the project.
 
 This will create a virtual environment `.venv` in the root of the project with all runtime and dev dependencies.
 
