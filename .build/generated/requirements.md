@@ -25,12 +25,12 @@ future==0.18.2; python_version >= "2.6" and python_full_version < "3.0.0" or pyt
 gitdb==4.0.9; python_version >= "3.6"
 gitpython==3.1.18; python_version >= "3.6"
 gntp==1.0.3
-guessit==3.3.1
+guessit==3.4.2
 html5lib==1.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
 idna==3.3; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version >= "3.5"
 imdbpie @ git+https://github.com/h3llrais3r/imdb-pie.git@75c300af1bf87c49baef09f17002a3e35b0ed3cc
 importlib-metadata==4.8.1; python_version < "3.8" and python_version >= "3.6" or python_version < "3.8"
-importlib-resources==5.4.0; python_version < "3.9" and python_version >= "3.6"
+importlib-resources==5.4.0; python_version >= "3.6" and python_version < "3.9"
 jaraco.classes==3.2.1; python_version >= "3.6"
 jaraco.collections==3.4.0; python_version >= "3.6"
 jaraco.functools==3.4.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
@@ -48,7 +48,7 @@ python-twitter==3.5
 pytz==2021.3; python_version >= "3.6"
 pywin32==302; sys_platform == "win32" and implementation_name == "cpython" and python_version < "3.10" and python_version >= "3.5" or sys_platform == "win32"
 rarfile==4.0
-rebulk==3.0.1
+rebulk==3.1.0
 requests-oauthlib==1.3.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
 requests==2.26.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.6.0")
 schema==0.7.4

@@ -46,11 +46,13 @@ gitpython 3.1.18 Python Git Library
 |   `-- smmap >=3.0.1,<6 
 `-- typing-extensions >=3.7.4.0
 gntp 1.0.3 Growl Notification Transport Protocol for Python
-guessit 3.3.1 GuessIt - a library for guessing information from video filenames.
-|-- babelfish *
+guessit 3.4.2 GuessIt - a library for guessing information from video filenames.
+|-- babelfish >=0.6.0
+|-- importlib-resources *
+|   `-- zipp >=3.1.0 
 |-- python-dateutil *
 |   `-- six >=1.5 
-`-- rebulk >=3
+`-- rebulk >=3.1.0
 html5lib 1.1 HTML parser based on the WHATWG HTML specification
 |-- six >=1.9
 `-- webencodings *
@@ -102,7 +104,7 @@ python-twitter 3.5 A Python wrapper around the Twitter API
         |-- idna >=2.5,<4 
         `-- urllib3 >=1.21.1,<1.27 
 pywin32 302 Python for Window Extensions
-rebulk 3.0.1 Rebulk - Define simple search patterns in bulk to perform advanced matching on any string.
+rebulk 3.1.0 Rebulk - Define simple search patterns in bulk to perform advanced matching on any string.
 requests 2.26.0 Python HTTP for Humans.
 |-- certifi >=2017.4.17
 |-- charset-normalizer >=2.0.0,<2.1.0
@@ -138,10 +140,12 @@ subliminal 2.1.0.dev0 Subtitles, faster than your thoughts
 |       `-- pbr >=2.0.0,<2.1.0 || >2.1.0 
 |-- enzyme >=0.4.1
 |-- guessit >=3.0.0
-|   |-- babelfish * 
+|   |-- babelfish >=0.6.0 
+|   |-- importlib-resources * 
+|   |   `-- zipp >=3.1.0 
 |   |-- python-dateutil * 
 |   |   `-- six >=1.5 
-|   `-- rebulk >=3 
+|   `-- rebulk >=3.1.0 
 |-- pysrt >=1.0.1
 |   `-- chardet * 
 |-- pytz >=2012c
