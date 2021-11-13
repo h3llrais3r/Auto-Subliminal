@@ -40,7 +40,7 @@ gntp = "1.0.3"
 guessit = "3.4.2"
 html5lib = "1.1"
 imdbpie = { git = "https://github.com/h3llrais3r/imdb-pie.git", rev = "75c300af1bf87c49baef09f17002a3e35b0ed3cc" }
-importlib-metadata = { version = "4.8.1", markers = "python_version < '3.8'" }
+importlib-metadata = { version = "4.2.0", markers = "python_version < '3.8'" }
 jsonpickle = "2.0.0"
 langdetect = "1.0.9"
 pysrt = "1.1.2"
@@ -64,14 +64,13 @@ ws4py = "0.5.1"
 coverage = "6.1.2"
 coveralls = "3.3.1"
 pytest = "6.2.5"
-pytest-flake8 = "1.0.7"
 pytest-mock = "3.6.1"
 requests-mock = "1.9.3"
 vcrpy = "4.1.1"
 
 # Tooling
-autopep8 = "1.5.7"
-flake8 = "3.9.2"
+autopep8 = "1.6.0"
+flake8 = "4.0.1"
 isort = "5.8.0"
 pigar = "0.10.0"
 

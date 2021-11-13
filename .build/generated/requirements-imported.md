@@ -46,12 +46,12 @@ enzyme == 0.4.1
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\notifiers\growl.py: 5
 gntp == 1.0.3
 
-# C:\Tools\GitHub\Auto-Subliminal\autosubliminal\__init__.py: 593
+# C:\Tools\GitHub\Auto-Subliminal\autosubliminal\__init__.py: 617
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\fileprocessor.py: 7
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\parsers\guessit\__init__.py: 3
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\parsers\guessit\rules.py: 3,4,5
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\providers\addic7ed_custom.py: 9
-guessit == 3.3.1
+guessit == 3.4.2
 
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\core\movie.py: 7
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\indexer.py: 9,10,11
@@ -60,7 +60,7 @@ imdbpie == 5.6.4.dev0
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\util\json.py: 4
 jsonpickle == 2.0.0
 
-# C:\Tools\GitHub\Auto-Subliminal\autosubliminal\__init__.py: 662,663
+# C:\Tools\GitHub\Auto-Subliminal\autosubliminal\__init__.py: 686,687
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\util\filesystem.py: 9
 langdetect == 1.0.9
 
@@ -77,7 +77,7 @@ python_dateutil == 2.8.2
 python_twitter == 3.5
 
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\parsers\guessit\rules.py: 8
-rebulk == 3.0.1
+rebulk == 3.1.0
 
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\core\cache.py: 8
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\notifiers\prowl.py: 5
@@ -95,10 +95,10 @@ requests_oauthlib == 1.3.0
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\core\websocket.py: 8
 schema == 0.7.4
 
-# C:\Tools\GitHub\Auto-Subliminal\autosubliminal\__init__.py: 4
+# C:\Tools\GitHub\Auto-Subliminal\autosubliminal\__init__.py: 5
 setuptools == 58.5.3
 
-# C:\Tools\GitHub\Auto-Subliminal\autosubliminal\__init__.py: 630
+# C:\Tools\GitHub\Auto-Subliminal\autosubliminal\__init__.py: 654
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\providers\addic7ed_custom.py: 17,18
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\providers\exceptions.py: 3
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\providers\pitcher.py: 11

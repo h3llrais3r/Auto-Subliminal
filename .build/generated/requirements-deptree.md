@@ -69,7 +69,7 @@ imdbpie 5.6.4.dev0 Python IMDB client using the IMDB json web service made avail
 |   `-- urllib3 >=1.21.1,<1.27 
 |-- six >=1.0.0
 `-- trans >=2.1.0
-importlib-metadata 4.8.1 Read metadata from Python packages
+importlib-metadata 4.2.0 Read metadata from Python packages
 |-- typing-extensions >=3.6.4
 `-- zipp >=0.5
 jsonpickle 2.0.0 Python library for serializing any arbitrary object graph into JSON
