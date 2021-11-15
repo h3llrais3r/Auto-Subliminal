@@ -1,0 +1,36 @@
+# Please see the documentation for all configuration options:
+# https://help.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+
+# Dependabot limitations:
+# - No creation of PR for updates that are not allowed (f.e. if higer python version is required, no PR is created for the dependency)
+# - No write rights (See heck https://github.com/stefanzweifel/git-auto-commit-action#commits-made-by-this-action-do-not-trigger-new-workflow-runs to fix it)
+# - Not able to run auto commit action because of limitation above (unless we can fix it)
+# - This file needs to be committed in master branch before it will start to work
+
+# TODO: Enable me (remove .bak extension from this file) disable renovate (remove renovate.json) when issues above are addressed
+
+version: 2
+updates:
+
+# Maintain dependencies for GitHub Actions
+- package-ecosystem: github-actions
+  directory: "/"
+  target-branch: development
+  schedule:
+    interval: daily
+
+# Maintain dependencies for pip (also includes poetry)
+- package-ecosystem: pip
+  directory: "/"
+  target-branch: development
+  open-pull-requests-limit: 10
+  schedule:
+    interval: daily
+
+# Maintain dependencies for npm
+- package-ecosystem: npm
+  directory: "/web/autosubliminal"
+  target-branch: development
+  open-pull-requests-limit: 10
+  schedule:
+    interval: daily
