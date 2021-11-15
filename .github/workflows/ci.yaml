@@ -1,6 +1,6 @@
-# CI workflow for Auto-Subliminal
+# Workflow for continuous integration
 
-name: Auto-Subliminal
+name: Continuous integration
 
 on:
   push:
@@ -67,6 +67,7 @@ jobs:
     - name: Get node version (Windows)
       id: get-node-version-windows
       if: ${{ runner.os == 'Windows' }}
+      shell: pwsh # default shell for windows (needed to get node version with powershell)
       run: |
         # Get minimal required node version from package.json
         cd web/autosubliminal

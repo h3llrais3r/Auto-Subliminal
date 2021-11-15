@@ -1,6 +1,6 @@
-# Workflow for PR with JS dependency change
+# Workflow for javascript dependency installation
 
-name: Install-dependency-js
+name: Javascript dependency installation
 
 on:
   pull_request:
@@ -36,6 +36,11 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: "${{steps.get-node-version-linux.outputs.node-version}}"
+
+    - name: Print node version
+      run: |
+        node --version
+        npm --version
 
     - name: Install js dependency
       run: |
