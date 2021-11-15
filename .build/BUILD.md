@@ -18,9 +18,9 @@ This will create a virtual environment `.venv` in the root of the project with a
 
 ### Install/upgrade python dependencies
 
-Run `poetry add <package>=<version>` to add/update a fixed version of a runtime dependency
+Run `poetry add <package>@<version>` to add/update a fixed version of a runtime dependency
 
-Run `poetry add <package>=<version> --dev` to add/update a fixed version of a dev dependency
+Run `poetry add <package>@<version> --dev` to add/update a fixed version of a dev dependency
 
 We always use fixed versions!
 
