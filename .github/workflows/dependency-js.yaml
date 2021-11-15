@@ -1,6 +1,6 @@
-# Workflow for javascript dependency installation
+# Workflow for a javascript dependency change via pull request
 
-name: Javascript dependency installation
+name: Javascript dependency
 
 on:
   pull_request:
