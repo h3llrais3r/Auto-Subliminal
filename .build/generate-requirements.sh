@@ -2,6 +2,9 @@
 
 echo 'Generating python dependency files:'
 
+echo '-> Installing dependencies ...'
+poetry install > /dev/null
+
 echo '-> Generating requirements.txt ...'
 tmpfile=./generated/requirements.txt
 file=./generated/requirements.md
