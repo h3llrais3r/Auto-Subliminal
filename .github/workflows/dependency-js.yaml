@@ -29,10 +29,6 @@ jobs:
     - name: Get node version
       id: get-node-version
       run: |
-        # Get minimal required node version from package.json
-        pwd
-        echo $(jq -r '.engines.node' package.json | sed 's/[>=]//g')
-        echo "setting node version"
         echo "::set-output name=node-version::$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
 
     - name: Set up node
@@ -42,8 +38,8 @@ jobs:
 
     - name: Print node version
       run: |
-        node --version
-        npm --version
+        echo "Node version $(node --version)"
+        echo "Npm version $(npm --version)"
 
     - name: Install js dependency
       run: |

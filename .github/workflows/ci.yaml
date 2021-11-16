@@ -52,11 +52,9 @@ jobs:
     - name: Get node version (Linux)
       id: get-node-version-linux
       if: ${{ runner.os == 'Linux' }}
+      working-directory: web/autosubliminal
       run: |
-        # Get minimal required node version from package.json
-        cd web/autosubliminal
         echo "::set-output name=node-version::$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
-        cd ../..
 
     - name: Set up node (Linux)
       if: ${{ runner.os == 'Linux' }}
@@ -68,11 +66,9 @@ jobs:
       id: get-node-version-windows
       if: ${{ runner.os == 'Windows' }}
       shell: pwsh # default shell for windows (needed to get node version with powershell)
+      working-directory: web/autosubliminal
       run: |
-        # Get minimal required node version from package.json
-        cd web/autosubliminal
         echo "::set-output name=node-version::$((Get-Content -Raw -Path package.json | ConvertFrom-Json).engines.node -replace '[>=]')"
-        cd ../..
 
     - name: Set up node (Windows)
       if: ${{ runner.os == 'Windows' }}
@@ -82,14 +78,13 @@ jobs:
 
     - name: Print node version
       run: |
-        node --version
-        npm --version
+        echo "Node version $(node --version)"
+        echo "Npm version $(npm --version)"
 
     - name: Install npm dependencies
+      working-directory: web/autosubliminal
       run: |
-        cd web/autosubliminal
         npm install
-        cd ../..
 
     - name: Lint python code
       run: |
@@ -97,10 +92,9 @@ jobs:
         poetry run flake8 --verbose
 
     - name: Lint angular code
+      working-directory: web/autosubliminal
       run: |
-        cd web/autosubliminal
         npm run lint
-        cd ../..
 
     - name: Test python code
       run: |
