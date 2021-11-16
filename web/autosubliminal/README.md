@@ -13,4 +13,5 @@
 * Run `npm run build` to build the project when frontend development is completed.
 * The build artifacts will be stored in the `static` directory.
 * This makes sure that all your changes (as javascript) are available for the backend server so they can be served from there as well.
+* REMARK: in order to get the same output in github workflows, we pin the node version in the `package.json` to the version used on the local machine as well.
 * Navigate to `http://localhost:xxxx/autosubliminal` to test your changes, where `xxxx` is the port of your backend server.
