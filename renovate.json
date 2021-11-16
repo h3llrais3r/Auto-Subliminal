@@ -5,6 +5,12 @@
   "baseBranches": [
     "development"
   ],
+  "npm": {
+    "fileMatch": [
+      "web/autosubliminal/package.json",
+      "web/autosubliminal/package-lock.json"
+    ]
+  },
   "js": {
     "labels": [
       "dependencies",
@@ -17,6 +23,17 @@
         ],
         "allowedVersions": "<5.0.0"
       }
+    ]
+  },
+  "pip_requirements": {
+    "fileMatch": [
+      "requirements.txt"
+    ]
+  },
+  "poetry": {
+    "fileMatch": [
+      "pyproject.toml",
+      "poetry.lock"
     ]
   },
   "python": {
