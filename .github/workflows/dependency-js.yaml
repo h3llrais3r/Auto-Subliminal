@@ -55,3 +55,6 @@ jobs:
         message: Install dependency and build application
         committer_name: h3llrais3r
         committer_email: pooh_beer_1@hotmail.com
+        default_author: user_info
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
