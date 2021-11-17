@@ -7,8 +7,7 @@
   ],
   "npm": {
     "fileMatch": [
-      "web/autosubliminal/package.json",
-      "web/autosubliminal/package-lock.json"
+      "web/autosubliminal/package.json"
     ]
   },
   "js": {
@@ -32,8 +31,7 @@
   },
   "poetry": {
     "fileMatch": [
-      "pyproject.toml",
-      "poetry.lock"
+      "pyproject.toml"
     ]
   },
   "python": {
