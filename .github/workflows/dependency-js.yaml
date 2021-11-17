@@ -50,9 +50,8 @@ jobs:
         npm run build
 
     - name: Auto commit changes
-      uses: stefanzweifel/git-auto-commit-action@v4
+      uses: EndBug/add-and-commit@v7
       with:
-        commit_message: Install dependency and build application
-        commit_user_name: h3llrais3r
-        commit_user_email: pooh_beer_1@hotmail.com
-        commit_author: h3llrais3r <pooh_beer_1@hotmail.com>
+        message: Install dependency and build application
+        committer_name: h3llrais3r
+        committer_email: pooh_beer_1@hotmail.com
