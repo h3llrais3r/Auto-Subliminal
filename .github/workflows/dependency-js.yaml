@@ -56,4 +56,3 @@ jobs:
         commit_user_name: h3llrais3r
         commit_user_email: pooh_beer_1@hotmail.com
         commit_author: h3llrais3r <pooh_beer_1@hotmail.com>
-        skip_dirty_check: true
