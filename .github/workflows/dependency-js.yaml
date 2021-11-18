@@ -53,7 +53,12 @@ jobs:
       run: |
         npm run build
 
-    - name: Build cache key
+    # Only needed for runs-on: windows-latest -> See https://github.com/actions/cache/issues/591 and https://github.com/actions/toolkit/issues/552
+    - name: "Set up GNU tar instead BSD tar for cache"
+      shell: cmd
+      run: echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
+
+    - name: Create build cache key
       id: build-cache-key
       run: |
         echo "::set-output name=cache-key::$(echo '${{ github.repository }}-dependency-js-build-cache-${{ github.run_id }}' | sed 's/\//\-/g;s/\\/\-/g;s/\(.*\)/\L\1/')"
