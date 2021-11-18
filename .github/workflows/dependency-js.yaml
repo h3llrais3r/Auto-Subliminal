@@ -49,11 +49,17 @@ jobs:
       run: |
         npm run build
 
+    - name: Build cache key
+      id: build-cache-key
+      run: |
+        echo "::set-output name=cache-key::$(echo '${{ github.event.repo.name }}-dependency-js-build-cache-${{ github.run_number }}' | sed 's/\//\-/g;s/\\/\-/g')"
+
     - name: Cache build
       uses: actions/cache@v2
       with:
         path: .
-        key: dependency-js-build-cache-${{ hashFiles('**/package-lock.json') }}
+        key: "${{ steps.build-cache-key.outputs.cache-key }}"
+      env:
 
   dependency-js-commit:
 
@@ -77,7 +83,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: .
-        key: dependency-js-build-cache-${{ hashFiles('**/package-lock.json') }}
+        key: "${{ jobs.dependency-js-build.steps.build-cache-key.outputs.cache-key }}"
 
     - name: Auto commit changes
       uses: stefanzweifel/git-auto-commit-action@v4
