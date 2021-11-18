@@ -57,6 +57,8 @@ jobs:
 
   dependency-js-commit:
 
+    needs: dependency-js-build
+
     defaults:
       run:
         shell: bash
