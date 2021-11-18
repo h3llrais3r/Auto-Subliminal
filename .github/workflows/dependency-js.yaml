@@ -10,7 +10,7 @@ on:
       - 'web/autosubliminal/package.json'
 
 jobs:
-  dependency-js:
+  dependency-js-build:
 
     defaults:
       run:
@@ -34,7 +34,7 @@ jobs:
     - name: Set up node
       uses: actions/setup-node@v2
       with:
-        node-version: "${{steps.get-node-version.outputs.node-version}}"
+        node-version: "${{ steps.get-node-version.outputs.node-version }}"
 
     - name: Print node version
       run: |
@@ -49,12 +49,38 @@ jobs:
       run: |
         npm run build
 
-    - name: Auto commit changes
-      uses: EndBug/add-and-commit@v7
+    - name: Cache build
+      uses: actions/cache@v2
       with:
-        message: Install dependency and build application
-        committer_name: h3llrais3r
-        committer_email: pooh_beer_1@hotmail.com
-        default_author: user_info
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        path: .
+        key: dependency-js-build-cache-${{ hashFiles('**/package-lock.json') }}
+
+  dependency-js-commit:
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: web/autosubliminal
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }} # required for PR (see https://github.com/stefanzweifel/git-auto-commit-action)
+
+    - name: Restore cache build
+      uses: actions/cache@v2
+      with:
+        path: .
+        key: dependency-js-build-cache-${{ hashFiles('**/package-lock.json') }}
+
+    - name: Auto commit changes
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: Install dependency and build application
+        commit_user_name: h3llrais3r
+        commit_user_email: pooh_beer_1@hotmail.com
+        commit_author: h3llrais3r <pooh_beer_1@hotmail.com>
