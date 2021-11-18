@@ -61,7 +61,9 @@ jobs:
     - name: Cache build
       uses: actions/cache@v2
       with:
-        path: .
+        path: |
+          web/autosubliminal
+          !web/autosubliminal/node_modules
         key: ${{ steps.build-cache-key.outputs.cache-key }}
 
   dependency-js-commit:
@@ -85,7 +87,9 @@ jobs:
     - name: Restore cache build
       uses: actions/cache@v2
       with:
-        path: .
+        path: |
+          web/autosubliminal
+          !web/autosubliminal/node_modules
         key: ${{ needs.dependency-js-build.outputs.build-cache-key }}
 
     - name: Auto commit changes
