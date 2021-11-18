@@ -86,7 +86,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: .
-        key: ${{ needs.jobs.dependency-js-build.outputs.cache-key }}
+        key: ${{ needs.jobs.dependency-js-build.outputs.build-cache-key }}
 
     - name: Auto commit changes
       uses: stefanzweifel/git-auto-commit-action@v4
