@@ -56,7 +56,7 @@ jobs:
     - name: Build cache key
       id: build-cache-key
       run: |
-        echo "::set-output name=cache-key::$(echo '${{ github.repository }}-dependency-js-build-cache-${{ github.run_id }}' | sed 's/\//\-/g;s/\\/\-/g')"
+        echo "::set-output name=cache-key::$(echo '${{ github.repository }}-dependency-js-build-cache-${{ github.run_id }}' | sed 's/\//\-/g;s/\\/\-/g;s/\(.*\)/\L\1/')"
 
     - name: Cache build
       uses: actions/cache@v2
@@ -86,7 +86,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: .
-        key: ${{ needs.jobs.dependency-js-build.outputs.build-cache-key }}
+        key: ${{ needs.dependency-js-build.outputs.build-cache-key }}
 
     - name: Auto commit changes
       uses: stefanzweifel/git-auto-commit-action@v4
