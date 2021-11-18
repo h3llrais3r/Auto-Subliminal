@@ -19,6 +19,10 @@ jobs:
 
     runs-on: windows-latest
 
+    # Map a step output to a job output
+    outputs:
+      build-cache-key: ${{ steps.build-cache-key.outputs.cache-key }}
+
     steps:
 
     - name: Checkout
@@ -58,7 +62,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: .
-        key: "${{ steps.build-cache-key.outputs.cache-key }}"
+        key: ${{ steps.build-cache-key.outputs.cache-key }}
 
   dependency-js-commit:
 
@@ -82,7 +86,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: .
-        key: "${{ jobs.dependency-js-build.steps.build-cache-key.outputs.cache-key }}"
+        key: ${{ needs.jobs.dependency-js-build.outputs.cache-key }}
 
     - name: Auto commit changes
       uses: stefanzweifel/git-auto-commit-action@v4
