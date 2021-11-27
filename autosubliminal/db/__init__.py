@@ -47,15 +47,15 @@ def create():
         cursor.execute(query)
         connection.commit()
 
-        query = 'CREATE TABLE wanted_items (id INTEGER PRIMARY KEY, videopath TEXT, timestamp DATETIME, ' \
-                'languages TEXT, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, quality TEXT, ' \
-                'source TEXT, codec TEXT, releasegrp TEXT, tvdbid TEXT, imdbid TEXT)'
+        query = 'CREATE TABLE wanted_items (id INTEGER PRIMARY KEY, video_path TEXT, video_size INTEGER, '\
+                'languages TEXT, timestamp DATETIME, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, '\
+                'quality TEXT, source TEXT, codec TEXT, release_group TEXT, tvdb_id TEXT, imdb_id TEXT)'
         cursor.execute(query)
         connection.commit()
 
-        query = 'CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, season TEXT, ' \
-                'episode TEXT, quality TEXT, source TEXT, language TEXT, codec TEXT, timestamp DATETIME, ' \
-                'releasegrp TEXT, subtitle TEXT, provider TEXT)'
+        query = 'CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, video_path TEXT, language TEXT, provider TEXT, '\
+                'subtitle TEXT, timestamp DATETIME, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, ' \
+                'quality TEXT, source TEXT, codec TEXT, release_group TEXT, tvdb_id INTEGER, imdb_id TEXT)'
         cursor.execute(query)
         connection.commit()
 
