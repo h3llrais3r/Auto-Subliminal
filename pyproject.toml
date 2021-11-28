@@ -27,7 +27,7 @@ packages = [{ include = "autosubliminal" }, { include = "AutoSubliminal.py" }]
 
 [tool.poetry.dependencies]
 # Python version
-python = ">=3.6,<4"
+python = ">=3.6.1,<4"
 
 # Runtime dependencies
 babelfish = "0.6.0"
