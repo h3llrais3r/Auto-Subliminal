@@ -306,7 +306,7 @@ python-versions = "*"
 
 [[package]]
 name = "guessit"
-version = "3.4.2"
+version = "3.4.3"
 description = "GuessIt - a library for guessing information from video filenames."
 category = "main"
 optional = false
@@ -1162,7 +1162,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.6.1,<4"
-content-hash = "55eeae680955ce6bf422ce31982f7e3beb6ad5207f8f49f5660a80560aed1350"
+content-hash = "63a0773391ab785487905cd8f854cfd5ce5873a668acb15f75d3b33a4af4b926"
 
 [metadata.files]
 appdirs = [
@@ -1320,8 +1320,8 @@ gntp = [
     {file = "gntp-1.0.3.tar.gz", hash = "sha256:f4a4f2009ecb8bb41a1aaddd5fb7c03087b2a14cac2c03af029ba04b9166dae0"},
 ]
 guessit = [
-    {file = "guessit-3.4.2-py3-none-any.whl", hash = "sha256:090aeeb2ed665e8c54c0dbf41c6e86789b20f578375214547aa57d2283042596"},
-    {file = "guessit-3.4.2.tar.gz", hash = "sha256:1b16a077e5fc709a8a291e99527719a95f42e00bf55b8c977233ae195c6196d7"},
+    {file = "guessit-3.4.3-py3-none-any.whl", hash = "sha256:f7f790c9e55a7bcc8ff887d3146e089c65a23eff72edfb6684ac5fedb47488a5"},
+    {file = "guessit-3.4.3.tar.gz", hash = "sha256:731e96e6a1f3b065d05accc8c19f35d4485d880b77ab8dc4b262cc353df294f7"},
 ]
 html5lib = [
     {file = "html5lib-1.1-py2.py3-none-any.whl", hash = "sha256:0d78f8fde1c230e99fe37986a60526d7049ed4bf8a9fadbad5f00e22e58e041d"},
