@@ -26,7 +26,7 @@ We always use fixed versions!
 
 ### Generate python dependency files
 
-Run `generate-requirements.bat` to generate all python dependency files:
+Run `generate-requirements.sh` to generate all python dependency files:
 * `requirements.txt` - contains all runtime dependencies
 * `.build/generated/requirements.md` - contains all runtime dependencies
 * `.build/generated/requirements-deptree.md` - contains dependency tree for all runtime dependencies

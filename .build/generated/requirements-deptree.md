@@ -41,12 +41,12 @@ dogpile.cache 1.1.4 A caching front-end based on the Dogpile lock.
     |   `-- zipp >=0.5 
     `-- pbr >=2.0.0,<2.1.0 || >2.1.0 
 enzyme 0.4.1 Python video metadata parser
-gitpython 3.1.18 Python Git Library
+gitpython 3.1.24 GitPython is a python library used to interact with Git repositories
 |-- gitdb >=4.0.1,<5
 |   `-- smmap >=3.0.1,<6 
-`-- typing-extensions >=3.7.4.0
+`-- typing-extensions >=3.7.4.3
 gntp 1.0.3 Growl Notification Transport Protocol for Python
-guessit 3.4.2 GuessIt - a library for guessing information from video filenames.
+guessit 3.4.3 GuessIt - a library for guessing information from video filenames.
 |-- babelfish >=0.6.0
 |-- importlib-resources *
 |   `-- zipp >=3.1.0 
@@ -119,7 +119,7 @@ requests-oauthlib 1.3.0 OAuthlib authentication support for Requests.
     `-- urllib3 >=1.21.1,<1.27 
 schema 0.7.4 Simple data validation library
 `-- contextlib2 >=0.5.5
-simplejson 3.17.5 Simple, fast, extensible JSON encoder/decoder for Python
+simplejson 3.17.6 Simple, fast, extensible JSON encoder/decoder for Python
 subliminal 2.1.0.dev0 Subtitles, faster than your thoughts
 |-- appdirs >=1.3
 |-- babelfish >=0.5.2

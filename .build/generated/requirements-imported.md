@@ -51,7 +51,7 @@ gntp == 1.0.3
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\parsers\guessit\__init__.py: 3
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\parsers\guessit\rules.py: 3,4,5
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\providers\addic7ed_custom.py: 9
-guessit == 3.4.2
+guessit == 3.4.3
 
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\core\movie.py: 7
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\indexer.py: 9,10,11
@@ -96,7 +96,7 @@ requests_oauthlib == 1.3.0
 schema == 0.7.4
 
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\__init__.py: 5
-setuptools == 58.5.3
+setuptools == 59.3.0
 
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\__init__.py: 654
 # C:\Tools\GitHub\Auto-Subliminal\autosubliminal\providers\addic7ed_custom.py: 17,18
