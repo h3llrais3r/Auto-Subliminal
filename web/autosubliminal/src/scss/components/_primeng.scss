@@ -364,6 +364,7 @@ p-dropdown {
 
     .p-dropdown {
       @include border-radius(0);
+      width: auto; // need to auto dropdown label inside inputgroup
 
       &:last-child {
         @include border-radius(0 3px 3px 0); // in sync with radius of primeng
