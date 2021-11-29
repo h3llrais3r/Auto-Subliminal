@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { TableState } from 'primeng/api';
+import { FilterMetadata, TableState } from 'primeng/api';
 import { Table } from 'primeng/table';
 
 @Component({
@@ -27,8 +27,8 @@ export class TableFilterComponent implements OnInit {
     if (this.tableStateKey) {
       const tableState = JSON.parse(localStorage.getItem(this.tableStateKey)) as TableState;
       if (tableState && tableState.filters && tableState.filters.global) {
-        this.filterValue = tableState.filters.global.value;
-        this.matchMode = tableState.filters.global.matchMode;
+        this.filterValue = (tableState.filters.global as FilterMetadata).value;
+        this.matchMode = (tableState.filters.global as FilterMetadata).matchMode;
       }
     }
   }
