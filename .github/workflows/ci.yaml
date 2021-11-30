@@ -19,7 +19,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ['3.7', '3.8', '3.9', '3.10']
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
 
     defaults:
       run:
@@ -49,32 +49,16 @@ jobs:
       run: |
         poetry install --no-interaction
 
-    - name: Get node version (Linux)
-      id: get-node-version-linux
-      if: ${{ runner.os == 'Linux' }}
+    - name: Get node version
+      id: get-node-version
       working-directory: web/autosubliminal
       run: |
         echo "::set-output name=node-version::$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
 
-    - name: Set up node (Linux)
-      if: ${{ runner.os == 'Linux' }}
+    - name: Set up node
       uses: actions/setup-node@v2
       with:
-        node-version: ${{ steps.get-node-version-linux.outputs.node-version }}
-
-    - name: Get node version (Windows)
-      id: get-node-version-windows
-      if: ${{ runner.os == 'Windows' }}
-      shell: pwsh # default shell for windows (needed to get node version with powershell)
-      working-directory: web/autosubliminal
-      run: |
-        echo "::set-output name=node-version::$((Get-Content -Raw -Path package.json | ConvertFrom-Json).engines.node -replace '[>=]')"
-
-    - name: Set up node (Windows)
-      if: ${{ runner.os == 'Windows' }}
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ steps.get-node-version-windows.outputs.node-version }}
+        node-version: ${{ steps.get-node-version.outputs.node-version }}
 
     - name: Print node version
       run: |
