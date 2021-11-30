@@ -56,10 +56,10 @@ jobs:
         echo "::set-output name=changes::$(if [ -n '$(git status --porcelain)' ]; then echo 'true'; else echo 'false'; fi)"
 
     - name: Auto commit changes
-        if: steps.check-changes.outputs.changes == "true"
-        run:  |
-          git config --global user.name "h3llrais3r"
-          git config --global user.email "pooh_beer_1@hotmail.com"
-          git add -A
-          git commit -m '[automated commit] Install dependency and build application'
-          git push
+      if: ${{ steps.check-changes.outputs.changes }} == "true"
+      run: |
+        git config --global user.name "h3llrais3r"
+        git config --global user.email "pooh_beer_1@hotmail.com"
+        git add -A
+        git commit -m '[automated commit] Install dependency and build application'
+        git push
