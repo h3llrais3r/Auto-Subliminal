@@ -66,6 +66,6 @@ jobs:
 
     - name: Auto labeling
       if: ${{ steps.check-changes.outputs.changes }} == "true"
-      uses: andymckay/labeler@v1.0.4
+      uses: andymckay/labeler@master
       with:
         add-labels: "application changes"
