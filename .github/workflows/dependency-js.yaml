@@ -1,0 +1,65 @@
+# Workflow for a javascript dependency change via pull request
+
+name: Javascript dependency
+
+on:
+  pull_request:
+    branches:
+      - development
+    paths:
+      - web/autosubliminal/package.json
+      - web/autosubliminal/package-lock.json
+
+jobs:
+  dependency-js:
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: web/autosubliminal
+
+    runs-on: windows-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }} # required for on:pull_request
+
+    - name: Get node version
+      id: get-node-version
+      run: |
+        echo "::set-output name=node-version::$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
+
+    - name: Set up node
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ steps.get-node-version.outputs.node-version }}
+
+    - name: Print node version
+      run: |
+        echo "Node version $(node --version)"
+        echo "Npm version $(npm --version)"
+
+    - name: Install js dependency
+      run: |
+        npm install
+
+    - name: Build application
+      run: |
+        npm run build
+
+    - name: Check changes
+      id: check-changes
+      run: |
+        echo "::set-output name=changes::$(if [ -n '$(git status --porcelain)' ]; then echo 'true'; else echo 'false'; fi)"
+
+    - name: Auto commit changes
+        if: steps.check-changes.outputs.changes == "true"
+        run:  |
+          git config --global user.name "h3llrais3r"
+          git config --global user.email "pooh_beer_1@hotmail.com"
+          git add -A
+          git commit -m '[automated commit] Install dependency and build application'
+          git push
