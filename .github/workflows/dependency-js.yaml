@@ -63,3 +63,9 @@ jobs:
         git add -A
         git commit -m '[automated commit] Install dependency and build application'
         git push
+
+    - name: Auto labeling
+      if: ${{ steps.check-changes.outputs.changes }} == "true"
+      uses: andymckay/labeler@v1.0.4
+        with:
+          add-labels: "application changes"
