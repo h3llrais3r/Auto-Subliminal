@@ -1,0 +1,33 @@
+#!/bin/sh
+
+# git hook to run a command after "git pull" if the specified file(s) was changed
+
+# Include installed husky script
+. "$(dirname "$0")/_/husky.sh"
+
+# Check if one of the specified files are changed
+changed() {
+  echo "$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD)" | grep --quiet "$1"
+}
+
+run() {
+  # Set root dir (project dir = parent of current dir)
+  rootdir=$(dirname $(pwd))
+  # Run "poetry install" if pyproject.toml or poetry.lock is changed
+  if changed "pyproject.toml\|poetry.lock"; then
+    echo "Python dependency changes detected"
+    echo "Running 'poetry install' to install updates"
+    cd "$rootdir"
+    poetry install
+  fi
+  # Run "npm install" if package.json or package-lock.json is changed
+  if changed "package.json\|package-lock.json"; then
+    echo "Javascript dependency changes detected"
+    echo "Running 'npm install' to install updates"
+    cd "$rootdir/web/autosubliminal"
+    npm install
+  fi
+}
+
+# Run script
+run

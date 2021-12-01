@@ -6,8 +6,6 @@ Install `poetry` (check `pyproject.toml` for minminal required version) for pyth
 
 Install `nodejs` (check `package.json` for minimal required version) for nodejs/angular frontend development globally on your system.
 
-Run `npm install -g @angular/cli@<version>` (check `package.json` for minimal required version) to install angular cli globally on your system.
-
 ## Python backend development
 
 ### Install python dependencies

@@ -21,6 +21,7 @@
     "show"
   ],
   "scripts": {
+    "prepare": "cd ../.. && husky install .githooks",
     "clean": "rimraf static",
     "copy-themes": "concurrently -n w: npm:copy-themes-*",
     "copy-themes-bootstrap4": "copyfiles -u 4 \"./node_modules/primeng/resources/themes/bootstrap4-*/theme.css\" ./src/assets/themes",
@@ -75,6 +76,7 @@
     "codelyzer": "6.0.2",
     "concurrently": "6.4.0",
     "copyfiles": "2.4.1",
+    "husky": "7.0.4",
     "jasmine-core": "3.10.1",
     "jasmine-spec-reporter": "5.0.2",
     "karma": "6.3.9",
