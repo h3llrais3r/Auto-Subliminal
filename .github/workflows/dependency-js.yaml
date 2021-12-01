@@ -58,14 +58,16 @@ jobs:
     - name: Auto commit changes
       if: ${{ steps.check-changes.outputs.changes }} == "true"
       run: |
-        git config --global user.name "h3llrais3r"
-        git config --global user.email "pooh_beer_1@hotmail.com"
-        git add -A
-        git commit -m '[automated commit] Install dependency and build application'
+        # Only enable this if you want to change the committer details (defaults to github actions if not set)
+        # git config --global user.name "h3llrais3r"
+        # git config --global user.email "pooh_beer_1@hotmail.com"
+        echo "Changes files:" ; git status --porcelain
+        git add --all
+        git commit --message "[automated commit] Install dependency and build application" --author "h3llrais3r <pooh_beer_1@hotmail.com>"
         git push
 
     - name: Auto labeling
       if: ${{ steps.check-changes.outputs.changes }} == "true"
       uses: andymckay/labeler@master
       with:
-        add-labels: "application changes"
+        add-labels: "build changes"
