@@ -21,7 +21,7 @@ run() {
     echo "### Running 'poetry install' to install updates ###"
     echo "###################################################"
     cd "$rootdir"
-    poetry install
+    poetry install --no-interaction
   fi
   # Run "npm install" if package.json or package-lock.json is changed
   if changed "package.json\|package-lock.json"; then

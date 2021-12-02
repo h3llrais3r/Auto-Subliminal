@@ -3,7 +3,7 @@
 echo 'Generating python dependency files:'
 
 echo '-> Installing dependencies ...'
-poetry install > /dev/null
+poetry install --no-interaction > /dev/null
 
 echo '-> Generating requirements.txt ...'
 tmpfile=./generated/requirements.txt
