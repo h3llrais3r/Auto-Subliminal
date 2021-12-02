@@ -11,19 +11,25 @@ changed() {
 }
 
 run() {
-  # Set root dir (project dir = parent of current dir)
-  rootdir=$(dirname $(pwd))
+  # Set root dir (parent of current dir)
+  rootdir=$(dirname "$(dirname "$0")")
   # Run "poetry install" if pyproject.toml or poetry.lock is changed
   if changed "pyproject.toml\|poetry.lock"; then
-    echo "Python dependency changes detected"
-    echo "Running 'poetry install' to install updates"
+    echo ""
+    echo "###################################################"
+    echo "### Python dependency changes detected          ###"
+    echo "### Running 'poetry install' to install updates ###"
+    echo "###################################################"
     cd "$rootdir"
     poetry install
   fi
   # Run "npm install" if package.json or package-lock.json is changed
   if changed "package.json\|package-lock.json"; then
-    echo "Javascript dependency changes detected"
-    echo "Running 'npm install' to install updates"
+    echo ""
+    echo "###################################################"
+    echo "### Javascript dependency changes detected      ###"
+    echo "### Running 'npm install' to install updates    ###"
+    echo "###################################################"
     cd "$rootdir/web/autosubliminal"
     npm install
   fi
