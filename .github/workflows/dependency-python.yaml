@@ -1,0 +1,74 @@
+# Workflow for a python dependency change via pull request
+
+name: Python dependency
+
+on:
+  pull_request:
+    branches:
+      - development
+    paths:
+      - pyproject.toml
+      - poetry.lock
+      - requirements.txt
+
+jobs:
+  dependency-python:
+
+    defaults:
+      run:
+        shell: bash
+
+    runs-on: windows-latest
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }} # required for on:pull_request
+
+    - name: Set up python
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.7" # keep in sync with min required python version of application
+
+    - name: Print python version
+      run: |
+        python --version
+
+    - name: Setup poetry
+      uses: snok/install-poetry@v1
+
+    - name: Print poetry version
+      run: |
+        poetry --version
+
+    - name: Install python dependencies
+      run: |
+        poetry install --no-interaction
+
+    - name: Generate dependencies files
+      working-directory: .build
+      run: |
+        ./generate-requirements.sh
+
+    - name: Check changes
+      id: check-changes
+      run: |
+        echo "::set-output name=changes::$(if [ -n '$(git status --porcelain)' ]; then echo 'true'; else echo 'false'; fi)"
+
+    - name: Auto commit changes
+      if: ${{ steps.check-changes.outputs.changes }} == "true"
+      run: |
+        echo "Changed files:" ; git status --porcelain
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git add --all
+        git commit --message "Generate requirements files" --author "h3llrais3r <pooh_beer_1@hotmail.com>"
+        git push
+
+    - name: Auto labeling
+      if: ${{ steps.check-changes.outputs.changes }} == "true"
+      uses: andymckay/labeler@master
+      with:
+        add-labels: "source changes"
