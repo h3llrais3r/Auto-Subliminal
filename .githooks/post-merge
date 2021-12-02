@@ -20,6 +20,7 @@ run() {
     echo "### Python dependency changes detected          ###"
     echo "### Running 'poetry install' to install updates ###"
     echo "###################################################"
+    echo ""
     cd "$rootdir"
     poetry install --no-interaction
   fi
@@ -30,6 +31,7 @@ run() {
     echo "### Javascript dependency changes detected      ###"
     echo "### Running 'npm install' to install updates    ###"
     echo "###################################################"
+    echo ""
     cd "$rootdir/web/autosubliminal"
     npm install
   fi
