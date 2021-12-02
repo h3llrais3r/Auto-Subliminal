@@ -429,7 +429,7 @@ def test_set_rw_and_remove():
         file.write('test')
         file.close()
         os.close(fd)
-        set_rw_and_remove(None, file_path, None)
+        set_rw_and_remove(os.remove, file_path, None)
         assert not os.path.exists(file_path)
     finally:
         if os.path.exists(file_path):

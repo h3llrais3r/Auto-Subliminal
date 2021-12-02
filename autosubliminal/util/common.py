@@ -472,9 +472,9 @@ def get_disk_space_details(directory):
         return st.f_bavail * st.f_frsize, st.f_blocks * st.f_frsize
 
 
-def set_rw_and_remove(operation, name, exc):
-    os.chmod(name, stat.S_IWRITE)
-    os.remove(name)
+def set_rw_and_remove(func, path, _):
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
 
 
 def atoi(text):

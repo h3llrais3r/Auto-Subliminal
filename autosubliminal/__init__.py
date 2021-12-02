@@ -6,6 +6,7 @@ import pkg_resources
 import re
 import shutil
 import site
+import stat
 import subprocess
 import sys
 import sysconfig
@@ -228,8 +229,11 @@ def initialize():
         POSTPROCESS, POSTPROCESSINDIVIDUAL, POSTPROCESSUTF8ENCODING, SHOWPOSTPROCESSCMD, SHOWPOSTPROCESSCMDARGS, \
         MOVIEPOSTPROCESSCMD, MOVIEPOSTPROCESSCMDARGS
 
+    # Check python version
+    python_version_changed = _check_python_version_change()
+
     # Setup environment
-    _setup_env()
+    _setup_env(python_version_changed)
 
     # Imports
     from autosubliminal import config, db, version
@@ -240,11 +244,8 @@ def initialize():
     # Fake some entry points to get libraries working without installation
     _fake_entry_points()
 
-    # Check python version
-    PYTHONVERSION = get_python_version_strict()
-    python_version_changed = _check_python_version_change()
-
     # System settings
+    PYTHONVERSION = get_python_version_strict()
     PATH = os.path.abspath(os.getcwd())
     CACHEDIR = os.path.abspath(os.path.join(PATH, 'cache'))
     DEREFERURL = 'https://dereferer.me/?'
@@ -322,19 +323,35 @@ def initialize():
     logger.initialize()
 
 
-def _setup_env():
+def _check_python_version_change():
+    """Check if the python version has changed or not."""
+
+    # Imports
+    from autosubliminal.util.system import get_python_version_strict, get_stored_python_version, store_python_version
+
+    previous_python_version = get_stored_python_version()
+    current_python_version = get_python_version_strict()
+
+    python_version_changed = not previous_python_version or current_python_version != previous_python_version
+    if python_version_changed:
+        store_python_version(current_python_version)
+
+    return python_version_changed
+
+
+def _setup_env(replace):
     print('INFO: Setting up environment.')
+    if replace:
+        print('INFO: Forcing new environment creation.')
+        SOURCE_PATH.joinpath('.requirements').unlink()
     print('INFO: Checking if current environment is writable.')
     if not _check_env_writable():
-        print('ERROR: Current environment is not writable.')
-        if not os.access(SOURCE_PATH, os.W_OK):
-            print('ERROR: Source directory %s is not writable either. Exiting.' % SOURCE_PATH)
-            os._exit(1)
-        _make_venv_and_restart()
+        print('WARNING: Current environment is not writable.')
+        _make_venv_and_restart(replace)
 
     if not IN_VENV:
-        print('INFO: A virtual environment is required when running from source.')
-        _make_venv_and_restart()
+        print('WARNING: A virtual environment is required when running from source.')
+        _make_venv_and_restart(replace)
 
     print('INFO: Using environment python interpreter %s.' % sys.executable)
 
@@ -369,13 +386,16 @@ def _check_env_writable():
     return any([os.access(location, os.W_OK) for location in set(locations)])
 
 
-def _make_venv_and_restart():
+def _make_venv_and_restart(replace):
     """
     Create and restart in virtual environment.
 
     Create a virtual environment in the .venv/runtime dir in the project root if it doesn't exist yet.
     Restart the application in the virtual environment.
     """
+    def remove_readonly(func, path, _):
+        os.chmod(path, stat.S_IWRITE)
+        func(path)
 
     venv_path = SOURCE_PATH.joinpath('.venv')
     current_interpreter = Path(sys.executable).resolve()
@@ -387,15 +407,20 @@ def _make_venv_and_restart():
             print('ERROR: Please check the permissions, and that it does not include global site packages.')
         os._exit(1)
 
-    # Create virtual environment if it doesn't exist yet
-    if not venv_path.is_dir():
-        print('INFO: Creating a new virtual environment in %s.' % venv_path)
+    # Create virtual environment if it doesn't exist yet or if we need to replace it
+    if not venv_path.is_dir() or replace:
+        if replace:
+            print('INFO: Recreating the virtual environment in %s.' % venv_path)
+            # Clear the venv ourselves as the the clear option in the venv.create can fail on windows
+            shutil.rmtree(venv_path, onerror=remove_readonly)
+        else:
+            print('INFO: Creating a new virtual environment in %s.' % venv_path)
         try:
             import venv
             venv.create(venv_path, system_site_packages=False, clear=True, symlinks=os.name != 'nt', with_pip=True)
             print('INFO: Created new virtual environment in %s.' % venv_path)
-        except (ImportError, Exception):
-            print('ERROR: Cannot create virtual environment in %s.' % venv_path)
+        except (ImportError, Exception) as error:
+            print('ERROR: Cannot create virtual environment: ' % error)
             os._exit(1)
 
     # Launch application in virtual environment
@@ -539,7 +564,7 @@ def _subprocess_call(cmd_list):
         if stdout:
             print('INFO: Sub process result: %s' % stdout)
         if stderr:
-            print('ERROR: Sub process error: %s' % stderr)
+            print('WARNING: Sub process error: %s' % stderr)
     except Exception as error:
         print('ERROR: Unable to run sub process: %s' % error)
         return 126
@@ -566,22 +591,6 @@ def _fake_entry_points():
     entry_points = {}
     distribution._ep_map = pkg_resources.EntryPoint.parse_map(entry_points, distribution)
     pkg_resources.working_set.add(distribution)
-
-
-def _check_python_version_change():
-    """Check if the python version has changed or not."""
-
-    # Imports
-    from autosubliminal.util.system import get_python_version_strict, get_stored_python_version, store_python_version
-
-    previous_python_version = get_stored_python_version()
-    current_python_version = get_python_version_strict()
-
-    python_version_changed = not previous_python_version or current_python_version != previous_python_version
-    if python_version_changed:
-        store_python_version(current_python_version)
-
-    return python_version_changed
 
 
 def _init_cache(replace):
