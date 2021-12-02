@@ -69,4 +69,4 @@ jobs:
       if: ${{ steps.check-changes.outputs.changes }} == "true"
       uses: andymckay/labeler@master
       with:
-        add-labels: "build changes"
+        add-labels: "source changes"
