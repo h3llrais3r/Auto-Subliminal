@@ -278,7 +278,7 @@ class _SubtitlesApi(RestResource):
 @cherrypy.popargs('episode_tvdb_id')
 class _HardcodedApi(RestResource):
     """
-    Rest resource for handling the /api/shows/{tvdb_id}/subtitles/hardcoded path.
+    Rest resource for handling the /api/shows/{tvdb_id}/subtitles/hardcoded/{episode_tvdb_id} path.
     """
 
     def __init__(self):
@@ -308,7 +308,7 @@ class _HardcodedApi(RestResource):
 
             # Update missing languages
             show_episode_details_db = ShowEpisodeDetailsDb()
-            db_show_episode = show_episode_details_db.get_show_episode(tvdb_id, subtitles=True)
+            db_show_episode = show_episode_details_db.get_show_episode(episode_tvdb_id, subtitles=True)
             db_show_settings = ShowSettingsDb().get_show_settings(tvdb_id)
             db_show_episode.missing_languages = get_missing_languages(db_show_episode.subtitles,
                                                                       db_show_settings.wanted_languages)
