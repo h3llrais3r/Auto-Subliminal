@@ -50,7 +50,8 @@
     }
   }
 
-  .p-menuitem-link.active {
+  // Highlight active menu item
+  .p-menuitem.active {
     background-color: var(--primary-color);
   }
 }
