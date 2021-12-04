@@ -315,7 +315,7 @@ class ShowEpisodeSubtitlesDb(object):
         self._query_get = 'SELECT * FROM show_episode_subtitles WHERE tvdb_id=?'
         self._query_set = 'INSERT INTO show_episode_subtitles VALUES (?,?,?,?)'
         self._query_delete = 'DELETE FROM show_episode_subtitles WHERE tvdb_id=?'
-        self._query_delete_by_type = ''
+        self._query_delete_by_type = 'DELETE FROM show_episode_subtitles WHERE tvdb_id=? AND type=?'
         self._query_flush = 'DELETE FROM show_episode_subtitles'
 
     def get_show_episode_subtitles(self, tvdb_id):
