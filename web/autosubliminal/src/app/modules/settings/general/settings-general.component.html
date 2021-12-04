@@ -74,7 +74,7 @@
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="scanDiskInterval" min="1" suffix=" hour(s)"></app-input-number>
+          <app-input-number formControlName="scanDiskInterval" [min]="1" suffix=" hour(s)"></app-input-number>
         </div>
       </div>
       <!-- Check sub interval -->
@@ -87,7 +87,7 @@
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="checkSubInterval" min="6" suffix=" hours"></app-input-number>
+          <app-input-number formControlName="checkSubInterval" [min]="6" suffix=" hours"></app-input-number>
         </div>
       </div>
       <!-- Check sub deadline -->
@@ -101,7 +101,7 @@
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="checkSubDeadline" min="1" suffix=" week(s)"></app-input-number>
+          <app-input-number formControlName="checkSubDeadline" [min]="1" suffix=" week(s)"></app-input-number>
         </div>
       </div>
       <!-- Check sub delta -->
@@ -115,7 +115,7 @@
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="checkSubDelta" min="1" suffix=" day(s)"></app-input-number>
+          <app-input-number formControlName="checkSubDelta" [min]="1" suffix=" day(s)"></app-input-number>
         </div>
       </div>
       <!-- Check version interval -->
@@ -128,7 +128,7 @@
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="checkVersionInterval" min="1" suffix=" hour(s)"></app-input-number>
+          <app-input-number formControlName="checkVersionInterval" [min]="1" suffix=" hour(s)"></app-input-number>
         </div>
       </div>
       <!-- Check version auto update -->
@@ -203,7 +203,7 @@
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="detectedLanguageProbability" min="1" max="100" suffix=" %"></app-input-number>
+          <app-input-number formControlName="detectedLanguageProbability" [min]="1" [max]="100" suffix=" %"></app-input-number>
         </div>
       </div>
       <!--Min video file size -->
@@ -217,7 +217,7 @@
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="minVideoFileSize" min="0" suffix=" MB"></app-input-number>
+          <app-input-number formControlName="minVideoFileSize" [min]="0" suffix=" MB"></app-input-number>
         </div>
       </div>
       <!--Max db results -->
@@ -230,7 +230,7 @@
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="maxDbResults" mode="decimal" min="0" suffix=" results"></app-input-number>
+          <app-input-number formControlName="maxDbResults" mode="decimal" [min]="0" suffix=" results"></app-input-number>
         </div>
       </div>
       <!-- Timestamp format -->

@@ -584,7 +584,6 @@
     <div class="row form-row">
       <div class="col-6 col-6 col-sm-6 col-md-4 col-lg-4">
         <div class="p-inputgroup">
-          <p-dropdown *ngIf="options" [options]="options" [(ngModel)]="newValue" [ngClass]="validationClass" (onChange)="onNewValueChange($event)" styleClass="w-100"></p-dropdown>
           <input type="text" pInputText [(ngModel)]="twitterRegistration.tokenPin" placeholder="Pin">
           <p-button label="Ok" styleClass="p-button-outlined input-addon" (onClick)="authorizeTwitter()"></p-button>
         </div>

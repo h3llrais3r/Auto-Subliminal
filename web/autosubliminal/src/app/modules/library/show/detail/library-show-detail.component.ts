@@ -24,6 +24,7 @@ export class LibraryShowDetailComponent implements OnInit {
   showShowSettings = false;
   showVideoSubtitles = false;
   videoSubtitles: VideoSubtitles;
+  episodeTvdbId: number;
 
   constructor(
     private route: ActivatedRoute,
@@ -109,7 +110,8 @@ export class LibraryShowDetailComponent implements OnInit {
       });
   }
 
-  openVideoSubtitlesDialog(fileLocation: string, fileName: string, languages: string[]): void {
+  openVideoSubtitlesDialog(episodeTvdbId: number, fileLocation: string, fileName: string, languages: string[]): void {
+    this.episodeTvdbId = episodeTvdbId; // keep track for which episode the video subtitles are edited
     this.videoSubtitles = new VideoSubtitles();
     this.videoSubtitles.fileLocation = fileLocation;
     this.videoSubtitles.fileName = fileName;
@@ -120,10 +122,11 @@ export class LibraryShowDetailComponent implements OnInit {
   closeVideoSubtitlesDialog(): void {
     this.showVideoSubtitles = false;
     this.videoSubtitles = null;
+    this.episodeTvdbId = null;
   }
 
-  saveHardcodedSubtitles(episodeTvdbId: number, videoSubtitles: VideoSubtitles): void {
-    this.showService.saveShowHardcodedSubtitles(this.show.tvdbId, episodeTvdbId, videoSubtitles).subscribe(
+  saveHardcodedSubtitles(videoSubtitles: VideoSubtitles): void {
+    this.showService.saveShowHardcodedSubtitles(this.show.tvdbId, this.episodeTvdbId, videoSubtitles).subscribe(
       () => {
         this.closeVideoSubtitlesDialog();
         this.getShowDetails(this.show.tvdbId);

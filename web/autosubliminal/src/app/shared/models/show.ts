@@ -68,7 +68,7 @@ export class ShowSeason {
 }
 
 export class ShowFile {
-  tvdbId: number;
+  tvdbId: number; // tvdbId of the show file/episode
   filename: string;
   type: FileType;
   embeddedLanguages: string[];

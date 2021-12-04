@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { AbstractControl, ControlContainer, ControlValueAccessor, FormControl, FormControlDirective } from '@angular/forms';
+import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirective } from '@angular/forms';
 
 // Abstract input component to be used as base class for all our input components!
 @Component({
@@ -32,8 +32,8 @@ export abstract class InputComponent implements ControlValueAccessor {
   @Output()
   keyup: EventEmitter<any> = new EventEmitter(); // allows custom onKeyup functionality (keyup)="..." when component is created
 
-  get control(): AbstractControl {
-    return this.formControl || this.controlContainer.control.get(this.formControlName);
+  get control(): FormControl {
+    return this.formControl || this.controlContainer.control.get(this.formControlName) as FormControl;
   }
 
   constructor(protected controlContainer: ControlContainer) { }
@@ -70,7 +70,6 @@ export abstract class InputComponent implements ControlValueAccessor {
     }
     return validationClass;
   }
-
 
   onKeyup(event: KeyboardEvent): void {
     this.keyup.emit(event);

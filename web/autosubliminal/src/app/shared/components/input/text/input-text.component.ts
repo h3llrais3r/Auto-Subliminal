@@ -21,7 +21,7 @@ export class InputTextComponent extends InputComponent implements OnInit {
   placeholder = '';
 
   @Input()
-  mask: '';
+  mask = '';
 
   @Input()
   dropSpecialCharacters = true;

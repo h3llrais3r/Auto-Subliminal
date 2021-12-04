@@ -97,7 +97,7 @@
                 <td class="wrap-text">
                   <span>{{file.filename}}</span>
                   <span class="icon-group">
-                    <a *ngIf="file.isVideo" class="icon-link" (click)="openVideoSubtitlesDialog(season.seasonPath, file.filename, file.hardcodedLanguages, file.tvdbId)">
+                    <a *ngIf="file.isVideo" class="icon-link" (click)="openVideoSubtitlesDialog(file.tvdbId, season.seasonPath, file.filename, file.hardcodedLanguages)">
                       <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
                     </a>
                     <a *ngIf="file.isVideo" class="icon-link" [href]="getPlayVideoUrl(season.seasonPath, file.filename)">
