@@ -37,9 +37,10 @@ TODO.txt
 # Config files
 config.properties*
 
-# Python version file
+# Runtime times
 .pythonversion
 .requirements
+.venvcreationtime
 
 # Installation files
 .eggs/

@@ -1,15 +1,19 @@
 # coding=utf-8
 
+import datetime
 import os
 import tempfile
 from distutils.version import StrictVersion
+from pathlib import Path
 
-from autosubliminal.util.system import (get_python_location, get_python_version_full, get_python_version_strict,
-                                        get_stored_python_version, store_python_version)
+from autosubliminal.util.system import (TIMESTAMP_FORMAT, get_python_location, get_python_version_full,
+                                        get_python_version_strict, get_stored_python_version,
+                                        get_stored_venv_creation_time, get_venv_creation_time,
+                                        is_python_version_changed, store_python_version, store_venv_creation_time)
 
 python_executable = '/path/to/python/executable/python.exe'
-python_version = '2.7.15 (v2.7.15:ca079a3ea3, Apr 30 2018, 16:30:26) [MSC v.1500 64 bit (AMD64)]'
-python_version_info = (2, 7, 15, 'final', 0)
+python_version = '3.7.9 (tags/v3.7.9:13c94747c7, Aug 17 2020, 18:58:18) [MSC v.1900 64 bit (AMD64)]'
+python_version_info = (3, 7, 9, 'final', 0)
 
 
 def test_get_python_version_full(monkeypatch):
@@ -19,15 +23,15 @@ def test_get_python_version_full(monkeypatch):
 
 def test_get_python_version_strict(monkeypatch):
     monkeypatch.setattr('sys.version_info', python_version_info)
-    assert get_python_version_strict() == StrictVersion('2.7.15')
+    assert get_python_version_strict() == StrictVersion('3.7.9')
 
 
-def test_get_python_executable(monkeypatch):
+def test_get_python_location(monkeypatch):
     monkeypatch.setattr('sys.executable', python_executable)
     assert get_python_location() == '/path/to/python/executable'
 
 
-def test_stored_python_version(monkeypatch):
+def test_get_stored_python_version(monkeypatch):
     path = None
     python_version = get_python_version_strict()
     try:
@@ -36,5 +40,44 @@ def test_stored_python_version(monkeypatch):
         store_python_version(python_version)
         os.close(fd)
         assert get_stored_python_version() == python_version
+    finally:
+        os.remove(path)
+
+
+def test_is_python_version_changed(monkeypatch, mocker):
+    monkeypatch.setattr('sys.version_info', python_version_info)
+    monkeypatch.setattr('autosubliminal.util.system.PYTHON_VERSION_FILE', 'path/does/not/exist')
+    assert is_python_version_changed()
+    mocker.patch('autosubliminal.util.system.get_python_version_strict', return_value=StrictVersion('3.7.9'))
+    mocker.patch('autosubliminal.util.system.get_stored_python_version', return_value=StrictVersion('3.7.10'))
+    assert is_python_version_changed()
+    mocker.patch('autosubliminal.util.system.get_python_version_strict', return_value=StrictVersion('3.7.9'))
+    mocker.patch('autosubliminal.util.system.get_stored_python_version', return_value=StrictVersion('3.7.9'))
+    assert not is_python_version_changed()
+
+
+def test_get_venv_creation_time(monkeypatch):
+    path = None
+    try:
+        fd, path = tempfile.mkstemp(text=True)
+        venv_cfg_file = Path(path)
+        creation_time = datetime.datetime.fromtimestamp(venv_cfg_file.stat().st_mtime).strftime(TIMESTAMP_FORMAT)
+        monkeypatch.setattr('sys.prefix', str(venv_cfg_file.parent))
+        monkeypatch.setattr('autosubliminal.util.system.VENV_CFG_FILE', venv_cfg_file.name)
+        os.close(fd)
+        assert get_venv_creation_time() == creation_time
+    finally:
+        os.remove(path)
+
+
+def test_get_stored_venv_creation_time(monkeypatch):
+    path = None
+    venv_creation_time = '2021-12-01 00:00:00'
+    try:
+        fd, path = tempfile.mkstemp(text=True)
+        monkeypatch.setattr('autosubliminal.util.system.VENV_CREATION_TIME_FILE', path)
+        store_venv_creation_time(venv_creation_time)
+        os.close(fd)
+        assert get_stored_venv_creation_time() == venv_creation_time
     finally:
         os.remove(path)

@@ -229,17 +229,19 @@ def initialize():
         POSTPROCESS, POSTPROCESSINDIVIDUAL, POSTPROCESSUTF8ENCODING, SHOWPOSTPROCESSCMD, SHOWPOSTPROCESSCMDARGS, \
         MOVIEPOSTPROCESSCMD, MOVIEPOSTPROCESSCMDARGS
 
-    # Check python version
-    python_version_changed = _check_python_version_change()
-
-    # Setup environment
-    _setup_env(python_version_changed)
+    # Setup virtual environment
+    _setup_venv()
 
     # Imports
     from autosubliminal import config, db, version
     from autosubliminal.core import logger
     from autosubliminal.indexer import MovieIndexer, ShowIndexer
-    from autosubliminal.util.system import get_python_version_strict
+    from autosubliminal.util.system import get_python_version_strict, is_python_version_changed, store_python_version
+
+    # Check if python version is changed
+    python_version_changed = is_python_version_changed()
+    if python_version_changed:
+        store_python_version(get_python_version_strict())
 
     # Fake some entry points to get libraries working without installation
     _fake_entry_points()
@@ -323,42 +325,27 @@ def initialize():
     logger.initialize()
 
 
-def _check_python_version_change():
-    """Check if the python version has changed or not."""
+def _setup_venv():
+    print('INFO: Setting up the virtual environment.')
 
-    # Imports
-    from autosubliminal.util.system import get_python_version_strict, get_stored_python_version, store_python_version
-
-    previous_python_version = get_stored_python_version()
-    current_python_version = get_python_version_strict()
-
-    python_version_changed = not previous_python_version or current_python_version != previous_python_version
-    if python_version_changed:
-        store_python_version(current_python_version)
-
-    return python_version_changed
-
-
-def _setup_env(replace):
-    print('INFO: Setting up environment.')
-    if replace:
-        print('INFO: Forcing new environment creation.')
-        SOURCE_PATH.joinpath('.requirements').unlink()
-    print('INFO: Checking if current environment is writable.')
-    if not _check_env_writable():
-        print('WARNING: Current environment is not writable.')
-        _make_venv_and_restart(replace)
-
+    # Make sure we are running inside a virtual environment
     if not IN_VENV:
         print('WARNING: A virtual environment is required when running from source.')
-        _make_venv_and_restart(replace)
+        _create_venv_and_restart()
 
-    print('INFO: Using environment python interpreter %s.' % sys.executable)
+    # At this point, we are always running inside a virtual environment
+    print('INFO: Checking if the current virtual environment is writable.')
+    if not _check_env_writable():
+        print('WARNING: The current virtual environment is not writable.')
+        _create_venv_and_restart()  # create an internal virtual environment if the current one is not writable
+
+    # Print python interpreter
+    print('INFO: Running virtual environment python interpreter %s.' % sys.executable)
 
     # Install dependencies
     _install_dependencies()
 
-    print('INFO: Environment setup finished.')
+    print('INFO: Virtual environment setup finished.')
 
 
 def _check_env_writable():
@@ -386,17 +373,22 @@ def _check_env_writable():
     return any([os.access(location, os.W_OK) for location in set(locations)])
 
 
-def _make_venv_and_restart(replace):
+def _create_venv_and_restart():
     """
-    Create and restart in virtual environment.
+    Create and restart in a virtual environment.
 
-    Create a virtual environment in the .venv/runtime dir in the project root if it doesn't exist yet.
+    Create a virtual environment in the .venv dir in the project root if it doesn't exist yet.
     Restart the application in the virtual environment.
     """
+    # Imports
+    from autosubliminal.util.system import get_python_version_strict, is_python_version_changed
+
+    # Helper function
     def remove_readonly(func, path, _):
         os.chmod(path, stat.S_IWRITE)
         func(path)
 
+    python_version_changed = is_python_version_changed()
     venv_path = SOURCE_PATH.joinpath('.venv')
     current_interpreter = Path(sys.executable).resolve()
 
@@ -407,9 +399,10 @@ def _make_venv_and_restart(replace):
             print('ERROR: Please check the permissions, and that it does not include global site packages.')
         os._exit(1)
 
-    # Create virtual environment if it doesn't exist yet or if we need to replace it
-    if not venv_path.is_dir() or replace:
-        if replace:
+    # Create virtual environment if it doesn't exist yet or when the python version is changed
+    if not venv_path.is_dir() or python_version_changed:
+        if python_version_changed:
+            print('WARNING: New python version %s detected.' % get_python_version_strict())
             print('INFO: Recreating the virtual environment in %s.' % venv_path)
             # Clear the venv ourselves as the the clear option in the venv.create can fail on windows
             shutil.rmtree(venv_path, onerror=remove_readonly)
@@ -448,12 +441,22 @@ def _install_dependencies():
 
     Install the runtime dependencies if they are not yet installed before, or when they have changed.
     """
+    # Imports
+    from autosubliminal.util.system import (get_venv_creation_time, is_venv_creation_time_changed,
+                                            store_venv_creation_time)
 
     print('INFO: Installing dependencies.')
-
-    # Check if requirements are already installed and up to date
     reqs = SOURCE_PATH.joinpath('requirements.txt')
     reqs_installed = SOURCE_PATH.joinpath('.requirements')
+
+    # Force new install when a new virtual environment is detected
+    if is_venv_creation_time_changed():
+        print('WARNING: New virtual environment detected.')
+        store_venv_creation_time(get_venv_creation_time())  # store the new venv creation time
+        if reqs_installed.is_file():
+            SOURCE_PATH.joinpath('.requirements').unlink()  # trigger new install of dependencies
+
+    # Check if requirements are already installed and up to date
     if reqs.is_file() and reqs_installed.is_file() and filecmp.cmp(reqs, reqs_installed, False):
         print('INFO: Dependencies already installed and up to date.')
         return
