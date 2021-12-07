@@ -34,14 +34,14 @@ export class Item {
   }
 
   get longName(): string {
-    if (this.isMovie) {
-      // Format: title (year)
-      return this.name;
-    } else if (this.isEpisode) {
-      // Format: title (year) SxxExx(-xx)
+    if (this.isEpisode) {
+      // Episode format: title (year) SxxExx(-xx)
       const season = `00${this.season}`.slice(-2);
       const episode = Array.isArray(this.episode) ? this.episode.map((ep) => `00${ep}`.slice(-2)).join('-') : `00${this.episode}`.slice(-2);
       return `${this.name} S${season}E${episode}`;
+    } else {
+      // Movie format: title (year)
+      return this.name;
     }
   }
 }
