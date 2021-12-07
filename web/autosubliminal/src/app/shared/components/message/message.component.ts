@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MessageSeverity } from '../../models/message';
 
 @Component({
@@ -6,7 +6,7 @@ import { MessageSeverity } from '../../models/message';
   templateUrl: './message.component.html',
   styleUrls: ['./message.component.scss']
 })
-export class MessageComponent implements OnInit {
+export class MessageComponent {
 
   @Input()
   visible = false;
@@ -15,6 +15,4 @@ export class MessageComponent implements OnInit {
   severity = MessageSeverity.INFO; // default info
 
   constructor() { }
-
-  ngOnInit(): void { }
 }

@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { InputComponent } from '../input.component';
@@ -13,7 +13,7 @@ import { InputComponent } from '../input.component';
     multi: true
   }]
 })
-export class InputDropdownComponent extends InputComponent implements OnInit {
+export class InputDropdownComponent extends InputComponent {
 
   @Input()
   options: SelectItem[];
@@ -21,6 +21,4 @@ export class InputDropdownComponent extends InputComponent implements OnInit {
   constructor(protected controlContainer: ControlContainer) {
     super(controlContainer);
   }
-
-  ngOnInit(): void { }
 }

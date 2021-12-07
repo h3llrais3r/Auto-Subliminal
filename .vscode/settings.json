@@ -26,7 +26,7 @@
   "javascript.preferences.quoteStyle": "single",
   "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.preferences.quoteStyle": "single",
-  "typescript.tsdk": "web\\autosubliminal\\node_modules\\typescript\\lib", // Use project typescript version instead of latest version packaged with VS Code
+  "typescript.tsdk": "web/autosubliminal/node_modules/typescript/lib", // Use project typescript version instead of latest version packaged with VS Code
   "typescript.updateImportsOnFileMove.enabled": "always",
   // Beautify settings (ignore formatting for json and html files, use built-in formatter instead)
   "beautify.language": {
@@ -47,6 +47,10 @@
       //"html"
     ]
   },
+  // Eslint settings
+  "eslint.workingDirectories": [
+    "web/autosubliminal"
+  ],
   // Python settings
   "[python]": {
     "editor.tabSize": 4 // Python uses 4 spaces for tab

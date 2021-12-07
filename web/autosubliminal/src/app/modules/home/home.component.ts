@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { WantedTotals } from '../../shared/models/wanted';
 
 @Component({
@@ -6,15 +6,13 @@ import { WantedTotals } from '../../shared/models/wanted';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
 
   total = 0;
   totalEpisodes = 0;
   totalMovies = 0;
 
   constructor() { }
-
-  ngOnInit(): void { }
 
   getTotals(wantedTotals: WantedTotals): void {
     this.total = wantedTotals.total;

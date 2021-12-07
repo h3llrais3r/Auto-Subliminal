@@ -1,6 +1,5 @@
 {
   "recommendations": [
-    "brainfit.vscode-importmagic",
     "christian-kohler.npm-intellisense",
     "dbaeumer.vscode-eslint",
     "HookyQR.beautify",
@@ -8,7 +7,6 @@
     "mikestead.dotenv",
     "msjsdiag.debugger-for-chrome",
     "ms-python.python",
-    "ms-vscode.vscode-typescript-tslint-plugin",
     "xyz.local-history",
     "Zignd.html-css-class-completion"
   ]

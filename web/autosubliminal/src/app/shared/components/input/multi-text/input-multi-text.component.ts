@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { InputComponent } from '../input.component';
@@ -13,7 +13,7 @@ import { InputComponent } from '../input.component';
     multi: true
   }]
 })
-export class InputMultiTextComponent extends InputComponent implements OnInit {
+export class InputMultiTextComponent extends InputComponent {
 
   @Input()
   options: SelectItem[]; // optional list of options to select from
@@ -24,8 +24,6 @@ export class InputMultiTextComponent extends InputComponent implements OnInit {
   constructor(protected controlContainer: ControlContainer) {
     super(controlContainer);
   }
-
-  ngOnInit(): void { }
 
   get values(): string[] {
     return this.control ? this.control.value : [];

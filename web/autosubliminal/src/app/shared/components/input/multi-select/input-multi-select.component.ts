@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, OnInit } from '@angular/core';
+import { Component, forwardRef, Input } from '@angular/core';
 import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { InputComponent } from '../input.component';
@@ -13,7 +13,7 @@ import { InputComponent } from '../input.component';
     multi: true
   }]
 })
-export class InputMultiSelectComponent extends InputComponent implements OnInit {
+export class InputMultiSelectComponent extends InputComponent {
 
   @Input()
   options: SelectItem[];
@@ -25,11 +25,8 @@ export class InputMultiSelectComponent extends InputComponent implements OnInit 
     super(controlContainer);
   }
 
-  ngOnInit(): void { }
-
   removeItem(item: any): void {
     // Filter out removed item
     this.control.setValue((this.control.value as any[]).filter((val) => val !== item));
   }
-
 }

@@ -1,11 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-progress-bar',
   templateUrl: './progress-bar.component.html',
   styleUrls: ['./progress-bar.component.scss']
 })
-export class ProgressBarComponent implements OnInit {
+export class ProgressBarComponent {
 
   @Input()
   value = 0;
@@ -15,8 +15,6 @@ export class ProgressBarComponent implements OnInit {
 
   @Input()
   showPercentage = false; // if true, percentage is show as text
-
-  ngOnInit(): void { }
 
   get percentage(): number {
     return Math.round(this.value / this.total * 100);

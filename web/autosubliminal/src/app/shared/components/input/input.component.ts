@@ -28,8 +28,8 @@ export abstract class InputComponent implements ControlValueAccessor {
   @Input()
   disabled = false;
 
-  // tslint:disable-next-line: no-output-native
   @Output()
+  // eslint-disable-next-line @angular-eslint/no-output-native
   keyup: EventEmitter<any> = new EventEmitter(); // allows custom onKeyup functionality (keyup)="..." when component is created
 
   get control(): FormControl {

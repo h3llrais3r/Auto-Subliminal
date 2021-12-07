@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, forwardRef, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { InputComponent } from '../input.component';
 
@@ -12,7 +12,7 @@ import { InputComponent } from '../input.component';
     multi: true
   }]
 })
-export class InputTextComponent extends InputComponent implements OnInit {
+export class InputTextComponent extends InputComponent {
 
   @Input()
   type = 'text';
@@ -29,8 +29,6 @@ export class InputTextComponent extends InputComponent implements OnInit {
   constructor(protected controlContainer: ControlContainer, protected changeDetectorRef: ChangeDetectorRef) {
     super(controlContainer);
   }
-
-  ngOnInit(): void { }
 
   // Override writeValue to get around ExpressionChangedAfterItHasBeenCheckedError by forcing change detection!
   // This is needed because of usage of ngx-mask, which seems to modify the value as well
