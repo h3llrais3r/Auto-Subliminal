@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { InputComponent } from '../input.component';
 
@@ -17,7 +17,7 @@ export class InputSwitchComponent extends InputComponent {
   @Input()
   label: string;
 
-  constructor(protected controlContainer: ControlContainer) {
-    super(controlContainer);
+  constructor(protected controlContainer: ControlContainer, protected changeDetectorRef: ChangeDetectorRef) {
+    super(controlContainer, changeDetectorRef);
   }
 }

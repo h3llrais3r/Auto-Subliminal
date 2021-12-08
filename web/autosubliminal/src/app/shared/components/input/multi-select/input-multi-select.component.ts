@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { InputComponent } from '../input.component';
@@ -21,8 +21,8 @@ export class InputMultiSelectComponent extends InputComponent {
   @Input()
   placeholder = 'Select items';
 
-  constructor(protected controlContainer: ControlContainer) {
-    super(controlContainer);
+  constructor(protected controlContainer: ControlContainer, protected changeDetectorRef: ChangeDetectorRef) {
+    super(controlContainer, changeDetectorRef);
   }
 
   removeItem(item: any): void {

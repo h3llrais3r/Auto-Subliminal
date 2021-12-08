@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { InputComponent } from '../input.component';
@@ -19,10 +19,11 @@ export class InputMultiTextComponent extends InputComponent {
   options: SelectItem[]; // optional list of options to select from
 
   newValue: string;
+
   addButtonDisabled = true;
 
-  constructor(protected controlContainer: ControlContainer) {
-    super(controlContainer);
+  constructor(protected controlContainer: ControlContainer, protected changeDetectorRef: ChangeDetectorRef) {
+    super(controlContainer, changeDetectorRef);
   }
 
   get values(): string[] {

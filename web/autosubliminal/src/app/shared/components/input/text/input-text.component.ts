@@ -27,13 +27,6 @@ export class InputTextComponent extends InputComponent {
   dropSpecialCharacters = true;
 
   constructor(protected controlContainer: ControlContainer, protected changeDetectorRef: ChangeDetectorRef) {
-    super(controlContainer);
-  }
-
-  // Override writeValue to get around ExpressionChangedAfterItHasBeenCheckedError by forcing change detection!
-  // This is needed because of usage of ngx-mask, which seems to modify the value as well
-  writeValue(obj: any): void {
-    this.formControlDirective.valueAccessor.writeValue(obj);
-    this.changeDetectorRef.detectChanges();
+    super(controlContainer, changeDetectorRef);
   }
 }

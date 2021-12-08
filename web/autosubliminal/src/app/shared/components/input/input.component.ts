@@ -1,14 +1,11 @@
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, FormControl, FormControlDirective } from '@angular/forms';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ControlContainer, ControlValueAccessor, FormControl } from '@angular/forms';
 
 // Abstract input component to be used as base class for all our input components!
 @Component({
   template: ''
 })
 export abstract class InputComponent implements ControlValueAccessor {
-
-  @ViewChild(FormControlDirective, { static: true }) // must be true to get it working!
-  formControlDirective: FormControlDirective;
 
   @Input()
   formControl: FormControl;
@@ -32,30 +29,16 @@ export abstract class InputComponent implements ControlValueAccessor {
   // eslint-disable-next-line @angular-eslint/no-output-native
   keyup: EventEmitter<any> = new EventEmitter(); // allows custom onKeyup functionality (keyup)="..." when component is created
 
+  value: any; // value of input component
+
+  onChange: (_: any) => {};
+
+  onTouched: () => {};
+
+  constructor(protected controlContainer: ControlContainer, protected changeDetectorRef: ChangeDetectorRef) { }
+
   get control(): FormControl {
     return this.formControl || this.controlContainer.control.get(this.formControlName) as FormControl;
-  }
-
-  constructor(protected controlContainer: ControlContainer) { }
-
-  clearInput(): void {
-    this.control.setValue('');
-  }
-
-  registerOnTouched(fn: any): void {
-    this.formControlDirective.valueAccessor.registerOnTouched(fn);
-  }
-
-  registerOnChange(fn: any): void {
-    this.formControlDirective.valueAccessor.registerOnChange(fn);
-  }
-
-  writeValue(obj: any): void {
-    this.formControlDirective.valueAccessor.writeValue(obj);
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.formControlDirective.valueAccessor.setDisabledState(isDisabled);
   }
 
   get validationClass(): string {
@@ -69,6 +52,27 @@ export abstract class InputComponent implements ControlValueAccessor {
       }
     }
     return validationClass;
+  }
+
+  writeValue(obj: any): void {
+    this.value = obj;
+    this.changeDetectorRef.markForCheck();
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  clearInput(): void {
+    this.control.setValue('');
   }
 
   onKeyup(event: KeyboardEvent): void {
