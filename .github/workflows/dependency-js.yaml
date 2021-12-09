@@ -61,10 +61,7 @@ jobs:
         echo "Changed files:" ; git status --porcelain
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git config --global --list
-        git config --local --list
         git add --all
-        git diff-index HEAD
         git commit --message "Install dependency and build application" --author "h3llrais3r <pooh_beer_1@hotmail.com>"
         git push
 
