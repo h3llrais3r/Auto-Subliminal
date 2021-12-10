@@ -58,6 +58,7 @@ tailer = "0.4.1"
 tvdb_api = { git = "https://github.com/h3llrais3r/tvdb_api.git", rev = "1210df9dd5869ccc5b63149b1b80630310a14f40" }
 Unidecode = "1.3.2"
 ws4py = "0.5.1"
+ffsubsync = "0.4.19"
 
 [tool.poetry.dev-dependencies]
 # Testing

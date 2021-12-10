@@ -4,23 +4,30 @@
 
 ```
 appdirs==1.4.4
+argparse==1.4.0
 attrs==21.2.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+auditok==0.1.5
 babelfish==0.6.0; python_version >= "3.6" and python_version < "4.0"
 beautifulsoup4==4.10.0; python_full_version > "3.0.0"
 boto==2.49.0
+cchardet==2.1.7
 certifi==2021.10.8; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
 chardet==4.0.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 charset-normalizer==2.0.7; python_full_version >= "3.6.0" and python_version >= "3"
 cheroot==8.5.2; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.5"
 cherrypy==18.6.1; python_version >= "3.5"
 click==8.0.3; python_version >= "3.6"
-colorama==0.4.4; python_version >= "3.6" and python_full_version < "3.0.0" and platform_system == "Windows" or platform_system == "Windows" and python_version >= "3.6" and python_full_version >= "3.5.0"
+colorama==0.4.4; platform_system == "Windows" and python_version >= "3.6" and python_full_version >= "3.6.2" and python_full_version < "4.0.0" and (python_version >= "2.7" and python_full_version < "3.0.0" and platform_system == "Windows" or python_full_version >= "3.5.0" and platform_system == "Windows")
+commonmark==0.9.1; python_full_version >= "3.6.2" and python_full_version < "4.0.0" and python_version >= "3.6"
 contextlib2==21.6.0; python_version >= "3.6"
 deathbycaptcha==0.1.1
 decorator==5.1.0; python_version >= "3.6"
 diskcache==5.2.1; python_version >= "3"
 dogpile.cache==1.1.4; python_version >= "3.6"
 enzyme==0.4.1
+ffmpeg-python==0.2.0
+ffsubsync==0.4.19
+future-annotations==1.0.0; python_full_version >= "3.6.1"
 future==0.18.2; python_version >= "2.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
 gitdb==4.0.9; python_version >= "3.7"
 gitpython==3.1.24; python_version >= "3.7"
@@ -38,10 +45,13 @@ jaraco.text==3.6.0; python_version >= "3.6"
 jsonpickle==2.0.0; python_version >= "2.7"
 langdetect==1.0.9
 more-itertools==8.11.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
+numpy==1.21.1; python_version >= "3.7"
 oauthlib==3.1.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
 pbr==5.7.0; python_version >= "3.6"
 portend==3.0.0; python_version >= "3.6"
+pygments==2.10.0; python_full_version >= "3.6.2" and python_full_version < "4.0.0" and python_version >= "3.6"
 pysrt==1.1.2
+pysubs2==1.3.0; python_version >= "3.7"
 python-anticaptcha==0.7.1
 python-dateutil==2.8.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
 python-twitter==3.5
@@ -51,21 +61,27 @@ rarfile==4.0
 rebulk==3.1.0
 requests-oauthlib==1.3.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
 requests==2.26.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.6.0")
+rich==10.15.2; python_full_version >= "3.6.2" and python_full_version < "4.0.0" and python_version >= "3.6"
 schema==0.7.5
 simplejson==3.17.6; (python_version >= "2.5" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
 six==1.16.0; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.5"
 smmap==5.0.0; python_version >= "3.7"
 soupsieve==2.3.1; python_version >= "3.6" and python_full_version > "3.0.0"
+srt==3.5.0; python_version >= "2.7"
 stevedore==3.5.0; python_version >= "3.6"
 subliminal @ git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a
 tailer==0.4.1
 tempora==4.1.2; python_version >= "3.6"
+tokenize-rt==4.2.1; python_full_version >= "3.6.1"
+tqdm==4.62.3; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
 trans==2.1.0
 tvdb-api @ git+https://github.com/h3llrais3r/tvdb_api.git@1210df9dd5869ccc5b63149b1b80630310a14f40
-typing-extensions==3.10.0.2; python_version < "3.8" and python_version >= "3.7"
+typing-extensions==3.10.0.2; python_version < "3.8" and python_version >= "3.7" and python_full_version >= "3.6.2" and python_full_version < "4.0.0"
 unidecode==1.3.2; python_version >= "3.5"
 urllib3==1.26.7; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version < "4"
 webencodings==0.5.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
+webrtcvad-wheels==2.0.10.post2; platform_system == "Windows"
+webrtcvad==2.0.10; platform_system != "Windows"
 ws4py==0.5.1
 zc.lockfile==2.0; python_version >= "3.5"
 zipp==3.6.0; python_version >= "3.6" and python_version < "3.8"

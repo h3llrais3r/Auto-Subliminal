@@ -43,10 +43,13 @@ dogpile.cache == 1.1.4
 # \autosubliminal\util\filesystem.py: 14
 enzyme == 0.4.1
 
+# \autosubliminal\subsynchronizer.py: 6
+ffsubsync == 0.4.19
+
 # \autosubliminal\notifiers\growl.py: 5
 gntp == 1.0.3
 
-# \autosubliminal\__init__.py: 617
+# \autosubliminal\__init__.py: 631
 # \autosubliminal\fileprocessor.py: 7
 # \autosubliminal\parsers\guessit\__init__.py: 3
 # \autosubliminal\parsers\guessit\rules.py: 3,4,5
@@ -60,7 +63,7 @@ imdbpie == 5.6.4.dev0
 # \autosubliminal\util\json.py: 4
 jsonpickle == 2.0.0
 
-# \autosubliminal\__init__.py: 686,687
+# \autosubliminal\__init__.py: 700,701
 # \autosubliminal\util\filesystem.py: 9
 langdetect == 1.0.9
 
@@ -96,9 +99,9 @@ requests_oauthlib == 1.3.0
 schema == 0.7.5
 
 # \autosubliminal\__init__.py: 5
-setuptools == 58.3.0
+setuptools == 59.5.0
 
-# \autosubliminal\__init__.py: 654
+# \autosubliminal\__init__.py: 668
 # \autosubliminal\providers\addic7ed_custom.py: 17,18
 # \autosubliminal\providers\exceptions.py: 3
 # \autosubliminal\providers\pitcher.py: 11
@@ -118,6 +121,9 @@ tailer == 0.4.1
 # \autosubliminal\core\show.py: 6,7,8,9,10
 # \autosubliminal\indexer.py: 12
 tvdb_api == 3.0.0
+
+# \autosubliminal\subsynchronizer.py: 24
+webrtcvad_wheels == 2.0.10.post2
 
 # \autosubliminal\application.py: 14
 # \autosubliminal\core\websocket.py: 9,10
