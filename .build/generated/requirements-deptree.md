@@ -41,6 +41,28 @@ dogpile.cache 1.1.4 A caching front-end based on the Dogpile lock.
     |   `-- zipp >=0.5 
     `-- pbr >=2.0.0,<2.1.0 || >2.1.0 
 enzyme 0.4.1 Python video metadata parser
+ffsubsync 0.4.19 Language-agnostic synchronization of subtitles with video.
+|-- argparse *
+|-- auditok 0.1.5
+|-- cchardet *
+|-- ffmpeg-python *
+|   `-- future * 
+|-- future-annotations *
+|   `-- tokenize-rt >=3 
+|-- numpy >=1.12.0
+|-- pysubs2 >=1.2.0
+|-- rich *
+|   |-- colorama >=0.4.0,<0.5.0 
+|   |-- commonmark >=0.9.0,<0.10.0 
+|   |-- pygments >=2.6.0,<3.0.0 
+|   `-- typing-extensions >=3.7.4,<5.0 
+|-- six *
+|-- srt >=3.0.0
+|-- tqdm *
+|   `-- colorama * 
+|-- typing-extensions *
+|-- webrtcvad *
+`-- webrtcvad-wheels *
 gitpython 3.1.24 GitPython is a python library used to interact with Git repositories
 |-- gitdb >=4.0.1,<5
 |   `-- smmap >=3.0.1,<6 
