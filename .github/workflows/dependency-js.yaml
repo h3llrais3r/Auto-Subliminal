@@ -61,7 +61,7 @@ jobs:
         echo "::set-output name=changes::$changes"
 
     - name: Auto commit changes
-      if: ${{ steps.check-changes.outputs.changes == "true" }}
+      if: ${{ steps.check-changes.outputs.changes == 'true' }}
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
@@ -70,7 +70,7 @@ jobs:
         git push
 
     - name: Auto labeling
-      if: ${{ steps.check-changes.outputs.changes == "true" }}
+      if: ${{ steps.check-changes.outputs.changes == 'true' }}
       uses: andymckay/labeler@master
       with:
         add-labels: "source changes"
