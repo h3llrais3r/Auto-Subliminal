@@ -53,12 +53,16 @@ jobs:
     - name: Check changes
       id: check-changes
       run: |
-        echo "::set-output name=changes::$(if [ -n '$(git status --porcelain)' ]; then echo 'true'; else echo 'false'; fi)"
+        echo "Changed files:"
+        git status --porcelain
+        echo "Checking for real changes (ignoring line endings)"
+        changes=$(if $(git diff --quiet); then echo "false"; else echo "true"; fi)
+        echo "Changes detected: $changes"
+        echo "::set-output name=changes::$changes"
 
     - name: Auto commit changes
       if: ${{ steps.check-changes.outputs.changes }} == "true"
       run: |
-        echo "Changed files:" ; git status --porcelain
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git add --all
