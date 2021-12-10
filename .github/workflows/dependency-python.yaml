@@ -62,18 +62,23 @@ jobs:
         echo "Changes detected: $changes"
         echo "::set-output name=changes::$changes"
 
-    - name: Auto commit changes
+    - name: Commit changes
       if: ${{ steps.check-changes.outputs.changes == 'true' }}
       run: |
-        echo "Changed files:" ; git status --porcelain
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         git add --all
         git commit --message "Generate requirements files" --author "h3llrais3r <pooh_beer_1@hotmail.com>"
         git push
 
-    - name: Auto labeling
+    - name: Add labels
       if: ${{ steps.check-changes.outputs.changes == 'true' }}
       uses: andymckay/labeler@master
       with:
         add-labels: "source changes"
+
+    - name: Remove labels
+      if: ${{ steps.check-changes.outputs.changes == 'false' }}
+      uses: andymckay/labeler@master
+      with:
+        remove-labels: "source changes"
