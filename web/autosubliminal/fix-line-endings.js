@@ -12,7 +12,7 @@ console.log('Running on operation system: ' + platform);
 if (platform === 'win32') {
   // Check changes
   console.log('Checking for file changes');
-  const changes = child_process.execSync('git status --porcelain | sed s/^...//').toString().trim().split(/\r?\n/);
+  const changes = child_process.execSync('git diff --name-only').toString().trim().split(/\r?\n/);
   if (changes.length > 0) {
     // Print detected changes
     console.log('Changes detected:');
@@ -22,9 +22,9 @@ if (platform === 'win32') {
     // Fix line endings
     let count = 0;
     changes.forEach(change => {
-      // Only fix line endings for frontend sources
+      // Only fix line endings for frontend sources (that exist: so no deleted ones)
       const file = path.join(__dirname, '..', '..', change); // git changes are according to root of the project
-      if (file.startsWith(__dirname)) {
+      if (fs.existsSync(file) && file.startsWith(__dirname)) {
         const content = fs.readFileSync(file, 'utf-8');
         const [wasAltered, modifiedContents] = eol.correctSync(content, { eolc: 'CRLF' });
         if (wasAltered) {
