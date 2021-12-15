@@ -14,7 +14,7 @@
     },
     // Debug ui
     {
-      "type": "chrome",
+      "type": "pwa-chrome",
       "request": "launch",
       "name": "Debug ui",
       "url": "http://localhost:8084", // Adapt port to the port your python server is running on
@@ -22,7 +22,7 @@
     },
     // Debug ui (dev)
     {
-      "type": "chrome",
+      "type": "pwa-chrome",
       "request": "launch",
       "name": "Debug ui (dev)",
       "url": "http://localhost:4200/autosubliminal", // Adapt port to the port your python server is running on
