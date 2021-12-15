@@ -12,7 +12,7 @@ console.log('Running on operation system: ' + platform);
 if (platform === 'win32') {
   // Check changes
   console.log('Checking for file changes');
-  const changes = child_process.execSync('git diff --name-only').toString().trim().split(/\r?\n/);
+  const changes = child_process.execSync('git status --porcelain | sed s/^...//').toString().trim().split(/\r?\n/);
   if (changes.length > 0) {
     // Print detected changes
     console.log('Changes detected:');
