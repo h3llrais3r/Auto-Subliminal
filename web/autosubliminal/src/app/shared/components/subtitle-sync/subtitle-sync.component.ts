@@ -82,6 +82,7 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
     this.subtitleService.saveSyncedSubtitle(this.subtitlePath, this.subtitleSyncResult.syncedSubtitlePath, this.backupOnSave).subscribe(
       () => {
         this.close();
+        this.subtitleSyncResult = null; // clear sync result (to not trigger the cleanup in onDestroy)
         this.messageService.showInfoMessage('Synchronized subtitle saved.')
       },
       () => this.messageService.showErrorMessage('Unable to save the synchronized subtitle!')
