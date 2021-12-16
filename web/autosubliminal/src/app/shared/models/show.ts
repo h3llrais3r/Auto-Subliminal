@@ -1,3 +1,4 @@
+import { joinPaths } from '../utils/path-utils';
 import { FileType } from './filetype';
 
 export class ShowsOverview {
@@ -41,6 +42,30 @@ export class Show {
   get name(): string {
     return `${this.title} (${this.year})`;
   }
+
+  getShowEpisodeFile(episodeTvdbId: number, fileType: FileType, fileName?: string): ShowEpisodeFile | null {
+    let episodeFile = null;
+    if (this.seasons) {
+      for (const season of this.seasons) {
+        if (season.files) {
+          if (fileName) {
+            episodeFile = season.files.find(file => file.fileName = fileName);
+          } else {
+            episodeFile = season.files.find(file => file.tvdbId === episodeTvdbId && file.type === fileType);
+          }
+          if (episodeFile) {
+            break;
+          }
+        }
+      }
+    }
+    return episodeFile;
+  }
+
+  getShowEpisodeFilePath(episodeTvdbId: number, fileType: FileType, fileName?: string): string | null {
+    let episodeFile = this.getShowEpisodeFile(episodeTvdbId, fileType, fileName);
+    return episodeFile ? joinPaths(episodeFile.filePath, episodeFile.fileName) : null;
+  }
 }
 
 export class ShowSettings {
@@ -57,19 +82,20 @@ export class ShowSettings {
 export class ShowSeason {
   seasonName: string;
   seasonPath: string;
-  files: ShowFile[];
+  files: ShowEpisodeFile[];
 
   constructor(obj?: any) {
     Object.assign(this, obj);
     if (this.files) {
-      this.files = this.files.map((file) => new ShowFile(file));
+      this.files = this.files.map((file) => new ShowEpisodeFile(file));
     }
   }
 }
 
-export class ShowFile {
-  tvdbId: number; // tvdbId of the show file/episode
-  filename: string;
+export class ShowEpisodeFile {
+  tvdbId: number; // tvdbId of the show episode file
+  filePath: string;
+  fileName: string;
   type: FileType;
   embeddedLanguages: string[];
   hardcodedLanguages: string[];

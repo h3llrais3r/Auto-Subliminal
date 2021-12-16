@@ -48,7 +48,7 @@ export class ShowService extends ApiServiceTemplate {
       .pipe(map(() => true));
   }
 
-  saveShowHardcodedSubtitles(tvdbId: number, episodeTvdbId: number, videoSubtitles: VideoSubtitles): Observable<boolean> {
+  saveShowEpisodeHardcodedSubtitles(tvdbId: number, episodeTvdbId: number, videoSubtitles: VideoSubtitles): Observable<boolean> {
     return this.httpClient.put<VideoSubtitles>(`${this.URL}/${tvdbId}/subtitles/hardcoded/${episodeTvdbId}`, JSON.stringify(videoSubtitles), this.options)
       .pipe(map(() => true));
   }

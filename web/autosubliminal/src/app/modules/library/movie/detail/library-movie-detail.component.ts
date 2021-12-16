@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
+import { appSettings } from '../../../../app-settings.service';
 import { MovieService } from '../../../../core/services/api/movie.service';
 import { SettingsService } from '../../../../core/services/api/settings.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
 import { MessageService } from '../../../../core/services/message.service';
+import { FileType } from '../../../../shared/models/filetype';
 import { Movie } from '../../../../shared/models/movie';
 import { VideoSubtitles } from '../../../../shared/models/video';
 import { getImdbUrl, getPlayVideoUrl, getPosterPlaceholderUrl } from '../../../../shared/utils/common-utils';
@@ -17,12 +19,19 @@ import { getImdbUrl, getPlayVideoUrl, getPosterPlaceholderUrl } from '../../../.
 })
 export class LibraryMovieDetailComponent implements OnInit {
 
+  readonly videoFileType = FileType.VIDEO;
+  readonly subtitleFileType = FileType.SUBTITLE;
+
   movie: Movie;
   loading = false;
   refreshInProgress = false;
   showMovieSettings = false;
   showVideoSubtitles = false;
+  showSubtitleSync = false;
+  manualSubSyncEnabled = false;
   videoSubtitles: VideoSubtitles;
+  movieVideoFilePath: string;
+  movieSubtitleFilePath: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,6 +44,7 @@ export class LibraryMovieDetailComponent implements OnInit {
     private confirmationService: ConfirmationService) { }
 
   ngOnInit(): void {
+    this.manualSubSyncEnabled = appSettings.manualSubSync;
     this.route.paramMap.subscribe(
       (paramMap) => {
         this.loading = true;
@@ -119,6 +129,12 @@ export class LibraryMovieDetailComponent implements OnInit {
   closeVideoSubtitlesDialog(): void {
     this.showVideoSubtitles = false;
     this.videoSubtitles = null;
+  }
+
+  openSubtitleSyncDialog(videoFilePath: string, subtitleFilepath: string): void {
+    this.movieVideoFilePath = videoFilePath;
+    this.movieSubtitleFilePath = subtitleFilepath;
+    this.showSubtitleSync = true;
   }
 
   saveHardcodedSubtitles(videoSubtitles: VideoSubtitles): void {

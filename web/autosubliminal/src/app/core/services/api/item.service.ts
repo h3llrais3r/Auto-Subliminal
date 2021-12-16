@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { appSettings } from '../../../app-settings.service';
 import { DownloadedItem, WantedItem } from '../../../shared/models/item';
 import { Subtitle } from '../../../shared/models/subtitle';
+import { SubtitleSyncResult } from '../../../shared/models/subtitle-sync-result';
 import { ApiServiceTemplate } from './api-service-template';
 
 @Injectable({
@@ -68,9 +69,9 @@ export class ItemService extends ApiServiceTemplate {
       .pipe(map(() => true));
   }
 
-  syncWantedItemSubtitle(wantedItemId: number): Observable<boolean> {
+  syncWantedItemSubtitle(wantedItemId: number): Observable<SubtitleSyncResult> {
     return this.httpClient.patch<void>(`${this.URL}/wanted/${wantedItemId}`, { action: 'syncSubtitle' }, this.options)
-      .pipe(map(() => true));
+      .pipe(map((subtitleSyncResult) => new SubtitleSyncResult(subtitleSyncResult)));
   }
 
   deleteWantedItemSubtitle(wantedItemId: number): Observable<boolean> {

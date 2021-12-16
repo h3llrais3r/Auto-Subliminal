@@ -115,6 +115,7 @@ class _SettingsApi(RestResource):
             'log_reversed': autosubliminal.LOGREVERSED,
             'manual_refine_video': autosubliminal.MANUALREFINEVIDEO,
             'prefer_hearing_impaired': autosubliminal.PREFERHEARINGIMPAIRED,
+            'manual_sub_sync': autosubliminal.MANUALSUBSYNC,
             'derefer_url': autosubliminal.DEREFERURL,
             'tvdb_url': autosubliminal.TVDBURL,
             'imdb_url': autosubliminal.IMDBURL,

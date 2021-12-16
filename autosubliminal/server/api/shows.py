@@ -116,8 +116,7 @@ class ShowsApi(RestResource):
             season_path = None
             for episode in season_episodes[season]:
                 # Determine season path
-                if not season_path:
-                    season_path, _ = os.path.split(episode.path)
+                season_path, _ = os.path.split(episode.path)
                 embedded_languages = []
                 hardcoded_languages = []
                 # Get subtitle files
@@ -127,16 +126,19 @@ class ShowsApi(RestResource):
                     elif subtitle.type == HARDCODED:
                         hardcoded_languages.append(subtitle.language)
                     else:
-                        _, filename = os.path.split(subtitle.path)
-                        season_files.append({'filename': filename, 'type': 'subtitle', 'language': subtitle.language})
+                        subtitle_filepath, subtitle_filename = os.path.split(subtitle.path)
+                        season_files.append(
+                            {'file_path': subtitle_filepath, 'file_name': subtitle_filename, 'type': 'subtitle',
+                             'language': subtitle.language, 'tvdb_id': episode.tvdb_id})
                 # Get video file
-                _, episode_filename = os.path.split(episode.path)
+                episode_filepath, episode_filename = os.path.split(episode.path)
                 season_files.append(
-                    {'filename': episode_filename, 'type': 'video', 'embedded_languages': embedded_languages,
-                     'hardcoded_languages': hardcoded_languages, 'tvdb_id': episode.tvdb_id})
+                    {'file_path': episode_filepath, 'file_name': episode_filename, 'type': 'video',
+                     'embedded_languages': embedded_languages, 'hardcoded_languages': hardcoded_languages,
+                     'tvdb_id': episode.tvdb_id})
             # Sort season files
             if season_files:
-                sorted_files = sorted(season_files, key=lambda k: k['filename'])
+                sorted_files = sorted(season_files, key=lambda k: k['file_name'])
                 seasons.update({season_name: {'path': season_path, 'files': sorted_files}})
 
         # Return sorted list of file dicts (grouped by season)

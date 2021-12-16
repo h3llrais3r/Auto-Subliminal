@@ -330,7 +330,14 @@ p-dropdown {
   &.w-100 {
     @include justify-content(left); // default left align
   }
+
+  &.sm {
+    .p-inline-message-text {
+      font-size: $font-size-sm;
+    }
+  }
 }
+
 
 // Dialog
 .p-dialog {

@@ -95,13 +95,16 @@
             <ng-template pTemplate="body" let-file>
               <tr>
                 <td class="wrap-text">
-                  <span>{{file.filename}}</span>
+                  <span>{{file.fileName}}</span>
                   <span class="icon-group">
-                    <a *ngIf="file.isVideo" class="icon-link" (click)="openVideoSubtitlesDialog(file.tvdbId, season.seasonPath, file.filename, file.hardcodedLanguages)">
+                    <a *ngIf="file.isVideo" class="icon-link" (click)="openVideoSubtitlesDialog(file.tvdbId, season.seasonPath, file.fileName, file.hardcodedLanguages)">
                       <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
                     </a>
-                    <a *ngIf="file.isVideo" class="icon-link" [href]="getPlayVideoUrl(season.seasonPath, file.filename)">
+                    <a *ngIf="file.isVideo" class="icon-link" [href]="getPlayVideoUrl(season.seasonPath, file.fileName)">
                       <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
+                    </a>
+                    <a *ngIf="manualSubSyncEnabled && file.isSubtitle" class="icon-link" (click)="openSubtitleSyncDialog(file.tvdbId, show.getShowEpisodeFilePath(file.tvdbId, videoFileType), show.getShowEpisodeFilePath(file.tvdbId, subtitleFileType, file.fileName))">
+                      <i class="fa fa-refresh" aria-hidden="true" title="Click to synchronize subtitle"></i>
                     </a>
                   </span>
                 </td>
@@ -136,6 +139,13 @@
                    [title]="show.name"
                    [showSettings]="show.settings">
 </app-show-settings>
+
+<!-- Subtitle sync dialog -->
+<app-subtitle-sync *ngIf="showSubtitleSync"
+                   [(visible)]="showSubtitleSync"
+                   [videoPath]="episodeVideoFilePath"
+                   [subtitlePath]="episodeSubtitleFilePath">
+</app-subtitle-sync>
 
 <!-- Library video subtitles dialog -->
 <app-library-video-subtitles *ngIf="showVideoSubtitles"

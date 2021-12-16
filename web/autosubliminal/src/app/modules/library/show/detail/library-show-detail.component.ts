@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
+import { appSettings } from '../../../../app-settings.service';
 import { SettingsService } from '../../../../core/services/api/settings.service';
 import { ShowService } from '../../../../core/services/api/show.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
 import { MessageService } from '../../../../core/services/message.service';
 import { FileType } from '../../../../shared/models/filetype';
-import { Show, ShowFile } from '../../../../shared/models/show';
+import { Show, ShowEpisodeFile } from '../../../../shared/models/show';
 import { VideoSubtitles } from '../../../../shared/models/video';
 import { getPlayVideoUrl, getPosterPlaceholderUrl, getTvdbUrl } from '../../../../shared/utils/common-utils';
 
@@ -18,12 +19,19 @@ import { getPlayVideoUrl, getPosterPlaceholderUrl, getTvdbUrl } from '../../../.
 })
 export class LibraryShowDetailComponent implements OnInit {
 
+  readonly videoFileType = FileType.VIDEO;
+  readonly subtitleFileType = FileType.SUBTITLE;
+
   show: Show;
   loading = false;
   refreshInProgress = false;
   showShowSettings = false;
   showVideoSubtitles = false;
+  showSubtitleSync = false;
+  manualSubSyncEnabled = false;
   videoSubtitles: VideoSubtitles;
+  episodeVideoFilePath: string;
+  episodeSubtitleFilePath: string;
   episodeTvdbId: number;
 
   constructor(
@@ -37,6 +45,7 @@ export class LibraryShowDetailComponent implements OnInit {
     private confirmationService: ConfirmationService) { }
 
   ngOnInit(): void {
+    this.manualSubSyncEnabled = appSettings.manualSubSync;
     this.route.paramMap.subscribe(
       (paramMap) => {
         this.loading = true;
@@ -125,8 +134,15 @@ export class LibraryShowDetailComponent implements OnInit {
     this.episodeTvdbId = null;
   }
 
+  openSubtitleSyncDialog(episodeTvdbId: number, videoFilePath: string, subtitleFilePath: string): void {
+    this.episodeTvdbId = episodeTvdbId;
+    this.episodeVideoFilePath = videoFilePath;
+    this.episodeSubtitleFilePath = subtitleFilePath;
+    this.showSubtitleSync = true;
+  }
+
   saveHardcodedSubtitles(videoSubtitles: VideoSubtitles): void {
-    this.showService.saveShowHardcodedSubtitles(this.show.tvdbId, this.episodeTvdbId, videoSubtitles).subscribe(
+    this.showService.saveShowEpisodeHardcodedSubtitles(this.show.tvdbId, this.episodeTvdbId, videoSubtitles).subscribe(
       () => {
         this.closeVideoSubtitlesDialog();
         this.getShowDetails(this.show.tvdbId);
@@ -135,7 +151,7 @@ export class LibraryShowDetailComponent implements OnInit {
     );
   }
 
-  getNrOfSubtitles(files: ShowFile[], language: string): string {
+  getNrOfSubtitles(files: ShowEpisodeFile[], language: string): string {
     let subtitleCount = 0;
     files.forEach((file) => {
       if (file.type === FileType.SUBTITLE && file.language && file.language === language) {
@@ -163,7 +179,7 @@ export class LibraryShowDetailComponent implements OnInit {
     return subtitleCount.toString(); // must be string to be used as badge
   }
 
-  getNrOfVideos(files: ShowFile[]): string {
+  getNrOfVideos(files: ShowEpisodeFile[]): string {
     let videoCount = 0;
     files.forEach((file) => {
       if (file.type === FileType.VIDEO) {
