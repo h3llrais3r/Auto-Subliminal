@@ -105,16 +105,16 @@ class MoviesApi(RestResource):
             elif subtitle.type == HARDCODED:
                 hardcoded_languages.append(subtitle.language)
             else:
-                _, filename = os.path.split(subtitle.path)
-                files.update({filename: {'filename': filename, 'type': 'subtitle', 'language': subtitle.language}})
+                subtitle_filepath, subtitle_filename = os.path.split(subtitle.path)
+                files.update({subtitle_filename: {'file_path': subtitle_filepath, 'file_name': subtitle_filename,
+                             'type': 'subtitle', 'language': subtitle.language}})
         # Get video file
-        _, movie_filename = os.path.split(movie.path)
-        files.update({movie_filename: {'filename': movie_filename, 'type': 'video',
-                                       'embedded_languages': embedded_languages,
-                                       'hardcoded_languages': hardcoded_languages}})
+        movie_filepath, movie_filename = os.path.split(movie.path)
+        files.update({movie_filename: {'file_path': movie_filepath, 'file_name': movie_filename, 'type': 'video',
+                     'embedded_languages': embedded_languages, 'hardcoded_languages': hardcoded_languages}})
 
         # Return sorted list
-        return sorted([v for v in files.values()], key=lambda k: k['filename'])
+        return sorted([v for v in files.values()], key=lambda k: k['file_name'])
 
 
 class _OverviewApi(RestResource):

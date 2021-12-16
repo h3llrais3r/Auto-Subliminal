@@ -66,6 +66,7 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
     MessageModule,
     MessagesModule,
     TableModule,
+    PanelModule,
     ButtonModule,
     InputTextModule,
     InputNumberModule,

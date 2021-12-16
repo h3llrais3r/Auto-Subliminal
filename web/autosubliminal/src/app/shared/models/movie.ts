@@ -1,3 +1,4 @@
+import { joinPaths } from '../utils/path-utils';
 import { FileType } from './filetype';
 
 export class MoviesOverview {
@@ -39,6 +40,23 @@ export class Movie {
   get name(): string {
     return `${this.title} (${this.year})`;
   }
+
+  getMovieFile(fileType: FileType, fileName?: string): MovieFile | null {
+    let movieFile = null;
+    if (this.files) {
+      if (fileName) {
+        movieFile = this.files.find(file => file.fileName = fileName);
+      } else {
+        movieFile = this.files.find(file => file.type === fileType);
+      }
+    }
+    return movieFile;
+  }
+
+  getMovieFilePath(fileType: FileType, fileName?: string): string | null {
+    const movieFile = this.getMovieFile(fileType, fileName);
+    return movieFile ? joinPaths(movieFile.filePath, movieFile.fileName) : null;
+  }
 }
 
 export class MovieSettings {
@@ -54,7 +72,8 @@ export class MovieSettings {
 
 export class MovieFile {
   imdbId: string;
-  filename: string;
+  filePath: string;
+  fileName: string;
   type: FileType;
   embeddedLanguages: string[];
   hardcodedLanguages: string[];

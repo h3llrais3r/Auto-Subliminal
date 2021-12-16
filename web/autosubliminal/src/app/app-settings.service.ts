@@ -22,6 +22,7 @@ class AppSettings {
   logReversed: boolean;
   manualRefineVideo: boolean;
   preferHearingImpaired: boolean;
+  manualSubSync: boolean;
   dereferUrl: string;
   tvdbUrl: string;
   imdbUrl: string;

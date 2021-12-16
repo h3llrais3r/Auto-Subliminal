@@ -18,6 +18,7 @@ per-file-ignores =
     autosubliminal/providers/addic7ed_custom.py: F401, E741,
     autosubliminal/providers/pitcher.py: E722,
     autosubliminal/providers/useragents.py: E501,
+    autosubliminal/subsynchronizer.py: F401,
     autosubliminal/util/common.py: E731
 max-line-length = 120
 # Line below is required to get autopep8 formatting the code properly in vscode

@@ -2,8 +2,9 @@
 
 import logging
 import os
+import platform
 
-from ffsubsync.ffsubsync import make_parser, run
+from ffsubsync import ffsubsync
 
 import autosubliminal
 
@@ -19,7 +20,7 @@ class SubSynchronizer(object):
     """
 
     def __init__(self):
-        self._log_dir_path = os.path.dirname(autosubliminal.LOGFILE)
+        self._log_dir_path = autosubliminal.PATH
         try:
             import webrtcvad
         except ImportError:
@@ -33,20 +34,47 @@ class SubSynchronizer(object):
         """
 
         log.info('Running sub synchronizer')
-        if not os.path.isdir(autosubliminal.FFMPEGPATH) or not os.path.isfile(
-                os.path.join(autosubliminal.FFMPEGPATH, 'ffmpeg')):
-            log.error('FFMPEG not found')
-            return False
+        ffmpeg_executable = os.path.join(autosubliminal.FFMPEGPATH, 'ffmpeg')
+        if platform.system() == 'Windows':
+            ffmpeg_executable = os.path.join(autosubliminal.FFMPEGPATH, 'ffmpeg.exe')
+        if not autosubliminal.FFMPEGPATH or not os.path.isfile(ffmpeg_executable):
+            log.error('FFMPEG executable not found')
+            return None
         else:
+            result = None
+            synced_subtitle_path = None
             try:
+                synced_subtitle_path = os.path.splitext(subtitle_path)[0] + '.synced.srt'
                 unparsed_args = [
-                    video_path, '-i', subtitle_path, '-o', os.path.splitext(subtitle_path)[0] + '.synced.srt',
-                    '--ffmpegpath', autosubliminal.FFMPEGPATH, '--vad', self._vad, '--log-dir-path', self._log_dir_path]
-                parser = make_parser()
+                    video_path,
+                    '--srtin', subtitle_path,
+                    '--srtout', synced_subtitle_path,
+                    '--output-encoding', 'same',
+                    '--ffmpegpath', autosubliminal.FFMPEGPATH,
+                    '--vad', self._vad,
+                    '--log-dir-path', self._log_dir_path  # TODO: check if we can omit this and log in our logs instead
+                ]
+                parser = ffsubsync.make_parser()
                 args = parser.parse_args(args=unparsed_args)
-                sync_result = run(args)
-                log.debug('Subtitle synchronization result: %s', sync_result)
-                return True
+                sync_result = ffsubsync.run(args)
+                log.info('Subtitle synchronization result: %s', sync_result)
+                if 'sync_was_successful' in sync_result and sync_result['sync_was_successful'] is True:
+                    # Convert to float as it's a numpy float which gives issues when converting to json
+                    offset_in_seconds = sync_result['offset_seconds'] or 0
+                    framerate_scale_factor = sync_result['framerate_scale_factor'] or 0
+                    result = {
+                        'synced_subtitle_path': synced_subtitle_path,
+                        'offset_in_seconds': float(offset_in_seconds),
+                        'framerate_scale_factor': float(framerate_scale_factor)
+                    }
+                    return result
+                else:
+                    log.error('Error while synchronizing subtitle: %s', subtitle_path)
+                    return None
             except Exception:
                 log.exception('Error while synchronizing subtitle: %s', subtitle_path)
-                return True
+                return None
+            finally:
+                # Make sure to delete the synced subtitle path if the synchronization was not sucessful
+                if not result and synced_subtitle_path and os.path.isfile(synced_subtitle_path):
+                    os.remove(synced_subtitle_path)

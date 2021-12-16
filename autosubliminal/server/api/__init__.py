@@ -5,6 +5,7 @@ from autosubliminal.server.api.logs import LogsApi
 from autosubliminal.server.api.movies import MoviesApi
 from autosubliminal.server.api.settings import SettingsApi
 from autosubliminal.server.api.shows import ShowsApi
+from autosubliminal.server.api.subtitles import SubtitlesApi
 from autosubliminal.server.api.system import SystemApi
 from autosubliminal.server.rest import RestResource
 
@@ -27,6 +28,7 @@ class Api(RestResource):
         self.movies = MoviesApi()
         self.settings = SettingsApi()
         self.shows = ShowsApi()
+        self.subtitles = SubtitlesApi()
         self.system = SystemApi()
 
     def get(self, *args, **kwargs):

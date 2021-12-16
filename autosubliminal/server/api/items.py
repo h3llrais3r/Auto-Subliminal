@@ -116,9 +116,9 @@ class _WantedApi(RestResource):
 
                     # Sync subtitle
                     elif action == 'syncSubtitle':
-                        synced = subchecker.sync_subtitle(wanted_item_index)
-                        if synced:
-                            return self._no_content()
+                        sync_result = subchecker.sync_subtitle(wanted_item_index)
+                        if sync_result:
+                            return to_dict(sync_result, camelize)
                         else:
                             return self._conflict('Unable to sync subtitle')
 

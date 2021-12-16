@@ -1,12 +1,14 @@
 <div class="container-lg">
   <p-panel *ngIf="wantedItem">
     <!-- Custom panel header -->
-    <p-header class="w-100">
-      <div class="p-panel-title">Manual search for subtitles</div>
-      <div>
-        <p-button label="Search" icon="pi pi-refresh" styleClass="p-button-outlined" [disabled]="searchInProgress" (onClick)="searchSubtitles()"></p-button>
+    <ng-template pTemplate="header">
+      <div class="w-100">
+        <div class="p-panel-title">Manual search for subtitles</div>
+        <div>
+          <p-button label="Search" icon="pi pi-refresh" styleClass="p-button-outlined" [disabled]="searchInProgress" (onClick)="searchSubtitles()"></p-button>
+        </div>
       </div>
-    </p-header>
+    </ng-template>
     <!-- Searching message -->
     <app-message [visible]="searchInProgress">
       <i class="fa fa-spinner fa-spin mr-2" aria-hidden="true"></i>
@@ -55,7 +57,6 @@
             <th pSortableColumn="score"><span>Score<p-sortIcon field="score"></p-sortIcon></span></th>
             <th pSortableColumn="providerName"><span>Provider<p-sortIcon field="providerName"></p-sortIcon></span></th>
             <th>Preview</th>
-            <th></th>
             <th></th>
             <th></th>
             <th></th>
@@ -114,14 +115,6 @@
                 <a class="icon-link" (click)="saveSubtitle(subtitle)">
                   <i *ngIf="subtitle !== savedSubtitle" class="fa fa-floppy-o" aria-hidden="true" title="Click to save subtitle"></i>
                   <i *ngIf="subtitle === savedSubtitle" class="fa fa-check-circle-o text-success" aria-hidden="true" title="Subtitle saved"></i>
-                </a>
-              </span>
-            </td>
-            <td class="subtitle-action">
-              <span class="p-column-title">Sync subtitle</span>
-              <span class="p-column-data">
-                <a class="icon-link" (click)="syncSubtitle()">
-                  <i class="fa fa-refresh" aria-hidden="true" title="Click to sync subtitle"></i>
                 </a>
               </span>
             </td>
@@ -195,12 +188,6 @@
     <div>Maximum score: {{scores.max}}</div>
   </div>
 </p-dialog>
-
-<!-- Subtitle sync dialog -->
-<app-subtitle-sync [(visible)]="showSubtitleSyncDialog"
-                   [videoFilePath]="wantedItem.videoFilePath"
-                   [videoFileName]="wantedItem.videoFileName">
-</app-subtitle-sync>
 
 <!-- Loading component -->
 <app-loading [visible]="postProcessInProgress"></app-loading>
