@@ -75,13 +75,13 @@ class _SynchronizationApi(RestResource):
                     log.error('Unable to save the synced subtitle as %s' % subtitle_path)
                     return self._conflict('Unable to save the synced subtitle')
 
-            # Delete a subtitle
-            elif action == 'delete' and 'subtitle_path' in input_dict:
+            # Delete a synced subtitle
+            elif action == 'delete' and 'synced_subtitle_path' in input_dict:
                 try:
-                    os.remove(input_dict['subtitle_path'])
+                    os.remove(input_dict['synced_subtitle_path'])
                     return self._no_content()
                 except Exception:
-                    return self._conflict('Unable to delete the subtitle')
+                    return self._conflict('Unable to delete the synced subtitle')
 
             return self._bad_request('Invalid action \'%s\'' % action)
 

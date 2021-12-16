@@ -27,8 +27,8 @@ export class SubtitleService extends ApiServiceTemplate {
       .pipe(map(() => true));
   }
 
-  deleteSubtitle(subtitlePath: string): Observable<boolean> {
-    return this.httpClient.patch<void>(`${this.URL}/synchronization`, { action: 'delete', subtitlePath }, this.options)
+  deleteSyncedSubtitle(syncedSubtitlePath: string): Observable<boolean> {
+    return this.httpClient.patch<void>(`${this.URL}/synchronization`, { action: 'delete', syncedSubtitlePath }, this.options)
       .pipe(map(() => true));
   }
 }
