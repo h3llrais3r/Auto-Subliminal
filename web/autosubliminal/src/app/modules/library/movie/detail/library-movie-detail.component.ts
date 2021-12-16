@@ -11,6 +11,7 @@ import { FileType } from '../../../../shared/models/filetype';
 import { Movie } from '../../../../shared/models/movie';
 import { VideoSubtitles } from '../../../../shared/models/video';
 import { getImdbUrl, getPlayVideoUrl, getPosterPlaceholderUrl } from '../../../../shared/utils/common-utils';
+import { joinPaths } from '../../../../shared/utils/path-utils';
 
 @Component({
   selector: 'app-library-movie-detail',
@@ -97,6 +98,22 @@ export class LibraryMovieDetailComponent implements OnInit {
             this.router.navigateByUrl('/library/movie');
           },
           () => this.messageService.showErrorMessage(`Unable to delete the movie ${this.movie.name}!`)
+        );
+      }
+    });
+  }
+
+  openDeleteSubtitleDialog(filePath: string, fileName: string): void {
+    this.confirmationService.confirm({
+      message: `Are you sure that you want to delete the subtitle<br><b>${fileName}</b>?`,
+      accept: () => {
+        this.movieService.deleteMovieSubtitle(this.movie.imdbId, joinPaths(filePath, fileName)).subscribe(
+          () => {
+            // Reload details
+            this.getMovieDetails(this.movie.imdbId);
+            this.messageService.showSuccessMessage(`Deleted ${fileName}.`);
+          },
+          () => this.messageService.showErrorMessage(`Unable to delete the subtitle ${fileName}!`)
         );
       }
     });

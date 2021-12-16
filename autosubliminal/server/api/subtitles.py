@@ -40,7 +40,7 @@ class _SynchronizationApi(RestResource):
         self.allowed_methods = ('PATCH',)
 
     def patch(self):
-        """Sync a video subtitle."""
+        """Patch actions related to subtitle synchronization."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
         if 'action' in input_dict:
