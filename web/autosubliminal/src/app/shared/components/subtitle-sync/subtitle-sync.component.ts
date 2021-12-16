@@ -50,7 +50,7 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
     // Make sure the synced subtitle is removed if synchronization is not properly handled by the user
     if (this.subtitleSyncResult) {
       // No specific handling in subscribe as we want to do it in the background
-      this.subtitleService.deleteSubtitle(this.subtitleSyncResult.syncedSubtitlePath).subscribe();
+      this.subtitleService.deleteSyncedSubtitle(this.subtitleSyncResult.syncedSubtitlePath).subscribe();
     }
   }
 
@@ -91,7 +91,7 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
 
   resetSubtitle(): void {
     // Delete the synced subtitle
-    this.subtitleService.deleteSubtitle(this.subtitleSyncResult.syncedSubtitlePath).subscribe(
+    this.subtitleService.deleteSyncedSubtitle(this.subtitleSyncResult.syncedSubtitlePath).subscribe(
       () => {
         this.subtitleSyncResult = null; // clear previous sync result
         this.messageService.showInfoMessage('Synchronized subtitle removed.');
