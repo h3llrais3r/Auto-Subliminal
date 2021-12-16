@@ -10,7 +10,8 @@
       "type": "python",
       "request": "launch",
       "program": "AutoSubliminal.py",
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
+      "justMyCode": false // Must be false to also debug dependency code (installed libs)
     },
     // Debug ui
     {
