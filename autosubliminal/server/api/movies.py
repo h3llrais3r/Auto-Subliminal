@@ -237,10 +237,43 @@ class _SubtitlesApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ()
+        self.allowed_methods = ('PATCH', )
 
-        # Add all sub paths here: /api/movies/subtitles/...
+        # Add all sub paths here: /api/movies/{imdb_id}/subtitles/...
         self.hardcoded = _HardcodedApi()
+
+    def patch(self, imdb_id):
+        """Patch actions related to movie subtitles."""
+        input_dict = to_dict(cherrypy.request.json, decamelize)
+
+        if 'action' in input_dict:
+            action = input_dict['action']
+
+            # Delete a subtitle
+            if action == 'delete' and 'subtitle_path' in input_dict:
+                try:
+                    # Delete file
+                    subtitle_path = input_dict['subtitle_path']
+                    os.remove(subtitle_path)
+                except Exception:
+                    return self._conflict('Unable to delete the subtitle')
+
+                # Remove from subtitles
+                MovieSubtitlesDb().delete_movie_subtitle(imdb_id, subtitle_path)
+
+                # Update missing languages
+                movie_details_db = MovieDetailsDb()
+                db_movie = movie_details_db.get_movie(imdb_id, subtitles=True)
+                db_movie_settings = MovieSettingsDb().get_movie_settings(imdb_id)
+                db_movie.missing_languages = get_missing_languages(
+                    db_movie.subtitles, db_movie_settings.wanted_languages)
+                movie_details_db.update_movie(db_movie)
+
+                return self._no_content()
+
+            return self._bad_request('Invalid action \'%s\'' % action)
+
+        return self._bad_request('Missing data')
 
 
 class _HardcodedApi(RestResource):

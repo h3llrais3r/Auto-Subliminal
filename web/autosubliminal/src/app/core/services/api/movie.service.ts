@@ -57,4 +57,9 @@ export class MovieService extends ApiServiceTemplate {
     return this.httpClient.delete<void>(`${this.URL}/${imdbId}`, this.options)
       .pipe(map(() => true));
   }
+
+  deleteMovieSubtitle(imdbId: string, subtitlePath: string): Observable<boolean> {
+    return this.httpClient.patch<void>(`${this.URL}/${imdbId}/subtitles`, { action: 'delete', subtitlePath }, this.options)
+      .pipe(map(() => true));
+  }
 }

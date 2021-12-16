@@ -173,6 +173,7 @@ class MovieSubtitlesDb(object):
         self._query_set = 'INSERT INTO movie_subtitles VALUES (?,?,?,?)'
         self._query_delete = 'DELETE FROM movie_subtitles WHERE imdb_id=?'
         self._query_delete_by_type = 'DELETE FROM movie_subtitles WHERE imdb_id=? AND type=?'
+        self._query_delete_by_path = 'DELETE FROM movie_subtitles WHERE imdb_id=? AND path=?'
         self._query_flush = 'DELETE FROM movie_subtitles'
 
     def get_movie_subtitles(self, imdb_id):
@@ -229,6 +230,21 @@ class MovieSubtitlesDb(object):
             cursor.execute(self._query_delete_by_type, [imdb_id, type])
         else:
             cursor.execute(self._query_delete, [imdb_id])
+        if not self.connection:
+            connection.commit()
+            connection.close()
+
+    def delete_movie_subtitle(self, imdb_id, path):
+        """Delete the subtitle of a movie.
+
+        :param imdb_id: the imdb id of the movie
+        :type imdb_id: str
+        :param path: the path of the subtitle
+        :type imdb_id: str
+        """
+        connection = self.connection or sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_delete_by_path, [imdb_id, path])
         if not self.connection:
             connection.commit()
             connection.close()

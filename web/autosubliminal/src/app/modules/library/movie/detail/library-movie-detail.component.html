@@ -89,6 +89,9 @@
                     <a *ngIf="file.isVideo" class="icon-link" [href]="getPlayVideoUrl(movie.path, file.fileName)">
                       <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
                     </a>
+                    <a *ngIf="file.isSubtitle" class="icon-link" (click)="openDeleteSubtitleDialog(file.filePath, file.fileName)">
+                      <i class="fa fa-trash" aria-hidden="true" title="Click to remove subtitle"></i>
+                    </a>
                     <a *ngIf="manualSubSyncEnabled && file.isSubtitle" class="icon-link" (click)="openSubtitleSyncDialog(movie.getMovieFilePath(videoFileType), movie.getMovieFilePath(subtitleFileType, file.fileName))">
                       <i class="fa fa-refresh" aria-hidden="true" title="Click to synchronize subtitle"></i>
                     </a>
