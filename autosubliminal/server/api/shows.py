@@ -32,7 +32,7 @@ class ShowsApi(RestResource):
         self.overview = _OverviewApi()
         self.refresh = _RefreshApi()
         self.settings = _SettingsApi()
-        self.subtitles = _SubtitlesApi()
+        self.episodes = _EpisodesApi()
 
         # Set the allowed methods
         self.allowed_methods = ('GET', 'DELETE')
@@ -262,25 +262,70 @@ class _SettingsApi(RestResource):
         return self._bad_request('Missing data')
 
 
-class _SubtitlesApi(RestResource):
+@cherrypy.popargs('episode_tvdb_id')
+class _EpisodesApi(RestResource):
     """
-    Rest resource for handling the /api/shows/{tvdb_id}/subtitles path.
+    Rest resource for handling the /api/shows/{tvdb_id}/episodes path.
     """
 
     def __init__(self):
         super().__init__()
 
-        # Set the allowed methods
-        self.allowed_methods = ()
+        # Add all sub paths here: /api/shows/{tvdb_id}/episodes/...
+        self.subtitles = _SubtitlesApi()
 
-        # Add all sub paths here: /api/shows/subtitles/...
+
+class _SubtitlesApi(RestResource):
+    """
+    Rest resource for handling the /api/shows/{tvdb_id}/episodes/{episode_tvdb_id}/subtitles path.
+    """
+
+    def __init__(self):
+        super().__init__()
+
+        # Add all sub paths here: /api/shows/{tvdb_id}/{episode_tvdb_id}/subtitles/...
         self.hardcoded = _HardcodedApi()
 
+        # Set the allowed methods
+        self.allowed_methods = ('PATCH',)
 
-@cherrypy.popargs('episode_tvdb_id')
+    def patch(self, tvdb_id, episode_tvdb_id):
+        """Patch actions related to show episode subtitles."""
+        input_dict = to_dict(cherrypy.request.json, decamelize)
+
+        if 'action' in input_dict:
+            action = input_dict['action']
+
+            # Delete a subtitle
+            if action == 'delete' and 'subtitle_path' in input_dict:
+                # Delete file
+                try:
+                    subtitle_path = input_dict['subtitle_path']
+                    os.remove(subtitle_path)
+                except Exception:
+                    return self._conflict('Unable to delete the subtitle')
+
+                # Remove from subtitles
+                ShowEpisodeSubtitlesDb().delete_show_episode_subtitle(episode_tvdb_id, subtitle_path)
+
+                # Update missing languages
+                show_episode_details_db = ShowEpisodeDetailsDb()
+                db_show_episode = show_episode_details_db.get_show_episode(episode_tvdb_id, subtitles=True)
+                db_show_settings = ShowSettingsDb().get_show_settings(tvdb_id)
+                db_show_episode.missing_languages = get_missing_languages(db_show_episode.subtitles,
+                                                                          db_show_settings.wanted_languages)
+                show_episode_details_db.update_show_episode(db_show_episode)
+
+                return self._no_content()
+
+            return self._bad_request('Invalid action \'%s\'' % action)
+
+        return self._bad_request('Missing data')
+
+
 class _HardcodedApi(RestResource):
     """
-    Rest resource for handling the /api/shows/{tvdb_id}/subtitles/hardcoded/{episode_tvdb_id} path.
+    Rest resource for handling the /api/shows/{tvdb_id}/episodes/{episode_tvdb_id}/subtitles/hardcoded path.
     """
 
     def __init__(self):

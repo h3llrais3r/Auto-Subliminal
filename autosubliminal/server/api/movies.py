@@ -236,11 +236,11 @@ class _SubtitlesApi(RestResource):
     def __init__(self):
         super().__init__()
 
-        # Set the allowed methods
-        self.allowed_methods = ('PATCH', )
-
         # Add all sub paths here: /api/movies/{imdb_id}/subtitles/...
         self.hardcoded = _HardcodedApi()
+
+        # Set the allowed methods
+        self.allowed_methods = ('PATCH', )
 
     def patch(self, imdb_id):
         """Patch actions related to movie subtitles."""

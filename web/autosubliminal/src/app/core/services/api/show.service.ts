@@ -49,12 +49,17 @@ export class ShowService extends ApiServiceTemplate {
   }
 
   saveShowEpisodeHardcodedSubtitles(tvdbId: number, episodeTvdbId: number, videoSubtitles: VideoSubtitles): Observable<boolean> {
-    return this.httpClient.put<VideoSubtitles>(`${this.URL}/${tvdbId}/subtitles/hardcoded/${episodeTvdbId}`, JSON.stringify(videoSubtitles), this.options)
+    return this.httpClient.put<VideoSubtitles>(`${this.URL}/${tvdbId}/episodes/${episodeTvdbId}/subtitles/hardcoded`, JSON.stringify(videoSubtitles), this.options)
       .pipe(map(() => true));
   }
 
   deleteShow(tvdbId: number): Observable<boolean> {
     return this.httpClient.delete<void>(`${this.URL}/${tvdbId}`, this.options)
+      .pipe(map(() => true));
+  }
+
+  deleteShowEpisodeSubtitle(tvdbId: number, episodeTvdbId: number, subtitlePath: string): Observable<boolean> {
+    return this.httpClient.patch<void>(`${this.URL}/${tvdbId}/episodes/${episodeTvdbId}/subtitles`, { action: 'delete', subtitlePath }, this.options)
       .pipe(map(() => true));
   }
 }
