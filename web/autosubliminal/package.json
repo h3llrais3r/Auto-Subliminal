@@ -80,7 +80,7 @@
     "@types/strftime": "0.9.4",
     "@typescript-eslint/eslint-plugin": "4.33.0",
     "@typescript-eslint/parser": "4.33.0",
-    "concurrently": "6.4.0",
+    "concurrently": "6.5.0",
     "copyfiles": "2.4.1",
     "eslint": "7.32.0",
     "husky": "7.0.4",
