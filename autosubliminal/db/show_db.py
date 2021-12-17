@@ -316,6 +316,7 @@ class ShowEpisodeSubtitlesDb(object):
         self._query_set = 'INSERT INTO show_episode_subtitles VALUES (?,?,?,?)'
         self._query_delete = 'DELETE FROM show_episode_subtitles WHERE tvdb_id=?'
         self._query_delete_by_type = 'DELETE FROM show_episode_subtitles WHERE tvdb_id=? AND type=?'
+        self._query_delete_by_path = 'DELETE FROM show_episode_subtitles WHERE tvdb_id=? AND path=?'
         self._query_flush = 'DELETE FROM show_episode_subtitles'
 
     def get_show_episode_subtitles(self, tvdb_id):
@@ -372,6 +373,21 @@ class ShowEpisodeSubtitlesDb(object):
             cursor.execute(self._query_delete_by_type, [tvdb_id, type])
         else:
             cursor.execute(self._query_delete, [tvdb_id])
+        if not self.connection:
+            connection.commit()
+            connection.close()
+
+    def delete_show_episode_subtitle(self, tvdb_id, path):
+        """Delete the subtitle of a show episode.
+
+        :param tvdb_id: the tvdb id of the show episode
+        :type tvdb_id: int
+        :param path: the path of the subtitle
+        :type imdb_id: str
+        """
+        connection = self.connection or sqlite3.connect(autosubliminal.DBFILE)
+        cursor = connection.cursor()
+        cursor.execute(self._query_delete_by_path, [tvdb_id, path])
         if not self.connection:
             connection.commit()
             connection.close()

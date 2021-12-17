@@ -103,7 +103,10 @@
                     <a *ngIf="file.isVideo" class="icon-link" [href]="getPlayVideoUrl(season.seasonPath, file.fileName)">
                       <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
                     </a>
-                    <a *ngIf="manualSubSyncEnabled && file.isSubtitle" class="icon-link" (click)="openSubtitleSyncDialog(file.tvdbId, show.getShowEpisodeFilePath(file.tvdbId, videoFileType), show.getShowEpisodeFilePath(file.tvdbId, subtitleFileType, file.fileName))">
+                    <a *ngIf="file.isSubtitle" class="icon-link" (click)="openDeleteSubtitleDialog(file.tvdbId, file.filePath, file.fileName)">
+                      <i class="fa fa-trash" aria-hidden="true" title="Click to remove subtitle"></i>
+                    </a>
+                    <a *ngIf="manualSubSyncEnabled && file.isSubtitle" class="icon-link" (click)="openSubtitleSyncDialog(show.getShowEpisodeFilePath(file.tvdbId, videoFileType), show.getShowEpisodeFilePath(file.tvdbId, subtitleFileType, file.fileName))">
                       <i class="fa fa-refresh" aria-hidden="true" title="Click to synchronize subtitle"></i>
                     </a>
                   </span>

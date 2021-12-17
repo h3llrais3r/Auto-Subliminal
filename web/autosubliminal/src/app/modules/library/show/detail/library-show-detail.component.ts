@@ -11,6 +11,7 @@ import { FileType } from '../../../../shared/models/filetype';
 import { Show, ShowEpisodeFile } from '../../../../shared/models/show';
 import { VideoSubtitles } from '../../../../shared/models/video';
 import { getPlayVideoUrl, getPosterPlaceholderUrl, getTvdbUrl } from '../../../../shared/utils/common-utils';
+import { joinPaths } from '../../../../shared/utils/path-utils';
 
 @Component({
   selector: 'app-library-show-detail',
@@ -94,10 +95,24 @@ export class LibraryShowDetailComponent implements OnInit {
       message: `Are you sure that you want to delete <b>${this.show.name}</b>?`,
       accept: () => {
         this.showService.deleteShow(this.show.tvdbId).subscribe(
-          () => {
-            this.router.navigateByUrl('/library/show');
-          },
+          () => this.router.navigateByUrl('/library/show'),
           () => this.messageService.showErrorMessage(`Unable to delete the show ${this.show.name}!`)
+        );
+      }
+    });
+  }
+
+  openDeleteSubtitleDialog(episodeTvdbId: number, filePath: string, fileName: string): void {
+    this.confirmationService.confirm({
+      message: `Are you sure that you want to delete the subtitle<br><b>${fileName}</b>?`,
+      accept: () => {
+        this.showService.deleteShowEpisodeSubtitle(this.show.tvdbId, episodeTvdbId, joinPaths(filePath, fileName)).subscribe(
+          () => {
+            // Reload details
+            this.getShowDetails(this.show.tvdbId);
+            this.messageService.showSuccessMessage(`Deleted ${fileName}.`);
+          },
+          () => this.messageService.showErrorMessage(`Unable to delete the subtitle ${fileName}!`)
         );
       }
     });
@@ -134,8 +149,7 @@ export class LibraryShowDetailComponent implements OnInit {
     this.episodeTvdbId = null;
   }
 
-  openSubtitleSyncDialog(episodeTvdbId: number, videoFilePath: string, subtitleFilePath: string): void {
-    this.episodeTvdbId = episodeTvdbId;
+  openSubtitleSyncDialog(videoFilePath: string, subtitleFilePath: string): void {
     this.episodeVideoFilePath = videoFilePath;
     this.episodeSubtitleFilePath = subtitleFilePath;
     this.showSubtitleSync = true;
