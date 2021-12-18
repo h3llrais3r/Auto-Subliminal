@@ -30,6 +30,7 @@ export class LibraryMovieDetailComponent implements OnInit {
   showVideoSubtitles = false;
   showSubtitleSync = false;
   manualSubSyncEnabled = false;
+  libraryEditModeEnabled = false;
   videoSubtitles: VideoSubtitles;
   movieVideoFilePath: string;
   movieSubtitleFilePath: string;
@@ -46,6 +47,7 @@ export class LibraryMovieDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.manualSubSyncEnabled = appSettings.manualSubSync;
+    this.libraryEditModeEnabled = appSettings.libraryEditMode;
     this.route.paramMap.subscribe(
       (paramMap) => {
         this.loading = true;

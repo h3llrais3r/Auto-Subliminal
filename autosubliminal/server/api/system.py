@@ -112,6 +112,7 @@ class _SettingsApi(RestResource):
             'check_sub_next_run_in_ms': get_next_scheduler_run_in_ms(autosubliminal.CHECKSUB),
             'check_version': autosubliminal.CHECKVERSION.name,
             'library_mode': autosubliminal.LIBRARYMODE,
+            'library_edit_mode': autosubliminal.LIBRARYEDITMODE,
             'log_reversed': autosubliminal.LOGREVERSED,
             'manual_refine_video': autosubliminal.MANUALREFINEVIDEO,
             'prefer_hearing_impaired': autosubliminal.PREFERHEARINGIMPAIRED,

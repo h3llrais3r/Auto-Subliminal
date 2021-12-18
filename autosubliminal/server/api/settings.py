@@ -182,7 +182,8 @@ class _LibraryApi(RestResource):
         settings = {
             'library_mode': autosubliminal.LIBRARYMODE,
             'library_paths': autosubliminal.LIBRARYPATHS,
-            'scan_library_interval': autosubliminal.SCANLIBRARYINTERVAL
+            'scan_library_interval': autosubliminal.SCANLIBRARYINTERVAL,
+            'library_edit_mode': autosubliminal.LIBRARYEDITMODE
         }
 
         return to_dict(settings, camelize)
@@ -203,6 +204,8 @@ class _LibraryApi(RestResource):
                 autosubliminal.LIBRARYPATHS = input_dict['library_paths']
             if 'scan_library_interval' in input_dict:
                 autosubliminal.SCANLIBRARYINTERVAL = input_dict['scan_library_interval']
+            if 'library_edit_mode' in input_dict:
+                autosubliminal.LIBRARYEDITMODE = input_dict['library_edit_mode']
 
             # Activate/deactivate scheduler
             if autosubliminal.LIBRARYMODE:

@@ -52,7 +52,8 @@ export class SettingsLibraryComponent implements OnInit {
     this.settingsForm = this.fb.group({
       libraryMode: [librarySettings.libraryMode, [Validators.required]],
       libraryPaths: [librarySettings.libraryPaths || [], []],
-      scanLibraryInterval: [librarySettings.scanLibraryInterval, [Validators.required]]
+      scanLibraryInterval: [librarySettings.scanLibraryInterval, [Validators.required]],
+      libraryEditMode: [librarySettings.libraryEditMode, [Validators.required]],
     });
   }
 
@@ -61,6 +62,7 @@ export class SettingsLibraryComponent implements OnInit {
     settings.libraryMode = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'libraryMode');
     settings.libraryPaths = FormUtils.getFormControlValue<string[]>(this.settingsForm, 'libraryPaths');
     settings.scanLibraryInterval = FormUtils.getFormControlValue<number>(this.settingsForm, 'scanLibraryInterval');
+    settings.libraryEditMode = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'libraryEditMode');
     return settings;
   }
 }
