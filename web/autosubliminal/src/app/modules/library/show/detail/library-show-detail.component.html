@@ -97,17 +97,17 @@
                 <td class="wrap-text">
                   <span>{{file.fileName}}</span>
                   <span class="icon-group">
-                    <a *ngIf="file.isVideo" class="icon-link" (click)="openVideoSubtitlesDialog(file.tvdbId, season.seasonPath, file.fileName, file.hardcodedLanguages)">
-                      <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
-                    </a>
                     <a *ngIf="file.isVideo" class="icon-link" [href]="getPlayVideoUrl(season.seasonPath, file.fileName)">
                       <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
                     </a>
-                    <a *ngIf="file.isSubtitle" class="icon-link" (click)="openDeleteSubtitleDialog(file.tvdbId, file.filePath, file.fileName)">
-                      <i class="fa fa-trash" aria-hidden="true" title="Click to remove subtitle"></i>
+                    <a *ngIf="libraryEditModeEnabled && file.isVideo" class="icon-link" (click)="openVideoSubtitlesDialog(file.tvdbId, season.seasonPath, file.fileName, file.hardcodedLanguages)">
+                      <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
                     </a>
-                    <a *ngIf="manualSubSyncEnabled && file.isSubtitle" class="icon-link" (click)="openSubtitleSyncDialog(show.getShowEpisodeFilePath(file.tvdbId, videoFileType), show.getShowEpisodeFilePath(file.tvdbId, subtitleFileType, file.fileName))">
+                    <a *ngIf="libraryEditModeEnabled && manualSubSyncEnabled && file.isSubtitle" class="icon-link" (click)="openSubtitleSyncDialog(show.getShowEpisodeFilePath(file.tvdbId, videoFileType), show.getShowEpisodeFilePath(file.tvdbId, subtitleFileType, file.fileName))">
                       <i class="fa fa-refresh" aria-hidden="true" title="Click to synchronize subtitle"></i>
+                    </a>
+                    <a *ngIf="libraryEditModeEnabled && file.isSubtitle" class="icon-link" (click)="openDeleteSubtitleDialog(file.tvdbId, file.filePath, file.fileName)">
+                      <i class="fa fa-trash" aria-hidden="true" title="Click to remove subtitle"></i>
                     </a>
                   </span>
                 </td>

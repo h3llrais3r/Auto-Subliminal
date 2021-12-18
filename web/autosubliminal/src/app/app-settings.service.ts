@@ -19,6 +19,7 @@ class AppSettings {
   checkSubNextRunInMs: number;
   checkVersion: string;
   libraryMode: boolean;
+  libraryEditMode: boolean;
   logReversed: boolean;
   manualRefineVideo: boolean;
   preferHearingImpaired: boolean;

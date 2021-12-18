@@ -30,6 +30,7 @@ export class LibrarySettings {
   libraryMode: boolean;
   libraryPaths: string[];
   scanLibraryInterval: number;
+  libraryEditMode: boolean;
 
   constructor(obj?: any) {
     Object.assign(this, obj);

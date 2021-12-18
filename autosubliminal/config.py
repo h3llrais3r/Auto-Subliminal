@@ -226,11 +226,17 @@ def read_config(check_upgrade=False):
                 autosubliminal.SCANLIBRARYINTERVAL = 24  # Run every 24 hours
         else:
             autosubliminal.SCANLIBRARYINTERVAL = 24  # Run every 24 hours
+
+        if cfg.has_option('library', 'libraryeditmode'):
+            autosubliminal.LIBRARYEDITMODE = cfg.getboolean('library', 'libraryeditmode')
+        else:
+            autosubliminal.LIBRARYEDITMODE = False
     else:
         # Library section is missing
         autosubliminal.LIBRARYMODE = False
         autosubliminal.LIBRARYPATHS = []
         autosubliminal.SCANLIBRARYINTERVAL = 24
+        autosubliminal.LIBRARYEDITMODE = False
 
     if cfg.has_section('logging'):
         if cfg.has_option('logging', 'logfile'):
@@ -940,6 +946,7 @@ def write_config_library_section():
     cfg.set(section, 'librarymode', str(autosubliminal.LIBRARYMODE))
     cfg.set(section, 'librarypaths', librarypaths)
     cfg.set(section, 'scanlibraryinterval', str(autosubliminal.SCANLIBRARYINTERVAL))
+    cfg.set(section, 'libraryeditmode', str(autosubliminal.LIBRARYEDITMODE))
 
     with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
         cfg.write(f)

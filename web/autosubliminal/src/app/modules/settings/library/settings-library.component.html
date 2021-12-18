@@ -40,6 +40,18 @@
           <app-input-number formControlName="scanLibraryInterval" [min]="24" suffix=" hours"></app-input-number>
         </div>
       </div>
+      <!-- Library edit mode -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="libraryEditMode" class="label">Library edit mode</label>
+          <app-icon-dropdown>
+            <li>When enabled, edit functionality is enabled in the libraries.</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-dropdown formControlName="libraryEditMode" [options]="enabledOrDisabled"></app-input-dropdown>
+        </div>
+      </div>
       <!-- Button -->
       <div class="row button-row">
         <div class="col-12 col-sm-12 col-md-12 col-lg-10">
