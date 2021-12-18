@@ -50,7 +50,7 @@ ffsubsync == 0.4.19
 # \autosubliminal\notifiers\growl.py: 5
 gntp == 1.0.3
 
-# \autosubliminal\__init__.py: 631
+# \autosubliminal\__init__.py: 632
 # \autosubliminal\fileprocessor.py: 7
 # \autosubliminal\parsers\guessit\__init__.py: 3
 # \autosubliminal\parsers\guessit\rules.py: 3,4,5
@@ -64,7 +64,7 @@ imdbpie == 5.6.4.dev0
 # \autosubliminal\util\json.py: 4
 jsonpickle == 2.0.0
 
-# \autosubliminal\__init__.py: 700,701
+# \autosubliminal\__init__.py: 701,702
 # \autosubliminal\util\filesystem.py: 9
 langdetect == 1.0.9
 
@@ -102,7 +102,7 @@ schema == 0.7.5
 # \autosubliminal\__init__.py: 5
 setuptools == 58.3.0
 
-# \autosubliminal\__init__.py: 668
+# \autosubliminal\__init__.py: 669
 # \autosubliminal\providers\addic7ed_custom.py: 17,18
 # \autosubliminal\providers\exceptions.py: 3
 # \autosubliminal\providers\pitcher.py: 11
