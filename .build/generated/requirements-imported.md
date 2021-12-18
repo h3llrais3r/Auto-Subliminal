@@ -12,6 +12,7 @@
 # \autosubliminal\server\api\movies.py: 6
 # \autosubliminal\server\api\settings.py: 6
 # \autosubliminal\server\api\shows.py: 6
+# \autosubliminal\server\api\subtitles.py: 7
 # \autosubliminal\server\api\system.py: 6
 # \autosubliminal\server\rest.py: 6
 # \autosubliminal\server\root.py: 3
@@ -43,7 +44,7 @@ dogpile.cache == 1.1.4
 # \autosubliminal\util\filesystem.py: 14
 enzyme == 0.4.1
 
-# \autosubliminal\subsynchronizer.py: 6
+# \autosubliminal\subsynchronizer.py: 7
 ffsubsync == 0.4.19
 
 # \autosubliminal\notifiers\growl.py: 5
@@ -99,7 +100,7 @@ requests_oauthlib == 1.3.0
 schema == 0.7.5
 
 # \autosubliminal\__init__.py: 5
-setuptools == 59.5.0
+setuptools == 58.3.0
 
 # \autosubliminal\__init__.py: 668
 # \autosubliminal\providers\addic7ed_custom.py: 17,18
@@ -122,7 +123,7 @@ tailer == 0.4.1
 # \autosubliminal\indexer.py: 12
 tvdb_api == 3.0.0
 
-# \autosubliminal\subsynchronizer.py: 24
+# \autosubliminal\subsynchronizer.py: 25
 webrtcvad_wheels == 2.0.10.post2
 
 # \autosubliminal\application.py: 14
