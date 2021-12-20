@@ -1,32 +1,38 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appSettings } from '../../../app-settings.service';
 import { ItemService } from '../../../core/services/api/item.service';
+import { SubtitleService } from '../../../core/services/api/subtitle.service';
 import { MessageService } from '../../../core/services/message.service';
 import { WantedItem } from '../../../shared/models/item';
 import { EpisodeScores, MovieScores } from '../../../shared/models/score';
-import { Subtitle } from '../../../shared/models/subtitle';
+import { SavedSubtitle, Subtitle } from '../../../shared/models/subtitle';
 import { getDereferUrl, getPlayVideoUrl } from '../../../shared/utils/common-utils';
 import { toNumber } from '../../../shared/utils/number-utils';
+import { joinPaths } from '../../../shared/utils/path-utils';
 
 @Component({
   selector: 'app-home-search',
   templateUrl: './home-search.component.html',
   styleUrls: ['./home-search.component.scss']
 })
-export class HomeSearchComponent implements OnInit {
+export class HomeSearchComponent implements OnInit, OnDestroy {
 
   wantedItem: WantedItem;
   subtitles: Subtitle[] = []; // default empty array so we are able to show the number of subtitles
   language: string;
   subtitlePreview: string;
-  savedSubtitle: Subtitle;
+  savedSubtitle: SavedSubtitle;
+  subtitleSyncVideoPath: string;
+  subtitleSyncSubtitlePath: string;
 
+  manualSubSyncEnabled = false;
   searchInProgress = false;
   postProcessInProgress = false;
   showScoreDetailsDialog = false;
   showSubtitlePreviewDialog = false;
+  showSubtitleSyncDialog = false;
   scores: MovieScores | EpisodeScores;
   matches: string[];
   score: number;
@@ -36,9 +42,11 @@ export class HomeSearchComponent implements OnInit {
     private router: Router,
     private domSanitizer: DomSanitizer,
     private itemService: ItemService,
+    private subtitleService: SubtitleService,
     private messageService: MessageService) { }
 
   ngOnInit(): void {
+    this.manualSubSyncEnabled = appSettings.manualSubSync;
     this.route.queryParamMap.subscribe(
       (queryParamMap) => {
         const wantedItemId = toNumber(queryParamMap.get('wantedItemId'));
@@ -52,6 +60,14 @@ export class HomeSearchComponent implements OnInit {
           () => this.messageService.showErrorMessage(`Unable to get the wanted item with id ${wantedItemId}`)
         );
       });
+  }
+
+  ngOnDestroy(): void {
+    // Make sure the save subtitle is removed if flow is not properly handled by the user
+    if (this.savedSubtitle) {
+      // No specific handling in subscribe as we want to do it in the background
+      this.itemService.deleteWantedItemSubtitle(this.wantedItem.id).subscribe();
+    }
   }
 
   searchSubtitles(): void {
@@ -125,8 +141,8 @@ export class HomeSearchComponent implements OnInit {
 
   saveSubtitle(subtitle: Subtitle): void {
     this.itemService.saveWantedItemSubtitle(this.wantedItem.id, subtitle.subtitleIndex).subscribe(
-      () => {
-        this.savedSubtitle = subtitle;
+      (savedSubtitle) => {
+        this.savedSubtitle = savedSubtitle;
         this.messageService.showInfoMessage('Subtitles saved.');
       },
       () => this.messageService.showErrorMessage('Unable to save the subtitle!')
@@ -143,6 +159,12 @@ export class HomeSearchComponent implements OnInit {
     );
   }
 
+  syncSubtitle(): void {
+    this.subtitleSyncVideoPath = joinPaths(this.wantedItem.videoFilePath, this.wantedItem.videoFileName);
+    this.subtitleSyncSubtitlePath = this.savedSubtitle.subtitlePath;
+    this.showSubtitleSyncDialog = true;
+  }
+
   getPlayVideoUrl(): SafeResourceUrl {
     return this.domSanitizer.bypassSecurityTrustResourceUrl(getPlayVideoUrl(this.wantedItem.videoFilePath, this.wantedItem.videoFileName));
   }
@@ -151,6 +173,7 @@ export class HomeSearchComponent implements OnInit {
     this.postProcessInProgress = true;
     this.itemService.postProcessWantedItem(this.wantedItem.id, subtitle.subtitleIndex).subscribe(
       () => {
+        this.saveSubtitle = null; // clear saved subtile (to not trigger the cleanup in onDestroy)
         this.postProcessInProgress = false;
         this.messageService.showSuccessMessage(`Post processed ${this.wantedItem.longName}.`);
         this.goHome();

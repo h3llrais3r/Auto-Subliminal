@@ -212,7 +212,7 @@ def save_subtitle(wanted_item_index, subtitle_index):
 
     # Get wanted queue lock
     if not get_wanted_queue_lock():
-        return False
+        return None
 
     # Get wanted item
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
@@ -231,7 +231,8 @@ def save_subtitle(wanted_item_index, subtitle_index):
     # Release wanted queue lock
     release_wanted_queue_lock()
 
-    return downloaded
+    # Return subtitle path if it was downloaded, None otherwise
+    return download_item if downloaded else None
 
 
 @release_wanted_queue_lock_on_exception
