@@ -31,8 +31,8 @@ movies_json = '[{"imdbId": "tt1", ' \
               '"wantedLanguages": ["en", "nl"]}, "title": "title2", "totalSubtitlesAvailable": 0, ' \
               '"totalSubtitlesMissing": 2, "totalSubtitlesWanted": 2, "year": 2019}]'
 
-movie_1_json = '{"files": [{"embeddedLanguages": [], "filename": "movie1.mkv", "hardcodedLanguages": [], ' \
-               '"type": "video"}, {"filename": "subtitle1.srt", "language": "nl", "type": "subtitle"}], ' \
+movie_1_json = '{"files": [{"embeddedLanguages": [], "fileName": "movie1.mkv", "hardcodedLanguages": [], ' \
+               '"type": "video"}, {"fileName": "subtitle1.srt", "language": "nl", "type": "subtitle"}], ' \
                '"imdbId": "tt1", "overview": "overview1", "path": "/path/to/movie1", "pathInVideoPaths": false, ' \
                '"poster": true, "settings": {"hearingImpaired": false, "refine": true, "utf8Encoding": true, ' \
                '"wantedLanguages": ["en", "nl"]}, "title": "title1", "totalSubtitlesAvailable": 1, ' \
@@ -40,6 +40,9 @@ movie_1_json = '{"files": [{"embeddedLanguages": [], "filename": "movie1.mkv", "
 
 movie_settings_1_json = '{"hearingImpaired": false, "refine": true, "utf8Encoding": true, ' \
                         '"wantedLanguages": ["en", "nl"]}'
+
+overview_json = '{"failedMovies": ["/path/to/failed/movie"], "totalMovies": 1, "totalSubtitlesAvailable": 1, ' \
+    '"totalSubtitlesMissing": 1, "totalSubtitlesWanted": 2}'
 
 
 def test_get_movies(monkeypatch, mocker):
@@ -55,8 +58,8 @@ def test_get_movie(monkeypatch, mocker):
     mocker.patch('os.path.exists', return_value=True)
     mocker.patch('autosubliminal.server.api.movies.MoviesApi._get_movie_files',
                  return_value=[
-                     {'filename': 'movie1.mkv', 'type': 'video', 'embedded_languages': [], 'hardcoded_languages': []},
-                     {'filename': 'subtitle1.srt', 'type': 'subtitle', 'language': 'nl'}])
+                     {'file_name': 'movie1.mkv', 'type': 'video', 'embedded_languages': [], 'hardcoded_languages': []},
+                     {'file_name': 'subtitle1.srt', 'type': 'subtitle', 'language': 'nl'}])
     mocker.patch.object(MovieSettingsDb, 'get_movie_settings', return_value=movie_settings_1)
     assert movie_1_json == pickle_api_result(MoviesApi().get('tt1'))
 
@@ -70,6 +73,4 @@ def test_get_movies_overview(mocker):
     mocker.patch.object(FailedMoviesDb, 'get_failed_movies', return_value=['/path/to/failed/movie'])
     mocker.patch.object(MovieDetailsDb, 'get_all_movies', return_value=[movie_details_1])
     mocker.patch.object(MovieSettingsDb, 'get_movie_settings', side_effect=[movie_settings_1, movie_settings_2])
-    overview_json = '{"failedMovies": ["/path/to/failed/movie"], "totalMovies": 1, "totalSubtitlesAvailable": 1, ' \
-                    '"totalSubtitlesMissing": 1, "totalSubtitlesWanted": 2}'
     assert overview_json == pickle_api_result(MoviesApi().overview.get())
