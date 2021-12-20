@@ -106,9 +106,12 @@ class _WantedApi(RestResource):
                     elif action == 'saveSubtitle':
                         subtitle_index = input_dict['subtitle_index'] if 'subtitle_index' in input_dict else None
                         if subtitle_index is not None:
-                            saved = subchecker.save_subtitle(wanted_item_index, subtitle_index)
-                            if saved:
-                                return self._no_content()
+                            download_item = subchecker.save_subtitle(wanted_item_index, subtitle_index)
+                            if download_item:
+                                saved_subtitle = {
+                                    'subtitle_path': download_item.subtitle_path
+                                }
+                                return to_dict(saved_subtitle, camelize)
                             else:
                                 return self._conflict('Unable to save subtitle')
 

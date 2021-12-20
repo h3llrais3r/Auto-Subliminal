@@ -16,3 +16,11 @@ export class Subtitle {
     Object.assign(this, obj);
   }
 }
+
+export class SavedSubtitle {
+  subtitlePath: string;
+
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
+}

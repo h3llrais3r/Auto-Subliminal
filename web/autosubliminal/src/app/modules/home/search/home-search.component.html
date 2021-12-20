@@ -60,6 +60,7 @@
             <th></th>
             <th></th>
             <th></th>
+            <th *ngIf="manualSubSyncEnabled"></th>
             <th></th>
             <th></th>
           </tr>
@@ -126,6 +127,14 @@
                 </a>
               </span>
             </td>
+            <td class="subtitle-action" *ngIf="manualSubSyncEnabled">
+              <span class="p-column-title">Sync subtitle</span>
+              <span class="p-column-data">
+                <a class="icon-link" [ngClass]="{'disabled': !savedSubtitle}" (click)="syncSubtitle()">
+                  <i class="fa fa-refresh" aria-hidden="true" title="Click to synchronize subtitle"></i>
+                </a>
+              </span>
+            </td>
             <td class="subtitle-action">
               <span class="p-column-title">Play video</span>
               <span class="p-column-data">
@@ -138,7 +147,7 @@
               <span class="p-column-title">Post process</span>
               <span class="p-column-data">
                 <a class="icon-link" [ngClass]="{'disabled': !savedSubtitle}" (click)="postProcess(subtitle)">
-                  <i class="fa fa-refresh" aria-hidden="true" title="Click to execute post processing"></i>
+                  <i class="fa fa-paper-plane" aria-hidden="true" title="Click to execute post processing"></i>
                 </a>
               </span>
             </td>
@@ -188,6 +197,13 @@
     <div>Maximum score: {{scores.max}}</div>
   </div>
 </p-dialog>
+
+<!-- Subtitle sync dialog -->
+<app-subtitle-sync *ngIf="showSubtitleSyncDialog"
+                   [(visible)]="showSubtitleSyncDialog"
+                   [videoPath]="subtitleSyncVideoPath"
+                   [subtitlePath]="subtitleSyncSubtitlePath">
+</app-subtitle-sync>
 
 <!-- Loading component -->
 <app-loading [visible]="postProcessInProgress"></app-loading>

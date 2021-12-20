@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { appSettings } from '../../../app-settings.service';
 import { DownloadedItem, WantedItem } from '../../../shared/models/item';
-import { Subtitle } from '../../../shared/models/subtitle';
+import { SavedSubtitle, Subtitle } from '../../../shared/models/subtitle';
 import { SubtitleSyncResult } from '../../../shared/models/subtitle-sync-result';
 import { ApiServiceTemplate } from './api-service-template';
 
@@ -64,9 +64,9 @@ export class ItemService extends ApiServiceTemplate {
       .pipe(map((subtitles) => subtitles.map((subtitle) => new Subtitle(subtitle))));
   }
 
-  saveWantedItemSubtitle(wantedItemId: number, subtitleIndex: number): Observable<boolean> {
-    return this.httpClient.patch<void>(`${this.URL}/wanted/${wantedItemId}`, { action: 'saveSubtitle', subtitleIndex }, this.options)
-      .pipe(map(() => true));
+  saveWantedItemSubtitle(wantedItemId: number, subtitleIndex: number): Observable<SavedSubtitle> {
+    return this.httpClient.patch<SavedSubtitle>(`${this.URL}/wanted/${wantedItemId}`, { action: 'saveSubtitle', subtitleIndex }, this.options)
+      .pipe(map((savedSubtitle) => new SavedSubtitle(savedSubtitle)));
   }
 
   syncWantedItemSubtitle(wantedItemId: number): Observable<SubtitleSyncResult> {
