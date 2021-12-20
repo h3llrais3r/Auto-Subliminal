@@ -5,6 +5,7 @@ projectname=$(basename "$(git rev-parse --show-toplevel)")
 echo 'Generating python dependency files:'
 
 echo '-> Installing dependencies ...'
+poetry run pip install --quiet --upgrade setuptools wheel > /dev/null
 poetry install --no-interaction > /dev/null
 
 echo '-> Generating requirements.txt ...'
