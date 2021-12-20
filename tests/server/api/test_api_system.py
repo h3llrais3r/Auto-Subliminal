@@ -51,9 +51,11 @@ settings_json = '{"antiCaptchaProviders": [], ' \
                 '"episodeScores": ' + episode_scores_json + ', ' \
                 '"imdbUrl": "http://www.imdb.com/title/", ' \
                 '"languages": [{"code": "nl", "name": "Dutch"}], ' \
+                '"libraryEditMode": false, ' \
                 '"libraryMode": false, ' \
                 '"logReversed": false, ' \
                 '"manualRefineVideo": false, ' \
+                '"manualSubSync": false, ' \
                 '"movieScores": ' + movie_scores_json + ', ' \
                 '"pathSeparator": "/", ' \
                 '"preferHearingImpaired": false, ' \
@@ -91,6 +93,7 @@ def test_get_settings(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.CHECKSUB', MyScheduler('SubChecker'))
     monkeypatch.setattr('autosubliminal.CHECKVERSION', MyScheduler('VersionChecker'))
     monkeypatch.setattr('autosubliminal.LIBRARYMODE', False)
+    monkeypatch.setattr('autosubliminal.LIBRARYEDITMODE', False)
     monkeypatch.setattr('autosubliminal.LOGREVERSED', False)
     monkeypatch.setattr('autosubliminal.MANUALREFINEVIDEO', False)
     monkeypatch.setattr('autosubliminal.DEREFERURL', 'https://dereferer.me/?')
@@ -108,6 +111,7 @@ def test_get_settings(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.MOVIEMINMATCHSCOREDEFAULT', 0)
     monkeypatch.setattr('autosubliminal.MOVIEMINMATCHSCORE', 0)
     monkeypatch.setattr('autosubliminal.PREFERHEARINGIMPAIRED', False)
+    monkeypatch.setattr('autosubliminal.MANUALSUBSYNC', False)
 
     print(settings_json)
     print(pickle_api_result(SystemApi().settings.get()))
