@@ -9,6 +9,7 @@ on:
     paths:
       - web/autosubliminal/package.json
       - web/autosubliminal/package-lock.json
+      #- web/autosubliminal/src/** # trigger build for all src changes
 
 jobs:
   dependency-js:
