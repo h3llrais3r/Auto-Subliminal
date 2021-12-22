@@ -71,11 +71,21 @@ export class AppSettingsService {
     console.log(`Application web root: ${this.webRoot}`);
   }
 
-  public load(): Observable<AppSettings> {
-    if (this.configLoaded) {
-      // Return previously loaded settings
-      return of(appSettings);
-    } else {
+  public load(force = false): Observable<AppSettings> {
+    if (force) {
+      // Reload settings
+      return this.httpClient.get(`${this.webRoot}/api/system/settings`)
+        .pipe(map((settings) => {
+          appSettings.fromSettings(settings);
+          this.configLoaded = true;
+          console.log('Application settings reloaded');
+          return appSettings;
+        }))
+        .pipe(catchError((error) => {
+          console.error('Error while reloading application settings');
+          return throwError(error); // rethrow error to be sure that app initialization stops
+        }));
+    } else if (!this.configLoaded) {
       // Load settings
       return this.httpClient.get(`${this.webRoot}/api/system/settings`)
         .pipe(map((settings) => {
@@ -88,10 +98,24 @@ export class AppSettingsService {
           return appSettings;
         }))
         .pipe(catchError((error) => {
-          console.error(`Error while retrieving application settings`);
+          console.error('Error while loading application settings');
           return throwError(error); // rethrow error to be sure that app initialization stops
         }));
+    } else {
+      // Return previously loaded settings
+      return of(appSettings);
     }
+  }
+
+  // Helper function to reload the appsettings in the background and reload the complete app in case of error
+  public reload(): void {
+    this.load(true).subscribe(
+      () => { },
+      () => {
+        console.error('Forcing page reload to re-initialize the application');
+        document.location.reload();
+      }
+    );
   }
 
   public loaded(): boolean {

@@ -54,7 +54,6 @@ class LibraryScanner(ScheduledProcess):
             except Exception:
                 log.exception('Could not scan the path (%s), skipping it', path)
 
-        # Send library page reload event
         send_websocket_notification('Library scan finished.')
         log.info('Finished round of library scanning')
 

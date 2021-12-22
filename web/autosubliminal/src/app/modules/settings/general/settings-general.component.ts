@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
-import { appSettings } from '../../../app-settings.service';
+import { appSettings, AppSettingsService } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
 import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
@@ -15,7 +15,11 @@ import { GeneralSettings } from '../../../shared/models/settings';
 })
 export class SettingsGeneralComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private settingsService: SettingsService, private messageService: MessageService) { }
+  constructor(
+    private fb: FormBuilder,
+    private settingsService: SettingsService,
+    private appSettingsService: AppSettingsService,
+    private messageService: MessageService) { }
 
   settingsForm: FormGroup;
 
@@ -39,7 +43,10 @@ export class SettingsGeneralComponent implements OnInit {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
       this.settingsService.updateGeneralSettings(this.getGeneralSettings()).subscribe(
-        () => this.messageService.showSuccessMessage('General settings saved.'),
+        () => {
+          this.messageService.showSuccessMessage('General settings saved.');
+          this.appSettingsService.reload(); // reload app settings
+        },
         () => this.messageService.showErrorMessage('Unable to save the general settings!')
       );
     } else {
