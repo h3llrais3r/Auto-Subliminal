@@ -52,7 +52,7 @@
     "moment": "2.29.1",
     "natural-compare": "1.4.0",
     "ng-lazyload-image": "9.1.0",
-    "ngx-countdown": "12.0.1",
+    "ngx-countdown": "13.0.0",
     "ngx-mask": "12.0.0",
     "ngx-webstorage": "8.0.0",
     "primeicons": "5.0.0",
