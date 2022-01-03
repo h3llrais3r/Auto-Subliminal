@@ -91,7 +91,7 @@ rebulk == 3.1.0
 # \autosubliminal\notifiers\telegram.py: 5
 # \autosubliminal\providers\addic7ed_custom.py: 10
 # \autosubliminal\util\common.py: 15
-requests == 2.26.0
+requests == 2.27.0
 
 # \autosubliminal\server\api\settings.py: 7
 requests_oauthlib == 1.3.0
@@ -100,7 +100,7 @@ requests_oauthlib == 1.3.0
 schema == 0.7.5
 
 # \autosubliminal\__init__.py: 5
-setuptools == 60.0.3
+setuptools == 60.2.0
 
 # \autosubliminal\__init__.py: 669
 # \autosubliminal\providers\addic7ed_custom.py: 17,18
