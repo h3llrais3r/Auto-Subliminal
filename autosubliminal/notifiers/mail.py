@@ -71,7 +71,7 @@ class MailNotifier(BaseNotifier):
         subject = autosubliminal.MAILSUBJECT if autosubliminal.MAILSUBJECT else self.notification_title
         # Add subtitle from kwargs to subject if available
         if download_item.subtitle_path:
-            subject += ' - ' + os.path.basename(download_item.subtitle_path)
+            subject += ' ' + os.path.basename(download_item.subtitle_path)
         # Call notify_download method of super class with the subject
         return super().notify_download(download_item, subject=subject)
 

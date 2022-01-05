@@ -11,7 +11,7 @@ class BaseNotifier(ABC):
 
     def __init__(self):
         self.application = 'Auto-Subliminal'
-        self.title = 'Subtitle download'
+        self.title = 'Downloaded subtitle'
         self.notification_title = self.application + ': ' + self.title
         self.test_message = 'Test notification from ' + self.application
 
