@@ -21,7 +21,7 @@ diskcache==5.2.1; python_version >= "3"
 dogpile.cache==1.1.4; python_version >= "3.6"
 enzyme==0.4.1
 ffmpeg-python==0.2.0
-ffsubsync==0.4.19
+ffsubsync==0.4.20
 future-annotations==1.0.0; python_full_version >= "3.6.1"
 future==0.18.2; python_version >= "2.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
 gitdb==4.0.9; python_version >= "3.7"
