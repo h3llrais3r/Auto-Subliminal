@@ -13,7 +13,7 @@ cheroot==8.5.2; python_version >= "3.5" and python_full_version < "3.0.0" or pyt
 cherrypy==18.6.1; python_version >= "3.5"
 click==8.0.3; python_version >= "3.6"
 colorama==0.4.4; platform_system == "Windows" and python_version >= "3.6" and python_full_version >= "3.6.2" and python_full_version < "4.0.0" and (python_version >= "2.7" and python_full_version < "3.0.0" and platform_system == "Windows" or python_full_version >= "3.5.0" and platform_system == "Windows")
-commonmark==0.9.1; python_full_version >= "3.6.2" and python_full_version < "4.0.0" and python_version >= "3.6"
+commonmark==0.9.1; python_full_version >= "3.6.2" and python_full_version < "4.0.0"
 contextlib2==21.6.0; python_version >= "3.6"
 deathbycaptcha==0.1.1
 decorator==5.1.0; python_version >= "3.6"
@@ -22,7 +22,6 @@ dogpile.cache==1.1.4; python_version >= "3.6"
 enzyme==0.4.1
 ffmpeg-python==0.2.0
 ffsubsync==0.4.20
-future-annotations==1.0.0; python_full_version >= "3.6.1"
 future==0.18.2; python_version >= "2.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
 gitdb==4.0.9; python_version >= "3.7"
 gitpython==3.1.26; python_version >= "3.7"
@@ -44,7 +43,7 @@ numpy==1.21.1; python_version >= "3.7"
 oauthlib==3.1.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
 pbr==5.7.0; python_version >= "3.6"
 portend==3.0.0; python_version >= "3.6"
-pygments==2.10.0; python_full_version >= "3.6.2" and python_full_version < "4.0.0" and python_version >= "3.6"
+pygments==2.10.0; python_full_version >= "3.6.2" and python_full_version < "4.0.0" and python_version >= "3.5"
 pysrt==1.1.2
 pysubs2==1.3.0; python_version >= "3.7"
 python-anticaptcha==0.7.1
@@ -56,7 +55,7 @@ rarfile==4.0
 rebulk==3.1.0
 requests-oauthlib==1.3.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
 requests==2.27.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.6.0")
-rich==10.15.2; python_full_version >= "3.6.2" and python_full_version < "4.0.0" and python_version >= "3.6"
+rich==10.15.2; python_full_version >= "3.6.2" and python_full_version < "4.0.0"
 schema==0.7.5
 simplejson==3.17.6; (python_version >= "2.5" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
 six==1.16.0; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.5"
@@ -67,7 +66,6 @@ stevedore==3.5.0; python_version >= "3.6"
 subliminal @ git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a
 tailer==0.4.1
 tempora==4.1.2; python_version >= "3.6"
-tokenize-rt==4.2.1; python_full_version >= "3.6.1"
 tqdm==4.62.3; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
 trans==2.1.0
 tvdb-api @ git+https://github.com/h3llrais3r/tvdb_api.git@1210df9dd5869ccc5b63149b1b80630310a14f40
