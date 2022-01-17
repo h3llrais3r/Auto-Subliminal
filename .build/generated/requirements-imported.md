@@ -45,7 +45,7 @@ dogpile.cache == 1.1.4
 enzyme == 0.4.1
 
 # \autosubliminal\subsynchronizer.py: 7
-ffsubsync == 0.4.19
+ffsubsync == 0.4.20
 
 # \autosubliminal\notifiers\growl.py: 5
 gntp == 1.0.3
