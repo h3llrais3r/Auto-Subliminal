@@ -48,7 +48,7 @@ jobs:
     # Woraround for https://github.com/numpy/numpy/issues/17216 (should be fixed in next numpy release)
     - name: Set environment variable to work around setuptools/numpy issue
       if: ${{ matrix.os == 'windows-latest' }}
-      run: echo "::set-env name=SETUPTOOLS_USE_DISTUTILS::stdlib"
+      run: echo "SETUPTOOLS_USE_DISTUTILS=stdlib" >> $GITHUB_ENV # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#example-6
 
     - name: Install python dependencies
       run: |
