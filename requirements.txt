@@ -8,7 +8,7 @@ boto==2.49.0
 cchardet==2.1.7
 certifi==2021.10.8; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
 chardet==4.0.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
-charset-normalizer==2.0.7; python_full_version >= "3.6.0" and python_version >= "3"
+charset-normalizer==2.0.10; python_full_version >= "3.6.0" and python_version >= "3"
 cheroot==8.5.2; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.5"
 cherrypy==18.6.1; python_version >= "3.5"
 click==8.0.3; python_version >= "3.6"
