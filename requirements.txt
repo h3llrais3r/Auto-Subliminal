@@ -41,7 +41,7 @@ langdetect==1.0.9
 more-itertools==8.11.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
 numpy==1.21.1; python_version >= "3.7"
 oauthlib==3.1.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
-pbr==5.7.0; python_version >= "3.6"
+pbr==5.8.0; python_version >= "3.6"
 portend==3.0.0; python_version >= "3.6"
 pygments==2.10.0; python_full_version >= "3.6.2" and python_full_version < "4.0.0" and python_version >= "3.5"
 pysrt==1.1.2
