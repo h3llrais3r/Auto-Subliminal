@@ -62,7 +62,7 @@ guessit == 3.4.3
 imdbpie == 5.6.4.dev0
 
 # \autosubliminal\util\json.py: 4
-jsonpickle == 2.0.0
+jsonpickle == 2.1.0
 
 # \autosubliminal\__init__.py: 701,702
 # \autosubliminal\util\filesystem.py: 9
