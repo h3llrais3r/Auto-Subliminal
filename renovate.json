@@ -5,6 +5,10 @@
   "baseBranches": [
     "development"
   ],
+  "enabledManagers": [
+    "npm",
+    "poetry"
+  ],
   "npm": {
     "fileMatch": [
       "web/autosubliminal/package.json"
