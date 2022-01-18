@@ -9,7 +9,6 @@ on:
     paths:
       - pyproject.toml
       - poetry.lock
-      - requirements.txt
 
 jobs:
   dependency-python:

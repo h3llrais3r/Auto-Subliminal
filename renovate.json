@@ -24,11 +24,6 @@
       }
     ]
   },
-  "pip_requirements": {
-    "fileMatch": [
-      "requirements.txt"
-    ]
-  },
   "poetry": {
     "fileMatch": [
       "pyproject.toml"
