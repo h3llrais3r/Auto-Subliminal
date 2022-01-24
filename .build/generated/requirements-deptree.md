@@ -33,7 +33,7 @@ deathbycaptcha 0.1.1 A library aims to support deathbycaptcha.
 |   |-- idna >=2.5,<4 
 |   `-- urllib3 >=1.21.1,<1.27 
 `-- simplejson *
-dogpile.cache 1.1.4 A caching front-end based on the Dogpile lock.
+dogpile.cache 1.1.5 A caching front-end based on the Dogpile lock.
 |-- decorator >=4.0.0
 `-- stevedore >=3.0.0
     |-- importlib-metadata >=1.7.0 
