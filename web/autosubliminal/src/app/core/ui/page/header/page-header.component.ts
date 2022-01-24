@@ -316,6 +316,57 @@ export class PageHeaderComponent implements OnInit {
               separator: true
             },
             {
+              label: 'Lara dark blue',
+              icon: 'pi pi-fw lara-dark-blue',
+              command: () => this.themeService.changeTheme('lara-dark-blue'),
+              styleClass: this.getThemeClass('lara-dark-blue', this.currentTheme)
+            },
+            {
+              label: 'Lara dark indigo',
+              icon: 'pi pi-fw lara-dark-indigo',
+              command: () => this.themeService.changeTheme('lara-dark-indigo'),
+              styleClass: this.getThemeClass('lara-dark-indigo', this.currentTheme)
+            },
+            {
+              label: 'Lara dark purple',
+              icon: 'pi pi-fw lara-dark-purple',
+              command: () => this.themeService.changeTheme('lara-dark-purple'),
+              styleClass: this.getThemeClass('lara-dark-purple', this.currentTheme)
+            },
+            {
+              label: 'Lara dark teal',
+              icon: 'pi pi-fw lara-dark-teal',
+              command: () => this.themeService.changeTheme('lara-dark-teal'),
+              styleClass: this.getThemeClass('lara-dark-teal', this.currentTheme)
+            },
+            {
+              label: 'Lara light blue',
+              icon: 'pi pi-fw lara-light-blue',
+              command: () => this.themeService.changeTheme('lara-light-blue'),
+              styleClass: this.getThemeClass('lara-light-blue', this.currentTheme)
+            },
+            {
+              label: 'Lara light indigo',
+              icon: 'pi pi-fw lara-light-indigo',
+              command: () => this.themeService.changeTheme('lara-light-indigo'),
+              styleClass: this.getThemeClass('lara-light-indigo', this.currentTheme)
+            },
+            {
+              label: 'Lara light purple',
+              icon: 'pi pi-fw lara-light-purple',
+              command: () => this.themeService.changeTheme('lara-light-purple'),
+              styleClass: this.getThemeClass('lara-light-purple', this.currentTheme)
+            },
+            {
+              label: 'Lara light teal',
+              icon: 'pi pi-fw lara-light-teal',
+              command: () => this.themeService.changeTheme('lara-light-teal'),
+              styleClass: this.getThemeClass('lara-light-teal', this.currentTheme)
+            },
+            {
+              separator: true
+            },
+            {
               label: 'Saga blue',
               icon: 'pi pi-fw saga-blue',
               command: () => this.themeService.changeTheme('saga-blue'),

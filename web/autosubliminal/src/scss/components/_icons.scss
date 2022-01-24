@@ -50,6 +50,46 @@
   background-image: url(../../assets/themes/arya-purple/arya-purple.png);
 }
 
+.lara-dark-blue::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/lara-dark-blue/lara-dark-blue.png);
+}
+
+.lara-dark-indigo::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/lara-dark-indigo/lara-dark-indigo.png);
+}
+
+.lara-dark-purple::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/lara-dark-purple/lara-dark-purple.png);
+}
+
+.lara-dark-teal::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/lara-dark-teal/lara-dark-teal.png);
+}
+
+.lara-light-blue::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/lara-light-blue/lara-light-blue.png);
+}
+
+.lara-light-indigo::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/lara-light-indigo/lara-light-indigo.png);
+}
+
+.lara-light-purple::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/lara-light-purple/lara-light-purple.png);
+}
+
+.lara-light-teal::before {
+  @extend %icon;
+  background-image: url(../../assets/themes/lara-light-teal/lara-light-teal.png);
+}
+
 .saga-blue::before {
   @extend %icon;
   background-image: url(../../assets/themes/saga-blue/saga-blue.png);
