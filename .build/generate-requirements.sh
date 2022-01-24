@@ -4,11 +4,11 @@ projectname=$(basename "$(git rev-parse --show-toplevel)")
 
 echo 'Generating python dependency files:'
 
-echo '-> Installing dependencies ...'
+echo '-> Installing dependencies...'
 poetry run pip install --quiet --upgrade setuptools wheel > /dev/null
 poetry install --no-interaction > /dev/null
 
-echo '-> Generating requirements.txt ...'
+echo '-> Generating requirements.txt...'
 tmpfile=./generated/requirements.txt
 file=./generated/requirements.md
 poetry export --without-hashes --format requirements.txt --output ./.build/$tmpfile
@@ -21,7 +21,7 @@ cat $tmpfile >> $file
 echo '```' >> $file
 mv $tmpfile ../requirements.txt
 
-echo '-> Generating requirements-deptree.md ...'
+echo '-> Generating requirements-deptree.md...'
 file=./generated/requirements-deptree.md
 echo '# Requirements dependency tree' > $file
 echo '' >> $file
@@ -31,7 +31,7 @@ echo '```' >> $file
 poetry show --tree --no-dev >> $file
 echo '```' >> $file
 
-echo '-> Generating requirements-imported.md ...'
+echo '-> Generating requirements-imported.md...'
 tmpfile=./generated/requirements-pigar.txt
 file=./generated/requirements-imported.md
 poetry run pigar -p $tmpfile -P ../autosubliminal > /dev/null
