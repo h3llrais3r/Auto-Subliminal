@@ -23,7 +23,7 @@ if (platform === 'win32') {
     let count = 0;
     changes.forEach(change => {
       // Only fix line endings for frontend sources that exist and are in the list of supported file extensions
-      const extensions =['.html', '.txt', '.js', '.css', '.scss'];
+      const extensions =['.html', '.txt', '.md', '.ts', '.js', '.json', '.css', '.scss'];
       const file = path.join(__dirname, '..', '..', change); // git changes are according to root of the project
       const fileExt = path.extname(file);
       if (fs.existsSync(file) && fs.statSync(file).isFile() && file.startsWith(__dirname) && extensions.includes(fileExt.toLowerCase())) {
