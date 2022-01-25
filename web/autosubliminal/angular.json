@@ -64,13 +64,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "5mb",
+                  "maximumWarning": "7mb",
                   "maximumError": "10mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
+                  "maximumWarning": "10kb",
+                  "maximumError": "20kb"
                 }
               ],
               "fileReplacements": [
@@ -80,8 +80,9 @@
                 }
               ],
               "outputHashing": "all",
-              "optimization": false // disable optimization as it causes different hashes on different builds/platforms/checkout locations
-            },
+              "optimization": false, // disable optimization as it causes different hashes on different builds/platforms/checkout locations
+              "sourceMap": true // enable sourceMap because without optimization not all source maps are properly removed (sourceMaps are also easier for debugging)
+             },
             "development": {
               "buildOptimizer": false,
               "optimization": false,
