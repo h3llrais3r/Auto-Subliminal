@@ -129,7 +129,7 @@ requests 2.27.1 Python HTTP for Humans.
 |-- charset-normalizer >=2.0.0,<2.1.0
 |-- idna >=2.5,<4
 `-- urllib3 >=1.21.1,<1.27
-requests-oauthlib 1.3.0 OAuthlib authentication support for Requests.
+requests-oauthlib 1.3.1 OAuthlib authentication support for Requests.
 |-- oauthlib >=3.0.0
 `-- requests >=2.0.0
     |-- certifi >=2017.4.17 

@@ -94,7 +94,7 @@ rebulk == 3.1.0
 requests == 2.27.1
 
 # \autosubliminal\server\api\settings.py: 7
-requests_oauthlib == 1.3.0
+requests_oauthlib == 1.3.1
 
 # \autosubliminal\core\websocket.py: 8
 schema == 0.7.5
