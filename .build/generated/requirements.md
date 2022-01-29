@@ -58,7 +58,7 @@ pytz==2021.3; python_version >= "3.6"
 pywin32==303; sys_platform == "win32" and implementation_name == "cpython" and python_version < "3.10" and python_version >= "3.5"
 rarfile==4.0
 rebulk==3.1.0
-requests-oauthlib==1.3.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
+requests-oauthlib==1.3.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
 requests==2.27.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.6.0")
 rich==10.15.2; python_full_version >= "3.6.2" and python_full_version < "4.0.0"
 schema==0.7.5
