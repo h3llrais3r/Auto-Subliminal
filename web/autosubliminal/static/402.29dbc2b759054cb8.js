@@ -4114,10 +4114,17 @@ let SettingsWebserverComponent = /*#__PURE__*/(() => {
     formatWebRoot() {
       let webRoot = _shared_components_forms_form_utils__WEBPACK_IMPORTED_MODULE_0__.FormUtils.getFormControlValue(this.settingsForm, 'webRoot');
 
-      if (webRoot && !webRoot.startsWith('/')) {
-        webRoot = `/${webRoot}`;
-        _shared_components_forms_form_utils__WEBPACK_IMPORTED_MODULE_0__.FormUtils.setFormControlValue(this.settingsForm, 'webRoot', webRoot);
+      if (webRoot) {
+        if (!webRoot.startsWith('/')) {
+          webRoot = `/${webRoot}`;
+        }
+
+        if (webRoot.endsWith('/')) {
+          webRoot = webRoot.replace(new RegExp('/+$'), '');
+        }
       }
+
+      _shared_components_forms_form_utils__WEBPACK_IMPORTED_MODULE_0__.FormUtils.setFormControlValue(this.settingsForm, 'webRoot', webRoot);
     }
 
     save() {
@@ -4195,4 +4202,4 @@ let SettingsWebserverComponent = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=402.8307fd759c4c7749.js.map
+//# sourceMappingURL=402.29dbc2b759054cb8.js.map

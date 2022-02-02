@@ -18,7 +18,7 @@ from autosubliminal.core.scheduler import Scheduler
 from autosubliminal.core.websocket import WebSocketBroadCaster, WebSocketHandler, WebSocketLogHandler
 from autosubliminal.diskscanner import DiskScanner
 from autosubliminal.libraryscanner import LibraryScanner
-from autosubliminal.server.root import WebServerRoot
+from autosubliminal.server.root import AppRoot, Root
 from autosubliminal.server.tool import SPARedirectTool
 from autosubliminal.subchecker import SubChecker
 from autosubliminal.util.json import json_out_handler
@@ -86,9 +86,12 @@ def start_server(restarting=False):
 
     # (Re-)Mount application
     if restarting:
-        # Remove previous mount (in case webroot should change)
-        del cherrypy.tree.apps[list(cherrypy.tree.apps)[0]]
-    cherrypy.tree.mount(WebServerRoot(), autosubliminal.WEBROOT, config=_get_application_configuration())
+        # Remove previous mounts (in case webroot should change)
+        apps = list(cherrypy.tree.apps)
+        for app in apps:
+            del cherrypy.tree.apps[app]
+    cherrypy.tree.mount(Root(), script_name='', config=_get_root_configuration())
+    cherrypy.tree.mount(AppRoot(), script_name=autosubliminal.WEBROOT, config=_get_application_configuration())
 
     # Start cherrypy server
     log.info('Starting CherryPy webserver')
@@ -159,6 +162,19 @@ def _setup_index_html():
         f.write(content)
 
 
+def _get_root_configuration():
+    # Configure application
+    conf = {
+        '/': {
+            'tools.encode.encoding': 'utf-8',
+            'tools.decode.encoding': 'utf-8'
+        }
+    }
+
+    # Return config
+    return conf
+
+
 def _get_application_configuration():
     # Configure application
     conf = {
@@ -186,7 +202,7 @@ def _get_application_configuration():
             'tools.spa_redirect.on': True
             # 'tools.expires.on': True,
             # 'tools.expires.secs': 3600 * 24 * 7
-        },
+        }
     }
 
     # Return config

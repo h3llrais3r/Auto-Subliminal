@@ -39,10 +39,15 @@ export class SettingsWebserverComponent implements OnInit {
 
   formatWebRoot(): void {
     let webRoot = FormUtils.getFormControlValue<string>(this.settingsForm, 'webRoot');
-    if (webRoot && !webRoot.startsWith(('/'))) {
-      webRoot = `/${webRoot}`;
-      FormUtils.setFormControlValue(this.settingsForm, 'webRoot', webRoot);
+    if (webRoot) {
+      if (!webRoot.startsWith('/')) {
+        webRoot = `/${webRoot}`;
+      }
+      if (webRoot.endsWith('/')) {
+        webRoot = webRoot.replace(new RegExp('/+$'), '');
+      }
     }
+    FormUtils.setFormControlValue(this.settingsForm, 'webRoot', webRoot);
   }
 
   save(): void {
