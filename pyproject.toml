@@ -61,7 +61,7 @@ ffsubsync = "0.4.20"
 
 [tool.poetry.dev-dependencies]
 # Testing
-coverage = "6.3"
+coverage = "6.3.1"
 coveralls = "3.3.1"
 pytest = "6.2.5"
 pytest-mock = "3.7.0"
