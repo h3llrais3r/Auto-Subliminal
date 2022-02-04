@@ -90,8 +90,9 @@ def start_server(restarting=False):
         apps = list(cherrypy.tree.apps)
         for app in apps:
             del cherrypy.tree.apps[app]
-    cherrypy.tree.mount(Root(), script_name='', config=_get_root_configuration())
     cherrypy.tree.mount(AppRoot(), script_name=autosubliminal.WEBROOT, config=_get_application_configuration())
+    if autosubliminal.WEBROOT:
+        cherrypy.tree.mount(Root(), script_name='', config=_get_root_configuration())
 
     # Start cherrypy server
     log.info('Starting CherryPy webserver')
@@ -135,7 +136,7 @@ def _configure_server(restarting=False):
 
     # Enable spa redirect tool (redirect to custom index.webroot.html which takes care of the webroot as well)
     _setup_index_html()
-    cherrypy.tools.spa_redirect = SPARedirectTool('/autosubliminal/index.webroot.html')
+    cherrypy.tools.spa_redirect = SPARedirectTool('/index.webroot.html')
 
     if not restarting:
         # Enable websocket plugin
@@ -153,8 +154,7 @@ def _setup_index_html():
     # Read index.html and replace base href
     with open('web/autosubliminal/static/index.html', mode='r') as f:
         content = f.read()
-        content = content.replace('<base href="/autosubliminal/">',
-                                  '<base href="' + autosubliminal.WEBROOT + '/autosubliminal/">')
+        content = content.replace('<base href="/">', '<base href="' + autosubliminal.WEBROOT + '/">')
 
     # Write index.webroot.html with changed base href
     with open('web/autosubliminal/static/index.webroot.html', mode='w') as f:
@@ -178,30 +178,42 @@ def _get_root_configuration():
 def _get_application_configuration():
     # Configure application
     conf = {
+        # Root settings (angular frontend)
+        # Attention: settings are applied on all sub paths as well, unless they are overwritten in sub path
         '/': {
             'tools.encode.encoding': 'utf-8',
-            'tools.decode.encoding': 'utf-8'
+            'tools.decode.encoding': 'utf-8',
+            'tools.staticdir.on': True,
+            'tools.staticdir.root': os.path.abspath(os.path.join(autosubliminal.PATH, 'web/autosubliminal')),
+            'tools.staticdir.dir': 'static',
+            'tools.spa_redirect.on': True
         },
+        # Api settings
         '/api': {
+            'tools.staticdir.on': False,
+            'tools.spa_redirect.on': False,
             'tools.json_out.handler': json_out_handler,  # Use our custom json_out_handler for /api
             'tools.response_headers.on': True,  # Always force content-type
             'tools.response_headers.headers': [('Content-Type', 'application/json; charset=utf-8')]
         },
+        # Artwork settings
+        '/artwork': {
+            'tools.staticdir.on': False,
+            'tools.spa_redirect.on': False
+        },
+        # Websocket(system) settings
         '/websocket/system': {
+            'tools.staticdir.on': False,
+            'tools.spa_redirect.on': False,
             'tools.websocket.on': True,
             'tools.websocket.handler_cls': WebSocketHandler
         },
+        # Websocket(log) settings
         '/websocket/log': {
+            'tools.staticdir.on': False,
+            'tools.spa_redirect.on': False,
             'tools.websocket.on': True,
             'tools.websocket.handler_cls': WebSocketLogHandler
-        },
-        '/autosubliminal': {
-            'tools.staticdir.root': os.path.abspath(os.path.join(autosubliminal.PATH, 'web/autosubliminal')),
-            'tools.staticdir.on': True,
-            'tools.staticdir.dir': 'static',
-            'tools.spa_redirect.on': True
-            # 'tools.expires.on': True,
-            # 'tools.expires.secs': 3600 * 24 * 7
         }
     }
 
