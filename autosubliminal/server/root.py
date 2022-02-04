@@ -11,7 +11,7 @@ from autosubliminal.server.web.websocket import WebSocket
 class Root(object):
     @cherrypy.expose
     def index(self):
-        # Redirect by default to /autosubliminal path when root path is visited
+        # Redirect by default to webroot path when root path is visited
         # HttpRedirect needs webroot, InternalRedirect doesn't but then you don't see the redirect in the browser
         raise cherrypy.HTTPRedirect(autosubliminal.WEBROOT + '/')
 
