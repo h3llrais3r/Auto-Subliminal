@@ -63,11 +63,8 @@ export class AppSettingsService {
   private webRoot = '';
 
   constructor(private platformLocation: PlatformLocation, private httpClient: HttpClient) {
-    // Get base href
-    const baseHref = this.platformLocation.getBaseHrefFromDOM();
-    console.log(`Application base href: ${baseHref}`);
     // Get webroot from base href
-    this.webRoot = baseHref.slice(0, baseHref.indexOf('/autosubliminal/')); // webroot is the part before /autosubliminal/ in base path
+    this.webRoot = this.platformLocation.getBaseHrefFromDOM().slice(0, -1); // webroot is baseHref without trailing /
     console.log(`Application web root: ${this.webRoot}`);
   }
 
