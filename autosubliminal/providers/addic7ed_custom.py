@@ -1,5 +1,6 @@
 # coding=utf-8
 
+import hashlib
 import logging
 import random
 import re
@@ -17,6 +18,7 @@ from subliminal.subtitle import Subtitle, fix_line_ending, guess_matches
 from subliminal.utils import sanitize, sanitize_release_group
 from subliminal.video import Episode
 
+import autosubliminal
 from autosubliminal.providers.exceptions import TooManyRequests
 from autosubliminal.providers.pitcher import load_verification, pitchers, store_verification
 
@@ -26,9 +28,9 @@ logger = logging.getLogger(__name__)
 # language_converters.register('addic7ed = subliminal.converters.addic7ed:Addic7edConverter')
 
 # Series cell matching regex
-show_cells_re = re.compile(b'<td class="version">.*?</td>', re.DOTALL)
+show_cells_re = re.compile(b'<td class="vr">.*?</td>', re.DOTALL)
 
-#: Series header parsing regex
+# Series header parsing regex
 series_year_re = re.compile(r'^(?P<series>[ \w\'.:(),*&!?-]+?)(?: \((?P<year>\d{4})\))?$')
 
 
@@ -98,14 +100,17 @@ class Addic7edProvider(Provider):
     server_url = 'https://www.addic7ed.com/'
     subtitle_class = Addic7edSubtitle
 
-    def __init__(self, username=None, password=None, random_user_agent=False):
+    def __init__(self, username=None, password=None, userid=None, random_user_agent=False):
         if any((username, password)) and not all((username, password)):
             raise ConfigurationError('Username and password must be specified')
 
         self.username = username
         self.password = password
+        self.userid = userid
         self.logged_in = False
         self.session = None
+        self.timeout = 20
+        self.cookies = None
         self.random_user_agent = random_user_agent
 
     def initialize(self):
@@ -115,7 +120,7 @@ class Addic7edProvider(Provider):
         # login
         if self.username and self.password:
             def check_verification(cache_region):
-                rr = self.session.get(self.server_url + 'panel.php', allow_redirects=False, timeout=10,
+                rr = self.session.get(self.server_url + 'panel.php', allow_redirects=False, timeout=self.timeout,
                                       headers={'Referer': self.server_url})
                 if rr.status_code == 302:
                     logger.info('Addic7ed: Login expired')
@@ -125,68 +130,77 @@ class Addic7edProvider(Provider):
                     self.logged_in = True
                     return True
 
-            if load_verification('addic7ed', self.session, callback=check_verification):
-                return
+            if autosubliminal.ANTICAPTCHACLASS:
+                if load_verification('addic7ed', self.session, callback=check_verification):
+                    return
 
-            logger.info('Addic7ed: Logging in')
-            data = {'username': self.username, 'password': self.password, 'Submit': 'Log in', 'url': '',
-                    'remember': 'true'}
+                logger.info('Addic7ed: Logging in')
+                data = {'username': self.username, 'password': self.password, 'Submit': 'Log in', 'url': '',
+                        'remember': 'true'}
 
-            tries = 0
-            while tries <= 3:
-                tries += 1
-                r = self.session.get(self.server_url + 'login.php', timeout=10, headers={'Referer': self.server_url})
-                if 'g-recaptcha' in r.content or 'grecaptcha' in r.content:
-                    logger.info('Addic7ed: Solving captcha. This might take a couple of minutes, but should only '
-                                'happen once every so often')
+                tries = 0
+                while tries <= 3:
+                    tries += 1
+                    r = self.session.get(self.server_url + 'login.php', timeout=self.timeout,
+                                         headers={'Referer': self.server_url})
+                    if 'g-recaptcha' in r.text or 'grecaptcha' in r.text:
+                        logger.info('Addic7ed: Solving captcha. This might take a couple of minutes, but should only '
+                                    'happen once every so often')
 
-                    for g, s in (('g-recaptcha-response', r'g-recaptcha.+?data-sitekey=\"(.+?)\"'),
-                                 ('recaptcha_response', r'grecaptcha.execute\(\'(.+?)\',')):
-                        site_key = re.search(s, r.content).group(1)
-                        if site_key:
-                            break
-                    if not site_key:
-                        logger.error('Addic7ed: Captcha site-key not found!')
-                        return
+                        for g, s in (('g-recaptcha-response', r'g-recaptcha.+?data-sitekey=\"(.+?)\"'),
+                                     ('recaptcha_response', r'grecaptcha.execute\(\'(.+?)\',')):
+                            site_key = re.search(s, r.text).group(1)
+                            if site_key:
+                                break
+                        if not site_key:
+                            logger.error('Addic7ed: Captcha site-key not found!')
+                            return
 
-                    pitcher = pitchers.get_pitcher()('Addic7ed', self.server_url + 'login.php', site_key,
-                                                     user_agent=self.session.headers['User-Agent'],
-                                                     cookies=self.session.cookies.get_dict(),
-                                                     is_invisible=True)
+                        pitcher = pitchers.get_pitcher()('Addic7ed', self.server_url + 'login.php', site_key,
+                                                         user_agent=self.session.headers['User-Agent'],
+                                                         cookies=self.session.cookies.get_dict(),
+                                                         is_invisible=True)
 
-                    result = pitcher.throw()
-                    if not result:
+                        result = pitcher.throw()
+                        if not result:
+                            if tries >= 3:
+                                raise Exception('Addic7ed: Couldn\'t solve captcha!')
+                            logger.info('Addic7ed: Couldn\'t solve captcha! Retrying')
+                            time.sleep(4)
+                            continue
+
+                        data[g] = result
+
+                    time.sleep(1)
+                    r = self.session.post(self.server_url + 'dologin.php', data, allow_redirects=False,
+                                          timeout=self.timeout, headers={'Referer': self.server_url + 'login.php'})
+
+                    if 'relax, slow down' in r.text:
+                        raise TooManyRequests(self.username)
+
+                    if 'Wrong password' in r.text or 'doesn\'t exist' in r.text:
+                        raise AuthenticationError(self.username)
+
+                    if r.status_code != 302:
                         if tries >= 3:
-                            raise Exception('Addic7ed: Couldn\'t solve captcha!')
-                        logger.info('Addic7ed: Couldn\'t solve captcha! Retrying')
+                            logger.error('Addic7ed: Something went wrong when logging in')
+                            raise AuthenticationError(self.username)
+                        logger.info('Addic7ed: Something went wrong when logging in; retrying')
                         time.sleep(4)
                         continue
+                    break
 
-                    data[g] = result
+                store_verification('addic7ed', self.session)
 
-                time.sleep(1)
-                r = self.session.post(self.server_url + 'dologin.php', data, allow_redirects=False, timeout=10,
-                                      headers={'Referer': self.server_url + 'login.php'})
+                logger.debug('Addic7ed: Logged in')
+                self.logged_in = True
 
-                if 'relax, slow down' in r.content:
-                    raise TooManyRequests(self.username)
-
-                if 'Wrong password' in r.content or 'doesn\'t exist' in r.content:
-                    raise AuthenticationError(self.username)
-
-                if r.status_code != 302:
-                    if tries >= 3:
-                        logger.error('Addic7ed: Something went wrong when logging in')
-                        raise AuthenticationError(self.username)
-                    logger.info('Addic7ed: Something went wrong when logging in; retrying')
-                    time.sleep(4)
-                    continue
-                break
-
-            store_verification('addic7ed', self.session)
-
-            logger.debug('Addic7ed: Logged in')
-            self.logged_in = True
+            else:
+                # Fallback to cookie login if not using anticaptcha
+                logger.debug('Addic7ed: Using cookie instead of login')
+                self.cookies = {'wikisubtitlesuser': self.userid,
+                                'wikisubtitlespass': hashlib.md5(self.password.encode('utf-8')).hexdigest()}
+                self.logged_in = False
 
             time.sleep(2)
 
@@ -194,7 +208,7 @@ class Addic7edProvider(Provider):
         # logout
         if self.logged_in:
             logger.info('Logging out')
-            r = self.session.get(self.server_url + 'logout.php', timeout=10)
+            r = self.session.get(self.server_url + 'logout.php', timeout=self.timeout)
             r.raise_for_status()
             logger.debug('Logged out')
             self.logged_in = False
@@ -219,7 +233,7 @@ class Addic7edProvider(Provider):
         """
         # get the show page
         logger.info('Getting show ids')
-        r = self.session.get(self.server_url + 'shows.php', timeout=10)
+        r = self.session.get(self.server_url + 'shows.php', timeout=self.timeout, cookies=self.cookies)
         r.raise_for_status()
 
         # LXML parser seems to fail when parsing Addic7ed.com HTML markup.
@@ -234,7 +248,7 @@ class Addic7edProvider(Provider):
 
         # populate the show ids
         show_ids = {}
-        for show in soup.select('td.version > h3 > a[href^="/show/"]'):
+        for show in soup.select('td.vr > h3 > a[href^="/show/"]'):
             show_ids[sanitize(show.text)] = int(show['href'][6:])
         logger.debug('Found %d show ids', len(show_ids))
 
@@ -260,7 +274,7 @@ class Addic7edProvider(Provider):
 
         # make the search
         logger.info('Searching show ids with %r', params)
-        r = self.session.get(self.server_url + 'srch.php', params=params, timeout=10)
+        r = self.session.get(self.server_url + 'srch.php', params=params, timeout=self.timeout, cookies=self.cookies)
         r.raise_for_status()
         soup = ParserBeautifulSoup(r.content, ['lxml', 'html.parser'])
 
@@ -320,7 +334,8 @@ class Addic7edProvider(Provider):
     def query(self, show_id, series, season, year=None, country=None):
         # get the page of the season of the show
         logger.info('Getting the page of show id %d, season %d', show_id, season)
-        r = self.session.get(self.server_url + 'show/%d' % show_id, params={'season': season}, timeout=10)
+        r = self.session.get(self.server_url + 'show/%d' %
+                             show_id, params={'season': season}, timeout=self.timeout, cookies=self.cookies)
         r.raise_for_status()
 
         if not r.content:
@@ -386,7 +401,7 @@ class Addic7edProvider(Provider):
         # download the subtitle
         logger.info('Downloading subtitle %r', subtitle)
         r = self.session.get(self.server_url + subtitle.download_link, headers={'Referer': subtitle.page_link},
-                             timeout=10)
+                             timeout=self.timeout, cookies=self.cookies)
         r.raise_for_status()
 
         if not r.content:

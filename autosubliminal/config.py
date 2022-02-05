@@ -480,6 +480,14 @@ def read_config(check_upgrade=False):
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'] = {}
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_custom'] = {'random_user_agent': True}
 
+        if cfg.has_option('subliminal', 'addic7eduserid'):
+            autosubliminal.ADDIC7EDUSERID = cfg.get('subliminal', 'addic7eduserid')
+            if autosubliminal.ADDIC7EDUSERID:
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_custom'].update(
+                    {'userid': autosubliminal.ADDIC7EDUSERID})
+        else:
+            autosubliminal.ADDIC7EDUSERID = ''
+
         if cfg.has_option('subliminal', 'opensubtitlesusername') and cfg.has_option('subliminal',
                                                                                     'opensubtitlespassword'):
             autosubliminal.OPENSUBTITLESUSERNAME = cfg.get('subliminal', 'opensubtitlesusername')
@@ -523,6 +531,7 @@ def read_config(check_upgrade=False):
         autosubliminal.ANTICAPTCHACLIENTKEY = ''
         autosubliminal.ADDIC7EDUSERNAME = ''
         autosubliminal.ADDIC7EDPASSWORD = ''
+        autosubliminal.ADDIC7EDUSERID = ''
         autosubliminal.OPENSUBTITLESUSERNAME = ''
         autosubliminal.OPENSUBTITLESPASSWORD = ''
         autosubliminal.LEGENDASTVUSERNAME = ''
@@ -1034,6 +1043,7 @@ def write_config_subliminal_section():
     cfg.set(section, 'anticaptchaclientkey', autosubliminal.ANTICAPTCHACLIENTKEY)
     cfg.set(section, 'addic7edusername', autosubliminal.ADDIC7EDUSERNAME)
     cfg.set(section, 'addic7edpassword', autosubliminal.ADDIC7EDPASSWORD)
+    cfg.set(section, 'addic7eduserid', autosubliminal.ADDIC7EDUSERID)
     cfg.set(section, 'opensubtitlesusername', autosubliminal.OPENSUBTITLESUSERNAME)
     cfg.set(section, 'opensubtitlespassword', autosubliminal.OPENSUBTITLESPASSWORD)
     cfg.set(section, 'legendastvusername', autosubliminal.LEGENDASTVUSERNAME)

@@ -84,6 +84,7 @@ export class SettingsSubliminalComponent implements OnInit {
       antiCaptchaClientKey: [subliminalSettings.antiCaptchaClientKey, []],
       addic7edUserName: [subliminalSettings.addic7edUserName, []],
       addic7edPassword: [subliminalSettings.addic7edPassword, []],
+      addic7edUserId: [subliminalSettings.addic7edUserId, []],
       opensubtitlesUserName: [subliminalSettings.opensubtitlesUserName, []],
       opensubtitlesPassword: [subliminalSettings.opensubtitlesPassword, []],
       legendastvUserName: [subliminalSettings.legendastvUserName, []],
@@ -110,6 +111,7 @@ export class SettingsSubliminalComponent implements OnInit {
     settings.antiCaptchaClientKey = FormUtils.getFormControlValue<string>(this.settingsForm, 'antiCaptchaClientKey');
     settings.addic7edUserName = FormUtils.getFormControlValue<string>(this.settingsForm, 'addic7edUserName');
     settings.addic7edPassword = FormUtils.getFormControlValue<string>(this.settingsForm, 'addic7edPassword');
+    settings.addic7edUserId = FormUtils.getFormControlValue<string>(this.settingsForm, 'addic7edUserId');
     settings.opensubtitlesUserName = FormUtils.getFormControlValue<string>(this.settingsForm, 'opensubtitlesUserName');
     settings.opensubtitlesPassword = FormUtils.getFormControlValue<string>(this.settingsForm, 'opensubtitlesPassword');
     settings.legendastvUserName = FormUtils.getFormControlValue<string>(this.settingsForm, 'legendastvUserName');

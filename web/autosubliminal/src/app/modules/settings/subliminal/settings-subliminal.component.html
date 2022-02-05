@@ -170,6 +170,19 @@
           <app-input-text formControlName="addic7edPassword" type="password" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
+      <!-- Addic7ed userid -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="addic7edUserId" class="label">UserId</label>
+          <app-icon-dropdown>
+            <li>The user id for your Addic7ed account.</li>
+            <li> It can be found in the url when you visit the details of your user in the profile page of your account.</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-text formControlName="addic7edUserId" [validationFeedback]="saveAttempt"></app-input-text>
+        </div>
+      </div>
       <!-- OpenSubtitles provider settings -->
       <div class="row form-row">
         <div class="col-12">

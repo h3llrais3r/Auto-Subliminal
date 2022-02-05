@@ -3638,83 +3638,101 @@ function SettingsSubliminalComponent_form_2_Template(rf, ctx) {
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](135, "div", 4);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](136, "div", 7);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](137, "span", 8);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](138, "OpenSubtitles provider");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](136, "div", 9);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](137, "label", 39);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](138, "UserId");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](139, "app-icon-dropdown");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](140, "li");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](141, "The user id for your Addic7ed account.");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](142, "li");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](143, " It can be found in the url when you visit the details of your user in the profile page of your account.");
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](139, "div", 4);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](140, "div", 9);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](141, "label", 39);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](142, "Username");
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](143, "app-icon-dropdown");
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](144, "li");
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](145, "The username for your OpenSubtitles account.");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](144, "div", 23);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](145, "app-input-text", 40);
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](146, "div", 23);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](147, "app-input-text", 40);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](148, "div", 4);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](149, "div", 9);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](150, "label", 41);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](151, "Password");
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](152, "app-icon-dropdown");
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](153, "li");
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](154, "The password for your OpenSubtitles account.");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](146, "div", 4);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](147, "div", 7);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](148, "span", 8);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](149, "OpenSubtitles provider");
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](155, "div", 23);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](156, "app-input-text", 42);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](150, "div", 4);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](151, "div", 9);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](152, "label", 41);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](153, "Username");
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](157, "div", 4);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](158, "div", 7);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](159, "span", 8);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](160, "Legendas.TV provider");
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](161, "div", 4);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](162, "div", 9);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](163, "label", 43);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](164, "Username");
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](165, "app-icon-dropdown");
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](166, "li");
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](167, "The username for your Legendas.TV account.");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](154, "app-icon-dropdown");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](155, "li");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](156, "The username for your OpenSubtitles account.");
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](168, "div", 23);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](169, "app-input-text", 44);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](157, "div", 23);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](158, "app-input-text", 42);
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](170, "div", 4);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](171, "div", 9);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](172, "label", 45);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](173, "Password");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](159, "div", 4);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](160, "div", 9);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](161, "label", 43);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](162, "Password");
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](174, "app-icon-dropdown");
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](175, "li");
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](176, "The password for your Legendas.TV account.");
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](177, "div", 23);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](178, "app-input-text", 46);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](163, "app-icon-dropdown");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](164, "li");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](165, "The password for your OpenSubtitles account.");
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](179, "div", 47);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](180, "div", 48);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](181, "p-button", 49);
-    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵlistener"]("onClick", function SettingsSubliminalComponent_form_2_Template_p_button_onClick_181_listener() {
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](166, "div", 23);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](167, "app-input-text", 44);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](168, "div", 4);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](169, "div", 7);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](170, "span", 8);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](171, "Legendas.TV provider");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](172, "div", 4);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](173, "div", 9);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](174, "label", 45);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](175, "Username");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](176, "app-icon-dropdown");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](177, "li");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](178, "The username for your Legendas.TV account.");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](179, "div", 23);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](180, "app-input-text", 46);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](181, "div", 4);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](182, "div", 9);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](183, "label", 47);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](184, "Password");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](185, "app-icon-dropdown");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](186, "li");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtext"](187, "The password for your Legendas.TV account.");
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](188, "div", 23);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](189, "app-input-text", 48);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](190, "div", 49);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](191, "div", 50);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](192, "p-button", 51);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵlistener"]("onClick", function SettingsSubliminalComponent_form_2_Template_p_button_onClick_192_listener() {
       _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵrestoreView"](_r2);
       const ctx_r1 = _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵnextContext"]();
       return ctx_r1.save();
@@ -3745,6 +3763,8 @@ function SettingsSubliminalComponent_form_2_Template(rf, ctx) {
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](13);
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("validationFeedback", ctx_r0.saveAttempt);
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](9);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("validationFeedback", ctx_r0.saveAttempt);
+    _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](11);
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("validationFeedback", ctx_r0.saveAttempt);
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](13);
     _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("validationFeedback", ctx_r0.saveAttempt);
@@ -3827,6 +3847,7 @@ let SettingsSubliminalComponent = /*#__PURE__*/(() => {
         antiCaptchaClientKey: [subliminalSettings.antiCaptchaClientKey, []],
         addic7edUserName: [subliminalSettings.addic7edUserName, []],
         addic7edPassword: [subliminalSettings.addic7edPassword, []],
+        addic7edUserId: [subliminalSettings.addic7edUserId, []],
         opensubtitlesUserName: [subliminalSettings.opensubtitlesUserName, []],
         opensubtitlesPassword: [subliminalSettings.opensubtitlesPassword, []],
         legendastvUserName: [subliminalSettings.legendastvUserName, []],
@@ -3853,6 +3874,7 @@ let SettingsSubliminalComponent = /*#__PURE__*/(() => {
       settings.antiCaptchaClientKey = _shared_components_forms_form_utils__WEBPACK_IMPORTED_MODULE_1__.FormUtils.getFormControlValue(this.settingsForm, 'antiCaptchaClientKey');
       settings.addic7edUserName = _shared_components_forms_form_utils__WEBPACK_IMPORTED_MODULE_1__.FormUtils.getFormControlValue(this.settingsForm, 'addic7edUserName');
       settings.addic7edPassword = _shared_components_forms_form_utils__WEBPACK_IMPORTED_MODULE_1__.FormUtils.getFormControlValue(this.settingsForm, 'addic7edPassword');
+      settings.addic7edUserId = _shared_components_forms_form_utils__WEBPACK_IMPORTED_MODULE_1__.FormUtils.getFormControlValue(this.settingsForm, 'addic7edUserId');
       settings.opensubtitlesUserName = _shared_components_forms_form_utils__WEBPACK_IMPORTED_MODULE_1__.FormUtils.getFormControlValue(this.settingsForm, 'opensubtitlesUserName');
       settings.opensubtitlesPassword = _shared_components_forms_form_utils__WEBPACK_IMPORTED_MODULE_1__.FormUtils.getFormControlValue(this.settingsForm, 'opensubtitlesPassword');
       settings.legendastvUserName = _shared_components_forms_form_utils__WEBPACK_IMPORTED_MODULE_1__.FormUtils.getFormControlValue(this.settingsForm, 'legendastvUserName');
@@ -3871,12 +3893,12 @@ let SettingsSubliminalComponent = /*#__PURE__*/(() => {
     selectors: [["app-settings-subliminal"]],
     decls: 3,
     vars: 1,
-    consts: [[1, "container-lg"], ["header", "Subliminal settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "form-row-notification"], ["severity", "warn", "text", "Passwords and keys are stored in plain text!", "styleClass", "w-100"], [1, "col-12"], [1, "p-tag", "p-tag-rounded", "p-tag-small"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], [1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8", "form-row-switches"], ["formControlName", "showMatchSource", "label", "Source"], ["formControlName", "showMatchQuality", "label", "Quality"], ["formControlName", "showMatchCodec", "label", "Codec"], ["formControlName", "showMatchReleaseGroup", "label", "Group"], ["formControlName", "movieMatchSource", "label", "Source"], ["formControlName", "movieMatchQuality", "label", "Quality"], ["formControlName", "movieMatchCodec", "label", "Codec"], ["formControlName", "movieMatchReleaseGroup", "label", "Group"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8", "form-row-label"], ["formControlName", "subliminalProviders", 3, "options", "multiple"], ["for", "subtitleUtf8Encoding", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "subtitleUtf8Encoding", 3, "options", "validationFeedback"], ["for", "refineVideo", 1, "label"], ["formControlName", "refineVideo", 3, "options", "validationFeedback"], ["for", "manualRefineVideo", 1, "label"], ["formControlName", "manualRefineVideo", 3, "options", "validationFeedback"], ["for", "preferHearingImpaired", 1, "label"], ["formControlName", "preferHearingImpaired", 3, "options", "validationFeedback"], ["for", "antiCaptchaClass", 1, "label"], ["formControlName", "antiCaptchaClass", 3, "options", "validationFeedback"], ["for", "antiCaptchaClientKey", 1, "label"], ["formControlName", "antiCaptchaClientKey", 3, "validationFeedback"], ["for", "addic7edUserName", 1, "label"], ["formControlName", "addic7edUserName", 3, "validationFeedback"], ["for", "addic7edPassword", 1, "label"], ["formControlName", "addic7edPassword", "type", "password", 3, "validationFeedback"], ["for", "opensubtitlesUserName", 1, "label"], ["formControlName", "opensubtitlesUserName", 3, "validationFeedback"], ["for", "opensubtitlesPassword", 1, "label"], ["formControlName", "opensubtitlesPassword", "type", "password", 3, "validationFeedback"], ["for", "legendastvUserName", 1, "label"], ["formControlName", "legendastvUserName", 3, "validationFeedback"], ["for", "legendastvPassword", 1, "label"], ["formControlName", "legendastvPassword", "type", "password", 3, "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
+    consts: [[1, "container-lg"], ["header", "Subliminal settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "form-row-notification"], ["severity", "warn", "text", "Passwords and keys are stored in plain text!", "styleClass", "w-100"], [1, "col-12"], [1, "p-tag", "p-tag-rounded", "p-tag-small"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], [1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8", "form-row-switches"], ["formControlName", "showMatchSource", "label", "Source"], ["formControlName", "showMatchQuality", "label", "Quality"], ["formControlName", "showMatchCodec", "label", "Codec"], ["formControlName", "showMatchReleaseGroup", "label", "Group"], ["formControlName", "movieMatchSource", "label", "Source"], ["formControlName", "movieMatchQuality", "label", "Quality"], ["formControlName", "movieMatchCodec", "label", "Codec"], ["formControlName", "movieMatchReleaseGroup", "label", "Group"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8", "form-row-label"], ["formControlName", "subliminalProviders", 3, "options", "multiple"], ["for", "subtitleUtf8Encoding", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "subtitleUtf8Encoding", 3, "options", "validationFeedback"], ["for", "refineVideo", 1, "label"], ["formControlName", "refineVideo", 3, "options", "validationFeedback"], ["for", "manualRefineVideo", 1, "label"], ["formControlName", "manualRefineVideo", 3, "options", "validationFeedback"], ["for", "preferHearingImpaired", 1, "label"], ["formControlName", "preferHearingImpaired", 3, "options", "validationFeedback"], ["for", "antiCaptchaClass", 1, "label"], ["formControlName", "antiCaptchaClass", 3, "options", "validationFeedback"], ["for", "antiCaptchaClientKey", 1, "label"], ["formControlName", "antiCaptchaClientKey", 3, "validationFeedback"], ["for", "addic7edUserName", 1, "label"], ["formControlName", "addic7edUserName", 3, "validationFeedback"], ["for", "addic7edPassword", 1, "label"], ["formControlName", "addic7edPassword", "type", "password", 3, "validationFeedback"], ["for", "addic7edUserId", 1, "label"], ["formControlName", "addic7edUserId", 3, "validationFeedback"], ["for", "opensubtitlesUserName", 1, "label"], ["formControlName", "opensubtitlesUserName", 3, "validationFeedback"], ["for", "opensubtitlesPassword", 1, "label"], ["formControlName", "opensubtitlesPassword", "type", "password", 3, "validationFeedback"], ["for", "legendastvUserName", 1, "label"], ["formControlName", "legendastvUserName", 3, "validationFeedback"], ["for", "legendastvPassword", 1, "label"], ["formControlName", "legendastvPassword", "type", "password", 3, "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
     template: function SettingsSubliminalComponent_Template(rf, ctx) {
       if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](1, "p-panel", 1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](2, SettingsSubliminalComponent_form_2_Template, 182, 20, "form", 2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](2, SettingsSubliminalComponent_form_2_Template, 193, 21, "form", 2);
         _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
       }
@@ -4202,4 +4224,4 @@ let SettingsWebserverComponent = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=402.29dbc2b759054cb8.js.map
+//# sourceMappingURL=402.bb224657ceef6548.js.map

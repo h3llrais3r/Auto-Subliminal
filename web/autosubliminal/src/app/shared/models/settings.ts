@@ -84,6 +84,7 @@ export class SubliminalSettings {
   antiCaptchaClientKey: string;
   addic7edUserName: string;
   addic7edPassword: string;
+  addic7edUserId: string;
   opensubtitlesUserName: string;
   opensubtitlesPassword: string;
   legendastvUserName: string;

@@ -374,6 +374,7 @@ class _SubliminalApi(RestResource):
             'anti_captcha_client_key': autosubliminal.ANTICAPTCHACLIENTKEY,
             'addic7ed_user_name': autosubliminal.ADDIC7EDUSERNAME,
             'addic7ed_password': autosubliminal.ADDIC7EDPASSWORD,
+            'addic7ed_user_id': autosubliminal.ADDIC7EDUSERID,
             'opensubtitles_user_name': autosubliminal.OPENSUBTITLESUSERNAME,
             'opensubtitles_password': autosubliminal.OPENSUBTITLESPASSWORD,
             'legendastv_user_name': autosubliminal.LEGENDASTVUSERNAME,
@@ -426,6 +427,8 @@ class _SubliminalApi(RestResource):
                 autosubliminal.ADDIC7EDUSERNAME = input_dict['addic7ed_user_name']
             if 'addic7ed_password' in input_dict:
                 autosubliminal.ADDIC7EDPASSWORD = input_dict['addic7ed_password']
+            if 'addic7ed_user_id' in input_dict:
+                autosubliminal.ADDIC7EDUSERID = input_dict['addic7ed_user_id']
             if 'opensubtitles_user_name' in input_dict:
                 autosubliminal.OPENSUBTITLESUSERNAME = input_dict['opensubtitles_user_name']
             if 'opensubtitles_password' in input_dict:
