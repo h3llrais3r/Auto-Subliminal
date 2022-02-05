@@ -123,10 +123,10 @@ class Addic7edProvider(Provider):
                 rr = self.session.get(self.server_url + 'panel.php', allow_redirects=False, timeout=self.timeout,
                                       headers={'Referer': self.server_url})
                 if rr.status_code == 302:
-                    logger.info('Addic7ed: Login expired')
+                    logger.info('Login expired')
                     cache_region.delete('addic7ed_data')
                 else:
-                    logger.info('Addic7ed: Re-using old login')
+                    logger.info('Re-using old login')
                     self.logged_in = True
                     return True
 
@@ -134,7 +134,7 @@ class Addic7edProvider(Provider):
                 if load_verification('addic7ed', self.session, callback=check_verification):
                     return
 
-                logger.info('Addic7ed: Logging in')
+                logger.info('Logging in')
                 data = {'username': self.username, 'password': self.password, 'Submit': 'Log in', 'url': '',
                         'remember': 'true'}
 
@@ -144,8 +144,8 @@ class Addic7edProvider(Provider):
                     r = self.session.get(self.server_url + 'login.php', timeout=self.timeout,
                                          headers={'Referer': self.server_url})
                     if 'g-recaptcha' in r.text or 'grecaptcha' in r.text:
-                        logger.info('Addic7ed: Solving captcha. This might take a couple of minutes, but should only '
-                                    'happen once every so often')
+                        logger.info('Solving captcha. This might take a couple of minutes, '
+                                    'but should only happen once every so often')
 
                         for g, s in (('g-recaptcha-response', r'g-recaptcha.+?data-sitekey=\"(.+?)\"'),
                                      ('recaptcha_response', r'grecaptcha.execute\(\'(.+?)\',')):
@@ -153,7 +153,7 @@ class Addic7edProvider(Provider):
                             if site_key:
                                 break
                         if not site_key:
-                            logger.error('Addic7ed: Captcha site-key not found!')
+                            logger.error('Captcha site-key not found!')
                             return
 
                         pitcher = pitchers.get_pitcher()('Addic7ed', self.server_url + 'login.php', site_key,
@@ -164,8 +164,8 @@ class Addic7edProvider(Provider):
                         result = pitcher.throw()
                         if not result:
                             if tries >= 3:
-                                raise Exception('Addic7ed: Couldn\'t solve captcha!')
-                            logger.info('Addic7ed: Couldn\'t solve captcha! Retrying')
+                                raise Exception('Couldn\'t solve captcha!')
+                            logger.info('Couldn\'t solve captcha! Retrying')
                             time.sleep(4)
                             continue
 
@@ -183,21 +183,21 @@ class Addic7edProvider(Provider):
 
                     if r.status_code != 302:
                         if tries >= 3:
-                            logger.error('Addic7ed: Something went wrong when logging in')
+                            logger.error('Something went wrong when logging in')
                             raise AuthenticationError(self.username)
-                        logger.info('Addic7ed: Something went wrong when logging in; retrying')
+                        logger.info('Something went wrong when logging in; retrying')
                         time.sleep(4)
                         continue
                     break
 
                 store_verification('addic7ed', self.session)
 
-                logger.debug('Addic7ed: Logged in')
+                logger.debug('Logged in')
                 self.logged_in = True
 
             else:
                 # Fallback to cookie login if not using anticaptcha
-                logger.debug('Addic7ed: Using cookie instead of login')
+                logger.info('Using cookie instead of login')
                 self.cookies = {'wikisubtitlesuser': self.userid,
                                 'wikisubtitlespass': hashlib.md5(self.password.encode('utf-8')).hexdigest()}
                 self.logged_in = False
