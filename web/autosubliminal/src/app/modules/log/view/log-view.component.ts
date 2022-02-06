@@ -4,6 +4,7 @@ import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSoc
 import { appSettings } from '../../../app-settings.service';
 import { LogService } from '../../../core/services/api/log.service';
 import { MessageService } from '../../../core/services/message.service';
+import { ScrollService } from '../../../core/services/scroll.service';
 import { Loglevel } from '../../../shared/models/loglevel';
 
 @Component({
@@ -21,14 +22,14 @@ export class LogViewComponent implements OnInit {
   selectedLoglevel = '';
   loading = false;
   tailing = false;
-  tailingDisabled = false;
+  tailingDisabled = false; // true for non current (lognum != 0) logfiles as tailing has no use in this case
   tailButtonLabel = 'Start tailing';
   tailButtonIcon = 'pi pi-play';
 
   private logWebsocket: WebSocketSubject<string>;
   private logMessages: string[] = [];
 
-  constructor(private logService: LogService, private messageService: MessageService) { }
+  constructor(private logService: LogService, private messageService: MessageService, private scrollService: ScrollService) { }
 
   ngOnInit(): void {
     this.loglevels = this.getLogLevels();
@@ -53,9 +54,17 @@ export class LogViewComponent implements OnInit {
   toggleTailing(): void {
     this.tailing = !this.tailing;
     if (this.tailing) {
+      // Change button label
       this.tailButtonLabel = 'Stop tailing';
       this.tailButtonIcon = 'pi pi-pause';
+      // Scroll to right position when tailing is enabled
+      if (appSettings.logReversed) {
+        this.scrollService.triggerScrollUp();
+      } else {
+        this.scrollService.triggerScrollDown();
+      }
     } else {
+      // Change button label
       this.tailButtonLabel = 'Start tailing';
       this.tailButtonIcon = 'pi pi-play';
     }
@@ -104,7 +113,15 @@ export class LogViewComponent implements OnInit {
       this.logWebsocket = this.createLogWebSocket(); // Need to create a new socket after unsubscribe
       this.logWebsocket.subscribe(
         (logMessage) => {
-          this.logMessages.push(logMessage);
+          if (appSettings.logReversed) {
+            // Append to the top
+            this.logMessages.unshift(logMessage);
+            this.scrollService.triggerScrollUp();
+          } else {
+            // Append to the end
+            this.logMessages.push(logMessage);
+            this.scrollService.triggerScrollDown();
+          }
         });
       console.log('Log tailing enabled');
     } else {
