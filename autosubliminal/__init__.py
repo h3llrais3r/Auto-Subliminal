@@ -240,18 +240,18 @@ def initialize():
     from autosubliminal import config, db, version
     from autosubliminal.core import logger
     from autosubliminal.indexer import MovieIndexer, ShowIndexer
-    from autosubliminal.util.system import get_python_version_strict, is_python_version_changed, store_python_version
+    from autosubliminal.util.system import get_python_version, is_python_version_changed, store_python_version
 
     # Check if python version is changed
     python_version_changed = is_python_version_changed()
     if python_version_changed:
-        store_python_version(get_python_version_strict())
+        store_python_version(get_python_version())
 
     # Fake some entry points to get libraries working without installation
     _fake_entry_points()
 
     # System settings
-    PYTHONVERSION = get_python_version_strict()
+    PYTHONVERSION = get_python_version()
     PATH = os.path.abspath(os.getcwd())
     CACHEDIR = os.path.abspath(os.path.join(PATH, 'cache'))
     DEREFERURL = 'https://dereferer.me/?'
@@ -385,7 +385,7 @@ def _create_venv_and_restart():
     Restart the application in the virtual environment.
     """
     # Imports
-    from autosubliminal.util.system import get_python_version_strict, is_python_version_changed
+    from autosubliminal.util.system import get_python_version, is_python_version_changed
 
     # Helper function
     def remove_readonly(func, path, _):
@@ -406,7 +406,7 @@ def _create_venv_and_restart():
     # Create virtual environment if it doesn't exist yet or when the python version is changed
     if not venv_path.is_dir() or python_version_changed:
         if python_version_changed:
-            print('WARNING: New python version %s detected.' % get_python_version_strict())
+            print('WARNING: New python version %s detected.' % get_python_version())
             print('INFO: Recreating the virtual environment in %s.' % venv_path)
             # Clear the venv ourselves as the the clear option in the venv.create can fail on windows
             shutil.rmtree(venv_path, onerror=remove_readonly)

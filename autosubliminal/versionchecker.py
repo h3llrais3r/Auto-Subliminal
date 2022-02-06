@@ -3,7 +3,8 @@
 import logging
 import re
 from abc import ABC, abstractmethod
-from distutils import version
+
+from packaging.version import Version
 
 try:
     from git import Repo
@@ -24,7 +25,7 @@ from autosubliminal.version import RELEASE_VERSION
 
 log = logging.getLogger(__name__)
 
-# Pattern to search for the RELEASE_VERSION (version must be compliant with version.StrictVersion of distutils)
+# Pattern to search for the RELEASE_VERSION (version must be compliant with packaging Version)
 VERSION_PATTERN = r'^RELEASE_VERSION\s*=\s*[\'\"]((\d+)\.(\d+)(\.(\d+))?([ab](\d+))?)[\'\"]$'
 
 
@@ -136,7 +137,7 @@ class SourceVersionManager(_BaseVersionManager):
 
     def __init__(self):
         super().__init__()
-        self.current_strict_version = version.StrictVersion(RELEASE_VERSION)
+        self.current_strict_version = Version(RELEASE_VERSION)
 
     @property
     def current_branch(self):
@@ -170,7 +171,7 @@ class SourceVersionManager(_BaseVersionManager):
             return False
         try:
             match = re.search(VERSION_PATTERN, response.text, flags=re.MULTILINE)
-            remote_version = version.StrictVersion(match.group(1))
+            remote_version = Version(match.group(1))
             log.debug('Remote version: %r', remote_version)
         except Exception:
             log.exception('Could not parse version from %s', autosubliminal.VERSIONURL)

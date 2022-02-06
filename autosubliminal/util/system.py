@@ -3,8 +3,9 @@
 import datetime
 import os
 import sys
-from distutils.version import StrictVersion
 from pathlib import Path
+
+from packaging.version import Version
 
 PYTHON_VERSION_FILE = '.pythonversion'
 VENV_CFG_FILE = 'pyvenv.cfg'
@@ -17,11 +18,11 @@ def get_python_version_full():
     return sys.version
 
 
-def get_python_version_strict():
-    """Return the python version as a distutils StrictVersion object."""
+def get_python_version():
+    """Return the python version as a packaging Version object."""
     version_tuple = sys.version_info[:3]
     version_string = '.'.join(str(x) for x in version_tuple)
-    return StrictVersion(version_string)
+    return Version(version_string)
 
 
 def get_python_location():
@@ -39,7 +40,7 @@ def get_stored_python_version():
             version_string = f.readline().strip()
         try:
             if version_string:
-                python_version = StrictVersion(version_string)
+                python_version = Version(version_string)
         except Exception:
             pass
 
@@ -55,7 +56,7 @@ def store_python_version(python_version):
 def is_python_version_changed():
     """Check if the python version has changed compared to the previous run."""
     previous_python_version = get_stored_python_version()
-    current_python_version = get_python_version_strict()
+    current_python_version = get_python_version()
     return not previous_python_version or current_python_version != previous_python_version
 
 

@@ -99,6 +99,8 @@ jsonpickle 2.1.0 Python library for serializing any arbitrary object graph into 
     `-- zipp >=0.5 
 langdetect 1.0.9 Language detection library ported from Google's language-detection.
 `-- six *
+packaging 21.3 Core utilities for Python packages
+`-- pyparsing >=2.0.2,<3.0.5 || >3.0.5
 pysrt 1.1.2 SubRip (.srt) subtitle parser and writer
 `-- chardet *
 python-anticaptcha 0.7.1 Client library for solve captchas with Anticaptcha.com support.

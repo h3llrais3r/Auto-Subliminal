@@ -17,7 +17,7 @@ charset-normalizer==2.0.11; python_full_version >= "3.6.0" and python_version >=
 cheroot==8.6.0; python_version >= "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.5"
 cherrypy==18.6.1; python_version >= "3.5"
 click==8.0.3; python_version >= "3.6"
-colorama==0.4.4; platform_system == "Windows" and python_version >= "3.6" and python_full_version >= "3.6.2" and python_full_version < "4.0.0" and (python_version >= "2.7" and python_full_version < "3.0.0" and platform_system == "Windows" or python_full_version >= "3.5.0" and platform_system == "Windows")
+colorama==0.4.4; python_full_version >= "3.6.2" and python_full_version < "4.0.0" and (python_version >= "2.7" and python_full_version < "3.0.0" and platform_system == "Windows" or python_full_version >= "3.5.0" and platform_system == "Windows") and (python_version >= "3.6" and python_full_version < "3.0.0" and platform_system == "Windows" or platform_system == "Windows" and python_version >= "3.6" and python_full_version >= "3.5.0")
 commonmark==0.9.1; python_full_version >= "3.6.2" and python_full_version < "4.0.0"
 contextlib2==21.6.0; python_version >= "3.6"
 deathbycaptcha==0.1.1
@@ -47,9 +47,11 @@ langdetect==1.0.9
 more-itertools==8.12.0; python_version >= "3.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.7"
 numpy==1.21.1; python_version >= "3.7"
 oauthlib==3.2.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
+packaging==21.3; python_version >= "3.6"
 pbr==5.8.0; python_version >= "3.6"
 portend==3.1.0; python_version >= "3.7"
 pygments==2.11.2; python_full_version >= "3.6.2" and python_full_version < "4.0.0" and python_version >= "3.5"
+pyparsing==3.0.7; python_version >= "3.6"
 pysrt==1.1.2
 pysubs2==1.3.1; python_version >= "3.7"
 python-anticaptcha==0.7.1

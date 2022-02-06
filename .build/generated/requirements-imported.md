@@ -22,7 +22,7 @@
 # \autosubliminal\util\json.py: 3
 CherryPy == 18.6.1
 
-# \autosubliminal\versionchecker.py: 9
+# \autosubliminal\versionchecker.py: 10
 GitPython == 3.1.26
 
 # \autosubliminal\indexer.py: 13
@@ -67,6 +67,10 @@ jsonpickle == 2.1.0
 # \autosubliminal\__init__.py: 702,703
 # \autosubliminal\util\filesystem.py: 9
 langdetect == 1.0.9
+
+# \autosubliminal\util\system.py: 8
+# \autosubliminal\versionchecker.py: 7
+packaging == 21.3
 
 # \autosubliminal\util\filesystem.py: 10
 pysrt == 1.1.2
