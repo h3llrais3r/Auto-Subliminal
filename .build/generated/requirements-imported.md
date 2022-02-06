@@ -28,7 +28,7 @@ GitPython == 3.1.26
 # \autosubliminal\indexer.py: 13
 Unidecode == 1.3.2
 
-# \autosubliminal\providers\addic7ed_custom.py: 8
+# \autosubliminal\providers\addic7ed_custom.py: 9
 # \autosubliminal\subchecker.py: 8
 # \autosubliminal\util\filesystem.py: 12,13
 # \autosubliminal\util\language.py: 3
@@ -50,11 +50,11 @@ ffsubsync == 0.4.20
 # \autosubliminal\notifiers\growl.py: 5
 gntp == 1.0.3
 
-# \autosubliminal\__init__.py: 632
+# \autosubliminal\__init__.py: 633
 # \autosubliminal\fileprocessor.py: 7
 # \autosubliminal\parsers\guessit\__init__.py: 3
 # \autosubliminal\parsers\guessit\rules.py: 3,4,5
-# \autosubliminal\providers\addic7ed_custom.py: 9
+# \autosubliminal\providers\addic7ed_custom.py: 10
 guessit == 3.4.3
 
 # \autosubliminal\core\movie.py: 7
@@ -64,7 +64,7 @@ imdbpie == 5.6.4.dev0
 # \autosubliminal\util\json.py: 4
 jsonpickle == 2.1.0
 
-# \autosubliminal\__init__.py: 701,702
+# \autosubliminal\__init__.py: 702,703
 # \autosubliminal\util\filesystem.py: 9
 langdetect == 1.0.9
 
@@ -89,7 +89,7 @@ rebulk == 3.1.0
 # \autosubliminal\notifiers\pushbullet.py: 5
 # \autosubliminal\notifiers\pushover.py: 5
 # \autosubliminal\notifiers\telegram.py: 5
-# \autosubliminal\providers\addic7ed_custom.py: 10
+# \autosubliminal\providers\addic7ed_custom.py: 11
 # \autosubliminal\util\common.py: 15
 requests == 2.27.1
 
@@ -100,10 +100,10 @@ requests_oauthlib == 1.3.1
 schema == 0.7.5
 
 # \autosubliminal\__init__.py: 5
-setuptools == 60.7.1
+setuptools == 60.8.0
 
-# \autosubliminal\__init__.py: 669
-# \autosubliminal\providers\addic7ed_custom.py: 17,18
+# \autosubliminal\__init__.py: 670
+# \autosubliminal\providers\addic7ed_custom.py: 18,19
 # \autosubliminal\providers\exceptions.py: 3
 # \autosubliminal\providers\pitcher.py: 11
 # \autosubliminal\providers\provider_cache.py: 3
