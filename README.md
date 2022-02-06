@@ -27,7 +27,7 @@ What it does
 Dependencies
 ------------
 
- * To run Auto-Subliminal from source you need Python 3.6 or higher
+ * To run Auto-Subliminal from source you need Python 3.7 or higher
  * Required dependencies: see [requirements.txt](requirements.txt)
 
 How to use
