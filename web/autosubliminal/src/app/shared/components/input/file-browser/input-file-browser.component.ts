@@ -15,16 +15,13 @@ import { InputComponent } from '../input.component';
 export class InputFileBrowserComponent extends InputComponent {
 
   @Input()
-  type = 'text';
-
-  @Input()
-  placeholder = '';
-
-  @Input()
   path = '' // no path by default, if specified, the file browser will always start to browse on this path
 
   @Input()
   folderMode = false; // default no folder mode (folder mode means selecting folders instead of files)
+
+  @Input()
+  placeholder = '';
 
   showFileBrowser = false;
   browserPath = '';

@@ -30,6 +30,11 @@ export class InputMultiTextComponent extends InputComponent {
     return this.control ? this.control.value : [];
   }
 
+  // Required to only update single value inside array (https://angular.io/api/core/TrackByFunction) and do not refresh complete array
+  trackValueByIndex(index: number, value: string): number {
+    return index;
+  }
+
   onValueChange(event: { event: MouseEvent, value: string }, originalValue: string): void { // event model exposed by p-dropdown onchange
     // Replace original value with change value
     const changedValue = event.value;

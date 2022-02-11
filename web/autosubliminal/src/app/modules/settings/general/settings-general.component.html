@@ -10,7 +10,7 @@
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-multi-text formControlName="videoPaths" [validationFeedback]="saveAttempt"></app-input-multi-text>
+          <app-input-multi-file-browser formControlName="videoPaths" [folderMode]="true" [validationFeedback]="saveAttempt"></app-input-multi-file-browser>
         </div>
       </div>
       <!-- Default language -->
@@ -228,7 +228,7 @@
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-file-browser formControlName="ffmpegPath" [folderMode]="true"></app-input-file-browser>
+          <app-input-file-browser formControlName="ffmpegPath" [folderMode]="true" [validationFeedback]="saveAttempt"></app-input-file-browser>
         </div>
       </div>
       <!--Min video file size -->

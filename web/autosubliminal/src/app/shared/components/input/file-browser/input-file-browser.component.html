@@ -3,9 +3,9 @@
   <input pInputText
          [id]="id || formControlName"
          [formControl]="control"
-         [type]="type"
          [placeholder]="placeholder"
          [ngClass]="validationClass"
+         type="text"
          class="w-100">
   <p-button icon="pi pi-folder-open" styleClass="p-button-outlined input-addon" (onClick)="openFileBrowser()"></p-button>
 </div>

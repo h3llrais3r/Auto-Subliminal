@@ -1,7 +1,7 @@
 <!-- Input multi text -->
 <div class="input-multi-text">
   <!-- Existing fields -->
-  <div class="p-inputgroup" *ngFor="let value of values">
+  <div class="p-inputgroup" *ngFor="let value of values; trackBy:trackValueByIndex">
     <p-dropdown *ngIf="options" [options]="options" [ngModel]="value" (onChange)="onValueChange($event, value)" styleClass="w-100"></p-dropdown>
     <input *ngIf="!options" type="text" pInputText [value]="value" (keyup)="onValueKeyup($event, value)">
     <p-button icon="pi pi-times" styleClass="p-button-outlined input-addon" (onClick)="removeValue(value)"></p-button>

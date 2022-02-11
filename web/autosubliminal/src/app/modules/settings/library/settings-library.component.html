@@ -24,7 +24,7 @@
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-multi-text formControlName="libraryPaths" [validationFeedback]="saveAttempt"></app-input-multi-text>
+          <app-input-multi-file-browser formControlName="libraryPaths" [folderMode]="true" [validationFeedback]="saveAttempt"></app-input-multi-file-browser>
         </div>
       </div>
       <!-- Scan library interval -->

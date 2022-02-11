@@ -25,6 +25,7 @@ import { FileBrowserComponent } from './components/file-browser/file-browser.com
 import { IconDropdownComponent } from './components/icon-dropdown/icon-dropdown.component';
 import { InputDropdownComponent } from './components/input/dropdown/input-dropdown.component';
 import { InputFileBrowserComponent } from './components/input/file-browser/input-file-browser.component';
+import { InputMultiFileBrowserComponent } from './components/input/multi-file-browser/input-multi-file-browser.component';
 import { InputMultiSelectComponent } from './components/input/multi-select/input-multi-select.component';
 import { InputMultiTextComponent } from './components/input/multi-text/input-multi-text.component';
 import { InputNumberComponent } from './components/input/number/input-number.component';
@@ -49,9 +50,10 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
     InputNumberComponent,
     InputSwitchComponent,
     InputDropdownComponent,
+    InputFileBrowserComponent,
     InputMultiTextComponent,
     InputMultiSelectComponent,
-    InputFileBrowserComponent,
+    InputMultiFileBrowserComponent,
     ProgressBarComponent,
     TableFilterComponent,
     MessageComponent,
@@ -109,9 +111,10 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
     InputNumberComponent,
     InputSwitchComponent,
     InputDropdownComponent,
+    InputFileBrowserComponent,
     InputMultiTextComponent,
     InputMultiSelectComponent,
-    InputFileBrowserComponent,
+    InputMultiFileBrowserComponent,
     ProgressBarComponent,
     TableFilterComponent,
     MessageComponent,
