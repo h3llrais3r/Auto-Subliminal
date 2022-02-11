@@ -1,0 +1,18 @@
+<!-- Input text -->
+<div class="p-inputgroup">
+  <input pInputText
+         [id]="id || formControlName"
+         [formControl]="control"
+         [type]="type"
+         [placeholder]="placeholder"
+         [ngClass]="validationClass"
+         class="w-100">
+  <p-button icon="pi pi-folder-open" styleClass="p-button-outlined input-addon" (onClick)="openFileBrowser()"></p-button>
+</div>
+<!-- File browser -->
+<app-file-browser *ngIf="showFileBrowser"
+                  [(visible)]="showFileBrowser"
+                  [path]="browserPath"
+                  [folderMode]="folderMode"
+                  (pathChange)="setFilePath($event)">
+</app-file-browser>

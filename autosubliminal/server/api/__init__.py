@@ -1,5 +1,6 @@
 # coding=utf-8
 
+from autosubliminal.server.api.filesystem import FileSystemApi
 from autosubliminal.server.api.items import ItemsApi
 from autosubliminal.server.api.logs import LogsApi
 from autosubliminal.server.api.movies import MoviesApi
@@ -23,6 +24,7 @@ class Api(RestResource):
         self.allowed_methods = ('GET',)
 
         # Add all sub paths here: /api/...
+        self.filesystem = FileSystemApi()
         self.items = ItemsApi()
         self.logs = LogsApi()
         self.movies = MoviesApi()

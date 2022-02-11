@@ -21,8 +21,10 @@ import { TableModule } from 'primeng/table';
 import { TabViewModule } from 'primeng/tabview';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { FileBrowserComponent } from './components/file-browser/file-browser.component';
 import { IconDropdownComponent } from './components/icon-dropdown/icon-dropdown.component';
 import { InputDropdownComponent } from './components/input/dropdown/input-dropdown.component';
+import { InputFileBrowserComponent } from './components/input/file-browser/input-file-browser.component';
 import { InputMultiSelectComponent } from './components/input/multi-select/input-multi-select.component';
 import { InputMultiTextComponent } from './components/input/multi-text/input-multi-text.component';
 import { InputNumberComponent } from './components/input/number/input-number.component';
@@ -49,13 +51,15 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
     InputDropdownComponent,
     InputMultiTextComponent,
     InputMultiSelectComponent,
+    InputFileBrowserComponent,
     ProgressBarComponent,
     TableFilterComponent,
     MessageComponent,
     MovieSettingsComponent,
     ShowSettingsComponent,
     ManualRefineComponent,
-    SubtitleSyncComponent
+    SubtitleSyncComponent,
+    FileBrowserComponent
   ],
   imports: [
     CommonModule,
@@ -107,13 +111,15 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
     InputDropdownComponent,
     InputMultiTextComponent,
     InputMultiSelectComponent,
+    InputFileBrowserComponent,
     ProgressBarComponent,
     TableFilterComponent,
     MessageComponent,
     MovieSettingsComponent,
     ShowSettingsComponent,
     ManualRefineComponent,
-    SubtitleSyncComponent
+    SubtitleSyncComponent,
+    FileBrowserComponent
   ],
   providers: [
     ConfirmationService
