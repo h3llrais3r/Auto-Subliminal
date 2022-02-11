@@ -26,7 +26,7 @@
       "type": "pwa-chrome",
       "request": "launch",
       "name": "Debug ui (dev)",
-      "url": "http://localhost:4200/autosubliminal", // Adapt port to the port your python server is running on
+      "url": "http://localhost:4200", // Adapt port to the port your python server is running on
       "webRoot": "${workspaceFolder}/web/autosubliminal"
     }
   ]
