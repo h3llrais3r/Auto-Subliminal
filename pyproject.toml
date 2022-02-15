@@ -41,7 +41,7 @@ gntp = "1.0.3"
 guessit = "3.4.3"
 html5lib = "1.1"
 imdbpie = { git = "https://github.com/h3llrais3r/imdb-pie.git", rev = "75c300af1bf87c49baef09f17002a3e35b0ed3cc" }
-importlib-metadata = { version = "4.2.0", markers = "python_version < '3.8'" }
+importlib-metadata = { version = "4.11.1", markers = "python_version < '3.8'" }
 jsonpickle = "2.1.0"
 langdetect = "1.0.9"
 packaging = "21.3"
