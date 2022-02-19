@@ -5,8 +5,6 @@ import os
 import sys
 from pathlib import Path
 
-from packaging.version import Version
-
 PYTHON_VERSION_FILE = '.pythonversion'
 VENV_CFG_FILE = 'pyvenv.cfg'
 VENV_CREATION_TIME_FILE = '.venvcreationtime'
@@ -20,6 +18,8 @@ def get_python_version_full():
 
 def get_python_version():
     """Return the python version as a packaging Version object."""
+    from packaging.version import Version
+
     version_tuple = sys.version_info[:3]
     version_string = '.'.join(str(x) for x in version_tuple)
     return Version(version_string)
@@ -32,9 +32,10 @@ def get_python_location():
 
 def get_stored_python_version():
     """Get the stored python version."""
-    python_version = None
+    from packaging.version import Version
 
     # Read python version from file
+    python_version = None
     if os.path.exists(PYTHON_VERSION_FILE):
         with open(PYTHON_VERSION_FILE, mode='r') as f:
             version_string = f.readline().strip()
