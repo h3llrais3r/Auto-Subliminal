@@ -12812,6 +12812,7 @@ body .dropdown .dropdown-menu.has-tip.anchor-right:after {
   -ms-flex-grow: 1;
   flex-grow: 1;
   font-size: 1.5rem;
+  order: 0;
 }
 .p-tabview .p-tabview-nav li .p-tabview-nav-link:not(.p-disabled):focus {
   box-shadow: none;
@@ -13073,4 +13074,4 @@ p-dropdown .p-dropdown.p-dropdown-ar .p-dropdown-panel .p-dropdown-items .p-drop
   -ms-flex-pack: flex-end;
 }
 
-/*# sourceMappingURL=styles.3c0c29985bf740a3.css.map*/
+/*# sourceMappingURL=styles.68e4204ec8eaa71b.css.map*/
