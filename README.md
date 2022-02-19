@@ -2,7 +2,7 @@ Auto-Subliminal [![License](https://img.shields.io/github/license/h3llrais3r/Aut
 ===============
 
 | Status | Master | Development |
-| -------|:------:| -----------:|
+| -------| ------:| -----------:|
 | CI | [![CI Status](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml?query=branch:master) | [![CI Status](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml/badge.svg?branch=development)](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml?query=branch:development) |
 | Coverage | [![Coverage Status](https://coveralls.io/repos/github/h3llrais3r/Auto-Subliminal/badge.svg?branch=master)](https://coveralls.io/github/h3llrais3r/Auto-Subliminal?branch=master) | [![Coverage Status](https://coveralls.io/repos/github/h3llrais3r/Auto-Subliminal/badge.svg?branch=development)](https://coveralls.io/github/h3llrais3r/Auto-Subliminal?branch=development) |
 
