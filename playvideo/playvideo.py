@@ -19,11 +19,7 @@
 
 import os
 import sys
-
-try:
-    from urllib.parse import unquote
-except ImportError:
-    from urllib import unquote
+from urllib.parse import unquote
 
 
 def main(script, url):
@@ -32,8 +28,8 @@ def main(script, url):
     This will trigger your default video player (if any) to open the video.
     """
 
-    # Url needs to be unquoted (because it's triggered from an url) and decoded from utf-8 to cover special characters
-    url = unquote(url).decode('utf-8')
+    # Url needs to be unquoted (because it's triggered from an url)
+    url = unquote(url)
 
     # Reconstruct url (replace the playvideo:// with the file:// protocol to open the file with the default program)
     url = url.replace('playvideo://', 'file://')
