@@ -5,11 +5,11 @@ Windows Registry Editor Version 5.00
 "URL Protocol"=""
 
 [HKEY_CLASSES_ROOT\playvideo\DefaultIcon]
-@="\"C:\\Tools\\Python27\\DLLs\\py.ico\""
+@="\"C:\\Tools\\Python38\\DLLs\\py.ico\""
 
 [HKEY_CLASSES_ROOT\playvideo\shell]
 
 [HKEY_CLASSES_ROOT\playvideo\shell\open]
 
 [HKEY_CLASSES_ROOT\playvideo\shell\open\command]
-@="\"C:\\Tools\\Python27\\pythonw.exe\" \"C:\\Tools\\GitHub\\Auto-Subliminal\\playvideo\\playvideo.py\" \"%1\""
+@="\"C:\\Tools\\Python38\\pythonw.exe\" \"C:\\Tools\\GitHub\\Auto-Subliminal\\playvideo\\playvideo.py\" \"%1\""
