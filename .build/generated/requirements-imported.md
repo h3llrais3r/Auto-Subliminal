@@ -23,7 +23,7 @@
 CherryPy == 18.6.1
 
 # \autosubliminal\versionchecker.py: 10
-GitPython == 3.1.26
+GitPython == 3.1.27
 
 # \autosubliminal\indexer.py: 13
 Unidecode == 1.3.3
@@ -68,7 +68,7 @@ jsonpickle == 2.1.0
 # \autosubliminal\util\filesystem.py: 9
 langdetect == 1.0.9
 
-# \autosubliminal\util\system.py: 8
+# \autosubliminal\util\system.py: 21,35
 # \autosubliminal\versionchecker.py: 7
 packaging == 21.3
 
