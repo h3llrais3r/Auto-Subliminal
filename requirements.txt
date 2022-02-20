@@ -24,7 +24,7 @@ ffmpeg-python==0.2.0
 ffsubsync==0.4.20
 future==0.18.2; python_version >= "2.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
 gitdb==4.0.9; python_version >= "3.7"
-gitpython==3.1.26; python_version >= "3.7"
+gitpython==3.1.27; python_version >= "3.7"
 gntp==1.0.3
 guessit==3.4.3
 html5lib==1.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
