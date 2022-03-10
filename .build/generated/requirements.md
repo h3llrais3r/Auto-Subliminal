@@ -78,7 +78,7 @@ tqdm==4.62.3; python_version >= "2.7" and python_full_version < "3.0.0" or pytho
 trans==2.1.0
 tvdb-api @ git+https://github.com/h3llrais3r/tvdb_api.git@1210df9dd5869ccc5b63149b1b80630310a14f40
 typing-extensions==4.0.1; python_version < "3.8" and python_version >= "3.7" and python_full_version >= "3.6.2" and python_full_version < "4.0.0"
-unidecode==1.3.3; python_version >= "3.5"
+unidecode==1.3.4; python_version >= "3.5"
 urllib3==1.26.8; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version < "4"
 webencodings==0.5.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 webrtcvad-wheels==2.0.10.post2; platform_system == "Windows"
