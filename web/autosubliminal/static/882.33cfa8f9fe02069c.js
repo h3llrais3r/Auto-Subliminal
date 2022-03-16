@@ -2101,8 +2101,8 @@ let HomeWantedComponent = /*#__PURE__*/(() => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "displayValue": () => (/* binding */ displayValue),
-/* harmony export */   "capitalizeFirstChar": () => (/* binding */ capitalizeFirstChar)
+/* harmony export */   "capitalizeFirstChar": () => (/* binding */ capitalizeFirstChar),
+/* harmony export */   "displayValue": () => (/* binding */ displayValue)
 /* harmony export */ });
 function displayValue(value, defaultValue = '', upperCase = false) {
   let val = value || defaultValue;
