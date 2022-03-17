@@ -17,9 +17,15 @@
 # TODO: check out how to do this on unix machines
 #
 
+import logging
 import os
 import sys
 from urllib.parse import unquote
+
+LOG_FILE = os.path.dirname(os.path.realpath(__file__)) + '/playvideo.log'
+
+logging.basicConfig(filename=LOG_FILE, format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO)
+logger = logging.getLogger('playvideo')
 
 
 def main(script, url):
@@ -36,8 +42,10 @@ def main(script, url):
 
     # Start the file with the default program
     try:
+        logger.info('Playing video: %s' % url)
         os.startfile(url)
     except Exception as e:
+        logger.error(e)
         print(e)
 
 
