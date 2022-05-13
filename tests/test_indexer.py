@@ -113,8 +113,8 @@ def test_get_show_artwork_url():
     # Same test as in test_show.py but now with real data from show indexer
     url_poster = 'https://www.thetvdb.com/banners/posters/80379-18.jpg'
     url_poster_thumb = 'https://www.thetvdb.com/banners/_cache/posters/80379-18.jpg'
-    url_banner = 'https://www.thetvdb.com/banners/graphical/80379-g13.jpg'
-    url_banner_thumb = 'https://www.thetvdb.com/banners/_cache/graphical/80379-g13.jpg'
+    url_banner = 'https://www.thetvdb.com/banners/blank/80379.jpg'
+    url_banner_thumb = 'https://www.thetvdb.com/banners/_cache/blank/80379.jpg'
     indexer = ShowIndexer()
     show_details = indexer.get_show_details(80379)
     assert show_details.get_artwork_url('poster', thumbnail=False) == url_poster
