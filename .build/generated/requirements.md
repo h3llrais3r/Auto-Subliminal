@@ -42,7 +42,7 @@ jaraco.collections==3.5.1; python_version >= "3.7"
 jaraco.context==4.1.1; python_version >= "3.7"
 jaraco.functools==3.5.0; python_version >= "3.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.7"
 jaraco.text==3.7.0; python_version >= "3.7"
-jsonpickle==2.1.0; python_version >= "2.7"
+jsonpickle==2.2.0; python_version >= "2.7"
 langdetect==1.0.9
 more-itertools==8.12.0; python_version >= "3.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.7"
 numpy==1.21.1; python_version >= "3.7"
