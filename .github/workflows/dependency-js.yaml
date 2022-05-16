@@ -11,6 +11,10 @@ on:
       - web/autosubliminal/package-lock.json
       #- web/autosubliminal/src/** # trigger build for all src changes
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   dependency-js:
 
@@ -27,6 +31,10 @@ jobs:
       uses: actions/checkout@v2
       with:
         ref: ${{ github.head_ref }} # required for on:pull_request
+
+    - name: Print concurrency group
+      run: |
+        echo "${{ github.workflow }}-${{ github.ref }}"
 
     - name: Get node version
       id: get-node-version
