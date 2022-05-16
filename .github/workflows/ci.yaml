@@ -33,6 +33,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Print concurrency group
+      run: |
+        echo "${{ github.workflow }}-${{ github.ref }}"
+
     - name: Set up python
       uses: actions/setup-python@v2
       with:
