@@ -55,7 +55,7 @@
     "ng-lazyload-image": "9.1.3",
     "ngx-countdown": "13.0.0",
     "ngx-mask": "13.1.15",
-    "ngx-webstorage": "9.0.0",
+    "ngx-webstorage": "10.0.1",
     "primeicons": "5.0.0",
     "primeng": "13.4.1",
     "rxjs": "6.6.7",
