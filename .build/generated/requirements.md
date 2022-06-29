@@ -62,7 +62,7 @@ pywin32==303; sys_platform == "win32" and implementation_name == "cpython" and p
 rarfile==4.0
 rebulk==3.1.0
 requests-oauthlib==1.3.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
-requests==2.28.0; python_version >= "3.7" and python_version < "4"
+requests==2.28.1; python_version >= "3.7" and python_version < "4"
 rich==11.1.0; python_full_version >= "3.6.2" and python_full_version < "4.0.0"
 schema==0.7.5
 simplejson==3.17.6; (python_version >= "2.5" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
