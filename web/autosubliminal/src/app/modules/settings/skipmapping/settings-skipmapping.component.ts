@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { AppSettingsService } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
 import { MessageService } from '../../../core/services/message.service';
@@ -13,12 +13,12 @@ import { SkipMappingSettings } from '../../../shared/models/settings';
 })
 export class SettingsSkipmappingComponent implements OnInit {
 
-  settingsForm: FormGroup;
+  settingsForm: UntypedFormGroup;
 
   saveAttempt = false;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private settingsService: SettingsService,
     private appSettingsService: AppSettingsService,
     private messageService: MessageService) { }

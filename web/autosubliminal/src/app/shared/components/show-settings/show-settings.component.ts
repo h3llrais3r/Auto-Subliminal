@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { ShowService } from '../../../core/services/api/show.service';
 import { ArtworkService } from '../../../core/services/artwork.service';
@@ -30,14 +30,14 @@ export class ShowSettingsComponent implements OnInit {
   @Input()
   showSettings: ShowSettings; // if specified, these settings will be used instead of fetching them via the tvdbId
 
-  settingsForm: FormGroup;
+  settingsForm: UntypedFormGroup;
 
   languages: SelectItem[];
 
   loaded = false;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private showService: ShowService,
     private artworkService: ArtworkService,
     private messageService: MessageService) { }

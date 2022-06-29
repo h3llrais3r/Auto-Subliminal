@@ -1,16 +1,16 @@
-import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { AbstractControl, UntypedFormGroup, ValidationErrors } from '@angular/forms';
 import $ from 'jquery';
 import { SelectItem } from 'primeng/api';
 import { appSettings } from '../../../app-settings.service';
 
 export class FormUtils {
 
-  static isFormControlValueEmpty(formGroup: FormGroup, fieldName: string): boolean {
+  static isFormControlValueEmpty(formGroup: UntypedFormGroup, fieldName: string): boolean {
     const value = formGroup.controls[fieldName].value;
     return value == null || value.length === 0;
   }
 
-  static getFormControlValue<T>(formGroup: FormGroup, fieldName: string): T {
+  static getFormControlValue<T>(formGroup: UntypedFormGroup, fieldName: string): T {
     let value = formGroup.controls[fieldName].value;
     if (value && typeof value === 'string') {
       value = value.trim();
@@ -18,19 +18,19 @@ export class FormUtils {
     return value as T;
   }
 
-  static setFormControlValue(formGroup: FormGroup, fieldName: string, value: string, defaultValue = ''): void {
+  static setFormControlValue(formGroup: UntypedFormGroup, fieldName: string, value: string, defaultValue = ''): void {
     formGroup.controls[fieldName].setValue(value ? value : defaultValue);
   }
 
-  static enableFormControlField(formGroup: FormGroup, fieldName: string): void {
+  static enableFormControlField(formGroup: UntypedFormGroup, fieldName: string): void {
     formGroup.controls[fieldName].enable();
   }
 
-  static disableFormControlField(formGroup: FormGroup, fieldName: string): void {
+  static disableFormControlField(formGroup: UntypedFormGroup, fieldName: string): void {
     formGroup.controls[fieldName].disable();
   }
 
-  static markFormControlFieldsAsDirty(formGroup: FormGroup): void {
+  static markFormControlFieldsAsDirty(formGroup: UntypedFormGroup): void {
     // Mark all controls as dirty (it seems that formGroup.markAsDirty() is not doing the same thing)
     Object.values(formGroup.controls).forEach((control) => control.markAsDirty());
   }
@@ -69,7 +69,7 @@ export class FormUtils {
     $('html,body').animate({ scrollTop: 0 }, 'smooth');
   }
 
-  static scrollToFirstInvalidField(formGroup: FormGroup): void {
+  static scrollToFirstInvalidField(formGroup: UntypedFormGroup): void {
     // Get first invalid form control field
     let formControlName: string;
     for (const controlName in formGroup.controls) {

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { AppSettingsService } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
@@ -14,7 +14,7 @@ import { NotificationSettings, TwitterRegistration } from '../../../shared/model
 })
 export class SettingsNotificationComponent implements OnInit {
 
-  settingsForm: FormGroup;
+  settingsForm: UntypedFormGroup;
 
   enabledOrDisabled: SelectItem[];
   growlProwlPriorities: SelectItem[];
@@ -25,7 +25,7 @@ export class SettingsNotificationComponent implements OnInit {
   saveAttempt = false;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private settingsService: SettingsService,
     private appSettingsService: AppSettingsService,
     private messageService: MessageService) { }

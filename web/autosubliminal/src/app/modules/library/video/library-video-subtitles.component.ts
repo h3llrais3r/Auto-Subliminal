@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
 import { VideoSubtitles } from '../../../shared/models/video';
@@ -23,10 +23,10 @@ export class LibraryVideoSubtitlesComponent implements OnInit {
   @Output()
   save = new EventEmitter<VideoSubtitles>(); // allows custom onSave functionality (save)="..." when component is created
 
-  videoSubtitlesForm: FormGroup;
+  videoSubtitlesForm: UntypedFormGroup;
   languages: SelectItem[];
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: UntypedFormBuilder) { }
 
   ngOnInit(): void {
     this.languages = FormUtils.languageSelectItems();

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, FormControl } from '@angular/forms';
+import { ControlContainer, ControlValueAccessor, UntypedFormControl } from '@angular/forms';
 
 // Abstract input component to be used as base class for all our input components!
 @Component({
@@ -8,7 +8,7 @@ import { ControlContainer, ControlValueAccessor, FormControl } from '@angular/fo
 export abstract class InputComponent implements ControlValueAccessor {
 
   @Input()
-  formControl: FormControl;
+  formControl: UntypedFormControl;
 
   @Input()
   formControlName: string;
@@ -37,8 +37,8 @@ export abstract class InputComponent implements ControlValueAccessor {
 
   constructor(protected controlContainer: ControlContainer, protected changeDetectorRef: ChangeDetectorRef) { }
 
-  get control(): FormControl {
-    return this.formControl || this.controlContainer.control.get(this.formControlName) as FormControl;
+  get control(): UntypedFormControl {
+    return this.formControl || this.controlContainer.control.get(this.formControlName) as UntypedFormControl;
   }
 
   get validationClass(): string {

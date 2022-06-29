@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { AppSettingsService } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
@@ -15,7 +15,7 @@ import { LogSettings } from '../../../shared/models/settings';
 })
 export class SettingsLoggingComponent implements OnInit {
 
-  settingsForm: FormGroup;
+  settingsForm: UntypedFormGroup;
 
   enabledOrDisabled: SelectItem[];
   logLevels: SelectItem[];
@@ -23,7 +23,7 @@ export class SettingsLoggingComponent implements OnInit {
   saveAttempt = false;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private settingsService: SettingsService,
     private appSettingsService: AppSettingsService,
     private messageService: MessageService) { }

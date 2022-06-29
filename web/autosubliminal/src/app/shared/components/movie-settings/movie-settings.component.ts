@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { MovieService } from '../../../core/services/api/movie.service';
 import { ArtworkService } from '../../../core/services/artwork.service';
@@ -30,14 +30,14 @@ export class MovieSettingsComponent implements OnInit {
   @Input()
   movieSettings: MovieSettings; // if specified, these settings will be used instead of fetching them via the imdbId
 
-  settingsForm: FormGroup;
+  settingsForm: UntypedFormGroup;
 
   languages: SelectItem[];
 
   loaded = false;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private movieService: MovieService,
     private artworkService: ArtworkService,
     private messageService: MessageService) { }

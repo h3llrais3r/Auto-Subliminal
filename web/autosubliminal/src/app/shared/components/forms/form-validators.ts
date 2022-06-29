@@ -1,4 +1,4 @@
-import { FormControl, ValidationErrors } from '@angular/forms';
+import { UntypedFormControl, ValidationErrors } from '@angular/forms';
 
 const REGEX_EMAIL = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/; // Format: test@test[.com]
 
@@ -8,7 +8,7 @@ function isEmptyInputValue(value: any): boolean {
   return value == null || value.length === 0;
 }
 
-function pattern(control: FormControl, regex: RegExp): ValidationErrors | null {
+function pattern(control: UntypedFormControl, regex: RegExp): ValidationErrors | null {
   if (isEmptyInputValue(control.value)) {
     return null; // don't validate empty values to allow optional controls
   }
@@ -19,7 +19,7 @@ function pattern(control: FormControl, regex: RegExp): ValidationErrors | null {
 export class FormValidators {
 
   // Not blank validator
-  static notBlank(control: FormControl): ValidationErrors | null {
+  static notBlank(control: UntypedFormControl): ValidationErrors | null {
     if (isEmptyInputValue(control.value)) {
       return null; // don't validate empty values to allow optional controls
     }
@@ -27,12 +27,12 @@ export class FormValidators {
     return value.length > 0 && value.trim().length === 0 ? { blank: true } : null;
   }
 
-  static notEmpty(control: FormControl): ValidationErrors | null {
+  static notEmpty(control: UntypedFormControl): ValidationErrors | null {
     return isEmptyInputValue(control.value) ? { empty: true } : null;
   }
 
   // Email validator
-  static email(control: FormControl): ValidationErrors | null {
+  static email(control: UntypedFormControl): ValidationErrors | null {
     return pattern(control, REGEX_EMAIL);
   }
 }

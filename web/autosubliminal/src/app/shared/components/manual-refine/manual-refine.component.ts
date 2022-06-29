@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ItemService } from '../../../core/services/api/item.service';
 import { MessageService } from '../../../core/services/message.service';
 import { WantedItem } from '../../models/item';
@@ -26,11 +26,11 @@ export class ManualRefineComponent implements OnInit {
   @Output()
   wantedItemChange = new EventEmitter<WantedItem>();
 
-  itemForm: FormGroup;
+  itemForm: UntypedFormGroup;
 
   updateAttempt = false;
 
-  constructor(private fb: FormBuilder, private itemService: ItemService, private messageService: MessageService) { }
+  constructor(private fb: UntypedFormBuilder, private itemService: ItemService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.buildForm(this.wantedItem);

@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { of } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
 import { appSettings } from '../../../app-settings.service';
@@ -37,7 +37,7 @@ export class FileBrowserComponent implements OnInit {
   fileBrowserFiles: FileBrowserFile[];
   selectedFile: FileBrowserFile;
   //selectedFilePath: string;
-  selectedFilePath: FormControl;
+  selectedFilePath: UntypedFormControl;
 
   private fileBrowserResult: FileBrowserResult;
   private fileBrowserPath: string;
@@ -54,7 +54,7 @@ export class FileBrowserComponent implements OnInit {
     // Create and subscribe for selected file path changes
     // Use mergeMap to handle fast changes by typing in text field
     // Proper error catching to make sure the subscribe does not break on error (f.e. when invalid path is typed)
-    this.selectedFilePath = new FormControl(this.path);
+    this.selectedFilePath = new UntypedFormControl(this.path);
     this.selectedFilePath.valueChanges
       .pipe(mergeMap((path) => this.fileSystemService.browse(path, this.includeFiles, this.includeFolders).pipe(catchError(() => of(null)))))
       .subscribe((result) => this.loadFileBrowserResult(result));

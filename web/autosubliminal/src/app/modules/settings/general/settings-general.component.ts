@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { appSettings, AppSettingsService } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
@@ -16,12 +16,12 @@ import { GeneralSettings } from '../../../shared/models/settings';
 export class SettingsGeneralComponent implements OnInit {
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private settingsService: SettingsService,
     private appSettingsService: AppSettingsService,
     private messageService: MessageService) { }
 
-  settingsForm: FormGroup;
+  settingsForm: UntypedFormGroup;
 
   enabledOrDisabled: SelectItem[];
   languages: SelectItem[];
@@ -99,7 +99,7 @@ export class SettingsGeneralComponent implements OnInit {
     }, { validator: this.globalFormValidator });
   }
 
-  private globalFormValidator(formGroup: FormGroup): ValidationErrors | null {
+  private globalFormValidator(formGroup: UntypedFormGroup): ValidationErrors | null {
     // Return error ffmpegPath is not filled in when manualSubSync is enabled
     const error: ValidationErrors = { ffmpegPathRequired: true };
     const ffmpegPath = FormUtils.getFormControlValue<string>(formGroup, 'ffmpegPath');
