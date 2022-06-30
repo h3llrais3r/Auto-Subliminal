@@ -54,7 +54,7 @@ pygments==2.11.2; python_full_version >= "3.6.2" and python_full_version < "4.0.
 pyparsing==3.0.7; python_version >= "3.6"
 pysrt==1.1.2
 pysubs2==1.3.1; python_version >= "3.7"
-python-anticaptcha==0.7.1
+python-anticaptcha==1.0.0
 python-dateutil==2.8.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
 python-twitter==3.5
 pytz==2021.3; python_version >= "3.7"

@@ -76,7 +76,7 @@ packaging == 21.3
 pysrt == 1.1.2
 
 # \autosubliminal\providers\pitcher.py: 10
-python_anticaptcha == 0.7.1
+python_anticaptcha == 1.0.0
 
 # \autosubliminal\core\show.py: 5
 python_dateutil == 2.8.2
