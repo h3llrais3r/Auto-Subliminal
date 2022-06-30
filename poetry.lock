@@ -1244,17 +1244,17 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "vcrpy"
-version = "4.1.1"
+version = "4.2.0"
 description = "Automatically mock your HTTP interactions to simplify and speed up testing"
 category = "dev"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.7"
 
 [package.dependencies]
 PyYAML = "*"
 six = ">=1.5"
 wrapt = "*"
-yarl = {version = "*", markers = "python_version >= \"3.6\""}
+yarl = "*"
 
 [[package]]
 name = "webencodings"
@@ -1341,7 +1341,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "0ea58644c8f7884287a6a027bc4dc3690b797507fd3b6dd57120881620c569f6"
+content-hash = "84b87ebd8d1989ac0b10299ca2e9653f720bf76a036ad71be6c72c31d4d9a406"
 
 [metadata.files]
 appdirs = [
@@ -2012,8 +2012,8 @@ urllib3 = [
     {file = "urllib3-1.26.8.tar.gz", hash = "sha256:0e7c33d9a63e7ddfcb86780aac87befc2fbddf46c58dbb487e0855f7ceec283c"},
 ]
 vcrpy = [
-    {file = "vcrpy-4.1.1-py2.py3-none-any.whl", hash = "sha256:12c3fcdae7b88ecf11fc0d3e6d77586549d4575a2ceee18e82eee75c1f626162"},
-    {file = "vcrpy-4.1.1.tar.gz", hash = "sha256:57095bf22fc0a2d99ee9674cdafebed0f3ba763018582450706f7d3a74fff599"},
+    {file = "vcrpy-4.2.0-py2.py3-none-any.whl", hash = "sha256:7ec280c8d5385652f1117fe32a200e6676614007d9f946af9f07df1e5f92254c"},
+    {file = "vcrpy-4.2.0.tar.gz", hash = "sha256:94520b86fb765925adc8c77ff934e89a5e156c28e74a314320217ef1b454afe0"},
 ]
 webencodings = [
     {file = "webencodings-0.5.1-py2.py3-none-any.whl", hash = "sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78"},
