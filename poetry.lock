@@ -721,7 +721,7 @@ python-versions = ">=2.6"
 
 [[package]]
 name = "pigar"
-version = "0.10.0"
+version = "1.0.0"
 description = "A fantastic tool to generate requirements for your Python project, and more than that."
 category = "dev"
 optional = false
@@ -1341,7 +1341,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "84b87ebd8d1989ac0b10299ca2e9653f720bf76a036ad71be6c72c31d4d9a406"
+content-hash = "a8a237b94c3eedf8e8846f8069d74e27c77cf6edc2bb1ec02538afb832473494"
 
 [metadata.files]
 appdirs = [
@@ -1727,8 +1727,8 @@ pbr = [
     {file = "pbr-5.8.0.tar.gz", hash = "sha256:672d8ebee84921862110f23fcec2acea191ef58543d34dfe9ef3d9f13c31cddf"},
 ]
 pigar = [
-    {file = "pigar-0.10.0-py2.py3-none-any.whl", hash = "sha256:ae0297ae647c9c7e4058910a62718ea1e35000873bf766d46a05f3036b9e96f8"},
-    {file = "pigar-0.10.0.tar.gz", hash = "sha256:4f7a2887b20a41a08deb4eab29936093724bddb73c7f123f0a9dc6f9827d73a3"},
+    {file = "pigar-1.0.0-py2.py3-none-any.whl", hash = "sha256:08183fa61052c229ff23881f2b94c7614c9268215f393e548c371a2d3702da6b"},
+    {file = "pigar-1.0.0.tar.gz", hash = "sha256:f3bef132281d4d4a71ba817469ee20eb935f1bcf42684598b8b9ba685ada5866"},
 ]
 pluggy = [
     {file = "pluggy-1.0.0-py2.py3-none-any.whl", hash = "sha256:74134bbf457f031a36d68416e1509f34bd5ccc019f0bcc952c7b909d06b37bd3"},
