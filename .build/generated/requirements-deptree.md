@@ -51,10 +51,9 @@ ffsubsync 0.4.20 Language-agnostic synchronization of subtitles with video.
 |-- numpy >=1.12.0
 |-- pysubs2 >=1.2.0
 |-- rich *
-|   |-- colorama >=0.4.0,<0.5.0 
 |   |-- commonmark >=0.9.0,<0.10.0 
 |   |-- pygments >=2.6.0,<3.0.0 
-|   `-- typing-extensions >=3.7.4,<5.0 
+|   `-- typing-extensions >=4.0.0,<5.0 
 |-- six *
 |-- srt >=3.0.0
 |-- tqdm *
