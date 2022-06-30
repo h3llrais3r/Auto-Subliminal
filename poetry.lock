@@ -870,7 +870,7 @@ dev = ["pre-commit", "tox", "pytest-asyncio"]
 
 [[package]]
 name = "python-anticaptcha"
-version = "0.7.1"
+version = "1.0.0"
 description = "Client library for solve captchas with Anticaptcha.com support."
 category = "main"
 optional = false
@@ -882,7 +882,7 @@ six = "*"
 
 [package.extras]
 docs = ["sphinx"]
-tests = ["nose", "retry", "selenium"]
+tests = ["retry", "nose2", "selenium"]
 
 [[package]]
 name = "python-dateutil"
@@ -1341,7 +1341,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "a8a237b94c3eedf8e8846f8069d74e27c77cf6edc2bb1ec02538afb832473494"
+content-hash = "33c955f49a85aff995cdf9b3ed91bbdb7f72cb2002aa02ecb1e27d2186999ad9"
 
 [metadata.files]
 appdirs = [
@@ -1797,8 +1797,8 @@ pytest-mock = [
     {file = "pytest_mock-3.8.1-py3-none-any.whl", hash = "sha256:d989f11ca4a84479e288b0cd1e6769d6ad0d3d7743dcc75e460d1416a5f2135a"},
 ]
 python-anticaptcha = [
-    {file = "python-anticaptcha-0.7.1.tar.gz", hash = "sha256:6d13df6702222b7adac29872f826079a72008177e95b4095a33d66b1050e8d86"},
-    {file = "python_anticaptcha-0.7.1-py2.py3-none-any.whl", hash = "sha256:f719fa76cdb0597ca6ff377540b999a1ecc77ce4e04c10f7e286d8dd8d189cc6"},
+    {file = "python-anticaptcha-1.0.0.tar.gz", hash = "sha256:058a9e3ca5dbdcaa98108c8b5181404cb4ffdba5261162a4301d60f985c63710"},
+    {file = "python_anticaptcha-1.0.0-py2.py3-none-any.whl", hash = "sha256:12e47cc1f27a0ab2080975a9c8b2554219570dad1d8feb0b9911078b17767f27"},
 ]
 python-dateutil = [
     {file = "python-dateutil-2.8.2.tar.gz", hash = "sha256:0123cacc1627ae19ddf3c27a5de5bd67ee4586fbdd6440d9748f8abb483d3e86"},
