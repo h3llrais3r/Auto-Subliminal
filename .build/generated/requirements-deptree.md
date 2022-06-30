@@ -103,7 +103,7 @@ packaging 21.3 Core utilities for Python packages
 `-- pyparsing >=2.0.2,<3.0.5 || >3.0.5
 pysrt 1.1.2 SubRip (.srt) subtitle parser and writer
 `-- chardet *
-python-anticaptcha 0.7.1 Client library for solve captchas with Anticaptcha.com support.
+python-anticaptcha 1.0.0 Client library for solve captchas with Anticaptcha.com support.
 |-- requests *
 |   |-- certifi >=2017.4.17 
 |   |-- charset-normalizer >=2,<3 
