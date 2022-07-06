@@ -23,7 +23,7 @@ contextlib2==21.6.0; python_version >= "3.6"
 deathbycaptcha==0.1.1
 decorator==5.1.1; python_version >= "3.6"
 diskcache==5.4.0; python_version >= "3"
-dogpile.cache==1.1.6; python_version >= "3.6"
+dogpile.cache==1.1.7; python_version >= "3.6"
 enzyme==0.4.1
 ffmpeg-python==0.2.0
 ffsubsync==0.4.20
