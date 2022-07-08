@@ -267,7 +267,7 @@ python-versions = "*"
 
 [[package]]
 name = "dogpile.cache"
-version = "1.1.7"
+version = "1.1.8"
 description = "A caching front-end based on the Dogpile lock."
 category = "main"
 optional = false
@@ -1346,7 +1346,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "c5cdca031fc0d56bcf9b1d5cf81a0bad387810797d3c803f7c868657137a45d4"
+content-hash = "d9fdfae020d161c1f8030d260c533081cc76980ec308f7cdfc3f6338c28cf0de"
 
 [metadata.files]
 appdirs = [
@@ -1513,8 +1513,8 @@ docopt = [
     {file = "docopt-0.6.2.tar.gz", hash = "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"},
 ]
 "dogpile.cache" = [
-    {file = "dogpile.cache-1.1.7-py3-none-any.whl", hash = "sha256:61ed33815e6a14bdb566193c78f944ee507c5c154a7d3063b7d5508e4b89502e"},
-    {file = "dogpile.cache-1.1.7.tar.gz", hash = "sha256:208b590a99faa265c6e1d11c2ce9ca66ab0b81a53acd72f56a825eedd23ee5c8"},
+    {file = "dogpile.cache-1.1.8-py3-none-any.whl", hash = "sha256:3f0ca10b46b165e0b0e65e0e74b1a4b36187787b69db7c0f7073077adff2f05d"},
+    {file = "dogpile.cache-1.1.8.tar.gz", hash = "sha256:d844e8bb638cc4f544a4c89a834dfd36fe935400b71a16cbd744ebdfb720fd4e"},
 ]
 enzyme = [
     {file = "enzyme-0.4.1.tar.gz", hash = "sha256:f2167fa97c24d1103a94d4bf4eb20f00ca76c38a37499821049253b2059c62bb"},
