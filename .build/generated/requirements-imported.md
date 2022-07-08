@@ -39,7 +39,7 @@ deathbycaptcha == 0.1.1
 
 # \autosubliminal\core\cache.py: 9,10,11
 # \autosubliminal\providers\pitcher.py: 9
-dogpile.cache == 1.1.7
+dogpile.cache == 1.1.8
 
 # \autosubliminal\util\filesystem.py: 14
 enzyme == 0.4.1
