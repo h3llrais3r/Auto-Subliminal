@@ -20,7 +20,7 @@
 # \autosubliminal\server\web\artwork.py: 3,4,5
 # \autosubliminal\server\web\websocket.py: 3
 # \autosubliminal\util\json.py: 3
-CherryPy == 18.6.1
+CherryPy == 18.7.0
 
 # \autosubliminal\versionchecker.py: 10
 GitPython == 3.1.27
