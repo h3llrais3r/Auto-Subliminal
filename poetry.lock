@@ -140,7 +140,7 @@ docs = ["sphinx (>=1.8.2)", "jaraco.packaging (>=3.2)", "sphinx-tabs (>=1.1.0)",
 
 [[package]]
 name = "cherrypy"
-version = "18.7.0"
+version = "18.8.0"
 description = "Object-Oriented HTTP framework"
 category = "main"
 optional = false
@@ -1346,7 +1346,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "c04d86779592cb2a8f80c89e53bcfac5c569929c8e53ae9b7852e8bc0387bf51"
+content-hash = "a85815aa3a6d24ebd708ed6ec777d7c83faae76baab9ba5a63bf04f6d1bd88ff"
 
 [metadata.files]
 appdirs = [
@@ -1431,8 +1431,8 @@ cheroot = [
     {file = "cheroot-8.6.0.tar.gz", hash = "sha256:366adf6e7cac9555486c2d1be6297993022eff6f8c4655c1443268cca3f08e25"},
 ]
 cherrypy = [
-    {file = "CherryPy-18.7.0-py2.py3-none-any.whl", hash = "sha256:59160d4e125c773f875ae8ab6b9bd8729640407a050892a0a39ed4eef997b8e8"},
-    {file = "CherryPy-18.7.0.tar.gz", hash = "sha256:729452f798ca756390046ef318043cae864a46814deaf3e6bd34dc959af198de"},
+    {file = "CherryPy-18.8.0-py2.py3-none-any.whl", hash = "sha256:b56097025dc78a76a59db551b3a82871c6b3a0107b80b12ff759e4c0b3b947ce"},
+    {file = "CherryPy-18.8.0.tar.gz", hash = "sha256:9b48cfba8a2f16d5b6419cc657e6d51db005ba35c5e3824e4728bb03bbc7ef9b"},
 ]
 click = [
     {file = "click-8.1.3-py3-none-any.whl", hash = "sha256:bb4d8133cb15a609f44e8213d9b391b0809795062913b383c62be0ee95b1db48"},
