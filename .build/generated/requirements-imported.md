@@ -20,7 +20,7 @@
 # \autosubliminal\server\web\artwork.py: 3,4,5
 # \autosubliminal\server\web\websocket.py: 3
 # \autosubliminal\util\json.py: 3
-CherryPy == 18.7.0
+CherryPy == 18.8.0
 
 # \autosubliminal\versionchecker.py: 10
 GitPython == 3.1.27
@@ -104,7 +104,7 @@ requests_oauthlib == 1.3.1
 schema == 0.7.5
 
 # \autosubliminal\__init__.py: 5
-setuptools == 63.1.0
+setuptools == 63.2.0
 
 # \autosubliminal\__init__.py: 670
 # \autosubliminal\providers\addic7ed_custom.py: 18,19
