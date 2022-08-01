@@ -104,7 +104,7 @@ requests_oauthlib == 1.3.1
 schema == 0.7.5
 
 # \autosubliminal\__init__.py: 5
-setuptools == 63.2.0
+setuptools == 63.3.0
 
 # \autosubliminal\__init__.py: 670
 # \autosubliminal\providers\addic7ed_custom.py: 18,19
