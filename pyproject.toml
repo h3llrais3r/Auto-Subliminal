@@ -66,7 +66,7 @@ coverage = "6.4.4"
 coveralls = "3.3.1"
 pytest = "7.1.2"
 pytest-mock = "3.8.2"
-requests-mock = "1.9.3"
+requests-mock = "1.10.0"
 vcrpy = "4.2.0"
 
 # Tooling
