@@ -1,83 +1,84 @@
-appdirs==1.4.4
-argparse==1.4.0
-attrs==21.4.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
-auditok==0.1.5
-babelfish==0.6.0; python_version >= "3.6" and python_version < "4.0"
-beautifulsoup4==4.11.1; python_full_version >= "3.6.0"
-boto==2.49.0
-cchardet==2.1.7
-certifi==2022.6.15; python_version >= "3.7" and python_version < "4" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0")
-chardet==5.0.0; python_version >= "3.6"
-charset-normalizer==2.1.0; python_version >= "3.7" and python_version < "4" and python_full_version >= "3.6.0" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0")
-cheroot==8.6.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
-cherrypy==18.8.0; python_version >= "3.6"
-click==8.1.3; python_version >= "3.7"
-colorama==0.4.5; python_version >= "3.7" and python_full_version < "3.0.0" and platform_system == "Windows" or python_full_version >= "3.5.0" and platform_system == "Windows" and python_version >= "3.7"
-commonmark==0.9.1; python_full_version >= "3.6.3" and python_full_version < "4.0.0"
-contextlib2==21.6.0; python_version >= "3.6"
-deathbycaptcha==0.1.1
-decorator==5.1.1; python_version >= "3.6"
-diskcache==5.4.0; python_version >= "3"
-dogpile.cache==1.1.8; python_version >= "3.6"
-enzyme==0.4.1
-ffmpeg-python==0.2.0
-ffsubsync==0.4.20
-future==0.18.2; python_version >= "2.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0"
-gitdb==4.0.9; python_version >= "3.7"
-gitpython==3.1.27; python_version >= "3.7"
-gntp==1.0.3
-guessit==3.4.3
-html5lib==1.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
-idna==3.3; python_version >= "3.7" and python_version < "4" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0")
-imdbpie @ git+https://github.com/h3llrais3r/imdb-pie.git@75c300af1bf87c49baef09f17002a3e35b0ed3cc
-importlib-metadata==4.2.0; python_version < "3.8" and python_version >= "3.7" or python_version < "3.8"
-importlib-resources==5.8.0; python_version >= "3.7" and python_version < "3.9"
-jaraco.classes==3.2.1; python_version >= "3.7"
-jaraco.collections==3.5.1; python_version >= "3.7"
-jaraco.context==4.1.1; python_version >= "3.7"
-jaraco.functools==3.5.0; python_version >= "3.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.7"
-jaraco.text==3.8.0; python_version >= "3.7"
-jsonpickle==2.2.0; python_version >= "2.7"
-langdetect==1.0.9
-more-itertools==8.13.0; python_version >= "3.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.7"
-numpy==1.21.1; python_version >= "3.7"
-oauthlib==3.2.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
-packaging==21.3; python_version >= "3.6"
-pbr==5.9.0; python_version >= "3.6"
-portend==3.1.0; python_version >= "3.7"
-pygments==2.12.0; python_full_version >= "3.6.3" and python_full_version < "4.0.0" and python_version >= "3.6"
-pyparsing==3.0.9; python_full_version >= "3.6.8" and python_version >= "3.6"
-pysrt==1.1.2
-pysubs2==1.4.2; python_version >= "3.7"
-python-anticaptcha==1.0.0
-python-dateutil==2.8.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
-python-twitter==3.5
-pytz==2022.1; python_version >= "3.7"
-pywin32==304; sys_platform == "win32" and implementation_name == "cpython" and python_version < "3.10" and python_version >= "3.6"
-rarfile==4.0
-rebulk==3.1.0
-requests-oauthlib==1.3.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
-requests==2.28.1; python_version >= "3.7" and python_version < "4"
-rich==12.4.4; python_full_version >= "3.6.3" and python_full_version < "4.0.0"
-schema==0.7.5
-simplejson==3.17.6; (python_version >= "2.5" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
-six==1.16.0; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
-smmap==5.0.0; python_version >= "3.7"
-soupsieve==2.3.2.post1; python_version >= "3.6" and python_full_version >= "3.6.0"
-srt==3.5.2; python_version >= "2.7"
-stevedore==3.5.0; python_version >= "3.6"
-subliminal @ git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a
-tailer==0.4.1
-tempora==5.0.1; python_version >= "3.7"
-tqdm==4.64.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0"
-trans==2.1.0
-tvdb-api @ git+https://github.com/h3llrais3r/tvdb_api.git@1210df9dd5869ccc5b63149b1b80630310a14f40
-typing-extensions==4.3.0; python_version < "3.8" and python_version >= "3.7" and python_full_version >= "3.6.3" and python_full_version < "4.0.0"
-unidecode==1.3.4; python_version >= "3.5"
-urllib3==1.26.10; python_version >= "3.7" and python_full_version < "3.0.0" and python_version < "4" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0") or python_full_version >= "3.6.0" and python_version < "4" and python_version >= "3.7" and (python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0")
-webencodings==0.5.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
-webrtcvad-wheels==2.0.10.post2; platform_system == "Windows"
-webrtcvad==2.0.10; platform_system != "Windows"
-ws4py==0.5.1
-zc.lockfile==2.0; python_version >= "3.6"
-zipp==3.8.0; python_version >= "3.7" and python_version < "3.8"
+appdirs==1.4.4 ; python_version >= "3.7" and python_version < "4"
+argparse==1.4.0 ; python_version >= "3.7" and python_version < "4"
+attrs==21.4.0 ; python_version >= "3.7" and python_version < "4"
+auditok==0.1.5 ; python_version >= "3.7" and python_version < "4"
+babelfish==0.6.0 ; python_version >= "3.7" and python_version < "4.0"
+beautifulsoup4==4.11.1 ; python_version >= "3.7" and python_version < "4"
+boto==2.49.0 ; python_version >= "3.7" and python_version < "4"
+cchardet==2.1.7 ; python_version >= "3.7" and python_version < "4"
+certifi==2022.6.15 ; python_version >= "3.7" and python_version < "4"
+chardet==5.0.0 ; python_version >= "3.7" and python_version < "4"
+charset-normalizer==2.1.0 ; python_version >= "3.7" and python_version < "4"
+cheroot==8.6.0 ; python_version >= "3.7" and python_version < "4"
+cherrypy==18.8.0 ; python_version >= "3.7" and python_version < "4"
+click==8.1.3 ; python_version >= "3.7" and python_version < "4"
+colorama==0.4.5 ; python_version >= "3.7" and python_version < "4" and platform_system == "Windows"
+commonmark==0.9.1 ; python_version >= "3.7" and python_version < "4"
+contextlib2==21.6.0 ; python_version >= "3.7" and python_version < "4"
+deathbycaptcha==0.1.1 ; python_version >= "3.7" and python_version < "4"
+decorator==5.1.1 ; python_version >= "3.7" and python_version < "4"
+diskcache==5.4.0 ; python_version >= "3.7" and python_version < "4"
+dogpile-cache==1.1.8 ; python_version >= "3.7" and python_version < "4"
+enzyme==0.4.1 ; python_version >= "3.7" and python_version < "4"
+ffmpeg-python==0.2.0 ; python_version >= "3.7" and python_version < "4"
+ffsubsync==0.4.20 ; python_version >= "3.7" and python_version < "4"
+future==0.18.2 ; python_version >= "3.7" and python_version < "4"
+gitdb==4.0.9 ; python_version >= "3.7" and python_version < "4"
+gitpython==3.1.27 ; python_version >= "3.7" and python_version < "4"
+gntp==1.0.3 ; python_version >= "3.7" and python_version < "4"
+guessit==3.4.3 ; python_version >= "3.7" and python_version < "4"
+html5lib==1.1 ; python_version >= "3.7" and python_version < "4"
+idna==3.3 ; python_version >= "3.7" and python_version < "4"
+imdbpie @ git+https://github.com/h3llrais3r/imdb-pie.git@75c300af1bf87c49baef09f17002a3e35b0ed3cc ; python_version >= "3.7" and python_version < "4"
+importlib-metadata==4.2.0 ; python_version >= "3.7" and python_version < "3.8"
+importlib-resources==5.8.0 ; python_version >= "3.7" and python_version < "3.9"
+jaraco-classes==3.2.1 ; python_version >= "3.7" and python_version < "4"
+jaraco-collections==3.5.1 ; python_version >= "3.7" and python_version < "4"
+jaraco-context==4.1.1 ; python_version >= "3.7" and python_version < "4"
+jaraco-functools==3.5.0 ; python_version >= "3.7" and python_version < "4"
+jaraco-text==3.8.0 ; python_version >= "3.7" and python_version < "4"
+jsonpickle==2.2.0 ; python_version >= "3.7" and python_version < "4"
+langdetect==1.0.9 ; python_version >= "3.7" and python_version < "4"
+more-itertools==8.13.0 ; python_version >= "3.7" and python_version < "4"
+numpy==1.21.1 ; python_version >= "3.7" and python_version < "4"
+oauthlib==3.2.0 ; python_version >= "3.7" and python_version < "4"
+packaging==21.3 ; python_version >= "3.7" and python_version < "4"
+pbr==5.9.0 ; python_version >= "3.7" and python_version < "4"
+portend==3.1.0 ; python_version >= "3.7" and python_version < "4"
+pygments==2.12.0 ; python_version >= "3.7" and python_version < "4"
+pyparsing==3.0.9 ; python_version >= "3.7" and python_version < "4"
+pysrt==1.1.2 ; python_version >= "3.7" and python_version < "4"
+pysubs2==1.4.2 ; python_version >= "3.7" and python_version < "4"
+python-anticaptcha==1.0.0 ; python_version >= "3.7" and python_version < "4"
+python-dateutil==2.8.2 ; python_version >= "3.7" and python_version < "4"
+python-twitter==3.5 ; python_version >= "3.7" and python_version < "4"
+pytz==2022.1 ; python_version >= "3.7" and python_version < "4"
+pywin32==304 ; sys_platform == "win32" and implementation_name == "cpython" and python_version < "3.10" and python_version >= "3.7"
+rarfile==4.0 ; python_version >= "3.7" and python_version < "4"
+rebulk==3.1.0 ; python_version >= "3.7" and python_version < "4"
+requests-oauthlib==1.3.1 ; python_version >= "3.7" and python_version < "4"
+requests==2.28.1 ; python_version >= "3.7" and python_version < "4"
+rich==12.4.4 ; python_version >= "3.7" and python_version < "4"
+schema==0.7.5 ; python_version >= "3.7" and python_version < "4"
+setuptools==65.3.0 ; python_version >= "3.7" and python_version < "4"
+simplejson==3.17.6 ; python_version >= "3.7" and python_version < "4"
+six==1.16.0 ; python_version >= "3.7" and python_version < "4"
+smmap==5.0.0 ; python_version >= "3.7" and python_version < "4"
+soupsieve==2.3.2.post1 ; python_version >= "3.7" and python_version < "4"
+srt==3.5.2 ; python_version >= "3.7" and python_version < "4"
+stevedore==3.5.0 ; python_version >= "3.7" and python_version < "4"
+subliminal @ git+https://github.com/Diaoul/subliminal.git@6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a ; python_version >= "3.7" and python_version < "4"
+tailer==0.4.1 ; python_version >= "3.7" and python_version < "4"
+tempora==5.0.1 ; python_version >= "3.7" and python_version < "4"
+tqdm==4.64.0 ; python_version >= "3.7" and python_version < "4"
+trans==2.1.0 ; python_version >= "3.7" and python_version < "4"
+tvdb-api @ git+https://github.com/h3llrais3r/tvdb_api.git@1210df9dd5869ccc5b63149b1b80630310a14f40 ; python_version >= "3.7" and python_version < "4"
+typing-extensions==4.3.0 ; python_version >= "3.7" and python_version < "4"
+unidecode==1.3.4 ; python_version >= "3.7" and python_version < "4"
+urllib3==1.26.10 ; python_version >= "3.7" and python_version < "4"
+webencodings==0.5.1 ; python_version >= "3.7" and python_version < "4"
+webrtcvad-wheels==2.0.10.post2 ; python_version >= "3.7" and python_version < "4" and platform_system == "Windows"
+webrtcvad==2.0.10 ; python_version >= "3.7" and python_version < "4" and platform_system != "Windows"
+ws4py==0.5.1 ; python_version >= "3.7" and python_version < "4"
+zc-lockfile==2.0 ; python_version >= "3.7" and python_version < "4"
+zipp==3.8.0 ; python_version >= "3.7" and python_version < "3.9"

@@ -6,27 +6,28 @@
 babelfish 0.6.0 A module to work with countries and languages
 cherrypy 18.8.0 Object-Oriented HTTP framework
 |-- cheroot >=8.2.1
-|   |-- jaraco.functools * 
+|   |-- jaraco-functools * 
 |   |   `-- more-itertools * 
 |   |-- more-itertools >=2.6 (circular dependency aborted here)
 |   `-- six >=1.11.0 
-|-- jaraco.collections *
-|   |-- jaraco.classes * 
+|-- jaraco-collections *
+|   |-- jaraco-classes * 
 |   |   `-- more-itertools * 
-|   `-- jaraco.text * 
+|   `-- jaraco-text * 
 |       |-- importlib-resources * 
 |       |   `-- zipp >=3.1.0 
-|       |-- jaraco.context >=4.1 
-|       `-- jaraco.functools * 
+|       |-- jaraco-context >=4.1 
+|       `-- jaraco-functools * 
 |           `-- more-itertools * (circular dependency aborted here)
 |-- more-itertools *
 |-- portend >=2.1.1
 |   `-- tempora >=1.8 
-|       |-- jaraco.functools >=1.20 
+|       |-- jaraco-functools >=1.20 
 |       |   `-- more-itertools * 
 |       `-- pytz * 
 |-- pywin32 >=227
-`-- zc.lockfile *
+`-- zc-lockfile *
+    `-- setuptools * 
 deathbycaptcha 0.1.1 A library aims to support deathbycaptcha.
 |-- requests *
 |   |-- certifi >=2017.4.17 
@@ -152,7 +153,7 @@ subliminal 2.1.0.dev0 Subtitles, faster than your thoughts
 |   `-- importlib-metadata * 
 |       |-- typing-extensions >=3.6.4 
 |       `-- zipp >=0.5 
-|-- dogpile.cache >=0.6.0
+|-- dogpile-cache >=0.6.0
 |   |-- decorator >=4.0.0 
 |   `-- stevedore >=3.0.0 
 |       |-- importlib-metadata >=1.7.0 
