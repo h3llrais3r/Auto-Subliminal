@@ -60,7 +60,7 @@ tvdb_api = { git = "https://github.com/h3llrais3r/tvdb_api.git", rev = "1210df9d
 Unidecode = "1.3.4"
 ws4py = "0.5.1"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 # Testing
 coverage = "6.4.4"
 coveralls = "3.3.1"
