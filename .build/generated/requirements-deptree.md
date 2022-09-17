@@ -4,7 +4,7 @@
 
 ```
 babelfish 0.6.0 A module to work with countries and languages
-cherrypy 18.8.0 Object-Oriented HTTP framework
+CherryPy 18.8.0 Object-Oriented HTTP framework
 |-- cheroot >=8.2.1
 |   |-- jaraco-functools * 
 |   |   `-- more-itertools * 
@@ -14,11 +14,16 @@ cherrypy 18.8.0 Object-Oriented HTTP framework
 |   |-- jaraco-classes * 
 |   |   `-- more-itertools * 
 |   `-- jaraco-text * 
+|       |-- autocommand * 
 |       |-- importlib-resources * 
 |       |   `-- zipp >=3.1.0 
+|       |-- inflect * 
+|       |   `-- pydantic * 
+|       |       `-- typing-extensions >=4.1.0 
 |       |-- jaraco-context >=4.1 
-|       `-- jaraco-functools * 
-|           `-- more-itertools * (circular dependency aborted here)
+|       |-- jaraco-functools * 
+|       |   `-- more-itertools * (circular dependency aborted here)
+|       `-- more-itertools * (circular dependency aborted here)
 |-- more-itertools *
 |-- portend >=2.1.1
 |   `-- tempora >=1.8 
@@ -62,7 +67,7 @@ ffsubsync 0.4.20 Language-agnostic synchronization of subtitles with video.
 |-- typing-extensions *
 |-- webrtcvad *
 `-- webrtcvad-wheels *
-gitpython 3.1.27 GitPython is a python library used to interact with Git repositories
+GitPython 3.1.27 GitPython is a python library used to interact with Git repositories
 |-- gitdb >=4.0.1,<5
 |   `-- smmap >=3.0.1,<6 
 `-- typing-extensions >=3.7.4.3
@@ -88,8 +93,10 @@ imdbpie 5.6.4.dev0 Python IMDB client using the IMDB json web service made avail
 |   |-- charset-normalizer >=2,<3 
 |   |-- idna >=2.5,<4 
 |   `-- urllib3 >=1.21.1,<1.27 
+|-- setuptools >=39.0.1
 |-- six >=1.0.0
-`-- trans >=2.1.0
+|-- trans >=2.1.0
+`-- wheel >=0.30.0
 importlib-metadata 4.2.0 Read metadata from Python packages
 |-- typing-extensions >=3.6.4
 `-- zipp >=0.5
@@ -190,6 +197,6 @@ tvdb-api 3.0.0 Client implementation for TheTVDB API v2 and v3
 |   `-- six >=1.5 
 |-- six >=1.10.0
 `-- urllib3 >=1.15.1
-unidecode 1.3.4 ASCII transliterations of Unicode text
+Unidecode 1.3.4 ASCII transliterations of Unicode text
 ws4py 0.5.1 WebSocket client and server library for Python 2 and 3 as well as PyPy
 ```

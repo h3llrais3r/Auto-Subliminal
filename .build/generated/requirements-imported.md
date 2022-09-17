@@ -68,7 +68,6 @@ jsonpickle == 2.2.0
 # \autosubliminal\util\filesystem.py: 9
 langdetect == 1.0.9
 
-# \autosubliminal\util\system.py: 21,35
 # \autosubliminal\versionchecker.py: 7
 packaging == 21.3
 
