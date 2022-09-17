@@ -5,8 +5,6 @@ import os
 import tempfile
 from pathlib import Path
 
-from packaging.version import Version
-
 from autosubliminal.util.system import (TIMESTAMP_FORMAT, get_python_location, get_python_version,
                                         get_python_version_full, get_stored_python_version,
                                         get_stored_venv_creation_time, get_venv_creation_time,
@@ -24,7 +22,7 @@ def test_get_python_version_full(monkeypatch):
 
 def test_get_python_version(monkeypatch):
     monkeypatch.setattr('sys.version_info', python_version_info)
-    assert get_python_version() == Version('3.7.9')
+    assert get_python_version() == '3.7.9'
 
 
 def test_get_python_location(monkeypatch):
@@ -49,11 +47,11 @@ def test_is_python_version_changed(monkeypatch, mocker):
     monkeypatch.setattr('sys.version_info', python_version_info)
     monkeypatch.setattr('autosubliminal.util.system.PYTHON_VERSION_FILE', 'path/does/not/exist')
     assert is_python_version_changed()
-    mocker.patch('autosubliminal.util.system.get_python_version', return_value=Version('3.7.9'))
-    mocker.patch('autosubliminal.util.system.get_stored_python_version', return_value=Version('3.7.10'))
+    mocker.patch('autosubliminal.util.system.get_python_version', return_value='3.7.9')
+    mocker.patch('autosubliminal.util.system.get_stored_python_version', return_value='3.7.10')
     assert is_python_version_changed()
-    mocker.patch('autosubliminal.util.system.get_python_version', return_value=Version('3.7.9'))
-    mocker.patch('autosubliminal.util.system.get_stored_python_version', return_value=Version('3.7.9'))
+    mocker.patch('autosubliminal.util.system.get_python_version', return_value='3.7.9')
+    mocker.patch('autosubliminal.util.system.get_stored_python_version', return_value='3.7.9')
     assert not is_python_version_changed()
 
 

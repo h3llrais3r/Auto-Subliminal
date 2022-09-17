@@ -2,10 +2,15 @@
 
 import datetime
 import os
+import re
 import sys
 from pathlib import Path
 
+# REMARK: only used default python packages here!
+# This is used before installing all packages at runtime!
+
 PYTHON_VERSION_FILE = '.pythonversion'
+PYTHON_VERSION_REGEX = r'^(\d+)\.(\d+)\.(\d+)$'
 VENV_CFG_FILE = 'pyvenv.cfg'
 VENV_CREATION_TIME_FILE = '.venvcreationtime'
 TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M:%S'
@@ -17,12 +22,10 @@ def get_python_version_full():
 
 
 def get_python_version():
-    """Return the python version as a packaging Version object."""
-    from packaging.version import Version
+    """Return the python version as a string."""
 
     version_tuple = sys.version_info[:3]
-    version_string = '.'.join(str(x) for x in version_tuple)
-    return Version(version_string)
+    return '.'.join(str(x) for x in version_tuple)
 
 
 def get_python_location():
@@ -31,19 +34,15 @@ def get_python_location():
 
 
 def get_stored_python_version():
-    """Get the stored python version."""
-    from packaging.version import Version
+    """Get the stored python version as a string."""
 
     # Read python version from file
     python_version = None
     if os.path.exists(PYTHON_VERSION_FILE):
         with open(PYTHON_VERSION_FILE, mode='r') as f:
             version_string = f.readline().strip()
-        try:
-            if version_string:
-                python_version = Version(version_string)
-        except Exception:
-            pass
+            if version_string and re.match(PYTHON_VERSION_REGEX, version_string):
+                python_version = version_string
 
     return python_version
 
