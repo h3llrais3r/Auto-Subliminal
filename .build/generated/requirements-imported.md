@@ -26,7 +26,7 @@ CherryPy == 18.8.0
 GitPython == 3.1.27
 
 # \autosubliminal\indexer.py: 13
-Unidecode == 1.3.4
+Unidecode == 1.3.5
 
 # \autosubliminal\providers\addic7ed_custom.py: 9
 # \autosubliminal\subchecker.py: 8
