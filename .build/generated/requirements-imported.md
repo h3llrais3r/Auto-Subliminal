@@ -23,7 +23,7 @@
 CherryPy == 18.8.0
 
 # \autosubliminal\versionchecker.py: 10
-GitPython == 3.1.27
+GitPython == 3.1.29
 
 # \autosubliminal\indexer.py: 13
 Unidecode == 1.3.6
