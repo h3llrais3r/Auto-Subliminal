@@ -46,7 +46,7 @@ python-versions = "*"
 
 [[package]]
 name = "autopep8"
-version = "1.7.0"
+version = "1.7.1"
 description = "A tool that automatically formats Python code to conform to the PEP 8 style guide"
 category = "dev"
 optional = false
@@ -54,7 +54,7 @@ python-versions = "*"
 
 [package.dependencies]
 pycodestyle = ">=2.9.1"
-toml = "*"
+tomli = "*"
 
 [[package]]
 name = "babelfish"
@@ -1205,14 +1205,6 @@ docs = ["jaraco.packaging (>=9)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)
 testing = ["backports.unittest-mock", "freezegun", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.3)", "pytest-flake8", "pytest-freezegun", "pytest-mypy (>=0.9.1)", "types-freezegun", "types-pytz"]
 
 [[package]]
-name = "toml"
-version = "0.10.2"
-description = "Python Library for Tom's Obvious, Minimal Language"
-category = "dev"
-optional = false
-python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
-
-[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -1419,7 +1411,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "2cc098e2a9dba334b390bd741c2816c4501e41619e04c1ddda2adbf0d450a999"
+content-hash = "0ba9dcb0620444fa9a6efd1c0533110ae43788914ca6e25688356b6da360ae3b"
 
 [metadata.files]
 appdirs = [
@@ -1442,8 +1434,8 @@ autocommand = [
     {file = "autocommand-2.2.1.tar.gz", hash = "sha256:fed420e9d02745821a782971b583c6970259ee0b229be2a0a401e1467a4f170f"},
 ]
 autopep8 = [
-    {file = "autopep8-1.7.0-py2.py3-none-any.whl", hash = "sha256:6f09e90a2be784317e84dc1add17ebfc7abe3924239957a37e5040e27d812087"},
-    {file = "autopep8-1.7.0.tar.gz", hash = "sha256:ca9b1a83e53a7fad65d731dc7a2a2d50aa48f43850407c59f6a1a306c4201142"},
+    {file = "autopep8-1.7.1-py2.py3-none-any.whl", hash = "sha256:99afd5a60d30c6d426319e15db2ed7833d2da38f7f94a8753a1953509cc78e5d"},
+    {file = "autopep8-1.7.1.tar.gz", hash = "sha256:f0058220e4cc0ef6121996fc8ec1c32f0735e446be23c4e1f692de0bf23174dd"},
 ]
 babelfish = [
     {file = "babelfish-0.6.0-py3-none-any.whl", hash = "sha256:268f1c6279f2a04a66837972e8a9f3dcc68e16f1201eec57d2a4b828a8b41b11"},
@@ -2124,10 +2116,6 @@ tailer = [
 tempora = [
     {file = "tempora-5.0.2-py3-none-any.whl", hash = "sha256:e65d32ae68ad772ee738d802689f689b3f883e165e8dadd39aa89ef317b12b99"},
     {file = "tempora-5.0.2.tar.gz", hash = "sha256:31fa5bb33b2641026211f23e808eb8bd351901988b167d45f323c8f450ecf211"},
-]
-toml = [
-    {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
-    {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
 ]
 tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},

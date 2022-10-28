@@ -70,7 +70,7 @@ requests-mock = "1.10.0"
 vcrpy = "4.2.1"
 
 # Tooling
-autopep8 = "1.7.0"
+autopep8 = "1.7.1"
 flake8 = "5.0.4"
 isort = "5.10.1"
 pigar = "1.0.0"
