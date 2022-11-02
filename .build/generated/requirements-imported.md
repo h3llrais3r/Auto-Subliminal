@@ -55,7 +55,7 @@ gntp == 1.0.3
 # \autosubliminal\parsers\guessit\__init__.py: 3
 # \autosubliminal\parsers\guessit\rules.py: 3,4,5
 # \autosubliminal\providers\addic7ed_custom.py: 10
-guessit == 3.4.3
+guessit == 3.5.0
 
 # \autosubliminal\core\movie.py: 7
 # \autosubliminal\indexer.py: 9,10,11
