@@ -2,11 +2,9 @@ Auto-Subliminal [![License](https://img.shields.io/github/license/h3llrais3r/Aut
 ===============
 
 | Status | Master | Development |
-| -------|:------:| -----------:|
-| Travis CI build | [![Travis CI build status](https://travis-ci.org/h3llrais3r/Auto-Subliminal.svg?branch=master)](https://travis-ci.org/h3llrais3r/Auto-Subliminal) | [![Travis CI build status](https://travis-ci.org/h3llrais3r/Auto-Subliminal.svg?branch=development)](https://travis-ci.org/h3llrais3r/Auto-Subliminal) |
-| Appveyor CI build | [![Appveyor CI build status](https://ci.appveyor.com/api/projects/status/e9ni9cl0lbbk04j6/branch/master?svg=true)](https://ci.appveyor.com/project/h3llrais3r/auto-subliminal/branch/master) | [![Appveyor CI build status](https://ci.appveyor.com/api/projects/status/e9ni9cl0lbbk04j6/branch/development?svg=true)](https://ci.appveyor.com/project/h3llrais3r/auto-subliminal/branch/development) |
+| -------| ------:| -----------:|
+| CI | [![CI Status](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml/badge.svg?branch=master)](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml?query=branch:master) | [![CI Status](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml/badge.svg?branch=development)](https://github.com/h3llrais3r/Auto-Subliminal/actions/workflows/ci.yaml?query=branch:development) |
 | Coverage | [![Coverage Status](https://coveralls.io/repos/github/h3llrais3r/Auto-Subliminal/badge.svg?branch=master)](https://coveralls.io/github/h3llrais3r/Auto-Subliminal?branch=master) | [![Coverage Status](https://coveralls.io/repos/github/h3llrais3r/Auto-Subliminal/badge.svg?branch=development)](https://coveralls.io/github/h3llrais3r/Auto-Subliminal?branch=development) |
-| Requirements | [![Requirements Status](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements.svg?branch=master)](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements/?branch=master) | [![Requirements Status](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements.svg?branch=development)](https://requires.io/github/h3llrais3r/Auto-Subliminal/requirements/?branch=development) |
 
 About
 -----
@@ -29,14 +27,18 @@ What it does
 Dependencies
 ------------
 
- * To run Auto-Subliminal from source you need Python 2.7 (experimental support for Python 3)
- * Packaged external libraries: see [libaries.txt](requirements/libraries.txt)
+ * To run Auto-Subliminal from source you need Python 3.7 or higher
+ * Required dependencies: see [requirements.txt](requirements.txt)
 
 How to use
 ----------
 
  * Install python
- * Start the script: " python AutoSubliminal.py "
+ * Create a virtual environment and activate it
+ * Install all requirements in the virtual environment: `pip install -r requirements.txt`
+ * Start the script: `python AutoSubliminal.py`
+ * If you didn't create a virutal environment, the script creates one for you with the name `.venv` in the project root and will restart the script in the virtual environment
+ * If you didn't install the requirements, the script will install them for you in the virtual environment
  * A web browser should now open
  * Go to the config menu, check the settings and make sure you set at least:
     * Video paths: The root folder(s) of your series and/or movies
