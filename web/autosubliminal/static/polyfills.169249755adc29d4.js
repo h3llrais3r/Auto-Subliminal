@@ -73,7 +73,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /**
- * @license Angular v14.2.0-next.0
+ * @license Angular v15.1.0-next.0
  * (c) 2010-2022 Google LLC. https://angular.io/
  * License: MIT
  */
@@ -367,6 +367,10 @@ __webpack_require__.r(__webpack_exports__);
 
       cancelTask(task) {
         if (task.zone != this) throw new Error('A task can only be cancelled in the zone of creation! (Creation: ' + (task.zone || NO_ZONE).name + '; Execution: ' + this.name + ')');
+
+        if (task.state !== scheduled && task.state !== running) {
+          return;
+        }
 
         task._transitionTo(canceling, scheduled, running);
 
@@ -3401,4 +3405,4 @@ Zone.__load_patch('PromiseRejectionEvent', (global, Zone) => {
 /******/ var __webpack_exports__ = (__webpack_exec__(9932));
 /******/ }
 ]);
-//# sourceMappingURL=polyfills.97d0d72d52b96a9f.js.map
+//# sourceMappingURL=polyfills.169249755adc29d4.js.map
