@@ -758,7 +758,7 @@ python-versions = ">=2.6"
 
 [[package]]
 name = "pigar"
-version = "1.0.0"
+version = "1.0.2"
 description = "A fantastic tool to generate requirements for your Python project, and more than that."
 category = "dev"
 optional = false
@@ -767,6 +767,7 @@ python-versions = "*"
 [package.dependencies]
 colorama = ">=0.3.9"
 nbformat = ">=4.4.0"
+packaging = ">=20.9"
 requests = ">=2.20.0"
 
 [[package]]
@@ -1414,7 +1415,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7,<4"
-content-hash = "bd931a47e5782e7b8bbfbbb846fac9e12462ef73d5d8333d5ea256815860dc8c"
+content-hash = "c78f7cc291427032db961ecae66a52c53066a4b8dcc66c82114808fb73170c52"
 
 [metadata.files]
 appdirs = [
@@ -1817,8 +1818,8 @@ pbr = [
     {file = "pbr-5.10.0.tar.gz", hash = "sha256:cfcc4ff8e698256fc17ea3ff796478b050852585aa5bae79ecd05b2ab7b39b9a"},
 ]
 pigar = [
-    {file = "pigar-1.0.0-py2.py3-none-any.whl", hash = "sha256:08183fa61052c229ff23881f2b94c7614c9268215f393e548c371a2d3702da6b"},
-    {file = "pigar-1.0.0.tar.gz", hash = "sha256:f3bef132281d4d4a71ba817469ee20eb935f1bcf42684598b8b9ba685ada5866"},
+    {file = "pigar-1.0.2-py2.py3-none-any.whl", hash = "sha256:8c66e2b32a5a85b4afc7b27bcb393b02d3e6fb8f4487366152088f954e0f49ad"},
+    {file = "pigar-1.0.2.tar.gz", hash = "sha256:875ad66c66dfd1ff4d23b0ee3629edd264e67e6510c328ec6c6454f09f04ddf0"},
 ]
 pkgutil_resolve_name = [
     {file = "pkgutil_resolve_name-1.3.10-py3-none-any.whl", hash = "sha256:ca27cc078d25c5ad71a9de0a7a330146c4e014c2462d9af19c6b828280649c5e"},
