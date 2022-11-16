@@ -39,7 +39,7 @@ jobs:
     - name: Get node version
       id: get-node-version
       run: |
-        echo "::set-output name=node-version::$(jq -r '.engines.node' package.json | sed 's/[>=]//g')"
+        echo "node-version=$(jq -r '.engines.node' package.json | sed 's/[>=]//g')" >> $GITHUB_OUTPUT
 
     - name: Set up node
       uses: actions/setup-node@v3
@@ -67,7 +67,7 @@ jobs:
         echo "Checking for real changes (ignoring line endings)"
         changes=$(if $(git diff --quiet); then echo "false"; else echo "true"; fi)
         echo "Changes detected: $changes"
-        echo "::set-output name=changes::$changes"
+        echo "changes=$changes" >> $GITHUB_OUTPUT
 
     - name: Commit changes
       if: ${{ steps.check-changes.outputs.changes == 'true' }}

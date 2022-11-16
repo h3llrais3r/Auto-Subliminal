@@ -67,7 +67,7 @@ jobs:
         echo "Checking for real changes (ignoring line endings)"
         changes=$(if $(git diff --quiet); then echo "false"; else echo "true"; fi)
         echo "Changes detected: $changes"
-        echo "::set-output name=changes::$changes"
+        echo "changes=$changes" >> $GITHUB_OUTPUT
 
     - name: Commit changes
       if: ${{ steps.check-changes.outputs.changes == 'true' }}
