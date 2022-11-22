@@ -80,12 +80,12 @@ jobs:
 
     - name: Add labels
       if: ${{ steps.check-changes.outputs.changes == 'true' }}
-      uses: andymckay/labeler@master
+      uses: actions-ecosystem/action-add-labels@v1
       with:
-        add-labels: "source changes"
+        labels: "source changes"
 
     - name: Remove labels
       if: ${{ steps.check-changes.outputs.changes == 'false' }}
-      uses: andymckay/labeler@master
+      uses: actions-ecosystem/action-remove-labels@v1
       with:
-        remove-labels: "source changes"
+        labels: "source changes"
