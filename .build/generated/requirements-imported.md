@@ -62,7 +62,7 @@ guessit == 3.5.0
 imdbpie == 5.6.4.dev0
 
 # \autosubliminal\util\json.py: 4
-jsonpickle == 2.2.0
+jsonpickle == 3.0.0
 
 # \autosubliminal\__init__.py: 702,703
 # \autosubliminal\util\filesystem.py: 9
@@ -103,7 +103,7 @@ requests_oauthlib == 1.3.1
 schema == 0.7.5
 
 # \autosubliminal\__init__.py: 5
-setuptools == 65.3.0
+setuptools == 58.5.3
 
 # \autosubliminal\__init__.py: 670
 # \autosubliminal\providers\addic7ed_custom.py: 18,19
