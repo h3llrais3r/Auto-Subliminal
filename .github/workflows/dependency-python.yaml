@@ -55,9 +55,9 @@ jobs:
         poetry install --no-interaction
 
     - name: Generate dependencies files
+      working-directory: .build
       run: |
-        $GITHUB_WORKSPACE/.build/generate-requirements.sh
-      shell: bash
+        ./generate-requirements.sh
 
     - name: Check changes
       id: check-changes
