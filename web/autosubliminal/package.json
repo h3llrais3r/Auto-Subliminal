@@ -48,7 +48,7 @@
     "@angular/router": "14.2.12",
     "bootstrap": "4.6.2",
     "font-awesome": "4.7.0",
-    "jquery": "3.6.1",
+    "jquery": "3.6.2",
     "lodash-es": "4.17.21",
     "moment": "2.29.4",
     "natural-compare": "1.4.0",
