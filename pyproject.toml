@@ -71,7 +71,7 @@ vcrpy = "4.2.1"
 
 # Tooling
 autopep8 = "2.0.0"
-flake8 = "5.0.4"
+flake8 = "6.0.0"
 isort = "5.11.2"
 pigar = "2.0.3"
 
