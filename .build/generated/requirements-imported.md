@@ -79,7 +79,7 @@ requests-oauthlib==1.3.1
 # autosubliminal\core\websocket.py: 8
 schema==0.7.5
 # autosubliminal\__init__.py: 5
-setuptools==65.6.3
+setuptools==58.5.3
 # autosubliminal\__init__.py: 648,668,669,670
 # autosubliminal\providers\addic7ed_custom.py: 12,13,14,15,16,17,18,19
 # autosubliminal\providers\exceptions.py: 3
