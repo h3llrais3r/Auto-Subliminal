@@ -173,7 +173,7 @@ export class HomeSearchComponent implements OnInit, OnDestroy {
     this.postProcessInProgress = true;
     this.itemService.postProcessWantedItem(this.wantedItem.id, subtitle.subtitleIndex).subscribe(
       () => {
-        this.saveSubtitle = null; // clear saved subtile (to not trigger the cleanup in onDestroy)
+        this.savedSubtitle = null; // clear saved subtile (to not trigger the cleanup in onDestroy)
         this.postProcessInProgress = false;
         this.messageService.showSuccessMessage(`Post processed ${this.wantedItem.longName}.`);
         this.goHome();
