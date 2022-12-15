@@ -338,14 +338,14 @@ files = [
 
 [[package]]
 name = "certifi"
-version = "2022.9.24"
+version = "2022.12.7"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "certifi-2022.9.24-py3-none-any.whl", hash = "sha256:90c1a32f1d68f940488354e36370f6cca89f0f106db09518524c88d6ed83f382"},
-    {file = "certifi-2022.9.24.tar.gz", hash = "sha256:0d9c601124e5a6ba9712dbc60d9c53c21e34f5f641fe83002317394311bdce14"},
+    {file = "certifi-2022.12.7-py3-none-any.whl", hash = "sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18"},
+    {file = "certifi-2022.12.7.tar.gz", hash = "sha256:35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3"},
 ]
 
 [[package]]
@@ -1520,20 +1520,20 @@ zipp = {version = "*", markers = "python_version < \"3.8\""}
 
 [[package]]
 name = "pigar"
-version = "2.0.2"
+version = "2.0.3"
 description = "A fantastic tool to generate requirements for your Python project, and more than that."
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pigar-2.0.2-py3-none-any.whl", hash = "sha256:a9bba96eb95c9f23170ad211976d175ec4974b7e74add154749a3f1048f330ee"},
-    {file = "pigar-2.0.2.tar.gz", hash = "sha256:56e9b3abb3f124a8efbd8e0fb35bb2be9bd18f2f499e64ef8e1e9108b7041ea9"},
+    {file = "pigar-2.0.3-py3-none-any.whl", hash = "sha256:058b3cf5a37cd7511413dfc7d430a689553f02dcb02fe05bd5a7d968bfc6019d"},
+    {file = "pigar-2.0.3.tar.gz", hash = "sha256:9365fbeff1ed15240928714100ed95139b313cebbdbb27ba35bf75839742f3d4"},
 ]
 
 [package.dependencies]
 aiohttp = ">=3.8.3"
 CacheControl = "0.12.11"
-certifi = "2022.09.24"
+certifi = "2022.12.7"
 click = ">=8.1.3"
 colorama = "0.4.5"
 distlib = "0.3.6"
@@ -2778,4 +2778,4 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.7,<4"
-content-hash = "90dfe01ade98e0d97c7efd8bda7bbc7d5dbed2e1fa1fbca41922ca4baeed94b6"
+content-hash = "f311867628c2337b935129da7b7d5d2774d30a85aab47d448d600486c47edfc1"
