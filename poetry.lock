@@ -1166,19 +1166,17 @@ testing = ["flake8 (<5)", "pathlib2", "pytest (>=6)", "pytest-black (>=0.3.7)", 
 
 [[package]]
 name = "jsonpickle"
-version = "3.0.0"
+version = "3.0.1"
 description = "Python library for serializing any arbitrary object graph into JSON"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "jsonpickle-3.0.0-py2.py3-none-any.whl", hash = "sha256:7c4b13d595ff3520148ed870b9f5917023ebdc55c9ec0cb695688fdc16e90c3e"},
-    {file = "jsonpickle-3.0.0.tar.gz", hash = "sha256:504586e5c0fd52fd76a56f86c36f8c4d29778bdef92dc06d38ca6e2e9fc4f090"},
+    {file = "jsonpickle-3.0.1-py2.py3-none-any.whl", hash = "sha256:130d8b293ea0add3845de311aaba55e6d706d0bb17bc123bd2c8baf8a39ac77c"},
 ]
 
 [package.dependencies]
 importlib-metadata = {version = "*", markers = "python_version < \"3.8\""}
-setuptools = {version = "<59", markers = "python_version > \"3.10\""}
 
 [package.extras]
 docs = ["jaraco.packaging (>=3.2)", "rst.linker (>=1.9)", "sphinx"]
@@ -2778,4 +2776,4 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.7,<4"
-content-hash = "f311867628c2337b935129da7b7d5d2774d30a85aab47d448d600486c47edfc1"
+content-hash = "647120d32b38ee2730be56f955011300d427eea1fce0de3aa8d78d5225a1cdbe"
