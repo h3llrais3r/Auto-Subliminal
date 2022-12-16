@@ -49,7 +49,7 @@ guessit==3.5.0
 # autosubliminal\indexer.py: 9,10,11
 imdbpie==5.6.4.dev0
 # autosubliminal\util\json.py: 4
-jsonpickle==3.0.0
+jsonpickle==3.0.1
 # autosubliminal\__init__.py: 702,703
 # autosubliminal\util\filesystem.py: 9
 langdetect==1.0.9
