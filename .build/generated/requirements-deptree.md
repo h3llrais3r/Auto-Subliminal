@@ -100,11 +100,10 @@ imdbpie 5.6.4.dev0 Python IMDB client using the IMDB json web service made avail
 importlib-metadata 4.2.0 Read metadata from Python packages
 |-- typing-extensions >=3.6.4
 `-- zipp >=0.5
-jsonpickle 3.0.0 Python library for serializing any arbitrary object graph into JSON
-|-- importlib-metadata *
-|   |-- typing-extensions >=3.6.4 
-|   `-- zipp >=0.5 
-`-- setuptools <59
+jsonpickle 3.0.1 Python library for serializing any arbitrary object graph into JSON
+`-- importlib-metadata *
+    |-- typing-extensions >=3.6.4 
+    `-- zipp >=0.5 
 langdetect 1.0.9 Language detection library ported from Google's language-detection.
 `-- six *
 packaging 21.3 Core utilities for Python packages
