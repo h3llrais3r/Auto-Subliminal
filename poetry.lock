@@ -1519,14 +1519,14 @@ zipp = {version = "*", markers = "python_version < \"3.8\""}
 
 [[package]]
 name = "pigar"
-version = "2.0.3"
+version = "2.0.4"
 description = "A fantastic tool to generate requirements for your Python project, and more than that."
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pigar-2.0.3-py3-none-any.whl", hash = "sha256:058b3cf5a37cd7511413dfc7d430a689553f02dcb02fe05bd5a7d968bfc6019d"},
-    {file = "pigar-2.0.3.tar.gz", hash = "sha256:9365fbeff1ed15240928714100ed95139b313cebbdbb27ba35bf75839742f3d4"},
+    {file = "pigar-2.0.4-py3-none-any.whl", hash = "sha256:42372d543c07f60a2cc7e2df6b6a9abe0c7a8e8219c71cb23a5a5dcd876fa322"},
+    {file = "pigar-2.0.4.tar.gz", hash = "sha256:96c5a844bff0f5d5008837f4386d948785626e147ec502b11ca4e149d360c781"},
 ]
 
 [package.dependencies]
@@ -2777,4 +2777,4 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.7,<4"
-content-hash = "d26504ce088e69bddba06e8bbea1b50b1705bc72b1ca9c232fde5d6687d2836e"
+content-hash = "bfb77ef4ded161e33614b7e128531e22b03c99545622c033f2fea83e09ad6db4"
