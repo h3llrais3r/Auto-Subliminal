@@ -73,6 +73,6 @@ vcrpy = "4.2.1"
 autopep8 = "2.0.0"
 flake8 = "5.0.4"
 isort = "5.11.4"
-pigar = "2.0.3"
+pigar = "2.0.4"
 
 [tool.flake8]
