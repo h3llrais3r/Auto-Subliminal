@@ -139,18 +139,6 @@ files = [
 ]
 
 [[package]]
-name = "argparse"
-version = "1.4.0"
-description = "Python command-line parsing library"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "argparse-1.4.0-py2.py3-none-any.whl", hash = "sha256:c31647edb69fd3d465a847ea3157d37bed1f95f19760b11a47aa91c04b666314"},
-    {file = "argparse-1.4.0.tar.gz", hash = "sha256:62b089a55be1d8949cd2bc7e0df0bddb9e028faefc8c32038cc84862aefdd6e4"},
-]
-
-[[package]]
 name = "async-timeout"
 version = "4.0.2"
 description = "Timeout context manager for asyncio programs"
@@ -713,21 +701,23 @@ dev = ["Sphinx (==2.1.0)", "future (==0.17.1)", "numpy (==1.16.4)", "pytest (==4
 
 [[package]]
 name = "ffsubsync"
-version = "0.4.20"
+version = "0.4.22"
 description = "Language-agnostic synchronization of subtitles with video."
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "ffsubsync-0.4.20-py2.py3-none-any.whl", hash = "sha256:a307f69c17f18eac14c4e91bcc670dd71bbd2c447cc03812d5706b1e04d92e02"},
-    {file = "ffsubsync-0.4.20.tar.gz", hash = "sha256:d48d241bec6a2ab03a3d61e1ab2e277e6cab270f746ec626c819337a5bb64cf9"},
+    {file = "ffsubsync-0.4.22-py2.py3-none-any.whl", hash = "sha256:81bd2ee89b49c83af7f59e35b37cb49f2cccb64d28d8304bfecd54f844d2ea8c"},
+    {file = "ffsubsync-0.4.22.tar.gz", hash = "sha256:b5cbd967374efef292119dda1cb5396f82f06f45a83f80ccc5efec529b730754"},
 ]
 
 [package.dependencies]
-argparse = "*"
 auditok = "0.1.5"
-cchardet = "*"
+cchardet = {version = "*", markers = "python_version < \"3.11\""}
+chardet = {version = "*", markers = "python_version >= \"3.7\""}
+charset-normalizer = "*"
 ffmpeg-python = "*"
+future = ">=0.18.2"
 numpy = ">=1.12.0"
 pysubs2 = {version = ">=1.2.0", markers = "python_version >= \"3.7\""}
 rich = "*"
@@ -2777,4 +2767,4 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.7,<4"
-content-hash = "fbfb72a2b8be87146e632a02ed1ea8f51e075244372830ab527bc4a87f6bc42b"
+content-hash = "85d033fe1c17eeaf35e8446031b800632aa265f407893e9d1d4e7b263b2021ff"
