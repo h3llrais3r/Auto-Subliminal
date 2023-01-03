@@ -48,12 +48,14 @@ dogpile.cache 1.1.8 A caching front-end based on the Dogpile lock.
     |   `-- zipp >=0.5 
     `-- pbr >=2.0.0,<2.1.0 || >2.1.0 
 enzyme 0.4.1 Python video metadata parser
-ffsubsync 0.4.20 Language-agnostic synchronization of subtitles with video.
-|-- argparse *
+ffsubsync 0.4.22 Language-agnostic synchronization of subtitles with video.
 |-- auditok 0.1.5
 |-- cchardet *
+|-- chardet *
+|-- charset-normalizer *
 |-- ffmpeg-python *
 |   `-- future * 
+|-- future >=0.18.2
 |-- numpy >=1.12.0
 |-- pysubs2 >=1.2.0
 |-- rich *

@@ -34,7 +34,7 @@ dogpile.cache==1.1.8
 # autosubliminal\util\filesystem.py: 14
 enzyme==0.4.1
 # autosubliminal\subsynchronizer.py: 7
-ffsubsync==0.4.20
+ffsubsync==0.4.22
 # autosubliminal\versionchecker.py: 10
 GitPython==3.1.30
 # autosubliminal\notifiers\growl.py: 5
