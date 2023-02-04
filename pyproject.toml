@@ -17,7 +17,6 @@ classifiers = [
   "Development Status :: 5 - Production/Stable",
   "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.7",
   "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
@@ -27,7 +26,7 @@ packages = [{ include = "autosubliminal" }, { include = "AutoSubliminal.py" }]
 
 [tool.poetry.dependencies]
 # Python version
-python = ">=3.7,<4"
+python = ">=3.8.1,<4"
 
 # Runtime dependencies
 babelfish = "0.6.0"
@@ -41,7 +40,6 @@ gntp = "1.0.3"
 guessit = "3.5.0"
 html5lib = "1.1"
 imdbpie = { git = "https://github.com/h3llrais3r/imdb-pie.git", rev = "75c300af1bf87c49baef09f17002a3e35b0ed3cc" }
-importlib-metadata = { version = "4.2.0", markers = "python_version < '3.8'" }
 jsonpickle = "3.0.1"
 langdetect = "1.0.9"
 packaging = "21.3"
@@ -71,8 +69,8 @@ vcrpy = "4.2.1"
 
 # Tooling
 autopep8 = "2.0.0"
-flake8 = "5.0.4"
+flake8 = "6.0.0"
 isort = "5.11.4"
-pigar = "2.0.4"
+pigar = "2.0.5"
 
 [tool.flake8]

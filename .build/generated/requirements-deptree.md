@@ -4,7 +4,7 @@
 
 ```
 babelfish 0.6.0 A module to work with countries and languages
-CherryPy 18.8.0 Object-Oriented HTTP framework
+cherrypy 18.8.0 Object-Oriented HTTP framework
 |-- cheroot >=8.2.1
 |   |-- jaraco-functools * 
 |   |   `-- more-itertools * 
@@ -18,8 +18,8 @@ CherryPy 18.8.0 Object-Oriented HTTP framework
 |       |-- importlib-resources * 
 |       |   `-- zipp >=3.1.0 
 |       |-- inflect * 
-|       |   `-- pydantic * 
-|       |       `-- typing-extensions >=4.1.0 
+|       |   `-- pydantic >=1.9.1 
+|       |       `-- typing-extensions >=4.2.0 
 |       |-- jaraco-context >=4.1 
 |       |-- jaraco-functools * 
 |       |   `-- more-itertools * (circular dependency aborted here)
@@ -40,12 +40,9 @@ deathbycaptcha 0.1.1 A library aims to support deathbycaptcha.
 |   |-- idna >=2.5,<4 
 |   `-- urllib3 >=1.21.1,<1.27 
 `-- simplejson *
-dogpile.cache 1.1.8 A caching front-end based on the Dogpile lock.
+dogpile-cache 1.1.8 A caching front-end based on the Dogpile lock.
 |-- decorator >=4.0.0
 `-- stevedore >=3.0.0
-    |-- importlib-metadata >=1.7.0 
-    |   |-- typing-extensions >=3.6.4 
-    |   `-- zipp >=0.5 
     `-- pbr >=2.0.0,<2.1.0 || >2.1.0 
 enzyme 0.4.1 Python video metadata parser
 ffsubsync 0.4.23 Language-agnostic synchronization of subtitles with video.
@@ -59,8 +56,9 @@ ffsubsync 0.4.23 Language-agnostic synchronization of subtitles with video.
 |-- numpy >=1.12.0
 |-- pysubs2 >=1.2.0
 |-- rich *
-|   |-- commonmark >=0.9.0,<0.10.0 
-|   |-- pygments >=2.6.0,<3.0.0 
+|   |-- markdown-it-py >=2.1.0,<3.0.0 
+|   |   `-- mdurl >=0.1,<1.0 
+|   |-- pygments >=2.14.0,<3.0.0 
 |   `-- typing-extensions >=4.0.0,<5.0 
 |-- six *
 |-- srt >=3.0.0
@@ -70,9 +68,8 @@ ffsubsync 0.4.23 Language-agnostic synchronization of subtitles with video.
 |-- webrtcvad *
 `-- webrtcvad-wheels *
 gitpython 3.1.30 GitPython is a python library used to interact with Git repositories
-|-- gitdb >=4.0.1,<5
-|   `-- smmap >=3.0.1,<6 
-`-- typing-extensions >=3.7.4.3
+`-- gitdb >=4.0.1,<5
+    `-- smmap >=3.0.1,<6 
 gntp 1.0.3 Growl Notification Transport Protocol for Python
 guessit 3.5.0 GuessIt - a library for guessing information from video filenames.
 |-- babelfish >=0.6.0
@@ -99,13 +96,7 @@ imdbpie 5.6.4.dev0 Python IMDB client using the IMDB json web service made avail
 |-- six >=1.0.0
 |-- trans >=2.1.0
 `-- wheel >=0.30.0
-importlib-metadata 4.2.0 Read metadata from Python packages
-|-- typing-extensions >=3.6.4
-`-- zipp >=0.5
 jsonpickle 3.0.1 Python library for serializing any arbitrary object graph into JSON
-`-- importlib-metadata *
-    |-- typing-extensions >=3.6.4 
-    `-- zipp >=0.5 
 langdetect 1.0.9 Language detection library ported from Google's language-detection.
 `-- six *
 packaging 21.3 Core utilities for Python packages
@@ -158,16 +149,10 @@ subliminal 2.1.0.dev0 Subtitles, faster than your thoughts
 |   `-- soupsieve >1.2 
 |-- chardet >=2.3.0
 |-- click >=4.0
-|   |-- colorama * 
-|   `-- importlib-metadata * 
-|       |-- typing-extensions >=3.6.4 
-|       `-- zipp >=0.5 
+|   `-- colorama * 
 |-- dogpile-cache >=0.6.0
 |   |-- decorator >=4.0.0 
 |   `-- stevedore >=3.0.0 
-|       |-- importlib-metadata >=1.7.0 
-|       |   |-- typing-extensions >=3.6.4 
-|       |   `-- zipp >=0.5 
 |       `-- pbr >=2.0.0,<2.1.0 || >2.1.0 
 |-- enzyme >=0.4.1
 |-- guessit >=3.0.0
@@ -188,9 +173,6 @@ subliminal 2.1.0.dev0 Subtitles, faster than your thoughts
 |   `-- urllib3 >=1.21.1,<1.27 
 |-- six >=1.9.0
 `-- stevedore >=1.20.0
-    |-- importlib-metadata >=1.7.0 
-    |   |-- typing-extensions >=3.6.4 
-    |   `-- zipp >=0.5 
     `-- pbr >=2.0.0,<2.1.0 || >2.1.0 
 tailer 0.4.1 Python tail is a simple implementation of GNU tail and head.
 tvdb-api 3.0.0 Client implementation for TheTVDB API v2 and v3
@@ -199,6 +181,6 @@ tvdb-api 3.0.0 Client implementation for TheTVDB API v2 and v3
 |   `-- six >=1.5 
 |-- six >=1.10.0
 `-- urllib3 >=1.15.1
-Unidecode 1.3.6 ASCII transliterations of Unicode text
+unidecode 1.3.6 ASCII transliterations of Unicode text
 ws4py 0.5.1 WebSocket client and server library for Python 2 and 3 as well as PyPy
 ```

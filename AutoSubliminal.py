@@ -9,9 +9,9 @@ import sys
 import time
 
 # Check minimal python version
-MIN_PYTHON_VERSION = (3, 7)
+MIN_PYTHON_VERSION = (3, 8)
 if sys.version_info < MIN_PYTHON_VERSION:
-    print('ERROR: Python 3.7 or higher is required.')
+    print('ERROR: Python 3.8 or higher is required.')
     os._exit(1)
 
 help_message = '''
