@@ -242,15 +242,15 @@ class GitVersionManager(_BaseVersionManager):
         self.update_allowed = False
 
         # Local git version
-        log.debug('Local branch: %s', self.current_git_branch)
-        log.debug('Local commit: %s', self.current_git_commit)
+        log.debug('Local branch: %s', self.current_branch)
+        log.debug('Local commit: %s', self.current_version)
         if self.repo.is_dirty():
             log.warning('Local branch is dirty')
 
         # Remote git version
         try:
             remote_url = self.repo.remote(name='origin').url
-            remote_fetch_info = self.repo.remote().fetch(refspec=self.current_git_branch)[0]
+            remote_fetch_info = self.repo.remote().fetch(refspec=self.current_branch)[0]
             remote_commit = remote_fetch_info.commit
             log.debug('Remote url: %s', remote_url)
             log.debug('Remote commit: %s', remote_commit)
