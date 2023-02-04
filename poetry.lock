@@ -701,14 +701,14 @@ dev = ["Sphinx (==2.1.0)", "future (==0.17.1)", "numpy (==1.16.4)", "pytest (==4
 
 [[package]]
 name = "ffsubsync"
-version = "0.4.22"
+version = "0.4.23"
 description = "Language-agnostic synchronization of subtitles with video."
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "ffsubsync-0.4.22-py2.py3-none-any.whl", hash = "sha256:81bd2ee89b49c83af7f59e35b37cb49f2cccb64d28d8304bfecd54f844d2ea8c"},
-    {file = "ffsubsync-0.4.22.tar.gz", hash = "sha256:b5cbd967374efef292119dda1cb5396f82f06f45a83f80ccc5efec529b730754"},
+    {file = "ffsubsync-0.4.23-py2.py3-none-any.whl", hash = "sha256:6a91609757fbfb9a8138f0c0104c11eec873f9e510be707e56b4785f9eefe785"},
+    {file = "ffsubsync-0.4.23.tar.gz", hash = "sha256:b0f985ae529b78acfe0b94925c6efa4c1ce199cdc3cad007443cd75790bbe476"},
 ]
 
 [package.dependencies]
@@ -2778,4 +2778,4 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.7,<4"
-content-hash = "13db2046b75eeecc22da825835a4ad3682b253622b5b63996224ee37ecad1354"
+content-hash = "4bdddc24f1303b5136d950cbea769205c9a7c8e3189e842efd7b257459103a8d"
