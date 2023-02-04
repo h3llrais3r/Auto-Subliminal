@@ -36,7 +36,7 @@ cherrypy 18.8.0 Object-Oriented HTTP framework
 deathbycaptcha 0.1.1 A library aims to support deathbycaptcha.
 |-- requests *
 |   |-- certifi >=2017.4.17 
-|   |-- charset-normalizer >=2,<3 
+|   |-- charset-normalizer >=2,<4 
 |   |-- idna >=2.5,<4 
 |   `-- urllib3 >=1.21.1,<1.27 
 `-- simplejson *
@@ -89,7 +89,7 @@ imdbpie 5.6.4.dev0 Python IMDB client using the IMDB json web service made avail
 |   `-- six >=1.5 
 |-- requests >=0.10
 |   |-- certifi >=2017.4.17 
-|   |-- charset-normalizer >=2,<3 
+|   |-- charset-normalizer >=2,<4 
 |   |-- idna >=2.5,<4 
 |   `-- urllib3 >=1.21.1,<1.27 
 |-- setuptools >=39.0.1
@@ -106,7 +106,7 @@ pysrt 1.1.2 SubRip (.srt) subtitle parser and writer
 python-anticaptcha 1.0.0 Client library for solve captchas with Anticaptcha.com support.
 |-- requests *
 |   |-- certifi >=2017.4.17 
-|   |-- charset-normalizer >=2,<3 
+|   |-- charset-normalizer >=2,<4 
 |   |-- idna >=2.5,<4 
 |   `-- urllib3 >=1.21.1,<1.27 
 `-- six *
@@ -116,27 +116,27 @@ python-twitter 3.5 A Python wrapper around the Twitter API
 |-- future *
 |-- requests *
 |   |-- certifi >=2017.4.17 
-|   |-- charset-normalizer >=2,<3 
+|   |-- charset-normalizer >=2,<4 
 |   |-- idna >=2.5,<4 
 |   `-- urllib3 >=1.21.1,<1.27 
 `-- requests-oauthlib *
     |-- oauthlib >=3.0.0 
     `-- requests >=2.0.0 
         |-- certifi >=2017.4.17 
-        |-- charset-normalizer >=2,<3 
+        |-- charset-normalizer >=2,<4 
         |-- idna >=2.5,<4 
         `-- urllib3 >=1.21.1,<1.27 
 rebulk 3.1.0 Rebulk - Define simple search patterns in bulk to perform advanced matching on any string.
-requests 2.28.1 Python HTTP for Humans.
+requests 2.28.2 Python HTTP for Humans.
 |-- certifi >=2017.4.17
-|-- charset-normalizer >=2,<3
+|-- charset-normalizer >=2,<4
 |-- idna >=2.5,<4
 `-- urllib3 >=1.21.1,<1.27
 requests-oauthlib 1.3.1 OAuthlib authentication support for Requests.
 |-- oauthlib >=3.0.0
 `-- requests >=2.0.0
     |-- certifi >=2017.4.17 
-    |-- charset-normalizer >=2,<3 
+    |-- charset-normalizer >=2,<4 
     |-- idna >=2.5,<4 
     `-- urllib3 >=1.21.1,<1.27 
 schema 0.7.5 Simple data validation library
@@ -168,7 +168,7 @@ subliminal 2.1.0.dev0 Subtitles, faster than your thoughts
 |-- rarfile >=2.7
 |-- requests >=2.0
 |   |-- certifi >=2017.4.17 
-|   |-- charset-normalizer >=2,<3 
+|   |-- charset-normalizer >=2,<4 
 |   |-- idna >=2.5,<4 
 |   `-- urllib3 >=1.21.1,<1.27 
 |-- six >=1.9.0
