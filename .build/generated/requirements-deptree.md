@@ -48,7 +48,7 @@ dogpile.cache 1.1.8 A caching front-end based on the Dogpile lock.
     |   `-- zipp >=0.5 
     `-- pbr >=2.0.0,<2.1.0 || >2.1.0 
 enzyme 0.4.1 Python video metadata parser
-ffsubsync 0.4.22 Language-agnostic synchronization of subtitles with video.
+ffsubsync 0.4.23 Language-agnostic synchronization of subtitles with video.
 |-- auditok 0.1.5
 |-- cchardet *
 |-- chardet *
@@ -150,7 +150,7 @@ requests-oauthlib 1.3.1 OAuthlib authentication support for Requests.
     `-- urllib3 >=1.21.1,<1.27 
 schema 0.7.5 Simple data validation library
 `-- contextlib2 >=0.5.5
-simplejson 3.18.0 Simple, fast, extensible JSON encoder/decoder for Python
+simplejson 3.18.1 Simple, fast, extensible JSON encoder/decoder for Python
 subliminal 2.1.0.dev0 Subtitles, faster than your thoughts
 |-- appdirs >=1.3
 |-- babelfish >=0.5.2
