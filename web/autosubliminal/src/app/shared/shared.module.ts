@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
-import { NgxMaskModule } from 'ngx-mask';
+import { NgxMaskDirective, provideEnvironmentNgxMask } from 'ngx-mask';
 import { ConfirmationService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -67,7 +67,6 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxMaskModule.forRoot(),
     LazyLoadImageModule,
     MessageModule,
     MessagesModule,
@@ -79,13 +78,13 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
     InputSwitchModule,
     DropdownModule,
     MultiSelectModule,
-    DialogModule
+    DialogModule,
+    NgxMaskDirective
   ],
   exports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    NgxMaskModule,
     LazyLoadImageModule,
     MessageModule,
     MessagesModule,
@@ -104,6 +103,7 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
     DialogModule,
     ConfirmDialogModule,
     TooltipModule,
+    NgxMaskDirective,
     LoadingComponent,
     ScrollComponent,
     IconDropdownComponent,
@@ -125,6 +125,7 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
     FileBrowserComponent
   ],
   providers: [
+    provideEnvironmentNgxMask(),
     ConfirmationService
   ]
 })
