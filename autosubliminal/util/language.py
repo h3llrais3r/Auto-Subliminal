@@ -37,4 +37,4 @@ def get_subtitle_languages():
     languages.append(SubtitleLanguage('pt-BR', 'Brazilian Portuguese'))
 
     # Return sorted on name
-    return sorted(languages, key=lambda l: l.name)
+    return sorted(languages, key=lambda language: language.name)
