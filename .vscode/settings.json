@@ -31,7 +31,6 @@
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
   // Html settings
-  "html.format.endWithNewline": true,
   "html.format.wrapLineLength": 0, // No auto wrap
   "html.format.wrapAttributes": "preserve-aligned", // Keep manual wrapping, but align
   // Javascript/Typescript settings
@@ -41,25 +40,6 @@
   "typescript.preferences.quoteStyle": "single",
   "typescript.tsdk": "web/autosubliminal/node_modules/typescript/lib", // Use project typescript version instead of latest version packaged with VS Code
   "typescript.updateImportsOnFileMove.enabled": "always",
-  // Beautify settings (ignore formatting for json and html files, use built-in formatter instead)
-  "beautify.language": {
-    "js": {
-      "type": [
-        "javascript"
-        //"json",
-        //"jsonc"
-      ]
-    },
-    "css": [
-      "css",
-      "less",
-      "scss"
-    ],
-    "html": [
-      //"htm",
-      //"html"
-    ]
-  },
   // Eslint settings
   "eslint.workingDirectories": [
     "web/autosubliminal"
@@ -69,7 +49,6 @@
     "editor.tabSize": 4 // Python uses 4 spaces for tab
   },
   "python.languageServer": "Pylance",
-  "python.pythonPath": "${workspaceFolder}/.venv/Scripts/python.exe",
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
   "python.envFile": "${workspaceFolder}/.env",
   "python.formatting.provider": "autopep8",
