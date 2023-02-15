@@ -23,6 +23,20 @@
         <span class="subtitle-sync-value">{{subtitleName}}</span>
       </div>
     </div>
+    <div class="row">
+      <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+        <span class="subtitle-sync-label">Reference subtitle:</span>
+      </div>
+      <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+        <div class="subtitle-upload">
+          <div class="p-inputgroup">
+            <input type="text" pInputText [(ngModel)]="referenceSubtitle">
+            <p-fileUpload *ngIf="!referenceSubtitle" mode="basic" chooseIcon="pi pi-upload" [auto]="true" [customUpload]="true" (uploadHandler)="uploadReferenceSubtitle($event)"></p-fileUpload>
+            <p-button *ngIf="referenceSubtitle" icon="pi pi-times" styleClass="p-button" (onClick)="removeReferenceSubtitle()"></p-button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row" *ngIf="subtitleSyncResult">
       <p-panel>
         <ng-template pTemplate="header">
@@ -78,8 +92,8 @@
   </div>
   <ng-template pTemplate="footer">
     <p-button icon="pi pi-times" label="Cancel" styleClass="p-button p-button-secondary" (click)="close()" [disabled]="syncInProgress"></p-button>
-    <p-button *ngIf="!subtitleSyncResult && !syncInProgress" icon="pi pi-sync" label="Synchronize" styleClass="p-button" (click)="syncSubtitle()"></p-button>
-    <p-button *ngIf="!subtitleSyncResult && syncInProgress" icon="pi pi-sync pi-spin" label="Synchronizing..." styleClass="p-button" [disabled]="true"></p-button>
+    <p-button *ngIf="!subtitleSyncResult && !syncInProgress" icon="pi pi-sync" label="Synchronize" styleClass="p-button mr-0" (click)="syncSubtitle()"></p-button>
+    <p-button *ngIf="!subtitleSyncResult && syncInProgress" icon="pi pi-sync pi-spin" label="Synchronizing..." styleClass="p-button mr-0" [disabled]="true"></p-button>
     <p-button *ngIf="subtitleSyncResult" icon="pi pi-undo" label="Reset" styleClass="p-button" (click)="resetSubtitle()"></p-button>
     <p-button *ngIf="subtitleSyncResult" icon="pi pi-check" label="Save" styleClass="p-button mr-0" (click)="saveSubtitle()"></p-button>
   </ng-template>

@@ -17,8 +17,8 @@ export class SubtitleService extends ApiServiceTemplate {
     super(httpClient);
   }
 
-  syncSubtitle(videoPath: string, subtitlePath: string): Observable<SubtitleSyncResult> {
-    return this.httpClient.patch<SubtitleSyncResult>(`${this.URL}/synchronization`, { action: 'sync', videoPath, subtitlePath }, this.options)
+  syncSubtitle(subtitlePath: string, referenceFilePath: string): Observable<SubtitleSyncResult> {
+    return this.httpClient.patch<SubtitleSyncResult>(`${this.URL}/synchronization`, { action: 'sync', subtitlePath, referenceFilePath }, this.options)
       .pipe(map((subtitleSyncResult) => new SubtitleSyncResult(subtitleSyncResult)));
   }
 

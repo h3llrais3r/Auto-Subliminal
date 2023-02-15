@@ -201,6 +201,11 @@ def _get_application_configuration():
             'tools.staticdir.on': False,
             'tools.spa_redirect.on': False
         },
+        # Upload settings
+        '/upload': {
+            'tools.staticdir.on': False,
+            'tools.spa_redirect.on': False
+        },
         # Websocket(system) settings
         '/websocket/system': {
             'tools.staticdir.on': False,

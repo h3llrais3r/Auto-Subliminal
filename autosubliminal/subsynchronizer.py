@@ -28,9 +28,9 @@ class SubSynchronizer(object):
         else:
             self._vad = 'subs_then_webrtc'
 
-    def run(self, video_path, subtitle_path):
+    def run(self, subtitle_path, reference_file_path):
         """
-        Synchronize the subtitle with the video.
+        Synchronize the subtitle with a reference file (video file or other subtitle file).
         """
 
         log.info('Running sub synchronizer')
@@ -46,7 +46,7 @@ class SubSynchronizer(object):
             try:
                 synced_subtitle_path = os.path.splitext(subtitle_path)[0] + '.synced.srt'
                 unparsed_args = [
-                    video_path,
+                    reference_file_path,
                     '--srtin', subtitle_path,
                     '--srtout', synced_subtitle_path,
                     '--output-encoding', 'same',

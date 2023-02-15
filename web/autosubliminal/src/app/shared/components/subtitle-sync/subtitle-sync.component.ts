@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SubtitleService } from '../../../core/services/api/subtitle.service';
 import { MessageService } from '../../../core/services/message.service';
+import { UploadService } from '../../../core/services/upload.service';
 import { SubtitleSyncResult } from '../../models/subtitle-sync-result';
 import { getPlayVideoUrl } from '../../utils/common-utils';
 import { splitPath } from '../../utils/path-utils';
@@ -29,13 +30,17 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
 
   subtitleName: string;
 
+  referenceSubtitle: string = null;
+
+  referenceSubtitlePath: string = null;
+
   syncInProgress = false;
 
   backupOnSave = false;
 
   subtitleSyncResult: SubtitleSyncResult;
 
-  constructor(private domSanitizer: DomSanitizer, private subtitleService: SubtitleService, private messageService: MessageService) { }
+  constructor(private domSanitizer: DomSanitizer, private uploadService: UploadService, private subtitleService: SubtitleService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     if (this.videoPath) {
@@ -54,9 +59,46 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
     }
   }
 
+  uploadReferenceSubtitle(event: any): void {
+    const file = event.files[0];
+    const formData = new FormData();
+    formData.append('file', event.files[0]);
+    this.uploadService.uploadTmpFile(formData).subscribe(
+      (tmpFilePath) => {
+        this.referenceSubtitle = file.name;
+        this.referenceSubtitlePath = tmpFilePath;
+      },
+      (err) => {
+        this.messageService.showErrorMessage('Unable to upload the reference subtitle!');
+      }
+    );
+  }
+
+  removeReferenceSubtitle(): void {
+    this.referenceSubtitle = null;
+    this.referenceSubtitlePath = null;
+  }
+
   syncSubtitle(): void {
     this.syncInProgress = true;
-    this.subtitleService.syncSubtitle(this.videoPath, this.subtitlePath).subscribe(
+    // Reference subtitle path is used when available, fallback to video path
+    const referenceFilePath = this.referenceSubtitlePath || this.videoPath;
+    this.subtitleService.syncSubtitle(this.subtitlePath, referenceFilePath).subscribe(
+      (subtitleSyncResult) => {
+        this.subtitleSyncResult = subtitleSyncResult;
+        this.syncInProgress = false;
+        this.messageService.showInfoMessage('Subtitle synchronized.');
+      },
+      () => {
+        this.syncInProgress = false;
+        this.messageService.showErrorMessage('Unable to synchronize the subtitle!');
+      }
+    );
+  }
+
+  syncSubtitleWithReferenceSubtitle(): void {
+    this.syncInProgress = true;
+    this.subtitleService.syncSubtitle(this.subtitlePath, this.referenceSubtitlePath).subscribe(
       (subtitleSyncResult) => {
         this.subtitleSyncResult = subtitleSyncResult;
         this.syncInProgress = false;

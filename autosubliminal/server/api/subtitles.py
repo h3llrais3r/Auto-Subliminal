@@ -21,7 +21,7 @@ class SubtitlesApi(RestResource):
     def __init__(self):
         super().__init__()
 
-        # Add all sub paths here: /api/shows/...
+        # Add all sub paths here: /api/subtitles/...
         self.synchronization = _SynchronizationApi()
 
         # Set the allowed methods
@@ -46,11 +46,11 @@ class _SynchronizationApi(RestResource):
         if 'action' in input_dict:
             action = input_dict['action']
 
-            # Synchronize video subtitle
-            if action == 'sync' and all(k in input_dict for k in ('video_path', 'subtitle_path')):
-                video_path = input_dict['video_path']
+            # Synchronize subtitle with a reference file
+            if action == 'sync' and all(k in input_dict for k in ('subtitle_path', 'reference_file_path')):
                 subtitle_path = input_dict['subtitle_path']
-                sync_result = SubSynchronizer().run(video_path, subtitle_path)
+                reference_file_path = input_dict['reference_file_path']
+                sync_result = SubSynchronizer().run(subtitle_path, reference_file_path)
                 if sync_result:
                     return to_dict(sync_result, camelize)
                 else:

@@ -9,6 +9,7 @@ import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { FileUploadModule } from 'primeng/fileupload';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
@@ -79,6 +80,7 @@ import { TableFilterComponent } from './components/table-filter/table-filter.com
     DropdownModule,
     MultiSelectModule,
     DialogModule,
+    FileUploadModule,
     NgxMaskDirective
   ],
   exports: [

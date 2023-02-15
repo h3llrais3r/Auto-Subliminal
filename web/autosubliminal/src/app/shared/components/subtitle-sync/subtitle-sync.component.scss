@@ -1,4 +1,5 @@
 @import '../../../../scss/variables';
+@import '../../../../scss/mixins/flexbox';
 
 ::ng-deep .dialog-subtitle-sync {
   width: 40rem;
@@ -21,6 +22,12 @@
     // font-style: italic;
   }
 
+  .subtitle-upload {
+    @include flexbox;
+    @include align-items(center);
+    @include justify-content(space-between);
+  }
+
   .save-warning {
     .label {
       font-style: italic;
@@ -29,8 +36,8 @@
   }
 
   .backup-toggle {
-    display: flex;
-    align-items: center;
+    @include flexbox;
+    @include align-items(center);
 
     .label {
       font-style: italic;

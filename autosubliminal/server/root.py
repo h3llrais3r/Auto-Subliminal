@@ -5,6 +5,7 @@ import cherrypy
 import autosubliminal
 from autosubliminal.server.api import Api
 from autosubliminal.server.web.artwork import Artwork
+from autosubliminal.server.web.upload import Upload
 from autosubliminal.server.web.websocket import WebSocket
 
 
@@ -21,4 +22,5 @@ class AppRoot(object):
         # Create root tree (name of attribute defines name of path: f.e. api -> /api)
         self.api = Api()
         self.artwork = Artwork()
+        self.upload = Upload()
         self.websocket = WebSocket()
