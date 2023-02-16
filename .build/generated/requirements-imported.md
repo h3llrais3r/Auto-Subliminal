@@ -23,6 +23,7 @@ babelfish==0.6.0
 # autosubliminal\server\root.py: 3
 # autosubliminal\server\tool.py: 3,4
 # autosubliminal\server\web\artwork.py: 3,4,5
+# autosubliminal\server\web\upload.py: 6
 # autosubliminal\server\web\websocket.py: 3
 # autosubliminal\util\json.py: 3
 CherryPy==18.8.0
@@ -36,7 +37,7 @@ enzyme==0.4.1
 # autosubliminal\subsynchronizer.py: 7
 ffsubsync==0.4.23
 # autosubliminal\versionchecker.py: 10
-GitPython==3.1.30
+GitPython==3.1.31
 # autosubliminal\notifiers\growl.py: 5
 gntp==1.0.3
 # autosubliminal\__init__.py: 633
