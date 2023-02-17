@@ -596,6 +596,11 @@ def read_config(check_upgrade=False):
         else:
             autosubliminal.MAILSRV = 'smtp.gmail.com:587'
 
+        if cfg.has_option('notification', 'mailfromname'):
+            autosubliminal.MAILFROMNAME = cfg.get('notification', 'mailfromname')
+        else:
+            autosubliminal.MAILFROMNAME = ''
+
         if cfg.has_option('notification', 'mailfromaddr'):
             autosubliminal.MAILFROMADDR = cfg.get('notification', 'mailfromaddr')
         else:
@@ -753,6 +758,7 @@ def read_config(check_upgrade=False):
         autosubliminal.NOTIFY = False
         autosubliminal.NOTIFYMAIL = False
         autosubliminal.MAILSRV = 'smtp.gmail.com:587'
+        autosubliminal.MAILFROMNAME = ''
         autosubliminal.MAILFROMADDR = 'example@gmail.com'
         autosubliminal.MAILTOADDR = 'example@gmail.com'
         autosubliminal.MAILUSERNAME = 'example@gmail.com'
@@ -1224,6 +1230,7 @@ def write_config_notification_section():
     cfg.set(section, 'notify', str(autosubliminal.NOTIFY))
     cfg.set(section, 'notifymail', str(autosubliminal.NOTIFYMAIL))
     cfg.set(section, 'mailsrv', autosubliminal.MAILSRV)
+    cfg.set(section, 'mailfromname', autosubliminal.MAILFROMNAME)
     cfg.set(section, 'mailfromaddr', autosubliminal.MAILFROMADDR)
     cfg.set(section, 'mailtoaddr', autosubliminal.MAILTOADDR)
     cfg.set(section, 'mailusername', autosubliminal.MAILUSERNAME)

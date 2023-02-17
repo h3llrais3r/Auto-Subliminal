@@ -69,6 +69,18 @@
           <app-input-text formControlName="mailServer" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
+      <!-- Mail from Name -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="mailFromName" class="label">Sender name</label>
+          <app-icon-dropdown>
+            <li>The name from which the notification will be sent.</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-text formControlName="mailFromName" [validationFeedback]="saveAttempt"></app-input-text>
+        </div>
+      </div>
       <!-- Mail from -->
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">

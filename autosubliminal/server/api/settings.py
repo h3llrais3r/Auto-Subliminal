@@ -585,6 +585,7 @@ class _NotificationApi(RestResource):
             'notify': autosubliminal.NOTIFY,
             'notify_mail': autosubliminal.NOTIFYMAIL,
             'mail_server': autosubliminal.MAILSRV,
+            'mail_from_name': autosubliminal.MAILFROMNAME,
             'mail_from': autosubliminal.MAILFROMADDR,
             'mail_to': autosubliminal.MAILTOADDR,
             'mail_user_name': autosubliminal.MAILUSERNAME,
@@ -634,6 +635,8 @@ class _NotificationApi(RestResource):
                 autosubliminal.NOTIFYMAIL = input_dict['notify_mail']
             if 'mail_server' in input_dict:
                 autosubliminal.MAILSRV = input_dict['mail_server']
+            if 'mail_from_name' in input_dict:
+                autosubliminal.MAILFROMNAME = input_dict['mail_from_name']
             if 'mail_from' in input_dict:
                 autosubliminal.MAILFROMADDR = input_dict['mail_from']
             if 'mail_to' in input_dict:

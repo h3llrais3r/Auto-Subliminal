@@ -21,6 +21,7 @@ def test_mail_disabled():
 
 def test_mail_exception(monkeypatch):
     monkeypatch.setattr('autosubliminal.NOTIFYMAIL', True)
+    monkeypatch.setattr('autosubliminal.MAILFROMNAME', 'FromMe')
     monkeypatch.setattr('autosubliminal.MAILFROMADDR', 'from@test.com')
     monkeypatch.setattr('autosubliminal.MAILTOADDR', 'to@test.com')
     monkeypatch.setattr('autosubliminal.MAILSUBJECT', 'subject')
@@ -34,6 +35,7 @@ def test_mail_exception(monkeypatch):
 
 def test_mail_notify_download(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.NOTIFYMAIL', True)
+    monkeypatch.setattr('autosubliminal.MAILFROMNAME', 'FromMe')
     monkeypatch.setattr('autosubliminal.MAILFROMADDR', 'from@test.com')
     monkeypatch.setattr('autosubliminal.MAILTOADDR', 'to@test.com')
     monkeypatch.setattr('autosubliminal.MAILSUBJECT', 'subject')

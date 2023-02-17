@@ -120,6 +120,7 @@ export class NotificationSettings {
   notify: boolean;
   notifyMail: boolean;
   mailServer: string;
+  mailFromName: string;
   mailFrom: string;
   mailTo: string;
   mailUserName: string;

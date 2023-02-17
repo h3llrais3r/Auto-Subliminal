@@ -102,6 +102,7 @@ export class SettingsNotificationComponent implements OnInit {
       notify: [notificationSettings.notify, [Validators.required]],
       notifyMail: [notificationSettings.notifyMail, []],
       mailServer: [notificationSettings.mailServer, []],
+      mailFromName: [notificationSettings.mailFromName, []],
       mailFrom: [notificationSettings.mailFrom, []],
       mailTo: [notificationSettings.mailTo, []],
       mailUserName: [notificationSettings.mailUserName, []],
@@ -139,6 +140,7 @@ export class SettingsNotificationComponent implements OnInit {
     settings.notify = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'notify');
     settings.notifyMail = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'notifyMail');
     settings.mailServer = FormUtils.getFormControlValue<string>(this.settingsForm, 'mailServer');
+    settings.mailFromName = FormUtils.getFormControlValue<string>(this.settingsForm, 'mailFromName');
     settings.mailFrom = FormUtils.getFormControlValue<string>(this.settingsForm, 'mailFrom');
     settings.mailTo = FormUtils.getFormControlValue<string>(this.settingsForm, 'mailTo');
     settings.mailUserName = FormUtils.getFormControlValue<string>(this.settingsForm, 'mailUserName');
