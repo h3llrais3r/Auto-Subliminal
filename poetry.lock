@@ -1960,14 +1960,14 @@ files = [
 
 [[package]]
 name = "rebulk"
-version = "3.1.0"
+version = "3.2.0"
 description = "Rebulk - Define simple search patterns in bulk to perform advanced matching on any string."
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "rebulk-3.1.0-py3-none-any.whl", hash = "sha256:e56550ae25a822111bff8c8f5eeea14cb44f406e9a9ce67ad4e350253b2fff6c"},
-    {file = "rebulk-3.1.0.tar.gz", hash = "sha256:809de3a97c68afa831f7101b10d316fe62e061dc9f7f67a44b7738128721173a"},
+    {file = "rebulk-3.2.0-py3-none-any.whl", hash = "sha256:6bc31ae4b37200623c5827d2f539f9ec3e52b50431322dad8154642a39b0a53e"},
+    {file = "rebulk-3.2.0.tar.gz", hash = "sha256:0d30bf80fca00fa9c697185ac475daac9bde5f646ce3338c9ff5d5dc1ebdfebc"},
 ]
 
 [package.extras]
@@ -2824,4 +2824,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "8b0fe7257623950824365dbcead89880dfbc2e8b7493644b4ee85dc62438ef32"
+content-hash = "f5c5eda8ac0f4eb20382a9a38630b989b6efd8aa681ecb5da12570f45fd91dd0"
