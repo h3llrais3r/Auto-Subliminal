@@ -853,14 +853,14 @@ files = [
 
 [[package]]
 name = "guessit"
-version = "3.7.0"
+version = "3.7.1"
 description = "GuessIt - a library for guessing information from video filenames."
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "guessit-3.7.0-py3-none-any.whl", hash = "sha256:a7a3360d414bef45b2d3e23bbe5c821e9b0639c627a68b27925315d174832e13"},
-    {file = "guessit-3.7.0.tar.gz", hash = "sha256:eb1a983668af99ddaba05d3cf224c3b37885ff51be343032cde5b35345a768ac"},
+    {file = "guessit-3.7.1-py3-none-any.whl", hash = "sha256:c3be280ee8ec581a45ca6a654a92e317bf89567fdc55e7167452226f4f5b8b38"},
+    {file = "guessit-3.7.1.tar.gz", hash = "sha256:2c18d982ee6db30db5d59557add0324a2b49bf3940a752947510632a2b58a3c1"},
 ]
 
 [package.dependencies]
@@ -2824,4 +2824,4 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "5524ac34f67cd4599444d9c41693fdd4a11ada9f45f18b6cf3f71e301fd4e591"
+content-hash = "7bd0658e713ff285b9de505dffcec4796833ad7cfd1da08cd380f874ed2cbec8"
