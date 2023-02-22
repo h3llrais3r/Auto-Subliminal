@@ -16,20 +16,23 @@ export class LibraryScanningComponent implements OnInit {
 
   ngOnInit(): void {
     // Check if library scanner is running
-    this.systemService.getScheduler(appSettings.scanLibrary).subscribe(
-      (scheduler) => {
+    this.systemService.getScheduler(appSettings.scanLibrary).subscribe({
+      next: (scheduler) => {
         this.scanningInProgress = scheduler.running;
-      });
+      }
+    });
     // Subscribe on scheduler finish events to check if library scanner is started
-    this.systemEventService.schedulerStart.subscribe(
-      (scheduler) => {
+    this.systemEventService.schedulerStart.subscribe({
+      next: (scheduler) => {
         this.scanningInProgress = scheduler.name === appSettings.scanLibrary ? true : this.scanningInProgress;
-      });
+      }
+    });
     // Subscribe on scheduler finish events to check if library scanner is finished
-    this.systemEventService.schedulerFinish.subscribe(
-      (scheduler) => {
+    this.systemEventService.schedulerFinish.subscribe({
+      next: (scheduler) => {
         this.scanningInProgress = scheduler.name === appSettings.scanLibrary ? false : this.scanningInProgress;
-      });
+      }
+    });
   }
 
 }

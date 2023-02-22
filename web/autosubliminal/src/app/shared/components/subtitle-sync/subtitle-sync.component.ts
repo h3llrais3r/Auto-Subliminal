@@ -63,15 +63,15 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
     const file = event.files[0];
     const formData = new FormData();
     formData.append('file', event.files[0]);
-    this.uploadService.uploadTmpFile(formData).subscribe(
-      (tmpFilePath) => {
+    this.uploadService.uploadTmpFile(formData).subscribe({
+      next: (tmpFilePath) => {
         this.referenceSubtitle = file.name;
         this.referenceSubtitlePath = tmpFilePath;
       },
-      (err) => {
+      error: () => {
         this.messageService.showErrorMessage('Unable to upload the reference subtitle!');
       }
-    );
+    });
   }
 
   removeReferenceSubtitle(): void {
@@ -83,33 +83,33 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
     this.syncInProgress = true;
     // Reference subtitle path is used when available, fallback to video path
     const referenceFilePath = this.referenceSubtitlePath || this.videoPath;
-    this.subtitleService.syncSubtitle(this.subtitlePath, referenceFilePath).subscribe(
-      (subtitleSyncResult) => {
+    this.subtitleService.syncSubtitle(this.subtitlePath, referenceFilePath).subscribe({
+      next: (subtitleSyncResult) => {
         this.subtitleSyncResult = subtitleSyncResult;
         this.syncInProgress = false;
         this.messageService.showInfoMessage('Subtitle synchronized.');
       },
-      () => {
+      error: () => {
         this.syncInProgress = false;
         this.messageService.showErrorMessage('Unable to synchronize the subtitle!');
       }
-    );
+    });
   }
 
   syncSubtitleWithReferenceSubtitle(): void {
     this.syncInProgress = true;
-    this.subtitleService.syncSubtitle(this.subtitlePath, this.referenceSubtitlePath).subscribe(
-      (subtitleSyncResult) => {
+    this.subtitleService.syncSubtitle(this.subtitlePath, this.referenceSubtitlePath).subscribe({
+      next: (subtitleSyncResult) => {
         this.subtitleSyncResult = subtitleSyncResult;
         this.syncInProgress = false;
         this.messageService.showInfoMessage('Subtitle synchronized.');
       },
-      () => {
+      error: () => {
         this.syncInProgress = false;
         this.messageService.showErrorMessage('Unable to synchronize the subtitle!');
       }
-    );
-  }
+    })
+  };
 
   getPlayVideoUrl(): SafeResourceUrl {
     const [filePath, fileName] = splitPath(this.videoPath);
@@ -121,25 +121,25 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
   }
 
   saveSubtitle(): void {
-    this.subtitleService.saveSyncedSubtitle(this.subtitlePath, this.subtitleSyncResult.syncedSubtitlePath, this.backupOnSave).subscribe(
-      () => {
+    this.subtitleService.saveSyncedSubtitle(this.subtitlePath, this.subtitleSyncResult.syncedSubtitlePath, this.backupOnSave).subscribe({
+      next: () => {
         this.close();
         this.subtitleSyncResult = null; // clear sync result (to not trigger the cleanup in onDestroy)
         this.messageService.showInfoMessage('Synchronized subtitle saved.')
       },
-      () => this.messageService.showErrorMessage('Unable to save the synchronized subtitle!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to save the synchronized subtitle!')
+    });
   }
 
   resetSubtitle(): void {
     // Delete the synced subtitle
-    this.subtitleService.deleteSyncedSubtitle(this.subtitleSyncResult.syncedSubtitlePath).subscribe(
-      () => {
+    this.subtitleService.deleteSyncedSubtitle(this.subtitleSyncResult.syncedSubtitlePath).subscribe({
+      next: () => {
         this.subtitleSyncResult = null; // clear previous sync result
         this.messageService.showInfoMessage('Synchronized subtitle removed.');
       },
-      () => this.messageService.showErrorMessage('Unable to removed the synchronized subtitle!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to removed the synchronized subtitle!')
+    });
   }
 
   close(): void {

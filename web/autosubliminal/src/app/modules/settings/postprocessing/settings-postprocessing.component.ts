@@ -28,24 +28,24 @@ export class SettingsPostprocessingComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildSelectItems();
-    this.settingsService.getPostProcessSettings().subscribe(
-      (postProcessSettings) => {
+    this.settingsService.getPostProcessSettings().subscribe({
+      next: (postProcessSettings) => {
         this.buildForm(postProcessSettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the postprocessing settings!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the postprocessing settings!')
+    });
   }
 
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updatePostProcessSettings(this.getPostProcessSettings()).subscribe(
-        () => {
+      this.settingsService.updatePostProcessSettings(this.getPostProcessSettings()).subscribe({
+        next: () => {
           this.messageService.showSuccessMessage('Postprocessing settings saved.');
           this.appSettingsService.reload(); // reload app settings
         },
-        () => this.messageService.showErrorMessage('Unable to save the postprocessing settings!')
-      );
+        error: () => this.messageService.showErrorMessage('Unable to save the postprocessing settings!')
+      });
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

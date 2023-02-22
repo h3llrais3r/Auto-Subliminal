@@ -28,24 +28,24 @@ export class SettingsLibraryComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildSelectItems();
-    this.settingsService.getLibrarySettings().subscribe(
-      (librarySettings) => {
+    this.settingsService.getLibrarySettings().subscribe({
+      next: (librarySettings) => {
         this.buildForm(librarySettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the library settings!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the library settings!')
+    });
   }
 
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateLibrarySettings(this.getLibrarySettings()).subscribe(
-        () => {
+      this.settingsService.updateLibrarySettings(this.getLibrarySettings()).subscribe({
+        next: () => {
           this.messageService.showSuccessMessage('Library settings saved.');
           this.appSettingsService.reload(); // reload app settings
         },
-        () => this.messageService.showErrorMessage('Unable to save the library settings!')
-      );
+        error: () => this.messageService.showErrorMessage('Unable to save the library settings!')
+      });
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

@@ -39,16 +39,16 @@ export class HomeDownloadedComponent implements OnInit {
 
   private loadDownloadedItems(): void {
     this.loading = true;
-    this.itemService.getDownloadedItems().subscribe(
-      (downloadedItems) => {
+    this.itemService.getDownloadedItems().subscribe({
+      next: (downloadedItems) => {
         this.downloadedItems = downloadedItems;
         this.loading = false;
       },
-      () => {
+      error: () => {
         this.loading = false;
         this.messageService.showErrorMessage('Unable to get the downloaded items');
       }
-    );
+    });
   }
 
   sort(event: SortEvent): void {

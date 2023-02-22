@@ -13,15 +13,15 @@ export class LogClearComponent implements OnInit {
   constructor(private router: Router, private logService: LogService, private messageService: MessageService) { }
 
   ngOnInit(): void {
-    this.logService.clearLogs().subscribe(
-      (result) => {
+    this.logService.clearLogs().subscribe({
+      next: (result) => {
         // Redirect to log view after the logs are cleared
         if (result) {
           this.router.navigateByUrl('/log/view');
         }
       },
-      () => this.messageService.showErrorMessage(`Unable to clear the logs!`)
-    );
+      error: () => this.messageService.showErrorMessage(`Unable to clear the logs!`)
+    });
   }
 
 }

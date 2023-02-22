@@ -49,12 +49,13 @@ export class LibraryShowDetailComponent implements OnInit {
   ngOnInit(): void {
     this.manualSubSyncEnabled = appSettings.manualSubSync;
     this.libraryEditModeEnabled = appSettings.libraryEditMode;
-    this.route.paramMap.subscribe(
-      (paramMap) => {
+    this.route.paramMap.subscribe({
+      next: (paramMap) => {
         this.loading = true;
         const tvdbId = Number(paramMap.get('tvdbId'));
         this.getShowDetails(tvdbId);
-      });
+      }
+    });
   }
 
   getShowPosterFullSizeUrl(): string {
@@ -83,23 +84,23 @@ export class LibraryShowDetailComponent implements OnInit {
 
   refreshShowDetails(): void {
     this.refreshInProgress = true;
-    this.showService.refreshShowDetails(this.show.tvdbId).subscribe(
-      () => {
+    this.showService.refreshShowDetails(this.show.tvdbId).subscribe({
+      next: () => {
         this.getShowDetails(this.show.tvdbId);
         this.refreshInProgress = false;
       },
-      () => this.messageService.showErrorMessage('Unable to refresh the show details!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to refresh the show details!')
+    });
   }
 
   openDeleteDialog(): void {
     this.confirmationService.confirm({
       message: `Are you sure that you want to delete <b>${this.show.name}</b>?`,
       accept: () => {
-        this.showService.deleteShow(this.show.tvdbId).subscribe(
-          () => this.router.navigateByUrl('/library/show'),
-          () => this.messageService.showErrorMessage(`Unable to delete the show ${this.show.name}!`)
-        );
+        this.showService.deleteShow(this.show.tvdbId).subscribe({
+          next: () => this.router.navigateByUrl('/library/show'),
+          error: () => this.messageService.showErrorMessage(`Unable to delete the show ${this.show.name}!`)
+        });
       }
     });
   }
@@ -108,32 +109,33 @@ export class LibraryShowDetailComponent implements OnInit {
     this.confirmationService.confirm({
       message: `Are you sure that you want to delete the subtitle<br><b>${fileName}</b>?`,
       accept: () => {
-        this.showService.deleteShowEpisodeSubtitle(this.show.tvdbId, episodeTvdbId, joinPaths(filePath, fileName)).subscribe(
-          () => {
+        this.showService.deleteShowEpisodeSubtitle(this.show.tvdbId, episodeTvdbId, joinPaths(filePath, fileName)).subscribe({
+          next: () => {
             // Reload details
             this.getShowDetails(this.show.tvdbId);
             this.messageService.showSuccessMessage(`Deleted ${fileName}.`);
           },
-          () => this.messageService.showErrorMessage(`Unable to delete the subtitle ${fileName}!`)
-        );
+          error: () => this.messageService.showErrorMessage(`Unable to delete the subtitle ${fileName}!`)
+        });
       }
     });
   }
 
   addShowPathToVideoPaths(): void {
     const videoPath = { videoPath: this.show.path };
-    this.settingsService.updateGeneralSetting('videoPaths', videoPath).subscribe(
-      () => {
+    this.settingsService.updateGeneralSetting('videoPaths', videoPath).subscribe({
+      next: () => {
         this.messageService.showSuccessMessage(`Path ${this.show.path} added to the video paths.`);
         this.getShowDetails(this.show.tvdbId);
       },
-      (error) => {
+      error: (error) => {
         if (error.status && error.status === 409) {
           this.messageService.showWarningMessage(`Path ${this.show.path} already added to the video paths.`);
         } else {
           this.messageService.showErrorMessage(`Unable to add path ${this.show.path} to the video paths!`);
         }
-      });
+      }
+    });
   }
 
   openVideoSubtitlesDialog(episodeTvdbId: number, fileLocation: string, fileName: string, languages: string[]): void {
@@ -158,13 +160,13 @@ export class LibraryShowDetailComponent implements OnInit {
   }
 
   saveHardcodedSubtitles(videoSubtitles: VideoSubtitles): void {
-    this.showService.saveShowEpisodeHardcodedSubtitles(this.show.tvdbId, this.episodeTvdbId, videoSubtitles).subscribe(
-      () => {
+    this.showService.saveShowEpisodeHardcodedSubtitles(this.show.tvdbId, this.episodeTvdbId, videoSubtitles).subscribe({
+      next: () => {
         this.closeVideoSubtitlesDialog();
         this.getShowDetails(this.show.tvdbId);
       },
-      () => this.messageService.showErrorMessage('Unable to save the harcoded subtitles!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to save the harcoded subtitles!')
+    });
   }
 
   getNrOfSubtitles(files: ShowEpisodeFile[], language: string): string {
@@ -206,12 +208,12 @@ export class LibraryShowDetailComponent implements OnInit {
   }
 
   private getShowDetails(tvdbId: number): void {
-    this.showService.getShowDetails(tvdbId).subscribe(
-      (show) => {
+    this.showService.getShowDetails(tvdbId).subscribe({
+      next: (show) => {
         this.show = show;
         this.loading = false;
       },
-      () => this.messageService.showErrorMessage('Unable to get the show details!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the show details!')
+    });
   }
 }

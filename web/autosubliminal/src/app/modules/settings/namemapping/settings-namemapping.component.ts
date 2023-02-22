@@ -24,24 +24,24 @@ export class SettingsNamemappingComponent implements OnInit {
     private messageService: MessageService) { }
 
   ngOnInit(): void {
-    this.settingsService.getNameMappingSettings().subscribe(
-      (nameMappingSettings) => {
+    this.settingsService.getNameMappingSettings().subscribe({
+      next: (nameMappingSettings) => {
         this.buildForm(nameMappingSettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the namemapping settings!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the namemapping settings!')
+    });
   }
 
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateNameMappingSettings(this.getNameMappingSettings()).subscribe(
-        () => {
+      this.settingsService.updateNameMappingSettings(this.getNameMappingSettings()).subscribe({
+        next: () => {
           this.messageService.showSuccessMessage('Namemapping settings saved.');
           this.appSettingsService.reload(); // reload app settings
         },
-        () => this.messageService.showErrorMessage('Unable to save the namemapping settings!')
-      );
+        error: () => this.messageService.showErrorMessage('Unable to save the namemapping settings!')
+      });
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

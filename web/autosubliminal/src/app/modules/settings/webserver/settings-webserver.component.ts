@@ -29,12 +29,12 @@ export class SettingsWebserverComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildSelectItems();
-    this.settingsService.getWebServerSettings().subscribe(
-      (webServerSettings) => {
+    this.settingsService.getWebServerSettings().subscribe({
+      next: (webServerSettings) => {
         this.buildForm(webServerSettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the webserver settings!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the webserver settings!')
+    });
   }
 
   formatWebRoot(): void {
@@ -53,13 +53,13 @@ export class SettingsWebserverComponent implements OnInit {
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateWebServerSettings(this.getWebServerSettings()).subscribe(
-        () => {
+      this.settingsService.updateWebServerSettings(this.getWebServerSettings()).subscribe({
+        next: () => {
           this.messageService.showSuccessMessage('Webserver settings saved.');
           this.appSettingsService.reload(); // reload app settings
         },
-        () => this.messageService.showErrorMessage('Unable to save the webserver settings!')
-      );
+        error: () => this.messageService.showErrorMessage('Unable to save the webserver settings!')
+      });
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

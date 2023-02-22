@@ -28,8 +28,8 @@ export class SystemInfoComponent implements OnInit {
 
   ngOnInit(): void {
     // Get system info
-    this.systemService.getSystemInfo().subscribe(
-      (systemInfo) => {
+    this.systemService.getSystemInfo().subscribe({
+      next: (systemInfo) => {
         this.systemInfo = systemInfo;
         if (this.systemInfo.installType === SystemInstallType.SOURCE) {
           this.version = this.systemInfo.currentVersion;
@@ -41,16 +41,16 @@ export class SystemInfoComponent implements OnInit {
           this.version = this.NOT_AVAILABLE;
         }
       },
-      () => this.messageService.showErrorMessage('Unable to get the system info!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the system info!')
+    });
 
     // Get changelog
-    this.httpClient.get(this.CHANGELOG_URL, { responseType: 'text' }).subscribe(
-      (changelog) => {
+    this.httpClient.get(this.CHANGELOG_URL, { responseType: 'text' }).subscribe({
+      next: (changelog) => {
         this.changelog = this.parseChangelog(changelog);
       },
-      () => this.messageService.showErrorMessage('Unable to get the changelog!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the changelog!')
+    });
   }
 
   private parseChangelog(changelogHtml: string): string {

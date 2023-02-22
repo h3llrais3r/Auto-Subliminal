@@ -30,24 +30,24 @@ export class SettingsSubliminalComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildSelectItems();
-    this.settingsService.getSubliminalSettings().subscribe(
-      (subliminalSettings) => {
+    this.settingsService.getSubliminalSettings().subscribe({
+      next: (subliminalSettings) => {
         this.buildForm(subliminalSettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the subliminal settings!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the subliminal settings!')
+    });
   }
 
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateSubliminalSettings(this.getSubliminalSettings()).subscribe(
-        () => {
+      this.settingsService.updateSubliminalSettings(this.getSubliminalSettings()).subscribe({
+        next: () => {
           this.messageService.showSuccessMessage('Subliminal settings saved.');
           this.appSettingsService.reload(); // reload app settings
         },
-        () => this.messageService.showErrorMessage('Unable to save the subliminal settings!')
-      );
+        error: () => this.messageService.showErrorMessage('Unable to save the subliminal settings!')
+      });
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

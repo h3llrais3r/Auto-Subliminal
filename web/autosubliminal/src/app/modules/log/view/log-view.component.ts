@@ -33,7 +33,9 @@ export class LogViewComponent implements OnInit {
 
   ngOnInit(): void {
     this.loglevels = this.getLogLevels();
-    this.logService.getLogCount().subscribe((count) => this.logNums = Array.from(Array(count).keys()).map((i) => i + 1)); // get array starting from 1
+    this.logService.getLogCount().subscribe({
+      next: (count) => this.logNums = Array.from(Array(count).keys()).map((i) => i + 1) // get array starting from 1
+    });
     this.getLogs(0); // 0 = current logfile
   }
 
@@ -41,14 +43,14 @@ export class LogViewComponent implements OnInit {
     this.loading = true;
     this.selectedLogNum = logNum;
     this.tailingDisabled = this.selectedLogNum !== 0; // tailing only allowed when on current logfile -> lognum = 0
-    this.logService.getLogs(logNum).subscribe(
-      (logLines) => {
+    this.logService.getLogs(logNum).subscribe({
+      next: (logLines) => {
         this.logMessages = logLines;
         this.loading = false;
         this.handleLogTailing();
       },
-      () => this.messageService.showErrorMessage('Unable to get the logs!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the logs!')
+    });
   }
 
   toggleTailing(): void {
@@ -111,8 +113,8 @@ export class LogViewComponent implements OnInit {
     if (this.tailing && !this.tailingDisabled) {
       // Subscribe on new logs once loaded (only for current logfile -> logNum = 0)
       this.logWebsocket = this.createLogWebSocket(); // Need to create a new socket after unsubscribe
-      this.logWebsocket.subscribe(
-        (logMessage) => {
+      this.logWebsocket.subscribe({
+        next: (logMessage) => {
           if (appSettings.logReversed) {
             // Append to the top
             this.logMessages.unshift(logMessage);
@@ -122,7 +124,8 @@ export class LogViewComponent implements OnInit {
             this.logMessages.push(logMessage);
             this.scrollService.triggerScrollDown();
           }
-        });
+        }
+      });
       console.log('Log tailing enabled');
     } else {
       // Unsubscribe when not tailing

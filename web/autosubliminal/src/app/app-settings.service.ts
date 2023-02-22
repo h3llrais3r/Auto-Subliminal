@@ -106,13 +106,12 @@ export class AppSettingsService {
 
   // Helper function to reload the appsettings in the background and reload the complete app in case of error
   public reload(): void {
-    this.load(true).subscribe(
-      () => { },
-      () => {
+    this.load(true).subscribe({
+      error: () => {
         console.error('Forcing page reload to re-initialize the application');
         document.location.reload();
       }
-    );
+    });
   }
 
   public loaded(): boolean {

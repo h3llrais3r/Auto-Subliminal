@@ -28,8 +28,8 @@ export class WebSocketService {
 
   private connect(): void {
     this.systemWebsocket = this.createSystemWebSocket();
-    this.systemWebsocket.subscribe(
-      (serverMessage) => {
+    this.systemWebsocket.subscribe({
+      next: (serverMessage) => {
         if (serverMessage.type === 'EVENT') {
           const serverEvent = serverMessage as SystemWebSocketServerEvent;
           switch (serverEvent.event.type) {
@@ -61,16 +61,17 @@ export class WebSocketService {
           console.error(`Invalid websocket server message type: ${serverMessage.type}`);
         }
       },
-      () => { } // ignore, as it's already handled by closeObserver
-    );
+      error: () => { } // ignore, as it's already handled by closeObserver
+    });
   }
 
   private reconnect(): void {
-    interval(this.RECONNECT_INTERVAL).pipe(takeWhile(() => !this.systemWebsocket)).subscribe(
-      () => {
+    interval(this.RECONNECT_INTERVAL).pipe(takeWhile(() => !this.systemWebsocket)).subscribe({
+      next: () => {
         console.log('Reconnecting to websocket...');
         this.connect();
-      });
+      }
+    });
   }
 
   private createSystemWebSocket(): WebSocketSubject<SystemWebSocketServerMessage> {

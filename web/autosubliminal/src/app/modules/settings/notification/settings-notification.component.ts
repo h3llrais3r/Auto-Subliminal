@@ -32,57 +32,57 @@ export class SettingsNotificationComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildSelectItems();
-    this.settingsService.getNotificationSettings().subscribe(
-      (notificationSettings) => {
+    this.settingsService.getNotificationSettings().subscribe({
+      next: (notificationSettings) => {
         this.buildForm(notificationSettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the notification settings!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the notification settings!')
+    });
   }
 
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateNotificationSettings(this.getNotificationSettings()).subscribe(
-        () => {
+      this.settingsService.updateNotificationSettings(this.getNotificationSettings()).subscribe({
+        next: () => {
           this.messageService.showSuccessMessage('Notification settings saved.');
           this.appSettingsService.reload(); // reload app settings
         },
-        () => this.messageService.showErrorMessage('Unable to save the notification settings!')
-      );
+        error: () => this.messageService.showErrorMessage('Unable to save the notification settings!')
+      });
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }
   }
 
   test(notifierName: string): void {
-    this.settingsService.testNotifier(notifierName).subscribe(
-      () => this.messageService.showSuccessMessage(`Test ${notifierName} notification sent.`),
-      () => this.messageService.showErrorMessage(`Test ${notifierName} notification failed!`)
-    );
+    this.settingsService.testNotifier(notifierName).subscribe({
+      next: () => this.messageService.showSuccessMessage(`Test ${notifierName} notification sent.`),
+      error: () => this.messageService.showErrorMessage(`Test ${notifierName} notification failed!`)
+    });
   }
 
   registerTwitter(): void {
-    this.settingsService.registerTwitter().subscribe(
-      (twitterRegistration) => {
+    this.settingsService.registerTwitter().subscribe({
+      next: (twitterRegistration) => {
         // Show dialog to finish the registration
         this.twitterRegistration = twitterRegistration;
         this.twitterRegistrationDialog = true;
       },
-      () => this.messageService.showErrorMessage('Twitter registration failed!')
-    );
+      error: () => this.messageService.showErrorMessage('Twitter registration failed!')
+    });
   }
 
   authorizeTwitter(): void {
-    this.settingsService.authorizeTwitter(this.twitterRegistration).subscribe(
-      (twitterAuthorization) => {
+    this.settingsService.authorizeTwitter(this.twitterRegistration).subscribe({
+      next: (twitterAuthorization) => {
         // Update form with twitter key and secret
         FormUtils.setFormControlValue(this.settingsForm, 'twitterKey', twitterAuthorization.twitterKey);
         FormUtils.setFormControlValue(this.settingsForm, 'twitterSecret', twitterAuthorization.twitterSecret);
         this.messageService.showSuccessMessage('Twitter registration successful. Please save and test Twitter.');
       },
-      () => this.messageService.showErrorMessage('Twitter authorization failed!')
-    );
+      error: () => this.messageService.showErrorMessage('Twitter authorization failed!')
+    });
   }
 
   private buildSelectItems(): void {

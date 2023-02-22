@@ -24,24 +24,24 @@ export class SettingsSkipmappingComponent implements OnInit {
     private messageService: MessageService) { }
 
   ngOnInit(): void {
-    this.settingsService.getSkipMappingSettings().subscribe(
-      (skipMappingSettings) => {
+    this.settingsService.getSkipMappingSettings().subscribe({
+      next: (skipMappingSettings) => {
         this.buildForm(skipMappingSettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the skipmapping settings!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the skipmapping settings!')
+    });
   }
 
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateSkipMappingSettings(this.getSkipMappingSettings()).subscribe(
-        () => {
+      this.settingsService.updateSkipMappingSettings(this.getSkipMappingSettings()).subscribe({
+        next: () => {
           this.messageService.showSuccessMessage('Skipmapping settings saved.');
           this.appSettingsService.reload(); // reload app settings
         },
-        () => this.messageService.showErrorMessage('Unable to save the skipmapping settings!')
-      );
+        error: () => this.messageService.showErrorMessage('Unable to save the skipmapping settings!')
+      });
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

@@ -16,9 +16,13 @@ export class ScrollComponent implements OnInit, AfterViewChecked {
 
   constructor(private scrollService: ScrollService) {
     // Subscribe on scrollUp events
-    this.scrollService.scrollUp.subscribe(() => this.scrollToTop());
+    this.scrollService.scrollUp.subscribe({
+      next: () => this.scrollToTop()
+    });
     // Subscribe on scrollDown events
-    this.scrollService.scrollDown.subscribe(() => this.scrollToBottom());
+    this.scrollService.scrollDown.subscribe({
+      next: () => this.scrollToBottom()
+    });
   }
 
   ngOnInit(): void {

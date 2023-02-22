@@ -45,13 +45,13 @@ export class MovieSettingsComponent implements OnInit {
   ngOnInit(): void {
     this.languages = FormUtils.languageSelectItems();
     if (!this.movieSettings) {
-      this.movieService.getMovieSettings(this.imdbId).subscribe(
-        (movieSettings) => {
+      this.movieService.getMovieSettings(this.imdbId).subscribe({
+        next: (movieSettings) => {
           this.buildForm(movieSettings);
           this.loaded = true;
         },
-        () => this.messageService.showErrorMessage('Unable to get the movie settings!')
-      );
+        error: () => this.messageService.showErrorMessage('Unable to get the movie settings!')
+      });
     } else {
       this.buildForm(this.movieSettings);
       this.loaded = true;
@@ -76,13 +76,13 @@ export class MovieSettingsComponent implements OnInit {
   }
 
   saveMovieSettings(): void {
-    this.movieService.saveMovieSettings(this.imdbId, this.getMovieSettings()).subscribe(
-      () => {
+    this.movieService.saveMovieSettings(this.imdbId, this.getMovieSettings()).subscribe({
+      next: () => {
         this.messageService.showSuccessMessage(`Move settings saved and will be applied on next disk scan.`);
         this.close();
       },
-      () => this.messageService.showErrorMessage(`Unable to save the movie settings!`)
-    );
+      error: () => this.messageService.showErrorMessage(`Unable to save the movie settings!`)
+    });
   }
 
   private getMovieSettings(): MovieSettings {

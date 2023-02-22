@@ -29,35 +29,39 @@ export class PageFooterComponent implements OnInit, OnDestroy {
     // Init values
     this.initValues();
     // Subscribe on scanDisk started events
-    this.scanDiskStartedSubscription = this.systemEventService.schedulerStart.subscribe(
-      (scheduler) => {
+    this.scanDiskStartedSubscription = this.systemEventService.schedulerStart.subscribe({
+      next: (scheduler) => {
         if (scheduler.name === appSettings.scanDisk) {
           this.scanDiskRunning = true;
         }
-      });
+      }
+    });
     // Subscribe on scanDisk finished events
-    this.scanDiskFinishedSubscription = this.systemEventService.schedulerFinish.subscribe(
-      (scheduler) => {
+    this.scanDiskFinishedSubscription = this.systemEventService.schedulerFinish.subscribe({
+      next: (scheduler) => {
         if (scheduler.name === appSettings.scanDisk) {
           this.initScanDiskCountdown(scheduler.nextRun);
           this.scanDiskRunning = false;
         }
-      });
+      }
+    });
     // Subscribe on checkSub started events
-    this.checkSubStartedSubscription = this.systemEventService.schedulerStart.subscribe(
-      (scheduler) => {
+    this.checkSubStartedSubscription = this.systemEventService.schedulerStart.subscribe({
+      next: (scheduler) => {
         if (scheduler.name === appSettings.checkSub) {
           this.checkSubRunning = true;
         }
-      });
+      }
+    });
     // Subscribe on checkSub finished events
-    this.checkSubFinishedSubscription = this.systemEventService.schedulerFinish.subscribe(
-      (scheduler) => {
+    this.checkSubFinishedSubscription = this.systemEventService.schedulerFinish.subscribe({
+      next: (scheduler) => {
         if (scheduler.name === appSettings.checkSub) {
           this.initCheckSubCountdown(scheduler.nextRun);
           this.checkSubRunning = false;
         }
-      });
+      }
+    });
   }
 
   ngOnDestroy(): void {

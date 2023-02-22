@@ -34,12 +34,13 @@ export class LibraryMovieOverviewComponent implements OnInit, OnDestroy {
     // Load overview
     this.loadOverview();
     // Subscribe on scanLibrary finish events to reload the overview
-    this.scanLibrarySubscription = this.systemEventService.schedulerFinish.subscribe(
-      (scheduler) => {
+    this.scanLibrarySubscription = this.systemEventService.schedulerFinish.subscribe({
+      next: (scheduler) => {
         if (scheduler.name === appSettings.scanLibrary) {
           this.loadOverview();
         }
-      });
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -48,14 +49,14 @@ export class LibraryMovieOverviewComponent implements OnInit, OnDestroy {
 
   private loadOverview(): void {
     this.loading = true;
-    this.movieService.getMovies().subscribe(
-      (movies) => {
+    this.movieService.getMovies().subscribe({
+      next: (movies) => {
         this.movies = movies;
         this.nrOfMovies = this.movies.length;
         this.loading = false;
       },
-      () => this.messageService.showErrorMessage('Unable to get the movies!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the movies!')
+    });
   }
 
   sort(event: SortEvent): void {

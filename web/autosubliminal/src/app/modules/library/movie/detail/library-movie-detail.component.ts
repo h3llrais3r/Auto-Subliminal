@@ -48,12 +48,13 @@ export class LibraryMovieDetailComponent implements OnInit {
   ngOnInit(): void {
     this.manualSubSyncEnabled = appSettings.manualSubSync;
     this.libraryEditModeEnabled = appSettings.libraryEditMode;
-    this.route.paramMap.subscribe(
-      (paramMap) => {
+    this.route.paramMap.subscribe({
+      next: (paramMap) => {
         this.loading = true;
         const imdbId = paramMap.get('imdbId');
         this.getMovieDetails(imdbId);
-      });
+      }
+    });
   }
 
   getMoviePosterFullSizeUrl(): string {
@@ -82,25 +83,25 @@ export class LibraryMovieDetailComponent implements OnInit {
 
   refreshMovieDetails(): void {
     this.refreshInProgress = true;
-    this.movieService.refreshMovieDetails(this.movie.imdbId).subscribe(
-      () => {
+    this.movieService.refreshMovieDetails(this.movie.imdbId).subscribe({
+      next: () => {
         this.getMovieDetails(this.movie.imdbId);
         this.refreshInProgress = false;
       },
-      () => this.messageService.showErrorMessage('Unable to refresh the movie details!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to refresh the movie details!')
+    });
   }
 
   openDeleteDialog(): void {
     this.confirmationService.confirm({
       message: `Are you sure that you want to delete <b>${this.movie.name}</b>?`,
       accept: () => {
-        this.movieService.deleteMovie(this.movie.imdbId).subscribe(
-          () => {
+        this.movieService.deleteMovie(this.movie.imdbId).subscribe({
+          next: () => {
             this.router.navigateByUrl('/library/movie');
           },
-          () => this.messageService.showErrorMessage(`Unable to delete the movie ${this.movie.name}!`)
-        );
+          error: () => this.messageService.showErrorMessage(`Unable to delete the movie ${this.movie.name}!`)
+        });
       }
     });
   }
@@ -109,32 +110,33 @@ export class LibraryMovieDetailComponent implements OnInit {
     this.confirmationService.confirm({
       message: `Are you sure that you want to delete the subtitle<br><b>${fileName}</b>?`,
       accept: () => {
-        this.movieService.deleteMovieSubtitle(this.movie.imdbId, joinPaths(filePath, fileName)).subscribe(
-          () => {
+        this.movieService.deleteMovieSubtitle(this.movie.imdbId, joinPaths(filePath, fileName)).subscribe({
+          next: () => {
             // Reload details
             this.getMovieDetails(this.movie.imdbId);
             this.messageService.showSuccessMessage(`Deleted ${fileName}.`);
           },
-          () => this.messageService.showErrorMessage(`Unable to delete the subtitle ${fileName}!`)
-        );
+          error: () => this.messageService.showErrorMessage(`Unable to delete the subtitle ${fileName}!`)
+        });
       }
     });
   }
 
   addMoviePathToVideoPaths(): void {
     const videoPath = { videoPath: this.movie.path };
-    this.settingsService.updateGeneralSetting('videoPaths', videoPath).subscribe(
-      () => {
+    this.settingsService.updateGeneralSetting('videoPaths', videoPath).subscribe({
+      next: () => {
         this.messageService.showSuccessMessage(`Path ${this.movie.path} added to the video paths.`);
         this.getMovieDetails(this.movie.imdbId);
       },
-      (error) => {
+      error: (error) => {
         if (error.status && error.status === 409) {
           this.messageService.showInfoMessage(`Path ${this.movie.path} already added to the video paths.`);
         } else {
           this.messageService.showErrorMessage(`Unable to add path ${this.movie.path} to the video paths!`);
         }
-      });
+      }
+    });
   }
 
   openVideoSubtitlesDialog(fileLocation: string, fileName: string, languages: string[]): void {
@@ -157,22 +159,22 @@ export class LibraryMovieDetailComponent implements OnInit {
   }
 
   saveHardcodedSubtitles(videoSubtitles: VideoSubtitles): void {
-    this.movieService.saveMovieHardcodedSubtitles(this.movie.imdbId, videoSubtitles).subscribe(
-      () => {
+    this.movieService.saveMovieHardcodedSubtitles(this.movie.imdbId, videoSubtitles).subscribe({
+      next: () => {
         this.closeVideoSubtitlesDialog();
         this.getMovieDetails(this.movie.imdbId);
       },
-      () => this.messageService.showErrorMessage('Unable to save the hardcoded subtitles!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to save the hardcoded subtitles!')
+    });
   }
 
   private getMovieDetails(imdbId: string): void {
-    this.movieService.getMovieDetails(imdbId).subscribe(
-      (movie) => {
+    this.movieService.getMovieDetails(imdbId).subscribe({
+      next: (movie) => {
         this.movie = movie;
         this.loading = false;
       },
-      () => this.messageService.showErrorMessage('Unable to get the movie details!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the movie details!')
+    });
   }
 }

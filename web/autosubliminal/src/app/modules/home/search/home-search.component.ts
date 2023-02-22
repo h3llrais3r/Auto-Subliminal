@@ -47,19 +47,20 @@ export class HomeSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.manualSubSyncEnabled = appSettings.manualSubSync;
-    this.route.queryParamMap.subscribe(
-      (queryParamMap) => {
+    this.route.queryParamMap.subscribe({
+      next: (queryParamMap) => {
         const wantedItemId = toNumber(queryParamMap.get('wantedItemId'));
         this.language = queryParamMap.get('language');
-        this.itemService.getWantedItem(wantedItemId).subscribe(
-          (wantedItem) => {
+        this.itemService.getWantedItem(wantedItemId).subscribe({
+          next: (wantedItem) => {
             this.wantedItem = wantedItem;
             this.scores = this.wantedItem.isEpisode ? appSettings.episodeScores : appSettings.movieScores;
             this.searchSubtitles();
           },
-          () => this.messageService.showErrorMessage(`Unable to get the wanted item with id ${wantedItemId}`)
-        );
-      });
+          error: () => this.messageService.showErrorMessage(`Unable to get the wanted item with id ${wantedItemId}`)
+        });
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -73,17 +74,17 @@ export class HomeSearchComponent implements OnInit, OnDestroy {
   searchSubtitles(): void {
     this.searchInProgress = true;
     this.subtitles = []; // reset subtitles
-    this.itemService.searchWantedItemSubtitles(this.wantedItem.id, this.language).subscribe(
-      (subtitles) => {
+    this.itemService.searchWantedItemSubtitles(this.wantedItem.id, this.language).subscribe({
+      next: (subtitles) => {
         this.subtitles = subtitles;
         this.searchInProgress = false;
         this.messageService.showInfoMessage(`${this.subtitles.length} subtitles found.`);
       },
-      () => {
+      error: () => {
         this.searchInProgress = false;
         this.messageService.showErrorMessage('Unable to search subtitles!');
       }
-    );
+    });
   }
 
   showScoreDetails(subtitle: Subtitle): void {
@@ -140,23 +141,23 @@ export class HomeSearchComponent implements OnInit, OnDestroy {
   }
 
   saveSubtitle(subtitle: Subtitle): void {
-    this.itemService.saveWantedItemSubtitle(this.wantedItem.id, subtitle.subtitleIndex).subscribe(
-      (savedSubtitle) => {
+    this.itemService.saveWantedItemSubtitle(this.wantedItem.id, subtitle.subtitleIndex).subscribe({
+      next: (savedSubtitle) => {
         this.savedSubtitle = savedSubtitle;
         this.messageService.showInfoMessage('Subtitles saved.');
       },
-      () => this.messageService.showErrorMessage('Unable to save the subtitle!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to save the subtitle!')
+    });
   }
 
   deleteSubtitle(): void {
-    this.itemService.deleteWantedItemSubtitle(this.wantedItem.id).subscribe(
-      () => {
+    this.itemService.deleteWantedItemSubtitle(this.wantedItem.id).subscribe({
+      next: () => {
         this.savedSubtitle = null;
         this.messageService.showInfoMessage('Subtitles deleted.');
       },
-      () => this.messageService.showErrorMessage('Unable to delete the subtitle!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to delete the subtitle!')
+    });
   }
 
   syncSubtitle(): void {
@@ -171,18 +172,18 @@ export class HomeSearchComponent implements OnInit, OnDestroy {
 
   postProcess(subtitle: Subtitle): void {
     this.postProcessInProgress = true;
-    this.itemService.postProcessWantedItem(this.wantedItem.id, subtitle.subtitleIndex).subscribe(
-      () => {
+    this.itemService.postProcessWantedItem(this.wantedItem.id, subtitle.subtitleIndex).subscribe({
+      next: () => {
         this.savedSubtitle = null; // clear saved subtile (to not trigger the cleanup in onDestroy)
         this.postProcessInProgress = false;
         this.messageService.showSuccessMessage(`Post processed ${this.wantedItem.longName}.`);
         this.goHome();
       },
-      () => {
+      error: () => {
         this.postProcessInProgress = false;
         this.messageService.showErrorMessage(`Unable to post process ${this.wantedItem.longName}!`);
       }
-    );
+    });
   }
 
   goHome(): void {

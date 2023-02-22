@@ -52,14 +52,14 @@ export class ManualRefineComponent implements OnInit {
   resetWantedItem(): void {
     const wantedItem = this.getWantedItem();
     // Reset the wanted item (restore it with the data from the db after it has been temporarily updated)
-    this.itemService.resetWantedItem(wantedItem.id).subscribe(
-      (updatedWantedItem) => {
+    this.itemService.resetWantedItem(wantedItem.id).subscribe({
+      next: (updatedWantedItem) => {
         this.wantedItemChange.emit(updatedWantedItem);
         this.messageService.showSuccessMessage(`Restored ${updatedWantedItem.longName}.`);
         this.close();
       },
-      () => this.messageService.showErrorMessage(`Unable to restore ${wantedItem.longName}`)
-    );
+      error: () => this.messageService.showErrorMessage(`Unable to restore ${wantedItem.longName}`)
+    });
   }
 
   updateWantedItem(): void {
@@ -67,14 +67,14 @@ export class ManualRefineComponent implements OnInit {
     if (this.itemForm.valid) {
       const wantedItem = this.getWantedItem();
       // Update the wanted item
-      this.itemService.updateWantedItem(wantedItem).subscribe(
-        (updatedWantedItem) => {
+      this.itemService.updateWantedItem(wantedItem).subscribe({
+        next: (updatedWantedItem) => {
           this.wantedItemChange.emit(updatedWantedItem);
           this.messageService.showSuccessMessage(`Updated ${updatedWantedItem.longName}.`);
           this.close();
         },
-        () => this.messageService.showErrorMessage(`Unable to update ${wantedItem.longName}`)
-      );
+        error: () => this.messageService.showErrorMessage(`Unable to update ${wantedItem.longName}`)
+      });
     }
   }
 

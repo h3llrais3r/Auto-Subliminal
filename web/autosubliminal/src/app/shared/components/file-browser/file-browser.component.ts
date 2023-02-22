@@ -57,9 +57,13 @@ export class FileBrowserComponent implements OnInit {
     this.selectedFilePath = new UntypedFormControl(this.path);
     this.selectedFilePath.valueChanges
       .pipe(mergeMap((path) => this.fileSystemService.browse(path, this.includeFiles, this.includeFolders).pipe(catchError(() => of(null)))))
-      .subscribe((result) => this.loadFileBrowserResult(result));
+      .subscribe({
+        next: (result) => this.loadFileBrowserResult(result)
+      });
     // Trigger initial browse
-    this.fileSystemService.browse(this.path, this.includeFiles, this.includeFolders).subscribe((result) => this.loadFileBrowserResult(result));
+    this.fileSystemService.browse(this.path, this.includeFiles, this.includeFolders).subscribe({
+      next: (result) => this.loadFileBrowserResult(result)
+    });
   }
 
   select(): void {

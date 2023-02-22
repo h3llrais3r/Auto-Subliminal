@@ -32,16 +32,24 @@ export class AppComponent {
     // Check if system is started (this is the case when the settings are loaded)
     this.systemStarted = this.appSettingsLoaded;
     // Subscribe on system start events
-    this.systemEventService.systemStart.subscribe(() => this.checkStart());
+    this.systemEventService.systemStart.subscribe({
+      next: () => this.checkStart()
+    });
     // Subscribe on system restart events
-    this.systemEventService.systemRestart.subscribe(() => {
-      this.messageService.clearMessages(); // Clear messages
-      this.checkRestart();
+    this.systemEventService.systemRestart.subscribe({
+      next: () => {
+        this.messageService.clearMessages(); // Clear messages
+        this.checkRestart();
+      }
     });
     // Subscribe on system shutdown events
-    this.systemEventService.systemShutdown.subscribe(() => this.checkShutdown());
+    this.systemEventService.systemShutdown.subscribe({
+      next: () => this.checkShutdown()
+    });
     // Subscribe on websocket connection interrupted events
-    this.systemEventService.webSocketConnectionInterrupted.subscribe((interrupted) => this.webSocketConnectionInterrupted = interrupted);
+    this.systemEventService.webSocketConnectionInterrupted.subscribe({
+      next: (interrupted) => this.webSocketConnectionInterrupted = interrupted
+    });
   }
 
   get connectionInterrupted(): boolean {
@@ -59,10 +67,10 @@ export class AppComponent {
       this.systemStart = true;
       this.systemStarted = false;
       this.systemShutdownFinished = false;
-      const check = interval(this.ALIVE_CHECK_INTERVAL).subscribe(
-        () => {
-          this.systemService.isAlive().subscribe(
-            (alive) => {
+      const check = interval(this.ALIVE_CHECK_INTERVAL).subscribe({
+        next: () => {
+          this.systemService.isAlive().subscribe({
+            next: (alive) => {
               if (alive) {
                 // If app is loaded, mark system is started
                 if (this.appSettingsLoaded) {
@@ -75,9 +83,10 @@ export class AppComponent {
                 }
               }
               // Continue the check
-            });
+            }
+          });
         }
-      );
+      });
     }
   }
 
@@ -85,38 +94,39 @@ export class AppComponent {
   private checkRestart(): void {
     this.systemRestart = true;
     this.systemStarted = false;
-    const check = interval(this.ALIVE_CHECK_INTERVAL).subscribe(
-      () => {
-        this.systemService.isAlive().subscribe(
-          (alive) => {
+    const check = interval(this.ALIVE_CHECK_INTERVAL).subscribe({
+      next: () => {
+        this.systemService.isAlive().subscribe({
+          next: (alive) => {
             if (alive) {
               this.systemRestart = false;
               this.systemStarted = true;
               check.unsubscribe(); // stop the check
             }
             // continue the check
-          });
+          }
+        });
       }
-    );
+    });
   }
 
   private checkShutdown(): void {
     this.systemShutdown = true;
     this.systemStarted = false;
-    const check = interval(this.ALIVE_CHECK_INTERVAL).subscribe(
-      () => {
-        this.systemService.isAlive().subscribe(
-          () => {
+    const check = interval(this.ALIVE_CHECK_INTERVAL).subscribe({
+      next: () => {
+        this.systemService.isAlive().subscribe({
+          next: () => {
             // continue the check
           },
-          () => {
+          error: () => {
             // no longer alive -> shutdown finished
             this.systemShutdown = false;
             this.systemShutdownFinished = true;
             check.unsubscribe(); // stop the check
           }
-        );
+        });
       }
-    );
+    });
   }
 }

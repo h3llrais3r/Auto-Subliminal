@@ -31,24 +31,24 @@ export class SettingsGeneralComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildSelectItems();
-    this.settingsService.getGeneralSettings().subscribe(
-      (generalSettings) => {
+    this.settingsService.getGeneralSettings().subscribe({
+      next: (generalSettings) => {
         this.buildForm(generalSettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the general settings!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the general settings!')
+    });
   }
 
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateGeneralSettings(this.getGeneralSettings()).subscribe(
-        () => {
+      this.settingsService.updateGeneralSettings(this.getGeneralSettings()).subscribe({
+        next: () => {
           this.messageService.showSuccessMessage('General settings saved.');
           this.appSettingsService.reload(); // reload app settings
         },
-        () => this.messageService.showErrorMessage('Unable to save the general settings!')
-      );
+        error: () => this.messageService.showErrorMessage('Unable to save the general settings!')
+      });
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }

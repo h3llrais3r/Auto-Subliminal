@@ -45,13 +45,13 @@ export class ShowSettingsComponent implements OnInit {
   ngOnInit(): void {
     this.languages = FormUtils.languageSelectItems();
     if (!this.showSettings) {
-      this.showService.getShowSettings(this.tvdbId).subscribe(
-        (showSettings) => {
+      this.showService.getShowSettings(this.tvdbId).subscribe({
+        next: (showSettings) => {
           this.buildForm(showSettings);
           this.loaded = true;
         },
-        () => this.messageService.showErrorMessage('Unable to get the show settings!')
-      );
+        error: () => this.messageService.showErrorMessage('Unable to get the show settings!')
+      });
     } else {
       this.buildForm(this.showSettings);
       this.loaded = true;
@@ -76,13 +76,13 @@ export class ShowSettingsComponent implements OnInit {
   }
 
   saveShowSettings(): void {
-    this.showService.saveShowSettings(this.tvdbId, this.getShowSettings()).subscribe(
-      () => {
+    this.showService.saveShowSettings(this.tvdbId, this.getShowSettings()).subscribe({
+      next: () => {
         this.messageService.showSuccessMessage(`Show settings saved and will be applied on next disk scan.`);
         this.close();
       },
-      () => this.messageService.showErrorMessage(`Unable to save the show settings!`)
-    );
+      error: () => this.messageService.showErrorMessage(`Unable to save the show settings!`)
+    });
   }
 
   private getShowSettings(): ShowSettings {

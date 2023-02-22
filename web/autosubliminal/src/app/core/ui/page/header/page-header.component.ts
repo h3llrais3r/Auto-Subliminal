@@ -27,13 +27,17 @@ export class PageHeaderComponent implements OnInit {
     private themeService: ThemeService) { }
 
   ngOnInit(): void {
-    this.themeService.currentTheme.subscribe((theme) => {
-      this.currentTheme = theme;
-      this.buildMenu();
+    this.themeService.currentTheme.subscribe({
+      next: (theme) => {
+        this.currentTheme = theme;
+        this.buildMenu();
+      }
     });
-    this.systemEventService.systemUpdate.subscribe((systemUpdate) => {
-      this.systemUpdateAvailable = systemUpdate.available;
-      this.buildMenu();
+    this.systemEventService.systemUpdate.subscribe({
+      next: (systemUpdate) => {
+        this.systemUpdateAvailable = systemUpdate.available;
+        this.buildMenu();
+      }
     });
   }
 

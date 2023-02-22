@@ -35,12 +35,13 @@ export class LibraryShowOverviewComponent implements OnInit, OnDestroy {
     // Load overview
     this.loadOverview();
     // Subscribe on scanLibrary finish events to reload the overview
-    this.scanLibrarySubscription = this.systemEventService.schedulerFinish.subscribe(
-      (scheduler) => {
+    this.scanLibrarySubscription = this.systemEventService.schedulerFinish.subscribe({
+      next: (scheduler) => {
         if (scheduler.name === appSettings.scanLibrary) {
           this.loadOverview();
         }
-      });
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -49,14 +50,14 @@ export class LibraryShowOverviewComponent implements OnInit, OnDestroy {
 
   private loadOverview(): void {
     this.loading = true;
-    this.showService.getShows().subscribe(
-      (shows) => {
+    this.showService.getShows().subscribe({
+      next: (shows) => {
         this.shows = shows;
         this.nrOfShows = this.shows.length;
         this.loading = false;
       },
-      () => this.messageService.showErrorMessage('Unable to get the shows!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the shows!')
+    });
   }
 
   sort(event: SortEvent): void {

@@ -30,24 +30,24 @@ export class SettingsLoggingComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildSelectItems();
-    this.settingsService.getLogSettings().subscribe(
-      (logSettings) => {
+    this.settingsService.getLogSettings().subscribe({
+      next: (logSettings) => {
         this.buildForm(logSettings);
       },
-      () => this.messageService.showErrorMessage('Unable to get the log settings!')
-    );
+      error: () => this.messageService.showErrorMessage('Unable to get the log settings!')
+    });
   }
 
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateLogSettings(this.getLogSettings()).subscribe(
-        () => {
+      this.settingsService.updateLogSettings(this.getLogSettings()).subscribe({
+        next: () => {
           this.messageService.showSuccessMessage('Log settings saved.');
           this.appSettingsService.reload(); // reload app settings
         },
-        () => this.messageService.showErrorMessage('Unable to save the log settings!')
-      );
+        error: () => this.messageService.showErrorMessage('Unable to save the log settings!')
+      });
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }
