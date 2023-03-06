@@ -95,7 +95,7 @@ jobs:
 
     - name: Test python code
       run: |
-        # Configuration is done in .coveragerc
+        # Configuration is done in pyproject.toml
         poetry run coverage run --module pytest
         poetry run coverage report
 
