@@ -96,6 +96,7 @@ testpaths = ["tests"]
 
 [tool.autopep8]
 max_line_length = 120
+experimental = true
 
 [tool.flake8]
 
