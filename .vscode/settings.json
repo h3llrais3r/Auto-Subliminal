@@ -56,9 +56,6 @@
   "python.linting.lintOnSave": true,
   "python.linting.pylintEnabled": false,
   "python.linting.flake8Enabled": true,
-  "python.sortImports.args": [
-    "-sp isort.cfg"
-  ],
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "python.analysis.completeFunctionParens": true
