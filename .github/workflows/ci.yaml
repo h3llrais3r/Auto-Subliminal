@@ -88,6 +88,11 @@ jobs:
         # Configuration is done in .flake8
         poetry run flake8 --verbose
 
+    - name: Type check python code
+      run: |
+        # Configuration is done in pyproject.toml
+        poetry run mypy
+
     - name: Lint angular code
       working-directory: web/autosubliminal
       run: |
