@@ -27,10 +27,10 @@ babelfish==0.6.0
 # autosubliminal\server\web\websocket.py: 3
 # autosubliminal\util\json.py: 3
 CherryPy==18.8.0
-# autosubliminal\providers\pitcher.py: 7,8
+# autosubliminal\providers\pitcher.py: 9,10
 deathbycaptcha==0.1.1
 # autosubliminal\core\cache.py: 9,10,11
-# autosubliminal\providers\pitcher.py: 9
+# autosubliminal\providers\pitcher.py: 11
 dogpile.cache==1.1.8
 # autosubliminal\util\filesystem.py: 14
 enzyme==0.4.1
@@ -58,7 +58,7 @@ langdetect==1.0.9
 packaging==21.3
 # autosubliminal\util\filesystem.py: 10
 pysrt==1.1.2
-# autosubliminal\providers\pitcher.py: 10
+# autosubliminal\providers\pitcher.py: 12
 python-anticaptcha==1.0.0
 # autosubliminal\core\show.py: 5
 python-dateutil==2.8.2
@@ -84,7 +84,7 @@ setuptools==67.1.0
 # autosubliminal\__init__.py: 649,669,670,671
 # autosubliminal\providers\addic7ed_custom.py: 12,13,14,15,16,17,18,19
 # autosubliminal\providers\exceptions.py: 3
-# autosubliminal\providers\pitcher.py: 11
+# autosubliminal\providers\pitcher.py: 13
 # autosubliminal\providers\provider_cache.py: 3
 # autosubliminal\refiners\manual.py: 5
 # autosubliminal\refiners\namemapping.py: 5
