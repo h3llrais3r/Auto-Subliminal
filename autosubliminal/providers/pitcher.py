@@ -3,6 +3,8 @@
 import json
 import logging
 import time
+from abc import ABC, abstractmethod
+from typing import Dict, List
 
 from deathbycaptcha.deathbycaptcha import DEFAULT_TOKEN_TIMEOUT
 from deathbycaptcha.deathbycaptcha import SocketClient as DBCClient
@@ -16,37 +18,7 @@ from autosubliminal.providers.proxy import Proxy
 logger = logging.getLogger(__name__)
 
 
-class PitcherRegistry(object):
-    pitchers = []
-    pitchers_by_key = {}
-
-    def register(self, cls):
-        idx = len(self.pitchers)
-        self.pitchers.append(cls)
-        key = '%s_%s' % (cls.name, cls.needs_proxy)
-        key_by_source = '%s_%s' % (cls.source, cls.needs_proxy)
-        self.pitchers_by_key[key] = idx
-        self.pitchers_by_key[key_by_source] = idx
-        return cls
-
-    def get_pitcher(self, name_or_site=None, with_proxy=False):
-        name_or_site = name_or_site or autosubliminal.ANTICAPTCHACLASS
-        if not name_or_site:
-            raise Exception('AntiCaptcha class not given, exiting')
-
-        key = '%s_%s' % (name_or_site, with_proxy)
-        if key not in self.pitchers_by_key:
-            raise Exception('Pitcher %s not found (proxy: %s)' % (name_or_site, with_proxy))
-
-        return self.pitchers[self.pitchers_by_key.get(key)]
-
-
-registry = pitchers = PitcherRegistry()
-
-
-class Pitcher(object):
-    name = None
-    source = None
+class Pitcher(ABC):
     needs_proxy = False
     tries = 3
     job = None
@@ -70,11 +42,23 @@ class Pitcher(object):
         self.success = False
         self.solve_time = None
 
-    def get_client(self):
-        raise NotImplementedError
+    @property
+    @abstractmethod
+    def name(self):
+        pass
 
+    @property
+    @abstractmethod
+    def source(self):
+        pass
+
+    @abstractmethod
+    def get_client(self):
+        pass
+
+    @abstractmethod
     def get_job(self):
-        raise NotImplementedError
+        pass
 
     def _throw(self):
         self.client = self.get_client()
@@ -89,10 +73,36 @@ class Pitcher(object):
         return data
 
 
+class PitcherRegistry(object):
+    pitchers: List[Pitcher] = []
+    pitchers_by_key: Dict[str, Pitcher] = {}
+
+    def register(self, cls):
+        idx = len(self.pitchers)
+        self.pitchers.append(cls)
+        key = '%s_%s' % (cls.name, cls.needs_proxy)
+        key_by_source = '%s_%s' % (cls.source, cls.needs_proxy)
+        self.pitchers_by_key[key] = idx
+        self.pitchers_by_key[key_by_source] = idx
+        return cls
+
+    def get_pitcher(self, name_or_site=None, with_proxy=False):
+        name_or_site = name_or_site or autosubliminal.ANTICAPTCHACLASS
+        if not name_or_site:
+            raise Exception('AntiCaptcha class not given, exiting')
+
+        key = '%s_%s' % (name_or_site, with_proxy)
+        if key not in self.pitchers_by_key:
+            raise Exception('Pitcher %s not found (proxy: %s)' % (name_or_site, with_proxy))
+
+        return self.pitchers[self.pitchers_by_key.get(key)]
+
+
+registry = PitcherRegistry()
+
+
 @registry.register
 class AntiCaptchaProxyLessPitcher(Pitcher):
-    name = 'AntiCaptchaProxyLess'
-    source = 'anti-captcha.com'
     host = 'api.anti-captcha.com'
     language_pool = 'en'
     tries = 5
@@ -106,6 +116,14 @@ class AntiCaptchaProxyLessPitcher(Pitcher):
         self.language_pool = language_pool or self.language_pool
         self.use_ssl = use_ssl
         self.is_invisible = is_invisible
+
+    @property
+    def name(self):
+        return 'AntiCaptchaProxyLess'
+
+    @property
+    def source(self):
+        return 'anti-captcha.com'
 
     def get_client(self):
         return AnticaptchaClient(self.client_key, self.language_pool, self.host, self.use_ssl)
@@ -156,7 +174,6 @@ class AntiCaptchaProxyLessPitcher(Pitcher):
 
 @registry.register
 class AntiCaptchaPitcher(AntiCaptchaProxyLessPitcher):
-    name = 'AntiCaptcha'
     proxy = None
     needs_proxy = True
     user_agent = None
@@ -171,6 +188,10 @@ class AntiCaptchaPitcher(AntiCaptchaProxyLessPitcher):
 
         super().__init__(*args, **kwargs)
 
+    @property
+    def name(self):
+        return 'AntiCaptcha'
+
     def get_job(self):
         task = NoCaptchaTask(website_url=self.website_url, website_key=self.website_key, proxy=self.proxy,
                              user_agent=self.user_agent, cookies=self.cookies, is_invisible=self.is_invisible)
@@ -179,8 +200,6 @@ class AntiCaptchaPitcher(AntiCaptchaProxyLessPitcher):
 
 @registry.register
 class DBCProxyLessPitcher(Pitcher):
-    name = 'DeathByCaptchaProxyLess'
-    source = 'deathbycaptcha.com'
     username = None
     password = None
 
@@ -190,6 +209,14 @@ class DBCProxyLessPitcher(Pitcher):
 
         self.username, self.password = self.client_key.split(':', 1)
         self.timeout = timeout
+
+    @property
+    def name(self):
+        return 'DeathByCaptchaProxyLess'
+
+    @property
+    def source(self):
+        return 'deathbycaptcha.com'
 
     def get_client(self):
         return DBCClient(self.username, self.password)
@@ -220,7 +247,6 @@ class DBCProxyLessPitcher(Pitcher):
 
 @registry.register
 class DBCPitcher(DBCProxyLessPitcher):
-    name = 'DeathByCaptcha'
     proxy = None
     needs_proxy = True
     proxy_type = 'HTTP'
@@ -228,6 +254,10 @@ class DBCPitcher(DBCProxyLessPitcher):
     def __init__(self, *args, **kwargs):
         self.proxy = kwargs.pop('proxy')
         super().__init__(*args, **kwargs)
+
+    @property
+    def name(self):
+        return 'DeathByCaptcha'
 
     @property
     def payload_dict(self):

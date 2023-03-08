@@ -20,7 +20,7 @@ from subliminal.video import Episode
 
 import autosubliminal
 from autosubliminal.providers.exceptions import TooManyRequests
-from autosubliminal.providers.pitcher import load_verification, pitchers, store_verification
+from autosubliminal.providers.pitcher import load_verification, registry, store_verification
 
 logger = logging.getLogger(__name__)
 
@@ -156,7 +156,7 @@ class Addic7edProvider(Provider):
                             logger.error('Captcha site-key not found!')
                             return
 
-                        pitcher = pitchers.get_pitcher()('Addic7ed', self.server_url + 'login.php', site_key,
+                        pitcher = registry.get_pitcher()('Addic7ed', self.server_url + 'login.php', site_key,
                                                          user_agent=self.session.headers['User-Agent'],
                                                          cookies=self.session.cookies.get_dict(),
                                                          is_invisible=True)
