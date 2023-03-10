@@ -82,7 +82,7 @@ def main(argv=None):
                     autosubliminal.DAEMON = True
 
     except Usage as err:
-        sys.stderr.write(sys.argv[0].split('/')[-1] + ': ' + bytes(err.msg) + '\n')
+        sys.stderr.write(sys.argv[0].split('/')[-1] + ': ' + str(err.msg) + '\n')
         sys.stderr.write('For help use --help\n')
         return 2
 
