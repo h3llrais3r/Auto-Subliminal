@@ -87,9 +87,6 @@ def main(argv=None):
         return 2
 
     # Initialize configuration
-    if os.path.isfile('config.properties.dev'):
-        print('WARNING: Using development configuration file.')
-        autosubliminal.CONFIGFILE = 'config.properties.dev'
     print('INFO: Initializing variables and loading config.')
     autosubliminal.initialize()
 
