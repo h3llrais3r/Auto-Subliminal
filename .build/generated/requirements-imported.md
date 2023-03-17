@@ -40,7 +40,7 @@ ffsubsync==0.4.23
 GitPython==3.1.31
 # autosubliminal\notifiers\growl.py: 5
 gntp==1.0.3
-# autosubliminal\__init__.py: 634
+# autosubliminal\__init__.py: 547
 # autosubliminal\fileprocessor.py: 7
 # autosubliminal\parsers\guessit\__init__.py: 3
 # autosubliminal\parsers\guessit\rules.py: 3,4,5
@@ -51,7 +51,7 @@ guessit==3.7.1
 imdbpie==5.6.4.dev0
 # autosubliminal\util\json.py: 4
 jsonpickle==3.0.1
-# autosubliminal\__init__.py: 703,704
+# autosubliminal\__init__.py: 624,625
 # autosubliminal\util\filesystem.py: 9
 langdetect==1.0.9
 # autosubliminal\versionchecker.py: 7
@@ -79,9 +79,9 @@ requests==2.28.2
 requests-oauthlib==1.3.1
 # autosubliminal\core\websocket.py: 8
 schema==0.7.5
-# autosubliminal\__init__.py: 5
-setuptools==67.1.0
-# autosubliminal\__init__.py: 649,669,670,671
+# autosubliminal\__init__.py: 16
+stevedore==4.1.1
+# autosubliminal\__init__.py: 562,588,589,590
 # autosubliminal\providers\addic7ed_custom.py: 12,13,14,15,16,17,18,19
 # autosubliminal\providers\exceptions.py: 3
 # autosubliminal\providers\pitcher.py: 13
