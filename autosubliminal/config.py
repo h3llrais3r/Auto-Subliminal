@@ -6,6 +6,7 @@ import os
 import shutil
 import time
 from configparser import ConfigParser
+from typing import cast
 
 import autosubliminal
 from autosubliminal import version
