@@ -33,11 +33,11 @@
           <label for="scanLibraryInterval" class="label">Scan library interval</label>
           <app-icon-dropdown>
             <li>Library scan interval of the ScanLibrary thread. It scans the complete library for generating an overview.</li>
-            <li>Time is in hours. Default value is 24 hours. Cannot not be set lower then 24 hours.</li>
+            <li>Cannot not be set lower then {{scanLibraryIntervalDefault}} hour(s).</li>
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="scanLibraryInterval" [min]="24" suffix=" hours"></app-input-number>
+          <app-input-number formControlName="scanLibraryInterval" [min]="scanLibraryIntervalDefault" suffix=" hour(s)"></app-input-number>
         </div>
       </div>
       <!-- Library edit mode -->

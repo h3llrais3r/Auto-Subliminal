@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
-import { AppSettingsService } from '../../../app-settings.service';
+import { appSettings, AppSettingsService } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
 import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
@@ -16,6 +16,8 @@ export class SettingsLibraryComponent implements OnInit {
 
   settingsForm: UntypedFormGroup;
 
+  scanLibraryIntervalDefault: number;
+
   enabledOrDisabled: SelectItem[];
 
   saveAttempt = false;
@@ -27,6 +29,7 @@ export class SettingsLibraryComponent implements OnInit {
     private messageService: MessageService) { }
 
   ngOnInit(): void {
+    this.initDefaults();
     this.buildSelectItems();
     this.settingsService.getLibrarySettings().subscribe({
       next: (librarySettings) => {
@@ -49,6 +52,10 @@ export class SettingsLibraryComponent implements OnInit {
     } else {
       FormUtils.scrollToFirstInvalidField(this.settingsForm);
     }
+  }
+
+  private initDefaults(): void {
+    this.scanLibraryIntervalDefault = appSettings.scanLibraryIntervalDefault;
   }
 
   private buildSelectItems(): void {

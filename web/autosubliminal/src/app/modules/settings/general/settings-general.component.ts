@@ -23,6 +23,12 @@ export class SettingsGeneralComponent implements OnInit {
 
   settingsForm: UntypedFormGroup;
 
+  scanDiskIntervalDefault: number;
+  checkSubIntervalDefault: number;
+  checkSubDeadlineDefault: number;
+  checkSubDeltaDefault: number;
+  checkVersionIntervalDefault: number;
+
   enabledOrDisabled: SelectItem[];
   languages: SelectItem[];
   timestampFormats: SelectItem[];
@@ -30,6 +36,7 @@ export class SettingsGeneralComponent implements OnInit {
   saveAttempt = false;
 
   ngOnInit(): void {
+    this.initDefaults();
     this.buildSelectItems();
     this.settingsService.getGeneralSettings().subscribe({
       next: (generalSettings) => {
@@ -57,6 +64,14 @@ export class SettingsGeneralComponent implements OnInit {
   showFfmpegPath(): boolean {
     // FFMPEG is required for manualSubSync
     return FormUtils.getFormControlValue<boolean>(this.settingsForm, 'manualSubSync');
+  }
+
+  private initDefaults(): void {
+    this.scanDiskIntervalDefault = appSettings.scanDiskIntervalDefault;
+    this.checkSubIntervalDefault = appSettings.checkSubIntervalDefault;
+    this.checkSubDeadlineDefault = appSettings.checkSubDeadlineDefault;
+    this.checkSubDeltaDefault = appSettings.checkSubDeltaDefault;
+    this.checkVersionIntervalDefault = appSettings.checkVersionIntervalDefault;
   }
 
   private buildSelectItems(): void {

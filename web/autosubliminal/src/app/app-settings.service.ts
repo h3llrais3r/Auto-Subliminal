@@ -14,10 +14,16 @@ class AppSettings {
   webRoot = ''; // Make sure it's a string as it's used to all url connections to the backend (if not set it becomes undefined, which gives 404 errors)
   scanDisk: string;
   scanDiskNextRunInMs: number;
+  scanDiskIntervalDefault: number;
   scanLibrary: string;
+  scanLibraryIntervalDefault: number;
   checkSub: string;
   checkSubNextRunInMs: number;
+  checkSubIntervalDefault: number;
+  checkSubDeadlineDefault: number;
+  checkSubDeltaDefault: number;
   checkVersion: string;
+  checkVersionIntervalDefault: number;
   libraryMode: boolean;
   libraryEditMode: boolean;
   logReversed: boolean;

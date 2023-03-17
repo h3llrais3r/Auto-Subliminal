@@ -70,11 +70,11 @@
           <label for="scanDiskInterval" class="label">Disk scan interval</label>
           <app-icon-dropdown>
             <li>Disk scan interval of the ScanDisk thread. It scans the disk for missing subtitle files.</li>
-            <li>Default value is 1 hour. Cannot be set lower then 1 hour.</li>
+            <li>Cannot be set lower then {{scanDiskIntervalDefault}} hour(s).</li>
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="scanDiskInterval" [min]="1" suffix=" hour(s)"></app-input-number>
+          <app-input-number formControlName="scanDiskInterval" [min]="scanDiskIntervalDefault" suffix=" hour(s)"></app-input-number>
         </div>
       </div>
       <!-- Check sub interval -->
@@ -83,11 +83,11 @@
           <label for="checkSubInterval" class="label">Subtitle check interval</label>
           <app-icon-dropdown>
             <li>Subtitle check interval of the CheckSub thread. It checks if there is a match on the configured subliminal providers.</li>
-            <li>Default value is 24 hours. Cannot be set lower then 6 hours.</li>
+            <li>Cannot be set lower then {{checkSubIntervalDefault}} hour(s).</li>
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="checkSubInterval" [min]="6" suffix=" hours"></app-input-number>
+          <app-input-number formControlName="checkSubInterval" [min]="checkSubIntervalDefault" suffix=" hour(s)"></app-input-number>
         </div>
       </div>
       <!-- Check sub deadline -->
@@ -96,12 +96,12 @@
           <label for="checkSubDeadline" class="label">Subtitle check deadline</label>
           <app-icon-dropdown>
             <li>Subtitle check deadline in weeks for checking subtitles on daily basis.</li>
-            <li>After this deadline, the daily search is replaced by a search every X days, defined by the parameter below.</li>
-            <li>Default value is 4 weeks. Cannot be set lower than 1 week.</li>
+            <li>After this deadline, the daily search is replaced by a search every X week(s), defined by the parameter below.</li>
+            <li>Cannot be set lower than {{checkSubDeadlineDefault}} week(s).</li>
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="checkSubDeadline" [min]="1" suffix=" week(s)"></app-input-number>
+          <app-input-number formControlName="checkSubDeadline" [min]="checkSubDeadlineDefault" suffix=" week(s)"></app-input-number>
         </div>
       </div>
       <!-- Check sub delta -->
@@ -110,12 +110,12 @@
           <label for="checkSubDelta" class="label">Subtitle check delta</label>
           <app-icon-dropdown>
             <li>Subtitle check delta in days for checking subtitles after deadline.</li>
-            <li>After the deadline (parameter above) is passed, a subtitle is search every X days, defined by this parameter.</li>
-            <li>Default value is 7 days (1 week). Cannot be set lower than 1 day.</li>
+            <li>After the deadline (parameter above) is passed, a subtitle is search every X day(s), defined by this parameter.</li>
+            <li>Cannot be set lower than {{checkSubDeltaDefault}} day(s).</li>
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="checkSubDelta" [min]="1" suffix=" day(s)"></app-input-number>
+          <app-input-number formControlName="checkSubDelta" [min]="checkSubDeltaDefault" suffix=" day(s)"></app-input-number>
         </div>
       </div>
       <!-- Check version interval -->
@@ -124,11 +124,11 @@
           <label for="checkVersionInterval" class="label">Version check interval</label>
           <app-icon-dropdown>
             <li>Version check interval of the VersionCheck thread. It checks if there is a new version available.</li>
-            <li>Default value is 12 hours. Cannot be set lower then 1 hour.</li>
+            <li> Cannot be set lower then {{checkVersionIntervalDefault}} hour(s).</li>
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
-          <app-input-number formControlName="checkVersionInterval" [min]="1" suffix=" hour(s)"></app-input-number>
+          <app-input-number formControlName="checkVersionInterval" [min]="checkVersionIntervalDefault" suffix=" hour(s)"></app-input-number>
         </div>
       </div>
       <!-- Check version auto update -->
