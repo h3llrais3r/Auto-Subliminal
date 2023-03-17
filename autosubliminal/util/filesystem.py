@@ -175,23 +175,28 @@ def get_embedded_subtitles(dirname, filename, log_scan=False):
                         try:
                             embedded_subtitle_languages.add(Language.fromalpha3b(st.language))
                         except BabelfishError:
-                            log_scan and log.error('Embedded subtitle track language %r is not a valid language',
-                                                   st.language)
+                            if log_scan:
+                                log.error('Embedded subtitle track language %r is not a valid language', st.language)
                     elif st.name:
                         try:
                             embedded_subtitle_languages.add(Language.fromname(st.name))
                         except BabelfishError:
-                            log_scan and log.error('Embedded subtitle track name %r is not a valid language', st.name)
+                            if log_scan:
+                                log.error('Embedded subtitle track name %r is not a valid language', st.name)
                     else:
-                        log_scan and log.error('Embedded subtitle track language %r is not a valid language',
-                                               st.language)
-                log_scan and log.debug('Found embedded subtitles %r with enzyme', embedded_subtitle_languages)
+                        if log_scan:
+                            log.error('Embedded subtitle track language %r is not a valid language', st.language)
+                if log_scan:
+                    log.debug('Found embedded subtitles %r with enzyme', embedded_subtitle_languages)
             else:
-                log_scan and log.debug('MKV has no subtitle track')
+                if log_scan:
+                    log.debug('MKV has no subtitle track')
         else:
-            log_scan and log.debug('Check is only supported for MKV containers, skipping')
+            if log_scan:
+                log.debug('Check is only supported for MKV containers, skipping')
     except Exception:
-        log_scan and log.error('Parsing video metadata with enzyme failed')
+        if log_scan:
+            log.error('Parsing video metadata with enzyme failed')
 
     return [Subtitle(EMBEDDED, str(language), path) for language in embedded_subtitle_languages if
             language != Language('und')]
