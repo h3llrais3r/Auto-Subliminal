@@ -101,6 +101,7 @@ TIMESTAMPFORMAT: str = '%Y-%m-%d %H:%M:%S'
 # Library config section
 LIBRARYMODE: bool = False
 LIBRARYPATHS: List[str] = []
+SCANLIBRARYINTERVALDEFAULT: int = 24  # hours
 SCANLIBRARYINTERVAL: int = 24  # hours
 LIBRARYEDITMODE: bool = False
 

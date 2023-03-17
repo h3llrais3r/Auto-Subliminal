@@ -154,10 +154,11 @@ def read_config(check_upgrade=False):
         if cfg.has_option('library', 'scanlibraryinterval'):
             autosubliminal.SCANLIBRARYINTERVAL = cfg.getint('library', 'scanlibraryinterval')
             # SCANLIBRARY may only run max once a day to prevent too heavy system usage
-            if autosubliminal.SCANLIBRARYINTERVAL < 24:
-                print('WARNING: scanlibraryinterval variable is lower then 24 hours. Setting it to 24 hours.')
-                print('WARNING: This is not allowed because it will result in too high system usage.')
-                autosubliminal.SCANLIBRARYINTERVAL = 24
+            if autosubliminal.SCANLIBRARYINTERVAL < autosubliminal.SCANLIBRARYINTERVALDEFAULT:
+                print('WARNING: Invalid SCANLIBRARYINTERVAL found.')
+                print('WARNING: Using the default value (%s hours) instead.' %
+                      autosubliminal.SCANLIBRARYINTERVALDEFAULT)
+                autosubliminal.SCANLIBRARYINTERVAL = autosubliminal.SCANLIBRARYINTERVALDEFAULT
 
         if cfg.has_option('library', 'libraryeditmode'):
             autosubliminal.LIBRARYEDITMODE = cfg.getboolean('library', 'libraryeditmode')
