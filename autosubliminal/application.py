@@ -265,18 +265,13 @@ def stop(exit=True):
 
     # Stop scheduled threads
     log.info('Stopping threads')
-    if autosubliminal.SCANDISK:
-        autosubliminal.SCANDISK.stop()
-    if autosubliminal.CHECKSUB:
-        autosubliminal.CHECKSUB.stop()
-    if autosubliminal.CHECKVERSION:
-        autosubliminal.CHECKVERSION.stop()
-    if autosubliminal.SCANLIBRARY:
-        autosubliminal.SCANLIBRARY.stop()
+    autosubliminal.SCANDISK.stop()
+    autosubliminal.CHECKSUB.stop()
+    autosubliminal.CHECKVERSION.stop()
+    autosubliminal.SCANLIBRARY.stop()
 
     # Stop permanent threads
-    if autosubliminal.WEBSOCKETBROADCASTER:
-        autosubliminal.WEBSOCKETBROADCASTER.stop()
+    autosubliminal.WEBSOCKETBROADCASTER.stop()
 
     if exit:
         _shutdown()
