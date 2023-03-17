@@ -21,7 +21,7 @@ def test_rest_method_not_allowed():
 def test_rest_get(monkeypatch):
     monkeypatch.setattr('cherrypy.request.method', 'GET')
     resource = RestResource()
-    resource.allowed_methods = ('GET',)
+    resource.allowed_methods = ['GET']
     with pytest.raises(MethodNotImplemented):
         resource.default()
 
@@ -29,7 +29,7 @@ def test_rest_get(monkeypatch):
 def test_rest_post(monkeypatch):
     monkeypatch.setattr('cherrypy.request.method', 'POST')
     resource = RestResource()
-    resource.allowed_methods = ('POST',)
+    resource.allowed_methods = ['POST']
     with pytest.raises(MethodNotImplemented):
         resource.default()
 
@@ -37,7 +37,7 @@ def test_rest_post(monkeypatch):
 def test_rest_put(monkeypatch):
     monkeypatch.setattr('cherrypy.request.method', 'PUT')
     resource = RestResource()
-    resource.allowed_methods = ('PUT',)
+    resource.allowed_methods = ['PUT']
     with pytest.raises(MethodNotImplemented):
         resource.default()
 
@@ -45,7 +45,7 @@ def test_rest_put(monkeypatch):
 def test_rest_patch(monkeypatch):
     monkeypatch.setattr('cherrypy.request.method', 'PATCH')
     resource = RestResource()
-    resource.allowed_methods = ('PATCH',)
+    resource.allowed_methods = ['PATCH']
     with pytest.raises(MethodNotImplemented):
         resource.default()
 
@@ -53,6 +53,6 @@ def test_rest_patch(monkeypatch):
 def test_rest_delete(monkeypatch):
     monkeypatch.setattr('cherrypy.request.method', 'DELETE')
     resource = RestResource()
-    resource.allowed_methods = ('DELETE',)
+    resource.allowed_methods = ['DELETE']
     with pytest.raises(MethodNotImplemented):
         resource.default()

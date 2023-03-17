@@ -16,7 +16,7 @@ class RestResource(ABC):
 
     def __init__(self):
         self.http_method = None
-        self.allowed_methods = ()
+        self.allowed_methods = []
 
     @cherrypy.expose
     @cherrypy.tools.json_in()

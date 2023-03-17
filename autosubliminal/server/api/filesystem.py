@@ -17,7 +17,7 @@ class FileSystemApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET',)
+        self.allowed_methods = ['GET']
 
     def get(self, **kwargs):
         """Get the details of a path from the filesytem."""

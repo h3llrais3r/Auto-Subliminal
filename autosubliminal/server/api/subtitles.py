@@ -25,7 +25,7 @@ class SubtitlesApi(RestResource):
         self.synchronization = _SynchronizationApi()
 
         # Set the allowed methods
-        self.allowed_methods = ('PATCH',)
+        self.allowed_methods = ['PATCH']
 
 
 class _SynchronizationApi(RestResource):
@@ -37,7 +37,7 @@ class _SynchronizationApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('PATCH',)
+        self.allowed_methods = ['PATCH']
 
     def patch(self):
         """Patch actions related to subtitle synchronization."""

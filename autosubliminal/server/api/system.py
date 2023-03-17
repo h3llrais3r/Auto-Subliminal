@@ -41,7 +41,7 @@ class _AliveApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET',)
+        self.allowed_methods = ['GET']
 
     def get(self):
         """Return true if system is alive."""
@@ -60,7 +60,7 @@ class _InfoApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET',)
+        self.allowed_methods = ['GET']
 
     def get(self):
         """Return the system info."""
@@ -96,7 +96,7 @@ class _SettingsApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET',)
+        self.allowed_methods = ['GET']
 
     def get(self):
         """Get the list of settings for the frontend."""
@@ -174,7 +174,7 @@ class _SchedulersApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET',)
+        self.allowed_methods = ['GET']
 
     def get(self, scheduler_name=None):
         """Get the list of schedulers or a single scheduler by it's name."""
@@ -195,7 +195,7 @@ class _PathsApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET',)
+        self.allowed_methods = ['GET']
 
     def get(self):
         """Get the path info for all configured paths."""

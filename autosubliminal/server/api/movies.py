@@ -34,7 +34,7 @@ class MoviesApi(RestResource):
         self.subtitles = _SubtitlesApi()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'DELETE')
+        self.allowed_methods = ['GET', 'DELETE']
 
     def get(self, imdb_id=None):
         """Get the list of movies or the details of a single movie."""
@@ -126,7 +126,7 @@ class _OverviewApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET',)
+        self.allowed_methods = ['GET']
 
     def get(self):
         movies = MovieDetailsDb().get_all_movies()
@@ -165,7 +165,7 @@ class _RefreshApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('PUT',)
+        self.allowed_methods = ['PUT']
 
     def put(self, imdb_id):
         """Refresh/rescan a movie."""
@@ -187,7 +187,7 @@ class _SettingsApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'PUT')
+        self.allowed_methods = ['GET', 'PUT']
 
     def get(self, imdb_id):
         """Get the settings for a movie"""
@@ -240,7 +240,7 @@ class _SubtitlesApi(RestResource):
         self.hardcoded = _HardcodedApi()
 
         # Set the allowed methods
-        self.allowed_methods = ('PATCH', )
+        self.allowed_methods = ['PATCH']
 
     def patch(self, imdb_id):
         """Patch actions related to movie subtitles."""
@@ -285,7 +285,7 @@ class _HardcodedApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('PUT',)
+        self.allowed_methods = ['PUT']
 
     def put(self, imdb_id):
         """Save the list of hardcoded subtitles for a movie file."""

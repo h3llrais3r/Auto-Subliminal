@@ -34,7 +34,7 @@ class _WantedApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'DELETE', 'PUT', 'PATCH')
+        self.allowed_methods = ['GET', 'DELETE', 'PUT', 'PATCH']
 
     def get(self, wanted_item_id=None):
         """Get the list of wanted items or a single wanted item from the wanted queue."""
@@ -227,7 +227,7 @@ class _DownloadedApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET',)
+        self.allowed_methods = ['GET']
 
     def get(self, ):
         """Get the list of downloaded items."""

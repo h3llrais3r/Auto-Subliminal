@@ -56,7 +56,7 @@ class _GeneralApi(RestResource):
         self._section = 'general'
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'PUT', 'PATCH')
+        self.allowed_methods = ['GET', 'PUT', 'PATCH']
 
     def get(self):
         """Get general settings."""
@@ -175,7 +175,7 @@ class _LibraryApi(RestResource):
         self._section = 'library'
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'PUT')
+        self.allowed_methods = ['GET', 'PUT']
 
     def get(self):
         """Get general settings."""
@@ -231,7 +231,7 @@ class _LoggingApi(RestResource):
         self._section = 'logging'
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'PUT')
+        self.allowed_methods = ['GET', 'PUT']
 
     def get(self):
         """Get log settings."""
@@ -296,7 +296,7 @@ class _WebserverApi(RestResource):
         self._section = 'webserver'
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'PUT')
+        self.allowed_methods = ['GET', 'PUT']
 
     def get(self):
         """Get webserver settings."""
@@ -352,7 +352,7 @@ class _SubliminalApi(RestResource):
         self._section = 'subliminal'
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'PUT')
+        self.allowed_methods = ['GET', 'PUT']
 
     def get(self):
         """Get subliminal settings."""
@@ -480,7 +480,7 @@ class _NameMappingApi(RestResource):
         self._section = 'namemapping'
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'PUT')
+        self.allowed_methods = ['GET', 'PUT']
 
     def get(self):
         """Get namemapping settings."""
@@ -533,7 +533,7 @@ class _SkipMappingApi(RestResource):
         self._section = 'skipmapping'
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'PUT')
+        self.allowed_methods = ['GET', 'PUT']
 
     def get(self):
         """Get skipmapping settings."""
@@ -577,7 +577,7 @@ class _NotificationApi(RestResource):
         self._section = 'notification'
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'PUT', 'POST', 'PATCH')
+        self.allowed_methods = ['GET', 'PUT', 'POST', 'PATCH']
 
     def get(self):
         """Get notification settings."""
@@ -780,7 +780,7 @@ class _PostProcessingApi(RestResource):
         self._section = 'postprocessing'
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'PUT')
+        self.allowed_methods = ['GET', 'PUT']
 
     def get(self):
         """Get postprocessing settings."""

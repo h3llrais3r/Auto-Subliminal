@@ -21,7 +21,7 @@ class Api(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET',)
+        self.allowed_methods = ['GET']
 
         # Add all sub paths here: /api/...
         self.filesystem = FileSystemApi()

@@ -23,7 +23,7 @@ class LogsApi(RestResource):
         self.count = _CountApi()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'DELETE')
+        self.allowed_methods = ['GET', 'DELETE']
 
     def get(self, lognum=None):
         """Get the log lines for a logfile."""
@@ -56,7 +56,7 @@ class _CountApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET',)
+        self.allowed_methods = ['GET']
 
     def get(self):
         """Get the number of backup logfiles."""

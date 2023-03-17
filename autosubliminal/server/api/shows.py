@@ -35,7 +35,7 @@ class ShowsApi(RestResource):
         self.episodes = _EpisodesApi()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'DELETE')
+        self.allowed_methods = ['GET', 'DELETE']
 
     def get(self, tvdb_id=None):
         """Get the list of shows or the details of a single show."""
@@ -155,7 +155,7 @@ class _OverviewApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET',)
+        self.allowed_methods = ['GET']
 
     def get(self):
         shows = ShowDetailsDb().get_all_shows()
@@ -200,7 +200,7 @@ class _RefreshApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('PUT',)
+        self.allowed_methods = ['PUT']
 
     def put(self, tvdb_id):
         """Refresh/rescan a show."""
@@ -221,7 +221,7 @@ class _SettingsApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('GET', 'PUT')
+        self.allowed_methods = ['GET', 'PUT']
 
     def get(self, tvdb_id):
         """Get the settings for a show"""
@@ -287,7 +287,7 @@ class _SubtitlesApi(RestResource):
         self.hardcoded = _HardcodedApi()
 
         # Set the allowed methods
-        self.allowed_methods = ('PATCH',)
+        self.allowed_methods = ['PATCH']
 
     def patch(self, tvdb_id, episode_tvdb_id):
         """Patch actions related to show episode subtitles."""
@@ -332,7 +332,7 @@ class _HardcodedApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ('PUT',)
+        self.allowed_methods = ['PUT']
 
     def put(self, tvdb_id, episode_tvdb_id):
         """Save the list of hardcoded subtitles for a show episode file."""
