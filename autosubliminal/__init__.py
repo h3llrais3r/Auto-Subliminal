@@ -1,8 +1,8 @@
 # coding=utf-8
 
 import filecmp
+import logging
 import os
-import pkg_resources
 import re
 import shutil
 import site
@@ -10,327 +10,235 @@ import stat
 import subprocess
 import sys
 import sysconfig
-import uuid
 from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+from stevedore import ExtensionManager
+
+from autosubliminal.core.scheduler import Scheduler
+from autosubliminal.core.websocket import WebSocketBroadCaster
+from autosubliminal.indexer import MovieIndexer, ShowIndexer
+from autosubliminal.version import RELEASE_VERSION
 
 # Variables to handle dependencies installation in virtual environment (custom or internal one)
 SOURCE_PATH = Path(__file__).parent.parent.resolve()
 IN_VENV = hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
 
-# Config
-CONFIGFILE = None
-CONFIGVERSION = None
-CONFIGUPGRADED = None
+# Startup
+EXECUTABLE: str = ''
+ARGS: List[str] = []
+SYSENCODING: str = ''
+DAEMON: bool = False
+STARTED: bool = False
+PID: int = 0
 
 # System
-PATH = None
-CACHEDIR = None
-DEREFERURL = None
-GITHUBURL = None
-VERSIONURL = None
-USERAGENT = None
-SYSENCODING = None
-TIMEOUT = None
-WANTEDQUEUE = None
-WANTEDQUEUELOCK = None
-WEBSOCKETMESSAGEQUEUE = None
-WEBSOCKETBROADCASTER = None
-SCHEDULERS = None
-SCANDISK = None
-SCANLIBRARY = None
-CHECKSUB = None
-CHECKVERSION = None
+PATH: str = ''
+CACHEDIR: str = ''
+DEREFERURL = 'https://dereferer.me/?'
+GITHUBURL = 'https://github.com/h3llrais3r/Auto-Subliminal'
+VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py'
+USERAGENT = 'Auto-Subliminal/' + RELEASE_VERSION
+TIMEOUT = 300
+WANTEDQUEUE: List[Any] = []
+WANTEDQUEUELOCK: bool = False
+WEBSOCKETMESSAGEQUEUE: List[Any] = []
+WEBSOCKETBROADCASTER: WebSocketBroadCaster = None
+SCHEDULERS: Dict[str, Scheduler] = {}
+SCANDISK: Scheduler = None
+SCANLIBRARY: Scheduler = None
+CHECKSUB: Scheduler = None
+CHECKVERSION: Scheduler = None
 
 # Developer
-DEVELOPER = None
+DEVELOPER: bool = False
 
 # Indexers
-TVDBAPIKEY = None
-TVDBURL = None
-IMDBURL = None
-SHOWINDEXER = None
-MOVIEINDEXER = None
+TVDBAPIKEY = '76F2D5362F45C5EC'
+TVDBURL = 'http://thetvdb.com/?tab=series&id='
+IMDBURL = 'http://www.imdb.com/title/'
+SHOWINDEXER: ShowIndexer
+MOVIEINDEXER: MovieIndexer
 
 # Db
-DBFILE = None
-DBVERSION = None
-DBTIMESTAMPFORMAT = None
+DBFILE = 'database.db'
+DBTIMESTAMPFORMAT = '%Y-%m-%d %H:%M:%S'
+DBVERSION: int = 1
 
-# Startup
-PYTHONVERSION = None
-EXECUTABLE = None
-ARGS = None
-DAEMON = None
-STARTED = None
-PID = None
-UUID = None
+# Config
+CONFIGFILE: str = 'config.properties'
+CONFIGVERSION: int = 1
+CONFIGUPGRADED: bool = False
 
 # General config section
-VIDEOPATHS = None
-DEFAULTLANGUAGE = None
-DEFAULTLANGUAGESUFFIX = None
-ADDITIONALLANGUAGES = None
-MANUALSEARCHWITHSCORING = None
-SCANDISKINTERVAL = None
-CHECKSUBINTERVAL = None
-CHECKSUBDEADLINE = None
-CHECKSUBDELTA = None
-CHECKVERSIONINTERVAL = None
-CHECKVERSIONAUTOUPDATE = None
-SCANEMBEDDEDSUBS = None
-SCANHARDCODEDSUBS = None
-SKIPHIDDENDIRS = None
-DETECTINVALIDSUBLANGUAGE = None
-DETECTEDLANGUAGEPROBABILITY = None
-MANUALSUBSYNC = None
-FFMPEGPATH = None
-MINVIDEOFILESIZE = None  # in MB
-MAXDBRESULTS = None
-TIMESTAMPFORMAT = None
+VIDEOPATHS: List[str] = []
+DEFAULTLANGUAGE: str = 'en'
+DEFAULTLANGUAGESUFFIX: bool = False
+ADDITIONALLANGUAGES: List[str] = []
+MANUALSEARCHWITHSCORING: bool = True
+SCANDISKINTERVALDEFAULT: int = 1  # hours
+SCANDISKINTERVAL: int = 1  # hours
+CHECKSUBINTERVALDEFAULT: int = 6  # hours
+CHECKSUBINTERVAL: int = 24  # hours
+CHECKSUBDEADLINEDEFAULT: int = 1  # weeks
+CHECKSUBDEADLINE: int = 4  # weeks
+CHECKSUBDELTADEFAULT: int = 1  # days
+CHECKSUBDELTA: int = 7  # days
+CHECKVERSIONINTERVALDEFAULT: int = 1  # hours
+CHECKVERSIONINTERVAL: int = 12  # hours
+CHECKVERSIONAUTOUPDATE: bool = False
+SCANEMBEDDEDSUBS: bool = False
+SCANHARDCODEDSUBS: bool = False
+SKIPHIDDENDIRS: bool = False
+DETECTINVALIDSUBLANGUAGE: bool = False
+DETECTEDLANGUAGEPROBABILITY: float = 0.9
+MANUALSUBSYNC: bool = False
+FFMPEGPATH: str = ''
+MINVIDEOFILESIZE: int = 0  # MB
+MAXDBRESULTS: int = 0
+TIMESTAMPFORMAT: str = '%Y-%m-%d %H:%M:%S'
 
 # Library config section
-LIBRARYMODE = None
-LIBRARYPATHS = None
-SCANLIBRARYINTERVAL = None
-LIBRARYEDITMODE = None
+LIBRARYMODE: bool = False
+LIBRARYPATHS: List[str] = []
+SCANLIBRARYINTERVAL: int = 24  # hours
+LIBRARYEDITMODE: bool = False
 
 # Logfile config section
-LOGFILE = None
-LOGLEVEL = None
-LOGSIZE = None  # in MB
-LOGNUM = None
-LOGHTTPACCESS = None
-LOGEXTERNALLIBS = None
-LOGDETAILEDFORMAT = None
-LOGREVERSED = None
-LOGLEVELCONSOLE = None
+LOGFILE: str = 'AutoSubliminal.log'
+LOGLEVEL: int = logging.INFO
+LOGNUM: int = 0
+LOGSIZE: int = 0  # MB
+LOGHTTPACCESS: bool = False
+LOGEXTERNALLIBS: bool = False
+LOGDETAILEDFORMAT: bool = False
+LOGREVERSED: bool = False
+LOGLEVELCONSOLE: int = logging.ERROR
 
 # Webserver config section
-WEBSERVERIP = None
-WEBSERVERPORT = None
-WEBROOT = None
-USERNAME = None
-PASSWORD = None
-LAUNCHBROWSER = None
+WEBSERVERIP: str = '0.0.0.0'
+WEBSERVERPORT: int = 8083
+WEBROOT: str = ''
+USERNAME: str = ''
+PASSWORD: str = ''
+LAUNCHBROWSER: bool = True
 
 # Subliminal config section
-SHOWMINMATCHSCORE = None
-SHOWMINMATCHSCOREDEFAULT = None
-SHOWMATCHSOURCE = None
-SHOWMATCHQUALITY = None
-SHOWMATCHCODEC = None
-SHOWMATCHRELEASEGROUP = None
-MOVIEMINMATCHSCORE = None
-MOVIEMINMATCHSCOREDEFAULT = None
-MOVIEMATCHSOURCE = None
-MOVIEMATCHQUALITY = None
-MOVIEMATCHCODEC = None
-MOVIEMATCHRELEASEGROUP = None
-SUBLIMINALPROVIDERMANAGER = None
-SUBLIMINALPROVIDERS = None
-SUBLIMINALPROVIDERCONFIGS = None
-SUBTITLEUTF8ENCODING = None
-MANUALREFINEVIDEO = None
-REFINEVIDEO = None
-PREFERHEARINGIMPAIRED = None
-ANTICAPTCHACLASS = None
-ANTICAPTCHACLIENTKEY = None
-ADDIC7EDUSERNAME = None
-ADDIC7EDPASSWORD = None
-ADDIC7EDUSERID = None
-OPENSUBTITLESUSERNAME = None
-OPENSUBTITLESPASSWORD = None
-LEGENDASTVUSERNAME = None
-LEGENDASTVPASSWORD = None
+SHOWMINMATCHSCOREDEFAULT: int = 0
+SHOWMINMATCHSCORE: int = 0
+SHOWMATCHSOURCE: bool = False
+SHOWMATCHQUALITY: bool = False
+SHOWMATCHCODEC: bool = False
+SHOWMATCHRELEASEGROUP: bool = False
+MOVIEMINMATCHSCOREDEFAULT: int = 0
+MOVIEMINMATCHSCORE: int = 0
+MOVIEMATCHSOURCE: bool = False
+MOVIEMATCHQUALITY: bool = False
+MOVIEMATCHCODEC: bool = False
+MOVIEMATCHRELEASEGROUP: bool = False
+SUBLIMINALPROVIDERMANAGER: ExtensionManager = None
+SUBLIMINALPROVIDERS: List[str] = []
+SUBLIMINALPROVIDERCONFIGS: Dict[str, dict] = {}
+SUBTITLEUTF8ENCODING: bool = False
+MANUALREFINEVIDEO: bool = False
+REFINEVIDEO: bool = False
+PREFERHEARINGIMPAIRED: bool = False
+ANTICAPTCHACLASS: str = ''
+ANTICAPTCHACLIENTKEY: str = ''
+ADDIC7EDUSERNAME: str = ''
+ADDIC7EDPASSWORD: str = ''
+ADDIC7EDUSERID: str = ''
+OPENSUBTITLESUSERNAME: str = ''
+OPENSUBTITLESPASSWORD: str = ''
+LEGENDASTVUSERNAME: str = ''
+LEGENDASTVPASSWORD: str = ''
 
 # Namemapping config section
-SHOWNAMEMAPPING = None
-ADDIC7EDSHOWNAMEMAPPING = None
-ALTERNATIVESHOWNAMEMAPPING = None
-MOVIENAMEMAPPING = None
-ALTERNATIVEMOVIENAMEMAPPING = None
+SHOWNAMEMAPPING: Dict[str, str] = {}
+ADDIC7EDSHOWNAMEMAPPING: Dict[str, str] = {}
+ALTERNATIVESHOWNAMEMAPPING: Dict[str, str] = {}
+MOVIENAMEMAPPING: Dict[str, str] = {}
+ALTERNATIVEMOVIENAMEMAPPING: Dict[str, str] = {}
 
 # Skip config section
-SKIPSHOW = None
-SKIPMOVIE = None
+SKIPSHOW: Dict[str, str] = {}
+SKIPMOVIE: Dict[str, str] = {}
 
 # Notifications config section
-NOTIFY = None
-NOTIFYMAIL = None
-MAILSRV = None
-MAILFROMNAME = None
-MAILFROMADDR = None
-MAILTOADDR = None
-MAILUSERNAME = None
-MAILPASSWORD = None
-MAILSUBJECT = None
-MAILAUTH = None
-MAILENCRYPTION = None
-NOTIFYTWITTER = None
-TWITTERKEY = None
-TWITTERSECRET = None
-NOTIFYPUSHALOT = None
-PUSHALOTAPI = None
-NOTIFYPUSHOVER = None
-PUSHOVERKEY = None
-PUSHOVERAPI = None
-PUSHOVERDEVICES = None
-NOTIFYGROWL = None
-GROWLHOST = None
-GROWLPORT = None
-GROWLPASS = None
-GROWLPRIORITY = None
-NOTIFYPROWL = None
-PROWLAPI = None
-PROWLPRIORITY = None
-NOTIFYPUSHBULLET = None
-PUSHBULLETAPI = None
-NOTIFYTELEGRAM = None
-TELEGRAMBOTAPI = None
-TELEGRAMCHATID = None
+NOTIFY: bool = False
+NOTIFYMAIL: bool = False
+MAILSRV: str = 'smtp.gmail.com:587'
+MAILFROMNAME: str = ''
+MAILFROMADDR: str = 'example@gmail.com'
+MAILTOADDR: str = 'example@gmail.com'
+MAILUSERNAME: str = 'example@gmail.com'
+MAILPASSWORD: str = 'mysecretpassword'
+MAILSUBJECT: str = 'Subs info'
+MAILENCRYPTION: str = 'TLS'
+MAILAUTH: str = ''
+NOTIFYTWITTER: bool = False
+TWITTERKEY: str = 'token key'
+TWITTERSECRET: str = 'token secret'
+NOTIFYPUSHALOT: bool = False
+PUSHALOTAPI: str = 'API key'
+NOTIFYPUSHOVER: bool = False
+PUSHOVERKEY: str = 'user key'
+PUSHOVERAPI: str = 'API key'
+PUSHOVERDEVICES: str = ''
+NOTIFYGROWL: bool = False
+GROWLHOST: str = '127.0.0.1'
+GROWLPORT: int = 23053
+GROWLPASS: str = 'mysecretpassword'
+GROWLPRIORITY: int = 0
+NOTIFYPROWL: bool = False
+PROWLAPI: str = 'API key'
+PROWLPRIORITY: int = 0
+NOTIFYPUSHBULLET: bool = False
+PUSHBULLETAPI: str = 'API key'
+NOTIFYTELEGRAM: bool = False
+TELEGRAMBOTAPI: str = 'API key'
+TELEGRAMCHATID: str = ''
 
 # PostProcessing config section
-POSTPROCESS = None
-POSTPROCESSINDIVIDUAL = None
-POSTPROCESSUTF8ENCODING = None
-SHOWPOSTPROCESSCMD = None
-SHOWPOSTPROCESSCMDARGS = None
-MOVIEPOSTPROCESSCMD = None
-MOVIEPOSTPROCESSCMDARGS = None
+POSTPROCESS: bool = False
+POSTPROCESSINDIVIDUAL: bool = False
+POSTPROCESSUTF8ENCODING: bool = False
+SHOWPOSTPROCESSCMD: str = ''
+SHOWPOSTPROCESSCMDARGS: str = ''
+MOVIEPOSTPROCESSCMD: str = ''
+MOVIEPOSTPROCESSCMDARGS: str = ''
 
 
-def initialize():
-    global CONFIGFILE, CONFIGVERSION, CONFIGUPGRADED, \
-        CACHEDIR, DEREFERURL, GITHUBURL, VERSIONURL, USERAGENT, SYSENCODING, TIMEOUT, WANTEDQUEUE, WANTEDQUEUELOCK, \
-        WEBSOCKETMESSAGEQUEUE, WEBSOCKETBROADCASTER, SCHEDULERS, SCANDISK, SCANLIBRARY, CHECKSUB, CHECKVERSION, \
-        DEVELOPER, \
-        TVDBAPIKEY, TVDBURL, IMDBURL, SHOWINDEXER, MOVIEINDEXER, \
-        DBFILE, DBVERSION, DBTIMESTAMPFORMAT, \
-        PYTHONVERSION, DAEMON, STARTED, PID, UUID, \
-        PATH, VIDEOPATHS, DEFAULTLANGUAGE, DEFAULTLANGUAGESUFFIX, ADDITIONALLANGUAGES, MANUALSEARCHWITHSCORING, \
-        SCANDISKINTERVAL, CHECKSUBINTERVAL, CHECKSUBDEADLINE, CHECKSUBDELTA, CHECKVERSIONINTERVAL, \
-        CHECKVERSIONAUTOUPDATE, SCANEMBEDDEDSUBS, SCANHARDCODEDSUBS, SKIPHIDDENDIRS, DETECTINVALIDSUBLANGUAGE, \
-        DETECTEDLANGUAGEPROBABILITY, MANUALSUBSYNC, FFMPEGPATH, MINVIDEOFILESIZE, MAXDBRESULTS, TIMESTAMPFORMAT, \
-        LIBRARYMODE, LIBRARYPATHS, SCANLIBRARYINTERVAL, LIBRARYEDITMODE, \
-        LOGFILE, LOGLEVEL, LOGSIZE, LOGNUM, LOGHTTPACCESS, LOGEXTERNALLIBS, LOGDETAILEDFORMAT, LOGREVERSED, \
-        LOGLEVELCONSOLE, \
-        WEBSERVERIP, WEBSERVERPORT, WEBROOT, USERNAME, PASSWORD, LAUNCHBROWSER, \
-        SHOWMINMATCHSCORE, SHOWMINMATCHSCOREDEFAULT, SHOWMATCHSOURCE, SHOWMATCHQUALITY, SHOWMATCHCODEC, \
-        SHOWMATCHRELEASEGROUP, \
-        MOVIEMINMATCHSCORE, MOVIEMINMATCHSCOREDEFAULT, MOVIEMATCHSOURCE, MOVIEMATCHQUALITY, MOVIEMATCHCODEC, \
-        MOVIEMATCHRELEASEGROUP, \
-        SUBLIMINALPROVIDERMANAGER, SUBLIMINALPROVIDERS, SUBLIMINALPROVIDERCONFIGS, \
-        SUBTITLEUTF8ENCODING, MANUALREFINEVIDEO, REFINEVIDEO, PREFERHEARINGIMPAIRED, \
-        ANTICAPTCHACLASS, ANTICAPTCHACLIENTKEY, ADDIC7EDUSERNAME, ADDIC7EDPASSWORD, ADDIC7EDUSERID, \
-        OPENSUBTITLESUSERNAME, OPENSUBTITLESPASSWORD, LEGENDASTVUSERNAME, LEGENDASTVPASSWORD, \
-        SHOWNAMEMAPPING, ADDIC7EDSHOWNAMEMAPPING, ALTERNATIVESHOWNAMEMAPPING, \
-        MOVIENAMEMAPPING, ALTERNATIVEMOVIENAMEMAPPING, \
-        SKIPSHOW, SKIPMOVIE, \
-        NOTIFY, NOTIFYMAIL, MAILSRV, MAILFROMNAME, MAILFROMADDR, MAILTOADDR, MAILUSERNAME, MAILPASSWORD, MAILSUBJECT, \
-        MAILAUTH, MAILENCRYPTION, NOTIFYTWITTER, TWITTERKEY, TWITTERSECRET, NOTIFYPUSHALOT, PUSHALOTAPI, \
-        NOTIFYPUSHOVER, PUSHOVERKEY, PUSHOVERAPI, PUSHOVERDEVICES, \
-        NOTIFYGROWL, GROWLHOST, GROWLPORT, GROWLPASS, GROWLPRIORITY, NOTIFYPROWL, PROWLAPI, PROWLPRIORITY, \
-        NOTIFYPUSHBULLET, PUSHBULLETAPI, NOTIFYTELEGRAM, TELEGRAMBOTAPI, TELEGRAMCHATID, \
-        POSTPROCESS, POSTPROCESSINDIVIDUAL, POSTPROCESSUTF8ENCODING, SHOWPOSTPROCESSCMD, SHOWPOSTPROCESSCMDARGS, \
-        MOVIEPOSTPROCESSCMD, MOVIEPOSTPROCESSCMDARGS
-
-    # Setup virtual environment
+def initialize() -> None:
+    _check_min_python_version()
+    _check_python_version_change()
     _setup_venv()
-
-    # Imports
-    from autosubliminal import config, db, version
-    from autosubliminal.core import logger
-    from autosubliminal.indexer import MovieIndexer, ShowIndexer
-    from autosubliminal.util.system import get_python_version, is_python_version_changed, store_python_version
-
-    # Check if python version is changed
-    python_version_changed = is_python_version_changed()
-    if python_version_changed:
-        store_python_version(get_python_version())
-
-    # Fake some entry points to get libraries working without installation
-    _fake_entry_points()
-
-    # System settings
-    PYTHONVERSION = get_python_version()
-    PATH = os.path.abspath(os.getcwd())
-    CACHEDIR = os.path.abspath(os.path.join(PATH, 'cache'))
-    DEREFERURL = 'https://dereferer.me/?'
-    GITHUBURL = 'https://github.com/h3llrais3r/Auto-Subliminal'
-    VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py'
-    USERAGENT = 'Auto-Subliminal/' + version.RELEASE_VERSION
-    TIMEOUT = 300
-
-    # Wanted queue settings
-    WANTEDQUEUE = []
-    WANTEDQUEUELOCK = False
-
-    # Websocket settings
-    WEBSOCKETMESSAGEQUEUE = []
-
-    # Scheduler settings
-    SCHEDULERS = {}
-
-    # Developer settings
-    DEVELOPER = False
-
-    # Indexer settings
-    TVDBAPIKEY = '76F2D5362F45C5EC'
-    TVDBURL = 'http://thetvdb.com/?tab=series&id='
-    IMDBURL = 'http://www.imdb.com/title/'
-    SHOWINDEXER = ShowIndexer()
-    MOVIEINDEXER = MovieIndexer()
-
-    # Startup settings
-    STARTED = False
-    UUID = uuid.uuid4()  # Generate random uuid each time we initialize the application
-
-    # Webserver settings
-    LAUNCHBROWSER = True
-
-    # Cache settings
-    _init_cache(python_version_changed)
-
-    # Guessit settings
+    _init_globals()
+    _init_cache()
     _init_guessit()
-
-    # Score settings
-    SHOWMINMATCHSCOREDEFAULT, MOVIEMINMATCHSCOREDEFAULT = _init_scores()
-
-    # Subliminal settings
-    SUBLIMINALPROVIDERMANAGER = _init_subliminal(python_version_changed)
-    SUBLIMINALPROVIDERCONFIGS = {}
-
-    # Langdetect settings
+    _init_scores()
+    _init_subliminal()
     _init_langdetect()
+    _init_config()
+    _init_db()
+    _init_logger()
 
-    # Config settings
-    CONFIGUPGRADED = False
-    if CONFIGFILE is None:
-        CONFIGFILE = 'config.properties'
-    config.read_config(True)
-    if CONFIGUPGRADED:
-        print('INFO: Config seems to be upgraded. Writing config.')
-        config.write_config()
-        print('INFO: Writing config done.')
 
-    # Change to the new work directory
-    if os.path.exists(PATH):
-        os.chdir(PATH)
-    else:
-        print('ERROR: PATH does not exist. Please check your config.')
+def _check_min_python_version() -> None:
+    min_python_version = (3, 8)
+    if sys.version_info < min_python_version:
+        print('ERROR: Python 3.8 or higher is required.')
         os._exit(1)
 
-    # Database settings
-    DBFILE = 'database.db'
-    DBTIMESTAMPFORMAT = '%Y-%m-%d %H:%M:%S'
-    db.initialize()
 
-    # Logging settings
-    logger.initialize()
+def _check_python_version_change() -> None:
+    from autosubliminal.util.system import get_python_version, is_python_version_changed, store_python_version
+
+    if is_python_version_changed():
+        store_python_version(get_python_version())
 
 
-def _setup_venv():
+def _setup_venv() -> None:
     print('INFO: Setting up the virtual environment.')
 
     # Make sure we are running inside a virtual environment
@@ -353,7 +261,7 @@ def _setup_venv():
     print('INFO: Virtual environment setup finished.')
 
 
-def _check_env_writable():
+def _check_env_writable() -> bool:
     """Check if we can install packages to the current environment."""
 
     locations = []
@@ -378,7 +286,7 @@ def _check_env_writable():
     return any([os.access(location, os.W_OK) for location in set(locations)])
 
 
-def _create_venv_and_restart():
+def _create_venv_and_restart() -> None:
     """
     Create and restart in a virtual environment.
 
@@ -418,7 +326,7 @@ def _create_venv_and_restart():
             venv.create(venv_path, system_site_packages=False, clear=True, symlinks=os.name != 'nt', with_pip=True)
             print('INFO: Created new virtual environment in %s.' % venv_path)
         except (ImportError, Exception) as error:
-            print('ERROR: Cannot create virtual environment: ' % error)
+            print('ERROR: Cannot create virtual environment: %s' % error)
             os._exit(1)
 
     # Launch application in virtual environment
@@ -434,13 +342,13 @@ def _create_venv_and_restart():
                 new_argv = [new_path] + sys.argv
 
                 print('INFO: Restarting Auto-Subliminal in virtual environment with %s.' % new_argv)
-                return os.execvp(new_path, new_argv)
+                os.execvp(new_path, new_argv)
 
         print('ERROR: Could not find the virtual environment executable in %s. Exiting.' % venv_path)
         os._exit(1)
 
 
-def _install_dependencies():
+def _install_dependencies() -> None:
     """
     Install dependencies.
 
@@ -479,7 +387,7 @@ def _install_dependencies():
     shutil.copy(reqs, reqs_installed)  # Keep copy of installed requirements
 
 
-def _upgrade_pip():
+def _upgrade_pip() -> None:
     """Upgrade pip."""
 
     print('INFO: Upgrading pip.')
@@ -501,7 +409,7 @@ def _upgrade_pip():
         os._exit(1)
 
 
-def _pip_install(packages):
+def _pip_install(packages) -> None:
     if not isinstance(packages, list):
         # Clean out Warning line in list (dirty clean)
         packages = re.sub(r'Warning.*', '', packages)
@@ -550,7 +458,8 @@ def _pip_install(packages):
             os._exit(1)
 
 
-def _get_os_id():
+def _get_os_id() -> Optional[str]:
+    os_id = None
     os_release = Path('/etc/os-release').resolve()
     if os_release.is_file():
         from configparser import ConfigParser
@@ -558,12 +467,13 @@ def _get_os_id():
         parser = ConfigParser()
         parser.read_string('[DEFAULT]\n' + os_release.read_text())
         try:
-            return parser['DEFAULT']['ID']
+            os_id = parser['DEFAULT']['ID']
         except (KeyError, IndexError):
             pass
+    return os_id
 
 
-def _subprocess_call(cmd_list):
+def _subprocess_call(cmd_list) -> int:
     try:
         process = subprocess.Popen(cmd_list, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE, universal_newlines=True, cwd=os.getcwd())
@@ -580,39 +490,41 @@ def _subprocess_call(cmd_list):
     return process.returncode
 
 
-def _fake_entry_points():
-    """
-    Fake some entry points to get libraries working without installation.
-    After setup, entry points can be retrieved by:
-    pkg_resources.get_entry_info(dist='fake_entry_points', group=None, name='entry_point_namespace')
-    """
+def _init_globals() -> None:
+    """Initialize globals."""
+    from autosubliminal.indexer import MovieIndexer, ShowIndexer
 
-    # Imports
-    from autosubliminal import version
+    global PATH
+    PATH = os.path.abspath(os.getcwd())
+    if os.path.exists(PATH):
+        os.chdir(PATH)
+    else:
+        print('ERROR: PATH does not exist. Please check your config.')
+        os._exit(1)
 
-    # Do not normalize the path or the entry point will be loaded under the wrong entry_key
-    # current_path = os.path.dirname(os.path.normpath(__file__))
-    current_path = os.path.dirname(__file__)
-    distribution = pkg_resources.Distribution(location=os.path.dirname(current_path), project_name='fake_entry_points',
-                                              version=version.RELEASE_VERSION)
-    # Add entry points here if needed (currently none)
-    entry_points = {}
-    distribution._ep_map = pkg_resources.EntryPoint.parse_map(entry_points, distribution)
-    pkg_resources.working_set.add(distribution)
+    global SHOWINDEXER
+    SHOWINDEXER = ShowIndexer()
+
+    global MOVIEINDEXER
+    MOVIEINDEXER = MovieIndexer()
 
 
-def _init_cache(replace):
+def _init_cache() -> None:
     """Initialize internal cache."""
 
     # Imports
     from autosubliminal.core.cache import MutexFileLock, clear_cache, region
+    from autosubliminal.util.system import is_python_version_changed
 
     # Make sure the cache dir exists
+    global CACHEDIR
+    CACHEDIR = os.path.abspath(os.path.join(PATH, 'cache'))
     if not os.path.exists(CACHEDIR):
         os.makedirs(CACHEDIR)
 
-    # Clean cache
-    if replace:
+    # Clean cache if needed
+    replace_cache = is_python_version_changed()
+    if replace_cache:
         clear_cache()
 
     # Configure autosubliminal/dogpile cache
@@ -621,10 +533,10 @@ def _init_cache(replace):
     if not region.is_configured:
         cache_file = os.path.abspath(os.path.join(CACHEDIR, 'autosubliminal.cache.dbm'))
         region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexFileLock},
-                         replace_existing_backend=replace)
+                         replace_existing_backend=replace_cache)
 
 
-def _init_guessit():
+def _init_guessit() -> None:
     """Initialize guessit.
 
     Make sure that guessit.guessit(...) always uses our custom version.
@@ -639,7 +551,7 @@ def _init_guessit():
     guessit.guessit = custom_guessit
 
 
-def _init_scores():
+def _init_scores() -> None:
     """Initialize scores.
 
     Init scores based on scores from subliminal.
@@ -649,14 +561,20 @@ def _init_scores():
     from subliminal.score import episode_scores, movie_scores
 
     # Calculate default scores (minimal score needed for a match)
-    show_min_score_default = (
+    global SHOWMINMATCHSCOREDEFAULT
+    SHOWMINMATCHSCOREDEFAULT = (
         episode_scores['series'] + episode_scores['year'] + episode_scores['season'] + episode_scores['episode'])
-    movie_min_score_default = movie_scores['title'] + movie_scores['year']
+    global SHOWMINMATCHSCORE
+    MOVIEMINMATCHSCOREDEFAULT = movie_scores['title'] + movie_scores['year']
 
-    return show_min_score_default, movie_min_score_default
+    # Init scores
+    global SHOWMINMATCHSCORE
+    SHOWMINMATCHSCORE = SHOWMINMATCHSCOREDEFAULT
+    global MOVIEMINMATCHSCORE
+    MOVIEMINMATCHSCORE = MOVIEMINMATCHSCOREDEFAULT
 
 
-def _init_subliminal(replace):
+def _init_subliminal() -> None:
     """Initialize subliminal.
 
     This must always be done AFTER the registration of our fake_entry_points.
@@ -670,13 +588,15 @@ def _init_subliminal(replace):
     from subliminal.cli import MutexLock
     from subliminal.extensions import provider_manager, refiner_manager
 
+    from autosubliminal.util.system import is_python_version_changed
+
     # Configure subliminal/dogpile cache
     # Use MutexLock otherwise some providers will not work due to fcntl module import error in windows
     # Do not reconfigure after a soft restart (without exiting main app) -> otherwise RegionAlreadyConfigured exception
     if not region.is_configured:
         cache_file = os.path.abspath(os.path.join(CACHEDIR, 'subliminal.cache.dbm'))
         region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexLock},
-                         replace_existing_backend=replace)
+                         replace_existing_backend=is_python_version_changed())
 
     # Add our custom refiners to list of subliminal refiners
     manual_refiner = 'manual = autosubliminal.refiners.manual:refine'
@@ -691,14 +611,14 @@ def _init_subliminal(replace):
     if provider not in provider_manager.registered_extensions:
         provider_manager.register(provider)
 
-    # Return the provider manager with all providers
-    return provider_manager
+    # Set the provider manager with all providers and init the list of all provider names
+    global SUBLIMINALPROVIDERMANAGER, SUBLIMINALPROVIDERS
+    SUBLIMINALPROVIDERMANAGER = provider_manager
+    SUBLIMINALPROVIDERS = SUBLIMINALPROVIDERMANAGER.names()
 
 
-def _init_langdetect():
-    """
-    Initialize language detection.
-    """
+def _init_langdetect() -> None:
+    """Initialize language detection."""
     # Imports
     import langdetect.detector_factory
     from langdetect.detector_factory import DetectorFactory
@@ -709,3 +629,31 @@ def _init_langdetect():
     # Language detection algorithm is non-deterministic, we might get different results every time you run it.
     # To enforce consistent results, call following code before the first language detection
     DetectorFactory.seed = 0
+
+
+def _init_config() -> None:
+    """Initialize the config."""
+    # Imports
+    from autosubliminal import config
+
+    config.read_config(True)
+    if CONFIGUPGRADED:
+        print('INFO: Config seems to be upgraded. Writing config.')
+        config.write_config()
+        print('INFO: Writing config done.')
+
+
+def _init_db() -> None:
+    """Initiliaze the db."""
+    # Imports
+    from autosubliminal import db
+
+    db.initialize()
+
+
+def _init_logger() -> None:
+    """Initizalize the logger."""
+    # Imports
+    from autosubliminal.core import logger
+
+    logger.initialize()

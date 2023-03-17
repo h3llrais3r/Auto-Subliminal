@@ -35,6 +35,7 @@ def read_config(check_upgrade=False):
         print('***********************************************************************')
         cfg = _create_config_parser()
 
+    # Section 'general'
     if cfg.has_section('general'):
         if cfg.has_option('general', 'videopaths'):
             video_paths = cfg.get('general', 'videopaths')
@@ -42,324 +43,194 @@ def read_config(check_upgrade=False):
                 autosubliminal.VIDEOPATHS = video_paths.split(',')
             else:
                 print('ERROR: Required variable VIDEOPATHS is missing. Please configure at least 1 video path.')
-                autosubliminal.VIDEOPATHS = []
         else:
             print('ERROR: Required variable VIDEOPATHS is missing. Please configure at least 1 video path.')
-            autosubliminal.VIDEOPATHS = []
 
         if cfg.has_option('general', 'defaultlanguage'):
             autosubliminal.DEFAULTLANGUAGE = cfg.get('general', 'defaultlanguage')
-        else:
-            autosubliminal.DEFAULTLANGUAGE = 'en'
 
         if cfg.has_option('general', 'defaultlanguagesuffix'):
             autosubliminal.DEFAULTLANGUAGESUFFIX = cfg.getboolean('general', 'defaultlanguagesuffix')
-        else:
-            autosubliminal.DEFAULTLANGUAGESUFFIX = False
 
         if cfg.has_option('general', 'additionallanguages'):
             additional_languages = cfg.get('general', 'additionallanguages')
             if additional_languages:
                 autosubliminal.ADDITIONALLANGUAGES = additional_languages.split(',')
-            else:
-                autosubliminal.ADDITIONALLANGUAGES = []
-        else:
-            autosubliminal.ADDITIONALLANGUAGES = []
 
         if cfg.has_option('general', 'manualsearchwithscoring'):
             autosubliminal.MANUALSEARCHWITHSCORING = cfg.getboolean('general', 'manualsearchwithscoring')
-        else:
-            autosubliminal.MANUALSEARCHWITHSCORING = True
 
         if cfg.has_option('general', 'scandiskinterval'):
             autosubliminal.SCANDISKINTERVAL = cfg.getint('general', 'scandiskinterval')
-            if autosubliminal.SCANDISKINTERVAL < 1:
-                print('WARNING: scandiskinterval variable is lower then 1. Setting it to 1.')
-                autosubliminal.SCANDISKINTERVAL = 1  # Run every hour
-        else:
-            autosubliminal.SCANDISKINTERVAL = 1  # Run every hour
+            if autosubliminal.SCANDISKINTERVAL < autosubliminal.SCANDISKINTERVALDEFAULT:
+                print('WARNING: Invalid SCANDISKINTERVAL found.')
+                print('WARNING: Using the default value (%s hours) instead.' % autosubliminal.SCANDISKINTERVALDEFAULT)
+                autosubliminal.SCANDISKINTERVAL = autosubliminal.SCANDISKINTERVALDEFAULT
 
         if cfg.has_option('general', 'checksubinterval'):
             autosubliminal.CHECKSUBINTERVAL = cfg.getint('general', 'checksubinterval')
-            if autosubliminal.CHECKSUBINTERVAL < 6:
-                print('WARNING: checksubinterval variable is lower then 6. Setting it to 6.')
-                print('WARNING: This is not allowed because this will result in being banned from the providers.')
-                autosubliminal.CHECKSUBINTERVAL = 6  # Run every 6 hours
-        else:
-            autosubliminal.CHECKSUBINTERVAL = 24  # Run every 24 hours
+            if autosubliminal.CHECKSUBINTERVAL < autosubliminal.CHECKSUBINTERVALDEFAULT:
+                print('WARNING: Invalid CHECKSUBINTERVAL found.')
+                print('WARNING: Using the default value (%s hours) instead.' % autosubliminal.CHECKSUBINTERVALDEFAULT)
+                autosubliminal.CHECKSUBINTERVAL = autosubliminal.CHECKSUBINTERVALDEFAULT
 
         if cfg.has_option('general', 'checksubdeadline'):
             autosubliminal.CHECKSUBDEADLINE = cfg.getint('general', 'checksubdeadline')
-            if autosubliminal.CHECKSUBDEADLINE < 1:
-                print('WARNING: checksubdeadline variable is lower then 1. Setting it to 1.')
-                autosubliminal.CHECKSUBDEADLINE = 1
-        else:
-            autosubliminal.CHECKSUBDEADLINE = 4  # Default 4 weeks
+            if autosubliminal.CHECKSUBDEADLINE < autosubliminal.CHECKSUBDEADLINEDEFAULT:
+                print('WARNING: Invalid CHECKSUBDEADLINE found.')
+                print('WARNING: Using the default value (%s weeks) instead.' % autosubliminal.CHECKSUBDEADLINEDEFAULT)
+                autosubliminal.CHECKSUBDEADLINE = autosubliminal.CHECKSUBDEADLINEDEFAULT
 
         if cfg.has_option('general', 'checksubdelta'):
             autosubliminal.CHECKSUBDELTA = cfg.getint('general', 'checksubdelta')
-            if autosubliminal.CHECKSUBDELTA < 1:
-                print('WARNING: checksubdelta variable cannot be lower than 1 day. Set it to 1 day.')
-                autosubliminal.CHECKSUBDELTA = 1
-        else:
-            autosubliminal.CHECKSUBDELTA = 7  # Default once a week (every 7 days)
+            if autosubliminal.CHECKSUBDELTA < autosubliminal.CHECKSUBDELTADEFAULT:
+                print('WARNING: Invalid CHECKSUBDELTA found.')
+                print('WARNING: Using the default value (%s days) instead.' % autosubliminal.CHECKSUBDELTADEFAULT)
+                autosubliminal.CHECKSUBDELTA = autosubliminal.CHECKSUBDELTADEFAULT
 
         if cfg.has_option('general', 'checkversioninterval'):
             autosubliminal.CHECKVERSIONINTERVAL = cfg.getint('general', 'checkversioninterval')
-            if autosubliminal.CHECKVERSIONINTERVAL < 1:
-                print('WARNING: checkversioninterval variable is lower then 1. Setting it to 1.')
-                autosubliminal.CHECKVERSIONINTERVAL = 1  # Run every hour
-        else:
-            autosubliminal.CHECKVERSIONINTERVAL = 12  # Run every 12 hours
+            if autosubliminal.CHECKVERSIONINTERVAL < autosubliminal.CHECKVERSIONINTERVALDEFAULT:
+                print('WARNING: Invalid CHECKVERSIONINTERVAL found.')
+                print('WARNING: Using the default value (%s hours) instead.' %
+                      autosubliminal.CHECKVERSIONINTERVALDEFAULT)
+                autosubliminal.CHECKVERSIONINTERVAL = autosubliminal.CHECKVERSIONINTERVALDEFAULT
 
         if cfg.has_option('general', 'checkversionautoupdate'):
             autosubliminal.CHECKVERSIONAUTOUPDATE = cfg.getboolean('general', 'checkversionautoupdate')
-        else:
-            autosubliminal.CHECKVERSIONAUTOUPDATE = False
 
         if cfg.has_option('general', 'scanembeddedsubs'):
             autosubliminal.SCANEMBEDDEDSUBS = cfg.getboolean('general', 'scanembeddedsubs')
-        else:
-            autosubliminal.SCANEMBEDDEDSUBS = False
 
         if cfg.has_option('general', 'scanhardcodedsubs'):
             autosubliminal.SCANHARDCODEDSUBS = cfg.getboolean('general', 'scanhardcodedsubs')
-        else:
-            autosubliminal.SCANHARDCODEDSUBS = False
 
         if cfg.has_option('general', 'skiphiddendirs'):
             autosubliminal.SKIPHIDDENDIRS = cfg.getboolean('general', 'skiphiddendirs')
-        else:
-            autosubliminal.SKIPHIDDENDIRS = False
 
         if cfg.has_option('general', 'detectinvalidsublanguage'):
             autosubliminal.DETECTINVALIDSUBLANGUAGE = cfg.getboolean('general', 'detectinvalidsublanguage')
-        else:
-            autosubliminal.DETECTINVALIDSUBLANGUAGE = False
 
         if cfg.has_option('general', 'detectedlanguageprobability'):
             autosubliminal.DETECTEDLANGUAGEPROBABILITY = cfg.getfloat('general', 'detectedlanguageprobability')
-        else:
-            autosubliminal.DETECTEDLANGUAGEPROBABILITY = 0.9
 
         if cfg.has_option('general', 'manualsubsync'):
             autosubliminal.MANUALSUBSYNC = cfg.getboolean('general', 'manualsubsync')
-        else:
-            autosubliminal.MANUALSUBSYNC = False
 
         if cfg.has_option('general', 'ffmpegpath'):
             autosubliminal.FFMPEGPATH = cfg.get('general', 'ffmpegpath')
-        else:
-            autosubliminal.FFMPEGPATH = ''
 
         if cfg.has_option('general', 'minvideofilesize'):
             autosubliminal.MINVIDEOFILESIZE = cfg.getint('general', 'minvideofilesize')
-        else:
-            autosubliminal.MINVIDEOFILESIZE = 0
 
         if cfg.has_option('general', 'maxdbresults'):
             autosubliminal.MAXDBRESULTS = cfg.getint('general', 'maxdbresults')
-        else:
-            autosubliminal.MAXDBRESULTS = 0
 
         if cfg.has_option('general', 'timestampformat'):
             autosubliminal.TIMESTAMPFORMAT = cfg.get('general', 'timestampformat')
-        else:
-            autosubliminal.TIMESTAMPFORMAT = '%Y-%m-%d %H:%M:%S'
 
         if cfg.has_option('general', 'configversion'):
             autosubliminal.CONFIGVERSION = cfg.getint('general', 'configversion')
-        else:
-            autosubliminal.CONFIGVERSION = 1
 
     else:
         # General section is missing
         print('ERROR: Required variable VIDEOPATHS is missing. Please configure at least 1 video path.')
-        autosubliminal.VIDEOPATHS = []
-        autosubliminal.DEFAULTLANGUAGE = 'en'
-        autosubliminal.DEFAULTLANGUAGESUFFIX = False
-        autosubliminal.ADDITIONALLANGUAGES = []
-        autosubliminal.MANUALSEARCHWITHSCORING = True
-        autosubliminal.SCANDISKINTERVAL = 1
-        autosubliminal.CHECKSUBINTERVAL = 24
-        autosubliminal.CHECKSUBDEADLINE = 4
-        autosubliminal.CHECKSUBDELTA = 7
-        autosubliminal.CHECKVERSIONINTERVAL = 12
-        autosubliminal.CHECKVERSIONAUTOUPDATE = False
-        autosubliminal.SCANEMBEDDEDSUBS = False
-        autosubliminal.SCANHARDCODEDSUBS = False
-        autosubliminal.SKIPHIDDENDIRS = False
-        autosubliminal.DETECTINVALIDSUBLANGUAGE = False
-        autosubliminal.DETECTEDLANGUAGEPROBABILITY = 0.9
-        autosubliminal.MANUALSUBSYNC = False
-        autosubliminal.FFMPEGPATH = ''
-        autosubliminal.MINVIDEOFILESIZE = 0
-        autosubliminal.MAXDBRESULTS = 0
-        autosubliminal.TIMESTAMPFORMAT = '%Y-%m-%d %H:%M:%S'
-        autosubliminal.CONFIGVERSION = version.CONFIG_VERSION
+
         # Check old config version location -> needed for upgrade from version 8 to 9
         if cfg.has_section('config'):
             if cfg.has_option('config', 'configversion'):
                 autosubliminal.CONFIGVERSION = cfg.getint('config', 'configversion')
 
+    # Section 'library'
     if cfg.has_section('library'):
         if cfg.has_option('library', 'librarymode'):
             autosubliminal.LIBRARYMODE = cfg.getboolean('library', 'librarymode')
-        else:
-            autosubliminal.LIBRARYMODE = False
 
         if cfg.has_option('library', 'librarypaths'):
             library_paths = cfg.get('library', 'librarypaths')
             if library_paths:
                 autosubliminal.LIBRARYPATHS = library_paths.split(',')
-            else:
-                autosubliminal.LIBRARYPATHS = []
-        else:
-            autosubliminal.LIBRARYPATHS = []
 
         if cfg.has_option('library', 'scanlibraryinterval'):
             autosubliminal.SCANLIBRARYINTERVAL = cfg.getint('library', 'scanlibraryinterval')
             # SCANLIBRARY may only run max once a day to prevent too heavy system usage
             if autosubliminal.SCANLIBRARYINTERVAL < 24:
-                print('WARNING: scanlibraryinterval variable is lower then 24.')
+                print('WARNING: scanlibraryinterval variable is lower then 24 hours. Setting it to 24 hours.')
                 print('WARNING: This is not allowed because it will result in too high system usage.')
-                autosubliminal.SCANLIBRARYINTERVAL = 24  # Run every 24 hours
-        else:
-            autosubliminal.SCANLIBRARYINTERVAL = 24  # Run every 24 hours
+                autosubliminal.SCANLIBRARYINTERVAL = 24
 
         if cfg.has_option('library', 'libraryeditmode'):
             autosubliminal.LIBRARYEDITMODE = cfg.getboolean('library', 'libraryeditmode')
-        else:
-            autosubliminal.LIBRARYEDITMODE = False
-    else:
-        # Library section is missing
-        autosubliminal.LIBRARYMODE = False
-        autosubliminal.LIBRARYPATHS = []
-        autosubliminal.SCANLIBRARYINTERVAL = 24
-        autosubliminal.LIBRARYEDITMODE = False
 
+    # Section 'logging'
     if cfg.has_section('logging'):
         if cfg.has_option('logging', 'logfile'):
             autosubliminal.LOGFILE = cfg.get('logging', 'logfile')
-        else:
-            autosubliminal.LOGFILE = 'AutoSubliminal.log'
 
         if cfg.has_option('logging', 'loglevel'):
-            autosubliminal.LOGLEVEL = cfg.get('logging', 'loglevel')
-            if autosubliminal.LOGLEVEL.lower() == 'error':
+            loglevel = cfg.get('logging', 'loglevel')
+            if loglevel.lower() == 'error':
                 autosubliminal.LOGLEVEL = logging.ERROR
-            elif autosubliminal.LOGLEVEL.lower() == 'warning':
+            elif loglevel.lower() == 'warning':
                 autosubliminal.LOGLEVEL = logging.WARNING
-            elif autosubliminal.LOGLEVEL.lower() == 'debug':
+            elif loglevel.lower() == 'debug':
                 autosubliminal.LOGLEVEL = logging.DEBUG
-            elif autosubliminal.LOGLEVEL.lower() == 'info':
+            elif loglevel.lower() == 'info':
                 autosubliminal.LOGLEVEL = logging.INFO
-            elif autosubliminal.LOGLEVEL.lower() == 'critical':
+            elif loglevel.lower() == 'critical':
                 autosubliminal.LOGLEVEL = logging.CRITICAL
-        else:
-            autosubliminal.LOGLEVEL = logging.INFO
 
         if cfg.has_option('logging', 'lognum'):
             autosubliminal.LOGNUM = cfg.getint('logging', 'lognum')
-        else:
-            autosubliminal.LOGNUM = 0
 
         if cfg.has_option('logging', 'logsize'):
             autosubliminal.LOGSIZE = cfg.getint('logging', 'logsize')
-        else:
-            autosubliminal.LOGSIZE = 0
 
         if cfg.has_option('logging', 'loghttpaccess'):
             autosubliminal.LOGHTTPACCESS = cfg.getboolean('logging', 'loghttpaccess')
-        else:
-            autosubliminal.LOGHTTPACCESS = False
 
         if cfg.has_option('logging', 'logexternallibs'):
             autosubliminal.LOGEXTERNALLIBS = cfg.getboolean('logging', 'logexternallibs')
-        else:
-            autosubliminal.LOGEXTERNALLIBS = False
 
         if cfg.has_option('logging', 'logdetailedformat'):
             autosubliminal.LOGDETAILEDFORMAT = cfg.getboolean('logging', 'logdetailedformat')
-        else:
-            autosubliminal.LOGDETAILEDFORMAT = False
 
         if cfg.has_option('logging', 'logreversed'):
             autosubliminal.LOGREVERSED = cfg.getboolean('logging', 'logreversed')
-        else:
-            autosubliminal.LOGREVERSED = False
 
         if cfg.has_option('logging', 'loglevelconsole'):
-            autosubliminal.LOGLEVELCONSOLE = cfg.get('logging', 'loglevelconsole')
-            if autosubliminal.LOGLEVELCONSOLE.lower() == 'error':
+            loglevel = cfg.get('logging', 'loglevelconsole')
+            if loglevel.lower() == 'error':
                 autosubliminal.LOGLEVELCONSOLE = logging.ERROR
-            elif autosubliminal.LOGLEVELCONSOLE.lower() == 'warning':
+            elif loglevel.lower() == 'warning':
                 autosubliminal.LOGLEVELCONSOLE = logging.WARNING
-            elif autosubliminal.LOGLEVELCONSOLE.lower() == 'debug':
+            elif loglevel.lower() == 'debug':
                 autosubliminal.LOGLEVELCONSOLE = logging.DEBUG
-            elif autosubliminal.LOGLEVELCONSOLE.lower() == 'info':
+            elif loglevel.lower() == 'info':
                 autosubliminal.LOGLEVELCONSOLE = logging.INFO
-            elif autosubliminal.LOGLEVELCONSOLE.lower() == 'critical':
+            elif loglevel.lower() == 'critical':
                 autosubliminal.LOGLEVELCONSOLE = logging.CRITICAL
-        else:
-            autosubliminal.LOGLEVELCONSOLE = logging.ERROR
 
-    else:
-        # Logfile section is missing
-        autosubliminal.LOGFILE = 'AutoSubliminal.log'
-        autosubliminal.LOGLEVEL = logging.INFO
-        autosubliminal.LOGNUM = 0
-        autosubliminal.LOGSIZE = 0
-        autosubliminal.LOGHTTPACCESS = False
-        autosubliminal.LOGEXTERNALLIBS = False
-        autosubliminal.LOGDETAILEDFORMAT = False
-        autosubliminal.LOGREVERSED = False
-        autosubliminal.LOGLEVELCONSOLE = logging.ERROR
-
+    # Section 'webserver'
     if cfg.has_section('webserver'):
         if cfg.has_option('webserver', 'webserverip') and cfg.has_option('webserver', 'webserverport'):
             autosubliminal.WEBSERVERIP = cfg.get('webserver', 'webserverip')
             autosubliminal.WEBSERVERPORT = cfg.getint('webserver', 'webserverport')
-            print('INFO: The webserver is started on %s:%d.' % (
-                autosubliminal.WEBSERVERIP, autosubliminal.WEBSERVERPORT))
-
-        else:
-            print('INFO: The webserver is started on 0.0.0.0:8083.')
-            autosubliminal.WEBSERVERIP = '0.0.0.0'
-            autosubliminal.WEBSERVERPORT = 8083
 
         if cfg.has_option('webserver', 'webroot'):
             autosubliminal.WEBROOT = cfg.get('webserver', 'webroot')
-        else:
-            autosubliminal.WEBROOT = ''
-
-        if not cfg.has_option('webserver', 'username'):
-            autosubliminal.USERNAME = ''
-
-        if not cfg.has_option('webserver', 'password'):
-            autosubliminal.PASSWORD = ''
 
         if cfg.has_option('webserver', 'username') and cfg.has_option('webserver', 'password'):
             autosubliminal.USERNAME = cfg.get('webserver', 'username')
             autosubliminal.PASSWORD = cfg.get('webserver', 'password')
         elif cfg.has_option('webserver', 'username') or cfg.has_option('webserver', 'password'):
-            print('ERROR: Both username and password are required. Starting without authentication.')
+            print('ERROR: Both username and password are required for webserver authentication.')
+            print('ERROR: Starting without authentication.')
 
         if cfg.has_option('webserver', 'launchbrowser'):
             autosubliminal.LAUNCHBROWSER = cfg.getboolean('webserver', 'launchbrowser')
-        else:
-            autosubliminal.LAUNCHBROWSER = True
-    else:
-        # Webserver section is missing
-        print('INFO: The webserver section is started on 0.0.0.0:8083.')
-        print('INFO: The webserver is started without authentication.')
-        autosubliminal.WEBSERVERIP = '0.0.0.0'
-        autosubliminal.WEBSERVERPORT = 8083
-        autosubliminal.WEBROOT = ''
-        autosubliminal.USERNAME = ''
-        autosubliminal.PASSWORD = ''
-        autosubliminal.LAUNCHBROWSER = True
 
+    # Section 'subliminal'
     if cfg.has_section('subliminal'):
         if cfg.has_option('subliminal', 'showminmatchscore'):
             autosubliminal.SHOWMINMATCHSCORE = cfg.getint('subliminal', 'showminmatchscore')
@@ -368,28 +239,18 @@ def read_config(check_upgrade=False):
                 print('WARNING: Invalid SHOWMINMATCHSCORE found.')
                 print('WARNING: Using the default score (%s) instead.' % autosubliminal.SHOWMINMATCHSCOREDEFAULT)
                 autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
-        else:
-            autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
 
         if cfg.has_option('subliminal', 'showmatchsource'):
             autosubliminal.SHOWMATCHSOURCE = cfg.getboolean('subliminal', 'showmatchsource')
-        else:
-            autosubliminal.SHOWMATCHSOURCE = False
 
         if cfg.has_option('subliminal', 'showmatchquality'):
             autosubliminal.SHOWMATCHQUALITY = cfg.getboolean('subliminal', 'showmatchquality')
-        else:
-            autosubliminal.SHOWMATCHQUALITY = False
 
         if cfg.has_option('subliminal', 'showmatchcodec'):
             autosubliminal.SHOWMATCHCODEC = cfg.getboolean('subliminal', 'showmatchcodec')
-        else:
-            autosubliminal.SHOWMATCHCODEC = False
 
         if cfg.has_option('subliminal', 'showmatchreleasegroup'):
             autosubliminal.SHOWMATCHRELEASEGROUP = cfg.getboolean('subliminal', 'showmatchreleasegroup')
-        else:
-            autosubliminal.SHOWMATCHRELEASEGROUP = False
 
         if cfg.has_option('subliminal', 'movieminmatchscore'):
             autosubliminal.MOVIEMINMATCHSCORE = cfg.getint('subliminal', 'movieminmatchscore')
@@ -398,28 +259,18 @@ def read_config(check_upgrade=False):
                 print('WARNING: Invalid MOVIEMINMATCHSCORE found.')
                 print('WARNING: Using the default score (%s) instead.' % autosubliminal.MOVIEMINMATCHSCOREDEFAULT)
                 autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
-        else:
-            autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
 
         if cfg.has_option('subliminal', 'moviematchsource'):
             autosubliminal.MOVIEMATCHSOURCE = cfg.getboolean('subliminal', 'moviematchsource')
-        else:
-            autosubliminal.MOVIEMATCHSOURCE = False
 
         if cfg.has_option('subliminal', 'moviematchquality'):
             autosubliminal.MOVIEMATCHQUALITY = cfg.getboolean('subliminal', 'moviematchquality')
-        else:
-            autosubliminal.MOVIEMATCHQUALITY = False
 
         if cfg.has_option('subliminal', 'moviematchcodec'):
             autosubliminal.MOVIEMATCHCODEC = cfg.getboolean('subliminal', 'moviematchcodec')
-        else:
-            autosubliminal.MOVIEMATCHCODEC = False
 
         if cfg.has_option('subliminal', 'moviematchreleasegroup'):
             autosubliminal.MOVIEMATCHRELEASEGROUP = cfg.getboolean('subliminal', 'moviematchreleasegroup')
-        else:
-            autosubliminal.MOVIEMATCHRELEASEGROUP = False
 
         if cfg.has_option('subliminal', 'providers'):
             providers = cfg.get('subliminal', 'providers')
@@ -429,38 +280,24 @@ def read_config(check_upgrade=False):
             for provider in autosubliminal.SUBLIMINALPROVIDERS:
                 if provider not in autosubliminal.SUBLIMINALPROVIDERMANAGER.names():
                     autosubliminal.SUBLIMINALPROVIDERS.remove(provider)
-        else:
-            autosubliminal.SUBLIMINALPROVIDERS = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
 
         if cfg.has_option('subliminal', 'subtitleutf8encoding'):
             autosubliminal.SUBTITLEUTF8ENCODING = cfg.getboolean('subliminal', 'subtitleutf8encoding')
-        else:
-            autosubliminal.SUBTITLEUTF8ENCODING = False
 
         if cfg.has_option('subliminal', 'manualrefinevideo'):
             autosubliminal.MANUALREFINEVIDEO = cfg.getboolean('subliminal', 'manualrefinevideo')
-        else:
-            autosubliminal.MANUALREFINEVIDEO = False
 
         if cfg.has_option('subliminal', 'refinevideo'):
             autosubliminal.REFINEVIDEO = cfg.getboolean('subliminal', 'refinevideo')
-        else:
-            autosubliminal.REFINEVIDEO = False
 
         if cfg.has_option('subliminal', 'preferhearingimpaired'):
             autosubliminal.PREFERHEARINGIMPAIRED = cfg.getboolean('subliminal', 'preferhearingimpaired')
-        else:
-            autosubliminal.PREFERHEARINGIMPAIRED = False
 
         if cfg.has_option('subliminal', 'anticaptchaclass'):
             autosubliminal.ANTICAPTCHACLASS = cfg.get('subliminal', 'anticaptchaclass')
-        else:
-            autosubliminal.ANTICAPTCHACLASS = ''
 
         if cfg.has_option('subliminal', 'anticaptchaclientkey'):
             autosubliminal.ANTICAPTCHACLIENTKEY = cfg.get('subliminal', 'anticaptchaclientkey')
-        else:
-            autosubliminal.ANTICAPTCHACLIENTKEY = ''
 
         if cfg.has_option('subliminal', 'addic7edusername') and cfg.has_option('subliminal', 'addic7edpassword'):
             autosubliminal.ADDIC7EDUSERNAME = cfg.get('subliminal', 'addic7edusername')
@@ -475,8 +312,6 @@ def read_config(check_upgrade=False):
                     'username': autosubliminal.ADDIC7EDUSERNAME,
                     'password': autosubliminal.ADDIC7EDPASSWORD})
         else:
-            autosubliminal.ADDIC7EDUSERNAME = ''
-            autosubliminal.ADDIC7EDPASSWORD = ''
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'] = {}
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_custom'] = {'random_user_agent': True}
 
@@ -485,8 +320,6 @@ def read_config(check_upgrade=False):
             if autosubliminal.ADDIC7EDUSERID:
                 autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_custom'].update(
                     {'userid': autosubliminal.ADDIC7EDUSERID})
-        else:
-            autosubliminal.ADDIC7EDUSERID = ''
 
         if cfg.has_option('subliminal', 'opensubtitlesusername') and cfg.has_option('subliminal',
                                                                                     'opensubtitlespassword'):
@@ -496,9 +329,6 @@ def read_config(check_upgrade=False):
                 autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles'] = {
                     'username': autosubliminal.OPENSUBTITLESUSERNAME,
                     'password': autosubliminal.OPENSUBTITLESPASSWORD}
-        else:
-            autosubliminal.OPENSUBTITLESUSERNAME = ''
-            autosubliminal.OPENSUBTITLESPASSWORD = ''
 
         if cfg.has_option('subliminal', 'legendastvusername') and cfg.has_option('subliminal', 'legendastvpassword'):
             autosubliminal.LEGENDASTVUSERNAME = cfg.get('subliminal', 'legendastvusername')
@@ -507,341 +337,174 @@ def read_config(check_upgrade=False):
                 autosubliminal.SUBLIMINALPROVIDERCONFIGS['legendastv'] = {
                     'username': autosubliminal.LEGENDASTVUSERNAME,
                     'password': autosubliminal.LEGENDASTVPASSWORD}
-        else:
-            autosubliminal.LEGENDASTVUSERNAME = ''
-            autosubliminal.LEGENDASTVPASSWORD = ''
-    else:
-        # Subliminal section is missing
-        autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
-        autosubliminal.SHOWMATCHSOURCE = False
-        autosubliminal.SHOWMATCHQUALITY = False
-        autosubliminal.SHOWMATCHCODEC = False
-        autosubliminal.SHOWMATCHRELEASEGROUP = False
-        autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
-        autosubliminal.MOVIEMATCHSOURCE = False
-        autosubliminal.MOVIEMATCHQUALITY = False
-        autosubliminal.MOVIEMATCHCODEC = False
-        autosubliminal.MOVIEMATCHRELEASEGROUP = False
-        autosubliminal.SUBLIMINALPROVIDERS = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
-        autosubliminal.SUBTITLEUTF8ENCODING = False
-        autosubliminal.MANUALREFINEVIDEO = False
-        autosubliminal.REFINEVIDEO = False
-        autosubliminal.PREFERHEARINGIMPAIRED = False
-        autosubliminal.ANTICAPTCHACLASS = ''
-        autosubliminal.ANTICAPTCHACLIENTKEY = ''
-        autosubliminal.ADDIC7EDUSERNAME = ''
-        autosubliminal.ADDIC7EDPASSWORD = ''
-        autosubliminal.ADDIC7EDUSERID = ''
-        autosubliminal.OPENSUBTITLESUSERNAME = ''
-        autosubliminal.OPENSUBTITLESPASSWORD = ''
-        autosubliminal.LEGENDASTVUSERNAME = ''
-        autosubliminal.LEGENDASTVPASSWORD = ''
 
+    # Section 'shownamemapping'
     if cfg.has_section('shownamemapping'):
         autosubliminal.SHOWNAMEMAPPING = dict(cfg.items('shownamemapping'))
-    else:
-        # Shownamemapping section is missing
-        autosubliminal.SHOWNAMEMAPPING = {}
 
+    # Section 'addic7edshownamemapping'
     if cfg.has_section('addic7edshownamemapping'):
         autosubliminal.ADDIC7EDSHOWNAMEMAPPING = dict(cfg.items('addic7edshownamemapping'))
-    else:
-        # Addic7edshownamemapping section is missing
-        autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {}
 
+    # Section 'alternativeshownamemapping'
     if cfg.has_section('alternativeshownamemapping'):
         autosubliminal.ALTERNATIVESHOWNAMEMAPPING = dict(cfg.items('alternativeshownamemapping'))
-    else:
-        # Alternativeshownamemapping section is missing
-        autosubliminal.ALTERNATIVESHOWNAMEMAPPING = {}
 
+    # Section 'movienamemapping'
     if cfg.has_section('movienamemapping'):
         autosubliminal.MOVIENAMEMAPPING = dict(cfg.items('movienamemapping'))
-    else:
-        # Movienamemapping section is missing
-        autosubliminal.MOVIENAMEMAPPING = {}
 
+    # Section 'alternativemovienamemapping'
     if cfg.has_section('alternativemovienamemapping'):
         autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = dict(cfg.items('alternativemovienamemapping'))
-    else:
-        # Alternativemovienamemapping section is missing
-        autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = {}
 
+    # Section 'skipshow'
     if cfg.has_section('skipshow'):
         autosubliminal.SKIPSHOW = dict(cfg.items('skipshow'))
-    else:
-        # Skipshow section is missing
-        autosubliminal.SKIPSHOW = {}
 
+    # Section 'skipmovie'
     if cfg.has_section('skipmovie'):
         autosubliminal.SKIPMOVIE = dict(cfg.items('skipmovie'))
-    else:
-        # Skipmovie section is missing
-        autosubliminal.SKIPMOVIE = {}
 
+    # Section 'notification'
     if cfg.has_section('notification'):
         if cfg.has_option('notification', 'notify'):
             autosubliminal.NOTIFY = cfg.getboolean('notification', 'notify')
-        else:
-            autosubliminal.NOTIFY = False
 
         # Mail
         if cfg.has_option('notification', 'notifymail'):
             autosubliminal.NOTIFYMAIL = cfg.getboolean('notification', 'notifymail')
-        else:
-            autosubliminal.NOTIFYMAIL = False
 
         if cfg.has_option('notification', 'mailsrv'):
             autosubliminal.MAILSRV = cfg.get('notification', 'mailsrv')
-        else:
-            autosubliminal.MAILSRV = 'smtp.gmail.com:587'
 
         if cfg.has_option('notification', 'mailfromname'):
             autosubliminal.MAILFROMNAME = cfg.get('notification', 'mailfromname')
-        else:
-            autosubliminal.MAILFROMNAME = ''
 
         if cfg.has_option('notification', 'mailfromaddr'):
             autosubliminal.MAILFROMADDR = cfg.get('notification', 'mailfromaddr')
-        else:
-            autosubliminal.MAILFROMADDR = 'example@gmail.com'
 
         if cfg.has_option('notification', 'mailtoaddr'):
             autosubliminal.MAILTOADDR = cfg.get('notification', 'mailtoaddr')
-        else:
-            autosubliminal.MAILTOADDR = 'example@gmail.com'
 
         if cfg.has_option('notification', 'mailusername'):
             autosubliminal.MAILUSERNAME = cfg.get('notification', 'mailusername')
-        else:
-            autosubliminal.MAILUSERNAME = 'example@gmail.com'
 
         if cfg.has_option('notification', 'mailpassword'):
             autosubliminal.MAILPASSWORD = cfg.get('notification', 'mailpassword')
-        else:
-            autosubliminal.MAILPASSWORD = 'mysecretpassword'
 
         if cfg.has_option('notification', 'mailsubject'):
             autosubliminal.MAILSUBJECT = cfg.get('notification', 'mailsubject')
-        else:
-            autosubliminal.MAILSUBJECT = 'Auto-Subliminal downloaded'
 
         if cfg.has_option('notification', 'mailencryption'):
             autosubliminal.MAILENCRYPTION = cfg.get('notification', 'mailencryption')
-        else:
-            autosubliminal.MAILENCRYPTION = 'TLS'
 
         if cfg.has_option('notification', 'mailauth'):
             autosubliminal.MAILAUTH = cfg.get('notification', 'mailauth')
-        else:
-            autosubliminal.MAILAUTH = ''
 
         # Twitter
         if cfg.has_option('notification', 'notifytwitter'):
             autosubliminal.NOTIFYTWITTER = cfg.getboolean('notification', 'notifytwitter')
-        else:
-            autosubliminal.NOTIFYTWITTER = False
 
         if cfg.has_option('notification', 'twitterkey'):
             autosubliminal.TWITTERKEY = cfg.get('notification', 'twitterkey')
-        else:
-            autosubliminal.TWITTERKEY = 'token key'
 
         if cfg.has_option('notification', 'twittersecret'):
             autosubliminal.TWITTERSECRET = cfg.get('notification', 'twittersecret')
-        else:
-            autosubliminal.TWITTERSECRET = 'token secret'
 
         # Pushalot - Windows Phone and Windows 8 notifier
         if cfg.has_option('notification', 'notifypushalot'):
             autosubliminal.NOTIFYPUSHALOT = cfg.getboolean('notification', 'notifypushalot')
-        else:
-            autosubliminal.NOTIFYPUSHALOT = False
 
         if cfg.has_option('notification', 'pushalotapi'):
             autosubliminal.PUSHALOTAPI = cfg.get('notification', 'pushalotapi')
-        else:
-            autosubliminal.PUSHALOTAPI = 'API key'
 
         # Pushover - Android and IOS notifier
         if cfg.has_option('notification', 'notifypushover'):
             autosubliminal.NOTIFYPUSHOVER = cfg.getboolean('notification', 'notifypushover')
-        else:
-            autosubliminal.NOTIFYPUSHOVER = False
 
         if cfg.has_option('notification', 'pushoverkey'):
             autosubliminal.PUSHOVERKEY = cfg.get('notification', 'pushoverkey')
-        else:
-            autosubliminal.PUSHOVERKEY = 'user key'
 
         if cfg.has_option('notification', 'pushoverapi'):
             autosubliminal.PUSHOVERAPI = cfg.get('notification', 'pushoverapi')
-        else:
-            autosubliminal.PUSHOVERAPI = 'API key'
 
         if cfg.has_option('notification', 'pushoverdevices'):
             autosubliminal.PUSHOVERDEVICES = cfg.get('notification', 'pushoverdevices')
-        else:
-            autosubliminal.PUSHOVERDEVICES = ''
 
         # Growl
         if cfg.has_option('notification', 'notifygrowl'):
             autosubliminal.NOTIFYGROWL = cfg.getboolean('notification', 'notifygrowl')
-        else:
-            autosubliminal.NOTIFYGROWL = False
 
         if cfg.has_option('notification', 'growlhost'):
             autosubliminal.GROWLHOST = cfg.get('notification', 'growlhost')
-        else:
-            autosubliminal.GROWLHOST = '127.0.0.1'
 
         if cfg.has_option('notify', 'growlport'):
             autosubliminal.GROWLPORT = cfg.getint('notify', 'growlport')
-        else:
-            autosubliminal.GROWLPORT = 23053
 
         if cfg.has_option('notification', 'growlpass'):
             autosubliminal.GROWLPASS = cfg.get('notification', 'growlpass')
-        else:
-            autosubliminal.GROWLPASS = 'mysecretpassword'
 
         if cfg.has_option('notification', 'growlpriority'):
             autosubliminal.GROWLPRIORITY = cfg.getint('notification', 'growlpriority')
-        else:
-            autosubliminal.GROWLPRIORITY = 0
 
         # Prowl
         if cfg.has_option('notification', 'notifyprowl'):
             autosubliminal.NOTIFYPROWL = cfg.getboolean('notification', 'notifyprowl')
-        else:
-            autosubliminal.NOTIFYPROWL = False
 
         if cfg.has_option('notification', 'prowlapi'):
             autosubliminal.PROWLAPI = cfg.get('notification', 'prowlapi')
-        else:
-            autosubliminal.PROWLAPI = 'API key'
 
         if cfg.has_option('notification', 'prowlpriority'):
             autosubliminal.PROWLPRIORITY = cfg.getint('notification', 'prowlpriority')
-        else:
-            autosubliminal.PROWLPRIORITY = 0
 
         # Pushbullet
         if cfg.has_option('notification', 'notifypushbullet'):
             autosubliminal.NOTIFYPUSHBULLET = cfg.getboolean('notification', 'notifypushbullet')
-        else:
-            autosubliminal.NOTIFYPUSHBULLET = False
 
         if cfg.has_option('notification', 'pushbulletapi'):
             autosubliminal.PUSHBULLETAPI = cfg.get('notification', 'pushbulletapi')
-        else:
-            autosubliminal.PUSHBULLETAPI = 'API key'
 
         # Telegram
         if cfg.has_option('notification', 'notifytelegram'):
             autosubliminal.NOTIFYTELEGRAM = cfg.getboolean('notification', 'notifytelegram')
-        else:
-            autosubliminal.NOTIFYTELEGRAM = False
 
         if cfg.has_option('notification', 'telegrambotapi'):
             autosubliminal.TELEGRAMBOTAPI = cfg.get('notification', 'telegrambotapi')
-        else:
-            autosubliminal.TELEGRAMBOTAPI = 'API key'
 
         if cfg.has_option('notification', 'telegramchatid'):
             autosubliminal.TELEGRAMCHATID = cfg.get('notification', 'telegramchatid')
-        else:
-            autosubliminal.TELEGRAMCHATID = ''
 
-    else:
-        # Notify section is missing
-        autosubliminal.NOTIFY = False
-        autosubliminal.NOTIFYMAIL = False
-        autosubliminal.MAILSRV = 'smtp.gmail.com:587'
-        autosubliminal.MAILFROMNAME = ''
-        autosubliminal.MAILFROMADDR = 'example@gmail.com'
-        autosubliminal.MAILTOADDR = 'example@gmail.com'
-        autosubliminal.MAILUSERNAME = 'example@gmail.com'
-        autosubliminal.MAILPASSWORD = 'mysecretpassword'
-        autosubliminal.MAILSUBJECT = 'Subs info'
-        autosubliminal.MAILENCRYPTION = 'TLS'
-        autosubliminal.MAILAUTH = ''
-        autosubliminal.NOTIFYTWITTER = False
-        autosubliminal.TWITTERKEY = 'token key'
-        autosubliminal.TWITTERSECRET = 'token secret'
-        autosubliminal.NOTIFYPUSHALOT = False
-        autosubliminal.PUSHALOTAPI = 'API key'
-        autosubliminal.NOTIFYPUSHOVER = False
-        autosubliminal.PUSHOVERKEY = 'user key'
-        autosubliminal.PUSHOVERAPI = 'API key'
-        autosubliminal.PUSHOVERDEVICES = ''
-        autosubliminal.NOTIFYGROWL = False
-        autosubliminal.GROWLHOST = '127.0.0.1'
-        autosubliminal.GROWLPORT = 23053
-        autosubliminal.GROWLPASS = 'mysecretpassword'
-        autosubliminal.GROWLPRIORITY = 0
-        autosubliminal.NOTIFYPROWL = False
-        autosubliminal.PROWLAPI = 'API key'
-        autosubliminal.PROWLPRIORITY = 0
-        autosubliminal.NOTIFYPUSHBULLET = False
-        autosubliminal.PUSHBULLETAPI = 'API key'
-        autosubliminal.NOTIFYTELEGRAM = False
-        autosubliminal.TELEGRAMBOTAPI = 'API key'
-        autosubliminal.TELEGRAMCHATID = ''
-
+    # Section 'postprocessing'
     if cfg.has_section('postprocessing'):
         if cfg.has_option('postprocessing', 'postprocess'):
             autosubliminal.POSTPROCESS = cfg.getboolean('postprocessing', 'postprocess')
-        else:
-            autosubliminal.POSTPROCESS = False
 
         if cfg.has_option('postprocessing', 'postprocessindividual'):
             autosubliminal.POSTPROCESSINDIVIDUAL = cfg.getboolean('postprocessing', 'postprocessindividual')
-        else:
-            autosubliminal.POSTPROCESSINDIVIDUAL = False
 
         if cfg.has_option('postprocessing', 'postprocessutf8encoding'):
             autosubliminal.POSTPROCESSUTF8ENCODING = cfg.getboolean('postprocessing', 'postprocessutf8encoding')
-        else:
-            autosubliminal.POSTPROCESSUTF8ENCODING = False
 
         if cfg.has_option('postprocessing', 'showpostprocesscmd'):
             autosubliminal.SHOWPOSTPROCESSCMD = cfg.get('postprocessing', 'showpostprocesscmd')
-        else:
-            autosubliminal.SHOWPOSTPROCESSCMD = ''
 
         if cfg.has_option('postprocessing', 'showpostprocesscmdargs'):
             autosubliminal.SHOWPOSTPROCESSCMDARGS = cfg.get('postprocessing', 'showpostprocesscmdargs')
-        else:
-            autosubliminal.SHOWPOSTPROCESSCMDARGS = ''
 
         if cfg.has_option('postprocessing', 'moviepostprocesscmd'):
             autosubliminal.MOVIEPOSTPROCESSCMD = cfg.get('postprocessing', 'moviepostprocesscmd')
-        else:
-            autosubliminal.MOVIEPOSTPROCESSCMD = ''
 
         if cfg.has_option('postprocessing', 'moviepostprocesscmdargs'):
             autosubliminal.MOVIEPOSTPROCESSCMDARGS = cfg.get('postprocessing', 'moviepostprocesscmdargs')
-        else:
-            autosubliminal.MOVIEPOSTPROCESSCMDARGS = ''
 
-    else:
-        # Postprocessing section is missing
-        autosubliminal.POSTPROCESS = False
-        autosubliminal.POSTPROCESSINDIVIDUAL = False
-        autosubliminal.POSTPROCESSUTF8ENCODING = False
-        autosubliminal.SHOWPOSTPROCESSCMD = ''
-        autosubliminal.SHOWPOSTPROCESSCMDARGS = ''
-        autosubliminal.MOVIEPOSTPROCESSCMD = ''
-        autosubliminal.MOVIEPOSTPROCESSCMDARGS = ''
-
-    # Dev section: only overwrite default values if specified
+    # Section 'dev'
     if cfg.has_section('dev'):
-        if cfg.has_option('dev', 'apikey'):
-            autosubliminal.TVDBAPIKEY = cfg.get('dev', 'tvdbapikey')
-
         if cfg.has_option('dev', 'developer'):
             autosubliminal.DEVELOPER = cfg.getboolean('dev', 'developer')
+
+        if cfg.has_option('dev', 'tvdbapikey'):
+            autosubliminal.TVDBAPIKEY = cfg.get('dev', 'tvdbapikey')
 
     # Check if config needs to be upgraded
     if check_upgrade:
