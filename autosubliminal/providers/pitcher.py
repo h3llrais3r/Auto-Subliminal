@@ -105,7 +105,7 @@ class AntiCaptchaProxyLessPitcher(Pitcher):
 
     def __init__(self, website_name, website_url, website_key, tries=3, host=None, language_pool=None,
                  use_ssl=True, is_invisible=False, *args, **kwargs):
-        super().__init__(website_name, website_url, website_key, tries=tries, *args, **kwargs)
+        super().__init__(website_name, website_url, website_key, tries, *args, **kwargs)
         self.host = host or self.host
         self.language_pool = language_pool or self.language_pool
         self.use_ssl = use_ssl
@@ -190,7 +190,7 @@ class DBCProxyLessPitcher(Pitcher):
 
     def __init__(self, website_name, website_url, website_key,
                  timeout=DEFAULT_TOKEN_TIMEOUT, tries=3, *args, **kwargs):
-        super().__init__(website_name, website_url, website_key, tries=tries)
+        super().__init__(website_name, website_url, website_key, tries, *args, **kwargs)
 
         self.username, self.password = self.client_key.split(':', 1)
         self.timeout = timeout

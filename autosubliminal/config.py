@@ -1243,14 +1243,14 @@ def _upgrade_config(from_version, to_version):
             autosubliminal.SHOWMATCHRELEASEGROUP = False
             print('INFO: New value showminmatchscore: %d' % autosubliminal.SHOWMINMATCHSCORE)
             print('INFO: Replacing old user namemappings with tvdb ids.')
-            for x in autosubliminal.SHOWNAMEMAPPING:
+            for show in autosubliminal.SHOWNAMEMAPPING:
                 # Search for tvdb id
-                tvdb_id = autosubliminal.SHOWINDEXER.get_tvdb_id(x, force_search=True)
+                tvdb_id = autosubliminal.SHOWINDEXER.get_tvdb_id(show, force_search=True)
                 # Replace by tvdb id or remove namemapping
                 if tvdb_id:
-                    autosubliminal.SHOWNAMEMAPPING[x] = str(tvdb_id)
+                    autosubliminal.SHOWNAMEMAPPING[show] = str(tvdb_id)
                 else:
-                    del autosubliminal.SHOWNAMEMAPPING[x]
+                    del autosubliminal.SHOWNAMEMAPPING[show]
             print('INFO: Config upgraded to version 3.')
             autosubliminal.CONFIGVERSION = 3
             autosubliminal.CONFIGUPGRADED = True
@@ -1416,12 +1416,12 @@ def _upgrade_config(from_version, to_version):
         if from_version == 7 and to_version == 8:
             print('INFO: Upgrading skip config. Please check/reconfigure your config!')
             # '00' means now skip all, '0' means skip season 0
-            for x in autosubliminal.SKIPSHOW:
-                seasons = autosubliminal.SKIPSHOW[x].split(',')
+            for show in autosubliminal.SKIPSHOW:
+                seasons = autosubliminal.SKIPSHOW[show].split(',')
                 replace = {'0': '00', '00': '0'}
-                autosubliminal.SKIPSHOW[x] = ','.join([replace[r] if r in replace else r for r in seasons])
-            for x in autosubliminal.SKIPMOVIE:
-                autosubliminal.SKIPMOVIE[x] = '00'
+                autosubliminal.SKIPSHOW[show] = ','.join([replace[r] if r in replace else r for r in seasons])
+            for movie in autosubliminal.SKIPMOVIE:
+                autosubliminal.SKIPMOVIE[movie] = '00'
             print('INFO: Config upgraded to version 8.')
             autosubliminal.CONFIGVERSION = 8
             autosubliminal.CONFIGUPGRADED = True
@@ -1533,10 +1533,10 @@ def _upgrade_config(from_version, to_version):
                 # No config yet, just mark as upgraded
                 cfg = _create_config_parser()
             # Updating intervals
-            autosubliminal.SCANDISKINTERVAL /= 3600
-            autosubliminal.CHECKSUBINTERVAL /= 3600
-            autosubliminal.CHECKVERSIONINTERVAL /= 3600
-            autosubliminal.SCANLIBRARYINTERVAL /= 3600
+            autosubliminal.SCANDISKINTERVAL = cast(int, autosubliminal.SCANDISKINTERVAL / 3600)
+            autosubliminal.CHECKSUBINTERVAL = cast(int, autosubliminal.CHECKSUBINTERVAL / 3600)
+            autosubliminal.CHECKVERSIONINTERVAL = cast(int, autosubliminal.CHECKVERSIONINTERVAL / 3600)
+            autosubliminal.SCANLIBRARYINTERVAL = cast(int, autosubliminal.SCANLIBRARYINTERVAL / 3600)
             print('INFO: Config upgraded to version 12.')
             autosubliminal.CONFIGVERSION = 12
             autosubliminal.CONFIGUPGRADED = True

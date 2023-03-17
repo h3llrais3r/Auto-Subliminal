@@ -3,6 +3,7 @@
 import logging
 import re
 from abc import ABC, abstractmethod
+from typing import cast
 
 from packaging.version import Version
 
@@ -36,6 +37,8 @@ class VersionChecker(ScheduledProcess):
 
     def __init__(self):
         super().__init__(force_run_lock=False)
+        self.manager: _BaseVersionManager = None
+        self.install_type: InstallType = None
         try:
             Repo(autosubliminal.PATH)
             self.manager = GitVersionManager()
@@ -260,13 +263,14 @@ class GitVersionManager(_BaseVersionManager):
 
         # Get number of commits ahead and behind (option --count not supported git < 1.7.2)
         try:
-            ahead, behind = self.repo.git.execute('git rev-list --count --left-right HEAD...@{upstream}').split('\t')
+            ahead, behind = cast(str, self.repo.git.execute(
+                'git rev-list --count --left-right HEAD...@{upstream}')).split('\t')
             self.num_commits_ahead = int(ahead)
             self.num_commits_behind = int(behind)
         except Exception:
             # Count it ourselves when option --count is not supported
             try:
-                output = self.repo.git.execute('git rev-list --left-right HEAD...@{upstream}')
+                output = cast(str, self.repo.git.execute('git rev-list --left-right HEAD...@{upstream}'))
                 self.num_commits_ahead = int(output.count('<'))
                 self.num_commits_behind = int(output.count('>'))
             except Exception:

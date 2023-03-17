@@ -2,6 +2,7 @@
 
 import logging
 import os
+from typing import Any, Dict
 
 import cherrypy
 
@@ -100,10 +101,10 @@ class ShowsApi(RestResource):
 
     def _get_show_season_files(self, show_episodes):
         # Show season files are supposed to be stored in individual season dirs or the root dir only
-        seasons = {}
+        seasons: Dict[Any, Any] = {}
 
         # Create episode dict, grouped by season
-        season_episodes = {}
+        season_episodes: Dict[Any, Any] = {}
         for episode in show_episodes:
             if episode.season in season_episodes:
                 season_episodes[episode.season].append(episode)

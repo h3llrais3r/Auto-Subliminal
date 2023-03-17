@@ -5,12 +5,13 @@ import ctypes
 import datetime
 import logging
 import os
-import platform
 import re
 import stat
 import subprocess
+import sys
 import time
 from collections.abc import Mapping
+from typing import Any, Dict
 
 import requests
 
@@ -177,7 +178,7 @@ def to_dict(obj, key_fn, *args, **kwargs):
         else:
             return val_or_iter
 
-    obj_dict = {}
+    obj_dict: Dict[Any, Any] = {}
 
     # Convert to dict (if not from builtins module, we assume it's an custom class object)
     if type(obj).__module__ != type(builtins).__module__:
@@ -461,7 +462,7 @@ def humanize_bytes(bytes, precision=1):
 # Thanks to http://stackoverflow.com/questions/51658/cross-platform-space-remaining-on-volume-using-python
 def get_disk_space_details(directory):
     """Return folder/drive disk space details (free and total space)."""
-    if platform.system() == 'Windows':
+    if sys.platform == 'win32':
         total_bytes = ctypes.c_ulonglong(0)
         free_bytes = ctypes.c_ulonglong(0)
         ctypes.windll.kernel32.GetDiskFreeSpaceExW(ctypes.c_wchar_p(directory), None, ctypes.pointer(total_bytes),

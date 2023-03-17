@@ -29,30 +29,32 @@ log = logging.getLogger(__name__)
 
 
 def daemon():
-    print('INFO: Starting as a daemon.')
-    try:
-        pid = os.fork()
-        if pid > 0:
-            sys.exit(0)
-    except OSError:
-        sys.exit(1)
+    if sys.platform != 'win32':
 
-    os.chdir(autosubliminal.PATH)
-    os.setsid()
-    os.umask(0)
-    try:
-        pid = os.fork()
-        if pid > 0:
-            sys.exit(0)
-    except OSError:
-        sys.exit(1)
+        print('INFO: Starting as a daemon.')
+        try:
+            pid = os.fork()
+            if pid > 0:
+                sys.exit(0)
+        except OSError:
+            sys.exit(1)
 
-    print('INFO: Disabling console output for daemon.')
+        os.chdir(autosubliminal.PATH)
+        os.setsid()
+        os.umask(0)
+        try:
+            pid = os.fork()
+            if pid > 0:
+                sys.exit(0)
+        except OSError:
+            sys.exit(1)
 
-    cherrypy.log.screen = False
-    sys.stdin.close()
-    sys.stdout.flush()
-    sys.stderr.flush()
+        print('INFO: Disabling console output for daemon.')
+
+        cherrypy.log.screen = False
+        sys.stdin.close()
+        sys.stdout.flush()
+        sys.stderr.flush()
 
 
 def launch_browser():
@@ -105,8 +107,6 @@ def start_server(restarting=False):
 
 
 def _configure_server(restarting=False):
-    global websocket_plugin
-
     # Configure server error log
     cherrypy.config.update({'log.error_file': 'cherrypy.error.log'})
 
@@ -140,12 +140,12 @@ def _configure_server(restarting=False):
 
     if not restarting:
         # Enable websocket plugin
-        websocket_plugin = WebSocketPlugin(cherrypy.engine)
-        websocket_plugin.subscribe()
+        autosubliminal.WEBSOCKETPLUGIN = WebSocketPlugin(cherrypy.engine)
+        autosubliminal.WEBSOCKETPLUGIN.subscribe()
         cherrypy.tools.websocket = WebSocketTool()
     else:
         # When restarting we need to create a new websocket manager thread (you cannot start the same thread twice!)
-        websocket_plugin.manager = WebSocketManager()
+        autosubliminal.WEBSOCKETPLUGIN.manager = WebSocketManager()
         # When restarting we need to clear the httpserver to force the creation of a new one (needed for ip/port change)
         cherrypy.server.httpserver = None
 

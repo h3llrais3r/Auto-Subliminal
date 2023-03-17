@@ -48,8 +48,6 @@ class MailNotifier(BaseNotifier):
         mail_message['To'] = email.utils.formataddr(('Recipient', autosubliminal.MAILTOADDR))
         subject = kwargs['subject'] if 'subject' in kwargs else self.notification_title
         mail_message['Subject'] = subject
-        # Convert message to string
-        mail_message = mail_message.as_string()
         try:
             server = smtplib.SMTP(autosubliminal.MAILSRV)
             if autosubliminal.MAILENCRYPTION == 'TLS':
@@ -59,7 +57,7 @@ class MailNotifier(BaseNotifier):
                 if autosubliminal.MAILAUTH:
                     server.esmtp_features['auth'] = autosubliminal.MAILAUTH.upper()
                 server.login(autosubliminal.MAILUSERNAME, autosubliminal.MAILPASSWORD)
-            server.sendmail(autosubliminal.MAILFROMADDR, autosubliminal.MAILTOADDR, mail_message)
+            server.sendmail(autosubliminal.MAILFROMADDR, autosubliminal.MAILTOADDR, mail_message.as_string())
             server.quit()
             return True
         except Exception:

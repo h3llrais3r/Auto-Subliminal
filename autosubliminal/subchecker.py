@@ -4,6 +4,7 @@ import logging
 import operator
 import os
 import shutil
+from typing import Any, Dict, List
 
 import babelfish
 import subliminal
@@ -122,7 +123,7 @@ class SubChecker(ScheduledProcess):
 @release_wanted_queue_lock_on_exception
 def search_subtitle(wanted_item_index, lang):
     log.info('Searching for an individual subtitle')
-    subs = []
+    subs: List[Dict[str, Any]] = []
 
     # Get wanted queue lock
     if not get_wanted_queue_lock():

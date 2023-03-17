@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from stevedore import ExtensionManager
+from ws4py.server.cherrypyserver import WebSocketPlugin
 
 from autosubliminal.core.scheduler import Scheduler
 from autosubliminal.core.websocket import WebSocketBroadCaster
@@ -42,6 +43,7 @@ USERAGENT = 'Auto-Subliminal/' + RELEASE_VERSION
 TIMEOUT = 300
 WANTEDQUEUE: List[Any] = []
 WANTEDQUEUELOCK: bool = False
+WEBSOCKETPLUGIN: WebSocketPlugin = None
 WEBSOCKETMESSAGEQUEUE: List[Any] = []
 WEBSOCKETBROADCASTER: WebSocketBroadCaster = None
 SCHEDULERS: Dict[str, Scheduler] = {}
