@@ -1,6 +1,8 @@
 # coding=utf-8
 
 import pytest
+from pytest import MonkeyPatch
+from pytest_mock import MockerFixture
 
 import autosubliminal
 from autosubliminal.core.item import DownloadedItem, WantedItem
@@ -65,7 +67,7 @@ downloaded_item_json = '{"codec": "H.264", "episode": 6, "id": 1, "imdbId": null
 downloaded_item_list_json = '[' + downloaded_item_json + ']'
 
 
-def test_get_wanted_all_items(monkeypatch):
+def test_get_wanted_all_items(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.LIBRARYPATHS', [])
     monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
     monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 1)  # put on 1 to always return true on is_search_active
@@ -74,7 +76,7 @@ def test_get_wanted_all_items(monkeypatch):
     assert wanted_item_list_json == pickle_api_result(ItemsApi().wanted.get())
 
 
-def test_get_wanted_single_item(monkeypatch):
+def test_get_wanted_single_item(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.LIBRARYPATHS', [])
     monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
     monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 1)  # put on 1 to always return true on is_search_active
@@ -89,6 +91,6 @@ def test_get_wanted_item_bad_request():
         ItemsApi().wanted.get(-1)
 
 
-def test_get_downloaded_items(mocker):
+def test_get_downloaded_items(mocker: MockerFixture):
     mocker.patch.object(LastDownloadsDb, 'get_last_downloads', return_value=[downloaded_item])
     assert downloaded_item_list_json == pickle_api_result(ItemsApi().downloaded.get())

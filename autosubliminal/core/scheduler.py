@@ -39,7 +39,7 @@ class Scheduler(object):
         self.process = process
         self.interval = datetime.timedelta(hours=interval).total_seconds()  # Convert to seconds
         self.active = active
-        self.last_run = 0
+        self.last_run: float = 0
         self._delay = initial_delay
         self._force_run = False
         self._force_stop = False

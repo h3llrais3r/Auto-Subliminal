@@ -1,5 +1,8 @@
 # coding=utf-8
 
+from pytest import MonkeyPatch
+from pytest_mock import MockerFixture
+
 from autosubliminal.core.item import DownloadItem, WantedItem
 from autosubliminal.notifiers.growl import GrowlNotifier
 
@@ -19,7 +22,7 @@ def test_growl_disabled():
     assert notifier.notify_download(download_item) is False
 
 
-def test_growl_error(monkeypatch, mocker):
+def test_growl_error(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.NOTIFYGROWL', True)
     monkeypatch.setattr('autosubliminal.GROWLHOST', 'localhost')
     monkeypatch.setattr('autosubliminal.GROWLPORT', 23053)
@@ -30,7 +33,7 @@ def test_growl_error(monkeypatch, mocker):
     assert notifier.notify_download(download_item) is False
 
 
-def test_growl_exception(monkeypatch, mocker):
+def test_growl_exception(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.NOTIFYGROWL', True)
     monkeypatch.setattr('autosubliminal.GROWLHOST', 'localhost')
     monkeypatch.setattr('autosubliminal.GROWLPORT', 23053)
@@ -42,7 +45,7 @@ def test_growl_exception(monkeypatch, mocker):
     assert notifier.notify_download(download_item) is False
 
 
-def test_growl_registration_error(monkeypatch, mocker):
+def test_growl_registration_error(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.NOTIFYGROWL', True)
     monkeypatch.setattr('autosubliminal.GROWLHOST', 'localhost')
     monkeypatch.setattr('autosubliminal.GROWLPORT', 23053)
@@ -52,7 +55,7 @@ def test_growl_registration_error(monkeypatch, mocker):
     assert notifier.test() is False
 
 
-def test_growl_registration_exception(monkeypatch, mocker):
+def test_growl_registration_exception(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.NOTIFYGROWL', True)
     monkeypatch.setattr('autosubliminal.GROWLHOST', 'localhost')
     monkeypatch.setattr('autosubliminal.GROWLPORT', 23053)
@@ -62,7 +65,7 @@ def test_growl_registration_exception(monkeypatch, mocker):
     assert notifier.test() is False
 
 
-def test_growl_notify_download(monkeypatch, mocker):
+def test_growl_notify_download(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.NOTIFYGROWL', True)
     monkeypatch.setattr('autosubliminal.GROWLHOST', 'localhost')
     monkeypatch.setattr('autosubliminal.GROWLPORT', 23053)
@@ -73,7 +76,7 @@ def test_growl_notify_download(monkeypatch, mocker):
     assert notifier.notify_download(download_item) is True
 
 
-def test_growl_test(monkeypatch, mocker):
+def test_growl_test(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.NOTIFYGROWL', True)
     monkeypatch.setattr('autosubliminal.GROWLHOST', 'localhost')
     monkeypatch.setattr('autosubliminal.GROWLPORT', 23053)

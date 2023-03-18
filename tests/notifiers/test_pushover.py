@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import requests_mock
+from pytest import MonkeyPatch
 
 from autosubliminal.core.item import DownloadItem, WantedItem
 from autosubliminal.notifiers.pushover import PUSHOVERURL, PushoverNotifier
@@ -21,7 +22,7 @@ def test_pushover_disabled():
     assert notifier.notify_download(download_item) is False
 
 
-def test_pushover_error(monkeypatch):
+def test_pushover_error(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHOVER', True)
     with requests_mock.mock() as m:
         # Mock erroneous request
@@ -32,7 +33,7 @@ def test_pushover_error(monkeypatch):
         assert notifier.notify_download(download_item) is False
 
 
-def test_pushover_exception(monkeypatch):
+def test_pushover_exception(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHOVER', True)
     with requests_mock.mock() as m:
         # Mock exception request
@@ -43,7 +44,7 @@ def test_pushover_exception(monkeypatch):
         assert notifier.notify_download(download_item) is False
 
 
-def test_pushover_notify_download(monkeypatch):
+def test_pushover_notify_download(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHOVER', True)
     with requests_mock.mock() as m:
         # Mock successful request

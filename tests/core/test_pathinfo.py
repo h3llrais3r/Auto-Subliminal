@@ -1,8 +1,10 @@
+from pytest_mock import MockerFixture
+
 from autosubliminal.core.pathinfo import PathInfo
 from autosubliminal.util.common import camelize
 
 
-def test_get_path_info(mocker):
+def test_get_path_info(mocker: MockerFixture):
     mocker.patch('autosubliminal.core.pathinfo.get_disk_space_details', return_value=(1024, 2048))
     pathinfo = PathInfo.get_path_info('name', 'path')
     assert pathinfo.name == 'name'
@@ -15,7 +17,7 @@ def test_get_path_info(mocker):
     assert pathinfo.free_percentage == 50.0
 
 
-def test_get_path_info_no_result(mocker):
+def test_get_path_info_no_result(mocker: MockerFixture):
     mocker.patch('autosubliminal.core.pathinfo.get_disk_space_details', return_value=(0, 0))
     pathinfo = PathInfo.get_path_info('name', 'path')
     assert pathinfo.name == 'name'
@@ -27,7 +29,7 @@ def test_get_path_info_no_result(mocker):
     assert pathinfo.free_percentage == 0.0  # if total is 0, return percentage = 0 to avoid division by 0
 
 
-def test_to_dict(mocker):
+def test_to_dict(mocker: MockerFixture):
     pathinfo_dict = {
         'name': 'name',
         'path': 'path',

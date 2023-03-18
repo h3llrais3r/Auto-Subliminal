@@ -4,11 +4,14 @@ import logging
 import os
 import tempfile
 
+from pytest import MonkeyPatch
+
 import autosubliminal
-from autosubliminal.core.logger import count_backup_logfiles, get_log_lines, get_logfile, initialize, update_settings
+from autosubliminal.core.logger import (_LogFilter, _LogFormatter, count_backup_logfiles, get_log_lines, get_logfile,
+                                        initialize, update_settings)
 
 
-def _mock_settings(monkeypatch):
+def _mock_settings(monkeypatch: MonkeyPatch):
     log_file = os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'resources', 'test.log'))
     monkeypatch.setattr('autosubliminal.LOGLEVEL', 'INFO')
     monkeypatch.setattr('autosubliminal.LOGHTTPACCESS', True)
@@ -21,7 +24,7 @@ def _mock_settings(monkeypatch):
     monkeypatch.setattr('autosubliminal.LOGLEVELCONSOLE', 'ERROR')
 
 
-def test_initialize(monkeypatch):
+def test_initialize(monkeypatch: MonkeyPatch):
     _mock_settings(monkeypatch)
     initialize()
     log = logging.getLogger()
@@ -31,15 +34,17 @@ def test_initialize(monkeypatch):
     assert file_handler.level == logging.INFO
     assert len(file_handler.filters) == 1
     file_filter = file_handler.filters[0]
+    assert isinstance(file_filter, _LogFilter)
     assert file_filter.log_http_access
     assert file_filter.log_external_libs
     assert file_handler.formatter is not None
+    assert isinstance(file_handler.formatter, _LogFormatter)
     assert file_handler.formatter.detailed_format
     console_handler = log.handlers[1]
     assert console_handler.level == logging.ERROR
 
 
-def test_update_settings(monkeypatch):
+def test_update_settings(monkeypatch: MonkeyPatch):
     _mock_settings(monkeypatch)
     initialize()
     monkeypatch.setattr('autosubliminal.LOGLEVEL', 'DEBUG')
@@ -51,13 +56,14 @@ def test_update_settings(monkeypatch):
     file_handler = log.handlers[0]
     assert file_handler.level == logging.DEBUG
     file_filter = file_handler.filters[0]
+    assert isinstance(file_filter, _LogFilter)
     assert not file_filter.log_http_access
     assert not file_filter.log_external_libs
     console_handler = log.handlers[1]
     assert console_handler.level == logging.WARNING
 
 
-def test_get_log_lines(monkeypatch):
+def test_get_log_lines(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.LOGREVERSED', False)
     try:
         line1 = '2016-06-06 20:32:15,509 INFO     [MainThread :: __main__] Running application with PID: 9944'

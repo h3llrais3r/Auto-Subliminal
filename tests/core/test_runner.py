@@ -2,6 +2,8 @@
 
 import time
 
+from pytest_mock import MockerFixture
+
 from autosubliminal.core.runner import Runner
 
 
@@ -10,7 +12,7 @@ class MyRunner(Runner):
         pass
 
 
-def test_runner(mocker):
+def test_runner(mocker: MockerFixture):
     runner = None
     try:  # Use try/finally block to make sure that the thread is stopped
         runner_mock = mocker.patch.object(MyRunner, 'run')

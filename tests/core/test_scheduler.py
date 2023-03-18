@@ -2,6 +2,9 @@
 
 import time
 
+from pytest import MonkeyPatch
+from pytest_mock import MockerFixture
+
 import autosubliminal
 from autosubliminal.core.scheduler import ScheduledProcess, Scheduler
 from autosubliminal.util.common import camelize, to_dict
@@ -33,7 +36,7 @@ class MyScheduledProcess(ScheduledProcess):
         pass
 
 
-def test_scheduler(mocker):
+def test_scheduler(mocker: MockerFixture):
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
@@ -47,7 +50,7 @@ def test_scheduler(mocker):
         _assert_scheduler(scheduler)
 
 
-def test_scheduler_force_run(mocker):
+def test_scheduler_force_run(mocker: MockerFixture):
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
@@ -62,7 +65,7 @@ def test_scheduler_force_run(mocker):
         _assert_scheduler(scheduler)
 
 
-def test_duplicate_scheduler(monkeypatch, mocker):
+def test_duplicate_scheduler(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.SCHEDULERS', {'MyScheduledProcess': None})
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
@@ -78,7 +81,7 @@ def test_duplicate_scheduler(monkeypatch, mocker):
         _assert_scheduler(scheduler)
 
 
-def test_triple_scheduler(monkeypatch, mocker):
+def test_triple_scheduler(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.SCHEDULERS', {'MyScheduledProcess': None, 'MyScheduledProcess-1': None})
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
@@ -94,7 +97,7 @@ def test_triple_scheduler(monkeypatch, mocker):
         _assert_scheduler(scheduler)
 
 
-def test_scheduler_run_process_exception(mocker):
+def test_scheduler_run_process_exception(mocker: MockerFixture):
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         mocker.patch.object(MyScheduledProcess, 'run', side_effect=Exception)
@@ -108,7 +111,7 @@ def test_scheduler_run_process_exception(mocker):
         _assert_scheduler(scheduler)
 
 
-def test_scheduler_activate(mocker):
+def test_scheduler_activate(mocker: MockerFixture):
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
@@ -128,7 +131,7 @@ def test_scheduler_activate(mocker):
         _assert_scheduler(scheduler)
 
 
-def test_scheduler_deactivate(mocker):
+def test_scheduler_deactivate(mocker: MockerFixture):
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')

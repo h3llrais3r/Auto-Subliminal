@@ -1,10 +1,15 @@
 # coding=utf-8
 
+from typing import cast
+
 import pytest
+from pytest import MonkeyPatch
+from pytest_mock import MockerFixture
 from subliminal.extensions import RegistrableExtensionManager
 
 import autosubliminal
 from autosubliminal.core.pathinfo import PathInfo
+from autosubliminal.core.scheduler import Scheduler
 from autosubliminal.server.api.system import SystemApi
 from autosubliminal.server.rest import BadRequest
 from autosubliminal.util.common import to_dict
@@ -90,7 +95,7 @@ pathinfo_2_json = '{"freeBytes": 1024, "freePercentage": 100.0, "freeSpace": "1.
 pathinfo_json_list = '[' + pathinfo_1_json + ', ' + pathinfo_2_json + ']'
 
 
-def test_get_settings(monkeypatch, mocker):
+def test_get_settings(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.PID', 1)
     monkeypatch.setattr('autosubliminal.DEVELOPER', True)
     monkeypatch.setattr('autosubliminal.WEBROOT', 'mywebroot')
@@ -131,12 +136,12 @@ def test_get_settings(monkeypatch, mocker):
 
 
 def test_get_schedulers():
-    autosubliminal.SCHEDULERS = {'MyScheduler1': MyScheduler('MyScheduler1')}
+    autosubliminal.SCHEDULERS = {'MyScheduler1': cast(Scheduler, MyScheduler('MyScheduler1'))}
     assert scheduler_json_list == pickle_api_result(SystemApi().schedulers.get())
 
 
 def test_get_scheduler():
-    autosubliminal.SCHEDULERS = {'MyScheduler1': MyScheduler('MyScheduler1')}
+    autosubliminal.SCHEDULERS = {'MyScheduler1': cast(Scheduler, MyScheduler('MyScheduler1'))}
     assert scheduler_json == pickle_api_result(SystemApi().schedulers.get('MyScheduler1'))
 
 
@@ -145,7 +150,7 @@ def test_get_scheduler_bad_request():
         SystemApi().schedulers.get('InvalidSchedulerName')
 
 
-def test_get_paths(mocker):
+def test_get_paths(mocker: MockerFixture):
     autosubliminal.PATH = 'path1'
     autosubliminal.VIDEOPATHS = ['path2']
     mocker.patch.object(PathInfo, 'get_path_info', side_effect=[pathinfo_1, pathinfo_2])

@@ -3,6 +3,8 @@
 import os
 
 from enzyme.mkv import SubtitleTrack
+from pytest import MonkeyPatch
+from pytest_mock import MockerFixture
 
 from autosubliminal.core.subtitle import EMBEDDED, HARDCODED, Subtitle
 from autosubliminal.util.filesystem import (check_missing_subtitle_languages, get_available_subtitles,
@@ -18,7 +20,7 @@ def test_one_path_exists():
     assert not one_path_exists(None, retry_delay=1)
 
 
-def test_is_skipped_dir(monkeypatch):
+def test_is_skipped_dir(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.SKIPHIDDENDIRS', True)
     assert is_skipped_dir('/path/to/.hidden')
     assert is_skipped_dir('/path/to/_unpack_')
@@ -32,7 +34,7 @@ def test_is_valid_video_file():
     assert not is_valid_video_file('sample_test.mkv')
 
 
-def test_check_missing_subtitle_languages(monkeypatch, mocker):
+def test_check_missing_subtitle_languages(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
     monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['de', 'en', 'fr'])
     mocker.patch('autosubliminal.util.filesystem.get_embedded_subtitles', return_value=[])
@@ -44,7 +46,7 @@ def test_check_missing_subtitle_languages(monkeypatch, mocker):
         lang for lang in check_missing_subtitle_languages(dirname, filename, scan_embedded=True, scan_hardcoded=True))
 
 
-def test_check_missing_subtitle_languages_with_langdetect(monkeypatch, mocker):
+def test_check_missing_subtitle_languages_with_langdetect(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
     monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en'])
     mocker.patch('autosubliminal.util.filesystem._detect_subtitle_language', return_value='fr')
@@ -55,7 +57,7 @@ def test_check_missing_subtitle_languages_with_langdetect(monkeypatch, mocker):
     assert missing_languages == check_missing_subtitle_languages(dirname, filename, detect_invalid=True)
 
 
-def test_get_available_subtitles(monkeypatch, mocker):
+def test_get_available_subtitles(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
     fr = Subtitle(type=EMBEDDED, language='fr', path='/path/to/subtitle/fr')
     de = Subtitle(type=HARDCODED, language='de', path='/path/to/subtitle/de')
@@ -68,7 +70,7 @@ def test_get_available_subtitles(monkeypatch, mocker):
         [s.language for s in get_available_subtitles(dirname, filename, scan_embedded=True, scan_hardcoded=True)])
 
 
-def test_get_embedded_subtitles(mocker):
+def test_get_embedded_subtitles(mocker: MockerFixture):
     mkv_mock = mocker.patch('autosubliminal.util.filesystem.MKV')
     mkv_subtitles = [SubtitleTrack(language='dut', name='Dutch'), SubtitleTrack(name='English'),
                      SubtitleTrack(name='invalid')]
@@ -86,7 +88,7 @@ def test_get_hardcoded_subtitles():
     assert available_languages == sorted([s.language for s in get_hardcoded_subtitles(dirname, filename)])
 
 
-def test_get_external_subtitles(monkeypatch):
+def test_get_external_subtitles(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
     filename = 'Southpaw.2015.1080p.BluRay.x264.mkv'
     dirname = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'resources'))

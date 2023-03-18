@@ -7,6 +7,7 @@ import time
 import pytest
 import requests_mock
 from dogpile.cache.api import NoValue
+from pytest import MonkeyPatch
 
 import autosubliminal
 from autosubliminal.core.cache import MutexFileLock, cache_artwork, get_artwork_cache_path, is_artwork_cached, region
@@ -16,7 +17,7 @@ resource_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'r
 cache_path = os.path.abspath(os.path.join(resource_path, 'cache'))
 
 
-def test_cache(monkeypatch):
+def test_cache(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.core.cache.SCAN_VIDEO_EXPIRATION_TIME', 1)
     filename = os.path.abspath(os.path.join(resource_path, 'test.autosubliminal.cache.dbm'))
     region.configure(backend='dogpile.cache.dbm', expiration_time=autosubliminal.core.cache.SCAN_VIDEO_EXPIRATION_TIME,
@@ -38,7 +39,7 @@ def clear_cache():
 
 
 @pytest.fixture
-def populate_cache(monkeypatch):
+def populate_cache(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.CACHEDIR', cache_path)
     tvdb_id = 289590
     with open(os.path.join(resource_path, '%d.jpg' % tvdb_id), mode='rb') as f:
@@ -49,7 +50,7 @@ def populate_cache(monkeypatch):
 
 
 @pytest.mark.usefixtures('clear_cache')
-def test_cache_artwork(monkeypatch):
+def test_cache_artwork(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.CACHEDIR', cache_path)
     tvdb_id = 289590
     with open(os.path.join(resource_path, '%d.jpg' % tvdb_id), mode='rb') as f:
@@ -67,7 +68,7 @@ def test_is_artwork_cached():
     assert is_artwork_cached('tvdb', 289590, 'poster', thumbnail=True)
 
 
-def test_get_artwork_cache_path(monkeypatch):
+def test_get_artwork_cache_path(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.CACHEDIR', cache_path)
     tvdb_id = 289590
     expected_path = os.path.normpath('%s/artwork/tvdb/poster/%d.jpg' % (cache_path, tvdb_id))

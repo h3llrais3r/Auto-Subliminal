@@ -11,7 +11,7 @@ resources_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '
 
 # Mappings are always stored in sanitized form!
 autosubliminal.ALTERNATIVESHOWNAMEMAPPING = {'refine': 'series'}
-autosubliminal.SHOWNAMEMAPPING = {'refine': 123456}
+autosubliminal.SHOWNAMEMAPPING = {'refine': '123456'}
 
 autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = {'refine': 'title'}
 autosubliminal.MOVIENAMEMAPPING = {'refine': 'tt123456'}

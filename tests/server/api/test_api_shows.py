@@ -1,5 +1,8 @@
 # coding=utf-8
 
+from pytest import MonkeyPatch
+from pytest_mock import MockerFixture
+
 from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails, ShowSettings
 from autosubliminal.core.subtitle import EXTERNAL, Subtitle
 from autosubliminal.db import FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb
@@ -58,7 +61,7 @@ overview_json = '{"failedShows": ["/path/to/failed/show"], "totalEpisodes": 3, "
     '"totalSubtitlesAvailable": 2, "totalSubtitlesMissing": 4, "totalSubtitlesWanted": 6}'
 
 
-def test_get_shows(monkeypatch, mocker):
+def test_get_shows(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.VIDEOPATHS', [])
     mocker.patch.object(ShowDetailsDb, 'get_all_shows', return_value=[show_details_1, show_details_2])
     mocker.patch.object(ShowEpisodeDetailsDb, 'get_show_episodes',
@@ -67,7 +70,7 @@ def test_get_shows(monkeypatch, mocker):
     assert shows_json == pickle_api_result(ShowsApi().get())
 
 
-def test_get_show(monkeypatch, mocker):
+def test_get_show(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.VIDEOPATHS', [])
     mocker.patch.object(ShowDetailsDb, 'get_show', return_value=show_details_1)
     mocker.patch('os.path.exists', return_value=True)
@@ -82,12 +85,12 @@ def test_get_show(monkeypatch, mocker):
     assert show_1_json == pickle_api_result(ShowsApi().get('1'))
 
 
-def test_get_show_settings(mocker):
+def test_get_show_settings(mocker: MockerFixture):
     mocker.patch.object(ShowSettingsDb, 'get_show_settings', return_value=show_settings_1)
     assert show_settings_1_json == pickle_api_result(ShowsApi().settings.get('1'))
 
 
-def test_get_shows_overview(mocker):
+def test_get_shows_overview(mocker: MockerFixture):
     mocker.patch.object(FailedShowsDb, 'get_failed_shows', return_value=['/path/to/failed/show'])
     mocker.patch.object(ShowDetailsDb, 'get_all_shows', return_value=[show_details_1, show_details_2])
     mocker.patch.object(ShowSettingsDb, 'get_show_settings', side_effect=[show_settings_1, show_settings_2])

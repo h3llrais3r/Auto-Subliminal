@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import requests_mock
+from pytest import MonkeyPatch
 
 from autosubliminal.core.item import DownloadItem, WantedItem
 from autosubliminal.notifiers.pushbullet import PUSHBULLETURL, PushbulletNotifier
@@ -21,7 +22,7 @@ def test_pushbullet_disabled():
     assert notifier.notify_download(download_item) is False
 
 
-def test_pushbullet_error(monkeypatch):
+def test_pushbullet_error(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHBULLET', True)
     with requests_mock.mock() as m:
         # Mock erroneous request
@@ -32,7 +33,7 @@ def test_pushbullet_error(monkeypatch):
         assert notifier.notify_download(download_item) is False
 
 
-def test_pushbullet_exception(monkeypatch):
+def test_pushbullet_exception(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHBULLET', True)
     with requests_mock.mock() as m:
         # Mock exception request
@@ -43,7 +44,7 @@ def test_pushbullet_exception(monkeypatch):
         assert notifier.notify_download(download_item) is False
 
 
-def test_pushbullet_notify_download(monkeypatch):
+def test_pushbullet_notify_download(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHBULLET', True)
     with requests_mock.mock() as m:
         # Mock successful request

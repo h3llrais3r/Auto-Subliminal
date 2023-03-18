@@ -120,7 +120,7 @@ sections = [
 ]
 
 [tool.mypy]
-files = ["AutoSubliminal.py", "autosubliminal"]
+files = ["AutoSubliminal.py", "autosubliminal", "tests"]
 ignore_missing_imports = true
 no_strict_optional = true
 check_untyped_defs = true

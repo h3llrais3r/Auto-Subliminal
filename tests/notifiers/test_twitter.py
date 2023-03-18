@@ -1,5 +1,8 @@
 # coding=utf-8
 
+from pytest import MonkeyPatch
+from pytest_mock import MockerFixture
+
 from autosubliminal.core.item import DownloadItem, WantedItem
 from autosubliminal.notifiers.twitter import TwitterNotifier
 
@@ -19,7 +22,7 @@ def test_twitter_disabled():
     assert notifier.notify_download(download_item) is False
 
 
-def test_twitter_exception(monkeypatch):
+def test_twitter_exception(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.NOTIFYTWITTER', True)
     # No twitter settings patched, so will result in exception
     notifier = TwitterNotifier()
@@ -28,7 +31,7 @@ def test_twitter_exception(monkeypatch):
     assert notifier.notify_download(download_item) is False
 
 
-def test_twitter_notify_download(monkeypatch, mocker):
+def test_twitter_notify_download(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.NOTIFYTWITTER', True)
     mocker.patch('twitter.Api.__init__', return_value=None)
     mocker.patch('twitter.Api.PostUpdate', return_value=True)

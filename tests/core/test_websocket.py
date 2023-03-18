@@ -1,8 +1,14 @@
 # coding=utf-8
 
+from typing import cast
+from unittest.mock import Mock
+
+from pytest import MonkeyPatch
+from pytest_mock import MockerFixture
 from ws4py.messaging import BinaryMessage, TextMessage
 
 import autosubliminal
+from autosubliminal.core.scheduler import Scheduler
 from autosubliminal.core.websocket import WebSocketBroadCaster, WebSocketHandler
 
 
@@ -11,21 +17,21 @@ class MyScheduler(object):
         pass
 
 
-autosubliminal.SCHEDULERS = {'MyScheduler': MyScheduler()}
+autosubliminal.SCHEDULERS = {'MyScheduler': cast(Scheduler, MyScheduler())}
 
 
-def test_receive_message_text(mocker):
+def test_receive_message_text(mocker: MockerFixture):
     mocker.patch('autosubliminal.core.websocket.WebSocketHandler.handle_message', return_value=True)
     handler = WebSocketHandler(None)
     handler.received_message(TextMessage('{"key1": "value1"}'))
-    handler.handle_message.assert_called_once_with({'key1': 'value1'})
+    cast(Mock, handler.handle_message).assert_called_once_with({'key1': 'value1'})
 
 
-def test_receive_message_invalid(mocker):
+def test_receive_message_invalid(mocker: MockerFixture):
     mocker.patch('autosubliminal.core.websocket.WebSocketHandler.handle_message')
     handler = WebSocketHandler(None)
     handler.received_message(BinaryMessage(b''))
-    handler.handle_message.assert_not_called()
+    cast(Mock, handler.handle_message).assert_not_called()
 
 
 def test_handle_message_event_run_process():
@@ -71,7 +77,7 @@ def test_handle_message_event_invalid():
     assert not handler.handle_message(message)
 
 
-def test_websocket_broadcaster(monkeypatch, mocker):
+def test_websocket_broadcaster(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     mocker.patch('threading.Thread')
     mocker.patch('cherrypy.engine.publish')
     message = {

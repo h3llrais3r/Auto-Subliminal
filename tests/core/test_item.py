@@ -2,6 +2,9 @@
 
 import datetime
 
+from pytest import MonkeyPatch
+from pytest_mock import MockerFixture
+
 from autosubliminal.core.item import WantedItem
 
 wanted_item = WantedItem()
@@ -41,7 +44,7 @@ def test_wanted_item_trim_release_group():
     assert wanted_item_1.release_group == 'KILLERS'
 
 
-def test_wanted_item_library_path(monkeypatch):
+def test_wanted_item_library_path(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.LIBRARYPATHS', ['path/to/library'])
     wanted_item.set_attr('video_path', 'path/to/library/and/video/file')
     assert wanted_item.library_path == 'path/to/library'
@@ -79,7 +82,7 @@ def test_wanted_item_copy_to():
     assert wanted_item_1 == wanted_item_2
 
 
-def test_is_search_active_for_wanted_item_before_on_creation(monkeypatch, mocker):
+def test_is_search_active_for_wanted_item_before_on_creation(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
     monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 7)
     today = datetime.datetime(2018, 1, 1, 0, 0, 0)
@@ -87,7 +90,7 @@ def test_is_search_active_for_wanted_item_before_on_creation(monkeypatch, mocker
     assert wanted_item.is_search_active
 
 
-def test_is_search_active_for_wanted_item_before_deadline(monkeypatch, mocker):
+def test_is_search_active_for_wanted_item_before_deadline(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
     monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 7)
     today = datetime.datetime(2018, 1, 2, 0, 0, 0)
@@ -95,7 +98,7 @@ def test_is_search_active_for_wanted_item_before_deadline(monkeypatch, mocker):
     assert wanted_item.is_search_active
 
 
-def test_is_search_active_for_wanted_item_on_deadline(monkeypatch, mocker):
+def test_is_search_active_for_wanted_item_on_deadline(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
     monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 7)
     today = datetime.datetime(2018, 1, 29, 0, 0, 0)
@@ -103,7 +106,7 @@ def test_is_search_active_for_wanted_item_on_deadline(monkeypatch, mocker):
     assert wanted_item.is_search_active
 
 
-def test_is_search_active_for_wanted_item_after_deadline(monkeypatch, mocker):
+def test_is_search_active_for_wanted_item_after_deadline(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
     monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 7)
     today = datetime.datetime(2018, 1, 30, 0, 0, 0)
@@ -111,7 +114,7 @@ def test_is_search_active_for_wanted_item_after_deadline(monkeypatch, mocker):
     assert not wanted_item.is_search_active
 
 
-def test_is_search_active_for_wanted_item_after_deadline_on_delta(monkeypatch, mocker):
+def test_is_search_active_for_wanted_item_after_deadline_on_delta(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
     monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 7)
     today = datetime.datetime(2018, 2, 26, 0, 0, 0)

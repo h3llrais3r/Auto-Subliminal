@@ -1,5 +1,8 @@
 # coding=utf-8
 
+from pytest import MonkeyPatch
+from pytest_mock import MockerFixture
+
 from autosubliminal.core.item import DownloadItem, WantedItem
 from autosubliminal.notifiers.mail import MailNotifier
 
@@ -19,7 +22,7 @@ def test_mail_disabled():
     assert notifier.notify_download(download_item) is False
 
 
-def test_mail_exception(monkeypatch):
+def test_mail_exception(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.NOTIFYMAIL', True)
     monkeypatch.setattr('autosubliminal.MAILFROMNAME', 'FromMe')
     monkeypatch.setattr('autosubliminal.MAILFROMADDR', 'from@test.com')
@@ -33,7 +36,7 @@ def test_mail_exception(monkeypatch):
     assert notifier.notify_download(download_item) is False
 
 
-def test_mail_notify_download(monkeypatch, mocker):
+def test_mail_notify_download(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.NOTIFYMAIL', True)
     monkeypatch.setattr('autosubliminal.MAILFROMNAME', 'FromMe')
     monkeypatch.setattr('autosubliminal.MAILFROMADDR', 'from@test.com')

@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import requests_mock
+from pytest import MonkeyPatch
 
 import autosubliminal
 from autosubliminal.core.item import DownloadItem, WantedItem
@@ -25,7 +26,7 @@ def test_telegram_disabled():
     assert notifier.notify_download(download_item) is False
 
 
-def test_telegram_error(monkeypatch):
+def test_telegram_error(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.NOTIFYTELEGRAM', True)
     with requests_mock.mock() as m:
         # Mock erroneous request
@@ -36,7 +37,7 @@ def test_telegram_error(monkeypatch):
         assert notifier.notify_download(download_item) is False
 
 
-def test_telegram_exception(monkeypatch):
+def test_telegram_exception(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.NOTIFYTELEGRAM', True)
     with requests_mock.mock() as m:
         # Mock exception request
@@ -47,7 +48,7 @@ def test_telegram_exception(monkeypatch):
         assert notifier.notify_download(download_item) is False
 
 
-def test_telegram_notify_download(monkeypatch):
+def test_telegram_notify_download(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.NOTIFYTELEGRAM', True)
     with requests_mock.mock() as m:
         # Mock successful request

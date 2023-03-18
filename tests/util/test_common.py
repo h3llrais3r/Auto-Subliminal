@@ -3,8 +3,11 @@
 import os
 import tempfile
 from datetime import datetime
+from typing import Any, Dict, List
 
 import pytest
+from pytest import MonkeyPatch
+from pytest_mock import MockerFixture
 from vcr import VCR
 
 import autosubliminal
@@ -30,10 +33,10 @@ text_value_special_char_upper = 'Ù'
 num_value = 1
 long_value = 1.0
 bool_value = True
-list_value = []
+list_value: List[Any] = []
 list_value_with_items = ['a', 'b']
 list_value_with_items_upper = ['A', 'B']
-dict_value = {}
+dict_value: Dict[Any, Any] = {}
 dict_value_with_items = {'1': 'a'}
 dict_value_with_items_upper = {'1': 'A'}
 
@@ -71,7 +74,7 @@ def test_run_cmd():
 
 
 @vcr.use_cassette()
-def test_connect_url(monkeypatch):
+def test_connect_url(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.USERAGENT', 'Auto-Subliminal/' + version.RELEASE_VERSION)
     monkeypatch.setattr('autosubliminal.TIMEOUT', 60)
     response = connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py')
@@ -79,21 +82,21 @@ def test_connect_url(monkeypatch):
     assert response.text is not None
 
 
-def test_connect_url_exception(monkeypatch):
+def test_connect_url_exception(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.USERAGENT', 'Auto-Subliminal/' + version.RELEASE_VERSION)
     monkeypatch.setattr('autosubliminal.TIMEOUT', 60)
     with pytest.raises(Exception):
         connect_url('invalid_url')
 
 
-def test_wait_for_internet_connection(mocker):
+def test_wait_for_internet_connection(mocker: MockerFixture):
     mocker.patch('autosubliminal.util.common.connect_url')
     time_sleep = mocker.patch('time.sleep')
     wait_for_internet_connection()
     assert not time_sleep.called
 
 
-def test_wait_for_internet_connection_with_sleep(mocker):
+def test_wait_for_internet_connection_with_sleep(mocker: MockerFixture):
     mocker.patch('autosubliminal.util.common.connect_url', side_effect=[Exception, None])
     time_sleep = mocker.patch('time.sleep')
     wait_for_internet_connection()
@@ -221,7 +224,7 @@ def test_save_text():
     assert safe_text(dict_value_with_items) == '{\'1\': \'a\'}'
 
 
-def test_save_text_default_value(mocker):
+def test_save_text_default_value(mocker: MockerFixture):
     mocker.patch('autosubliminal.util.common.str', side_effect=Exception)
     assert safe_text(None, 'fallback') == 'fallback'
 
@@ -358,7 +361,7 @@ def test_get_item_name():
     assert get_item_name(wanted_item_empty, default_value='default', uppercase=True) == 'DEFAULT'
 
 
-def test_convert_timestamp(monkeypatch):
+def test_convert_timestamp(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.DBTIMESTAMPFORMAT', '%Y-%m-%d %H:%M:%S')
     monkeypatch.setattr('autosubliminal.TIMESTAMPFORMAT', '%d-%m-%Y %H:%M:%S')
     assert convert_timestamp('2015-12-31 23:59:59') == '31-12-2015 23:59:59'
@@ -449,13 +452,13 @@ def test_natural_keys():
     assert sorted(my_list, key=natural_keys) == my_sorted_list
 
 
-def test_get_wanted_languages(monkeypatch):
+def test_get_wanted_languages(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
     monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en', 'fr'])
     assert ['nl', 'en', 'fr'] == get_wanted_languages()
 
 
-def test_get_missing_languages(monkeypatch):
+def test_get_missing_languages(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
     monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en', 'fr'])
     available_subtitles = [Subtitle(language='en'), Subtitle(language='fr')]

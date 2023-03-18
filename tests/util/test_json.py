@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import jsonpickle
+from pytest_mock import MockerFixture
 
 from autosubliminal.util.encoding import s2b
 from autosubliminal.util.json import from_json, json_out_handler, to_json
@@ -76,7 +77,7 @@ def test_dict_to_json():
     assert obj_json == to_json(obj_dict)
 
 
-def test_json_out_handler(mocker):
+def test_json_out_handler(mocker: MockerFixture):
     mocker.patch('cherrypy.serving.request')
     mocker.patch('cherrypy.serving.request._json_inner_handler', return_value=obj)
     assert json_out_handler() == s2b(obj_json)  # cherrypy requires a bytes output
