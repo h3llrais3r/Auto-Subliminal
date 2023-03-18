@@ -1,13 +1,15 @@
 # coding=utf-8
 
 from imdbpie.objects import TitleSearchResult
+from pytest import MonkeyPatch
+from pytest_mock import MockerFixture
 from tvdb_api.models.series_search_result import SeriesSearchResult
 
 import autosubliminal
 from autosubliminal import version
+from autosubliminal.core.indexer import IMDB_ID_UNKNOWN, TVDB_ID_UNKNOWN, MovieIndexer, ShowIndexer
 from autosubliminal.core.movie import MovieDetails
 from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails
-from autosubliminal.indexer import IMDB_ID_UNKNOWN, TVDB_ID_UNKNOWN, MovieIndexer, ShowIndexer
 
 autosubliminal.USERAGENT = 'Auto-Subliminal/' + version.RELEASE_VERSION
 autosubliminal.TVDBAPIKEY = '76F2D5362F45C5EC'
@@ -29,29 +31,29 @@ def test_get_tvdb_id():
     assert indexer.get_tvdb_id('Fais pas ci, fais pas ça', language='fr', force_search=True, store_id=False) == 80977
 
 
-def test_get_tvdb_id_from_show_name_mapping(monkeypatch):
+def test_get_tvdb_id_from_show_name_mapping(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.SHOWNAMEMAPPING', {'the big bang theory': 80379})
     indexer = ShowIndexer()
     assert indexer.get_tvdb_id('The Big Bang Theory', force_search=False, store_id=False) == 80379
 
 
-def test_get_tvdb_id_from_cache(monkeypatch, mocker):
+def test_get_tvdb_id_from_cache(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.SHOWNAMEMAPPING', {})
     mocker.patch('autosubliminal.db.TvdbIdCacheDb.get_tvdb_id', return_value=80379)
     indexer = ShowIndexer()
     assert indexer.get_tvdb_id('The Big Bang Theory', force_search=False, store_id=False) == 80379
 
 
-def test_get_tvdb_id_from_cache_not_found(monkeypatch, mocker):
+def test_get_tvdb_id_from_cache_not_found(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.SHOWNAMEMAPPING', {})
     mocker.patch('autosubliminal.db.TvdbIdCacheDb.get_tvdb_id', return_value=TVDB_ID_UNKNOWN)
     indexer = ShowIndexer()
     assert indexer.get_tvdb_id('The Big Bang Theory', force_search=False, store_id=False) is None
 
 
-def test_get_tvdb_id_and_store_in_cache(mocker):
+def test_get_tvdb_id_and_store_in_cache(mocker: MockerFixture):
     search_result = SeriesSearchResult(id=80379)
-    mocker.patch('autosubliminal.indexer.ShowIndexer._search', return_value=search_result)
+    mocker.patch('autosubliminal.core.indexer.ShowIndexer._search', return_value=search_result)
     db_mock_delete = mocker.patch('autosubliminal.db.TvdbIdCacheDb.delete_tvdb_id')
     db_mock_set = mocker.patch('autosubliminal.db.TvdbIdCacheDb.set_tvdb_id')
     indexer = ShowIndexer()
@@ -60,8 +62,8 @@ def test_get_tvdb_id_and_store_in_cache(mocker):
     assert db_mock_set.called
 
 
-def test_get_tvdb_id_exception(mocker):
-    mocker.patch('autosubliminal.indexer.ShowIndexer._search', side_effect=Exception)
+def test_get_tvdb_id_exception(mocker: MockerFixture):
+    mocker.patch('autosubliminal.core.indexer.ShowIndexer._search', side_effect=Exception)
     db_mock_delete = mocker.patch('autosubliminal.db.TvdbIdCacheDb.delete_tvdb_id')
     db_mock_set = mocker.patch('autosubliminal.db.TvdbIdCacheDb.set_tvdb_id')
     indexer = ShowIndexer()
@@ -143,29 +145,29 @@ def test_get_imdb_id():
     assert indexer.get_imdb_id_and_year('Bullet', year=2014, force_search=True, store_id=False) == ('tt2544734', 2014)
 
 
-def test_get_imdb_id_from_movie_name_mapping(monkeypatch):
+def test_get_imdb_id_from_movie_name_mapping(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.MOVIENAMEMAPPING', {'southpaw (2015)': 'tt1798684'})
     indexer = MovieIndexer()
     assert indexer.get_imdb_id_and_year('Southpaw', 2015, force_search=False, store_id=False) == ('tt1798684', 2015)
 
 
-def test_get_imdb_id_from_cache(monkeypatch, mocker):
+def test_get_imdb_id_from_cache(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.MOVIENAMEMAPPING', {})
     mocker.patch('autosubliminal.db.ImdbIdCacheDb.get_imdb_id', return_value='tt1798684')
     indexer = MovieIndexer()
     assert indexer.get_imdb_id_and_year('Southpaw', 2015, force_search=False, store_id=False) == ('tt1798684', 2015)
 
 
-def test_get_imdb_id_from_cache_not_found(monkeypatch, mocker):
+def test_get_imdb_id_from_cache_not_found(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     monkeypatch.setattr('autosubliminal.MOVIENAMEMAPPING', {})
     mocker.patch('autosubliminal.db.ImdbIdCacheDb.get_imdb_id', return_value=IMDB_ID_UNKNOWN)
     indexer = MovieIndexer()
     assert indexer.get_imdb_id_and_year('Southpaw', 2015, force_search=False, store_id=False) == (None, 2015)
 
 
-def test_get_imdb_id_and_store_in_cache(mocker):
+def test_get_imdb_id_and_store_in_cache(mocker: MockerFixture):
     search_result = TitleSearchResult(imdb_id='tt1798684', title='Southpaw', type='feature', year=2015)
-    mocker.patch('autosubliminal.indexer.MovieIndexer._search', return_value=search_result)
+    mocker.patch('autosubliminal.core.indexer.MovieIndexer._search', return_value=search_result)
     db_mock_delete = mocker.patch('autosubliminal.db.ImdbIdCacheDb.delete_imdb_id')
     db_mock_set = mocker.patch('autosubliminal.db.ImdbIdCacheDb.set_imdb_id')
     indexer = MovieIndexer()
@@ -174,8 +176,8 @@ def test_get_imdb_id_and_store_in_cache(mocker):
     assert db_mock_set.called
 
 
-def test_get_imdb_id_exception(mocker):
-    mocker.patch('autosubliminal.indexer.MovieIndexer._search', side_effect=Exception)
+def test_get_imdb_id_exception(mocker: MockerFixture):
+    mocker.patch('autosubliminal.core.indexer.MovieIndexer._search', side_effect=Exception)
     db_mock_delete = mocker.patch('autosubliminal.db.ImdbIdCacheDb.delete_imdb_id')
     db_mock_set = mocker.patch('autosubliminal.db.ImdbIdCacheDb.set_imdb_id')
     indexer = MovieIndexer()

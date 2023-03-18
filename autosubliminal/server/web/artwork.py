@@ -4,8 +4,8 @@ import cherrypy
 from cherrypy._cperror import NotFound
 from cherrypy.lib import static
 
-from autosubliminal.core.cache import get_artwork_cache_path, is_artwork_cached, cache_artwork
-from autosubliminal.indexer import ShowIndexer, MovieIndexer
+from autosubliminal.core.cache import cache_artwork, get_artwork_cache_path, is_artwork_cached
+from autosubliminal.core.indexer import MovieIndexer, ShowIndexer
 
 
 class Artwork(object):

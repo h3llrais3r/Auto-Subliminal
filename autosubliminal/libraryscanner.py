@@ -5,13 +5,13 @@ import os
 
 import autosubliminal
 from autosubliminal.core.cache import cache_artwork, is_artwork_cached
+from autosubliminal.core.indexer import MovieIndexer, ShowIndexer
 from autosubliminal.core.movie import MovieSettings
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.core.show import ShowSettings
 from autosubliminal.db import (FailedMoviesDb, FailedShowsDb, MovieDetailsDb, MovieSettingsDb, ShowDetailsDb,
                                ShowEpisodeDetailsDb, ShowSettingsDb)
 from autosubliminal.fileprocessor import process_file
-from autosubliminal.indexer import MovieIndexer, ShowIndexer
 from autosubliminal.util.common import get_missing_languages, safe_lowercase
 from autosubliminal.util.filesystem import (VIDEO_EXTENSIONS, get_available_subtitles, is_skipped_dir,
                                             is_valid_video_file, one_path_exists)

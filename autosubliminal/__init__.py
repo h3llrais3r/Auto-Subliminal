@@ -16,9 +16,9 @@ from typing import Any, Dict, List, Optional
 from stevedore import ExtensionManager
 from ws4py.server.cherrypyserver import WebSocketPlugin
 
+from autosubliminal.core.indexer import MovieIndexer, ShowIndexer
 from autosubliminal.core.scheduler import Scheduler
 from autosubliminal.core.websocket import WebSocketBroadCaster
-from autosubliminal.indexer import MovieIndexer, ShowIndexer
 from autosubliminal.version import RELEASE_VERSION
 
 # Variables to handle dependencies installation in virtual environment (custom or internal one)
@@ -495,7 +495,7 @@ def _subprocess_call(cmd_list) -> int:
 
 def _init_globals() -> None:
     """Initialize globals."""
-    from autosubliminal.indexer import MovieIndexer, ShowIndexer
+    from autosubliminal.core.indexer import MovieIndexer, ShowIndexer
 
     global PATH
     PATH = os.path.abspath(os.getcwd())
