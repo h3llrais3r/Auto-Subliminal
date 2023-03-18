@@ -44,8 +44,12 @@ settings_json = '{"antiCaptchaProviders": [], ' \
                 '"appProcessId": 1, ' \
                 '"appVersion": "' + autosubliminal.version.RELEASE_VERSION + '", ' \
                 '"checkSub": "SubChecker", ' \
+                '"checkSubDeadlineDefault": 1, '\
+                '"checkSubDeltaDefault": 1, '\
+                '"checkSubIntervalDefault": 6, '\
                 '"checkSubNextRunInMs": 61000, ' \
                 '"checkVersion": "VersionChecker", ' \
+                '"checkVersionIntervalDefault": 1, ' \
                 '"dereferUrl": "https://dereferer.me/?", ' \
                 '"developerMode": true, ' \
                 '"episodeScores": ' + episode_scores_json + ', ' \
@@ -60,8 +64,10 @@ settings_json = '{"antiCaptchaProviders": [], ' \
                 '"pathSeparator": "/", ' \
                 '"preferHearingImpaired": false, ' \
                 '"scanDisk": "DiskScanner", ' \
+                '"scanDiskIntervalDefault": 1, ' \
                 '"scanDiskNextRunInMs": 61000, ' \
                 '"scanLibrary": "LibraryScanner", ' \
+                '"scanLibraryIntervalDefault": 24, ' \
                 '"subliminalProviders": [], ' \
                 '"timestampFormat": "%d-%m-%Y %H:%M:%S", ' \
                 '"tvdbUrl": "http://thetvdb.com/?tab=series&id=", ' \
@@ -89,9 +95,15 @@ def test_get_settings(monkeypatch, mocker):
     monkeypatch.setattr('autosubliminal.DEVELOPER', True)
     monkeypatch.setattr('autosubliminal.WEBROOT', 'mywebroot')
     monkeypatch.setattr('autosubliminal.SCANDISK', MyScheduler('DiskScanner'))
+    monkeypatch.setattr('autosubliminal.SCANDISKINTERVALDEFAULT', 1)
     monkeypatch.setattr('autosubliminal.SCANLIBRARY', MyScheduler('LibraryScanner'))
+    monkeypatch.setattr('autosubliminal.SCANLIBRARYINTERVALDEFAULT', 24)
     monkeypatch.setattr('autosubliminal.CHECKSUB', MyScheduler('SubChecker'))
+    monkeypatch.setattr('autosubliminal.CHECKSUBINTERVALDEFAULT', 6)
+    monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINEDEFAULT', 1)
+    monkeypatch.setattr('autosubliminal.CHECKSUBDELTADEFAULT', 1)
     monkeypatch.setattr('autosubliminal.CHECKVERSION', MyScheduler('VersionChecker'))
+    monkeypatch.setattr('autosubliminal.CHECKVERSIONINTERVALDEFAULT', 1)
     monkeypatch.setattr('autosubliminal.LIBRARYMODE', False)
     monkeypatch.setattr('autosubliminal.LIBRARYEDITMODE', False)
     monkeypatch.setattr('autosubliminal.LOGREVERSED', False)
