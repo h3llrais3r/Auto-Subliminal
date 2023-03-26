@@ -341,7 +341,7 @@ def test_get_item_title():
 
 def test_get_item_name():
     wanted_item_1 = WantedItem(title='title1')
-    wanted_item_2 = WantedItem(title='title2', year=2016, type='mmovie')
+    wanted_item_2 = WantedItem(title='title2', year=2016, type='movie')
     wanted_item_3 = WantedItem(title='title3', type='episode', season=1, episode=1)
     wanted_item_4 = WantedItem(title='title4', year=2016, type='episode', season=1, episode=1)
     wanted_item_5 = WantedItem(title='title5', year=2016, type='episode', season=1, episode=[1, 2])

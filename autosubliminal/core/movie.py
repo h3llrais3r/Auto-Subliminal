@@ -2,6 +2,7 @@
 
 import logging
 import os
+from typing import Any, Dict, List, Optional, Type
 from urllib.parse import urlparse, urlunparse
 
 from imdbpie.objects import Title
@@ -18,8 +19,8 @@ class MovieDetails(object):
     Contains all the details of a movie that are fetched from the indexer.
     """
 
-    def __init__(self, path=None, imdb_id=None, title=None, year=None, overview=None, poster=None,
-                 missing_languages=None, subtitles=None):
+    def __init__(self, path: str = None, imdb_id: str = None, title: str = None, year: int = None, overview: str = None,
+                 poster: str = None, missing_languages: List[str] = None, subtitles: List[Any] = None) -> None:
         self.path = path
         self.imdb_id = imdb_id
         self.title = title
@@ -29,7 +30,7 @@ class MovieDetails(object):
         self.missing_languages = missing_languages or []
         self.subtitles = subtitles or []
 
-    def get_artwork_url(self, artwork_type, thumbnail=False):
+    def get_artwork_url(self, artwork_type: str, thumbnail: bool = False) -> Optional[str]:
         """Get the actual artwork url for download.
 
         Returns the url of the full size artwork or the thumbnail version.
@@ -40,8 +41,8 @@ class MovieDetails(object):
         :return: the full artwork url
         :rtype: str or None
         """
-        artwork_url = None
-        artwork_name = getattr(self, artwork_type) if hasattr(self, artwork_type)else None
+        artwork_url: str = None
+        artwork_name: str = getattr(self, artwork_type) if hasattr(self, artwork_type) else None
         if artwork_name:
             if thumbnail:
                 # Parse url (artwork name is already an url)
@@ -60,14 +61,14 @@ class MovieDetails(object):
 
         return artwork_url
 
-    def set_attr(self, key, value):
+    def set_attr(self, key: str, value: Any) -> None:
         """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
         :param key: the attribute key
         :type key: str
         :param value: the attribute value
-        :type value: str
+        :type value: Any
         """
         if hasattr(self, key) and not hasattr(type(self), key):
             if key in ['year']:
@@ -80,7 +81,7 @@ class MovieDetails(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_dict(self, key_fn, *args, **kwargs):
+    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its json representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict
@@ -108,7 +109,7 @@ class MovieDetails(object):
         return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
     @classmethod
-    def from_indexer(cls, obj):
+    def from_indexer(cls: Type['MovieDetails'], obj: Title) -> 'MovieDetails':
         """Construct a :class:`MovieDetails` object from the indexer object.
 
         :param obj: the indexer object
@@ -122,8 +123,8 @@ class MovieDetails(object):
                        year=obj.year,
                        overview=obj.plot_outline,
                        poster=obj.image.url)
-        else:
-            return None
+
+        return None
 
 
 class MovieSettings(object):
@@ -132,21 +133,22 @@ class MovieSettings(object):
     Contains all the settings for a movie.
     """
 
-    def __init__(self, imdb_id=None, wanted_languages=None, refine=None, hearing_impaired=None, utf8_encoding=None):
+    def __init__(self, imdb_id: str = None, wanted_languages: List[str] = None, refine: bool = None,
+                 hearing_impaired: bool = None, utf8_encoding: bool = None) -> None:
         self.imdb_id = imdb_id
         self.wanted_languages = wanted_languages
         self.refine = refine
         self.hearing_impaired = hearing_impaired
         self.utf8_encoding = utf8_encoding
 
-    def set_attr(self, key, value):
+    def set_attr(self, key: str, value: Any) -> None:
         """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
         :param key: the attribute key
         :type key: str
         :param value: the attribute value
-        :type value: str
+        :type value: Any
         """
         if hasattr(self, key) and not hasattr(type(self), key):
             if key in ['wanted_languages']:
@@ -159,7 +161,7 @@ class MovieSettings(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_dict(self, key_fn, *args, **kwargs):
+    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its json representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict
@@ -185,7 +187,7 @@ class MovieSettings(object):
         return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
     @classmethod
-    def default_settings(cls, imdb_id):
+    def default_settings(cls: Type['MovieSettings'], imdb_id: str) -> 'MovieSettings':
         return cls(imdb_id=imdb_id,
                    wanted_languages=get_wanted_languages(),
                    refine=autosubliminal.REFINEVIDEO,

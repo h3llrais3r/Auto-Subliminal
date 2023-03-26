@@ -29,10 +29,10 @@ class LibraryScanner(ScheduledProcess):
     Data is stored in the database.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(run_lock=False, force_run_lock=False)
 
-    def run(self, force_run):
+    def run(self, force_run: bool) -> None:
         paths = autosubliminal.LIBRARYPATHS
         log.info('Starting round of library scanning at %r', paths)
         send_websocket_notification('Scanning library...')
@@ -59,7 +59,7 @@ class LibraryScanner(ScheduledProcess):
 
 
 class LibraryPathScanner(object):
-    def __init__(self):
+    def __init__(self) -> None:
         self.show_db = ShowDetailsDb()
         self.failed_shows_db = FailedShowsDb()
         self.show_episodes_db = ShowEpisodeDetailsDb()
@@ -70,7 +70,7 @@ class LibraryPathScanner(object):
         self.show_indexer = ShowIndexer()
         self.movie_indexer = MovieIndexer()
 
-    def scan_path(self, path):
+    def scan_path(self, path: str) -> None:
         log.info('Scanning path: %s', path)
 
         # Check all folders and files
@@ -91,7 +91,7 @@ class LibraryPathScanner(object):
                     except Exception:
                         log.exception('Error while scanning video file: %s', os.path.join(dirname, filename))
 
-    def _scan_file(self, dirname, filename):
+    def _scan_file(self, dirname: str, filename: str) -> None:
         wanted_item = process_file(dirname, filename)
         if wanted_item:
             if wanted_item.is_episode:
@@ -204,14 +204,15 @@ class LibraryPathScanner(object):
                 # Check movie details
                 self._update_movie_details(movie_settings, dirname, filename, wanted_item.imdb_id)
 
-    def _get_show_path(self, dirname):
+    def _get_show_path(self, dirname: str) -> str:
         path = dirname
         # Get root show path (ignore season folders)
         while 'season' in safe_lowercase(os.path.normpath(os.path.normcase(path))):
             path, _ = os.path.split(path)
         return path
 
-    def _update_episode_details(self, show_settings, dirname, filename, show_tvdb_id, season, episode):
+    def _update_episode_details(self, show_settings: ShowSettings, dirname: str, filename: str, show_tvdb_id: int,
+                                season: int, episode: int) -> None:
         episode_details = self.show_episodes_db.get_show_episode_by_show(show_tvdb_id, season, episode)
 
         # If no episode is found, we need to fetch the episode details of the show
@@ -233,7 +234,7 @@ class LibraryPathScanner(object):
             # Update details in db
             self.show_episodes_db.update_show_episode(episode_details, subtitles=True)
 
-    def _update_movie_details(self, movie_settings, dirname, filename, imdb_id):
+    def _update_movie_details(self, movie_settings: MovieSettings, dirname: str, filename: str, imdb_id: str) -> None:
         movie_details = self.movie_db.get_movie(imdb_id)
 
         if movie_details:

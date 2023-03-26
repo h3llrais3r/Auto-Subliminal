@@ -4,7 +4,7 @@ from pytest import MonkeyPatch
 from pytest_mock import MockerFixture
 
 from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails, ShowSettings
-from autosubliminal.core.subtitle import EXTERNAL, Subtitle
+from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.db import FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb
 from autosubliminal.server.api.shows import ShowsApi
 
@@ -24,12 +24,12 @@ show_settings_2 = ShowSettings(tvdb_id=2, wanted_languages=['en', 'nl'], refine=
 
 show_episode_details_1_1 = ShowEpisodeDetails(path='/path/to/show1/s01e01.mkv', tvdb_id=11, show_tvdb_id=1,
                                               title='title1_1', season=1, episode=1, missing_languages=['en'],
-                                              subtitles=[Subtitle(type=EXTERNAL, language='nl',
+                                              subtitles=[Subtitle(type='external', language='nl',
                                                                   path='/path/to/movie1/subtitle1.srt')])
 
 show_episode_details_2_1 = ShowEpisodeDetails(path='/path/to/show2/s01e01.mkv', tvdb_id=21, show_tvdb_id=2,
                                               title='title2_1', season=1, episode=1, missing_languages=['en'],
-                                              subtitles=[Subtitle(type=EXTERNAL, language='nl',
+                                              subtitles=[Subtitle(type='external', language='nl',
                                                                   path='/path/to/movie1/subtitle1.srt')])
 
 show_episode_details_2_2 = ShowEpisodeDetails(path='/path/to/show2/s01e02.mkv', tvdb_id=22, show_tvdb_id=2,

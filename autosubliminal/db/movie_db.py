@@ -2,30 +2,32 @@
 
 import logging
 import sqlite3
+from sqlite3 import Connection, Cursor, Row
+from typing import List, Optional
 
 import autosubliminal
 from autosubliminal.core.movie import MovieDetails, MovieSettings
-from autosubliminal.core.subtitle import Subtitle
+from autosubliminal.core.subtitle import Subtitle, SubtitleType
 from autosubliminal.util.common import to_text
 
 log = logging.getLogger(__name__)
 
 
-def _movie_details_factory(cursor, row):
+def _movie_details_factory(cursor: Cursor, row: Row) -> MovieDetails:
     movie_details = MovieDetails()
     for idx, col in enumerate(cursor.description):
         movie_details.set_attr(col[0], row[idx])
     return movie_details
 
 
-def _movie_settings_factory(cursor, row):
+def _movie_settings_factory(cursor: Cursor, row: Row) -> MovieSettings:
     movie_settings = MovieSettings()
     for idx, col in enumerate(cursor.description):
         movie_settings.set_attr(col[0], row[idx])
     return movie_settings
 
 
-def _subtitle_factory(cursor, row):
+def _subtitle_factory(cursor: Cursor, row: Row) -> Subtitle:
     subtitle = Subtitle()
     for idx, col in enumerate(cursor.description):
         subtitle.set_attr(col[0], row[idx])
@@ -33,7 +35,7 @@ def _subtitle_factory(cursor, row):
 
 
 class MovieDetailsDb(object):
-    def __init__(self):
+    def __init__(self) -> None:
         self._query_get_all = 'SELECT * FROM movie_details'
         self._query_get = 'SELECT * FROM movie_details WHERE imdb_id=?'
         self._query_set = 'INSERT INTO movie_details VALUES (?,?,?,?,?,?,?)'
@@ -42,7 +44,7 @@ class MovieDetailsDb(object):
         self._query_delete = 'DELETE FROM movie_details WHERE imdb_id=?'
         self._query_flush = 'DELETE FROM movie_details'
 
-    def get_all_movies(self, subtitles=False):
+    def get_all_movies(self, subtitles: bool = False) -> List[MovieDetails]:
         """Get all movies.
 
         :param subtitles: indication if subtitles must be fetched or not
@@ -54,16 +56,16 @@ class MovieDetailsDb(object):
         connection.row_factory = _movie_details_factory
         cursor = connection.cursor()
         cursor.execute(self._query_get_all)
-        movies = cursor.fetchall()
+        all_movies: List[MovieDetails] = cursor.fetchall()
         if subtitles:
             subtitles_db = MovieSubtitlesDb(connection)
-            for movie in movies:
+            for movie in all_movies:
                 movie.subtitles = subtitles_db.get_movie_subtitles(movie.imdb_id)
         connection.close()
 
-        return movies
+        return all_movies
 
-    def get_movie(self, imdb_id, subtitles=False):
+    def get_movie(self, imdb_id: str, subtitles: bool = False) -> Optional[MovieDetails]:
         """Get a movie by its imdb id.
 
         :param imdb_id: the imdb id
@@ -77,14 +79,14 @@ class MovieDetailsDb(object):
         connection.row_factory = _movie_details_factory
         cursor = connection.cursor()
         cursor.execute(self._query_get, [imdb_id])
-        movie = cursor.fetchone()
-        if subtitles:
+        movie: Optional[MovieDetails] = cursor.fetchone()
+        if movie and subtitles:
             movie.subtitles = MovieSubtitlesDb(connection).get_movie_subtitles(movie.imdb_id)
         connection.close()
 
         return movie
 
-    def set_movie(self, movie, subtitles=False):
+    def set_movie(self, movie: MovieDetails, subtitles: bool = False) -> None:
         """Set a movie.
 
         :param movie: the movie
@@ -108,7 +110,7 @@ class MovieDetailsDb(object):
         connection.commit()
         connection.close()
 
-    def update_movie(self, movie, subtitles=False):
+    def update_movie(self, movie: MovieDetails, subtitles: bool = False) -> None:
         """Update a movie.
 
         :param movie: the movie
@@ -134,7 +136,7 @@ class MovieDetailsDb(object):
         connection.commit()
         connection.close()
 
-    def delete_movie(self, imdb_id, subtitles=False):
+    def delete_movie(self, imdb_id: str, subtitles: bool = False) -> None:
         """Delete a movie by its imdb id.
 
         :param imdb_id: the imdb id
@@ -150,7 +152,7 @@ class MovieDetailsDb(object):
         connection.commit()
         connection.close()
 
-    def flush_movies(self, subtitles=False):
+    def flush_movies(self, subtitles: bool = False) -> None:
         """Flush all movies.
 
         :param subtitles: indication if subtitles must be flushed or not
@@ -166,7 +168,7 @@ class MovieDetailsDb(object):
 
 
 class MovieSubtitlesDb(object):
-    def __init__(self, connection=None):
+    def __init__(self, connection: Connection = None) -> None:
         self.connection = connection
 
         self._query_get = 'SELECT * FROM movie_subtitles WHERE imdb_id=?'
@@ -176,7 +178,7 @@ class MovieSubtitlesDb(object):
         self._query_delete_by_path = 'DELETE FROM movie_subtitles WHERE imdb_id=? AND path=?'
         self._query_flush = 'DELETE FROM movie_subtitles'
 
-    def get_movie_subtitles(self, imdb_id):
+    def get_movie_subtitles(self, imdb_id: str) -> List[Subtitle]:
         """Get the subtitles of a movie by its imdb id.
 
         :param imdb_id: the imdb id
@@ -188,13 +190,13 @@ class MovieSubtitlesDb(object):
         connection.row_factory = _subtitle_factory
         cursor = connection.cursor()
         cursor.execute(self._query_get, [imdb_id])
-        subtitles = cursor.fetchall()
+        subtitles: List[Subtitle] = cursor.fetchall()
         if not self.connection:
             connection.close()
 
         return subtitles
 
-    def set_movie_subtitles(self, imdb_id, movie_subtitles):
+    def set_movie_subtitles(self, imdb_id: str, movie_subtitles: List[Subtitle]) -> None:
         """Set the subtitles of a movie.
 
         :param imdb_id: the imdb id
@@ -215,7 +217,7 @@ class MovieSubtitlesDb(object):
             connection.commit()
             connection.close()
 
-    def delete_movie_subtitles(self, imdb_id, type=None):
+    def delete_movie_subtitles(self, imdb_id: str, type: Optional[SubtitleType] = None) -> None:
         """Delete the subtitles of a movie.
         If a type is specified, only the specified type is deleted.
 
@@ -234,7 +236,7 @@ class MovieSubtitlesDb(object):
             connection.commit()
             connection.close()
 
-    def delete_movie_subtitle(self, imdb_id, path):
+    def delete_movie_subtitle(self, imdb_id: str, path: str) -> None:
         """Delete the subtitle of a movie.
 
         :param imdb_id: the imdb id of the movie
@@ -249,7 +251,7 @@ class MovieSubtitlesDb(object):
             connection.commit()
             connection.close()
 
-    def flush_movie_subtitles(self):
+    def flush_movie_subtitles(self) -> None:
         """Flush all movie subtitles."""
         connection = self.connection or sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
@@ -260,14 +262,14 @@ class MovieSubtitlesDb(object):
 
 
 class MovieSettingsDb(object):
-    def __init__(self):
+    def __init__(self) -> None:
         self._query_get = 'SELECT * FROM movie_settings WHERE imdb_id=?'
         self._query_set = 'INSERT INTO movie_settings VALUES(?,?,?,?,?)'
         self._query_update = 'UPDATE movie_settings SET wanted_languages=?, refine=?, hearing_impaired=?, ' \
                              'utf8_encoding=? WHERE imdb_id=?'
         self._query_delete = 'DELETE FROM movie_settings WHERE imdb_id=?'
 
-    def get_movie_settings(self, imdb_id):
+    def get_movie_settings(self, imdb_id: str) -> Optional[MovieSettings]:
         """Get the movie settings by its imdb id.
 
         :param imdb_id: the imdb id
@@ -279,12 +281,12 @@ class MovieSettingsDb(object):
         connection.row_factory = _movie_settings_factory
         cursor = connection.cursor()
         cursor.execute(self._query_get, [imdb_id])
-        movie_settings = cursor.fetchone()
+        movie_settings: Optional[MovieSettings] = cursor.fetchone()
         connection.close()
 
         return movie_settings
 
-    def set_movie_settings(self, movie_settings):
+    def set_movie_settings(self, movie_settings: MovieSettings) -> None:
         """Set the movie settings.
 
         :param movie_settings: the movie settings
@@ -301,7 +303,7 @@ class MovieSettingsDb(object):
         ])
         connection.commit()
 
-    def update_movie_settings(self, movie_settings):
+    def update_movie_settings(self, movie_settings: MovieSettings) -> None:
         """Update movie settings.
 
         :param movie_settings: the movie settings
@@ -318,7 +320,7 @@ class MovieSettingsDb(object):
         ])
         connection.commit()
 
-    def delete_movie_settings(self, imdb_id):
+    def delete_movie_settings(self, imdb_id: str) -> None:
         """Delete the movie settings by its imdb id.
 
         :param imdb_id: the imdb id

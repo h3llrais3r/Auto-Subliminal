@@ -3,6 +3,7 @@
 import logging
 import os
 import time
+from typing import Any, Dict, Optional
 
 from guessit import guessit
 
@@ -13,7 +14,7 @@ from autosubliminal.util.common import get_file_size, humanize_bytes
 log = logging.getLogger(__name__)
 
 
-def process_file(dirname, filename):
+def process_file(dirname: str, filename: str) -> Optional[WantedItem]:
     """
     Process a file with guessit and construct the wanted item.
     """
@@ -44,7 +45,7 @@ def process_file(dirname, filename):
     return wanted_item
 
 
-def _guess(file_path):
+def _guess(file_path: str) -> Optional[Dict[str, Any]]:
     try:
         log.debug('Guessing file info')
         guess = guessit(file_path)
@@ -55,7 +56,7 @@ def _guess(file_path):
         return None
 
 
-def _validate_guess(guess):
+def _validate_guess(guess: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     log.debug('Validating guess')
 
     # Validate episode guess
@@ -81,14 +82,14 @@ def _validate_guess(guess):
     return guess
 
 
-def _property_from_guess(guess, property_name, default_value=None):
+def _property_from_guess(guess, property_name: str, default_value: Any = None) -> Any:
     property_value = default_value
     if property_name in guess:
         property_value = guess[property_name]
     return property_value
 
 
-def _enrich_wanted_item(wanted_item, file_path, file_size):
+def _enrich_wanted_item(wanted_item: WantedItem, file_path: str, file_size: int) -> None:
     """
     Enrich a wanted item.
 

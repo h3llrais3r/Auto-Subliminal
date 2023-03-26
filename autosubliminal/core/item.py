@@ -5,6 +5,9 @@ import logging
 import os
 import re
 from abc import ABC
+from typing import Any, Dict, List, Literal, Optional, Type, Union, cast
+
+from subliminal.video import Video
 
 import autosubliminal
 from autosubliminal.util.common import (find_path_in_paths, get_today, humanize_bytes, to_dict, to_list, to_obj,
@@ -14,6 +17,8 @@ from autosubliminal.util.common import (find_path_in_paths, get_today, humanize_
 release_group_regex = re.compile(r'(.*)\[.*?\]')
 
 log = logging.getLogger(__name__)
+
+ItemType = Literal['episode', 'movie']
 
 
 class _BaseItem(ABC):
@@ -44,18 +49,19 @@ class _BaseItem(ABC):
     https://stackoverflow.com/questions/390250/elegant-ways-to-support-equivalence-equality-in-python-classes
     """
 
-    def __init__(self, type=None, title=None, year=None, season=None, episode=None, source=None, quality=None,
-                 codec=None, release_group=None):
+    def __init__(self, type: ItemType = None, title: str = None, year: int = None, season: int = None,
+                 episode: Union[int, List[int]] = None, source: Union[str, List[str]] = None, quality: str = None,
+                 codec: Union[str, List[str]] = None, release_group: str = None) -> None:
         # We need to trim the release group in some cases
-        _release_group = release_group
+        _release_group: str = release_group
         if release_group:
             # Remove release group provider (part between []) if present (f.e. KILLERS[rarbg])
             match = release_group_regex.match(release_group)
             if match:
                 # Return first parenthesized group (=release group without [] part)
-                _release_group = match.group(1)
+                _release_group = cast(str, match.group(1))
 
-        self.id = None
+        self.id: int = None
         self.type = type  # Type of video: 'episode' or 'movie'
         self.title = title
         self.year = year
@@ -65,17 +71,17 @@ class _BaseItem(ABC):
         self.quality = quality
         self.codec = codec
         self.release_group = _release_group
-        self.tvdb_id = None
-        self.imdb_id = None
+        self.tvdb_id: Optional[int] = None
+        self.imdb_id: Optional[str] = None
 
-    def set_attr(self, key, value):
+    def set_attr(self, key: str, value: Any) -> None:
         """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
         :param key: the attribute key
         :type key: str
         :param value: the attribute value
-        :type value: str
+        :type value: Any
         """
         if hasattr(self, key) and not hasattr(type(self), key):
             if key in ['year', 'season', 'tvdb_id']:
@@ -137,31 +143,32 @@ class WantedItem(_BaseItem):
     :type release_group: str
     """
 
-    def __init__(self, type=None, title=None, year=None, season=None, episode=None, source=None, quality=None,
-                 codec=None, release_group=None):
+    def __init__(self, type: ItemType = None, title: str = None, year: int = None, season: int = None,
+                 episode: Union[int, List[int]] = None, source: Union[str, List[str]] = None, quality: str = None,
+                 codec: Union[str, List[str]] = None, release_group: str = None) -> None:
         super().__init__(type=type, title=title, year=year, season=season, episode=episode,
                          source=source, quality=quality, codec=codec, release_group=release_group)
 
-        self.video_path = None
-        self.video_size = None
-        self.languages = []  # List of languages
-        self.timestamp = None  # File timestamp string - format '%Y-%m-%d %H:%M:%S'
+        self.video_path: str = None
+        self.video_size: int = None  # Size in bytes
+        self.languages: List[str] = []  # List of languages
+        self.timestamp: str = None  # File timestamp string - format '%Y-%m-%d %H:%M:%S'
 
-        self.video = None  # Subliminal Video object
-        self.found_subtitles = None  # List of found subtitles after a manual search
+        self.video: Video = None  # Subliminal Video object
+        self.found_subtitles: Dict[str, Any] = None  # List of found subtitles after a manual search
 
     @property
-    def is_episode(self):
+    def is_episode(self) -> bool:
         """Indication if the item is an episode."""
         return self.type == 'episode'
 
     @property
-    def is_movie(self):
+    def is_movie(self) -> bool:
         """Indication if the item is a movie."""
         return self.type == 'movie'
 
     @property
-    def is_search_active(self):
+    def is_search_active(self) -> bool:
         """Indication if the search is active for the wanted item.
 
         The search will be active:
@@ -179,7 +186,7 @@ class WantedItem(_BaseItem):
         else:
             return False
 
-    def to_dict(self, key_fn, *args, **kwargs):
+    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its json representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict
@@ -210,16 +217,16 @@ class WantedItem(_BaseItem):
         return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
     @property
-    def library_path(self):
+    def library_path(self) -> Optional[str]:
         """Library path for the wanted item.
 
         If library paths are available, we check if the wanted item is located in a library path or not.
         If yes, return the library path, else return None
         """
         video_dir = os.path.dirname(self.video_path)
-        return find_path_in_paths(video_dir, autosubliminal.LIBRARYPATHS, check_common_path=True)
+        return find_path_in_paths(video_dir, autosubliminal.LIBRARYPATHS, check_common_path='true')
 
-    def set_attr(self, key, value):
+    def set_attr(self, key: str, value: Any) -> None:
         """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
@@ -235,12 +242,12 @@ class WantedItem(_BaseItem):
             else:
                 super().set_attr(key, value)
 
-    def copy_to(self, wanted_item):
+    def copy_to(self, wanted_item: 'WantedItem') -> None:
         """Copy all attributes to another wanted item."""
         wanted_item.__dict__.update(self.__dict__)
 
     @classmethod
-    def from_guess(cls, guess):
+    def from_guess(cls: Type['WantedItem'], guess: Dict[str, Any]) -> Optional['WantedItem']:
         """Construct a :class:`WantedItem` object from a guess.
 
         :param guess: the :mod:`guessit` dict
@@ -262,7 +269,7 @@ class WantedItem(_BaseItem):
             return None
 
     @staticmethod
-    def _property_from_guess(guess, property_name, default_value=None):
+    def _property_from_guess(guess: Dict[str, Any], property_name: str, default_value: Any = None) -> Any:
         property_value = default_value
         if property_name in guess:
             property_value = guess[property_name]
@@ -279,19 +286,19 @@ class DownloadItem(WantedItem):
     :type wanted_item: WantedItem
     """
 
-    def __init__(self, wanted_item):
+    def __init__(self, wanted_item: WantedItem) -> None:
         super().__init__()
 
         # Copy all properties from wanted_item
         self.__dict__.update(wanted_item.__dict__)
 
-        self.subtitle_path = None
-        self.subtitle_link = None
-        self.language = None
-        self.provider = None
-        self.subtitle = None  # Filename without extension
-        self.subtitles = None
-        self.single = None
+        self.subtitle_path: str = None
+        self.subtitle_link: str = None
+        self.language: str = None
+        self.provider: str = None
+        self.subtitle: str = None  # Filename without extension
+        self.subtitles: List[Any] = None
+        self.single: bool = None
 
 
 class DownloadedItem(_BaseItem):
@@ -303,13 +310,13 @@ class DownloadedItem(_BaseItem):
     def __init__(self):
         super().__init__()
 
-        self.video_path = None
-        self.language = None
-        self.provider = None
-        self.subtitle = None
-        self.timestamp = None  # Download timestamp string - format '%Y-%m-%d %H:%M:%S'
+        self.video_path: str = None
+        self.language: str = None
+        self.provider: str = None
+        self.subtitle: str = None
+        self.timestamp: str = None  # Download timestamp string - format '%Y-%m-%d %H:%M:%S'
 
-    def to_dict(self, key_fn, *args, **kwargs):
+    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its json representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict

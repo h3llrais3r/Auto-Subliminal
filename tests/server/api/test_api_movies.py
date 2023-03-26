@@ -4,15 +4,16 @@ from pytest import MonkeyPatch
 from pytest_mock import MockerFixture
 
 from autosubliminal.core.movie import MovieDetails, MovieSettings
-from autosubliminal.core.subtitle import EXTERNAL, Subtitle
+from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb
 from autosubliminal.server.api.movies import MoviesApi
 
 from tests.server.api.test_api import pickle_api_result
 
-movie_details_1 = MovieDetails(path='/path/to/movie1/movie1.mkv', imdb_id='tt1', title='title1', year=2018,
-                               overview='overview1', poster='poster1.jpg', missing_languages=['en'],
-                               subtitles=[Subtitle(type=EXTERNAL, language='nl', path='/path/to/movie1/subtitle1.srt')])
+movie_details_1 = MovieDetails(
+    path='/path/to/movie1/movie1.mkv', imdb_id='tt1', title='title1', year=2018, overview='overview1',
+    poster='poster1.jpg', missing_languages=['en'],
+    subtitles=[Subtitle(type='external', language='nl', path='/path/to/movie1/subtitle1.srt')])
 
 movie_details_2 = MovieDetails(path='/path/to/movie2/movie2.mkv', imdb_id='tt2', title='title2', year=2019,
                                overview='overview2', poster='poster2.jpg', missing_languages=['nl', 'en'], subtitles=[])

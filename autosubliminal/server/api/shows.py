@@ -8,7 +8,7 @@ import cherrypy
 
 import autosubliminal
 from autosubliminal.core.show import ShowSettings
-from autosubliminal.core.subtitle import EMBEDDED, HARDCODED, Subtitle
+from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.db import (FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb,
                                ShowSettingsDb, WantedItemsDb)
 from autosubliminal.libraryscanner import LibraryPathScanner
@@ -122,9 +122,9 @@ class ShowsApi(RestResource):
                 hardcoded_languages = []
                 # Get subtitle files
                 for subtitle in episode.subtitles:
-                    if subtitle.type == EMBEDDED:
+                    if subtitle.type == 'embedded':
                         embedded_languages.append(subtitle.language)
-                    elif subtitle.type == HARDCODED:
+                    elif subtitle.type == 'hardcoded':
                         hardcoded_languages.append(subtitle.language)
                     else:
                         subtitle_filepath, subtitle_filename = os.path.split(subtitle.path)
@@ -349,9 +349,9 @@ class _HardcodedApi(RestResource):
             # Update subtitles
             subtitles = []
             for language in languages:
-                subtitles.append(Subtitle(HARDCODED, language, path=os.path.join(file_location, file_name)))
+                subtitles.append(Subtitle('hardcoded', language, path=os.path.join(file_location, file_name)))
             subtitles_db = ShowEpisodeSubtitlesDb()
-            subtitles_db.delete_show_episode_subtitles(episode_tvdb_id, type=HARDCODED)
+            subtitles_db.delete_show_episode_subtitles(episode_tvdb_id, type='hardcoded')
             subtitles_db.set_show_episode_subtitles(episode_tvdb_id, subtitles)
 
             # Update missing languages

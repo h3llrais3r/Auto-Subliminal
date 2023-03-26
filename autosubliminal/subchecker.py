@@ -4,7 +4,7 @@ import logging
 import operator
 import os
 import shutil
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional, Tuple
 
 import babelfish
 import subliminal
@@ -17,10 +17,10 @@ from subliminal.providers.podnapisi import PodnapisiSubtitle
 from subliminal.providers.shooter import ShooterSubtitle
 from subliminal.providers.thesubdb import TheSubDBSubtitle
 from subliminal.providers.tvsubtitles import TVsubtitlesSubtitle
-from subliminal.video import Episode, Movie
+from subliminal.video import Episode, Movie, Video
 
 import autosubliminal
-from autosubliminal.core.item import DownloadItem
+from autosubliminal.core.item import DownloadItem, WantedItem
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import WantedItemsDb
 from autosubliminal.postprocessor import PostProcessor
@@ -41,18 +41,18 @@ class SubChecker(ScheduledProcess):
     Sub checker. Check for subtitles of episodes and movies that are in the WANTEDQUEUE.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
     @release_wanted_queue_lock_on_exception
-    def run(self, force_run):
+    def run(self, force_run: bool) -> None:
         log.info('Starting round of subtitle checking')
 
         # Wait for internet connection
         wait_for_internet_connection()
         send_websocket_notification('Checking subtitles...')
 
-        to_delete_wanted_queue = []
+        to_delete_wanted_queue: List[int] = []
 
         # Setup provider pool
         provider_pool = _get_provider_pool()
@@ -121,7 +121,7 @@ class SubChecker(ScheduledProcess):
 
 
 @release_wanted_queue_lock_on_exception
-def search_subtitle(wanted_item_index, lang):
+def search_subtitle(wanted_item_index: int, lang: str) -> Tuple[List[Dict[str, Any]], Optional[str]]:
     log.info('Searching for an individual subtitle')
     subs: List[Dict[str, Any]] = []
 
@@ -208,7 +208,7 @@ def search_subtitle(wanted_item_index, lang):
 
 
 @release_wanted_queue_lock_on_exception
-def save_subtitle(wanted_item_index, subtitle_index):
+def save_subtitle(wanted_item_index: int, subtitle_index: int) -> Optional[DownloadItem]:
     log.info('Saving an individual subtitle')
 
     # Get wanted queue lock
@@ -237,7 +237,7 @@ def save_subtitle(wanted_item_index, subtitle_index):
 
 
 @release_wanted_queue_lock_on_exception
-def force_id_search(wanted_item_index):
+def force_id_search(wanted_item_index: int) -> bool:
     log.info('Force id search')
 
     # Get wanted queue lock
@@ -270,32 +270,32 @@ def force_id_search(wanted_item_index):
 
 
 @release_wanted_queue_lock_on_exception
-def sync_subtitle(wanted_item_index):
+def sync_subtitle(wanted_item_index: int) -> Optional[Dict[str, Any]]:
     log.info('Synchronizing an individual subtitle')
 
     # Get wanted queue lock
     if not get_wanted_queue_lock():
-        return False
+        return None
 
     # Get wanted item
     wanted_item = autosubliminal.WANTEDQUEUE[int(wanted_item_index)]
 
     # Synchronize subtitle
-    synced = False
+    sync_result = None
     subtitle_path = _get_subtitle_path(wanted_item)
     try:
-        synced = SubSynchronizer().run(wanted_item.video_path, subtitle_path)
+        sync_result = SubSynchronizer().run(wanted_item.video_path, subtitle_path)
     except Exception:
         log.exception('Unable to synchronize subtitle: %s', subtitle_path)
 
     # Release wanted queue lock
     release_wanted_queue_lock()
 
-    return synced
+    return sync_result
 
 
 @release_wanted_queue_lock_on_exception
-def delete_subtitle(wanted_item_index):
+def delete_subtitle(wanted_item_index: int) -> bool:
     log.info('Deleting an individual subtitle')
 
     # Get wanted queue lock
@@ -321,7 +321,7 @@ def delete_subtitle(wanted_item_index):
 
 
 @release_wanted_queue_lock_on_exception
-def delete_video(wanted_item_index, cleanup):
+def delete_video(wanted_item_index: int, cleanup: bool) -> bool:
     log.info('Deleting an individual video file')
 
     # Get wanted queue lock
@@ -377,7 +377,7 @@ def delete_video(wanted_item_index, cleanup):
 
 
 @release_wanted_queue_lock_on_exception
-def skip_show(wanted_item_index, season):
+def skip_show(wanted_item_index: int, season: int) -> bool:
     log.info('Skipping a show')
 
     # Get wanted queue lock
@@ -389,7 +389,7 @@ def skip_show(wanted_item_index, season):
     show = wanted_item.title
 
     # Remove all wanted items for the same show and season
-    to_delete_wanted_queue = []
+    to_delete_wanted_queue: List[int] = []
     for index, item in enumerate(autosubliminal.WANTEDQUEUE):
         if item.title == show:
             # Skip show all seasons
@@ -413,7 +413,7 @@ def skip_show(wanted_item_index, season):
 
 
 @release_wanted_queue_lock_on_exception
-def skip_movie(wanted_item_index):
+def skip_movie(wanted_item_index: int) -> bool:
     log.info('Skipping a movie')
 
     # Get wanted queue lock
@@ -425,7 +425,7 @@ def skip_movie(wanted_item_index):
     WantedItemsDb().delete_wanted_item(wanted_item.id)
     movie = wanted_item.title
     if wanted_item.year:
-        movie += ' (' + wanted_item.year + ')'
+        movie += ' (' + str(wanted_item.year) + ')'
     log.info('Skipped movie %s', movie)
 
     # Release wanted queue lock
@@ -435,7 +435,7 @@ def skip_movie(wanted_item_index):
 
 
 @release_wanted_queue_lock_on_exception
-def post_process(wanted_item_index, subtitle_index):
+def post_process(wanted_item_index: int, subtitle_index: int) -> bool:
     log.info('Post processing an individual subtitle')
 
     # Get wanted queue lock
@@ -488,7 +488,7 @@ def post_process(wanted_item_index, subtitle_index):
 
 
 @release_wanted_queue_lock_on_exception
-def post_process_no_subtitle(wanted_item_index):
+def post_process_no_subtitle(wanted_item_index: int) -> bool:
     log.info('Post processing without subtitle')
 
     # Get wanted queue lock
@@ -516,7 +516,7 @@ def post_process_no_subtitle(wanted_item_index):
     return processed
 
 
-def _scan_wanted_item_for_video(wanted_item, is_manual=False):
+def _scan_wanted_item_for_video(wanted_item: WantedItem, is_manual: bool = False) -> Optional[Video]:
     video_path = wanted_item.video_path
     log.info('Scanning video')
 
@@ -540,7 +540,7 @@ def _scan_wanted_item_for_video(wanted_item, is_manual=False):
         subliminal.refine(video, episode_refiners=refiners, movie_refiners=refiners)
     except Exception:
         log.exception('Error while scanning video, skipping %s', video_path)
-        return
+        return None
 
     # Add video to wanted item
     wanted_item.video = video
@@ -548,14 +548,15 @@ def _scan_wanted_item_for_video(wanted_item, is_manual=False):
     return video
 
 
-def _search_subtitles(video, lang, best_only, provider_pool):
+def _search_subtitles(video: Video, lang: str, best_only: bool, provider_pool: ProviderPool) -> Optional[
+        Tuple[List[subliminal.Subtitle], babelfish.Language, bool]]:
     log.info('Searching for %s subtitles', lang)
 
     # Determine language
     language = babelfish.Language.fromietf(lang)
     if not language:
         log.error('Invalid language specified: %s', lang)
-        return
+        return None
 
     # Determine if language code suffix is needed in srt file name (f.e. <episode_name>.nl.srt)
     single = False
@@ -591,7 +592,7 @@ def _search_subtitles(video, lang, best_only, provider_pool):
     return subtitles, language, single
 
 
-def _get_provider_pool():
+def _get_provider_pool() -> Optional[ProviderPool]:
     # Create a new provider pool with our settings
     # If we don't have any providers configured, don't create the pool
     if autosubliminal.SUBLIMINALPROVIDERS:
@@ -605,12 +606,12 @@ def _get_provider_pool():
         return None
 
 
-def _get_wanted_subtitle(subtitles, subtitle_index):
+def _get_wanted_subtitle(subtitles, subtitle_index: int) -> Any:
     log.debug('Getting wanted subtitle')
     return subtitles[int(subtitle_index)]
 
 
-def _get_subtitle_path(wanted_item):
+def _get_subtitle_path(wanted_item: WantedItem) -> str:
     log.debug('Getting subtitle path')
     found_subtitles = wanted_item.found_subtitles
     language = found_subtitles['language']
@@ -622,7 +623,8 @@ def _get_subtitle_path(wanted_item):
     return path
 
 
-def _construct_download_item(wanted_item, subtitles, language, single):
+def _construct_download_item(wanted_item: WantedItem, subtitles: List[subliminal.Subtitle], language: str,
+                             single=bool) -> DownloadItem:
     log.debug('Constructing the download item')
 
     # Get the subtitle, subtitles should only contain 1 subtitle
@@ -643,7 +645,7 @@ def _construct_download_item(wanted_item, subtitles, language, single):
     return download_item
 
 
-def _get_min_match_score(video, is_manual=False):
+def _get_min_match_score(video: Video, is_manual: bool = False) -> int:
     min_score = 0
     if isinstance(video, Episode):
         if is_manual:
@@ -665,9 +667,9 @@ def _get_min_match_score(video, is_manual=False):
     return min_score
 
 
-def _get_releases(subtitle):
+def _get_releases(subtitle: subliminal.Subtitle) -> List[str]:
     log.debug('Getting supported releases')
-    releases = []
+    releases: List[str] = []
     if isinstance(subtitle, (Addic7edSubtitle, CustomAddic7edSubtitle)):
         releases.extend([subtitle.version])
     elif isinstance(subtitle, LegendasTVSubtitle):
@@ -687,6 +689,6 @@ def _get_releases(subtitle):
     return releases
 
 
-def _construct_playvideo_url(wanted_item):
+def _construct_playvideo_url(wanted_item: WantedItem) -> str:
     log.debug('Constructing \'playvideo://\' url')
     return 'playvideo://' + wanted_item.video_path

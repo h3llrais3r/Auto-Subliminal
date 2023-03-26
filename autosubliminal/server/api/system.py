@@ -2,6 +2,7 @@
 
 import os
 import platform
+from typing import cast
 
 import cherrypy
 from subliminal.score import episode_scores, movie_scores
@@ -14,6 +15,7 @@ from autosubliminal.util.common import camelize, get_next_scheduler_run_in_ms, t
 from autosubliminal.util.language import get_subtitle_languages
 from autosubliminal.util.system import get_python_location, get_python_version_full
 from autosubliminal.version import RELEASE_VERSION
+from autosubliminal.versionchecker import VersionChecker
 
 
 class SystemApi(RestResource):
@@ -64,15 +66,16 @@ class _InfoApi(RestResource):
 
     def get(self):
         """Return the system info."""
+        versionChecker = cast(VersionChecker, autosubliminal.CHECKVERSION.process)
         info = {
             'os': platform.platform(),
             'pid': autosubliminal.PID,
             'release_version': RELEASE_VERSION,
-            'install_type': autosubliminal.CHECKVERSION.process.install_type.name,
-            'current_version': autosubliminal.CHECKVERSION.process.current_version,
-            'current_version_url': autosubliminal.CHECKVERSION.process.current_version_url,
-            'current_branch': autosubliminal.CHECKVERSION.process.current_branch,
-            'current_branch_url': autosubliminal.CHECKVERSION.process.current_branch_url,
+            'install_type': versionChecker.install_type.name,
+            'current_version': versionChecker.current_version,
+            'current_version_url': versionChecker.current_version_url,
+            'current_branch': versionChecker.current_branch,
+            'current_branch_url': versionChecker.current_branch_url,
             'system_encoding': autosubliminal.SYSENCODING,
             'python_version': get_python_version_full(),
             'python_location': get_python_location(),

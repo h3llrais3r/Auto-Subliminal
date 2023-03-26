@@ -17,6 +17,7 @@ from stevedore import ExtensionManager
 from ws4py.server.cherrypyserver import WebSocketPlugin
 
 from autosubliminal.core.indexer import MovieIndexer, ShowIndexer
+from autosubliminal.core.item import WantedItem
 from autosubliminal.core.scheduler import Scheduler
 from autosubliminal.core.websocket import WebSocketBroadCaster
 from autosubliminal.version import RELEASE_VERSION
@@ -41,7 +42,7 @@ GITHUBURL = 'https://github.com/h3llrais3r/Auto-Subliminal'
 VERSIONURL = 'https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py'
 USERAGENT = 'Auto-Subliminal/' + RELEASE_VERSION
 TIMEOUT = 300
-WANTEDQUEUE: List[Any] = []
+WANTEDQUEUE: List[WantedItem] = []
 WANTEDQUEUELOCK: bool = False
 WEBSOCKETPLUGIN: WebSocketPlugin = None
 WEBSOCKETMESSAGEQUEUE: List[Any] = []

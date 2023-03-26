@@ -3,7 +3,7 @@
 import logging
 
 import autosubliminal
-from autosubliminal.core.item import DownloadItem
+from autosubliminal.core.item import DownloadItem, WantedItem
 from autosubliminal.util.common import get_root_path, run_cmd, safe_trim
 from autosubliminal.util.encoding import b2u, s2u
 
@@ -26,7 +26,7 @@ class PostProcessor(object):
     :type wanted_item: WantedItem or DownloadItem
     """
 
-    def __init__(self, wanted_item):
+    def __init__(self, wanted_item: WantedItem) -> None:
         # Set utf-8 encoding if needed, otherwise use default encoding (normally ascii)
         self._wanted_item = wanted_item
         self._encoding = 'utf-8' if autosubliminal.POSTPROCESSUTF8ENCODING else autosubliminal.SYSENCODING
@@ -41,7 +41,7 @@ class PostProcessor(object):
             if autosubliminal.MOVIEPOSTPROCESSCMDARGS:
                 self._args = autosubliminal.MOVIEPOSTPROCESSCMDARGS.split('|')
 
-    def run(self):
+    def run(self) -> bool:
         if not self._cmd:
             log.debug('No post processor command specified, skipping')
             return True

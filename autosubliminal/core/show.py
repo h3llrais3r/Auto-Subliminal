@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import logging
+from typing import Any, Dict, List, Optional, Type, Union
 
 from dateutil import parser
 from tvdb_api.models.episode import Episode
@@ -21,7 +22,8 @@ class ShowDetails(object):
     Contains all the details of a show that are fetched from the indexer.
     """
 
-    def __init__(self, path=None, tvdb_id=None, title=None, year=None, overview=None, poster=None, banner=None):
+    def __init__(self, path: str = None, tvdb_id: int = None, title: str = None, year: int = None, overview: str = None,
+                 poster: str = None, banner: str = None) -> None:
         self.path = path
         self.tvdb_id = tvdb_id
         self.title = title
@@ -30,7 +32,7 @@ class ShowDetails(object):
         self.poster = poster
         self.banner = banner
 
-    def get_artwork_url(self, artwork_type, thumbnail=False):
+    def get_artwork_url(self, artwork_type: str, thumbnail: bool = False) -> Optional[str]:
         """Get the actual artwork url for download.
 
         Returns the url of the full size artwork or the thumbnail version.
@@ -41,14 +43,14 @@ class ShowDetails(object):
         :return: the full artwork url
         :rtype: str or None
         """
-        artwork_url = None
-        artwork_name = getattr(self, artwork_type) if hasattr(self, artwork_type) else None
+        artwork_url: str = None
+        artwork_name: str = getattr(self, artwork_type) if hasattr(self, artwork_type) else None
         if artwork_name:
             artwork_url = get_artwork_url(artwork_name, thumbnail=thumbnail)
 
         return artwork_url
 
-    def set_attr(self, key, value):
+    def set_attr(self, key: str, value: Any) -> None:
         """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
@@ -65,7 +67,7 @@ class ShowDetails(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_dict(self, key_fn, *args, **kwargs):
+    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its dict representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict
@@ -93,7 +95,8 @@ class ShowDetails(object):
         return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
     @classmethod
-    def from_indexer(cls, obj, poster=None):
+    def from_indexer(cls: Type['ShowDetails'], obj: Union[Series, SeriesSearchResult],
+                     poster: SeriesImageQueryResult = None) -> Optional['ShowDetails']:
         """Construct a :class:`ShowDetails` object from the indexer object.
 
         :param obj: the indexer object
@@ -103,9 +106,10 @@ class ShowDetails(object):
         :return: the :class:`ShowDetails` object or None
         :rtype: ShowDetails or None
         """
-        poster_file_name = None
+        poster_file_name: str = None
         if poster and isinstance(poster, SeriesImageQueryResult):
             poster_file_name = poster.file_name
+
         if obj:
             if isinstance(obj, Series):
                 return cls(tvdb_id=obj.id,
@@ -121,8 +125,8 @@ class ShowDetails(object):
                            overview=obj.overview,
                            poster=poster_file_name,
                            banner=obj.banner)
-        else:
-            return None
+
+        return None
 
 
 class ShowEpisodeDetails(object):
@@ -131,8 +135,9 @@ class ShowEpisodeDetails(object):
     Contains all the details of an episode of a show that are fetched from the indexer.
     """
 
-    def __init__(self, path=None, tvdb_id=None, show_tvdb_id=None, title=None, season=None, episode=None,
-                 missing_languages=None, subtitles=None):
+    def __init__(self, path: str = None, tvdb_id: int = None, show_tvdb_id: int = None, title: str = None,
+                 season: int = None, episode: int = None, missing_languages: List[str] = None,
+                 subtitles: List[Any] = None) -> None:
         self.path = path
         self.tvdb_id = tvdb_id
         self.show_tvdb_id = show_tvdb_id
@@ -143,18 +148,18 @@ class ShowEpisodeDetails(object):
         self.subtitles = subtitles or []
 
     @property
-    def available(self):
+    def available(self) -> bool:
         """Indicates if the show episode is available on disk."""
         return self.path is not None
 
-    def set_attr(self, key, value):
+    def set_attr(self, key: str, value: Any) -> None:
         """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
         :param key: the attribute key
         :type key: str
         :param value: the attribute value
-        :type value: str
+        :type value: Any
         """
         if hasattr(self, key) and not hasattr(type(self), key):
             if key in ['tvdb_id', 'show_tvdb_id' 'year']:
@@ -168,7 +173,7 @@ class ShowEpisodeDetails(object):
                 setattr(self, key, value)
 
     @classmethod
-    def from_indexer(cls, obj):
+    def from_indexer(cls: Type['ShowEpisodeDetails'], obj: Episode) -> Optional['ShowEpisodeDetails']:
         """Construct a :class:`ShowEpisodeDetails` object from the indexer object.
 
         :param obj: the indexer object
@@ -183,8 +188,8 @@ class ShowEpisodeDetails(object):
                            title=obj.episode_name,
                            season=obj.aired_season,
                            episode=obj.aired_episode_number)
-        else:
-            return None
+
+        return None
 
 
 class ShowSettings(object):
@@ -193,21 +198,22 @@ class ShowSettings(object):
     Contains all the settings for a show.
     """
 
-    def __init__(self, tvdb_id=None, wanted_languages=None, refine=None, hearing_impaired=None, utf8_encoding=None):
+    def __init__(self, tvdb_id: int = None, wanted_languages: List[str] = None, refine: bool = None,
+                 hearing_impaired: bool = None, utf8_encoding: bool = None) -> None:
         self.tvdb_id = tvdb_id
         self.wanted_languages = wanted_languages
         self.refine = refine
         self.hearing_impaired = hearing_impaired
         self.utf8_encoding = utf8_encoding
 
-    def set_attr(self, key, value):
+    def set_attr(self, key: str, value: Any) -> None:
         """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.
         :param key: the attribute key
         :type key: str
         :param value: the attribute value
-        :type value: str
+        :type value: Any
         """
         if hasattr(self, key) and not hasattr(type(self), key):
             if key in ['tvdb_id']:
@@ -223,7 +229,7 @@ class ShowSettings(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_dict(self, key_fn, *args, **kwargs):
+    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its dict representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict
@@ -249,7 +255,7 @@ class ShowSettings(object):
         return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
     @classmethod
-    def default_settings(cls, tvdb_id):
+    def default_settings(cls: Type['ShowSettings'], tvdb_id: int) -> 'ShowSettings':
         return cls(tvdb_id=tvdb_id,
                    wanted_languages=get_wanted_languages(),
                    refine=autosubliminal.REFINEVIDEO,

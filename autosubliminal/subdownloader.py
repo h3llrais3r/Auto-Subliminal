@@ -7,6 +7,7 @@ import subliminal
 
 import autosubliminal
 from autosubliminal import notifiers
+from autosubliminal.core.item import DownloadItem
 from autosubliminal.db import LastDownloadsDb
 from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.util.common import get_item_name
@@ -21,11 +22,11 @@ class SubDownloader(object):
     It stores the subtitle at the right location with the right name and handle the notifications and post processing.
     """
 
-    def __init__(self, download_item):
+    def __init__(self, download_item: DownloadItem) -> None:
         log.debug('Download item: %r', download_item)
         self._download_item = download_item
 
-    def run(self):
+    def run(self) -> None:
         """
         Save the subtitle with further handling
         """
@@ -52,7 +53,7 @@ class SubDownloader(object):
             send_websocket_notification(
                 'Downloaded \'%s\' subtitle for \'%s\' from \'%s\'.' % (language, name, provider), severity='success')
 
-    def save(self):
+    def save(self) -> bool:
         """
         Save the subtitle
         """
@@ -71,7 +72,7 @@ class SubDownloader(object):
             log.error('Download item is not complete, skipping')
             return False
 
-    def mark_downloaded(self):
+    def mark_downloaded(self) -> bool:
         """
         Mark the subtitle as downloaded
         """
@@ -88,7 +89,7 @@ class SubDownloader(object):
 
         return True
 
-    def post_process(self):
+    def post_process(self) -> bool:
         """
         Post process the subtitle
         """

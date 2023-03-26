@@ -7,6 +7,7 @@ import threading
 import time
 import traceback
 from abc import ABC, abstractmethod
+from typing import Any, Dict
 
 import autosubliminal
 from autosubliminal.util.common import camelize, to_dict
@@ -25,24 +26,26 @@ class Scheduler(object):
     :param process: process to schedule
     :type process: ScheduledProcess
     :param interval: interval in hours between scheduled runs
-    :type interval: int
+    :type interval: float
     :param active: indication if the scheduler is active or not
     :type active: bool
     :param initial_delay: indication in seconds for the delay of the initial run of the thread process
-    :type initial_delay: int
+    :type initial_delay: float
     :param initial_run: indication if the process should run initially before starting the thread
     :type initial_run: bool
     """
 
-    def __init__(self, name, process, interval, active=True, initial_delay=0, initial_run=False):
+    def __init__(
+            self, name: str, process: 'ScheduledProcess', interval: float, active: bool = True,
+            initial_delay: float = 0, initial_run: bool = False) -> None:
         self.name = name
         self.process = process
         self.interval = datetime.timedelta(hours=interval).total_seconds()  # Convert to seconds
         self.active = active
         self.last_run: float = 0
         self._delay = initial_delay
-        self._force_run = False
-        self._force_stop = False
+        self._force_run: bool = False
+        self._force_stop: bool = False
 
         # Register scheduler
         self._register_scheduler()
@@ -58,7 +61,7 @@ class Scheduler(object):
             while not self.last_run:
                 time.sleep(1)
 
-    def _register_scheduler(self):
+    def _register_scheduler(self) -> None:
         # Add scheduler to dict of schedulers
         scheduler_name = self.name
         while scheduler_name in autosubliminal.SCHEDULERS:
@@ -78,7 +81,7 @@ class Scheduler(object):
         self.name = scheduler_name
         autosubliminal.SCHEDULERS[scheduler_name] = self
 
-    def _schedule_process(self):
+    def _schedule_process(self) -> None:
         while True:
             # Check for stop
             if self._force_stop:
@@ -105,7 +108,7 @@ class Scheduler(object):
 
             time.sleep(1)
 
-    def _run_process(self, current_time):
+    def _run_process(self, current_time) -> None:
         # Check if the run needs a lock
         run_lock = self.process.force_run_lock if self._force_run else self.process.run_lock
 
@@ -143,31 +146,31 @@ class Scheduler(object):
             if run_lock:
                 release_wanted_queue_lock()
 
-    def stop(self):
+    def stop(self) -> None:
         """Stop the scheduler."""
         log.info('Stopping %s thread', self.name)
 
         self._force_stop = True
         self._thread.join(10)
 
-    def activate(self):
+    def activate(self) -> None:
         """Activate the scheduler."""
         log.info('Activating %s scheduler', self.name)
         self.active = True
 
-    def deactivate(self):
+    def deactivate(self) -> None:
         """Deactivate the scheduler."""
         log.info('Deactivating %s scheduler', self.name)
         self.active = False
 
-    def run(self, delay=0):
+    def run(self, delay=0) -> None:
         """Force run the scheduler."""
         log.info('Running %s thread', self.name)
 
         self._force_run = True
         self._delay = delay
 
-    def to_dict(self, key_fn, *args, **kwargs):
+    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its dict representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict
@@ -193,18 +196,18 @@ class Scheduler(object):
         return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
     @property
-    def alive(self):
+    def alive(self) -> bool:
         return self._thread.is_alive()
 
     @property
-    def next_run(self):
+    def next_run(self) -> float:
         if self.last_run:
             return self.last_run + self.interval
         else:
             return 0
 
     @property
-    def running(self):
+    def running(self) -> bool:
         return self.process.running
 
 
@@ -213,11 +216,11 @@ class ScheduledProcess(ABC):
     Base class for all scheduled processes.
     """
 
-    def __init__(self, run_lock=True, force_run_lock=True):
+    def __init__(self, run_lock: bool = True, force_run_lock: bool = True) -> None:
         self.running = False
         self.run_lock = run_lock
         self.force_run_lock = force_run_lock
 
     @abstractmethod
-    def run(self, force_run):
+    def run(self, force_run: bool) -> None:
         pass

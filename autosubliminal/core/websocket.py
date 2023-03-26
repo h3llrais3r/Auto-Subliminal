@@ -5,7 +5,7 @@ import logging
 
 import cherrypy
 import tailer
-from schema import And, Schema, SchemaError, Use
+from schema import And, Schema, Use
 from ws4py.messaging import TextMessage
 from ws4py.websocket import WebSocket
 
@@ -26,7 +26,9 @@ MESSAGE_SCHEMA = Schema({
     'type': 'EVENT',
     'event': {
         'type': And(Use(str), lambda t: t in SUPPORTED_EVENT_TYPES),
-        'data': And(Use(dict))
+        'data': {
+            'name': And(Use(str))
+        }
     }
 })
 
@@ -89,11 +91,7 @@ class WebSocketHandler(WebSocket):
         return handled
 
     def check_message_structure(self, message):
-        try:
-            MESSAGE_SCHEMA.validate(message)
-            return True
-        except SchemaError:
-            return False
+        return MESSAGE_SCHEMA.is_valid(message)
 
 
 class WebSocketBroadCaster(Runner):

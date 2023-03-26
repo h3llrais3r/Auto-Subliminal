@@ -27,7 +27,7 @@
     "**/web/autosubliminal/static/**": true
   },
   "files.associations": {
-    "*.json": "jsonc" // Use json with comments by default
+    "*.yaml": "home-assistant"
   },
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
@@ -43,12 +43,13 @@
   "typescript.tsdk": "web/autosubliminal/node_modules/typescript/lib", // Use project typescript version instead of latest version packaged with VS Code
   "typescript.updateImportsOnFileMove.enabled": "always",
   // Eslint settings
-  "eslint.workingDirectories": [
-    "web/autosubliminal"
-  ],
+  "eslint.workingDirectories": ["web/autosubliminal"],
   // Python settings
   "[python]": {
-    "editor.tabSize": 4 // Python uses 4 spaces for tab
+    "editor.tabSize": 4, // Python uses 4 spaces for tab
+    "editor.codeActionsOnSave": {
+      "source.unusedImports": true
+    }
   },
   "python.languageServer": "Pylance",
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",

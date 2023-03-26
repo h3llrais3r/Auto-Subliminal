@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import threading
+from typing import cast
 
 import autosubliminal
 from autosubliminal.db.cache_db import ImdbIdCacheDb, TvdbIdCacheDb
@@ -10,9 +11,10 @@ from autosubliminal.db.show_db import ShowDetailsDb
 from autosubliminal.util.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
                                        release_wanted_queue_lock_on_exception)
 from autosubliminal.util.websocket import send_websocket_notification
+from autosubliminal.versionchecker import VersionChecker
 
 
-def restart(exit=False):
+def restart(exit: bool = False) -> None:
     """
     Thread to restart the application.
     """
@@ -22,7 +24,7 @@ def restart(exit=False):
     thread.start()
 
 
-def shutdown():
+def shutdown() -> None:
     """
     Thread to shutdown the application.
     """
@@ -33,15 +35,15 @@ def shutdown():
     timer.start()
 
 
-def update():
+def update() -> None:
     """
     Update the system.
     """
-    autosubliminal.CHECKVERSION.process.update(force_update=True)
+    cast(VersionChecker, autosubliminal.CHECKVERSION.process).update(force_update=True)
     restart(exit=True)
 
 
-def flush_cache():
+def flush_cache() -> None:
     """
     Flush the cache db's.
     """
@@ -51,7 +53,7 @@ def flush_cache():
 
 
 @release_wanted_queue_lock_on_exception
-def flush_wanted_items():
+def flush_wanted_items() -> None:
     """
     Flush the wanted items db.
     """
@@ -66,7 +68,7 @@ def flush_wanted_items():
         send_websocket_notification('Cannot flush wanted items database when wanted queue is in use!', severity='warn')
 
 
-def flush_last_downloads():
+def flush_last_downloads() -> None:
     """
     Flush the last downloads db.
     """
@@ -74,7 +76,7 @@ def flush_last_downloads():
     send_websocket_notification('Flushed last downloads database.')
 
 
-def flush_library():
+def flush_library() -> None:
     """
     Flush the library db.
     """

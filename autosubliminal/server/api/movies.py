@@ -7,7 +7,7 @@ import cherrypy
 
 import autosubliminal
 from autosubliminal.core.movie import MovieSettings
-from autosubliminal.core.subtitle import EMBEDDED, HARDCODED, Subtitle
+from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb, WantedItemsDb
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import NotFound, RestResource
@@ -100,9 +100,9 @@ class MoviesApi(RestResource):
         hardcoded_languages = []
         # Get subtitle files
         for subtitle in movie.subtitles:
-            if subtitle.type == EMBEDDED:
+            if subtitle.type == 'embedded':
                 embedded_languages.append(subtitle.language)
-            elif subtitle.type == HARDCODED:
+            elif subtitle.type == 'hardcoded':
                 hardcoded_languages.append(subtitle.language)
             else:
                 subtitle_filepath, subtitle_filename = os.path.split(subtitle.path)
@@ -301,9 +301,9 @@ class _HardcodedApi(RestResource):
             # Update subtitles
             subtitles = []
             for language in languages:
-                subtitles.append(Subtitle(HARDCODED, language, path=os.path.join(file_location, file_name)))
+                subtitles.append(Subtitle('hardcoded', language, path=os.path.join(file_location, file_name)))
             subtitles_db = MovieSubtitlesDb()
-            subtitles_db.delete_movie_subtitles(imdb_id, type=HARDCODED)
+            subtitles_db.delete_movie_subtitles(imdb_id, type='hardcoded')
             subtitles_db.set_movie_subtitles(imdb_id, subtitles)
 
             # Update missing languages

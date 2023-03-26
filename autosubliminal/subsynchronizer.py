@@ -3,6 +3,7 @@
 import logging
 import os
 import platform
+from typing import Any, Dict, Optional
 
 from ffsubsync import ffsubsync
 
@@ -19,7 +20,7 @@ class SubSynchronizer(object):
     :type wanted_item: WantedItem
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._log_dir_path = autosubliminal.PATH
         try:
             import webrtcvad
@@ -28,7 +29,7 @@ class SubSynchronizer(object):
         else:
             self._vad = 'subs_then_webrtc'
 
-    def run(self, subtitle_path, reference_file_path):
+    def run(self, subtitle_path: str, reference_file_path: str) -> Optional[Dict[str, Any]]:
         """
         Synchronize the subtitle with a reference file (video file or other subtitle file).
         """
@@ -42,7 +43,7 @@ class SubSynchronizer(object):
             return None
         else:
             result = None
-            synced_subtitle_path = None
+            synced_subtitle_path: str = None
             try:
                 synced_subtitle_path = os.path.splitext(subtitle_path)[0] + '.synced.srt'
                 unparsed_args = [

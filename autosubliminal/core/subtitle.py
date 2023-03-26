@@ -1,20 +1,19 @@
 # coding=utf-8
 
-# Subtitle types
-HARDCODED = 'hardcoded'
-EMBEDDED = 'embedded'
-EXTERNAL = 'external'
+from typing import Any, Literal
+
+SubtitleType = Literal['hardcoded', 'embedded', 'external']
 
 
 class Subtitle(object):
     """Subtitle class."""
 
-    def __init__(self, type=None, language=None, path=None):
+    def __init__(self, type: SubtitleType = None, language: str = None, path: str = None) -> None:
         self.type = type
         self.language = language
         self.path = path
 
-    def set_attr(self, key, value):
+    def set_attr(self, key: str, value: Any) -> None:
         """Set an attribute (ignore/skip @property attributes).
 
         It takes care of converting the value if needed.

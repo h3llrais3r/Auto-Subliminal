@@ -4,6 +4,7 @@ import datetime
 import logging
 import os
 import tempfile
+from typing import Union
 
 import requests
 from dogpile.cache.backends.file import AbstractFileLock
@@ -40,7 +41,8 @@ class MutexFileLock(AbstractFileLock):
         return self.mutex.release_write_lock()
 
 
-def cache_artwork(indexer_name, indexer_id, artwork_type, artwork_url, thumbnail=False):
+def cache_artwork(indexer_name: str, indexer_id: Union[str, int],
+                  artwork_type: str, artwork_url: str, thumbnail: bool = False) -> None:
     """Store the artwork in the cache."""
     try:
         img_data = requests.get(artwork_url).content
@@ -51,12 +53,14 @@ def cache_artwork(indexer_name, indexer_id, artwork_type, artwork_url, thumbnail
         log.exception('Unable to store artwork in cache')
 
 
-def is_artwork_cached(indexer_name, indexer_id, artwork_type, thumbnail=False):
+def is_artwork_cached(indexer_name: str, indexer_id: Union[str, int],
+                      artwork_type: str, thumbnail: bool = False) -> bool:
     """Check if the artwork is cached."""
     return os.path.exists(get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=thumbnail))
 
 
-def get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=False):
+def get_artwork_cache_path(indexer_name: str, indexer_id: Union[str, int],
+                           artwork_type: str, thumbnail: bool = False) -> str:
     """Get the path of the artwork in the cache."""
     # Make sure the cache path exists
     cache_location = os.path.join(autosubliminal.CACHEDIR, 'artwork', indexer_name, artwork_type)
@@ -69,26 +73,26 @@ def get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=Fal
     return os.path.abspath(os.path.join(cache_path, str(indexer_id) + '.jpg'))
 
 
-def clear_cache():
+def clear_cache() -> None:
     """Clear all caches."""
     _clear_autosubliminal_cache()
     _clear_subliminal_cache()
     _clear_imdbpie_cache()
 
 
-def _clear_autosubliminal_cache():
+def _clear_autosubliminal_cache() -> None:
     cache_file = os.path.abspath(os.path.join(autosubliminal.CACHEDIR, 'autosubliminal.cache.dbm'))
     if os.path.exists(cache_file):
         os.remove(cache_file)
 
 
-def _clear_subliminal_cache():
+def _clear_subliminal_cache() -> None:
     cache_file = os.path.abspath(os.path.join(autosubliminal.CACHEDIR, 'subliminal.cache.dbm'))
     if os.path.exists(cache_file):
         os.remove(cache_file)
 
 
-def _clear_imdbpie_cache():
+def _clear_imdbpie_cache() -> None:
     # Cache is created by imdbpie in temp location (see auth.py in imdbpie)
     # Cleanup is required when switching between python versions
     # If not, 'ValueError: unsupported pickle protocol' is thrown

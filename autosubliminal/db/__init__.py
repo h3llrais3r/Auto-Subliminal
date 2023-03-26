@@ -33,7 +33,7 @@ __all__ = [
 ]
 
 
-def create():
+def create() -> None:
     # Create the database
     try:
         connection = sqlite3.connect(autosubliminal.DBFILE)
@@ -116,10 +116,8 @@ def create():
         print('ERROR: Could not create database.')
         print('ERROR: Please check if Auto-Subliminal has write access to file %s.' % autosubliminal.DBFILE)
 
-    return True
 
-
-def upgrade(from_version, to_version):
+def upgrade(from_version: int, to_version: int) -> None:
     print('INFO: Upgrading database from version %d to version %d.' % (from_version, to_version))
     print('INFO: Creating backup of database.')
     try:
@@ -315,7 +313,7 @@ def upgrade(from_version, to_version):
             connection.close()
 
 
-def get_version():
+def get_version() -> int:
     try:
         query_get_version = 'SELECT database_version FROM info'
         connection = sqlite3.connect(autosubliminal.DBFILE)
@@ -332,7 +330,7 @@ def get_version():
         return 1
 
 
-def initialize():
+def initialize() -> None:
     # Check if the db file already exists and create it if not
     db_file = os.path.join(autosubliminal.PATH, autosubliminal.DBFILE)
     if not os.path.exists(db_file):

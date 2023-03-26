@@ -16,7 +16,7 @@ class Runner(ABC):
     :type name: str
     """
 
-    def __init__(self, name):
+    def __init__(self, name: str) -> None:
         self.name = name
         self._force_stop = False
 
@@ -25,16 +25,16 @@ class Runner(ABC):
         self._thread = threading.Thread(name=self.name, target=self._run_process)
         self._thread.start()
 
-    def _run_process(self):
+    def _run_process(self) -> None:
         while not self._force_stop:
             self.run()
             time.sleep(1)
 
     @abstractmethod
-    def run(self):
+    def run(self) -> None:
         pass
 
-    def stop(self):
+    def stop(self) -> None:
         log.info('Stopping thread %s', self.name)
         self._force_stop = True
         self._thread.join(10)

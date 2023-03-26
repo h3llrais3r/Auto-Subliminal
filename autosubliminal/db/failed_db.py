@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import sqlite3
+from typing import List, Optional
 
 import autosubliminal
 
@@ -8,14 +9,14 @@ import autosubliminal
 class FailedShowsDb(object):
     """Failed shows db."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._query_get_all = 'SELECT path FROM failed_shows'
         self._query_get = 'SELECT path FROM failed_shows WHERE path=?'
         self._query_set = 'INSERT INTO failed_shows VALUES (?)'
         self._query_delete = 'DELETE FROM failed_shows WHERE path=?'
         self._query_flush = 'DELETE FROM failed_shows'
 
-    def get_failed_shows(self):
+    def get_failed_shows(self) -> List[str]:
         """Get the list of failed shows (=shows for which no tvdb id could be determined).
 
         :return: the list of failed show paths
@@ -32,7 +33,7 @@ class FailedShowsDb(object):
 
         return shows
 
-    def get_failed_show(self, show_path):
+    def get_failed_show(self, show_path: str) -> Optional[str]:
         """Get a failed show by its path.
 
         :param show_path: the show path
@@ -48,9 +49,9 @@ class FailedShowsDb(object):
             show = row[0]
         connection.close()
 
-        return show
+        return str(show) if show else None
 
-    def set_failed_show(self, show_path):
+    def set_failed_show(self, show_path: str) -> None:
         """Set a failed show.
 
         :param show_path: the show path
@@ -62,7 +63,7 @@ class FailedShowsDb(object):
         connection.commit()
         connection.close()
 
-    def delete_failed_show(self, show_path):
+    def delete_failed_show(self, show_path: str) -> None:
         """Delete a failed show.
 
         :param show_path: the show path
@@ -74,7 +75,7 @@ class FailedShowsDb(object):
         connection.commit()
         connection.close()
 
-    def flush_failed_shows(self):
+    def flush_failed_shows(self) -> None:
         """Flush all failed shows."""
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
@@ -86,14 +87,14 @@ class FailedShowsDb(object):
 class FailedMoviesDb(object):
     """Failed movies db."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._query_get_all = 'SELECT path FROM failed_movies'
         self._query_get = 'SELECT path FROM failed_movies WHERE path=?'
         self._query_set = 'INSERT INTO failed_movies VALUES (?)'
         self._query_delete = 'DELETE FROM failed_movies WHERE path=?'
         self._query_flush = 'DELETE FROM failed_movies'
 
-    def get_failed_movies(self):
+    def get_failed_movies(self) -> List[str]:
         """Get the list of failed movies (=movies for which no imdb id could be determined).
 
         :return: the list of failed movie paths
@@ -110,7 +111,7 @@ class FailedMoviesDb(object):
 
         return movies
 
-    def get_failed_movie(self, movie_path):
+    def get_failed_movie(self, movie_path: str) -> Optional[str]:
         """Get a failed movie by its path.
 
         :param movie_path: the movie path
@@ -126,9 +127,9 @@ class FailedMoviesDb(object):
             movie = row[0]
         connection.close()
 
-        return movie
+        return str(movie) if movie else None
 
-    def set_failed_movie(self, movie_path):
+    def set_failed_movie(self, movie_path: str) -> None:
         """Set a failed movie.
 
         :param movie_path: the movie path
@@ -140,7 +141,7 @@ class FailedMoviesDb(object):
         connection.commit()
         connection.close()
 
-    def delete_failed_movie(self, movie_path):
+    def delete_failed_movie(self, movie_path: str) -> None:
         """Delete a failed movie.
 
         :param movie_path: the movie path
@@ -152,7 +153,7 @@ class FailedMoviesDb(object):
         connection.commit()
         connection.close()
 
-    def flush_failed_movies(self):
+    def flush_failed_movies(self) -> None:
         """Flush all failed movies."""
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()

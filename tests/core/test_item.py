@@ -77,7 +77,7 @@ def test_wanted_item_set_attr():
 
 def test_wanted_item_copy_to():
     wanted_item_1 = WantedItem(type='episode', title='titl1', season=1, episode=1)
-    wanted_item_2 = WantedItem(type='episode', title='title2', season=2, episode=2, codec=2)
+    wanted_item_2 = WantedItem(type='episode', title='title2', season=2, episode=2, codec='H.264')
     wanted_item_1.copy_to(wanted_item_2)
     assert wanted_item_1 == wanted_item_2
 

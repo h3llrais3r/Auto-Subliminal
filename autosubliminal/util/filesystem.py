@@ -14,7 +14,7 @@ from babelfish import Language
 from enzyme.mkv import MKV
 
 import autosubliminal
-from autosubliminal.core.subtitle import EMBEDDED, EXTERNAL, HARDCODED, Subtitle
+from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.util.common import get_wanted_languages
 
 log = logging.getLogger(__name__)
@@ -198,7 +198,7 @@ def get_embedded_subtitles(dirname, filename, log_scan=False):
         if log_scan:
             log.error('Parsing video metadata with enzyme failed')
 
-    return [Subtitle(EMBEDDED, str(language), path) for language in embedded_subtitle_languages if
+    return [Subtitle('embedded', str(language), path) for language in embedded_subtitle_languages if
             language != Language('und')]
 
 
@@ -214,7 +214,7 @@ def get_hardcoded_subtitles(dirname, filename):
             if subtitles:
                 hardcoded_subtitle_languages = subtitles.split(',')  # Subs are comma separated on 1st line
 
-    return [Subtitle(HARDCODED, language, path) for language in hardcoded_subtitle_languages]
+    return [Subtitle('hardcoded', language, path) for language in hardcoded_subtitle_languages]
 
 
 def get_external_subtitles(dirname, filename):
@@ -225,7 +225,7 @@ def get_external_subtitles(dirname, filename):
     for f in os.listdir(dirname):
         name, ext = os.path.splitext(f)
         if video_name in name and ext == SUBTITLE_EXTENSION:
-            external_subtitle_languages.append(Subtitle(EXTERNAL, get_subtitle_language(f), os.path.join(dirname, f)))
+            external_subtitle_languages.append(Subtitle('external', get_subtitle_language(f), os.path.join(dirname, f)))
 
     return external_subtitle_languages
 

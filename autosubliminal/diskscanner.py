@@ -2,9 +2,11 @@
 
 import logging
 import os
+from typing import List, Optional
 
 import autosubliminal
 from autosubliminal import fileprocessor
+from autosubliminal.core.item import WantedItem
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import MovieSettingsDb, ShowSettingsDb, WantedItemsDb
 from autosubliminal.util.filesystem import (check_missing_subtitle_languages, is_skipped_dir, is_valid_video_file,
@@ -23,14 +25,14 @@ class DiskScanner(ScheduledProcess):
     If found, episodes and movies are added to the WANTEDQUEUE.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.wanted_db = WantedItemsDb()
         self.show_settings_db = ShowSettingsDb()
         self.movie_settings_db = MovieSettingsDb()
 
     @release_wanted_queue_lock_on_exception
-    def run(self, force_run):
+    def run(self, force_run: bool) -> None:
         paths = autosubliminal.VIDEOPATHS
         log.info('Starting round of local disk checking at %r', paths)
         send_websocket_notification('Scanning disk...')
@@ -41,7 +43,7 @@ class DiskScanner(ScheduledProcess):
             return
 
         # Walk through paths to search for wanted items
-        new_wanted_items = []
+        new_wanted_items: List[WantedItem] = []
         old_wanted_items = self.wanted_db.get_wanted_items()
         for path in paths:
             try:
@@ -66,9 +68,9 @@ class DiskScanner(ScheduledProcess):
         send_websocket_notification('Disk scan finished.')
         log.info('Finished round of local disk checking')
 
-    def _scan_path(self, path):
+    def _scan_path(self, path) -> List[WantedItem]:
         log.info('Scanning video path: %s', path)
-        wanted_items = []
+        wanted_items: List[WantedItem] = []
 
         # Check all folders and files
         for dirname, dirnames, filenames in os.walk(os.path.join(path)):
@@ -84,7 +86,7 @@ class DiskScanner(ScheduledProcess):
                 # Only scan valid video files
                 if is_valid_video_file(filename):
                     log.debug('Video file found: %s', filename)
-                    wanted_item = None
+                    wanted_item: WantedItem = None
                     try:
                         wanted_item = self._scan_file(dirname, filename)
                     except Exception:
@@ -97,7 +99,7 @@ class DiskScanner(ScheduledProcess):
 
         return wanted_items
 
-    def _scan_file(self, dirname, filename):
+    def _scan_file(self, dirname, filename) -> Optional[WantedItem]:
         # Check if video file has already been processed before, so we don't need to process it again
         wanted_item = self.wanted_db.get_wanted_item_by_video_path(os.path.join(dirname, filename), ignore_case=True)
         if wanted_item:
@@ -109,15 +111,15 @@ class DiskScanner(ScheduledProcess):
             wanted_item = fileprocessor.process_file(dirname, filename)
             if wanted_item:
                 # Determine wanted languages
-                wanted_languages = []
+                wanted_languages: List[str] = []
                 if wanted_item.is_episode and wanted_item.tvdb_id:
-                    settings = self.show_settings_db.get_show_settings(wanted_item.tvdb_id)
-                    if settings and settings.wanted_languages:
-                        wanted_languages = settings.wanted_languages
+                    show_settings = self.show_settings_db.get_show_settings(wanted_item.tvdb_id)
+                    if show_settings and show_settings.wanted_languages:
+                        wanted_languages = show_settings.wanted_languages
                 elif wanted_item.is_movie and wanted_item.imdb_id:
-                    settings = self.movie_settings_db.get_movie_settings(wanted_item.imdb_id)
-                    if settings and settings.wanted_languages:
-                        wanted_languages = settings.wanted_languages
+                    movie_settings = self.movie_settings_db.get_movie_settings(wanted_item.imdb_id)
+                    if movie_settings and movie_settings.wanted_languages:
+                        wanted_languages = movie_settings.wanted_languages
 
                 # Check for missing subtitles (scan embedded and detect invalid if configured to do so)
                 languages = check_missing_subtitle_languages(dirname, filename,

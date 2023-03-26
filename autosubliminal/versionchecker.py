@@ -13,7 +13,6 @@ except ImportError:
     # GitPython throws import error when no git is available on the system
     pass
 
-# isort:imports-firstparty
 import autosubliminal
 from autosubliminal import system
 from autosubliminal.core.enums import InstallType
@@ -35,7 +34,7 @@ class VersionChecker(ScheduledProcess):
     Version checker. Check the running version and update if needed.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__(force_run_lock=False)
         self.manager: _BaseVersionManager = None
         self.install_type: InstallType = None
@@ -49,7 +48,7 @@ class VersionChecker(ScheduledProcess):
             self.install_type = InstallType.SOURCE
 
     @release_wanted_queue_lock_on_exception
-    def run(self, force_run):
+    def run(self, force_run: bool) -> None:
         log.info('Checking version')
 
         # Wait for internet connection
@@ -65,7 +64,7 @@ class VersionChecker(ScheduledProcess):
             system.restart(exit=True)
 
     @release_wanted_queue_lock_on_exception
-    def update(self, force_update=False):
+    def update(self, force_update: bool = False) -> None:
         log.info('Updating version')
 
         # Only get lock for force run because when called from run, we already have a queue lock
@@ -80,19 +79,19 @@ class VersionChecker(ScheduledProcess):
             release_wanted_queue_lock()
 
     @property
-    def current_branch(self):
+    def current_branch(self) -> str:
         return self.manager.current_branch
 
     @property
-    def current_branch_url(self):
+    def current_branch_url(self) -> str:
         return self.manager.current_branch_url
 
     @property
-    def current_version(self):
+    def current_version(self) -> str:
         return self.manager.current_version
 
     @property
-    def current_version_url(self):
+    def current_version_url(self) -> str:
         return self.manager.current_version_url
 
 
@@ -101,35 +100,35 @@ class _BaseVersionManager(ABC):
     Base class for all version manager classes.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.update_allowed = False
 
     @property
     @abstractmethod
-    def current_branch(self):
+    def current_branch(self) -> str:
         pass
 
     @property
     @abstractmethod
-    def current_branch_url(self):
+    def current_branch_url(self) -> str:
         pass
 
     @property
     @abstractmethod
-    def current_version(self):
+    def current_version(self) -> str:
         pass
 
     @property
     @abstractmethod
-    def current_version_url(self):
+    def current_version_url(self) -> str:
         pass
 
     @abstractmethod
-    def check_version(self, force_run=False):
+    def check_version(self, force_run: bool = False) -> bool:
         pass
 
     @abstractmethod
-    def update_version(self):
+    def update_version(self) -> None:
         pass
 
 
@@ -138,27 +137,27 @@ class SourceVersionManager(_BaseVersionManager):
     Source version manager. Used when you have installed from source by downloading it manually from Github.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.current_strict_version = Version(RELEASE_VERSION)
 
     @property
-    def current_branch(self):
+    def current_branch(self) -> str:
         return 'master'
 
     @property
-    def current_branch_url(self):
+    def current_branch_url(self) -> str:
         return autosubliminal.GITHUBURL + '/tree/' + self.current_branch
 
     @property
-    def current_version(self):
+    def current_version(self) -> str:
         return RELEASE_VERSION
 
     @property
-    def current_version_url(self):
+    def current_version_url(self) -> str:
         return autosubliminal.GITHUBURL + '/releases/tag/' + self.current_version
 
-    def check_version(self, force_run=False):
+    def check_version(self, force_run: bool = False) -> bool:
         # Reset update_allowed flag
         self.update_allowed = False
 
@@ -201,7 +200,7 @@ class SourceVersionManager(_BaseVersionManager):
 
         return True
 
-    def update_version(self):
+    def update_version(self) -> None:
         log.info('Update version not supported')
 
 
@@ -210,7 +209,7 @@ class GitVersionManager(_BaseVersionManager):
     Git version manager. Used when you have installed from source via Git scm.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.repo = Repo(autosubliminal.PATH)
         self.current_git_branch = self.repo.active_branch
@@ -219,28 +218,28 @@ class GitVersionManager(_BaseVersionManager):
         self.num_commits_behind = 0
 
     @property
-    def current_branch(self):
+    def current_branch(self) -> str:
         # Get string representation of current git branch
         return str(self.current_git_branch)
 
     @property
-    def current_branch_url(self):
+    def current_branch_url(self) -> str:
         return autosubliminal.GITHUBURL + '/tree/' + self.current_branch
 
     @property
-    def current_version(self):
+    def current_version(self) -> str:
         # Get string representation of current git commit
         return str(self.current_git_commit)
 
     @property
-    def current_version_url(self):
+    def current_version_url(self) -> str:
         return autosubliminal.GITHUBURL + '/commit/' + self.current_version
 
-    def clean(self):
+    def clean(self) -> None:
         # call git clean to remove all untracked files (only in source folders)
         self.repo.git.execute('git clean -xdf autosubliminal web')
 
-    def check_version(self, force_run=False):
+    def check_version(self, force_run: bool = False) -> bool:
         # Reset update_allowed flag
         self.update_allowed = False
 
@@ -295,7 +294,7 @@ class GitVersionManager(_BaseVersionManager):
 
         return True
 
-    def update_version(self):
+    def update_version(self) -> None:
         if self.update_allowed:
             try:
                 # Do a git clean before and after the update to remove all untracked files
