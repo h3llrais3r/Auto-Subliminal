@@ -45,11 +45,11 @@ dogpile-cache 1.1.8 A caching front-end based on the Dogpile lock.
 `-- stevedore >=3.0.0
     `-- pbr >=2.0.0,<2.1.0 || >2.1.0 
 enzyme 0.4.1 Python video metadata parser
-ffsubsync 0.4.23 Language-agnostic synchronization of subtitles with video.
+ffsubsync 0.4.24 Language-agnostic synchronization of subtitles with video.
 |-- auditok 0.1.5
-|-- cchardet *
 |-- chardet *
 |-- charset-normalizer *
+|-- faust-cchardet *
 |-- ffmpeg-python *
 |   `-- future * 
 |-- future >=0.18.2
@@ -92,10 +92,10 @@ imdbpie 5.6.4.dev0 Python IMDB client using the IMDB json web service made avail
 |   |-- charset-normalizer >=2,<4 
 |   |-- idna >=2.5,<4 
 |   `-- urllib3 >=1.21.1,<1.27 
-|-- setuptools >=39.0.1
+|-- setuptools >=65.5.1
 |-- six >=1.0.0
 |-- trans >=2.1.0
-`-- wheel >=0.30.0
+`-- wheel >=0.38.0
 jsonpickle 3.0.1 Python library for serializing any arbitrary object graph into JSON
 langdetect 1.0.9 Language detection library ported from Google's language-detection.
 `-- six *

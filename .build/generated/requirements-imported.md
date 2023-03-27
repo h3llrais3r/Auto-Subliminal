@@ -18,7 +18,7 @@ babelfish==0.6.0
 # autosubliminal\server\api\settings.py: 6
 # autosubliminal\server\api\shows.py: 7
 # autosubliminal\server\api\subtitles.py: 7
-# autosubliminal\server\api\system.py: 6
+# autosubliminal\server\api\system.py: 7
 # autosubliminal\server\rest.py: 6
 # autosubliminal\server\root.py: 3
 # autosubliminal\server\tool.py: 3,4
@@ -29,29 +29,29 @@ babelfish==0.6.0
 CherryPy==18.8.0
 # autosubliminal\providers\pitcher.py: 9,10
 deathbycaptcha==0.1.1
-# autosubliminal\core\cache.py: 9,10,11
+# autosubliminal\core\cache.py: 10,11,12
 # autosubliminal\providers\pitcher.py: 11
 dogpile.cache==1.1.8
 # autosubliminal\util\filesystem.py: 14
 enzyme==0.4.1
-# autosubliminal\subsynchronizer.py: 7
-ffsubsync==0.4.23
+# autosubliminal\subsynchronizer.py: 8
+ffsubsync==0.4.24
 # autosubliminal\versionchecker.py: 11
 GitPython==3.1.31
 # autosubliminal\notifiers\growl.py: 5
 gntp==1.0.3
-# autosubliminal\__init__.py: 549
-# autosubliminal\fileprocessor.py: 7
+# autosubliminal\__init__.py: 550
+# autosubliminal\fileprocessor.py: 8
 # autosubliminal\parsers\guessit\__init__.py: 3
 # autosubliminal\parsers\guessit\rules.py: 3,4,5
 # autosubliminal\providers\addic7ed_custom.py: 10
 guessit==3.7.1
 # autosubliminal\core\indexer.py: 9,10,11
-# autosubliminal\core\movie.py: 7
+# autosubliminal\core\movie.py: 8
 imdbpie==5.6.4.dev0
 # autosubliminal\util\json.py: 4
 jsonpickle==3.0.1
-# autosubliminal\__init__.py: 626,627
+# autosubliminal\__init__.py: 627,628
 # autosubliminal\util\filesystem.py: 9
 langdetect==1.0.9
 # autosubliminal\versionchecker.py: 8
@@ -60,13 +60,13 @@ packaging==21.3
 pysrt==1.1.2
 # autosubliminal\providers\pitcher.py: 12
 python-anticaptcha==1.0.0
-# autosubliminal\core\show.py: 5
+# autosubliminal\core\show.py: 6
 python-dateutil==2.8.2
 # autosubliminal\notifiers\twitter.py: 5
 python-twitter==3.5
 # autosubliminal\parsers\guessit\rules.py: 6,7,8
 rebulk==3.2.0
-# autosubliminal\core\cache.py: 8
+# autosubliminal\core\cache.py: 9
 # autosubliminal\notifiers\prowl.py: 5
 # autosubliminal\notifiers\pushalot.py: 5
 # autosubliminal\notifiers\pushbullet.py: 5
@@ -81,7 +81,8 @@ requests-oauthlib==1.3.1
 schema==0.7.5
 # autosubliminal\__init__.py: 16
 stevedore==4.1.1
-# autosubliminal\__init__.py: 564,590,591,592
+# autosubliminal\__init__.py: 565,591,592,593
+# autosubliminal\core\item.py: 10
 # autosubliminal\providers\addic7ed_custom.py: 12,13,14,15,16,17,18,19
 # autosubliminal\providers\exceptions.py: 3
 # autosubliminal\providers\pitcher.py: 13
@@ -89,7 +90,7 @@ stevedore==4.1.1
 # autosubliminal\refiners\manual.py: 5
 # autosubliminal\refiners\namemapping.py: 5
 # autosubliminal\server\api\settings.py: 8
-# autosubliminal\server\api\system.py: 7
+# autosubliminal\server\api\system.py: 8
 # autosubliminal\subchecker.py: 10,11,12,13,14,15,16,17,18,19,20
 # autosubliminal\subdownloader.py: 6
 # autosubliminal\util\filesystem.py: 11
@@ -97,11 +98,11 @@ subliminal==2.1.0.dev0
 # autosubliminal\core\websocket.py: 7
 tailer==0.4.1
 # autosubliminal\core\indexer.py: 12
-# autosubliminal\core\show.py: 6,7,8,9,10
+# autosubliminal\core\show.py: 7,8,9,10,11
 tvdb-api==3.0.0
 # autosubliminal\core\indexer.py: 13
 Unidecode==1.3.6
-# autosubliminal\subsynchronizer.py: 25
+# autosubliminal\subsynchronizer.py: 26
 webrtcvad-wheels==2.0.11.post1
 # autosubliminal\__init__.py: 17
 # autosubliminal\application.py: 13,14
