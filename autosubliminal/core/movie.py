@@ -2,12 +2,13 @@
 
 import logging
 import os
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Callable, Dict, List, Optional, Type
 from urllib.parse import urlparse, urlunparse
 
 from imdbpie.objects import Title
 
 import autosubliminal
+from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.util.common import get_wanted_languages, to_dict, to_list, to_obj
 
 log = logging.getLogger(__name__)
@@ -20,7 +21,7 @@ class MovieDetails(object):
     """
 
     def __init__(self, path: str = None, imdb_id: str = None, title: str = None, year: int = None, overview: str = None,
-                 poster: str = None, missing_languages: List[str] = None, subtitles: List[Any] = None) -> None:
+                 poster: str = None, missing_languages: List[str] = None, subtitles: List[Subtitle] = None) -> None:
         self.path = path
         self.imdb_id = imdb_id
         self.title = title
@@ -81,7 +82,7 @@ class MovieDetails(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
+    def to_dict(self, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its json representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict
@@ -161,7 +162,7 @@ class MovieSettings(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
+    def to_dict(self, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its json representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict

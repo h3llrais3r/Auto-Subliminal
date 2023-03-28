@@ -5,12 +5,14 @@ import logging
 import os
 import re
 import time
+from typing import List, Optional, Set, Tuple, cast
 
 import langdetect
 import pysrt
 import subliminal
 from babelfish import Error as BabelfishError
 from babelfish import Language
+from enzyme import SubtitleTrack
 from enzyme.mkv import MKV
 
 import autosubliminal
@@ -24,7 +26,7 @@ HARDCODED_SUBS_EXTENSION = '.hardcoded.subs'
 VIDEO_EXTENSIONS = subliminal.video.VIDEO_EXTENSIONS
 
 
-def one_path_exists(paths, retry_delay=15):
+def one_path_exists(paths: List[str], retry_delay: int = 15) -> bool:
     exists = False
     if paths and isinstance(paths, list):
         for path in paths:
@@ -38,7 +40,7 @@ def one_path_exists(paths, retry_delay=15):
     return exists
 
 
-def is_skipped_dir(dirname):
+def is_skipped_dir(dirname: str) -> bool:
     skipped = False
     if autosubliminal.SKIPHIDDENDIRS and os.path.split(dirname)[1].startswith('.'):
         log.debug('Skipping hidden directory: %s', dirname)
@@ -52,7 +54,7 @@ def is_skipped_dir(dirname):
     return skipped
 
 
-def is_valid_video_file(filename, video_extensions=VIDEO_EXTENSIONS):
+def is_valid_video_file(filename: str, video_extensions: Tuple[str, ...] = VIDEO_EXTENSIONS) -> bool:
     valid = False
     _, ext = os.path.splitext(filename)
     if ext and ext in video_extensions:
@@ -64,7 +66,7 @@ def is_valid_video_file(filename, video_extensions=VIDEO_EXTENSIONS):
     return valid
 
 
-def save_hardcoded_subtitle_languages(dirname, filename, hardcoded_subtitle_languages):
+def save_hardcoded_subtitle_languages(dirname: str, filename: str, hardcoded_subtitle_languages: List[str]) -> None:
     log.debug('Saving hardcoded subtitle(s)')
     hardcoded_filename = os.path.join(dirname, filename + HARDCODED_SUBS_EXTENSION)
 
@@ -74,18 +76,19 @@ def save_hardcoded_subtitle_languages(dirname, filename, hardcoded_subtitle_lang
         f.write(','.join(languages))
 
 
-def check_missing_subtitle_languages(dirname, filename, scan_embedded=False, scan_hardcoded=False,
-                                     detect_invalid=False, wanted_languages=None):
+def check_missing_subtitle_languages(dirname: str, filename: str, scan_embedded: bool = False,
+                                     scan_hardcoded: bool = False, detect_invalid: bool = False,
+                                     wanted_languages: List[str] = None) -> List[str]:
     log.debug('Checking for missing subtitle(s)')
-    missing_languages = []
+    missing_languages: List[str] = []
 
     # Check embedded languages
-    embedded_languages = []
+    embedded_languages: List[str] = []
     if scan_embedded:
         embedded_languages = [s.language for s in get_embedded_subtitles(dirname, filename, log_scan=True)]
 
     # Check hardcoded languages
-    hardcoded_languages = []
+    hardcoded_languages: List[str] = []
     if scan_hardcoded:
         hardcoded_languages = [s.language for s in get_hardcoded_subtitles(dirname, filename)]
 
@@ -137,8 +140,9 @@ def check_missing_subtitle_languages(dirname, filename, scan_embedded=False, sca
     return missing_languages
 
 
-def get_available_subtitles(dirname, filename, scan_embedded=False, scan_hardcoded=False):
-    subtitles = []
+def get_available_subtitles(dirname: str, filename: str, scan_embedded: bool = False,
+                            scan_hardcoded: bool = False) -> List[Subtitle]:
+    subtitles: List[Subtitle] = []
 
     # Embedded subtitles
     if scan_embedded:
@@ -154,14 +158,14 @@ def get_available_subtitles(dirname, filename, scan_embedded=False, scan_hardcod
     return subtitles
 
 
-def get_embedded_subtitles(dirname, filename, log_scan=False):
+def get_embedded_subtitles(dirname: str, filename: str, log_scan: bool = False) -> List[Subtitle]:
     """Get the embedded subtitle languages for a video file.
 
     Based on subliminal.video.scan_video(...) but only keep the check for embedded subtitles.
     """
     log.debug('Checking for embedded subtitle(s)')
 
-    embedded_subtitle_languages = set()
+    languages: Set[Language] = set()
     path = os.path.join(dirname, filename)
     try:
         if filename.endswith('.mkv'):
@@ -170,16 +174,16 @@ def get_embedded_subtitles(dirname, filename, log_scan=False):
 
             # subtitle tracks
             if mkv.subtitle_tracks:
-                for st in mkv.subtitle_tracks:
+                for st in cast(List[SubtitleTrack], mkv.subtitle_tracks):
                     if st.language:
                         try:
-                            embedded_subtitle_languages.add(Language.fromalpha3b(st.language))
+                            languages.add(Language.fromalpha3b(st.language))
                         except BabelfishError:
                             if log_scan:
                                 log.error('Embedded subtitle track language %r is not a valid language', st.language)
                     elif st.name:
                         try:
-                            embedded_subtitle_languages.add(Language.fromname(st.name))
+                            languages.add(Language.fromname(st.name))
                         except BabelfishError:
                             if log_scan:
                                 log.error('Embedded subtitle track name %r is not a valid language', st.name)
@@ -187,7 +191,7 @@ def get_embedded_subtitles(dirname, filename, log_scan=False):
                         if log_scan:
                             log.error('Embedded subtitle track language %r is not a valid language', st.language)
                 if log_scan:
-                    log.debug('Found embedded subtitles %r with enzyme', embedded_subtitle_languages)
+                    log.debug('Found embedded subtitles %r with enzyme', languages)
             else:
                 if log_scan:
                     log.debug('MKV has no subtitle track')
@@ -198,41 +202,40 @@ def get_embedded_subtitles(dirname, filename, log_scan=False):
         if log_scan:
             log.error('Parsing video metadata with enzyme failed')
 
-    return [Subtitle('embedded', str(language), path) for language in embedded_subtitle_languages if
-            language != Language('und')]
+    return [Subtitle('embedded', str(language), path) for language in languages if language != Language('und')]
 
 
-def get_hardcoded_subtitles(dirname, filename):
+def get_hardcoded_subtitles(dirname: str, filename: str) -> List[Subtitle]:
     log.debug('Checking for hardcoded subtitle(s)')
 
-    hardcoded_subtitle_languages = []
+    languages: List[str] = []
     path = os.path.join(dirname, filename)
     file_path = os.path.join(dirname, filename + HARDCODED_SUBS_EXTENSION)
     if os.path.exists(file_path):
         with codecs.open(file_path, mode='r', encoding='utf-8') as f:
             subtitles = f.readline().strip()
             if subtitles:
-                hardcoded_subtitle_languages = subtitles.split(',')  # Subs are comma separated on 1st line
+                languages = subtitles.split(',')  # Subs are comma separated on 1st line
 
-    return [Subtitle('hardcoded', language, path) for language in hardcoded_subtitle_languages]
+    return [Subtitle('hardcoded', language, path) for language in languages]
 
 
-def get_external_subtitles(dirname, filename):
+def get_external_subtitles(dirname: str, filename: str) -> List[Subtitle]:
     log.debug('Checking for external subtitle(s)')
 
-    external_subtitle_languages = []
+    languages: List[Subtitle] = []
     video_name, _ = os.path.splitext(filename)
     for f in os.listdir(dirname):
         name, ext = os.path.splitext(f)
         if video_name in name and ext == SUBTITLE_EXTENSION:
-            external_subtitle_languages.append(Subtitle('external', get_subtitle_language(f), os.path.join(dirname, f)))
+            languages.append(Subtitle('external', get_subtitle_language(f), os.path.join(dirname, f)))
 
-    return external_subtitle_languages
+    return languages
 
 
-def get_subtitle_language(filename):
+def get_subtitle_language(filename: str) -> str:
     video_name, _ = os.path.splitext(filename)
-    language = None
+    language: Language = None
     # Try to parse the 2 last characters as language
     try:
         language = Language.fromietf(video_name[-2:])
@@ -246,7 +249,7 @@ def get_subtitle_language(filename):
         return autosubliminal.DEFAULTLANGUAGE
 
 
-def _detect_subtitle_language(srt_path):
+def _detect_subtitle_language(srt_path: str) -> Optional[Language]:
     log.debug('Detecting subtitle language')
 
     # Load srt file (try first iso-8859-1 with fallback to utf-8)
@@ -281,7 +284,7 @@ def _detect_subtitle_language(srt_path):
     return None
 
 
-def _delete_subtitle_file(subtitle_path, language):
+def _delete_subtitle_file(subtitle_path: str, language: Language) -> bool:
     try:
         log.warning('Deleting subtitle with invalid language: %s [%s]', subtitle_path, language)
         os.remove(subtitle_path)

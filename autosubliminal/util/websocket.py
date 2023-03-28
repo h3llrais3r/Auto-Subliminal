@@ -1,5 +1,7 @@
 # coding=utf-8
 
+from typing import Any, Dict, Literal
+
 import autosubliminal
 
 SYSTEM_START = 'SYSTEM_START'
@@ -12,8 +14,10 @@ SCHEDULER_FINISH = 'SCHEDULER_FINISH'
 SUPPORTED_EVENT_TYPES = [SYSTEM_START, SYSTEM_RESTART, SYSTEM_SHUTDOWN, SYSTEM_UPDATE, SCHEDULER_START,
                          SCHEDULER_FINISH]
 
+MessageSeverity = Literal['info', 'success', 'warn', 'error']
 
-def send_websocket_event(type, data=None):
+
+def send_websocket_event(type: str, data: Dict[str, Any] = None) -> None:
     """ Send a websocket event message.
 
     :param type: the event type
@@ -31,17 +35,12 @@ def send_websocket_event(type, data=None):
     autosubliminal.WEBSOCKETMESSAGEQUEUE.append(event)
 
 
-def send_websocket_notification(message, severity='info', sticky=False):
+def send_websocket_notification(message: str, severity: 'MessageSeverity' = 'info', sticky: bool = False) -> None:
     """Send a websocket notification message.
 
     :param message: the notification message
     :type message: str
     :param severity: the notification message severity
-    Possible values for notification type are:
-    - success (green)
-    - info (blue)
-    - warn (orange)
-    - error (red)
     :type severity: str
     :param sticky: indication if it will be shown at a fixed inline location and it will not fade
     :type sticky: bool
@@ -51,6 +50,7 @@ def send_websocket_notification(message, severity='info', sticky=False):
         'notification': {
             'message': message,
             'severity': severity,
-            'sticky': sticky}
+            'sticky': sticky
+        }
     }
     autosubliminal.WEBSOCKETMESSAGEQUEUE.append(notification)

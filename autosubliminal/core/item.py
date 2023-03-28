@@ -5,7 +5,7 @@ import logging
 import os
 import re
 from abc import ABC
-from typing import Any, Dict, List, Literal, Optional, Type, Union, cast
+from typing import Any, Callable, Dict, List, Literal, Optional, Type, Union, cast
 
 from subliminal.video import Video
 
@@ -186,7 +186,7 @@ class WantedItem(_BaseItem):
         else:
             return False
 
-    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
+    def to_dict(self, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its json representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict
@@ -224,7 +224,7 @@ class WantedItem(_BaseItem):
         If yes, return the library path, else return None
         """
         video_dir = os.path.dirname(self.video_path)
-        return find_path_in_paths(video_dir, autosubliminal.LIBRARYPATHS, check_common_path='true')
+        return find_path_in_paths(video_dir, autosubliminal.LIBRARYPATHS, check_common_path=True)
 
     def set_attr(self, key: str, value: Any) -> None:
         """Set an attribute (ignore/skip @property attributes).
@@ -316,7 +316,7 @@ class DownloadedItem(_BaseItem):
         self.subtitle: str = None
         self.timestamp: str = None  # Download timestamp string - format '%Y-%m-%d %H:%M:%S'
 
-    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
+    def to_dict(self, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its json representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict

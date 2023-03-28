@@ -11,7 +11,7 @@ import subprocess
 import sys
 import time
 from collections.abc import Mapping
-from typing import Any, Dict
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple, Type, Union, cast
 
 import requests
 
@@ -25,7 +25,7 @@ _boolean_states = {'1': True, 'yes': True, 'true': True, 'on': True,
                    '0': False, 'no': False, 'false': False, 'off': False}
 
 
-def get_today():
+def get_today() -> datetime.datetime:
     """Helper to get today as datetime.
 
     We made this a function, otherwise we can't mock built-in datetime.datetime.today in our tests!
@@ -33,7 +33,7 @@ def get_today():
     return datetime.datetime.today()
 
 
-def run_cmd(cmd, communicate=True):
+def run_cmd(cmd: Union[str, List[str]], communicate: bool = True) -> Optional[Tuple[bytes, bytes]]:
     """Run a command.
 
     By default it will communicate the output, but it can be disabled.
@@ -49,8 +49,10 @@ def run_cmd(cmd, communicate=True):
         # Return stdout, stderr
         return process.communicate()
 
+    return None
 
-def connect_url(url):
+
+def connect_url(url: str) -> requests.Response:
     """Connect to a certain url.
 
     Use our user agent and timeout by default.
@@ -65,10 +67,10 @@ def connect_url(url):
         raise e
 
 
-def wait_for_internet_connection():
+def wait_for_internet_connection() -> None:
     """ Function that blocks the process until there is internet connection."""
     # Internal check for internet connection
-    def _check_internet_connection(url):
+    def _check_internet_connection(url: str) -> bool:
         try:
             connect_url(url)
             return True
@@ -81,7 +83,7 @@ def wait_for_internet_connection():
         time.sleep(5)
 
 
-def to_obj(value, obj_type=str, default_value=None):
+def to_obj(value: Any, obj_type: Type[Any] = str, default_value: Any = None) -> Any:
     """Convert an object to an object value.
 
     By default it converts it to text value.
@@ -93,7 +95,7 @@ def to_obj(value, obj_type=str, default_value=None):
         return default_value
 
 
-def to_text(obj, default_value=None):
+def to_text(obj: Any, default_value: str = None) -> Optional[str]:
     """Convert an object to a text value.
 
     If the object is None, the default value will be returned.
@@ -109,7 +111,7 @@ def to_text(obj, default_value=None):
         return default_value
 
 
-def to_list(value, obj_type=str, default_value=None):
+def to_list(value: Any, obj_type: Type[Any] = str, default_value: List[Any] = None) -> Optional[List[Any]]:
     """Convert a value to a list.
 
     If the value is None, the default value will be returned.
@@ -128,7 +130,8 @@ def to_list(value, obj_type=str, default_value=None):
         return default_value
 
 
-def to_obj_or_list(value, obj_type=str, default_value=None):
+def to_obj_or_list(value: Any, obj_type: Type[Any] = str, default_value: Any = None) -> Union[Optional[Any],
+                                                                                              Optional[List[Any]]]:
     """Convert a value to an object or a list.
 
     If the value is None, the default value will be returned.
@@ -145,7 +148,7 @@ def to_obj_or_list(value, obj_type=str, default_value=None):
         return default_value
 
 
-def to_dict(obj, key_fn, *args, **kwargs):
+def to_dict(obj: Any, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
     """Convert an object to a dict.
 
     Only public attributes are converted. Private attributes and callable attributes (methods) are not included.
@@ -162,14 +165,14 @@ def to_dict(obj, key_fn, *args, **kwargs):
     """
 
     # Internal helper to add a value to a dict
-    def _add_to_dict(obj_dict, key, value, key_fn, *args):
+    def _add_to_dict(obj_dict: Dict[str, Any], key: str, value: Any, key_fn: Callable, *args) -> None:
         # Add to dict and filter out unwanted attributes
         if key not in args:
             dict_key = key_fn(key) if key_fn else key
             obj_dict[dict_key] = _process_dict_value(value, to_dict, key_fn, *args)
 
     # Internal helper to process a dict value
-    def _process_dict_value(val_or_iter, fn, *args):
+    def _process_dict_value(val_or_iter: Any, fn: Callable, *args) -> Any:
         """Process the dict value, which can be an class, dict, list, ... again."""
         if type(val_or_iter).__module__ != type(builtins).__module__ or isinstance(val_or_iter, Mapping):
             return fn(val_or_iter, *args)
@@ -178,7 +181,7 @@ def to_dict(obj, key_fn, *args, **kwargs):
         else:
             return val_or_iter
 
-    obj_dict: Dict[Any, Any] = {}
+    obj_dict: Dict[str, Any] = {}
 
     # Convert to dict (if not from builtins module, we assume it's an custom class object)
     if type(obj).__module__ != type(builtins).__module__:
@@ -198,18 +201,18 @@ def to_dict(obj, key_fn, *args, **kwargs):
     return obj_dict
 
 
-def dict_to_list(obj_dict):
+def dict_to_list(obj_dict: Dict[str, Any]) -> List[str]:
     """Return a dict as a list with key value pairs."""
-    obj_list = []
+    obj_list: List[str] = []
     for (key, value) in obj_dict.items():
         obj_list.append(key + ' = ' + value)
 
     return obj_list
 
 
-def list_to_dict(obj_list):
+def list_to_dict(obj_list: List[str]) -> Dict[str, str]:
     """Return a key value pair list as a dict."""
-    obj_dict = {}
+    obj_dict: Dict[str, str] = {}
     for item in obj_list:
         item_split = item.split('=')
         obj_dict[safe_trim(item_split[0])] = safe_trim(item_split[1])
@@ -218,14 +221,14 @@ def list_to_dict(obj_list):
 
 
 # Based on ConfigParser.getboolean
-def get_boolean(value):
+def get_boolean(value: Any) -> bool:
     v = str(value)
     if v.lower() not in _boolean_states:
         raise ValueError('Not a boolean: %s' % v)
     return _boolean_states[v.lower()]
 
 
-def safe_text(obj, default_value=None):
+def safe_text(obj: Any, default_value: str = None) -> Optional[str]:
     """Return the object converted to text.
 
     When not possible return the default value.
@@ -236,40 +239,40 @@ def safe_text(obj, default_value=None):
         return default_value
 
 
-def safe_lowercase(obj, default_value=None):
+def safe_lowercase(obj: Any, default_value: str = None) -> Optional[str]:
     """Return the object converted to lowercase.
 
     When not possible return the obj itself, or the default value if specified.
     """
     try:
-        return obj.lower()
+        return cast(str, obj).lower()
     except Exception:
         return default_value or obj
 
 
-def safe_uppercase(obj, default_value=None):
+def safe_uppercase(obj: Any, default_value: str = None) -> Optional[str]:
     """Return the object converted to uppercase.
 
     When not possible return the obj itself, or the default value if specified.
     """
     try:
-        return obj.upper()
+        return cast(str, obj).upper()
     except Exception:
         return default_value or obj
 
 
-def safe_trim(obj, default_value=None):
+def safe_trim(obj: Any, default_value: str = None) -> Optional[str]:
     """Return the object trimmed with leading and trailing spaces, tabs and newlines.
 
     When not possible return the obj itself, or the default value if specified.
     """
     try:
-        return obj.strip(' \n\r\t')
+        return cast(str, obj).strip(' \n\r\t')
     except Exception:
         return default_value or obj
 
 
-def camelize(string_value, uppercase_first_letter=False):
+def camelize(string_value: str, uppercase_first_letter: bool = False) -> Optional[str]:
     """Camelize a string.
 
     Return the original string if it cannot be camelized (empty or no underscores in it).
@@ -281,7 +284,7 @@ def camelize(string_value, uppercase_first_letter=False):
     return string_value
 
 
-def decamelize(string_value):
+def decamelize(string_value: str) -> Optional[str]:
     """Decamelize a string.
 
     Return the original string if it cannot be decamelized.
@@ -293,30 +296,30 @@ def decamelize(string_value):
     return string_value
 
 
-def sanitize(string_value, ignore_characters=None):
+def sanitize(string_value: str, ignore_characters: Set[str] = None) -> Optional[str]:
     """Sanitize a string to strip special characters.
 
     Copied from https://github.com/Diaoul/subliminal/blob/master/subliminal/utils.py
     """
     ignore_characters = ignore_characters or set()
     # Only deal with strings
-    if string_value is None:
-        return
-    # Replace some characters with one space
-    characters = {'-', ':', '(', ')', '.', ',', '!'} - ignore_characters
-    if characters:
-        string_value = re.sub(r'[%s]' % re.escape(''.join(characters)), ' ', string_value)
-    # Remove some characters
-    characters = {'\'', '/'} - ignore_characters
-    if characters:
-        string_value = re.sub(r'[%s]' % re.escape(''.join(characters)), '', string_value)
-    # Replace multiple spaces with one
-    string_value = re.sub(r'\s+', ' ', string_value)
-    # Strip and lower case
-    return string_value.strip().lower()
+    if string_value:
+        # Replace some characters with one space
+        characters = {'-', ':', '(', ')', '.', ',', '!'} - ignore_characters
+        if characters:
+            string_value = re.sub(r'[%s]' % re.escape(''.join(characters)), ' ', string_value)
+        # Remove some characters
+        characters = {'\'', '/'} - ignore_characters
+        if characters:
+            string_value = re.sub(r'[%s]' % re.escape(''.join(characters)), '', string_value)
+        # Replace multiple spaces with one
+        string_value = re.sub(r'\s+', ' ', string_value)
+        # Strip and lower case
+        return string_value.strip().lower()
+    return string_value
 
 
-def safe_value(value, default_value='', uppercase=False):
+def safe_value(value: Any, default_value: str = '', uppercase: bool = False) -> Optional[str]:
     result = value or default_value
     result = ','.join(str(v) for v in result) if isinstance(result, list) else result
     result = safe_text(result, default_value)
@@ -325,7 +328,7 @@ def safe_value(value, default_value='', uppercase=False):
     return result
 
 
-def get_item_title(item, default_value='N/A', uppercase=False):
+def get_item_title(item, default_value: str = 'N/A', uppercase: bool = False) -> Optional[str]:
     title = safe_value(item.title, default_value, uppercase=False)
     year = safe_value(item.year, default_value, uppercase=False)
     if not title == default_value and not year == default_value:
@@ -362,12 +365,12 @@ def get_next_scheduler_run_in_ms(scheduler):
         return (scheduler.last_run + scheduler.interval) * 1000
 
 
-def convert_timestamp(timestamp_string):
+def convert_timestamp(timestamp_string: str) -> str:
     return time.strftime(autosubliminal.TIMESTAMPFORMAT,
                          time.strptime(timestamp_string, autosubliminal.DBTIMESTAMPFORMAT))
 
 
-def get_file_size(path):
+def get_file_size(path: str) -> int:
     try:
         byte_size = os.path.getsize(path)
     except Exception:
@@ -376,7 +379,7 @@ def get_file_size(path):
     return byte_size
 
 
-def get_common_path(paths, separator=os.path.sep):
+def get_common_path(paths: List[str], separator: str = os.path.sep) -> Optional[str]:
     """Get the common path between paths.
 
     This unlike the os.path.commonprefix version always returns path prefixes as it compares path component wise.
@@ -393,9 +396,9 @@ def get_common_path(paths, separator=os.path.sep):
     return separator.join(cp) if cp else None
 
 
-def find_path_in_paths(path_to_find, paths, check_common_path=False):
+def find_path_in_paths(path_to_find: str, paths: List[str], check_common_path: bool = False) -> Optional[str]:
     # Normalize all paths before checking
-    def n(x):
+    def n(x: str) -> str:
         return os.path.normcase(os.path.normpath(x))
 
     # If check_common_path, also check if the path_to_find is a sub path of the paths to check (not the way around!)
@@ -406,7 +409,7 @@ def find_path_in_paths(path_to_find, paths, check_common_path=False):
     return paths_found[0] if paths_found else None
 
 
-def get_root_path(video_path, separator=os.path.sep):
+def get_root_path(video_path: str, separator: str = os.path.sep) -> str:
     """Get the root path of a video path.
 
     The root path must be one of the paths listed in autosubliminal.VIDEOPATHS.
@@ -420,7 +423,7 @@ def get_root_path(video_path, separator=os.path.sep):
 
 
 # Thanks to: http://code.activestate.com/recipes/577081-humanized-representation-of-a-number-of-bytes/
-def humanize_bytes(bytes, precision=1):
+def humanize_bytes(bytes: int, precision: int = 1) -> str:
     """Return a humanized string representation of a number of bytes.
 
     >>> humanize_bytes(1)
@@ -460,7 +463,7 @@ def humanize_bytes(bytes, precision=1):
 
 
 # Thanks to http://stackoverflow.com/questions/51658/cross-platform-space-remaining-on-volume-using-python
-def get_disk_space_details(directory):
+def get_disk_space_details(directory: str) -> Tuple[int, int]:
     """Return folder/drive disk space details (free and total space)."""
     if sys.platform == 'win32':
         total_bytes = ctypes.c_ulonglong(0)
@@ -473,12 +476,12 @@ def get_disk_space_details(directory):
         return st.f_bavail * st.f_frsize, st.f_blocks * st.f_frsize
 
 
-def set_rw_and_remove(func, path, _):
+def set_rw_and_remove(func: Callable, path: str, _: Any) -> None:
     os.chmod(path, stat.S_IWRITE)
     func(path)
 
 
-def atoi(text):
+def atoi(text: str) -> Union[int, str]:
     """Convert a text to int.
 
     Returns the int value if the text contains digits, otherwise it returns the text.
@@ -486,7 +489,7 @@ def atoi(text):
     return int(text) if text.isdigit() else text
 
 
-def natural_keys(text):
+def natural_keys(text: str) -> List[Union[int, str]]:
     """ Sort by natural key order.
 
     Sorts in human order (http://nedbatchelder.com/blog/200712/human_sorting.html).
@@ -498,9 +501,9 @@ def natural_keys(text):
     return [atoi(c) for c in re.split(r'(\d+)', text)]
 
 
-def get_wanted_languages():
+def get_wanted_languages() -> List[str]:
     """Get the default list of configured wanted languages."""
-    wanted_languages = []
+    wanted_languages: List[str] = []
 
     if autosubliminal.DEFAULTLANGUAGE:
         wanted_languages.append(autosubliminal.DEFAULTLANGUAGE)
@@ -510,7 +513,7 @@ def get_wanted_languages():
     return wanted_languages
 
 
-def get_missing_languages(available_subtitles, wanted_languages=None):
+def get_missing_languages(available_subtitles, wanted_languages: List[str] = None) -> List[str]:
     """Get the missing subtitle languages."""
     if wanted_languages is None:
         wanted_languages = get_wanted_languages()

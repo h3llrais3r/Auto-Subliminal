@@ -7,7 +7,7 @@ import threading
 import time
 import traceback
 from abc import ABC, abstractmethod
-from typing import Any, Dict
+from typing import Any, Callable, Dict
 
 import autosubliminal
 from autosubliminal.util.common import camelize, to_dict
@@ -170,7 +170,7 @@ class Scheduler(object):
         self._force_run = True
         self._delay = delay
 
-    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
+    def to_dict(self, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its dict representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict

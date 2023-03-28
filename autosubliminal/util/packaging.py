@@ -1,9 +1,11 @@
 # coding=utf-8
 
+from typing import Dict
+
 REQUIREMENTS_FILE = 'requirements.txt'
 
 
-def get_libraries():
+def get_libraries() -> Dict[str, str]:
     """Return the dict with the packaged libraries and their versions."""
     libs = open(REQUIREMENTS_FILE, 'r').read().split('\n')
 
@@ -14,7 +16,7 @@ def get_libraries():
     return requirements_dict
 
 
-def get_library_version(library):
+def get_library_version(library: str) -> str:
     """Return the version of a packaged library."""
     requirements_dict = get_libraries()
 

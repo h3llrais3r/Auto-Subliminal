@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import logging
-from typing import Any, Dict, List, Optional, Type, Union
+from typing import Any, Callable, Dict, List, Optional, Type, Union
 
 from dateutil import parser
 from tvdb_api.models.episode import Episode
@@ -11,6 +11,7 @@ from tvdb_api.models.series_search_result import SeriesSearchResult
 from tvdb_api.utils.artwork import get_artwork_url
 
 import autosubliminal
+from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.util.common import get_wanted_languages, to_dict, to_list, to_obj
 
 log = logging.getLogger(__name__)
@@ -67,7 +68,7 @@ class ShowDetails(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
+    def to_dict(self, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its dict representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict
@@ -137,7 +138,7 @@ class ShowEpisodeDetails(object):
 
     def __init__(self, path: str = None, tvdb_id: int = None, show_tvdb_id: int = None, title: str = None,
                  season: int = None, episode: int = None, missing_languages: List[str] = None,
-                 subtitles: List[Any] = None) -> None:
+                 subtitles: List[Subtitle] = None) -> None:
         self.path = path
         self.tvdb_id = tvdb_id
         self.show_tvdb_id = show_tvdb_id
@@ -229,7 +230,7 @@ class ShowSettings(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_dict(self, key_fn, *args, **kwargs) -> Dict[str, Any]:
+    def to_dict(self, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
         """Convert the object to its dict representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict

@@ -377,7 +377,7 @@ def delete_video(wanted_item_index: int, cleanup: bool) -> bool:
 
 
 @release_wanted_queue_lock_on_exception
-def skip_show(wanted_item_index: int, season: int) -> bool:
+def skip_show(wanted_item_index: int, season: str) -> bool:
     log.info('Skipping a show')
 
     # Get wanted queue lock
@@ -396,7 +396,7 @@ def skip_show(wanted_item_index: int, season: int) -> bool:
             if season == '00':
                 to_delete_wanted_queue.append(index)
             # Skip season (and specials = season 0)
-            elif season == item.season:
+            elif int(season) == item.season:
                 to_delete_wanted_queue.append(index)
     # Start at the end to delete to prevent index out of range error
     i = len(to_delete_wanted_queue) - 1

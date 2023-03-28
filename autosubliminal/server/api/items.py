@@ -39,7 +39,7 @@ class _WantedApi(RestResource):
     def get(self, wanted_item_id=None):
         """Get the list of wanted items or a single wanted item from the wanted queue."""
         if wanted_item_id:
-            wanted_item = find_wanted_item_in_queue(int(wanted_item_id))
+            wanted_item, _ = find_wanted_item_in_queue(int(wanted_item_id))
             if wanted_item:
                 return wanted_item.to_dict(camelize)
             else:
@@ -56,7 +56,7 @@ class _WantedApi(RestResource):
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
         if wanted_item_id:
-            wanted_item = find_wanted_item_in_queue(int(wanted_item_id))
+            wanted_item, _ = find_wanted_item_in_queue(int(wanted_item_id))
             if wanted_item:
                 if get_wanted_queue_lock():
                     # Update wanted item (all keys that are passed) and update the wanted queue
@@ -76,7 +76,7 @@ class _WantedApi(RestResource):
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
         if wanted_item_id:
-            wanted_item, wanted_item_index = find_wanted_item_in_queue(int(wanted_item_id), include_index=True)
+            wanted_item, wanted_item_index = find_wanted_item_in_queue(int(wanted_item_id))
             if wanted_item:
                 if 'action' in input_dict:
                     action = input_dict['action']
@@ -185,7 +185,7 @@ class _WantedApi(RestResource):
                             elif type == 'movie':
                                 movie = wanted_item.title
                                 if wanted_item.year:
-                                    movie += ' (' + wanted_item.year + ')'
+                                    movie += ' (' + str(wanted_item.year) + ')'
                                 # Check if already skipped
                                 movie_sanitized = sanitize(movie)
                                 for x in autosubliminal.SKIPMOVIE:

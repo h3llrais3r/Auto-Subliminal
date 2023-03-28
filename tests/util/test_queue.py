@@ -1,9 +1,11 @@
 # coding=utf-8
 
+from typing import cast
+
 import pytest
 
 import autosubliminal
-from autosubliminal.core.item import WantedItem
+from autosubliminal.core.item import ItemType, WantedItem
 from autosubliminal.util.queue import (count_wanted_queue_items, get_wanted_queue_lock, release_wanted_queue_lock,
                                        release_wanted_queue_lock_on_exception)
 
@@ -26,7 +28,7 @@ def test_count_wanted_queue_items():
     assert count_wanted_queue_items() == 2
     assert count_wanted_queue_items(item_type='movie') == 1
     assert count_wanted_queue_items(item_type='episode') == 1
-    assert count_wanted_queue_items(item_type='video') == 0
+    assert count_wanted_queue_items(item_type=cast(ItemType, 'video')) == 0  # invalid item_type
 
 
 def test_release_wanted_queue_lock_on_exception():

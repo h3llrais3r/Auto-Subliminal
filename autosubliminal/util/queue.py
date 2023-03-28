@@ -3,15 +3,17 @@
 import logging
 import threading
 from functools import wraps
+from typing import Optional, Tuple
 
 import autosubliminal
+from autosubliminal.core.item import ItemType, WantedItem
 
 log = logging.getLogger(__name__)
 
 _lock = threading.Lock()
 
 
-def get_wanted_queue_lock():
+def get_wanted_queue_lock() -> bool:
     with _lock:
         if autosubliminal.WANTEDQUEUELOCK:
             log.debug('Cannot get wanted queue lock, skipping')
@@ -22,7 +24,7 @@ def get_wanted_queue_lock():
             return True
 
 
-def release_wanted_queue_lock():
+def release_wanted_queue_lock() -> None:
     with _lock:
         if autosubliminal.WANTEDQUEUELOCK:
             log.debug('Releasing wanted queue lock')
@@ -51,7 +53,7 @@ def release_wanted_queue_lock_on_exception(func):
     return wrapper
 
 
-def count_wanted_queue_items(item_type=None):
+def count_wanted_queue_items(item_type: ItemType = None) -> int:
     size = 0
     if not item_type:
         size = len(autosubliminal.WANTEDQUEUE)
@@ -62,22 +64,18 @@ def count_wanted_queue_items(item_type=None):
     return size
 
 
-def find_wanted_item_in_queue(wanted_item_id, include_index=False):
+def find_wanted_item_in_queue(wanted_item_id: int) -> Tuple[Optional[WantedItem], Optional[int]]:
     """
     Find a wanted item in the wanted queue.
     """
+    for index, item in enumerate(autosubliminal.WANTEDQUEUE):
+        if item.id == wanted_item_id:
+            return item, index
 
-    if include_index:
-        for index, item in enumerate(autosubliminal.WANTEDQUEUE):
-            if item.id == wanted_item_id:
-                return item, index
-        raise RuntimeError('Wanted item id %s not found in WANTEDQUEUE' % wanted_item_id)
-    else:
-        # Return the first item that matches or None if not found
-        return next((x for x in autosubliminal.WANTEDQUEUE if x.id == wanted_item_id), None)
+    return None, None
 
 
-def update_wanted_item_in_queue(wanted_item):
+def update_wanted_item_in_queue(wanted_item: WantedItem) -> None:
     """
     Update the wanted item in the wanted queue.
     """
