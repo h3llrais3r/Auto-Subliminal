@@ -6,7 +6,7 @@ import pytest
 
 import autosubliminal
 from autosubliminal.core.item import ItemType, WantedItem
-from autosubliminal.util.queue import (count_wanted_queue_items, get_wanted_queue_lock, release_wanted_queue_lock,
+from autosubliminal.core.queue import (count_wanted_queue_items, get_wanted_queue_lock, release_wanted_queue_lock,
                                        release_wanted_queue_lock_on_exception)
 
 

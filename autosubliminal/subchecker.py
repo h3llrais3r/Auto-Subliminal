@@ -21,6 +21,8 @@ from subliminal.video import Episode, Movie, Video
 
 import autosubliminal
 from autosubliminal.core.item import DownloadItem, WantedItem
+from autosubliminal.core.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
+                                       release_wanted_queue_lock_on_exception)
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.db import WantedItemsDb
 from autosubliminal.postprocessor import PostProcessor
@@ -29,8 +31,6 @@ from autosubliminal.providers.addic7ed_custom import Addic7edSubtitle as CustomA
 from autosubliminal.subdownloader import SubDownloader
 from autosubliminal.subsynchronizer import SubSynchronizer
 from autosubliminal.util.common import set_rw_and_remove, wait_for_internet_connection
-from autosubliminal.util.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
-                                       release_wanted_queue_lock_on_exception)
 from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)

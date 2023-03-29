@@ -10,8 +10,8 @@ from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict
 
 import autosubliminal
+from autosubliminal.core.queue import get_wanted_queue_lock, release_wanted_queue_lock
 from autosubliminal.util.common import camelize, to_dict
-from autosubliminal.util.queue import get_wanted_queue_lock, release_wanted_queue_lock
 from autosubliminal.util.websocket import SCHEDULER_FINISH, SCHEDULER_START, send_websocket_event
 
 log = logging.getLogger(__name__)
