@@ -1,7 +1,7 @@
 import { PlatformLocation } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AntiCaptchaProvider } from './shared/models/captcha';
 import { Language } from './shared/models/language';
@@ -56,10 +56,6 @@ class AppSettings {
 
 export let appSettings = new AppSettings();
 
-export function appSettingsServiceFactory(appSettingsService: AppSettingsService): () => Observable<AppSettings> {
-  return () => appSettingsService.load();
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -74,40 +70,22 @@ export class AppSettingsService {
     console.log(`Application web root: ${this.webRoot}`);
   }
 
-  public load(force = false): Observable<AppSettings> {
-    if (force) {
-      // Reload settings
-      return this.httpClient.get(`${this.webRoot}/api/system/settings`)
-        .pipe(map((settings) => {
-          appSettings.fromSettings(settings);
-          this.configLoaded = true;
-          console.log('Application settings reloaded');
-          return appSettings;
-        }))
-        .pipe(catchError((error) => {
-          console.error('Error while reloading application settings');
-          return throwError(error); // rethrow error to be sure that app initialization stops
-        }));
-    } else if (!this.configLoaded) {
-      // Load settings
-      return this.httpClient.get(`${this.webRoot}/api/system/settings`)
-        .pipe(map((settings) => {
-          appSettings.fromSettings(settings);
-          this.configLoaded = true;
-          console.log('Application settings loaded');
-          console.log(`Application version: ${appSettings.appVersion}`);
-          console.log(`Application PID: ${appSettings.appProcessId}`);
-          console.log(`Developer mode: ${appSettings.developerMode}`);
-          return appSettings;
-        }))
-        .pipe(catchError((error) => {
-          console.error('Error while loading application settings');
-          return throwError(error); // rethrow error to be sure that app initialization stops
-        }));
-    } else {
-      // Return previously loaded settings
-      return of(appSettings);
-    }
+  public load(reload = false): Observable<AppSettings> {
+    // Load settings
+    return this.httpClient.get(`${this.webRoot}/api/system/settings`)
+      .pipe(map((settings) => {
+        appSettings.fromSettings(settings);
+        this.configLoaded = true;
+        console.log(`Application settings ${reload ? 're' : ''}loaded`);
+        console.log(`Application version: ${appSettings.appVersion}`);
+        console.log(`Application PID: ${appSettings.appProcessId}`);
+        console.log(`Developer mode: ${appSettings.developerMode}`);
+        return appSettings;
+      }))
+      .pipe(catchError((error) => {
+        console.error('Error while loading application settings');
+        return throwError(() => error); // rethrow error to be sure that app initialization stops
+      }));
   }
 
   // Helper function to reload the appsettings in the background and reload the complete app in case of error
