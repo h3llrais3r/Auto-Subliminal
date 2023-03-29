@@ -7,8 +7,8 @@
 
 # autosubliminal\providers\addic7ed_custom.py: 9
 # autosubliminal\subchecker.py: 9
-# autosubliminal\util\filesystem.py: 12,13
-# autosubliminal\util\language.py: 3
+# autosubliminal\util\filesystem.py: 13,14
+# autosubliminal\util\language.py: 5,6
 babelfish==0.6.0
 # autosubliminal\application.py: 11,12
 # autosubliminal\core\websocket.py: 6
@@ -32,7 +32,7 @@ deathbycaptcha==0.1.1
 # autosubliminal\core\cache.py: 10,11,12
 # autosubliminal\providers\pitcher.py: 11
 dogpile.cache==1.1.8
-# autosubliminal\util\filesystem.py: 14
+# autosubliminal\util\filesystem.py: 15,16
 enzyme==0.4.1
 # autosubliminal\subsynchronizer.py: 8
 ffsubsync==0.4.24
@@ -52,11 +52,11 @@ imdbpie==5.6.4.dev0
 # autosubliminal\util\json.py: 4
 jsonpickle==3.0.1
 # autosubliminal\__init__.py: 627,628
-# autosubliminal\util\filesystem.py: 9
+# autosubliminal\util\filesystem.py: 10
 langdetect==1.0.9
 # autosubliminal\versionchecker.py: 8
 packaging==21.3
-# autosubliminal\util\filesystem.py: 10
+# autosubliminal\util\filesystem.py: 11
 pysrt==1.1.2
 # autosubliminal\providers\pitcher.py: 12
 python-anticaptcha==1.0.0
@@ -93,7 +93,7 @@ stevedore==4.1.1
 # autosubliminal\server\api\system.py: 8
 # autosubliminal\subchecker.py: 10,11,12,13,14,15,16,17,18,19,20
 # autosubliminal\subdownloader.py: 6
-# autosubliminal\util\filesystem.py: 11
+# autosubliminal\util\filesystem.py: 12
 subliminal==2.1.0.dev0
 # autosubliminal\core\websocket.py: 7
 tailer==0.4.1
