@@ -319,50 +319,13 @@ def sanitize(string_value: str, ignore_characters: Set[str] = None) -> Optional[
     return string_value
 
 
-def safe_value(value: Any, default_value: str = '', uppercase: bool = False) -> Optional[str]:
+def safe_value(value: Any, default_value: str = '', uppercase: bool = False) -> str:
     result = value or default_value
     result = ','.join(str(v) for v in result) if isinstance(result, list) else result
     result = safe_text(result, default_value)
     if uppercase:
         result = safe_uppercase(result, default_value=default_value)
     return result
-
-
-def get_item_title(item, default_value: str = 'N/A', uppercase: bool = False) -> Optional[str]:
-    title = safe_value(item.title, default_value, uppercase=False)
-    year = safe_value(item.year, default_value, uppercase=False)
-    if not title == default_value and not year == default_value:
-        title += ' (' + year + ')'
-    if uppercase:
-        title = safe_uppercase(title, default_value=default_value)
-    return title
-
-
-def get_item_name(item, default_value='N/A', uppercase=False):
-    name = get_item_title(item, default_value, False)
-    if item.is_episode:
-        season = safe_value(item.season, default_value, uppercase=False)
-        episode = safe_value(item.episode, default_value, uppercase=False)
-        if not season == default_value and not episode == default_value:
-            name += ' S' + season.zfill(2)
-            if isinstance(item.episode, list):
-                for idx, e in enumerate(item.episode):
-                    episode = safe_value(e, default_value, uppercase=False)
-                    if idx > 0:
-                        name += '-'
-                    name += 'E' + episode.zfill(2)
-            else:
-                name += 'E' + episode.zfill(2)
-    if uppercase:
-        name = safe_uppercase(name, default_value=default_value)
-    return name
-
-
-def get_next_scheduler_run_in_ms(scheduler):
-    if not scheduler or scheduler.running:
-        return 0
-    else:
-        return (scheduler.last_run + scheduler.interval) * 1000
 
 
 def convert_timestamp(timestamp_string: str) -> str:

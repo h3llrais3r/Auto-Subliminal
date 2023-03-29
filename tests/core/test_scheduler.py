@@ -6,7 +6,7 @@ from pytest import MonkeyPatch
 from pytest_mock import MockerFixture
 
 import autosubliminal
-from autosubliminal.core.scheduler import ScheduledProcess, Scheduler
+from autosubliminal.core.scheduler import ScheduledProcess, Scheduler, scheduler_next_run_in_ms
 from autosubliminal.util.common import camelize, to_dict
 
 autosubliminal.SCHEDULERS = {}
@@ -151,6 +151,18 @@ def test_scheduler_deactivate(mocker: MockerFixture):
         _assert_scheduler(scheduler)
 
 
+def test_scheduler_next_run_in_ms():
+    assert scheduler_next_run_in_ms(None) == 0
+    try:
+        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1, initial_run=False)
+        scheduler.process.running = True
+        assert scheduler_next_run_in_ms(scheduler) == 0
+        scheduler.process.running = False
+        assert scheduler_next_run_in_ms(scheduler) > 0
+    finally:
+        _assert_scheduler(scheduler)
+
+
 def test_scheduler_to_dict():
     scheduler = MyScheduler('MyScheduler1')
     scheduler_dict = {
@@ -162,7 +174,7 @@ def test_scheduler_to_dict():
     assert scheduler_dict == scheduler.to_dict(camelize)
 
 
-def _assert_scheduler(scheduler):
+def _assert_scheduler(scheduler: Scheduler):
     if scheduler:
         scheduler.stop()
         assert not scheduler.running

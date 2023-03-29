@@ -12,14 +12,12 @@ from vcr import VCR
 
 import autosubliminal
 from autosubliminal import version
-from autosubliminal.core.item import WantedItem
 from autosubliminal.core.subtitle import Subtitle
-from autosubliminal.util.common import (atoi, camelize, connect_url, convert_timestamp, decamelize, find_path_in_paths,
-                                        get_boolean, get_common_path, get_file_size, get_item_name, get_item_title,
-                                        get_missing_languages, get_root_path, get_today, get_wanted_languages,
-                                        humanize_bytes, natural_keys, run_cmd, safe_lowercase, safe_text, safe_trim,
-                                        safe_uppercase, safe_value, sanitize, set_rw_and_remove, to_dict, to_list,
-                                        to_obj, to_obj_or_list, to_text, wait_for_internet_connection)
+from autosubliminal.util.common import (
+    atoi, camelize, connect_url, convert_timestamp, decamelize, find_path_in_paths, get_boolean, get_common_path,
+    get_file_size, get_missing_languages, get_root_path, get_today, get_wanted_languages, humanize_bytes, natural_keys,
+    run_cmd, safe_lowercase, safe_text, safe_trim, safe_uppercase, safe_value, sanitize, set_rw_and_remove, to_dict,
+    to_list, to_obj, to_obj_or_list, to_text, wait_for_internet_connection)
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -324,41 +322,6 @@ def test_safe_value():
     assert safe_value('value', uppercase=True) == 'VALUE'
     assert safe_value('', default_value='default') == 'default'
     assert safe_value('', default_value='default', uppercase=True) == 'DEFAULT'
-
-
-def test_get_item_title():
-    wanted_item_1 = WantedItem(title='title1')
-    wanted_item_2 = WantedItem(title='title2', year=2016)
-    wanted_item_empty = WantedItem()
-    assert get_item_title(wanted_item_1) == 'title1'
-    assert get_item_title(wanted_item_1, uppercase=True) == 'TITLE1'
-    assert get_item_title(wanted_item_2) == 'title2 (2016)'
-    assert get_item_title(wanted_item_2, uppercase=True) == 'TITLE2 (2016)'
-    assert get_item_title(wanted_item_empty) == 'N/A'
-    assert get_item_title(wanted_item_empty, default_value='default') == 'default'
-    assert get_item_title(wanted_item_empty, default_value='default', uppercase=True) == 'DEFAULT'
-
-
-def test_get_item_name():
-    wanted_item_1 = WantedItem(title='title1')
-    wanted_item_2 = WantedItem(title='title2', year=2016, type='movie')
-    wanted_item_3 = WantedItem(title='title3', type='episode', season=1, episode=1)
-    wanted_item_4 = WantedItem(title='title4', year=2016, type='episode', season=1, episode=1)
-    wanted_item_5 = WantedItem(title='title5', year=2016, type='episode', season=1, episode=[1, 2])
-    wanted_item_empty = WantedItem()
-    assert get_item_name(wanted_item_1) == 'title1'
-    assert get_item_name(wanted_item_1, uppercase=True) == 'TITLE1'
-    assert get_item_name(wanted_item_2) == 'title2 (2016)'
-    assert get_item_name(wanted_item_2, uppercase=True) == 'TITLE2 (2016)'
-    assert get_item_name(wanted_item_3) == 'title3 S01E01'
-    assert get_item_name(wanted_item_3, uppercase=True) == 'TITLE3 S01E01'
-    assert get_item_name(wanted_item_4) == 'title4 (2016) S01E01'
-    assert get_item_name(wanted_item_4, uppercase=True) == 'TITLE4 (2016) S01E01'
-    assert get_item_name(wanted_item_5) == 'title5 (2016) S01E01-E02'
-    assert get_item_name(wanted_item_5, uppercase=True) == 'TITLE5 (2016) S01E01-E02'
-    assert get_item_name(wanted_item_empty) == 'N/A'
-    assert get_item_name(wanted_item_empty, default_value='default') == 'default'
-    assert get_item_name(wanted_item_empty, default_value='default', uppercase=True) == 'DEFAULT'
 
 
 def test_convert_timestamp(monkeypatch: MonkeyPatch):

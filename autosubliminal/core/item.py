@@ -10,8 +10,8 @@ from typing import Any, Callable, Dict, List, Literal, Optional, Type, Union, ca
 from subliminal.video import Video
 
 import autosubliminal
-from autosubliminal.util.common import (find_path_in_paths, get_today, humanize_bytes, to_dict, to_list, to_obj,
-                                        to_obj_or_list)
+from autosubliminal.util.common import (find_path_in_paths, get_today, humanize_bytes, safe_value, to_dict, to_list,
+                                        to_obj, to_obj_or_list)
 
 # Release group regex
 release_group_regex = re.compile(r'(.*)\[.*?\]')
@@ -49,6 +49,11 @@ class _BaseItem(ABC):
     https://stackoverflow.com/questions/390250/elegant-ways-to-support-equivalence-equality-in-python-classes
     """
 
+    # Keep list of default properties that should be excluded when converting to json for frontend
+    # Typically these are generated properties, which can be generated from the default properties
+    # This is to keep the data to be sent over the wire to a minimum
+    exclude_props = ['exclude_props', 'is_episode', 'is_movie', 'name', 'long_name']
+
     def __init__(self, type: ItemType = None, title: str = None, year: int = None, season: int = None,
                  episode: Union[int, List[int]] = None, source: Union[str, List[str]] = None, quality: str = None,
                  codec: Union[str, List[str]] = None, release_group: str = None) -> None:
@@ -73,6 +78,40 @@ class _BaseItem(ABC):
         self.release_group = _release_group
         self.tvdb_id: Optional[int] = None
         self.imdb_id: Optional[str] = None
+
+    @property
+    def is_episode(self) -> bool:
+        return self.type == 'episode'
+
+    @property
+    def is_movie(self) -> bool:
+        return self.type == 'movie'
+
+    @property
+    def name(self) -> str:
+        name = safe_value(self.title)
+        year = safe_value(self.year)
+        if name and year:
+            name += ' (' + year + ')'
+        return name
+
+    @property
+    def long_name(self) -> str:
+        name = self.name
+        if name and self.is_episode:
+            season = safe_value(self.season)
+            episode = safe_value(self.episode)
+            if season and episode:
+                name += ' S' + season.zfill(2)
+                if isinstance(self.episode, list):
+                    for idx, ep in enumerate(self.episode):
+                        episode = safe_value(ep)
+                        if idx > 0:
+                            name += '-'
+                        name += 'E' + episode.zfill(2)
+                else:
+                    name += 'E' + episode.zfill(2)
+        return name
 
     def set_attr(self, key: str, value: Any) -> None:
         """Set an attribute (ignore/skip @property attributes).
@@ -158,16 +197,6 @@ class WantedItem(_BaseItem):
         self.found_subtitles: Dict[str, Any] = None  # List of found subtitles after a manual search
 
     @property
-    def is_episode(self) -> bool:
-        """Indication if the item is an episode."""
-        return self.type == 'episode'
-
-    @property
-    def is_movie(self) -> bool:
-        """Indication if the item is a movie."""
-        return self.type == 'movie'
-
-    @property
     def is_search_active(self) -> bool:
         """Indication if the search is active for the wanted item.
 
@@ -199,7 +228,7 @@ class WantedItem(_BaseItem):
         :rtype: dict
         """
         # Define args to exclude
-        exclude_args = ['video_path', 'video_size', 'is_episode', 'is_movie', 'video', 'found_subtitles']
+        exclude_args = [*_BaseItem.exclude_props, 'video_path', 'video_size', 'video', 'found_subtitles']
         if args:
             exclude_args.extend(list(args))
 
@@ -329,7 +358,7 @@ class DownloadedItem(_BaseItem):
         :rtype: dict
         """
         # Define args to exclude
-        exclude_args = ['video_path']
+        exclude_args = [*_BaseItem.exclude_props, 'video_path']
         if args:
             exclude_args.extend(list(args))
 

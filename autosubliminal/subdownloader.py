@@ -10,7 +10,6 @@ from autosubliminal import notifiers
 from autosubliminal.core.item import DownloadItem
 from autosubliminal.db import LastDownloadsDb
 from autosubliminal.postprocessor import PostProcessor
-from autosubliminal.util.common import get_item_name
 from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)
@@ -35,7 +34,9 @@ class SubDownloader(object):
 
         # Save the subtitle
         if self.save():
-            name = get_item_name(self._download_item)
+            name = self._download_item.long_name
+            language = self._download_item.language
+            provider = self._download_item.provider
 
             # Mark as downloaded
             self.mark_downloaded()
@@ -47,9 +48,6 @@ class SubDownloader(object):
                     'Unable to handle post processing for \'%s\'! Please check the log file!' % name, severity='error')
 
             # Show success message
-            language = self._download_item.language
-            name = get_item_name(self._download_item)
-            provider = self._download_item.provider
             send_websocket_notification(
                 'Downloaded \'%s\' subtitle for \'%s\' from \'%s\'.' % (language, name, provider), severity='success')
 

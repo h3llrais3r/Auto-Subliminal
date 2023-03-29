@@ -44,6 +44,30 @@ def test_wanted_item_trim_release_group():
     assert wanted_item_1.release_group == 'KILLERS'
 
 
+def test_wanted_item_name():
+    wanted_item_1 = WantedItem(title='title1')
+    wanted_item_2 = WantedItem(title='title2', year=2016)
+    wanted_item_empty = WantedItem()
+    assert wanted_item_1.name == 'title1'
+    assert wanted_item_2.name == 'title2 (2016)'
+    assert wanted_item_empty.name == ''
+
+
+def test_wanted_item_long_name():
+    wanted_item_1 = WantedItem(title='title1')
+    wanted_item_2 = WantedItem(title='title2', year=2016, type='movie')
+    wanted_item_3 = WantedItem(title='title3', type='episode', season=1, episode=1)
+    wanted_item_4 = WantedItem(title='title4', year=2016, type='episode', season=1, episode=1)
+    wanted_item_5 = WantedItem(title='title5', year=2016, type='episode', season=1, episode=[1, 2])
+    wanted_item_empty = WantedItem()
+    assert wanted_item_1.long_name == 'title1'
+    assert wanted_item_2.long_name == 'title2 (2016)'
+    assert wanted_item_3.long_name == 'title3 S01E01'
+    assert wanted_item_4.long_name == 'title4 (2016) S01E01'
+    assert wanted_item_5.long_name == 'title5 (2016) S01E01-E02'
+    assert wanted_item_empty.long_name == ''
+
+
 def test_wanted_item_library_path(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.LIBRARYPATHS', ['path/to/library'])
     wanted_item.set_attr('video_path', 'path/to/library/and/video/file')

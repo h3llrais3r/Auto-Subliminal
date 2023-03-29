@@ -9,9 +9,10 @@ from subliminal.score import episode_scores, movie_scores
 
 import autosubliminal
 from autosubliminal.core.pathinfo import PathInfo
+from autosubliminal.core.scheduler import scheduler_next_run_in_ms
 from autosubliminal.providers.pitcher import ANTI_CAPTCHA_PROVIDERS
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import camelize, get_next_scheduler_run_in_ms, to_dict
+from autosubliminal.util.common import camelize, to_dict
 from autosubliminal.util.language import get_subtitle_languages
 from autosubliminal.util.system import get_python_location, get_python_version_full
 from autosubliminal.version import RELEASE_VERSION
@@ -109,12 +110,12 @@ class _SettingsApi(RestResource):
             'developer_mode': autosubliminal.DEVELOPER,
             'web_root': autosubliminal.WEBROOT,
             'scan_disk': autosubliminal.SCANDISK.name,
-            'scan_disk_next_run_in_ms': get_next_scheduler_run_in_ms(autosubliminal.SCANDISK),
+            'scan_disk_next_run_in_ms': scheduler_next_run_in_ms(autosubliminal.SCANDISK),
             'scan_disk_interval_default': autosubliminal.SCANDISKINTERVALDEFAULT,
             'scan_library': autosubliminal.SCANLIBRARY.name,
             'scan_library_interval_default': autosubliminal.SCANLIBRARYINTERVALDEFAULT,
             'check_sub': autosubliminal.CHECKSUB.name,
-            'check_sub_next_run_in_ms': get_next_scheduler_run_in_ms(autosubliminal.CHECKSUB),
+            'check_sub_next_run_in_ms': scheduler_next_run_in_ms(autosubliminal.CHECKSUB),
             'check_sub_interval_default': autosubliminal.CHECKSUBINTERVALDEFAULT,
             'check_sub_deadline_default': autosubliminal.CHECKSUBDEADLINEDEFAULT,
             'check_sub_delta_default': autosubliminal.CHECKSUBDELTADEFAULT,
