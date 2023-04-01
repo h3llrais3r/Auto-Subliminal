@@ -10,7 +10,7 @@ from autosubliminal.util.websocket import (SCHEDULER_FINISH, SCHEDULER_START, SY
                                            send_websocket_notification)
 
 
-def test_send_websocket_event_system_start(monkeypatch: MonkeyPatch):
+def test_send_websocket_event_system_start(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
     message = {
         'type': 'EVENT',
@@ -24,7 +24,7 @@ def test_send_websocket_event_system_start(monkeypatch: MonkeyPatch):
     assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
 
 
-def test_send_websocket_event_system_restart(monkeypatch: MonkeyPatch):
+def test_send_websocket_event_system_restart(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
     message = {
         'type': 'EVENT',
@@ -38,7 +38,7 @@ def test_send_websocket_event_system_restart(monkeypatch: MonkeyPatch):
     assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
 
 
-def test_send_websocket_event_system_shutdown(monkeypatch: MonkeyPatch):
+def test_send_websocket_event_system_shutdown(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
     message = {
         'type': 'EVENT',
@@ -52,7 +52,7 @@ def test_send_websocket_event_system_shutdown(monkeypatch: MonkeyPatch):
     assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
 
 
-def test_send_websocket_event_system_update(monkeypatch: MonkeyPatch):
+def test_send_websocket_event_system_update(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
     message = {
         'type': 'EVENT',
@@ -68,7 +68,7 @@ def test_send_websocket_event_system_update(monkeypatch: MonkeyPatch):
     assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
 
 
-def test_send_websocket_event_scheduler_start(monkeypatch: MonkeyPatch):
+def test_send_websocket_event_scheduler_start(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
     message = {
         'type': 'EVENT',
@@ -84,7 +84,7 @@ def test_send_websocket_event_scheduler_start(monkeypatch: MonkeyPatch):
     assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
 
 
-def test_send_websocket_event_scheduler_finish(monkeypatch: MonkeyPatch):
+def test_send_websocket_event_scheduler_finish(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
     next_run = time.time()
     message = {
@@ -102,7 +102,7 @@ def test_send_websocket_event_scheduler_finish(monkeypatch: MonkeyPatch):
     assert autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0) == message
 
 
-def test_send_websocket_notification(monkeypatch: MonkeyPatch):
+def test_send_websocket_notification(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [])
     message = {
         'type': 'NOTIFICATION',

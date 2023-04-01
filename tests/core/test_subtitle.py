@@ -3,7 +3,7 @@ from pytest import MonkeyPatch
 from autosubliminal.core.subtitle import Subtitle, get_missing_subtitle_languages
 
 
-def test_get_missing_subtitle_languages(monkeypatch: MonkeyPatch):
+def test_get_missing_subtitle_languages(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
     monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en', 'fr'])
     available_subtitles = [Subtitle(language='en'), Subtitle(language='fr')]

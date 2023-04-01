@@ -15,14 +15,14 @@ download_item.language = 'en'
 download_item.provider = 'provider'
 
 
-def test_twitter_disabled():
+def test_twitter_disabled() -> None:
     notifier = TwitterNotifier()
     assert notifier.name == notifier_name
     assert notifier.notify('test') is False
     assert notifier.notify_download(download_item) is False
 
 
-def test_twitter_exception(monkeypatch: MonkeyPatch):
+def test_twitter_exception(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.NOTIFYTWITTER', True)
     # No twitter settings patched, so will result in exception
     notifier = TwitterNotifier()
@@ -31,7 +31,7 @@ def test_twitter_exception(monkeypatch: MonkeyPatch):
     assert notifier.notify_download(download_item) is False
 
 
-def test_twitter_notify_download(monkeypatch: MonkeyPatch, mocker: MockerFixture):
+def test_twitter_notify_download(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
     monkeypatch.setattr('autosubliminal.NOTIFYTWITTER', True)
     mocker.patch('twitter.Api.__init__', return_value=None)
     mocker.patch('twitter.Api.PostUpdate', return_value=True)

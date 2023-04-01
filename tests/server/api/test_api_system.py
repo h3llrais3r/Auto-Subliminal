@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from typing import cast
+from typing import Any, Callable, Dict, cast
 
 import pytest
 from pytest import MonkeyPatch
@@ -18,7 +18,7 @@ from tests.server.api.test_api import pickle_api_result
 
 
 class MyScheduler(object):
-    def __init__(self, name):
+    def __init__(self, name: str) -> None:
         self.name = name
         self.process = None
         self.interval = 60
@@ -28,14 +28,14 @@ class MyScheduler(object):
         self._force_stop = False
 
     @property
-    def next_run(self):
+    def next_run(self) -> int:
         return self.last_run + self.interval
 
     @property
-    def running(self):
+    def running(self) -> bool:
         return False
 
-    def to_dict(self, key_fn):
+    def to_dict(self, key_fn: Callable) -> Dict[str, Any]:
         return to_dict(self, key_fn, 'process')
 
 
@@ -95,7 +95,7 @@ pathinfo_2_json = '{"freeBytes": 1024, "freePercentage": 100.0, "freeSpace": "1.
 pathinfo_json_list = '[' + pathinfo_1_json + ', ' + pathinfo_2_json + ']'
 
 
-def test_get_settings(monkeypatch: MonkeyPatch, mocker: MockerFixture):
+def test_get_settings(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
     monkeypatch.setattr('autosubliminal.PID', 1)
     monkeypatch.setattr('autosubliminal.DEVELOPER', True)
     monkeypatch.setattr('autosubliminal.WEBROOT', 'mywebroot')
@@ -135,22 +135,22 @@ def test_get_settings(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     assert settings_json == pickle_api_result(SystemApi().settings.get())
 
 
-def test_get_schedulers():
+def test_get_schedulers() -> None:
     autosubliminal.SCHEDULERS = {'MyScheduler1': cast(Scheduler, MyScheduler('MyScheduler1'))}
     assert scheduler_json_list == pickle_api_result(SystemApi().schedulers.get())
 
 
-def test_get_scheduler():
+def test_get_scheduler() -> None:
     autosubliminal.SCHEDULERS = {'MyScheduler1': cast(Scheduler, MyScheduler('MyScheduler1'))}
     assert scheduler_json == pickle_api_result(SystemApi().schedulers.get('MyScheduler1'))
 
 
-def test_get_scheduler_bad_request():
+def test_get_scheduler_bad_request() -> None:
     with pytest.raises(BadRequest):
         SystemApi().schedulers.get('InvalidSchedulerName')
 
 
-def test_get_paths(mocker: MockerFixture):
+def test_get_paths(mocker: MockerFixture) -> None:
     autosubliminal.PATH = 'path1'
     autosubliminal.VIDEOPATHS = ['path2']
     mocker.patch.object(PathInfo, 'get_path_info', side_effect=[pathinfo_1, pathinfo_2])

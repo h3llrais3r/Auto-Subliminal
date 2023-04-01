@@ -144,14 +144,14 @@ class _BaseItem(ABC):
                 # Use default value
                 setattr(self, key, value)
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         """Overrides the default implementation to allow comparison."""
         if not isinstance(other, type(self)):
             return NotImplemented
 
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other: Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         """Overrides the default implementation (unnecessary in Python 3) to allow comparison."""
         return not self.__eq__(other)
 

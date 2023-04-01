@@ -13,28 +13,28 @@ from autosubliminal.core.websocket import WebSocketBroadCaster, WebSocketHandler
 
 
 class MyScheduler(object):
-    def run(self):
+    def run(self) -> None:
         pass
 
 
 autosubliminal.SCHEDULERS = {'MyScheduler': cast(Scheduler, MyScheduler())}
 
 
-def test_receive_message_text(mocker: MockerFixture):
+def test_receive_message_text(mocker: MockerFixture) -> None:
     mocker.patch('autosubliminal.core.websocket.WebSocketHandler.handle_message', return_value=True)
     handler = WebSocketHandler(None)
     handler.received_message(TextMessage('{"key1": "value1"}'))
     cast(Mock, handler.handle_message).assert_called_once_with({'key1': 'value1'})
 
 
-def test_receive_message_invalid(mocker: MockerFixture):
+def test_receive_message_invalid(mocker: MockerFixture) -> None:
     mocker.patch('autosubliminal.core.websocket.WebSocketHandler.handle_message')
     handler = WebSocketHandler(None)
     handler.received_message(BinaryMessage(b''))
     cast(Mock, handler.handle_message).assert_not_called()
 
 
-def test_handle_message_event_run_process():
+def test_handle_message_event_run_process() -> None:
     handler = WebSocketHandler(None)
     message = {
         'type': 'EVENT',
@@ -48,7 +48,7 @@ def test_handle_message_event_run_process():
     assert handler.handle_message(message)
 
 
-def test_handle_message_event_run_process_unsupported():
+def test_handle_message_event_run_process_unsupported() -> None:
     handler = WebSocketHandler(None)
     message = {
         'type': 'event',
@@ -62,7 +62,7 @@ def test_handle_message_event_run_process_unsupported():
     assert not handler.handle_message(message)
 
 
-def test_handle_message_event_invalid():
+def test_handle_message_event_invalid() -> None:
     handler = WebSocketHandler(None)
     message = {
         'type': 'EVENT',
@@ -77,7 +77,7 @@ def test_handle_message_event_invalid():
     assert not handler.handle_message(message)
 
 
-def test_websocket_broadcaster(monkeypatch: MonkeyPatch, mocker: MockerFixture):
+def test_websocket_broadcaster(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
     mocker.patch('threading.Thread')
     mocker.patch('cherrypy.engine.publish')
     message = {

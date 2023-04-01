@@ -6,20 +6,20 @@ from pytest import MonkeyPatch
 from autosubliminal.server.rest import MethodNotAllowed, MethodNotImplemented, NotFound, RestResource
 
 
-def test_rest_method_not_found(monkeypatch: MonkeyPatch):
+def test_rest_method_not_found(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('cherrypy.request.method', 'UNKNOWN')
     resource = RestResource()
     with pytest.raises(NotFound):
         resource.default()
 
 
-def test_rest_method_not_allowed():
+def test_rest_method_not_allowed() -> None:
     resource = RestResource()
     with pytest.raises(MethodNotAllowed):
         resource.default()
 
 
-def test_rest_get(monkeypatch: MonkeyPatch):
+def test_rest_get(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('cherrypy.request.method', 'GET')
     resource = RestResource()
     resource.allowed_methods = ['GET']
@@ -27,7 +27,7 @@ def test_rest_get(monkeypatch: MonkeyPatch):
         resource.default()
 
 
-def test_rest_post(monkeypatch: MonkeyPatch):
+def test_rest_post(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('cherrypy.request.method', 'POST')
     resource = RestResource()
     resource.allowed_methods = ['POST']
@@ -35,7 +35,7 @@ def test_rest_post(monkeypatch: MonkeyPatch):
         resource.default()
 
 
-def test_rest_put(monkeypatch: MonkeyPatch):
+def test_rest_put(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('cherrypy.request.method', 'PUT')
     resource = RestResource()
     resource.allowed_methods = ['PUT']
@@ -43,7 +43,7 @@ def test_rest_put(monkeypatch: MonkeyPatch):
         resource.default()
 
 
-def test_rest_patch(monkeypatch: MonkeyPatch):
+def test_rest_patch(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('cherrypy.request.method', 'PATCH')
     resource = RestResource()
     resource.allowed_methods = ['PATCH']
@@ -51,7 +51,7 @@ def test_rest_patch(monkeypatch: MonkeyPatch):
         resource.default()
 
 
-def test_rest_delete(monkeypatch: MonkeyPatch):
+def test_rest_delete(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('cherrypy.request.method', 'DELETE')
     resource = RestResource()
     resource.allowed_methods = ['DELETE']

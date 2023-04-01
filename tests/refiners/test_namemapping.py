@@ -17,21 +17,21 @@ autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = {'refine': 'title'}
 autosubliminal.MOVIENAMEMAPPING = {'refine': 'tt123456'}
 
 
-def test_refine_episode():
+def test_refine_episode() -> None:
     episode = Episode(name=os.path.join(resources_dir, 'Refine.Episode.mkv'), series='Refine', season=0, episode=0)
     refine(episode)
     assert episode.alternative_series == ['series']
     assert episode.series_tvdb_id == 123456
 
 
-def test_refine_movie():
+def test_refine_movie() -> None:
     movie = Movie(name=os.path.join(resources_dir, 'Refine.Movie.mkv'), title='Refine')
     refine(movie)
     assert movie.alternative_titles == ['title']
     assert movie.imdb_id == 'tt123456'
 
 
-def test_skip_refine():
+def test_skip_refine() -> None:
     movie = Movie(name=os.path.join(resources_dir, 'Refine.Movie.Not.Exists.mkv'), title='Refine')
     refine(movie)
     assert movie.title == 'Refine'

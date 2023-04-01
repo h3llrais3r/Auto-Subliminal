@@ -15,14 +15,14 @@ download_item.language = 'en'
 download_item.provider = 'provider'
 
 
-def test_pushalot_disabled():
+def test_pushalot_disabled() -> None:
     notifier = PushalotNotifier()
     assert notifier.name == notifier_name
     assert notifier.notify('test') is False
     assert notifier.notify_download(download_item) is False
 
 
-def test_pushalot_error(monkeypatch: MonkeyPatch):
+def test_pushalot_error(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHALOT', True)
     with requests_mock.mock() as m:
         # Mock erroneous request
@@ -33,7 +33,7 @@ def test_pushalot_error(monkeypatch: MonkeyPatch):
         assert notifier.notify_download(download_item) is False
 
 
-def test_pushalot_exception(monkeypatch: MonkeyPatch):
+def test_pushalot_exception(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHALOT', True)
     with requests_mock.mock() as m:
         # Mock exception request
@@ -44,7 +44,7 @@ def test_pushalot_exception(monkeypatch: MonkeyPatch):
         assert notifier.notify_download(download_item) is False
 
 
-def test_pushalot_notify_download(monkeypatch: MonkeyPatch):
+def test_pushalot_notify_download(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.NOTIFYPUSHALOT', True)
     with requests_mock.mock() as m:
         # Mock successful request

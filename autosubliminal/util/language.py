@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from typing import Any, List, cast
+from typing import List, cast
 
 import babelfish
 from babelfish.language import IsoLanguage
@@ -11,14 +11,14 @@ class SubtitleLanguage(object):
         self.code = code  # iso (f.e. 'nl') or ietf (f.e. 'pt-BR')
         self.name = name
 
-    def __eq__(self, other: Any) -> bool:
+    def __eq__(self, other: object) -> bool:
         """Overrides the default implementation to allow comparison."""
         if not isinstance(other, type(self)):
             return NotImplemented
 
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other: Any) -> bool:
+    def __ne__(self, other: object) -> bool:
         """Overrides the default implementation (unnecessary in Python 3) to allow comparison."""
         return not self.__eq__(other)
 

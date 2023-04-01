@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import time
+from typing import Any, Callable, Dict
 
 from pytest import MonkeyPatch
 from pytest_mock import MockerFixture
@@ -14,7 +15,7 @@ autosubliminal.WEBSOCKETMESSAGEQUEUE = []
 
 
 class MyScheduler(object):
-    def __init__(self, name):
+    def __init__(self, name: str) -> None:
         self.name = name
         self.process = None
         self.interval = 60
@@ -24,19 +25,19 @@ class MyScheduler(object):
         self._force_stop = False
 
     @property
-    def next_run(self):
+    def next_run(self) -> int:
         return self.last_run + self.interval
 
-    def to_dict(self, key_fn):
+    def to_dict(self, key_fn: Callable) -> Dict[str, Any]:
         return to_dict(self, key_fn, 'process')
 
 
 class MyScheduledProcess(ScheduledProcess):
-    def run(self, force_run):
+    def run(self, force_run: bool) -> None:
         pass
 
 
-def test_scheduler(mocker: MockerFixture):
+def test_scheduler(mocker: MockerFixture) -> None:
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
@@ -50,7 +51,7 @@ def test_scheduler(mocker: MockerFixture):
         _assert_scheduler(scheduler)
 
 
-def test_scheduler_force_run(mocker: MockerFixture):
+def test_scheduler_force_run(mocker: MockerFixture) -> None:
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
@@ -65,7 +66,7 @@ def test_scheduler_force_run(mocker: MockerFixture):
         _assert_scheduler(scheduler)
 
 
-def test_duplicate_scheduler(monkeypatch: MonkeyPatch, mocker: MockerFixture):
+def test_duplicate_scheduler(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
     monkeypatch.setattr('autosubliminal.SCHEDULERS', {'MyScheduledProcess': None})
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
@@ -81,7 +82,7 @@ def test_duplicate_scheduler(monkeypatch: MonkeyPatch, mocker: MockerFixture):
         _assert_scheduler(scheduler)
 
 
-def test_triple_scheduler(monkeypatch: MonkeyPatch, mocker: MockerFixture):
+def test_triple_scheduler(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
     monkeypatch.setattr('autosubliminal.SCHEDULERS', {'MyScheduledProcess': None, 'MyScheduledProcess-1': None})
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
@@ -97,7 +98,7 @@ def test_triple_scheduler(monkeypatch: MonkeyPatch, mocker: MockerFixture):
         _assert_scheduler(scheduler)
 
 
-def test_scheduler_run_process_exception(mocker: MockerFixture):
+def test_scheduler_run_process_exception(mocker: MockerFixture) -> None:
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         mocker.patch.object(MyScheduledProcess, 'run', side_effect=Exception)
@@ -111,7 +112,7 @@ def test_scheduler_run_process_exception(mocker: MockerFixture):
         _assert_scheduler(scheduler)
 
 
-def test_scheduler_activate(mocker: MockerFixture):
+def test_scheduler_activate(mocker: MockerFixture) -> None:
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
@@ -131,7 +132,7 @@ def test_scheduler_activate(mocker: MockerFixture):
         _assert_scheduler(scheduler)
 
 
-def test_scheduler_deactivate(mocker: MockerFixture):
+def test_scheduler_deactivate(mocker: MockerFixture) -> None:
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
@@ -151,7 +152,7 @@ def test_scheduler_deactivate(mocker: MockerFixture):
         _assert_scheduler(scheduler)
 
 
-def test_scheduler_next_run_in_ms():
+def test_scheduler_next_run_in_ms() -> None:
     assert scheduler_next_run_in_ms(None) == 0
     try:
         scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1, initial_run=False)
@@ -163,7 +164,7 @@ def test_scheduler_next_run_in_ms():
         _assert_scheduler(scheduler)
 
 
-def test_scheduler_to_dict():
+def test_scheduler_to_dict() -> None:
     scheduler = MyScheduler('MyScheduler1')
     scheduler_dict = {
         'interval': 60,
@@ -174,7 +175,7 @@ def test_scheduler_to_dict():
     assert scheduler_dict == scheduler.to_dict(camelize)
 
 
-def _assert_scheduler(scheduler: Scheduler):
+def _assert_scheduler(scheduler: Scheduler) -> None:
     if scheduler:
         scheduler.stop()
         assert not scheduler.running

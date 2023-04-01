@@ -11,7 +11,7 @@ from autosubliminal.core.logger import (_LogFilter, _LogFormatter, count_backup_
                                         initialize, update_settings)
 
 
-def _mock_settings(monkeypatch: MonkeyPatch):
+def _mock_settings(monkeypatch: MonkeyPatch) -> None:
     log_file = os.path.abspath(os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', 'resources', 'test.log'))
     monkeypatch.setattr('autosubliminal.LOGLEVEL', 'INFO')
     monkeypatch.setattr('autosubliminal.LOGHTTPACCESS', True)
@@ -24,7 +24,7 @@ def _mock_settings(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.LOGLEVELCONSOLE', 'ERROR')
 
 
-def test_initialize(monkeypatch: MonkeyPatch):
+def test_initialize(monkeypatch: MonkeyPatch) -> None:
     _mock_settings(monkeypatch)
     initialize()
     log = logging.getLogger()
@@ -44,7 +44,7 @@ def test_initialize(monkeypatch: MonkeyPatch):
     assert console_handler.level == logging.ERROR
 
 
-def test_update_settings(monkeypatch: MonkeyPatch):
+def test_update_settings(monkeypatch: MonkeyPatch) -> None:
     _mock_settings(monkeypatch)
     initialize()
     monkeypatch.setattr('autosubliminal.LOGLEVEL', 'DEBUG')
@@ -63,7 +63,7 @@ def test_update_settings(monkeypatch: MonkeyPatch):
     assert console_handler.level == logging.WARNING
 
 
-def test_get_log_lines(monkeypatch: MonkeyPatch):
+def test_get_log_lines(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.LOGREVERSED', False)
     try:
         line1 = '2016-06-06 20:32:15,509 INFO     [MainThread :: __main__] Running application with PID: 9944'
@@ -92,7 +92,7 @@ def test_get_log_lines(monkeypatch: MonkeyPatch):
         os.remove(autosubliminal.LOGFILE)
 
 
-def test_get_logfile():
+def test_get_logfile() -> None:
     try:
         fd, autosubliminal.LOGFILE = tempfile.mkstemp(text=True)
         os.close(fd)
@@ -102,6 +102,6 @@ def test_get_logfile():
         os.remove(autosubliminal.LOGFILE)
 
 
-def test_count_backup_logfiles():
+def test_count_backup_logfiles() -> None:
     autosubliminal.LOGFILE = 'path/to/autosubliminal.log'
     assert count_backup_logfiles() == 0

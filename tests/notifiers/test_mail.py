@@ -15,14 +15,14 @@ download_item.language = 'en'
 download_item.provider = 'provider'
 
 
-def test_mail_disabled():
+def test_mail_disabled() -> None:
     notifier = MailNotifier()
     assert notifier.name == notifier_name
     assert notifier.notify('test') is False
     assert notifier.notify_download(download_item) is False
 
 
-def test_mail_exception(monkeypatch: MonkeyPatch):
+def test_mail_exception(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.NOTIFYMAIL', True)
     monkeypatch.setattr('autosubliminal.MAILFROMNAME', 'FromMe')
     monkeypatch.setattr('autosubliminal.MAILFROMADDR', 'from@test.com')
@@ -36,7 +36,7 @@ def test_mail_exception(monkeypatch: MonkeyPatch):
     assert notifier.notify_download(download_item) is False
 
 
-def test_mail_notify_download(monkeypatch: MonkeyPatch, mocker: MockerFixture):
+def test_mail_notify_download(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
     monkeypatch.setattr('autosubliminal.NOTIFYMAIL', True)
     monkeypatch.setattr('autosubliminal.MAILFROMNAME', 'FromMe')
     monkeypatch.setattr('autosubliminal.MAILFROMADDR', 'from@test.com')

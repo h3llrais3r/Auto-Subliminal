@@ -3,7 +3,7 @@
 from autosubliminal.parsers import guessit
 
 
-def test_guessit_rename_parts_to_episode_numbers():
+def test_guessit_rename_parts_to_episode_numbers() -> None:
     guess = guessit('Buried.Knights.Templar.and.the.Holy.Grail.2018.Season.1.Part1.720p.WEB.h264-CookieMonster.mkv')
     assert guess is not None
     assert guess['type'] == 'episode'
@@ -17,7 +17,7 @@ def test_guessit_rename_parts_to_episode_numbers():
     assert guess['release_group'] == 'CookieMonster'
 
 
-def test_guessit_append_part_to_movie_title():
+def test_guessit_append_part_to_movie_title() -> None:
     guess = guessit('The.Hunger.Games.Mockingjay.Part.2.2015.1080p.BluRay.x264-SPARKS.mkv')
     assert guess is not None
     assert guess['type'] == 'movie'
@@ -29,7 +29,7 @@ def test_guessit_append_part_to_movie_title():
     assert guess['release_group'] == 'SPARKS'
 
 
-def test_guessit_append_line_to_movie_title():
+def test_guessit_append_line_to_movie_title() -> None:
     guess = guessit('The.Thin.Red.Line.1998.1080p.BluRay.H264.AAC-RARBG.mkv')
     assert guess is not None
     assert guess['type'] == 'movie'
@@ -42,7 +42,7 @@ def test_guessit_append_line_to_movie_title():
     assert guess['release_group'] == 'RARBG'
 
 
-def test_guessit_append_us_to_movie_title():
+def test_guessit_append_us_to_movie_title() -> None:
     guess = guessit('Werewolf.The.Beast.Among.Us.2012.1080p.BluRay.x264.DTS-FGT.mkv')
     assert guess is not None
     assert guess['type'] == 'movie'
@@ -55,7 +55,7 @@ def test_guessit_append_us_to_movie_title():
     assert guess['release_group'] == 'FGT'
 
 
-def test_guessit_prepend_xxx_to_movie_title():
+def test_guessit_prepend_xxx_to_movie_title() -> None:
     guess = guessit('xXx.Return.of.Xander.Cage.2017.1080p.BluRay.H264.AAC-RARBG.mkv')
     assert guess is not None
     assert guess['type'] == 'movie'
@@ -68,7 +68,7 @@ def test_guessit_prepend_xxx_to_movie_title():
     assert guess['release_group'] == 'RARBG'
 
 
-def test_guessit_vhs_as_movie_title():
+def test_guessit_vhs_as_movie_title() -> None:
     guess = guessit('VHS 2012 BluRay 720p DTS x264-CHD.mkv')
     assert guess is not None
     assert guess['type'] == 'movie'
@@ -80,13 +80,13 @@ def test_guessit_vhs_as_movie_title():
     assert guess['release_group'] == 'CHD'
 
 
-def test_guessit_title_exceptions():
+def test_guessit_title_exceptions() -> None:
     guess = guessit('A Very Harold & Kumar 3D Christmas (2011).mkv')
     assert guess is not None
     assert guess['title'] == 'A Very Harold & Kumar 3D Christmas'
 
 
-def test_guessit_release_group_exceptions():
+def test_guessit_release_group_exceptions() -> None:
     guess = guessit('VHS 2012 BluRay 720p DTS x264-CHD.mkv')
     assert guess is not None
     assert guess['release_group'] == 'CHD'

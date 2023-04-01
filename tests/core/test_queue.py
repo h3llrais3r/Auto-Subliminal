@@ -10,7 +10,7 @@ from autosubliminal.core.queue import (count_wanted_queue_items, get_wanted_queu
                                        release_wanted_queue_lock_on_exception)
 
 
-def test_wanted_queue_lock():
+def test_wanted_queue_lock() -> None:
     assert get_wanted_queue_lock()
     assert autosubliminal.WANTEDQUEUELOCK
     assert not get_wanted_queue_lock()
@@ -21,7 +21,7 @@ def test_wanted_queue_lock():
     assert not autosubliminal.WANTEDQUEUELOCK
 
 
-def test_count_wanted_queue_items():
+def test_count_wanted_queue_items() -> None:
     wanted_item_1 = WantedItem(type='movie', title='title1')
     wanted_item_2 = WantedItem(type='episode', title='title2')
     autosubliminal.WANTEDQUEUE = [wanted_item_1, wanted_item_2]
@@ -31,9 +31,9 @@ def test_count_wanted_queue_items():
     assert count_wanted_queue_items(item_type=cast(ItemType, 'video')) == 0  # invalid item_type
 
 
-def test_release_wanted_queue_lock_on_exception():
+def test_release_wanted_queue_lock_on_exception() -> None:
     @release_wanted_queue_lock_on_exception
-    def test_function():
+    def test_function() -> None:
         get_wanted_queue_lock()
         assert autosubliminal.WANTEDQUEUELOCK
         raise Exception('unexpected')

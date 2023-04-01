@@ -39,39 +39,39 @@ dict_value_with_items_upper = {'1': 'A'}
 
 
 class MyObject(object):
-    def __init__(self):
+    def __init__(self) -> None:
         self.my_key1 = 1
         self.my_key2 = '2'
         self.my_key3 = [3]
         self._my_key4 = 4
 
     @property
-    def my_key5(self):
+    def my_key5(self) -> Dict[str, Any]:
         return {'my_sub_key5': 5}
 
     @property
-    def my_key6(self):
+    def my_key6(self) -> int:
         return 6
 
-    def my_method1(self):
+    def my_method1(self) -> None:
         pass
 
-    def _my_method2(self):
+    def _my_method2(self) -> None:
         pass
 
 
-def test_get_today():
+def test_get_today() -> None:
     today = get_today()
     assert today is not None
     assert isinstance(today, datetime)
 
 
-def test_run_cmd():
+def test_run_cmd() -> None:
     assert run_cmd('cd') is not None
 
 
 @vcr.use_cassette()
-def test_connect_url(monkeypatch: MonkeyPatch):
+def test_connect_url(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.USERAGENT', 'Auto-Subliminal/' + version.RELEASE_VERSION)
     monkeypatch.setattr('autosubliminal.TIMEOUT', 60)
     response = connect_url('https://raw.github.com/h3llrais3r/Auto-Subliminal/master/autosubliminal/version.py')
@@ -79,28 +79,28 @@ def test_connect_url(monkeypatch: MonkeyPatch):
     assert response.text is not None
 
 
-def test_connect_url_exception(monkeypatch: MonkeyPatch):
+def test_connect_url_exception(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.USERAGENT', 'Auto-Subliminal/' + version.RELEASE_VERSION)
     monkeypatch.setattr('autosubliminal.TIMEOUT', 60)
     with pytest.raises(Exception):
         connect_url('invalid_url')
 
 
-def test_wait_for_internet_connection(mocker: MockerFixture):
+def test_wait_for_internet_connection(mocker: MockerFixture) -> None:
     mocker.patch('autosubliminal.util.common.connect_url')
     time_sleep = mocker.patch('time.sleep')
     wait_for_internet_connection()
     assert not time_sleep.called
 
 
-def test_wait_for_internet_connection_with_sleep(mocker: MockerFixture):
+def test_wait_for_internet_connection_with_sleep(mocker: MockerFixture) -> None:
     mocker.patch('autosubliminal.util.common.connect_url', side_effect=[Exception, None])
     time_sleep = mocker.patch('time.sleep')
     wait_for_internet_connection()
     assert time_sleep.called
 
 
-def test_to_obj():
+def test_to_obj() -> None:
     value_0 = 0
     value_1 = 1
     value_2 = '2'
@@ -117,7 +117,7 @@ def test_to_obj():
     assert to_obj(value_empty, obj_type=bool) is False
 
 
-def test_to_text():
+def test_to_text() -> None:
     value_0 = 0
     value_1 = 1
     value_2 = [1, 2]
@@ -130,7 +130,7 @@ def test_to_text():
     assert to_text(value_2) == '1,2'
 
 
-def test_to_list():
+def test_to_list() -> None:
     value_0 = 0
     value_1 = '1'
     value_2 = '1,2'
@@ -149,7 +149,7 @@ def test_to_list():
     assert to_list(value_4, obj_type=int) == [1, 2, 3, 4]
 
 
-def test_to_obj_or_list():
+def test_to_obj_or_list() -> None:
     value_0 = 0
     value_1 = '1'
     value_2 = '1,2'
@@ -163,7 +163,7 @@ def test_to_obj_or_list():
     assert to_obj_or_list(value_2, obj_type=int) == [1, 2]
 
 
-def test_to_dict():
+def test_to_dict() -> None:
     obj_dict = {
         'my_key1': 1,
         'my_key2': '2',
@@ -180,7 +180,7 @@ def test_to_dict():
     assert to_dict(MyObject(), None, decamelize, *my_args, **my_kwargs) == object_dict_with_key7
 
 
-def test_to_dict_camelized():
+def test_to_dict_camelized() -> None:
     obj_dict = {
         'myKey1': 1,
         'myKey2': '2',
@@ -195,7 +195,7 @@ def test_to_dict_camelized():
     assert to_dict(MyObject(), camelize, *my_args, **my_kwargs) == object_dict_with_key7
 
 
-def test_get_boolean():
+def test_get_boolean() -> None:
     assert get_boolean('1')
     assert get_boolean('yes')
     assert get_boolean('true')
@@ -208,7 +208,7 @@ def test_get_boolean():
         get_boolean('test')
 
 
-def test_save_text():
+def test_save_text() -> None:
     assert safe_text(None) == 'None'
     assert safe_text(text_value) == 'test'
     assert safe_text(text_value_special_char) == 'ù'
@@ -221,12 +221,12 @@ def test_save_text():
     assert safe_text(dict_value_with_items) == '{\'1\': \'a\'}'
 
 
-def test_save_text_default_value(mocker: MockerFixture):
+def test_save_text_default_value(mocker: MockerFixture) -> None:
     mocker.patch('autosubliminal.util.common.str', side_effect=Exception)
     assert safe_text(None, 'fallback') == 'fallback'
 
 
-def test_safe_lowercase():
+def test_safe_lowercase() -> None:
     assert safe_lowercase(None) is None
     assert safe_lowercase(None, default_value='n/a') == 'n/a'
     assert safe_lowercase(text_value_upper) == 'test'
@@ -247,7 +247,7 @@ def test_safe_lowercase():
     assert safe_lowercase(safe_text(dict_value_with_items_upper), default_value='n/a') == '{\'1\': \'a\'}'
 
 
-def test_safe_uppercase():
+def test_safe_uppercase() -> None:
     assert safe_uppercase(None) is None
     assert safe_uppercase(None, default_value='N/A') == 'N/A'
     assert safe_uppercase(text_value) == 'TEST'
@@ -268,7 +268,7 @@ def test_safe_uppercase():
     assert safe_uppercase(safe_text(dict_value_with_items), default_value='N/A') == '{\'1\': \'A\'}'
 
 
-def test_safe_trim():
+def test_safe_trim() -> None:
     assert safe_trim(None) is None
     assert safe_trim(None, default_value='N/A') == 'N/A'
     assert safe_trim('test') == 'test'
@@ -291,7 +291,7 @@ def test_safe_trim():
     assert safe_trim(dict_value, default_value='N/A') == 'N/A'
 
 
-def test_camelize():
+def test_camelize() -> None:
     assert camelize('test_me_4') == 'testMe4'
     assert camelize('TEST_me4') == 'testMe4'
     assert camelize('utf_8_encoding') == 'utf8Encoding'
@@ -301,7 +301,7 @@ def test_camelize():
     assert camelize(None) is None
 
 
-def test_decamelize():
+def test_decamelize() -> None:
     assert decamelize('testMe4') == 'test_me4'
     assert decamelize('utf8Encoding') == 'utf8_encoding'
     assert decamelize('utf8_encoding') == 'utf8_encoding'
@@ -309,12 +309,12 @@ def test_decamelize():
     assert decamelize(None) is None
 
 
-def test_sanitize():
+def test_sanitize() -> None:
     assert sanitize(None) is None
     assert sanitize('(Mr.-Robot! / :),') == 'mr robot'
 
 
-def test_safe_value():
+def test_safe_value() -> None:
     assert safe_value(None) == ''
     assert safe_value('value') == 'value'
     assert safe_value('ù') == 'ù'
@@ -323,13 +323,13 @@ def test_safe_value():
     assert safe_value('', default_value='default', uppercase=True) == 'DEFAULT'
 
 
-def test_convert_timestamp(monkeypatch: MonkeyPatch):
+def test_convert_timestamp(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.DBTIMESTAMPFORMAT', '%Y-%m-%d %H:%M:%S')
     monkeypatch.setattr('autosubliminal.TIMESTAMPFORMAT', '%d-%m-%Y %H:%M:%S')
     assert convert_timestamp('2015-12-31 23:59:59') == '31-12-2015 23:59:59'
 
 
-def test_humanize_bytes():
+def test_humanize_bytes() -> None:
     assert humanize_bytes(0) == '0 bytes'
     assert humanize_bytes(1) == '1 byte'
     assert humanize_bytes(1024) == '1.0 kB'
@@ -341,13 +341,13 @@ def test_humanize_bytes():
     assert humanize_bytes(1024 * 1234 * 1111, 1) == '1.3 GB'
 
 
-def test_get_common_path():
+def test_get_common_path() -> None:
     separator = '\\'
     assert get_common_path(['c:\\temp\\test', 'c:\\temp\\video_path.ext'], separator) == 'c:\\temp'
     assert get_common_path(['c:\\temp', 'd:\\temp'], separator) is None
 
 
-def test_find_path_in_paths():
+def test_find_path_in_paths() -> None:
     paths = ['path/to/dir1', 'path/to/dir2/sub/dir']
     assert find_path_in_paths('path/to/dir1', paths) == 'path/to/dir1'
     assert find_path_in_paths('path/to/dir1', paths, check_common_path=True) == 'path/to/dir1'
@@ -359,7 +359,7 @@ def test_find_path_in_paths():
     assert find_path_in_paths('path/to/dir2/sub/dir', paths, check_common_path=True) == 'path/to/dir2/sub/dir'
 
 
-def test_get_root_path():
+def test_get_root_path() -> None:
     separator = '\\'
     autosubliminal.VIDEOPATHS = ['c:\\temp', 'c:\\test']
     assert get_root_path('c:\\temp\\video_path.ext', separator) == 'c:\\temp'
@@ -367,7 +367,7 @@ def test_get_root_path():
         get_root_path('c:\\temp2\\test.ext', separator)
 
 
-def test_get_file_size():
+def test_get_file_size() -> None:
     file_path = None
     try:
         fd, file_path = tempfile.mkstemp(text=True)
@@ -382,11 +382,11 @@ def test_get_file_size():
             os.remove(file_path)
 
 
-def test_get_file_size_exception():
+def test_get_file_size_exception() -> None:
     assert get_file_size('path/does/not/exist') == 0
 
 
-def test_set_rw_and_remove():
+def test_set_rw_and_remove() -> None:
     file_path = None
     try:
         fd, file_path = tempfile.mkstemp(text=True)
@@ -401,20 +401,20 @@ def test_set_rw_and_remove():
             os.remove(file_path)
 
 
-def test_atoi():
+def test_atoi() -> None:
     assert atoi('test') == 'test'
     assert atoi('test01') == 'test01'
     assert atoi('01') == 1
     assert atoi('1') == 1
 
 
-def test_natural_keys():
+def test_natural_keys() -> None:
     my_list = ['season 23', 'season 15', 'season 30', 'season 05', 'season 01', 'root']
     my_sorted_list = ['root', 'season 01', 'season 05', 'season 15', 'season 23', 'season 30']
     assert sorted(my_list, key=natural_keys) == my_sorted_list
 
 
-def test_get_wanted_languages(monkeypatch: MonkeyPatch):
+def test_get_wanted_languages(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
     monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en', 'fr'])
     assert ['nl', 'en', 'fr'] == get_wanted_languages()

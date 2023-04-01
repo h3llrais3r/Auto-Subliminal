@@ -8,12 +8,12 @@ from autosubliminal.core.runner import Runner
 
 
 class MyRunner(Runner):
-    def run(self):
+    def run(self) -> None:
         pass
 
 
-def test_runner(mocker: MockerFixture):
-    runner = None
+def test_runner(mocker: MockerFixture) -> None:
+    runner: MyRunner = None
     try:  # Use try/finally block to make sure that the thread is stopped
         runner_mock = mocker.patch.object(MyRunner, 'run')
         runner = MyRunner('MyRunner')

@@ -1,7 +1,7 @@
 from autosubliminal.core.show import ShowDetails
 
 
-def test_get_artwork_url():
+def test_get_artwork_url() -> None:
     url_poster = 'https://www.thetvdb.com/banners/posters/80379-18.jpg'
     url_poster_thumb = 'https://www.thetvdb.com/banners/_cache/posters/80379-18.jpg'
     url_banner = 'https://www.thetvdb.com/banners/blank/80379.jpg'

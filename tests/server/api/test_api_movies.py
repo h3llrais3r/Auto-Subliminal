@@ -49,14 +49,14 @@ overview_json = '{"failedMovies": ["/path/to/failed/movie"], "totalMovies": 1, "
     '"totalSubtitlesMissing": 1, "totalSubtitlesWanted": 2}'
 
 
-def test_get_movies(monkeypatch: MonkeyPatch, mocker: MockerFixture):
+def test_get_movies(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
     monkeypatch.setattr('autosubliminal.VIDEOPATHS', [])
     mocker.patch.object(MovieDetailsDb, 'get_all_movies', return_value=[movie_details_1, movie_details_2])
     mocker.patch.object(MovieSettingsDb, 'get_movie_settings', side_effect=[movie_settings_1, movie_settings_2])
     assert movies_json == pickle_api_result(MoviesApi().get())
 
 
-def test_get_movie(monkeypatch: MonkeyPatch, mocker: MockerFixture):
+def test_get_movie(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
     monkeypatch.setattr('autosubliminal.VIDEOPATHS', [])
     mocker.patch.object(MovieDetailsDb, 'get_movie', return_value=movie_details_1)
     mocker.patch('os.path.exists', return_value=True)
@@ -68,12 +68,12 @@ def test_get_movie(monkeypatch: MonkeyPatch, mocker: MockerFixture):
     assert movie_1_json == pickle_api_result(MoviesApi().get('tt1'))
 
 
-def test_get_movie_settings(mocker: MockerFixture):
+def test_get_movie_settings(mocker: MockerFixture) -> None:
     mocker.patch.object(MovieSettingsDb, 'get_movie_settings', return_value=movie_settings_1)
     assert movie_settings_1_json == pickle_api_result(MoviesApi().settings.get('tt1'))
 
 
-def test_get_movies_overview(mocker: MockerFixture):
+def test_get_movies_overview(mocker: MockerFixture) -> None:
     mocker.patch.object(FailedMoviesDb, 'get_failed_movies', return_value=['/path/to/failed/movie'])
     mocker.patch.object(MovieDetailsDb, 'get_all_movies', return_value=[movie_details_1])
     mocker.patch.object(MovieSettingsDb, 'get_movie_settings', side_effect=[movie_settings_1, movie_settings_2])

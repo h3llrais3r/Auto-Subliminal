@@ -4,7 +4,7 @@ import autosubliminal
 from autosubliminal.util.skip import skip_movie, skip_show
 
 
-def test_skip_show():
+def test_skip_show() -> None:
     autosubliminal.SKIPSHOW = {'show1': '0', 'show2': '1', 'show3': '0,1', 'show4': '00'}
     assert skip_show('SHOW1', 0)  # 0 means skip specials
     assert not skip_show('SHOW1', 1)
@@ -18,7 +18,7 @@ def test_skip_show():
     assert not skip_show('show5', 1)
 
 
-def test_skip_movie():
+def test_skip_movie() -> None:
     autosubliminal.SKIPMOVIE = {'movie1': '00', 'movie2 (2016)': '00'}
     assert skip_movie('MOVIE1', None)
     assert not skip_movie('MOVIE1', 2016)

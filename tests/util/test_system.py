@@ -18,22 +18,22 @@ python_version = '3.7.9 (tags/v3.7.9:13c94747c7, Aug 17 2020, 18:58:18) [MSC v.1
 python_version_info = (3, 7, 9, 'final', 0)
 
 
-def test_get_python_version_full(monkeypatch: MonkeyPatch):
+def test_get_python_version_full(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('sys.version', python_version)
     assert get_python_version_full() == python_version
 
 
-def test_get_python_version(monkeypatch: MonkeyPatch):
+def test_get_python_version(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('sys.version_info', python_version_info)
     assert get_python_version() == '3.7.9'
 
 
-def test_get_python_location(monkeypatch: MonkeyPatch):
+def test_get_python_location(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('sys.executable', python_executable)
     assert get_python_location() == '/path/to/python/executable'
 
 
-def test_get_stored_python_version(monkeypatch: MonkeyPatch):
+def test_get_stored_python_version(monkeypatch: MonkeyPatch) -> None:
     path = None
     python_version = get_python_version()
     try:
@@ -46,7 +46,7 @@ def test_get_stored_python_version(monkeypatch: MonkeyPatch):
         os.remove(path)
 
 
-def test_is_python_version_changed(monkeypatch: MonkeyPatch, mocker: MockerFixture):
+def test_is_python_version_changed(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
     monkeypatch.setattr('sys.version_info', python_version_info)
     monkeypatch.setattr('autosubliminal.util.system.PYTHON_VERSION_FILE', 'path/does/not/exist')
     assert is_python_version_changed()
@@ -58,7 +58,7 @@ def test_is_python_version_changed(monkeypatch: MonkeyPatch, mocker: MockerFixtu
     assert not is_python_version_changed()
 
 
-def test_get_venv_creation_time(monkeypatch: MonkeyPatch):
+def test_get_venv_creation_time(monkeypatch: MonkeyPatch) -> None:
     path = None
     try:
         fd, path = tempfile.mkstemp(text=True)
@@ -72,7 +72,7 @@ def test_get_venv_creation_time(monkeypatch: MonkeyPatch):
         os.remove(path)
 
 
-def test_get_stored_venv_creation_time(monkeypatch: MonkeyPatch):
+def test_get_stored_venv_creation_time(monkeypatch: MonkeyPatch) -> None:
     path = None
     venv_creation_time = '2021-12-01 00:00:00'
     try:

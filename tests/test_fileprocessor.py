@@ -15,20 +15,20 @@ autosubliminal.SHOWINDEXER = ShowIndexer()
 autosubliminal.MOVIEINDEXER = MovieIndexer()
 
 
-def test_process_file_size_too_low(monkeypatch: MonkeyPatch):
+def test_process_file_size_too_low(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.MINVIDEOFILESIZE', 10)
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
     result_dict = process_file(dir_name, 'Southpaw.2015.1080p.BluRay.x264.mkv')
     assert result_dict is None
 
 
-def test_process_episode_file_insufficient_guess():
+def test_process_episode_file_insufficient_guess() -> None:
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
     result_dict = process_file(dir_name, 'Insufficient.guess.series.S1.mkv')
     assert result_dict is None
 
 
-def test_process_episode_file(mocker: MockerFixture):
+def test_process_episode_file(mocker: MockerFixture) -> None:
     mocker.patch.object(autosubliminal.SHOWINDEXER, 'get_tvdb_id')
     cast(Mock, autosubliminal.SHOWINDEXER.get_tvdb_id).return_value = 263365
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
@@ -45,7 +45,7 @@ def test_process_episode_file(mocker: MockerFixture):
     assert wanted_item.tvdb_id == 263365
 
 
-def test_process_multi_episode_file(mocker: MockerFixture):
+def test_process_multi_episode_file(mocker: MockerFixture) -> None:
     mocker.patch.object(autosubliminal.SHOWINDEXER, 'get_tvdb_id')
     cast(Mock, autosubliminal.SHOWINDEXER.get_tvdb_id).return_value = 263365
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
@@ -62,7 +62,7 @@ def test_process_multi_episode_file(mocker: MockerFixture):
     assert wanted_item.tvdb_id == 263365
 
 
-def test_process_episode_file_guess_by_filename(mocker: MockerFixture):
+def test_process_episode_file_guess_by_filename(mocker: MockerFixture) -> None:
     mocker.patch.object(autosubliminal.SHOWINDEXER, 'get_tvdb_id')
     cast(Mock, autosubliminal.SHOWINDEXER.get_tvdb_id).return_value = 248741
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
@@ -79,7 +79,7 @@ def test_process_episode_file_guess_by_filename(mocker: MockerFixture):
     assert wanted_item.tvdb_id == 248741
 
 
-def test_process_episode_file_guess_by_file_path(mocker: MockerFixture):
+def test_process_episode_file_guess_by_file_path(mocker: MockerFixture) -> None:
     mocker.patch.object(autosubliminal.SHOWINDEXER, 'get_tvdb_id')
     cast(Mock, autosubliminal.SHOWINDEXER.get_tvdb_id).return_value = 248741
     # Mock getctime (we don't want that the _enrich_dict fails since we are using a simulated dir_name)
@@ -99,7 +99,7 @@ def test_process_episode_file_guess_by_file_path(mocker: MockerFixture):
     assert wanted_item.tvdb_id == 248741
 
 
-def test_process_file_movie(mocker: MockerFixture):
+def test_process_file_movie(mocker: MockerFixture) -> None:
     mocker.patch.object(autosubliminal.MOVIEINDEXER, 'get_imdb_id_and_year')
     cast(Mock, autosubliminal.MOVIEINDEXER.get_imdb_id_and_year).return_value = 'tt1798684', 2015
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
@@ -114,7 +114,7 @@ def test_process_file_movie(mocker: MockerFixture):
     assert wanted_item.imdb_id == 'tt1798684'
 
 
-def test_process_movie_file_special_chars(mocker: MockerFixture):
+def test_process_movie_file_special_chars(mocker: MockerFixture) -> None:
     mocker.patch.object(autosubliminal.MOVIEINDEXER, 'get_imdb_id_and_year')
     cast(Mock, autosubliminal.MOVIEINDEXER.get_imdb_id_and_year).return_value = 'tt0993789', 2008
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
@@ -126,20 +126,20 @@ def test_process_movie_file_special_chars(mocker: MockerFixture):
     assert wanted_item.imdb_id == 'tt0993789'
 
 
-def test_process_movie_file_insufficient_guess(mocker: MockerFixture):
+def test_process_movie_file_insufficient_guess(mocker: MockerFixture) -> None:
     mocker.patch('autosubliminal.fileprocessor.guessit',
                  return_value=dict([('year', 2018), ('container', 'mkv'), ('type', 'movie')]))
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
     assert process_file(dir_name, '2018.mkv') is None
 
 
-def test_guess_invalid_type(mocker: MockerFixture):
+def test_guess_invalid_type(mocker: MockerFixture) -> None:
     mocker.patch('autosubliminal.fileprocessor.guessit', return_value=dict([('year', 2018), ('container', 'mkv')]))
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
     assert process_file(dir_name, '2018.mkv') is None
 
 
-def test_guess_exception(mocker: MockerFixture):
+def test_guess_exception(mocker: MockerFixture) -> None:
     mocker.patch('autosubliminal.fileprocessor.guessit', side_effect=Exception)
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
     assert process_file(dir_name, 'Southpaw.2015.1080p.BluRay.x264.mkv') is None

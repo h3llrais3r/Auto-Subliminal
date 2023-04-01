@@ -7,6 +7,7 @@ import os
 import signal
 import sys
 import time
+from typing import Any, List
 
 help_message = '''
 Usage:
@@ -27,11 +28,11 @@ Example:
 
 
 class Usage(Exception):
-    def __init__(self, msg):
+    def __init__(self, msg: Any) -> None:
         self.msg = msg
 
 
-def main(argv=None):
+def main(argv: List[str] = None) -> int:
     import autosubliminal
 
     # Set startup parameters
