@@ -12,7 +12,7 @@ from subliminal.video import Video
 
 import autosubliminal
 from autosubliminal.core.subtitle import Subtitle
-from autosubliminal.util.common import (find_path_in_paths, get_today, humanize_bytes, safe_value, to_dict, to_list,
+from autosubliminal.util.common import (find_path_in_paths, get_today, humanize_bytes, safe_str, to_dict, to_list,
                                         to_obj, to_obj_or_list)
 
 # Release group regex
@@ -97,8 +97,8 @@ class _BaseItem(ABC):
 
     @ property
     def name(self) -> str:
-        name = safe_value(self.title)
-        year = safe_value(self.year)
+        name = safe_str(self.title)
+        year = safe_str(self.year)
         if name and year:
             name += ' (' + year + ')'
         return name
@@ -107,13 +107,13 @@ class _BaseItem(ABC):
     def long_name(self) -> str:
         name = self.name
         if name and self.is_episode:
-            season = safe_value(self.season)
-            episode = safe_value(self.episode)
+            season = safe_str(self.season)
+            episode = safe_str(self.episode)
             if season and episode:
                 name += ' S' + season.zfill(2)
                 if isinstance(self.episode, list):
                     for idx, ep in enumerate(self.episode):
-                        episode = safe_value(ep)
+                        episode = safe_str(ep)
                         if idx > 0:
                             name += '-'
                         name += 'E' + episode.zfill(2)

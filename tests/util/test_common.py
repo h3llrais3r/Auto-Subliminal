@@ -3,7 +3,7 @@
 import os
 import tempfile
 from datetime import datetime
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Set
 
 import pytest
 from pytest import MonkeyPatch
@@ -15,8 +15,8 @@ from autosubliminal import version
 from autosubliminal.util.common import (atoi, camelize, connect_url, convert_timestamp, decamelize, find_path_in_paths,
                                         get_boolean, get_common_path, get_file_size, get_root_path, get_today,
                                         get_wanted_languages, humanize_bytes, natural_keys, run_cmd, safe_lowercase,
-                                        safe_text, safe_trim, safe_uppercase, safe_value, sanitize, set_rw_and_remove,
-                                        to_dict, to_list, to_obj, to_obj_or_list, to_text, wait_for_internet_connection)
+                                        safe_str, safe_trim, safe_uppercase, sanitize, set_rw_and_remove, to_dict,
+                                        to_list, to_obj, to_obj_or_list, wait_for_internet_connection)
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -30,10 +30,13 @@ text_value_special_char_upper = 'Ù'
 num_value = 1
 long_value = 1.0
 bool_value = True
-list_value: List[Any] = []
+list_value_empty: List[Any] = []
 list_value_with_items = ['a', 'b']
 list_value_with_items_upper = ['A', 'B']
-dict_value: Dict[Any, Any] = {}
+set_value_empty: Set[Any] = set()
+set_value_with_items = sorted({'a', 'b'})  # sorted to be able to compare
+set_value_with_items_upper = sorted({'A', 'B'})  # sorted to be able to compare
+dict_value_empty: Dict[Any, Any] = {}
 dict_value_with_items = {'1': 'a'}
 dict_value_with_items_upper = {'1': 'A'}
 
@@ -117,19 +120,6 @@ def test_to_obj() -> None:
     assert to_obj(value_empty, obj_type=bool) is False
 
 
-def test_to_text() -> None:
-    value_0 = 0
-    value_1 = 1
-    value_2 = [1, 2]
-    assert to_text(None) is None
-    assert to_text(None, default_value='') == ''
-    assert to_text([]) is None
-    assert to_text([], default_value='') == ''
-    assert to_text(value_0) == '0'
-    assert to_text(value_1) == '1'
-    assert to_text(value_2) == '1,2'
-
-
 def test_to_list() -> None:
     value_0 = 0
     value_1 = '1'
@@ -208,68 +198,82 @@ def test_get_boolean() -> None:
         get_boolean('test')
 
 
-def test_save_text() -> None:
-    assert safe_text(None) == 'None'
-    assert safe_text(text_value) == 'test'
-    assert safe_text(text_value_special_char) == 'ù'
-    assert safe_text(num_value) == '1'
-    assert safe_text(long_value) == '1.0'
-    assert safe_text(bool_value) == 'True'
-    assert safe_text(list_value) == '[]'
-    assert safe_text(list_value_with_items) == '[\'a\', \'b\']'
-    assert safe_text(dict_value) == '{}'
-    assert safe_text(dict_value_with_items) == '{\'1\': \'a\'}'
+def test_safe_str() -> None:
+    assert safe_str(None) == ''
+    assert safe_str(None, uppercase=True) == ''
+    assert safe_str(None, default_value='default') == 'default'
+    assert safe_str(None, default_value='default', uppercase=True) == 'DEFAULT'
+    assert safe_str('') == ''
+    assert safe_str('', uppercase=True) == ''
+    assert safe_str('', default_value='default') == 'default'
+    assert safe_str('', default_value='default', uppercase=True) == 'DEFAULT'
+    assert safe_str(num_value) == '1'
+    assert safe_str(num_value, uppercase=True) == '1'
+    assert safe_str(long_value) == '1.0'
+    assert safe_str(long_value, uppercase=True) == '1.0'
+    assert safe_str(bool_value) == 'True'
+    assert safe_str(bool_value, uppercase=True) == 'TRUE'
+    assert safe_str(text_value) == 'test'
+    assert safe_str(text_value, uppercase=True) == 'TEST'
+    assert safe_str(text_value_special_char) == 'ù'
+    assert safe_str(text_value_special_char, uppercase=True) == 'Ù'
+    assert safe_str(list_value_empty) == ''
+    assert safe_str(list_value_empty, uppercase=True) == ''
+    assert safe_str(list_value_with_items) == 'a,b'
+    assert safe_str(list_value_with_items, uppercase=True) == 'A,B'
+    assert safe_str(set_value_empty) == ''
+    assert safe_str(set_value_empty, uppercase=True) == ''
+    assert safe_str(set_value_with_items) == 'a,b'
+    assert safe_str(set_value_with_items, uppercase=True) == 'A,B'
+    assert safe_str(dict_value_empty) == ''
+    assert safe_str(dict_value_empty, uppercase=True) == ''
+    assert safe_str(dict_value_with_items) == '{\'1\': \'a\'}'
+    assert safe_str(dict_value_with_items, uppercase=True) == '{\'1\': \'A\'}'
 
 
-def test_save_text_default_value(mocker: MockerFixture) -> None:
+def test_safe_text_default_value(mocker: MockerFixture) -> None:
     mocker.patch('autosubliminal.util.common.str', side_effect=Exception)
-    assert safe_text(None, 'fallback') == 'fallback'
+    assert safe_str(None, default_value='fallback') == 'fallback'
 
 
 def test_safe_lowercase() -> None:
-    assert safe_lowercase(None) is None
+    assert safe_lowercase(None) == ''
     assert safe_lowercase(None, default_value='n/a') == 'n/a'
+    assert safe_lowercase('') == ''
+    assert safe_lowercase('', default_value='n/a') == 'n/a'
     assert safe_lowercase(text_value_upper) == 'test'
     assert safe_lowercase(text_value_special_char_upper) == 'ù'
-    assert safe_lowercase(num_value) is num_value
-    assert safe_lowercase(num_value, default_value='n/a') == 'n/a'
-    assert safe_lowercase(long_value) is long_value
-    assert safe_lowercase(long_value, default_value='n/a') == 'n/a'
-    assert safe_lowercase(bool_value) is bool_value
-    assert safe_lowercase(bool_value, default_value='n/a') == 'n/a'
-    assert safe_lowercase(list_value) is list_value
-    assert safe_lowercase(list_value, default_value='n/a') == 'n/a'
-    assert safe_lowercase(list_value_with_items, default_value='n/a') == 'n/a'
-    assert safe_lowercase(safe_text(list_value_with_items_upper), default_value='n/a') == '[\'a\', \'b\']'
-    assert safe_lowercase(dict_value) is dict_value
-    assert safe_lowercase(dict_value, default_value='n/a') == 'n/a'
-    assert safe_lowercase(dict_value_with_items_upper, default_value='n/a') == 'n/a'
-    assert safe_lowercase(safe_text(dict_value_with_items_upper), default_value='n/a') == '{\'1\': \'a\'}'
+    assert safe_lowercase(num_value) == '1'
+    assert safe_lowercase(long_value) == '1.0'
+    assert safe_lowercase(bool_value) == 'true'
+    assert safe_lowercase(list_value_empty) == ''
+    assert safe_lowercase(list_value_with_items_upper) == 'a,b'
+    assert safe_lowercase(set_value_empty) == ''
+    assert safe_lowercase(set_value_with_items_upper) == 'a,b'
+    assert safe_lowercase(dict_value_empty) == ''
+    assert safe_lowercase(dict_value_with_items_upper) == '{\'1\': \'a\'}'
 
 
 def test_safe_uppercase() -> None:
-    assert safe_uppercase(None) is None
+    assert safe_uppercase(None) == ''
     assert safe_uppercase(None, default_value='N/A') == 'N/A'
-    assert safe_uppercase(text_value) == 'TEST'
-    assert safe_uppercase(text_value_special_char) == 'Ù'
-    assert safe_uppercase(num_value) is num_value
-    assert safe_uppercase(num_value, default_value='N/A') == 'N/A'
-    assert safe_uppercase(long_value) is long_value
-    assert safe_uppercase(long_value, default_value='N/A') == 'N/A'
-    assert safe_uppercase(bool_value) is bool_value
-    assert safe_uppercase(bool_value, default_value='N/A') == 'N/A'
-    assert safe_uppercase(list_value) is list_value
-    assert safe_uppercase(list_value, default_value='N/A') == 'N/A'
-    assert safe_uppercase(list_value_with_items, default_value='N/A') == 'N/A'
-    assert safe_uppercase(safe_text(list_value_with_items), default_value='N/A') == '[\'A\', \'B\']'
-    assert safe_uppercase(dict_value) is dict_value
-    assert safe_uppercase(dict_value, default_value='N/A') == 'N/A'
-    assert safe_uppercase(dict_value_with_items, default_value='N/A') == 'N/A'
-    assert safe_uppercase(safe_text(dict_value_with_items), default_value='N/A') == '{\'1\': \'A\'}'
+    assert safe_uppercase('') == ''
+    assert safe_uppercase('', default_value='N/A') == 'N/A'
+    assert safe_uppercase(text_value_upper) == 'TEST'
+    assert safe_uppercase(text_value_special_char_upper) == 'Ù'
+    assert safe_uppercase(num_value) == '1'
+    assert safe_uppercase(long_value) == '1.0'
+    assert safe_uppercase(bool_value) == 'TRUE'
+    assert safe_uppercase(list_value_empty) == ''
+    assert safe_uppercase(list_value_with_items_upper) == 'A,B'
+    assert safe_uppercase(set_value_empty) == ''
+    assert safe_uppercase(set_value_with_items_upper) == 'A,B'
+    assert safe_uppercase(dict_value_empty) == ''
+    assert safe_uppercase(dict_value_with_items_upper) == '{\'1\': \'A\'}'
 
 
 def test_safe_trim() -> None:
-    assert safe_trim(None) is None
+    assert safe_trim(None) == ''
     assert safe_trim(None, default_value='N/A') == 'N/A'
     assert safe_trim('test') == 'test'
     assert safe_trim(' test ') == 'test'
@@ -279,48 +283,39 @@ def test_safe_trim() -> None:
     assert safe_trim(' \n\r\ttest \n\r\t') == 'test'
     assert safe_trim(' \n\r\ttest and test \n\r\t') == 'test and test'
     assert safe_trim(' \n\r\ttest \n\r\tand \n\r\ttest \n\r\t') == 'test \n\r\tand \n\r\ttest'
-    assert safe_trim(num_value) is num_value
-    assert safe_trim(num_value, default_value='N/A') == 'N/A'
-    assert safe_trim(long_value) is long_value
-    assert safe_trim(long_value, default_value='N/A') == 'N/A'
-    assert safe_trim(bool_value) is bool_value
-    assert safe_trim(bool_value, default_value='N/A') == 'N/A'
-    assert safe_trim(list_value) is list_value
-    assert safe_trim(list_value, default_value='N/A') == 'N/A'
-    assert safe_trim(dict_value) is dict_value
-    assert safe_trim(dict_value, default_value='N/A') == 'N/A'
+    assert safe_trim(num_value) == '1'
+    assert safe_trim(long_value) == '1.0'
+    assert safe_trim(bool_value) == 'True'
+    assert safe_trim(list_value_empty) == ''
+    assert safe_trim(list_value_with_items) == 'a,b'
+    assert safe_trim(set_value_empty) == ''
+    assert safe_trim(set_value_with_items) == 'a,b'
+    assert safe_trim(dict_value_empty) == ''
+    assert safe_trim(dict_value_with_items) == '{\'1\': \'a\'}'
 
 
 def test_camelize() -> None:
+    assert camelize(None) is None
+    assert camelize('') == ''
     assert camelize('test_me_4') == 'testMe4'
     assert camelize('TEST_me4') == 'testMe4'
     assert camelize('utf_8_encoding') == 'utf8Encoding'
     assert camelize('utf8_encoding') == 'utf8Encoding'
-    assert camelize('') == ''
     assert camelize('testMe') == 'testMe'
-    assert camelize(None) is None
 
 
 def test_decamelize() -> None:
-    assert decamelize('testMe4') == 'test_me4'
-    assert decamelize('utf8Encoding') == 'utf8_encoding'
-    assert decamelize('utf8_encoding') == 'utf8_encoding'
-    assert decamelize('') == ''
     assert decamelize(None) is None
+    assert decamelize('') == ''
+    assert decamelize('testMe4') == 'test_me4'
+    assert decamelize('TEST_me4') == 'test_me4'
+    assert decamelize('utf8Encoding') == 'utf8_encoding'
+    assert decamelize('test_me') == 'test_me'
 
 
 def test_sanitize() -> None:
     assert sanitize(None) is None
     assert sanitize('(Mr.-Robot! / :),') == 'mr robot'
-
-
-def test_safe_value() -> None:
-    assert safe_value(None) == ''
-    assert safe_value('value') == 'value'
-    assert safe_value('ù') == 'ù'
-    assert safe_value('value', uppercase=True) == 'VALUE'
-    assert safe_value('', default_value='default') == 'default'
-    assert safe_value('', default_value='default', uppercase=True) == 'DEFAULT'
 
 
 def test_convert_timestamp(monkeypatch: MonkeyPatch) -> None:

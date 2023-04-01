@@ -1,7 +1,7 @@
 # coding=utf-8
 
 import time
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, Optional
 
 from pytest import MonkeyPatch
 from pytest_mock import MockerFixture
@@ -175,7 +175,7 @@ def test_scheduler_to_dict() -> None:
     assert scheduler_dict == scheduler.to_dict(camelize)
 
 
-def _assert_scheduler(scheduler: Scheduler) -> None:
+def _assert_scheduler(scheduler: Optional[Scheduler]) -> None:
     if scheduler:
         scheduler.stop()
         assert not scheduler.running

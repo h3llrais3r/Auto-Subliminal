@@ -8,7 +8,7 @@ from typing import List, Optional
 import autosubliminal
 from autosubliminal.core.movie import MovieDetails, MovieSettings
 from autosubliminal.core.subtitle import Subtitle, SubtitleType
-from autosubliminal.util.common import to_text
+from autosubliminal.util.db import to_text
 
 log = logging.getLogger(__name__)
 

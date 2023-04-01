@@ -7,7 +7,7 @@ from typing import List, Optional, Type, TypeVar
 
 import autosubliminal
 from autosubliminal.core.item import DownloadedItem, DownloadItem, WantedItem
-from autosubliminal.util.common import to_text
+from autosubliminal.util.db import to_text
 
 log = logging.getLogger(__name__)
 

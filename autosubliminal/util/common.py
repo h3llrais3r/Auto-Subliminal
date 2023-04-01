@@ -11,7 +11,7 @@ import subprocess
 import sys
 import time
 from collections.abc import Mapping
-from typing import Any, Callable, Dict, List, Optional, Set, Tuple, Type, Union, cast
+from typing import Any, Callable, Dict, List, Optional, Set, Tuple, Type, Union
 
 import requests
 
@@ -83,10 +83,10 @@ def wait_for_internet_connection() -> None:
         time.sleep(5)
 
 
-def to_obj(value: Any, obj_type: Type[Any] = str, default_value: Any = None) -> Any:
-    """Convert an object to an object value.
+def to_obj(value: Any, obj_type: Type[Any] = str, default_value: Optional[Any] = None) -> Any:
+    """Convert any value to an object type.
 
-    By default it converts it to text value.
+    By default it converts it to a string.
     Optionally, it can be converted to the specified object type.
     """
     try:
@@ -95,23 +95,7 @@ def to_obj(value: Any, obj_type: Type[Any] = str, default_value: Any = None) -> 
         return default_value
 
 
-def to_text(obj: Any, default_value: str = None) -> Optional[str]:
-    """Convert an object to a text value.
-
-    If the object is None, the default value will be returned.
-    If the object is a list, convert it to a comma separated text value.
-    If not, return the text representation of the object.
-    """
-    if obj is not None:
-        if isinstance(obj, list):
-            return ','.join(str(e) for e in obj) if obj else default_value
-        else:
-            return str(obj)
-    else:
-        return default_value
-
-
-def to_list(value: Any, obj_type: Type[Any] = str, default_value: List[Any] = None) -> Optional[List[Any]]:
+def to_list(value: Any, obj_type: Type[Any] = str, default_value: Optional[List[Any]] = None) -> Optional[List[Any]]:
     """Convert a value to a list.
 
     If the value is None, the default value will be returned.
@@ -130,8 +114,8 @@ def to_list(value: Any, obj_type: Type[Any] = str, default_value: List[Any] = No
         return default_value
 
 
-def to_obj_or_list(value: Any, obj_type: Type[Any] = str, default_value: Any = None) -> Union[Optional[Any],
-                                                                                              Optional[List[Any]]]:
+def to_obj_or_list(value: Any, obj_type: Type[Any] = str,
+                   default_value: Optional[Any] = None) -> Union[Optional[Any], Optional[List[Any]]]:
     """Convert a value to an object or a list.
 
     If the value is None, the default value will be returned.
@@ -148,7 +132,7 @@ def to_obj_or_list(value: Any, obj_type: Type[Any] = str, default_value: Any = N
         return default_value
 
 
-def to_dict(obj: Any, key_fn: Callable, *args: Any, **kwargs: Any) -> Dict[str, Any]:
+def to_dict(obj: Any, key_fn: Optional[Callable] = None, *args: Any, **kwargs: Any) -> Dict[str, Any]:
     """Convert an object to a dict.
 
     Only public attributes are converted. Private attributes and callable attributes (methods) are not included.
@@ -228,51 +212,40 @@ def get_boolean(value: Any) -> bool:
     return _boolean_states[v.lower()]
 
 
-def safe_text(obj: Any, default_value: str = None) -> Optional[str]:
-    """Return the object converted to text.
+def safe_str(value: Any, default_value: str = '', uppercase: bool = False) -> str:
+    """Convert any value to a string safely."""
 
-    When not possible return the default value.
-    """
-    try:
-        return str(obj)
-    except Exception:
-        return default_value
+    # Internal helper to convert any value to its string representation safely
+    def _safe_str(value: Any, default_value: str) -> str:
+        try:
+            return str(value)
+        except Exception:
+            return default_value
 
-
-def safe_lowercase(obj: Any, default_value: str = None) -> Optional[str]:
-    """Return the object converted to lowercase.
-
-    When not possible return the obj itself, or the default value if specified.
-    """
-    try:
-        return cast(str, obj).lower()
-    except Exception:
-        return default_value or obj
+    result = value or default_value
+    result = ','.join(str(v) for v in result) if isinstance(result, (list, set)) else result
+    result = _safe_str(result, default_value)
+    if uppercase:
+        result = safe_uppercase(result, default_value=default_value)
+    return result
 
 
-def safe_uppercase(obj: Any, default_value: str = None) -> Optional[str]:
-    """Return the object converted to uppercase.
-
-    When not possible return the obj itself, or the default value if specified.
-    """
-    try:
-        return cast(str, obj).upper()
-    except Exception:
-        return default_value or obj
+def safe_lowercase(value: Any, default_value: str = '') -> str:
+    """Convert any value safely to lowercase."""
+    return safe_str(value, default_value=default_value).lower()
 
 
-def safe_trim(obj: Any, default_value: str = None) -> Optional[str]:
-    """Return the object trimmed with leading and trailing spaces, tabs and newlines.
-
-    When not possible return the obj itself, or the default value if specified.
-    """
-    try:
-        return cast(str, obj).strip(' \n\r\t')
-    except Exception:
-        return default_value or obj
+def safe_uppercase(value: Any, default_value: str = '') -> str:
+    """Convert any value safely to uppercase."""
+    return safe_str(value, default_value=default_value).upper()
 
 
-def camelize(string_value: str, uppercase_first_letter: bool = False) -> Optional[str]:
+def safe_trim(value: Any, default_value: str = '') -> str:
+    """Trim any value safely."""
+    return safe_str(value, default_value=default_value).strip(' \n\r\t')
+
+
+def camelize(string_value: Optional[str], uppercase_first_letter: bool = False) -> Optional[str]:
     """Camelize a string.
 
     Return the original string if it cannot be camelized (empty or no underscores in it).
@@ -284,7 +257,7 @@ def camelize(string_value: str, uppercase_first_letter: bool = False) -> Optiona
     return string_value
 
 
-def decamelize(string_value: str) -> Optional[str]:
+def decamelize(string_value: Optional[str]) -> Optional[str]:
     """Decamelize a string.
 
     Return the original string if it cannot be decamelized.
@@ -296,10 +269,10 @@ def decamelize(string_value: str) -> Optional[str]:
     return string_value
 
 
-def sanitize(string_value: str, ignore_characters: Set[str] = None) -> Optional[str]:
+def sanitize(string_value: str, ignore_characters: Set[str] = None) -> str:
     """Sanitize a string to strip special characters.
 
-    Copied from https://github.com/Diaoul/subliminal/blob/master/subliminal/utils.py
+    Based on https://github.com/Diaoul/subliminal/blob/master/subliminal/utils.py
     """
     ignore_characters = ignore_characters or set()
     # Only deal with strings
@@ -317,15 +290,6 @@ def sanitize(string_value: str, ignore_characters: Set[str] = None) -> Optional[
         # Strip and lower case
         return string_value.strip().lower()
     return string_value
-
-
-def safe_value(value: Any, default_value: str = '', uppercase: bool = False) -> str:
-    result = value or default_value
-    result = ','.join(str(v) for v in result) if isinstance(result, list) else result
-    result = safe_text(result, default_value)
-    if uppercase:
-        result = safe_uppercase(result, default_value=default_value)
-    return result
 
 
 def convert_timestamp(timestamp_string: str) -> str:
