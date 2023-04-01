@@ -7,6 +7,8 @@ import subprocess
 import sys
 import time
 import webbrowser
+from types import FrameType
+from typing import Any, Dict, Optional
 
 import cherrypy
 from cherrypy.lib import auth_digest
@@ -28,7 +30,7 @@ from autosubliminal.versionchecker import VersionChecker
 log = logging.getLogger(__name__)
 
 
-def daemon():
+def daemon() -> None:
     if sys.platform != 'win32':
 
         print('INFO: Starting as a daemon.')
@@ -57,7 +59,7 @@ def daemon():
         sys.stderr.flush()
 
 
-def launch_browser():
+def launch_browser() -> None:
     host = autosubliminal.WEBSERVERIP
     port = autosubliminal.WEBSERVERPORT
     wr = autosubliminal.WEBROOT
@@ -76,7 +78,7 @@ def launch_browser():
             log.exception('Browser launch failed')
 
 
-def start_server(restarting=False):
+def start_server(restarting: bool = False) -> None:
     # stop server when restarting
     if restarting:
         # Stop server
@@ -106,7 +108,7 @@ def start_server(restarting=False):
         _exit(1)
 
 
-def _configure_server(restarting=False):
+def _configure_server(restarting: bool = False) -> None:
     # Configure server error log
     cherrypy.config.update({'log.error_file': 'cherrypy.error.log'})
 
@@ -150,7 +152,7 @@ def _configure_server(restarting=False):
         cherrypy.server.httpserver = None
 
 
-def _setup_index_html():
+def _setup_index_html() -> None:
     # Read index.html and replace base href
     with open('web/autosubliminal/static/index.html', mode='r') as f:
         content = f.read()
@@ -162,7 +164,7 @@ def _setup_index_html():
         f.write(content)
 
 
-def _get_root_configuration():
+def _get_root_configuration() -> Dict[str, Any]:
     # Configure application
     conf = {
         '/': {
@@ -175,7 +177,7 @@ def _get_root_configuration():
     return conf
 
 
-def _get_application_configuration():
+def _get_application_configuration() -> Dict[str, Any]:
     # Configure application
     conf = {
         # Root settings (angular frontend)
@@ -226,7 +228,7 @@ def _get_application_configuration():
     return conf
 
 
-def start():
+def start() -> None:
     log.info('Starting')
 
     # Start permanent threads
@@ -254,7 +256,7 @@ def start():
     autosubliminal.STARTED = True
 
 
-def stop(exit=True):
+def stop(exit: bool = True) -> None:
     log.info('Stopping')
     if exit:
         send_websocket_event(SYSTEM_SHUTDOWN)
@@ -278,7 +280,7 @@ def stop(exit=True):
         _exit()
 
 
-def restart(exit=False):
+def restart(exit: bool = False) -> None:
     log.info('Restarting')
     send_websocket_event(SYSTEM_RESTART)
     time.sleep(2)  # Sleep 2 seconds to give the frontend to receive the event
@@ -307,7 +309,7 @@ def restart(exit=False):
         log.info('Restarted')
 
 
-def signal_handler(signum, frame):
+def signal_handler(signum: int, frame: Optional[FrameType]) -> None:
     log.debug('Received signal: %s', signum)
     if signum == signal.SIGINT:
         log.info('Received interrupt signal, exiting')
@@ -315,7 +317,7 @@ def signal_handler(signum, frame):
         _exit()
 
 
-def _shutdown():
+def _shutdown() -> None:
     log.info('Exiting CherryPy webserver')
     cherrypy.engine.exit()
     log.info('Exiting PID: %s', autosubliminal.PID)
@@ -323,6 +325,6 @@ def _shutdown():
     logging.shutdown()
 
 
-def _exit(code=0):
+def _exit(code: int = 0) -> None:
     # Exit process
     os._exit(code)

@@ -23,7 +23,7 @@ class PathInfo(object):
     def _calculate_free_percentage(self) -> float:
         return round((float(self.free_bytes) / float(self.total_bytes) * 100), 2) if self.total_bytes else 0.0
 
-    def to_dict(self, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
+    def to_dict(self, key_fn: Callable, *args: Any, **kwargs: Any) -> Dict[str, Any]:
         """Convert the object to its dict representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict

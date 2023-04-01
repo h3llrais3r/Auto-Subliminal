@@ -1,6 +1,9 @@
 # coding=utf-8
 
-def b2u(b, encoding='utf-8', fallback_error_mode='replace'):
+from typing import AnyStr
+
+
+def b2u(b: bytes, encoding: str = 'utf-8', fallback_error_mode: str = 'replace') -> str:
     """
     Convert a byte string (bytes) to a unicode string (str).
 
@@ -18,7 +21,7 @@ def b2u(b, encoding='utf-8', fallback_error_mode='replace'):
         return b.decode(encoding, errors=fallback_error_mode)
 
 
-def s2u(s, encoding='utf-8', fallback_error_mode='replace', validate=False):
+def s2u(s: AnyStr, encoding: str = 'utf-8', fallback_error_mode: str = 'replace', validate: bool = False) -> str:
     """
     Convert a string value (bytes or str) to a unicode string (str).
 
@@ -39,7 +42,7 @@ def s2u(s, encoding='utf-8', fallback_error_mode='replace', validate=False):
         return s
 
 
-def u2b(u, encoding='utf-8', fallback_error_mode='replace'):
+def u2b(u: str, encoding: str = 'utf-8', fallback_error_mode: str = 'replace') -> bytes:
     """
     Convert a unicode string to a byte string.
 
@@ -57,7 +60,7 @@ def u2b(u, encoding='utf-8', fallback_error_mode='replace'):
         return u.encode(encoding, fallback_error_mode)
 
 
-def s2b(s, encoding='utf-8', fallback_error_mode='replace', validate=False):
+def s2b(s: AnyStr, encoding: str = 'utf-8', fallback_error_mode: str = 'replace', validate: bool = False) -> bytes:
     """
     Convert a string value to a byte string.
 

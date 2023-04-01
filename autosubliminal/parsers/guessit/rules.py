@@ -1,9 +1,12 @@
 # coding=utf-8
 
+from typing import Any, Dict
+
 from guessit.rules.common.comparators import marker_sorted
 from guessit.rules.common.formatters import cleanup
 from guessit.rules.properties.type import TypeProcessor
 from rebulk import Rebulk
+from rebulk.match import Matches
 from rebulk.processors import POST_PROCESS
 from rebulk.rules import AppendMatch, RemoveMatch, RenameMatch, Rule
 
@@ -47,7 +50,7 @@ class RenamePartsToEpisodeNumbers(Rule):
     dependency = TypeProcessor  # To guess the type before
     consequence = RenameMatch('episode')
 
-    def when(self, matches, context):
+    def when(self, matches: Matches, context: Dict[str, Any]):
         """Evaluate the rule.
 
         :param matches:
@@ -109,7 +112,7 @@ class AppendPartToMovieTile(Rule):
     dependency = TypeProcessor  # To guess the type before
     consequence = [RemoveMatch, AppendMatch]
 
-    def when(self, matches, context):
+    def when(self, matches: Matches, context: Dict[str, Any]):
         """Evaluate the rule.
 
         :param matches:
@@ -177,7 +180,7 @@ class AppendLineToMovieTitle(Rule):
     dependency = TypeProcessor  # To guess the type before
     consequence = [RemoveMatch, AppendMatch]
 
-    def when(self, matches, context):
+    def when(self, matches: Matches, context: Dict[str, Any]):
         """Evaluate the rule.
 
         :param matches:
@@ -246,7 +249,7 @@ class AppendUsToMovieTitle(Rule):
     dependency = TypeProcessor  # To guess the type before
     consequence = [RemoveMatch, AppendMatch]
 
-    def when(self, matches, context):
+    def when(self, matches: Matches, context: Dict[str, Any]):
         """Evaluate the rule.
 
         :param matches:
@@ -315,7 +318,7 @@ class PrependXxxToMovieTitle(Rule):
     dependency = TypeProcessor  # To guess the type before
     consequence = [RemoveMatch, AppendMatch]
 
-    def when(self, matches, context):
+    def when(self, matches: Matches, context: Dict[str, Any]):
         """Evaluate the rule.
 
         :param matches:
@@ -385,7 +388,7 @@ class VhsAsMovieTitle(Rule):
     dependency = TypeProcessor  # To guess the type before
     consequence = RenameMatch('title')
 
-    def when(self, matches, context):
+    def when(self, matches: Matches, context: Dict[str, Any]):
         """Evaluate the rule.
 
         :param matches:
@@ -406,7 +409,7 @@ class VhsAsMovieTitle(Rule):
                         return source
 
 
-def rules():
+def rules() -> Rebulk:
     """Return all our custom rules to be applied to the guessit api.
 
     IMPORTANT:

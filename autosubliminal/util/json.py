@@ -1,12 +1,14 @@
 # coding=utf-8
 
+from typing import Any, Dict
+
 import cherrypy
 import jsonpickle
 
 from autosubliminal.util.encoding import s2b
 
 
-def from_json(value):
+def from_json(value: str) -> Dict[str, Any]:
     """
     Convert json to an object. This will only work for objects which were converted to json with unpickable=True.
     In all other cases, the result will be a dict instead.
@@ -14,10 +16,10 @@ def from_json(value):
     :param value: the json value to convert to a dict
     :return: the dict
     """
-    return jsonpickle.loads(value)
+    return jsonpickle.loads(value)  # type: ignore[no-any-return]
 
 
-def to_json(obj, unpickable=False):
+def to_json(obj: Any, unpickable: bool = False) -> str:
     """
     Convert an object to json.
 
@@ -25,10 +27,10 @@ def to_json(obj, unpickable=False):
     :param unpickable: if set to true, the json will contain extra info to convert the json back to the object
     :return: the json string
     """
-    return jsonpickle.dumps(obj, unpicklable=unpickable)
+    return jsonpickle.dumps(obj, unpicklable=unpickable)  # type: ignore[no-any-return]
 
 
-def json_out_handler(*args, **kwargs):
+def json_out_handler(*args: Any, **kwargs: Any) -> bytes:
     """
     Custom cherrypy json_handler which uses jsonpickle for converting objects to json.
     This is a copy from cherrypy.jsontools json_handler() but encodes with jsonpickle.

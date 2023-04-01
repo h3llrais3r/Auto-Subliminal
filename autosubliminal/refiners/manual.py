@@ -1,13 +1,16 @@
 # coding=utf-8
 
 import logging
+from typing import Any
 
-from subliminal.video import Episode, Movie
+from subliminal.video import Episode, Movie, Video
+
+from autosubliminal.core.item import WantedItem
 
 logger = logging.getLogger(__name__)
 
 
-def refine(video, wanted_item, **kwargs):
+def refine(video: Video, wanted_item: WantedItem, **kwargs: Any) -> None:
     """Refine a video by using the manually altered data from the wanted_item.
 
     Based on subliminal.refiners
@@ -35,7 +38,7 @@ def refine(video, wanted_item, **kwargs):
     """
     # skip non existing videos
     if not video.exists:
-        return
+        return None
 
     # refine episode
     if isinstance(video, Episode):
@@ -48,7 +51,7 @@ def refine(video, wanted_item, **kwargs):
         video.resolution = _get_video_attr(wanted_item.quality, video.resolution)
         video.video_codec = _get_video_attr(wanted_item.codec, video.video_codec)
         video.release_group = _get_video_attr(wanted_item.release_group, video.release_group)
-        return
+        return None
 
     # refine movie
     if isinstance(video, Movie):
@@ -59,10 +62,10 @@ def refine(video, wanted_item, **kwargs):
         video.resolution = _get_video_attr(wanted_item.quality, video.resolution)
         video.video_codec = _get_video_attr(wanted_item.codec, video.video_codec)
         video.release_group = _get_video_attr(wanted_item.release_group, video.release_group)
-        return
+        return None
 
 
-def _get_video_attr(attr, default_attr):
+def _get_video_attr(attr: Any, default_attr: Any) -> Any:
     # Video can only work with single values, so take first element from the list if attr is a list
     if isinstance(attr, list) and len(attr) > 0:
         return attr[0]

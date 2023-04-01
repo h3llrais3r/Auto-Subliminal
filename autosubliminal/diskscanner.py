@@ -68,7 +68,7 @@ class DiskScanner(ScheduledProcess):
         send_websocket_notification('Disk scan finished.')
         log.info('Finished round of local disk checking')
 
-    def _scan_path(self, path) -> List[WantedItem]:
+    def _scan_path(self, path: str) -> List[WantedItem]:
         log.info('Scanning video path: %s', path)
         wanted_items: List[WantedItem] = []
 
@@ -99,7 +99,7 @@ class DiskScanner(ScheduledProcess):
 
         return wanted_items
 
-    def _scan_file(self, dirname, filename) -> Optional[WantedItem]:
+    def _scan_file(self, dirname: str, filename: str) -> Optional[WantedItem]:
         # Check if video file has already been processed before, so we don't need to process it again
         wanted_item = self.wanted_db.get_wanted_item_by_video_path(os.path.join(dirname, filename), ignore_case=True)
         if wanted_item:

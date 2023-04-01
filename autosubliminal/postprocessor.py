@@ -1,6 +1,7 @@
 # coding=utf-8
 
 import logging
+from typing import AnyStr, List, Optional
 
 import autosubliminal
 from autosubliminal.core.item import DownloadItem, WantedItem
@@ -60,7 +61,7 @@ class PostProcessor(object):
 
         return True
 
-    def _construct_process_cmd(self):
+    def _construct_process_cmd(self) -> Optional[List[str]]:
         try:
             log.debug('#' * 40)
             log.debug('Command:')
@@ -111,11 +112,11 @@ class PostProcessor(object):
 
         return process
 
-    def _convert_arg(self, arg):
+    def _convert_arg(self, arg: AnyStr) -> str:
         # Arguments should be sent as string values (validate if the args can be sent in the specified encoding)
         return s2u(arg, encoding=self._encoding, validate=True)
 
-    def _log_process_output(self, message, output, log_level):
+    def _log_process_output(self, message: str, output: bytes, log_level: int) -> None:
         # Process output is always in bytes
         # We expect the encoding of the output to be the same as the encoding we used
         try:

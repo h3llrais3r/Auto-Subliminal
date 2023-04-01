@@ -5,7 +5,9 @@ import logging
 import os
 import re
 import shutil
+from logging import LogRecord
 from logging.handlers import BaseRotatingHandler
+from typing import List, Optional, no_type_check
 
 import autosubliminal
 
@@ -13,7 +15,7 @@ LOG_PARSER = re.compile(r'^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\
                         re.IGNORECASE)
 
 
-def initialize():
+def initialize() -> None:
     # Customize the root logger so every logger outputs to this
     # Using logging.getLogger() without name parameter returns the root logger
     log = logging.getLogger()
@@ -44,7 +46,7 @@ def initialize():
         log.addHandler(console)
 
 
-def update_settings():
+def update_settings() -> None:
     # The new settings must already be set in the autosubliminal variables
     # Only apply the settings that can be changed at runtime, others require a restart
     logging.getLogger().setLevel(autosubliminal.LOGLEVEL)
@@ -59,9 +61,9 @@ def update_settings():
             handler.setLevel(autosubliminal.LOGLEVELCONSOLE)
 
 
-def get_log_lines(loglevel='all', lines=0, lognum=None):
+def get_log_lines(loglevel: str = 'all', lines: int = 0, lognum: int = None) -> List[str]:
     # Read log file data
-    data = []
+    data: List[str] = []
     previous_loglevel = loglevel
     logfile = get_logfile(lognum)
     if logfile:
@@ -69,7 +71,7 @@ def get_log_lines(loglevel='all', lines=0, lognum=None):
         data = f.readlines()
         f.close()
     # Log data
-    log_data = []
+    log_data: List[str] = []
     for x in data:
         try:
             matches = LOG_PARSER.search(x)
@@ -96,7 +98,7 @@ def get_log_lines(loglevel='all', lines=0, lognum=None):
     return log_data
 
 
-def get_logfile(lognum=None):
+def get_logfile(lognum: int = None) -> Optional[str]:
     logfile = autosubliminal.LOGFILE
     if lognum:
         logfile += '.' + str(lognum)
@@ -105,14 +107,14 @@ def get_logfile(lognum=None):
     return None
 
 
-def count_backup_logfiles():
+def count_backup_logfiles() -> int:
     # Count the number of backup logfiles
     result = len([f for f in os.listdir('.') if os.path.isfile(f) and re.match(autosubliminal.LOGFILE + '.', f)])
     return result
 
 
 class _LogFormatter(logging.Formatter):
-    def __init__(self, detailed_format=False):
+    def __init__(self, detailed_format: bool = False) -> None:
         self.detailed_format = detailed_format
         # If the format is changed, also the utils.LOG_PARSER must be changed!
         self._custom_fmt = '%(asctime)s %(levelname)-8s '
@@ -122,7 +124,7 @@ class _LogFormatter(logging.Formatter):
         self._custom_fmt += '%(message)s'
         super().__init__(self._custom_fmt)
 
-    def format(self, record):
+    def format(self, record: LogRecord) -> str:
         # Add custom field(s) to the record to use it in the detailed format
         if self.detailed_format:
             record.customDetails = '[%s :: %s]' % (record.threadName, record.name)
@@ -130,12 +132,12 @@ class _LogFormatter(logging.Formatter):
 
 
 class _LogFilter(logging.Filter):
-    def __init__(self, log_http_access=None, log_external_libs=None):
+    def __init__(self, log_http_access: bool = None, log_external_libs: bool = None):
         self.log_http_access = log_http_access
         self.log_external_libs = log_external_libs
         super().__init__()
 
-    def filter(self, record):
+    def filter(self, record: LogRecord) -> bool:
         # Filter out http access
         if not self.log_http_access and 'cherrypy.access' in record.name:
             return False
@@ -146,6 +148,7 @@ class _LogFilter(logging.Filter):
         return True
 
 
+@no_type_check  # TODO: check if we still need this custom handler or not
 class CustomRotatingFileHandler(BaseRotatingHandler):
     """
     Custom handler for logging to a set of files, which switches from one file
@@ -153,6 +156,7 @@ class CustomRotatingFileHandler(BaseRotatingHandler):
     This is a modified version of the RotatingFileHandler to circumvent http://bugs.python.org/issue4749
     """
 
+    @no_type_check
     def __init__(self, filename, mode='a', maxBytes=0, backupCount=0, encoding=None, delay=0):
         """
         Open the specified file and use it as the stream for logging.
@@ -185,6 +189,7 @@ class CustomRotatingFileHandler(BaseRotatingHandler):
         self.maxBytes = maxBytes
         self.backupCount = backupCount
 
+    @no_type_check
     def doRollover(self):
         """
         Do a rollover, as described in __init__().
@@ -221,6 +226,7 @@ class CustomRotatingFileHandler(BaseRotatingHandler):
         if not self.delay:
             self.stream = self._open()
 
+    @no_type_check
     def shouldRollover(self, record):
         """
         Determine if rollover should occur.

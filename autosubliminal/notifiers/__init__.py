@@ -2,15 +2,20 @@
 
 import importlib
 import logging
+from typing import Any, Type
+
+from autosubliminal.core.item import DownloadItem
+from autosubliminal.notifiers.generic import BaseNotifier
 
 log = logging.getLogger(__name__)
 
 
 # Utility function to get a notifier object instance of a notifier library
 # Each notifier library must define an '__CLASS_NAME__' variable which defines the notifier class name
-def _get_notifier_instance(library_name):
+def _get_notifier_instance(library_name: str) -> BaseNotifier:
     module = importlib.import_module('.' + library_name.lower(), __package__)
-    return getattr(module, module.__CLASS_NAME__)()
+    cls: Type[BaseNotifier] = getattr(module, module.__CLASS_NAME__)
+    return cls()
 
 
 # Supported notifier libraries must be added here
@@ -21,7 +26,7 @@ _notifier_libraries = ['growl', 'mail', 'prowl', 'pushalot', 'pushbullet', 'push
 _notifiers = dict((name, _get_notifier_instance(name)) for name in _notifier_libraries)
 
 
-def notify(message, **kwargs):
+def notify(message: str, **kwargs: Any) -> bool:
     """
      Send a notification message with all configured notifiers.
 
@@ -37,7 +42,7 @@ def notify(message, **kwargs):
     return notified
 
 
-def notify_download(download_item, **kwargs):
+def notify_download(download_item: DownloadItem, **kwargs: Any) -> bool:
     """
     Send a download notification message with all configured notifiers.
 
@@ -53,7 +58,7 @@ def notify_download(download_item, **kwargs):
     return notified
 
 
-def test_notifier(library):
+def test_notifier(library: str) -> bool:
     """
     Send a test notification for a supported notifier library.
 

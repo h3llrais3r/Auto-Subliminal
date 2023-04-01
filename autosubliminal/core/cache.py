@@ -4,7 +4,7 @@ import datetime
 import logging
 import os
 import tempfile
-from typing import Union
+from typing import Optional, Union
 
 import requests
 from dogpile.cache.backends.file import AbstractFileLock
@@ -23,22 +23,22 @@ SCAN_VIDEO_EXPIRATION_TIME = datetime.timedelta(days=1).total_seconds()
 class MutexFileLock(AbstractFileLock):
     """:class:`MutexFileLock` is a thread-based rw lock based on :class:`dogpile.core.ReadWriteMutex`."""
 
-    def __init__(self, filename):
+    def __init__(self, filename: str) -> None:
         self.mutex = ReadWriteMutex()
 
-    def acquire_read_lock(self, wait):
+    def acquire_read_lock(self, wait: bool) -> Optional[bool]:
         ret = self.mutex.acquire_read_lock(wait)
         return wait or ret
 
-    def acquire_write_lock(self, wait):
+    def acquire_write_lock(self, wait: bool) -> Optional[bool]:
         ret = self.mutex.acquire_write_lock(wait)
         return wait or ret
 
-    def release_read_lock(self):
-        return self.mutex.release_read_lock()
+    def release_read_lock(self) -> None:
+        return self.mutex.release_read_lock()  # type: ignore[no-any-return]
 
-    def release_write_lock(self):
-        return self.mutex.release_write_lock()
+    def release_write_lock(self) -> None:
+        return self.mutex.release_write_lock()  # type: ignore[no-any-return]
 
 
 def cache_artwork(indexer_name: str, indexer_id: Union[str, int],

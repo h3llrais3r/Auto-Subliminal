@@ -12,10 +12,10 @@ class SPARedirectTool(Tool):
     This replaces the usage of custom error page, which also works, but gives 404 error responses instead.
     """
 
-    def __init__(self, index_url):
+    def __init__(self, index_url: str) -> None:
         Tool.__init__(self, 'before_handler', self._redirect)
         self._index_url = index_url
 
-    def _redirect(self):
+    def _redirect(self) -> None:
         if cherrypy.request.handler and cherrypy.request.handler.status == 404:
             raise cherrypy.InternalRedirect(self._index_url)

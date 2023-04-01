@@ -1,8 +1,9 @@
 # coding=utf-8
 
 import logging
+from typing import Any
 
-from subliminal.video import Episode, Movie
+from subliminal.video import Episode, Movie, Video
 
 from autosubliminal.util.mapping import (get_alternative_movie_name_mapping, get_alternative_show_name_mapping,
                                          get_movie_name_mapping, get_show_name_mapping)
@@ -10,7 +11,7 @@ from autosubliminal.util.mapping import (get_alternative_movie_name_mapping, get
 logger = logging.getLogger(__name__)
 
 
-def refine(video, **kwargs):
+def refine(video: Video, **kwargs: Any) -> None:
     """Refine a video by adding the custom name mappings.
 
     Based on subliminal.refiners
@@ -28,7 +29,7 @@ def refine(video, **kwargs):
     """
     # skip non existing videos
     if not video.exists:
-        return
+        return None
 
     # refine episode
     if isinstance(video, Episode):
@@ -36,7 +37,7 @@ def refine(video, **kwargs):
         video.alternative_series = (video.alternative_series or []) + (
             get_alternative_show_name_mapping(video.series) or [])
         video.series_tvdb_id = get_show_name_mapping(video.series) or video.series_tvdb_id
-        return
+        return None
 
     # refine movie
     if isinstance(video, Movie):
@@ -44,4 +45,4 @@ def refine(video, **kwargs):
         video.alternative_titles = (video.alternative_titles or []) + (
             get_alternative_movie_name_mapping(video.title, video.year) or [])
         video.imdb_id = get_movie_name_mapping(video.title, video.year) or video.imdb_id
-        return
+        return None

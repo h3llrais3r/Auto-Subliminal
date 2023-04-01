@@ -3,7 +3,7 @@
 import logging
 import threading
 from functools import wraps
-from typing import Optional, Tuple
+from typing import Any, Callable, Optional, Tuple
 
 import autosubliminal
 from autosubliminal.core.item import ItemType, WantedItem
@@ -33,14 +33,14 @@ def release_wanted_queue_lock() -> None:
             log.warning('Trying to release a wanted queue lock while there is no lock')
 
 
-def release_wanted_queue_lock_on_exception(func):
+def release_wanted_queue_lock_on_exception(func: Callable) -> Callable:
     """
     Decorator to force the release of the wanted queue lock on unexpected exceptions.
     This should be used on every place where we do a get_wanted_queue_lock to release it also on unexpected exceptions.
     """
 
     @wraps(func)
-    def wrapper(*args, **kwargs):
+    def wrapper(*args: Any, **kwargs: Any) -> Any:
         try:
             return func(*args, **kwargs)
         except Exception as e:

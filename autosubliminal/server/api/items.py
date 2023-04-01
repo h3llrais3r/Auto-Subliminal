@@ -1,5 +1,7 @@
 # coding=utf-8
 
+from typing import Any, Dict, List, Optional, Union
+
 import cherrypy
 
 import autosubliminal
@@ -16,7 +18,7 @@ class ItemsApi(RestResource):
     Rest resource for handling the /api/items path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Add all sub paths here: /api/items/...
@@ -30,20 +32,20 @@ class _WantedApi(RestResource):
     Rest resource for handling the /api/items/wanted path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['GET', 'DELETE', 'PUT', 'PATCH']
 
-    def get(self, wanted_item_id=None):
+    def get(self, wanted_item_id: str = None) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
         """Get the list of wanted items or a single wanted item from the wanted queue."""
         if wanted_item_id:
             wanted_item, _ = find_wanted_item_in_queue(int(wanted_item_id))
             if wanted_item:
                 return wanted_item.to_dict(camelize)
             else:
-                return self._bad_request('Invalid wanted_item_id')
+                self._raise_bad_request('Invalid wanted_item_id')
         else:
             items = []
             for item in autosubliminal.WANTEDQUEUE:
@@ -51,7 +53,7 @@ class _WantedApi(RestResource):
             return items
 
     @release_wanted_queue_lock_on_exception
-    def put(self, wanted_item_id):
+    def put(self, wanted_item_id: str) -> Dict[str, Any]:
         """Update a wanted item in the wanted queue."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
@@ -66,12 +68,12 @@ class _WantedApi(RestResource):
                     release_wanted_queue_lock()
                     return wanted_item.to_dict(camelize)
                 else:
-                    return self._conflict('Wanted queue in use')
+                    self._raise_conflict('Wanted queue in use')
 
-        return self._bad_request('Invalid wanted_item_id')
+        self._raise_bad_request('Invalid wanted_item_id')
 
     @release_wanted_queue_lock_on_exception
-    def patch(self, wanted_item_id):
+    def patch(self, wanted_item_id: str) -> Optional[Union[List[Dict[str, Any]], Dict[str, Any]]]:
         """Execute an action on the wanted item in the wanted queue."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
@@ -88,7 +90,7 @@ class _WantedApi(RestResource):
                             wanted_item = WantedItemsDb().get_wanted_item(int(wanted_item_id))
                             return wanted_item.to_dict(camelize)
                         else:
-                            return self._conflict('Unable to search indexer id')
+                            self._raise_conflict('Unable to search indexer id')
 
                     # Search subtitles
                     elif action == 'searchSubtitles':
@@ -98,9 +100,9 @@ class _WantedApi(RestResource):
                             if not error_message:
                                 return [to_dict(x, camelize) for x in subs]
                             else:
-                                return self._conflict(error_message)
+                                self._raise_conflict(error_message)
 
-                        return self._bad_request('Missing language')
+                        self._raise_bad_request('Missing language')
 
                     # Save subtitle
                     elif action == 'saveSubtitle':
@@ -113,9 +115,9 @@ class _WantedApi(RestResource):
                                 }
                                 return to_dict(saved_subtitle, camelize)
                             else:
-                                return self._conflict('Unable to save subtitle')
+                                self._raise_conflict('Unable to save subtitle')
 
-                        return self._bad_request('Missing subtitle_index')
+                        self._raise_bad_request('Missing subtitle_index')
 
                     # Sync subtitle
                     elif action == 'syncSubtitle':
@@ -123,15 +125,16 @@ class _WantedApi(RestResource):
                         if sync_result:
                             return to_dict(sync_result, camelize)
                         else:
-                            return self._conflict('Unable to sync subtitle')
+                            self._raise_conflict('Unable to sync subtitle')
 
                     # Delete subtitle
                     elif action == 'deleteSubtitle':
                         removed = subchecker.delete_subtitle(wanted_item_index)
                         if removed:
-                            return self._no_content()
+                            self._set_no_content_status()
+                            return None
                         else:
-                            return self._conflict('Unable to delete subtitle')
+                            self._raise_conflict('Unable to delete subtitle')
 
                     # Reset a wanted item
                     elif action == 'reset':
@@ -141,16 +144,17 @@ class _WantedApi(RestResource):
                             release_wanted_queue_lock()
                             return wanted_item.to_dict(camelize)
                         else:
-                            return self._conflict('Unable to reset item')
+                            self._raise_conflict('Unable to reset item')
 
                     # Delete a wanted item
                     elif action == 'delete':
                         cleanup = input_dict['cleanup'] if 'cleanup' in input_dict else False
                         deleted = subchecker.delete_video(wanted_item_index, cleanup)
                         if deleted:
-                            return self._no_content()
+                            self._set_no_content_status()
+                            return None
                         else:
-                            return self._conflict('Unable to delete item')
+                            self._raise_conflict('Unable to delete item')
 
                     # Skip a wanted item
                     elif action == 'skip':
@@ -167,7 +171,8 @@ class _WantedApi(RestResource):
                                     if title_sanitized == sanitize(x):
                                         for s in autosubliminal.SKIPSHOW[x].split(','):
                                             if s == season or s == '00':
-                                                return self._no_content()
+                                                self._set_no_content_status()
+                                                return None
                                         # Not skipped yet, skip all or append season the seasons to skip
                                         if season == '00':
                                             config_season = '00'
@@ -179,9 +184,10 @@ class _WantedApi(RestResource):
                                 if subchecker.skip_show(wanted_item_index, season):
                                     config.write_config_property('skipshow', wanted_item.title, config_season)
                                     config.apply_skipshow()
-                                    return self._no_content()
+                                    self._set_no_content_status()
+                                    return None
                                 else:
-                                    return self._conflict('Unable to skip show')
+                                    self._raise_conflict('Unable to skip show')
                             elif type == 'movie':
                                 movie = wanted_item.title
                                 if wanted_item.year:
@@ -190,16 +196,18 @@ class _WantedApi(RestResource):
                                 movie_sanitized = sanitize(movie)
                                 for x in autosubliminal.SKIPMOVIE:
                                     if movie_sanitized == sanitize(x):
-                                        return self._no_content()
+                                        self._set_no_content_status()
+                                        return None
                                 # Skip movie
                                 if subchecker.skip_movie(wanted_item_index):
                                     config.write_config_property('skipmovie', movie, '00')
                                     config.apply_skipmovie()
-                                    return self._no_content()
+                                    self._set_no_content_status()
+                                    return None
                                 else:
-                                    return self._conflict('Unable to skip movie')
+                                    self._raise_conflict('Unable to skip movie')
 
-                        return self._bad_request('Invalid type \'%s\'' % item_type)
+                        self._raise_bad_request('Invalid type \'%s\'' % item_type)
 
                     # Post process a wanted item
                     elif action == 'postProcess':
@@ -208,31 +216,31 @@ class _WantedApi(RestResource):
                         else:
                             processed = subchecker.post_process_no_subtitle(wanted_item_index)
                         if processed:
-                            return self._no_content()
+                            self._set_no_content_status()
+                            return None
                         else:
-                            return self._conflict('Unable to post process item')
+                            self._raise_conflict('Unable to post process item')
 
-                    return self._bad_request('Invalid action \'%s\'' % action)
+                    self._raise_bad_request('Invalid action \'%s\'' % action)
 
-        return self._bad_request('Invalid wanted_item_id')
+        self._raise_bad_request('Invalid wanted_item_id')
 
 
-@cherrypy.popargs('number_of_items')
 class _DownloadedApi(RestResource):
     """
     Rest resource for handling the /api/items/downloaded path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['GET']
 
-    def get(self, ):
+    def get(self) -> List[Dict[str, Any]]:
         """Get the list of downloaded items."""
         last_downloads = LastDownloadsDb().get_last_downloads()
-        items = []
+        items: List[Dict[str, Any]] = []
         for item in last_downloads:
             items.append(item.to_dict(camelize))
 

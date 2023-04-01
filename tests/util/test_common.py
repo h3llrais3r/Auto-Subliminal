@@ -12,12 +12,11 @@ from vcr import VCR
 
 import autosubliminal
 from autosubliminal import version
-from autosubliminal.core.subtitle import Subtitle
-from autosubliminal.util.common import (
-    atoi, camelize, connect_url, convert_timestamp, decamelize, find_path_in_paths, get_boolean, get_common_path,
-    get_file_size, get_missing_languages, get_root_path, get_today, get_wanted_languages, humanize_bytes, natural_keys,
-    run_cmd, safe_lowercase, safe_text, safe_trim, safe_uppercase, safe_value, sanitize, set_rw_and_remove, to_dict,
-    to_list, to_obj, to_obj_or_list, to_text, wait_for_internet_connection)
+from autosubliminal.util.common import (atoi, camelize, connect_url, convert_timestamp, decamelize, find_path_in_paths,
+                                        get_boolean, get_common_path, get_file_size, get_root_path, get_today,
+                                        get_wanted_languages, humanize_bytes, natural_keys, run_cmd, safe_lowercase,
+                                        safe_text, safe_trim, safe_uppercase, safe_value, sanitize, set_rw_and_remove,
+                                        to_dict, to_list, to_obj, to_obj_or_list, to_text, wait_for_internet_connection)
 
 vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
           record_mode='once',
@@ -419,12 +418,3 @@ def test_get_wanted_languages(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
     monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en', 'fr'])
     assert ['nl', 'en', 'fr'] == get_wanted_languages()
-
-
-def test_get_missing_languages(monkeypatch: MonkeyPatch):
-    monkeypatch.setattr('autosubliminal.DEFAULTLANGUAGE', 'nl')
-    monkeypatch.setattr('autosubliminal.ADDITIONALLANGUAGES', ['en', 'fr'])
-    available_subtitles = [Subtitle(language='en'), Subtitle(language='fr')]
-    assert ['nl', 'en', 'fr'] == get_missing_languages([])
-    assert ['nl', 'en', 'fr'] == get_missing_languages([], ['nl', 'en', 'fr'])
-    assert ['nl'] == get_missing_languages(available_subtitles)

@@ -2,6 +2,7 @@
 
 import logging
 import os
+from typing import Any, Dict
 
 import cherrypy
 from requests_oauthlib.oauth1_session import OAuth1Session
@@ -22,7 +23,7 @@ class SettingsApi(RestResource):
     Rest resource for handling the /api/settings path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Add all sub paths here: /api/settings/...
@@ -37,7 +38,7 @@ class SettingsApi(RestResource):
         self.postprocessing = _PostProcessingApi()
 
     @staticmethod
-    def save_and_restart_if_needed(section):
+    def save_and_restart_if_needed(section: str) -> None:
         # Save to the config and restart if needed
         restart = config.write_config(section)
         if restart:
@@ -51,14 +52,14 @@ class _GeneralApi(RestResource):
     Rest resource for handling the /api/settings/general path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._section = 'general'
 
         # Set the allowed methods
         self.allowed_methods = ['GET', 'PUT', 'PATCH']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         """Get general settings."""
         settings = {
             'video_paths': autosubliminal.VIDEOPATHS,
@@ -86,7 +87,7 @@ class _GeneralApi(RestResource):
 
         return to_dict(settings, camelize)
 
-    def put(self, general_setting_name=None):
+    def put(self, general_setting_name: str = None) -> None:
         """Update general settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
         general_setting_name = decamelize(general_setting_name)
@@ -139,11 +140,12 @@ class _GeneralApi(RestResource):
 
             SettingsApi.save_and_restart_if_needed(self._section)
 
-            return self._no_content()
+            self._set_no_content_status()
+            return None
 
-        return self._bad_request('Invalid data')
+        self._raise_bad_request('Invalid data')
 
-    def patch(self, general_setting_name=None):
+    def patch(self, general_setting_name: str = None) -> None:
         """Patch a general setting."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
         general_setting_name = decamelize(general_setting_name)
@@ -157,11 +159,12 @@ class _GeneralApi(RestResource):
                 if not find_path_in_paths(video_path, autosubliminal.VIDEOPATHS, check_common_path=True):
                     autosubliminal.VIDEOPATHS.append(video_path)
                     write_config_general_section()
-                    return self._no_content()
+                    self._set_no_content_status()
+                    return None
                 else:
-                    return self._conflict('Path already added to the video paths')
+                    self._raise_conflict('Path already added to the video paths')
 
-        return self._bad_request('Invalid data')
+        self._raise_bad_request('Invalid data')
 
 
 @cherrypy.popargs('library_setting_name')
@@ -170,14 +173,14 @@ class _LibraryApi(RestResource):
     Rest resource for handling the /api/settings/library path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._section = 'library'
 
         # Set the allowed methods
         self.allowed_methods = ['GET', 'PUT']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         """Get general settings."""
         settings = {
             'library_mode': autosubliminal.LIBRARYMODE,
@@ -188,7 +191,7 @@ class _LibraryApi(RestResource):
 
         return to_dict(settings, camelize)
 
-    def put(self, library_setting_name=None):
+    def put(self, library_setting_name: str = None) -> None:
         """Update general settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
         library_setting_name = decamelize(library_setting_name)
@@ -215,9 +218,10 @@ class _LibraryApi(RestResource):
 
             SettingsApi.save_and_restart_if_needed(self._section)
 
-            return self._no_content()
+            self._set_no_content_status()
+            return None
 
-        return self._bad_request('Invalid data')
+        self._raise_bad_request('Invalid data')
 
 
 @cherrypy.popargs('log_setting_name')
@@ -226,14 +230,14 @@ class _LoggingApi(RestResource):
     Rest resource for handling the /api/settings/logging path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._section = 'logging'
 
         # Set the allowed methods
         self.allowed_methods = ['GET', 'PUT']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         """Get log settings."""
         settings = {
             'log_file': autosubliminal.LOGFILE,
@@ -249,7 +253,7 @@ class _LoggingApi(RestResource):
 
         return to_dict(settings, camelize)
 
-    def put(self, log_setting_name=None):
+    def put(self, log_setting_name: str = None) -> None:
         """Update log settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
         log_setting_name = decamelize(log_setting_name)
@@ -280,9 +284,10 @@ class _LoggingApi(RestResource):
 
             SettingsApi.save_and_restart_if_needed(self._section)
 
-            return self._no_content()
+            self._set_no_content_status()
+            return None
 
-        return self._bad_request('Invalid data')
+        self._raise_bad_request('Invalid data')
 
 
 @cherrypy.popargs('webserver_setting_name')
@@ -291,14 +296,14 @@ class _WebserverApi(RestResource):
     Rest resource for handling the /api/settings/webserver path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._section = 'webserver'
 
         # Set the allowed methods
         self.allowed_methods = ['GET', 'PUT']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         """Get webserver settings."""
         settings = {
             'web_server_ip': autosubliminal.WEBSERVERIP,
@@ -311,7 +316,7 @@ class _WebserverApi(RestResource):
 
         return to_dict(settings, camelize)
 
-    def put(self, webserver_setting_name=None):
+    def put(self, webserver_setting_name: str = None) -> None:
         """Update webserver settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
         webserver_setting_name = decamelize(webserver_setting_name)
@@ -336,9 +341,10 @@ class _WebserverApi(RestResource):
 
             SettingsApi.save_and_restart_if_needed(self._section)
 
-            return self._no_content()
+            self._set_no_content_status()
+            return None
 
-        return self._bad_request('Invalid data')
+        self._raise_bad_request('Invalid data')
 
 
 @cherrypy.popargs('subliminal_setting_name')
@@ -347,14 +353,14 @@ class _SubliminalApi(RestResource):
     Rest resource for handling the /api/settings/subliminal path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._section = 'subliminal'
 
         # Set the allowed methods
         self.allowed_methods = ['GET', 'PUT']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         """Get subliminal settings."""
         settings = {
             'show_match_source': autosubliminal.SHOWMATCHSOURCE,
@@ -383,7 +389,7 @@ class _SubliminalApi(RestResource):
 
         return to_dict(settings, camelize)
 
-    def put(self, subliminal_setting_name=None):
+    def put(self, subliminal_setting_name: str = None) -> None:
         """Update subliminal settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
         subliminal_setting_name = decamelize(subliminal_setting_name)
@@ -464,9 +470,10 @@ class _SubliminalApi(RestResource):
 
             SettingsApi.save_and_restart_if_needed(self._section)
 
-            return self._no_content()
+            self._set_no_content_status()
+            return None
 
-        return self._bad_request('Invalid data')
+        self._raise_bad_request('Invalid data')
 
 
 @cherrypy.popargs('namemapping_setting_name')
@@ -475,14 +482,14 @@ class _NameMappingApi(RestResource):
     Rest resource for handling the /api/settings/namemapping path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._section = 'namemapping'
 
         # Set the allowed methods
         self.allowed_methods = ['GET', 'PUT']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         """Get namemapping settings."""
         settings = {
             'show_name_mapping': dict_to_list(autosubliminal.SHOWNAMEMAPPING),
@@ -494,7 +501,7 @@ class _NameMappingApi(RestResource):
 
         return to_dict(settings, camelize)
 
-    def put(self, namemapping_setting_name=None):
+    def put(self, namemapping_setting_name: str = None) -> None:
         """Update namemapping settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
         namemapping_setting_name = decamelize(namemapping_setting_name)
@@ -517,9 +524,10 @@ class _NameMappingApi(RestResource):
 
             SettingsApi.save_and_restart_if_needed(self._section)
 
-            return self._no_content()
+            self._set_no_content_status()
+            return None
 
-        return self._bad_request('Invalid data')
+        self._raise_bad_request('Invalid data')
 
 
 @cherrypy.popargs('skipmapping_setting_name')
@@ -528,14 +536,14 @@ class _SkipMappingApi(RestResource):
     Rest resource for handling the /api/settings/skipmapping path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._section = 'skipmapping'
 
         # Set the allowed methods
         self.allowed_methods = ['GET', 'PUT']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         """Get skipmapping settings."""
         settings = {
             'skip_show_mapping': dict_to_list(autosubliminal.SKIPSHOW),
@@ -544,7 +552,7 @@ class _SkipMappingApi(RestResource):
 
         return to_dict(settings, camelize)
 
-    def put(self, skipmapping_setting_name=None):
+    def put(self, skipmapping_setting_name: str = None) -> None:
         """Update skipmapping settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
         skipmapping_setting_name = decamelize(skipmapping_setting_name)
@@ -561,9 +569,10 @@ class _SkipMappingApi(RestResource):
 
             SettingsApi.save_and_restart_if_needed(self._section)
 
-            return self._no_content()
+            self._set_no_content_status()
+            return None
 
-        return self._bad_request('Invalid data')
+        self._raise_bad_request('Invalid data')
 
 
 @cherrypy.popargs('notification_setting_name')
@@ -572,14 +581,14 @@ class _NotificationApi(RestResource):
     Rest resource for handling the /api/settings/notification path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._section = 'notification'
 
         # Set the allowed methods
         self.allowed_methods = ['GET', 'PUT', 'POST', 'PATCH']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         """Get notification settings."""
         settings = {
             'notify': autosubliminal.NOTIFY,
@@ -619,7 +628,7 @@ class _NotificationApi(RestResource):
 
         return to_dict(settings, camelize)
 
-    def put(self, notification_setting_name=None):
+    def put(self, notification_setting_name: str = None) -> None:
         """Update notification settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
         notification_setting_name = decamelize(notification_setting_name)
@@ -698,11 +707,12 @@ class _NotificationApi(RestResource):
 
             SettingsApi.save_and_restart_if_needed(self._section)
 
-            return self._no_content()
+            self._set_no_content_status()
+            return None
 
-        return self._bad_request('Invalid data')
+        self._raise_bad_request('Invalid data')
 
-    def post(self, notification_setting_name=None):
+    def post(self, notification_setting_name: str = None) -> Dict[str, Any]:
         """Register a notifier."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
@@ -722,7 +732,7 @@ class _NotificationApi(RestResource):
                         response = oauth_client.fetch_request_token(twitter_notifier.REQUEST_TOKEN_URL)
                     except Exception:
                         log.exception('Error while fetching twitter request token')
-                        return self._internal_server_error('Twitter registration failed')
+                        self._raise_internal_server_error('Twitter registration failed')
 
                     # Create result
                     result = {
@@ -744,7 +754,7 @@ class _NotificationApi(RestResource):
                         response = oauth_client.fetch_access_token(twitter_notifier.ACCESS_TOKEN_URL)
                     except Exception:
                         log.exception('Error while fetching twitter access token')
-                        return self._internal_server_error('Twitter registration failed')
+                        self._raise_internal_server_error('Twitter registration failed')
 
                     # Create result
                     result = {
@@ -754,20 +764,21 @@ class _NotificationApi(RestResource):
 
                     return to_dict(result, camelize)
 
-        return self._bad_request('Invalid data')
+        self._raise_bad_request('Invalid data')
 
-    def patch(self, notification_setting_name=None):
+    def patch(self, notification_setting_name: str = None) -> None:
         """Test a notifier."""
 
         # Test a notifier (notification_setting_name is used as notifier name)
         if notification_setting_name:
             notifier_name = notification_setting_name
             if notifiers.test_notifier(notifier_name):
-                return self._no_content()
+                self._set_no_content_status()
+                return None
             else:
-                return self._internal_server_error('Test %s notification failed' % notifier_name)
+                self._raise_internal_server_error('Test %s notification failed' % notifier_name)
         else:
-            return self._bad_request('Invalid data')
+            self._raise_bad_request('Invalid data')
 
 
 class _PostProcessingApi(RestResource):
@@ -775,14 +786,14 @@ class _PostProcessingApi(RestResource):
     Rest resource for handling the /api/settings/postprocessing path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self._section = 'postprocessing'
 
         # Set the allowed methods
         self.allowed_methods = ['GET', 'PUT']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         """Get postprocessing settings."""
         settings = {
             'post_process': autosubliminal.POSTPROCESS,
@@ -796,7 +807,7 @@ class _PostProcessingApi(RestResource):
 
         return to_dict(settings, camelize)
 
-    def put(self, postprocess_setting_name=None):
+    def put(self, postprocess_setting_name: str = None) -> None:
         """Update postprocessing settings."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
         postprocess_setting_name = decamelize(postprocess_setting_name)
@@ -823,6 +834,7 @@ class _PostProcessingApi(RestResource):
 
             SettingsApi.save_and_restart_if_needed(self._section)
 
-            return self._no_content()
+            self._set_no_content_status()
+            return None
 
-        return self._bad_request('Invalid data')
+        self._raise_bad_request('Invalid data')

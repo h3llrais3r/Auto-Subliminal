@@ -2,6 +2,7 @@
 
 import cherrypy
 from cherrypy._cperror import NotFound
+from cherrypy._cprequest import ResponseBody
 from cherrypy.lib import static
 
 from autosubliminal.core.cache import cache_artwork, get_artwork_cache_path, is_artwork_cached
@@ -9,21 +10,22 @@ from autosubliminal.core.indexer import MovieIndexer, ShowIndexer
 
 
 class Artwork(object):
-    def __init__(self):
+    def __init__(self) -> None:
         self.artwork_types = ['banner', 'poster']
         self.artwork_resolutions = ['fullsize', 'thumbnail']
         self.show_indexer = ShowIndexer()
         self.movie_indexer = MovieIndexer()
 
     @cherrypy.expose(alias='tvdb')
-    def tvdb(self, artwork_type, artwork_resolution, tvdb_id):
+    def tvdb(self, artwork_type: str, artwork_resolution: str, tvdb_id: str) -> ResponseBody:
         return self._serve_artwork_image('tvdb', artwork_type, artwork_resolution, tvdb_id)
 
     @cherrypy.expose(alias='imdb')
-    def imdb(self, artwork_type, artwork_resolution, imdb_id):
+    def imdb(self, artwork_type: str, artwork_resolution: str, imdb_id: str) -> ResponseBody:
         return self._serve_artwork_image('imdb', artwork_type, artwork_resolution, imdb_id)
 
-    def _serve_artwork_image(self, indexer_name, artwork_type, artwork_resolution, indexer_id):
+    def _serve_artwork_image(self, indexer_name: str, artwork_type: str, artwork_resolution: str,
+                             indexer_id: str) -> ResponseBody:
         # Return not found when invalid data is passed
         if artwork_type not in self.artwork_types or artwork_resolution not in self.artwork_resolutions:
             raise NotFound()

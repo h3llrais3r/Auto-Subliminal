@@ -82,7 +82,7 @@ class MovieDetails(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_dict(self, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
+    def to_dict(self, key_fn: Callable, *args: Any, **kwargs: Any) -> Dict[str, Any]:
         """Convert the object to its json representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict
@@ -162,7 +162,7 @@ class MovieSettings(object):
                 # Use default value
                 setattr(self, key, value)
 
-    def to_dict(self, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
+    def to_dict(self, key_fn: Callable, *args: Any, **kwargs: Any) -> Dict[str, Any]:
         """Convert the object to its json representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict

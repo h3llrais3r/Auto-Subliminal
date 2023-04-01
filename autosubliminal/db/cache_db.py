@@ -15,7 +15,7 @@ class TvdbIdCacheDb(object):
         self._query_delete = 'DELETE FROM tvdb_id_cache WHERE show_name=?'
         self._query_flush = 'DELETE FROM tvdb_id_cache'
 
-    def get_tvdb_id(self, show_name) -> Optional[int]:
+    def get_tvdb_id(self, show_name: str) -> Optional[int]:
         """Get the tvdb id for a show.
 
         :param show_name: the show name

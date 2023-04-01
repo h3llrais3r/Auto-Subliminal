@@ -2,11 +2,12 @@
 
 import codecs
 import logging
+from typing import cast
 
 import cherrypy
 import tailer
 from schema import And, Schema, Use
-from ws4py.messaging import TextMessage
+from ws4py.messaging import Message, TextMessage
 from ws4py.websocket import WebSocket
 
 import autosubliminal
@@ -39,7 +40,7 @@ class WebSocketHandler(WebSocket):
     For now we only support event messages that trigger something on the server.
     """
 
-    def received_message(self, message):
+    def received_message(self, message: Message) -> None:
         if isinstance(message, TextMessage):
             # Data is always returned in bytes through the websocket, so convert it first to unicode
             message_dict = from_json(b2u(message.data))
@@ -47,7 +48,7 @@ class WebSocketHandler(WebSocket):
         else:
             log.warning('Unsupported message received on websocket server: %r', message)
 
-    def handle_message(self, message):
+    def handle_message(self, message: Message) -> bool:
         handled = False
         # Check for a valid event message structure
         if self.check_message_structure(message):
@@ -90,8 +91,8 @@ class WebSocketHandler(WebSocket):
 
         return handled
 
-    def check_message_structure(self, message):
-        return MESSAGE_SCHEMA.is_valid(message)
+    def check_message_structure(self, message: Message) -> bool:
+        return cast(bool, MESSAGE_SCHEMA.is_valid(message))
 
 
 class WebSocketBroadCaster(Runner):
@@ -99,7 +100,7 @@ class WebSocketBroadCaster(Runner):
     WebSocket broadcaster class for broadcasting data from the server through the websocket system.
     """
 
-    def run(self):
+    def run(self) -> None:
         # Check for messages on the websocket queue and pop it
         if len(autosubliminal.WEBSOCKETMESSAGEQUEUE) > 0:
             message = autosubliminal.WEBSOCKETMESSAGEQUEUE.pop(0)
@@ -113,7 +114,7 @@ class WebSocketLogHandler(WebSocket):
     Websocket handler for log file tailing.
     """
 
-    def opened(self):
+    def opened(self) -> None:
         cherrypy.log("WebSocketLogHandler opened, starting log file tailing...")
         logfile = autosubliminal.LOGFILE
         for line in tailer.follow(codecs.open(logfile, 'r', 'utf-8')):

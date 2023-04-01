@@ -1,15 +1,17 @@
+from typing import Any, Dict, Type
 from urllib.parse import urlparse
 
 
 class Proxy(object):
-    def __init__(self, proxy_type, proxy_address, proxy_port, proxy_login, proxy_password):
+    def __init__(self, proxy_type: str, proxy_address: str, proxy_port: int, proxy_login: str,
+                 proxy_password: str) -> None:
         self.proxyType = proxy_type
         self.proxyAddress = proxy_address
         self.proxyPort = proxy_port
         self.proxyLogin = proxy_login
         self.proxyPassword = proxy_password
 
-    def serialize(self):
+    def serialize(self) -> Dict[str, Any]:
         result = {'proxyType': self.proxyType,
                   'proxyAddress': self.proxyAddress,
                   'proxyPort': self.proxyPort}
@@ -19,7 +21,7 @@ class Proxy(object):
         return result
 
     @classmethod
-    def parse_url(cls, url):
+    def parse_url(cls: Type['Proxy'], url: str) -> 'Proxy':
         parsed = urlparse(url)
         return cls(proxy_type=parsed.scheme,
                    proxy_address=parsed.hostname,

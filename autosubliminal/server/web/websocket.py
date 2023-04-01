@@ -12,11 +12,11 @@ class WebSocket(object):
     """
 
     @cherrypy.expose
-    def log(self):
+    def log(self) -> None:
         """Log websocket."""
         pass
 
     @cherrypy.expose
-    def system(self):
+    def system(self) -> None:
         """System websocket."""
         pass

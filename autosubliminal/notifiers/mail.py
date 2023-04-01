@@ -5,8 +5,11 @@ import logging
 import os
 import smtplib
 from email.mime.text import MIMEText
+from logging import Logger
+from typing import Any
 
 import autosubliminal
+from autosubliminal.core.item import DownloadItem
 from autosubliminal.notifiers.generic import BaseNotifier
 
 log = logging.getLogger(__name__)
@@ -17,23 +20,23 @@ class MailNotifier(BaseNotifier):
     Mail notifier.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
     @property
-    def log(self):
+    def log(self) -> Logger:
         return log
 
     @property
-    def name(self):
+    def name(self) -> str:
         return 'Mail'
 
     @property
-    def enabled(self):
+    def enabled(self) -> bool:
         return autosubliminal.NOTIFYMAIL
 
     # Override of generic _get_download_message method
-    def _get_download_message(self, download_item):
+    def _get_download_message(self, download_item: DownloadItem) -> str:
         # Prepend extra info to default download message
         message = self.notification_title + '\n\n'
         if download_item.video_path:
@@ -41,7 +44,7 @@ class MailNotifier(BaseNotifier):
         message += super()._get_download_message(download_item)
         return message
 
-    def _send_message(self, message, **kwargs):
+    def _send_message(self, message: str, **kwargs: Any) -> bool:
         mail_message = MIMEText(message, _charset='utf-8')
         mail_message['From'] = email.utils.formataddr(
             (autosubliminal.MAILFROMNAME or autosubliminal.MAILFROMADDR, autosubliminal.MAILFROMADDR))
@@ -65,7 +68,7 @@ class MailNotifier(BaseNotifier):
             return False
 
     # Override of generic notify_download method
-    def notify_download(self, download_item, **kwargs):
+    def notify_download(self, download_item: DownloadItem, **kwargs: Any) -> bool:
         # Set subject
         subject = autosubliminal.MAILSUBJECT if autosubliminal.MAILSUBJECT else self.notification_title
         # Add subtitle from kwargs to subject if available

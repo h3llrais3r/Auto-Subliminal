@@ -2,19 +2,18 @@
 
 import logging
 import os
-from typing import Any, Dict
+from typing import Any, Dict, List, Union
 
 import cherrypy
 
 import autosubliminal
-from autosubliminal.core.show import ShowSettings
-from autosubliminal.core.subtitle import Subtitle
+from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails, ShowSettings
+from autosubliminal.core.subtitle import Subtitle, get_missing_subtitle_languages
 from autosubliminal.db import (FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb,
                                ShowSettingsDb, WantedItemsDb)
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import NotFound, RestResource
-from autosubliminal.util.common import (camelize, decamelize, find_path_in_paths, get_boolean, get_missing_languages,
-                                        natural_keys, to_dict)
+from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, get_boolean, natural_keys, to_dict
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 
 log = logging.getLogger(__name__)
@@ -26,7 +25,7 @@ class ShowsApi(RestResource):
     Rest resource for handling the /api/shows path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Add all sub paths here: /api/shows/...
@@ -38,11 +37,11 @@ class ShowsApi(RestResource):
         # Set the allowed methods
         self.allowed_methods = ['GET', 'DELETE']
 
-    def get(self, tvdb_id=None):
+    def get(self, tvdb_id: str = None) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
         """Get the list of shows or the details of a single show."""
         if tvdb_id:
-            db_show = ShowDetailsDb().get_show(tvdb_id)
-            db_show_settings = ShowSettingsDb().get_show_settings(tvdb_id)
+            db_show = ShowDetailsDb().get_show(int(tvdb_id))
+            db_show_settings = ShowSettingsDb().get_show_settings(int(tvdb_id))
 
             # Return NotFound if movie does not longer exists on disk
             if not os.path.exists(db_show.path):
@@ -61,14 +60,15 @@ class ShowsApi(RestResource):
 
             return shows
 
-    def delete(self, tvdb_id):
+    def delete(self, tvdb_id: str) -> None:
         # Delete from database
-        ShowDetailsDb().delete_show(tvdb_id, episodes=True, subtitles=True)
-        ShowSettingsDb().delete_show_settings(tvdb_id)
+        ShowDetailsDb().delete_show(int(tvdb_id), episodes=True, subtitles=True)
+        ShowSettingsDb().delete_show_settings(int(tvdb_id))
 
-        return self._no_content()
+        self._set_no_content_status()
+        return None
 
-    def _to_show_dict(self, show, show_settings, details=False):
+    def _to_show_dict(self, show: ShowDetails, show_settings: ShowSettings, details: bool = False) -> Dict[str, Any]:
         # Check if the show path is listed in the video paths to scan
         path_in_video_paths = True if find_path_in_paths(show.path, autosubliminal.VIDEOPATHS,
                                                          check_common_path=True) else False
@@ -99,27 +99,27 @@ class ShowsApi(RestResource):
 
         return show.to_dict(camelize, **include_kwargs)
 
-    def _get_show_season_files(self, show_episodes):
+    def _get_show_season_files(self, show_episodes: List[ShowEpisodeDetails]) -> List[Dict[str, Any]]:
         # Show season files are supposed to be stored in individual season dirs or the root dir only
-        seasons: Dict[Any, Any] = {}
+        seasons: Dict[str, Any] = {}
 
         # Create episode dict, grouped by season
-        season_episodes: Dict[Any, Any] = {}
+        season_episodes: Dict[str, List[ShowEpisodeDetails]] = {}
         for episode in show_episodes:
             if episode.season in season_episodes:
-                season_episodes[episode.season].append(episode)
+                season_episodes[str(episode.season)].append(episode)
             else:
-                season_episodes.update({episode.season: [episode]})
+                season_episodes.update({str(episode.season): [episode]})
 
         for season in season_episodes.keys():
-            season_files = []
+            season_files: List[Dict[str, Any]] = []
             season_name = 'Season ' + season.zfill(2)
-            season_path = None
+            season_path: str = None
             for episode in season_episodes[season]:
                 # Determine season path
                 season_path, _ = os.path.split(episode.path)
-                embedded_languages = []
-                hardcoded_languages = []
+                embedded_languages: List[str] = []
+                hardcoded_languages: List[str] = []
                 # Get subtitle files
                 for subtitle in episode.subtitles:
                     if subtitle.type == 'embedded':
@@ -139,7 +139,7 @@ class ShowsApi(RestResource):
                      'tvdb_id': episode.tvdb_id})
             # Sort season files
             if season_files:
-                sorted_files = sorted(season_files, key=lambda k: k['file_name'])
+                sorted_files = sorted(season_files, key=lambda k: str(k['file_name']))
                 seasons.update({season_name: {'path': season_path, 'files': sorted_files}})
 
         # Return sorted list of file dicts (grouped by season)
@@ -152,13 +152,13 @@ class _OverviewApi(RestResource):
     Rest resource for handling the /api/shows/overview path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['GET']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         shows = ShowDetailsDb().get_all_shows()
         total_shows = len(shows)
 
@@ -197,20 +197,21 @@ class _RefreshApi(RestResource):
     Rest resource for handling the /api/shows/{tvdb_id}/refresh path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['PUT']
 
-    def put(self, tvdb_id):
+    def put(self, tvdb_id: str) -> None:
         """Refresh/rescan a show."""
-        show = ShowDetailsDb().get_show(tvdb_id)
+        show = ShowDetailsDb().get_show(int(tvdb_id))
 
         # Refresh/rescan the show path
         LibraryPathScanner().scan_path(show.path)
 
-        return self._no_content()
+        self._set_no_content_status()
+        return None
 
 
 class _SettingsApi(RestResource):
@@ -218,25 +219,25 @@ class _SettingsApi(RestResource):
     Rest resource for handling the /api/shows/{tvdb_id}/settings path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['GET', 'PUT']
 
-    def get(self, tvdb_id):
+    def get(self, tvdb_id: str) -> Dict[str, Any]:
         """Get the settings for a show"""
         show_settings_db = ShowSettingsDb()
-        show_settings = show_settings_db.get_show_settings(tvdb_id)
+        show_settings = show_settings_db.get_show_settings(int(tvdb_id))
 
         # If no settings are defined yet, use the default settings
         if not show_settings:
-            show_settings = ShowSettings.default_settings(tvdb_id)
+            show_settings = ShowSettings.default_settings(int(tvdb_id))
             show_settings_db.set_show_settings(show_settings)
 
         return show_settings.to_dict(camelize)
 
-    def put(self, tvdb_id):
+    def put(self, tvdb_id: str) -> None:
         """Save the settings for a show."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
@@ -248,7 +249,7 @@ class _SettingsApi(RestResource):
 
             # Update settings
             db = ShowSettingsDb()
-            show_settings = db.get_show_settings(tvdb_id)
+            show_settings = db.get_show_settings(int(tvdb_id))
             show_settings.wanted_languages = wanted_languages
             show_settings.refine = refine
             show_settings.hearing_impaired = hearing_impaired
@@ -256,11 +257,12 @@ class _SettingsApi(RestResource):
             db.update_show_settings(show_settings)
 
             # Delete wanted items for the show so the new settings will be used in the next disk scan
-            WantedItemsDb().delete_wanted_items_for_show(tvdb_id)
+            WantedItemsDb().delete_wanted_items_for_show(int(tvdb_id))
 
-            return self._no_content()
+            self._set_no_content_status()
+            return None
 
-        return self._bad_request('Missing data')
+        self._raise_bad_request('Missing data')
 
 
 @cherrypy.popargs('episode_tvdb_id')
@@ -269,7 +271,7 @@ class _EpisodesApi(RestResource):
     Rest resource for handling the /api/shows/{tvdb_id}/episodes path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Add all sub paths here: /api/shows/{tvdb_id}/episodes/...
@@ -281,7 +283,7 @@ class _SubtitlesApi(RestResource):
     Rest resource for handling the /api/shows/{tvdb_id}/episodes/{episode_tvdb_id}/subtitles path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Add all sub paths here: /api/shows/{tvdb_id}/{episode_tvdb_id}/subtitles/...
@@ -290,7 +292,7 @@ class _SubtitlesApi(RestResource):
         # Set the allowed methods
         self.allowed_methods = ['PATCH']
 
-    def patch(self, tvdb_id, episode_tvdb_id):
+    def patch(self, tvdb_id: str, episode_tvdb_id: str) -> None:
         """Patch actions related to show episode subtitles."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
@@ -304,24 +306,25 @@ class _SubtitlesApi(RestResource):
                     subtitle_path = input_dict['subtitle_path']
                     os.remove(subtitle_path)
                 except Exception:
-                    return self._conflict('Unable to delete the subtitle')
+                    self._raise_conflict('Unable to delete the subtitle')
 
                 # Remove from subtitles
-                ShowEpisodeSubtitlesDb().delete_show_episode_subtitle(episode_tvdb_id, subtitle_path)
+                ShowEpisodeSubtitlesDb().delete_show_episode_subtitle(int(episode_tvdb_id), subtitle_path)
 
                 # Update missing languages
                 show_episode_details_db = ShowEpisodeDetailsDb()
-                db_show_episode = show_episode_details_db.get_show_episode(episode_tvdb_id, subtitles=True)
-                db_show_settings = ShowSettingsDb().get_show_settings(tvdb_id)
-                db_show_episode.missing_languages = get_missing_languages(db_show_episode.subtitles,
-                                                                          db_show_settings.wanted_languages)
+                db_show_episode = show_episode_details_db.get_show_episode(int(episode_tvdb_id), subtitles=True)
+                db_show_settings = ShowSettingsDb().get_show_settings(int(tvdb_id))
+                db_show_episode.missing_languages = get_missing_subtitle_languages(db_show_episode.subtitles,
+                                                                                   db_show_settings.wanted_languages)
                 show_episode_details_db.update_show_episode(db_show_episode)
 
-                return self._no_content()
+                self._set_no_content_status()
+                return None
 
-            return self._bad_request('Invalid action \'%s\'' % action)
+            self._raise_bad_request('Invalid action \'%s\'' % action)
 
-        return self._bad_request('Missing data')
+        self._raise_bad_request('Missing data')
 
 
 class _HardcodedApi(RestResource):
@@ -329,13 +332,13 @@ class _HardcodedApi(RestResource):
     Rest resource for handling the /api/shows/{tvdb_id}/episodes/{episode_tvdb_id}/subtitles/hardcoded path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['PUT']
 
-    def put(self, tvdb_id, episode_tvdb_id):
+    def put(self, tvdb_id: str, episode_tvdb_id: str) -> None:
         """Save the list of hardcoded subtitles for a show episode file."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
@@ -347,21 +350,22 @@ class _HardcodedApi(RestResource):
             save_hardcoded_subtitle_languages(file_location, file_name, languages)
 
             # Update subtitles
-            subtitles = []
+            subtitles: List[Subtitle] = []
             for language in languages:
                 subtitles.append(Subtitle('hardcoded', language, path=os.path.join(file_location, file_name)))
             subtitles_db = ShowEpisodeSubtitlesDb()
-            subtitles_db.delete_show_episode_subtitles(episode_tvdb_id, type='hardcoded')
-            subtitles_db.set_show_episode_subtitles(episode_tvdb_id, subtitles)
+            subtitles_db.delete_show_episode_subtitles(int(episode_tvdb_id), type='hardcoded')
+            subtitles_db.set_show_episode_subtitles(int(episode_tvdb_id), subtitles)
 
             # Update missing languages
             show_episode_details_db = ShowEpisodeDetailsDb()
-            db_show_episode = show_episode_details_db.get_show_episode(episode_tvdb_id, subtitles=True)
-            db_show_settings = ShowSettingsDb().get_show_settings(tvdb_id)
-            db_show_episode.missing_languages = get_missing_languages(db_show_episode.subtitles,
-                                                                      db_show_settings.wanted_languages)
+            db_show_episode = show_episode_details_db.get_show_episode(int(episode_tvdb_id), subtitles=True)
+            db_show_settings = ShowSettingsDb().get_show_settings(int(tvdb_id))
+            db_show_episode.missing_languages = get_missing_subtitle_languages(db_show_episode.subtitles,
+                                                                               db_show_settings.wanted_languages)
             show_episode_details_db.update_show_episode(db_show_episode)
 
-            return self._no_content()
+            self._set_no_content_status()
+            return None
 
-        return self._bad_request('Missing data')
+        self._raise_bad_request('Missing data')

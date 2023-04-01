@@ -22,7 +22,7 @@ class SubtitleLanguage(object):
         """Overrides the default implementation (unnecessary in Python 3) to allow comparison."""
         return not self.__eq__(other)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         """Overrides the default implementation to allow comparison."""
         return hash(tuple(sorted(self.__dict__.items())))
 

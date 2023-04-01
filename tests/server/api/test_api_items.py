@@ -82,13 +82,13 @@ def test_get_wanted_single_item(monkeypatch: MonkeyPatch):
     monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 1)  # put on 1 to always return true on is_search_active
     autosubliminal.WANTEDQUEUE = []
     autosubliminal.WANTEDQUEUE.append(wanted_item)
-    assert wanted_item_json == pickle_api_result(ItemsApi().wanted.get(1))
+    assert wanted_item_json == pickle_api_result(ItemsApi().wanted.get('1'))
 
 
 def test_get_wanted_item_bad_request():
     autosubliminal.WANTEDQUEUE = []
     with pytest.raises(BadRequest):
-        ItemsApi().wanted.get(-1)
+        ItemsApi().wanted.get('-1')
 
 
 def test_get_downloaded_items(mocker: MockerFixture):

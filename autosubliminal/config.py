@@ -19,7 +19,7 @@ log = logging.getLogger(__name__)
 ENCODING = 'utf-8'
 
 
-def read_config(check_upgrade=False):
+def read_config(check_upgrade: bool = False) -> None:
     """
     Read the config file and set all the variables.
     If specified, it also checks if it needs to upgrade itself.
@@ -517,7 +517,7 @@ def read_config(check_upgrade=False):
             os._exit(1)
 
 
-def write_config(section=None):
+def write_config(section: str = None) -> bool:
     """
     Write all settings to the config file.
     If a section is specified, only that section is written, otherwise all config settings are written.
@@ -566,7 +566,7 @@ def write_config(section=None):
     return restart
 
 
-def write_config_general_section():
+def write_config_general_section() -> None:
     """
     Write the config general section.
     """
@@ -609,7 +609,7 @@ def write_config_general_section():
         cfg.write(f)
 
 
-def write_config_library_section():
+def write_config_library_section() -> None:
     """
     Write the config library section.
     """
@@ -632,7 +632,7 @@ def write_config_library_section():
         cfg.write(f)
 
 
-def write_config_logging_section():
+def write_config_logging_section() -> None:
     """
     Write the config logging section.
     """
@@ -660,7 +660,7 @@ def write_config_logging_section():
     apply_logging()
 
 
-def write_config_webserver_section():
+def write_config_webserver_section() -> None:
     """
     Write the config webserver section.
     """
@@ -682,7 +682,7 @@ def write_config_webserver_section():
         cfg.write(f)
 
 
-def write_config_subliminal_section():
+def write_config_subliminal_section() -> None:
     """
     Write the config subliminal section.
     """
@@ -727,7 +727,7 @@ def write_config_subliminal_section():
     apply_subliminal()
 
 
-def write_config_shownamemapping_section():
+def write_config_shownamemapping_section() -> None:
     """
     Write the config shownamemapping section.
     """
@@ -749,7 +749,7 @@ def write_config_shownamemapping_section():
     apply_shownamemapping()
 
 
-def write_config_addic7edshownamemapping_section():
+def write_config_addic7edshownamemapping_section() -> None:
     """
     Write the config addic7edshownamemapping section.
     """
@@ -771,7 +771,7 @@ def write_config_addic7edshownamemapping_section():
     apply_addic7edshownamemapping()
 
 
-def write_config_alternativeshownamemapping_section():
+def write_config_alternativeshownamemapping_section() -> None:
     """
     Write the config alternativeshownamemapping section.
     """
@@ -793,7 +793,7 @@ def write_config_alternativeshownamemapping_section():
     apply_alternativeshownamemapping()
 
 
-def write_config_movienamemapping_section():
+def write_config_movienamemapping_section() -> None:
     """
     Write the config movienamemapping section.
     """
@@ -815,7 +815,7 @@ def write_config_movienamemapping_section():
     apply_movienamemapping()
 
 
-def write_config_alternativemovienamemapping_section():
+def write_config_alternativemovienamemapping_section() -> None:
     """
     Write the config alternativemovienamemapping section.
     """
@@ -837,7 +837,7 @@ def write_config_alternativemovienamemapping_section():
     apply_alternativemovienamemapping()
 
 
-def write_config_skipshow_section():
+def write_config_skipshow_section() -> None:
     """
     Write the config skipshow section.
     """
@@ -859,7 +859,7 @@ def write_config_skipshow_section():
     apply_skipshow()
 
 
-def write_config_skipmovie_section():
+def write_config_skipmovie_section() -> None:
     """
     Write the config skipmovie section.
     """
@@ -881,7 +881,7 @@ def write_config_skipmovie_section():
     apply_skipmovie()
 
 
-def write_config_notification_section():
+def write_config_notification_section() -> None:
     """
     Write the config notification section.
     """
@@ -930,7 +930,7 @@ def write_config_notification_section():
         cfg.write(f)
 
 
-def write_config_postprocessing_section():
+def write_config_postprocessing_section() -> None:
     """
     Write the config postprocessing section.
     """
@@ -953,7 +953,7 @@ def write_config_postprocessing_section():
         cfg.write(f)
 
 
-def write_config_property(section=None, property_key=None, property_value=None):
+def write_config_property(section: str = None, property_key: str = None, property_value: str = None) -> None:
     """
     Write a config property to a section.
     """
@@ -972,14 +972,14 @@ def write_config_property(section=None, property_key=None, property_value=None):
             cfg.write(f)
 
 
-def apply_logging():
+def apply_logging() -> None:
     """
     Apply the logging settings.
     """
     logger.update_settings()
 
 
-def apply_subliminal():
+def apply_subliminal() -> None:
     """
     Apply the subliminal settings.
     """
@@ -996,7 +996,7 @@ def apply_subliminal():
         autosubliminal.SUBLIMINALPROVIDERS = autosubliminal.SUBLIMINALPROVIDERMANAGER.names()
 
 
-def apply_shownamemapping():
+def apply_shownamemapping() -> None:
     """
     Apply the shownamemapping settings.
     """
@@ -1008,7 +1008,7 @@ def apply_shownamemapping():
         autosubliminal.SHOWNAMEMAPPING = {}
 
 
-def apply_addic7edshownamemapping():
+def apply_addic7edshownamemapping() -> None:
     """
     Apply the addic7edshownamemapping settings.
     """
@@ -1020,7 +1020,7 @@ def apply_addic7edshownamemapping():
         autosubliminal.ADDIC7EDSHOWNAMEMAPPING = {}
 
 
-def apply_alternativeshownamemapping():
+def apply_alternativeshownamemapping() -> None:
     """
     Apply the alternativeshownamemapping settings.
     """
@@ -1032,7 +1032,7 @@ def apply_alternativeshownamemapping():
         autosubliminal.ALTERNATIVESHOWNAMEMAPPING = {}
 
 
-def apply_movienamemapping():
+def apply_movienamemapping() -> None:
     """
     Apply the movienamemapping settings.
     """
@@ -1044,7 +1044,7 @@ def apply_movienamemapping():
         autosubliminal.MOVIENAMEMAPPING = {}
 
 
-def apply_alternativemovienamemapping():
+def apply_alternativemovienamemapping() -> None:
     """
     Apply the alternativemovienamemapping settings.
     """
@@ -1056,7 +1056,7 @@ def apply_alternativemovienamemapping():
         autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = {}
 
 
-def apply_skipshow():
+def apply_skipshow() -> None:
     """
     Apply the skipshow settings.
     """
@@ -1068,7 +1068,7 @@ def apply_skipshow():
         autosubliminal.SKIPSHOW = {}
 
 
-def apply_skipmovie():
+def apply_skipmovie() -> None:
     """
     Apply the skipmovie settings.
     """
@@ -1080,7 +1080,7 @@ def apply_skipmovie():
         autosubliminal.SKIPMOVIE = {}
 
 
-def _create_config_parser():
+def _create_config_parser() -> ConfigParser:
     """Create a config parser.
 
     Don't use interpolation (for now) because we want to support values with % in it (timestamp format).
@@ -1088,7 +1088,7 @@ def _create_config_parser():
     return ConfigParser(interpolation=None)
 
 
-def _load_config_parser():
+def _load_config_parser() -> ConfigParser:
     """
     Read the config file and return the config parser.
     If no config file is present, a new config parser object is returned.
@@ -1106,7 +1106,7 @@ def _load_config_parser():
     return cfg
 
 
-def _check_for_restart():
+def _check_for_restart() -> bool:
     """
     Check if internal variables are different from the config file.
     Only check the variables the require a restart to take effect
@@ -1195,7 +1195,7 @@ def _check_for_restart():
         return False
 
 
-def _upgrade_config(from_version, to_version):
+def _upgrade_config(from_version: int, to_version: int) -> None:
     print('INFO: Upgrading config version from %d to %d.' % (from_version, to_version))
     print('INFO: Creating backup of old config file.')
     try:

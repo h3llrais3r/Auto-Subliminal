@@ -9,10 +9,11 @@ from autosubliminal.core.indexer import MovieIndexer, ShowIndexer
 from autosubliminal.core.movie import MovieSettings
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.core.show import ShowSettings
+from autosubliminal.core.subtitle import get_missing_subtitle_languages
 from autosubliminal.db import (FailedMoviesDb, FailedShowsDb, MovieDetailsDb, MovieSettingsDb, ShowDetailsDb,
                                ShowEpisodeDetailsDb, ShowSettingsDb)
 from autosubliminal.fileprocessor import process_file
-from autosubliminal.util.common import get_missing_languages, safe_lowercase
+from autosubliminal.util.common import safe_lowercase
 from autosubliminal.util.filesystem import (VIDEO_EXTENSIONS, get_available_subtitles, is_skipped_dir,
                                             is_valid_video_file, one_path_exists)
 from autosubliminal.util.websocket import send_websocket_notification
@@ -226,8 +227,8 @@ class LibraryPathScanner(object):
             # Set details
             available_subtitles = get_available_subtitles(dirname, filename, autosubliminal.SCANEMBEDDEDSUBS,
                                                           autosubliminal.SCANHARDCODEDSUBS)
-            missing_languages = get_missing_languages(available_subtitles,
-                                                      wanted_languages=show_settings.wanted_languages)
+            missing_languages = get_missing_subtitle_languages(available_subtitles,
+                                                               wanted_languages=show_settings.wanted_languages)
             episode_details.subtitles = available_subtitles
             episode_details.missing_languages = missing_languages
             episode_details.path = os.path.abspath(os.path.join(dirname, filename))
@@ -241,8 +242,8 @@ class LibraryPathScanner(object):
             # Set details
             available_subtitles = get_available_subtitles(dirname, filename, autosubliminal.SCANEMBEDDEDSUBS,
                                                           autosubliminal.SCANHARDCODEDSUBS)
-            missing_languages = get_missing_languages(available_subtitles,
-                                                      wanted_languages=movie_settings.wanted_languages)
+            missing_languages = get_missing_subtitle_languages(available_subtitles,
+                                                               wanted_languages=movie_settings.wanted_languages)
             movie_details.subtitles = available_subtitles
             movie_details.missing_languages = missing_languages
             movie_details.path = os.path.abspath(os.path.join(dirname, filename))

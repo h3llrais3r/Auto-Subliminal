@@ -26,18 +26,18 @@ class Scheduler(object):
     :param process: process to schedule
     :type process: ScheduledProcess
     :param interval: interval in hours between scheduled runs
-    :type interval: float
+    :type interval: int
     :param active: indication if the scheduler is active or not
     :type active: bool
     :param initial_delay: indication in seconds for the delay of the initial run of the thread process
-    :type initial_delay: float
+    :type initial_delay: int
     :param initial_run: indication if the process should run initially before starting the thread
     :type initial_run: bool
     """
 
     def __init__(
-            self, name: str, process: 'ScheduledProcess', interval: float, active: bool = True,
-            initial_delay: float = 0, initial_run: bool = False) -> None:
+            self, name: str, process: 'ScheduledProcess', interval: int, active: bool = True,
+            initial_delay: int = 0, initial_run: bool = False) -> None:
         self.name = name
         self.process = process
         self.interval = datetime.timedelta(hours=interval).total_seconds()  # Convert to seconds
@@ -108,7 +108,7 @@ class Scheduler(object):
 
             time.sleep(1)
 
-    def _run_process(self, current_time) -> None:
+    def _run_process(self, current_time: float) -> None:
         # Check if the run needs a lock
         run_lock = self.process.force_run_lock if self._force_run else self.process.run_lock
 
@@ -163,14 +163,14 @@ class Scheduler(object):
         log.info('Deactivating %s scheduler', self.name)
         self.active = False
 
-    def run(self, delay=0) -> None:
+    def run(self, delay: int = 0) -> None:
         """Force run the scheduler."""
         log.info('Running %s thread', self.name)
 
         self._force_run = True
         self._delay = delay
 
-    def to_dict(self, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
+    def to_dict(self, key_fn: Callable, *args: Any, **kwargs: Any) -> Dict[str, Any]:
         """Convert the object to its dict representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict

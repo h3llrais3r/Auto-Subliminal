@@ -24,6 +24,7 @@ from autosubliminal.core.item import DownloadItem, WantedItem
 from autosubliminal.core.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
                                        release_wanted_queue_lock_on_exception)
 from autosubliminal.core.scheduler import ScheduledProcess
+from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.db import WantedItemsDb
 from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.providers import provider_cache
@@ -606,7 +607,7 @@ def _get_provider_pool() -> Optional[ProviderPool]:
         return None
 
 
-def _get_wanted_subtitle(subtitles, subtitle_index: int) -> Any:
+def _get_wanted_subtitle(subtitles: List[Subtitle], subtitle_index: int) -> Any:
     log.debug('Getting wanted subtitle')
     return subtitles[int(subtitle_index)]
 
@@ -618,13 +619,13 @@ def _get_subtitle_path(wanted_item: WantedItem) -> str:
     single = found_subtitles['single']
 
     # Get subtitle path
-    path = subliminal.subtitle.get_subtitle_path(wanted_item.video.name, None if single else language)
+    path: str = subliminal.subtitle.get_subtitle_path(wanted_item.video.name, None if single else language)
     log.debug('Subtitle path: %s', path)
     return path
 
 
 def _construct_download_item(wanted_item: WantedItem, subtitles: List[subliminal.Subtitle], language: str,
-                             single=bool) -> DownloadItem:
+                             single: bool) -> DownloadItem:
     log.debug('Constructing the download item')
 
     # Get the subtitle, subtitles should only contain 1 subtitle

@@ -1,6 +1,8 @@
 # coding=utf-8
 
 import logging
+from logging import Logger
+from typing import Any
 
 import requests
 
@@ -17,22 +19,22 @@ class TelegramNotifier(BaseNotifier):
     Telegram notifier.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
     @property
-    def log(self):
+    def log(self) -> Logger:
         return log
 
     @property
-    def name(self):
+    def name(self) -> str:
         return 'Telegram'
 
     @property
-    def enabled(self):
+    def enabled(self) -> bool:
         return autosubliminal.NOTIFYTELEGRAM
 
-    def _send_message(self, message, **kwargs):
+    def _send_message(self, message: str, **kwargs: Any) -> bool:
         data = {'chat_id': autosubliminal.TELEGRAMCHATID,
                 'text': message}
         try:

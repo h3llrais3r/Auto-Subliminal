@@ -1,5 +1,7 @@
 # coding=utf-8
 
+from typing import Any, Dict
+
 from autosubliminal.server.api.filesystem import FileSystemApi
 from autosubliminal.server.api.items import ItemsApi
 from autosubliminal.server.api.logs import LogsApi
@@ -17,7 +19,7 @@ class Api(RestResource):
     Rest resource for handling the /api path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
@@ -33,5 +35,5 @@ class Api(RestResource):
         self.subtitles = SubtitlesApi()
         self.system = SystemApi()
 
-    def get(self, *args, **kwargs):
+    def get(self, *args: Any, **kwargs: Any) -> Dict[str, Any]:
         return {'api': 'Welcome to the Auto-Subliminal REST api'}

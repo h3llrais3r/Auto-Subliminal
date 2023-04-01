@@ -2,17 +2,17 @@
 
 import logging
 import os
+from typing import Any, Dict, List, Union
 
 import cherrypy
 
 import autosubliminal
-from autosubliminal.core.movie import MovieSettings
-from autosubliminal.core.subtitle import Subtitle
+from autosubliminal.core.movie import MovieDetails, MovieSettings
+from autosubliminal.core.subtitle import Subtitle, get_missing_subtitle_languages
 from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb, MovieSubtitlesDb, WantedItemsDb
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import NotFound, RestResource
-from autosubliminal.util.common import (camelize, decamelize, find_path_in_paths, get_boolean, get_missing_languages,
-                                        to_dict)
+from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, get_boolean, to_dict
 from autosubliminal.util.filesystem import save_hardcoded_subtitle_languages
 
 log = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ class MoviesApi(RestResource):
     Rest resource for handling the /api/movies path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Add all sub paths here: /api/movies/...
@@ -36,7 +36,7 @@ class MoviesApi(RestResource):
         # Set the allowed methods
         self.allowed_methods = ['GET', 'DELETE']
 
-    def get(self, imdb_id=None):
+    def get(self, imdb_id: str = None) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
         """Get the list of movies or the details of a single movie."""
         if imdb_id:
             db_movie = MovieDetailsDb().get_movie(imdb_id, subtitles=True)
@@ -50,7 +50,7 @@ class MoviesApi(RestResource):
             return self._to_movie_dict(db_movie, db_movie_settings, details=True)
 
         else:
-            movies = []
+            movies: List[Dict[str, Any]] = []
             movie_settings_db = MovieSettingsDb()
             db_movies = MovieDetailsDb().get_all_movies()
             for db_movie in db_movies:
@@ -59,14 +59,16 @@ class MoviesApi(RestResource):
 
             return movies
 
-    def delete(self, imdb_id):
+    def delete(self, imdb_id: str) -> None:
         # Delete from database
         MovieDetailsDb().delete_movie(imdb_id, subtitles=True)
         MovieSettingsDb().delete_movie_settings(imdb_id)
 
-        return self._no_content()
+        self._set_no_content_status()
+        return None
 
-    def _to_movie_dict(self, movie, movie_settings, details=False):
+    def _to_movie_dict(self, movie: MovieDetails, movie_settings: MovieSettings,
+                       details: bool = False) -> Dict[str, Any]:
         # Check if the movie path is listed in the video paths to scan
         path_in_video_paths = True if find_path_in_paths(movie.path, autosubliminal.VIDEOPATHS,
                                                          check_common_path=True) else False
@@ -92,12 +94,12 @@ class MoviesApi(RestResource):
 
         return movie.to_dict(camelize, **include_kwargs)
 
-    def _get_movie_files(self, movie):
+    def _get_movie_files(self, movie: MovieDetails) -> List[Dict[str, Any]]:
         # Movie files are supposed to be stored in the same dir
-        files = {}
+        files: Dict[str, Any] = {}
 
-        embedded_languages = []
-        hardcoded_languages = []
+        embedded_languages: List[str] = []
+        hardcoded_languages: List[str] = []
         # Get subtitle files
         for subtitle in movie.subtitles:
             if subtitle.type == 'embedded':
@@ -114,7 +116,7 @@ class MoviesApi(RestResource):
                      'embedded_languages': embedded_languages, 'hardcoded_languages': hardcoded_languages}})
 
         # Return sorted list
-        return sorted([v for v in files.values()], key=lambda k: k['file_name'])
+        return sorted([v for v in files.values()], key=lambda k: str(k['file_name']))
 
 
 class _OverviewApi(RestResource):
@@ -122,13 +124,13 @@ class _OverviewApi(RestResource):
     Rest resource for handling the /api/movies/overview path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['GET']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         movies = MovieDetailsDb().get_all_movies()
         total_movies = len(movies)
 
@@ -161,13 +163,13 @@ class _RefreshApi(RestResource):
     Rest resource for handling the /api/movies/{imdb_id}/refresh path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['PUT']
 
-    def put(self, imdb_id):
+    def put(self, imdb_id: str) -> None:
         """Refresh/rescan a movie."""
         movie = MovieDetailsDb().get_movie(imdb_id)
         movie_path, _ = os.path.split(movie.path)
@@ -175,7 +177,8 @@ class _RefreshApi(RestResource):
         # Refresh/rescan the movie path
         LibraryPathScanner().scan_path(movie_path)
 
-        return self._no_content()
+        self._set_no_content_status()
+        return None
 
 
 class _SettingsApi(RestResource):
@@ -183,13 +186,13 @@ class _SettingsApi(RestResource):
     Rest resource for handling the /api/movies/{imdb_id}/settings path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['GET', 'PUT']
 
-    def get(self, imdb_id):
+    def get(self, imdb_id: str) -> Dict[str, Any]:
         """Get the settings for a movie"""
         movie_settings_db = MovieSettingsDb()
         movie_settings = movie_settings_db.get_movie_settings(imdb_id)
@@ -201,7 +204,7 @@ class _SettingsApi(RestResource):
 
         return movie_settings.to_dict(camelize)
 
-    def put(self, imdb_id):
+    def put(self, imdb_id: str) -> None:
         """Save the settings for a movie."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
@@ -223,9 +226,10 @@ class _SettingsApi(RestResource):
             # Delete wanted items for the movie so the new settings will be used in the next disk scan
             WantedItemsDb().delete_wanted_items_for_movie(imdb_id)
 
-            return self._no_content()
+            self._set_no_content_status()
+            return None
 
-        return self._bad_request('Missing data')
+        self._raise_bad_request('Missing data')
 
 
 class _SubtitlesApi(RestResource):
@@ -233,7 +237,7 @@ class _SubtitlesApi(RestResource):
     Rest resource for handling the /api/movies/{imdb_id}/subtitles path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Add all sub paths here: /api/movies/{imdb_id}/subtitles/...
@@ -242,7 +246,7 @@ class _SubtitlesApi(RestResource):
         # Set the allowed methods
         self.allowed_methods = ['PATCH']
 
-    def patch(self, imdb_id):
+    def patch(self, imdb_id: str) -> None:
         """Patch actions related to movie subtitles."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
@@ -256,7 +260,7 @@ class _SubtitlesApi(RestResource):
                     subtitle_path = input_dict['subtitle_path']
                     os.remove(subtitle_path)
                 except Exception:
-                    return self._conflict('Unable to delete the subtitle')
+                    self._raise_conflict('Unable to delete the subtitle')
 
                 # Remove from subtitles
                 MovieSubtitlesDb().delete_movie_subtitle(imdb_id, subtitle_path)
@@ -265,15 +269,16 @@ class _SubtitlesApi(RestResource):
                 movie_details_db = MovieDetailsDb()
                 db_movie = movie_details_db.get_movie(imdb_id, subtitles=True)
                 db_movie_settings = MovieSettingsDb().get_movie_settings(imdb_id)
-                db_movie.missing_languages = get_missing_languages(
-                    db_movie.subtitles, db_movie_settings.wanted_languages)
+                db_movie.missing_languages = get_missing_subtitle_languages(db_movie.subtitles,
+                                                                            db_movie_settings.wanted_languages)
                 movie_details_db.update_movie(db_movie)
 
-                return self._no_content()
+                self._set_no_content_status()
+                return None
 
-            return self._bad_request('Invalid action \'%s\'' % action)
+            self._raise_bad_request('Invalid action \'%s\'' % action)
 
-        return self._bad_request('Missing data')
+        self._raise_bad_request('Missing data')
 
 
 class _HardcodedApi(RestResource):
@@ -281,13 +286,13 @@ class _HardcodedApi(RestResource):
     Rest resource for handling the /api/movies/{imdb_id}/subtitles/hardcoded path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['PUT']
 
-    def put(self, imdb_id):
+    def put(self, imdb_id: str) -> None:
         """Save the list of hardcoded subtitles for a movie file."""
         input_dict = to_dict(cherrypy.request.json, decamelize)
 
@@ -310,9 +315,11 @@ class _HardcodedApi(RestResource):
             movie_details_db = MovieDetailsDb()
             db_movie = movie_details_db.get_movie(imdb_id, subtitles=True)
             db_movie_settings = MovieSettingsDb().get_movie_settings(imdb_id)
-            db_movie.missing_languages = get_missing_languages(db_movie.subtitles, db_movie_settings.wanted_languages)
+            db_movie.missing_languages = get_missing_subtitle_languages(db_movie.subtitles,
+                                                                        db_movie_settings.wanted_languages)
             movie_details_db.update_movie(db_movie)
 
-            return self._no_content()
+            self._set_no_content_status()
+            return None
 
-        return self._bad_request('Missing data')
+        self._raise_bad_request('Missing data')

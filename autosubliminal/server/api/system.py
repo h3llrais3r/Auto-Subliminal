@@ -2,7 +2,7 @@
 
 import os
 import platform
-from typing import cast
+from typing import Any, Dict, List, Union, cast
 
 import cherrypy
 from subliminal.score import episode_scores, movie_scores
@@ -24,7 +24,7 @@ class SystemApi(RestResource):
     Rest resource for handling the /api/system path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Add all sub paths here: /api/system/...
@@ -40,13 +40,13 @@ class _AliveApi(RestResource):
     Rest resource for handling the /api/system/alive path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['GET']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         """Return true if system is alive."""
         if autosubliminal.STARTED:
             return {'alive': True}
@@ -59,13 +59,13 @@ class _InfoApi(RestResource):
     Rest resource for handling the /api/system/info path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['GET']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         """Return the system info."""
         versionChecker = cast(VersionChecker, autosubliminal.CHECKVERSION.process)
         info = {
@@ -96,13 +96,13 @@ class _SettingsApi(RestResource):
     Rest resource for handling the /api/system/settings path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['GET']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         """Get the list of settings for the frontend."""
         settings = {
             'app_version': RELEASE_VERSION,
@@ -141,7 +141,7 @@ class _SettingsApi(RestResource):
 
         return to_dict(settings, camelize)
 
-    def _get_episode_scores(self):
+    def _get_episode_scores(self) -> Dict[str, Any]:
         return {
             'hash': episode_scores['hash'],
             'title': episode_scores['series'],
@@ -158,7 +158,7 @@ class _SettingsApi(RestResource):
             'max': episode_scores['hash'] + episode_scores['hearing_impaired']
         }
 
-    def _get_movie_scores(self):
+    def _get_movie_scores(self) -> Dict[str, Any]:
         return {
             'hash': movie_scores['hash'],
             'title': movie_scores['title'],
@@ -180,20 +180,20 @@ class _SchedulersApi(RestResource):
     Rest resource for handling the /api/system/schedulers path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['GET']
 
-    def get(self, scheduler_name=None):
+    def get(self, scheduler_name: str = None) -> Union[List[Dict[str, Any]], Dict[str, Any]]:
         """Get the list of schedulers or a single scheduler by it's name."""
         if scheduler_name is None:
             return [autosubliminal.SCHEDULERS[scheduler].to_dict(camelize) for scheduler in autosubliminal.SCHEDULERS]
         elif scheduler_name in autosubliminal.SCHEDULERS:
             return autosubliminal.SCHEDULERS[scheduler_name].to_dict(camelize)
         else:
-            return self._bad_request('Invalid scheduler_name')
+            self._raise_bad_request('Invalid scheduler_name')
 
 
 class _PathsApi(RestResource):
@@ -201,13 +201,13 @@ class _PathsApi(RestResource):
     Rest resource for handling the /api/system/paths path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['GET']
 
-    def get(self):
+    def get(self) -> List[Dict[str, Any]]:
         """Get the path info for all configured paths."""
         pathinfos = []
         pathinfo = PathInfo.get_path_info('Auto-Subliminal path', autosubliminal.PATH)

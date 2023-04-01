@@ -3,6 +3,7 @@
 import os
 import re
 import sys
+from typing import Any, Dict, List, Optional
 
 from autosubliminal.server.rest import RestResource
 from autosubliminal.util.common import get_boolean
@@ -13,16 +14,16 @@ class FileSystemApi(RestResource):
     Rest resource for handling the /filesystem path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['GET']
 
-    def get(self, **kwargs):
+    def get(self, **kwargs: Any) -> Optional[Dict[str, Any]]:
         """Get the details of a path from the filesytem."""
-        files = []
-        folders = []
+        files: List[str] = []
+        folders: List[str] = []
 
         path = kwargs.get('path', '')
         include_files = get_boolean(kwargs.get('includeFiles', 'false'))
@@ -55,4 +56,5 @@ class FileSystemApi(RestResource):
 
         except Exception:
             # Return no content on error (don't throw 4xx error to prevent api errors)
-            return self._no_content()
+            self._set_no_content_status()
+            return None

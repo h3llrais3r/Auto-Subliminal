@@ -2,6 +2,7 @@
 
 import os
 import re
+from typing import Any, Dict, List
 
 import cherrypy
 
@@ -16,7 +17,7 @@ class LogsApi(RestResource):
     Rest resource for handling the /api/logs path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Add all sub paths here: /api/logs/...
@@ -25,11 +26,11 @@ class LogsApi(RestResource):
         # Set the allowed methods
         self.allowed_methods = ['GET', 'DELETE']
 
-    def get(self, lognum=None):
+    def get(self, lognum: str = None) -> List[str]:
         """Get the log lines for a logfile."""
-        return get_log_lines(loglevel='all', lines=1000, lognum=lognum)
+        return get_log_lines(loglevel='all', lines=1000, lognum=int(lognum))
 
-    def delete(self, lognum=None):
+    def delete(self, lognum: str = None) -> None:
         """Delete the logs for a logfile."""
         if lognum:
             # Clear only specified backup log file
@@ -44,7 +45,8 @@ class LogsApi(RestResource):
             for f in [f for f in os.listdir('.') if os.path.isfile(f) and re.match(autosubliminal.LOGFILE + '.', f)]:
                 os.remove(f)
 
-        return self._no_content()
+        self._set_no_content_status()
+        return None
 
 
 class _CountApi(RestResource):
@@ -52,13 +54,13 @@ class _CountApi(RestResource):
     Rest resource for handling the /api/logs/count path.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         # Set the allowed methods
         self.allowed_methods = ['GET']
 
-    def get(self):
+    def get(self) -> Dict[str, Any]:
         """Get the number of backup logfiles."""
         count = count_backup_logfiles()
         return {'count': count}

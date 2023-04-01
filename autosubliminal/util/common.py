@@ -148,7 +148,7 @@ def to_obj_or_list(value: Any, obj_type: Type[Any] = str, default_value: Any = N
         return default_value
 
 
-def to_dict(obj: Any, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
+def to_dict(obj: Any, key_fn: Callable, *args: Any, **kwargs: Any) -> Dict[str, Any]:
     """Convert an object to a dict.
 
     Only public attributes are converted. Private attributes and callable attributes (methods) are not included.
@@ -165,14 +165,14 @@ def to_dict(obj: Any, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
     """
 
     # Internal helper to add a value to a dict
-    def _add_to_dict(obj_dict: Dict[str, Any], key: str, value: Any, key_fn: Callable, *args) -> None:
+    def _add_to_dict(obj_dict: Dict[str, Any], key: str, value: Any, key_fn: Callable, *args: Any) -> None:
         # Add to dict and filter out unwanted attributes
         if key not in args:
             dict_key = key_fn(key) if key_fn else key
             obj_dict[dict_key] = _process_dict_value(value, to_dict, key_fn, *args)
 
     # Internal helper to process a dict value
-    def _process_dict_value(val_or_iter: Any, fn: Callable, *args) -> Any:
+    def _process_dict_value(val_or_iter: Any, fn: Callable, *args: Any) -> Any:
         """Process the dict value, which can be an class, dict, list, ... again."""
         if type(val_or_iter).__module__ != type(builtins).__module__ or isinstance(val_or_iter, Mapping):
             return fn(val_or_iter, *args)
@@ -196,7 +196,7 @@ def to_dict(obj: Any, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
     # Add custom attributes
     if kwargs:
         for key, value in kwargs.items():
-            _add_to_dict(obj_dict, key, value, key_fn)  # do not pass *args to skip filtering
+            _add_to_dict(obj_dict, key, value, key_fn)  # do not pass *args: Any to skip filtering
 
     return obj_dict
 
@@ -474,16 +474,3 @@ def get_wanted_languages() -> List[str]:
         wanted_languages.extend(autosubliminal.ADDITIONALLANGUAGES)
 
     return wanted_languages
-
-
-def get_missing_languages(available_subtitles, wanted_languages: List[str] = None) -> List[str]:
-    """Get the missing subtitle languages."""
-    if wanted_languages is None:
-        wanted_languages = get_wanted_languages()
-
-    available_languages = []
-    for subtitle in available_subtitles:
-        available_languages.append(subtitle.language)
-
-    # Return the missing languages (= not in available languages)
-    return [language for language in wanted_languages if language not in available_languages]

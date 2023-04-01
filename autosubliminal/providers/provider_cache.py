@@ -9,7 +9,7 @@ ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX = 'subliminal.providers.addic7ed:_search_sh
 CUSTOM_ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX = 'autosubliminal.providers.addic7ed_custom:_search_show_id'
 
 
-def fill_addic7ed_show_id_cache():
+def fill_addic7ed_show_id_cache() -> None:
     """
     Fill the Addic7ed show_id cache used by the Addic7ed provider with our Addic7ed show name mappings.
 

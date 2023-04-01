@@ -5,11 +5,13 @@ import logging
 import os
 import re
 from abc import ABC
-from typing import Any, Callable, Dict, List, Literal, Optional, Type, Union, cast
+from typing import Any, Callable, Dict, List, Literal, Optional, Type, TypedDict, Union, cast
 
+import babelfish
 from subliminal.video import Video
 
 import autosubliminal
+from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.util.common import (find_path_in_paths, get_today, humanize_bytes, safe_value, to_dict, to_list,
                                         to_obj, to_obj_or_list)
 
@@ -19,6 +21,12 @@ release_group_regex = re.compile(r'(.*)\[.*?\]')
 log = logging.getLogger(__name__)
 
 ItemType = Literal['episode', 'movie']
+
+WantedItemSubtitles = TypedDict('WantedItemSubtitles', {
+    'subtitles': List[Subtitle],
+    'language': babelfish.Language,
+    'single': bool}
+)
 
 
 class _BaseItem(ABC):
@@ -67,7 +75,7 @@ class _BaseItem(ABC):
                 _release_group = cast(str, match.group(1))
 
         self.id: int = None
-        self.type = type  # Type of video: 'episode' or 'movie'
+        self.type = type
         self.title = title
         self.year = year
         self.season = season
@@ -79,15 +87,15 @@ class _BaseItem(ABC):
         self.tvdb_id: Optional[int] = None
         self.imdb_id: Optional[str] = None
 
-    @property
+    @ property
     def is_episode(self) -> bool:
         return self.type == 'episode'
 
-    @property
+    @ property
     def is_movie(self) -> bool:
         return self.type == 'movie'
 
-    @property
+    @ property
     def name(self) -> str:
         name = safe_value(self.title)
         year = safe_value(self.year)
@@ -95,7 +103,7 @@ class _BaseItem(ABC):
             name += ' (' + year + ')'
         return name
 
-    @property
+    @ property
     def long_name(self) -> str:
         name = self.name
         if name and self.is_episode:
@@ -136,23 +144,23 @@ class _BaseItem(ABC):
                 # Use default value
                 setattr(self, key, value)
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         """Overrides the default implementation to allow comparison."""
         if not isinstance(other, type(self)):
             return NotImplemented
 
         return self.__dict__ == other.__dict__
 
-    def __ne__(self, other):
+    def __ne__(self, other: Any) -> bool:
         """Overrides the default implementation (unnecessary in Python 3) to allow comparison."""
         return not self.__eq__(other)
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         """Overrides the default implementation to allow comparison."""
         # Exclude items that have a value of type list, as they are not hashable
         return hash(tuple(sorted(filter(lambda x: not isinstance(x[1], list), self.__dict__.items()))))
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """Overrides the default implementation to get readable representation of the object."""
         return '<%s [%r]>' % (self.__class__.__name__, self.__dict__)
 
@@ -194,9 +202,9 @@ class WantedItem(_BaseItem):
         self.timestamp: str = None  # File timestamp string - format '%Y-%m-%d %H:%M:%S'
 
         self.video: Video = None  # Subliminal Video object
-        self.found_subtitles: Dict[str, Any] = None  # List of found subtitles after a manual search
+        self.found_subtitles: WantedItemSubtitles = None  # List of found subtitles after a manual search
 
-    @property
+    @ property
     def is_search_active(self) -> bool:
         """Indication if the search is active for the wanted item.
 
@@ -215,7 +223,7 @@ class WantedItem(_BaseItem):
         else:
             return False
 
-    def to_dict(self, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
+    def to_dict(self, key_fn: Callable, *args: Any, **kwargs: Any) -> Dict[str, Any]:
         """Convert the object to its json representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict
@@ -245,7 +253,7 @@ class WantedItem(_BaseItem):
         # Convert to json dict
         return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
-    @property
+    @ property
     def library_path(self) -> Optional[str]:
         """Library path for the wanted item.
 
@@ -275,7 +283,7 @@ class WantedItem(_BaseItem):
         """Copy all attributes to another wanted item."""
         wanted_item.__dict__.update(self.__dict__)
 
-    @classmethod
+    @ classmethod
     def from_guess(cls: Type['WantedItem'], guess: Dict[str, Any]) -> Optional['WantedItem']:
         """Construct a :class:`WantedItem` object from a guess.
 
@@ -297,7 +305,7 @@ class WantedItem(_BaseItem):
         else:
             return None
 
-    @staticmethod
+    @ staticmethod
     def _property_from_guess(guess: Dict[str, Any], property_name: str, default_value: Any = None) -> Any:
         property_value = default_value
         if property_name in guess:
@@ -336,7 +344,7 @@ class DownloadedItem(_BaseItem):
     Represents an item that is completed and stored in the database to keep track of the downloaded items.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
         self.video_path: str = None
@@ -345,7 +353,7 @@ class DownloadedItem(_BaseItem):
         self.subtitle: str = None
         self.timestamp: str = None  # Download timestamp string - format '%Y-%m-%d %H:%M:%S'
 
-    def to_dict(self, key_fn: Callable, *args, **kwargs) -> Dict[str, Any]:
+    def to_dict(self, key_fn: Callable, *args: Any, **kwargs: Any) -> Dict[str, Any]:
         """Convert the object to its json representation.
 
         :param key_fn: the function that is executed on the keys when creating the dict

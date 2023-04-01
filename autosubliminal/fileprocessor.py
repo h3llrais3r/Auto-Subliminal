@@ -82,7 +82,7 @@ def _validate_guess(guess: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     return guess
 
 
-def _property_from_guess(guess, property_name: str, default_value: Any = None) -> Any:
+def _property_from_guess(guess: Dict[str, Any], property_name: str, default_value: Any = None) -> Any:
     property_value = default_value
     if property_name in guess:
         property_value = guess[property_name]

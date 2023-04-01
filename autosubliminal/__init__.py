@@ -11,7 +11,7 @@ import subprocess
 import sys
 import sysconfig
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Union
 
 from stevedore import ExtensionManager
 from ws4py.server.cherrypyserver import WebSocketPlugin
@@ -301,7 +301,7 @@ def _create_venv_and_restart() -> None:
     from autosubliminal.util.system import get_python_version, is_python_version_changed
 
     # Helper function
-    def remove_readonly(func, path, _):
+    def remove_readonly(func: Callable, path: Any, _: Any) -> None:
         os.chmod(path, stat.S_IWRITE)
         func(path)
 
@@ -413,7 +413,7 @@ def _upgrade_pip() -> None:
         os._exit(1)
 
 
-def _pip_install(packages) -> None:
+def _pip_install(packages: Union[List[str], str]) -> None:
     if not isinstance(packages, list):
         # Clean out Warning line in list (dirty clean)
         packages = re.sub(r'Warning.*', '', packages)
@@ -477,7 +477,7 @@ def _get_os_id() -> Optional[str]:
     return os_id
 
 
-def _subprocess_call(cmd_list) -> int:
+def _subprocess_call(cmd_list: List[str]) -> int:
     try:
         process = subprocess.Popen(cmd_list, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE, universal_newlines=True, cwd=os.getcwd())

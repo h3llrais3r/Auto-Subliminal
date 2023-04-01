@@ -1,6 +1,8 @@
 # coding=utf-8
 
 import logging
+from logging import Logger
+from typing import Any
 
 import gntp.notifier
 
@@ -15,29 +17,29 @@ class GrowlNotifier(BaseNotifier):
     Growl notifier.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
 
     @property
-    def log(self):
+    def log(self) -> Logger:
         return log
 
     @property
-    def name(self):
+    def name(self) -> str:
         return 'Growl'
 
     @property
-    def enabled(self):
+    def enabled(self) -> bool:
         return autosubliminal.NOTIFYGROWL
 
-    def _create_notifier(self):
+    def _create_notifier(self) -> gntp.notifier.GrowlNotifier:
         return gntp.notifier.GrowlNotifier(applicationName=self.application,
                                            notifications=[self.notification_title],
                                            hostname=autosubliminal.GROWLHOST,
                                            port=autosubliminal.GROWLPORT,
                                            password=autosubliminal.GROWLPASS if autosubliminal.GROWLPASS else None)
 
-    def _register(self):
+    def _register(self) -> bool:
         try:
             # Can return error in case of invalid response
             response = self._create_notifier().register()
@@ -49,7 +51,7 @@ class GrowlNotifier(BaseNotifier):
             log.exception('%s registration failed', self.name)
             return False
 
-    def _send_message(self, message, **kwargs):
+    def _send_message(self, message: str, **kwargs: Any) -> bool:
         try:
             response = self._create_notifier().notify(noteType=self.notification_title,
                                                       title=self.title,
@@ -64,7 +66,7 @@ class GrowlNotifier(BaseNotifier):
             return False
 
     # Override of generic test method (test will also take care the growl registration)
-    def test(self):
+    def test(self) -> bool:
         # Registration
         if not self._register():
             return False
