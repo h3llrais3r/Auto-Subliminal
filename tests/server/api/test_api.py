@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from typing import Any
+from typing import Any, cast
 
 import jsonpickle
 
@@ -21,4 +21,4 @@ def pickle_api_result(result: Any) -> str:
     # - pickle ourselves because we don't use cherrypy.tools here
     # - force sorted keys to be able to compare results (Python 3 sorts by default)
     jsonpickle.set_encoder_options('simplejson', sort_keys=True)
-    return jsonpickle.encode(result, unpicklable=False)  # type: ignore[no-any-return]
+    return cast(str, jsonpickle.encode(result, unpicklable=False))

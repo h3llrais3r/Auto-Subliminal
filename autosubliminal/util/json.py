@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from typing import Any, Dict
+from typing import Any, Dict, cast
 
 import cherrypy
 import jsonpickle
@@ -16,7 +16,7 @@ def from_json(value: str) -> Dict[str, Any]:
     :param value: the json value to convert to a dict
     :return: the dict
     """
-    return jsonpickle.decode(value)  # type: ignore[no-any-return]
+    return cast(Dict[str, Any], jsonpickle.decode(value))
 
 
 def to_json(obj: Any, unpickable: bool = False) -> str:
@@ -27,7 +27,7 @@ def to_json(obj: Any, unpickable: bool = False) -> str:
     :param unpickable: if set to true, the json will contain extra info to convert the json back to the object
     :return: the json string
     """
-    return jsonpickle.encode(obj, unpicklable=unpickable)  # type: ignore[no-any-return]
+    return cast(str, jsonpickle.encode(obj, unpicklable=unpickable))
 
 
 def json_out_handler(*args: Any, **kwargs: Any) -> bytes:
