@@ -77,7 +77,7 @@ export class LogViewComponent implements OnInit {
     return this.logMessages.filter((logMessage) => {
       if (this.selectedLoglevel) {
         const match = this.LOG_MESSAGE_REGEX.exec(logMessage);
-        return match && match.groups.loglevel === this.selectedLoglevel;
+        return match && match.groups['loglevel'] === this.selectedLoglevel;
       } else {
         return true;
       }

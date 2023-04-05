@@ -26,9 +26,9 @@ export class TableFilterComponent implements OnInit {
     // Restore global filter when used with table state functionality
     if (this.tableStateKey) {
       const tableState = JSON.parse(localStorage.getItem(this.tableStateKey)) as TableState;
-      if (tableState && tableState.filters && tableState.filters.global) {
-        this.filterValue = (tableState.filters.global as FilterMetadata).value;
-        this.matchMode = (tableState.filters.global as FilterMetadata).matchMode;
+      if (tableState && tableState.filters && tableState.filters['global']) {
+        this.filterValue = (tableState.filters['global'] as FilterMetadata).value;
+        this.matchMode = (tableState.filters['global'] as FilterMetadata).matchMode;
       }
     }
   }

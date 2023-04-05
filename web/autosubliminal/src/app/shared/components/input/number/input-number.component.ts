@@ -35,7 +35,7 @@ export class InputNumberComponent extends InputComponent {
   @Input()
   suffix: string;
 
-  constructor(protected controlContainer: ControlContainer, protected changeDetectorRef: ChangeDetectorRef) {
+  constructor(protected override controlContainer: ControlContainer, protected override changeDetectorRef: ChangeDetectorRef) {
     super(controlContainer, changeDetectorRef);
   }
 }

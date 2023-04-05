@@ -119,11 +119,11 @@ export class SettingsGeneralComponent implements OnInit {
     const error: ValidationErrors = { ffmpegPathRequired: true };
     const ffmpegPath = FormUtils.getFormControlValue<string>(formGroup, 'ffmpegPath');
     if (FormUtils.getFormControlValue<boolean>(formGroup, 'manualSubSync') && (!ffmpegPath || !ffmpegPath.trim())) {
-      FormUtils.addFormControlValidationErrors(formGroup.controls.ffmpegPath, error);
+      FormUtils.addFormControlValidationErrors(formGroup.controls['ffmpegPath'], error);
       FormUtils.markFormControlFieldsAsDirty(formGroup);
       return error;
     }
-    FormUtils.clearFormControlValidationErrors(formGroup.controls.ffmpegPath, error);
+    FormUtils.clearFormControlValidationErrors(formGroup.controls['ffmpegPath'], error);
     return null;
   }
 

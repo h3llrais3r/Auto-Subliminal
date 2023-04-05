@@ -26,7 +26,7 @@ export class InputFileBrowserComponent extends InputComponent {
   showFileBrowser = false;
   browserPath = '';
 
-  constructor(protected controlContainer: ControlContainer, protected changeDetectorRef: ChangeDetectorRef) {
+  constructor(protected override controlContainer: ControlContainer, protected override changeDetectorRef: ChangeDetectorRef) {
     super(controlContainer, changeDetectorRef);
   }
 
