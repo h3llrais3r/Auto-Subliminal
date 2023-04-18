@@ -2,11 +2,13 @@
   "recommendations": [
     "christian-kohler.npm-intellisense",
     "dbaeumer.vscode-eslint",
-    "HookyQR.beautify",
-    //"littlefoxteam.vscode-python-test-adapter", // might be useful if you don't like the internal test explorer of th python extension
     "mikestead.dotenv",
-    "ms-python.python",
     "xyz.local-history",
-    "Zignd.html-css-class-completion"
+    "zignd.html-css-class-completion",
+    "ms-python.flake8",
+    "ms-python.isort",
+    "firsttris.vscode-jest-runner",
+    "ms-python.vscode-pylance",
+    "angular.ng-template"
   ]
 }
