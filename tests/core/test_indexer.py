@@ -132,15 +132,17 @@ def test_get_imdb_id() -> None:
     # By title
     assert indexer.get_imdb_id_and_year('Southpaw', force_search=True, store_id=False) == ('tt1798684', 2015)
     # By title and year
-    assert indexer.get_imdb_id_and_year('Southpaw', year=2015, force_search=True, store_id=False) == (
-        'tt1798684', 2015)
-    assert indexer.get_imdb_id_and_year('Joyeux Noël', year=2005, force_search=True, store_id=False) == (
-        'tt0424205', 2005)
+    assert indexer.get_imdb_id_and_year(
+        'Southpaw', year=2015, force_search=True, store_id=False) == ('tt1798684', 2015)
+    assert indexer.get_imdb_id_and_year(
+        'Joyeux Noël', year=2005, force_search=True, store_id=False) == ('tt0424205', 2005)
+    assert indexer.get_imdb_id_and_year(
+        'Ron Goossens, Low Budget Stuntman', year=2017, force_search=True, store_id=False) == ('tt5637542', 2017)
     # By alternative title
     assert indexer.get_imdb_id_and_year('Kyatapirâ', force_search=True, store_id=False) == ('tt1508290', 2010)
     # By alternative title and year
-    assert indexer.get_imdb_id_and_year('Kyatapirâ', year=2010, force_search=True, store_id=False) == (
-        'tt1508290', 2010)
+    assert indexer.get_imdb_id_and_year(
+        'Kyatapirâ', year=2010, force_search=True, store_id=False) == ('tt1508290', 2010)
     # By fallback search
     assert indexer.get_imdb_id_and_year('Bullet', year=2014, force_search=True, store_id=False) == ('tt2544734', 2014)
 

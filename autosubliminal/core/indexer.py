@@ -7,7 +7,6 @@ from functools import wraps
 from time import time
 from typing import Any, Callable, List, Optional, Set, Tuple, cast
 
-from imdbpie import Imdb
 from imdbpie.facade import ImdbFacade
 from imdbpie.objects import Title, TitleSearchResult
 from tvdb_api.client import TvdbClient
@@ -257,7 +256,7 @@ class MovieIndexer(_BaseIndexer):
     """
 
     def __init__(self) -> None:
-        pass
+        self._client = ImdbFacade()
 
     @property
     def name(self) -> str:
@@ -280,10 +279,10 @@ class MovieIndexer(_BaseIndexer):
         search_results: Tuple[TitleSearchResult, ...] = ()
         if fallback_search:
             log.info('Searching imdb api again with year included for %s', name)
-            search_results = ImdbFacade().search_for_title(re.sub('[()]', '', name))
+            search_results = self._client.search_for_title(re.sub('[()]', '', name))
         else:
             log.info('Searching imdb api for %s', name)
-            search_results = ImdbFacade().search_for_title(title)
+            search_results = self._client.search_for_title(title)
 
         # Find the first movie that matches the title (and year if present)
         for search_result in cast(Tuple[TitleSearchResult, ...], search_results):
@@ -301,7 +300,8 @@ class MovieIndexer(_BaseIndexer):
         # If no match is found, try to search for alternative titles of the first (most relevant) result
         if len(search_results) > 0:
             best_match: TitleSearchResult = search_results[0]
-            best_match_title_versions = Imdb().get_title_versions(best_match.imdb_id)  # Not available in ImdbFacade
+            # Need to use lowlevel client on the imdbFacade client for 'get_title_versions'
+            best_match_title_versions = self._client._client.get_title_versions(best_match.imdb_id)
             if best_match_title_versions and 'alternateTitles' in best_match_title_versions:
                 for alternate_title in best_match_title_versions['alternateTitles']:
                     if self.sanitize_imdb_title(alternate_title['title']) == self.sanitize_imdb_title(title):
@@ -332,7 +332,7 @@ class MovieIndexer(_BaseIndexer):
         :rtype : imdbpie.objects.Title or None
         """
         log.info('Querying imdb api for id %s', id)
-        movie = ImdbFacade().get_title(id)
+        movie = self._client.get_title(id)
 
         return movie
 

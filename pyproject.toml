@@ -40,7 +40,7 @@ GitPython = "3.1.31"
 gntp = "1.0.3"
 guessit = "3.7.1"
 html5lib = "1.1"
-imdbpie = { git = "https://github.com/h3llrais3r/imdb-pie.git", rev = "7856ba4287f10b503ecd6b32ea545c6553d9f6c5" }
+imdbpie = { git = "https://github.com/h3llrais3r/imdb-pie.git", rev = "4e5fc35fdafbf8b1d51b54dd722f757f99f98d46" }
 jsonpickle = "3.0.1"
 langdetect = "1.0.9"
 packaging = "21.3"
