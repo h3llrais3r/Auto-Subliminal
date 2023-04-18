@@ -13,9 +13,19 @@
       "console": "integratedTerminal",
       "justMyCode": false // Must be false to also debug dependency code (installed libs)
     },
+    // Debug test
+    {
+      "name": "Debug test",
+      "type": "python",
+      "request": "launch",
+      "purpose": ["debug-test"],
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": false // Must be false to also debug dependency code (installed libs)
+    },
     // Debug ui
     {
-      "type": "pwa-chrome",
+      "type": "chrome",
       "request": "launch",
       "name": "Debug ui",
       "url": "http://localhost:8084", // Adapt port to the port your python server is running on
@@ -23,7 +33,7 @@
     },
     // Debug ui (dev)
     {
-      "type": "pwa-chrome",
+      "type": "chrome",
       "request": "launch",
       "name": "Debug ui (dev)",
       "url": "http://localhost:4200", // Adapt port to the port your python server is running on
