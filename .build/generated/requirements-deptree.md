@@ -11,8 +11,6 @@ cherrypy 18.8.0 Object-Oriented HTTP framework
 |   |-- more-itertools >=2.6 (circular dependency aborted here)
 |   `-- six >=1.11.0 
 |-- jaraco-collections *
-|   |-- jaraco-classes * 
-|   |   `-- more-itertools * 
 |   `-- jaraco-text * 
 |       |-- autocommand * 
 |       |-- importlib-resources * 
@@ -22,7 +20,7 @@ cherrypy 18.8.0 Object-Oriented HTTP framework
 |       |       `-- typing-extensions >=4.2.0 
 |       |-- jaraco-context >=4.1 
 |       |-- jaraco-functools * 
-|       |   `-- more-itertools * (circular dependency aborted here)
+|       |   `-- more-itertools * 
 |       `-- more-itertools * (circular dependency aborted here)
 |-- more-itertools *
 |-- portend >=2.1.1
@@ -56,9 +54,9 @@ ffsubsync 0.4.24 Language-agnostic synchronization of subtitles with video.
 |-- numpy >=1.12.0
 |-- pysubs2 >=1.2.0
 |-- rich *
-|   |-- markdown-it-py >=2.1.0,<3.0.0 
+|   |-- markdown-it-py >=2.2.0,<3.0.0 
 |   |   `-- mdurl >=0.1,<1.0 
-|   |-- pygments >=2.14.0,<3.0.0 
+|   |-- pygments >=2.13.0,<3.0.0 
 |   `-- typing-extensions >=4.0.0,<5.0 
 |-- six *
 |-- srt >=3.0.0

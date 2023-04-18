@@ -47,7 +47,7 @@ gntp==1.0.3
 # autosubliminal\parsers\guessit\rules.py: 5,6,7
 # autosubliminal\providers\addic7ed_custom.py: 10
 guessit==3.7.1
-# autosubliminal\core\indexer.py: 10,11,12
+# autosubliminal\core\indexer.py: 10,11
 # autosubliminal\core\movie.py: 8
 imdbpie==5.6.4.dev0
 # autosubliminal\util\json.py: 6
@@ -81,7 +81,7 @@ requests-oauthlib==1.3.1
 # autosubliminal\core\websocket.py: 9
 schema==0.7.5
 # autosubliminal\__init__.py: 16
-stevedore==4.1.1
+stevedore==5.0.0
 # autosubliminal\__init__.py: 565,591,592,593
 # autosubliminal\core\item.py: 11
 # autosubliminal\providers\addic7ed_custom.py: 12,13,14,15,16,17,18,19
@@ -98,10 +98,10 @@ stevedore==4.1.1
 subliminal==2.1.0.dev0
 # autosubliminal\core\websocket.py: 8
 tailer==0.4.1
-# autosubliminal\core\indexer.py: 13,14,15,16,17,18,19,20,21,22
+# autosubliminal\core\indexer.py: 12,13,14,15,16,17,18,19,20,21
 # autosubliminal\core\show.py: 7,8,9,10,11
 tvdb-api==3.0.0
-# autosubliminal\core\indexer.py: 23
+# autosubliminal\core\indexer.py: 22
 Unidecode==1.3.6
 # autosubliminal\subsynchronizer.py: 26
 webrtcvad-wheels==2.0.11.post1
