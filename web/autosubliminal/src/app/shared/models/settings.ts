@@ -5,10 +5,13 @@ export class GeneralSettings {
   additionalLanguages: string[];
   manualSearchWithScoring: boolean;
   scanDiskInterval: number;
+  scanDiskAtStartup: boolean;
   checkSubInterval: number;
+  checkSubAtStartup: boolean;
   checkSubDeadline: number;
   checkSubDelta: number;
   checkVersionInterval: number;
+  checkVersionAtStartup: boolean;
   checkVersionAutoUpdate: boolean;
   scanEmbeddedSubs: boolean;
   scanHardcodedSubs: boolean;
@@ -30,6 +33,7 @@ export class LibrarySettings {
   libraryMode: boolean;
   libraryPaths: string[];
   scanLibraryInterval: number;
+  scanLibraryAtStartup: boolean;
   libraryEditMode: boolean;
 
   constructor(obj?: any) {

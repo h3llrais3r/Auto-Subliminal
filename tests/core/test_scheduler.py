@@ -41,7 +41,8 @@ def test_scheduler(mocker: MockerFixture) -> None:
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
-        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1, initial_run=True)
+        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1)
+        scheduler.start(wait=True)
         time.sleep(2)  # Sleep to be sure that the run has been executed at least once
         assert process_run_mock.called
         assert scheduler.last_run > 0
@@ -55,7 +56,8 @@ def test_scheduler_force_run(mocker: MockerFixture) -> None:
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
-        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1, initial_run=False)
+        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1)
+        scheduler.start()
         scheduler.run(delay=1)
         time.sleep(2)  # Sleep to be sure that the run has been executed at least once
         assert process_run_mock.called
@@ -71,7 +73,8 @@ def test_duplicate_scheduler(monkeypatch: MonkeyPatch, mocker: MockerFixture) ->
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
-        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1, initial_run=True)
+        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1)
+        scheduler.start(wait=True)
         time.sleep(2)  # Sleep to be sure that the run has been executed at least once
         assert 'MyScheduledProcess-1' in autosubliminal.SCHEDULERS
         assert process_run_mock.called
@@ -87,7 +90,8 @@ def test_triple_scheduler(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> No
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
-        scheduler = Scheduler('MyScheduledProcess-1', MyScheduledProcess(), 1, initial_run=True)
+        scheduler = Scheduler('MyScheduledProcess-1', MyScheduledProcess(), 1)
+        scheduler.start(wait=True)
         time.sleep(2)  # Sleep to be sure that the run has been executed at least once
         assert 'MyScheduledProcess-2' in autosubliminal.SCHEDULERS
         assert process_run_mock.called
@@ -103,7 +107,8 @@ def test_scheduler_run_process_exception(mocker: MockerFixture) -> None:
     try:  # Use try/finally block to make sure that the thread is stopped
         mocker.patch.object(MyScheduledProcess, 'run', side_effect=Exception)
         os_mock = mocker.patch('os._exit')
-        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1, initial_run=False)
+        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1)
+        scheduler.start()
         scheduler.last_run = time.time()
         scheduler.run()
         time.sleep(3)  # Sleep to be sure that the run exception been executed at least once
@@ -116,7 +121,8 @@ def test_scheduler_activate(mocker: MockerFixture) -> None:
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
-        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1, active=False, initial_run=True)
+        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1, active=False)
+        scheduler.start(wait=True)
         time.sleep(2)  # Sleep to be sure that the run has been executed at least once
         assert not process_run_mock.called
         assert scheduler.last_run == 0
@@ -136,7 +142,8 @@ def test_scheduler_deactivate(mocker: MockerFixture) -> None:
     scheduler = None
     try:  # Use try/finally block to make sure that the thread is stopped
         process_run_mock = mocker.patch.object(MyScheduledProcess, 'run')
-        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1, initial_run=True)
+        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1)
+        scheduler.start(wait=True)
         time.sleep(2)  # Sleep to be sure that the run has been executed at least once
         assert process_run_mock.called
         assert scheduler.last_run > 0
@@ -155,7 +162,8 @@ def test_scheduler_deactivate(mocker: MockerFixture) -> None:
 def test_scheduler_next_run_in_ms() -> None:
     assert scheduler_next_run_in_ms(None) == 0
     try:
-        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1, initial_run=False)
+        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1)
+        scheduler.start()
         scheduler.process.running = True
         assert scheduler_next_run_in_ms(scheduler) == 0
         scheduler.process.running = False

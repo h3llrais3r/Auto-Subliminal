@@ -96,10 +96,13 @@ export class SettingsGeneralComponent implements OnInit {
       additionalLanguages: [generalSettings.additionalLanguages || [], []],
       manualSearchWithScoring: [generalSettings.manualSearchWithScoring, [Validators.required]],
       scanDiskInterval: [generalSettings.scanDiskInterval, [Validators.required]],
+      scanDiskAtStartup: [generalSettings.scanDiskAtStartup, [Validators.required]],
       checkSubInterval: [generalSettings.checkSubInterval, [Validators.required]],
+      checkSubAtStartup: [generalSettings.checkSubAtStartup, [Validators.required]],
       checkSubDeadline: [generalSettings.checkSubDeadline, [Validators.required]],
       checkSubDelta: [generalSettings.checkSubDelta, [Validators.required]],
       checkVersionInterval: [generalSettings.checkVersionInterval, [Validators.required]],
+      checkVersionAtStartup: [generalSettings.checkVersionAtStartup, [Validators.required]],
       checkVersionAutoUpdate: [generalSettings.checkVersionAutoUpdate, [Validators.required]],
       scanEmbeddedSubs: [generalSettings.scanEmbeddedSubs, [Validators.required]],
       scanHardcodedSubs: [generalSettings.scanHardcodedSubs, [Validators.required]],
@@ -135,10 +138,13 @@ export class SettingsGeneralComponent implements OnInit {
     settings.additionalLanguages = FormUtils.getFormControlValue<string[]>(this.settingsForm, 'additionalLanguages');
     settings.manualSearchWithScoring = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'manualSearchWithScoring');
     settings.scanDiskInterval = FormUtils.getFormControlValue<number>(this.settingsForm, 'scanDiskInterval');
+    settings.scanDiskAtStartup = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'scanDiskAtStartup');
     settings.checkSubInterval = FormUtils.getFormControlValue<number>(this.settingsForm, 'checkSubInterval');
+    settings.checkSubAtStartup = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'checkSubAtStartup');
     settings.checkSubDeadline = FormUtils.getFormControlValue<number>(this.settingsForm, 'checkSubDeadline');
     settings.checkSubDelta = FormUtils.getFormControlValue<number>(this.settingsForm, 'checkSubDelta');
     settings.checkVersionInterval = FormUtils.getFormControlValue<number>(this.settingsForm, 'checkVersionInterval');
+    settings.checkVersionAtStartup = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'checkVersionAtStartup');
     settings.checkVersionAutoUpdate = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'checkVersionAutoUpdate');
     settings.scanEmbeddedSubs = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'scanEmbeddedSubs');
     settings.scanHardcodedSubs = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'scanHardcodedSubs');

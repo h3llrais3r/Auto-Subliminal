@@ -68,12 +68,18 @@ def read_config(check_upgrade: bool = False) -> None:
                 print('WARNING: Using the default value (%s hours) instead.' % autosubliminal.SCANDISKINTERVALDEFAULT)
                 autosubliminal.SCANDISKINTERVAL = autosubliminal.SCANDISKINTERVALDEFAULT
 
+        if cfg.has_option('general', 'scandiskatstartup'):
+            autosubliminal.SCANDISKATSTARTUP = cfg.getboolean('general', 'scandiskatstartup')
+
         if cfg.has_option('general', 'checksubinterval'):
             autosubliminal.CHECKSUBINTERVAL = cfg.getint('general', 'checksubinterval')
             if autosubliminal.CHECKSUBINTERVAL < autosubliminal.CHECKSUBINTERVALDEFAULT:
                 print('WARNING: Invalid CHECKSUBINTERVAL found.')
                 print('WARNING: Using the default value (%s hours) instead.' % autosubliminal.CHECKSUBINTERVALDEFAULT)
                 autosubliminal.CHECKSUBINTERVAL = autosubliminal.CHECKSUBINTERVALDEFAULT
+
+        if cfg.has_option('general', 'checksubatstartup'):
+            autosubliminal.CHECKSUBATSTARTUP = cfg.getboolean('general', 'checksubatstartup')
 
         if cfg.has_option('general', 'checksubdeadline'):
             autosubliminal.CHECKSUBDEADLINE = cfg.getint('general', 'checksubdeadline')
@@ -96,6 +102,9 @@ def read_config(check_upgrade: bool = False) -> None:
                 print('WARNING: Using the default value (%s hours) instead.' %
                       autosubliminal.CHECKVERSIONINTERVALDEFAULT)
                 autosubliminal.CHECKVERSIONINTERVAL = autosubliminal.CHECKVERSIONINTERVALDEFAULT
+
+        if cfg.has_option('general', 'checkversionatstartup'):
+            autosubliminal.CHECKVERSIONATSTARTUP = cfg.getboolean('general', 'checkversionatstartup')
 
         if cfg.has_option('general', 'checkversionautoupdate'):
             autosubliminal.CHECKVERSIONAUTOUPDATE = cfg.getboolean('general', 'checkversionautoupdate')
@@ -160,6 +169,9 @@ def read_config(check_upgrade: bool = False) -> None:
                 print('WARNING: Using the default value (%s hours) instead.' %
                       autosubliminal.SCANLIBRARYINTERVALDEFAULT)
                 autosubliminal.SCANLIBRARYINTERVAL = autosubliminal.SCANLIBRARYINTERVALDEFAULT
+
+        if cfg.has_option('library', 'scanlibraryatstartup'):
+            autosubliminal.SCANLIBRARYATSTARTUP = cfg.getboolean('library', 'scanlibraryatstartup')
 
         if cfg.has_option('library', 'libraryeditmode'):
             autosubliminal.LIBRARYEDITMODE = cfg.getboolean('library', 'libraryeditmode')
@@ -588,10 +600,13 @@ def write_config_general_section() -> None:
     cfg.set(section, 'additionallanguages', additionallanguages)
     cfg.set(section, 'manualsearchwithscoring', str(autosubliminal.MANUALSEARCHWITHSCORING))
     cfg.set(section, 'scandiskinterval', str(autosubliminal.SCANDISKINTERVAL))
+    cfg.set(section, 'scandiskatstartup', str(autosubliminal.SCANDISKATSTARTUP))
     cfg.set(section, 'checksubinterval', str(autosubliminal.CHECKSUBINTERVAL))
+    cfg.set(section, 'checksubatstartup', str(autosubliminal.CHECKSUBATSTARTUP))
     cfg.set(section, 'checksubdeadline', str(autosubliminal.CHECKSUBDEADLINE))
     cfg.set(section, 'checksubdelta', str(autosubliminal.CHECKSUBDELTA))
     cfg.set(section, 'checkversioninterval', str(autosubliminal.CHECKVERSIONINTERVAL))
+    cfg.set(section, 'checkversionatstartup', str(autosubliminal.CHECKVERSIONATSTARTUP))
     cfg.set(section, 'checkversionautoupdate', str(autosubliminal.CHECKVERSIONAUTOUPDATE))
     cfg.set(section, 'scanembeddedsubs', str(autosubliminal.SCANEMBEDDEDSUBS))
     cfg.set(section, 'scanhardcodedsubs', str(autosubliminal.SCANHARDCODEDSUBS))
@@ -626,6 +641,7 @@ def write_config_library_section() -> None:
     cfg.set(section, 'librarymode', str(autosubliminal.LIBRARYMODE))
     cfg.set(section, 'librarypaths', librarypaths)
     cfg.set(section, 'scanlibraryinterval', str(autosubliminal.SCANLIBRARYINTERVAL))
+    cfg.set(section, 'scanlibraryatstartup', str(autosubliminal.SCANLIBRARYATSTARTUP))
     cfg.set(section, 'libraryeditmode', str(autosubliminal.LIBRARYEDITMODE))
 
     with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:

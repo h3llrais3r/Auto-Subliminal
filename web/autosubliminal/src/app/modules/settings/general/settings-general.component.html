@@ -77,6 +77,19 @@
           <app-input-number formControlName="scanDiskInterval" [min]="scanDiskIntervalDefault" suffix=" hour(s)"></app-input-number>
         </div>
       </div>
+      <!-- Scan disk at startup -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="scanDiskAtStartup" class="label">Disk scan at startup</label>
+          <app-icon-dropdown>
+            <li>When enabled, the ScanDisk thread will run immediately at startup.</li>
+            <li>If not, it will run the first time after the disk scan interval.</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-dropdown formControlName="scanDiskAtStartup" [options]="enabledOrDisabled"></app-input-dropdown>
+        </div>
+      </div>
       <!-- Check sub interval -->
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
@@ -88,6 +101,19 @@
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-number formControlName="checkSubInterval" [min]="checkSubIntervalDefault" suffix=" hour(s)"></app-input-number>
+        </div>
+      </div>
+      <!-- Check sub at startup -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="checkSubAtStartup" class="label">Subtitle check at startup</label>
+          <app-icon-dropdown>
+            <li>When enabled, the CheckSub thread will run immediately at startup.</li>
+            <li>If not, it will run the first time after the subtitle check interval.</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-dropdown formControlName="checkSubAtStartup" [options]="enabledOrDisabled"></app-input-dropdown>
         </div>
       </div>
       <!-- Check sub deadline -->
@@ -123,12 +149,25 @@
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
           <label for="checkVersionInterval" class="label">Version check interval</label>
           <app-icon-dropdown>
-            <li>Version check interval of the VersionCheck thread. It checks if there is a new version available.</li>
+            <li>Version check interval of the CheckVersion thread. It checks if there is a new version available.</li>
             <li> Cannot be set lower then {{checkVersionIntervalDefault}} hour(s).</li>
           </app-icon-dropdown>
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-number formControlName="checkVersionInterval" [min]="checkVersionIntervalDefault" suffix=" hour(s)"></app-input-number>
+        </div>
+      </div>
+      <!-- Check version at startup -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="checkVersionAtStartup" class="label">Version check at startup</label>
+          <app-icon-dropdown>
+            <li>When enabled, the CheckVersion thread will run immediately at startup.</li>
+            <li>If not, it will run the first time after the version check interval.</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-dropdown formControlName="checkVersionAtStartup" [options]="enabledOrDisabled"></app-input-dropdown>
         </div>
       </div>
       <!-- Check version auto update -->

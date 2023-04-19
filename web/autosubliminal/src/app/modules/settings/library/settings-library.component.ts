@@ -68,6 +68,7 @@ export class SettingsLibraryComponent implements OnInit {
       libraryMode: [librarySettings.libraryMode, [Validators.required]],
       libraryPaths: [librarySettings.libraryPaths || [], []],
       scanLibraryInterval: [librarySettings.scanLibraryInterval, [Validators.required]],
+      scanLibraryAtStartup: [librarySettings.scanLibraryAtStartup, [Validators.required]],
       libraryEditMode: [librarySettings.libraryEditMode, [Validators.required]],
     });
   }
@@ -77,6 +78,7 @@ export class SettingsLibraryComponent implements OnInit {
     settings.libraryMode = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'libraryMode');
     settings.libraryPaths = FormUtils.getFormControlValue<string[]>(this.settingsForm, 'libraryPaths');
     settings.scanLibraryInterval = FormUtils.getFormControlValue<number>(this.settingsForm, 'scanLibraryInterval');
+    settings.scanLibraryAtStartup = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'scanLibraryAtStartup');
     settings.libraryEditMode = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'libraryEditMode');
     return settings;
   }

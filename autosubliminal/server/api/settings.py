@@ -68,10 +68,13 @@ class _GeneralApi(RestResource):
             'additional_languages': autosubliminal.ADDITIONALLANGUAGES,
             'manual_search_with_scoring': autosubliminal.MANUALSEARCHWITHSCORING,
             'scan_disk_interval': autosubliminal.SCANDISKINTERVAL,
+            'scan_disk_at_startup': autosubliminal.SCANDISKATSTARTUP,
             'check_sub_interval': autosubliminal.CHECKSUBINTERVAL,
+            'check_sub_at_startup': autosubliminal.CHECKSUBATSTARTUP,
             'check_sub_deadline': autosubliminal.CHECKSUBDEADLINE,
             'check_sub_delta': autosubliminal.CHECKSUBDELTA,
             'check_version_interval': autosubliminal.CHECKVERSIONINTERVAL,
+            'check_version_at_startup': autosubliminal.CHECKVERSIONATSTARTUP,
             'check_version_auto_update': autosubliminal.CHECKVERSIONAUTOUPDATE,
             'scan_embedded_subs': autosubliminal.SCANEMBEDDEDSUBS,
             'scan_hardcoded_subs': autosubliminal.SCANHARDCODEDSUBS,
@@ -109,12 +112,20 @@ class _GeneralApi(RestResource):
                 autosubliminal.MANUALSEARCHWITHSCORING = input_dict['manual_search_with_scoring']
             if 'scan_disk_interval' in input_dict:
                 autosubliminal.SCANDISKINTERVAL = input_dict['scan_disk_interval']
+            if 'scan_disk_at_startup' in input_dict:
+                autosubliminal.SCANDISKATSTARTUP = input_dict['scan_disk_at_startup']
+            if 'check_sub_interval' in input_dict:
+                autosubliminal.CHECKSUBINTERVAL = input_dict['check_sub_interval']
+            if 'check_sub_at_startup' in input_dict:
+                autosubliminal.CHECKSUBATSTARTUP = input_dict['check_sub_at_startup']
             if 'check_sub_deadline' in input_dict:
                 autosubliminal.CHECKSUBDEADLINE = input_dict['check_sub_deadline']
             if 'check_sub_delta' in input_dict:
                 autosubliminal.CHECKSUBDELTA = input_dict['check_sub_delta']
             if 'check_version_interval' in input_dict:
                 autosubliminal.CHECKVERSIONINTERVAL = input_dict['check_version_interval']
+            if 'check_version_at_startup' in input_dict:
+                autosubliminal.CHECKVERSIONATSTARTUP = input_dict['check_version_at_startup']
             if 'check_version_auto_update' in input_dict:
                 autosubliminal.CHECKVERSIONAUTOUPDATE = input_dict['check_version_auto_update']
             if 'scan_embedded_subs' in input_dict:
@@ -186,6 +197,7 @@ class _LibraryApi(RestResource):
             'library_mode': autosubliminal.LIBRARYMODE,
             'library_paths': autosubliminal.LIBRARYPATHS,
             'scan_library_interval': autosubliminal.SCANLIBRARYINTERVAL,
+            'scan_library_at_startup': autosubliminal.SCANLIBRARYATSTARTUP,
             'library_edit_mode': autosubliminal.LIBRARYEDITMODE
         }
 
@@ -207,6 +219,8 @@ class _LibraryApi(RestResource):
                 autosubliminal.LIBRARYPATHS = input_dict['library_paths']
             if 'scan_library_interval' in input_dict:
                 autosubliminal.SCANLIBRARYINTERVAL = input_dict['scan_library_interval']
+            if 'scan_library_at_startup' in input_dict:
+                autosubliminal.SCANLIBRARYATSTARTUP = input_dict['scan_library_at_startup']
             if 'library_edit_mode' in input_dict:
                 autosubliminal.LIBRARYEDITMODE = input_dict['library_edit_mode']
 

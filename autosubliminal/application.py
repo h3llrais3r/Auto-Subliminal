@@ -240,17 +240,26 @@ def start() -> None:
 
     # Schedule threads
     # Order of CHECKVERSION, SCANDISK and CHECKSUB is important because they are all using the queue lock
-    # Make sure they are started in the specified order:
+    # Make sure they are started in the specified order (when no delay on startup):
     # - Start CHECKVERSION and wait to finish
-    # - Start SCANDISK
-    # - Start CHECKSUB with delay to be sure it doesn't get the queue lock before SCANDISK
-    # - Start SCANLIBRARY immediately because it doesn't use the queue lock
-    autosubliminal.CHECKVERSION = Scheduler('VersionChecker', VersionChecker(), autosubliminal.CHECKVERSIONINTERVAL,
-                                            initial_run=True)
+    # - Start SCANDISK and wait to finish
+    # - Start CHECKSUB
+    # - Start SCANLIBRARY
+    autosubliminal.CHECKVERSION = Scheduler('VersionChecker', VersionChecker(), autosubliminal.CHECKVERSIONINTERVAL)
     autosubliminal.SCANDISK = Scheduler('DiskScanner', DiskScanner(), autosubliminal.SCANDISKINTERVAL)
-    autosubliminal.CHECKSUB = Scheduler('SubChecker', SubChecker(), autosubliminal.CHECKSUBINTERVAL, initial_delay=5)
+    autosubliminal.CHECKSUB = Scheduler('SubChecker', SubChecker(), autosubliminal.CHECKSUBINTERVAL)
     autosubliminal.SCANLIBRARY = Scheduler('LibraryScanner', LibraryScanner(), autosubliminal.SCANLIBRARYINTERVAL,
                                            active=autosubliminal.LIBRARYMODE)
+
+    # Some threads can have a delayed start
+    delay_checkversion = 0 if autosubliminal.CHECKVERSIONATSTARTUP else autosubliminal.CHECKVERSIONINTERVAL * 3600
+    delay_scandisk = 0 if autosubliminal.SCANDISKATSTARTUP else autosubliminal.SCANDISKINTERVAL * 3600
+    delay_checksub = 0 if autosubliminal.CHECKSUBATSTARTUP else autosubliminal.CHECKSUBINTERVAL * 3600
+    delay_scanlibrary = 0 if autosubliminal.SCANDISKATSTARTUP else autosubliminal.SCANLIBRARYINTERVAL * 3600
+    autosubliminal.CHECKVERSION.start(delay=delay_checkversion, wait=autosubliminal.CHECKVERSIONATSTARTUP)
+    autosubliminal.SCANDISK.start(delay=delay_scandisk, wait=autosubliminal.SCANDISKATSTARTUP)
+    autosubliminal.CHECKSUB.start(delay=delay_checksub)
+    autosubliminal.SCANLIBRARY.start(delay=delay_scanlibrary)
 
     # Mark as started
     autosubliminal.STARTED = True

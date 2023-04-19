@@ -36,30 +36,21 @@ class Scheduler(object):
     """
 
     def __init__(
-            self, name: str, process: 'ScheduledProcess', interval: int, active: bool = True,
-            initial_delay: int = 0, initial_run: bool = False) -> None:
+            self, name: str, process: 'ScheduledProcess', interval: int, active: bool = True) -> None:
         self.name = name
         self.process = process
         self.interval = datetime.timedelta(hours=interval).total_seconds()  # Convert to seconds
         self.active = active
         self.last_run: float = 0
-        self._delay = initial_delay
+        self._delay: int = 0
         self._force_run: bool = False
         self._force_stop: bool = False
 
         # Register scheduler
         self._register_scheduler()
 
-        # Start thread
-        log.info('Starting %s thread', self.name)
+        # Create thread
         self._thread = threading.Thread(name=self.name, target=self._schedule_process)
-        self._thread.start()
-
-        # Initial run will block caller thread until process is executed the first time
-        if self.active and initial_run:
-            log.debug('Waiting for initial run of %s thread', self.name)
-            while not self.last_run:
-                time.sleep(1)
 
     def _register_scheduler(self) -> None:
         # Add scheduler to dict of schedulers
@@ -80,6 +71,19 @@ class Scheduler(object):
                 scheduler_name = scheduler_name + '-' + str(suffix)
         self.name = scheduler_name
         autosubliminal.SCHEDULERS[scheduler_name] = self
+
+    def start(self, delay: int = 0, wait: bool = False) -> None:
+        """Start the scheduler."""
+        log.info('Starting %s thread', self.name)
+
+        self._delay = delay
+        self._thread.start()
+
+        # Wait (if not delayed) and block caller thread until process is executed the first time
+        if self.active and delay == 0 and wait:
+            log.debug('Waiting for initial run of %s thread to be completed', self.name)
+            while not self.last_run:
+                time.sleep(1)
 
     def _schedule_process(self) -> None:
         while True:
