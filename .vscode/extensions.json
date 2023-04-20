@@ -5,10 +5,11 @@
     "mikestead.dotenv",
     "xyz.local-history",
     "zignd.html-css-class-completion",
-    "ms-python.flake8",
+    //"ms-python.autopep8"
     "ms-python.isort",
-    "firsttris.vscode-jest-runner",
+    //"ms-python.flake8",
     "ms-python.vscode-pylance",
-    "angular.ng-template"
+    "firsttris.vscode-jest-runner",
+    "angular.ng-template",
   ]
 }

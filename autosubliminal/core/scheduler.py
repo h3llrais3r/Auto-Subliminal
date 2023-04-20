@@ -72,15 +72,19 @@ class Scheduler(object):
         self.name = scheduler_name
         autosubliminal.SCHEDULERS[scheduler_name] = self
 
-    def start(self, delay: int = 0, wait: bool = False) -> None:
+    def start(self, now: bool = True, wait: bool = False) -> None:
         """Start the scheduler."""
         log.info('Starting %s thread', self.name)
 
-        self._delay = delay
+        # If the process should not run now, set last_run to now to postpone till next run
+        if not now:
+            self.last_run = time.time()
+
+        # Start thread
         self._thread.start()
 
-        # Wait (if not delayed) and block caller thread until process is executed the first time
-        if self.active and delay == 0 and wait:
+        # Wait and block caller thread until process is executed the first time when needed
+        if self.active and wait:
             log.debug('Waiting for initial run of %s thread to be completed', self.name)
             while not self.last_run:
                 time.sleep(1)

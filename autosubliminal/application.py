@@ -240,7 +240,7 @@ def start() -> None:
 
     # Schedule threads
     # Order of CHECKVERSION, SCANDISK and CHECKSUB is important because they are all using the queue lock
-    # Make sure they are started in the specified order (when no delay on startup):
+    # Make sure they are started in the specified order (when started directly on startup):
     # - Start CHECKVERSION and wait to finish
     # - Start SCANDISK and wait to finish
     # - Start CHECKSUB
@@ -251,15 +251,13 @@ def start() -> None:
     autosubliminal.SCANLIBRARY = Scheduler('LibraryScanner', LibraryScanner(), autosubliminal.SCANLIBRARYINTERVAL,
                                            active=autosubliminal.LIBRARYMODE)
 
-    # Some threads can have a delayed start
-    delay_checkversion = 0 if autosubliminal.CHECKVERSIONATSTARTUP else autosubliminal.CHECKVERSIONINTERVAL * 3600
-    delay_scandisk = 0 if autosubliminal.SCANDISKATSTARTUP else autosubliminal.SCANDISKINTERVAL * 3600
-    delay_checksub = 0 if autosubliminal.CHECKSUBATSTARTUP else autosubliminal.CHECKSUBINTERVAL * 3600
-    delay_scanlibrary = 0 if autosubliminal.SCANDISKATSTARTUP else autosubliminal.SCANLIBRARYINTERVAL * 3600
-    autosubliminal.CHECKVERSION.start(delay=delay_checkversion, wait=autosubliminal.CHECKVERSIONATSTARTUP)
-    autosubliminal.SCANDISK.start(delay=delay_scandisk, wait=autosubliminal.SCANDISKATSTARTUP)
-    autosubliminal.CHECKSUB.start(delay=delay_checksub)
-    autosubliminal.SCANLIBRARY.start(delay=delay_scanlibrary)
+    # Start threads
+    autosubliminal.CHECKVERSION.start(now=autosubliminal.CHECKVERSIONATSTARTUP,
+                                      wait=autosubliminal.CHECKVERSIONATSTARTUP)
+    autosubliminal.SCANDISK.start(now=autosubliminal.SCANDISKATSTARTUP,
+                                  wait=autosubliminal.SCANDISKATSTARTUP)
+    autosubliminal.CHECKSUB.start(now=autosubliminal.CHECKSUBATSTARTUP)
+    autosubliminal.SCANLIBRARY.start(now=autosubliminal.SCANLIBRARYATSTARTUP)
 
     # Mark as started
     autosubliminal.STARTED = True
