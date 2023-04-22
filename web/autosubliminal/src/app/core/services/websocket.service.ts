@@ -3,6 +3,7 @@ import { interval } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 import { appSettings } from '../../app-settings.service';
+import { WantedItem } from '../../shared/models/item';
 import { Scheduler } from '../../shared/models/scheduler';
 import { SystemUpdate } from '../../shared/models/systemupdate';
 import { SystemWebSocketClientMessage, SystemWebSocketMessage, SystemWebSocketServerEvent, SystemWebSocketServerEventType, SystemWebSocketServerMessage, SystemWebSocketServerNotification } from '../../shared/models/websocket';
@@ -50,6 +51,12 @@ export class WebSocketService {
               break;
             case SystemWebSocketServerEventType.SCHEDULER_FINISH:
               this.systemEventService.notifySchedulerFinish(new Scheduler(serverEvent.event.data));
+              break;
+            case SystemWebSocketServerEventType.WANTED_ITEM_UPDATE:
+              this.systemEventService.notifyWantedItemUpdate(new WantedItem(serverEvent.event.data));
+              break;
+            case SystemWebSocketServerEventType.WANTED_ITEM_DELETE:
+              this.systemEventService.notifyWantedItemDelete(new WantedItem(serverEvent.event.data));
               break;
             default:
               console.error(`Invalid websocket server event type: ${serverEvent.event.type}`);

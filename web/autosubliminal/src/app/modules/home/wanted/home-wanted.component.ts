@@ -43,6 +43,8 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
 
   private scanDiskSubscription: Subscription;
   private checkSubSubscription: Subscription;
+  private wantedItemUpdateSubscription: Subscription;
+  private wantedItemDeleteSubscription: Subscription;
 
   constructor(
     private router: Router,
@@ -71,11 +73,25 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
         }
       }
     });
+    // Subscribe on wantedItem update events to update the overview
+    this.wantedItemUpdateSubscription = this.systemEventService.wantedItemUpdate.subscribe({
+      next: (wantedItem) => {
+        this.updateWantedItemInList(wantedItem);
+      }
+    });
+    // Subscribe on wantedItem delete events to update the overview
+    this.wantedItemDeleteSubscription = this.systemEventService.wantedItemDelete.subscribe({
+      next: (wantedItem) => {
+        this.deleteWantedItemInList(wantedItem);
+      }
+    });
   }
 
   ngOnDestroy(): void {
     this.scanDiskSubscription.unsubscribe();
     this.checkSubSubscription.unsubscribe();
+    this.wantedItemUpdateSubscription.unsubscribe();
+    this.wantedItemDeleteSubscription.unsubscribe();
   }
 
   private buildSelectItems(): void {
@@ -121,7 +137,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
     this.messageService.showInfoMessage(`Searching for ${indexer} for ${wantedItem.longName}.`);
     this.itemService.searchWantedItemIndexerId(wantedItem.id).subscribe({
       next: (updatedWantedItem) => {
-        this.updateWantedItem(updatedWantedItem);
+        this.updateWantedItemInList(updatedWantedItem);
         this.messageService.showSuccessMessage(`${capitalizeFirstChar(indexer)} found for ${updatedWantedItem.longName}.`);
       },
       error: () => this.messageService.showErrorMessage(`Unable to search ${indexer} for ${wantedItem.longName}!`)
@@ -147,7 +163,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
     this.router.navigate(['/home/search'], { queryParams: { wantedItemId: wantedItem.id, language } });
   }
 
-  updateWantedItem(wantedItem: WantedItem): void {
+  updateWantedItemInList(wantedItem: WantedItem): void {
     // Replace updated wanted item in list of wanted items
     this.wantedItems = this.wantedItems.map((item) => item.id === wantedItem.id ? wantedItem : item);
   }
@@ -155,7 +171,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
   postProcessWantedItem(wantedItem: WantedItem): void {
     this.itemService.postProcessWantedItem(wantedItem.id).subscribe({
       next: () => {
-        this.removeWantedItemFromList(wantedItem);
+        this.deleteWantedItemInList(wantedItem);
         this.messageService.showSuccessMessage(`Post processed ${wantedItem.longName}.`);
       },
       error: () => this.messageService.showErrorMessage(`Unable to post process ${wantedItem.longName}!`)
@@ -170,7 +186,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
       accept: () => {
         this.itemService.deleteWantedItem(wantedItem.id, this.cleanupOnDelete).subscribe({
           next: () => {
-            this.removeWantedItemFromList(wantedItem);
+            this.deleteWantedItemInList(wantedItem);
             this.messageService.showSuccessMessage(`Deleted ${wantedItem.longName}.`);
           },
           error: () => this.messageService.showErrorMessage(`Unable to delete ${wantedItem.longName}!`)
@@ -187,7 +203,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
       accept: () => {
         this.itemService.skipWantedItem(wantedItem.id, wantedItem.type, this.seasonToSkip).subscribe({
           next: () => {
-            this.removeWantedItemFromList(wantedItem);
+            this.deleteWantedItemInList(wantedItem);
             if (!this.seasonToSkip || this.seasonToSkip === '00') { // '00' or nothing means all seasons
               this.messageService.showSuccessMessage(`Skipped the show ${wantedItem.name} all seasons.`);
             } else {
@@ -206,7 +222,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
       accept: () => {
         this.itemService.skipWantedItem(wantedItem.id, wantedItem.type).subscribe({
           next: () => {
-            this.removeWantedItemFromList(wantedItem);
+            this.deleteWantedItemInList(wantedItem);
             this.messageService.showSuccessMessage(`Skipped the movie ${wantedItem.name}.`);
           },
           error: () => this.messageService.showErrorMessage(`Unable to skip the movie ${wantedItem.name}!`)
@@ -215,7 +231,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
     });
   }
 
-  private removeWantedItemFromList(wantedItem: WantedItem): void {
+  private deleteWantedItemInList(wantedItem: WantedItem): void {
     this.wantedItems = this.wantedItems.filter((item) => item.id !== wantedItem.id);
     this.emitTotals();
   }

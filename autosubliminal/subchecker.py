@@ -4,7 +4,7 @@ import logging
 import operator
 import os
 import shutil
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple, cast
 
 import babelfish
 import subliminal
@@ -21,7 +21,7 @@ from subliminal.video import Episode, Movie, Video
 
 import autosubliminal
 from autosubliminal.core.item import DownloadItem, WantedItem
-from autosubliminal.core.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
+from autosubliminal.core.queue import (delete_wanted_item_in_queue, get_wanted_queue_lock, release_wanted_queue_lock,
                                        release_wanted_queue_lock_on_exception)
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.core.subtitle import Subtitle
@@ -31,8 +31,9 @@ from autosubliminal.providers import provider_cache
 from autosubliminal.providers.addic7ed_custom import Addic7edSubtitle as CustomAddic7edSubtitle
 from autosubliminal.subdownloader import SubDownloader
 from autosubliminal.subsynchronizer import SubSynchronizer
-from autosubliminal.util.common import set_rw_and_remove, wait_for_internet_connection
-from autosubliminal.util.websocket import send_websocket_notification
+from autosubliminal.util.common import camelize, set_rw_and_remove, wait_for_internet_connection
+from autosubliminal.util.websocket import (WANTED_ITEM_DELETE, WANTED_ITEM_UPDATE, send_websocket_event,
+                                           send_websocket_notification)
 
 log = logging.getLogger(__name__)
 
@@ -53,16 +54,15 @@ class SubChecker(ScheduledProcess):
         wait_for_internet_connection()
         send_websocket_notification('Checking subtitles...')
 
-        to_delete_wanted_queue: List[int] = []
-
         # Setup provider pool
         provider_pool = _get_provider_pool()
         if provider_pool:
             log.info('Searching subtitles with providers: %s', ', '.join(provider_pool.providers))
 
             # Process all items in wanted queue
+            # Loop over cloned queue list so we can remove the item directly from the wanted queue when downloaded
             db = WantedItemsDb()
-            for index, wanted_item in enumerate(autosubliminal.WANTEDQUEUE):
+            for wanted_item in autosubliminal.WANTEDQUEUE[:]:
                 log.info('Searching subtitles for video: %s', wanted_item.video_path)
 
                 # Check if the search is currently active for the wanted_item
@@ -79,6 +79,7 @@ class SubChecker(ScheduledProcess):
                 provider_pool.discarded_providers.clear()
 
                 # Check subtitles for each language
+                # Loop over cloned list so we can remove the language directly when downloaded
                 languages = wanted_item.languages
                 for lang in languages[:]:
                     # Search the best subtitle with the minimal score
@@ -100,19 +101,15 @@ class SubChecker(ScheduledProcess):
                         # Update wanted item if there are still wanted languages
                         if len(languages) > 0:
                             db.update_wanted_item(wanted_item)
+                            send_websocket_event(WANTED_ITEM_UPDATE, data=wanted_item.to_dict(camelize))
 
-                        # Mark wanted item as deleted if there are no more wanted languages
+                        # Delete wanted item if there are no more wanted languages
                         else:
-                            to_delete_wanted_queue.append(index)
-
-            # Cleanup wanted item(s)
-            i = len(to_delete_wanted_queue) - 1
-            while i >= 0:
-                wanted_item_to_delete = autosubliminal.WANTEDQUEUE.pop(to_delete_wanted_queue[i])
-                log.debug('Removed item from the wanted queue at index %s', to_delete_wanted_queue[i])
-                db.delete_wanted_item(wanted_item_to_delete.id)
-                log.debug('Removed %s from wanted_items database', wanted_item_to_delete.video_path)
-                i -= 1
+                            delete_wanted_item_in_queue(wanted_item)
+                            log.debug('Removed item from the wanted queue: %s', wanted_item)
+                            db.delete_wanted_item(wanted_item.id)
+                            log.debug('Removed %s from wanted_items database', wanted_item.video_path)
+                            send_websocket_event(WANTED_ITEM_DELETE, data=wanted_item.to_dict(camelize))
 
         else:
             log.info('No subliminal providers configured, skipping')
@@ -166,7 +163,7 @@ def search_subtitle(wanted_item_index: int, lang: str) -> Tuple[List[Dict[str, A
                     if subtitle.content:
                         # Get the matches (hearing_impaired is used for score increasing, so add it if matched)
                         # This is to get the same behaviour as in the subliminal.compute_score()
-                        matches = subtitle.get_matches(video)
+                        matches: Set[str] = subtitle.get_matches(video)
                         if subtitle.hearing_impaired == autosubliminal.PREFERHEARINGIMPAIRED:
                             matches.add('hearing_impaired')
                         # Create new sub dict for showing result
@@ -177,7 +174,7 @@ def search_subtitle(wanted_item_index: int, lang: str) -> Tuple[List[Dict[str, A
                                'playvideo_url': _construct_playvideo_url(wanted_item)}
                         # Get content preview (the first 28 lines and last 30 lines of the subtitle)
                         # Use the subtitle text (decoded content) instead of content to generate the preview
-                        content_split = subtitle.text.splitlines(False)
+                        content_split = cast(str, subtitle.text).splitlines(False)
                         if len(content_split) < 58:
                             content_preview = 'This seems to be an invalid subtitle.'
                             content_preview += '<br> It has less than 58 lines to preview.'
@@ -549,8 +546,8 @@ def _scan_wanted_item_for_video(wanted_item: WantedItem, is_manual: bool = False
     return video
 
 
-def _search_subtitles(video: Video, lang: str, best_only: bool, provider_pool: ProviderPool) -> Optional[
-        Tuple[List[subliminal.Subtitle], babelfish.Language, bool]]:
+def _search_subtitles(video: Video, lang: str, best_only: bool, provider_pool: ProviderPool) -> Tuple[
+        Optional[List[subliminal.Subtitle]], Optional[babelfish.Language], Optional[bool]]:
     log.info('Searching for %s subtitles', lang)
 
     # Determine language
@@ -624,8 +621,8 @@ def _get_subtitle_path(wanted_item: WantedItem) -> str:
     return path
 
 
-def _construct_download_item(wanted_item: WantedItem, subtitles: List[subliminal.Subtitle], language: str,
-                             single: bool) -> DownloadItem:
+def _construct_download_item(wanted_item: WantedItem, subtitles: List[subliminal.Subtitle],
+                             language: babelfish.Language, single: bool) -> DownloadItem:
     log.debug('Constructing the download item')
 
     # Get the subtitle, subtitles should only contain 1 subtitle

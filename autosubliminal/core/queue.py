@@ -84,3 +84,14 @@ def update_wanted_item_in_queue(wanted_item: WantedItem) -> None:
         if item.id == wanted_item.id:
             autosubliminal.WANTEDQUEUE[index] = wanted_item
             break
+
+
+def delete_wanted_item_in_queue(wanted_item: WantedItem) -> None:
+    """
+    Delete the wanted item in the wanted queue.
+    """
+
+    for index, item in enumerate(autosubliminal.WANTEDQUEUE):
+        if item.id == wanted_item.id:
+            autosubliminal.WANTEDQUEUE.pop(index)
+            break
