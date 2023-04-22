@@ -230,6 +230,7 @@ def initialize() -> None:
     _init_config()
     _init_db()
     _init_logger()
+    _init_wanted_queue()
 
 
 def _check_min_python_version() -> None:
@@ -665,3 +666,11 @@ def _init_logger() -> None:
     from autosubliminal.core import logger
 
     logger.initialize()
+
+
+def _init_wanted_queue() -> None:
+    """Initialize the wanted queue."""
+    from autosubliminal.db import WantedItemsDb
+
+    global WANTEDQUEUE
+    WANTEDQUEUE = WantedItemsDb().get_wanted_items()
