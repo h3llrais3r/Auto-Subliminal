@@ -75,7 +75,7 @@ rebulk==3.2.0
 # autosubliminal\notifiers\telegram.py: 7
 # autosubliminal\providers\addic7ed_custom.py: 11
 # autosubliminal\util\common.py: 16
-requests==2.28.2
+requests==2.29.0
 # autosubliminal\server\api\settings.py: 8
 requests-oauthlib==1.3.1
 # autosubliminal\core\websocket.py: 9
