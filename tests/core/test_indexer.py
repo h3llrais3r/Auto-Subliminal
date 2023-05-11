@@ -93,10 +93,10 @@ def test_get_show_episodes() -> None:
     assert len(episodes) > 0
     episode = episodes[0]
     assert isinstance(episode, ShowEpisodeDetails)
-    assert episode.tvdb_id == 332484
+    assert episode.tvdb_id == 2321301
     assert episode.show_tvdb_id == '80379'
-    assert episode.title == 'Pilot'
-    assert episode.season == 1
+    assert episode.title == 'Unaired Pilot'
+    assert episode.season == 0
     assert episode.episode == 1
 
 

@@ -232,7 +232,8 @@ class ShowIndexer(_BaseIndexer):
                 if episodes and episodes.data:
                     api_list.extend(episodes.data)
 
-        # Convert to list of show details objects if found
+        # Convert to sorted list of show episode details objects if found
+        api_list.sort(key=lambda x: (x.aired_season, x.aired_episode_number))
         return [ShowEpisodeDetails.from_indexer(x) for x in api_list] if api_list else None
 
     @authenticate
