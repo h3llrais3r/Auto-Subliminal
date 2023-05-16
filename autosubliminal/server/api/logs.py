@@ -28,7 +28,7 @@ class LogsApi(RestResource):
 
     def get(self, lognum: str = None) -> List[str]:
         """Get the log lines for a logfile."""
-        return get_log_lines(loglevel='all', lines=1000, lognum=int(lognum))
+        return get_log_lines(loglevel='all', lines=1000, lognum=int(lognum) if lognum else None)
 
     def delete(self, lognum: str = None) -> None:
         """Delete the logs for a logfile."""
