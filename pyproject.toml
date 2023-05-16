@@ -101,6 +101,7 @@ testpaths = ["tests"]
 [tool.autopep8]
 max_line_length = 120
 experimental = true
+ignore = ["E402"]
 
 [tool.flake8]
 

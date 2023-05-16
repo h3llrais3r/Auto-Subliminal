@@ -13,6 +13,7 @@
     web
 ignore =
     W504
+    E402
 per-file-ignores =
     autosubliminal/core/scheduler.py: E722,
     autosubliminal/providers/addic7ed_custom.py: F401, E741,

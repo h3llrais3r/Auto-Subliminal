@@ -7,8 +7,7 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-# REMARK: only used default python packages here!
-# This is used before installing all packages at runtime!
+# ATTENTION: only use standard libs as no dependencies are installed yet when imported in installer!
 
 PYTHON_VERSION_FILE = '.pythonversion'
 PYTHON_VERSION_REGEX = r'^(\d+)\.(\d+)\.(\d+)$'
