@@ -41,7 +41,7 @@ ffsubsync==0.4.25
 GitPython==3.1.31
 # autosubliminal\notifiers\growl.py: 7
 gntp==1.0.3
-# autosubliminal\__init__.py: 555
+# autosubliminal\__init__.py: 281
 # autosubliminal\fileprocessor.py: 8
 # autosubliminal\parsers\guessit\__init__.py: 3
 # autosubliminal\parsers\guessit\rules.py: 5,6,7
@@ -52,7 +52,7 @@ guessit==3.7.1
 imdbpie==5.6.4.dev0
 # autosubliminal\util\json.py: 6
 jsonpickle==3.0.1
-# autosubliminal\__init__.py: 632,633
+# autosubliminal\__init__.py: 358,359
 # autosubliminal\util\filesystem.py: 10
 langdetect==1.0.9
 # autosubliminal\versionchecker.py: 8
@@ -80,9 +80,9 @@ requests==2.30.0
 requests-oauthlib==1.3.1
 # autosubliminal\core\websocket.py: 9
 schema==0.7.5
-# autosubliminal\__init__.py: 16
+# autosubliminal\__init__.py: 15
 stevedore==5.0.0
-# autosubliminal\__init__.py: 570,596,597,598
+# autosubliminal\__init__.py: 296,322,323,324
 # autosubliminal\core\item.py: 11
 # autosubliminal\providers\addic7ed_custom.py: 12,13,14,15,16,17,18,19
 # autosubliminal\providers\exceptions.py: 3
@@ -105,7 +105,7 @@ tvdb-api==3.0.0
 Unidecode==1.3.6
 # autosubliminal\subsynchronizer.py: 26
 webrtcvad-wheels==2.0.11.post1
-# autosubliminal\__init__.py: 17
+# autosubliminal\__init__.py: 16
 # autosubliminal\application.py: 15,16
 # autosubliminal\core\websocket.py: 10,11
 ws4py==0.5.1
