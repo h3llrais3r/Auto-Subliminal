@@ -59,7 +59,7 @@
     "primeicons": "6.0.1",
     "primeng": "15.4.1",
     "rxjs": "7.8.1",
-    "strftime": "0.10.1",
+    "strftime": "0.10.2",
     "tslib": "2.5.0",
     "zone.js": "0.13.0"
   },
