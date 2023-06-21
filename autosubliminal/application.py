@@ -234,10 +234,6 @@ def start() -> None:
     # Start permanent threads
     autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
 
-    # Sleep 3 seconds before sending the start event trough websocket (client websockets reconnect every 2 seconds)
-    time.sleep(3)
-    send_websocket_event(SYSTEM_START)
-
     # Schedule threads
     # Order of CHECKVERSION, SCANDISK and CHECKSUB is important because they are all using the queue lock
     # Make sure they are started in the specified order (when started directly on startup):
@@ -250,6 +246,10 @@ def start() -> None:
     autosubliminal.CHECKSUB = Scheduler('SubChecker', SubChecker(), autosubliminal.CHECKSUBINTERVAL)
     autosubliminal.SCANLIBRARY = Scheduler('LibraryScanner', LibraryScanner(), autosubliminal.SCANLIBRARYINTERVAL,
                                            active=autosubliminal.LIBRARYMODE)
+
+    # Sleep 3 seconds before sending the start event trough websocket (client websockets reconnect every 2 seconds)
+    time.sleep(3)
+    send_websocket_event(SYSTEM_START)
 
     # Start threads
     autosubliminal.CHECKVERSION.start(now=autosubliminal.CHECKVERSIONATSTARTUP,

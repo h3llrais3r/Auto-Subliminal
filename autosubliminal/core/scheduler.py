@@ -232,11 +232,3 @@ class ScheduledProcess(ABC):
     @abstractmethod
     def run(self, force_run: bool) -> None:
         pass
-
-
-def scheduler_next_run_in_ms(scheduler: Scheduler) -> float:
-    # Next run = 0 when not initialized yet or when still running
-    if not scheduler or scheduler.running:
-        return 0
-    else:
-        return (scheduler.last_run + scheduler.interval) * 1000

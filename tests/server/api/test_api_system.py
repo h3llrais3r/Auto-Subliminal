@@ -52,7 +52,6 @@ settings_json = '{"antiCaptchaProviders": [], ' \
                 '"checkSubDeadlineDefault": 1, '\
                 '"checkSubDeltaDefault": 1, '\
                 '"checkSubIntervalDefault": 6, '\
-                '"checkSubNextRunInMs": 61000, ' \
                 '"checkVersion": "VersionChecker", ' \
                 '"checkVersionIntervalDefault": 1, ' \
                 '"dereferUrl": "https://dereferer.me/?", ' \
@@ -70,7 +69,6 @@ settings_json = '{"antiCaptchaProviders": [], ' \
                 '"preferHearingImpaired": false, ' \
                 '"scanDisk": "DiskScanner", ' \
                 '"scanDiskIntervalDefault": 1, ' \
-                '"scanDiskNextRunInMs": 61000, ' \
                 '"scanLibrary": "LibraryScanner", ' \
                 '"scanLibraryIntervalDefault": 24, ' \
                 '"subliminalProviders": [], ' \

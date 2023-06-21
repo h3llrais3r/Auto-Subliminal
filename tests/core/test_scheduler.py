@@ -7,7 +7,7 @@ from pytest import MonkeyPatch
 from pytest_mock import MockerFixture
 
 import autosubliminal
-from autosubliminal.core.scheduler import ScheduledProcess, Scheduler, scheduler_next_run_in_ms
+from autosubliminal.core.scheduler import ScheduledProcess, Scheduler
 from autosubliminal.util.common import camelize, to_dict
 
 autosubliminal.SCHEDULERS = {}
@@ -155,19 +155,6 @@ def test_scheduler_deactivate(mocker: MockerFixture) -> None:
         assert scheduler.next_run == 0
         assert not scheduler.active
         assert not scheduler.running
-    finally:
-        _assert_scheduler(scheduler)
-
-
-def test_scheduler_next_run_in_ms() -> None:
-    assert scheduler_next_run_in_ms(None) == 0
-    try:
-        scheduler = Scheduler('MyScheduledProcess', MyScheduledProcess(), 1)
-        scheduler.start()
-        scheduler.process.running = True
-        assert scheduler_next_run_in_ms(scheduler) == 0
-        scheduler.process.running = False
-        assert scheduler_next_run_in_ms(scheduler) > 0
     finally:
         _assert_scheduler(scheduler)
 
