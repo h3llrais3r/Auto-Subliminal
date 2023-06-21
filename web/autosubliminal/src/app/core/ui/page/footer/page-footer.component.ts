@@ -15,8 +15,8 @@ import { SystemEventService } from '../../../services/system-event.service';
 export class PageFooterComponent implements OnInit, OnDestroy {
 
   appVersion: string;
-  scanDiskCountdown: CountdownConfig;
-  checkSubCountdown: CountdownConfig;
+  scanDiskCountdownConfig: CountdownConfig;
+  checkSubCountdownConfig: CountdownConfig;
   scanDiskRunning = false;
   scanDiskNotAvailable = false;
   checkSubRunning = false;
@@ -90,7 +90,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
       if (scheduler.nextRun) {
         this.scanDiskNotAvailable = false;
         const now = moment();
-        this.scanDiskCountdown = {
+        this.scanDiskCountdownConfig = {
           leftTime: moment.duration(moment(scheduler.nextRun).diff(now)).asSeconds()
         };
       } else {
@@ -108,7 +108,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
       if (scheduler.nextRun) {
         this.checkSubNotAvailable = false;
         const now = moment();
-        this.checkSubCountdown = {
+        this.checkSubCountdownConfig = {
           leftTime: moment.duration(moment(scheduler.nextRun).diff(now)).asSeconds()
         };
       } else {

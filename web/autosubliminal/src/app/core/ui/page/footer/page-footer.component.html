@@ -9,14 +9,14 @@
       <span>Next disk scan in:</span>
       <span *ngIf="scanDiskRunning">Running...</span>
       <span *ngIf="scanDiskNotAvailable">N/A</span>
-      <countdown *ngIf="!scanDiskRunning" [config]="scanDiskCountdown"></countdown>
+      <countdown *ngIf="scanDiskCountdownConfig && !scanDiskRunning && !scanDiskNotAvailable" [config]="scanDiskCountdownConfig"></countdown>
     </span>
     <span class="separator">|</span>
     <span class="info">
       <span>Next subtitle check in:</span>
       <span *ngIf="checkSubRunning">Running...</span>
       <span *ngIf="checkSubNotAvailable">N/A</span>
-      <countdown *ngIf="!checkSubRunning" [config]="checkSubCountdown"></countdown>
+      <countdown *ngIf="checkSubCountdownConfig && !checkSubRunning && !checkSubNotAvailable" [config]="checkSubCountdownConfig"></countdown>
     </span>
   </div>
 </div>
