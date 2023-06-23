@@ -1,11 +1,12 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import moment from 'moment';
-import { CountdownConfig } from 'ngx-countdown';
+import { CountdownComponent, CountdownConfig } from 'ngx-countdown';
 import { Subscription } from 'rxjs';
 import { appSettings } from '../../../../app-settings.service';
 import { Scheduler } from '../../../../shared/models/scheduler';
 import { SystemService } from '../../../services/api/system.service';
 import { SystemEventService } from '../../../services/system-event.service';
+import { WebSocketService } from '../../../services/websocket.service';
 
 @Component({
   selector: 'app-page-footer',
@@ -19,15 +20,24 @@ export class PageFooterComponent implements OnInit, OnDestroy {
   checkSubCountdownConfig: CountdownConfig;
   scanDiskRunning = false;
   scanDiskNotAvailable = false;
+  scanDiskCountdownRunning = false;
   checkSubRunning = false;
   checkSubNotAvailable = false;
+  checkSubCountdownRunning = false;
 
   private scanDiskStartedSubscription: Subscription;
   private scanDiskFinishedSubscription: Subscription;
   private checkSubStartedSubscription: Subscription;
   private checkSubFinishedSubscription: Subscription;
+  private webSocketConnectionInterruptedSubscription: Subscription;
 
-  constructor(private systemService: SystemService, private systemEventService: SystemEventService) { }
+  @ViewChild('scanDiskCountdown', { static: false })
+  private scanDiskCountdown: CountdownComponent;
+
+  @ViewChild('checkSubCountdown', { static: false })
+  private checkSubCountdown: CountdownComponent;
+
+  constructor(private systemService: SystemService, private systemEventService: SystemEventService, private webSocketService: WebSocketService) { }
 
   ngOnInit(): void {
     // Init values
@@ -64,6 +74,17 @@ export class PageFooterComponent implements OnInit, OnDestroy {
         }
       }
     });
+    // Subscribe on websocket events
+    this.webSocketConnectionInterruptedSubscription = this.systemEventService.webSocketConnectionInterrupted.subscribe({
+      next: (interrupted) => {
+        if (interrupted) {
+          this.scanDiskCountdown.pause();
+          this.checkSubCountdown.pause();
+        } else {
+          this.initValues();
+        }
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -71,6 +92,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
     this.scanDiskFinishedSubscription.unsubscribe();
     this.checkSubStartedSubscription.unsubscribe();
     this.checkSubFinishedSubscription.unsubscribe();
+    this.webSocketConnectionInterruptedSubscription.unsubscribe();
   }
 
   private initValues(): void {
@@ -85,6 +107,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
     if (scheduler.running) {
       this.scanDiskRunning = true;
       this.scanDiskNotAvailable = false;
+      this.scanDiskCountdownRunning = false;
     } else {
       this.scanDiskRunning = false;
       if (scheduler.nextRun) {
@@ -93,8 +116,10 @@ export class PageFooterComponent implements OnInit, OnDestroy {
         this.scanDiskCountdownConfig = {
           leftTime: moment.duration(moment(scheduler.nextRun).diff(now)).asSeconds()
         };
+        this.scanDiskCountdownRunning = true;
       } else {
-        this.scanDiskNotAvailable = true; // if not running, 0 means N/A
+        this.scanDiskNotAvailable = true; // 0 means N/A
+        this.scanDiskCountdownRunning = false;
       }
     }
   }
@@ -103,6 +128,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
     if (scheduler.running) {
       this.checkSubRunning = true;
       this.checkSubNotAvailable = false;
+      this.checkSubCountdownRunning = false;
     } else {
       this.checkSubRunning = false;
       if (scheduler.nextRun) {
@@ -111,8 +137,10 @@ export class PageFooterComponent implements OnInit, OnDestroy {
         this.checkSubCountdownConfig = {
           leftTime: moment.duration(moment(scheduler.nextRun).diff(now)).asSeconds()
         };
+        this.checkSubCountdownRunning = true;
       } else {
-        this.checkSubNotAvailable = true; // if not running, 0 means N/A
+        this.checkSubNotAvailable = true; // 0 means N/A
+        this.checkSubCountdownRunning = false;
       }
     }
   }

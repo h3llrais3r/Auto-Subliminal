@@ -29,10 +29,6 @@ class Scheduler(object):
     :type interval: int
     :param active: indication if the scheduler is active or not
     :type active: bool
-    :param initial_delay: indication in seconds for the delay of the initial run of the thread process
-    :type initial_delay: int
-    :param initial_run: indication if the process should run initially before starting the thread
-    :type initial_run: bool
     """
 
     def __init__(
@@ -42,6 +38,7 @@ class Scheduler(object):
         self.interval = datetime.timedelta(hours=interval).total_seconds()  # Convert to seconds
         self.active = active
         self.last_run: float = 0
+        self._initial_run: float = 0  # Only used to allow delay of initial run
         self._delay: int = 0
         self._force_run: bool = False
         self._force_stop: bool = False
@@ -49,7 +46,7 @@ class Scheduler(object):
         # Register scheduler
         self._register_scheduler()
 
-        # Create thread
+        # Create thread (use timer so we can delay the execution when needed)
         self._thread = threading.Thread(name=self.name, target=self._schedule_process)
 
     def _register_scheduler(self) -> None:
@@ -76,15 +73,15 @@ class Scheduler(object):
         """Start the scheduler."""
         log.info('Starting %s thread', self.name)
 
-        # If the process should not run now, set last_run to now to postpone till next run
+        # If the process should not run now, set initial_run to now to postpone till next run
         if not now:
-            self.last_run = time.time()
+            self._initial_run = time.time()
 
         # Start thread
         self._thread.start()
 
         # Wait and block caller thread until process is executed the first time when needed
-        if self.active and wait:
+        if self.active and now and wait:
             log.debug('Waiting for initial run of %s thread to be completed', self.name)
             while not self.last_run:
                 time.sleep(1)
@@ -101,7 +98,7 @@ class Scheduler(object):
             if self.active:
                 if self._force_run:
                     run_needed = True
-                elif current_time - self.last_run > self.interval:
+                elif current_time - (self.last_run or self._initial_run) > self.interval:
                     run_needed = True
             elif self.last_run:
                 # Clear last_run if not active

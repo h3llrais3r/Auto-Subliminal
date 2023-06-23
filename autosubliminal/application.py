@@ -231,27 +231,27 @@ def _get_application_configuration() -> Dict[str, Any]:
 def start() -> None:
     log.info('Starting')
 
-    # Start permanent threads
-    autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
-
-    # Schedule threads
-    # Order of CHECKVERSION, SCANDISK and CHECKSUB is important because they are all using the queue lock
-    # Make sure they are started in the specified order (when started directly on startup):
-    # - Start CHECKVERSION and wait to finish
-    # - Start SCANDISK and wait to finish
-    # - Start CHECKSUB
-    # - Start SCANLIBRARY
+    # Create threads
     autosubliminal.CHECKVERSION = Scheduler('VersionChecker', VersionChecker(), autosubliminal.CHECKVERSIONINTERVAL)
     autosubliminal.SCANDISK = Scheduler('DiskScanner', DiskScanner(), autosubliminal.SCANDISKINTERVAL)
     autosubliminal.CHECKSUB = Scheduler('SubChecker', SubChecker(), autosubliminal.CHECKSUBINTERVAL)
     autosubliminal.SCANLIBRARY = Scheduler('LibraryScanner', LibraryScanner(), autosubliminal.SCANLIBRARYINTERVAL,
                                            active=autosubliminal.LIBRARYMODE)
 
+    # Start websocket thread
+    autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
+
     # Sleep 3 seconds before sending the start event trough websocket (client websockets reconnect every 2 seconds)
     time.sleep(3)
     send_websocket_event(SYSTEM_START)
 
     # Start threads
+    # Order of CHECKVERSION, SCANDISK and CHECKSUB is important because they are all using the queue lock
+    # Make sure they are started in the specified order (when started directly on startup):
+    # - Start CHECKVERSION and wait to finish
+    # - Start SCANDISK and wait to finish
+    # - Start CHECKSUB
+    # - Start SCANLIBRARY
     autosubliminal.CHECKVERSION.start(now=autosubliminal.CHECKVERSIONATSTARTUP,
                                       wait=autosubliminal.CHECKVERSIONATSTARTUP)
     autosubliminal.SCANDISK.start(now=autosubliminal.SCANDISKATSTARTUP,
