@@ -2484,14 +2484,14 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "vcrpy"
-version = "4.4.0"
+version = "5.0.0"
 description = "Automatically mock your HTTP interactions to simplify and speed up testing"
 category = "dev"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "vcrpy-4.4.0-py2.py3-none-any.whl", hash = "sha256:560c9d0d8436ced29223ceefb513c3ac3f2e2a60d51a9830f236a1e63167905a"},
-    {file = "vcrpy-4.4.0.tar.gz", hash = "sha256:d1109ae93dbc2e7fcbc485849a7600d5dea510d3bef070eec4419c9a72ca2639"},
+    {file = "vcrpy-5.0.0-py2.py3-none-any.whl", hash = "sha256:28b66c87be7678896e9e78fee4f6695e3fb153d5d7e5f635416a33658452bb44"},
+    {file = "vcrpy-5.0.0.tar.gz", hash = "sha256:1ef3ddea819a26eda10b560c70bd74c41855241d431745712e31a5b2de2d05a8"},
 ]
 
 [package.dependencies]
@@ -2862,4 +2862,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "255730ba61df7e7c2f5a95e1eb3d92cbdb2180144f19156e04f4d376ebc5b98f"
+content-hash = "b764d40ab0712665b705b8736e2ae0d747ccb1118c419c91033b494b78657e37"
