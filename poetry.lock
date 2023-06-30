@@ -1515,14 +1515,14 @@ files = [
 
 [[package]]
 name = "pigar"
-version = "2.1.0"
+version = "2.1.1"
 description = "A fantastic tool to generate requirements for your Python project, and more than that."
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "pigar-2.1.0-py3-none-any.whl", hash = "sha256:4d1458db53dc92a0417d8176fbdae93ad6f5b95c45caffcd03a508f55ac13650"},
-    {file = "pigar-2.1.0.tar.gz", hash = "sha256:39d24bf3eeee5c983d656465ee7b0c05949b746e457895a31672651b6dce2db5"},
+    {file = "pigar-2.1.1-py3-none-any.whl", hash = "sha256:1332dc803f6b196ebe25a92a32cb4f2db767d29063e8353bd7162de09b682aba"},
+    {file = "pigar-2.1.1.tar.gz", hash = "sha256:18dfa0daabbc23e5c14abca8b230c83e6a373ac37fadf2cee26b5a9bc9991fed"},
 ]
 
 [package.dependencies]
@@ -2862,4 +2862,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "b764d40ab0712665b705b8736e2ae0d747ccb1118c419c91033b494b78657e37"
+content-hash = "b8ece7817bc98ec63593caf24b9788539713bedae336b585bca12201d823fd9d"
