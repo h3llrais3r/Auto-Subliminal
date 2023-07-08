@@ -32,7 +32,7 @@ CherryPy==18.8.0
 deathbycaptcha==0.1.1
 # autosubliminal\core\cache.py: 10,11,12
 # autosubliminal\providers\pitcher.py: 11
-dogpile.cache==1.2.1
+dogpile.cache==1.2.2
 # autosubliminal\util\filesystem.py: 15,16
 enzyme==0.4.1
 # autosubliminal\subsynchronizer.py: 8
