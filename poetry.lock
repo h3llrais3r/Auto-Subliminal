@@ -2393,14 +2393,14 @@ resolved_reference = "1210df9dd5869ccc5b63149b1b80630310a14f40"
 
 [[package]]
 name = "types-python-dateutil"
-version = "2.8.19.13"
+version = "2.8.19.14"
 description = "Typing stubs for python-dateutil"
 category = "dev"
 optional = false
 python-versions = "*"
 files = [
-    {file = "types-python-dateutil-2.8.19.13.tar.gz", hash = "sha256:09a0275f95ee31ce68196710ed2c3d1b9dc42e0b61cc43acc369a42cb939134f"},
-    {file = "types_python_dateutil-2.8.19.13-py3-none-any.whl", hash = "sha256:0b0e7c68e7043b0354b26a1e0225cb1baea7abb1b324d02b50e2d08f1221043f"},
+    {file = "types-python-dateutil-2.8.19.14.tar.gz", hash = "sha256:1f4f10ac98bb8b16ade9dbee3518d9ace017821d94b057a425b069f834737f4b"},
+    {file = "types_python_dateutil-2.8.19.14-py3-none-any.whl", hash = "sha256:f977b8de27787639986b4e28963263fd0e5158942b3ecef91b9335c130cb1ce9"},
 ]
 
 [[package]]
@@ -2863,4 +2863,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "33ca91557bce947b3002151f521f0dbb531320ee0327097bb81af5158b9087f2"
+content-hash = "2a106d4dfa301e3659ce32d52d107ef312c544b609552dc69dd0314b7afcef6c"
