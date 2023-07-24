@@ -76,7 +76,7 @@ mypy = "1.4.1"
 pigar = "2.1.1"
 types-requests = "2.31.0.2"
 types-setuptools = "68.0.0.3"
-types-python-dateutil = "2.8.19.13"
+types-python-dateutil = "2.8.19.14"
 
 [tool.coverage.run]
 branch = false
