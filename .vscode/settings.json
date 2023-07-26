@@ -33,13 +33,30 @@
   "files.trimFinalNewlines": true,
   "files.trimTrailingWhitespace": true,
   // Html settings
+  "[html]": {
+    "editor.defaultFormatter": "vscode.html-language-features",
+    "editor.suggest.insertMode": "replace"
+  },
   "html.format.wrapLineLength": 0, // No auto wrap
   "html.format.wrapAttributes": "preserve-aligned", // Keep manual wrapping, but align
+  // Json/Jsonc settings
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
   // Javascript/Typescript settings
-  "javascript.preferences.importModuleSpecifier": "relative",
-  "javascript.preferences.quoteStyle": "single",
-  "typescript.preferences.importModuleSpecifier": "relative",
-  "typescript.preferences.quoteStyle": "single",
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "javascript.preferences.importModuleSpecifier": "relative",
+    "javascript.preferences.quoteStyle": "single"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features",
+    "typescript.preferences.importModuleSpecifier": "relative",
+    "typescript.preferences.quoteStyle": "single"
+  },
   "typescript.tsdk": "web/autosubliminal/node_modules/typescript/lib", // Use project typescript version instead of latest version packaged with VS Code
   "typescript.updateImportsOnFileMove.enabled": "always",
   // Eslint settings
