@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
-import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, forwardRef, Input } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
+import { DropdownChangeEvent } from 'primeng/dropdown';
 import { InputComponent } from '../input.component';
 
 @Component({
@@ -18,7 +19,12 @@ export class InputDropdownComponent extends InputComponent {
   @Input()
   options: SelectItem[];
 
-  constructor(protected override controlContainer: ControlContainer, protected override changeDetectorRef: ChangeDetectorRef) {
-    super(controlContainer, changeDetectorRef);
+  override writeValue(obj: any): void {
+    super.writeValue(obj);
+    this.changeDetectorRef.detectChanges(); // p-dropdown makes changes to the input, so detect changes again to prevent ExpressionChangedAfterItHasBeenCheckedError
+  }
+
+  onDropDownChange(event: DropdownChangeEvent): void {
+    this.changeEvent.emit(event.originalEvent);
   }
 }

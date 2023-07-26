@@ -69,7 +69,7 @@ export class SettingsLibraryComponent implements OnInit {
       libraryPaths: [librarySettings.libraryPaths || [], []],
       scanLibraryInterval: [librarySettings.scanLibraryInterval, [Validators.required]],
       scanLibraryAtStartup: [librarySettings.scanLibraryAtStartup, [Validators.required]],
-      libraryEditMode: [librarySettings.libraryEditMode, [Validators.required]],
+      libraryEditMode: [librarySettings.libraryEditMode, [Validators.required]]
     });
   }
 

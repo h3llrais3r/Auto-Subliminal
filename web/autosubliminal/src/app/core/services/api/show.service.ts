@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -13,10 +12,6 @@ import { ApiServiceTemplate } from './api-service-template';
 export class ShowService extends ApiServiceTemplate {
 
   private readonly URL = `${appSettings.webRoot}/api/shows`;
-
-  constructor(private httpClient: HttpClient) {
-    super(httpClient);
-  }
 
   getShowsOverview(): Observable<ShowsOverview> {
     return this.httpClient.get<ShowsOverview>(`${this.URL}/overview`, this.options)

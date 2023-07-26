@@ -12,8 +12,6 @@ export class HomeComponent {
   totalEpisodes = 0;
   totalMovies = 0;
 
-  constructor() { }
-
   getTotals(wantedTotals: WantedTotals): void {
     this.total = wantedTotals.total;
     this.totalEpisodes = wantedTotals.totalEpisodes;

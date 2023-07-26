@@ -1,0 +1,47 @@
+// ------------
+// Custom rules
+// ------------
+{
+  "rules": {
+    // Force single quotes
+    "quotes": "off",
+    "@typescript-eslint/quotes": [
+      "error",
+      "single",
+      {
+        "allowTemplateLiterals": true
+      }
+    ],
+    // Force semi usage
+    "semi": "off",
+    "@typescript-eslint/semi": [
+      "error"
+    ],
+    // Force comma usage
+    "comma-dangle": "off",
+    "@typescript-eslint/comma-dangle": [
+      "error"
+    ],
+    // Force function return type
+    "@typescript-eslint/explicit-function-return-type": [
+      "error"
+    ],
+    // Force no multiple empty lines
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1
+      }
+    ],
+    // Warn quoted props
+    "quote-props": [
+      "warn",
+      "as-needed"
+    ],
+    // Warn objectd shorthand
+    "object-shorthand": [
+      "warn",
+      "always"
+    ]
+  }
+}

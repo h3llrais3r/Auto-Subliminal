@@ -36,18 +36,6 @@
             "style": "camelCase",
             "type": "attribute"
           }
-        ],
-        //////////////////
-        // Custom rules //
-        //////////////////
-        // Force single quotes
-        "quotes": "off",
-        "@typescript-eslint/quotes": [
-          "error",
-          "single",
-          {
-            "allowTemplateLiterals": true
-          }
         ]
       }
     },
@@ -59,6 +47,13 @@
         "plugin:@angular-eslint/template/recommended"
       ],
       "rules": {}
+    },
+    // ------------
+    // Custom rules
+    // ------------
+    {
+      "files": ["*.ts"],
+      "extends": ["./.eslintrc.custom.json"]
     }
   ]
 }

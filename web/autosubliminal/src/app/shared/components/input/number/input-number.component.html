@@ -1,5 +1,5 @@
 <!-- Input number -->
-<p-inputNumber [id]="id || formControlName"
+<p-inputNumber [inputId]="id || formControlName"
                [formControl]="control"
                [mode]="mode"
                [useGrouping]="useGrouping"
@@ -10,6 +10,9 @@
                [showButtons]="showButtons"
                decrementButtonClass="p-button-outlined input-addon"
                incrementButtonClass="p-button-outlined input-addon"
+               (onFocus)="onFocus($event)"
+               (onKeyDown)="onKeyDown($event)"
+               (onBlur)="onBlur($event)"
                class="w-100"
                styleClass="w-100"
                inputStyleClass="w-100">

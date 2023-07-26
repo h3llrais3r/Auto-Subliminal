@@ -41,8 +41,6 @@ export class LibraryVideoSubtitlesComponent implements OnInit {
     });
   }
 
-
-
   close(): void {
     this.visibleChange.emit(false);
   }

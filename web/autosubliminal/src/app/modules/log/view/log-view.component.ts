@@ -14,7 +14,7 @@ import { Loglevel } from '../../../shared/models/loglevel';
 })
 export class LogViewComponent implements OnInit {
 
-  private readonly LOG_MESSAGE_REGEX = /^((?<date>\d{4}\-\d{2}\-\d{2})\s(?<time>\d{2}:\d{2}:\d{2},\d{3})\s(?<loglevel>\w+))/;
+  private readonly LOG_MESSAGE_REGEX = /^((?<date>\d{4}-\d{2}-\d{2})\s(?<time>\d{2}:\d{2}:\d{2},\d{3})\s(?<loglevel>\w+))/;
 
   logNums: number[];
   selectedLogNum = 0;
@@ -104,7 +104,7 @@ export class LogViewComponent implements OnInit {
     const config: WebSocketSubjectConfig<string> = {
       url,
       deserializer: (e: MessageEvent) => e.data as string,
-      serializer: (value: string) => value,
+      serializer: (value: string) => value
     };
     return webSocket(config);
   }

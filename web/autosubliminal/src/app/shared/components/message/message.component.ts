@@ -13,6 +13,4 @@ export class MessageComponent {
 
   @Input()
   severity = MessageSeverity.INFO; // default info
-
-  constructor() { }
 }

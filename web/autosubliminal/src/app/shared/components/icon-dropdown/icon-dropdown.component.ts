@@ -9,6 +9,4 @@ export class IconDropdownComponent {
 
   @Input()
   iconClass = 'fa fa-info-circle';
-
-  constructor() { }
 }

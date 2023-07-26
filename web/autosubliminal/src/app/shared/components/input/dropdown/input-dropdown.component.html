@@ -1,7 +1,10 @@
 <!-- Dropdown -->
-<p-dropdown [id]="id || formControlName"
+<p-dropdown [inputId]="id || formControlName"
             [formControl]="control"
             [options]="options"
             [ngClass]="validationClass"
+            (onFocus)="onFocus($event)"
+            (onChange)="onDropDownChange($event)"
+            (onBlur)="onBlur($event)"
             styleClass="w-100">
 </p-dropdown>

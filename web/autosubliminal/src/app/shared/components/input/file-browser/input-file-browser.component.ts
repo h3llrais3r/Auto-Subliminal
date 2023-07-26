@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
-import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, forwardRef, Input } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { InputComponent } from '../input.component';
 
 @Component({
@@ -15,7 +15,7 @@ import { InputComponent } from '../input.component';
 export class InputFileBrowserComponent extends InputComponent {
 
   @Input()
-  path = '' // no path by default, if specified, the file browser will always start to browse on this path
+  path = ''; // no path by default, if specified, the file browser will always start to browse on this path
 
   @Input()
   folderMode = false; // default no folder mode (folder mode means selecting folders instead of files)
@@ -25,10 +25,6 @@ export class InputFileBrowserComponent extends InputComponent {
 
   showFileBrowser = false;
   browserPath = '';
-
-  constructor(protected override controlContainer: ControlContainer, protected override changeDetectorRef: ChangeDetectorRef) {
-    super(controlContainer, changeDetectorRef);
-  }
 
   openFileBrowser(): void {
     this.browserPath = this.path || this.control.value || ''; // use fixed path, path from input field or empty if not specified

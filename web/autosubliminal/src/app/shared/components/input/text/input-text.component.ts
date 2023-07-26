@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
-import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, forwardRef, Input } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { InputComponent } from '../input.component';
 
 @Component({
@@ -26,7 +26,8 @@ export class InputTextComponent extends InputComponent {
   @Input()
   dropSpecialCharacters = true;
 
-  constructor(protected override controlContainer: ControlContainer, protected override changeDetectorRef: ChangeDetectorRef) {
-    super(controlContainer, changeDetectorRef);
+  override writeValue(obj: any): void {
+    super.writeValue(obj);
+    this.changeDetectorRef.detectChanges(); // ngx-mask makes changes to the input, so detect changes again to prevent ExpressionChangedAfterItHasBeenCheckedError
   }
 }

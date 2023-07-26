@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
-import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, forwardRef, Input } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
+import { MultiSelectBlurEvent, MultiSelectChangeEvent, MultiSelectFocusEvent } from 'primeng/multiselect';
 import { InputComponent } from '../input.component';
 
 @Component({
@@ -21,12 +22,20 @@ export class InputMultiSelectComponent extends InputComponent {
   @Input()
   placeholder = 'Select items';
 
-  constructor(protected override controlContainer: ControlContainer, protected override changeDetectorRef: ChangeDetectorRef) {
-    super(controlContainer, changeDetectorRef);
-  }
-
   removeItem(item: any): void {
     // Filter out removed item
     this.control.setValue((this.control.value as any[]).filter((val) => val !== item));
+  }
+
+  onMultiSelectFocus(event: MultiSelectFocusEvent): void {
+    this.focusEvent.emit(event);
+  }
+
+  onMultiSelectChange(event: MultiSelectChangeEvent): void {
+    this.changeEvent.emit(event);
+  }
+
+  onMultiSelectBlur(event: MultiSelectBlurEvent): void {
+    this.blurEvent.emit(event);
   }
 }

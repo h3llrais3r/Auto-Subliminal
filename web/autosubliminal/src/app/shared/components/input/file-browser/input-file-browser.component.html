@@ -1,11 +1,16 @@
 <!-- Input text -->
 <div class="p-inputgroup">
   <input pInputText
+         type="text"
          [id]="id || formControlName"
          [formControl]="control"
          [placeholder]="placeholder"
          [ngClass]="validationClass"
-         type="text"
+         (focus)="onFocus($event)"
+         (keydown)="onKeyDown($event)"
+         (keyup)="onKeyUp($event)"
+         (change)="onChange($event)"
+         (blur)="onBlur($event)"
          class="w-100">
   <p-button icon="pi pi-folder-open" styleClass="p-button-outlined input-addon" (onClick)="openFileBrowser()"></p-button>
 </div>

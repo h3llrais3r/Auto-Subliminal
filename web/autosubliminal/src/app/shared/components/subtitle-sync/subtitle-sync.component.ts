@@ -108,8 +108,8 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
         this.syncInProgress = false;
         this.messageService.showErrorMessage('Unable to synchronize the subtitle!');
       }
-    })
-  };
+    });
+  }
 
   getPlayVideoUrl(): SafeResourceUrl {
     const [filePath, fileName] = splitPath(this.videoPath);
@@ -125,7 +125,7 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
       next: () => {
         this.close();
         this.subtitleSyncResult = null; // clear sync result (to not trigger the cleanup in onDestroy)
-        this.messageService.showInfoMessage('Synchronized subtitle saved.')
+        this.messageService.showInfoMessage('Synchronized subtitle saved.');
       },
       error: () => this.messageService.showErrorMessage('Unable to save the synchronized subtitle!')
     });

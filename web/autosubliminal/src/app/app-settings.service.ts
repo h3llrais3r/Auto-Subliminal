@@ -52,7 +52,7 @@ class AppSettings {
   }
 }
 
-export let appSettings = new AppSettings();
+export const appSettings = new AppSettings();
 
 @Injectable({
   providedIn: 'root'

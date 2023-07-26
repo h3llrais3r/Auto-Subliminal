@@ -9,8 +9,6 @@ export class ScrollService {
   scrollUp = new Subject<boolean>();
   scrollDown = new Subject<boolean>();
 
-  constructor() { }
-
   triggerScrollUp(): void {
     this.scrollUp.next(true);
   }

@@ -26,7 +26,7 @@ export class FileBrowserComponent implements OnInit {
   visibleChange = new EventEmitter<boolean>(); // Setup 2-way binding [(visible)]="..."
 
   @Input()
-  path = '' // no path by default, if specified, the file browser will start to browse on this path
+  path = ''; // no path by default, if specified, the file browser will start to browse on this path
 
   @Output()
   pathChange = new EventEmitter<string>(); // Setup 2-way binding [(path)]="..."

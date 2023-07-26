@@ -1,11 +1,14 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
-import { ControlContainer, ControlValueAccessor, UntypedFormControl } from '@angular/forms';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ControlContainer, ControlValueAccessor, FormControlDirective, UntypedFormControl } from '@angular/forms';
 
 // Abstract input component to be used as base class for all our input components!
 @Component({
   template: ''
 })
 export abstract class InputComponent implements ControlValueAccessor {
+
+  @ViewChild(FormControlDirective, { static: true }) // must be true to get it working!
+  formControlDirective: FormControlDirective;
 
   @Input()
   formControl: UntypedFormControl;
@@ -26,14 +29,19 @@ export abstract class InputComponent implements ControlValueAccessor {
   disabled = false;
 
   @Output()
-  // eslint-disable-next-line @angular-eslint/no-output-native
-  keyup: EventEmitter<any> = new EventEmitter(); // allows custom onKeyup functionality (keyup)="..." when component is created
+  focusEvent = new EventEmitter<any>(); // allows custom onFocus functionality (focusEvent)="..." when component is created
 
-  value: any; // value of input component
+  @Output()
+  keyDownEvent = new EventEmitter<any>(); // allows custom onKeyDown functionality (keyDownEvent)="..." when component is created
 
-  onChange: (_: any) => {};
+  @Output()
+  keyUpEvent = new EventEmitter<any>(); // allows custom onKeyUp functionality (keyUpEvent)="..." when component is created
 
-  onTouched: () => {};
+  @Output()
+  changeEvent = new EventEmitter<any>(); // allows custom onChange functionality (changeEvent)="..." when component is created
+
+  @Output()
+  blurEvent = new EventEmitter<any>(); // allows custom onBlur functionality (blurEvent)="..." when component is created
 
   constructor(protected controlContainer: ControlContainer, protected changeDetectorRef: ChangeDetectorRef) { }
 
@@ -55,27 +63,38 @@ export abstract class InputComponent implements ControlValueAccessor {
   }
 
   writeValue(obj: any): void {
-    this.value = obj;
-    this.changeDetectorRef.markForCheck();
+    this.formControlDirective.valueAccessor.writeValue(obj);
   }
 
   registerOnChange(fn: any): void {
-    this.onChange = fn;
+    this.formControlDirective.valueAccessor.registerOnChange(fn);
   }
 
   registerOnTouched(fn: any): void {
-    this.onTouched = fn;
+    this.formControlDirective.valueAccessor.registerOnTouched(fn);
   }
 
   setDisabledState?(isDisabled: boolean): void {
-    this.disabled = isDisabled;
+    this.formControlDirective.valueAccessor.setDisabledState?.(isDisabled);
   }
 
-  clearInput(): void {
-    this.control.setValue('');
+  onFocus(event: Event): void {
+    this.focusEvent.emit(event);
   }
 
-  onKeyup(event: KeyboardEvent): void {
-    this.keyup.emit(event);
+  onKeyDown(event: KeyboardEvent): void {
+    this.keyDownEvent.emit(event);
+  }
+
+  onKeyUp(event: KeyboardEvent): void {
+    this.keyUpEvent.emit(event);
+  }
+
+  onChange(event: Event): void {
+    this.changeEvent.emit(event);
+  }
+
+  onBlur(event: Event): void {
+    this.blurEvent.emit(event);
   }
 }

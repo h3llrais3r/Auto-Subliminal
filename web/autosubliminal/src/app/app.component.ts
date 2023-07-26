@@ -90,7 +90,6 @@ export class AppComponent {
     }
   }
 
-
   private checkRestart(): void {
     this.systemRestart = true;
     this.systemStarted = false;

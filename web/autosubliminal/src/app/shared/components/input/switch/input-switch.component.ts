@@ -1,5 +1,6 @@
-import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
-import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, forwardRef, Input } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { InputSwitchOnChangeEvent } from 'primeng/inputswitch';
 import { InputComponent } from '../input.component';
 
 @Component({
@@ -17,7 +18,7 @@ export class InputSwitchComponent extends InputComponent {
   @Input()
   label: string;
 
-  constructor(protected override controlContainer: ControlContainer, protected override changeDetectorRef: ChangeDetectorRef) {
-    super(controlContainer, changeDetectorRef);
+  onInputSwitchChange(event: InputSwitchOnChangeEvent): void {
+    this.changeEvent.emit(event);
   }
 }

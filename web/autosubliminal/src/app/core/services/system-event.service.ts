@@ -19,8 +19,6 @@ export class SystemEventService {
   wantedItemDelete = new Subject<WantedItem>();
   webSocketConnectionInterrupted = new Subject<boolean>();
 
-  constructor() { }
-
   notifySystemStart(): void {
     this.systemStart.next(true);
   }

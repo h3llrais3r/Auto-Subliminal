@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
-import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, forwardRef, Input } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { InputComponent } from '../input.component';
 
 @Component({
@@ -22,10 +22,6 @@ export class InputMultiFileBrowserComponent extends InputComponent {
   browserPath = '';
   browserIndex = -1;
   newValue: string;
-
-  constructor(protected override controlContainer: ControlContainer, protected override changeDetectorRef: ChangeDetectorRef) {
-    super(controlContainer, changeDetectorRef);
-  }
 
   get values(): string[] {
     return this.control ? this.control.value : [];

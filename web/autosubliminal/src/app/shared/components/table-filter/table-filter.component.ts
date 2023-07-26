@@ -20,8 +20,6 @@ export class TableFilterComponent implements OnInit {
 
   filterValue = '';
 
-  constructor() { }
-
   ngOnInit(): void {
     // Restore global filter when used with table state functionality
     if (this.tableStateKey) {

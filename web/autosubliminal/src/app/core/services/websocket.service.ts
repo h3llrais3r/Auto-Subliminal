@@ -67,8 +67,8 @@ export class WebSocketService {
         } else {
           console.error(`Invalid websocket server message type: ${serverMessage.type}`);
         }
-      },
-      error: () => { } // ignore, as it's already handled by closeObserver
+      }
+      //error: () => { } // ignore, as it's already handled by closeObserver
     });
   }
 

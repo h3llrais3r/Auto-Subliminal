@@ -9,6 +9,4 @@ export class LoadingComponent {
 
   @Input()
   visible = false;
-
-  constructor() { }
 }

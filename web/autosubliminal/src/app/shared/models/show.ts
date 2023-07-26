@@ -63,7 +63,7 @@ export class Show {
   }
 
   getShowEpisodeFilePath(episodeTvdbId: number, fileType: FileType, fileName?: string): string | null {
-    let episodeFile = this.getShowEpisodeFile(episodeTvdbId, fileType, fileName);
+    const episodeFile = this.getShowEpisodeFile(episodeTvdbId, fileType, fileName);
     return episodeFile ? joinPaths(episodeFile.filePath, episodeFile.fileName) : null;
   }
 }

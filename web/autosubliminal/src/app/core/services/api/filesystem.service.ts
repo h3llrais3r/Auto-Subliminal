@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { appSettings } from '../../../app-settings.service';
@@ -11,10 +10,6 @@ import { ApiServiceTemplate } from './api-service-template';
 export class FileSystemService extends ApiServiceTemplate {
 
   private readonly URL = `${appSettings.webRoot}/api/filesystem`;
-
-  constructor(private httpClient: HttpClient) {
-    super(httpClient);
-  }
 
   browse(path = '', includeFiles = true, includeFolders = true): Observable<FileBrowserResult> {
     const url = `${this.URL}?path=${path}&includeFiles=${includeFiles}&includeFolders=${includeFolders}`;

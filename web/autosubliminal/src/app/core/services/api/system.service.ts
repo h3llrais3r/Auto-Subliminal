@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -14,10 +13,6 @@ import { ApiServiceTemplate } from './api-service-template';
 export class SystemService extends ApiServiceTemplate {
 
   private readonly URL = `${appSettings.webRoot}/api/system`;
-
-  constructor(private httpClient: HttpClient) {
-    super(httpClient);
-  }
 
   isAlive(): Observable<boolean> {
     return this.httpClient.get<Alive>(`${this.URL}/alive`, this.options)
