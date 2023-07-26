@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, HostListener, Input, OnInit } from '@angular/core';
+import { AfterContentChecked, Component, HostListener, Input, OnInit } from '@angular/core';
 import { ScrollService } from '../../../core/services/scroll.service';
 
 @Component({
@@ -6,7 +6,7 @@ import { ScrollService } from '../../../core/services/scroll.service';
   templateUrl: './scroll.component.html',
   styleUrls: ['./scroll.component.scss']
 })
-export class ScrollComponent implements OnInit, AfterViewChecked {
+export class ScrollComponent implements OnInit, AfterContentChecked {
 
   @Input()
   target: HTMLElement; // optional target html element, if specified scroll is related to the element
@@ -30,7 +30,7 @@ export class ScrollComponent implements OnInit, AfterViewChecked {
     this.maxScrollHeight = this.getMaxScrollHeight();
   }
 
-  ngAfterViewChecked(): void {
+  ngAfterContentChecked(): void {
     // Make sure to update the scrollheight after the page/component is loaded
     this.scrollHeight = this.getScrollHeight();
     this.maxScrollHeight = this.getMaxScrollHeight();

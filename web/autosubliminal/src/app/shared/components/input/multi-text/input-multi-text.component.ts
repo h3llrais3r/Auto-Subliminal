@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlContainer, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
+import { DropdownChangeEvent } from 'primeng/dropdown';
 import { InputComponent } from '../input.component';
 
 @Component({
@@ -35,7 +36,7 @@ export class InputMultiTextComponent extends InputComponent {
     return index;
   }
 
-  onValueChange(event: { event: MouseEvent, value: string }, originalValue: string): void { // event model exposed by p-dropdown onchange
+  onValueChange(event: DropdownChangeEvent, originalValue: string): void { // event model exposed by p-dropdown onchange
     // Replace original value with change value
     const changedValue = event.value;
     if (changedValue) {
@@ -56,7 +57,7 @@ export class InputMultiTextComponent extends InputComponent {
     this.control.setValue(this.values.filter((val) => val !== value));
   }
 
-  onNewValueChange(event: { event: MouseEvent, value: string }): void { // event model exposed by p-dropdown onchange
+  onNewValueChange(event: DropdownChangeEvent): void { // event model exposed by p-dropdown onchange
     if (event.value) {
       this.addButtonDisabled = false;
     } else {

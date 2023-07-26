@@ -1,5 +1,4 @@
 @import '../../../../scss/variables';
-@import '../../../../scss/mixins/flexbox';
 
 ::ng-deep .dialog-file-browser {
   width: 50rem;
@@ -21,9 +20,6 @@
 }
 
 .col-type {
-  @include flexbox;
-  @include flex-grow(0 !important); // disable auto grow of primeng table
-  @include flex-basis(auto !important); // disable auto grow primeng table
   width: 50px;
 }
 
