@@ -17,19 +17,19 @@ export class WebSocketService {
 
   private readonly RECONNECT_INTERVAL = 2000;
 
-  private systemWebsocket: WebSocketSubject<SystemWebSocketMessage>;
+  private systemWebsocket$: WebSocketSubject<SystemWebSocketMessage>;
 
   constructor(private messageService: MessageService, private systemEventService: SystemEventService) {
     this.connect();
   }
 
   public sendMessageThroughSystemWebSocket(systemWebSocketClientMessage: SystemWebSocketClientMessage): void {
-    this.systemWebsocket.next(systemWebSocketClientMessage);
+    this.systemWebsocket$.next(systemWebSocketClientMessage);
   }
 
   private connect(): void {
-    this.systemWebsocket = this.createSystemWebSocket();
-    this.systemWebsocket.subscribe({
+    this.systemWebsocket$ = this.createSystemWebSocket();
+    this.systemWebsocket$.subscribe({
       next: (serverMessage) => {
         if (serverMessage.type === 'EVENT') {
           const serverEvent = serverMessage as SystemWebSocketServerEvent;
@@ -73,7 +73,7 @@ export class WebSocketService {
   }
 
   private reconnect(): void {
-    interval(this.RECONNECT_INTERVAL).pipe(takeWhile(() => !this.systemWebsocket)).subscribe({
+    interval(this.RECONNECT_INTERVAL).pipe(takeWhile(() => !this.systemWebsocket$)).subscribe({
       next: () => {
         console.log('Reconnecting to websocket...');
         this.connect();
@@ -98,7 +98,7 @@ export class WebSocketService {
         next: () => {
           console.log('Websocket connection failed');
           this.systemEventService.notifyWebSocketConnectionInterrupted(true); // connection interrupted
-          this.systemWebsocket = null;
+          this.systemWebsocket$ = null;
           this.reconnect();
         }
       }

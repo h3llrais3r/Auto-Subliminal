@@ -34,7 +34,7 @@ export class LibraryMovieOverviewComponent implements OnInit, OnDestroy {
     // Load overview
     this.loadOverview();
     // Subscribe on scanLibrary finish events to reload the overview
-    this.scanLibrarySubscription = this.systemEventService.schedulerFinish.subscribe({
+    this.scanLibrarySubscription = this.systemEventService.schedulerFinish$.subscribe({
       next: (scheduler) => {
         if (scheduler.name === appSettings.scanLibrary) {
           this.loadOverview();

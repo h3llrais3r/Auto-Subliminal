@@ -43,7 +43,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
     // Init values
     this.initValues();
     // Subscribe on scanDisk started events
-    this.scanDiskStartedSubscription = this.systemEventService.schedulerStart.subscribe({
+    this.scanDiskStartedSubscription = this.systemEventService.schedulerStart$.subscribe({
       next: (scheduler) => {
         if (scheduler.name === appSettings.scanDisk) {
           this.initScanDiskCountdown(scheduler);
@@ -51,7 +51,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
       }
     });
     // Subscribe on scanDisk finished events
-    this.scanDiskFinishedSubscription = this.systemEventService.schedulerFinish.subscribe({
+    this.scanDiskFinishedSubscription = this.systemEventService.schedulerFinish$.subscribe({
       next: (scheduler) => {
         if (scheduler.name === appSettings.scanDisk) {
           this.initScanDiskCountdown(scheduler);
@@ -59,7 +59,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
       }
     });
     // Subscribe on checkSub started events
-    this.checkSubStartedSubscription = this.systemEventService.schedulerStart.subscribe({
+    this.checkSubStartedSubscription = this.systemEventService.schedulerStart$.subscribe({
       next: (scheduler) => {
         if (scheduler.name === appSettings.checkSub) {
           this.initCheckSubCountdown(scheduler);
@@ -67,7 +67,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
       }
     });
     // Subscribe on checkSub finished events
-    this.checkSubFinishedSubscription = this.systemEventService.schedulerFinish.subscribe({
+    this.checkSubFinishedSubscription = this.systemEventService.schedulerFinish$.subscribe({
       next: (scheduler) => {
         if (scheduler.name === appSettings.checkSub) {
           this.initCheckSubCountdown(scheduler);
@@ -75,7 +75,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
       }
     });
     // Subscribe on websocket events
-    this.webSocketConnectionInterruptedSubscription = this.systemEventService.webSocketConnectionInterrupted.subscribe({
+    this.webSocketConnectionInterruptedSubscription = this.systemEventService.webSocketConnectionInterrupted$.subscribe({
       next: (interrupted) => {
         if (interrupted) {
           this.scanDiskCountdown.pause();

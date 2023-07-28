@@ -22,13 +22,13 @@ export class LibraryScanningComponent implements OnInit {
       }
     });
     // Subscribe on scheduler finish events to check if library scanner is started
-    this.systemEventService.schedulerStart.subscribe({
+    this.systemEventService.schedulerStart$.subscribe({
       next: (scheduler) => {
         this.scanningInProgress = scheduler.name === appSettings.scanLibrary ? true : this.scanningInProgress;
       }
     });
     // Subscribe on scheduler finish events to check if library scanner is finished
-    this.systemEventService.schedulerFinish.subscribe({
+    this.systemEventService.schedulerFinish$.subscribe({
       next: (scheduler) => {
         this.scanningInProgress = scheduler.name === appSettings.scanLibrary ? false : this.scanningInProgress;
       }

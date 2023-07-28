@@ -32,22 +32,22 @@ export class AppComponent {
     // Check if system is started (this is the case when the settings are loaded)
     this.systemStarted = this.appSettingsLoaded;
     // Subscribe on system start events
-    this.systemEventService.systemStart.subscribe({
+    this.systemEventService.systemStart$.subscribe({
       next: () => this.checkStart()
     });
     // Subscribe on system restart events
-    this.systemEventService.systemRestart.subscribe({
+    this.systemEventService.systemRestart$.subscribe({
       next: () => {
         this.messageService.clearMessages(); // Clear messages
         this.checkRestart();
       }
     });
     // Subscribe on system shutdown events
-    this.systemEventService.systemShutdown.subscribe({
+    this.systemEventService.systemShutdown$.subscribe({
       next: () => this.checkShutdown()
     });
     // Subscribe on websocket connection interrupted events
-    this.systemEventService.webSocketConnectionInterrupted.subscribe({
+    this.systemEventService.webSocketConnectionInterrupted$.subscribe({
       next: (interrupted) => this.webSocketConnectionInterrupted = interrupted
     });
   }

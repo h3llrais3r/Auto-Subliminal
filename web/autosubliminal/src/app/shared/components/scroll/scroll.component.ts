@@ -16,11 +16,11 @@ export class ScrollComponent implements OnInit, AfterContentChecked {
 
   constructor(private scrollService: ScrollService) {
     // Subscribe on scrollUp events
-    this.scrollService.scrollUp.subscribe({
+    this.scrollService.scrollUp$.subscribe({
       next: () => this.scrollToTop()
     });
     // Subscribe on scrollDown events
-    this.scrollService.scrollDown.subscribe({
+    this.scrollService.scrollDown$.subscribe({
       next: () => this.scrollToBottom()
     });
   }

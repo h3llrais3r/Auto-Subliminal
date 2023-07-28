@@ -6,14 +6,14 @@ import { Subject } from 'rxjs';
 })
 export class ScrollService {
 
-  scrollUp = new Subject<boolean>();
-  scrollDown = new Subject<boolean>();
+  scrollUp$ = new Subject<boolean>();
+  scrollDown$ = new Subject<boolean>();
 
   triggerScrollUp(): void {
-    this.scrollUp.next(true);
+    this.scrollUp$.next(true);
   }
 
   triggerScrollDown(): void {
-    this.scrollDown.next(true);
+    this.scrollDown$.next(true);
   }
 }

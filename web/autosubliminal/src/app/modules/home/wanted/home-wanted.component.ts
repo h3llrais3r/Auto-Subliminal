@@ -58,7 +58,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
     this.buildSelectItems();
     this.loadWantedItems();
     // Subscribe on scanDisk finish events to reload the overview
-    this.scanDiskSubscription = this.systemEventService.schedulerFinish.subscribe({
+    this.scanDiskSubscription = this.systemEventService.schedulerFinish$.subscribe({
       next: (scheduler) => {
         if (scheduler.name === appSettings.scanDisk) {
           this.loadWantedItems();
@@ -66,7 +66,7 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
       }
     });
     // Subscribe on checkSub finish events to reload the overview
-    this.checkSubSubscription = this.systemEventService.schedulerFinish.subscribe({
+    this.checkSubSubscription = this.systemEventService.schedulerFinish$.subscribe({
       next: (scheduler) => {
         if (scheduler.name === appSettings.checkSub) {
           this.loadWantedItems();
@@ -74,13 +74,13 @@ export class HomeWantedComponent implements OnInit, OnDestroy {
       }
     });
     // Subscribe on wantedItem update events to update the overview
-    this.wantedItemUpdateSubscription = this.systemEventService.wantedItemUpdate.subscribe({
+    this.wantedItemUpdateSubscription = this.systemEventService.wantedItemUpdate$.subscribe({
       next: (wantedItem) => {
         this.updateWantedItemInList(wantedItem);
       }
     });
     // Subscribe on wantedItem delete events to update the overview
-    this.wantedItemDeleteSubscription = this.systemEventService.wantedItemDelete.subscribe({
+    this.wantedItemDeleteSubscription = this.systemEventService.wantedItemDelete$.subscribe({
       next: (wantedItem) => {
         this.deleteWantedItemInList(wantedItem);
       }

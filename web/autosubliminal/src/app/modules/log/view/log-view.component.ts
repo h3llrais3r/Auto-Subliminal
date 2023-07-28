@@ -26,7 +26,7 @@ export class LogViewComponent implements OnInit {
   tailButtonLabel = 'Start tailing';
   tailButtonIcon = 'pi pi-play';
 
-  private logWebsocket: WebSocketSubject<string>;
+  private logWebsocket$: WebSocketSubject<string>;
   private logMessages: string[] = [];
 
   constructor(private logService: LogService, private messageService: MessageService, private scrollService: ScrollService) { }
@@ -112,8 +112,8 @@ export class LogViewComponent implements OnInit {
   private handleLogTailing(): void {
     if (this.tailing && !this.tailingDisabled) {
       // Subscribe on new logs once loaded (only for current logfile -> logNum = 0)
-      this.logWebsocket = this.createLogWebSocket(); // Need to create a new socket after unsubscribe
-      this.logWebsocket.subscribe({
+      this.logWebsocket$ = this.createLogWebSocket(); // Need to create a new socket after unsubscribe
+      this.logWebsocket$.subscribe({
         next: (logMessage) => {
           if (appSettings.logReversed) {
             // Append to the top
@@ -129,8 +129,8 @@ export class LogViewComponent implements OnInit {
       console.log('Log tailing enabled');
     } else {
       // Unsubscribe when not tailing
-      if (this.logWebsocket) {
-        this.logWebsocket.unsubscribe();
+      if (this.logWebsocket$) {
+        this.logWebsocket$.unsubscribe();
       }
       console.log('Log tailing disabled');
     }
