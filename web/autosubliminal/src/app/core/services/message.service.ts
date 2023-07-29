@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Message, MessageService as PrimeNgMessageService } from 'primeng/api';
 import { MessageSeverity } from '../../shared/models/message';
 
@@ -7,7 +7,7 @@ import { MessageSeverity } from '../../shared/models/message';
 })
 export class MessageService {
 
-  constructor(private primeNgMessageService: PrimeNgMessageService) { }
+  private primeNgMessageService = inject(PrimeNgMessageService);
 
   public showSuccessMessage(messageText: string, sticky = false): void {
     this.showMessage(messageText, MessageSeverity.SUCCESS, sticky);

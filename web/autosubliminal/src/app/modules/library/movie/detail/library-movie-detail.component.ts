@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
@@ -35,20 +36,20 @@ export class LibraryMovieDetailComponent implements OnInit {
   movieVideoFilePath: string;
   movieSubtitleFilePath: string;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private domSanitizer: DomSanitizer,
-    private movieService: MovieService,
-    private artworkService: ArtworkService,
-    private settingsService: SettingsService,
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService) { }
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private domSanitizer = inject(DomSanitizer);
+  private movieService = inject(MovieService);
+  private artworkService = inject(ArtworkService);
+  private settingsService = inject(SettingsService);
+  private messageService = inject(MessageService);
+  private confirmationService = inject(ConfirmationService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.manualSubSyncEnabled = appSettings.manualSubSync;
     this.libraryEditModeEnabled = appSettings.libraryEditMode;
-    this.route.paramMap.subscribe({
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (paramMap) => {
         this.loading = true;
         const imdbId = paramMap.get('imdbId');
@@ -83,7 +84,7 @@ export class LibraryMovieDetailComponent implements OnInit {
 
   refreshMovieDetails(): void {
     this.refreshInProgress = true;
-    this.movieService.refreshMovieDetails(this.movie.imdbId).subscribe({
+    this.movieService.refreshMovieDetails(this.movie.imdbId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.getMovieDetails(this.movie.imdbId);
         this.refreshInProgress = false;
@@ -96,7 +97,7 @@ export class LibraryMovieDetailComponent implements OnInit {
     this.confirmationService.confirm({
       message: `Are you sure that you want to delete <b>${this.movie.name}</b>?`,
       accept: () => {
-        this.movieService.deleteMovie(this.movie.imdbId).subscribe({
+        this.movieService.deleteMovie(this.movie.imdbId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: () => {
             this.router.navigateByUrl('/library/movie');
           },
@@ -110,7 +111,7 @@ export class LibraryMovieDetailComponent implements OnInit {
     this.confirmationService.confirm({
       message: `Are you sure that you want to delete the subtitle<br><b>${fileName}</b>?`,
       accept: () => {
-        this.movieService.deleteMovieSubtitle(this.movie.imdbId, joinPaths(filePath, fileName)).subscribe({
+        this.movieService.deleteMovieSubtitle(this.movie.imdbId, joinPaths(filePath, fileName)).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: () => {
             // Reload details
             this.getMovieDetails(this.movie.imdbId);
@@ -124,7 +125,7 @@ export class LibraryMovieDetailComponent implements OnInit {
 
   addMoviePathToVideoPaths(): void {
     const videoPath = { videoPath: this.movie.path };
-    this.settingsService.updateGeneralSetting('videoPaths', videoPath).subscribe({
+    this.settingsService.updateGeneralSetting('videoPaths', videoPath).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.messageService.showSuccessMessage(`Path ${this.movie.path} added to the video paths.`);
         this.getMovieDetails(this.movie.imdbId);
@@ -159,7 +160,7 @@ export class LibraryMovieDetailComponent implements OnInit {
   }
 
   saveHardcodedSubtitles(videoSubtitles: VideoSubtitles): void {
-    this.movieService.saveMovieHardcodedSubtitles(this.movie.imdbId, videoSubtitles).subscribe({
+    this.movieService.saveMovieHardcodedSubtitles(this.movie.imdbId, videoSubtitles).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.closeVideoSubtitlesDialog();
         this.getMovieDetails(this.movie.imdbId);
@@ -169,7 +170,7 @@ export class LibraryMovieDetailComponent implements OnInit {
   }
 
   private getMovieDetails(imdbId: string): void {
-    this.movieService.getMovieDetails(imdbId).subscribe({
+    this.movieService.getMovieDetails(imdbId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (movie) => {
         this.movie = movie;
         this.loading = false;

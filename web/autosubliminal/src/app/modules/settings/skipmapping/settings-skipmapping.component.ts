@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { AppSettingsService } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
@@ -17,14 +18,14 @@ export class SettingsSkipmappingComponent implements OnInit {
 
   saveAttempt = false;
 
-  constructor(
-    private fb: UntypedFormBuilder,
-    private settingsService: SettingsService,
-    private appSettingsService: AppSettingsService,
-    private messageService: MessageService) { }
+  private fb = inject(UntypedFormBuilder);
+  private settingsService = inject(SettingsService);
+  private appSettingsService = inject(AppSettingsService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
-    this.settingsService.getSkipMappingSettings().subscribe({
+    this.settingsService.getSkipMappingSettings().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (skipMappingSettings) => {
         this.buildForm(skipMappingSettings);
       },
@@ -35,7 +36,7 @@ export class SettingsSkipmappingComponent implements OnInit {
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateSkipMappingSettings(this.getSkipMappingSettings()).subscribe({
+      this.settingsService.updateSkipMappingSettings(this.getSkipMappingSettings()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
           this.messageService.showSuccessMessage('Skipmapping settings saved.');
           this.appSettingsService.reload(); // reload app settings

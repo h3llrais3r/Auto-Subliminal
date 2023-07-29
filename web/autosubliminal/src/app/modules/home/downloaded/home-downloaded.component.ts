@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SelectItem, SortEvent } from 'primeng/api';
 import { ItemService } from '../../../core/services/api/item.service';
 import { MessageService } from '../../../core/services/message.service';
@@ -23,11 +24,21 @@ export class HomeDownloadedComponent implements OnInit {
   globalFilterFields = ['name', 'season', 'episode', 'source', 'quality', 'codec', 'releaseGroup', 'languages', 'timestamp'];
   tableStateKey = 'autosubliminal-home-downloaded-table';
 
-  constructor(private itemService: ItemService, private messageService: MessageService) { }
+  private itemService = inject(ItemService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.buildSelectItems();
     this.loadDownloadedItems();
+  }
+
+  sort(event: SortEvent): void {
+    naturalSort(event);
+  }
+
+  displayUpperCase(value: any): string {
+    return displayValue(value, 'N/A', true);
   }
 
   private buildSelectItems(): void {
@@ -39,7 +50,7 @@ export class HomeDownloadedComponent implements OnInit {
 
   private loadDownloadedItems(): void {
     this.loading = true;
-    this.itemService.getDownloadedItems().subscribe({
+    this.itemService.getDownloadedItems().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (downloadedItems) => {
         this.downloadedItems = downloadedItems;
         this.loading = false;
@@ -49,13 +60,5 @@ export class HomeDownloadedComponent implements OnInit {
         this.messageService.showErrorMessage('Unable to get the downloaded items');
       }
     });
-  }
-
-  sort(event: SortEvent): void {
-    naturalSort(event);
-  }
-
-  displayUpperCase(value: any): string {
-    return displayValue(value, 'N/A', true);
   }
 }

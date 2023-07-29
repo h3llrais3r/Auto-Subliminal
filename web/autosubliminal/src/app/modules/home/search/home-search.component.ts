@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { appSettings } from '../../../app-settings.service';
 import { ItemService } from '../../../core/services/api/item.service';
-import { SubtitleService } from '../../../core/services/api/subtitle.service';
 import { MessageService } from '../../../core/services/message.service';
 import { WantedItem } from '../../../shared/models/item';
 import { EpisodeScores, MovieScores } from '../../../shared/models/score';
@@ -37,21 +37,20 @@ export class HomeSearchComponent implements OnInit, OnDestroy {
   matches: string[];
   score: number;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private domSanitizer: DomSanitizer,
-    private itemService: ItemService,
-    private subtitleService: SubtitleService,
-    private messageService: MessageService) { }
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private domSanitizer = inject(DomSanitizer);
+  private itemService = inject(ItemService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.manualSubSyncEnabled = appSettings.manualSubSync;
-    this.route.queryParamMap.subscribe({
+    this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (queryParamMap) => {
         const wantedItemId = toNumber(queryParamMap.get('wantedItemId'));
         this.language = queryParamMap.get('language');
-        this.itemService.getWantedItem(wantedItemId).subscribe({
+        this.itemService.getWantedItem(wantedItemId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: (wantedItem) => {
             this.wantedItem = wantedItem;
             this.scores = this.wantedItem.isEpisode ? appSettings.episodeScores : appSettings.movieScores;
@@ -67,14 +66,14 @@ export class HomeSearchComponent implements OnInit, OnDestroy {
     // Make sure the save subtitle is removed if flow is not properly handled by the user
     if (this.savedSubtitle) {
       // No specific handling in subscribe as we want to do it in the background
-      this.itemService.deleteWantedItemSubtitle(this.wantedItem.id).subscribe();
+      this.itemService.deleteWantedItemSubtitle(this.wantedItem.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
   }
 
   searchSubtitles(): void {
     this.searchInProgress = true;
     this.subtitles = []; // reset subtitles
-    this.itemService.searchWantedItemSubtitles(this.wantedItem.id, this.language).subscribe({
+    this.itemService.searchWantedItemSubtitles(this.wantedItem.id, this.language).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (subtitles) => {
         this.subtitles = subtitles;
         this.searchInProgress = false;
@@ -141,7 +140,7 @@ export class HomeSearchComponent implements OnInit, OnDestroy {
   }
 
   saveSubtitle(subtitle: Subtitle): void {
-    this.itemService.saveWantedItemSubtitle(this.wantedItem.id, subtitle.subtitleIndex).subscribe({
+    this.itemService.saveWantedItemSubtitle(this.wantedItem.id, subtitle.subtitleIndex).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (savedSubtitle) => {
         this.savedSubtitle = savedSubtitle;
         this.messageService.showInfoMessage('Subtitles saved.');
@@ -151,7 +150,7 @@ export class HomeSearchComponent implements OnInit, OnDestroy {
   }
 
   deleteSubtitle(): void {
-    this.itemService.deleteWantedItemSubtitle(this.wantedItem.id).subscribe({
+    this.itemService.deleteWantedItemSubtitle(this.wantedItem.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.savedSubtitle = null;
         this.messageService.showInfoMessage('Subtitles deleted.');
@@ -172,7 +171,7 @@ export class HomeSearchComponent implements OnInit, OnDestroy {
 
   postProcess(subtitle: Subtitle): void {
     this.postProcessInProgress = true;
-    this.itemService.postProcessWantedItem(this.wantedItem.id, subtitle.subtitleIndex).subscribe({
+    this.itemService.postProcessWantedItem(this.wantedItem.id, subtitle.subtitleIndex).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.savedSubtitle = null; // clear saved subtile (to not trigger the cleanup in onDestroy)
         this.postProcessInProgress = false;

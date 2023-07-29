@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { StorageService } from './storage.service';
 
@@ -9,7 +9,9 @@ export class ThemeService {
 
   currentTheme$ = new BehaviorSubject<string>('bootstrap4-dark-blue'); // default theme (as set in index.html)
 
-  constructor(private storageService: StorageService) {
+  private storageService = inject(StorageService);
+
+  constructor() {
     // Set the current theme from storage or use default theme
     const theme = this.storageService.getTheme() || this.currentTheme$.getValue();
     if (theme !== this.currentTheme$.getValue()) {

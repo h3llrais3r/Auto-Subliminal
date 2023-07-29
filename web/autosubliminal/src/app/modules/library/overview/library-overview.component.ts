@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { forkJoin, Subscription } from 'rxjs';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { forkJoin } from 'rxjs';
 import { appSettings } from '../../../app-settings.service';
 import { MovieService } from '../../../core/services/api/movie.service';
 import { ShowService } from '../../../core/services/api/show.service';
@@ -13,25 +14,23 @@ import { ShowsOverview } from '../../../shared/models/show';
   templateUrl: './library-overview.component.html',
   styleUrls: ['./library-overview.component.scss']
 })
-export class LibraryOverviewComponent implements OnInit, OnDestroy {
+export class LibraryOverviewComponent implements OnInit {
 
   loading = false;
   showsOverview: ShowsOverview;
   moviesOverview: MoviesOverview;
 
-  private scanLibrarySubscription: Subscription;
-
-  constructor(
-    private systemEventService: SystemEventService,
-    private showService: ShowService,
-    private movieService: MovieService,
-    private messageService: MessageService) { }
+  private systemEventService = inject(SystemEventService);
+  private showService = inject(ShowService);
+  private movieService = inject(MovieService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     // Load overview
     this.loadOverview();
     // Subscribe on scanLibrary finish events to reload the overview
-    this.scanLibrarySubscription = this.systemEventService.schedulerFinish$.subscribe({
+    this.systemEventService.schedulerFinish$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (scheduler) => {
         if (scheduler.name === appSettings.scanLibrary) {
           this.loadOverview();
@@ -40,14 +39,10 @@ export class LibraryOverviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.scanLibrarySubscription.unsubscribe();
-  }
-
   private loadOverview(): void {
     this.loading = true;
     // Load shows and movies overview
-    forkJoin([this.showService.getShowsOverview(), this.movieService.getMoviesOverview()]).subscribe({
+    forkJoin([this.showService.getShowsOverview(), this.movieService.getMoviesOverview()]).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: ([showsOverview, moviesOverview]) => {
         this.showsOverview = showsOverview;
         this.moviesOverview = moviesOverview;

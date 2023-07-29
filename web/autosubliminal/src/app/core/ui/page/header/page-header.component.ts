@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { appSettings } from '../../../../app-settings.service';
@@ -14,26 +15,26 @@ import { WebSocketService } from '../../../services/websocket.service';
 })
 export class PageHeaderComponent implements OnInit {
 
-  private readonly APP_URL = 'https://github.com/h3llrais3r/Auto-Subliminal';
-
   menuItems: MenuItem[];
   currentTheme: string;
   systemUpdateAvailable = false;
 
-  constructor(
-    private router: Router,
-    private webSocketService: WebSocketService,
-    private systemEventService: SystemEventService,
-    private themeService: ThemeService) { }
+  private readonly APP_URL = 'https://github.com/h3llrais3r/Auto-Subliminal';
+
+  private router: Router;
+  private webSocketService = inject(WebSocketService);
+  private systemEventService = inject(SystemEventService);
+  private themeService = inject(ThemeService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
-    this.themeService.currentTheme$.subscribe({
+    this.themeService.currentTheme$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (theme) => {
         this.currentTheme = theme;
         this.buildMenu();
       }
     });
-    this.systemEventService.systemUpdate$.subscribe({
+    this.systemEventService.systemUpdate$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (systemUpdate) => {
         this.systemUpdateAvailable = systemUpdate.available;
         this.buildMenu();

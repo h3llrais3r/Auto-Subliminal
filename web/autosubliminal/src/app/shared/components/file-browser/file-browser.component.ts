@@ -1,6 +1,7 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { Component, DestroyRef, ElementRef, EventEmitter, inject, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormControl } from '@angular/forms';
-import { of } from 'rxjs';
+import { debounceTime, of } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
 import { appSettings } from '../../../app-settings.service';
 import { FileSystemService } from '../../../core/services/api/filesystem.service';
@@ -13,8 +14,6 @@ import { joinPaths, splitPathInChunks } from '../../utils/path-utils';
   styleUrls: ['./file-browser.component.scss']
 })
 export class FileBrowserComponent implements OnInit {
-
-  private readonly FOLDER_UP = '...';
 
   @ViewChildren('rowElement')
   rowElements: QueryList<ElementRef<HTMLTableRowElement>>;
@@ -39,12 +38,15 @@ export class FileBrowserComponent implements OnInit {
   //selectedFilePath: string;
   selectedFilePath: UntypedFormControl;
 
+  private readonly FOLDER_UP = '...';
+
   private fileBrowserResult: FileBrowserResult;
   private fileBrowserPath: string;
   private includeFiles = true;
   private includeFolders = true;
 
-  constructor(private fileSystemService: FileSystemService) { }
+  private fileSystemService = inject(FileSystemService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     // In folder mode we don't want to select files, so do not include them
@@ -52,16 +54,20 @@ export class FileBrowserComponent implements OnInit {
       this.includeFiles = false;
     }
     // Create and subscribe for selected file path changes
+    // Use debounceTime to prevent too much calls to backend while typing
     // Use mergeMap to handle fast changes by typing in text field
     // Proper error catching to make sure the subscribe does not break on error (f.e. when invalid path is typed)
     this.selectedFilePath = new UntypedFormControl(this.path);
-    this.selectedFilePath.valueChanges
-      .pipe(mergeMap((path) => this.fileSystemService.browse(path, this.includeFiles, this.includeFolders).pipe(catchError(() => of(null)))))
-      .subscribe({
-        next: (result) => this.loadFileBrowserResult(result)
-      });
+    this.selectedFilePath.valueChanges.pipe(
+      debounceTime(500),
+      mergeMap((path) => this.fileSystemService.browse(path, this.includeFiles, this.includeFolders)),
+      catchError(() => of(null)),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (result) => this.loadFileBrowserResult(result)
+    });
     // Trigger initial browse
-    this.fileSystemService.browse(this.path, this.includeFiles, this.includeFolders).subscribe({
+    this.fileSystemService.browse(this.path, this.includeFiles, this.includeFolders).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result) => this.loadFileBrowserResult(result)
     });
   }

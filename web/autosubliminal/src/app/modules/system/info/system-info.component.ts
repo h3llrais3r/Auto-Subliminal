@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SystemService } from '../../../core/services/api/system.service';
 import { MessageService } from '../../../core/services/message.service';
 import { SystemInfo, SystemInstallType } from '../../../shared/models/systeminfo';
@@ -11,9 +12,6 @@ import { SystemInfo, SystemInstallType } from '../../../shared/models/systeminfo
 })
 export class SystemInfoComponent implements OnInit {
 
-  private readonly NOT_AVAILABLE = 'N/A';
-  private readonly CHANGELOG_URL = 'https://raw.githubusercontent.com/h3llrais3r/Auto-Subliminal/master/changelog.html';
-
   readonly SOURCE_URL = 'https://github.com/h3llrais3r/Auto-Subliminal';
   readonly ISSUES_URL = `${this.SOURCE_URL}/issues`;
   readonly WIKI_URL = `${this.SOURCE_URL}/wiki`;
@@ -24,11 +22,17 @@ export class SystemInfoComponent implements OnInit {
   versionUrl: string;
   gitInstall = false;
 
-  constructor(private httpClient: HttpClient, private systemService: SystemService, private messageService: MessageService) { }
+  private readonly NOT_AVAILABLE = 'N/A';
+  private readonly CHANGELOG_URL = 'https://raw.githubusercontent.com/h3llrais3r/Auto-Subliminal/master/changelog.html';
+
+  private httpClient = inject(HttpClient);
+  private systemService = inject(SystemService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     // Get system info
-    this.systemService.getSystemInfo().subscribe({
+    this.systemService.getSystemInfo().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (systemInfo) => {
         this.systemInfo = systemInfo;
         if (this.systemInfo.installType === SystemInstallType.SOURCE) {
@@ -45,7 +49,7 @@ export class SystemInfoComponent implements OnInit {
     });
 
     // Get changelog
-    this.httpClient.get(this.CHANGELOG_URL, { responseType: 'text' }).subscribe({
+    this.httpClient.get(this.CHANGELOG_URL, { responseType: 'text' }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (changelog) => {
         this.changelog = this.parseChangelog(changelog);
       },

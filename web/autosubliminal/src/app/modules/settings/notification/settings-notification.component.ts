@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { AppSettingsService } from '../../../app-settings.service';
@@ -24,15 +25,15 @@ export class SettingsNotificationComponent implements OnInit {
 
   saveAttempt = false;
 
-  constructor(
-    private fb: UntypedFormBuilder,
-    private settingsService: SettingsService,
-    private appSettingsService: AppSettingsService,
-    private messageService: MessageService) { }
+  private fb = inject(UntypedFormBuilder);
+  private settingsService = inject(SettingsService);
+  private appSettingsService = inject(AppSettingsService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.buildSelectItems();
-    this.settingsService.getNotificationSettings().subscribe({
+    this.settingsService.getNotificationSettings().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (notificationSettings) => {
         this.buildForm(notificationSettings);
       },
@@ -43,7 +44,7 @@ export class SettingsNotificationComponent implements OnInit {
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateNotificationSettings(this.getNotificationSettings()).subscribe({
+      this.settingsService.updateNotificationSettings(this.getNotificationSettings()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
           this.messageService.showSuccessMessage('Notification settings saved.');
           this.appSettingsService.reload(); // reload app settings
@@ -56,14 +57,14 @@ export class SettingsNotificationComponent implements OnInit {
   }
 
   test(notifierName: string): void {
-    this.settingsService.testNotifier(notifierName).subscribe({
+    this.settingsService.testNotifier(notifierName).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => this.messageService.showSuccessMessage(`Test ${notifierName} notification sent.`),
       error: () => this.messageService.showErrorMessage(`Test ${notifierName} notification failed!`)
     });
   }
 
   registerTwitter(): void {
-    this.settingsService.registerTwitter().subscribe({
+    this.settingsService.registerTwitter().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (twitterRegistration) => {
         // Show dialog to finish the registration
         this.twitterRegistration = twitterRegistration;
@@ -74,7 +75,7 @@ export class SettingsNotificationComponent implements OnInit {
   }
 
   authorizeTwitter(): void {
-    this.settingsService.authorizeTwitter(this.twitterRegistration).subscribe({
+    this.settingsService.authorizeTwitter(this.twitterRegistration).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (twitterAuthorization) => {
         // Update form with twitter key and secret
         FormUtils.setFormControlValue(this.settingsForm, 'twitterKey', twitterAuthorization.twitterKey);

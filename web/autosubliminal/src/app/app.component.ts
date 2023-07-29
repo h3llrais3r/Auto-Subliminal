@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { interval } from 'rxjs';
+import { Component, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { concatMap, interval, noop } from 'rxjs';
 import { AppSettingsService } from './app-settings.service';
 import { SystemService } from './core/services/api/system.service';
 import { MessageService } from './core/services/message.service';
@@ -12,8 +13,6 @@ import { SystemEventService } from './core/services/system-event.service';
 })
 export class AppComponent {
 
-  private readonly ALIVE_CHECK_INTERVAL = 2000;
-
   appSettingsLoaded = false;
   systemStarted = false;
   systemStart = false;
@@ -22,32 +21,36 @@ export class AppComponent {
   systemShutdownFinished = false;
   webSocketConnectionInterrupted = false;
 
-  constructor(
-    private appSettingsService: AppSettingsService,
-    private systemEventService: SystemEventService,
-    private systemService: SystemService,
-    private messageService: MessageService) {
+  private readonly ALIVE_CHECK_INTERVAL = 2000;
+
+  private appSettingsService = inject(AppSettingsService);
+  private systemEventService = inject(SystemEventService);
+  private systemService = inject(SystemService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
+
+  constructor() {
     // Check if app settings are loaded
     this.appSettingsLoaded = this.appSettingsService.loaded();
     // Check if system is started (this is the case when the settings are loaded)
     this.systemStarted = this.appSettingsLoaded;
     // Subscribe on system start events
-    this.systemEventService.systemStart$.subscribe({
+    this.systemEventService.systemStart$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => this.checkStart()
     });
     // Subscribe on system restart events
-    this.systemEventService.systemRestart$.subscribe({
+    this.systemEventService.systemRestart$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.messageService.clearMessages(); // Clear messages
         this.checkRestart();
       }
     });
     // Subscribe on system shutdown events
-    this.systemEventService.systemShutdown$.subscribe({
+    this.systemEventService.systemShutdown$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => this.checkShutdown()
     });
     // Subscribe on websocket connection interrupted events
-    this.systemEventService.webSocketConnectionInterrupted$.subscribe({
+    this.systemEventService.webSocketConnectionInterrupted$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (interrupted) => this.webSocketConnectionInterrupted = interrupted
     });
   }
@@ -67,24 +70,23 @@ export class AppComponent {
       this.systemStart = true;
       this.systemStarted = false;
       this.systemShutdownFinished = false;
-      const check = interval(this.ALIVE_CHECK_INTERVAL).subscribe({
-        next: () => {
-          this.systemService.isAlive().subscribe({
-            next: (alive) => {
-              if (alive) {
-                // If app is loaded, mark system is started
-                if (this.appSettingsLoaded) {
-                  this.systemStart = false;
-                  this.systemStarted = true;
-                  check.unsubscribe(); // stop the check
-                } else {
-                  // If iapp is not loaded, reload page to re-initialize the app
-                  document.location.reload();
-                }
-              }
-              // Continue the check
+      const check = interval(this.ALIVE_CHECK_INTERVAL).pipe(
+        concatMap(() => this.systemService.isAlive()),
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe({
+        next: (alive) => {
+          if (alive) {
+            // If app is loaded, mark system is started
+            if (this.appSettingsLoaded) {
+              this.systemStart = false;
+              this.systemStarted = true;
+              check.unsubscribe(); // stop the check
+            } else {
+              // If iapp is not loaded, reload page to re-initialize the app
+              document.location.reload();
             }
-          });
+          }
+          // Continue the check
         }
       });
     }
@@ -93,18 +95,17 @@ export class AppComponent {
   private checkRestart(): void {
     this.systemRestart = true;
     this.systemStarted = false;
-    const check = interval(this.ALIVE_CHECK_INTERVAL).subscribe({
-      next: () => {
-        this.systemService.isAlive().subscribe({
-          next: (alive) => {
-            if (alive) {
-              this.systemRestart = false;
-              this.systemStarted = true;
-              check.unsubscribe(); // stop the check
-            }
-            // continue the check
-          }
-        });
+    const check = interval(this.ALIVE_CHECK_INTERVAL).pipe(
+      concatMap(() => this.systemService.isAlive()),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (alive) => {
+        if (alive) {
+          this.systemRestart = false;
+          this.systemStarted = true;
+          check.unsubscribe(); // stop the check
+        }
+        // continue the check
       }
     });
   }
@@ -112,19 +113,16 @@ export class AppComponent {
   private checkShutdown(): void {
     this.systemShutdown = true;
     this.systemStarted = false;
-    const check = interval(this.ALIVE_CHECK_INTERVAL).subscribe({
-      next: () => {
-        this.systemService.isAlive().subscribe({
-          next: () => {
-            // continue the check
-          },
-          error: () => {
-            // no longer alive -> shutdown finished
-            this.systemShutdown = false;
-            this.systemShutdownFinished = true;
-            check.unsubscribe(); // stop the check
-          }
-        });
+    const check = interval(this.ALIVE_CHECK_INTERVAL).pipe(
+      concatMap(() => this.systemService.isAlive()),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: () => noop, // continue the check
+      error: () => {
+        // error means no longer alive -> shutdown finished
+        this.systemShutdown = false;
+        this.systemShutdownFinished = true;
+        check.unsubscribe(); // stop the check
       }
     });
   }

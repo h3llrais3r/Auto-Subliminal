@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { appSettings, AppSettingsService } from '../../../app-settings.service';
@@ -22,15 +23,15 @@ export class SettingsSubliminalComponent implements OnInit {
 
   saveAttempt = false;
 
-  constructor(
-    private fb: UntypedFormBuilder,
-    private settingsService: SettingsService,
-    private appSettingsService: AppSettingsService,
-    private messageService: MessageService) { }
+  private fb = inject(UntypedFormBuilder);
+  private settingsService = inject(SettingsService);
+  private appSettingsService = inject(AppSettingsService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.buildSelectItems();
-    this.settingsService.getSubliminalSettings().subscribe({
+    this.settingsService.getSubliminalSettings().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (subliminalSettings) => {
         this.buildForm(subliminalSettings);
       },
@@ -41,7 +42,7 @@ export class SettingsSubliminalComponent implements OnInit {
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateSubliminalSettings(this.getSubliminalSettings()).subscribe({
+      this.settingsService.updateSubliminalSettings(this.getSubliminalSettings()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
           this.messageService.showSuccessMessage('Subliminal settings saved.');
           this.appSettingsService.reload(); // reload app settings

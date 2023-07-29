@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { appSettings, AppSettingsService } from '../../../app-settings.service';
@@ -22,16 +23,16 @@ export class SettingsLibraryComponent implements OnInit {
 
   saveAttempt = false;
 
-  constructor(
-    private fb: UntypedFormBuilder,
-    private settingsService: SettingsService,
-    private appSettingsService: AppSettingsService,
-    private messageService: MessageService) { }
+  private fb = inject(UntypedFormBuilder);
+  private settingsService = inject(SettingsService);
+  private appSettingsService = inject(AppSettingsService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.initDefaults();
     this.buildSelectItems();
-    this.settingsService.getLibrarySettings().subscribe({
+    this.settingsService.getLibrarySettings().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (librarySettings) => {
         this.buildForm(librarySettings);
       },
@@ -42,7 +43,7 @@ export class SettingsLibraryComponent implements OnInit {
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateLibrarySettings(this.getLibrarySettings()).subscribe({
+      this.settingsService.updateLibrarySettings(this.getLibrarySettings()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
           this.messageService.showSuccessMessage('Library settings saved.');
           this.appSettingsService.reload(); // reload app settings

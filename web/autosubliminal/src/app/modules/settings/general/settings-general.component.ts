@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { appSettings, AppSettingsService } from '../../../app-settings.service';
@@ -15,12 +16,6 @@ import { GeneralSettings } from '../../../shared/models/settings';
 })
 export class SettingsGeneralComponent implements OnInit {
 
-  constructor(
-    private fb: UntypedFormBuilder,
-    private settingsService: SettingsService,
-    private appSettingsService: AppSettingsService,
-    private messageService: MessageService) { }
-
   settingsForm: UntypedFormGroup;
 
   scanDiskIntervalDefault: number;
@@ -35,10 +30,16 @@ export class SettingsGeneralComponent implements OnInit {
 
   saveAttempt = false;
 
+  private fb = inject(UntypedFormBuilder);
+  private settingsService = inject(SettingsService);
+  private appSettingsService = inject(AppSettingsService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
+
   ngOnInit(): void {
     this.initDefaults();
     this.buildSelectItems();
-    this.settingsService.getGeneralSettings().subscribe({
+    this.settingsService.getGeneralSettings().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (generalSettings) => {
         this.buildForm(generalSettings);
       },
@@ -49,7 +50,7 @@ export class SettingsGeneralComponent implements OnInit {
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateGeneralSettings(this.getGeneralSettings()).subscribe({
+      this.settingsService.updateGeneralSettings(this.getGeneralSettings()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
           this.messageService.showSuccessMessage('General settings saved.');
           this.appSettingsService.reload(); // reload app settings

@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
@@ -36,20 +37,20 @@ export class LibraryShowDetailComponent implements OnInit {
   episodeSubtitleFilePath: string;
   episodeTvdbId: number;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private domSanitizer: DomSanitizer,
-    private showService: ShowService,
-    private artworkService: ArtworkService,
-    private settingsService: SettingsService,
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService) { }
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private domSanitizer = inject(DomSanitizer);
+  private showService = inject(ShowService);
+  private artworkService = inject(ArtworkService);
+  private settingsService = inject(SettingsService);
+  private messageService = inject(MessageService);
+  private confirmationService = inject(ConfirmationService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.manualSubSyncEnabled = appSettings.manualSubSync;
     this.libraryEditModeEnabled = appSettings.libraryEditMode;
-    this.route.paramMap.subscribe({
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (paramMap) => {
         this.loading = true;
         const tvdbId = Number(paramMap.get('tvdbId'));
@@ -84,7 +85,7 @@ export class LibraryShowDetailComponent implements OnInit {
 
   refreshShowDetails(): void {
     this.refreshInProgress = true;
-    this.showService.refreshShowDetails(this.show.tvdbId).subscribe({
+    this.showService.refreshShowDetails(this.show.tvdbId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.getShowDetails(this.show.tvdbId);
         this.refreshInProgress = false;
@@ -97,7 +98,7 @@ export class LibraryShowDetailComponent implements OnInit {
     this.confirmationService.confirm({
       message: `Are you sure that you want to delete <b>${this.show.name}</b>?`,
       accept: () => {
-        this.showService.deleteShow(this.show.tvdbId).subscribe({
+        this.showService.deleteShow(this.show.tvdbId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: () => this.router.navigateByUrl('/library/show'),
           error: () => this.messageService.showErrorMessage(`Unable to delete the show ${this.show.name}!`)
         });
@@ -109,7 +110,7 @@ export class LibraryShowDetailComponent implements OnInit {
     this.confirmationService.confirm({
       message: `Are you sure that you want to delete the subtitle<br><b>${fileName}</b>?`,
       accept: () => {
-        this.showService.deleteShowEpisodeSubtitle(this.show.tvdbId, episodeTvdbId, joinPaths(filePath, fileName)).subscribe({
+        this.showService.deleteShowEpisodeSubtitle(this.show.tvdbId, episodeTvdbId, joinPaths(filePath, fileName)).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: () => {
             // Reload details
             this.getShowDetails(this.show.tvdbId);
@@ -123,7 +124,7 @@ export class LibraryShowDetailComponent implements OnInit {
 
   addShowPathToVideoPaths(): void {
     const videoPath = { videoPath: this.show.path };
-    this.settingsService.updateGeneralSetting('videoPaths', videoPath).subscribe({
+    this.settingsService.updateGeneralSetting('videoPaths', videoPath).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.messageService.showSuccessMessage(`Path ${this.show.path} added to the video paths.`);
         this.getShowDetails(this.show.tvdbId);
@@ -160,7 +161,7 @@ export class LibraryShowDetailComponent implements OnInit {
   }
 
   saveHardcodedSubtitles(videoSubtitles: VideoSubtitles): void {
-    this.showService.saveShowEpisodeHardcodedSubtitles(this.show.tvdbId, this.episodeTvdbId, videoSubtitles).subscribe({
+    this.showService.saveShowEpisodeHardcodedSubtitles(this.show.tvdbId, this.episodeTvdbId, videoSubtitles).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.closeVideoSubtitlesDialog();
         this.getShowDetails(this.show.tvdbId);
@@ -208,7 +209,7 @@ export class LibraryShowDetailComponent implements OnInit {
   }
 
   private getShowDetails(tvdbId: number): void {
-    this.showService.getShowDetails(tvdbId).subscribe({
+    this.showService.getShowDetails(tvdbId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (show) => {
         this.show = show;
         this.loading = false;

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, Input, Output, ViewChild } from '@angular/core';
 import { ControlContainer, ControlValueAccessor, FormControlDirective, UntypedFormControl } from '@angular/forms';
 
 // Abstract input component to be used as base class for all our input components!
@@ -43,7 +43,8 @@ export abstract class InputComponent implements ControlValueAccessor {
   @Output()
   blurEvent = new EventEmitter<any>(); // allows custom onBlur functionality (blurEvent)="..." when component is created
 
-  constructor(protected controlContainer: ControlContainer, protected changeDetectorRef: ChangeDetectorRef) { }
+  protected controlContainer = inject(ControlContainer);
+  protected changeDetectorRef = inject(ChangeDetectorRef);
 
   get control(): UntypedFormControl {
     return this.formControl || this.controlContainer.control.get(this.formControlName) as UntypedFormControl;

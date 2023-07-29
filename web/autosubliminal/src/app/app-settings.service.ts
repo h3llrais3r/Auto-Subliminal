@@ -1,6 +1,7 @@
 import { PlatformLocation } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { AntiCaptchaProvider } from './shared/models/captcha';
@@ -62,7 +63,11 @@ export class AppSettingsService {
   private configLoaded = false;
   private webRoot = '';
 
-  constructor(private platformLocation: PlatformLocation, private httpClient: HttpClient) {
+  private platformLocation = inject(PlatformLocation);
+  private httpClient = inject(HttpClient);
+  private destroyRef = inject(DestroyRef);
+
+  constructor() {
     // Get webroot from base href
     this.webRoot = this.platformLocation.getBaseHrefFromDOM().slice(0, -1); // webroot is baseHref without trailing /
     console.log(`Application web root: ${this.webRoot}`);
@@ -70,8 +75,8 @@ export class AppSettingsService {
 
   public load(reload = false): Observable<AppSettings> {
     // Load settings
-    return this.httpClient.get(`${this.webRoot}/api/system/settings`)
-      .pipe(map((settings) => {
+    return this.httpClient.get(`${this.webRoot}/api/system/settings`).pipe(
+      map((settings) => {
         appSettings.fromSettings(settings);
         this.configLoaded = true;
         console.log(`Application settings ${reload ? 're' : ''}loaded`);
@@ -79,16 +84,17 @@ export class AppSettingsService {
         console.log(`Application PID: ${appSettings.appProcessId}`);
         console.log(`Developer mode: ${appSettings.developerMode}`);
         return appSettings;
-      }))
-      .pipe(catchError((error) => {
+      }),
+      catchError((error) => {
         console.error('Error while loading application settings');
         return throwError(() => error); // rethrow error to be sure that app initialization stops
-      }));
+      })
+    );
   }
 
   // Helper function to reload the appsettings in the background and reload the complete app in case of error
   public reload(): void {
-    this.load(true).subscribe({
+    this.load(true).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       error: () => {
         console.error('Forcing page reload to re-initialize the application');
         document.location.reload();

@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { DestroyRef, inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { interval } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
@@ -19,7 +20,11 @@ export class WebSocketService {
 
   private systemWebsocket$: WebSocketSubject<SystemWebSocketMessage>;
 
-  constructor(private messageService: MessageService, private systemEventService: SystemEventService) {
+  private messageService = inject(MessageService);
+  private systemEventService = inject(SystemEventService);
+  private destroyRef = inject(DestroyRef);
+
+  constructor() {
     this.connect();
   }
 
@@ -29,7 +34,7 @@ export class WebSocketService {
 
   private connect(): void {
     this.systemWebsocket$ = this.createSystemWebSocket();
-    this.systemWebsocket$.subscribe({
+    this.systemWebsocket$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (serverMessage) => {
         if (serverMessage.type === 'EVENT') {
           const serverEvent = serverMessage as SystemWebSocketServerEvent;
@@ -73,7 +78,10 @@ export class WebSocketService {
   }
 
   private reconnect(): void {
-    interval(this.RECONNECT_INTERVAL).pipe(takeWhile(() => !this.systemWebsocket$)).subscribe({
+    interval(this.RECONNECT_INTERVAL).pipe(
+      takeWhile(() => !this.systemWebsocket$),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
       next: () => {
         console.log('Reconnecting to websocket...');
         this.connect();

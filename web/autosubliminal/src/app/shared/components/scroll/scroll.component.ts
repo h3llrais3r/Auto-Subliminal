@@ -1,4 +1,5 @@
-import { AfterContentChecked, Component, HostListener, Input, OnInit } from '@angular/core';
+import { AfterContentChecked, Component, DestroyRef, HostListener, inject, Input, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ScrollService } from '../../../core/services/scroll.service';
 
 @Component({
@@ -14,27 +15,8 @@ export class ScrollComponent implements OnInit, AfterContentChecked {
   private scrollHeight: number;
   private maxScrollHeight: number;
 
-  constructor(private scrollService: ScrollService) {
-    // Subscribe on scrollUp events
-    this.scrollService.scrollUp$.subscribe({
-      next: () => this.scrollToTop()
-    });
-    // Subscribe on scrollDown events
-    this.scrollService.scrollDown$.subscribe({
-      next: () => this.scrollToBottom()
-    });
-  }
-
-  ngOnInit(): void {
-    this.scrollHeight = this.getScrollHeight();
-    this.maxScrollHeight = this.getMaxScrollHeight();
-  }
-
-  ngAfterContentChecked(): void {
-    // Make sure to update the scrollheight after the page/component is loaded
-    this.scrollHeight = this.getScrollHeight();
-    this.maxScrollHeight = this.getMaxScrollHeight();
-  }
+  private scrollService = inject(ScrollService);
+  private destroyRef = inject(DestroyRef);
 
   get scrollBottom(): boolean {
     return this.scrollHeight < this.maxScrollHeight;
@@ -46,6 +28,25 @@ export class ScrollComponent implements OnInit, AfterContentChecked {
 
   @HostListener('window:scroll')
   onWindowScroll(): void {
+    this.scrollHeight = this.getScrollHeight();
+    this.maxScrollHeight = this.getMaxScrollHeight();
+  }
+
+  ngOnInit(): void {
+    this.scrollHeight = this.getScrollHeight();
+    this.maxScrollHeight = this.getMaxScrollHeight();
+    // Subscribe on scrollUp events
+    this.scrollService.scrollUp$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => this.scrollToTop()
+    });
+    // Subscribe on scrollDown events
+    this.scrollService.scrollDown$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => this.scrollToBottom()
+    });
+  }
+
+  ngAfterContentChecked(): void {
+    // Make sure to update the scrollheight after the page/component is loaded
     this.scrollHeight = this.getScrollHeight();
     this.maxScrollHeight = this.getMaxScrollHeight();
   }

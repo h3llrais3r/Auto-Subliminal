@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ItemService } from '../../../core/services/api/item.service';
 import { MessageService } from '../../../core/services/message.service';
@@ -30,29 +31,19 @@ export class ManualRefineComponent implements OnInit {
 
   updateAttempt = false;
 
-  constructor(private fb: UntypedFormBuilder, private itemService: ItemService, private messageService: MessageService) { }
+  private fb = inject(UntypedFormBuilder);
+  private itemService = inject(ItemService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.buildForm(this.wantedItem);
   }
 
-  private buildForm(wantedItem: WantedItem): void {
-    this.itemForm = this.fb.group({
-      title: [wantedItem.title, [Validators.required, FormValidators.notEmpty]],
-      year: [wantedItem.year, []],
-      season: [wantedItem.season, []],
-      episode: [wantedItem.episode ? wantedItem.episode.toString() : wantedItem.codec, []], // convert to string as we convert it back afterwards to the required type
-      source: [wantedItem.source ? wantedItem.source.toString() : wantedItem.codec, []], // convert to string as we convert it back afterwards to the required type
-      quality: [wantedItem.quality, []],
-      codec: [wantedItem.codec ? wantedItem.codec.toString() : wantedItem.codec, []], // convert to string as we convert it back afterwards to the required type
-      releaseGroup: [wantedItem.releaseGroup, []]
-    });
-  }
-
   resetWantedItem(): void {
     const wantedItem = this.getWantedItem();
     // Reset the wanted item (restore it with the data from the db after it has been temporarily updated)
-    this.itemService.resetWantedItem(wantedItem.id).subscribe({
+    this.itemService.resetWantedItem(wantedItem.id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (updatedWantedItem) => {
         this.wantedItemChange.emit(updatedWantedItem);
         this.messageService.showSuccessMessage(`Restored ${updatedWantedItem.longName}.`);
@@ -67,7 +58,7 @@ export class ManualRefineComponent implements OnInit {
     if (this.itemForm.valid) {
       const wantedItem = this.getWantedItem();
       // Update the wanted item
-      this.itemService.updateWantedItem(wantedItem).subscribe({
+      this.itemService.updateWantedItem(wantedItem).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (updatedWantedItem) => {
           this.wantedItemChange.emit(updatedWantedItem);
           this.messageService.showSuccessMessage(`Updated ${updatedWantedItem.longName}.`);
@@ -76,6 +67,23 @@ export class ManualRefineComponent implements OnInit {
         error: () => this.messageService.showErrorMessage(`Unable to update ${wantedItem.longName}`)
       });
     }
+  }
+
+  close(): void {
+    this.visibleChange.emit(false);
+  }
+
+  private buildForm(wantedItem: WantedItem): void {
+    this.itemForm = this.fb.group({
+      title: [wantedItem.title, [Validators.required, FormValidators.notEmpty]],
+      year: [wantedItem.year, []],
+      season: [wantedItem.season, []],
+      episode: [wantedItem.episode ? wantedItem.episode.toString() : wantedItem.codec, []], // convert to string as we convert it back afterwards to the required type
+      source: [wantedItem.source ? wantedItem.source.toString() : wantedItem.codec, []], // convert to string as we convert it back afterwards to the required type
+      quality: [wantedItem.quality, []],
+      codec: [wantedItem.codec ? wantedItem.codec.toString() : wantedItem.codec, []], // convert to string as we convert it back afterwards to the required type
+      releaseGroup: [wantedItem.releaseGroup, []]
+    });
   }
 
   private getWantedItem(): WantedItem {
@@ -92,9 +100,5 @@ export class ManualRefineComponent implements OnInit {
     wantedItem.codec = (codec && codec.indexOf(',') > 0) ? codec.split(',').map((s) => s.trim()) : codec;
     wantedItem.releaseGroup = FormUtils.getFormControlValue<string>(this.itemForm, 'releaseGroup');
     return wantedItem;
-  }
-
-  close(): void {
-    this.visibleChange.emit(false);
   }
 }

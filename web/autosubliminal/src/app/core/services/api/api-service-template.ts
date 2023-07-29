@@ -1,14 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 
 // Add @Injectable() to not have to repeat the constructor in every subclass
 @Injectable()
-export class ApiServiceTemplate {
+export abstract class ApiServiceTemplate {
 
   defaultHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
   defaultOptions = { headers: this.defaultHeaders };
 
-  constructor(protected httpClient: HttpClient) { }
+  protected httpClient = inject(HttpClient);
 
   // can be overridden in subclass
   protected get headers(): HttpHeaders {

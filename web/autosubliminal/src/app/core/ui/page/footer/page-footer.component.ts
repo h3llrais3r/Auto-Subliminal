@@ -1,19 +1,24 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import moment from 'moment';
 import { CountdownComponent, CountdownConfig } from 'ngx-countdown';
-import { Subscription } from 'rxjs';
 import { appSettings } from '../../../../app-settings.service';
 import { Scheduler } from '../../../../shared/models/scheduler';
 import { SystemService } from '../../../services/api/system.service';
 import { SystemEventService } from '../../../services/system-event.service';
-import { WebSocketService } from '../../../services/websocket.service';
 
 @Component({
   selector: 'app-page-footer',
   templateUrl: './page-footer.component.html',
   styleUrls: ['./page-footer.component.scss']
 })
-export class PageFooterComponent implements OnInit, OnDestroy {
+export class PageFooterComponent implements OnInit {
+
+  @ViewChild('scanDiskCountdown', { static: false })
+  private scanDiskCountdown: CountdownComponent;
+
+  @ViewChild('checkSubCountdown', { static: false })
+  private checkSubCountdown: CountdownComponent;
 
   appVersion: string;
   scanDiskCountdownConfig: CountdownConfig;
@@ -25,25 +30,15 @@ export class PageFooterComponent implements OnInit, OnDestroy {
   checkSubNotAvailable = false;
   checkSubCountdownRunning = false;
 
-  private scanDiskStartedSubscription: Subscription;
-  private scanDiskFinishedSubscription: Subscription;
-  private checkSubStartedSubscription: Subscription;
-  private checkSubFinishedSubscription: Subscription;
-  private webSocketConnectionInterruptedSubscription: Subscription;
-
-  @ViewChild('scanDiskCountdown', { static: false })
-  private scanDiskCountdown: CountdownComponent;
-
-  @ViewChild('checkSubCountdown', { static: false })
-  private checkSubCountdown: CountdownComponent;
-
-  constructor(private systemService: SystemService, private systemEventService: SystemEventService, private webSocketService: WebSocketService) { }
+  private systemService = inject(SystemService);
+  private systemEventService = inject(SystemEventService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     // Init values
     this.initValues();
     // Subscribe on scanDisk started events
-    this.scanDiskStartedSubscription = this.systemEventService.schedulerStart$.subscribe({
+    this.systemEventService.schedulerStart$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (scheduler) => {
         if (scheduler.name === appSettings.scanDisk) {
           this.initScanDiskCountdown(scheduler);
@@ -51,7 +46,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
       }
     });
     // Subscribe on scanDisk finished events
-    this.scanDiskFinishedSubscription = this.systemEventService.schedulerFinish$.subscribe({
+    this.systemEventService.schedulerFinish$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (scheduler) => {
         if (scheduler.name === appSettings.scanDisk) {
           this.initScanDiskCountdown(scheduler);
@@ -59,7 +54,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
       }
     });
     // Subscribe on checkSub started events
-    this.checkSubStartedSubscription = this.systemEventService.schedulerStart$.subscribe({
+    this.systemEventService.schedulerStart$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (scheduler) => {
         if (scheduler.name === appSettings.checkSub) {
           this.initCheckSubCountdown(scheduler);
@@ -67,7 +62,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
       }
     });
     // Subscribe on checkSub finished events
-    this.checkSubFinishedSubscription = this.systemEventService.schedulerFinish$.subscribe({
+    this.systemEventService.schedulerFinish$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (scheduler) => {
         if (scheduler.name === appSettings.checkSub) {
           this.initCheckSubCountdown(scheduler);
@@ -75,7 +70,7 @@ export class PageFooterComponent implements OnInit, OnDestroy {
       }
     });
     // Subscribe on websocket events
-    this.webSocketConnectionInterruptedSubscription = this.systemEventService.webSocketConnectionInterrupted$.subscribe({
+    this.systemEventService.webSocketConnectionInterrupted$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (interrupted) => {
         if (interrupted) {
           this.scanDiskCountdown.pause();
@@ -87,20 +82,16 @@ export class PageFooterComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.scanDiskStartedSubscription.unsubscribe();
-    this.scanDiskFinishedSubscription.unsubscribe();
-    this.checkSubStartedSubscription.unsubscribe();
-    this.checkSubFinishedSubscription.unsubscribe();
-    this.webSocketConnectionInterruptedSubscription.unsubscribe();
-  }
-
   private initValues(): void {
     // Set app version
     this.appVersion = appSettings.appVersion;
     // Init countdowns
-    this.systemService.getScheduler(appSettings.scanDisk).subscribe((scheduler) => this.initScanDiskCountdown(scheduler));
-    this.systemService.getScheduler(appSettings.checkSub).subscribe((scheduler) => this.initCheckSubCountdown(scheduler));
+    this.systemService.getScheduler(appSettings.scanDisk).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (scheduler) => this.initScanDiskCountdown(scheduler)
+    });
+    this.systemService.getScheduler(appSettings.checkSub).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (scheduler) => this.initCheckSubCountdown(scheduler)
+    });
   }
 
   private initScanDiskCountdown(scheduler: Scheduler): void {

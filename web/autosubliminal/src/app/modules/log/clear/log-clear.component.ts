@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { LogService } from '../../../core/services/api/log.service';
 import { MessageService } from '../../../core/services/message.service';
@@ -10,10 +11,13 @@ import { MessageService } from '../../../core/services/message.service';
 })
 export class LogClearComponent implements OnInit {
 
-  constructor(private router: Router, private logService: LogService, private messageService: MessageService) { }
+  private router = inject(Router);
+  private logService = inject(LogService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
-    this.logService.clearLogs().subscribe({
+    this.logService.clearLogs().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result) => {
         // Redirect to log view after the logs are cleared
         if (result) {

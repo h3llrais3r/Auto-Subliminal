@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { SubtitleService } from '../../../core/services/api/subtitle.service';
 import { MessageService } from '../../../core/services/message.service';
@@ -40,7 +41,11 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
 
   subtitleSyncResult: SubtitleSyncResult;
 
-  constructor(private domSanitizer: DomSanitizer, private uploadService: UploadService, private subtitleService: SubtitleService, private messageService: MessageService) { }
+  private domSanitizer = inject(DomSanitizer);
+  private uploadService = inject(UploadService);
+  private subtitleService = inject(SubtitleService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     if (this.videoPath) {
@@ -55,7 +60,7 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
     // Make sure the synced subtitle is removed if synchronization is not properly handled by the user
     if (this.subtitleSyncResult) {
       // No specific handling in subscribe as we want to do it in the background
-      this.subtitleService.deleteSyncedSubtitle(this.subtitleSyncResult.syncedSubtitlePath).subscribe();
+      this.subtitleService.deleteSyncedSubtitle(this.subtitleSyncResult.syncedSubtitlePath).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
   }
 
@@ -63,7 +68,7 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
     const file = event.files[0];
     const formData = new FormData();
     formData.append('file', event.files[0]);
-    this.uploadService.uploadTmpFile(formData).subscribe({
+    this.uploadService.uploadTmpFile(formData).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (tmpFilePath) => {
         this.referenceSubtitle = file.name;
         this.referenceSubtitlePath = tmpFilePath;
@@ -83,7 +88,7 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
     this.syncInProgress = true;
     // Reference subtitle path is used when available, fallback to video path
     const referenceFilePath = this.referenceSubtitlePath || this.videoPath;
-    this.subtitleService.syncSubtitle(this.subtitlePath, referenceFilePath).subscribe({
+    this.subtitleService.syncSubtitle(this.subtitlePath, referenceFilePath).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (subtitleSyncResult) => {
         this.subtitleSyncResult = subtitleSyncResult;
         this.syncInProgress = false;
@@ -98,7 +103,7 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
 
   syncSubtitleWithReferenceSubtitle(): void {
     this.syncInProgress = true;
-    this.subtitleService.syncSubtitle(this.subtitlePath, this.referenceSubtitlePath).subscribe({
+    this.subtitleService.syncSubtitle(this.subtitlePath, this.referenceSubtitlePath).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (subtitleSyncResult) => {
         this.subtitleSyncResult = subtitleSyncResult;
         this.syncInProgress = false;
@@ -121,7 +126,7 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
   }
 
   saveSubtitle(): void {
-    this.subtitleService.saveSyncedSubtitle(this.subtitlePath, this.subtitleSyncResult.syncedSubtitlePath, this.backupOnSave).subscribe({
+    this.subtitleService.saveSyncedSubtitle(this.subtitlePath, this.subtitleSyncResult.syncedSubtitlePath, this.backupOnSave).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.close();
         this.subtitleSyncResult = null; // clear sync result (to not trigger the cleanup in onDestroy)
@@ -133,7 +138,7 @@ export class SubtitleSyncComponent implements OnInit, OnDestroy {
 
   resetSubtitle(): void {
     // Delete the synced subtitle
-    this.subtitleService.deleteSyncedSubtitle(this.subtitleSyncResult.syncedSubtitlePath).subscribe({
+    this.subtitleService.deleteSyncedSubtitle(this.subtitleSyncResult.syncedSubtitlePath).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.subtitleSyncResult = null; // clear previous sync result
         this.messageService.showInfoMessage('Synchronized subtitle removed.');

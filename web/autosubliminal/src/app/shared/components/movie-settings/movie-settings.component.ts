@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { MovieService } from '../../../core/services/api/movie.service';
@@ -36,16 +37,16 @@ export class MovieSettingsComponent implements OnInit {
 
   loaded = false;
 
-  constructor(
-    private fb: UntypedFormBuilder,
-    private movieService: MovieService,
-    private artworkService: ArtworkService,
-    private messageService: MessageService) { }
+  private fb = inject(UntypedFormBuilder);
+  private movieService = inject(MovieService);
+  private artworkService = inject(ArtworkService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.languages = FormUtils.languageSelectItems();
     if (!this.movieSettings) {
-      this.movieService.getMovieSettings(this.imdbId).subscribe({
+      this.movieService.getMovieSettings(this.imdbId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (movieSettings) => {
           this.buildForm(movieSettings);
           this.loaded = true;
@@ -58,15 +59,6 @@ export class MovieSettingsComponent implements OnInit {
     }
   }
 
-  private buildForm(movieSettings: MovieSettings): void {
-    this.settingsForm = this.fb.group({
-      wantedLanguages: [movieSettings.wantedLanguages || [], [Validators.required, FormValidators.notEmpty]],
-      refine: [movieSettings.refine, [Validators.required]],
-      hearingImpaired: [movieSettings.hearingImpaired, [Validators.required]],
-      utf8Encoding: [movieSettings.utf8Encoding || [Validators.required]]
-    });
-  }
-
   getMoviePosterThumbnailUrl(): string {
     return this.artworkService.getMoviePosterThumbnailUrl(this.imdbId);
   }
@@ -76,12 +68,25 @@ export class MovieSettingsComponent implements OnInit {
   }
 
   saveMovieSettings(): void {
-    this.movieService.saveMovieSettings(this.imdbId, this.getMovieSettings()).subscribe({
+    this.movieService.saveMovieSettings(this.imdbId, this.getMovieSettings()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.messageService.showSuccessMessage(`Move settings saved and will be applied on next disk scan.`);
         this.close();
       },
       error: () => this.messageService.showErrorMessage(`Unable to save the movie settings!`)
+    });
+  }
+
+  close(): void {
+    this.visibleChange.emit(false);
+  }
+
+  private buildForm(movieSettings: MovieSettings): void {
+    this.settingsForm = this.fb.group({
+      wantedLanguages: [movieSettings.wantedLanguages || [], [Validators.required, FormValidators.notEmpty]],
+      refine: [movieSettings.refine, [Validators.required]],
+      hearingImpaired: [movieSettings.hearingImpaired, [Validators.required]],
+      utf8Encoding: [movieSettings.utf8Encoding || [Validators.required]]
     });
   }
 
@@ -92,9 +97,5 @@ export class MovieSettingsComponent implements OnInit {
     movieSettings.hearingImpaired = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'hearingImpaired');
     movieSettings.utf8Encoding = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'utf8Encoding');
     return movieSettings;
-  }
-
-  close(): void {
-    this.visibleChange.emit(false);
   }
 }

@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { ShowService } from '../../../core/services/api/show.service';
@@ -36,16 +37,16 @@ export class ShowSettingsComponent implements OnInit {
 
   loaded = false;
 
-  constructor(
-    private fb: UntypedFormBuilder,
-    private showService: ShowService,
-    private artworkService: ArtworkService,
-    private messageService: MessageService) { }
+  private fb = inject(UntypedFormBuilder);
+  private showService = inject(ShowService);
+  private artworkService = inject(ArtworkService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.languages = FormUtils.languageSelectItems();
     if (!this.showSettings) {
-      this.showService.getShowSettings(this.tvdbId).subscribe({
+      this.showService.getShowSettings(this.tvdbId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (showSettings) => {
           this.buildForm(showSettings);
           this.loaded = true;
@@ -58,15 +59,6 @@ export class ShowSettingsComponent implements OnInit {
     }
   }
 
-  private buildForm(showSettings: ShowSettings): void {
-    this.settingsForm = this.fb.group({
-      wantedLanguages: [showSettings.wantedLanguages || [], [Validators.required, FormValidators.notEmpty]],
-      refine: [showSettings.refine, [Validators.required]],
-      hearingImpaired: [showSettings.hearingImpaired, [Validators.required]],
-      utf8Encoding: [showSettings.utf8Encoding, [Validators.required]]
-    });
-  }
-
   getShowPosterThumbnailUrl(): string {
     return this.artworkService.getShowPosterThumbnailUrl(this.tvdbId);
   }
@@ -76,12 +68,25 @@ export class ShowSettingsComponent implements OnInit {
   }
 
   saveShowSettings(): void {
-    this.showService.saveShowSettings(this.tvdbId, this.getShowSettings()).subscribe({
+    this.showService.saveShowSettings(this.tvdbId, this.getShowSettings()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.messageService.showSuccessMessage(`Show settings saved and will be applied on next disk scan.`);
         this.close();
       },
       error: () => this.messageService.showErrorMessage(`Unable to save the show settings!`)
+    });
+  }
+
+  close(): void {
+    this.visibleChange.emit(false);
+  }
+
+  private buildForm(showSettings: ShowSettings): void {
+    this.settingsForm = this.fb.group({
+      wantedLanguages: [showSettings.wantedLanguages || [], [Validators.required, FormValidators.notEmpty]],
+      refine: [showSettings.refine, [Validators.required]],
+      hearingImpaired: [showSettings.hearingImpaired, [Validators.required]],
+      utf8Encoding: [showSettings.utf8Encoding, [Validators.required]]
     });
   }
 
@@ -92,9 +97,5 @@ export class ShowSettingsComponent implements OnInit {
     showSettings.hearingImpaired = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'hearingImpaired');
     showSettings.utf8Encoding = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'utf8Encoding');
     return showSettings;
-  }
-
-  close(): void {
-    this.visibleChange.emit(false);
   }
 }

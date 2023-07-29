@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
@@ -26,23 +26,11 @@ export class LibraryVideoSubtitlesComponent implements OnInit {
   videoSubtitlesForm: UntypedFormGroup;
   languages: SelectItem[];
 
-  constructor(private fb: UntypedFormBuilder) { }
+  private fb = inject(UntypedFormBuilder);
 
   ngOnInit(): void {
     this.languages = FormUtils.languageSelectItems();
     this.buildForm();
-  }
-
-  private buildForm(): void {
-    this.videoSubtitlesForm = this.fb.group({
-      fileLocation: [this.videoSubtitles.fileLocation, []],
-      fileName: [this.videoSubtitles.fileName, []],
-      languages: [this.videoSubtitles.languages || [], []]
-    });
-  }
-
-  close(): void {
-    this.visibleChange.emit(false);
   }
 
   saveVideoSubtitles(): void {
@@ -51,5 +39,17 @@ export class LibraryVideoSubtitlesComponent implements OnInit {
     videoSubtitles.fileName = FormUtils.getFormControlValue<string>(this.videoSubtitlesForm, 'fileName');
     videoSubtitles.languages = FormUtils.getFormControlValue<string[]>(this.videoSubtitlesForm, 'languages');
     this.save.emit(videoSubtitles); // ouput the videoSubtitles object on save
+  }
+
+  close(): void {
+    this.visibleChange.emit(false);
+  }
+
+  private buildForm(): void {
+    this.videoSubtitlesForm = this.fb.group({
+      fileLocation: [this.videoSubtitles.fileLocation, []],
+      fileName: [this.videoSubtitles.fileName, []],
+      languages: [this.videoSubtitles.languages || [], []]
+    });
   }
 }

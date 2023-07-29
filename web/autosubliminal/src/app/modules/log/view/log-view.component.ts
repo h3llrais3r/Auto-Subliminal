@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SelectItem } from 'primeng/api';
 import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 import { appSettings } from '../../../app-settings.service';
@@ -14,8 +15,6 @@ import { Loglevel } from '../../../shared/models/loglevel';
 })
 export class LogViewComponent implements OnInit {
 
-  private readonly LOG_MESSAGE_REGEX = /^((?<date>\d{4}-\d{2}-\d{2})\s(?<time>\d{2}:\d{2}:\d{2},\d{3})\s(?<loglevel>\w+))/;
-
   logNums: number[];
   selectedLogNum = 0;
   loglevels: SelectItem[];
@@ -26,14 +25,34 @@ export class LogViewComponent implements OnInit {
   tailButtonLabel = 'Start tailing';
   tailButtonIcon = 'pi pi-play';
 
+  private readonly LOG_MESSAGE_REGEX = /^((?<date>\d{4}-\d{2}-\d{2})\s(?<time>\d{2}:\d{2}:\d{2},\d{3})\s(?<loglevel>\w+))/;
+
   private logWebsocket$: WebSocketSubject<string>;
   private logMessages: string[] = [];
 
-  constructor(private logService: LogService, private messageService: MessageService, private scrollService: ScrollService) { }
+  private logService = inject(LogService);
+  private messageService = inject(MessageService);
+  private scrollService = inject(ScrollService);
+  private destroyRef = inject(DestroyRef);
+
+  get filteredLogMessages(): string[] {
+    return this.logMessages.filter((logMessage) => {
+      if (this.selectedLoglevel) {
+        const match = this.LOG_MESSAGE_REGEX.exec(logMessage);
+        return match && match.groups['loglevel'] === this.selectedLoglevel;
+      } else {
+        return true;
+      }
+    });
+  }
+
+  get logContent(): string {
+    return this.filteredLogMessages.join('\n');
+  }
 
   ngOnInit(): void {
     this.loglevels = this.getLogLevels();
-    this.logService.getLogCount().subscribe({
+    this.logService.getLogCount().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (count) => this.logNums = Array.from(Array(count).keys()).map((i) => i + 1) // get array starting from 1
     });
     this.getLogs(0); // 0 = current logfile
@@ -43,7 +62,7 @@ export class LogViewComponent implements OnInit {
     this.loading = true;
     this.selectedLogNum = logNum;
     this.tailingDisabled = this.selectedLogNum !== 0; // tailing only allowed when on current logfile -> lognum = 0
-    this.logService.getLogs(logNum).subscribe({
+    this.logService.getLogs(logNum).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (logLines) => {
         this.logMessages = logLines;
         this.loading = false;
@@ -73,21 +92,6 @@ export class LogViewComponent implements OnInit {
     this.handleLogTailing();
   }
 
-  get filteredLogMessages(): string[] {
-    return this.logMessages.filter((logMessage) => {
-      if (this.selectedLoglevel) {
-        const match = this.LOG_MESSAGE_REGEX.exec(logMessage);
-        return match && match.groups['loglevel'] === this.selectedLoglevel;
-      } else {
-        return true;
-      }
-    });
-  }
-
-  get logContent(): string {
-    return this.filteredLogMessages.join('\n');
-  }
-
   private getLogLevels(): SelectItem[] {
     const logLevels: SelectItem[] = [];
     logLevels.push({ label: 'ALL', value: '' });
@@ -113,7 +117,7 @@ export class LogViewComponent implements OnInit {
     if (this.tailing && !this.tailingDisabled) {
       // Subscribe on new logs once loaded (only for current logfile -> logNum = 0)
       this.logWebsocket$ = this.createLogWebSocket(); // Need to create a new socket after unsubscribe
-      this.logWebsocket$.subscribe({
+      this.logWebsocket$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (logMessage) => {
           if (appSettings.logReversed) {
             // Append to the top

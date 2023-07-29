@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { AppSettingsService } from '../../../app-settings.service';
@@ -21,15 +22,15 @@ export class SettingsWebserverComponent implements OnInit {
 
   saveAttempt = false;
 
-  constructor(
-    private fb: UntypedFormBuilder,
-    private settingsService: SettingsService,
-    private appSettingsService: AppSettingsService,
-    private messageService: MessageService) { }
+  private fb = inject(UntypedFormBuilder);
+  private settingsService = inject(SettingsService);
+  private appSettingsService = inject(AppSettingsService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.buildSelectItems();
-    this.settingsService.getWebServerSettings().subscribe({
+    this.settingsService.getWebServerSettings().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (webServerSettings) => {
         this.buildForm(webServerSettings);
       },
@@ -53,7 +54,7 @@ export class SettingsWebserverComponent implements OnInit {
   save(): void {
     this.saveAttempt = true;
     if (this.settingsForm.valid) {
-      this.settingsService.updateWebServerSettings(this.getWebServerSettings()).subscribe({
+      this.settingsService.updateWebServerSettings(this.getWebServerSettings()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: () => {
           this.messageService.showSuccessMessage('Webserver settings saved.');
           this.appSettingsService.reload(); // reload app settings

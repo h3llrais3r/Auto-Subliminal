@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Scheduler } from 'src/app/shared/models/scheduler';
 import { SystemService } from '../../../core/services/api/system.service';
 import { MessageService } from '../../../core/services/message.service';
@@ -15,22 +16,25 @@ export class SystemStatusComponent implements OnInit {
   schedulers: Scheduler[];
   paths: PathInfo[];
 
-  constructor(private systemService: SystemService, private systemEventService: SystemEventService, private messageService: MessageService) { }
+  private systemService = inject(SystemService);
+  private systemEventService = inject(SystemEventService);
+  private messageService = inject(MessageService);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     // Get schedulers
-    this.systemService.getSchedulers().subscribe({
+    this.systemService.getSchedulers().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (schedulers) => {
         this.schedulers = schedulers;
         // Subscribe on scheduler start events
-        this.systemEventService.schedulerStart$.subscribe({
+        this.systemEventService.schedulerStart$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: (startedScheduler) => {
             // Replace started scheduler in list of schedulers
             this.schedulers = this.schedulers.map((scheduler) => scheduler.name === startedScheduler.name ? startedScheduler : scheduler);
           }
         });
         // Subscribe on scheduler finish events
-        this.systemEventService.schedulerFinish$.subscribe({
+        this.systemEventService.schedulerFinish$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
           next: (finishedScheduler) => {
             // Replace finished scheduler in list of schedulers
             this.schedulers = this.schedulers.map((scheduler) => scheduler.name === finishedScheduler.name ? finishedScheduler : scheduler);
@@ -40,7 +44,7 @@ export class SystemStatusComponent implements OnInit {
       error: () => this.messageService.showErrorMessage('Unable to get the system schedulers!')
     });
     // Get paths
-    this.systemService.getPaths().subscribe({
+    this.systemService.getPaths().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (paths) => {
         this.paths = paths;
       },

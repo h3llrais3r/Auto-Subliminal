@@ -26,6 +26,10 @@
     "@typescript-eslint/explicit-function-return-type": [
       "error"
     ],
+    // Force member ordering
+    "@typescript-eslint/member-ordering": [
+      "error"
+    ],
     // Force no multiple empty lines
     "no-multiple-empty-lines": [
       "error",
@@ -38,7 +42,7 @@
       "warn",
       "as-needed"
     ],
-    // Warn objectd shorthand
+    // Warn object shorthand
     "object-shorthand": [
       "warn",
       "always"
