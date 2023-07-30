@@ -46,17 +46,18 @@
   "[jsonc]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },
-  // Javascript/Typescript settings
+  // Javascript settings
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features",
-    "javascript.preferences.importModuleSpecifier": "relative",
-    "javascript.preferences.quoteStyle": "single"
   },
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "javascript.preferences.quoteStyle": "single",
+  // Typescript settings
   "[typescript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features",
-    "typescript.preferences.importModuleSpecifier": "relative",
-    "typescript.preferences.quoteStyle": "single"
   },
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.quoteStyle": "single",
   "typescript.tsdk": "web/autosubliminal/node_modules/typescript/lib", // Use project typescript version instead of latest version packaged with VS Code
   "typescript.updateImportsOnFileMove.enabled": "always",
   // Eslint settings
