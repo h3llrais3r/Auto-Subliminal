@@ -1,18 +1,28 @@
+import { NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { MessageModule } from 'primeng/message';
+import { PanelModule } from 'primeng/panel';
 import { AppSettingsService } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
 import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
 import { FormValidators } from '../../../shared/components/forms/form-validators';
+import { IconDropdownComponent } from '../../../shared/components/icon-dropdown/icon-dropdown.component';
+import { InputDropdownComponent } from '../../../shared/components/input/dropdown/input-dropdown.component';
+import { InputNumberComponent } from '../../../shared/components/input/number/input-number.component';
+import { InputTextComponent } from '../../../shared/components/input/text/input-text.component';
 import { WebServerSettings } from '../../../shared/models/settings';
 
 @Component({
   selector: 'app-settings-webserver',
   templateUrl: './settings-webserver.component.html',
-  styleUrls: ['./settings-webserver.component.scss']
+  styleUrls: ['./settings-webserver.component.scss'],
+  standalone: true,
+  imports: [NgIf, FormsModule, ReactiveFormsModule, PanelModule, ButtonModule, MessageModule, IconDropdownComponent, InputTextComponent, InputNumberComponent, InputDropdownComponent]
 })
 export class SettingsWebserverComponent implements OnInit {
 

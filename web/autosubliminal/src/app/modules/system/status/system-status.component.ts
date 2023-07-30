@@ -1,5 +1,9 @@
+import { NgClass, NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SharedModule } from 'primeng/api';
+import { PanelModule } from 'primeng/panel';
+import { TableModule } from 'primeng/table';
 import { Scheduler } from 'src/app/shared/models/scheduler';
 import { SystemService } from '../../../core/services/api/system.service';
 import { MessageService } from '../../../core/services/message.service';
@@ -9,7 +13,9 @@ import { PathInfo } from '../../../shared/models/pathinfo';
 @Component({
   selector: 'app-system-status',
   templateUrl: './system-status.component.html',
-  styleUrls: ['./system-status.component.scss']
+  styleUrls: ['./system-status.component.scss'],
+  standalone: true,
+  imports: [NgIf, NgClass, PanelModule, TableModule, SharedModule]
 })
 export class SystemStatusComponent implements OnInit {
 

@@ -1,17 +1,29 @@
+import { NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
+import { PanelModule } from 'primeng/panel';
 import { AppSettingsService } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
 import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
+import { IconDropdownComponent } from '../../../shared/components/icon-dropdown/icon-dropdown.component';
+import { InputDropdownComponent } from '../../../shared/components/input/dropdown/input-dropdown.component';
+import { InputNumberComponent } from '../../../shared/components/input/number/input-number.component';
+import { InputTextComponent } from '../../../shared/components/input/text/input-text.component';
 import { NotificationSettings, TwitterRegistration } from '../../../shared/models/settings';
 
 @Component({
   selector: 'app-settings-notification',
   templateUrl: './settings-notification.component.html',
-  styleUrls: ['./settings-notification.component.scss']
+  styleUrls: ['./settings-notification.component.scss'],
+  standalone: true,
+  imports: [NgIf, FormsModule, ReactiveFormsModule, PanelModule, ButtonModule, DialogModule, InputTextModule, MessageModule, IconDropdownComponent, InputDropdownComponent, InputTextComponent, InputNumberComponent]
 })
 export class SettingsNotificationComponent implements OnInit {
 

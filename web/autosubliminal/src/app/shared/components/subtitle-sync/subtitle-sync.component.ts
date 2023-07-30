@@ -1,6 +1,15 @@
+import { NgIf } from '@angular/common';
 import { Component, DestroyRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { FileUploadModule } from 'primeng/fileupload';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { InputTextModule } from 'primeng/inputtext';
+import { PanelModule } from 'primeng/panel';
 import { SubtitleService } from '../../../core/services/api/subtitle.service';
 import { MessageService } from '../../../core/services/message.service';
 import { UploadService } from '../../../core/services/upload.service';
@@ -11,7 +20,9 @@ import { splitPath } from '../../utils/path-utils';
 @Component({
   selector: 'app-subtitle-sync',
   templateUrl: './subtitle-sync.component.html',
-  styleUrls: ['./subtitle-sync.component.scss']
+  styleUrls: ['./subtitle-sync.component.scss'],
+  standalone: true,
+  imports: [NgIf, FormsModule, DialogModule, InputTextModule, FileUploadModule, ButtonModule, PanelModule, InputSwitchModule, SharedModule]
 })
 export class SubtitleSyncComponent implements OnInit, OnDestroy {
 

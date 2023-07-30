@@ -1,6 +1,12 @@
+import { NgIf } from '@angular/common';
 import { Component, DestroyRef, ElementRef, EventEmitter, inject, Input, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UntypedFormControl } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
 import { debounceTime, of } from 'rxjs';
 import { catchError, mergeMap } from 'rxjs/operators';
 import { appSettings } from '../../../app-settings.service';
@@ -11,7 +17,9 @@ import { joinPaths, splitPathInChunks } from '../../utils/path-utils';
 @Component({
   selector: 'app-file-browser',
   templateUrl: './file-browser.component.html',
-  styleUrls: ['./file-browser.component.scss']
+  styleUrls: ['./file-browser.component.scss'],
+  standalone: true,
+  imports: [NgIf, FormsModule, ReactiveFormsModule, DialogModule, TableModule, ButtonModule, SharedModule, InputTextModule]
 })
 export class FileBrowserComponent implements OnInit {
 

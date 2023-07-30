@@ -1,7 +1,10 @@
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, forwardRef, Input } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
-import { DropdownChangeEvent } from 'primeng/dropdown';
+import { ButtonModule } from 'primeng/button';
+import { DropdownChangeEvent, DropdownModule } from 'primeng/dropdown';
+import { InputTextModule } from 'primeng/inputtext';
 import { InputComponent } from '../input.component';
 
 @Component({
@@ -12,7 +15,9 @@ import { InputComponent } from '../input.component';
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => InputMultiTextComponent),
     multi: true
-  }]
+  }],
+  standalone: true,
+  imports: [NgIf, NgFor, NgClass, FormsModule, ReactiveFormsModule, InputTextModule, DropdownModule, ButtonModule]
 })
 export class InputMultiTextComponent extends InputComponent {
 

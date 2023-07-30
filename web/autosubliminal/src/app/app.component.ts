@@ -1,15 +1,23 @@
+import { NgIf } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterOutlet } from '@angular/router';
+import { DialogModule } from 'primeng/dialog';
+import { ToastModule } from 'primeng/toast';
 import { concatMap, interval, noop } from 'rxjs';
 import { AppSettingsService } from './app-settings.service';
 import { SystemService } from './core/services/api/system.service';
 import { MessageService } from './core/services/message.service';
 import { SystemEventService } from './core/services/system-event.service';
+import { PageFooterComponent } from './core/ui/page/footer/page-footer.component';
+import { PageHeaderComponent } from './core/ui/page/header/page-header.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  standalone: true,
+  imports: [NgIf, RouterOutlet, DialogModule, ToastModule, PageHeaderComponent, PageFooterComponent]
 })
 export class AppComponent {
 

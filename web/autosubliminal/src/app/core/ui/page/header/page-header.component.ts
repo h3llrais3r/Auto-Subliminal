@@ -1,7 +1,8 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, SharedModule } from 'primeng/api';
+import { MenubarModule } from 'primeng/menubar';
 import { appSettings } from '../../../../app-settings.service';
 import { SystemWebSocketClientEvent, SystemWebSocketClientEventType } from '../../../../shared/models/websocket';
 import { SystemEventService } from '../../../services/system-event.service';
@@ -11,7 +12,9 @@ import { WebSocketService } from '../../../services/websocket.service';
 @Component({
   selector: 'app-page-header',
   templateUrl: './page-header.component.html',
-  styleUrls: ['./page-header.component.scss']
+  styleUrls: ['./page-header.component.scss'],
+  standalone: true,
+  imports: [MenubarModule, SharedModule]
 })
 export class PageHeaderComponent implements OnInit {
 

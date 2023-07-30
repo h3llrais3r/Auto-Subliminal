@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import { AfterContentChecked, Component, DestroyRef, HostListener, inject, Input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ScrollService } from '../../../core/services/scroll.service';
@@ -5,7 +6,9 @@ import { ScrollService } from '../../../core/services/scroll.service';
 @Component({
   selector: 'app-scroll',
   templateUrl: './scroll.component.html',
-  styleUrls: ['./scroll.component.scss']
+  styleUrls: ['./scroll.component.scss'],
+  standalone: true,
+  imports: [NgClass]
 })
 export class ScrollComponent implements OnInit, AfterContentChecked {
 

@@ -1,23 +1,36 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmationService } from 'primeng/api';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { ConfirmationService, SharedModule } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { PanelModule } from 'primeng/panel';
+import { TableModule } from 'primeng/table';
 import { appSettings } from '../../../../app-settings.service';
 import { MovieService } from '../../../../core/services/api/movie.service';
 import { SettingsService } from '../../../../core/services/api/settings.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
 import { MessageService } from '../../../../core/services/message.service';
+import { MessageComponent } from '../../../../shared/components/message/message.component';
+import { MovieSettingsComponent } from '../../../../shared/components/movie-settings/movie-settings.component';
+import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
+import { SubtitleSyncComponent } from '../../../../shared/components/subtitle-sync/subtitle-sync.component';
 import { FileType } from '../../../../shared/models/filetype';
 import { Movie } from '../../../../shared/models/movie';
 import { VideoSubtitles } from '../../../../shared/models/video';
 import { getImdbUrl, getPlayVideoUrl, getPosterPlaceholderUrl } from '../../../../shared/utils/common-utils';
 import { joinPaths } from '../../../../shared/utils/path-utils';
+import { LibraryScanningComponent } from '../../scanning/library-scanning.component';
+import { LibraryVideoSubtitlesComponent } from '../../video/library-video-subtitles.component';
 
 @Component({
   selector: 'app-library-movie-detail',
   templateUrl: './library-movie-detail.component.html',
-  styleUrls: ['./library-movie-detail.component.scss']
+  styleUrls: ['./library-movie-detail.component.scss'],
+  standalone: true,
+  imports: [NgIf, NgFor, PanelModule, TableModule, ConfirmDialogModule, SharedModule, LazyLoadImageModule, LibraryScanningComponent, MessageComponent, MovieSettingsComponent, SubtitleSyncComponent, LibraryVideoSubtitlesComponent, ProgressBarComponent]
 })
 export class LibraryMovieDetailComponent implements OnInit {
 

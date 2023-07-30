@@ -1,18 +1,27 @@
+import { NgIf } from '@angular/common';
 import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { SelectItem } from 'primeng/api';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { SelectItem, SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { ShowService } from '../../../core/services/api/show.service';
 import { ArtworkService } from '../../../core/services/artwork.service';
 import { MessageService } from '../../../core/services/message.service';
 import { ShowSettings } from '../../models/show';
 import { FormUtils } from '../forms/form-utils';
 import { FormValidators } from '../forms/form-validators';
+import { IconDropdownComponent } from '../icon-dropdown/icon-dropdown.component';
+import { InputMultiSelectComponent } from '../input/multi-select/input-multi-select.component';
+import { InputSwitchComponent } from '../input/switch/input-switch.component';
 
 @Component({
   selector: 'app-show-settings',
   templateUrl: './show-settings.component.html',
-  styleUrls: ['./show-settings.component.scss']
+  styleUrls: ['./show-settings.component.scss'],
+  standalone: true,
+  imports: [NgIf, DialogModule, FormsModule, ReactiveFormsModule, ButtonModule, SharedModule, LazyLoadImageModule, IconDropdownComponent, InputMultiSelectComponent, InputSwitchComponent]
 })
 export class ShowSettingsComponent implements OnInit {
 

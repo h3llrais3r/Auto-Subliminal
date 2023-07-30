@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import moment from 'moment';
@@ -10,7 +11,9 @@ import { SystemEventService } from '../../../services/system-event.service';
 @Component({
   selector: 'app-page-footer',
   templateUrl: './page-footer.component.html',
-  styleUrls: ['./page-footer.component.scss']
+  styleUrls: ['./page-footer.component.scss'],
+  standalone: true,
+  imports: [NgIf, CountdownComponent]
 })
 export class PageFooterComponent implements OnInit {
 

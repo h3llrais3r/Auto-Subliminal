@@ -1,17 +1,28 @@
+import { NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { ListboxModule } from 'primeng/listbox';
+import { MessageModule } from 'primeng/message';
+import { PanelModule } from 'primeng/panel';
 import { appSettings, AppSettingsService } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
 import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
+import { IconDropdownComponent } from '../../../shared/components/icon-dropdown/icon-dropdown.component';
+import { InputDropdownComponent } from '../../../shared/components/input/dropdown/input-dropdown.component';
+import { InputSwitchComponent } from '../../../shared/components/input/switch/input-switch.component';
+import { InputTextComponent } from '../../../shared/components/input/text/input-text.component';
 import { SubliminalSettings } from '../../../shared/models/settings';
 
 @Component({
   selector: 'app-settings-subliminal',
   templateUrl: './settings-subliminal.component.html',
-  styleUrls: ['./settings-subliminal.component.scss']
+  styleUrls: ['./settings-subliminal.component.scss'],
+  standalone: true,
+  imports: [NgIf, FormsModule, ReactiveFormsModule, PanelModule, MessageModule, ButtonModule, ListboxModule, IconDropdownComponent, InputSwitchComponent, InputDropdownComponent, InputTextComponent]
 })
 export class SettingsSubliminalComponent implements OnInit {
 

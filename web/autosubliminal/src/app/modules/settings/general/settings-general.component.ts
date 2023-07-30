@@ -1,18 +1,29 @@
+import { NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { PanelModule } from 'primeng/panel';
 import { appSettings, AppSettingsService } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
 import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
 import { FormValidators } from '../../../shared/components/forms/form-validators';
+import { IconDropdownComponent } from '../../../shared/components/icon-dropdown/icon-dropdown.component';
+import { InputDropdownComponent } from '../../../shared/components/input/dropdown/input-dropdown.component';
+import { InputFileBrowserComponent } from '../../../shared/components/input/file-browser/input-file-browser.component';
+import { InputMultiFileBrowserComponent } from '../../../shared/components/input/multi-file-browser/input-multi-file-browser.component';
+import { InputMultiTextComponent } from '../../../shared/components/input/multi-text/input-multi-text.component';
+import { InputNumberComponent } from '../../../shared/components/input/number/input-number.component';
 import { GeneralSettings } from '../../../shared/models/settings';
 
 @Component({
   selector: 'app-settings-general',
   templateUrl: './settings-general.component.html',
-  styleUrls: ['./settings-general.component.scss']
+  styleUrls: ['./settings-general.component.scss'],
+  standalone: true,
+  imports: [NgIf, PanelModule, FormsModule, ReactiveFormsModule, ButtonModule, IconDropdownComponent, InputMultiFileBrowserComponent, InputDropdownComponent, InputMultiTextComponent, InputNumberComponent, InputFileBrowserComponent]
 })
 export class SettingsGeneralComponent implements OnInit {
 

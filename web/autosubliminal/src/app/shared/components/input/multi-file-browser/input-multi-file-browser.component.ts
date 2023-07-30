@@ -1,5 +1,9 @@
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, forwardRef, Input } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { FileBrowserComponent } from '../../file-browser/file-browser.component';
 import { InputComponent } from '../input.component';
 
 @Component({
@@ -10,7 +14,9 @@ import { InputComponent } from '../input.component';
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => InputMultiFileBrowserComponent),
     multi: true
-  }]
+  }],
+  standalone: true,
+  imports: [NgIf, NgFor, NgClass, FormsModule, ReactiveFormsModule, InputTextModule, ButtonModule, FileBrowserComponent]
 })
 export class InputMultiFileBrowserComponent extends InputComponent {
 

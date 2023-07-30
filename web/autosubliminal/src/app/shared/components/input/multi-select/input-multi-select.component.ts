@@ -1,7 +1,8 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, forwardRef, Input } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
-import { SelectItem } from 'primeng/api';
-import { MultiSelectBlurEvent, MultiSelectChangeEvent, MultiSelectFocusEvent } from 'primeng/multiselect';
+import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { SelectItem, SharedModule } from 'primeng/api';
+import { MultiSelectBlurEvent, MultiSelectChangeEvent, MultiSelectFocusEvent, MultiSelectModule } from 'primeng/multiselect';
 import { InputComponent } from '../input.component';
 
 @Component({
@@ -12,7 +13,9 @@ import { InputComponent } from '../input.component';
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => InputMultiSelectComponent),
     multi: true
-  }]
+  }],
+  standalone: true,
+  imports: [NgIf, NgFor, FormsModule, ReactiveFormsModule, MultiSelectModule, SharedModule]
 })
 export class InputMultiSelectComponent extends InputComponent {
 

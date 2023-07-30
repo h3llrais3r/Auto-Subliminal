@@ -1,23 +1,38 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmationService } from 'primeng/api';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { ConfirmationService, SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { PanelModule } from 'primeng/panel';
+import { TableModule } from 'primeng/table';
 import { appSettings } from '../../../../app-settings.service';
 import { SettingsService } from '../../../../core/services/api/settings.service';
 import { ShowService } from '../../../../core/services/api/show.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
 import { MessageService } from '../../../../core/services/message.service';
+import { IconDropdownComponent } from '../../../../shared/components/icon-dropdown/icon-dropdown.component';
+import { MessageComponent } from '../../../../shared/components/message/message.component';
+import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
+import { ShowSettingsComponent } from '../../../../shared/components/show-settings/show-settings.component';
+import { SubtitleSyncComponent } from '../../../../shared/components/subtitle-sync/subtitle-sync.component';
 import { FileType } from '../../../../shared/models/filetype';
 import { Show, ShowEpisodeFile } from '../../../../shared/models/show';
 import { VideoSubtitles } from '../../../../shared/models/video';
 import { getPlayVideoUrl, getPosterPlaceholderUrl, getTvdbUrl } from '../../../../shared/utils/common-utils';
 import { joinPaths } from '../../../../shared/utils/path-utils';
+import { LibraryScanningComponent } from '../../scanning/library-scanning.component';
+import { LibraryVideoSubtitlesComponent } from '../../video/library-video-subtitles.component';
 
 @Component({
   selector: 'app-library-show-detail',
   templateUrl: './library-show-detail.component.html',
-  styleUrls: ['./library-show-detail.component.scss']
+  styleUrls: ['./library-show-detail.component.scss'],
+  standalone: true,
+  imports: [NgIf, NgFor, PanelModule, TableModule, ButtonModule, ConfirmDialogModule, SharedModule, LazyLoadImageModule, LibraryScanningComponent, MessageComponent, ProgressBarComponent, IconDropdownComponent, ShowSettingsComponent, SubtitleSyncComponent, LibraryVideoSubtitlesComponent]
 })
 export class LibraryShowDetailComponent implements OnInit {
 

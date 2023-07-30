@@ -1,18 +1,26 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
+import { PanelModule } from 'primeng/panel';
 import { forkJoin } from 'rxjs';
 import { appSettings } from '../../../app-settings.service';
 import { MovieService } from '../../../core/services/api/movie.service';
 import { ShowService } from '../../../core/services/api/show.service';
 import { MessageService } from '../../../core/services/message.service';
 import { SystemEventService } from '../../../core/services/system-event.service';
+import { IconDropdownComponent } from '../../../shared/components/icon-dropdown/icon-dropdown.component';
+import { ProgressBarComponent } from '../../../shared/components/progress-bar/progress-bar.component';
 import { MoviesOverview } from '../../../shared/models/movie';
 import { ShowsOverview } from '../../../shared/models/show';
+import { LibraryScanningComponent } from '../scanning/library-scanning.component';
 
 @Component({
   selector: 'app-library-overview',
   templateUrl: './library-overview.component.html',
-  styleUrls: ['./library-overview.component.scss']
+  styleUrls: ['./library-overview.component.scss'],
+  standalone: true,
+  imports: [NgIf, NgFor, RouterLink, PanelModule, LibraryScanningComponent, IconDropdownComponent, ProgressBarComponent]
 })
 export class LibraryOverviewComponent implements OnInit {
 

@@ -1,18 +1,29 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { SortEvent } from 'primeng/api';
+import { RouterLink } from '@angular/router';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { SharedModule, SortEvent } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { PanelModule } from 'primeng/panel';
+import { TableModule } from 'primeng/table';
 import { appSettings } from '../../../../app-settings.service';
 import { MovieService } from '../../../../core/services/api/movie.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
 import { MessageService } from '../../../../core/services/message.service';
 import { SystemEventService } from '../../../../core/services/system-event.service';
+import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
+import { TableFilterComponent } from '../../../../shared/components/table-filter/table-filter.component';
 import { Movie } from '../../../../shared/models/movie';
 import { naturalSort } from '../../../../shared/utils/table-utils';
+import { LibraryScanningComponent } from '../../scanning/library-scanning.component';
 
 @Component({
   selector: 'app-library-movie-overview',
   templateUrl: './library-movie-overview.component.html',
-  styleUrls: ['./library-movie-overview.component.scss']
+  styleUrls: ['./library-movie-overview.component.scss'],
+  standalone: true,
+  imports: [NgIf, NgFor, RouterLink, PanelModule, TableModule, ButtonModule, SharedModule, LazyLoadImageModule, LibraryScanningComponent, TableFilterComponent, ProgressBarComponent]
 })
 export class LibraryMovieOverviewComponent implements OnInit {
 

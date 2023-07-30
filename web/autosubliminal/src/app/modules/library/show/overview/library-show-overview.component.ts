@@ -1,19 +1,30 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { SortEvent } from 'primeng/api';
+import { RouterLink } from '@angular/router';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { SharedModule, SortEvent } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { PanelModule } from 'primeng/panel';
+import { TableModule } from 'primeng/table';
 import { appSettings } from '../../../../app-settings.service';
 import { ShowService } from '../../../../core/services/api/show.service';
 import { ArtworkService } from '../../../../core/services/artwork.service';
 import { MessageService } from '../../../../core/services/message.service';
 import { SystemEventService } from '../../../../core/services/system-event.service';
+import { ProgressBarComponent } from '../../../../shared/components/progress-bar/progress-bar.component';
+import { TableFilterComponent } from '../../../../shared/components/table-filter/table-filter.component';
 import { Show } from '../../../../shared/models/show';
 import { getBannerPlaceholderUrl } from '../../../../shared/utils/common-utils';
 import { naturalSort } from '../../../../shared/utils/table-utils';
+import { LibraryScanningComponent } from '../../scanning/library-scanning.component';
 
 @Component({
   selector: 'app-library-show-overview',
   templateUrl: './library-show-overview.component.html',
-  styleUrls: ['./library-show-overview.component.scss']
+  styleUrls: ['./library-show-overview.component.scss'],
+  standalone: true,
+  imports: [NgIf, NgFor, RouterLink, PanelModule, TableModule, ButtonModule, SharedModule, LazyLoadImageModule, LibraryScanningComponent, TableFilterComponent, ProgressBarComponent]
 })
 export class LibraryShowOverviewComponent implements OnInit {
 

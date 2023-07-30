@@ -5,9 +5,10 @@ import { LogService } from '../../../core/services/api/log.service';
 import { MessageService } from '../../../core/services/message.service';
 
 @Component({
-  selector: 'app-log-clear',
-  templateUrl: './log-clear.component.html',
-  styleUrls: ['./log-clear.component.scss']
+    selector: 'app-log-clear',
+    templateUrl: './log-clear.component.html',
+    styleUrls: ['./log-clear.component.scss'],
+    standalone: true
 })
 export class LogClearComponent implements OnInit {
 

@@ -1,17 +1,25 @@
+import { NgIf } from '@angular/common';
 import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { ItemService } from '../../../core/services/api/item.service';
 import { MessageService } from '../../../core/services/message.service';
 import { WantedItem } from '../../models/item';
 import { toNumber, toNumberList } from '../../utils/number-utils';
 import { FormUtils } from '../forms/form-utils';
 import { FormValidators } from '../forms/form-validators';
+import { InputNumberComponent } from '../input/number/input-number.component';
+import { InputTextComponent } from '../input/text/input-text.component';
 
 @Component({
   selector: 'app-manual-refine',
   templateUrl: './manual-refine.component.html',
-  styleUrls: ['./manual-refine.component.scss']
+  styleUrls: ['./manual-refine.component.scss'],
+  standalone: true,
+  imports: [NgIf, FormsModule, ReactiveFormsModule, DialogModule, ButtonModule, SharedModule, InputTextComponent, InputNumberComponent]
 })
 export class ManualRefineComponent implements OnInit {
 

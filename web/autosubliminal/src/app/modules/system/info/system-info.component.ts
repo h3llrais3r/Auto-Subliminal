@@ -1,6 +1,8 @@
+import { NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TabViewModule } from 'primeng/tabview';
 import { SystemService } from '../../../core/services/api/system.service';
 import { MessageService } from '../../../core/services/message.service';
 import { SystemInfo, SystemInstallType } from '../../../shared/models/systeminfo';
@@ -8,7 +10,9 @@ import { SystemInfo, SystemInstallType } from '../../../shared/models/systeminfo
 @Component({
   selector: 'app-system-info',
   templateUrl: './system-info.component.html',
-  styleUrls: ['./system-info.component.scss']
+  styleUrls: ['./system-info.component.scss'],
+  standalone: true,
+  imports: [NgIf, TabViewModule]
 })
 export class SystemInfoComponent implements OnInit {
 

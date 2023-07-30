@@ -1,10 +1,19 @@
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { PanelModule } from 'primeng/panel';
+import { TableModule } from 'primeng/table';
 import { appSettings } from '../../../app-settings.service';
 import { ItemService } from '../../../core/services/api/item.service';
 import { MessageService } from '../../../core/services/message.service';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { MessageComponent } from '../../../shared/components/message/message.component';
+import { SubtitleSyncComponent } from '../../../shared/components/subtitle-sync/subtitle-sync.component';
 import { WantedItem } from '../../../shared/models/item';
 import { EpisodeScores, MovieScores } from '../../../shared/models/score';
 import { SavedSubtitle, Subtitle } from '../../../shared/models/subtitle';
@@ -15,7 +24,9 @@ import { joinPaths } from '../../../shared/utils/path-utils';
 @Component({
   selector: 'app-home-search',
   templateUrl: './home-search.component.html',
-  styleUrls: ['./home-search.component.scss']
+  styleUrls: ['./home-search.component.scss'],
+  standalone: true,
+  imports: [NgIf, NgFor, NgClass, PanelModule, ButtonModule, TableModule, DialogModule, SharedModule, MessageComponent, SubtitleSyncComponent, LoadingComponent]
 })
 export class HomeSearchComponent implements OnInit, OnDestroy {
 

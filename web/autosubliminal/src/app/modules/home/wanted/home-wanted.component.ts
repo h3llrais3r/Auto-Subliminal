@@ -1,11 +1,24 @@
+import { NgFor, NgIf } from '@angular/common';
 import { Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ConfirmationService, SelectItem, SortEvent } from 'primeng/api';
+import { ConfirmationService, SelectItem, SharedModule, SortEvent } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { InputTextModule } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
 import { appSettings } from '../../../app-settings.service';
 import { ItemService } from '../../../core/services/api/item.service';
 import { MessageService } from '../../../core/services/message.service';
 import { SystemEventService } from '../../../core/services/system-event.service';
+import { IconDropdownComponent } from '../../../shared/components/icon-dropdown/icon-dropdown.component';
+import { ManualRefineComponent } from '../../../shared/components/manual-refine/manual-refine.component';
+import { MovieSettingsComponent } from '../../../shared/components/movie-settings/movie-settings.component';
+import { ShowSettingsComponent } from '../../../shared/components/show-settings/show-settings.component';
+import { TableFilterComponent } from '../../../shared/components/table-filter/table-filter.component';
 import { WantedItem } from '../../../shared/models/item';
 import { VideoType } from '../../../shared/models/video';
 import { WantedTotals } from '../../../shared/models/wanted';
@@ -16,7 +29,9 @@ import { naturalSort } from '../../../shared/utils/table-utils';
 @Component({
   selector: 'app-home-wanted',
   templateUrl: './home-wanted.component.html',
-  styleUrls: ['./home-wanted.component.scss']
+  styleUrls: ['./home-wanted.component.scss'],
+  standalone: true,
+  imports: [NgIf, NgFor, FormsModule, TableModule, DropdownModule, ConfirmDialogModule, InputSwitchModule, InputTextModule, ButtonModule, SharedModule, TableFilterComponent, IconDropdownComponent, ShowSettingsComponent, MovieSettingsComponent, ManualRefineComponent]
 })
 export class HomeWantedComponent implements OnInit {
 

@@ -1,17 +1,26 @@
+import { NgClass, NgFor } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { SelectItem } from 'primeng/api';
+import { FormsModule } from '@angular/forms';
+import { SelectItem, SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DropdownModule } from 'primeng/dropdown';
+import { PanelModule } from 'primeng/panel';
 import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 import { appSettings } from '../../../app-settings.service';
 import { LogService } from '../../../core/services/api/log.service';
 import { MessageService } from '../../../core/services/message.service';
 import { ScrollService } from '../../../core/services/scroll.service';
+import { LoadingComponent } from '../../../shared/components/loading/loading.component';
+import { ScrollComponent } from '../../../shared/components/scroll/scroll.component';
 import { Loglevel } from '../../../shared/models/loglevel';
 
 @Component({
   selector: 'app-log-view',
   templateUrl: './log-view.component.html',
-  styleUrls: ['./log-view.component.scss']
+  styleUrls: ['./log-view.component.scss'],
+  standalone: true,
+  imports: [NgFor, NgClass, FormsModule, PanelModule, ButtonModule, DropdownModule, SharedModule, LoadingComponent, ScrollComponent]
 })
 export class LogViewComponent implements OnInit {
 

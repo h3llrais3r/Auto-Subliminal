@@ -3,11 +3,14 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { appSettings } from '../../../app-settings.service';
 import { SystemService } from '../../../core/services/api/system.service';
 import { SystemEventService } from '../../../core/services/system-event.service';
+import { MessageComponent } from '../../../shared/components/message/message.component';
 
 @Component({
   selector: 'app-library-scanning',
   templateUrl: './library-scanning.component.html',
-  styleUrls: ['./library-scanning.component.scss']
+  styleUrls: ['./library-scanning.component.scss'],
+  standalone: true,
+  imports: [MessageComponent]
 })
 export class LibraryScanningComponent implements OnInit {
 

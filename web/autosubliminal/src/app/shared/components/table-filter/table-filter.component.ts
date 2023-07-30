@@ -1,11 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { FilterMetadata, TableState } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-table-filter',
   templateUrl: './table-filter.component.html',
-  styleUrls: ['./table-filter.component.scss']
+  styleUrls: ['./table-filter.component.scss'],
+  standalone: true,
+  imports: [FormsModule, InputTextModule, ButtonModule]
 })
 export class TableFilterComponent implements OnInit {
 

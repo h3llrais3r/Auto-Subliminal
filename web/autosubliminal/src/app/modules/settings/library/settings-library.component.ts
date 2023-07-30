@@ -1,17 +1,26 @@
+import { NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { PanelModule } from 'primeng/panel';
 import { appSettings, AppSettingsService } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
 import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
+import { IconDropdownComponent } from '../../../shared/components/icon-dropdown/icon-dropdown.component';
+import { InputDropdownComponent } from '../../../shared/components/input/dropdown/input-dropdown.component';
+import { InputMultiFileBrowserComponent } from '../../../shared/components/input/multi-file-browser/input-multi-file-browser.component';
+import { InputNumberComponent } from '../../../shared/components/input/number/input-number.component';
 import { LibrarySettings } from '../../../shared/models/settings';
 
 @Component({
   selector: 'app-settings-library',
   templateUrl: './settings-library.component.html',
-  styleUrls: ['./settings-library.component.scss']
+  styleUrls: ['./settings-library.component.scss'],
+  standalone: true,
+  imports: [NgIf, FormsModule, ReactiveFormsModule, PanelModule, ButtonModule, IconDropdownComponent, InputDropdownComponent, InputMultiFileBrowserComponent, InputNumberComponent]
 })
 export class SettingsLibraryComponent implements OnInit {
 

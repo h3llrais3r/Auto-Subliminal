@@ -1,13 +1,19 @@
+import { NgIf } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
-import { SelectItem } from 'primeng/api';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { SelectItem, SharedModule } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
+import { InputMultiSelectComponent } from '../../../shared/components/input/multi-select/input-multi-select.component';
 import { VideoSubtitles } from '../../../shared/models/video';
 
 @Component({
   selector: 'app-library-video-subtitles',
   templateUrl: './library-video-subtitles.component.html',
-  styleUrls: ['./library-video-subtitles.component.scss']
+  styleUrls: ['./library-video-subtitles.component.scss'],
+  standalone: true,
+  imports: [NgIf, FormsModule, ReactiveFormsModule, DialogModule, ButtonModule, SharedModule, InputMultiSelectComponent]
 })
 export class LibraryVideoSubtitlesComponent implements OnInit {
 

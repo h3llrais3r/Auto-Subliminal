@@ -1,16 +1,23 @@
+import { NgIf } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { PanelModule } from 'primeng/panel';
 import { AppSettingsService } from '../../../app-settings.service';
 import { SettingsService } from '../../../core/services/api/settings.service';
 import { MessageService } from '../../../core/services/message.service';
 import { FormUtils } from '../../../shared/components/forms/form-utils';
+import { IconDropdownComponent } from '../../../shared/components/icon-dropdown/icon-dropdown.component';
+import { InputMultiTextComponent } from '../../../shared/components/input/multi-text/input-multi-text.component';
 import { SkipMappingSettings } from '../../../shared/models/settings';
 
 @Component({
   selector: 'app-settings-skipmapping',
   templateUrl: './settings-skipmapping.component.html',
-  styleUrls: ['./settings-skipmapping.component.scss']
+  styleUrls: ['./settings-skipmapping.component.scss'],
+  standalone: true,
+  imports: [NgIf, FormsModule, ReactiveFormsModule, PanelModule, ButtonModule, IconDropdownComponent, InputMultiTextComponent]
 })
 export class SettingsSkipmappingComponent implements OnInit {
 
