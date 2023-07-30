@@ -18,7 +18,7 @@
     <div class="caption">
       <div class="p-inputgroup dropdown">
         <span class="p-inputgroup-addon">Type</span>
-        <p-dropdown [options]="videoTypes" (onChange)="downloadedTable.filter($event.value, 'type', 'equals')"></p-dropdown>
+        <p-dropdown [options]="videoTypes" inputId="downloadedVideoTypes" (onChange)="downloadedTable.filter($event.value, 'type', 'equals')"></p-dropdown>
       </div>
       <span class="ml-auto">
         <app-table-filter [table]="downloadedTable" [tableStateKey]="tableStateKey" matchMode='contains'></app-table-filter>

@@ -2,10 +2,11 @@ import { NgIf } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { TabViewModule } from 'primeng/tabview';
+import { SystemInfo, SystemInstallType } from '../../../models/systeminfo';
 import { SystemService } from '../../../services/api/system.service';
 import { MessageService } from '../../../services/message.service';
-import { SystemInfo, SystemInstallType } from '../../../models/systeminfo';
 
 @Component({
   selector: 'app-system-info',
@@ -21,7 +22,7 @@ export class SystemInfoComponent implements OnInit {
   readonly WIKI_URL = `${this.SOURCE_URL}/wiki`;
 
   systemInfo: SystemInfo;
-  changelog: string;
+  changelog: SafeHtml;
   version: string;
   versionUrl: string;
   gitInstall = false;
@@ -32,6 +33,7 @@ export class SystemInfoComponent implements OnInit {
   private httpClient = inject(HttpClient);
   private systemService = inject(SystemService);
   private messageService = inject(MessageService);
+  private domSanitizer = inject(DomSanitizer);
   private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
@@ -55,7 +57,7 @@ export class SystemInfoComponent implements OnInit {
     // Get changelog
     this.httpClient.get(this.CHANGELOG_URL, { responseType: 'text' }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (changelog) => {
-        this.changelog = this.parseChangelog(changelog);
+        this.changelog = this.domSanitizer.bypassSecurityTrustHtml(this.parseChangelog(changelog));
       },
       error: () => this.messageService.showErrorMessage('Unable to get the changelog!')
     });

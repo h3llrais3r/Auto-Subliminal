@@ -3,7 +3,7 @@
   <!-- Existing fields -->
   <div class="p-inputgroup" *ngFor="let value of values; let i=index; trackBy:trackValueByIndex">
     <div class="p-inputgroup">
-      <input type="text" pInputText [value]="value" (keyup)="onValueKeyup($event, value)">
+      <input type="text" pInputText [id]="(id || formControlName) + i" [value]="value" (keyup)="onValueKeyup($event, value)">
       <p-button icon="pi pi-folder-open" styleClass="p-button-outlined input-addon" (onClick)="openFileBrowser(value, i)"></p-button>
       <p-button icon="pi pi-times" styleClass="p-button-outlined input-addon" (onClick)="removeValue(value)"></p-button>
     </div>
@@ -11,7 +11,7 @@
   <!-- New field -->
   <div class="p-inputgroup">
     <div class="p-inputgroup">
-      <input type="text" pInputText [(ngModel)]="newValue" [ngClass]="validationClass" (keyup)="onNewValueKeyup($event)" placeholder="New value">
+      <input type="text" pInputText [id]="(id || formControlName) + 'New'" [(ngModel)]="newValue" [ngClass]="validationClass" (keyup)="onNewValueKeyup($event)" placeholder="New value">
       <p-button icon="pi pi-folder-open" styleClass="p-button-outlined input-addon" (onClick)="openFileBrowser(newValue, -1)"></p-button>
       <p-button icon="pi pi-plus" styleClass="p-button-outlined input-addon" (onClick)="addNewValue()" [disabled]="addButtonDisabled"></p-button>
     </div>
