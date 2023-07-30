@@ -1,0 +1,15 @@
+.dropdown {
+  margin-left: 0.125rem;
+
+  .dropdown-toggle {
+    i {
+      margin-left: 0.125rem; // proper alignment with dropdown tip
+    }
+  }
+
+  .dropdown-menu {
+    margin-left: -0.125rem;
+    padding: 0.5rem;
+    white-space: nowrap;
+  }
+}

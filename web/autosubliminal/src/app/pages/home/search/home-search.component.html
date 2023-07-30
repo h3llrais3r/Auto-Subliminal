@@ -1,0 +1,209 @@
+<div class="container-lg">
+  <p-panel *ngIf="wantedItem">
+    <!-- Custom panel header -->
+    <ng-template pTemplate="header">
+      <div class="w-100">
+        <div class="p-panel-title">Manual search for subtitles</div>
+        <div>
+          <p-button label="Search" icon="pi pi-refresh" styleClass="p-button-outlined" [disabled]="searchInProgress" (onClick)="searchSubtitles()"></p-button>
+        </div>
+      </div>
+    </ng-template>
+    <!-- Searching message -->
+    <app-message [visible]="searchInProgress">
+      <i class="fa fa-spinner fa-spin mr-2" aria-hidden="true"></i>
+      <span>Searching subtitles...</span>
+    </app-message>
+    <div class="panel-section">
+      <div class="panel-section-header">Wanted item</div>
+      <!-- Wanted item details -->
+      <div class="wanted-item-container">
+        <div class="row">
+          <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+            <span class="wanted-item-label">File name:</span>
+          </div>
+          <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+            <span class="wanted-item-value">{{wantedItem.videoFileName}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+            <span class="wanted-item-label">File path:</span>
+          </div>
+          <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+            <span class="wanted-item-value">{{wantedItem.videoFilePath}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 col-sm-12 col-md-2 col-lg-2">
+            <span class="wanted-item-label">Language:</span>
+          </div>
+          <div class="col-12 col-sm-12 col-md-10 col-lg-10">
+            <span class="p-tag language">{{language}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Subtitles -->
+    <div class="panel-section">
+      <div class="panel-section-header">Subtitles&nbsp;({{subtitles.length}})</div>
+      <p-table [value]="subtitles"
+               [loading]="searchInProgress"
+               [autoLayout]="true"
+               [rowHover]="true"
+               styleClass="p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode">
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="score"><span>Score<p-sortIcon field="score"></p-sortIcon></span></th>
+            <th pSortableColumn="providerName"><span>Provider<p-sortIcon field="providerName"></p-sortIcon></span></th>
+            <th>Preview</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th *ngIf="manualSubSyncEnabled"></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-subtitle>
+          <tr>
+            <td>
+              <span class="p-column-title">Score</span>
+              <span class="p-column-data">
+                <span>{{subtitle.score}}</span>
+                <a *ngIf="subtitle.score < scores.min" class="icon-link ml-1" (click)="showScoreDetails(subtitle)">
+                  <i class="fa fa-times-circle text-warning" aria-hidden="true" title="Click to show score details"></i>
+                </a>
+                <a *ngIf="subtitle.score >= scores.min" class="icon-link ml-1" (click)="showScoreDetails(subtitle)">
+                  <i class="fa fa-check-circle text-success" aria-hidden="true" title="Click to show score details"></i>
+                </a>
+              </span>
+            </td>
+            <td>
+              <span class="p-column-title">Provider</span>
+              <span class="p-column-data">
+                <span class="dropdown">
+                  <!-- Use static display to disable auto placement by popper.js -->
+                  <span class="dropdown-toggle has-tip icon-link" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false" title="Click to show releases">
+                    {{subtitle.providerName}}
+                  </span>
+                  <ul class="dropdown-menu has-tip">
+                    <li *ngFor="let release of subtitle.releases">{{release}}</li>
+                  </ul>
+                </span>
+              </span>
+            </td>
+            <td>
+              <span class="p-column-title">Preview</span>
+              <div class="p-column-data subtitle-preview">
+                <a class="icon-link subtitle-preview-icon" (click)="showSubtitlePreview(subtitle)">
+                  <i class="fa fa-search-plus" aria-hidden="true" title="Click to show preview"></i>
+                </a>
+                <div class="subtitle-preview-content" [innerHTML]="subtitle.contentPreview"></div>
+              </div>
+            </td>
+            <td class="subtitle-action">
+              <span class="p-column-title">Visit website</span>
+              <span class="p-column-data">
+                <a class="icon-link" [href]="getWebsiteUrl(subtitle)" target="_blank">
+                  <i class="fa fa-external-link" aria-hidden="true" title="Click to visit website"></i>
+                </a>
+              </span>
+            </td>
+            <td class="subtitle-action">
+              <span class="p-column-title">Save subtitle</span>
+              <span class="p-column-data">
+                <a class="icon-link" (click)="saveSubtitle(subtitle)">
+                  <i *ngIf="subtitle !== savedSubtitle" class="fa fa-floppy-o" aria-hidden="true" title="Click to save subtitle"></i>
+                  <i *ngIf="subtitle === savedSubtitle" class="fa fa-check-circle-o text-success" aria-hidden="true" title="Subtitle saved"></i>
+                </a>
+              </span>
+            </td>
+            <td class="subtitle-action">
+              <span class="p-column-title">Delete subtitle</span>
+              <span class="p-column-data">
+                <a class="icon-link" (click)="deleteSubtitle()">
+                  <i class="fa fa-times" aria-hidden="true" title="Click to delete subtitle"></i>
+                </a>
+              </span>
+            </td>
+            <td class="subtitle-action" *ngIf="manualSubSyncEnabled">
+              <span class="p-column-title">Sync subtitle</span>
+              <span class="p-column-data">
+                <a class="icon-link" [ngClass]="{'disabled': !savedSubtitle}" (click)="syncSubtitle()">
+                  <i class="fa fa-refresh" aria-hidden="true" title="Click to synchronize subtitle"></i>
+                </a>
+              </span>
+            </td>
+            <td class="subtitle-action">
+              <span class="p-column-title">Play video</span>
+              <span class="p-column-data">
+                <a class="icon-link" [href]="getPlayVideoUrl()">
+                  <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
+                </a>
+              </span>
+            </td>
+            <td class="subtitle-action">
+              <span class="p-column-title">Post process</span>
+              <span class="p-column-data">
+                <a class="icon-link" [ngClass]="{'disabled': !savedSubtitle}" (click)="postProcess(subtitle)">
+                  <i class="fa fa-paper-plane" aria-hidden="true" title="Click to execute post processing"></i>
+                </a>
+              </span>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <p-footer>
+      <div>
+        <button type="button" pButton icon="pi pi-chevron-left" label="Return" (click)="goHome()"></button>
+      </div>
+    </p-footer>
+  </p-panel>
+</div>
+
+<!-- Subtitle preview dialog -->
+<p-dialog [(visible)]="showSubtitlePreviewDialog"
+          [modal]="true"
+          [closable]="true"
+          [resizable]="false"
+          header="Subtitle preview">
+  <div class="dialog-content">
+    <div [innerHTML]="subtitlePreview"></div>
+  </div>
+</p-dialog>
+
+<!-- Score details dialog -->
+<p-dialog [(visible)]="showScoreDetailsDialog"
+          [modal]="true"
+          [closable]="true"
+          [resizable]="false"
+          header="Score details">
+  <div *ngIf="matches" class="dialog-content">
+    <div>Matches:</div>
+    <ul>
+      <li *ngFor="let scoreMatch of getScoreMatches()">{{scoreMatch}}</li>
+    </ul>
+    <div>
+      <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      Calculated score: {{score}}
+      <i *ngIf="score < scores.min" class="fa fa-times-circle text-warning" aria-hidden="true" title="Below minimum required configured score"></i>
+      <i *ngIf="score >= scores.min" class="fa fa-check-circle text-success" aria-hidden="true" title="Equal or more than minimum required configured score"></i>
+    </div>
+    <br>
+    <div>Minimum required default score: {{scores.default}}</div>
+    <div>Minimum required configured score: {{scores.min}}</div>
+    <div>Maximum score: {{scores.max}}</div>
+  </div>
+</p-dialog>
+
+<!-- Subtitle sync dialog -->
+<app-subtitle-sync *ngIf="showSubtitleSyncDialog"
+                   [(visible)]="showSubtitleSyncDialog"
+                   [videoPath]="subtitleSyncVideoPath"
+                   [subtitlePath]="subtitleSyncSubtitlePath">
+</app-subtitle-sync>
+
+<!-- Loading component -->
+<app-loading [visible]="postProcessInProgress"></app-loading>

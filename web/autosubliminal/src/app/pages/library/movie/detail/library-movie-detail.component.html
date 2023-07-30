@@ -1,0 +1,144 @@
+<div class="container-lg">
+  <p-panel header="Movie details">
+    <!-- Library scanning message -->
+    <app-library-scanning></app-library-scanning>
+    <!-- Details refreshing message -->
+    <app-message [visible]="refreshInProgress">
+      <i class="fa fa-spinner fa-spin mr-2" aria-hidden="true"></i>
+      <span>Refreshing movie details...</span>
+    </app-message>
+    <!-- Details -->
+    <div class="library-details-container" *ngIf="movie">
+      <!-- Info -->
+      <div class="row mb-3">
+        <div class="col-12 library-details-info-container">
+          <div class="library-details-info-poster">
+            <a [href]="getMoviePosterFullSizeUrl()" target="_blank">
+              <img class="library-details-info-poster-image" [lazyLoad]="getMoviePosterThumbnailUrl()" [defaultImage]="getPosterPlaceholderUrl()" title="Click to view full size">
+            </a>
+          </div>
+          <div class="library-details-info">
+            <div class="row">
+              <div class="col-12 library-details-info-title">
+                <span>{{movie.name}}</span>
+                <span class="icon-group">
+                  <a class="icon-link" [href]="getImdbUrl()" target="_blank">
+                    <i class="fa fa-imdb" aria-hidden="true" title="Click to visit Imdb"></i>
+                  </a>
+                  <a class="icon-link" (click)="openSettingsDialog()">
+                    <i class="fa fa-wrench" aria-hidden="true" title="Click to edit movie settings"></i>
+                  </a>
+                  <a class="icon-link" (click)="refreshMovieDetails()">
+                    <i class="fa fa-repeat" aria-hidden="true" title="Click to refresh movie details"></i>
+                  </a>
+                  <a class="icon-link" (click)="openDeleteDialog()">
+                    <i class="fa fa-trash" aria-hidden="true" title="Click to delete movie from the database"></i>
+                  </a>
+                </span>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <hr>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">{{movie.overview}}</div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-3">Location:</div>
+              <div class="col-9 wrap-text">
+                {{movie.path}}
+                <a *ngIf="!movie.pathInVideoPaths" class="icon-link" (click)="addMoviePathToVideoPaths()">
+                  <i class="fa fa-plus" aria-hidden="true" title="Click to add the movie path to the video paths to scan"></i>
+                </a>
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-3">Wanted languages:</div>
+              <div class="col-9"><span *ngFor="let language of movie.settings.wantedLanguages" class="p-tag language mr-2">{{language}}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Files summary -->
+      <div class="row mb-3">
+        <div class="col-12">
+          <hr>
+          <div class="library-details-files-summary">
+            <span class="summary-title">Files</span>
+            <span class="summary-progress-bar ml-auto">
+              <app-progress-bar [value]="movie.totalSubtitlesAvailable" [total]="movie.totalSubtitlesWanted"></app-progress-bar>
+            </span>
+          </div>
+          <hr>
+        </div>
+      </div>
+      <!-- Files -->
+      <div class="row mb-3">
+        <div class="col-12 library-details-files">
+          <p-table [value]="movie.files" [autoLayout]="true" styleClass="p-datatable-sm">
+            <ng-template pTemplate="body" let-file>
+              <tr>
+                <td class="wrap-text">
+                  <span>{{file.fileName}}</span>
+                  <span class="icon-group">
+                    <a *ngIf="file.isVideo" class="icon-link" [href]="getPlayVideoUrl(movie.path, file.fileName)">
+                      <i class="fa fa-play-circle-o" aria-hidden="true" title="Click to play video"></i>
+                    </a>
+                    <a *ngIf="libraryEditModeEnabled && file.isVideo" class="icon-link" (click)="openVideoSubtitlesDialog(movie.path, file.fileName, file.hardcodedLanguages)">
+                      <i class="fa fa-wrench" aria-hidden="true" title="Click to save hardcoded subtitle languages"></i>
+                    </a>
+                    <a *ngIf="manualSubSyncEnabled && file.isSubtitle" class="icon-link" (click)="openSubtitleSyncDialog(movie.getMovieFilePath(videoFileType), movie.getMovieFilePath(subtitleFileType, file.fileName))">
+                      <i class="fa fa-refresh" aria-hidden="true" title="Click to synchronize subtitle"></i>
+                    </a>
+                    <a *ngIf="libraryEditModeEnabled && file.isSubtitle" class="icon-link" (click)="openDeleteSubtitleDialog(file.filePath, file.fileName)">
+                      <i class="fa fa-trash" aria-hidden="true" title="Click to remove subtitle"></i>
+                    </a>
+                  </span>
+                </td>
+                <td *ngIf="file.isVideo" class="text-right">
+                  <!-- language is an array in case of video type -->
+                  <span class="p-tag language ml-2" *ngFor="let language of file.hardcodedLanguages">{{language}}</span>
+                  <span class="p-tag language ml-2" *ngFor="let language of file.embeddedLanguages">{{language}}</span>
+                  <span class="p-tag language ml-2" *ngIf="file.internalLanguagesAvailable">internal</span>
+                  <span class="p-tag filetype ml-2">{{file.type}}</span>
+                </td>
+                <td *ngIf="file.isSubtitle" class="text-right">
+                  <!-- language is a string in case of subtitle type -->
+                  <span class="p-tag language ml-2" *ngIf="file.language">{{file.language}}</span>
+                  <span class="p-tag filetype ml-2">{{file.type}}</span>
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+  </p-panel>
+</div>
+
+<!-- Confirmation dialog -->
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+<!-- Movie settings dialog -->
+<app-movie-settings *ngIf="showMovieSettings"
+                    [(visible)]="showMovieSettings"
+                    [imdbId]="movie.imdbId"
+                    [title]="movie.name"
+                    [movieSettings]="movie.settings">
+</app-movie-settings>
+
+<!-- Subtitle sync dialog -->
+<app-subtitle-sync *ngIf="showSubtitleSync"
+                   [(visible)]="showSubtitleSync"
+                   [videoPath]="movieVideoFilePath"
+                   [subtitlePath]="movieSubtitleFilePath">
+</app-subtitle-sync>
+
+<!-- Library video subtitles dialog -->
+<app-library-video-subtitles *ngIf="showVideoSubtitles"
+                             [(visible)]="showVideoSubtitles"
+                             [videoSubtitles]="videoSubtitles"
+                             (save)="saveHardcodedSubtitles($event)">
+</app-library-video-subtitles>

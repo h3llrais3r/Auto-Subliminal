@@ -8,23 +8,23 @@ const routes: Routes = [
   },
   {
     path: 'home',
-    loadChildren: () => import('./modules/home/home.routes')
+    loadChildren: () => import('./pages/home/home.routes')
   },
   {
     path: 'library',
-    loadChildren: () => import('./modules/library/library.routes')
+    loadChildren: () => import('./pages/library/library.routes')
   },
   {
     path: 'settings',
-    loadChildren: () => import('./modules/settings/settings.routes')
+    loadChildren: () => import('./pages/settings/settings.routes')
   },
   {
     path: 'log',
-    loadChildren: () => import('./modules/log/log.routes')
+    loadChildren: () => import('./pages/log/log.routes')
   },
   {
     path: 'system',
-    loadChildren: () => import('./modules/system/system.routes')
+    loadChildren: () => import('./pages/system/system.routes')
   },
   {
     path: '**', // wildcard to match any non matching routes

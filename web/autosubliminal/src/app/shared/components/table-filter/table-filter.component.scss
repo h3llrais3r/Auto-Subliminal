@@ -1,9 +1,0 @@
-@import '../../../../scss/variables';
-
-.search-input {
-  min-width: 10rem;
-
-  @media (max-width: $media-mobile-max-width) {
-    min-width: 8rem; // proper size on mobile
-  }
-}

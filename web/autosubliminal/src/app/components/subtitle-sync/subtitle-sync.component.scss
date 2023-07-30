@@ -1,0 +1,47 @@
+@import '../../../scss/variables';
+@import '../../../scss/mixins/flexbox';
+
+::ng-deep .dialog-subtitle-sync {
+  width: 40rem;
+}
+
+::ng-deep .p-panel .p-panel-header .p-panel-title {
+  font-size: 1.25rem !important;
+}
+
+.subtitle-sync-container {
+  .row {
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle-sync-label {
+    font-weight: $font-bold;
+  }
+
+  .subtitle-sync-value {
+    // font-style: italic;
+  }
+
+  .subtitle-upload {
+    @include flexbox;
+    @include align-items(center);
+    @include justify-content(space-between);
+  }
+
+  .save-warning {
+    .label {
+      font-style: italic;
+      margin-left: 0.5rem;
+    }
+  }
+
+  .backup-toggle {
+    @include flexbox;
+    @include align-items(center);
+
+    .label {
+      font-style: italic;
+      margin-right: 0.5rem;
+    }
+  }
+}

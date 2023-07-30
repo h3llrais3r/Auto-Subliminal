@@ -1,0 +1,11 @@
+<span class="input-switch-container">
+  <span class="input-switch">
+    <span *ngIf="label" class="label">{{label}}</span>
+    <span>
+      <p-inputSwitch [inputId]="id || formControlName"
+                     [formControl]="control"
+                     (onChange)="onInputSwitchChange($event)">
+      </p-inputSwitch>
+    </span>
+  </span>
+</span>

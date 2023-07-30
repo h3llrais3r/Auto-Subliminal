@@ -1,0 +1,5 @@
+<span class="p-inputgroup">
+  <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+  <input #filterInput pInputText type="text" [(ngModel)]="filterValue" (input)="table.filterGlobal(filterInput.value, matchMode)" class="search-input" placeholder="Global Search" />
+  <button type="button" pButton icon="pi pi-times" class="p-button-outlined" (click)="clearTableFilter()" title="Clear filter"></button>
+</span>

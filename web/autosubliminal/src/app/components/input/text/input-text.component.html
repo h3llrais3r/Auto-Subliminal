@@ -1,0 +1,15 @@
+<!-- Input text -->
+<input pInputText
+       [type]="type"
+       [id]="id || formControlName"
+       [formControl]="control"
+       [placeholder]="placeholder"
+       [ngClass]="validationClass"
+       [mask]="mask"
+       [dropSpecialCharacters]="dropSpecialCharacters"
+       (focus)="onFocus($event)"
+       (keydown)="onKeyDown($event)"
+       (keyup)="onKeyUp($event)"
+       (change)="onChange($event)"
+       (blur)="onBlur($event)"
+       class="w-100">

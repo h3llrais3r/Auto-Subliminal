@@ -1,0 +1,30 @@
+<div class="container-lg">
+  <p-panel>
+    <!-- Custom panel header -->
+    <ng-template pTemplate="header">
+      <div class="w-100">
+        <div class="p-panel-title">Logfile</div>
+        <div>
+          <span class="log-num">
+            <span class="p-tag p-tag-rounded" [ngClass]="{'p-tag-secondary': selectedLogNum !== 0}" (click)="getLogs(0)">current</span>
+            <span *ngFor="let logNum of logNums" class="p-badge" [ngClass]="{'p-badge-secondary': selectedLogNum !== logNum}" (click)="getLogs(logNum)">{{logNum}}</span>
+          </span>
+          <span class="log-tail">
+            <p-button [label]="tailButtonLabel" [icon]="tailButtonIcon" styleClass="p-button-outlined" [disabled]="tailingDisabled" (onClick)="toggleTailing()"></p-button>
+          </span>
+          <span class="log-level">
+            <p-dropdown [options]="loglevels" [(ngModel)]="selectedLoglevel" styleClass="p-dropdown-ar" scrollHeight="300px"></p-dropdown>
+          </span>
+        </div>
+      </div>
+    </ng-template>
+    <!-- Log content -->
+    <pre class="log-content">{{logContent}}</pre>
+  </p-panel>
+</div>
+
+<!-- Loading component -->
+<app-loading [visible]="loading"></app-loading>
+
+<!-- Scroll component -->
+<app-scroll></app-scroll>

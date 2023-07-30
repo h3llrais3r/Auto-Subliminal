@@ -6,11 +6,11 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { concatMap, interval, noop } from 'rxjs';
 import { AppSettingsService } from './app-settings.service';
-import { SystemService } from './core/services/api/system.service';
-import { MessageService } from './core/services/message.service';
-import { SystemEventService } from './core/services/system-event.service';
-import { PageFooterComponent } from './core/ui/page/footer/page-footer.component';
-import { PageHeaderComponent } from './core/ui/page/header/page-header.component';
+import { SystemService } from './services/api/system.service';
+import { MessageService } from './services/message.service';
+import { SystemEventService } from './services/system-event.service';
+import { PageFooterComponent } from './components/page/footer/page-footer.component';
+import { PageHeaderComponent } from './components/page/header/page-header.component';
 
 @Component({
   selector: 'app-root',

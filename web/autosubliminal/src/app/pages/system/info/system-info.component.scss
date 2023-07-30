@@ -1,0 +1,39 @@
+@import '../../../../scss/variables';
+
+.info-wrapper {
+  .info {
+    &-item {
+      margin-bottom: 1rem;
+    }
+
+    &-label {
+      font-weight: $font-bold;
+    }
+  }
+}
+
+.changelog-wrapper ::ng-deep .release {
+  .version {
+    margin-bottom: 1rem;
+
+    &-label {
+      font-weight: $font-bold;
+    }
+  }
+
+  .releasedate {
+    margin-bottom: 1rem;
+
+    &-label {
+      font-weight: $font-bold;
+    }
+  }
+
+  .changelog {
+    margin-bottom: 1rem;
+
+    &-label {
+      font-weight: $font-bold;
+    }
+  }
+}

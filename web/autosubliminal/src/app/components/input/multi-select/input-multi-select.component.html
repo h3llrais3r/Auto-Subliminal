@@ -1,0 +1,20 @@
+<!-- Multi select -->
+<p-multiSelect [inputId]="id || formControlName"
+               [options]="options"
+               [formControl]="control"
+               [placeholder]="placeholder"
+               [filter]="true"
+               (onFocus)="onMultiSelectFocus($event)"
+               (onChange)="onMultiSelectChange($event)"
+               (onBlur)="onMultiSelectBlur($event)"
+               filterBy="label,value"
+               appendTo="body"
+               styleClass="w-100">
+  <ng-template let-items pTemplate="selectedItems">
+    <span *ngFor="let item of items" class="mr-2">
+      <span class="p-tag p-tag-secondary p-tag-small">{{item}}</span>
+      <span class="p-tag p-tag-secondary p-tag-small p-tag-icon" (click)="removeItem(item)"><i class="fa fa-times" aria-hidden="true" title="Click to remove item"></i></span>
+    </span>
+    <span *ngIf="!items || items.length === 0">{{placeholder}}</span>
+  </ng-template>
+</p-multiSelect>

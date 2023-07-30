@@ -2,11 +2,10 @@ import { PlatformLocation } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { AntiCaptchaProvider } from './shared/models/captcha';
-import { Language } from './shared/models/language';
-import { EpisodeScores, MovieScores } from './shared/models/score';
+import { catchError, map, Observable, throwError } from 'rxjs';
+import { AntiCaptchaProvider } from './models/captcha';
+import { Language } from './models/language';
+import { EpisodeScores, MovieScores } from './models/score';
 
 class AppSettings {
   appVersion: string;

@@ -1,0 +1,28 @@
+@import '../../../scss/variables';
+
+::ng-deep .dialog-file-browser {
+  width: 50rem;
+
+  .p-datatable .p-datatable-header {
+    padding-left: 0; // remove padding from table header
+    padding-right: 0; // remove padding from table header
+  }
+}
+
+.caption {
+  .label {
+    font-weight: $font-bold;
+  }
+
+  .value {
+    font-weight: $font-default;
+  }
+}
+
+.col-type {
+  width: 50px;
+}
+
+.col-name {
+  width: 100%;
+}

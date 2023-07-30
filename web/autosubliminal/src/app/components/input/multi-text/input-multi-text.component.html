@@ -1,0 +1,17 @@
+<!-- Input multi text -->
+<div class="input-multi-text">
+  <!-- Existing fields -->
+  <div class="p-inputgroup" *ngFor="let value of values; trackBy:trackValueByIndex">
+    <p-dropdown *ngIf="options" [options]="options" [ngModel]="value" (onChange)="onValueChange($event, value)" styleClass="w-100"></p-dropdown>
+    <input *ngIf="!options" type="text" pInputText [value]="value" (keyup)="onValueKeyup($event, value)">
+    <p-button icon="pi pi-times" styleClass="p-button-outlined input-addon" (onClick)="removeValue(value)"></p-button>
+  </div>
+  <!-- New field -->
+  <div class="p-inputgroup">
+    <p-dropdown *ngIf="options" [options]="options" [(ngModel)]="newValue" [ngClass]="validationClass" (onChange)="onNewValueChange($event)" styleClass="w-100"></p-dropdown>
+    <input *ngIf="!options" type="text" pInputText [(ngModel)]="newValue" [ngClass]="validationClass" (keyup)="onNewValueKeyup($event)" placeholder="New value">
+    <p-button icon="pi pi-plus" styleClass="p-button-outlined input-addon" (onClick)="addNewValue()" [disabled]="addButtonDisabled"></p-button>
+  </div>
+  <!-- Hidden input -->
+  <input type="hidden" [id]="id || formControlName" [formControl]="control">
+</div>
