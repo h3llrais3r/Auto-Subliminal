@@ -14,30 +14,36 @@
       "web/autosubliminal/package.json"
     ]
   },
-  "js": {
-    "labels": [
-      "dependencies",
-      "javascript"
-    ],
-    "packageRules": [
-      {
-        "packageNames": [
-          "bootstrap"
-        ],
-        "allowedVersions": "<5.0.0"
-      }
-    ]
-  },
   "poetry": {
     "fileMatch": [
       "pyproject.toml"
     ]
   },
-  "python": {
-    "labels": [
-      "dependencies",
-      "python"
-    ],
-    "packageRules": []
-  }
+  "labels": [
+    "dependencies"
+  ],
+  "packageRules": [
+    {
+      "matchCategories": [
+        "js"
+      ],
+      "addLabels": [
+        "javascript"
+      ]
+    },
+    {
+      "matchCategories": [
+        "python"
+      ],
+      "addLabels": [
+        "python"
+      ]
+    },
+    {
+      "matchPackageNames": [
+        "bootstrap"
+      ],
+      "allowedVersions": "<5.0.0"
+    }
+  ]
 }
