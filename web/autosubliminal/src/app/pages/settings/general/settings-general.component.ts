@@ -6,10 +6,6 @@ import { SelectItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { appSettings, AppSettingsService } from '../../../app-settings.service';
-import { SettingsService } from '../../../services/api/settings.service';
-import { MessageService } from '../../../services/message.service';
-import { FormUtils } from '../../../components/forms/form-utils';
-import { FormValidators } from '../../../components/forms/form-validators';
 import { IconDropdownComponent } from '../../../components/icon-dropdown/icon-dropdown.component';
 import { InputDropdownComponent } from '../../../components/input/dropdown/input-dropdown.component';
 import { InputFileBrowserComponent } from '../../../components/input/file-browser/input-file-browser.component';
@@ -17,6 +13,10 @@ import { InputMultiFileBrowserComponent } from '../../../components/input/multi-
 import { InputMultiTextComponent } from '../../../components/input/multi-text/input-multi-text.component';
 import { InputNumberComponent } from '../../../components/input/number/input-number.component';
 import { GeneralSettings } from '../../../models/settings';
+import { SettingsService } from '../../../services/api/settings.service';
+import { MessageService } from '../../../services/message.service';
+import { FormUtils } from '../../../utils/form-utils';
+import { FormValidators } from '../../../utils/form-validators';
 
 @Component({
   selector: 'app-settings-general',

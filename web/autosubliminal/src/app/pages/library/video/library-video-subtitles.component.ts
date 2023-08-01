@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup 
 import { SelectItem, SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import { FormUtils } from '../../../components/forms/form-utils';
 import { InputMultiSelectComponent } from '../../../components/input/multi-select/input-multi-select.component';
 import { VideoSubtitles } from '../../../models/video';
+import { FormUtils } from '../../../utils/form-utils';
 
 @Component({
   selector: 'app-library-video-subtitles',

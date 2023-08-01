@@ -1,4 +1,4 @@
-import { appSettings } from '../../app-settings.service';
+import { appSettings } from '../app-settings.service';
 
 export function calculateEpisodeScore(matchSource: boolean, matchQuality: boolean, matchCodec: boolean, matchReleaseGroup: boolean): number {
   let score = appSettings.episodeScores.default;

@@ -6,15 +6,15 @@ import { SelectItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { AppSettingsService } from '../../../app-settings.service';
-import { SettingsService } from '../../../services/api/settings.service';
-import { MessageService } from '../../../services/message.service';
-import { FormUtils } from '../../../components/forms/form-utils';
-import { FormValidators } from '../../../components/forms/form-validators';
 import { IconDropdownComponent } from '../../../components/icon-dropdown/icon-dropdown.component';
 import { InputDropdownComponent } from '../../../components/input/dropdown/input-dropdown.component';
 import { InputNumberComponent } from '../../../components/input/number/input-number.component';
 import { InputTextComponent } from '../../../components/input/text/input-text.component';
 import { LogSettings } from '../../../models/settings';
+import { SettingsService } from '../../../services/api/settings.service';
+import { MessageService } from '../../../services/message.service';
+import { FormUtils } from '../../../utils/form-utils';
+import { FormValidators } from '../../../utils/form-validators';
 
 @Component({
   selector: 'app-settings-logging',

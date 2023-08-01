@@ -5,12 +5,12 @@ import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup,
 import { SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { WantedItem } from '../../models/item';
 import { ItemService } from '../../services/api/item.service';
 import { MessageService } from '../../services/message.service';
-import { WantedItem } from '../../models/item';
+import { FormUtils } from '../../utils/form-utils';
+import { FormValidators } from '../../utils/form-validators';
 import { toNumber, toNumberList } from '../../utils/number-utils';
-import { FormUtils } from '../forms/form-utils';
-import { FormValidators } from '../forms/form-validators';
 import { InputNumberComponent } from '../input/number/input-number.component';
 import { InputTextComponent } from '../input/text/input-text.component';
 

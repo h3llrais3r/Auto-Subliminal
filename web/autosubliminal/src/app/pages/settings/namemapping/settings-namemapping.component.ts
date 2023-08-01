@@ -6,12 +6,12 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { PanelModule } from 'primeng/panel';
 import { AppSettingsService } from '../../../app-settings.service';
-import { SettingsService } from '../../../services/api/settings.service';
-import { MessageService } from '../../../services/message.service';
-import { FormUtils } from '../../../components/forms/form-utils';
 import { IconDropdownComponent } from '../../../components/icon-dropdown/icon-dropdown.component';
 import { InputMultiTextComponent } from '../../../components/input/multi-text/input-multi-text.component';
 import { NameMappingSettings } from '../../../models/settings';
+import { SettingsService } from '../../../services/api/settings.service';
+import { MessageService } from '../../../services/message.service';
+import { FormUtils } from '../../../utils/form-utils';
 
 @Component({
   selector: 'app-settings-namemapping',

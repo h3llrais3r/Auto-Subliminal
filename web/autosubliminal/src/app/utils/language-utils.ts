@@ -1,5 +1,5 @@
-import { appSettings } from '../../app-settings.service';
-import { Language } from '../../models/language';
+import { appSettings } from '../app-settings.service';
+import { Language } from '../models/language';
 
 // Function to convert a list of language codes to a list of language objects
 export function convertToLanguages(languageCodes: string[]): Language[] {
