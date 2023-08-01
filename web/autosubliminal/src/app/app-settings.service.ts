@@ -1,56 +1,9 @@
-import { PlatformLocation } from '@angular/common';
+import { DOCUMENT, PlatformLocation } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { catchError, map, Observable, throwError } from 'rxjs';
-import { AntiCaptchaProvider } from './models/captcha';
-import { Language } from './models/language';
-import { EpisodeScores, MovieScores } from './models/score';
-
-class AppSettings {
-  appVersion: string;
-  appProcessId: number;
-  developerMode: boolean;
-  webRoot = ''; // Make sure it's a string as it's used to all url connections to the backend (if not set it becomes undefined, which gives 404 errors)
-  scanDisk: string;
-  scanDiskIntervalDefault: number;
-  scanLibrary: string;
-  scanLibraryIntervalDefault: number;
-  checkSub: string;
-  checkSubIntervalDefault: number;
-  checkSubDeadlineDefault: number;
-  checkSubDeltaDefault: number;
-  checkVersion: string;
-  checkVersionIntervalDefault: number;
-  libraryMode: boolean;
-  libraryEditMode: boolean;
-  logReversed: boolean;
-  manualRefineVideo: boolean;
-  preferHearingImpaired: boolean;
-  manualSubSync: boolean;
-  dereferUrl: string;
-  tvdbUrl: string;
-  imdbUrl: string;
-  timestampFormat: string;
-  pathSeparator: string;
-  languages: Language[];
-  subliminalProviders: string[];
-  antiCaptchaProviders: AntiCaptchaProvider[];
-  episodeScores: EpisodeScores;
-  movieScores: MovieScores;
-
-  get timeFormat(): string {
-    return this.timestampFormat.split(' ')[0];
-  }
-
-  get dateFormat(): string {
-    return this.timestampFormat.split(' ')[1];
-  }
-
-  public fromSettings(obj: any): void {
-    Object.assign(this, obj);
-  }
-}
+import { AppSettings } from './models/app-settings';
 
 export const appSettings = new AppSettings();
 
@@ -62,6 +15,7 @@ export class AppSettingsService {
   private configLoaded = false;
   private webRoot = '';
 
+  private document = inject(DOCUMENT);
   private platformLocation = inject(PlatformLocation);
   private httpClient = inject(HttpClient);
   private destroyRef = inject(DestroyRef);
@@ -96,7 +50,7 @@ export class AppSettingsService {
     this.load(true).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       error: () => {
         console.error('Forcing page reload to re-initialize the application');
-        document.location.reload();
+        this.document.location.reload();
       }
     });
   }

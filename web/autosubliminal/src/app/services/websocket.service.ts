@@ -1,5 +1,6 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { WINDOW } from 'ngx-window-token';
 import { interval, takeWhile } from 'rxjs';
 import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 import { appSettings } from '../app-settings.service';
@@ -19,6 +20,7 @@ export class WebSocketService {
 
   private systemWebsocket$: WebSocketSubject<SystemWebSocketMessage>;
 
+  private window = inject(WINDOW);
   private messageService = inject(MessageService);
   private systemEventService = inject(SystemEventService);
   private destroyRef = inject(DestroyRef);
@@ -90,11 +92,11 @@ export class WebSocketService {
 
   private createSystemWebSocket(): WebSocketSubject<SystemWebSocketServerMessage> {
     let protocol = 'ws:';
-    if (window.location.protocol === 'https:') {
+    if (this.window.location.protocol === 'https:') {
       protocol = 'wss:';
     }
     const config: WebSocketSubjectConfig<SystemWebSocketServerMessage> = {
-      url: `${protocol}//${window.location.host}${appSettings.webRoot}/websocket/system`,
+      url: `${protocol}//${this.window.location.host}${appSettings.webRoot}/websocket/system`,
       openObserver: { // on connect
         next: () => {
           console.log('Websocket connection established');

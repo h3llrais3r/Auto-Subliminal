@@ -231,6 +231,9 @@ SOFTWARE.
 ngx-webstorage
 MIT
 
+ngx-window-token
+MIT
+
 primeicons
 MIT
 MIT License

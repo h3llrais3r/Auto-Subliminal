@@ -2,18 +2,19 @@ import { NgClass, NgFor } from '@angular/common';
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
+import { WINDOW } from 'ngx-window-token';
 import { SelectItem, SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DropdownModule } from 'primeng/dropdown';
 import { PanelModule } from 'primeng/panel';
 import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
 import { appSettings } from '../../../app-settings.service';
-import { LogService } from '../../../services/api/log.service';
-import { MessageService } from '../../../services/message.service';
-import { ScrollService } from '../../../services/scroll.service';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { ScrollComponent } from '../../../components/scroll/scroll.component';
 import { Loglevel } from '../../../models/loglevel';
+import { LogService } from '../../../services/api/log.service';
+import { MessageService } from '../../../services/message.service';
+import { ScrollService } from '../../../services/scroll.service';
 
 @Component({
   selector: 'app-log-view',
@@ -39,6 +40,7 @@ export class LogViewComponent implements OnInit {
   private logWebsocket$: WebSocketSubject<string>;
   private logMessages: string[] = [];
 
+  private window = inject(WINDOW);
   private logService = inject(LogService);
   private messageService = inject(MessageService);
   private scrollService = inject(ScrollService);
@@ -110,10 +112,10 @@ export class LogViewComponent implements OnInit {
 
   private createLogWebSocket(): WebSocketSubject<string> {
     let protocol = 'ws:';
-    if (window.location.protocol === 'https:') {
+    if (this.window.location.protocol === 'https:') {
       protocol = 'wss:';
     }
-    const url = `${protocol}//${window.location.host}${appSettings.webRoot}/websocket/log`;
+    const url = `${protocol}//${this.window.location.host}${appSettings.webRoot}/websocket/log`;
     const config: WebSocketSubjectConfig<string> = {
       url,
       deserializer: (e: MessageEvent) => e.data as string,

@@ -1,3 +1,4 @@
+import { DOCUMENT } from '@angular/common';
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { StorageService } from './storage.service';
@@ -9,6 +10,7 @@ export class ThemeService {
 
   currentTheme$ = new BehaviorSubject<string>('bootstrap4-dark-blue'); // default theme (as set in index.html)
 
+  private document = inject(DOCUMENT);
   private storageService = inject(StorageService);
 
   constructor() {
@@ -20,7 +22,7 @@ export class ThemeService {
   }
 
   changeTheme(theme: string): void {
-    const themeElement = document.getElementById('currentTheme');
+    const themeElement = this.document.getElementById('currentTheme');
     themeElement.setAttribute('href', themeElement.getAttribute('href').replace(this.currentTheme$.getValue(), theme));
     this.storageService.storeTheme(theme);
     this.currentTheme$.next(theme);

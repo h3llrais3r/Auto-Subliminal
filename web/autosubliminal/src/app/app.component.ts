@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { DOCUMENT, NgIf } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
@@ -6,11 +6,11 @@ import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
 import { concatMap, interval, noop } from 'rxjs';
 import { AppSettingsService } from './app-settings.service';
+import { PageFooterComponent } from './components/page/footer/page-footer.component';
+import { PageHeaderComponent } from './components/page/header/page-header.component';
 import { SystemService } from './services/api/system.service';
 import { MessageService } from './services/message.service';
 import { SystemEventService } from './services/system-event.service';
-import { PageFooterComponent } from './components/page/footer/page-footer.component';
-import { PageHeaderComponent } from './components/page/header/page-header.component';
 
 @Component({
   selector: 'app-root',
@@ -31,6 +31,7 @@ export class AppComponent {
 
   private readonly ALIVE_CHECK_INTERVAL = 2000;
 
+  private document = inject(DOCUMENT);
   private appSettingsService = inject(AppSettingsService);
   private systemEventService = inject(SystemEventService);
   private systemService = inject(SystemService);
@@ -90,8 +91,8 @@ export class AppComponent {
               this.systemStarted = true;
               check.unsubscribe(); // stop the check
             } else {
-              // If iapp is not loaded, reload page to re-initialize the app
-              document.location.reload();
+              // If app is not loaded, reload page to re-initialize the app
+              this.document.location.reload();
             }
           }
           // Continue the check

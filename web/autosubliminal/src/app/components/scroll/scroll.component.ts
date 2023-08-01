@@ -1,6 +1,7 @@
-import { NgClass } from '@angular/common';
+import { DOCUMENT, NgClass } from '@angular/common';
 import { AfterContentChecked, Component, DestroyRef, HostListener, inject, Input, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { WINDOW } from 'ngx-window-token';
 import { ScrollService } from '../../services/scroll.service';
 
 @Component({
@@ -18,6 +19,8 @@ export class ScrollComponent implements OnInit, AfterContentChecked {
   private scrollHeight: number;
   private maxScrollHeight: number;
 
+  private window = inject(WINDOW);
+  private document = inject(DOCUMENT);
   private scrollService = inject(ScrollService);
   private destroyRef = inject(DestroyRef);
 
@@ -59,7 +62,7 @@ export class ScrollComponent implements OnInit, AfterContentChecked {
       if (this.target) {
         this.target.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'smooth' });
       } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        this.window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
   }
@@ -69,16 +72,16 @@ export class ScrollComponent implements OnInit, AfterContentChecked {
       if (this.target) {
         this.target.scrollIntoView({ block: 'end', inline: 'nearest', behavior: 'smooth' });
       } else {
-        window.scrollTo({ top: this.maxScrollHeight, behavior: 'smooth' });
+        this.window.scrollTo({ top: this.maxScrollHeight, behavior: 'smooth' });
       }
     }
   }
 
   private getScrollHeight(): number {
-    return document.documentElement.scrollTop || document.body.scrollTop;
+    return this.document.documentElement.scrollTop || this.document.body.scrollTop;
   }
 
   private getMaxScrollHeight(): number {
-    return (document.documentElement.scrollHeight || document.body.scrollHeight) - (document.documentElement.offsetHeight || document.body.offsetHeight);
+    return (this.document.documentElement.scrollHeight || this.document.body.scrollHeight) - (this.document.documentElement.offsetHeight || this.document.body.offsetHeight);
   }
 }
