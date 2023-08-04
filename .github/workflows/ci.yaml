@@ -120,13 +120,11 @@ jobs:
           poetry run coverage report
 
       - name: Publish python coverage report
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_PARALLEL: true
-          # Set service name as work around -> https://github.com/TheKevJames/coveralls-python/issues/252
-          COVERALLS_SERVICE_NAME: github
-        run: |
-          poetry run coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: ${{ matrix.os }}-python-${{ matrix.python-version }}
+          parallel: true
 
   ci-backend-finish:
     needs: ci-backend
@@ -134,12 +132,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install python dependencies
-        run: |
-          pip install --upgrade coveralls
-
       - name: Aggregate python coverage reports
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          coveralls --finish
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel-finished: true
