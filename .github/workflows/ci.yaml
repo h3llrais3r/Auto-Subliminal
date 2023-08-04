@@ -125,8 +125,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: ${{ matrix.os }}-python-${{ matrix.python-version }}
+          file: coverage.lcov # although it's autodetected, removing it, causes issues on windows builds, so keep it
           parallel: true
-          # file: coverage.lcov # auto detected since v2
 
   ci-backend-finish:
     needs: ci-backend
