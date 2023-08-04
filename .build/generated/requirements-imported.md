@@ -11,7 +11,7 @@
 # autosubliminal\util\filesystem.py: 13,14
 # autosubliminal\util\language.py: 5,6
 babelfish==0.6.0
-# autosubliminal\application.py: 13,14
+# autosubliminal\application.py: 12,13
 # autosubliminal\core\websocket.py: 7
 # autosubliminal\server\api\items.py: 5
 # autosubliminal\server\api\logs.py: 7
@@ -106,7 +106,7 @@ Unidecode==1.3.6
 # autosubliminal\subsynchronizer.py: 26
 webrtcvad-wheels==2.0.11.post1
 # autosubliminal\__init__.py: 16
-# autosubliminal\application.py: 15,16
+# autosubliminal\application.py: 14,15
 # autosubliminal\core\websocket.py: 10,11
 ws4py==0.5.1
 ```
