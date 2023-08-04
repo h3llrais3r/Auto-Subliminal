@@ -69,6 +69,10 @@ class Scheduler(object):
         self.name = scheduler_name
         autosubliminal.SCHEDULERS[scheduler_name] = self
 
+    def _deregister_scheduler(self) -> None:
+        # Remove scheduler form dict of schedulers
+        del autosubliminal.SCHEDULERS[self.name]
+
     def start(self, now: bool = True, wait: bool = False) -> None:
         """Start the scheduler."""
         log.info('Starting %s thread', self.name)
@@ -157,6 +161,7 @@ class Scheduler(object):
 
         self._force_stop = True
         self._thread.join(10)
+        self._deregister_scheduler()
 
     def activate(self) -> None:
         """Activate the scheduler."""
