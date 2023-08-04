@@ -17,8 +17,54 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  ci:
+  # Frontend
+  ci-frontend:
+    runs-on: ${{ matrix.os }} # Use matrix os to run on multiple os
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
 
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Print concurrency group
+        run: |
+          echo "${{ github.workflow }}-${{ github.ref }}"
+
+      - name: Get node version
+        id: get-node-version
+        working-directory: web/autosubliminal
+        run: |
+          echo "node-version=$(jq -r '.engines.node' package.json | sed 's/[>=]//g')" >> $GITHUB_OUTPUT
+
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ steps.get-node-version.outputs.node-version }}
+
+      - name: Print node version
+        run: |
+          echo "Node version $(node --version)"
+          echo "Npm version $(npm --version)"
+
+      - name: Install npm dependencies
+        working-directory: web/autosubliminal
+        run: |
+          npm install
+
+      - name: Build angular code
+        working-directory: web/autosubliminal
+        run: |
+          npm run build-ci
+
+      - name: Lint angular code
+        working-directory: web/autosubliminal
+        run: |
+          npm run lint
+
+  # Backend
+  ci-backend:
     runs-on: ${{ matrix.os }} # Use matrix os to run on multiple os
     strategy:
       matrix:
@@ -30,98 +76,70 @@ jobs:
         shell: bash # required for poetry
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Print concurrency group
-      run: |
-        echo "${{ github.workflow }}-${{ github.ref }}"
+      - name: Print concurrency group
+        run: |
+          echo "${{ github.workflow }}-${{ github.ref }}"
 
-    - name: Set up python
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Set up python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Print python version
-      run: |
-        python --version
+      - name: Print python version
+        run: |
+          python --version
 
-    - name: Setup poetry
-      uses: snok/install-poetry@v1
+      - name: Setup poetry
+        uses: snok/install-poetry@v1
 
-    - name: Print poetry version
-      run: |
-        poetry --version
+      - name: Print poetry version
+        run: |
+          poetry --version
 
-    - name: Install python dependencies
-      run: |
-        poetry install --no-interaction
+      - name: Install python dependencies
+        run: |
+          poetry install --no-interaction
 
-    - name: Get node version
-      id: get-node-version
-      working-directory: web/autosubliminal
-      run: |
-        echo "node-version=$(jq -r '.engines.node' package.json | sed 's/[>=]//g')" >> $GITHUB_OUTPUT
+      - name: Lint python code
+        run: |
+          # Configuration is done in .flake8
+          poetry run flake8 --verbose
 
-    - name: Set up node
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ steps.get-node-version.outputs.node-version }}
+      - name: Type check python code
+        run: |
+          # Configuration is done in pyproject.toml
+          poetry run mypy
 
-    - name: Print node version
-      run: |
-        echo "Node version $(node --version)"
-        echo "Npm version $(npm --version)"
+      - name: Test python code
+        run: |
+          # Configuration is done in pyproject.toml
+          poetry run coverage run --module pytest
+          poetry run coverage report
 
-    - name: Install npm dependencies
-      working-directory: web/autosubliminal
-      run: |
-        npm install
+      - name: Publish python coverage report
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_PARALLEL: true
+          # Set service name as work around -> https://github.com/TheKevJames/coveralls-python/issues/252
+          COVERALLS_SERVICE_NAME: github
+        run: |
+          poetry run coveralls
 
-    - name: Lint python code
-      run: |
-        # Configuration is done in .flake8
-        poetry run flake8 --verbose
-
-    - name: Type check python code
-      run: |
-        # Configuration is done in pyproject.toml
-        poetry run mypy
-
-    - name: Lint angular code
-      working-directory: web/autosubliminal
-      run: |
-        npm run lint
-
-    - name: Test python code
-      run: |
-        # Configuration is done in pyproject.toml
-        poetry run coverage run --module pytest
-        poetry run coverage report
-
-    - name: Publish python coverage report
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        COVERALLS_PARALLEL: true
-        # Set service name as work around -> https://github.com/TheKevJames/coveralls-python/issues/252
-        COVERALLS_SERVICE_NAME: github
-      run: |
-        poetry run coveralls
-
-  ci-finish:
-
-    needs: ci
+  ci-backend-finish:
+    needs: ci-backend
 
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install python dependencies
+        run: |
+          pip install --upgrade coveralls
 
-    - name: Install python dependencies
-      run: |
-        pip install --upgrade coveralls
-
-    - name: Aggregate python coverage reports
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        coveralls --finish
+      - name: Aggregate python coverage reports
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          coveralls --finish

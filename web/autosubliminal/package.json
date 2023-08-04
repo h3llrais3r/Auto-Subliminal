@@ -30,8 +30,9 @@
     "copy-themes-saga": "copyfiles -u 4 \"./node_modules/primeng/resources/themes/saga-*/**/*\" ./src/assets/themes",
     "copy-themes-vela": "copyfiles -u 4 \"./node_modules/primeng/resources/themes/vela-*/**/*\" ./src/assets/themes",
     "fix-line-endings": "node fix-line-endings.js",
-    "build": "npm run clean && npm run copy-themes && ng build && npm run fix-line-endings",
     "start": "npm run copy-themes && ng serve --host 0.0.0.0 --proxy-config proxy.localhost.conf.json",
+    "build": "npm run clean && npm run copy-themes && ng build && npm run fix-line-endings",
+    "build-ci": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "ng": "ng"
