@@ -118,6 +118,7 @@ jobs:
           # Configuration is done in pyproject.toml
           poetry run coverage run --module pytest
           poetry run coverage report
+          poetry run coverage lcov
 
       - name: Publish python coverage report
         uses: coverallsapp/github-action@master

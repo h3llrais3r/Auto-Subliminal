@@ -60,3 +60,5 @@ cache/
 #Coverage files (except coverage configuration file)
 !.coveragerc
 .coverage
+coverage/
+coverage.*
