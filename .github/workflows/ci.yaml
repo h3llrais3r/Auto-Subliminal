@@ -125,8 +125,8 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: ${{ matrix.os }}-python-${{ matrix.python-version }}
-          file: coverage.lcov
           parallel: true
+          # file: coverage.lcov # auto detected since v2
 
   ci-backend-finish:
     needs: ci-backend
