@@ -73,13 +73,13 @@ export class PageFooterComponent implements OnInit {
       }
     });
     // Subscribe on websocket events
-    this.systemEventService.webSocketConnectionInterrupted$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (interrupted) => {
-        if (interrupted) {
+    this.systemEventService.webSocketConnectionStatus$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (connected) => {
+        if (connected) {
+          this.initValues();
+        } else {
           this.scanDiskCountdown.pause();
           this.checkSubCountdown.pause();
-        } else {
-          this.initValues();
         }
       }
     });

@@ -1,9 +1,9 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WINDOW } from 'ngx-window-token';
-import { interval, takeWhile } from 'rxjs';
+import { filter, iif, interval, of, switchMap, take, takeWhile } from 'rxjs';
 import { webSocket, WebSocketSubject, WebSocketSubjectConfig } from 'rxjs/webSocket';
-import { appSettings } from '../app-settings.service';
+import { appSettings, AppSettingsService } from '../app-settings.service';
 import { WantedItem } from '../models/item';
 import { Scheduler } from '../models/scheduler';
 import { SystemUpdate } from '../models/systemupdate';
@@ -16,25 +16,26 @@ import { SystemEventService } from './system-event.service';
 })
 export class WebSocketService {
 
-  private readonly RECONNECT_INTERVAL = 2000;
+  private readonly RECONNECT_INTERVAL = 5000;
 
   private systemWebsocket$: WebSocketSubject<SystemWebSocketMessage>;
 
   private window = inject(WINDOW);
   private messageService = inject(MessageService);
   private systemEventService = inject(SystemEventService);
+  private appSettingsService = inject(AppSettingsService);
   private destroyRef = inject(DestroyRef);
 
-  constructor() {
-    this.connect();
+  public initialize(): void {
+    this.connect(true);
   }
 
   public sendMessageThroughSystemWebSocket(systemWebSocketClientMessage: SystemWebSocketClientMessage): void {
     this.systemWebsocket$.next(systemWebSocketClientMessage);
   }
 
-  private connect(): void {
-    this.systemWebsocket$ = this.createSystemWebSocket();
+  private connect(initial = false): void {
+    this.systemWebsocket$ = this.createSystemWebSocket(initial);
     this.systemWebsocket$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (serverMessage) => {
         if (serverMessage.type === 'EVENT') {
@@ -90,7 +91,7 @@ export class WebSocketService {
     });
   }
 
-  private createSystemWebSocket(): WebSocketSubject<SystemWebSocketServerMessage> {
+  private createSystemWebSocket(initial: boolean): WebSocketSubject<SystemWebSocketServerMessage> {
     let protocol = 'ws:';
     if (this.window.location.protocol === 'https:') {
       protocol = 'wss:';
@@ -100,13 +101,21 @@ export class WebSocketService {
       openObserver: { // on connect
         next: () => {
           console.log('Websocket connection established');
-          this.systemEventService.notifyWebSocketConnectionInterrupted(false); // connection established
+          // Only notify connection established when app settings could be reloaded
+          // During initial websocket creation, the app settings should not be loaded, as they were already loaded before
+          of(initial).pipe(
+            switchMap((initial) => iif(() => initial, of(true), this.appSettingsService.load(true))), // bypass on initial setup
+            take(1),
+            filter((loaded) => loaded) // only notify loaded
+          ).subscribe({
+            next: () => this.systemEventService.notifyWebSocketConnectionStatus(true) // connection established
+          });
         }
       },
       closeObserver: { // try to reconnect on close
         next: () => {
           console.log('Websocket connection failed');
-          this.systemEventService.notifyWebSocketConnectionInterrupted(true); // connection interrupted
+          this.systemEventService.notifyWebSocketConnectionStatus(false); // connection interrupted
           this.systemWebsocket$ = null;
           this.reconnect();
         }

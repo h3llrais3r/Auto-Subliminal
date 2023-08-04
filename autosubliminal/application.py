@@ -5,7 +5,6 @@ import os
 import signal
 import subprocess
 import sys
-import time
 import webbrowser
 from types import FrameType
 from typing import Any, Dict, Optional
@@ -241,8 +240,7 @@ def start() -> None:
     # Start websocket thread
     autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
 
-    # Sleep 3 seconds before sending the start event trough websocket (client websockets reconnect every 2 seconds)
-    time.sleep(3)
+    # Send the start event trough websocket
     send_websocket_event(SYSTEM_START)
 
     # Start threads
@@ -267,10 +265,6 @@ def stop(exit: bool = True) -> None:
     log.info('Stopping')
     if exit:
         send_websocket_event(SYSTEM_SHUTDOWN)
-        time.sleep(2)  # Sleep 2 seconds to give the frontend to receive the event
-
-    # Mark as stopped
-    autosubliminal.STARTED = False
 
     # Stop scheduled threads
     log.info('Stopping threads')
@@ -282,6 +276,9 @@ def stop(exit: bool = True) -> None:
     # Stop permanent threads
     autosubliminal.WEBSOCKETBROADCASTER.stop()
 
+    # Mark as stopped
+    autosubliminal.STARTED = False
+
     if exit:
         _shutdown()
         _exit()
@@ -290,7 +287,6 @@ def stop(exit: bool = True) -> None:
 def restart(exit: bool = False) -> None:
     log.info('Restarting')
     send_websocket_event(SYSTEM_RESTART)
-    time.sleep(2)  # Sleep 2 seconds to give the frontend to receive the event
 
     if exit:
         # Exit current process and restart a new one with the same args

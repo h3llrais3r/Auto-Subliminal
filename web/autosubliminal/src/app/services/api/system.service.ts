@@ -14,8 +14,8 @@ export class SystemService extends ApiServiceTemplate {
   private readonly URL = `${appSettings.webRoot}/api/system`;
 
   isAlive(): Observable<boolean> {
-    return this.httpClient.get<Alive>(`${this.URL}/alive`, this.options)
-      .pipe(map((alive) => alive.alive));
+    return this.httpClient.head(`${this.URL}/alive`, this.options)
+      .pipe(map(() => true));
   }
 
   getSystemInfo(): Observable<SystemInfo> {

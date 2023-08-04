@@ -43,14 +43,10 @@ class _AliveApi(RestResource):
         super().__init__()
 
         # Set the allowed methods
-        self.allowed_methods = ['GET']
+        self.allowed_methods = ['HEAD']
 
-    def get(self) -> Dict[str, Any]:
-        """Return true if system is alive."""
-        if autosubliminal.STARTED:
-            return {'alive': True}
-        else:
-            return {'alive': False}
+    def head(self) -> None:
+        return None  # no need to return, as long as returns 200, it's fine
 
 
 class _InfoApi(RestResource):

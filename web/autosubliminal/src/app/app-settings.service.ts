@@ -2,7 +2,7 @@ import { DOCUMENT, PlatformLocation } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { DestroyRef, inject, Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, Subject } from 'rxjs';
 import { AppSettings } from './models/app-settings';
 
 export const appSettings = new AppSettings();
@@ -12,7 +12,9 @@ export const appSettings = new AppSettings();
 })
 export class AppSettingsService {
 
-  private configLoaded = false;
+  appSettings$ = new Subject<AppSettings>();
+  appSettingsLoaded$ = new BehaviorSubject<boolean>(false);
+
   private webRoot = '';
 
   private document = inject(DOCUMENT);
@@ -26,21 +28,24 @@ export class AppSettingsService {
     console.log(`Application web root: ${this.webRoot}`);
   }
 
-  public load(reload = false): Observable<AppSettings> {
+  public load(reload = false): Observable<boolean> {
     // Load settings
     return this.httpClient.get(`${this.webRoot}/api/system/settings`).pipe(
       map((settings) => {
         appSettings.fromSettings(settings);
-        this.configLoaded = true;
+        this.appSettings$.next(appSettings);
+        this.appSettingsLoaded$.next(true);
         console.log(`Application settings ${reload ? 're' : ''}loaded`);
         console.log(`Application version: ${appSettings.appVersion}`);
         console.log(`Application PID: ${appSettings.appProcessId}`);
         console.log(`Developer mode: ${appSettings.developerMode}`);
-        return appSettings;
+        return true;
       }),
       catchError((error) => {
-        console.error('Error while loading application settings');
-        return throwError(() => error); // rethrow error to be sure that app initialization stops
+        console.error('Error while loading application settings', error);
+        this.appSettingsLoaded$.next(false);
+        return of(false);
+        // return throwError(() => error); // rethrow error only in case the  app initialization needs to stop
       })
     );
   }
@@ -53,9 +58,5 @@ export class AppSettingsService {
         this.document.location.reload();
       }
     });
-  }
-
-  public loaded(): boolean {
-    return this.configLoaded;
   }
 }

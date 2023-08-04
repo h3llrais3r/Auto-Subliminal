@@ -1,16 +1,16 @@
-import { DOCUMENT, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { DialogModule } from 'primeng/dialog';
 import { ToastModule } from 'primeng/toast';
-import { concatMap, interval, noop } from 'rxjs';
+import { filter, switchMap } from 'rxjs';
 import { AppSettingsService } from './app-settings.service';
 import { PageFooterComponent } from './components/page/footer/page-footer.component';
 import { PageHeaderComponent } from './components/page/header/page-header.component';
-import { SystemService } from './services/api/system.service';
 import { MessageService } from './services/message.service';
 import { SystemEventService } from './services/system-event.service';
+import { WebSocketService } from './services/websocket.service';
 
 @Component({
   selector: 'app-root',
@@ -21,32 +21,26 @@ import { SystemEventService } from './services/system-event.service';
 })
 export class AppComponent {
 
-  appSettingsLoaded = false;
-  systemStarted = false;
-  systemStart = false;
-  systemRestart = false;
-  systemShutdown = false;
-  systemShutdownFinished = false;
-  webSocketConnectionInterrupted = false;
+  systemAlive = false;
+  systemRestartInProgress = false;
+  systemShutdownInProgress = false;
 
-  private readonly ALIVE_CHECK_INTERVAL = 2000;
-
-  private document = inject(DOCUMENT);
+  private websocketService = inject(WebSocketService);
   private appSettingsService = inject(AppSettingsService);
   private systemEventService = inject(SystemEventService);
-  private systemService = inject(SystemService);
   private messageService = inject(MessageService);
   private destroyRef = inject(DestroyRef);
 
   constructor() {
-    // Check if app settings are loaded
-    this.appSettingsLoaded = this.appSettingsService.loaded();
-    // Check if system is started (this is the case when the settings are loaded)
-    this.systemStarted = this.appSettingsLoaded;
-    // Subscribe on system start events
-    this.systemEventService.systemStart$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => this.checkStart()
+    // Check if app settings are loaded (which means the system is alive as it fetches data from the server)
+    this.appSettingsService.appSettingsLoaded$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (loaded) => {
+        // Indicate if system is alive or not
+        this.systemAlive = loaded;
+      }
     });
+    // Initialize websockets
+    this.websocketService.initialize();
     // Subscribe on system restart events
     this.systemEventService.systemRestart$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
@@ -58,80 +52,43 @@ export class AppComponent {
     this.systemEventService.systemShutdown$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => this.checkShutdown()
     });
-    // Subscribe on websocket connection interrupted events
-    this.systemEventService.webSocketConnectionInterrupted$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (interrupted) => this.webSocketConnectionInterrupted = interrupted
+    // Subscribe on websocket connection events
+    this.systemEventService.webSocketConnectionStatus$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (connected) => this.systemAlive = connected // Mark system as alive or not
     });
   }
 
   get connectionInterrupted(): boolean {
     // Only show connection interrupted if not one of the other dialogs are shown
-    return this.webSocketConnectionInterrupted &&
-      !this.systemStart &&
-      !this.systemRestart &&
-      !this.systemShutdown &&
-      !this.systemShutdownFinished;
-  }
-
-  private checkStart(): void {
-    // Only check for start if not restarting (this check is for start after a shutdown)
-    if (!this.systemRestart) {
-      this.systemStart = true;
-      this.systemStarted = false;
-      this.systemShutdownFinished = false;
-      const check = interval(this.ALIVE_CHECK_INTERVAL).pipe(
-        concatMap(() => this.systemService.isAlive()),
-        takeUntilDestroyed(this.destroyRef)
-      ).subscribe({
-        next: (alive) => {
-          if (alive) {
-            // If app is loaded, mark system is started
-            if (this.appSettingsLoaded) {
-              this.systemStart = false;
-              this.systemStarted = true;
-              check.unsubscribe(); // stop the check
-            } else {
-              // If app is not loaded, reload page to re-initialize the app
-              this.document.location.reload();
-            }
-          }
-          // Continue the check
-        }
-      });
-    }
+    return !this.systemAlive && !this.systemRestartInProgress && !this.systemShutdownInProgress;
   }
 
   private checkRestart(): void {
-    this.systemRestart = true;
-    this.systemStarted = false;
-    const check = interval(this.ALIVE_CHECK_INTERVAL).pipe(
-      concatMap(() => this.systemService.isAlive()),
+    this.systemRestartInProgress = true;
+    const check = this.systemEventService.webSocketConnectionStatus$.pipe(
+      filter((connected) => !connected), // wait util disconnected
+      switchMap(() => this.systemEventService.webSocketConnectionStatus$), // check again
+      filter((connected) => connected), // wait until connected
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
-      next: (alive) => {
-        if (alive) {
-          this.systemRestart = false;
-          this.systemStarted = true;
-          check.unsubscribe(); // stop the check
-        }
-        // continue the check
+      next: () => {
+        this.systemAlive = true;
+        this.systemRestartInProgress = false;
+        check.unsubscribe(); // stop checking
       }
     });
   }
 
   private checkShutdown(): void {
-    this.systemShutdown = true;
-    this.systemStarted = false;
-    const check = interval(this.ALIVE_CHECK_INTERVAL).pipe(
-      concatMap(() => this.systemService.isAlive()),
+    this.systemShutdownInProgress = true;
+    const check = this.systemEventService.webSocketConnectionStatus$.pipe(
+      filter((connected) => !connected), // wait until disconnected
       takeUntilDestroyed(this.destroyRef)
     ).subscribe({
-      next: () => noop, // continue the check
-      error: () => {
-        // error means no longer alive -> shutdown finished
-        this.systemShutdown = false;
-        this.systemShutdownFinished = true;
-        check.unsubscribe(); // stop the check
+      next: () => {
+        this.systemAlive = false;
+        this.systemShutdownInProgress = false;
+        check.unsubscribe(); // stop checking
       }
     });
   }

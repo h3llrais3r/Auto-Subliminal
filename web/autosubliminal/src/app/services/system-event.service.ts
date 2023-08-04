@@ -17,7 +17,7 @@ export class SystemEventService {
   schedulerFinish$ = new Subject<Scheduler>();
   wantedItemUpdate$ = new Subject<WantedItem>();
   wantedItemDelete$ = new Subject<WantedItem>();
-  webSocketConnectionInterrupted$ = new Subject<boolean>();
+  webSocketConnectionStatus$ = new Subject<boolean>();
 
   notifySystemStart(): void {
     this.systemStart$.next(true);
@@ -51,7 +51,7 @@ export class SystemEventService {
     this.wantedItemDelete$.next(wantedItem);
   }
 
-  notifyWebSocketConnectionInterrupted(interrupted: boolean): void {
-    this.webSocketConnectionInterrupted$.next(interrupted);
+  notifyWebSocketConnectionStatus(connected: boolean): void {
+    this.webSocketConnectionStatus$.next(connected);
   }
 }

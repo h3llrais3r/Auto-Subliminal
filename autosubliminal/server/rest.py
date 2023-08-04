@@ -48,6 +48,9 @@ class RestResource(ABC):
         # Call method
         return method(*args, **kwargs)
 
+    def head(self, *args: Any, **kwargs: Any) -> Any:
+        raise MethodNotImplemented()
+
     def get(self, *args: Any, **kwargs: Any) -> Any:
         raise MethodNotImplemented()
 
