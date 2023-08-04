@@ -105,20 +105,23 @@ jobs:
 
       - name: Lint python code
         run: |
-          # Configuration is done in .flake8
-          poetry run flake8 --verbose
+          poetry run flake8 --verbose # Configuration is done in .flake8
 
       - name: Type check python code
         run: |
-          # Configuration is done in pyproject.toml
-          poetry run mypy
+          poetry run mypy # Configuration is done in pyproject.toml
 
       - name: Test python code
         run: |
-          # Configuration is done in pyproject.toml
-          poetry run coverage run --module pytest
-          poetry run coverage report
+          poetry run coverage run --module pytest # Configuration is done in pyproject.toml
+
+      - name: Generate coverage report
+        run: |
           poetry run coverage lcov
+
+      - name: Show coverage report
+        run: |
+          poetry run coverage report
 
       - name: Publish python coverage report
         uses: coverallsapp/github-action@v2
