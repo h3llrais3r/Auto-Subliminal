@@ -37,6 +37,13 @@
         "max": 1
       }
     ],
+    // Warn no implicit any (since typescript-eslint 6 it comes as error)
+    "@typescript-eslint/no-explicit-any": [
+      "warn",
+      {
+        "ignoreRestArgs": true
+      }
+    ],
     // Warn quoted props
     "quote-props": [
       "warn",

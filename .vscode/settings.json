@@ -27,7 +27,8 @@
     "**/web/autosubliminal/static/**": true
   },
   "files.associations": {
-    "*.json": "jsonc" // Use json with comments by default
+    "*.json": "jsonc", // Use json with comments by default
+    "*.yaml": "yaml"
   },
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
