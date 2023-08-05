@@ -38,5 +38,3 @@ export class SystemService extends ApiServiceTemplate {
       .pipe(map((scheduler) => new Scheduler(scheduler)));
   }
 }
-
-type Alive = { alive: boolean };

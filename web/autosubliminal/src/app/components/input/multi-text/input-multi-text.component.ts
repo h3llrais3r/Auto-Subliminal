@@ -33,6 +33,7 @@ export class InputMultiTextComponent extends InputComponent {
   }
 
   // Required to only update single value inside array (https://angular.io/api/core/TrackByFunction) and do not refresh complete array
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   trackValueByIndex(index: number, value: string): number {
     return index;
   }
