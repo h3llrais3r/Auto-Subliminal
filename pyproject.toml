@@ -41,7 +41,7 @@ gntp = "1.0.3"
 guessit = "3.7.1"
 html5lib = "1.1"
 imdbpie = { git = "https://github.com/h3llrais3r/imdb-pie.git", rev = "4e5fc35fdafbf8b1d51b54dd722f757f99f98d46" }
-jsonpickle = "3.0.1"
+jsonpickle = "3.0.2"
 langdetect = "1.0.9"
 packaging = "23.1"
 pysrt = "1.1.2"
