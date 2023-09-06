@@ -77,7 +77,7 @@
     "@angular/compiler-cli": "16.2.4",
     "@types/jasmine": "4.3.5",
     "@types/jasminewd2": "2.0.10",
-    "@types/jquery": "3.5.17",
+    "@types/jquery": "3.5.18",
     "@types/lodash-es": "4.17.9",
     "@types/natural-compare": "1.4.1",
     "@types/node": "16.18.48",
