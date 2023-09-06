@@ -80,7 +80,7 @@
     "@types/jquery": "3.5.17",
     "@types/lodash-es": "4.17.9",
     "@types/natural-compare": "1.4.1",
-    "@types/node": "16.18.46",
+    "@types/node": "16.18.48",
     "@types/strftime": "0.9.4",
     "@typescript-eslint/eslint-plugin": "6.6.0",
     "@typescript-eslint/parser": "6.6.0",
