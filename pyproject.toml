@@ -56,7 +56,7 @@ simplejson = "3.19.1"
 subliminal = { git = "https://github.com/Diaoul/subliminal.git", rev = "6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a" }
 tailer = "0.4.1"
 tvdb_api = { git = "https://github.com/h3llrais3r/tvdb_api.git", rev = "1210df9dd5869ccc5b63149b1b80630310a14f40" }
-Unidecode = "1.3.6"
+Unidecode = "1.3.7"
 ws4py = "0.5.1"
 
 [tool.poetry.group.dev.dependencies]
