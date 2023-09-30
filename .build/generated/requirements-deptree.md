@@ -180,6 +180,6 @@ tvdb-api 3.0.0 Client implementation for TheTVDB API v2 and v3
 |   `-- six >=1.5 
 |-- six >=1.10.0
 `-- urllib3 >=1.15.1
-unidecode 1.3.6 ASCII transliterations of Unicode text
+unidecode 1.3.7 ASCII transliterations of Unicode text
 ws4py 0.5.1 WebSocket client and server library for Python 2 and 3 as well as PyPy
 ```
