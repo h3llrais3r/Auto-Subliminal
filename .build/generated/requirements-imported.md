@@ -56,7 +56,7 @@ jsonpickle==3.0.2
 # autosubliminal\util\filesystem.py: 10
 langdetect==1.0.9
 # autosubliminal\versionchecker.py: 8
-packaging==23.1
+packaging==23.2
 # autosubliminal\util\filesystem.py: 11
 pysrt==1.1.2
 # autosubliminal\providers\pitcher.py: 12
