@@ -139,7 +139,7 @@ requests-oauthlib 1.3.1 OAuthlib authentication support for Requests.
     `-- urllib3 >=1.21.1,<3 
 schema 0.7.5 Simple data validation library
 `-- contextlib2 >=0.5.5
-simplejson 3.19.1 Simple, fast, extensible JSON encoder/decoder for Python
+simplejson 3.19.2 Simple, fast, extensible JSON encoder/decoder for Python
 subliminal 2.1.0.dev0 Subtitles, faster than your thoughts
 |-- appdirs >=1.3
 |-- babelfish >=0.5.2
