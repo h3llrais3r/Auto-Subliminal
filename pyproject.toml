@@ -63,7 +63,7 @@ ws4py = "0.5.1"
 # Testing
 coverage = "7.3.2"
 pytest = "7.4.3"
-pytest-mock = "3.11.1"
+pytest-mock = "3.12.0"
 requests-mock = "1.11.0"
 vcrpy = "5.1.0"
 
