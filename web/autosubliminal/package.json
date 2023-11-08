@@ -81,7 +81,7 @@
     "@types/lodash-es": "4.17.11",
     "@types/natural-compare": "1.4.3",
     "@types/node": "16.18.61",
-    "@types/strftime": "0.9.6",
+    "@types/strftime": "0.9.7",
     "@typescript-eslint/eslint-plugin": "6.10.0",
     "@typescript-eslint/parser": "6.10.0",
     "concurrently": "8.2.2",
