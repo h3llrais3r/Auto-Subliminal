@@ -78,7 +78,7 @@
     "@types/jasmine": "4.6.4",
     "@types/jasminewd2": "2.0.13",
     "@types/jquery": "3.5.29",
-    "@types/lodash-es": "4.17.11",
+    "@types/lodash-es": "4.17.12",
     "@types/natural-compare": "1.4.3",
     "@types/node": "16.18.61",
     "@types/strftime": "0.9.7",
