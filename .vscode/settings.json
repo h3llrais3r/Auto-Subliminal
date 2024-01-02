@@ -7,8 +7,8 @@
   "editor.detectIndentation": false,
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll": true, // Fix lint issues on save
-    "source.organizeImports": true
+    "source.fixAll": "explicit",
+    "source.organizeImports": "explicit"
   },
   // Search settings
   "search.quickOpen.includeHistory": false,
@@ -69,18 +69,12 @@
   "[python]": {
     "editor.tabSize": 4, // Python uses 4 spaces for tab
     "editor.codeActionsOnSave": {
-      "source.unusedImports": true
+      "source.unusedImports": "explicit"
     }
   },
   "python.languageServer": "Pylance",
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
   "python.envFile": "${workspaceFolder}/.env",
-  "python.formatting.provider": "autopep8",
-  "python.linting.enabled": true,
-  "python.linting.lintOnSave": true,
-  "python.linting.pylintEnabled": false,
-  "python.linting.flake8Enabled": true,
-  "python.linting.mypyEnabled": true,
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "python.analysis.completeFunctionParens": true
