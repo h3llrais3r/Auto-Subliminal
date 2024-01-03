@@ -82,6 +82,7 @@ export class SubliminalSettings {
   subliminalProviders: string[];
   subtitleUtf8Encoding: boolean;
   refineVideo: boolean;
+  omdbApiKey: string;
   manualRefineVideo: boolean;
   preferHearingImpaired: boolean;
   antiCaptchaClass: string;
@@ -91,6 +92,7 @@ export class SubliminalSettings {
   addic7edUserId: string;
   opensubtitlesUserName: string;
   opensubtitlesPassword: string;
+  opensubtitlesApiKey: string;
   legendastvUserName: string;
   legendastvPassword: string;
 

@@ -304,6 +304,9 @@ def read_config(check_upgrade: bool = False) -> None:
         if cfg.has_option('subliminal', 'refinevideo'):
             autosubliminal.REFINEVIDEO = cfg.getboolean('subliminal', 'refinevideo')
 
+        if cfg.has_option('subliminal', 'omdbapikey'):
+            autosubliminal.OMDBAPIKEY = cfg.get('subliminal', 'omdbapikey')
+
         if cfg.has_option('subliminal', 'preferhearingimpaired'):
             autosubliminal.PREFERHEARINGIMPAIRED = cfg.getboolean('subliminal', 'preferhearingimpaired')
 
@@ -339,10 +342,24 @@ def read_config(check_upgrade: bool = False) -> None:
                                                                                     'opensubtitlespassword'):
             autosubliminal.OPENSUBTITLESUSERNAME = cfg.get('subliminal', 'opensubtitlesusername')
             autosubliminal.OPENSUBTITLESPASSWORD = cfg.get('subliminal', 'opensubtitlespassword')
+            autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles'] = {}
+            autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles_com'] = {}
             if autosubliminal.OPENSUBTITLESUSERNAME and autosubliminal.OPENSUBTITLESPASSWORD:
-                autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles'] = {
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles'].update({
                     'username': autosubliminal.OPENSUBTITLESUSERNAME,
-                    'password': autosubliminal.OPENSUBTITLESPASSWORD}
+                    'password': autosubliminal.OPENSUBTITLESPASSWORD})
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles_com'].update({
+                    'username': autosubliminal.OPENSUBTITLESUSERNAME,
+                    'password': autosubliminal.OPENSUBTITLESPASSWORD})
+        else:
+            autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles'] = {}
+            autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles_com'] = {}
+
+        if cfg.has_option('subliminal', 'opensubtitlesapikey'):
+            autosubliminal.OPENSUBTITLESAPIKEY = cfg.get('subliminal', 'opensubtitlesapikey')
+            if autosubliminal.OPENSUBTITLESAPIKEY:
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles_com'].update(
+                    {'apikey': autosubliminal.OPENSUBTITLESAPIKEY})
 
         if cfg.has_option('subliminal', 'legendastvusername') and cfg.has_option('subliminal', 'legendastvpassword'):
             autosubliminal.LEGENDASTVUSERNAME = cfg.get('subliminal', 'legendastvusername')
@@ -725,6 +742,7 @@ def write_config_subliminal_section() -> None:
     cfg.set(section, 'subtitleutf8encoding', str(autosubliminal.SUBTITLEUTF8ENCODING))
     cfg.set(section, 'manualrefinevideo', str(autosubliminal.MANUALREFINEVIDEO))
     cfg.set(section, 'refinevideo', str(autosubliminal.REFINEVIDEO))
+    cfg.set(section, 'omdbapikey', autosubliminal.OMDBAPIKEY)
     cfg.set(section, 'preferhearingimpaired', str(autosubliminal.PREFERHEARINGIMPAIRED))
     cfg.set(section, 'anticaptchaclass', autosubliminal.ANTICAPTCHACLASS)
     cfg.set(section, 'anticaptchaclientkey', autosubliminal.ANTICAPTCHACLIENTKEY)
@@ -733,6 +751,7 @@ def write_config_subliminal_section() -> None:
     cfg.set(section, 'addic7eduserid', autosubliminal.ADDIC7EDUSERID)
     cfg.set(section, 'opensubtitlesusername', autosubliminal.OPENSUBTITLESUSERNAME)
     cfg.set(section, 'opensubtitlespassword', autosubliminal.OPENSUBTITLESPASSWORD)
+    cfg.set(section, 'opensubtitlesapikey', autosubliminal.OPENSUBTITLESAPIKEY)
     cfg.set(section, 'legendastvusername', autosubliminal.LEGENDASTVUSERNAME)
     cfg.set(section, 'legendastvpassword', autosubliminal.LEGENDASTVPASSWORD)
 

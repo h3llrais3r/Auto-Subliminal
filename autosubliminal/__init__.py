@@ -145,6 +145,7 @@ SUBLIMINALPROVIDERCONFIGS: Dict[str, dict] = {}
 SUBTITLEUTF8ENCODING: bool = False
 MANUALREFINEVIDEO: bool = False
 REFINEVIDEO: bool = False
+OMDBAPIKEY: str = ''
 PREFERHEARINGIMPAIRED: bool = False
 ANTICAPTCHACLASS: str = ''
 ANTICAPTCHACLIENTKEY: str = ''
@@ -153,6 +154,7 @@ ADDIC7EDPASSWORD: str = ''
 ADDIC7EDUSERID: str = ''
 OPENSUBTITLESUSERNAME: str = ''
 OPENSUBTITLESPASSWORD: str = ''
+OPENSUBTITLESAPIKEY: str = ''
 LEGENDASTVUSERNAME: str = ''
 LEGENDASTVPASSWORD: str = ''
 
@@ -340,11 +342,16 @@ def _init_subliminal() -> None:
     namemapping_refiner = 'namemapping = autosubliminal.refiners.namemapping:refine'
     if namemapping_refiner not in refiner_manager.registered_extensions:
         refiner_manager.register(namemapping_refiner)
+    omdb_refiner = 'omdb_custom = autosubliminal.refiners.omdb_custom:refine'
+    if omdb_refiner not in refiner_manager.registered_extensions:
+        refiner_manager.register(omdb_refiner)
 
-    # Add our custom addic7ed provider to list of subliminal providers
-    provider = 'addic7ed_custom = autosubliminal.providers.addic7ed_custom:Addic7edProvider'
-    if provider not in provider_manager.registered_extensions:
-        provider_manager.register(provider)
+    # Add our custom providers to list of subliminal providers
+    providers = ['addic7ed_custom = autosubliminal.providers.addic7ed_custom:Addic7edProvider',
+                 'opensubtitles_com = autosubliminal.providers.opensubtitles_com:OpenSubtitlesComProvider']
+    for provider in providers:
+        if provider not in provider_manager.registered_extensions:
+            provider_manager.register(provider)
 
     # Set the provider manager with all providers and init the list of all provider names
     global SUBLIMINALPROVIDERMANAGER, SUBLIMINALPROVIDERS

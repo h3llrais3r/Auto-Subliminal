@@ -17,6 +17,7 @@ ignore =
 per-file-ignores =
     autosubliminal/core/scheduler.py: E722,
     autosubliminal/providers/addic7ed_custom.py: F401, E741,
+    autosubliminal/providers/opensubtitles_com.py: E741,
     autosubliminal/providers/pitcher.py: E722,
     autosubliminal/providers/useragents.py: E501,
     autosubliminal/subsynchronizer.py: F401,

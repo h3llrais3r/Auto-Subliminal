@@ -29,6 +29,7 @@ from autosubliminal.db import WantedItemsDb
 from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.providers import provider_cache
 from autosubliminal.providers.addic7ed_custom import Addic7edSubtitle as CustomAddic7edSubtitle
+from autosubliminal.providers.opensubtitles_com import OpenSubtitlesComSubtitle
 from autosubliminal.subdownloader import SubDownloader
 from autosubliminal.subsynchronizer import SubSynchronizer
 from autosubliminal.util.common import camelize, set_rw_and_remove, wait_for_internet_connection
@@ -528,14 +529,25 @@ def _scan_wanted_item_for_video(wanted_item: WantedItem, is_manual: bool = False
             refiners = ('manual',)  # don't remove the , -> needs to be a tuple
             subliminal.refine(video, episode_refiners=refiners, movie_refiners=refiners, wanted_item=wanted_item)
 
-        # Use build-in refiners
+        # Use build-in refiners (but use the omdb_custom instead omdb, as it requires an apikey now)
         if autosubliminal.REFINEVIDEO:
-            subliminal.refine(video)
+            episode_refiners: Tuple[str, ...] = ('metadata', 'tvdb')
+            movie_refiners: Tuple[str, ...] = ('metadata',)
+            if autosubliminal.OMDBAPIKEY:
+                episode_refiners = tuple(list(episode_refiners) + [('omdb_custom')])
+                movie_refiners = tuple(list(movie_refiners) + [('omdb_custom')])
+            subliminal.refine(video, episode_refiners=episode_refiners, movie_refiners=movie_refiners)
 
         # Use our namemapping refiner (always enabled to enable our name mappings)
         # This should always be at the end since we want to enrich the result after the build-in refiners
         refiners = ('namemapping',)  # don't remove the , -> needs to be a tuple
         subliminal.refine(video, episode_refiners=refiners, movie_refiners=refiners)
+
+        # Add our indexer id's in case the refiners were not able to detect it
+        if isinstance(video, Episode) and not video.series_tvdb_id and wanted_item.tvdb_id:
+            video.series_tvdb_id = wanted_item.tvdb_id
+        elif isinstance(video, Movie) and not video.imdb_id and wanted_item.imdb_id:
+            video.imdb_id = wanted_item.imdb_id
     except Exception:
         log.exception('Error while scanning video, skipping %s', video_path)
         return None
@@ -676,6 +688,8 @@ def _get_releases(subtitle: subliminal.Subtitle) -> List[str]:
         releases.extend([subtitle.content])
     elif isinstance(subtitle, OpenSubtitlesSubtitle):
         releases.extend([subtitle.movie_release_name])
+    elif isinstance(subtitle, OpenSubtitlesComSubtitle):
+        releases.extend([subtitle.release])
     elif isinstance(subtitle, PodnapisiSubtitle):
         releases.extend(subtitle.releases)
     elif isinstance(subtitle, ShooterSubtitle):

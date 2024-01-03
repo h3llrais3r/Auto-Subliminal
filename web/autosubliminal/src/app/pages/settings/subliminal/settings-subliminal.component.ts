@@ -90,6 +90,7 @@ export class SettingsSubliminalComponent implements OnInit {
       subliminalProviders: [subliminalSettings.subliminalProviders || [], []],
       subtitleUtf8Encoding: [subliminalSettings.subtitleUtf8Encoding, [Validators.required]],
       refineVideo: [subliminalSettings.refineVideo, [Validators.required]],
+      omdbApiKey: [subliminalSettings.omdbApiKey, []],
       manualRefineVideo: [subliminalSettings.manualRefineVideo, [Validators.required]],
       preferHearingImpaired: [subliminalSettings.preferHearingImpaired, [Validators.required]],
       antiCaptchaClass: [subliminalSettings.antiCaptchaClass, []],
@@ -99,6 +100,7 @@ export class SettingsSubliminalComponent implements OnInit {
       addic7edUserId: [subliminalSettings.addic7edUserId, []],
       opensubtitlesUserName: [subliminalSettings.opensubtitlesUserName, []],
       opensubtitlesPassword: [subliminalSettings.opensubtitlesPassword, []],
+      opensubtitlesApiKey: [subliminalSettings.opensubtitlesApiKey, []],
       legendastvUserName: [subliminalSettings.legendastvUserName, []],
       legendastvPassword: [subliminalSettings.legendastvPassword, []]
     });
@@ -117,6 +119,7 @@ export class SettingsSubliminalComponent implements OnInit {
     settings.subliminalProviders = FormUtils.getFormControlValue<string[]>(this.settingsForm, 'subliminalProviders');
     settings.subtitleUtf8Encoding = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'subtitleUtf8Encoding');
     settings.refineVideo = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'refineVideo');
+    settings.omdbApiKey = FormUtils.getFormControlValue<string>(this.settingsForm, 'omdbApiKey');
     settings.manualRefineVideo = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'manualRefineVideo');
     settings.preferHearingImpaired = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'preferHearingImpaired');
     settings.antiCaptchaClass = FormUtils.getFormControlValue<string>(this.settingsForm, 'antiCaptchaClass');
@@ -126,6 +129,7 @@ export class SettingsSubliminalComponent implements OnInit {
     settings.addic7edUserId = FormUtils.getFormControlValue<string>(this.settingsForm, 'addic7edUserId');
     settings.opensubtitlesUserName = FormUtils.getFormControlValue<string>(this.settingsForm, 'opensubtitlesUserName');
     settings.opensubtitlesPassword = FormUtils.getFormControlValue<string>(this.settingsForm, 'opensubtitlesPassword');
+    settings.opensubtitlesApiKey = FormUtils.getFormControlValue<string>(this.settingsForm, 'opensubtitlesApiKey');
     settings.legendastvUserName = FormUtils.getFormControlValue<string>(this.settingsForm, 'legendastvUserName');
     settings.legendastvPassword = FormUtils.getFormControlValue<string>(this.settingsForm, 'legendastvPassword');
     return settings;

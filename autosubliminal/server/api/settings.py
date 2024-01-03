@@ -388,6 +388,7 @@ class _SubliminalApi(RestResource):
             'subliminal_providers': autosubliminal.SUBLIMINALPROVIDERS,
             'subtitle_utf8_encoding': autosubliminal.SUBTITLEUTF8ENCODING,
             'refine_video': autosubliminal.REFINEVIDEO,
+            'omdb_api_key': autosubliminal.OMDBAPIKEY,
             'manual_refine_video': autosubliminal.MANUALREFINEVIDEO,
             'prefer_hearing_impaired': autosubliminal.PREFERHEARINGIMPAIRED,
             'anti_captcha_class': autosubliminal.ANTICAPTCHACLASS,
@@ -397,6 +398,7 @@ class _SubliminalApi(RestResource):
             'addic7ed_user_id': autosubliminal.ADDIC7EDUSERID,
             'opensubtitles_user_name': autosubliminal.OPENSUBTITLESUSERNAME,
             'opensubtitles_password': autosubliminal.OPENSUBTITLESPASSWORD,
+            'opensubtitles_api_key': autosubliminal.OPENSUBTITLESAPIKEY,
             'legendastv_user_name': autosubliminal.LEGENDASTVUSERNAME,
             'legendastv_password': autosubliminal.LEGENDASTVPASSWORD
         }
@@ -435,6 +437,8 @@ class _SubliminalApi(RestResource):
                 autosubliminal.SUBTITLEUTF8ENCODING = input_dict['subtitle_utf8_encoding']
             if 'refine_video' in input_dict:
                 autosubliminal.REFINEVIDEO = input_dict['refine_video']
+            if 'omdb_api_key' in input_dict:
+                autosubliminal.OMDBAPIKEY = input_dict['omdb_api_key']
             if 'manual_refine_video' in input_dict:
                 autosubliminal.MANUALREFINEVIDEO = input_dict['manual_refine_video']
             if 'prefer_hearing_impaired' in input_dict:
@@ -453,6 +457,8 @@ class _SubliminalApi(RestResource):
                 autosubliminal.OPENSUBTITLESUSERNAME = input_dict['opensubtitles_user_name']
             if 'opensubtitles_password' in input_dict:
                 autosubliminal.OPENSUBTITLESPASSWORD = input_dict['opensubtitles_password']
+            if 'opensubtitles_api_key' in input_dict:
+                autosubliminal.OPENSUBTITLESAPIKEY = input_dict['opensubtitles_api_key']
             if 'legendastv_user_name' in input_dict:
                 autosubliminal.LEGENDASTVUSERNAME = input_dict['legendastv_user_name']
             if 'legendastv_password' in input_dict:

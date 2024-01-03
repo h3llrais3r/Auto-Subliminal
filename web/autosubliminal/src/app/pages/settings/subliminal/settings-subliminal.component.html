@@ -82,6 +82,19 @@
           <app-input-dropdown formControlName="refineVideo" [options]="enabledOrDisabled" [validationFeedback]="saveAttempt"></app-input-dropdown>
         </div>
       </div>
+      <!-- Refine video - omdb refiner apikey -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="omdbApiKey" class="label">OMDB refiner API key</label>
+          <app-icon-dropdown>
+            <li>The API key for the OMDB refiner.</li>
+            <li>Required if you want to use the OMDB refiner.</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-text formControlName="omdbApiKey" [validationFeedback]="saveAttempt"></app-input-text>
+        </div>
+      </div>
       <!-- Manual refine video -->
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
@@ -211,6 +224,19 @@
         </div>
         <div class="col-12 col-sm-12 col-md-8 col-lg-8">
           <app-input-text formControlName="opensubtitlesPassword" type="password" [validationFeedback]="saveAttempt"></app-input-text>
+        </div>
+      </div>
+      <!-- OpenSubtitles apikey -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="opensubtitlesApiKey" class="label">API key</label>
+          <app-icon-dropdown>
+            <li>The API key for your OpenSubtitles account.</li>
+            <li>Required for OpenSubtitles.com provider.</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-text formControlName="opensubtitlesApiKey" [validationFeedback]="saveAttempt"></app-input-text>
         </div>
       </div>
       <!-- Legendas.TV provider settings -->
