@@ -53,7 +53,7 @@ requests = "2.31.0"
 requests-oauthlib = "1.3.1"
 schema = "0.7.5"
 simplejson = "3.19.2"
-subliminal = { git = "https://github.com/Diaoul/subliminal.git", rev = "6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a" }
+subliminal = { git = "https://github.com/Diaoul/subliminal.git", rev = "f86450918501ef11e26e40eef153654c52a6d8bb" }
 tailer = "0.4.1"
 tvdb_api = { git = "https://github.com/h3llrais3r/tvdb_api.git", rev = "1210df9dd5869ccc5b63149b1b80630310a14f40" }
 Unidecode = "1.3.7"
