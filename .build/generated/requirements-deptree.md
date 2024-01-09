@@ -174,7 +174,7 @@ subliminal 2.1.0.dev0 Subtitles, faster than your thoughts
 `-- stevedore >=1.20.0
     `-- pbr >=2.0.0,<2.1.0 || >2.1.0 
 tailer 0.4.1 Python tail is a simple implementation of GNU tail and head.
-tvdb-api 3.0.0 Client implementation for TheTVDB API v2 and v3
+tvdb_api 3.0.0 Client implementation for TheTVDB API v2 and v3
 |-- certifi >=14.05.14
 |-- python-dateutil >=2.5.3
 |   `-- six >=1.5 

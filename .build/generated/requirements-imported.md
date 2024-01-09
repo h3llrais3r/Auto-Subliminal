@@ -7,6 +7,7 @@
 
 # autosubliminal\core\item.py: 10
 # autosubliminal\providers\addic7ed_custom.py: 9
+# autosubliminal\providers\opensubtitles_com.py: 6
 # autosubliminal\subchecker.py: 9
 # autosubliminal\util\filesystem.py: 13,14
 # autosubliminal\util\language.py: 5,6
@@ -31,6 +32,7 @@ CherryPy==18.8.0
 # autosubliminal\providers\pitcher.py: 9,10
 deathbycaptcha==0.1.1
 # autosubliminal\core\cache.py: 10,11,12
+# autosubliminal\providers\opensubtitles_com.py: 7
 # autosubliminal\providers\pitcher.py: 11
 dogpile.cache==1.2.2
 # autosubliminal\util\filesystem.py: 15,16
@@ -41,18 +43,19 @@ ffsubsync==0.4.25
 GitPython==3.1.40
 # autosubliminal\notifiers\growl.py: 7
 gntp==1.0.3
-# autosubliminal\__init__.py: 281
+# autosubliminal\__init__.py: 283
 # autosubliminal\fileprocessor.py: 8
 # autosubliminal\parsers\guessit\__init__.py: 3
 # autosubliminal\parsers\guessit\rules.py: 5,6,7
 # autosubliminal\providers\addic7ed_custom.py: 10
+# autosubliminal\providers\opensubtitles_com.py: 8
 guessit==3.7.1
 # autosubliminal\core\indexer.py: 10,11
 # autosubliminal\core\movie.py: 8
 imdbpie==5.6.4.dev0
 # autosubliminal\util\json.py: 6
 jsonpickle==3.0.2
-# autosubliminal\__init__.py: 358,359
+# autosubliminal\__init__.py: 365,366
 # autosubliminal\util\filesystem.py: 10
 langdetect==1.0.9
 # autosubliminal\versionchecker.py: 8
@@ -74,6 +77,8 @@ rebulk==3.2.0
 # autosubliminal\notifiers\pushover.py: 7
 # autosubliminal\notifiers\telegram.py: 7
 # autosubliminal\providers\addic7ed_custom.py: 11
+# autosubliminal\providers\opensubtitles_com.py: 9
+# autosubliminal\refiners\omdb_custom.py: 5
 # autosubliminal\util\common.py: 16
 requests==2.31.0
 # autosubliminal\server\api\settings.py: 8
@@ -82,14 +87,16 @@ requests-oauthlib==1.3.1
 schema==0.7.5
 # autosubliminal\__init__.py: 15
 stevedore==5.0.0
-# autosubliminal\__init__.py: 296,322,323,324
+# autosubliminal\__init__.py: 298,324,325,326
 # autosubliminal\core\item.py: 11
 # autosubliminal\providers\addic7ed_custom.py: 12,13,14,15,16,17,18,19
 # autosubliminal\providers\exceptions.py: 3
+# autosubliminal\providers\opensubtitles_com.py: 10,11,12,14,15,16
 # autosubliminal\providers\pitcher.py: 13
 # autosubliminal\providers\provider_cache.py: 3
 # autosubliminal\refiners\manual.py: 6
 # autosubliminal\refiners\namemapping.py: 6
+# autosubliminal\refiners\omdb_custom.py: 6,7,8,9
 # autosubliminal\server\api\settings.py: 9
 # autosubliminal\server\api\system.py: 8
 # autosubliminal\subchecker.py: 10,11,12,13,14,15,16,17,18,19,20
@@ -100,7 +107,7 @@ subliminal==2.1.0.dev0
 tailer==0.4.1
 # autosubliminal\core\indexer.py: 12,13,14,15,16,17,18,19,20,21
 # autosubliminal\core\show.py: 7,8,9,10,11
-tvdb-api==3.0.0
+tvdb_api==3.0.0
 # autosubliminal\core\indexer.py: 22
 Unidecode==1.3.7
 # autosubliminal\subsynchronizer.py: 26
