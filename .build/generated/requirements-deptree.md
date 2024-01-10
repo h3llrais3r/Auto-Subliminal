@@ -70,7 +70,7 @@ gitpython 3.1.40 GitPython is a Python library used to interact with Git reposit
 `-- gitdb >=4.0.1,<5
     `-- smmap >=3.0.1,<6 
 gntp 1.0.3 Growl Notification Transport Protocol for Python
-guessit 3.7.1 GuessIt - a library for guessing information from video filenames.
+guessit 3.8.0 GuessIt - a library for guessing information from video filenames.
 |-- babelfish >=0.6.0
 |-- importlib-resources *
 |   `-- zipp >=3.1.0 

@@ -49,7 +49,7 @@ gntp==1.0.3
 # autosubliminal\parsers\guessit\rules.py: 5,6,7
 # autosubliminal\providers\addic7ed_custom.py: 10
 # autosubliminal\providers\opensubtitles_com.py: 8
-guessit==3.7.1
+guessit==3.8.0
 # autosubliminal\core\indexer.py: 10,11
 # autosubliminal\core\movie.py: 8
 imdbpie==5.6.4.dev0
