@@ -4,7 +4,7 @@
 
 ```
 babelfish 0.6.0 A module to work with countries and languages
-cherrypy 18.8.0 Object-Oriented HTTP framework
+cherrypy 18.9.0 Object-Oriented HTTP framework
 |-- cheroot >=8.2.1
 |   |-- jaraco-functools * 
 |   |   `-- more-itertools * 
