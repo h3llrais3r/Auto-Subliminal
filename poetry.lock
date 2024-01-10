@@ -552,20 +552,23 @@ files = [
 
 [[package]]
 name = "dogpile-cache"
-version = "1.2.2"
+version = "1.3.0"
 description = "A caching front-end based on the Dogpile lock."
 category = "main"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.8"
 files = [
-    {file = "dogpile.cache-1.2.2-py3-none-any.whl", hash = "sha256:f6c2c6ff3a3dc7dc0d662b3f30983f684502fd7a91a45be680879d7d8cc177d7"},
-    {file = "dogpile.cache-1.2.2.tar.gz", hash = "sha256:fd9022c0d9cbadadf20942391a95adaf296be80b42daa8e202f8de1c21f198b2"},
+    {file = "dogpile.cache-1.3.0-py3-none-any.whl", hash = "sha256:c0d33baeff2b823c12e4aa8a662ce2beaf0297f8f2aca1fc2cb178e8bc4b476d"},
+    {file = "dogpile.cache-1.3.0.tar.gz", hash = "sha256:0a387f1932c071ee8fd971d2ff51f8aba1106c559439a51b8c74a207f40e215d"},
 ]
 
 [package.dependencies]
 decorator = ">=4.0.0"
 stevedore = ">=3.0.0"
-typing-extensions = {version = ">=4.0.1", markers = "python_version < \"3.11\""}
+typing_extensions = {version = ">=4.0.1", markers = "python_version < \"3.11\""}
+
+[package.extras]
+pifpaf = ["pifpaf (>=2.5.0)", "setuptools"]
 
 [[package]]
 name = "enzyme"
@@ -2832,4 +2835,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "c7bc906bc16643ded60a087248165bfd78a38e62dae7492aa22404dcf4bbbc7d"
+content-hash = "16f585465d0c4172c29cc081e22a568bf1bcb2c734085d1f402705aed99c7296"
