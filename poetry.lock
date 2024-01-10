@@ -881,14 +881,14 @@ files = [
 
 [[package]]
 name = "guessit"
-version = "3.7.1"
+version = "3.8.0"
 description = "GuessIt - a library for guessing information from video filenames."
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "guessit-3.7.1-py3-none-any.whl", hash = "sha256:c3be280ee8ec581a45ca6a654a92e317bf89567fdc55e7167452226f4f5b8b38"},
-    {file = "guessit-3.7.1.tar.gz", hash = "sha256:2c18d982ee6db30db5d59557add0324a2b49bf3940a752947510632a2b58a3c1"},
+    {file = "guessit-3.8.0-py3-none-any.whl", hash = "sha256:eb5747b1d0fbca926562c1e5894dbc3f6507c35e8c0bd9e38148401cd9579d83"},
+    {file = "guessit-3.8.0.tar.gz", hash = "sha256:6619fcbbf9a0510ec8c2c33744c4251cad0507b1d573d05c875de17edc5edbed"},
 ]
 
 [package.dependencies]
@@ -898,7 +898,7 @@ python-dateutil = "*"
 rebulk = ">=3.2.0"
 
 [package.extras]
-dev = ["mkdocs", "mkdocs-material", "pyinstaller", "python-semantic-release", "tox"]
+dev = ["mkdocs", "mkdocs-material", "pyinstaller", "python-semantic-release", "tox", "twine", "wheel"]
 test = ["PyYAML", "pylint", "pytest", "pytest-benchmark", "pytest-cov", "pytest-mock"]
 
 [[package]]
@@ -2835,4 +2835,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "16f585465d0c4172c29cc081e22a568bf1bcb2c734085d1f402705aed99c7296"
+content-hash = "01a565ef49001eca7a6a09d3c6bd87ee32ac58333936196ddff76123eda60f70"
