@@ -380,14 +380,14 @@ docs = ["furo", "jaraco.packaging (>=3.2)", "python-dateutil", "sphinx (>=1.8.2)
 
 [[package]]
 name = "cherrypy"
-version = "18.8.0"
+version = "18.9.0"
 description = "Object-Oriented HTTP framework"
 category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "CherryPy-18.8.0-py2.py3-none-any.whl", hash = "sha256:b56097025dc78a76a59db551b3a82871c6b3a0107b80b12ff759e4c0b3b947ce"},
-    {file = "CherryPy-18.8.0.tar.gz", hash = "sha256:9b48cfba8a2f16d5b6419cc657e6d51db005ba35c5e3824e4728bb03bbc7ef9b"},
+    {file = "CherryPy-18.9.0-py3-none-any.whl", hash = "sha256:d8168b039a28c3ae41888ef0eb02c561ba0b6c519d2f4c10a88a1d19673a3805"},
+    {file = "CherryPy-18.9.0.tar.gz", hash = "sha256:6b06c191ce71a86461f30572a1ab57ffc09f43143ba8e42c103c7b3347220eb1"},
 ]
 
 [package.dependencies]
@@ -2832,4 +2832,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "ff462ba4201bd6e63210027613367f19af93b41fc0e46b438ee4d5eb34cc2c3b"
+content-hash = "c7bc906bc16643ded60a087248165bfd78a38e62dae7492aa22404dcf4bbbc7d"
