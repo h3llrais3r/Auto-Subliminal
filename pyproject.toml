@@ -38,7 +38,7 @@ enzyme = "0.4.1"
 ffsubsync = "0.4.25"
 GitPython = "3.1.40"
 gntp = "1.0.3"
-guessit = "3.7.1"
+guessit = "3.8.0"
 html5lib = "1.1"
 imdbpie = { git = "https://github.com/h3llrais3r/imdb-pie.git", rev = "4e5fc35fdafbf8b1d51b54dd722f757f99f98d46" }
 jsonpickle = "3.0.2"
