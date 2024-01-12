@@ -66,7 +66,7 @@ ffsubsync 0.4.25 Language-agnostic synchronization of subtitles with video.
 |-- typing-extensions *
 |-- webrtcvad *
 `-- webrtcvad-wheels *
-gitpython 3.1.40 GitPython is a Python library used to interact with Git repositories
+gitpython 3.1.41 GitPython is a Python library used to interact with Git repositories
 `-- gitdb >=4.0.1,<5
     `-- smmap >=3.0.1,<6 
 gntp 1.0.3 Growl Notification Transport Protocol for Python
