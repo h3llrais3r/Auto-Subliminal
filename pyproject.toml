@@ -74,7 +74,7 @@ isort = "5.13.2"
 mypy = "1.8.0"
 pigar = "2.1.1"
 types-requests = "2.31.0.6"
-types-setuptools = "69.0.0.20240125"
+types-setuptools = "69.1.0.20240215"
 types-python-dateutil = "2.8.19.20240106"
 
 [tool.coverage.run]
