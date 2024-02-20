@@ -1107,20 +1107,19 @@ testing = ["flake8 (<5)", "pathlib2", "pytest (>=6)", "pytest-black (>=0.3.7)", 
 
 [[package]]
 name = "jsonpickle"
-version = "3.0.2"
+version = "3.0.3"
 description = "Python library for serializing any arbitrary object graph into JSON"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "jsonpickle-3.0.2-py3-none-any.whl", hash = "sha256:4a8442d97ca3f77978afa58068768dba7bff2dbabe79a9647bc3cdafd4ef019f"},
-    {file = "jsonpickle-3.0.2.tar.gz", hash = "sha256:e37abba4bfb3ca4a4647d28bb9f4706436f7b46c8a8333b4a718abafa8e46b37"},
+    {file = "jsonpickle-3.0.3-py3-none-any.whl", hash = "sha256:e8d6dcc58f6722bea0321cd328fbda81c582461185688a535df02be0f699afb4"},
+    {file = "jsonpickle-3.0.3.tar.gz", hash = "sha256:5691f44495327858ab3a95b9c440a79b41e35421be1a6e09a47b6c9b9421fd06"},
 ]
 
 [package.extras]
-docs = ["jaraco.packaging (>=3.2)", "rst.linker (>=1.9)", "sphinx"]
-testing = ["ecdsa", "feedparser", "gmpy2", "numpy", "pandas", "pymongo", "pytest (>=3.5,!=3.7.3)", "pytest-black-multipy", "pytest-checkdocs (>=1.2.3)", "pytest-cov", "pytest-flake8 (>=1.1.1)", "scikit-learn", "sqlalchemy"]
-testing-libs = ["simplejson", "ujson"]
+docs = ["furo", "jaraco.packaging (>=9)", "rst.linker (>=1.9)", "sphinx"]
+testing = ["ecdsa", "feedparser", "gmpy2", "numpy", "pandas", "pymongo", "pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-ruff", "scikit-learn", "simplejson", "sqlalchemy", "ujson"]
 
 [[package]]
 name = "jsonschema"
@@ -2832,4 +2831,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "ccc7f845b0e44779e50f42920f41e406da5337425af61f3bad05c47cb7db3d9d"
+content-hash = "0d02190b7ef103b70b92c1430f6e5a2769b1d9df984a1493a8983c04e4b0fe96"
