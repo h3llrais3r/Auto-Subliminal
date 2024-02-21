@@ -77,6 +77,10 @@ body {
     }
   }
 
+  .btn-group {
+    gap: 0.5rem;
+  }
+
   // Icon group (use * since we don't know what element is used inside of the group)
   .icon-group {
     display: inline-block;

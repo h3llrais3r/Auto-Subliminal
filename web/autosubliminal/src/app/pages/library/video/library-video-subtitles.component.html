@@ -17,7 +17,9 @@
     </div>
   </form>
   <ng-template pTemplate="footer">
-    <p-button icon="pi pi-times" label="Cancel" styleClass="p-button p-button-secondary" (click)="close()"></p-button>
-    <p-button icon="pi pi-check" label="Save" styleClass="p-button mr-0" (click)="saveVideoSubtitles()"></p-button>
+    <div class="btn-group">
+      <p-button icon="pi pi-times" label="Cancel" styleClass="p-button p-button-secondary" (click)="close()"></p-button>
+      <p-button icon="pi pi-check" label="Save" styleClass="p-button mr-0" (click)="saveVideoSubtitles()"></p-button>
+    </div>
   </ng-template>
 </p-dialog>

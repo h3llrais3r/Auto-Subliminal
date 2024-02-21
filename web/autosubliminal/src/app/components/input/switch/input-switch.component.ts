@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component, forwardRef, Input } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { InputSwitchModule, InputSwitchOnChangeEvent } from 'primeng/inputswitch';
+import { InputSwitchChangeEvent, InputSwitchModule } from 'primeng/inputswitch';
 import { InputComponent } from '../input.component';
 
 @Component({
@@ -21,7 +21,7 @@ export class InputSwitchComponent extends InputComponent {
   @Input()
   label: string;
 
-  onInputSwitchChange(event: InputSwitchOnChangeEvent): void {
+  onInputSwitchChange(event: InputSwitchChangeEvent): void {
     this.changeEvent.emit(event);
   }
 }

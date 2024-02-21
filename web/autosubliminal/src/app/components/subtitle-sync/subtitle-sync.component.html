@@ -91,10 +91,12 @@
     </div>
   </div>
   <ng-template pTemplate="footer">
-    <p-button icon="pi pi-times" label="Cancel" styleClass="p-button p-button-secondary" (click)="close()" [disabled]="syncInProgress"></p-button>
-    <p-button *ngIf="!subtitleSyncResult && !syncInProgress" icon="pi pi-sync" label="Synchronize" styleClass="p-button mr-0" (click)="syncSubtitle()"></p-button>
-    <p-button *ngIf="!subtitleSyncResult && syncInProgress" icon="pi pi-sync pi-spin" label="Synchronizing..." styleClass="p-button mr-0" [disabled]="true"></p-button>
-    <p-button *ngIf="subtitleSyncResult" icon="pi pi-undo" label="Reset" styleClass="p-button" (click)="resetSubtitle()"></p-button>
-    <p-button *ngIf="subtitleSyncResult" icon="pi pi-check" label="Save" styleClass="p-button mr-0" (click)="saveSubtitle()"></p-button>
+    <div class="btn-group">
+      <p-button icon="pi pi-times" label="Cancel" styleClass="p-button p-button-secondary" (click)="close()" [disabled]="syncInProgress"></p-button>
+      <p-button *ngIf="!subtitleSyncResult && !syncInProgress" icon="pi pi-sync" label="Synchronize" styleClass="p-button mr-0" (click)="syncSubtitle()"></p-button>
+      <p-button *ngIf="!subtitleSyncResult && syncInProgress" icon="pi pi-sync pi-spin" label="Synchronizing..." styleClass="p-button mr-0" [disabled]="true"></p-button>
+      <p-button *ngIf="subtitleSyncResult" icon="pi pi-undo" label="Reset" styleClass="p-button" (click)="resetSubtitle()"></p-button>
+      <p-button *ngIf="subtitleSyncResult" icon="pi pi-check" label="Save" styleClass="p-button mr-0" (click)="saveSubtitle()"></p-button>
+    </div>
   </ng-template>
 </p-dialog>
