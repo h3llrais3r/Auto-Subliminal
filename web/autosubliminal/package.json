@@ -21,7 +21,7 @@
     "show"
   ],
   "scripts": {
-    "prepare": "cd ../.. && husky install .githooks",
+    "prepare": "cd ../.. && husky",
     "clean": "rimraf static",
     "copy-themes": "concurrently -n w: npm:copy-themes-*",
     "copy-themes-bootstrap4": "copyfiles -u 4 \"./node_modules/primeng/resources/themes/bootstrap4-*/theme.css\" ./src/assets/themes",

@@ -1,9 +1,4 @@
-#!/bin/sh
-
 # git hook to run a command after "git pull" if the specified file(s) was changed
-
-# Include installed husky script
-. "$(dirname "$0")/_/husky.sh"
 
 # Check if one of the specified files are changed
 changed() {
