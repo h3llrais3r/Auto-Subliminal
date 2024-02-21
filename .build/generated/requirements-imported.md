@@ -34,7 +34,7 @@ deathbycaptcha==0.1.1
 # autosubliminal\core\cache.py: 10,11,12
 # autosubliminal\providers\opensubtitles_com.py: 7
 # autosubliminal\providers\pitcher.py: 11
-dogpile.cache==1.3.0
+dogpile.cache==1.3.1
 # autosubliminal\util\filesystem.py: 15,16
 enzyme==0.4.1
 # autosubliminal\subsynchronizer.py: 8
