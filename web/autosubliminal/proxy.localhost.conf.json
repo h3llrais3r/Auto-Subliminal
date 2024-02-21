@@ -1,21 +1,21 @@
 {
   "/api": {
-    "target": "http://localhost:8084/",
+    "target": "http://127.0.0.1:8084/",
     "secure": false,
     "logLevel": "debug"
   },
   "/artwork": {
-    "target": "http://localhost:8084/",
+    "target": "http://127.0.0.1:8084/",
     "secure": false,
     "logLevel": "debug"
   },
   "/upload": {
-    "target": "http://localhost:8084/",
+    "target": "http://127.0.0.1:8084/",
     "secure": false,
     "logLevel": "debug"
   },
   "/websocket": {
-    "target": "ws://localhost:8084/",
+    "target": "ws://127.0.0.1:8084/",
     "secure": false,
     "logLevel": "debug",
     "ws": true
