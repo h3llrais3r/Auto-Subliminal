@@ -65,7 +65,7 @@ pysrt==1.1.2
 # autosubliminal\providers\pitcher.py: 12
 python-anticaptcha==1.0.0
 # autosubliminal\core\show.py: 6
-python-dateutil==2.8.2
+python-dateutil==2.9.0
 # autosubliminal\notifiers\twitter.py: 7
 python-twitter==3.5
 # autosubliminal\parsers\guessit\rules.py: 8,9,10,11

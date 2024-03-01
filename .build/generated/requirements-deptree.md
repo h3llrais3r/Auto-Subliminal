@@ -108,7 +108,7 @@ python-anticaptcha 1.0.0 Client library for solve captchas with Anticaptcha.com 
 |   |-- idna >=2.5,<4 
 |   `-- urllib3 >=1.21.1,<3 
 `-- six *
-python-dateutil 2.8.2 Extensions to the standard Python datetime module
+python-dateutil 2.9.0 Extensions to the standard Python datetime module
 `-- six >=1.5
 python-twitter 3.5 A Python wrapper around the Twitter API
 |-- future *
