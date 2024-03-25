@@ -1960,14 +1960,14 @@ test = ["fixtures", "mock", "purl", "pytest", "requests-futures", "sphinx", "tes
 
 [[package]]
 name = "requests-oauthlib"
-version = "1.4.0"
+version = "1.4.1"
 description = "OAuthlib authentication support for Requests."
 category = "main"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
 files = [
-    {file = "requests-oauthlib-1.4.0.tar.gz", hash = "sha256:acee623221e4a39abcbb919312c8ff04bd44e7e417087fb4bd5e2a2f53d5e79a"},
-    {file = "requests_oauthlib-1.4.0-py2.py3-none-any.whl", hash = "sha256:7a3130d94a17520169e38db6c8d75f2c974643788465ecc2e4b36d288bf13033"},
+    {file = "requests-oauthlib-1.4.1.tar.gz", hash = "sha256:a2fb581fb28257a257340bef9dab782e28c599a000b2f8dd837bc41892d4fc6c"},
+    {file = "requests_oauthlib-1.4.1-py2.py3-none-any.whl", hash = "sha256:7d3bdc908f5e9b80137fbc445bf8db94295bb006bcbd9520fef55f28f44ed376"},
 ]
 
 [package.dependencies]
@@ -2821,4 +2821,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "83bcd20118ace36396d962881228a9c2175580c47594fa6c5715ae022b8ee4d8"
+content-hash = "0b817737ad6340c9eb9cba83c5f52f2e4bfec86ef8944694b849c2c784f52a6a"
