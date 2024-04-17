@@ -10387,8 +10387,8 @@ a.text-dark:hover, a.text-dark:focus {
 @font-face {
     font-family: 'primeicons';
     font-display: block;
-    src: url('primeicons.ffecb2549ad1765a.eot');
-    src: url('primeicons.ffecb2549ad1765a.eot?#iefix') format('embedded-opentype'), url('primeicons.ba3f916dfb64be8c.woff2') format('woff2'), url('primeicons.f8b9e8a4e401b603.woff') format('woff'), url('primeicons.0112589c5695a9ed.ttf') format('truetype'), url('primeicons.943ab24c43224d29.svg?#primeicons') format('svg');
+    src: url('primeicons.8ca441e178bfb872.eot');
+    src: url('primeicons.8ca441e178bfb872.eot?#iefix') format('embedded-opentype'), url('primeicons.e1a53edb6ea00325.woff2') format('woff2'), url('primeicons.7f7722745590608a.woff') format('woff'), url('primeicons.310a7310efb91ab1.ttf') format('truetype'), url('primeicons.19e14e488f5edc90.svg?#primeicons') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -10420,6 +10420,16 @@ a.text-dark:hover, a.text-dark:focus {
     animation: fa-spin 2s infinite linear;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .pi-spin {
+    animation-delay: -1ms;
+    animation-duration: 1ms;
+    animation-iteration-count: 1;
+    transition-delay: 0s;
+    transition-duration: 0s;
+  }
+}
+
 @keyframes fa-spin {
     0% {
         transform: rotate(0deg);
@@ -10427,6 +10437,218 @@ a.text-dark:hover, a.text-dark:focus {
     100% {
         transform: rotate(359deg);
     }
+}
+
+.pi-folder-plus:before {
+    content: "\ea05";
+}
+
+.pi-receipt:before {
+    content: "\ea06";
+}
+
+.pi-asterisk:before {
+    content: "\ea07";
+}
+
+.pi-face-smile:before {
+    content: "\ea08";
+}
+
+.pi-pinterest:before {
+    content: "\ea09";
+}
+
+.pi-expand:before {
+    content: "\ea0a";
+}
+
+.pi-pen-to-square:before {
+    content: "\ea0b";
+}
+
+.pi-wave-pulse:before {
+    content: "\ea0c";
+}
+
+.pi-turkish-lira:before {
+    content: "\ea0d";
+}
+
+.pi-spinner-dotted:before {
+    content: "\ea0e";
+}
+
+.pi-crown:before {
+    content: "\ea0f";
+}
+
+.pi-pause-circle:before {
+    content: "\ea10";
+}
+
+.pi-warehouse:before {
+    content: "\ea11";
+}
+
+.pi-objects-column:before {
+    content: "\ea12";
+}
+
+.pi-clipboard:before {
+    content: "\ea13";
+}
+
+.pi-play-circle:before {
+    content: "\ea14";
+}
+
+.pi-venus:before {
+    content: "\ea15";
+}
+
+.pi-cart-minus:before {
+    content: "\ea16";
+}
+
+.pi-file-plus:before {
+    content: "\ea17";
+}
+
+.pi-microchip:before {
+    content: "\ea18";
+}
+
+.pi-twitch:before {
+    content: "\ea19";
+}
+
+.pi-building-columns:before {
+    content: "\ea1a";
+}
+
+.pi-file-check:before {
+    content: "\ea1b";
+}
+
+.pi-microchip-ai:before {
+    content: "\ea1c";
+}
+
+.pi-trophy:before {
+    content: "\ea1d";
+}
+
+.pi-barcode:before {
+    content: "\ea1e";
+}
+
+.pi-file-arrow-up:before {
+    content: "\ea1f";
+}
+
+.pi-mars:before {
+    content: "\ea20";
+}
+
+.pi-tiktok:before {
+    content: "\ea21";
+}
+
+.pi-arrow-up-right-and-arrow-down-left-from-center:before {
+    content: "\ea22";
+}
+
+.pi-ethereum:before {
+    content: "\ea23";
+}
+
+.pi-list-check:before {
+    content: "\ea24";
+}
+
+.pi-thumbtack:before {
+    content: "\ea25";
+}
+
+.pi-arrow-down-left-and-arrow-up-right-to-center:before {
+    content: "\ea26";
+}
+
+.pi-equals:before {
+    content: "\ea27";
+}
+
+.pi-lightbulb:before {
+    content: "\ea28";
+}
+
+.pi-star-half:before {
+    content: "\ea29";
+}
+
+.pi-address-book:before {
+    content: "\ea2a";
+}
+
+.pi-chart-scatter:before {
+    content: "\ea2b";
+}
+
+.pi-indian-rupee:before {
+    content: "\ea2c";
+}
+
+.pi-star-half-fill:before {
+    content: "\ea2d";
+}
+
+.pi-cart-arrow-down:before {
+    content: "\ea2e";
+}
+
+.pi-calendar-clock:before {
+    content: "\ea2f";
+}
+
+.pi-sort-up-fill:before {
+    content: "\ea30";
+}
+
+.pi-sparkles:before {
+    content: "\ea31";
+}
+
+.pi-bullseye:before {
+    content: "\ea32";
+}
+
+.pi-sort-down-fill:before {
+    content: "\ea33";
+}
+
+.pi-graduation-cap:before {
+    content: "\ea34";
+}
+
+.pi-hammer:before {
+    content: "\ea35";
+}
+
+.pi-bell-slash:before {
+    content: "\ea36";
+}
+
+.pi-gauge:before {
+    content: "\ea37";
+}
+
+.pi-shop:before {
+    content: "\ea38";
+}
+
+.pi-headphones:before {
+    content: "\ea39";
 }
 
 .pi-eraser:before {
@@ -14533,4 +14755,4 @@ p-dropdown .p-dropdown.p-dropdown-ar .p-dropdown-panel .p-dropdown-items .p-drop
   -ms-flex-pack: flex-end;
 }
 
-/*# sourceMappingURL=styles.5dc4319de128ed68.css.map*/
+/*# sourceMappingURL=styles.b26dac7d41562315.css.map*/
