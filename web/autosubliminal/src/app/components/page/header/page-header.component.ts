@@ -176,17 +176,17 @@ export class PageHeaderComponent implements OnInit {
             {
               label: 'Scan disk',
               icon: 'pi pi-fw pi-play',
-              command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SCHEDULER, appSettings.scanDisk))
+              command: (): void => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SCHEDULER, appSettings.scanDisk))
             },
             {
               label: 'Check subtitles',
               icon: 'pi pi-fw pi-play',
-              command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SCHEDULER, appSettings.checkSub))
+              command: (): void => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SCHEDULER, appSettings.checkSub))
             },
             {
               label: 'Scan library',
               icon: 'pi pi-fw pi-play',
-              command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SCHEDULER, appSettings.scanLibrary)),
+              command: (): void => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SCHEDULER, appSettings.scanLibrary)),
               visible: appSettings.libraryMode
             },
             {
@@ -195,12 +195,12 @@ export class PageHeaderComponent implements OnInit {
             {
               label: 'Check version',
               icon: 'pi pi-fw pi-tag',
-              command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SCHEDULER, appSettings.checkVersion))
+              command: (): void => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SCHEDULER, appSettings.checkVersion))
             },
             {
               label: 'Update version',
               icon: 'pi pi-fw pi-arrow-circle-up',
-              command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'update')),
+              command: (): void => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'update')),
               visible: this.systemUpdateAvailable
             },
             {
@@ -209,22 +209,22 @@ export class PageHeaderComponent implements OnInit {
             {
               label: 'Flush cache',
               icon: 'pi pi-fw pi-trash',
-              command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushCache'))
+              command: (): void => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushCache'))
             },
             {
               label: 'Flush wanted',
               icon: 'pi pi-fw pi-trash',
-              command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushWantedItems'))
+              command: (): void => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushWantedItems'))
             },
             {
               label: 'Flush downloads',
               icon: 'pi pi-fw pi-trash',
-              command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushLastDownloads'))
+              command: (): void => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushLastDownloads'))
             },
             {
               label: 'Flush library',
               icon: 'pi pi-fw pi-trash',
-              command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushLibrary')),
+              command: (): void => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'flushLibrary')),
               visible: appSettings.libraryMode
             },
             {
@@ -233,12 +233,12 @@ export class PageHeaderComponent implements OnInit {
             {
               label: 'Restart',
               icon: 'pi pi-fw pi-refresh',
-              command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'restart'))
+              command: (): void => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'restart'))
             },
             {
               label: 'Shutdown',
               icon: 'pi pi-fw pi-power-off',
-              command: () => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'shutdown'))
+              command: (): void => this.webSocketService.sendMessageThroughSystemWebSocket(new SystemWebSocketClientEvent(SystemWebSocketClientEventType.RUN_SYSTEM_PROCESS, 'shutdown'))
             },
             {
               separator: true
@@ -265,25 +265,25 @@ export class PageHeaderComponent implements OnInit {
             {
               label: 'Dark blue',
               icon: 'pi pi-fw bootstrap4-dark-blue',
-              command: () => this.themeService.changeTheme('bootstrap4-dark-blue'),
+              command: (): void => this.themeService.changeTheme('bootstrap4-dark-blue'),
               styleClass: this.getThemeClass('bootstrap4-dark-blue', this.currentTheme)
             },
             {
               label: 'Dark purple',
               icon: 'pi pi-fw bootstrap4-dark-purple',
-              command: () => this.themeService.changeTheme('bootstrap4-dark-purple'),
+              command: (): void => this.themeService.changeTheme('bootstrap4-dark-purple'),
               styleClass: this.getThemeClass('bootstrap4-dark-purple', this.currentTheme)
             },
             {
               label: 'Light blue',
               icon: 'pi pi-fw bootstrap4-light-blue',
-              command: () => this.themeService.changeTheme('bootstrap4-light-blue'),
+              command: (): void => this.themeService.changeTheme('bootstrap4-light-blue'),
               styleClass: this.getThemeClass('bootstrap4-light-blue', this.currentTheme)
             },
             {
               label: 'Light purple',
               icon: 'pi pi-fw bootstrap4-light-purple',
-              command: () => this.themeService.changeTheme('bootstrap4-light-purple'),
+              command: (): void => this.themeService.changeTheme('bootstrap4-light-purple'),
               styleClass: this.getThemeClass('bootstrap4-light-purple', this.currentTheme)
             },
             {
@@ -299,25 +299,25 @@ export class PageHeaderComponent implements OnInit {
             {
               label: 'Arya blue',
               icon: 'pi pi-fw arya-blue',
-              command: () => this.themeService.changeTheme('arya-blue'),
+              command: (): void => this.themeService.changeTheme('arya-blue'),
               styleClass: this.getThemeClass('arya-blue', this.currentTheme)
             },
             {
               label: 'Arya green',
               icon: 'pi pi-fw arya-green',
-              command: () => this.themeService.changeTheme('arya-green'),
+              command: (): void => this.themeService.changeTheme('arya-green'),
               styleClass: this.getThemeClass('arya-green', this.currentTheme)
             },
             {
               label: 'Arya orange',
               icon: 'pi pi-fw arya-orange',
-              command: () => this.themeService.changeTheme('arya-orange'),
+              command: (): void => this.themeService.changeTheme('arya-orange'),
               styleClass: this.getThemeClass('arya-orange', this.currentTheme)
             },
             {
               label: 'Arya purple',
               icon: 'pi pi-fw arya-purple',
-              command: () => this.themeService.changeTheme('arya-purple'),
+              command: (): void => this.themeService.changeTheme('arya-purple'),
               styleClass: this.getThemeClass('arya-purple', this.currentTheme)
             },
             {
@@ -326,49 +326,49 @@ export class PageHeaderComponent implements OnInit {
             {
               label: 'Lara dark blue',
               icon: 'pi pi-fw lara-dark-blue',
-              command: () => this.themeService.changeTheme('lara-dark-blue'),
+              command: (): void => this.themeService.changeTheme('lara-dark-blue'),
               styleClass: this.getThemeClass('lara-dark-blue', this.currentTheme)
             },
             {
               label: 'Lara dark indigo',
               icon: 'pi pi-fw lara-dark-indigo',
-              command: () => this.themeService.changeTheme('lara-dark-indigo'),
+              command: (): void => this.themeService.changeTheme('lara-dark-indigo'),
               styleClass: this.getThemeClass('lara-dark-indigo', this.currentTheme)
             },
             {
               label: 'Lara dark purple',
               icon: 'pi pi-fw lara-dark-purple',
-              command: () => this.themeService.changeTheme('lara-dark-purple'),
+              command: (): void => this.themeService.changeTheme('lara-dark-purple'),
               styleClass: this.getThemeClass('lara-dark-purple', this.currentTheme)
             },
             {
               label: 'Lara dark teal',
               icon: 'pi pi-fw lara-dark-teal',
-              command: () => this.themeService.changeTheme('lara-dark-teal'),
+              command: (): void => this.themeService.changeTheme('lara-dark-teal'),
               styleClass: this.getThemeClass('lara-dark-teal', this.currentTheme)
             },
             {
               label: 'Lara light blue',
               icon: 'pi pi-fw lara-light-blue',
-              command: () => this.themeService.changeTheme('lara-light-blue'),
+              command: (): void => this.themeService.changeTheme('lara-light-blue'),
               styleClass: this.getThemeClass('lara-light-blue', this.currentTheme)
             },
             {
               label: 'Lara light indigo',
               icon: 'pi pi-fw lara-light-indigo',
-              command: () => this.themeService.changeTheme('lara-light-indigo'),
+              command: (): void => this.themeService.changeTheme('lara-light-indigo'),
               styleClass: this.getThemeClass('lara-light-indigo', this.currentTheme)
             },
             {
               label: 'Lara light purple',
               icon: 'pi pi-fw lara-light-purple',
-              command: () => this.themeService.changeTheme('lara-light-purple'),
+              command: (): void => this.themeService.changeTheme('lara-light-purple'),
               styleClass: this.getThemeClass('lara-light-purple', this.currentTheme)
             },
             {
               label: 'Lara light teal',
               icon: 'pi pi-fw lara-light-teal',
-              command: () => this.themeService.changeTheme('lara-light-teal'),
+              command: (): void => this.themeService.changeTheme('lara-light-teal'),
               styleClass: this.getThemeClass('lara-light-teal', this.currentTheme)
             },
             {
@@ -377,25 +377,25 @@ export class PageHeaderComponent implements OnInit {
             {
               label: 'Saga blue',
               icon: 'pi pi-fw saga-blue',
-              command: () => this.themeService.changeTheme('saga-blue'),
+              command: (): void => this.themeService.changeTheme('saga-blue'),
               styleClass: this.getThemeClass('saga-blue', this.currentTheme)
             },
             {
               label: 'Saga green',
               icon: 'pi pi-fw saga-green',
-              command: () => this.themeService.changeTheme('saga-green'),
+              command: (): void => this.themeService.changeTheme('saga-green'),
               styleClass: this.getThemeClass('saga-green', this.currentTheme)
             },
             {
               label: 'Saga orange',
               icon: 'pi pi-fw saga-orange',
-              command: () => this.themeService.changeTheme('saga-orange'),
+              command: (): void => this.themeService.changeTheme('saga-orange'),
               styleClass: this.getThemeClass('saga-orange', this.currentTheme)
             },
             {
               label: 'Saga purple',
               icon: 'pi pi-fw saga-purple',
-              command: () => this.themeService.changeTheme('saga-purple'),
+              command: (): void => this.themeService.changeTheme('saga-purple'),
               styleClass: this.getThemeClass('saga-purple', this.currentTheme)
             },
             {
@@ -404,25 +404,25 @@ export class PageHeaderComponent implements OnInit {
             {
               label: 'Vela blue',
               icon: 'pi pi-fw vela-blue',
-              command: () => this.themeService.changeTheme('vela-blue'),
+              command: (): void => this.themeService.changeTheme('vela-blue'),
               styleClass: this.getThemeClass('vela-blue', this.currentTheme)
             },
             {
               label: 'Vela green',
               icon: 'pi pi-fw vela-green',
-              command: () => this.themeService.changeTheme('vela-green'),
+              command: (): void => this.themeService.changeTheme('vela-green'),
               styleClass: this.getThemeClass('vela-green', this.currentTheme)
             },
             {
               label: 'Vela orange',
               icon: 'pi pi-fw vela-orange',
-              command: () => this.themeService.changeTheme('vela-orange'),
+              command: (): void => this.themeService.changeTheme('vela-orange'),
               styleClass: this.getThemeClass('vela-orange', this.currentTheme)
             },
             {
               label: 'Vela purple',
               icon: 'pi pi-fw vela-purple',
-              command: () => this.themeService.changeTheme('vela-purple'),
+              command: (): void => this.themeService.changeTheme('vela-purple'),
               styleClass: this.getThemeClass('vela-purple', this.currentTheme)
             }
           ]
