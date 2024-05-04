@@ -84,7 +84,7 @@ requests==2.31.0
 # autosubliminal\server\api\settings.py: 8
 requests-oauthlib==1.4.1
 # autosubliminal\core\websocket.py: 9
-schema==0.7.5
+schema==0.7.7
 # autosubliminal\__init__.py: 15
 stevedore==5.0.0
 # autosubliminal\__init__.py: 298,324,325,326
