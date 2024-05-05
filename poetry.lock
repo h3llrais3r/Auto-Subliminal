@@ -528,14 +528,14 @@ files = [
 
 [[package]]
 name = "dogpile-cache"
-version = "1.3.2"
+version = "1.3.3"
 description = "A caching front-end based on the Dogpile lock."
 category = "main"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "dogpile.cache-1.3.2-py3-none-any.whl", hash = "sha256:c59250e23ddb4c03259c315c3b03d18b0658ec4f30ee665b39b91faf6401ef41"},
-    {file = "dogpile.cache-1.3.2.tar.gz", hash = "sha256:4f71dc0333ad351c9c6f704f5ba2a37bf51c6eed0437d1adf56e075959afe63b"},
+    {file = "dogpile.cache-1.3.3-py3-none-any.whl", hash = "sha256:5e211c4902ebdf88c678d268e22454b41e68071632daa9402d8ee24e825ed8ca"},
+    {file = "dogpile.cache-1.3.3.tar.gz", hash = "sha256:f84b8ed0b0fb297d151055447fa8dcaf7bae566d4dbdefecdcc1f37662ab588b"},
 ]
 
 [package.dependencies]
@@ -2806,4 +2806,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "ddc534d8976ddbc18de90be956076f1f776e6a5638d6f7121d893085e9848802"
+content-hash = "ff0090776ddaef4a1111ced6d7a942b3f6550dd9735dae77c35e63b4cceb35ba"
