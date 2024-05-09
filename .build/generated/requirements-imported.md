@@ -11,7 +11,7 @@
 # autosubliminal\subchecker.py: 9
 # autosubliminal\util\filesystem.py: 13,14
 # autosubliminal\util\language.py: 5,6
-babelfish==0.6.0
+babelfish==0.6.1
 # autosubliminal\application.py: 12,13
 # autosubliminal\core\websocket.py: 7
 # autosubliminal\server\api\items.py: 5
