@@ -50,7 +50,7 @@ python-dateutil = "2.9.0.post0"
 python-twitter = "3.5"
 rebulk = "3.2.0"
 requests = "2.31.0"
-requests-oauthlib = "1.4.1"
+requests-oauthlib = "2.0.0"
 schema = "0.7.7"
 simplejson = "3.19.2"
 subliminal = { git = "https://github.com/Diaoul/subliminal.git", rev = "6ac2fa23ee5baa7d8452552edaa7c4a8a00d237a" }

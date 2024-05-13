@@ -1972,14 +1972,14 @@ fixture = ["fixtures"]
 
 [[package]]
 name = "requests-oauthlib"
-version = "1.4.1"
+version = "2.0.0"
 description = "OAuthlib authentication support for Requests."
 category = "main"
 optional = false
-python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
+python-versions = ">=3.4"
 files = [
-    {file = "requests-oauthlib-1.4.1.tar.gz", hash = "sha256:a2fb581fb28257a257340bef9dab782e28c599a000b2f8dd837bc41892d4fc6c"},
-    {file = "requests_oauthlib-1.4.1-py2.py3-none-any.whl", hash = "sha256:7d3bdc908f5e9b80137fbc445bf8db94295bb006bcbd9520fef55f28f44ed376"},
+    {file = "requests-oauthlib-2.0.0.tar.gz", hash = "sha256:b3dffaebd884d8cd778494369603a9e7b58d29111bf6b41bdc2dcd87203af4e9"},
+    {file = "requests_oauthlib-2.0.0-py2.py3-none-any.whl", hash = "sha256:7dd8a5c40426b779b0868c404bdef9768deccf22749cde15852df527e6269b36"},
 ]
 
 [package.dependencies]
@@ -2830,4 +2830,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "2a3bb78fa0b7b4384c13340904d15fd4aede6fbcccf4c68167686a317a5b2ec1"
+content-hash = "11decf27dd81ce84e57a0ed1843cb60edac0653ff09c8c21946978e0cefe2370"
