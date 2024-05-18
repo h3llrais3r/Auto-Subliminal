@@ -406,9 +406,7 @@ function initZone() {
         if (this._hasTaskZS) {
           returnTask._zoneDelegates.push(this._hasTaskDlgtOwner);
         }
-        // clang-format off
         returnTask = this._scheduleTaskZS.onScheduleTask(this._scheduleTaskDlgt, this._scheduleTaskCurrZone, targetZone, task);
-        // clang-format on
         if (!returnTask) returnTask = task;
       } else {
         if (task.scheduleFn) {
@@ -760,12 +758,12 @@ function isPropertyWritable(propertyDesc) {
 const isWebWorker = typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope;
 // Make sure to access `process` through `_global` so that WebPack does not accidentally browserify
 // this code.
-const isNode = !('nw' in _global) && typeof _global.process !== 'undefined' && {}.toString.call(_global.process) === '[object process]';
+const isNode = !('nw' in _global) && typeof _global.process !== 'undefined' && _global.process.toString() === '[object process]';
 const isBrowser = !isNode && !isWebWorker && !!(isWindowExists && internalWindow['HTMLElement']);
 // we are in electron of nw, so we are both browser and nodejs
 // Make sure to access `process` through `_global` so that WebPack does not accidentally browserify
 // this code.
-const isMix = typeof _global.process !== 'undefined' && {}.toString.call(_global.process) === '[object process]' && !isWebWorker && !!(isWindowExists && internalWindow['HTMLElement']);
+const isMix = typeof _global.process !== 'undefined' && _global.process.toString() === '[object process]' && !isWebWorker && !!(isWindowExists && internalWindow['HTMLElement']);
 const zoneSymbolEventNames$1 = {};
 const wrapFn = function (event) {
   // https://github.com/angular/zone.js/issues/911, in IE, sometimes
@@ -1352,7 +1350,7 @@ function patchEventTarget(_global, api, apis, patchOptions) {
         }
         const passive = passiveSupported && !!passiveEvents && passiveEvents.indexOf(eventName) !== -1;
         const options = buildEventListenerOptions(arguments[2], passive);
-        const signal = options && typeof options === 'object' && options.signal && typeof options.signal === 'object' ? options.signal : undefined;
+        const signal = options?.signal;
         if (signal?.aborted) {
           // the signal is an aborted one, just return without attaching the event listener.
           return;
@@ -1431,11 +1429,20 @@ function patchEventTarget(_global, api, apis, patchOptions) {
         if (signal) {
           // after task is scheduled, we need to store the signal back to task.options
           taskData.options.signal = signal;
-          nativeListener.call(signal, 'abort', () => {
-            task.zone.cancelTask(task);
-          }, {
+          // Wrapping `task` in a weak reference would not prevent memory leaks. Weak references are
+          // primarily used for preventing strong references cycles. `onAbort` is always reachable
+          // as it's an event listener, so its closure retains a strong reference to the `task`.
+          const onAbort = () => task.zone.cancelTask(task);
+          nativeListener.call(signal, 'abort', onAbort, {
             once: true
           });
+          // We need to remove the `abort` listener when the event listener is going to be removed,
+          // as it creates a closure that captures `task`. This closure retains a reference to the
+          // `task` object even after it goes out of scope, preventing `task` from being garbage
+          // collected.
+          if (data) {
+            data.removeAbortListener = () => signal.removeEventListener('abort', onAbort);
+          }
         }
         // should clear taskData.target to avoid memory leak
         // issue, https://github.com/angular/angular/issues/20442
@@ -1517,6 +1524,13 @@ function patchEventTarget(_global, api, apis, patchOptions) {
                 const onPropertySymbol = ZONE_SYMBOL_PREFIX + 'ON_PROPERTY' + eventName;
                 target[onPropertySymbol] = null;
               }
+            }
+            // Note that `removeAllListeners` would ultimately call `removeEventListener`,
+            // so we're safe to remove the abort listener only once here.
+            const taskData = existingTask.data;
+            if (taskData?.removeAbortListener) {
+              taskData.removeAbortListener();
+              taskData.removeAbortListener = null;
             }
             existingTask.zone.cancelTask(existingTask);
             if (returnTarget) {
@@ -2785,4 +2799,4 @@ patchBrowser(Zone$1);
 /******/ var __webpack_exports__ = (__webpack_exec__(4050));
 /******/ }
 ]);
-//# sourceMappingURL=polyfills.27ea4e8d434bd16b.js.map
+//# sourceMappingURL=polyfills.d1912e207fa70289.js.map
