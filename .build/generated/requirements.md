@@ -62,7 +62,7 @@ pywin32==306 ; sys_platform == "win32" and implementation_name == "cpython" and 
 rarfile==4.0 ; python_full_version >= "3.8.1" and python_version < "4"
 rebulk==3.2.0 ; python_full_version >= "3.8.1" and python_version < "4"
 requests-oauthlib==2.0.0 ; python_full_version >= "3.8.1" and python_version < "4"
-requests==2.31.0 ; python_full_version >= "3.8.1" and python_version < "4"
+requests==2.32.0 ; python_full_version >= "3.8.1" and python_version < "4"
 rich==13.3.4 ; python_full_version >= "3.8.1" and python_version < "4"
 schema==0.7.7 ; python_full_version >= "3.8.1" and python_version < "4"
 setuptools==67.6.1 ; python_full_version >= "3.8.1" and python_version < "4"
