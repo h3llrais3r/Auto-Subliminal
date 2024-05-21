@@ -133,7 +133,7 @@ python-twitter 3.5 A Python wrapper around the Twitter API
         |-- idna >=2.5,<4 
         `-- urllib3 >=1.21.1,<3 
 rebulk 3.2.0 Rebulk - Define simple search patterns in bulk to perform advanced matching on any string.
-requests 2.31.0 Python HTTP for Humans.
+requests 2.32.0 Python HTTP for Humans.
 |-- certifi >=2017.4.17
 |-- charset-normalizer >=2,<4
 |-- idna >=2.5,<4
