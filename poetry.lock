@@ -180,14 +180,14 @@ files = [
 
 [[package]]
 name = "autopep8"
-version = "2.1.2"
+version = "2.2.0"
 description = "A tool that automatically formats Python code to conform to the PEP 8 style guide"
 category = "dev"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "autopep8-2.1.2-py2.py3-none-any.whl", hash = "sha256:fead1b74ae69bf939b7eb371c83522a9262d9ac4b49f1c6f3d38ca1e31707f74"},
-    {file = "autopep8-2.1.2.tar.gz", hash = "sha256:77b07146bf127aa88de78efc270d395a54ebb8284fdbe6542c4aeb8d969f4d9a"},
+    {file = "autopep8-2.2.0-py2.py3-none-any.whl", hash = "sha256:05418a981f038969d8bdcd5636bf15948db7555ae944b9f79b5a34b35f1370d4"},
+    {file = "autopep8-2.2.0.tar.gz", hash = "sha256:d306a0581163ac29908280ad557773a95a9bede072c0fafed6f141f5311f43c1"},
 ]
 
 [package.dependencies]
@@ -2830,4 +2830,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "70ed29b50eda74220810c779e7e8224ebc4e9b248dc901024b1b16471db0ce01"
+content-hash = "6895adecd53e4c5163d50bf3c75d97935ca5fe15b9b62f02d215d8e6636a8044"
