@@ -54,7 +54,7 @@ guessit==3.8.0
 # autosubliminal\core\movie.py: 8
 imdbpie==5.6.4.dev0
 # autosubliminal\util\json.py: 6
-jsonpickle==3.1.0
+jsonpickle==3.2.1
 # autosubliminal\__init__.py: 365,366
 # autosubliminal\util\filesystem.py: 10
 langdetect==1.0.9
