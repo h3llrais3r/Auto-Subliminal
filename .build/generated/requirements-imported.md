@@ -28,7 +28,7 @@ babelfish==0.6.1
 # autosubliminal\server\web\upload.py: 7
 # autosubliminal\server\web\websocket.py: 3
 # autosubliminal\util\json.py: 5
-CherryPy==18.9.0
+CherryPy==18.10.0
 # autosubliminal\providers\pitcher.py: 9,10
 deathbycaptcha==0.1.1
 # autosubliminal\core\cache.py: 10,11,12
