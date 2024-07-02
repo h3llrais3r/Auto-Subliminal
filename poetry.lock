@@ -552,14 +552,23 @@ pifpaf = ["pifpaf (>=2.5.0)", "setuptools"]
 
 [[package]]
 name = "enzyme"
-version = "0.4.1"
-description = "Python video metadata parser"
+version = "0.5.2"
+description = "Video metadata parser"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 files = [
-    {file = "enzyme-0.4.1.tar.gz", hash = "sha256:f2167fa97c24d1103a94d4bf4eb20f00ca76c38a37499821049253b2059c62bb"},
+    {file = "enzyme-0.5.2-py3-none-any.whl", hash = "sha256:5a85306c136368d78f299bb74bf0c5f5d37e2689adc5caec5aba5ee2f029296b"},
+    {file = "enzyme-0.5.2.tar.gz", hash = "sha256:7cf779148d9e66eb2838603eace140c53c3cefc8b8fe5d4d5a03a5fb5d57b3c1"},
 ]
+
+[package.dependencies]
+importlib-resources = {version = ">=4.6", markers = "python_version == \"3.8\""}
+
+[package.extras]
+dev = ["doc8", "mypy", "ruff", "tox", "typos", "validate-pyproject"]
+docs = ["myst-parser", "sphinx", "sphinx-rtd-theme"]
+test = ["PyYAML", "importlib-metadata (>=4.6)", "mypy", "pytest (>=6.0)", "requests"]
 
 [[package]]
 name = "exceptiongroup"
@@ -2830,4 +2839,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "47739faea7e24396c0c3a251385e97677a7d29808dbdf139561dd12f35ae9298"
+content-hash = "a9902b8f465de1ab8af48b37339a1fd13a41002199a263a5823a1851f8d9f881"
