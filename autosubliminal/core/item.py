@@ -87,15 +87,15 @@ class _BaseItem(ABC):
         self.tvdb_id: Optional[int] = None
         self.imdb_id: Optional[str] = None
 
-    @ property
+    @property
     def is_episode(self) -> bool:
         return self.type == 'episode'
 
-    @ property
+    @property
     def is_movie(self) -> bool:
         return self.type == 'movie'
 
-    @ property
+    @property
     def name(self) -> str:
         name = safe_str(self.title)
         year = safe_str(self.year)
@@ -103,7 +103,7 @@ class _BaseItem(ABC):
             name += ' (' + year + ')'
         return name
 
-    @ property
+    @property
     def long_name(self) -> str:
         name = self.name
         if name and self.is_episode:
@@ -204,7 +204,7 @@ class WantedItem(_BaseItem):
         self.video: Video = None  # Subliminal Video object
         self.found_subtitles: WantedItemSubtitles = None  # List of found subtitles after a manual search
 
-    @ property
+    @property
     def is_search_active(self) -> bool:
         """Indication if the search is active for the wanted item.
 
@@ -253,7 +253,7 @@ class WantedItem(_BaseItem):
         # Convert to json dict
         return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
-    @ property
+    @property
     def library_path(self) -> Optional[str]:
         """Library path for the wanted item.
 
@@ -283,7 +283,7 @@ class WantedItem(_BaseItem):
         """Copy all attributes to another wanted item."""
         wanted_item.__dict__.update(self.__dict__)
 
-    @ classmethod
+    @classmethod
     def from_guess(cls: Type['WantedItem'], guess: Dict[str, Any]) -> Optional['WantedItem']:
         """Construct a :class:`WantedItem` object from a guess.
 
@@ -305,7 +305,7 @@ class WantedItem(_BaseItem):
         else:
             return None
 
-    @ staticmethod
+    @staticmethod
     def _property_from_guess(guess: Dict[str, Any], property_name: str, default_value: Any = None) -> Any:
         property_value = default_value
         if property_name in guess:
