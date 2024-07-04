@@ -8,10 +8,18 @@ from pathlib import Path
 from pytest import MonkeyPatch
 from pytest_mock import MockerFixture
 
-from autosubliminal.util.system import (TIMESTAMP_FORMAT, get_python_location, get_python_version,
-                                        get_python_version_full, get_stored_python_version,
-                                        get_stored_venv_creation_time, get_venv_creation_time,
-                                        is_python_version_changed, store_python_version, store_venv_creation_time)
+from autosubliminal.util.system import (
+    TIMESTAMP_FORMAT,
+    get_python_location,
+    get_python_version,
+    get_python_version_full,
+    get_stored_python_version,
+    get_stored_venv_creation_time,
+    get_venv_creation_time,
+    is_python_version_changed,
+    store_python_version,
+    store_venv_creation_time,
+)
 
 python_executable = '/path/to/python/executable/python.exe'
 python_version = '3.7.9 (tags/v3.7.9:13c94747c7, Aug 17 2020, 18:58:18) [MSC v.1900 64 bit (AMD64)]'

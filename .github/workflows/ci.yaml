@@ -105,7 +105,7 @@ jobs:
 
       - name: Lint python code
         run: |
-          poetry run flake8 --verbose # Configuration is done in .flake8
+          poetry run ruff check # Configuration is done in pyproject.toml
 
       - name: Type check python code
         run: |

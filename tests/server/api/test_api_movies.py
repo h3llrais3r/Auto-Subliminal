@@ -7,7 +7,6 @@ from autosubliminal.core.movie import MovieDetails, MovieSettings
 from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.db import FailedMoviesDb, MovieDetailsDb, MovieSettingsDb
 from autosubliminal.server.api.movies import MoviesApi
-
 from tests.server.api.test_api import pickle_api_result
 
 movie_details_1 = MovieDetails(

@@ -13,7 +13,6 @@ from autosubliminal.core.scheduler import Scheduler
 from autosubliminal.server.api.system import SystemApi
 from autosubliminal.server.rest import BadRequest
 from autosubliminal.util.common import to_dict
-
 from tests.server.api.test_api import pickle_api_result
 
 

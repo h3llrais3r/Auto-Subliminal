@@ -21,8 +21,12 @@ from subliminal.video import Episode, Movie, Video
 
 import autosubliminal
 from autosubliminal.core.item import DownloadItem, WantedItem
-from autosubliminal.core.queue import (delete_wanted_item_in_queue, get_wanted_queue_lock, release_wanted_queue_lock,
-                                       release_wanted_queue_lock_on_exception)
+from autosubliminal.core.queue import (
+    delete_wanted_item_in_queue,
+    get_wanted_queue_lock,
+    release_wanted_queue_lock,
+    release_wanted_queue_lock_on_exception,
+)
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.db import WantedItemsDb
@@ -33,8 +37,12 @@ from autosubliminal.providers.opensubtitles_com import OpenSubtitlesComSubtitle
 from autosubliminal.subdownloader import SubDownloader
 from autosubliminal.subsynchronizer import SubSynchronizer
 from autosubliminal.util.common import camelize, set_rw_and_remove, wait_for_internet_connection
-from autosubliminal.util.websocket import (WANTED_ITEM_DELETE, WANTED_ITEM_UPDATE, send_websocket_event,
-                                           send_websocket_notification)
+from autosubliminal.util.websocket import (
+    WANTED_ITEM_DELETE,
+    WANTED_ITEM_UPDATE,
+    send_websocket_event,
+    send_websocket_notification,
+)
 
 log = logging.getLogger(__name__)
 

@@ -9,8 +9,13 @@ from guessit import guessit
 from requests import JSONDecodeError, Response, Session
 from subliminal import Provider
 from subliminal.cache import region
-from subliminal.exceptions import (AuthenticationError, ConfigurationError, DownloadLimitExceeded, ProviderError,
-                                   ServiceUnavailable)
+from subliminal.exceptions import (
+    AuthenticationError,
+    ConfigurationError,
+    DownloadLimitExceeded,
+    ProviderError,
+    ServiceUnavailable,
+)
 from subliminal.subtitle import Subtitle, fix_line_ending, guess_matches
 from subliminal.utils import sanitize
 from subliminal.video import Episode, Movie

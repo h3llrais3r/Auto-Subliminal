@@ -7,9 +7,16 @@ from pytest import MonkeyPatch
 from pytest_mock import MockerFixture
 
 from autosubliminal.core.subtitle import Subtitle
-from autosubliminal.util.filesystem import (check_missing_subtitle_languages, get_available_subtitles,
-                                            get_embedded_subtitles, get_external_subtitles, get_hardcoded_subtitles,
-                                            is_skipped_dir, is_valid_video_file, one_path_exists)
+from autosubliminal.util.filesystem import (
+    check_missing_subtitle_languages,
+    get_available_subtitles,
+    get_embedded_subtitles,
+    get_external_subtitles,
+    get_hardcoded_subtitles,
+    is_skipped_dir,
+    is_valid_video_file,
+    one_path_exists,
+)
 
 
 def test_one_path_exists() -> None:

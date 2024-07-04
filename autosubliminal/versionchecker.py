@@ -16,8 +16,11 @@ except ImportError:
 import autosubliminal
 from autosubliminal import system
 from autosubliminal.core.enums import InstallType
-from autosubliminal.core.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
-                                       release_wanted_queue_lock_on_exception)
+from autosubliminal.core.queue import (
+    get_wanted_queue_lock,
+    release_wanted_queue_lock,
+    release_wanted_queue_lock_on_exception,
+)
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.util.common import connect_url, wait_for_internet_connection
 from autosubliminal.util.websocket import SYSTEM_UPDATE, send_websocket_event, send_websocket_notification

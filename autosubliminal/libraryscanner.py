@@ -10,12 +10,24 @@ from autosubliminal.core.movie import MovieSettings
 from autosubliminal.core.scheduler import ScheduledProcess
 from autosubliminal.core.show import ShowSettings
 from autosubliminal.core.subtitle import get_missing_subtitle_languages
-from autosubliminal.db import (FailedMoviesDb, FailedShowsDb, MovieDetailsDb, MovieSettingsDb, ShowDetailsDb,
-                               ShowEpisodeDetailsDb, ShowSettingsDb)
+from autosubliminal.db import (
+    FailedMoviesDb,
+    FailedShowsDb,
+    MovieDetailsDb,
+    MovieSettingsDb,
+    ShowDetailsDb,
+    ShowEpisodeDetailsDb,
+    ShowSettingsDb,
+)
 from autosubliminal.fileprocessor import process_file
 from autosubliminal.util.common import safe_lowercase
-from autosubliminal.util.filesystem import (VIDEO_EXTENSIONS, get_available_subtitles, is_skipped_dir,
-                                            is_valid_video_file, one_path_exists)
+from autosubliminal.util.filesystem import (
+    VIDEO_EXTENSIONS,
+    get_available_subtitles,
+    is_skipped_dir,
+    is_valid_video_file,
+    one_path_exists,
+)
 from autosubliminal.util.websocket import send_websocket_notification
 
 log = logging.getLogger(__name__)

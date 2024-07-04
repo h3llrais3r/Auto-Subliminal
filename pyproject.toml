@@ -68,11 +68,9 @@ requests-mock = "1.12.1"
 vcrpy = "6.0.1"
 
 # Tooling
-autopep8 = "2.2.0"
-flake8 = "7.0.0"
-isort = "5.13.2"
 mypy = "1.10.1"
 pigar = "2.1.4"
+ruff = "0.5.0"
 types-requests = "2.31.0.6"
 types-setuptools = "70.2.0.20240704"
 types-python-dateutil = "2.9.0.20240316"
@@ -97,28 +95,6 @@ exclude_lines = [
 addopts = "--verbose"
 testpaths = ["tests"]
 
-[tool.autopep8]
-max_line_length = 120
-experimental = true
-ignore = ["E402"]
-
-[tool.flake8]
-
-[tool.isort]
-line_length = 120
-extra_standard_library = ["pkg_resources"]
-known_first_party = ["autosubliminal"]
-known_tests = ["tests"]
-default_section = "THIRDPARTY"
-sections = [
-  "FUTURE",
-  "STDLIB",
-  "THIRDPARTY",
-  "FIRSTPARTY",
-  "LOCALFOLDER",
-  "TESTS",
-]
-
 [tool.mypy]
 files = ["AutoSubliminal.py", "autosubliminal", "tests"]
 exclude = [
@@ -137,3 +113,48 @@ disallow_untyped_defs = true
 show_error_codes = true
 warn_unused_ignores = true
 warn_return_any = true
+
+[tool.ruff]
+extend-exclude = [
+  ".build",
+  ".cache",
+  ".github",
+  ".history",
+  ".idea",
+  ".pytest_cache",
+  ".venv",
+  ".vscode",
+  "cache",
+  "requirements",
+  "web",
+]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E402"]
+
+[tool.ruff.lint.per-file-ignores]
+"autosubliminal/providers/pitcher.py" = ["E722"]
+"autosubliminal/providers/useragents.py" = ["E501"]
+"autosubliminal/providers/addic7ed_custom.py" = ["F401", "E741"]
+"autosubliminal/subsynchronizer.py" = ["F401"]
+"autosubliminal/util/common.py" = ["E731"]
+"autosubliminal/providers/opensubtitles_com.py" = ["E741"]
+"autosubliminal/core/scheduler.py" = ["E722"]
+
+[tool.ruff.lint.isort]
+extra-standard-library = ["pkg_resources"]
+known-first-party = ["autosubliminal"]
+default-section = "third-party"
+section-order = [
+  "future",
+  "standard-library",
+  "third-party",
+  "first-party",
+  "local-folder",
+]
+
+[tool.ruff.format]
+quote-style = "single"
+skip-magic-trailing-comma = true

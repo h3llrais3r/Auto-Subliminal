@@ -6,9 +6,15 @@ import pytest
 
 import autosubliminal
 from autosubliminal.core.item import ItemType, WantedItem
-from autosubliminal.core.queue import (count_wanted_queue_items, delete_wanted_item_in_queue, find_wanted_item_in_queue,
-                                       get_wanted_queue_lock, release_wanted_queue_lock,
-                                       release_wanted_queue_lock_on_exception, update_wanted_item_in_queue)
+from autosubliminal.core.queue import (
+    count_wanted_queue_items,
+    delete_wanted_item_in_queue,
+    find_wanted_item_in_queue,
+    get_wanted_queue_lock,
+    release_wanted_queue_lock,
+    release_wanted_queue_lock_on_exception,
+    update_wanted_item_in_queue,
+)
 
 
 def test_wanted_queue_lock() -> None:

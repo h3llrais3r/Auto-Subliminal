@@ -5,12 +5,10 @@
     "mikestead.dotenv",
     "xyz.local-history",
     "zignd.html-css-class-completion",
-    "ms-python.autopep8",
-    "ms-python.isort",
-    "ms-python.flake8",
     "ms-python.mypy-type-checker",
     "ms-python.vscode-pylance",
     "firsttris.vscode-jest-runner",
-    "angular.ng-template"
+    "angular.ng-template",
+    "charliermarsh.ruff"
   ]
 }

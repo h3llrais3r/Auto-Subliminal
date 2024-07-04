@@ -1,9 +1,13 @@
 # coding=utf-8
 
 import autosubliminal
-from autosubliminal.util.mapping import (get_addic7ed_show_name_mapping, get_alternative_movie_name_mapping,
-                                         get_alternative_show_name_mapping, get_movie_name_mapping,
-                                         get_show_name_mapping)
+from autosubliminal.util.mapping import (
+    get_addic7ed_show_name_mapping,
+    get_alternative_movie_name_mapping,
+    get_alternative_show_name_mapping,
+    get_movie_name_mapping,
+    get_show_name_mapping,
+)
 
 
 def test_get_show_name_mapping() -> None:
@@ -37,8 +41,11 @@ def test_movie_name_mapping() -> None:
 
 
 def test_get_alternative_movie_name_mapping() -> None:
-    autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = {'movie1': 'movie1a, movie1b', 'movie2': 'movie2a',
-                                                  'movie3 (2016)': 'movie3a'}
+    autosubliminal.ALTERNATIVEMOVIENAMEMAPPING = {
+        'movie1': 'movie1a, movie1b',
+        'movie2': 'movie2a',
+        'movie3 (2016)': 'movie3a',
+    }
     assert get_alternative_movie_name_mapping('MOVIE1', None) == ['movie1a', 'movie1b']
     assert get_alternative_movie_name_mapping('Movie2', None) == ['movie2a']
     assert get_alternative_movie_name_mapping('movie3', None) is None

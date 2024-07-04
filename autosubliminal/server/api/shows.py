@@ -9,8 +9,14 @@ import cherrypy
 import autosubliminal
 from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails, ShowSettings
 from autosubliminal.core.subtitle import Subtitle, get_missing_subtitle_languages
-from autosubliminal.db import (FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowEpisodeSubtitlesDb,
-                               ShowSettingsDb, WantedItemsDb)
+from autosubliminal.db import (
+    FailedShowsDb,
+    ShowDetailsDb,
+    ShowEpisodeDetailsDb,
+    ShowEpisodeSubtitlesDb,
+    ShowSettingsDb,
+    WantedItemsDb,
+)
 from autosubliminal.libraryscanner import LibraryPathScanner
 from autosubliminal.server.rest import NotFound, RestResource
 from autosubliminal.util.common import camelize, decamelize, find_path_in_paths, get_boolean, natural_keys, to_dict

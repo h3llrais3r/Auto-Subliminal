@@ -7,8 +7,15 @@ import tempfile
 from pytest import MonkeyPatch
 
 import autosubliminal
-from autosubliminal.core.logger import (_LogFilter, _LogFormatter, count_backup_logfiles, get_log_lines, get_logfile,
-                                        initialize, update_settings)
+from autosubliminal.core.logger import (
+    _LogFilter,
+    _LogFormatter,
+    count_backup_logfiles,
+    get_log_lines,
+    get_logfile,
+    initialize,
+    update_settings,
+)
 
 
 def _mock_settings(monkeypatch: MonkeyPatch) -> None:

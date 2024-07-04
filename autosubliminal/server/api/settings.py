@@ -12,8 +12,15 @@ import autosubliminal
 from autosubliminal import config, notifiers
 from autosubliminal.config import write_config_general_section
 from autosubliminal.server.rest import RestResource
-from autosubliminal.util.common import (camelize, decamelize, dict_to_list, find_path_in_paths, get_boolean,
-                                        list_to_dict, to_dict)
+from autosubliminal.util.common import (
+    camelize,
+    decamelize,
+    dict_to_list,
+    find_path_in_paths,
+    get_boolean,
+    list_to_dict,
+    to_dict,
+)
 
 log = logging.getLogger(__name__)
 

@@ -4,8 +4,11 @@ import threading
 from typing import cast
 
 import autosubliminal
-from autosubliminal.core.queue import (get_wanted_queue_lock, release_wanted_queue_lock,
-                                       release_wanted_queue_lock_on_exception)
+from autosubliminal.core.queue import (
+    get_wanted_queue_lock,
+    release_wanted_queue_lock,
+    release_wanted_queue_lock_on_exception,
+)
 from autosubliminal.db.cache_db import ImdbIdCacheDb, TvdbIdCacheDb
 from autosubliminal.db.main_db import LastDownloadsDb, WantedItemsDb
 from autosubliminal.db.movie_db import MovieDetailsDb

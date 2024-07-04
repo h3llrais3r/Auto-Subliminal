@@ -7,7 +7,6 @@ from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails, ShowSettin
 from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.db import FailedShowsDb, ShowDetailsDb, ShowEpisodeDetailsDb, ShowSettingsDb
 from autosubliminal.server.api.shows import ShowsApi
-
 from tests.server.api.test_api import pickle_api_result
 
 show_details_1 = ShowDetails(path='/path/to/show1', tvdb_id=1, title='title1', year=2018, overview='overview1',

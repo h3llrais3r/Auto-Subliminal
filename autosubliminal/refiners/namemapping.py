@@ -5,8 +5,12 @@ from typing import Any
 
 from subliminal.video import Episode, Movie, Video
 
-from autosubliminal.util.mapping import (get_alternative_movie_name_mapping, get_alternative_show_name_mapping,
-                                         get_movie_name_mapping, get_show_name_mapping)
+from autosubliminal.util.mapping import (
+    get_alternative_movie_name_mapping,
+    get_alternative_show_name_mapping,
+    get_movie_name_mapping,
+    get_show_name_mapping,
+)
 
 logger = logging.getLogger(__name__)
 
