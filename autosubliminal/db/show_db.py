@@ -89,15 +89,18 @@ class ShowDetailsDb(object):
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_set, [
-            show_details.tvdb_id,
-            show_details.title,
-            show_details.year,
-            show_details.path,
-            show_details.overview,
-            show_details.poster,
-            show_details.banner
-        ])
+        cursor.execute(
+            self._query_set,
+            [
+                show_details.tvdb_id,
+                show_details.title,
+                show_details.year,
+                show_details.path,
+                show_details.overview,
+                show_details.poster,
+                show_details.banner,
+            ],
+        )
         connection.commit()
         connection.close()
 
@@ -141,18 +144,22 @@ class ShowEpisodeDetailsDb(object):
         self.connection = connection
 
         self._query_get_all_for_show = 'SELECT * FROM show_episode_details WHERE show_tvdb_id=?'
-        self._query_get_all_for_show_available = 'SELECT * FROM show_episode_details ' \
-                                                 'WHERE show_tvdb_id=? AND path IS NOT NULL AND path!=""'
+        self._query_get_all_for_show_available = (
+            'SELECT * FROM show_episode_details ' 'WHERE show_tvdb_id=? AND path IS NOT NULL AND path!=""'
+        )
         self._query_get = 'SELECT * FROM show_episode_details WHERE tvdb_id=?'
         self._query_get_by_show = 'SELECT * FROM show_episode_details WHERE show_tvdb_id=? AND season=? AND episode=?'
         self._query_set = 'INSERT INTO show_episode_details VALUES (?,?,?,?,?,?,?)'
-        self._query_update = 'UPDATE show_episode_details SET show_tvdb_id=?, title=?, season=?, episode=?, path=?, ' \
-                             'missing_languages=? WHERE tvdb_id=?'
+        self._query_update = (
+            'UPDATE show_episode_details SET show_tvdb_id=?, title=?, season=?, episode=?, path=?, '
+            'missing_languages=? WHERE tvdb_id=?'
+        )
         self._query_delete = 'DELETE FROM show_episode_details WHERE show_tvdb_id=?'
         self._query_flush = 'DELETE FROM show_episode_details'
 
-    def get_show_episodes(self, show_tvdb_id: int, available_only: bool = False,
-                          subtitles: bool = False) -> List[ShowEpisodeDetails]:
+    def get_show_episodes(
+        self, show_tvdb_id: int, available_only: bool = False, subtitles: bool = False
+    ) -> List[ShowEpisodeDetails]:
         """Get the episodes of a show by its tvdb id.
 
         :param show_tvdb_id: the tvdb id of the show
@@ -201,8 +208,9 @@ class ShowEpisodeDetailsDb(object):
 
         return show_episode
 
-    def get_show_episode_by_show(self, show_tvdb_id: int, season: int, episode: int,
-                                 subtitles: bool = False) -> Optional[ShowEpisodeDetails]:
+    def get_show_episode_by_show(
+        self, show_tvdb_id: int, season: int, episode: int, subtitles: bool = False
+    ) -> Optional[ShowEpisodeDetails]:
         """Get a show episode by its show tvdb id, season and episode number.
 
         :param show_tvdb_id: the tvdb id of the show
@@ -237,15 +245,18 @@ class ShowEpisodeDetailsDb(object):
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_set, [
-            show_episode.tvdb_id,
-            show_episode.show_tvdb_id,
-            show_episode.title,
-            show_episode.season,
-            show_episode.episode,
-            show_episode.path,
-            to_text(show_episode.missing_languages)
-        ])
+        cursor.execute(
+            self._query_set,
+            [
+                show_episode.tvdb_id,
+                show_episode.show_tvdb_id,
+                show_episode.title,
+                show_episode.season,
+                show_episode.episode,
+                show_episode.path,
+                to_text(show_episode.missing_languages),
+            ],
+        )
         if subtitles:
             ShowEpisodeSubtitlesDb(connection).set_show_episode_subtitles(show_episode.tvdb_id, show_episode.subtitles)
         connection.commit()
@@ -261,15 +272,18 @@ class ShowEpisodeDetailsDb(object):
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_update, [
-            show_episode.show_tvdb_id,
-            show_episode.title,
-            show_episode.season,
-            show_episode.episode,
-            show_episode.path,
-            to_text(show_episode.missing_languages),
-            show_episode.tvdb_id
-        ])
+        cursor.execute(
+            self._query_update,
+            [
+                show_episode.show_tvdb_id,
+                show_episode.title,
+                show_episode.season,
+                show_episode.episode,
+                show_episode.path,
+                to_text(show_episode.missing_languages),
+                show_episode.tvdb_id,
+            ],
+        )
         if subtitles:
             subtitles_db = ShowEpisodeSubtitlesDb(connection)
             subtitles_db.delete_show_episode_subtitles(show_episode.tvdb_id)
@@ -352,12 +366,7 @@ class ShowEpisodeSubtitlesDb(object):
         connection = self.connection or sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         for show_subtitle in show_episode_subtitles:
-            cursor.execute(self._query_set, [
-                tvdb_id,
-                show_subtitle.type,
-                show_subtitle.language,
-                show_subtitle.path
-            ])
+            cursor.execute(self._query_set, [tvdb_id, show_subtitle.type, show_subtitle.language, show_subtitle.path])
         if not self.connection:
             connection.commit()
             connection.close()
@@ -410,8 +419,10 @@ class ShowSettingsDb(object):
     def __init__(self) -> None:
         self._query_get = 'SELECT * FROM show_settings WHERE tvdb_id=?'
         self._query_set = 'INSERT INTO show_settings VALUES(?,?,?,?,?)'
-        self._query_update = 'UPDATE show_settings SET wanted_languages=?, refine=?, hearing_impaired=?, ' \
-                             'utf8_encoding=? WHERE tvdb_id=?'
+        self._query_update = (
+            'UPDATE show_settings SET wanted_languages=?, refine=?, hearing_impaired=?, '
+            'utf8_encoding=? WHERE tvdb_id=?'
+        )
         self._query_delete = 'DELETE FROM show_settings WHERE tvdb_id=?'
 
     def get_show_settings(self, tvdb_id: int) -> Optional[ShowSettings]:
@@ -439,13 +450,16 @@ class ShowSettingsDb(object):
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_set, [
-            show_settings.tvdb_id,
-            to_text(show_settings.wanted_languages),
-            show_settings.refine,
-            show_settings.hearing_impaired,
-            show_settings.utf8_encoding
-        ])
+        cursor.execute(
+            self._query_set,
+            [
+                show_settings.tvdb_id,
+                to_text(show_settings.wanted_languages),
+                show_settings.refine,
+                show_settings.hearing_impaired,
+                show_settings.utf8_encoding,
+            ],
+        )
         connection.commit()
         connection.close()
 
@@ -457,13 +471,16 @@ class ShowSettingsDb(object):
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_update, [
-            to_text(show_settings.wanted_languages),
-            show_settings.refine,
-            show_settings.hearing_impaired,
-            show_settings.utf8_encoding,
-            show_settings.tvdb_id
-        ])
+        cursor.execute(
+            self._query_update,
+            [
+                to_text(show_settings.wanted_languages),
+                show_settings.refine,
+                show_settings.hearing_impaired,
+                show_settings.utf8_encoding,
+                show_settings.tvdb_id,
+            ],
+        )
         connection.commit()
 
     def delete_show_settings(self, tvdb_id: int) -> None:

@@ -127,8 +127,10 @@ def test_process_movie_file_special_chars(mocker: MockerFixture) -> None:
 
 
 def test_process_movie_file_insufficient_guess(mocker: MockerFixture) -> None:
-    mocker.patch('autosubliminal.fileprocessor.guessit',
-                 return_value=dict([('year', 2018), ('container', 'mkv'), ('type', 'movie')]))
+    mocker.patch(
+        'autosubliminal.fileprocessor.guessit',
+        return_value=dict([('year', 2018), ('container', 'mkv'), ('type', 'movie')]),
+    )
     dir_name = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'resources')
     assert process_file(dir_name, '2018.mkv') is None
 

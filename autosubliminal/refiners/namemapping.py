@@ -39,7 +39,8 @@ def refine(video: Video, **kwargs: Any) -> None:
     if isinstance(video, Episode):
         logger.info('Refining episode video with custom name mappings')
         video.alternative_series = (video.alternative_series or []) + (
-            get_alternative_show_name_mapping(video.series) or [])
+            get_alternative_show_name_mapping(video.series) or []
+        )
         video.series_tvdb_id = get_show_name_mapping(video.series) or video.series_tvdb_id
         return None
 
@@ -47,6 +48,7 @@ def refine(video: Video, **kwargs: Any) -> None:
     if isinstance(video, Movie):
         logger.info('Refining movie video with custom name mappings')
         video.alternative_titles = (video.alternative_titles or []) + (
-            get_alternative_movie_name_mapping(video.title, video.year) or [])
+            get_alternative_movie_name_mapping(video.title, video.year) or []
+        )
         video.imdb_id = get_movie_name_mapping(video.title, video.year) or video.imdb_id
         return None

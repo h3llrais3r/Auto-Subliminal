@@ -29,7 +29,7 @@ __all__ = [
     'ShowEpisodeSubtitlesDb',
     'ShowSettingsDb',
     'FailedMoviesDb',
-    'FailedShowsDb'
+    'FailedShowsDb',
 ]
 
 
@@ -47,25 +47,33 @@ def create() -> None:
         cursor.execute(query)
         connection.commit()
 
-        query = 'CREATE TABLE wanted_items (id INTEGER PRIMARY KEY, video_path TEXT, video_size INTEGER, '\
-                'languages TEXT, timestamp DATETIME, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, '\
-                'quality TEXT, source TEXT, codec TEXT, release_group TEXT, tvdb_id TEXT, imdb_id TEXT)'
+        query = (
+            'CREATE TABLE wanted_items (id INTEGER PRIMARY KEY, video_path TEXT, video_size INTEGER, '
+            'languages TEXT, timestamp DATETIME, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, '
+            'quality TEXT, source TEXT, codec TEXT, release_group TEXT, tvdb_id TEXT, imdb_id TEXT)'
+        )
         cursor.execute(query)
         connection.commit()
 
-        query = 'CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, video_path TEXT, language TEXT, provider TEXT, '\
-                'subtitle TEXT, timestamp DATETIME, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, ' \
-                'quality TEXT, source TEXT, codec TEXT, release_group TEXT, tvdb_id INTEGER, imdb_id TEXT)'
+        query = (
+            'CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, video_path TEXT, language TEXT, provider TEXT, '
+            'subtitle TEXT, timestamp DATETIME, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, '
+            'quality TEXT, source TEXT, codec TEXT, release_group TEXT, tvdb_id INTEGER, imdb_id TEXT)'
+        )
         cursor.execute(query)
         connection.commit()
 
-        query = 'CREATE TABLE show_details (tvdb_id INTEGER PRIMARY KEY, title TEXT, year TEXT, path TEXT, ' \
-                'overview TEXT, poster TEXT, banner TEXT)'
+        query = (
+            'CREATE TABLE show_details (tvdb_id INTEGER PRIMARY KEY, title TEXT, year TEXT, path TEXT, '
+            'overview TEXT, poster TEXT, banner TEXT)'
+        )
         cursor.execute(query)
         connection.commit()
 
-        query = 'CREATE TABLE show_episode_details (tvdb_id INTEGER PRIMARY KEY, show_tvdb_id INTEGER, title TEXT, ' \
-                'season TEXT, episode TEXT, path TEXT, missing_languages TEXT)'
+        query = (
+            'CREATE TABLE show_episode_details (tvdb_id INTEGER PRIMARY KEY, show_tvdb_id INTEGER, title TEXT, '
+            'season TEXT, episode TEXT, path TEXT, missing_languages TEXT)'
+        )
         cursor.execute(query)
         connection.commit()
 
@@ -73,13 +81,17 @@ def create() -> None:
         cursor.execute(query)
         connection.commit()
 
-        query = 'CREATE TABLE show_settings (tvdb_id INTEGER PRIMARY KEY, wanted_languages TEXT, refine INTEGER, ' \
-                'hearing_impaired INTEGER, utf8_encoding INTEGER)'
+        query = (
+            'CREATE TABLE show_settings (tvdb_id INTEGER PRIMARY KEY, wanted_languages TEXT, refine INTEGER, '
+            'hearing_impaired INTEGER, utf8_encoding INTEGER)'
+        )
         cursor.execute(query)
         connection.commit()
 
-        query = 'CREATE TABLE movie_details (imdb_id TEXT PRIMARY KEY, title TEXT, year TEXT, path TEXT, ' \
-                'overview TEXT, poster TEXT, missing_languages TEXT)'
+        query = (
+            'CREATE TABLE movie_details (imdb_id TEXT PRIMARY KEY, title TEXT, year TEXT, path TEXT, '
+            'overview TEXT, poster TEXT, missing_languages TEXT)'
+        )
         cursor.execute(query)
         connection.commit()
 
@@ -87,8 +99,10 @@ def create() -> None:
         cursor.execute(query)
         connection.commit()
 
-        query = 'CREATE TABLE movie_settings (imdb_id TEXT PRIMARY KEY, wanted_languages TEXT, refine INTEGER, ' \
-                'hearing_impaired INTEGER, utf8_encoding INTEGER)'
+        query = (
+            'CREATE TABLE movie_settings (imdb_id TEXT PRIMARY KEY, wanted_languages TEXT, refine INTEGER, '
+            'hearing_impaired INTEGER, utf8_encoding INTEGER)'
+        )
         cursor.execute(query)
         connection.commit()
 
@@ -184,7 +198,8 @@ def upgrade(from_version: int, to_version: int) -> None:
             )
             cursor.execute(
                 'INSERT INTO tmp_last_downloads SELECT id, episode, show_name, NULL, season, episode, quality, source, '
-                'language, codec, timestamp, releasegrp, subtitle, provider FROM last_downloads')
+                'language, codec, timestamp, releasegrp, subtitle, provider FROM last_downloads'
+            )
             cursor.execute('DROP TABLE last_downloads')
             cursor.execute(
                 'CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, type TEXT, title TEXT, year TEXT, season TEXT, '
@@ -232,9 +247,7 @@ def upgrade(from_version: int, to_version: int) -> None:
                 'season TEXT, episode TEXT, path TEXT, missing_languages TEXT)'
             )
             # Create show_subtitles
-            cursor.execute(
-                'CREATE TABLE show_episode_subtitles (tvdb_id INTEGER, type TEXT, language TEXT, path TEXT)'
-            )
+            cursor.execute('CREATE TABLE show_episode_subtitles (tvdb_id INTEGER, type TEXT, language TEXT, path TEXT)')
             # Create show_settings
             cursor.execute(
                 'CREATE TABLE show_settings (tvdb_id INTEGER PRIMARY KEY, wanted_languages TEXT, refine INTEGER, '
@@ -246,17 +259,15 @@ def upgrade(from_version: int, to_version: int) -> None:
                 'overview TEXT, poster TEXT, missing_languages TEXT)'
             )
             # Create movie_subtitles
-            cursor.execute(
-                'CREATE TABLE movie_subtitles (imdb_id TEXT, type TEXT, language TEXT, path TEXT)'
-            )
+            cursor.execute('CREATE TABLE movie_subtitles (imdb_id TEXT, type TEXT, language TEXT, path TEXT)')
             # Create movie_settings
             cursor.execute(
                 'CREATE TABLE movie_settings (imdb_id TEXT PRIMARY KEY, wanted_languages TEXT, refine INTEGER, '
                 'hearing_impaired INTEGER, utf8_encoding INTEGER)'
             )
             # Update empty year values to NULL
-            cursor.execute('UPDATE last_downloads SET year = NULL WHERE year = \'\'')
-            cursor.execute('UPDATE wanted_items SET year = NULL WHERE year = \'\'')
+            cursor.execute("UPDATE last_downloads SET year = NULL WHERE year = ''")
+            cursor.execute("UPDATE wanted_items SET year = NULL WHERE year = ''")
             # Update database version
             cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (8, 7))
             connection.commit()
@@ -272,7 +283,7 @@ def upgrade(from_version: int, to_version: int) -> None:
             # Cleanup in tvdb_id_cache
             cursor.execute('DELETE FROM tvdb_id_cache WHERE tvdb_id = -1')
             # Cleanup imdb_id_cache
-            cursor.execute('DELETE FROM imdb_id_cache WHERE imdb_id = \'tt0000000\'')
+            cursor.execute("DELETE FROM imdb_id_cache WHERE imdb_id = 'tt0000000'")
             # Update database version
             cursor.execute('UPDATE info SET database_version = %d WHERE database_version = %d' % (9, 8))
             connection.commit()
@@ -289,16 +300,19 @@ def upgrade(from_version: int, to_version: int) -> None:
             )
             cursor.execute(
                 'INSERT INTO tmp_last_downloads SELECT id, type, title, year, season, episode, quality, source, '
-                'language, codec, timestamp, releasegrp, subtitle || \'.srt\', provider FROM last_downloads')
+                "language, codec, timestamp, releasegrp, subtitle || '.srt', provider FROM last_downloads"
+            )
             cursor.execute('DROP TABLE last_downloads')
             cursor.execute(
                 'CREATE TABLE last_downloads (id INTEGER PRIMARY KEY, video_path TEXT, language TEXT, provider TEXT, '
                 'subtitle TEXT, timestamp DATETIME, type TEXT, title TEXT, year TEXT, season TEXT, episode TEXT, '
                 'quality TEXT, source TEXT, codec TEXT, release_group TEXT, tvdb_id INTEGER, imdb_id TEXT)'
             )
-            cursor.execute('INSERT INTO last_downloads SELECT id, NULL, language, provider, subtitle, timestamp, type, '
-                           'title, year, season, episode, quality, source, codec, releasegrp, NULL, NULL '
-                           'FROM tmp_last_downloads')
+            cursor.execute(
+                'INSERT INTO last_downloads SELECT id, NULL, language, provider, subtitle, timestamp, type, '
+                'title, year, season, episode, quality, source, codec, releasegrp, NULL, NULL '
+                'FROM tmp_last_downloads'
+            )
             cursor.execute('DROP TABLE tmp_last_downloads')
             # Recreate wanted_items
             cursor.execute('DROP TABLE wanted_items')

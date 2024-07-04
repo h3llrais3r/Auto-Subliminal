@@ -75,12 +75,15 @@ class _InfoApi(RestResource):
             'system_encoding': autosubliminal.SYSENCODING,
             'python_version': get_python_version_full(),
             'python_location': get_python_location(),
-            'config_file': autosubliminal.CONFIGFILE if os.path.split(autosubliminal.CONFIGFILE)[0] else os.path.join(
-                autosubliminal.PATH, autosubliminal.CONFIGFILE),
-            'database_file': autosubliminal.DBFILE if os.path.split(autosubliminal.DBFILE)[0] else os.path.join(
-                autosubliminal.PATH, autosubliminal.DBFILE),
-            'log_file': autosubliminal.LOGFILE if os.path.split(autosubliminal.LOGFILE)[0] else os.path.join(
-                autosubliminal.PATH, autosubliminal.LOGFILE),
+            'config_file': autosubliminal.CONFIGFILE
+            if os.path.split(autosubliminal.CONFIGFILE)[0]
+            else os.path.join(autosubliminal.PATH, autosubliminal.CONFIGFILE),
+            'database_file': autosubliminal.DBFILE
+            if os.path.split(autosubliminal.DBFILE)[0]
+            else os.path.join(autosubliminal.PATH, autosubliminal.DBFILE),
+            'log_file': autosubliminal.LOGFILE
+            if os.path.split(autosubliminal.LOGFILE)[0]
+            else os.path.join(autosubliminal.PATH, autosubliminal.LOGFILE),
         }
 
         return to_dict(info, camelize)
@@ -129,7 +132,7 @@ class _SettingsApi(RestResource):
             'subliminal_providers': autosubliminal.SUBLIMINALPROVIDERMANAGER.names(),
             'anti_captcha_providers': ANTI_CAPTCHA_PROVIDERS,
             'episode_scores': self._get_episode_scores(),
-            'movie_scores': self._get_movie_scores()
+            'movie_scores': self._get_movie_scores(),
         }
 
         return to_dict(settings, camelize)
@@ -148,7 +151,7 @@ class _SettingsApi(RestResource):
             'hearing_impaired': episode_scores['hearing_impaired'],
             'default': autosubliminal.SHOWMINMATCHSCOREDEFAULT,
             'min': autosubliminal.SHOWMINMATCHSCORE,
-            'max': episode_scores['hash'] + episode_scores['hearing_impaired']
+            'max': episode_scores['hash'] + episode_scores['hearing_impaired'],
         }
 
     def _get_movie_scores(self) -> Dict[str, Any]:
@@ -163,7 +166,7 @@ class _SettingsApi(RestResource):
             'hearing_impaired': movie_scores['hearing_impaired'],
             'default': autosubliminal.MOVIEMINMATCHSCOREDEFAULT,
             'min': autosubliminal.MOVIEMINMATCHSCORE,
-            'max': movie_scores['hash'] + movie_scores['hearing_impaired']
+            'max': movie_scores['hash'] + movie_scores['hearing_impaired'],
         }
 
 

@@ -115,9 +115,7 @@ class _WantedApi(RestResource):
                         if subtitle_index is not None:
                             download_item = subchecker.save_subtitle(wanted_item_index, subtitle_index)
                             if download_item:
-                                saved_subtitle = {
-                                    'subtitle_path': download_item.subtitle_path
-                                }
+                                saved_subtitle = {'subtitle_path': download_item.subtitle_path}
                                 return to_dict(saved_subtitle, camelize)
                             else:
                                 self._raise_conflict('Unable to save subtitle')
@@ -212,7 +210,7 @@ class _WantedApi(RestResource):
                                 else:
                                     self._raise_conflict('Unable to skip movie')
 
-                        self._raise_bad_request('Invalid type \'%s\'' % item_type)
+                        self._raise_bad_request("Invalid type '%s'" % item_type)
 
                     # Post process a wanted item
                     elif action == 'postProcess':
@@ -226,7 +224,7 @@ class _WantedApi(RestResource):
                         else:
                             self._raise_conflict('Unable to post process item')
 
-                    self._raise_bad_request('Invalid action \'%s\'' % action)
+                    self._raise_bad_request("Invalid action '%s'" % action)
 
         self._raise_bad_request('Invalid wanted_item_id')
 

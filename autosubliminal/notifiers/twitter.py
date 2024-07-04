@@ -48,10 +48,12 @@ class TwitterNotifier(BaseNotifier):
 
     def _send_message(self, message: str, **kwargs: Any) -> bool:
         try:
-            api = Api(consumer_key=CONSUMER_KEY,
-                      consumer_secret=CONSUMER_SECRET,
-                      access_token_key=autosubliminal.TWITTERKEY,
-                      access_token_secret=autosubliminal.TWITTERSECRET)
+            api = Api(
+                consumer_key=CONSUMER_KEY,
+                consumer_secret=CONSUMER_SECRET,
+                access_token_key=autosubliminal.TWITTERKEY,
+                access_token_secret=autosubliminal.TWITTERSECRET,
+            )
             api.PostUpdate(str(message[:280]))
             return True
         except Exception:

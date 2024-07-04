@@ -188,13 +188,16 @@ class SourceVersionManager(_BaseVersionManager):
             send_websocket_notification(
                 'Unknown version found! '
                 'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and reinstall!',
-                severity='error', sticky=True)
+                severity='error',
+                sticky=True,
+            )
         elif local_version < remote_version:
             log.info('New version found')
             send_websocket_notification(
-                'New version found. '
-                'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and update!',
-                severity='warn', sticky=True)
+                'New version found. ' 'Check <a href=' + autosubliminal.GITHUBURL + '/releases>Github</a> and update!',
+                severity='warn',
+                sticky=True,
+            )
         else:
             log.info('Version up to date')
             # Show info message (only when run was forced manually)
@@ -265,8 +268,9 @@ class GitVersionManager(_BaseVersionManager):
 
         # Get number of commits ahead and behind (option --count not supported git < 1.7.2)
         try:
-            ahead, behind = cast(str, self.repo.git.execute(
-                'git rev-list --count --left-right HEAD...@{upstream}')).split('\t')
+            ahead, behind = cast(
+                str, self.repo.git.execute('git rev-list --count --left-right HEAD...@{upstream}')
+            ).split('\t')
             self.num_commits_ahead = int(ahead)
             self.num_commits_behind = int(behind)
         except Exception:

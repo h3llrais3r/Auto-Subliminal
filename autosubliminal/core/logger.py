@@ -11,8 +11,9 @@ from typing import List, Optional, no_type_check
 
 import autosubliminal
 
-LOG_PARSER = re.compile(r'^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))',
-                        re.IGNORECASE)
+LOG_PARSER = re.compile(
+    r'^((?P<date>\d{4}\-\d{2}\-\d{2}) (?P<time>\d{2}:\d{2}:\d{2},\d{3}) (?P<loglevel>\w+))', re.IGNORECASE
+)
 
 
 def initialize() -> None:
@@ -26,11 +27,13 @@ def initialize() -> None:
 
     log_filter = _LogFilter(autosubliminal.LOGHTTPACCESS, autosubliminal.LOGEXTERNALLIBS)
     log_formatter = _LogFormatter(autosubliminal.LOGDETAILEDFORMAT)
-    log_handler = CustomRotatingFileHandler(autosubliminal.LOGFILE,
-                                            mode='a',
-                                            maxBytes=autosubliminal.LOGSIZE * 1024 * 1024,
-                                            backupCount=autosubliminal.LOGNUM,
-                                            encoding='utf-8')
+    log_handler = CustomRotatingFileHandler(
+        autosubliminal.LOGFILE,
+        mode='a',
+        maxBytes=autosubliminal.LOGSIZE * 1024 * 1024,
+        backupCount=autosubliminal.LOGNUM,
+        encoding='utf-8',
+    )
     log_handler.addFilter(log_filter)
     log_handler.setFormatter(log_formatter)
     log_handler.setLevel(autosubliminal.LOGLEVEL)
@@ -199,14 +202,14 @@ class CustomRotatingFileHandler(BaseRotatingHandler):
             self.stream = None
         if self.backupCount > 0:
             for i in list(range(self.backupCount - 1, 0, -1)):
-                sfn = "%s.%d" % (self.baseFilename, i)
-                dfn = "%s.%d" % (self.baseFilename, i + 1)
+                sfn = '%s.%d' % (self.baseFilename, i)
+                dfn = '%s.%d' % (self.baseFilename, i + 1)
                 if os.path.exists(sfn):
                     # print "%s -> %s" % (sfn, dfn)
                     if os.path.exists(dfn):
                         os.remove(dfn)
                     os.rename(sfn, dfn)
-            dfn = self.baseFilename + ".1"
+            dfn = self.baseFilename + '.1'
             if os.path.exists(dfn):
                 os.remove(dfn)
             # Issue 18940: A file may not have been created if delay is True.
@@ -237,7 +240,7 @@ class CustomRotatingFileHandler(BaseRotatingHandler):
         if self.stream is None:  # delay was set...
             self.stream = self._open()
         if self.maxBytes > 0:  # are we rolling over?
-            msg = "%s\n" % self.format(record)
+            msg = '%s\n' % self.format(record)
             self.stream.seek(0, 2)  # due to non-posix-compliant Windows feature
             if self.stream.tell() + len(msg) >= self.maxBytes:
                 return 1

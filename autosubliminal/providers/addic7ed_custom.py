@@ -36,10 +36,12 @@ series_year_re = re.compile(r'^(?P<series>[ \w\'.:(),*&!?-]+?)(?: \((?P<year>\d{
 
 class Addic7edSubtitle(Subtitle):
     """Addic7ed Subtitle."""
+
     provider_name = 'addic7ed_custom'  # Needs to map to the name of the registered provider
 
-    def __init__(self, language, hearing_impaired, page_link, series, season, episode, title, year, version,
-                 download_link):
+    def __init__(
+        self, language, hearing_impaired, page_link, series, season, episode, title, year, version, download_link
+    ):
         super().__init__(language, hearing_impaired=hearing_impaired, page_link=page_link)
         self.series = series
         self.season = season
@@ -58,7 +60,8 @@ class Addic7edSubtitle(Subtitle):
 
         # series name
         if video.series and sanitize(self.series) in (
-                sanitize(name) for name in [video.series] + video.alternative_series):
+            sanitize(name) for name in [video.series] + video.alternative_series
+        ):
             matches.add('series')
         # season
         if video.season and self.season == video.season:
@@ -73,9 +76,14 @@ class Addic7edSubtitle(Subtitle):
         if video.original_series and self.year is None or video.year and video.year == self.year:
             matches.add('year')
         # release_group
-        if (video.release_group and self.version and
-                any(r in sanitize_release_group(self.version)
-                    for r in get_equivalent_release_groups(sanitize_release_group(video.release_group)))):
+        if (
+            video.release_group
+            and self.version
+            and any(
+                r in sanitize_release_group(self.version)
+                for r in get_equivalent_release_groups(sanitize_release_group(video.release_group))
+            )
+        ):
             matches.add('release_group')
         # resolution
         if video.resolution and self.version and video.resolution in self.version.lower():
@@ -91,11 +99,55 @@ class Addic7edSubtitle(Subtitle):
 
 class Addic7edProvider(Provider):
     """Addic7ed Provider."""
-    languages = {Language('por', 'BR')} | {Language(l) for l in [
-        'ara', 'aze', 'ben', 'bos', 'bul', 'cat', 'ces', 'dan', 'deu', 'ell', 'eng', 'eus', 'fas', 'fin', 'fra', 'glg',
-        'heb', 'hrv', 'hun', 'hye', 'ind', 'ita', 'jpn', 'kor', 'mkd', 'msa', 'nld', 'nor', 'pol', 'por', 'ron', 'rus',
-        'slk', 'slv', 'spa', 'sqi', 'srp', 'swe', 'tha', 'tur', 'ukr', 'vie', 'zho'
-    ]}
+
+    languages = {Language('por', 'BR')} | {
+        Language(l)
+        for l in [
+            'ara',
+            'aze',
+            'ben',
+            'bos',
+            'bul',
+            'cat',
+            'ces',
+            'dan',
+            'deu',
+            'ell',
+            'eng',
+            'eus',
+            'fas',
+            'fin',
+            'fra',
+            'glg',
+            'heb',
+            'hrv',
+            'hun',
+            'hye',
+            'ind',
+            'ita',
+            'jpn',
+            'kor',
+            'mkd',
+            'msa',
+            'nld',
+            'nor',
+            'pol',
+            'por',
+            'ron',
+            'rus',
+            'slk',
+            'slv',
+            'spa',
+            'sqi',
+            'srp',
+            'swe',
+            'tha',
+            'tur',
+            'ukr',
+            'vie',
+            'zho',
+        ]
+    }
     video_types = (Episode,)
     server_url = 'https://www.addic7ed.com/'
     subtitle_class = Addic7edSubtitle
@@ -119,9 +171,14 @@ class Addic7edProvider(Provider):
 
         # login
         if self.username and self.password:
+
             def check_verification(cache_region):
-                rr = self.session.get(self.server_url + 'panel.php', allow_redirects=False, timeout=self.timeout,
-                                      headers={'Referer': self.server_url})
+                rr = self.session.get(
+                    self.server_url + 'panel.php',
+                    allow_redirects=False,
+                    timeout=self.timeout,
+                    headers={'Referer': self.server_url},
+                )
                 if rr.status_code == 302:
                     logger.info('Login expired')
                     cache_region.delete('addic7ed_data')
@@ -135,20 +192,30 @@ class Addic7edProvider(Provider):
                     return
 
                 logger.info('Logging in')
-                data = {'username': self.username, 'password': self.password, 'Submit': 'Log in', 'url': '',
-                        'remember': 'true'}
+                data = {
+                    'username': self.username,
+                    'password': self.password,
+                    'Submit': 'Log in',
+                    'url': '',
+                    'remember': 'true',
+                }
 
                 tries = 0
                 while tries <= 3:
                     tries += 1
-                    r = self.session.get(self.server_url + 'login.php', timeout=self.timeout,
-                                         headers={'Referer': self.server_url})
+                    r = self.session.get(
+                        self.server_url + 'login.php', timeout=self.timeout, headers={'Referer': self.server_url}
+                    )
                     if 'g-recaptcha' in r.text or 'grecaptcha' in r.text:
-                        logger.info('Solving captcha. This might take a couple of minutes, '
-                                    'but should only happen once every so often')
+                        logger.info(
+                            'Solving captcha. This might take a couple of minutes, '
+                            'but should only happen once every so often'
+                        )
 
-                        for g, s in (('g-recaptcha-response', r'g-recaptcha.+?data-sitekey=\"(.+?)\"'),
-                                     ('recaptcha_response', r'grecaptcha.execute\(\'(.+?)\',')):
+                        for g, s in (
+                            ('g-recaptcha-response', r'g-recaptcha.+?data-sitekey=\"(.+?)\"'),
+                            ('recaptcha_response', r'grecaptcha.execute\(\'(.+?)\','),
+                        ):
                             site_key = re.search(s, r.text).group(1)
                             if site_key:
                                 break
@@ -156,29 +223,38 @@ class Addic7edProvider(Provider):
                             logger.error('Captcha site-key not found!')
                             return
 
-                        pitcher = registry.get_pitcher()('Addic7ed', self.server_url + 'login.php', site_key,
-                                                         user_agent=self.session.headers['User-Agent'],
-                                                         cookies=self.session.cookies.get_dict(),
-                                                         is_invisible=True)
+                        pitcher = registry.get_pitcher()(
+                            'Addic7ed',
+                            self.server_url + 'login.php',
+                            site_key,
+                            user_agent=self.session.headers['User-Agent'],
+                            cookies=self.session.cookies.get_dict(),
+                            is_invisible=True,
+                        )
 
                         result = pitcher.throw()
                         if not result:
                             if tries >= 3:
-                                raise Exception('Couldn\'t solve captcha!')
-                            logger.info('Couldn\'t solve captcha! Retrying')
+                                raise Exception("Couldn't solve captcha!")
+                            logger.info("Couldn't solve captcha! Retrying")
                             time.sleep(4)
                             continue
 
                         data[g] = result
 
                     time.sleep(1)
-                    r = self.session.post(self.server_url + 'dologin.php', data, allow_redirects=False,
-                                          timeout=self.timeout, headers={'Referer': self.server_url + 'login.php'})
+                    r = self.session.post(
+                        self.server_url + 'dologin.php',
+                        data,
+                        allow_redirects=False,
+                        timeout=self.timeout,
+                        headers={'Referer': self.server_url + 'login.php'},
+                    )
 
                     if 'relax, slow down' in r.text:
                         raise TooManyRequests(self.username)
 
-                    if 'Wrong password' in r.text or 'doesn\'t exist' in r.text:
+                    if 'Wrong password' in r.text or "doesn't exist" in r.text:
                         raise AuthenticationError(self.username)
 
                     if r.status_code != 302:
@@ -198,8 +274,10 @@ class Addic7edProvider(Provider):
             else:
                 # Fallback to cookie login if not using anticaptcha
                 logger.info('Using cookie instead of login')
-                self.cookies = {'wikisubtitlesuser': self.userid,
-                                'wikisubtitlespass': hashlib.md5(self.password.encode('utf-8')).hexdigest()}
+                self.cookies = {
+                    'wikisubtitlesuser': self.userid,
+                    'wikisubtitlespass': hashlib.md5(self.password.encode('utf-8')).hexdigest(),
+                }
                 self.logged_in = False
 
             time.sleep(2)
@@ -219,6 +297,7 @@ class Addic7edProvider(Provider):
         user_agent = 'Subliminal/%s' % __short_version__
         if self.random_user_agent:
             from autosubliminal.providers.useragents import RANDOM_USER_AGENTS
+
             user_agent = RANDOM_USER_AGENTS[random.randint(0, len(RANDOM_USER_AGENTS) - 1)]
             logger.debug('Using random user agent: %s', user_agent)
         return user_agent
@@ -266,7 +345,7 @@ class Addic7edProvider(Provider):
 
         """
         # addic7ed doesn't support search with quotes
-        series = series.replace('\'', ' ')
+        series = series.replace("'", ' ')
 
         # build the params
         series_year = '%s %d' % (series, year) if year is not None else series
@@ -283,7 +362,7 @@ class Addic7edProvider(Provider):
         if not suggestion:
             logger.warning('Show id not found: no suggestion')
             return None
-        if not sanitize(suggestion[0].i.text.replace('\'', ' ')) == sanitize(series_year):
+        if not sanitize(suggestion[0].i.text.replace("'", ' ')) == sanitize(series_year):
             logger.warning('Show id not found: suggestion does not match')
             return None
         show_id = int(suggestion[0]['href'][6:])
@@ -334,8 +413,9 @@ class Addic7edProvider(Provider):
     def query(self, show_id, series, season, year=None, country=None):
         # get the page of the season of the show
         logger.info('Getting the page of show id %d, season %d', show_id, season)
-        r = self.session.get(self.server_url + 'show/%d' %
-                             show_id, params={'season': season}, timeout=self.timeout, cookies=self.cookies)
+        r = self.session.get(
+            self.server_url + 'show/%d' % show_id, params={'season': season}, timeout=self.timeout, cookies=self.cookies
+        )
         r.raise_for_status()
 
         if not r.content:
@@ -370,8 +450,9 @@ class Addic7edProvider(Provider):
             version = cells[4].text
             download_link = cells[9].a['href'][1:]
 
-            subtitle = self.subtitle_class(language, hearing_impaired, page_link, series, season, episode, title, year,
-                                           version, download_link)
+            subtitle = self.subtitle_class(
+                language, hearing_impaired, page_link, series, season, episode, title, year, version, download_link
+            )
             logger.debug('Found subtitle %r', subtitle)
             subtitles.append(subtitle)
 
@@ -388,8 +469,11 @@ class Addic7edProvider(Provider):
 
         # query for subtitles with the show_id
         if show_id is not None:
-            subtitles = [s for s in self.query(show_id, title, video.season, video.year)
-                         if s.language in languages and s.episode == video.episode]
+            subtitles = [
+                s
+                for s in self.query(show_id, title, video.season, video.year)
+                if s.language in languages and s.episode == video.episode
+            ]
             if subtitles:
                 return subtitles
         else:
@@ -400,8 +484,12 @@ class Addic7edProvider(Provider):
     def download_subtitle(self, subtitle):
         # download the subtitle
         logger.info('Downloading subtitle %r', subtitle)
-        r = self.session.get(self.server_url + subtitle.download_link, headers={'Referer': subtitle.page_link},
-                             timeout=self.timeout, cookies=self.cookies)
+        r = self.session.get(
+            self.server_url + subtitle.download_link,
+            headers={'Referer': subtitle.page_link},
+            timeout=self.timeout,
+            cookies=self.cookies,
+        )
         r.raise_for_status()
 
         if not r.content:

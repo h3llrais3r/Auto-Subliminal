@@ -67,11 +67,13 @@ class MoviesApi(RestResource):
         self._set_no_content_status()
         return None
 
-    def _to_movie_dict(self, movie: MovieDetails, movie_settings: MovieSettings,
-                       details: bool = False) -> Dict[str, Any]:
+    def _to_movie_dict(
+        self, movie: MovieDetails, movie_settings: MovieSettings, details: bool = False
+    ) -> Dict[str, Any]:
         # Check if the movie path is listed in the video paths to scan
-        path_in_video_paths = True if find_path_in_paths(movie.path, autosubliminal.VIDEOPATHS,
-                                                         check_common_path=True) else False
+        path_in_video_paths = (
+            True if find_path_in_paths(movie.path, autosubliminal.VIDEOPATHS, check_common_path=True) else False
+        )
 
         # Calculate totals
         wanted_languages = movie_settings.wanted_languages
@@ -85,7 +87,7 @@ class MoviesApi(RestResource):
             'path_in_video_paths': path_in_video_paths,
             'total_subtitles_wanted': total_subtitles_wanted,
             'total_subtitles_available': total_subtitles_available,
-            'total_subtitles_missing': total_subtitles_missing
+            'total_subtitles_missing': total_subtitles_missing,
         }
 
         # Add details if needed
@@ -108,12 +110,29 @@ class MoviesApi(RestResource):
                 hardcoded_languages.append(subtitle.language)
             else:
                 subtitle_filepath, subtitle_filename = os.path.split(subtitle.path)
-                files.update({subtitle_filename: {'file_path': subtitle_filepath, 'file_name': subtitle_filename,
-                             'type': 'subtitle', 'language': subtitle.language}})
+                files.update(
+                    {
+                        subtitle_filename: {
+                            'file_path': subtitle_filepath,
+                            'file_name': subtitle_filename,
+                            'type': 'subtitle',
+                            'language': subtitle.language,
+                        }
+                    }
+                )
         # Get video file
         movie_filepath, movie_filename = os.path.split(movie.path)
-        files.update({movie_filename: {'file_path': movie_filepath, 'file_name': movie_filename, 'type': 'video',
-                     'embedded_languages': embedded_languages, 'hardcoded_languages': hardcoded_languages}})
+        files.update(
+            {
+                movie_filename: {
+                    'file_path': movie_filepath,
+                    'file_name': movie_filename,
+                    'type': 'video',
+                    'embedded_languages': embedded_languages,
+                    'hardcoded_languages': hardcoded_languages,
+                }
+            }
+        )
 
         # Return sorted list
         return sorted([v for v in files.values()], key=lambda k: str(k['file_name']))
@@ -152,7 +171,7 @@ class _OverviewApi(RestResource):
             'total_subtitles_wanted': total_subtitles_wanted,
             'total_subtitles_missing': total_subtitles_missing,
             'total_subtitles_available': total_subtitles_available,
-            'failed_movies': failed_movies
+            'failed_movies': failed_movies,
         }
 
         return to_dict(overview, camelize)
@@ -269,14 +288,15 @@ class _SubtitlesApi(RestResource):
                 movie_details_db = MovieDetailsDb()
                 db_movie = movie_details_db.get_movie(imdb_id, subtitles=True)
                 db_movie_settings = MovieSettingsDb().get_movie_settings(imdb_id)
-                db_movie.missing_languages = get_missing_subtitle_languages(db_movie.subtitles,
-                                                                            db_movie_settings.wanted_languages)
+                db_movie.missing_languages = get_missing_subtitle_languages(
+                    db_movie.subtitles, db_movie_settings.wanted_languages
+                )
                 movie_details_db.update_movie(db_movie)
 
                 self._set_no_content_status()
                 return None
 
-            self._raise_bad_request('Invalid action \'%s\'' % action)
+            self._raise_bad_request("Invalid action '%s'" % action)
 
         self._raise_bad_request('Missing data')
 
@@ -315,8 +335,9 @@ class _HardcodedApi(RestResource):
             movie_details_db = MovieDetailsDb()
             db_movie = movie_details_db.get_movie(imdb_id, subtitles=True)
             db_movie_settings = MovieSettingsDb().get_movie_settings(imdb_id)
-            db_movie.missing_languages = get_missing_subtitle_languages(db_movie.subtitles,
-                                                                        db_movie_settings.wanted_languages)
+            db_movie.missing_languages = get_missing_subtitle_languages(
+                db_movie.subtitles, db_movie_settings.wanted_languages
+            )
             movie_details_db.update_movie(db_movie)
 
             self._set_no_content_status()

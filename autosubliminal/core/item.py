@@ -30,15 +30,13 @@ log = logging.getLogger(__name__)
 
 ItemType = Literal['episode', 'movie']
 
-WantedItemSubtitles = TypedDict('WantedItemSubtitles', {
-    'subtitles': List[Subtitle],
-    'language': babelfish.Language,
-    'single': bool}
+WantedItemSubtitles = TypedDict(
+    'WantedItemSubtitles', {'subtitles': List[Subtitle], 'language': babelfish.Language, 'single': bool}
 )
 
 
 class _BaseItem(ABC):
-    """ Base item class.
+    """Base item class.
 
     Represents a base item from which all item related class should extend.
 
@@ -70,9 +68,18 @@ class _BaseItem(ABC):
     # This is to keep the data to be sent over the wire to a minimum
     exclude_props = ['exclude_props', 'is_episode', 'is_movie', 'name', 'long_name']
 
-    def __init__(self, type: ItemType = None, title: str = None, year: int = None, season: int = None,
-                 episode: Union[int, List[int]] = None, source: Union[str, List[str]] = None, quality: str = None,
-                 codec: Union[str, List[str]] = None, release_group: str = None) -> None:
+    def __init__(
+        self,
+        type: ItemType = None,
+        title: str = None,
+        year: int = None,
+        season: int = None,
+        episode: Union[int, List[int]] = None,
+        source: Union[str, List[str]] = None,
+        quality: str = None,
+        codec: Union[str, List[str]] = None,
+        release_group: str = None,
+    ) -> None:
         # We need to trim the release group in some cases
         _release_group: str = release_group
         if release_group:
@@ -198,11 +205,29 @@ class WantedItem(_BaseItem):
     :type release_group: str
     """
 
-    def __init__(self, type: ItemType = None, title: str = None, year: int = None, season: int = None,
-                 episode: Union[int, List[int]] = None, source: Union[str, List[str]] = None, quality: str = None,
-                 codec: Union[str, List[str]] = None, release_group: str = None) -> None:
-        super().__init__(type=type, title=title, year=year, season=season, episode=episode,
-                         source=source, quality=quality, codec=codec, release_group=release_group)
+    def __init__(
+        self,
+        type: ItemType = None,
+        title: str = None,
+        year: int = None,
+        season: int = None,
+        episode: Union[int, List[int]] = None,
+        source: Union[str, List[str]] = None,
+        quality: str = None,
+        codec: Union[str, List[str]] = None,
+        release_group: str = None,
+    ) -> None:
+        super().__init__(
+            type=type,
+            title=title,
+            year=year,
+            season=season,
+            episode=episode,
+            source=source,
+            quality=quality,
+            codec=codec,
+            release_group=release_group,
+        )
 
         self.video_path: str = None
         self.video_size: int = None  # Size in bytes
@@ -253,7 +278,7 @@ class WantedItem(_BaseItem):
         include_kwargs = {
             'video_file_name': file_name,
             'video_file_path': file_path.rstrip(os.path.sep),  # trim trailing slashes
-            'video_file_size': humanize_bytes(self.video_size)
+            'video_file_size': humanize_bytes(self.video_size),
         }
         if kwargs:
             include_kwargs.update(kwargs)
@@ -301,15 +326,17 @@ class WantedItem(_BaseItem):
         :rtype: WantedItem or None
         """
         if guess:
-            return cls(type=cls._property_from_guess(guess, 'type'),
-                       title=cls._property_from_guess(guess, 'title'),
-                       year=cls._property_from_guess(guess, 'year'),
-                       season=cls._property_from_guess(guess, 'season'),
-                       episode=cls._property_from_guess(guess, 'episode'),
-                       source=cls._property_from_guess(guess, 'source'),
-                       quality=cls._property_from_guess(guess, 'screen_size'),
-                       codec=cls._property_from_guess(guess, 'video_codec'),
-                       release_group=cls._property_from_guess(guess, 'release_group'))
+            return cls(
+                type=cls._property_from_guess(guess, 'type'),
+                title=cls._property_from_guess(guess, 'title'),
+                year=cls._property_from_guess(guess, 'year'),
+                season=cls._property_from_guess(guess, 'season'),
+                episode=cls._property_from_guess(guess, 'episode'),
+                source=cls._property_from_guess(guess, 'source'),
+                quality=cls._property_from_guess(guess, 'screen_size'),
+                codec=cls._property_from_guess(guess, 'video_codec'),
+                release_group=cls._property_from_guess(guess, 'release_group'),
+            )
         else:
             return None
 
@@ -382,7 +409,7 @@ class DownloadedItem(_BaseItem):
         file_path, file_name = os.path.split(self.video_path) if self.video_path else (None, None)
         include_kwargs = {
             'video_file_name': file_name,
-            'video_file_path': file_path.rstrip(os.path.sep) if file_path else file_path  # trim trailing slashes
+            'video_file_path': file_path.rstrip(os.path.sep) if file_path else file_path,  # trim trailing slashes
         }
         if kwargs:
             include_kwargs.update(kwargs)

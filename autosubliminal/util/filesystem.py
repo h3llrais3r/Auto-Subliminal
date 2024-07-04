@@ -76,9 +76,14 @@ def save_hardcoded_subtitle_languages(dirname: str, filename: str, hardcoded_sub
         f.write(','.join(languages))
 
 
-def check_missing_subtitle_languages(dirname: str, filename: str, scan_embedded: bool = False,
-                                     scan_hardcoded: bool = False, detect_invalid: bool = False,
-                                     wanted_languages: List[str] = None) -> List[str]:
+def check_missing_subtitle_languages(
+    dirname: str,
+    filename: str,
+    scan_embedded: bool = False,
+    scan_hardcoded: bool = False,
+    detect_invalid: bool = False,
+    wanted_languages: List[str] = None,
+) -> List[str]:
     log.debug('Checking for missing subtitle(s)')
     missing_languages: List[str] = []
 
@@ -140,8 +145,9 @@ def check_missing_subtitle_languages(dirname: str, filename: str, scan_embedded:
     return missing_languages
 
 
-def get_available_subtitles(dirname: str, filename: str, scan_embedded: bool = False,
-                            scan_hardcoded: bool = False) -> List[Subtitle]:
+def get_available_subtitles(
+    dirname: str, filename: str, scan_embedded: bool = False, scan_hardcoded: bool = False
+) -> List[Subtitle]:
     subtitles: List[Subtitle] = []
 
     # Embedded subtitles

@@ -13,27 +13,29 @@ SCHEDULER_FINISH = 'SCHEDULER_FINISH'
 WANTED_ITEM_UPDATE = 'WANTED_ITEM_UPDATE'
 WANTED_ITEM_DELETE = 'WANTED_ITEM_DELETE'
 
-SUPPORTED_EVENT_TYPES = [SYSTEM_START, SYSTEM_RESTART, SYSTEM_SHUTDOWN, SYSTEM_UPDATE, SCHEDULER_START,
-                         SCHEDULER_FINISH, WANTED_ITEM_UPDATE, WANTED_ITEM_DELETE]
+SUPPORTED_EVENT_TYPES = [
+    SYSTEM_START,
+    SYSTEM_RESTART,
+    SYSTEM_SHUTDOWN,
+    SYSTEM_UPDATE,
+    SCHEDULER_START,
+    SCHEDULER_FINISH,
+    WANTED_ITEM_UPDATE,
+    WANTED_ITEM_DELETE,
+]
 
 MessageSeverity = Literal['info', 'success', 'warn', 'error']
 
 
 def send_websocket_event(type: str, data: Dict[str, Any] = None) -> None:
-    """ Send a websocket event message.
+    """Send a websocket event message.
 
     :param type: the event type
     :type type: str
     :param data: the optional data for the event
     :type data: dict
     """
-    event = {
-        'type': 'EVENT',
-        'event': {
-            'type': type,
-            'data': data
-        }
-    }
+    event = {'type': 'EVENT', 'event': {'type': type, 'data': data}}
     autosubliminal.WEBSOCKETMESSAGEQUEUE.append(event)
 
 
@@ -49,10 +51,6 @@ def send_websocket_notification(message: str, severity: 'MessageSeverity' = 'inf
     """
     notification = {
         'type': 'NOTIFICATION',
-        'notification': {
-            'message': message,
-            'severity': severity,
-            'sticky': sticky
-        }
+        'notification': {'message': message, 'severity': severity, 'sticky': sticky},
     }
     autosubliminal.WEBSOCKETMESSAGEQUEUE.append(notification)

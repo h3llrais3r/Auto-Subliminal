@@ -29,8 +29,9 @@ class Subtitle(object):
             setattr(self, key, value)
 
 
-def get_missing_subtitle_languages(available_subtitles: List[Subtitle],
-                                   wanted_languages: List[str] = None) -> List[str]:
+def get_missing_subtitle_languages(
+    available_subtitles: List[Subtitle], wanted_languages: List[str] = None
+) -> List[str]:
     """Get the missing subtitle languages."""
     if wanted_languages is None:
         wanted_languages = get_wanted_languages()

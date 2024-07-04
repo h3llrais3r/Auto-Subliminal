@@ -18,13 +18,21 @@ log = logging.getLogger(__name__)
 
 
 class ShowDetails(object):
-    """ Show details class.
+    """Show details class.
 
     Contains all the details of a show that are fetched from the indexer.
     """
 
-    def __init__(self, path: str = None, tvdb_id: int = None, title: str = None, year: int = None, overview: str = None,
-                 poster: str = None, banner: str = None) -> None:
+    def __init__(
+        self,
+        path: str = None,
+        tvdb_id: int = None,
+        title: str = None,
+        year: int = None,
+        overview: str = None,
+        poster: str = None,
+        banner: str = None,
+    ) -> None:
         self.path = path
         self.tvdb_id = tvdb_id
         self.title = title
@@ -96,8 +104,9 @@ class ShowDetails(object):
         return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
     @classmethod
-    def from_indexer(cls: Type['ShowDetails'], obj: Union[Series, SeriesSearchResult],
-                     poster: SeriesImageQueryResult = None) -> Optional['ShowDetails']:
+    def from_indexer(
+        cls: Type['ShowDetails'], obj: Union[Series, SeriesSearchResult], poster: SeriesImageQueryResult = None
+    ) -> Optional['ShowDetails']:
         """Construct a :class:`ShowDetails` object from the indexer object.
 
         :param obj: the indexer object
@@ -113,32 +122,44 @@ class ShowDetails(object):
 
         if obj:
             if isinstance(obj, Series):
-                return cls(tvdb_id=obj.id,
-                           title=obj.series_name,
-                           year=parser.parse(obj.first_aired).year,
-                           overview=obj.overview,
-                           poster=poster_file_name,
-                           banner=obj.banner)
+                return cls(
+                    tvdb_id=obj.id,
+                    title=obj.series_name,
+                    year=parser.parse(obj.first_aired).year,
+                    overview=obj.overview,
+                    poster=poster_file_name,
+                    banner=obj.banner,
+                )
             elif isinstance(obj, SeriesSearchResult):
-                return cls(tvdb_id=obj.id,
-                           title=obj.series_name,
-                           year=parser.parse(obj.first_aired).year,
-                           overview=obj.overview,
-                           poster=poster_file_name,
-                           banner=obj.banner)
+                return cls(
+                    tvdb_id=obj.id,
+                    title=obj.series_name,
+                    year=parser.parse(obj.first_aired).year,
+                    overview=obj.overview,
+                    poster=poster_file_name,
+                    banner=obj.banner,
+                )
 
         return None
 
 
 class ShowEpisodeDetails(object):
-    """ Show episode details class.
+    """Show episode details class.
 
     Contains all the details of an episode of a show that are fetched from the indexer.
     """
 
-    def __init__(self, path: str = None, tvdb_id: int = None, show_tvdb_id: int = None, title: str = None,
-                 season: int = None, episode: int = None, missing_languages: List[str] = None,
-                 subtitles: List[Subtitle] = None) -> None:
+    def __init__(
+        self,
+        path: str = None,
+        tvdb_id: int = None,
+        show_tvdb_id: int = None,
+        title: str = None,
+        season: int = None,
+        episode: int = None,
+        missing_languages: List[str] = None,
+        subtitles: List[Subtitle] = None,
+    ) -> None:
         self.path = path
         self.tvdb_id = tvdb_id
         self.show_tvdb_id = show_tvdb_id
@@ -184,23 +205,31 @@ class ShowEpisodeDetails(object):
         """
         if obj:
             if isinstance(obj, Episode):
-                return cls(tvdb_id=obj.id,
-                           show_tvdb_id=obj.series_id,  # FIXME: the series_id is returned as str instead of int?!
-                           title=obj.episode_name,
-                           season=obj.aired_season,
-                           episode=obj.aired_episode_number)
+                return cls(
+                    tvdb_id=obj.id,
+                    show_tvdb_id=obj.series_id,  # FIXME: the series_id is returned as str instead of int?!
+                    title=obj.episode_name,
+                    season=obj.aired_season,
+                    episode=obj.aired_episode_number,
+                )
 
         return None
 
 
 class ShowSettings(object):
-    """ Show settings class.
+    """Show settings class.
 
     Contains all the settings for a show.
     """
 
-    def __init__(self, tvdb_id: int = None, wanted_languages: List[str] = None, refine: bool = None,
-                 hearing_impaired: bool = None, utf8_encoding: bool = None) -> None:
+    def __init__(
+        self,
+        tvdb_id: int = None,
+        wanted_languages: List[str] = None,
+        refine: bool = None,
+        hearing_impaired: bool = None,
+        utf8_encoding: bool = None,
+    ) -> None:
         self.tvdb_id = tvdb_id
         self.wanted_languages = wanted_languages
         self.refine = refine
@@ -257,8 +286,10 @@ class ShowSettings(object):
 
     @classmethod
     def default_settings(cls: Type['ShowSettings'], tvdb_id: int) -> 'ShowSettings':
-        return cls(tvdb_id=tvdb_id,
-                   wanted_languages=get_wanted_languages(),
-                   refine=autosubliminal.REFINEVIDEO,
-                   hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
-                   utf8_encoding=autosubliminal.SUBTITLEUTF8ENCODING)
+        return cls(
+            tvdb_id=tvdb_id,
+            wanted_languages=get_wanted_languages(),
+            refine=autosubliminal.REFINEVIDEO,
+            hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
+            utf8_encoding=autosubliminal.SUBTITLEUTF8ENCODING,
+        )

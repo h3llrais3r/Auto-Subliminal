@@ -103,8 +103,19 @@ class AntiCaptchaProxyLessPitcher(Pitcher):
     use_ssl = True
     is_invisible = False
 
-    def __init__(self, website_name, website_url, website_key, tries=3, host=None, language_pool=None,
-                 use_ssl=True, is_invisible=False, *args, **kwargs):
+    def __init__(
+        self,
+        website_name,
+        website_url,
+        website_key,
+        tries=3,
+        host=None,
+        language_pool=None,
+        use_ssl=True,
+        is_invisible=False,
+        *args,
+        **kwargs,
+    ):
         super().__init__(website_name, website_url, website_key, tries, *args, **kwargs)
         self.host = host or self.host
         self.language_pool = language_pool or self.language_pool
@@ -115,8 +126,9 @@ class AntiCaptchaProxyLessPitcher(Pitcher):
         return AnticaptchaClient(self.client_key, self.language_pool, self.host, self.use_ssl)
 
     def get_job(self):
-        task = NoCaptchaTaskProxylessTask(website_url=self.website_url, website_key=self.website_key,
-                                          is_invisible=self.is_invisible)
+        task = NoCaptchaTaskProxylessTask(
+            website_url=self.website_url, website_key=self.website_key, is_invisible=self.is_invisible
+        )
         return self.client.createTask(task)
 
     def _throw(self):
@@ -176,8 +188,14 @@ class AntiCaptchaPitcher(AntiCaptchaProxyLessPitcher):
         super().__init__(*args, **kwargs)
 
     def get_job(self):
-        task = NoCaptchaTask(website_url=self.website_url, website_key=self.website_key, proxy=self.proxy,
-                             user_agent=self.user_agent, cookies=self.cookies, is_invisible=self.is_invisible)
+        task = NoCaptchaTask(
+            website_url=self.website_url,
+            website_key=self.website_key,
+            proxy=self.proxy,
+            user_agent=self.user_agent,
+            cookies=self.cookies,
+            is_invisible=self.is_invisible,
+        )
         return self.client.createTask(task)
 
 
@@ -188,8 +206,7 @@ class DBCProxyLessPitcher(Pitcher):
     username = None
     password = None
 
-    def __init__(self, website_name, website_url, website_key,
-                 timeout=DEFAULT_TOKEN_TIMEOUT, tries=3, *args, **kwargs):
+    def __init__(self, website_name, website_url, website_key, timeout=DEFAULT_TOKEN_TIMEOUT, tries=3, *args, **kwargs):
         super().__init__(website_name, website_url, website_key, tries, *args, **kwargs)
 
         self.username, self.password = self.client_key.split(':', 1)
@@ -203,10 +220,7 @@ class DBCProxyLessPitcher(Pitcher):
 
     @property
     def payload_dict(self):
-        return {
-            'googlekey': self.website_key,
-            'pageurl': self.website_url
-        }
+        return {'googlekey': self.website_key, 'pageurl': self.website_url}
 
     def _throw(self):
         super()._throw()
@@ -236,10 +250,7 @@ class DBCPitcher(DBCProxyLessPitcher):
     @property
     def payload_dict(self):
         payload = super().payload_dict
-        payload.update({
-            'proxytype': self.proxy_type,
-            'proxy': self.proxy
-        })
+        payload.update({'proxytype': self.proxy_type, 'proxy': self.proxy})
         return payload
 
 
@@ -264,5 +275,5 @@ def store_verification(site_name, session):
 # List of supported anti captcha providers (for now we only use proxyless versions)
 ANTI_CAPTCHA_PROVIDERS = [
     {'class': AntiCaptchaProxyLessPitcher.name, 'source': AntiCaptchaProxyLessPitcher.source},
-    {'class': DBCProxyLessPitcher.name, 'source': DBCProxyLessPitcher.source}
+    {'class': DBCProxyLessPitcher.name, 'source': DBCProxyLessPitcher.source},
 ]

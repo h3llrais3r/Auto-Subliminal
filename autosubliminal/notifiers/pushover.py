@@ -35,11 +35,13 @@ class PushoverNotifier(BaseNotifier):
         return autosubliminal.NOTIFYPUSHOVER
 
     def _send_message(self, message: str, **kwargs: Any) -> bool:
-        data = {'token': autosubliminal.PUSHOVERAPI,
-                'user': autosubliminal.PUSHOVERKEY,
-                'title': self.notification_title,
-                'devices': autosubliminal.PUSHOVERDEVICES,
-                'message': message}
+        data = {
+            'token': autosubliminal.PUSHOVERAPI,
+            'user': autosubliminal.PUSHOVERKEY,
+            'title': self.notification_title,
+            'devices': autosubliminal.PUSHOVERDEVICES,
+            'message': message,
+        }
         try:
             response = requests.post(PUSHOVERURL, data=data)
             if response.status_code != 200:

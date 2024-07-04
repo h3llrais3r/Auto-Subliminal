@@ -7,5 +7,6 @@ class InstallType(Enum):
     """
     Install type enum.
     """
+
     SOURCE = 1
     GIT = 2

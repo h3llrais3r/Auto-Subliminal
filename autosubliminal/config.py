@@ -99,8 +99,9 @@ def read_config(check_upgrade: bool = False) -> None:
             autosubliminal.CHECKVERSIONINTERVAL = cfg.getint('general', 'checkversioninterval')
             if autosubliminal.CHECKVERSIONINTERVAL < autosubliminal.CHECKVERSIONINTERVALDEFAULT:
                 print('WARNING: Invalid CHECKVERSIONINTERVAL found.')
-                print('WARNING: Using the default value (%s hours) instead.' %
-                      autosubliminal.CHECKVERSIONINTERVALDEFAULT)
+                print(
+                    'WARNING: Using the default value (%s hours) instead.' % autosubliminal.CHECKVERSIONINTERVALDEFAULT
+                )
                 autosubliminal.CHECKVERSIONINTERVAL = autosubliminal.CHECKVERSIONINTERVALDEFAULT
 
         if cfg.has_option('general', 'checkversionatstartup'):
@@ -166,8 +167,9 @@ def read_config(check_upgrade: bool = False) -> None:
             # SCANLIBRARY may only run max once a day to prevent too heavy system usage
             if autosubliminal.SCANLIBRARYINTERVAL < autosubliminal.SCANLIBRARYINTERVALDEFAULT:
                 print('WARNING: Invalid SCANLIBRARYINTERVAL found.')
-                print('WARNING: Using the default value (%s hours) instead.' %
-                      autosubliminal.SCANLIBRARYINTERVALDEFAULT)
+                print(
+                    'WARNING: Using the default value (%s hours) instead.' % autosubliminal.SCANLIBRARYINTERVALDEFAULT
+                )
                 autosubliminal.SCANLIBRARYINTERVAL = autosubliminal.SCANLIBRARYINTERVALDEFAULT
 
         if cfg.has_option('library', 'scanlibraryatstartup'):
@@ -322,12 +324,12 @@ def read_config(check_upgrade: bool = False) -> None:
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'] = {}
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_custom'] = {'random_user_agent': True}
             if autosubliminal.ADDIC7EDUSERNAME and autosubliminal.ADDIC7EDPASSWORD:
-                autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'].update({
-                    'username': autosubliminal.ADDIC7EDUSERNAME,
-                    'password': autosubliminal.ADDIC7EDPASSWORD})
-                autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_custom'].update({
-                    'username': autosubliminal.ADDIC7EDUSERNAME,
-                    'password': autosubliminal.ADDIC7EDPASSWORD})
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'].update(
+                    {'username': autosubliminal.ADDIC7EDUSERNAME, 'password': autosubliminal.ADDIC7EDPASSWORD}
+                )
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_custom'].update(
+                    {'username': autosubliminal.ADDIC7EDUSERNAME, 'password': autosubliminal.ADDIC7EDPASSWORD}
+                )
         else:
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed'] = {}
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_custom'] = {'random_user_agent': True}
@@ -336,21 +338,23 @@ def read_config(check_upgrade: bool = False) -> None:
             autosubliminal.ADDIC7EDUSERID = cfg.get('subliminal', 'addic7eduserid')
             if autosubliminal.ADDIC7EDUSERID:
                 autosubliminal.SUBLIMINALPROVIDERCONFIGS['addic7ed_custom'].update(
-                    {'userid': autosubliminal.ADDIC7EDUSERID})
+                    {'userid': autosubliminal.ADDIC7EDUSERID}
+                )
 
-        if cfg.has_option('subliminal', 'opensubtitlesusername') and cfg.has_option('subliminal',
-                                                                                    'opensubtitlespassword'):
+        if cfg.has_option('subliminal', 'opensubtitlesusername') and cfg.has_option(
+            'subliminal', 'opensubtitlespassword'
+        ):
             autosubliminal.OPENSUBTITLESUSERNAME = cfg.get('subliminal', 'opensubtitlesusername')
             autosubliminal.OPENSUBTITLESPASSWORD = cfg.get('subliminal', 'opensubtitlespassword')
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles'] = {}
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles_com'] = {}
             if autosubliminal.OPENSUBTITLESUSERNAME and autosubliminal.OPENSUBTITLESPASSWORD:
-                autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles'].update({
-                    'username': autosubliminal.OPENSUBTITLESUSERNAME,
-                    'password': autosubliminal.OPENSUBTITLESPASSWORD})
-                autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles_com'].update({
-                    'username': autosubliminal.OPENSUBTITLESUSERNAME,
-                    'password': autosubliminal.OPENSUBTITLESPASSWORD})
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles'].update(
+                    {'username': autosubliminal.OPENSUBTITLESUSERNAME, 'password': autosubliminal.OPENSUBTITLESPASSWORD}
+                )
+                autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles_com'].update(
+                    {'username': autosubliminal.OPENSUBTITLESUSERNAME, 'password': autosubliminal.OPENSUBTITLESPASSWORD}
+                )
         else:
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles'] = {}
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles_com'] = {}
@@ -359,7 +363,8 @@ def read_config(check_upgrade: bool = False) -> None:
             autosubliminal.OPENSUBTITLESAPIKEY = cfg.get('subliminal', 'opensubtitlesapikey')
             if autosubliminal.OPENSUBTITLESAPIKEY:
                 autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles_com'].update(
-                    {'apikey': autosubliminal.OPENSUBTITLESAPIKEY})
+                    {'apikey': autosubliminal.OPENSUBTITLESAPIKEY}
+                )
 
         if cfg.has_option('subliminal', 'legendastvusername') and cfg.has_option('subliminal', 'legendastvpassword'):
             autosubliminal.LEGENDASTVUSERNAME = cfg.get('subliminal', 'legendastvusername')
@@ -367,7 +372,8 @@ def read_config(check_upgrade: bool = False) -> None:
             if autosubliminal.LEGENDASTVUSERNAME and autosubliminal.LEGENDASTVPASSWORD:
                 autosubliminal.SUBLIMINALPROVIDERCONFIGS['legendastv'] = {
                     'username': autosubliminal.LEGENDASTVUSERNAME,
-                    'password': autosubliminal.LEGENDASTVPASSWORD}
+                    'password': autosubliminal.LEGENDASTVPASSWORD,
+                }
 
     # Section 'shownamemapping'
     if cfg.has_section('shownamemapping'):
@@ -608,8 +614,7 @@ def write_config_general_section() -> None:
 
     # convert lists to comma separated values
     videopaths = '' if not autosubliminal.VIDEOPATHS else ','.join(autosubliminal.VIDEOPATHS)
-    additionallanguages = '' if not autosubliminal.ADDITIONALLANGUAGES else ','.join(
-        autosubliminal.ADDITIONALLANGUAGES)
+    additionallanguages = '' if not autosubliminal.ADDITIONALLANGUAGES else ','.join(autosubliminal.ADDITIONALLANGUAGES)
 
     cfg.set(section, 'videopaths', videopaths)
     cfg.set(section, 'defaultlanguage', autosubliminal.DEFAULTLANGUAGE)
@@ -949,7 +954,7 @@ def write_config_notification_section() -> None:
     cfg.set(section, 'pushoverdevices', autosubliminal.PUSHOVERDEVICES)
     cfg.set(section, 'notifygrowl', str(autosubliminal.NOTIFYGROWL))
     cfg.set(section, 'growlhost', autosubliminal.GROWLHOST)
-    cfg.set(section, "growlport", str(autosubliminal.GROWLPORT))
+    cfg.set(section, 'growlport', str(autosubliminal.GROWLPORT))
     cfg.set(section, 'growlpass', autosubliminal.GROWLPASS)
     cfg.set(section, 'growlpriority', str(autosubliminal.GROWLPRIORITY))
     cfg.set(section, 'notifyprowl', str(autosubliminal.NOTIFYPROWL))
@@ -1210,21 +1215,23 @@ def _check_for_restart() -> bool:
             password = cfg.get('webserver', 'password')
 
     # Now compare the values, if one differs a restart is required.
-    if scandiskinterval != autosubliminal.SCANDISKINTERVAL \
-            or checksubinterval != autosubliminal.CHECKSUBINTERVAL \
-            or checksubdeadline != autosubliminal.CHECKSUBDEADLINE \
-            or checksubdelta != autosubliminal.CHECKSUBDELTA \
-            or checkversioninterval != autosubliminal.CHECKVERSIONINTERVAL \
-            or scanlibraryinterval != autosubliminal.SCANLIBRARYINTERVAL \
-            or logfile != autosubliminal.LOGFILE \
-            or logsize != autosubliminal.LOGSIZE \
-            or lognum != autosubliminal.LOGNUM \
-            or logdetailedformat != autosubliminal.LOGDETAILEDFORMAT \
-            or webserverip != autosubliminal.WEBSERVERIP \
-            or webserverport != autosubliminal.WEBSERVERPORT \
-            or webroot != autosubliminal.WEBROOT \
-            or username != autosubliminal.USERNAME \
-            or password != autosubliminal.PASSWORD:
+    if (
+        scandiskinterval != autosubliminal.SCANDISKINTERVAL
+        or checksubinterval != autosubliminal.CHECKSUBINTERVAL
+        or checksubdeadline != autosubliminal.CHECKSUBDEADLINE
+        or checksubdelta != autosubliminal.CHECKSUBDELTA
+        or checkversioninterval != autosubliminal.CHECKVERSIONINTERVAL
+        or scanlibraryinterval != autosubliminal.SCANLIBRARYINTERVAL
+        or logfile != autosubliminal.LOGFILE
+        or logsize != autosubliminal.LOGSIZE
+        or lognum != autosubliminal.LOGNUM
+        or logdetailedformat != autosubliminal.LOGDETAILEDFORMAT
+        or webserverip != autosubliminal.WEBSERVERIP
+        or webserverport != autosubliminal.WEBSERVERPORT
+        or webroot != autosubliminal.WEBROOT
+        or username != autosubliminal.USERNAME
+        or password != autosubliminal.PASSWORD
+    ):
         return True
     else:
         return False
@@ -1436,8 +1443,11 @@ def _upgrade_config(from_version: int, to_version: int) -> None:
             print('INFO: Config upgraded to version 6.')
             autosubliminal.CONFIGVERSION = 6
             autosubliminal.CONFIGUPGRADED = True
-            send_websocket_notification('Config upgraded. Please check or reconfigure you subliminal configuration!',
-                                        severity='warn', sticky=True)
+            send_websocket_notification(
+                'Config upgraded. Please check or reconfigure you subliminal configuration!',
+                severity='warn',
+                sticky=True,
+            )
 
         if from_version == 6 and to_version == 7:
             print('INFO: Upgrading log config. Please check/reconfigure your config!')
@@ -1446,8 +1456,9 @@ def _upgrade_config(from_version: int, to_version: int) -> None:
             print('INFO: Config upgraded to version 7.')
             autosubliminal.CONFIGVERSION = 7
             autosubliminal.CONFIGUPGRADED = True
-            send_websocket_notification('Config upgraded. Please check or reconfigure your logging configuration!',
-                                        severity='warn', sticky=True)
+            send_websocket_notification(
+                'Config upgraded. Please check or reconfigure your logging configuration!', severity='warn', sticky=True
+            )
 
         if from_version == 7 and to_version == 8:
             print('INFO: Upgrading skip config. Please check/reconfigure your config!')
@@ -1461,8 +1472,9 @@ def _upgrade_config(from_version: int, to_version: int) -> None:
             print('INFO: Config upgraded to version 8.')
             autosubliminal.CONFIGVERSION = 8
             autosubliminal.CONFIGUPGRADED = True
-            send_websocket_notification('Config upgraded. Please check or reconfigure your skip configuration!',
-                                        severity='warn', sticky=True)
+            send_websocket_notification(
+                'Config upgraded. Please check or reconfigure your skip configuration!', severity='warn', sticky=True
+            )
 
         if from_version == 8 and to_version == 9:
             print('INFO: Renaming config, logfile and skip section. Please check/reconfigure your config!')
@@ -1502,7 +1514,9 @@ def _upgrade_config(from_version: int, to_version: int) -> None:
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification(
                 'Config upgraded. Please check or reconfigure your general, logging and notification configuration!',
-                severity='warn', sticky=True)
+                severity='warn',
+                sticky=True,
+            )
 
         if from_version == 9 and to_version == 10:
             print('INFO: Removing old PATH config.')
@@ -1591,8 +1605,9 @@ def _upgrade_config(from_version: int, to_version: int) -> None:
             # Rename provider
             if cfg.has_section('subliminal'):
                 if cfg.has_option('subliminal', 'providers'):
-                    providers = cfg.get('subliminal', 'providers').replace('addic7ed_random_user_agent',
-                                                                           'addic7ed_custom')
+                    providers = cfg.get('subliminal', 'providers').replace(
+                        'addic7ed_random_user_agent', 'addic7ed_custom'
+                    )
                     cfg.set('subliminal', 'providers', providers)
                     autosubliminal.SUBLIMINALPROVIDERS = providers.lower().split(',')
                     # Write to file
@@ -1601,5 +1616,8 @@ def _upgrade_config(from_version: int, to_version: int) -> None:
             print('INFO: Config upgraded to version 13.')
             autosubliminal.CONFIGVERSION = 13
             autosubliminal.CONFIGUPGRADED = True
-            send_websocket_notification('Config upgraded. Please check or reconfigure you subliminal configuration!',
-                                        severity='warn', sticky=True)
+            send_websocket_notification(
+                'Config upgraded. Please check or reconfigure you subliminal configuration!',
+                severity='warn',
+                sticky=True,
+            )

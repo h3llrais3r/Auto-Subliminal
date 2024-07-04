@@ -28,10 +28,10 @@ _notifiers = dict((name, _get_notifier_instance(name)) for name in _notifier_lib
 
 def notify(message: str, **kwargs: Any) -> bool:
     """
-     Send a notification message with all configured notifiers.
+    Send a notification message with all configured notifiers.
 
-     :param message: the message
-     :type message: str
+    :param message: the message
+    :type message: str
     """
     log.debug('Sending notifications for message %s', message)
 

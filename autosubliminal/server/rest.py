@@ -32,14 +32,14 @@ class RestResource(ABC):
 
         # Validate if method is allowed
         if self.http_method not in self.allowed_methods:
-            cherrypy.response.headers["Allow"] = ",".join(self.allowed_methods)
+            cherrypy.response.headers['Allow'] = ','.join(self.allowed_methods)
             raise MethodNotAllowed()
 
         # Validate resource url
         method = getattr(self, self.http_method.lower())  # methods are defined in lower case
         arg_spec = getfullargspec(method)
         defaults_count = len(arg_spec.defaults) if arg_spec.defaults else 0
-        arg_spec_set = set(arg_spec.args[1:len(arg_spec.args) - defaults_count])
+        arg_spec_set = set(arg_spec.args[1 : len(arg_spec.args) - defaults_count])
         arg_method_set = set(kwargs.keys())
         # Proper 404 error for paths like /api/songs/{{wrong_id}}/artists/35745
         if len(arg_spec_set.difference(arg_method_set)):

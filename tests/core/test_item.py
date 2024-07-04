@@ -139,7 +139,8 @@ def test_is_search_active_for_wanted_item_after_deadline(monkeypatch: MonkeyPatc
 
 
 def test_is_search_active_for_wanted_item_after_deadline_on_delta(
-        monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
+    monkeypatch: MonkeyPatch, mocker: MockerFixture
+) -> None:
     monkeypatch.setattr('autosubliminal.CHECKSUBDEADLINE', 4)
     monkeypatch.setattr('autosubliminal.CHECKSUBDELTA', 7)
     today = datetime.datetime(2018, 2, 26, 0, 0, 0)

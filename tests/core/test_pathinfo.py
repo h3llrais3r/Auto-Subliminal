@@ -37,7 +37,7 @@ def test_to_dict(mocker: MockerFixture) -> None:
         'freeSpace': '0 bytes',
         'freePercentage': 0.0,
         'totalBytes': 0,
-        'totalSpace': '0 bytes'
+        'totalSpace': '0 bytes',
     }
     mocker.patch('autosubliminal.core.pathinfo.get_disk_space_details', return_value=(0, 0))
     pathinfo = PathInfo.get_path_info('name', 'path')

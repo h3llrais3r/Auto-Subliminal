@@ -76,8 +76,9 @@ class ShowsApi(RestResource):
 
     def _to_show_dict(self, show: ShowDetails, show_settings: ShowSettings, details: bool = False) -> Dict[str, Any]:
         # Check if the show path is listed in the video paths to scan
-        path_in_video_paths = True if find_path_in_paths(show.path, autosubliminal.VIDEOPATHS,
-                                                         check_common_path=True) else False
+        path_in_video_paths = (
+            True if find_path_in_paths(show.path, autosubliminal.VIDEOPATHS, check_common_path=True) else False
+        )
 
         # Calculate totals based on available episodes
         total_subtitles_wanted = 0
@@ -96,7 +97,7 @@ class ShowsApi(RestResource):
             'path_in_video_paths': path_in_video_paths,
             'total_subtitles_wanted': total_subtitles_wanted,
             'total_subtitles_available': total_subtitles_available,
-            'total_subtitles_missing': total_subtitles_missing
+            'total_subtitles_missing': total_subtitles_missing,
         }
 
         # Add details if needed
@@ -135,22 +136,36 @@ class ShowsApi(RestResource):
                     else:
                         subtitle_filepath, subtitle_filename = os.path.split(subtitle.path)
                         season_files.append(
-                            {'file_path': subtitle_filepath, 'file_name': subtitle_filename, 'type': 'subtitle',
-                             'language': subtitle.language, 'tvdb_id': episode.tvdb_id})
+                            {
+                                'file_path': subtitle_filepath,
+                                'file_name': subtitle_filename,
+                                'type': 'subtitle',
+                                'language': subtitle.language,
+                                'tvdb_id': episode.tvdb_id,
+                            }
+                        )
                 # Get video file
                 episode_filepath, episode_filename = os.path.split(episode.path)
                 season_files.append(
-                    {'file_path': episode_filepath, 'file_name': episode_filename, 'type': 'video',
-                     'embedded_languages': embedded_languages, 'hardcoded_languages': hardcoded_languages,
-                     'tvdb_id': episode.tvdb_id})
+                    {
+                        'file_path': episode_filepath,
+                        'file_name': episode_filename,
+                        'type': 'video',
+                        'embedded_languages': embedded_languages,
+                        'hardcoded_languages': hardcoded_languages,
+                        'tvdb_id': episode.tvdb_id,
+                    }
+                )
             # Sort season files
             if season_files:
                 sorted_files = sorted(season_files, key=lambda k: str(k['file_name']))
                 seasons.update({season_name: {'path': season_path, 'files': sorted_files}})
 
         # Return sorted list of file dicts (grouped by season)
-        return [{'season_name': k, 'season_path': seasons[k]['path'], 'files': seasons[k]['files']} for k in
-                sorted(seasons.keys(), key=natural_keys)]
+        return [
+            {'season_name': k, 'season_path': seasons[k]['path'], 'files': seasons[k]['files']}
+            for k in sorted(seasons.keys(), key=natural_keys)
+        ]
 
 
 class _OverviewApi(RestResource):
@@ -192,7 +207,7 @@ class _OverviewApi(RestResource):
             'total_subtitles_wanted': total_subtitles_wanted,
             'total_subtitles_missing': total_subtitles_missing,
             'total_subtitles_available': total_subtitles_available,
-            'failed_shows': failed_shows
+            'failed_shows': failed_shows,
         }
 
         return to_dict(overview, camelize)
@@ -321,14 +336,15 @@ class _SubtitlesApi(RestResource):
                 show_episode_details_db = ShowEpisodeDetailsDb()
                 db_show_episode = show_episode_details_db.get_show_episode(int(episode_tvdb_id), subtitles=True)
                 db_show_settings = ShowSettingsDb().get_show_settings(int(tvdb_id))
-                db_show_episode.missing_languages = get_missing_subtitle_languages(db_show_episode.subtitles,
-                                                                                   db_show_settings.wanted_languages)
+                db_show_episode.missing_languages = get_missing_subtitle_languages(
+                    db_show_episode.subtitles, db_show_settings.wanted_languages
+                )
                 show_episode_details_db.update_show_episode(db_show_episode)
 
                 self._set_no_content_status()
                 return None
 
-            self._raise_bad_request('Invalid action \'%s\'' % action)
+            self._raise_bad_request("Invalid action '%s'" % action)
 
         self._raise_bad_request('Missing data')
 
@@ -367,8 +383,9 @@ class _HardcodedApi(RestResource):
             show_episode_details_db = ShowEpisodeDetailsDb()
             db_show_episode = show_episode_details_db.get_show_episode(int(episode_tvdb_id), subtitles=True)
             db_show_settings = ShowSettingsDb().get_show_settings(int(tvdb_id))
-            db_show_episode.missing_languages = get_missing_subtitle_languages(db_show_episode.subtitles,
-                                                                               db_show_settings.wanted_languages)
+            db_show_episode.missing_languages = get_missing_subtitle_languages(
+                db_show_episode.subtitles, db_show_settings.wanted_languages
+            )
             show_episode_details_db.update_show_episode(db_show_episode)
 
             self._set_no_content_status()

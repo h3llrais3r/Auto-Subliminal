@@ -99,7 +99,7 @@ class ShowIndexer(_BaseIndexer):
 
     @authenticate
     def _search(self, title: str, year: int = None, language: str = 'en') -> Optional[SeriesSearchResult]:
-        """ Search the api for a show.
+        """Search the api for a show.
 
         :param title: the title to search for
         :type title: str
@@ -136,7 +136,7 @@ class ShowIndexer(_BaseIndexer):
 
     @authenticate
     def _get_by_id(self, id: int, language: str = 'en') -> Optional[Series]:
-        """ Get details for a show from the api by it's id.
+        """Get details for a show from the api by it's id.
 
         :param id: the id of the show
         :type id: int
@@ -150,8 +150,9 @@ class ShowIndexer(_BaseIndexer):
 
         return cast(Series, series_data.data) if series_data.data else None
 
-    def get_tvdb_id(self, title: str, year: int = None, language: str = 'en', force_search: bool = False,
-                    store_id: bool = True) -> Optional[int]:
+    def get_tvdb_id(
+        self, title: str, year: int = None, language: str = 'en', force_search: bool = False, store_id: bool = True
+    ) -> Optional[int]:
         tvdb_id: int = None
         name = title
         if year:
@@ -238,12 +239,14 @@ class ShowIndexer(_BaseIndexer):
 
     @authenticate
     def get_show_episode(
-            self, tvdb_id: int, season: int, episode: int, language: str = 'en') -> Optional[ShowEpisodeDetails]:
+        self, tvdb_id: int, season: int, episode: int, language: str = 'en'
+    ) -> Optional[ShowEpisodeDetails]:
         log.debug('Getting show episode details for tvdb id %s, season %d, episode, %d', tvdb_id, season, episode)
 
         api_obj: Episode = None
         api_query_obj: SeriesEpisodesQuery = self._client.get_series_episode(
-            tvdb_id, season, episode, language=language)
+            tvdb_id, season, episode, language=language
+        )
         if api_query_obj and api_query_obj.data and len(api_query_obj.data) > 0:
             api_obj = api_query_obj.data[0]  # Query should only return 1 episode
 
@@ -264,7 +267,7 @@ class MovieIndexer(_BaseIndexer):
         return 'imdb'
 
     def _search(self, title: str, year: int = None, fallback_search: bool = False) -> Optional[TitleSearchResult]:
-        """ Search the api for a movie.
+        """Search the api for a movie.
 
         :param title: the title to search for
         :type title: str
@@ -309,14 +312,22 @@ class MovieIndexer(_BaseIndexer):
                         # If a year is present, it should also be the same
                         if year:
                             if best_match.year == int(year):
-                                return TitleSearchResult(imdb_id=best_match.imdb_id, title=best_match.title,
-                                                         type=best_match.type, year=best_match.year)
+                                return TitleSearchResult(
+                                    imdb_id=best_match.imdb_id,
+                                    title=best_match.title,
+                                    type=best_match.type,
+                                    year=best_match.year,
+                                )
                             else:
                                 continue
                         # If no year is present, take the first match
                         else:
-                            return TitleSearchResult(imdb_id=best_match.imdb_id, title=best_match.title,
-                                                     type=best_match.type, year=best_match.year)
+                            return TitleSearchResult(
+                                imdb_id=best_match.imdb_id,
+                                title=best_match.title,
+                                type=best_match.type,
+                                year=best_match.year,
+                            )
 
         # Fallback search in case nothing could be found
         if not fallback_search:
@@ -325,7 +336,7 @@ class MovieIndexer(_BaseIndexer):
         return None
 
     def _get_by_id(self, id: str) -> Title:
-        """ Get details for a movie from the api by it's id.
+        """Get details for a movie from the api by it's id.
 
         :param id: the id of the movie
         :type id: str
@@ -337,8 +348,9 @@ class MovieIndexer(_BaseIndexer):
 
         return movie
 
-    def get_imdb_id_and_year(self, title: str, year: int = None, force_search: bool = False,
-                             store_id: bool = True) -> Tuple[Optional[str], Optional[int]]:
+    def get_imdb_id_and_year(
+        self, title: str, year: int = None, force_search: bool = False, store_id: bool = True
+    ) -> Tuple[Optional[str], Optional[int]]:
         imdb_id: str = None
         name = title
         if year:

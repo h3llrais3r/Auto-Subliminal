@@ -6,7 +6,7 @@ from autosubliminal.util.common import get_disk_space_details, humanize_bytes, t
 
 
 class PathInfo(object):
-    """ Path info class.
+    """Path info class.
 
     Contains the path info for a path.
     """

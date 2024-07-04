@@ -39,8 +39,10 @@ class MovieDetailsDb(object):
         self._query_get_all = 'SELECT * FROM movie_details'
         self._query_get = 'SELECT * FROM movie_details WHERE imdb_id=?'
         self._query_set = 'INSERT INTO movie_details VALUES (?,?,?,?,?,?,?)'
-        self._query_update = 'UPDATE movie_details SET title=?, year=?, path=?, overview=?, poster=?, ' \
-                             'missing_languages=? WHERE imdb_id=?'
+        self._query_update = (
+            'UPDATE movie_details SET title=?, year=?, path=?, overview=?, poster=?, '
+            'missing_languages=? WHERE imdb_id=?'
+        )
         self._query_delete = 'DELETE FROM movie_details WHERE imdb_id=?'
         self._query_flush = 'DELETE FROM movie_details'
 
@@ -96,15 +98,18 @@ class MovieDetailsDb(object):
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_set, [
-            movie.imdb_id,
-            movie.title,
-            movie.year,
-            movie.path,
-            movie.overview,
-            movie.poster,
-            to_text(movie.missing_languages),
-        ])
+        cursor.execute(
+            self._query_set,
+            [
+                movie.imdb_id,
+                movie.title,
+                movie.year,
+                movie.path,
+                movie.overview,
+                movie.poster,
+                to_text(movie.missing_languages),
+            ],
+        )
         if subtitles:
             MovieSubtitlesDb(connection).set_movie_subtitles(movie.imdb_id, movie.subtitles)
         connection.commit()
@@ -120,15 +125,18 @@ class MovieDetailsDb(object):
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_update, [
-            movie.title,
-            movie.year,
-            movie.path,
-            movie.overview,
-            movie.poster,
-            to_text(movie.missing_languages),
-            movie.imdb_id
-        ])
+        cursor.execute(
+            self._query_update,
+            [
+                movie.title,
+                movie.year,
+                movie.path,
+                movie.overview,
+                movie.poster,
+                to_text(movie.missing_languages),
+                movie.imdb_id,
+            ],
+        )
         if subtitles:
             subtitles_db = MovieSubtitlesDb(connection)
             subtitles_db.delete_movie_subtitles(movie.imdb_id)
@@ -207,12 +215,9 @@ class MovieSubtitlesDb(object):
         connection = self.connection or sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
         for movie_subtitle in movie_subtitles:
-            cursor.execute(self._query_set, [
-                imdb_id,
-                movie_subtitle.type,
-                movie_subtitle.language,
-                movie_subtitle.path
-            ])
+            cursor.execute(
+                self._query_set, [imdb_id, movie_subtitle.type, movie_subtitle.language, movie_subtitle.path]
+            )
         if not self.connection:
             connection.commit()
             connection.close()
@@ -265,8 +270,10 @@ class MovieSettingsDb(object):
     def __init__(self) -> None:
         self._query_get = 'SELECT * FROM movie_settings WHERE imdb_id=?'
         self._query_set = 'INSERT INTO movie_settings VALUES(?,?,?,?,?)'
-        self._query_update = 'UPDATE movie_settings SET wanted_languages=?, refine=?, hearing_impaired=?, ' \
-                             'utf8_encoding=? WHERE imdb_id=?'
+        self._query_update = (
+            'UPDATE movie_settings SET wanted_languages=?, refine=?, hearing_impaired=?, '
+            'utf8_encoding=? WHERE imdb_id=?'
+        )
         self._query_delete = 'DELETE FROM movie_settings WHERE imdb_id=?'
 
     def get_movie_settings(self, imdb_id: str) -> Optional[MovieSettings]:
@@ -294,13 +301,16 @@ class MovieSettingsDb(object):
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_set, [
-            movie_settings.imdb_id,
-            to_text(movie_settings.wanted_languages),
-            movie_settings.refine,
-            movie_settings.hearing_impaired,
-            movie_settings.utf8_encoding
-        ])
+        cursor.execute(
+            self._query_set,
+            [
+                movie_settings.imdb_id,
+                to_text(movie_settings.wanted_languages),
+                movie_settings.refine,
+                movie_settings.hearing_impaired,
+                movie_settings.utf8_encoding,
+            ],
+        )
         connection.commit()
 
     def update_movie_settings(self, movie_settings: MovieSettings) -> None:
@@ -311,13 +321,16 @@ class MovieSettingsDb(object):
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_update, [
-            to_text(movie_settings.wanted_languages),
-            movie_settings.refine,
-            movie_settings.hearing_impaired,
-            movie_settings.utf8_encoding,
-            movie_settings.imdb_id
-        ])
+        cursor.execute(
+            self._query_update,
+            [
+                to_text(movie_settings.wanted_languages),
+                movie_settings.refine,
+                movie_settings.hearing_impaired,
+                movie_settings.utf8_encoding,
+                movie_settings.imdb_id,
+            ],
+        )
         connection.commit()
 
     def delete_movie_settings(self, imdb_id: str) -> None:

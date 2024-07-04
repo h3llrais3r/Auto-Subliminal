@@ -29,14 +29,33 @@ TOKEN_EXPIRATION_TIME = datetime.timedelta(hours=12).total_seconds()
 
 class OpenSubtitlesComSubtitle(Subtitle):
     """OpenSubtitles.com Subtitle."""
+
     provider_name = 'opensubtitles_com'
     series_re = re.compile(r'^(?P<series_name>.*) - (?P<series_slug>.*)$')
     encoding = 'utf-8'
 
-    def __init__(self, language, hearing_impaired, page_link, subtitle_id, feature_type, hash, hash_matched, title,
-                 movie_name, release, year, imdb_id, series_season, series_episode, file_name, file_id):
+    def __init__(
+        self,
+        language,
+        hearing_impaired,
+        page_link,
+        subtitle_id,
+        feature_type,
+        hash,
+        hash_matched,
+        title,
+        movie_name,
+        release,
+        year,
+        imdb_id,
+        series_season,
+        series_episode,
+        file_name,
+        file_id,
+    ):
         super(OpenSubtitlesComSubtitle, self).__init__(
-            language, hearing_impaired=hearing_impaired, page_link=page_link, encoding=self.encoding)
+            language, hearing_impaired=hearing_impaired, page_link=page_link, encoding=self.encoding
+        )
         self.subtitle_id = subtitle_id
         self.feature_type = feature_type
         self.hash = hash
@@ -120,6 +139,7 @@ class OpenSubtitlesComProvider(Provider):
     :param str apikey: apikey.
 
     """
+
     server_url = 'https://api.opensubtitles.com/api/v1/'
     languages = {Language.fromopensubtitles(l) for l in language_converters['opensubtitles'].codes}
     subtitle_class = OpenSubtitlesComSubtitle
@@ -132,8 +152,11 @@ class OpenSubtitlesComProvider(Provider):
             raise ConfigurationError('Apikey must be specified')
 
         self.session = Session()
-        self.session.headers = {'Content-Type': 'application/json',
-                                'User-Agent': autosubliminal.USERAGENT, 'Api-Key': apikey}
+        self.session.headers = {
+            'Content-Type': 'application/json',
+            'User-Agent': autosubliminal.USERAGENT,
+            'Api-Key': apikey,
+        }
 
         # None values not allowed for logging in, so replace it by ''
         self.username = username or ''
@@ -153,8 +176,12 @@ class OpenSubtitlesComProvider(Provider):
     def login(self):
         response = checked(
             self.session.post(
-                self.server_url + 'login', json={'username': self.username, 'password': self.password},
-                allow_redirects=False, timeout=30))
+                self.server_url + 'login',
+                json={'username': self.username, 'password': self.password},
+                allow_redirects=False,
+                timeout=30,
+            )
+        )
         try:
             self.token = response.json()['token']
         except (ValueError, JSONDecodeError):
@@ -196,7 +223,7 @@ class OpenSubtitlesComProvider(Provider):
             criteria.append(('season_number', season))
             criteria.append(('episode_number', episode))
         elif query:
-            criteria.append(('query', query.replace('\'', '')))
+            criteria.append(('query', query.replace("'", '')))
             if season and episode:
                 criteria.append(('season_number', season))
                 criteria.append(('episode_number', episode))
@@ -228,8 +255,11 @@ class OpenSubtitlesComProvider(Provider):
             title = subtitle_item['attributes']['feature_details']['title']
             movie_name = subtitle_item['attributes']['feature_details']['movie_name']
             release = subtitle_item['attributes']['release']
-            year = int(subtitle_item['attributes']['feature_details']['year']
-                       ) if subtitle_item['attributes']['feature_details']['year'] else None
+            year = (
+                int(subtitle_item['attributes']['feature_details']['year'])
+                if subtitle_item['attributes']['feature_details']['year']
+                else None
+            )
             imdb_id = self.format_imdb_id(subtitle_item['attributes']['feature_details']['imdb_id'])
             series_season = None
             if 'season_number' in subtitle_item['attributes']['feature_details']:
@@ -243,9 +273,24 @@ class OpenSubtitlesComProvider(Provider):
                 file_name = subtitle_item['attributes']['files'][0]['file_name']
                 file_id = subtitle_item['attributes']['files'][0]['file_id']
 
-            subtitle = self.subtitle_class(language, hearing_impaired, page_link, subtitle_id, feature_type, hash,
-                                           hash_matched, title, movie_name, release, year, imdb_id,
-                                           series_season, series_episode, file_name, file_id)
+            subtitle = self.subtitle_class(
+                language,
+                hearing_impaired,
+                page_link,
+                subtitle_id,
+                feature_type,
+                hash,
+                hash_matched,
+                title,
+                movie_name,
+                release,
+                year,
+                imdb_id,
+                series_season,
+                series_episode,
+                file_name,
+                file_id,
+            )
             logger.debug('Found subtitle %r', subtitle)
             subtitles.append(subtitle)
 
@@ -262,16 +307,29 @@ class OpenSubtitlesComProvider(Provider):
 
         # Use the same hashing as for opensubtitles
         return self.query(
-            languages, hash=video.hashes.get('opensubtitles'),
-            imdb_id=video.imdb_id, series_imdb_id=video.series_imdb_id, query=query, season=season, episode=episode)
+            languages,
+            hash=video.hashes.get('opensubtitles'),
+            imdb_id=video.imdb_id,
+            series_imdb_id=video.series_imdb_id,
+            query=query,
+            season=season,
+            episode=episode,
+        )
 
     def download_subtitle(self, subtitle):
-        headers = {'Accept': 'application/json', 'Content-Type': 'application/json',
-                   'Authorization': 'Bearer ' + self.token}
+        headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + self.token,
+        }
         response = checked(
             self.session.post(
-                self.server_url + 'download', json={'file_id': subtitle.file_id, 'sub_format': 'srt'},
-                headers=headers, timeout=self.timeout))
+                self.server_url + 'download',
+                json={'file_id': subtitle.file_id, 'sub_format': 'srt'},
+                headers=headers,
+                timeout=self.timeout,
+            )
+        )
 
         download_data = response.json()
         subtitle.download_link = download_data['link']
@@ -289,36 +347,43 @@ class OpenSubtitlesComProvider(Provider):
 
 class OpenSubtitlesComError(ProviderError):
     """Base class for non-generic :class:`OpenSubtitlesComProvider` exceptions."""
+
     pass
 
 
 class Unauthorized(OpenSubtitlesComError, AuthenticationError):
     """Exception raised when status is '401 Unauthorized'."""
+
     pass
 
 
 class NoSession(OpenSubtitlesComError, AuthenticationError):
     """Exception raised when status is '406 No session'."""
+
     pass
 
 
 class DownloadLimitReached(OpenSubtitlesComError, DownloadLimitExceeded):
     """Exception raised when status is '407 Download limit reached'."""
+
     pass
 
 
 class InvalidImdbid(OpenSubtitlesComError):
     """Exception raised when status is '413 Invalid ImdbID'."""
+
     pass
 
 
 class UnknownUserAgent(OpenSubtitlesComError, AuthenticationError):
     """Exception raised when status is '414 Unknown User Agent'."""
+
     pass
 
 
 class DisabledUserAgent(OpenSubtitlesComError, AuthenticationError):
     """Exception raised when status is '415 Disabled user agent'."""
+
     pass
 
 

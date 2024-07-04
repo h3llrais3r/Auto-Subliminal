@@ -141,7 +141,7 @@ def refine(video, **kwargs):
                 logger.debug('Found result for original series without year')
                 found = True
                 break
-            if video.year == int(result['Year'].split(u'\u2013')[0]):
+            if video.year == int(result['Year'].split('\u2013')[0]):
                 logger.debug('Found result with matching year')
                 found = True
                 break
@@ -153,7 +153,7 @@ def refine(video, **kwargs):
         # add series information
         logger.debug('Found series %r', result)
         video.series = result['Title']
-        video.year = int(result['Year'].split(u'\u2013')[0])
+        video.year = int(result['Year'].split('\u2013')[0])
         video.series_imdb_id = result['imdbID']
 
     elif isinstance(video, Movie):
@@ -193,5 +193,5 @@ def refine(video, **kwargs):
         # add movie information
         logger.debug('Found movie %r', result)
         video.title = result['Title']
-        video.year = int(result['Year'].split(u'\u2013')[0])
+        video.year = int(result['Year'].split('\u2013')[0])
         video.imdb_id = result['imdbID']

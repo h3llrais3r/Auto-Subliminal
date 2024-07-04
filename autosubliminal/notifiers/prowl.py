@@ -35,11 +35,13 @@ class ProwlNotifier(BaseNotifier):
         return autosubliminal.NOTIFYPROWL
 
     def _send_message(self, message: str, **kwargs: Any) -> bool:
-        data = {'apikey': autosubliminal.PROWLAPI,
-                'application': self.application,
-                'event': self.title,
-                'description': message,
-                'priority': autosubliminal.PROWLPRIORITY}
+        data = {
+            'apikey': autosubliminal.PROWLAPI,
+            'application': self.application,
+            'event': self.title,
+            'description': message,
+            'priority': autosubliminal.PROWLPRIORITY,
+        }
         try:
             response = requests.post(PROWLURL, data=data)
             if response.status_code != 200:

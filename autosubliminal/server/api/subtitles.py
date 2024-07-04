@@ -86,6 +86,6 @@ class _SynchronizationApi(RestResource):
                 except Exception:
                     self._raise_conflict('Unable to delete the synced subtitle')
 
-            self._raise_bad_request('Invalid action \'%s\'' % action)
+            self._raise_bad_request("Invalid action '%s'" % action)
 
         self._raise_bad_request('Missing data')

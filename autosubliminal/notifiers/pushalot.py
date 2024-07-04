@@ -35,9 +35,7 @@ class PushalotNotifier(BaseNotifier):
         return autosubliminal.NOTIFYPUSHALOT
 
     def _send_message(self, message: str, **kwargs: Any) -> bool:
-        data = {'AuthorizationToken': autosubliminal.PUSHALOTAPI,
-                'Title': self.notification_title,
-                'Body': message}
+        data = {'AuthorizationToken': autosubliminal.PUSHALOTAPI, 'Title': self.notification_title, 'Body': message}
         try:
             response = requests.post(PUSHALOTURL, data=data)
             if response.status_code != 200:

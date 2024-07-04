@@ -86,7 +86,6 @@ class DiskScanner(ScheduledProcess):
 
             # Check files
             for filename in filenames:
-
                 # Only scan valid video files
                 if is_valid_video_file(filename):
                     log.debug('Video file found: %s', filename)
@@ -126,11 +125,14 @@ class DiskScanner(ScheduledProcess):
                         wanted_languages = movie_settings.wanted_languages
 
                 # Check for missing subtitles (scan embedded and detect invalid if configured to do so)
-                languages = check_missing_subtitle_languages(dirname, filename,
-                                                             scan_embedded=autosubliminal.SCANEMBEDDEDSUBS,
-                                                             scan_hardcoded=autosubliminal.SCANHARDCODEDSUBS,
-                                                             detect_invalid=autosubliminal.DETECTINVALIDSUBLANGUAGE,
-                                                             wanted_languages=wanted_languages)
+                languages = check_missing_subtitle_languages(
+                    dirname,
+                    filename,
+                    scan_embedded=autosubliminal.SCANEMBEDDEDSUBS,
+                    scan_hardcoded=autosubliminal.SCANHARDCODEDSUBS,
+                    detect_invalid=autosubliminal.DETECTINVALIDSUBLANGUAGE,
+                    wanted_languages=wanted_languages,
+                )
 
                 # Process the video file if there are missing subtitles
                 if len(languages) > 0:

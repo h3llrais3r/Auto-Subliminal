@@ -35,15 +35,8 @@ class PushbulletNotifier(BaseNotifier):
         return autosubliminal.NOTIFYPUSHBULLET
 
     def _send_message(self, message: str, **kwargs: Any) -> bool:
-        data = {
-            'title': self.notification_title,
-            'body': message,
-            'type': 'note'
-        }
-        headers = {
-            'Access-Token': autosubliminal.PUSHBULLETAPI,
-            'Content-Type': 'application/json'
-        }
+        data = {'title': self.notification_title, 'body': message, 'type': 'note'}
+        headers = {'Access-Token': autosubliminal.PUSHBULLETAPI, 'Content-Type': 'application/json'}
         try:
             # Api requires json, so use json instead of data to automatically convert it to json
             response = requests.post(PUSHBULLETURL, json=data, headers=headers)

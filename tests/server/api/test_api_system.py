@@ -38,42 +38,48 @@ class MyScheduler(object):
         return to_dict(self, key_fn, 'process')
 
 
-episode_scores_json = '{"codec": 2, "default": 0, "episode": 30, "hash": 359, "hearingImpaired": 1, "max": 360, ' \
-                      '"min": 0, "quality": 2, "releaseGroup": 15, "season": 30, "source": 7, "title": 180, "year": 90}'
+episode_scores_json = (
+    '{"codec": 2, "default": 0, "episode": 30, "hash": 359, "hearingImpaired": 1, "max": 360, '
+    '"min": 0, "quality": 2, "releaseGroup": 15, "season": 30, "source": 7, "title": 180, "year": 90}'
+)
 
-movie_scores_json = '{"codec": 2, "default": 0, "hash": 119, "hearingImpaired": 1, "max": 120, "min": 0, ' \
-                    '"quality": 2, "releaseGroup": 15, "source": 7, "title": 60, "year": 30}'
+movie_scores_json = (
+    '{"codec": 2, "default": 0, "hash": 119, "hearingImpaired": 1, "max": 120, "min": 0, '
+    '"quality": 2, "releaseGroup": 15, "source": 7, "title": 60, "year": 30}'
+)
 
-settings_json = '{"antiCaptchaProviders": [], ' \
-                '"appProcessId": 1, ' \
-                '"appVersion": "' + autosubliminal.version.RELEASE_VERSION + '", ' \
-                '"checkSub": "SubChecker", ' \
-                '"checkSubDeadlineDefault": 1, '\
-                '"checkSubDeltaDefault": 1, '\
-                '"checkSubIntervalDefault": 6, '\
-                '"checkVersion": "VersionChecker", ' \
-                '"checkVersionIntervalDefault": 1, ' \
-                '"dereferUrl": "https://dereferer.me/?", ' \
-                '"developerMode": true, ' \
-                '"episodeScores": ' + episode_scores_json + ', ' \
-                '"imdbUrl": "http://www.imdb.com/title/", ' \
-                '"languages": [{"code": "nl", "name": "Dutch"}], ' \
-                '"libraryEditMode": false, ' \
-                '"libraryMode": false, ' \
-                '"logReversed": false, ' \
-                '"manualRefineVideo": false, ' \
-                '"manualSubSync": false, ' \
-                '"movieScores": ' + movie_scores_json + ', ' \
-                '"pathSeparator": "/", ' \
-                '"preferHearingImpaired": false, ' \
-                '"scanDisk": "DiskScanner", ' \
-                '"scanDiskIntervalDefault": 1, ' \
-                '"scanLibrary": "LibraryScanner", ' \
-                '"scanLibraryIntervalDefault": 24, ' \
-                '"subliminalProviders": [], ' \
-                '"timestampFormat": "%d-%m-%Y %H:%M:%S", ' \
-                '"tvdbUrl": "http://thetvdb.com/?tab=series&id=", ' \
-                '"webRoot": "mywebroot"}'
+settings_json = (
+    '{"antiCaptchaProviders": [], '
+    '"appProcessId": 1, '
+    '"appVersion": "' + autosubliminal.version.RELEASE_VERSION + '", '
+    '"checkSub": "SubChecker", '
+    '"checkSubDeadlineDefault": 1, '
+    '"checkSubDeltaDefault": 1, '
+    '"checkSubIntervalDefault": 6, '
+    '"checkVersion": "VersionChecker", '
+    '"checkVersionIntervalDefault": 1, '
+    '"dereferUrl": "https://dereferer.me/?", '
+    '"developerMode": true, '
+    '"episodeScores": ' + episode_scores_json + ', '
+    '"imdbUrl": "http://www.imdb.com/title/", '
+    '"languages": [{"code": "nl", "name": "Dutch"}], '
+    '"libraryEditMode": false, '
+    '"libraryMode": false, '
+    '"logReversed": false, '
+    '"manualRefineVideo": false, '
+    '"manualSubSync": false, '
+    '"movieScores": ' + movie_scores_json + ', '
+    '"pathSeparator": "/", '
+    '"preferHearingImpaired": false, '
+    '"scanDisk": "DiskScanner", '
+    '"scanDiskIntervalDefault": 1, '
+    '"scanLibrary": "LibraryScanner", '
+    '"scanLibraryIntervalDefault": 24, '
+    '"subliminalProviders": [], '
+    '"timestampFormat": "%d-%m-%Y %H:%M:%S", '
+    '"tvdbUrl": "http://thetvdb.com/?tab=series&id=", '
+    '"webRoot": "mywebroot"}'
+)
 
 scheduler = MyScheduler('MyScheduler1')
 
@@ -84,10 +90,14 @@ scheduler_json_list = '[' + scheduler_json + ']'
 pathinfo_1 = PathInfo('pathinfo1', 'path1', 1024, 2048)
 pathinfo_2 = PathInfo('pathinfo2', 'path2', 1024, 1024)
 
-pathinfo_1_json = '{"freeBytes": 1024, "freePercentage": 50.0, "freeSpace": "1.0 kB", "name": "pathinfo1", ' \
-                  '"path": "path1", "totalBytes": 2048, "totalSpace": "2.0 kB"}'
-pathinfo_2_json = '{"freeBytes": 1024, "freePercentage": 100.0, "freeSpace": "1.0 kB", "name": "pathinfo2", ' \
-                  '"path": "path2", "totalBytes": 1024, "totalSpace": "1.0 kB"}'
+pathinfo_1_json = (
+    '{"freeBytes": 1024, "freePercentage": 50.0, "freeSpace": "1.0 kB", "name": "pathinfo1", '
+    '"path": "path1", "totalBytes": 2048, "totalSpace": "2.0 kB"}'
+)
+pathinfo_2_json = (
+    '{"freeBytes": 1024, "freePercentage": 100.0, "freeSpace": "1.0 kB", "name": "pathinfo2", '
+    '"path": "path2", "totalBytes": 1024, "totalSpace": "1.0 kB"}'
+)
 
 pathinfo_json_list = '[' + pathinfo_1_json + ', ' + pathinfo_2_json + ']'
 
@@ -115,10 +125,12 @@ def test_get_settings(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
     monkeypatch.setattr('autosubliminal.IMDBURL', 'http://www.imdb.com/title/')
     monkeypatch.setattr('autosubliminal.TIMESTAMPFORMAT', '%d-%m-%Y %H:%M:%S')
     monkeypatch.setattr('autosubliminal.server.api.system.os.path.sep', '/')
-    mocker.patch('autosubliminal.server.api.system.get_subtitle_languages',
-                 return_value=[{'code': 'nl', 'name': 'Dutch'}])
-    monkeypatch.setattr('autosubliminal.SUBLIMINALPROVIDERMANAGER',
-                        RegistrableExtensionManager('subliminal.providers.dummy', []))
+    mocker.patch(
+        'autosubliminal.server.api.system.get_subtitle_languages', return_value=[{'code': 'nl', 'name': 'Dutch'}]
+    )
+    monkeypatch.setattr(
+        'autosubliminal.SUBLIMINALPROVIDERMANAGER', RegistrableExtensionManager('subliminal.providers.dummy', [])
+    )
     mocker.patch('autosubliminal.server.api.system.ANTI_CAPTCHA_PROVIDERS', [])
     monkeypatch.setattr('autosubliminal.SHOWMINMATCHSCOREDEFAULT', 0)
     monkeypatch.setattr('autosubliminal.SHOWMINMATCHSCORE', 0)

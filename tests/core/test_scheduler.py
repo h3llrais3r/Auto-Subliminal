@@ -161,12 +161,7 @@ def test_scheduler_deactivate(mocker: MockerFixture) -> None:
 
 def test_scheduler_to_dict() -> None:
     scheduler = MyScheduler('MyScheduler1')
-    scheduler_dict = {
-        'interval': 60,
-        'lastRun': 1,
-        'name': 'MyScheduler1',
-        'nextRun': 61
-    }
+    scheduler_dict = {'interval': 60, 'lastRun': 1, 'name': 'MyScheduler1', 'nextRun': 61}
     assert scheduler_dict == scheduler.to_dict(camelize)
 
 

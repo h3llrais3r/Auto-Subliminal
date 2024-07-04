@@ -38,9 +38,11 @@ class WantedItemsDb(object):
         self._query_get_by_video_path = 'SELECT * FROM wanted_items WHERE video_path=?'
         self._query_get_by_video_path_ignore_case = 'SELECT * FROM wanted_items WHERE video_path=? COLLATE nocase'
         self._query_set = 'INSERT INTO wanted_items VALUES (NULL,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)'
-        self._query_update = 'UPDATE wanted_items SET video_path=?, video_size=?, languages=?, timestamp=?, type=?, ' \
-                             'title=?, year=?, season=?, episode=?, quality=?, source=?, codec=?, release_group=?, ' \
-                             'tvdb_id=?, imdb_id=? WHERE id=?'
+        self._query_update = (
+            'UPDATE wanted_items SET video_path=?, video_size=?, languages=?, timestamp=?, type=?, '
+            'title=?, year=?, season=?, episode=?, quality=?, source=?, codec=?, release_group=?, '
+            'tvdb_id=?, imdb_id=? WHERE id=?'
+        )
         self._query_delete = 'DELETE FROM wanted_items WHERE id=?'
         self._query_delete_by_tvdb_id = 'DELETE FROM wanted_items WHERE tvdb_id=?'
         self._query_delete_by_imdb_id = 'DELETE FROM wanted_items WHERE imdb_id=?'
@@ -89,8 +91,9 @@ class WantedItemsDb(object):
         connection = sqlite3.connect(autosubliminal.DBFILE)
         connection.row_factory = _wanted_item_factory
         cursor = connection.cursor()
-        cursor.execute(self._query_get_by_video_path_ignore_case if ignore_case else self._query_get_by_video_path,
-                       [video_path])
+        cursor.execute(
+            self._query_get_by_video_path_ignore_case if ignore_case else self._query_get_by_video_path, [video_path]
+        )
         wanted_item: Optional[WantedItem] = cursor.fetchone()
         connection.close()
 
@@ -104,22 +107,26 @@ class WantedItemsDb(object):
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_set, [
-            wanted_item.video_path,
-            wanted_item.video_size,
-            to_text(wanted_item.languages),  # Store languages as comma separated string
-            wanted_item.timestamp,
-            wanted_item.type,
-            wanted_item.title,
-            wanted_item.year,
-            wanted_item.season,
-            to_text(wanted_item.episode),  # Can be a list for multi episode files
-            wanted_item.quality,
-            to_text(wanted_item.source),  # Can be a list for multi source files
-            to_text(wanted_item.codec),  # Can be a list for multi codec files
-            wanted_item.release_group,
-            wanted_item.tvdb_id,
-            wanted_item.imdb_id])
+        cursor.execute(
+            self._query_set,
+            [
+                wanted_item.video_path,
+                wanted_item.video_size,
+                to_text(wanted_item.languages),  # Store languages as comma separated string
+                wanted_item.timestamp,
+                wanted_item.type,
+                wanted_item.title,
+                wanted_item.year,
+                wanted_item.season,
+                to_text(wanted_item.episode),  # Can be a list for multi episode files
+                wanted_item.quality,
+                to_text(wanted_item.source),  # Can be a list for multi source files
+                to_text(wanted_item.codec),  # Can be a list for multi codec files
+                wanted_item.release_group,
+                wanted_item.tvdb_id,
+                wanted_item.imdb_id,
+            ],
+        )
         connection.commit()
         connection.close()
 
@@ -167,23 +174,27 @@ class WantedItemsDb(object):
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_update, [
-            wanted_item.video_path,
-            wanted_item.video_size,
-            to_text(wanted_item.languages),  # Store languages as comma separated string
-            wanted_item.timestamp,
-            wanted_item.type,
-            wanted_item.title,
-            wanted_item.year,
-            wanted_item.season,
-            to_text(wanted_item.episode),  # Can be a list for multi episode files
-            wanted_item.quality,
-            to_text(wanted_item.source),  # Can be a list for multi source files
-            to_text(wanted_item.codec),  # Can be a list for multi codec files
-            wanted_item.release_group,
-            wanted_item.tvdb_id,
-            wanted_item.imdb_id,
-            wanted_item.id])
+        cursor.execute(
+            self._query_update,
+            [
+                wanted_item.video_path,
+                wanted_item.video_size,
+                to_text(wanted_item.languages),  # Store languages as comma separated string
+                wanted_item.timestamp,
+                wanted_item.type,
+                wanted_item.title,
+                wanted_item.year,
+                wanted_item.season,
+                to_text(wanted_item.episode),  # Can be a list for multi episode files
+                wanted_item.quality,
+                to_text(wanted_item.source),  # Can be a list for multi source files
+                to_text(wanted_item.codec),  # Can be a list for multi codec files
+                wanted_item.release_group,
+                wanted_item.tvdb_id,
+                wanted_item.imdb_id,
+                wanted_item.id,
+            ],
+        )
         connection.commit()
         connection.close()
 
@@ -219,7 +230,7 @@ class LastDownloadsDb(object):
 
         # Return the max number of results or all (autosubliminal.MAXDBRESULTS = 0)
         if 0 < autosubliminal.MAXDBRESULTS < len(result_list):
-            return result_list[0:autosubliminal.MAXDBRESULTS]
+            return result_list[0 : autosubliminal.MAXDBRESULTS]
         else:
             return result_list
 
@@ -231,23 +242,27 @@ class LastDownloadsDb(object):
         """
         connection = sqlite3.connect(autosubliminal.DBFILE)
         cursor = connection.cursor()
-        cursor.execute(self._query_set, [
-            download_item.video_path,
-            download_item.language,
-            download_item.provider,
-            download_item.subtitle,
-            download_item.timestamp,
-            download_item.type,
-            download_item.title,
-            download_item.year,
-            download_item.season,
-            to_text(download_item.episode),  # Can be a list for multi episode files
-            download_item.quality,
-            to_text(download_item.source),  # Can be a list for multi source files
-            to_text(download_item.codec),  # Can be a list for multi codec files
-            download_item.release_group,
-            download_item.tvdb_id,
-            download_item.imdb_id])
+        cursor.execute(
+            self._query_set,
+            [
+                download_item.video_path,
+                download_item.language,
+                download_item.provider,
+                download_item.subtitle,
+                download_item.timestamp,
+                download_item.type,
+                download_item.title,
+                download_item.year,
+                download_item.season,
+                to_text(download_item.episode),  # Can be a list for multi episode files
+                download_item.quality,
+                to_text(download_item.source),  # Can be a list for multi source files
+                to_text(download_item.codec),  # Can be a list for multi codec files
+                download_item.release_group,
+                download_item.tvdb_id,
+                download_item.imdb_id,
+            ],
+        )
         connection.commit()
         connection.close()
 

@@ -31,8 +31,7 @@ class Scheduler(object):
     :type active: bool
     """
 
-    def __init__(
-            self, name: str, process: 'ScheduledProcess', interval: int, active: bool = True) -> None:
+    def __init__(self, name: str, process: 'ScheduledProcess', interval: int, active: bool = True) -> None:
         self.name = name
         self.process = process
         self.interval = datetime.timedelta(hours=interval).total_seconds()  # Convert to seconds
@@ -57,7 +56,7 @@ class Scheduler(object):
             suffix = 1
             suffix_index = scheduler_name.rfind('-')
             if suffix_index > 0:
-                scheduler_name_suffix = scheduler_name[suffix_index + 1:]
+                scheduler_name_suffix = scheduler_name[suffix_index + 1 :]
                 try:
                     suffix = int(scheduler_name_suffix)
                     suffix += 1

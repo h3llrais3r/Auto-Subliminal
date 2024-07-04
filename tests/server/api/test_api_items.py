@@ -29,11 +29,13 @@ wanted_item.release_group = 'NTb'
 wanted_item.tvdb_id = 289590
 wanted_item.imdb_id = None
 
-wanted_item_json = '{"codec": "H.264", "episode": 6, "id": 1, "imdbId": null, "isSearchActive": true, ' \
-                   '"languages": ["nl"], "libraryPath": null, "quality": "720p", "releaseGroup": "NTb", "season": 1, ' \
-                   '"source": "Web", "timestamp": "2015-11-15 16:27:35", "title": "Mr Robot", "tvdbId": 289590, ' \
-                   '"type": "episode", "videoFileName": "Mr.Robot.S01E06.720p.WEB-DL.DD5.1.H.264-NTb.mkv", ' \
-                   '"videoFilePath": "/path/to", "videoFileSize": "0 bytes", "year": null}'
+wanted_item_json = (
+    '{"codec": "H.264", "episode": 6, "id": 1, "imdbId": null, "isSearchActive": true, '
+    '"languages": ["nl"], "libraryPath": null, "quality": "720p", "releaseGroup": "NTb", "season": 1, '
+    '"source": "Web", "timestamp": "2015-11-15 16:27:35", "title": "Mr Robot", "tvdbId": 289590, '
+    '"type": "episode", "videoFileName": "Mr.Robot.S01E06.720p.WEB-DL.DD5.1.H.264-NTb.mkv", '
+    '"videoFilePath": "/path/to", "videoFileSize": "0 bytes", "year": null}'
+)
 
 wanted_item_list_json = '[' + wanted_item_json + ']'
 
@@ -56,12 +58,14 @@ downloaded_item.release_group = 'NTb'
 downloaded_item.tvdb_id = 289590
 downloaded_item.imdb_id = None
 
-downloaded_item_json = '{"codec": "H.264", "episode": 6, "id": 1, "imdbId": null, "language": "nl", ' \
-                       '"provider": "shooter", "quality": "720p", "releaseGroup": "NTb", "season": 1, ' \
-                       '"source": "Web", "subtitle": "Mr.Robot.S01E06.720p.WEB-DL.DD5.1.H.264-NTb.srt",' \
-                       ' "timestamp": "2015-11-15 16:27:35", "title": "Mr Robot", "tvdbId": 289590, ' \
-                       '"type": "episode", "videoFileName": "Mr.Robot.S01E06.720p.WEB-DL.DD5.1.H.264-NTb.mkv", ' \
-                       '"videoFilePath": "/path/to", "year": null}'
+downloaded_item_json = (
+    '{"codec": "H.264", "episode": 6, "id": 1, "imdbId": null, "language": "nl", '
+    '"provider": "shooter", "quality": "720p", "releaseGroup": "NTb", "season": 1, '
+    '"source": "Web", "subtitle": "Mr.Robot.S01E06.720p.WEB-DL.DD5.1.H.264-NTb.srt",'
+    ' "timestamp": "2015-11-15 16:27:35", "title": "Mr Robot", "tvdbId": 289590, '
+    '"type": "episode", "videoFileName": "Mr.Robot.S01E06.720p.WEB-DL.DD5.1.H.264-NTb.mkv", '
+    '"videoFilePath": "/path/to", "year": null}'
+)
 
 downloaded_item_list_json = '[' + downloaded_item_json + ']'
 

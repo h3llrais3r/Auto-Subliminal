@@ -41,8 +41,9 @@ class MutexFileLock(AbstractFileLock):
         return self.mutex.release_write_lock()  # type: ignore[no-any-return]
 
 
-def cache_artwork(indexer_name: str, indexer_id: Union[str, int],
-                  artwork_type: str, artwork_url: str, thumbnail: bool = False) -> None:
+def cache_artwork(
+    indexer_name: str, indexer_id: Union[str, int], artwork_type: str, artwork_url: str, thumbnail: bool = False
+) -> None:
     """Store the artwork in the cache."""
     try:
         img_data = requests.get(artwork_url).content
@@ -53,14 +54,16 @@ def cache_artwork(indexer_name: str, indexer_id: Union[str, int],
         log.exception('Unable to store artwork in cache')
 
 
-def is_artwork_cached(indexer_name: str, indexer_id: Union[str, int],
-                      artwork_type: str, thumbnail: bool = False) -> bool:
+def is_artwork_cached(
+    indexer_name: str, indexer_id: Union[str, int], artwork_type: str, thumbnail: bool = False
+) -> bool:
     """Check if the artwork is cached."""
     return os.path.exists(get_artwork_cache_path(indexer_name, indexer_id, artwork_type, thumbnail=thumbnail))
 
 
-def get_artwork_cache_path(indexer_name: str, indexer_id: Union[str, int],
-                           artwork_type: str, thumbnail: bool = False) -> str:
+def get_artwork_cache_path(
+    indexer_name: str, indexer_id: Union[str, int], artwork_type: str, thumbnail: bool = False
+) -> str:
     """Get the path of the artwork in the cache."""
     # Make sure the cache path exists
     cache_location = os.path.join(autosubliminal.CACHEDIR, 'artwork', indexer_name, artwork_type)

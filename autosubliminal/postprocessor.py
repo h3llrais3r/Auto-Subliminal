@@ -106,8 +106,9 @@ class PostProcessor(object):
             log.debug('#' * 40)
         except UnicodeEncodeError:
             log.debug('#' * 40)
-            log.exception('Cannot convert post processor parameters in %s, please enable utf-8 encoding!',
-                          self._encoding)
+            log.exception(
+                'Cannot convert post processor parameters in %s, please enable utf-8 encoding!', self._encoding
+            )
             process = None
 
         return process

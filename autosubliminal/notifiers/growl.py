@@ -33,11 +33,13 @@ class GrowlNotifier(BaseNotifier):
         return autosubliminal.NOTIFYGROWL
 
     def _create_notifier(self) -> gntp.notifier.GrowlNotifier:
-        return gntp.notifier.GrowlNotifier(applicationName=self.application,
-                                           notifications=[self.notification_title],
-                                           hostname=autosubliminal.GROWLHOST,
-                                           port=autosubliminal.GROWLPORT,
-                                           password=autosubliminal.GROWLPASS if autosubliminal.GROWLPASS else None)
+        return gntp.notifier.GrowlNotifier(
+            applicationName=self.application,
+            notifications=[self.notification_title],
+            hostname=autosubliminal.GROWLHOST,
+            port=autosubliminal.GROWLPORT,
+            password=autosubliminal.GROWLPASS if autosubliminal.GROWLPASS else None,
+        )
 
     def _register(self) -> bool:
         try:
@@ -53,10 +55,12 @@ class GrowlNotifier(BaseNotifier):
 
     def _send_message(self, message: str, **kwargs: Any) -> bool:
         try:
-            response = self._create_notifier().notify(noteType=self.notification_title,
-                                                      title=self.title,
-                                                      description=message,
-                                                      priority=autosubliminal.GROWLPRIORITY)
+            response = self._create_notifier().notify(
+                noteType=self.notification_title,
+                title=self.title,
+                description=message,
+                priority=autosubliminal.GROWLPRIORITY,
+            )
             if response is not True:
                 log.error('%s notification failed: %r', self.name, response)
                 return False

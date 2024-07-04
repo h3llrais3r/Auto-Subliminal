@@ -48,12 +48,18 @@ class SubSynchronizer(object):
                 synced_subtitle_path = os.path.splitext(subtitle_path)[0] + '.synced.srt'
                 unparsed_args = [
                     reference_file_path,
-                    '--srtin', subtitle_path,
-                    '--srtout', synced_subtitle_path,
-                    '--output-encoding', 'same',
-                    '--ffmpegpath', autosubliminal.FFMPEGPATH,
-                    '--vad', self._vad,
-                    '--log-dir-path', self._log_dir_path  # TODO: check if we can omit this and log in our logs instead
+                    '--srtin',
+                    subtitle_path,
+                    '--srtout',
+                    synced_subtitle_path,
+                    '--output-encoding',
+                    'same',
+                    '--ffmpegpath',
+                    autosubliminal.FFMPEGPATH,
+                    '--vad',
+                    self._vad,
+                    '--log-dir-path',
+                    self._log_dir_path,  # TODO: check if we can omit this and log in our logs instead
                 ]
                 parser = ffsubsync.make_parser()
                 args = parser.parse_args(args=unparsed_args)
@@ -66,7 +72,7 @@ class SubSynchronizer(object):
                     result = {
                         'synced_subtitle_path': synced_subtitle_path,
                         'offset_in_seconds': float(offset_in_seconds),
-                        'framerate_scale_factor': float(framerate_scale_factor)
+                        'framerate_scale_factor': float(framerate_scale_factor),
                     }
                     return result
                 else:

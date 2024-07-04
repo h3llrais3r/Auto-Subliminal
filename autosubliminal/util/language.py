@@ -34,8 +34,12 @@ def get_subtitle_languages() -> List[SubtitleLanguage]:
         return SubtitleLanguage(language.alpha2, language.name)
 
     # Add all iso languages (alpha2)
-    languages = list(map(from_alpha2, [language for language in cast(
-        List[IsoLanguage], babelfish.LANGUAGE_MATRIX) if language.alpha2]))
+    languages = list(
+        map(
+            from_alpha2,
+            [language for language in cast(List[IsoLanguage], babelfish.LANGUAGE_MATRIX) if language.alpha2],
+        )
+    )
 
     # Add special cases here (f.e. languages in ietf format)
     languages.append(SubtitleLanguage('pt-BR', 'Brazilian Portuguese'))

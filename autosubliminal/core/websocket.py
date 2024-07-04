@@ -23,15 +23,12 @@ RUN_SYSTEM_PROCESS = 'RUN_SYSTEM_PROCESS'
 
 SUPPORTED_EVENT_TYPES = [RUN_SCHEDULER, RUN_SYSTEM_PROCESS]
 
-MESSAGE_SCHEMA = Schema({
-    'type': 'EVENT',
-    'event': {
-        'type': And(Use(str), lambda t: t in SUPPORTED_EVENT_TYPES),
-        'data': {
-            'name': And(Use(str))
-        }
+MESSAGE_SCHEMA = Schema(
+    {
+        'type': 'EVENT',
+        'event': {'type': And(Use(str), lambda t: t in SUPPORTED_EVENT_TYPES), 'data': {'name': And(Use(str))}},
     }
-})
+)
 
 
 class WebSocketHandler(WebSocket):
@@ -115,7 +112,7 @@ class WebSocketLogHandler(WebSocket):
     """
 
     def opened(self) -> None:
-        cherrypy.log("WebSocketLogHandler opened, starting log file tailing...")
+        cherrypy.log('WebSocketLogHandler opened, starting log file tailing...')
         logfile = autosubliminal.LOGFILE
         for line in tailer.follow(codecs.open(logfile, 'r', 'utf-8')):
             self.send(TextMessage(line), False)

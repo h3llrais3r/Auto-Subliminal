@@ -269,8 +269,11 @@ def _init_cache() -> None:
     # Do not reconfigure after a soft restart (without exiting main app) -> otherwise RegionAlreadyConfigured exception
     if not region.is_configured:
         cache_file = os.path.abspath(os.path.join(CACHEDIR, 'autosubliminal.cache.dbm'))
-        region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexFileLock},
-                         replace_existing_backend=replace_cache)
+        region.configure(
+            backend='dogpile.cache.dbm',
+            arguments={'filename': cache_file, 'lock_factory': MutexFileLock},
+            replace_existing_backend=replace_cache,
+        )
 
 
 def _init_guessit() -> None:
@@ -300,7 +303,8 @@ def _init_scores() -> None:
     # Calculate default scores (minimal score needed for a match)
     global SHOWMINMATCHSCOREDEFAULT
     SHOWMINMATCHSCOREDEFAULT = (
-        episode_scores['series'] + episode_scores['year'] + episode_scores['season'] + episode_scores['episode'])
+        episode_scores['series'] + episode_scores['year'] + episode_scores['season'] + episode_scores['episode']
+    )
     global SHOWMINMATCHSCORE
     MOVIEMINMATCHSCOREDEFAULT = movie_scores['title'] + movie_scores['year']
 
@@ -332,8 +336,11 @@ def _init_subliminal() -> None:
     # Do not reconfigure after a soft restart (without exiting main app) -> otherwise RegionAlreadyConfigured exception
     if not region.is_configured:
         cache_file = os.path.abspath(os.path.join(CACHEDIR, 'subliminal.cache.dbm'))
-        region.configure(backend='dogpile.cache.dbm', arguments={'filename': cache_file, 'lock_factory': MutexLock},
-                         replace_existing_backend=is_python_version_changed())
+        region.configure(
+            backend='dogpile.cache.dbm',
+            arguments={'filename': cache_file, 'lock_factory': MutexLock},
+            replace_existing_backend=is_python_version_changed(),
+        )
 
     # Add our custom refiners to list of subliminal refiners
     manual_refiner = 'manual = autosubliminal.refiners.manual:refine'
@@ -347,8 +354,10 @@ def _init_subliminal() -> None:
         refiner_manager.register(omdb_refiner)
 
     # Add our custom providers to list of subliminal providers
-    providers = ['addic7ed_custom = autosubliminal.providers.addic7ed_custom:Addic7edProvider',
-                 'opensubtitles_com = autosubliminal.providers.opensubtitles_com:OpenSubtitlesComProvider']
+    providers = [
+        'addic7ed_custom = autosubliminal.providers.addic7ed_custom:Addic7edProvider',
+        'opensubtitles_com = autosubliminal.providers.opensubtitles_com:OpenSubtitlesComProvider',
+    ]
     for provider in providers:
         if provider not in provider_manager.registered_extensions:
             provider_manager.register(provider)

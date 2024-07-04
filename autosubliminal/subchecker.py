@@ -160,9 +160,13 @@ def search_subtitle(wanted_item_index: int, lang: str) -> Tuple[List[Dict[str, A
                 # Order subtitles by score and create new dict
                 # Use subliminal default compute_score
                 for index, subtitle, score in sorted(
-                        [(index, s, subliminal.compute_score(s, video, autosubliminal.PREFERHEARINGIMPAIRED))
-                         for index, s in enumerate(subtitles)], key=operator.itemgetter(2), reverse=True):
-
+                    [
+                        (index, s, subliminal.compute_score(s, video, autosubliminal.PREFERHEARINGIMPAIRED))
+                        for index, s in enumerate(subtitles)
+                    ],
+                    key=operator.itemgetter(2),
+                    reverse=True,
+                ):
                     # Filter out subtitles that do not match the default score
                     if score < default_min_score:
                         log.debug('Skipping subtitle %s with score below %d', subtitle, default_min_score)
@@ -176,11 +180,19 @@ def search_subtitle(wanted_item_index: int, lang: str) -> Tuple[List[Dict[str, A
                         if subtitle.hearing_impaired == autosubliminal.PREFERHEARINGIMPAIRED:
                             matches.add('hearing_impaired')
                         # Create new sub dict for showing result
-                        sub = {'subtitle_index': index, 'score': score, 'provider_name': subtitle.provider_name,
-                               'content': subtitle.content, 'language': language, 'single': single,
-                               'page_link': subtitle.page_link, 'releases': _get_releases(subtitle),
-                               'matches': matches, 'wanted_item_index': wanted_item_index,
-                               'playvideo_url': _construct_playvideo_url(wanted_item)}
+                        sub = {
+                            'subtitle_index': index,
+                            'score': score,
+                            'provider_name': subtitle.provider_name,
+                            'content': subtitle.content,
+                            'language': language,
+                            'single': single,
+                            'page_link': subtitle.page_link,
+                            'releases': _get_releases(subtitle),
+                            'matches': matches,
+                            'wanted_item_index': wanted_item_index,
+                            'playvideo_url': _construct_playvideo_url(wanted_item),
+                        }
                         # Get content preview (the first 28 lines and last 30 lines of the subtitle)
                         # Use the subtitle text (decoded content) instead of content to generate the preview
                         content_split = cast(str, subtitle.text).splitlines(False)
@@ -190,7 +202,7 @@ def search_subtitle(wanted_item_index: int, lang: str) -> Tuple[List[Dict[str, A
                         else:
                             try:
                                 # First 28 lines
-                                content_preview = '<br>'.join(x.replace('"', '\'') for x in content_split[:28])
+                                content_preview = '<br>'.join(x.replace('"', "'") for x in content_split[:28])
                                 # Separator
                                 content_preview += '<br>'
                                 content_preview += '<br>'
@@ -198,7 +210,8 @@ def search_subtitle(wanted_item_index: int, lang: str) -> Tuple[List[Dict[str, A
                                 content_preview += '<br>'
                                 # Last 30 lines
                                 content_preview += '<br>'.join(
-                                    x.replace('"', '\'') for x in content_split[len(content_split) - 30:])
+                                    x.replace('"', "'") for x in content_split[len(content_split) - 30 :]
+                                )
                             except Exception:
                                 content_preview = 'Problem with parsing the first 28 and/or last 30 lines of the file.'
                         sub['content_preview'] = content_preview
@@ -566,8 +579,9 @@ def _scan_wanted_item_for_video(wanted_item: WantedItem, is_manual: bool = False
     return video
 
 
-def _search_subtitles(video: Video, lang: str, best_only: bool, provider_pool: ProviderPool) -> Tuple[
-        Optional[List[subliminal.Subtitle]], Optional[babelfish.Language], Optional[bool]]:
+def _search_subtitles(
+    video: Video, lang: str, best_only: bool, provider_pool: ProviderPool
+) -> Tuple[Optional[List[subliminal.Subtitle]], Optional[babelfish.Language], Optional[bool]]:
     log.info('Searching for %s subtitles', lang)
 
     # Determine language
@@ -586,12 +600,14 @@ def _search_subtitles(video: Video, lang: str, best_only: bool, provider_pool: P
     if best_only:
         log.debug('Searching for best subtitle')
         # Download the best subtitle with min_score (without saving it in to file)
-        subtitles = provider_pool.download_best_subtitles(provider_pool.list_subtitles(video, languages),
-                                                          video,
-                                                          languages,
-                                                          min_score=_get_min_match_score(video),
-                                                          hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
-                                                          only_one=True)
+        subtitles = provider_pool.download_best_subtitles(
+            provider_pool.list_subtitles(video, languages),
+            video,
+            languages,
+            min_score=_get_min_match_score(video),
+            hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
+            only_one=True,
+        )
         if subtitles:
             log.info('Found the best subtitle with the required min match score for video')
         else:
@@ -618,8 +634,9 @@ def _get_provider_pool() -> Optional[ProviderPool]:
         if 'addic7ed' in ','.join(autosubliminal.SUBLIMINALPROVIDERS):
             provider_cache.fill_addic7ed_show_id_cache()
         # Create the pool
-        return ProviderPool(providers=autosubliminal.SUBLIMINALPROVIDERS,
-                            provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS)
+        return ProviderPool(
+            providers=autosubliminal.SUBLIMINALPROVIDERS, provider_configs=autosubliminal.SUBLIMINALPROVIDERCONFIGS
+        )
     else:
         return None
 
@@ -641,8 +658,9 @@ def _get_subtitle_path(wanted_item: WantedItem) -> str:
     return path
 
 
-def _construct_download_item(wanted_item: WantedItem, subtitles: List[subliminal.Subtitle],
-                             language: babelfish.Language, single: bool) -> DownloadItem:
+def _construct_download_item(
+    wanted_item: WantedItem, subtitles: List[subliminal.Subtitle], language: babelfish.Language, single: bool
+) -> DownloadItem:
     log.debug('Constructing the download item')
 
     # Get the subtitle, subtitles should only contain 1 subtitle
@@ -710,5 +728,5 @@ def _get_releases(subtitle: subliminal.Subtitle) -> List[str]:
 
 
 def _construct_playvideo_url(wanted_item: WantedItem) -> str:
-    log.debug('Constructing \'playvideo://\' url')
+    log.debug("Constructing 'playvideo://' url")
     return 'playvideo://' + wanted_item.video_path

@@ -66,7 +66,7 @@ def flush_wanted_items() -> None:
         autosubliminal.WANTEDQUEUE = []
         release_wanted_queue_lock()
         send_websocket_notification('Flushed wanted items database.')
-        send_websocket_notification('Please launch \'Scan Disk\' from the \'System\' menu.')
+        send_websocket_notification("Please launch 'Scan Disk' from the 'System' menu.")
     else:
         send_websocket_notification('Cannot flush wanted items database when wanted queue is in use!', severity='warn')
 
@@ -87,6 +87,6 @@ def flush_library() -> None:
         ShowDetailsDb().flush_shows(episodes=True, subtitles=True)
         MovieDetailsDb().flush_movies(subtitles=True)
         send_websocket_notification('Flushed library database.')
-        send_websocket_notification('Please launch \'Scan Library\' from the \'System\' menu.')
+        send_websocket_notification("Please launch 'Scan Library' from the 'System' menu.")
     else:
         send_websocket_notification('Cannot flush library database when library scanner is running!', severity='warn')

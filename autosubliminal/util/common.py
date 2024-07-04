@@ -21,8 +21,16 @@ log = logging.getLogger(__name__)
 
 
 # Copied from ConfigParser
-_boolean_states = {'1': True, 'yes': True, 'true': True, 'on': True,
-                   '0': False, 'no': False, 'false': False, 'off': False}
+_boolean_states = {
+    '1': True,
+    'yes': True,
+    'true': True,
+    'on': True,
+    '0': False,
+    'no': False,
+    'false': False,
+    'off': False,
+}
 
 
 def get_today() -> datetime.datetime:
@@ -39,11 +47,7 @@ def run_cmd(cmd: Union[str, List[str]], communicate: bool = True) -> Optional[Tu
     By default it will communicate the output, but it can be disabled.
     """
     log.debug('Running cmd: %r', cmd)
-    process = subprocess.Popen(cmd,
-                               shell=True,
-                               stdin=subprocess.PIPE,
-                               stdout=subprocess.PIPE,
-                               stderr=subprocess.PIPE)
+    process = subprocess.Popen(cmd, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     if communicate:
         # Return stdout, stderr
@@ -68,7 +72,8 @@ def connect_url(url: str) -> requests.Response:
 
 
 def wait_for_internet_connection() -> None:
-    """ Function that blocks the process until there is internet connection."""
+    """Function that blocks the process until there is internet connection."""
+
     # Internal check for internet connection
     def _check_internet_connection(url: str) -> bool:
         try:
@@ -114,8 +119,9 @@ def to_list(value: Any, obj_type: Type[Any] = str, default_value: Optional[List[
         return default_value
 
 
-def to_obj_or_list(value: Any, obj_type: Type[Any] = str,
-                   default_value: Optional[Any] = None) -> Union[Optional[Any], Optional[List[Any]]]:
+def to_obj_or_list(
+    value: Any, obj_type: Type[Any] = str, default_value: Optional[Any] = None
+) -> Union[Optional[Any], Optional[List[Any]]]:
     """Convert a value to an object or a list.
 
     If the value is None, the default value will be returned.
@@ -188,7 +194,7 @@ def to_dict(obj: Any, key_fn: Optional[Callable] = None, *args: Any, **kwargs: A
 def dict_to_list(obj_dict: Dict[str, Any]) -> List[str]:
     """Return a dict as a list with key value pairs."""
     obj_list: List[str] = []
-    for (key, value) in obj_dict.items():
+    for key, value in obj_dict.items():
         obj_list.append(key + ' = ' + value)
 
     return obj_list
@@ -282,7 +288,7 @@ def sanitize(string_value: str, ignore_characters: Set[str] = None) -> str:
         if characters:
             string_value = re.sub(r'[%s]' % re.escape(''.join(characters)), ' ', string_value)
         # Remove some characters
-        characters = {'\'', '/'} - ignore_characters
+        characters = {"'", '/'} - ignore_characters
         if characters:
             string_value = re.sub(r'[%s]' % re.escape(''.join(characters)), '', string_value)
         # Replace multiple spaces with one
@@ -293,8 +299,9 @@ def sanitize(string_value: str, ignore_characters: Set[str] = None) -> str:
 
 
 def convert_timestamp(timestamp_string: str) -> str:
-    return time.strftime(autosubliminal.TIMESTAMPFORMAT,
-                         time.strptime(timestamp_string, autosubliminal.DBTIMESTAMPFORMAT))
+    return time.strftime(
+        autosubliminal.TIMESTAMPFORMAT, time.strptime(timestamp_string, autosubliminal.DBTIMESTAMPFORMAT)
+    )
 
 
 def get_file_size(path: str) -> int:
@@ -370,14 +377,7 @@ def humanize_bytes(bytes: int, precision: int = 1) -> str:
     >>> humanize_bytes(1024*1234*1111,1)
     '1.3 GB'
     """
-    abbrevs = (
-        (1 << 50, 'PB'),
-        (1 << 40, 'TB'),
-        (1 << 30, 'GB'),
-        (1 << 20, 'MB'),
-        (1 << 10, 'kB'),
-        (1, 'bytes')
-    )
+    abbrevs = ((1 << 50, 'PB'), (1 << 40, 'TB'), (1 << 30, 'GB'), (1 << 20, 'MB'), (1 << 10, 'kB'), (1, 'bytes'))
     if bytes == 0:
         return '0 bytes'
     if bytes == 1:
@@ -395,8 +395,9 @@ def get_disk_space_details(directory: str) -> Tuple[int, int]:
     if sys.platform == 'win32':
         total_bytes = ctypes.c_ulonglong(0)
         free_bytes = ctypes.c_ulonglong(0)
-        ctypes.windll.kernel32.GetDiskFreeSpaceExW(ctypes.c_wchar_p(directory), None, ctypes.pointer(total_bytes),
-                                                   ctypes.pointer(free_bytes))
+        ctypes.windll.kernel32.GetDiskFreeSpaceExW(
+            ctypes.c_wchar_p(directory), None, ctypes.pointer(total_bytes), ctypes.pointer(free_bytes)
+        )
         return free_bytes.value, total_bytes.value
     else:
         st = os.statvfs(directory)
@@ -417,7 +418,7 @@ def atoi(text: str) -> Union[int, str]:
 
 
 def natural_keys(text: str) -> List[Union[int, str]]:
-    """ Sort by natural key order.
+    """Sort by natural key order.
 
     Sorts in human order (http://nedbatchelder.com/blog/200712/human_sorting.html).
     Based on https://stackoverflow.com/questions/5967500/how-to-correctly-sort-a-string-with-a-number-inside

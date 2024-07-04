@@ -110,8 +110,9 @@ class LibraryPathScanner(object):
             if wanted_item.is_episode:
                 # Do a force search if no tvdb id found
                 if not wanted_item.tvdb_id:
-                    wanted_item.tvdb_id = self.show_indexer.get_tvdb_id(wanted_item.title, year=wanted_item.year,
-                                                                        force_search=True)
+                    wanted_item.tvdb_id = self.show_indexer.get_tvdb_id(
+                        wanted_item.title, year=wanted_item.year, force_search=True
+                    )
 
                 # Skip if no tvdb id is found
                 if not wanted_item.tvdb_id:
@@ -147,37 +148,43 @@ class LibraryPathScanner(object):
                         if not is_artwork_cached(self.show_indexer.name, show_details.tvdb_id, artwork_type):
                             artwork_url = show_details.get_artwork_url(artwork_type, thumbnail=False)
                             cache_artwork(self.show_indexer.name, show_details.tvdb_id, artwork_type, artwork_url)
-                        if not is_artwork_cached(self.show_indexer.name, show_details.tvdb_id, artwork_type,
-                                                 thumbnail=True):
+                        if not is_artwork_cached(
+                            self.show_indexer.name, show_details.tvdb_id, artwork_type, thumbnail=True
+                        ):
                             artwork_url = show_details.get_artwork_url(artwork_type, thumbnail=True)
-                            cache_artwork(self.show_indexer.name, show_details.tvdb_id, artwork_type, artwork_url,
-                                          thumbnail=True)
+                            cache_artwork(
+                                self.show_indexer.name, show_details.tvdb_id, artwork_type, artwork_url, thumbnail=True
+                            )
                     # Banner
                     if show_details.banner:
                         artwork_type = 'banner'
                         if not is_artwork_cached(self.show_indexer.name, show_details.tvdb_id, artwork_type):
                             artwork_url = show_details.get_artwork_url(artwork_type, thumbnail=False)
                             cache_artwork(self.show_indexer.name, show_details.tvdb_id, artwork_type, artwork_url)
-                        if not is_artwork_cached(self.show_indexer.name, show_details.tvdb_id, artwork_type,
-                                                 thumbnail=True):
+                        if not is_artwork_cached(
+                            self.show_indexer.name, show_details.tvdb_id, artwork_type, thumbnail=True
+                        ):
                             artwork_url = show_details.get_artwork_url(artwork_type, thumbnail=True)
-                            cache_artwork(self.show_indexer.name, show_details.tvdb_id, artwork_type, artwork_url,
-                                          thumbnail=True)
+                            cache_artwork(
+                                self.show_indexer.name, show_details.tvdb_id, artwork_type, artwork_url, thumbnail=True
+                            )
 
                 # Check episode details
                 if isinstance(wanted_item.episode, list):
                     for episode in wanted_item.episode:
-                        self._update_episode_details(show_settings, dirname, filename, wanted_item.tvdb_id,
-                                                     wanted_item.season, episode)
+                        self._update_episode_details(
+                            show_settings, dirname, filename, wanted_item.tvdb_id, wanted_item.season, episode
+                        )
                 else:
-                    self._update_episode_details(show_settings, dirname, filename, wanted_item.tvdb_id,
-                                                 wanted_item.season, wanted_item.episode)
+                    self._update_episode_details(
+                        show_settings, dirname, filename, wanted_item.tvdb_id, wanted_item.season, wanted_item.episode
+                    )
             if wanted_item.is_movie:
                 # Do a force search if no imdb id found
                 if not wanted_item.imdb_id:
-                    wanted_item.imdb_id, _ = self.movie_indexer.get_imdb_id_and_year(wanted_item.title,
-                                                                                     year=wanted_item.year,
-                                                                                     force_search=True)
+                    wanted_item.imdb_id, _ = self.movie_indexer.get_imdb_id_and_year(
+                        wanted_item.title, year=wanted_item.year, force_search=True
+                    )
 
                 # Skip if no imdb id is found
                 if not wanted_item.imdb_id:
@@ -208,11 +215,17 @@ class LibraryPathScanner(object):
                         if not is_artwork_cached(self.movie_indexer.name, movie_details.imdb_id, artwork_type):
                             artwork_url = movie_details.get_artwork_url(artwork_type, thumbnail=False)
                             cache_artwork(self.movie_indexer.name, movie_details.imdb_id, artwork_type, artwork_url)
-                        if not is_artwork_cached(self.movie_indexer.name, movie_details.imdb_id, artwork_type,
-                                                 thumbnail=True):
+                        if not is_artwork_cached(
+                            self.movie_indexer.name, movie_details.imdb_id, artwork_type, thumbnail=True
+                        ):
                             artwork_url = movie_details.get_artwork_url(artwork_type, thumbnail=True)
-                            cache_artwork(self.movie_indexer.name, movie_details.imdb_id, artwork_type, artwork_url,
-                                          thumbnail=True)
+                            cache_artwork(
+                                self.movie_indexer.name,
+                                movie_details.imdb_id,
+                                artwork_type,
+                                artwork_url,
+                                thumbnail=True,
+                            )
 
                 # Check movie details
                 self._update_movie_details(movie_settings, dirname, filename, wanted_item.imdb_id)
@@ -224,8 +237,9 @@ class LibraryPathScanner(object):
             path, _ = os.path.split(path)
         return path
 
-    def _update_episode_details(self, show_settings: ShowSettings, dirname: str, filename: str, show_tvdb_id: int,
-                                season: int, episode: int) -> None:
+    def _update_episode_details(
+        self, show_settings: ShowSettings, dirname: str, filename: str, show_tvdb_id: int, season: int, episode: int
+    ) -> None:
         episode_details = self.show_episodes_db.get_show_episode_by_show(show_tvdb_id, season, episode)
 
         # If no episode is found, we need to fetch the episode details of the show
@@ -237,10 +251,12 @@ class LibraryPathScanner(object):
 
         if episode_details:
             # Set details
-            available_subtitles = get_available_subtitles(dirname, filename, autosubliminal.SCANEMBEDDEDSUBS,
-                                                          autosubliminal.SCANHARDCODEDSUBS)
-            missing_languages = get_missing_subtitle_languages(available_subtitles,
-                                                               wanted_languages=show_settings.wanted_languages)
+            available_subtitles = get_available_subtitles(
+                dirname, filename, autosubliminal.SCANEMBEDDEDSUBS, autosubliminal.SCANHARDCODEDSUBS
+            )
+            missing_languages = get_missing_subtitle_languages(
+                available_subtitles, wanted_languages=show_settings.wanted_languages
+            )
             episode_details.subtitles = available_subtitles
             episode_details.missing_languages = missing_languages
             episode_details.path = os.path.abspath(os.path.join(dirname, filename))
@@ -252,10 +268,12 @@ class LibraryPathScanner(object):
 
         if movie_details:
             # Set details
-            available_subtitles = get_available_subtitles(dirname, filename, autosubliminal.SCANEMBEDDEDSUBS,
-                                                          autosubliminal.SCANHARDCODEDSUBS)
-            missing_languages = get_missing_subtitle_languages(available_subtitles,
-                                                               wanted_languages=movie_settings.wanted_languages)
+            available_subtitles = get_available_subtitles(
+                dirname, filename, autosubliminal.SCANEMBEDDEDSUBS, autosubliminal.SCANHARDCODEDSUBS
+            )
+            missing_languages = get_missing_subtitle_languages(
+                available_subtitles, wanted_languages=movie_settings.wanted_languages
+            )
             movie_details.subtitles = available_subtitles
             movie_details.missing_languages = missing_languages
             movie_details.path = os.path.abspath(os.path.join(dirname, filename))

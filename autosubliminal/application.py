@@ -31,7 +31,6 @@ log = logging.getLogger(__name__)
 
 def daemon() -> None:
     if sys.platform != 'win32':
-
         print('INFO: Starting as a daemon.')
         try:
             pid = os.fork()
@@ -112,9 +111,9 @@ def _configure_server(restarting: bool = False) -> None:
     cherrypy.config.update({'log.error_file': 'cherrypy.error.log'})
 
     # Configure server url
-    cherrypy.config.update({'server.socket_host': autosubliminal.WEBSERVERIP,
-                            'server.socket_port': int(autosubliminal.WEBSERVERPORT)
-                            })
+    cherrypy.config.update(
+        {'server.socket_host': autosubliminal.WEBSERVERIP, 'server.socket_port': int(autosubliminal.WEBSERVERPORT)}
+    )
 
     # Disable engine plugins (no need for autoreload plugin)
     cherrypy.config.update({'engine.autoreload.on': False})
@@ -126,11 +125,14 @@ def _configure_server(restarting: bool = False) -> None:
     # Configure authentication in if a username and password is set by the user
     if autosubliminal.USERNAME and autosubliminal.PASSWORD:
         users = {autosubliminal.USERNAME: autosubliminal.PASSWORD}
-        cherrypy.config.update({'tools.auth_digest.on': True,
-                                'tools.auth_digest.realm': 'Auto-Subliminal website',
-                                'tools.auth_digest.get_ha1': auth_digest.get_ha1_dict_plain(users),
-                                'tools.auth_digest.key': 'yek.tsegid_htua.lanimilbuS-otuA'  # Can be any random string
-                                })
+        cherrypy.config.update(
+            {
+                'tools.auth_digest.on': True,
+                'tools.auth_digest.realm': 'Auto-Subliminal website',
+                'tools.auth_digest.get_ha1': auth_digest.get_ha1_dict_plain(users),
+                'tools.auth_digest.key': 'yek.tsegid_htua.lanimilbuS-otuA',  # Can be any random string
+            }
+        )
 
     # Configure our custom json_out_handler (Uncomment if it should be used for any @cherrypy.tools.json_out())
     # cherrypy.config.update({'tools.json_out.handler': json_out_handler})
@@ -165,12 +167,7 @@ def _setup_index_html() -> None:
 
 def _get_root_configuration() -> Dict[str, Any]:
     # Configure application
-    conf = {
-        '/': {
-            'tools.encode.encoding': 'utf-8',
-            'tools.decode.encoding': 'utf-8'
-        }
-    }
+    conf = {'/': {'tools.encode.encoding': 'utf-8', 'tools.decode.encoding': 'utf-8'}}
 
     # Return config
     return conf
@@ -187,7 +184,7 @@ def _get_application_configuration() -> Dict[str, Any]:
             'tools.staticdir.on': True,
             'tools.staticdir.root': os.path.abspath(os.path.join(autosubliminal.PATH, 'web/autosubliminal')),
             'tools.staticdir.dir': 'static',
-            'tools.spa_redirect.on': True
+            'tools.spa_redirect.on': True,
         },
         # Api settings
         '/api': {
@@ -195,32 +192,26 @@ def _get_application_configuration() -> Dict[str, Any]:
             'tools.spa_redirect.on': False,
             'tools.json_out.handler': json_out_handler,  # Use our custom json_out_handler for /api
             'tools.response_headers.on': True,  # Always force content-type
-            'tools.response_headers.headers': [('Content-Type', 'application/json; charset=utf-8')]
+            'tools.response_headers.headers': [('Content-Type', 'application/json; charset=utf-8')],
         },
         # Artwork settings
-        '/artwork': {
-            'tools.staticdir.on': False,
-            'tools.spa_redirect.on': False
-        },
+        '/artwork': {'tools.staticdir.on': False, 'tools.spa_redirect.on': False},
         # Upload settings
-        '/upload': {
-            'tools.staticdir.on': False,
-            'tools.spa_redirect.on': False
-        },
+        '/upload': {'tools.staticdir.on': False, 'tools.spa_redirect.on': False},
         # Websocket(system) settings
         '/websocket/system': {
             'tools.staticdir.on': False,
             'tools.spa_redirect.on': False,
             'tools.websocket.on': True,
-            'tools.websocket.handler_cls': WebSocketHandler
+            'tools.websocket.handler_cls': WebSocketHandler,
         },
         # Websocket(log) settings
         '/websocket/log': {
             'tools.staticdir.on': False,
             'tools.spa_redirect.on': False,
             'tools.websocket.on': True,
-            'tools.websocket.handler_cls': WebSocketLogHandler
-        }
+            'tools.websocket.handler_cls': WebSocketLogHandler,
+        },
     }
 
     # Return config
@@ -234,8 +225,9 @@ def start() -> None:
     autosubliminal.CHECKVERSION = Scheduler('VersionChecker', VersionChecker(), autosubliminal.CHECKVERSIONINTERVAL)
     autosubliminal.SCANDISK = Scheduler('DiskScanner', DiskScanner(), autosubliminal.SCANDISKINTERVAL)
     autosubliminal.CHECKSUB = Scheduler('SubChecker', SubChecker(), autosubliminal.CHECKSUBINTERVAL)
-    autosubliminal.SCANLIBRARY = Scheduler('LibraryScanner', LibraryScanner(), autosubliminal.SCANLIBRARYINTERVAL,
-                                           active=autosubliminal.LIBRARYMODE)
+    autosubliminal.SCANLIBRARY = Scheduler(
+        'LibraryScanner', LibraryScanner(), autosubliminal.SCANLIBRARYINTERVAL, active=autosubliminal.LIBRARYMODE
+    )
 
     # Start websocket thread
     autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
@@ -250,10 +242,10 @@ def start() -> None:
     # - Start SCANDISK and wait to finish
     # - Start CHECKSUB
     # - Start SCANLIBRARY
-    autosubliminal.CHECKVERSION.start(now=autosubliminal.CHECKVERSIONATSTARTUP,
-                                      wait=autosubliminal.CHECKVERSIONATSTARTUP)
-    autosubliminal.SCANDISK.start(now=autosubliminal.SCANDISKATSTARTUP,
-                                  wait=autosubliminal.SCANDISKATSTARTUP)
+    autosubliminal.CHECKVERSION.start(
+        now=autosubliminal.CHECKVERSIONATSTARTUP, wait=autosubliminal.CHECKVERSIONATSTARTUP
+    )
+    autosubliminal.SCANDISK.start(now=autosubliminal.SCANDISKATSTARTUP, wait=autosubliminal.SCANDISKATSTARTUP)
     autosubliminal.CHECKSUB.start(now=autosubliminal.CHECKSUBATSTARTUP)
     autosubliminal.SCANLIBRARY.start(now=autosubliminal.SCANLIBRARYATSTARTUP)
 

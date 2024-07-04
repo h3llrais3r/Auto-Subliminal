@@ -9,7 +9,7 @@ import sys
 import time
 from typing import Any, List
 
-help_message = '''
+help_message = """
 Usage:
     -h (--help)     Prints this message
     -c (--config=)  Forces Auto-Subliminal to use a configfile other than ./config.properties
@@ -24,7 +24,7 @@ Example:
     python AutoSubliminal.py --config=/home/user/config.properties
     python AutoSubliminal.py --config=/home/user/config.properties --daemon
 
-'''
+"""
 
 
 class Usage(Exception):

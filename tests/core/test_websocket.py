@@ -36,29 +36,13 @@ def test_receive_message_invalid(mocker: MockerFixture) -> None:
 
 def test_handle_message_event_run_process() -> None:
     handler = WebSocketHandler(None)
-    message = {
-        'type': 'EVENT',
-        'event': {
-            'type': 'RUN_SCHEDULER',
-            'data': {
-                'name': 'MyScheduler'
-            }
-        }
-    }
+    message = {'type': 'EVENT', 'event': {'type': 'RUN_SCHEDULER', 'data': {'name': 'MyScheduler'}}}
     assert handler.handle_message(message)
 
 
 def test_handle_message_event_run_process_unsupported() -> None:
     handler = WebSocketHandler(None)
-    message = {
-        'type': 'event',
-        'event': {
-            'type': 'RUN_SCHEDULER',
-            'data': {
-                'name': 'NotSupportedProcess'
-            }
-        }
-    }
+    message = {'type': 'event', 'event': {'type': 'RUN_SCHEDULER', 'data': {'name': 'NotSupportedProcess'}}}
     assert not handler.handle_message(message)
 
 
@@ -66,13 +50,8 @@ def test_handle_message_event_invalid() -> None:
     handler = WebSocketHandler(None)
     message = {
         'type': 'EVENT',
-        'event': {
-            'type': 'RUN_SCHEDULER',
-            'data': {
-                'name': 'MyScheduler'
-            }
-        },
-        'invalid': 'invalid'
+        'event': {'type': 'RUN_SCHEDULER', 'data': {'name': 'MyScheduler'}},
+        'invalid': 'invalid',
     }
     assert not handler.handle_message(message)
 
@@ -80,15 +59,7 @@ def test_handle_message_event_invalid() -> None:
 def test_websocket_broadcaster(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
     mocker.patch('threading.Thread')
     mocker.patch('cherrypy.engine.publish')
-    message = {
-        'type': 'EVENT',
-        'event': {
-            'type': 'SCHEDULER_START',
-            'data': {
-                'name': 'MyScheduler'
-            }
-        }
-    }
+    message = {'type': 'EVENT', 'event': {'type': 'SCHEDULER_START', 'data': {'name': 'MyScheduler'}}}
     monkeypatch.setattr('autosubliminal.WEBSOCKETMESSAGEQUEUE', [message])
     broadcaster = WebSocketBroadCaster(name='WebSocketBroadCaster')
     broadcaster.run()

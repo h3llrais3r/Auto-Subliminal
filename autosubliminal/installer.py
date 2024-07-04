@@ -129,6 +129,7 @@ def _create_venv_and_restart() -> None:
             print('INFO: Creating a new virtual environment in %s.' % venv_path)
         try:
             import venv
+
             venv.create(venv_path, system_site_packages=False, clear=True, symlinks=os.name != 'nt', with_pip=True)
             print('INFO: Created new virtual environment in %s.' % venv_path)
         except (ImportError, Exception) as error:
@@ -204,7 +205,7 @@ def _upgrade_pip() -> None:
         '--quiet',
         '--no-input',
         '--no-color',
-        '--disable-pip-version-check'
+        '--disable-pip-version-check',
     ]
     result = _subprocess_call(cmd)
     if result != 0:
@@ -231,7 +232,7 @@ def _pip_install(packages: Union[List[str], str]) -> None:
         '--no-input',
         '--no-color',
         '--disable-pip-version-check',
-        '--no-python-version-warning'
+        '--no-python-version-warning',
     ]
 
     # OS specific helpers for pip install
@@ -278,8 +279,14 @@ def _get_os_id() -> Optional[str]:
 
 def _subprocess_call(cmd_list: List[str]) -> int:
     try:
-        process = subprocess.Popen(cmd_list, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE, universal_newlines=True, cwd=os.getcwd())
+        process = subprocess.Popen(
+            cmd_list,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+            cwd=os.getcwd(),
+        )
         stdout, stderr = process.communicate()
         process.wait()
         if stdout:

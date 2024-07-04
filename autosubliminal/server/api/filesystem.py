@@ -29,7 +29,6 @@ class FileSystemApi(RestResource):
         include_files = get_boolean(kwargs.get('includeFiles', 'false'))
 
         try:
-
             # Make sure to browse a directory, if it's a file, use the files directory to brows
             path = path if os.path.isdir(path) else os.path.dirname(path)
 
@@ -48,11 +47,7 @@ class FileSystemApi(RestResource):
                     elif os.path.isdir(tmp_path):
                         folders.append(tmp)
 
-            return {
-                'files': files,
-                'folders': folders,
-                'path': path
-            }
+            return {'files': files, 'folders': folders, 'path': path}
 
         except Exception:
             # Return no content on error (don't throw 4xx error to prevent api errors)

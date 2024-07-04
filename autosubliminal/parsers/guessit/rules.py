@@ -67,8 +67,9 @@ class RenamePartsToEpisodeNumbers(Rule):
         for file_part in marker_sorted(file_parts, matches):
             parts = matches.range(file_part.start, file_part.end, predicate=lambda match: match.name == 'part')
             # Only apply when there's no episode
-            if parts and not matches.range(file_part.start, file_part.end,
-                                           predicate=lambda match: match.name == 'episode'):
+            if parts and not matches.range(
+                file_part.start, file_part.end, predicate=lambda match: match.name == 'episode'
+            ):
                 to_rename.extend(parts)
 
         return to_rename
@@ -416,5 +417,11 @@ def rules() -> Rebulk:
     - DO NOT define priority or dependency in each rule. Just define order here.
     - Only allowed dependency is TypeProcessor because we want to apply rules for certain types only
     """
-    return Rebulk().rules(RenamePartsToEpisodeNumbers, AppendPartToMovieTile, AppendLineToMovieTitle,
-                          AppendUsToMovieTitle, PrependXxxToMovieTitle, VhsAsMovieTitle)
+    return Rebulk().rules(
+        RenamePartsToEpisodeNumbers,
+        AppendPartToMovieTile,
+        AppendLineToMovieTitle,
+        AppendUsToMovieTitle,
+        PrependXxxToMovieTitle,
+        VhsAsMovieTitle,
+    )

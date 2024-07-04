@@ -41,10 +41,12 @@ from autosubliminal.util.common import (
     wait_for_internet_connection,
 )
 
-vcr = VCR(path_transformer=VCR.ensure_suffix('.yaml'),
-          record_mode='once',
-          match_on=['method', 'scheme', 'host', 'port', 'path', 'query', 'body'],
-          cassette_library_dir=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'cassettes', 'common'))
+vcr = VCR(
+    path_transformer=VCR.ensure_suffix('.yaml'),
+    record_mode='once',
+    match_on=['method', 'scheme', 'host', 'port', 'path', 'query', 'body'],
+    cassette_library_dir=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'cassettes', 'common'),
+)
 
 text_value = 'test'
 text_value_upper = 'TEST'
@@ -177,12 +179,7 @@ def test_to_obj_or_list() -> None:
 
 
 def test_to_dict() -> None:
-    obj_dict = {
-        'my_key1': 1,
-        'my_key2': '2',
-        'my_key3': [3],
-        'my_key5': {'my_sub_key5': 5}
-    }
+    obj_dict = {'my_key1': 1, 'my_key2': '2', 'my_key3': [3], 'my_key5': {'my_sub_key5': 5}}
     object_dict_with_key7 = dict(obj_dict)
     object_dict_with_key7.update({'my_key7': 7})
     my_args = ('my_key6',)
@@ -194,12 +191,7 @@ def test_to_dict() -> None:
 
 
 def test_to_dict_camelized() -> None:
-    obj_dict = {
-        'myKey1': 1,
-        'myKey2': '2',
-        'myKey3': [3],
-        'myKey5': {'mySubKey5': 5}
-    }
+    obj_dict = {'myKey1': 1, 'myKey2': '2', 'myKey3': [3], 'myKey5': {'mySubKey5': 5}}
     object_dict_with_key7 = dict(obj_dict)
     object_dict_with_key7.update({'myKey7': [{'mySubKey7a': '7a'}, {'mySubKey7b': '7b'}]})
     my_args = ('my_key6',)
@@ -250,8 +242,8 @@ def test_safe_str() -> None:
     assert safe_str(set_value_with_items, uppercase=True) == 'A,B'
     assert safe_str(dict_value_empty) == ''
     assert safe_str(dict_value_empty, uppercase=True) == ''
-    assert safe_str(dict_value_with_items) == '{\'1\': \'a\'}'
-    assert safe_str(dict_value_with_items, uppercase=True) == '{\'1\': \'A\'}'
+    assert safe_str(dict_value_with_items) == "{'1': 'a'}"
+    assert safe_str(dict_value_with_items, uppercase=True) == "{'1': 'A'}"
 
 
 def test_safe_text_default_value(mocker: MockerFixture) -> None:
@@ -274,7 +266,7 @@ def test_safe_lowercase() -> None:
     assert safe_lowercase(set_value_empty) == ''
     assert safe_lowercase(set_value_with_items_upper) == 'a,b'
     assert safe_lowercase(dict_value_empty) == ''
-    assert safe_lowercase(dict_value_with_items_upper) == '{\'1\': \'a\'}'
+    assert safe_lowercase(dict_value_with_items_upper) == "{'1': 'a'}"
 
 
 def test_safe_uppercase() -> None:
@@ -292,7 +284,7 @@ def test_safe_uppercase() -> None:
     assert safe_uppercase(set_value_empty) == ''
     assert safe_uppercase(set_value_with_items_upper) == 'A,B'
     assert safe_uppercase(dict_value_empty) == ''
-    assert safe_uppercase(dict_value_with_items_upper) == '{\'1\': \'A\'}'
+    assert safe_uppercase(dict_value_with_items_upper) == "{'1': 'A'}"
 
 
 def test_safe_trim() -> None:
@@ -314,7 +306,7 @@ def test_safe_trim() -> None:
     assert safe_trim(set_value_empty) == ''
     assert safe_trim(set_value_with_items) == 'a,b'
     assert safe_trim(dict_value_empty) == ''
-    assert safe_trim(dict_value_with_items) == '{\'1\': \'a\'}'
+    assert safe_trim(dict_value_with_items) == "{'1': 'a'}"
 
 
 def test_camelize() -> None:

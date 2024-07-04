@@ -50,6 +50,7 @@ class SettingsApi(RestResource):
         restart = config.write_config(section)
         if restart:
             from autosubliminal import system  # Import here to prevent api test from failing (circular import)
+
             system.restart()
 
 
@@ -88,11 +89,11 @@ class _GeneralApi(RestResource):
             'skip_hidden_dirs': autosubliminal.SKIPHIDDENDIRS,
             'detect_invalid_sub_language': autosubliminal.DETECTINVALIDSUBLANGUAGE,
             'detected_language_probability': autosubliminal.DETECTEDLANGUAGEPROBABILITY,
-            "manual_sub_sync": autosubliminal.MANUALSUBSYNC,
-            "ffmpeg_path": autosubliminal.FFMPEGPATH,
+            'manual_sub_sync': autosubliminal.MANUALSUBSYNC,
+            'ffmpeg_path': autosubliminal.FFMPEGPATH,
             'min_video_file_size': autosubliminal.MINVIDEOFILESIZE,
             'max_db_results': autosubliminal.MAXDBRESULTS,
-            'timestamp_format': autosubliminal.TIMESTAMPFORMAT
+            'timestamp_format': autosubliminal.TIMESTAMPFORMAT,
         }
 
         return to_dict(settings, camelize)
@@ -171,8 +172,11 @@ class _GeneralApi(RestResource):
         # Single setting partial update
         if general_setting_name:
             # Add a video path to the existing list of video paths (if not already in it)
-            if general_setting_name == 'video_paths' and 'video_path' in input_dict and os.path.isdir(
-                    input_dict['video_path']):
+            if (
+                general_setting_name == 'video_paths'
+                and 'video_path' in input_dict
+                and os.path.isdir(input_dict['video_path'])
+            ):
                 video_path = input_dict['video_path']
                 if not find_path_in_paths(video_path, autosubliminal.VIDEOPATHS, check_common_path=True):
                     autosubliminal.VIDEOPATHS.append(video_path)
@@ -205,7 +209,7 @@ class _LibraryApi(RestResource):
             'library_paths': autosubliminal.LIBRARYPATHS,
             'scan_library_interval': autosubliminal.SCANLIBRARYINTERVAL,
             'scan_library_at_startup': autosubliminal.SCANLIBRARYATSTARTUP,
-            'library_edit_mode': autosubliminal.LIBRARYEDITMODE
+            'library_edit_mode': autosubliminal.LIBRARYEDITMODE,
         }
 
         return to_dict(settings, camelize)
@@ -269,7 +273,7 @@ class _LoggingApi(RestResource):
             'log_external_libs': autosubliminal.LOGEXTERNALLIBS,
             'log_detailed_format': autosubliminal.LOGDETAILEDFORMAT,
             'log_reversed': autosubliminal.LOGREVERSED,
-            'log_level_console': autosubliminal.LOGLEVELCONSOLE
+            'log_level_console': autosubliminal.LOGLEVELCONSOLE,
         }
 
         return to_dict(settings, camelize)
@@ -332,7 +336,7 @@ class _WebserverApi(RestResource):
             'web_root': autosubliminal.WEBROOT,
             'user_name': autosubliminal.USERNAME,
             'password': autosubliminal.PASSWORD,
-            'launch_browser': autosubliminal.LAUNCHBROWSER
+            'launch_browser': autosubliminal.LAUNCHBROWSER,
         }
 
         return to_dict(settings, camelize)
@@ -407,7 +411,7 @@ class _SubliminalApi(RestResource):
             'opensubtitles_password': autosubliminal.OPENSUBTITLESPASSWORD,
             'opensubtitles_api_key': autosubliminal.OPENSUBTITLESAPIKEY,
             'legendastv_user_name': autosubliminal.LEGENDASTVUSERNAME,
-            'legendastv_password': autosubliminal.LEGENDASTVPASSWORD
+            'legendastv_password': autosubliminal.LEGENDASTVPASSWORD,
         }
 
         return to_dict(settings, camelize)
@@ -523,7 +527,7 @@ class _NameMappingApi(RestResource):
             'addic7ed_show_name_mapping': dict_to_list(autosubliminal.ADDIC7EDSHOWNAMEMAPPING),
             'alternative_show_name_mapping': dict_to_list(autosubliminal.ALTERNATIVESHOWNAMEMAPPING),
             'movie_name_mapping': dict_to_list(autosubliminal.MOVIENAMEMAPPING),
-            'alternative_movie_name_mapping': dict_to_list(autosubliminal.ALTERNATIVEMOVIENAMEMAPPING)
+            'alternative_movie_name_mapping': dict_to_list(autosubliminal.ALTERNATIVEMOVIENAMEMAPPING),
         }
 
         return to_dict(settings, camelize)
@@ -650,7 +654,7 @@ class _NotificationApi(RestResource):
             'pushbullet_api': autosubliminal.PUSHBULLETAPI,
             'notify_telegram': autosubliminal.NOTIFYTELEGRAM,
             'telegram_bot_api': autosubliminal.TELEGRAMBOTAPI,
-            'telegram_chat_id': autosubliminal.TELEGRAMCHATID
+            'telegram_chat_id': autosubliminal.TELEGRAMCHATID,
         }
 
         return to_dict(settings, camelize)
@@ -753,8 +757,9 @@ class _NotificationApi(RestResource):
 
                 # Getting request token
                 if 'token_key' not in input_dict and 'token_secret' not in input_dict:
-                    oauth_client = OAuth1Session(client_key=twitter_notifier.CONSUMER_KEY,
-                                                 client_secret=twitter_notifier.CONSUMER_SECRET)
+                    oauth_client = OAuth1Session(
+                        client_key=twitter_notifier.CONSUMER_KEY, client_secret=twitter_notifier.CONSUMER_SECRET
+                    )
                     try:
                         response = oauth_client.fetch_request_token(twitter_notifier.REQUEST_TOKEN_URL)
                     except Exception:
@@ -765,18 +770,20 @@ class _NotificationApi(RestResource):
                     result = {
                         'url': oauth_client.authorization_url(twitter_notifier.AUTHORIZATION_URL),
                         'token_key': response.get('oauth_token'),
-                        'token_secret': response.get('oauth_token_secret')
+                        'token_secret': response.get('oauth_token_secret'),
                     }
 
                     return to_dict(result, camelize)
 
                 # Getting access token
                 if 'token_key' in input_dict and 'token_secret' in input_dict and 'token_pin' in input_dict:
-                    oauth_client = OAuth1Session(client_key=twitter_notifier.CONSUMER_KEY,
-                                                 client_secret=twitter_notifier.CONSUMER_SECRET,
-                                                 resource_owner_key=input_dict['token_key'],
-                                                 resource_owner_secret=input_dict['token_secret'],
-                                                 verifier=input_dict['token_pin'])
+                    oauth_client = OAuth1Session(
+                        client_key=twitter_notifier.CONSUMER_KEY,
+                        client_secret=twitter_notifier.CONSUMER_SECRET,
+                        resource_owner_key=input_dict['token_key'],
+                        resource_owner_secret=input_dict['token_secret'],
+                        verifier=input_dict['token_pin'],
+                    )
                     try:
                         response = oauth_client.fetch_access_token(twitter_notifier.ACCESS_TOKEN_URL)
                     except Exception:
@@ -786,7 +793,7 @@ class _NotificationApi(RestResource):
                     # Create result
                     result = {
                         'twitter_key': response.get('oauth_token'),
-                        'twitter_secret': response.get('oauth_token_secret')
+                        'twitter_secret': response.get('oauth_token_secret'),
                     }
 
                     return to_dict(result, camelize)
@@ -829,7 +836,7 @@ class _PostProcessingApi(RestResource):
             'show_post_process_cmd': autosubliminal.SHOWPOSTPROCESSCMD,
             'show_post_process_args': autosubliminal.SHOWPOSTPROCESSCMDARGS,
             'movie_post_process_cmd': autosubliminal.MOVIEPOSTPROCESSCMD,
-            'movie_post_process_args': autosubliminal.MOVIEPOSTPROCESSCMDARGS
+            'movie_post_process_args': autosubliminal.MOVIEPOSTPROCESSCMDARGS,
         }
 
         return to_dict(settings, camelize)

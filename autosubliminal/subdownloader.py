@@ -45,11 +45,13 @@ class SubDownloader(object):
             processed = self.post_process()
             if not processed:
                 send_websocket_notification(
-                    'Unable to handle post processing for \'%s\'! Please check the log file!' % name, severity='error')
+                    "Unable to handle post processing for '%s'! Please check the log file!" % name, severity='error'
+                )
 
             # Show success message
             send_websocket_notification(
-                'Downloaded \'%s\' subtitle for \'%s\' from \'%s\'.' % (language, name, provider), severity='success')
+                "Downloaded '%s' subtitle for '%s' from '%s'." % (language, name, provider), severity='success'
+            )
 
     def save(self) -> bool:
         """
@@ -63,8 +65,9 @@ class SubDownloader(object):
             # Save the subtitle
             video = self._download_item.video
             encoding = 'utf-8' if autosubliminal.SUBTITLEUTF8ENCODING else None
-            subliminal.save_subtitles(video, self._download_item.subtitles, single=self._download_item.single,
-                                      encoding=encoding)
+            subliminal.save_subtitles(
+                video, self._download_item.subtitles, single=self._download_item.single, encoding=encoding
+            )
             return True
         else:
             log.error('Download item is not complete, skipping')
@@ -95,7 +98,6 @@ class SubDownloader(object):
         log.debug('Post processing subtitle')
 
         if autosubliminal.POSTPROCESS:
-
             # Individual processing: process after each subtitle download
             if autosubliminal.POSTPROCESSINDIVIDUAL:
                 return PostProcessor(self._download_item).run()

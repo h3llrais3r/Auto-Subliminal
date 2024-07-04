@@ -12,8 +12,17 @@ resources_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '
 
 def test_refine_episode() -> None:
     episode = Episode(name=os.path.join(resources_dir, 'Refine.Episode.mkv'), series='Refine', season=0, episode=0)
-    wanted_item = WantedItem(type='episode', title='Series', year=2018, season=1, episode=[1, 2], source='Source',
-                             quality='Resolution', codec='Codec', release_group='Group')
+    wanted_item = WantedItem(
+        type='episode',
+        title='Series',
+        year=2018,
+        season=1,
+        episode=[1, 2],
+        source='Source',
+        quality='Resolution',
+        codec='Codec',
+        release_group='Group',
+    )
     refine(episode, wanted_item)
     assert episode.series == 'Series'
     assert episode.year == 2018
@@ -27,8 +36,15 @@ def test_refine_episode() -> None:
 
 def test_refine_movie() -> None:
     movie = Movie(name=os.path.join(resources_dir, 'Refine.Movie.mkv'), title='Refine')
-    wanted_item = WantedItem(type='movie', title='Title', year=2018, source='Source', quality='Resolution',
-                             codec='Codec', release_group='Group')
+    wanted_item = WantedItem(
+        type='movie',
+        title='Title',
+        year=2018,
+        source='Source',
+        quality='Resolution',
+        codec='Codec',
+        release_group='Group',
+    )
     refine(movie, wanted_item)
     assert movie.title == 'Title'
     assert movie.year == 2018

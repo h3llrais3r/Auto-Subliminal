@@ -35,8 +35,7 @@ class TelegramNotifier(BaseNotifier):
         return autosubliminal.NOTIFYTELEGRAM
 
     def _send_message(self, message: str, **kwargs: Any) -> bool:
-        data = {'chat_id': autosubliminal.TELEGRAMCHATID,
-                'text': message}
+        data = {'chat_id': autosubliminal.TELEGRAMCHATID, 'text': message}
         try:
             response = requests.post(TELEGRAMURL % autosubliminal.TELEGRAMBOTAPI, data=data)
             if response.status_code != 200:

@@ -15,13 +15,22 @@ log = logging.getLogger(__name__)
 
 
 class MovieDetails(object):
-    """ Movie details class.
+    """Movie details class.
 
     Contains all the details of a movie that are fetched from the indexer.
     """
 
-    def __init__(self, path: str = None, imdb_id: str = None, title: str = None, year: int = None, overview: str = None,
-                 poster: str = None, missing_languages: List[str] = None, subtitles: List[Subtitle] = None) -> None:
+    def __init__(
+        self,
+        path: str = None,
+        imdb_id: str = None,
+        title: str = None,
+        year: int = None,
+        overview: str = None,
+        poster: str = None,
+        missing_languages: List[str] = None,
+        subtitles: List[Subtitle] = None,
+    ) -> None:
         self.path = path
         self.imdb_id = imdb_id
         self.title = title
@@ -119,23 +128,27 @@ class MovieDetails(object):
         :rtype: MovieDetails or None
         """
         if obj and isinstance(obj, Title):
-            return cls(imdb_id=obj.imdb_id,
-                       title=obj.title,
-                       year=obj.year,
-                       overview=obj.plot_outline,
-                       poster=obj.image.url)
+            return cls(
+                imdb_id=obj.imdb_id, title=obj.title, year=obj.year, overview=obj.plot_outline, poster=obj.image.url
+            )
 
         return None
 
 
 class MovieSettings(object):
-    """ Movie settings class.
+    """Movie settings class.
 
     Contains all the settings for a movie.
     """
 
-    def __init__(self, imdb_id: str = None, wanted_languages: List[str] = None, refine: bool = None,
-                 hearing_impaired: bool = None, utf8_encoding: bool = None) -> None:
+    def __init__(
+        self,
+        imdb_id: str = None,
+        wanted_languages: List[str] = None,
+        refine: bool = None,
+        hearing_impaired: bool = None,
+        utf8_encoding: bool = None,
+    ) -> None:
         self.imdb_id = imdb_id
         self.wanted_languages = wanted_languages
         self.refine = refine
@@ -189,8 +202,10 @@ class MovieSettings(object):
 
     @classmethod
     def default_settings(cls: Type['MovieSettings'], imdb_id: str) -> 'MovieSettings':
-        return cls(imdb_id=imdb_id,
-                   wanted_languages=get_wanted_languages(),
-                   refine=autosubliminal.REFINEVIDEO,
-                   hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
-                   utf8_encoding=autosubliminal.SUBTITLEUTF8ENCODING)
+        return cls(
+            imdb_id=imdb_id,
+            wanted_languages=get_wanted_languages(),
+            refine=autosubliminal.REFINEVIDEO,
+            hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED,
+            utf8_encoding=autosubliminal.SUBTITLEUTF8ENCODING,
+        )

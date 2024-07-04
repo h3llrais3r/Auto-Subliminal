@@ -27,8 +27,11 @@ def process_file(dirname: str, filename: str) -> Optional[WantedItem]:
     if autosubliminal.MINVIDEOFILESIZE:
         # MINVIDEOFILESIZE is size in MB
         if file_size < autosubliminal.MINVIDEOFILESIZE * 1024 * 1024:
-            log.warning('File size (%s) is lower than %sMB, skipping', humanize_bytes(file_size),
-                        autosubliminal.MINVIDEOFILESIZE)
+            log.warning(
+                'File size (%s) is lower than %sMB, skipping',
+                humanize_bytes(file_size),
+                autosubliminal.MINVIDEOFILESIZE,
+            )
             return None
 
     # Guess and create wanted item from guess
@@ -62,8 +65,11 @@ def _validate_guess(guess: Dict[str, Any]) -> Optional[Dict[str, Any]]:
     # Validate episode guess
     if _property_from_guess(guess, 'type') == 'episode':
         log.debug('Video guessed as episode')
-        if _property_from_guess(guess, 'title') is None or _property_from_guess(guess, 'season') is None \
-                or _property_from_guess(guess, 'episode') is None:
+        if (
+            _property_from_guess(guess, 'title') is None
+            or _property_from_guess(guess, 'season') is None
+            or _property_from_guess(guess, 'episode') is None
+        ):
             log.error('Could not guess all the mandatory elements for an episode')
             return None
 
@@ -111,7 +117,8 @@ def _enrich_wanted_item(wanted_item: WantedItem, file_path: str, file_size: int)
 
     # Enrich with movie data
     elif wanted_item.is_movie:
-        wanted_item.imdb_id, wanted_item.year = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(wanted_item.title,
-                                                                                                 wanted_item.year)
+        wanted_item.imdb_id, wanted_item.year = autosubliminal.MOVIEINDEXER.get_imdb_id_and_year(
+            wanted_item.title, wanted_item.year
+        )
 
     log.debug('Enriched WantedItem: %r', wanted_item)
