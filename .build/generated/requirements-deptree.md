@@ -4,200 +4,203 @@
 
 ```
 babelfish 0.6.1 A module to work with countries and languages
-|-- importlib-metadata >=4.6,<5.0
-|   `-- zipp >=0.5 
-`-- importlib-resources >=5.0,<6.0
-    `-- zipp >=3.1.0 
+├── importlib-metadata >=4.6,<5.0
+│   └── zipp >=0.5 
+└── importlib-resources >=5.0,<6.0
+    └── zipp >=3.1.0 
 cherrypy 18.10.0 Object-Oriented HTTP framework
-|-- cheroot >=8.2.1
-|   |-- jaraco-functools * 
-|   |   `-- more-itertools * 
-|   |-- more-itertools >=2.6 (circular dependency aborted here)
-|   `-- six >=1.11.0 
-|-- jaraco-collections *
-|   `-- jaraco-text * 
-|       |-- autocommand * 
-|       |-- importlib-resources * 
-|       |   `-- zipp >=3.1.0 
-|       |-- inflect * 
-|       |   `-- pydantic >=1.9.1 
-|       |       `-- typing-extensions >=4.2.0 
-|       |-- jaraco-context >=4.1 
-|       |-- jaraco-functools * 
-|       |   `-- more-itertools * 
-|       `-- more-itertools * (circular dependency aborted here)
-|-- more-itertools *
-|-- portend >=2.1.1
-|   `-- tempora >=1.8 
-|       |-- jaraco-functools >=1.20 
-|       |   `-- more-itertools * 
-|       `-- pytz * 
-|-- pywin32 >=227
-`-- zc-lockfile *
-    `-- setuptools * 
+├── cheroot >=8.2.1
+│   ├── jaraco-functools * 
+│   │   └── more-itertools * 
+│   └── more-itertools >=2.6 (circular dependency aborted here)
+├── jaraco-collections *
+│   └── jaraco-text * 
+│       ├── autocommand * 
+│       ├── importlib-resources * 
+│       │   └── zipp >=3.1.0 
+│       ├── inflect * 
+│       │   ├── more-itertools >=8.5.0 
+│       │   ├── typeguard >=4.0.1 
+│       │   │   ├── importlib-metadata >=3.6 
+│       │   │   │   └── zipp >=0.5 (circular dependency aborted here)
+│       │   │   └── typing-extensions >=4.10.0 
+│       │   └── typing-extensions * (circular dependency aborted here)
+│       ├── jaraco-context >=4.1 
+│       │   └── backports-tarfile * 
+│       ├── jaraco-functools * 
+│       │   └── more-itertools * (circular dependency aborted here)
+│       └── more-itertools * (circular dependency aborted here)
+├── more-itertools *
+├── portend >=2.1.1
+│   └── tempora >=1.8 
+│       └── jaraco-functools >=1.20 
+│           └── more-itertools * 
+├── pywin32 >=227
+└── zc-lockfile *
+    └── setuptools * 
 deathbycaptcha 0.1.1 A library aims to support deathbycaptcha.
-|-- requests *
-|   |-- certifi >=2017.4.17 
-|   |-- charset-normalizer >=2,<4 
-|   |-- idna >=2.5,<4 
-|   `-- urllib3 >=1.21.1,<3 
-`-- simplejson *
+├── requests *
+│   ├── certifi >=2017.4.17 
+│   ├── charset-normalizer >=2,<4 
+│   ├── idna >=2.5,<4 
+│   └── urllib3 >=1.21.1,<3 
+└── simplejson *
 dogpile-cache 1.3.3 A caching front-end based on the Dogpile lock.
-|-- decorator >=4.0.0
-|-- stevedore >=3.0.0
-|   `-- pbr >=2.0.0,<2.1.0 || >2.1.0 
-`-- typing-extensions >=4.0.1
+├── decorator >=4.0.0
+├── stevedore >=3.0.0
+│   └── pbr >=2.0.0,<2.1.0 || >2.1.0 
+└── typing-extensions >=4.0.1
 enzyme 0.5.2 Video metadata parser
-`-- importlib-resources >=4.6
-    `-- zipp >=3.1.0 
+└── importlib-resources >=4.6
+    └── zipp >=3.1.0 
 ffsubsync 0.4.25 Language-agnostic synchronization of subtitles with video.
-|-- auditok 0.1.5
-|-- chardet *
-|-- charset-normalizer *
-|-- faust-cchardet *
-|-- ffmpeg-python *
-|   `-- future * 
-|-- future >=0.18.2
-|-- numpy >=1.12.0
-|-- pysubs2 >=1.2.0
-|-- rich *
-|   |-- markdown-it-py >=2.2.0,<3.0.0 
-|   |   `-- mdurl >=0.1,<1.0 
-|   |-- pygments >=2.13.0,<3.0.0 
-|   `-- typing-extensions >=4.0.0,<5.0 
-|-- six *
-|-- srt >=3.0.0
-|-- tqdm *
-|   `-- colorama * 
-|-- typing-extensions *
-|-- webrtcvad *
-`-- webrtcvad-wheels *
+├── auditok 0.1.5
+├── chardet *
+├── charset-normalizer *
+├── faust-cchardet *
+├── ffmpeg-python *
+│   └── future * 
+├── future >=0.18.2
+├── numpy >=1.12.0
+├── pysubs2 >=1.2.0
+├── rich *
+│   ├── markdown-it-py >=2.2.0 
+│   │   └── mdurl >=0.1,<1.0 
+│   ├── pygments >=2.13.0,<3.0.0 
+│   └── typing-extensions >=4.0.0,<5.0 
+├── six *
+├── srt >=3.0.0
+├── tqdm *
+│   └── colorama * 
+├── typing-extensions *
+├── webrtcvad *
+└── webrtcvad-wheels *
 gitpython 3.1.43 GitPython is a Python library used to interact with Git repositories
-`-- gitdb >=4.0.1,<5
-    `-- smmap >=3.0.1,<6 
+└── gitdb >=4.0.1,<5
+    └── smmap >=3.0.1,<6 
 gntp 1.0.3 Growl Notification Transport Protocol for Python
 guessit 3.8.0 GuessIt - a library for guessing information from video filenames.
-|-- babelfish >=0.6.0
-|   |-- importlib-metadata >=4.6,<5.0 
-|   |   `-- zipp >=0.5 
-|   `-- importlib-resources >=5.0,<6.0 
-|       `-- zipp >=3.1.0 (circular dependency aborted here)
-|-- importlib-resources *
-|   `-- zipp >=3.1.0 
-|-- python-dateutil *
-|   `-- six >=1.5 
-`-- rebulk >=3.2.0
+├── babelfish >=0.6.0
+│   ├── importlib-metadata >=4.6,<5.0 
+│   │   └── zipp >=0.5 
+│   └── importlib-resources >=5.0,<6.0 
+│       └── zipp >=3.1.0 (circular dependency aborted here)
+├── importlib-resources *
+│   └── zipp >=3.1.0 
+├── python-dateutil *
+│   └── six >=1.5 
+└── rebulk >=3.2.0
 html5lib 1.1 HTML parser based on the WHATWG HTML specification
-|-- six >=1.9
-`-- webencodings *
+├── six >=1.9
+└── webencodings *
 imdbpie 5.6.4.dev0 Python IMDB client using the IMDB json web service made available for their iOS app.
-|-- attrs >=18.1.0
-|-- boto >=2.48.0
-|-- diskcache >=2.9.0
-|-- python-dateutil >=2.6.1
-|   `-- six >=1.5 
-|-- requests >=0.10
-|   |-- certifi >=2017.4.17 
-|   |-- charset-normalizer >=2,<4 
-|   |-- idna >=2.5,<4 
-|   `-- urllib3 >=1.21.1,<3 
-|-- setuptools >=65.5.1
-|-- six >=1.0.0
-|-- trans >=2.1.0
-`-- wheel >=0.38.0
+├── attrs >=18.1.0
+├── boto >=2.48.0
+├── diskcache >=2.9.0
+├── python-dateutil >=2.6.1
+│   └── six >=1.5 
+├── requests >=0.10
+│   ├── certifi >=2017.4.17 
+│   ├── charset-normalizer >=2,<4 
+│   ├── idna >=2.5,<4 
+│   └── urllib3 >=1.21.1,<3 
+├── setuptools >=65.5.1
+├── six >=1.0.0
+├── trans >=2.1.0
+└── wheel >=0.38.0
 jsonpickle 3.2.2 Python library for serializing arbitrary object graphs into JSON
 langdetect 1.0.9 Language detection library ported from Google's language-detection.
-`-- six *
+└── six *
 packaging 24.1 Core utilities for Python packages
 pysrt 1.1.2 SubRip (.srt) subtitle parser and writer
-`-- chardet *
+└── chardet *
 python-anticaptcha 1.0.0 Client library for solve captchas with Anticaptcha.com support.
-|-- requests *
-|   |-- certifi >=2017.4.17 
-|   |-- charset-normalizer >=2,<4 
-|   |-- idna >=2.5,<4 
-|   `-- urllib3 >=1.21.1,<3 
-`-- six *
+├── requests *
+│   ├── certifi >=2017.4.17 
+│   ├── charset-normalizer >=2,<4 
+│   ├── idna >=2.5,<4 
+│   └── urllib3 >=1.21.1,<3 
+└── six *
 python-dateutil 2.9.0.post0 Extensions to the standard Python datetime module
-`-- six >=1.5
+└── six >=1.5
 python-twitter 3.5 A Python wrapper around the Twitter API
-|-- future *
-|-- requests *
-|   |-- certifi >=2017.4.17 
-|   |-- charset-normalizer >=2,<4 
-|   |-- idna >=2.5,<4 
-|   `-- urllib3 >=1.21.1,<3 
-`-- requests-oauthlib *
-    |-- oauthlib >=3.0.0 
-    `-- requests >=2.0.0 
-        |-- certifi >=2017.4.17 
-        |-- charset-normalizer >=2,<4 
-        |-- idna >=2.5,<4 
-        `-- urllib3 >=1.21.1,<3 
+├── future *
+├── requests *
+│   ├── certifi >=2017.4.17 
+│   ├── charset-normalizer >=2,<4 
+│   ├── idna >=2.5,<4 
+│   └── urllib3 >=1.21.1,<3 
+└── requests-oauthlib *
+    ├── oauthlib >=3.0.0 
+    └── requests >=2.0.0 
+        ├── certifi >=2017.4.17 
+        ├── charset-normalizer >=2,<4 
+        ├── idna >=2.5,<4 
+        └── urllib3 >=1.21.1,<3 
 rebulk 3.2.0 Rebulk - Define simple search patterns in bulk to perform advanced matching on any string.
 requests 2.32.3 Python HTTP for Humans.
-|-- certifi >=2017.4.17
-|-- charset-normalizer >=2,<4
-|-- idna >=2.5,<4
-`-- urllib3 >=1.21.1,<3
+├── certifi >=2017.4.17
+├── charset-normalizer >=2,<4
+├── idna >=2.5,<4
+└── urllib3 >=1.21.1,<3
 requests-oauthlib 2.0.0 OAuthlib authentication support for Requests.
-|-- oauthlib >=3.0.0
-`-- requests >=2.0.0
-    |-- certifi >=2017.4.17 
-    |-- charset-normalizer >=2,<4 
-    |-- idna >=2.5,<4 
-    `-- urllib3 >=1.21.1,<3 
+├── oauthlib >=3.0.0
+└── requests >=2.0.0
+    ├── certifi >=2017.4.17 
+    ├── charset-normalizer >=2,<4 
+    ├── idna >=2.5,<4 
+    └── urllib3 >=1.21.1,<3 
 schema 0.7.7 Simple data validation library
 simplejson 3.19.2 Simple, fast, extensible JSON encoder/decoder for Python
 subliminal 2.1.0.dev0 Subtitles, faster than your thoughts
-|-- appdirs >=1.3
-|-- babelfish >=0.5.2
-|   |-- importlib-metadata >=4.6,<5.0 
-|   |   `-- zipp >=0.5 
-|   `-- importlib-resources >=5.0,<6.0 
-|       `-- zipp >=3.1.0 (circular dependency aborted here)
-|-- beautifulsoup4 >=4.4.0
-|   `-- soupsieve >1.2 
-|-- chardet >=2.3.0
-|-- click >=4.0
-|   `-- colorama * 
-|-- dogpile-cache >=0.6.0
-|   |-- decorator >=4.0.0 
-|   |-- stevedore >=3.0.0 
-|   |   `-- pbr >=2.0.0,<2.1.0 || >2.1.0 
-|   `-- typing-extensions >=4.0.1 
-|-- enzyme >=0.4.1
-|   `-- importlib-resources >=4.6 
-|       `-- zipp >=3.1.0 
-|-- guessit >=3.0.0
-|   |-- babelfish >=0.6.0 
-|   |   |-- importlib-metadata >=4.6,<5.0 
-|   |   |   `-- zipp >=0.5 
-|   |   `-- importlib-resources >=5.0,<6.0 
-|   |       `-- zipp >=3.1.0 (circular dependency aborted here)
-|   |-- importlib-resources * (circular dependency aborted here)
-|   |-- python-dateutil * 
-|   |   `-- six >=1.5 
-|   `-- rebulk >=3.2.0 
-|-- pysrt >=1.0.1
-|   `-- chardet * 
-|-- pytz >=2012c
-|-- rarfile >=2.7
-|-- requests >=2.0
-|   |-- certifi >=2017.4.17 
-|   |-- charset-normalizer >=2,<4 
-|   |-- idna >=2.5,<4 
-|   `-- urllib3 >=1.21.1,<3 
-|-- six >=1.9.0
-`-- stevedore >=1.20.0
-    `-- pbr >=2.0.0,<2.1.0 || >2.1.0 
+├── appdirs >=1.3
+├── babelfish >=0.5.2
+│   ├── importlib-metadata >=4.6,<5.0 
+│   │   └── zipp >=0.5 
+│   └── importlib-resources >=5.0,<6.0 
+│       └── zipp >=3.1.0 (circular dependency aborted here)
+├── beautifulsoup4 >=4.4.0
+│   └── soupsieve >1.2 
+├── chardet >=2.3.0
+├── click >=4.0
+│   └── colorama * 
+├── dogpile-cache >=0.6.0
+│   ├── decorator >=4.0.0 
+│   ├── stevedore >=3.0.0 
+│   │   └── pbr >=2.0.0,<2.1.0 || >2.1.0 
+│   └── typing-extensions >=4.0.1 
+├── enzyme >=0.4.1
+│   └── importlib-resources >=4.6 
+│       └── zipp >=3.1.0 
+├── guessit >=3.0.0
+│   ├── babelfish >=0.6.0 
+│   │   ├── importlib-metadata >=4.6,<5.0 
+│   │   │   └── zipp >=0.5 
+│   │   └── importlib-resources >=5.0,<6.0 
+│   │       └── zipp >=3.1.0 (circular dependency aborted here)
+│   ├── importlib-resources * (circular dependency aborted here)
+│   ├── python-dateutil * 
+│   │   └── six >=1.5 
+│   └── rebulk >=3.2.0 
+├── pysrt >=1.0.1
+│   └── chardet * 
+├── pytz >=2012c
+├── rarfile >=2.7
+├── requests >=2.0
+│   ├── certifi >=2017.4.17 
+│   ├── charset-normalizer >=2,<4 
+│   ├── idna >=2.5,<4 
+│   └── urllib3 >=1.21.1,<3 
+├── six >=1.9.0
+└── stevedore >=1.20.0
+    └── pbr >=2.0.0,<2.1.0 || >2.1.0 
 tailer 0.4.1 Python tail is a simple implementation of GNU tail and head.
 tvdb_api 3.0.0 Client implementation for TheTVDB API v2 and v3
-|-- certifi >=14.05.14
-|-- python-dateutil >=2.5.3
-|   `-- six >=1.5 
-|-- six >=1.10.0
-`-- urllib3 >=1.15.1
+├── certifi >=14.05.14
+├── python-dateutil >=2.5.3
+│   └── six >=1.5 
+├── six >=1.10.0
+└── urllib3 >=1.15.1
 unidecode 1.3.8 ASCII transliterations of Unicode text
 ws4py 0.5.1 WebSocket client and server library for Python 2 and 3 as well as PyPy
 ```
