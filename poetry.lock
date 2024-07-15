@@ -1552,19 +1552,20 @@ files = [
 
 [[package]]
 name = "pigar"
-version = "2.1.4"
+version = "2.1.6"
 description = "A tool to generate requirements.txt for Python project."
 category = "dev"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pigar-2.1.4-py3-none-any.whl", hash = "sha256:c83800e55bfe9dfa0546ccf893ae06b9faed7092f3052b45684177d73fa9d28e"},
-    {file = "pigar-2.1.4.tar.gz", hash = "sha256:6306d0b4175e4ec9d9209b4156711b46ef479ef2b2ce0423991f0966166d45de"},
+    {file = "pigar-2.1.6-py3-none-any.whl", hash = "sha256:cf4d9e2f69fd94e3bba714639da9eac21e1691b50a137b9b2eb7eb746516c466"},
+    {file = "pigar-2.1.6.tar.gz", hash = "sha256:a524cd7b9aa67efba3a403988e4630676b05831fcbcb7ecaa01377e88abb5e96"},
 ]
 
 [package.dependencies]
 aiohttp = ">=3.9"
 click = ">=8.1"
+colorama = "*"
 nbformat = ">=5.7"
 
 [[package]]
@@ -2959,4 +2960,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<4"
-content-hash = "9fdbb1f06a15c6530e898d543139a77da4cd048a34bfb79304d57f7ca3e789aa"
+content-hash = "a5325f045889b7e6c52ef7ab0356313044b12abeb0c8a61c060a561c2ff6a671"
