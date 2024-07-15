@@ -6,6 +6,7 @@ from typing import Any
 from subliminal.video import Episode, Movie, Video
 
 from autosubliminal.core.item import WantedItem
+from autosubliminal.util.common import to_list
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ def refine(video: Video, wanted_item: WantedItem, **kwargs: Any) -> None:
       * :attr:`~subliminal.video.Episode.series`
       * :attr:`~subliminal.video.Episode.year`
       * :attr:`~subliminal.video.Episode.season`
-      * :attr:`~subliminal.video.Episode.episode`
+      * :attr:`~subliminal.video.Episode.episodes`
       * :attr:`~subliminal.video.Episode.source`
       * :attr:`~subliminal.video.Episode.resolution`
       * :attr:`~subliminal.video.Episode.video_codec`
@@ -46,7 +47,7 @@ def refine(video: Video, wanted_item: WantedItem, **kwargs: Any) -> None:
         video.series = _get_video_attr(wanted_item.title, video.series)
         video.year = _get_video_attr(wanted_item.year, video.year)
         video.season = _get_video_attr(wanted_item.season, video.season)
-        video.episode = _get_video_attr(wanted_item.episode, video.episode)
+        video.episodes = to_list(_get_video_attr(wanted_item.episode, video.episode), obj_type=int, default_value=[])
         video.source = _get_video_attr(wanted_item.source, video.source)
         video.resolution = _get_video_attr(wanted_item.quality, video.resolution)
         video.video_codec = _get_video_attr(wanted_item.codec, video.video_codec)

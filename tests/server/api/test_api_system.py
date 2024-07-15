@@ -39,13 +39,13 @@ class MyScheduler(object):
 
 
 episode_scores_json = (
-    '{"codec": 2, "default": 0, "episode": 30, "hash": 359, "hearingImpaired": 1, "max": 360, '
-    '"min": 0, "quality": 2, "releaseGroup": 15, "season": 30, "source": 7, "title": 180, "year": 90}'
+    '{"codec": 2, "country": 135, "default": 0, "episode": 45, "hash": 809, "hearingImpaired": 1, "max": 810, '
+    '"min": 0, "quality": 2, "releaseGroup": 15, "season": 45, "source": 7, "title": 405, "year": 135}'
 )
 
 movie_scores_json = (
-    '{"codec": 2, "default": 0, "hash": 119, "hearingImpaired": 1, "max": 120, "min": 0, '
-    '"quality": 2, "releaseGroup": 15, "source": 7, "title": 60, "year": 30}'
+    '{"codec": 2, "country": 45, "default": 0, "hash": 269, "hearingImpaired": 1, "max": 270, "min": 0, '
+    '"quality": 2, "releaseGroup": 15, "source": 7, "title": 135, "year": 45}'
 )
 
 settings_json = (

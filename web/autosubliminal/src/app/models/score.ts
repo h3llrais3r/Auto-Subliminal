@@ -2,6 +2,7 @@ export interface MovieScores {
   hash: number;
   title: number;
   year: number;
+  country: number;
   source: number;
   quality: number;
   codec: number;

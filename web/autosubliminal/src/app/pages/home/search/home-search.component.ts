@@ -1,5 +1,5 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnDestroy, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,14 +9,14 @@ import { DialogModule } from 'primeng/dialog';
 import { PanelModule } from 'primeng/panel';
 import { TableModule } from 'primeng/table';
 import { appSettings } from '../../../app-settings.service';
-import { ItemService } from '../../../services/api/item.service';
-import { MessageService } from '../../../services/message.service';
 import { LoadingComponent } from '../../../components/loading/loading.component';
 import { MessageComponent } from '../../../components/message/message.component';
 import { SubtitleSyncComponent } from '../../../components/subtitle-sync/subtitle-sync.component';
 import { WantedItem } from '../../../models/item';
 import { EpisodeScores, MovieScores } from '../../../models/score';
 import { SavedSubtitle, Subtitle } from '../../../models/subtitle';
+import { ItemService } from '../../../services/api/item.service';
+import { MessageService } from '../../../services/message.service';
 import { getDereferUrl, getPlayVideoUrl } from '../../../utils/common-utils';
 import { toNumber } from '../../../utils/number-utils';
 import { joinPaths } from '../../../utils/path-utils';
@@ -113,6 +113,9 @@ export class HomeSearchComponent implements OnInit, OnDestroy {
     }
     if (this.matches.includes('year')) {
       matches.push(`Year: ${this.scores.year}`);
+    }
+    if (this.matches.includes('country')) {
+      matches.push(`Country: ${this.scores.country}`);
     }
     // Only available for episodes
     if (this.wantedItem.isEpisode) {

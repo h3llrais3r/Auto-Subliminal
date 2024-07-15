@@ -10,12 +10,11 @@ import babelfish
 import subliminal
 from subliminal.core import ProviderPool
 from subliminal.providers.addic7ed import Addic7edSubtitle
-from subliminal.providers.legendastv import LegendasTVSubtitle
+from subliminal.providers.gestdown import GestdownSubtitle
 from subliminal.providers.napiprojekt import NapiProjektSubtitle
 from subliminal.providers.opensubtitles import OpenSubtitlesSubtitle
+from subliminal.providers.opensubtitlescom import OpenSubtitlesComSubtitle
 from subliminal.providers.podnapisi import PodnapisiSubtitle
-from subliminal.providers.shooter import ShooterSubtitle
-from subliminal.providers.thesubdb import TheSubDBSubtitle
 from subliminal.providers.tvsubtitles import TVsubtitlesSubtitle
 from subliminal.video import Episode, Movie, Video
 
@@ -28,12 +27,11 @@ from autosubliminal.core.queue import (
     release_wanted_queue_lock_on_exception,
 )
 from autosubliminal.core.scheduler import ScheduledProcess
-from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.db import WantedItemsDb
 from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.providers import provider_cache
 from autosubliminal.providers.addic7ed_custom import Addic7edSubtitle as CustomAddic7edSubtitle
-from autosubliminal.providers.opensubtitles_com import OpenSubtitlesComSubtitle
+from autosubliminal.providers.opensubtitles_com import OpenSubtitlesComSubtitle as CustomOpenSubtitlesComSubtitle
 from autosubliminal.subdownloader import SubDownloader
 from autosubliminal.subsynchronizer import SubSynchronizer
 from autosubliminal.util.common import camelize, set_rw_and_remove, wait_for_internet_connection
@@ -161,7 +159,11 @@ def search_subtitle(wanted_item_index: int, lang: str) -> Tuple[List[Dict[str, A
                 # Use subliminal default compute_score
                 for index, subtitle, score in sorted(
                     [
-                        (index, s, subliminal.compute_score(s, video, autosubliminal.PREFERHEARINGIMPAIRED))
+                        (
+                            index,
+                            s,
+                            subliminal.compute_score(s, video, hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED),
+                        )
                         for index, s in enumerate(subtitles)
                     ],
                     key=operator.itemgetter(2),
@@ -641,7 +643,7 @@ def _get_provider_pool() -> Optional[ProviderPool]:
         return None
 
 
-def _get_wanted_subtitle(subtitles: List[Subtitle], subtitle_index: int) -> Any:
+def _get_wanted_subtitle(subtitles: List[subliminal.Subtitle], subtitle_index: int) -> Any:
     log.debug('Getting wanted subtitle')
     return subtitles[int(subtitle_index)]
 
@@ -706,22 +708,20 @@ def _get_min_match_score(video: Video, is_manual: bool = False) -> int:
 def _get_releases(subtitle: subliminal.Subtitle) -> List[str]:
     log.debug('Getting supported releases')
     releases: List[str] = []
-    if isinstance(subtitle, (Addic7edSubtitle, CustomAddic7edSubtitle)):
+    if isinstance(subtitle, Addic7edSubtitle):
+        releases.extend([subtitle.release_group])
+    elif isinstance(subtitle, CustomAddic7edSubtitle):
         releases.extend([subtitle.version])
-    elif isinstance(subtitle, LegendasTVSubtitle):
-        releases.extend([subtitle.archive.name])
+    elif isinstance(subtitle, GestdownSubtitle):
+        releases.extend([subtitle.release_group])
     elif isinstance(subtitle, NapiProjektSubtitle):
-        releases.extend([subtitle.content])
+        releases.extend([subtitle.text])
     elif isinstance(subtitle, OpenSubtitlesSubtitle):
         releases.extend([subtitle.movie_release_name])
-    elif isinstance(subtitle, OpenSubtitlesComSubtitle):
+    elif isinstance(subtitle, (OpenSubtitlesComSubtitle, CustomOpenSubtitlesComSubtitle)):
         releases.extend([subtitle.release])
     elif isinstance(subtitle, PodnapisiSubtitle):
         releases.extend(subtitle.releases)
-    elif isinstance(subtitle, ShooterSubtitle):
-        releases.extend([subtitle.hash])
-    elif isinstance(subtitle, TheSubDBSubtitle):
-        releases.extend([subtitle.hash])
     elif isinstance(subtitle, TVsubtitlesSubtitle):
         releases.extend([subtitle.release])
     return releases

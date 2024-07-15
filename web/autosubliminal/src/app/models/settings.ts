@@ -93,8 +93,6 @@ export class SubliminalSettings {
   opensubtitlesUserName: string;
   opensubtitlesPassword: string;
   opensubtitlesApiKey: string;
-  legendastvUserName: string;
-  legendastvPassword: string;
 
   constructor(obj?: any) {
     Object.assign(this, obj);

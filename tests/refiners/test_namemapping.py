@@ -18,7 +18,7 @@ autosubliminal.MOVIENAMEMAPPING = {'refine': 'tt123456'}
 
 
 def test_refine_episode() -> None:
-    episode = Episode(name=os.path.join(resources_dir, 'Refine.Episode.mkv'), series='Refine', season=0, episode=0)
+    episode = Episode(name=os.path.join(resources_dir, 'Refine.Episode.mkv'), series='Refine', season=0, episodes=0)
     refine(episode)
     assert episode.alternative_series == ['series']
     assert episode.series_tvdb_id == 123456

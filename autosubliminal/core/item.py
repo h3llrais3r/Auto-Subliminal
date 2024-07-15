@@ -8,10 +8,9 @@ from abc import ABC
 from typing import Any, Callable, Dict, List, Literal, Optional, Type, TypedDict, Union, cast
 
 import babelfish
-from subliminal.video import Video
+import subliminal
 
 import autosubliminal
-from autosubliminal.core.subtitle import Subtitle
 from autosubliminal.util.common import (
     find_path_in_paths,
     get_today,
@@ -31,7 +30,7 @@ log = logging.getLogger(__name__)
 ItemType = Literal['episode', 'movie']
 
 WantedItemSubtitles = TypedDict(
-    'WantedItemSubtitles', {'subtitles': List[Subtitle], 'language': babelfish.Language, 'single': bool}
+    'WantedItemSubtitles', {'subtitles': List[subliminal.Subtitle], 'language': babelfish.Language, 'single': bool}
 )
 
 
@@ -234,7 +233,7 @@ class WantedItem(_BaseItem):
         self.languages: List[str] = []  # List of languages
         self.timestamp: str = None  # File timestamp string - format '%Y-%m-%d %H:%M:%S'
 
-        self.video: Video = None  # Subliminal Video object
+        self.video: subliminal.Video = None  # Subliminal Video object
         self.found_subtitles: WantedItemSubtitles = None  # List of found subtitles after a manual search
 
     @property

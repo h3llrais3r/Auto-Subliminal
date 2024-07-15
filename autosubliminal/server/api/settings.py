@@ -410,8 +410,6 @@ class _SubliminalApi(RestResource):
             'opensubtitles_user_name': autosubliminal.OPENSUBTITLESUSERNAME,
             'opensubtitles_password': autosubliminal.OPENSUBTITLESPASSWORD,
             'opensubtitles_api_key': autosubliminal.OPENSUBTITLESAPIKEY,
-            'legendastv_user_name': autosubliminal.LEGENDASTVUSERNAME,
-            'legendastv_password': autosubliminal.LEGENDASTVPASSWORD,
         }
 
         return to_dict(settings, camelize)
@@ -470,10 +468,6 @@ class _SubliminalApi(RestResource):
                 autosubliminal.OPENSUBTITLESPASSWORD = input_dict['opensubtitles_password']
             if 'opensubtitles_api_key' in input_dict:
                 autosubliminal.OPENSUBTITLESAPIKEY = input_dict['opensubtitles_api_key']
-            if 'legendastv_user_name' in input_dict:
-                autosubliminal.LEGENDASTVUSERNAME = input_dict['legendastv_user_name']
-            if 'legendastv_password' in input_dict:
-                autosubliminal.LEGENDASTVPASSWORD = input_dict['legendastv_password']
 
             # Calculate show min match score
             show_min_match_score = autosubliminal.SHOWMINMATCHSCOREDEFAULT  # default score, not editable

@@ -16,7 +16,8 @@ from subliminal.exceptions import (
     ProviderError,
     ServiceUnavailable,
 )
-from subliminal.subtitle import Subtitle, fix_line_ending, guess_matches
+from subliminal.matches import guess_matches
+from subliminal.subtitle import Subtitle, fix_line_ending
 from subliminal.utils import sanitize
 from subliminal.video import Episode, Movie
 

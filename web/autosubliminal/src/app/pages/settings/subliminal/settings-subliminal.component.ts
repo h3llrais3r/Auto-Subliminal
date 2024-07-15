@@ -100,9 +100,7 @@ export class SettingsSubliminalComponent implements OnInit {
       addic7edUserId: [subliminalSettings.addic7edUserId, []],
       opensubtitlesUserName: [subliminalSettings.opensubtitlesUserName, []],
       opensubtitlesPassword: [subliminalSettings.opensubtitlesPassword, []],
-      opensubtitlesApiKey: [subliminalSettings.opensubtitlesApiKey, []],
-      legendastvUserName: [subliminalSettings.legendastvUserName, []],
-      legendastvPassword: [subliminalSettings.legendastvPassword, []]
+      opensubtitlesApiKey: [subliminalSettings.opensubtitlesApiKey, []]
     });
   }
 
@@ -130,8 +128,6 @@ export class SettingsSubliminalComponent implements OnInit {
     settings.opensubtitlesUserName = FormUtils.getFormControlValue<string>(this.settingsForm, 'opensubtitlesUserName');
     settings.opensubtitlesPassword = FormUtils.getFormControlValue<string>(this.settingsForm, 'opensubtitlesPassword');
     settings.opensubtitlesApiKey = FormUtils.getFormControlValue<string>(this.settingsForm, 'opensubtitlesApiKey');
-    settings.legendastvUserName = FormUtils.getFormControlValue<string>(this.settingsForm, 'legendastvUserName');
-    settings.legendastvPassword = FormUtils.getFormControlValue<string>(this.settingsForm, 'legendastvPassword');
     return settings;
   }
 }

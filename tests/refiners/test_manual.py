@@ -11,7 +11,7 @@ resources_dir = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..', '
 
 
 def test_refine_episode() -> None:
-    episode = Episode(name=os.path.join(resources_dir, 'Refine.Episode.mkv'), series='Refine', season=0, episode=0)
+    episode = Episode(name=os.path.join(resources_dir, 'Refine.Episode.mkv'), series='Refine', season=0, episodes=0)
     wanted_item = WantedItem(
         type='episode',
         title='Series',

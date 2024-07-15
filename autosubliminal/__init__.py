@@ -155,8 +155,6 @@ ADDIC7EDUSERID: str = ''
 OPENSUBTITLESUSERNAME: str = ''
 OPENSUBTITLESPASSWORD: str = ''
 OPENSUBTITLESAPIKEY: str = ''
-LEGENDASTVUSERNAME: str = ''
-LEGENDASTVPASSWORD: str = ''
 
 # Namemapping config section
 SHOWNAMEMAPPING: Dict[str, str] = {}
@@ -301,12 +299,17 @@ def _init_scores() -> None:
     from subliminal.score import episode_scores, movie_scores
 
     # Calculate default scores (minimal score needed for a match)
+    # Since latest subliminal version, we need to include country as well by default
     global SHOWMINMATCHSCOREDEFAULT
     SHOWMINMATCHSCOREDEFAULT = (
-        episode_scores['series'] + episode_scores['year'] + episode_scores['season'] + episode_scores['episode']
+        episode_scores['series']
+        + episode_scores['year']
+        + episode_scores['season']
+        + episode_scores['episode']
+        + episode_scores['country']
     )
-    global SHOWMINMATCHSCORE
-    MOVIEMINMATCHSCOREDEFAULT = movie_scores['title'] + movie_scores['year']
+    global MOVIEMINMATCHSCOREDEFAULT
+    MOVIEMINMATCHSCOREDEFAULT = movie_scores['title'] + movie_scores['year'] + episode_scores['country']
 
     # Init scores
     global SHOWMINMATCHSCORE
