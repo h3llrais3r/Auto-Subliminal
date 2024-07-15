@@ -152,24 +152,26 @@ requests-oauthlib 2.0.0 OAuthlib authentication support for Requests.
     └── urllib3 >=1.21.1,<3 
 schema 0.7.7 Simple data validation library
 simplejson 3.19.2 Simple, fast, extensible JSON encoder/decoder for Python
-subliminal 2.1.0.dev0 Subtitles, faster than your thoughts
-├── appdirs >=1.3
-├── babelfish >=0.5.2
+subliminal 2.2.1 Subtitles, faster than your thoughts
+├── babelfish >=0.6.1
 │   ├── importlib-metadata >=4.6,<5.0 
 │   │   └── zipp >=0.5 
 │   └── importlib-resources >=5.0,<6.0 
 │       └── zipp >=3.1.0 (circular dependency aborted here)
 ├── beautifulsoup4 >=4.4.0
 │   └── soupsieve >1.2 
-├── chardet >=2.3.0
-├── click >=4.0
+├── chardet >=5.0
+├── click >=8.0
 │   └── colorama * 
-├── dogpile-cache >=0.6.0
+├── click-option-group >=0.5.6
+│   └── click >=7.0,<9 
+│       └── colorama * 
+├── dogpile-cache >=1.0
 │   ├── decorator >=4.0.0 
 │   ├── stevedore >=3.0.0 
 │   │   └── pbr >=2.0.0,<2.1.0 || >2.1.0 
 │   └── typing-extensions >=4.0.1 
-├── enzyme >=0.4.1
+├── enzyme >=0.5.0
 │   └── importlib-resources >=4.6 
 │       └── zipp >=3.1.0 
 ├── guessit >=3.0.0
@@ -182,18 +184,18 @@ subliminal 2.1.0.dev0 Subtitles, faster than your thoughts
 │   ├── python-dateutil * 
 │   │   └── six >=1.5 
 │   └── rebulk >=3.2.0 
-├── pysrt >=1.0.1
-│   └── chardet * 
-├── pytz >=2012c
+├── platformdirs >=3
+├── pysubs2 >=1.7
 ├── rarfile >=2.7
 ├── requests >=2.0
 │   ├── certifi >=2017.4.17 
 │   ├── charset-normalizer >=2,<4 
 │   ├── idna >=2.5,<4 
 │   └── urllib3 >=1.21.1,<3 
-├── six >=1.9.0
-└── stevedore >=1.20.0
-    └── pbr >=2.0.0,<2.1.0 || >2.1.0 
+├── srt >=3.5
+├── stevedore >=3.0
+│   └── pbr >=2.0.0,<2.1.0 || >2.1.0 
+└── tomli >=2
 tailer 0.4.1 Python tail is a simple implementation of GNU tail and head.
 tvdb_api 3.0.0 Client implementation for TheTVDB API v2 and v3
 ├── certifi >=14.05.14
