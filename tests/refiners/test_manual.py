@@ -27,7 +27,8 @@ def test_refine_episode() -> None:
     assert episode.series == 'Series'
     assert episode.year == 2018
     assert episode.season == 1
-    assert episode.episode == 1  # Only first episode is kept when refining
+    assert episode.episodes == [1, 2]
+    assert episode.episode == 1  # Only first episode is return when there are multiple episodes
     assert episode.source == 'Source'
     assert episode.resolution == 'Resolution'
     assert episode.video_codec == 'Codec'

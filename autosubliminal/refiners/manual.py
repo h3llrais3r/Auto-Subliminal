@@ -47,7 +47,9 @@ def refine(video: Video, wanted_item: WantedItem, **kwargs: Any) -> None:
         video.series = _get_video_attr(wanted_item.title, video.series)
         video.year = _get_video_attr(wanted_item.year, video.year)
         video.season = _get_video_attr(wanted_item.season, video.season)
-        video.episodes = to_list(_get_video_attr(wanted_item.episode, video.episode), obj_type=int, default_value=[])
+        video.episodes = to_list(
+            _get_video_attr(wanted_item.episode, video.episodes, allow_list=True), obj_type=int, default_value=[]
+        )
         video.source = _get_video_attr(wanted_item.source, video.source)
         video.resolution = _get_video_attr(wanted_item.quality, video.resolution)
         video.video_codec = _get_video_attr(wanted_item.codec, video.video_codec)
@@ -66,9 +68,9 @@ def refine(video: Video, wanted_item: WantedItem, **kwargs: Any) -> None:
         return None
 
 
-def _get_video_attr(attr: Any, default_attr: Any) -> Any:
-    # Video can only work with single values, so take first element from the list if attr is a list
+def _get_video_attr(attr: Any, default_attr: Any, allow_list: bool = False) -> Any:
+    # If no list is allowed, take first element from the list if attr is a list
     if isinstance(attr, list) and len(attr) > 0:
-        return attr[0]
+        return attr if allow_list else attr[0]
     else:
         return attr if attr else default_attr
