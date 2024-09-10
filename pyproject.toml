@@ -52,7 +52,7 @@ rebulk = "3.2.0"
 requests = "2.32.3"
 requests-oauthlib = "2.0.0"
 schema = "0.7.7"
-simplejson = "3.19.2"
+simplejson = "3.19.3"
 subliminal = "2.2.1"
 tailer = "0.4.1"
 tvdb_api = { git = "https://github.com/h3llrais3r/tvdb_api.git", rev = "32228cc4af864398198e280bbafbd1ec98567d8f" }
