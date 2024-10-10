@@ -86,7 +86,7 @@ requests-oauthlib==2.0.0
 # autosubliminal\core\websocket.py: 9
 schema==0.7.7
 # autosubliminal\__init__.py: 15
-stevedore==5.2.0
+stevedore==5.3.0
 # autosubliminal\__init__.py: 299,331,332,333
 # autosubliminal\core\item.py: 11
 # autosubliminal\providers\addic7ed_custom.py: 12,13,14,15,16,17,18,19,20
@@ -111,7 +111,7 @@ tvdb_api==3.0.0
 # autosubliminal\core\indexer.py: 22
 Unidecode==1.3.8
 # autosubliminal\subsynchronizer.py: 26
-webrtcvad-wheels==2.0.11.post1
+webrtcvad-wheels==2.0.14
 # autosubliminal\__init__.py: 16
 # autosubliminal\application.py: 14,15
 # autosubliminal\core\websocket.py: 10,11
