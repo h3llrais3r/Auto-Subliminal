@@ -37,7 +37,7 @@ jobs:
     - name: Set up python
       uses: actions/setup-python@v4
       with:
-        python-version: "3.8" # keep in sync with min required python version of application
+        python-version: "3.9" # keep in sync with min required python version of application
 
     - name: Print python version
       run: |
