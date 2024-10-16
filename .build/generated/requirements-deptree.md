@@ -42,7 +42,7 @@ dogpile-cache 1.3.3 A caching front-end based on the Dogpile lock.
 |   `-- pbr >=2.0.0 
 `-- typing-extensions >=4.0.1
 enzyme 0.5.2 Video metadata parser
-ffsubsync 0.4.25 Language-agnostic synchronization of subtitles with video.
+ffsubsync 0.4.26 Language-agnostic synchronization of subtitles with video.
 |-- auditok 0.1.5
 |-- chardet *
 |-- charset-normalizer *
