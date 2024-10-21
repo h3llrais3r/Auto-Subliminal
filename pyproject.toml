@@ -70,7 +70,7 @@ vcrpy = "6.0.2"
 mypy = "1.12.1"
 pigar = "2.1.6"
 ruff = "0.7.0"
-types-requests = "2.31.0.6"
+types-requests = "2.32.0.20241016"
 types-setuptools = "75.2.0.20241019"
 types-python-dateutil = "2.9.0.20241003"
 
