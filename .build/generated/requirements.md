@@ -39,7 +39,7 @@ jaraco-collections==5.1.0 ; python_full_version >= "3.9.1" and python_version < 
 jaraco-context==6.0.1 ; python_full_version >= "3.9.1" and python_version < "4"
 jaraco-functools==4.1.0 ; python_full_version >= "3.9.1" and python_version < "4"
 jaraco-text==4.0.0 ; python_full_version >= "3.9.1" and python_version < "4"
-jsonpickle==3.3.0 ; python_full_version >= "3.9.1" and python_version < "4"
+jsonpickle==3.4.2 ; python_full_version >= "3.9.1" and python_version < "4"
 langdetect==1.0.9 ; python_full_version >= "3.9.1" and python_version < "4"
 markdown-it-py==3.0.0 ; python_full_version >= "3.9.1" and python_version < "4"
 mdurl==0.1.2 ; python_full_version >= "3.9.1" and python_version < "4"
