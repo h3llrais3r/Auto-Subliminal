@@ -96,7 +96,7 @@ imdbpie 5.6.4.dev0 Python IMDB client using the IMDB json web service made avail
 jsonpickle 3.4.2 jsonpickle encodes/decodes any Python object to/from JSON
 langdetect 1.0.9 Language detection library ported from Google's language-detection.
 `-- six *
-packaging 24.1 Core utilities for Python packages
+packaging 24.2 Core utilities for Python packages
 pysrt 1.1.2 SubRip (.srt) subtitle parser and writer
 `-- chardet *
 python-anticaptcha 1.0.0 Client library for solve captchas with Anticaptcha.com support.
