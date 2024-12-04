@@ -1194,6 +1194,11 @@ let Dropdown = /*#__PURE__*/(() => {
      */
     autofocusFilter = true;
     /**
+     * Determines if the panel will be shown when the input is focused and receives a character key down event.
+     * @group Props
+     */
+    autoShowPanelOnPrintableCharacterKeyDown = true;
+    /**
      * When present, it specifies that the component should be disabled.
      * @group Props
      */
@@ -1934,7 +1939,7 @@ let Dropdown = /*#__PURE__*/(() => {
           break;
         default:
           if (!event.metaKey && primeng_utils__WEBPACK_IMPORTED_MODULE_6__.ObjectUtils.isPrintableCharacter(event.key)) {
-            !this.overlayVisible && this.show();
+            !this.overlayVisible && this.autoShowPanelOnPrintableCharacterKeyDown && this.show();
             !this.editable && this.searchOptions(event, event.key);
           }
           break;
@@ -2349,6 +2354,7 @@ let Dropdown = /*#__PURE__*/(() => {
         selectOnFocus: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵInputFlags"].HasDecoratorInputTransform, "selectOnFocus", "selectOnFocus", _angular_core__WEBPACK_IMPORTED_MODULE_0__.booleanAttribute],
         autoOptionFocus: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵInputFlags"].HasDecoratorInputTransform, "autoOptionFocus", "autoOptionFocus", _angular_core__WEBPACK_IMPORTED_MODULE_0__.booleanAttribute],
         autofocusFilter: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵInputFlags"].HasDecoratorInputTransform, "autofocusFilter", "autofocusFilter", _angular_core__WEBPACK_IMPORTED_MODULE_0__.booleanAttribute],
+        autoShowPanelOnPrintableCharacterKeyDown: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵInputFlags"].HasDecoratorInputTransform, "autoShowPanelOnPrintableCharacterKeyDown", "autoShowPanelOnPrintableCharacterKeyDown", _angular_core__WEBPACK_IMPORTED_MODULE_0__.booleanAttribute],
         disabled: "disabled",
         itemSize: "itemSize",
         autoZIndex: "autoZIndex",
@@ -5296,8 +5302,10 @@ let Scroller = /*#__PURE__*/(() => {
             this.d_numToleratedItems = this._numToleratedItems;
             this.defaultWidth = width;
             this.defaultHeight = height;
-            this.defaultContentWidth = primeng_dom__WEBPACK_IMPORTED_MODULE_2__.DomHandler.getWidth(this.contentEl);
-            this.defaultContentHeight = primeng_dom__WEBPACK_IMPORTED_MODULE_2__.DomHandler.getHeight(this.contentEl);
+            if (this.contentEl) {
+              this.defaultContentWidth = primeng_dom__WEBPACK_IMPORTED_MODULE_2__.DomHandler.getWidth(this.contentEl);
+              this.defaultContentHeight = primeng_dom__WEBPACK_IMPORTED_MODULE_2__.DomHandler.getHeight(this.contentEl);
+            }
             this.init();
             this.calculateAutoSize();
           });
@@ -5460,4 +5468,4 @@ let ScrollerModule = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=704.b0e0503127e4b2f5.js.map
+//# sourceMappingURL=704.ca76679af2b2ac54.js.map
