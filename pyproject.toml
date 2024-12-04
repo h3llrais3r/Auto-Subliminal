@@ -61,7 +61,7 @@ ws4py = "0.5.1"
 [tool.poetry.group.dev.dependencies]
 # Testing
 coverage = "7.6.8"
-pytest = "8.3.3"
+pytest = "8.3.4"
 pytest-mock = "3.14.0"
 requests-mock = "1.12.1"
 vcrpy = "6.0.2"
