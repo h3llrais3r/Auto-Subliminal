@@ -10537,7 +10537,9 @@ let TableService = /*#__PURE__*/(() => {
     valueSource = new rxjs__WEBPACK_IMPORTED_MODULE_1__.Subject();
     totalRecordsSource = new rxjs__WEBPACK_IMPORTED_MODULE_1__.Subject();
     columnsSource = new rxjs__WEBPACK_IMPORTED_MODULE_1__.Subject();
+    isHeaderCheckboxSelection = new rxjs__WEBPACK_IMPORTED_MODULE_1__.Subject();
     sortSource$ = this.sortSource.asObservable();
+    isHeaderCheckboxSelection$ = this.isHeaderCheckboxSelection.asObservable();
     selectionSource$ = this.selectionSource.asObservable();
     contextMenuSource$ = this.contextMenuSource.asObservable();
     valueSource$ = this.valueSource.asObservable();
@@ -10560,6 +10562,9 @@ let TableService = /*#__PURE__*/(() => {
     }
     onColumnsChange(columns) {
       this.columnsSource.next(columns);
+    }
+    onHeaderCheckboxSelection(value) {
+      this.isHeaderCheckboxSelection.next(value);
     }
     static ɵfac = function TableService_Factory(t) {
       return new (t || TableService)();
@@ -12840,7 +12845,11 @@ let Table = /*#__PURE__*/(() => {
     }
     saveColumnWidths(state) {
       let widths = [];
-      let headers = primeng_dom__WEBPACK_IMPORTED_MODULE_4__.DomHandler.find(this.containerViewChild?.nativeElement, '.p-datatable-thead > tr > th');
+      let headers = [];
+      const container = this.containerViewChild?.nativeElement;
+      if (container) {
+        headers = primeng_dom__WEBPACK_IMPORTED_MODULE_4__.DomHandler.find(container, '.p-datatable-thead > tr > th');
+      }
       headers.forEach(header => widths.push(primeng_dom__WEBPACK_IMPORTED_MODULE_4__.DomHandler.getOuterWidth(header)));
       state.columnWidths = widths.join(',');
       if (this.columnResizeMode === 'expand') {
@@ -14922,14 +14931,21 @@ let TableCheckbox = /*#__PURE__*/(() => {
     checked;
     focused;
     subscription;
+    tableHeaderCheckboxSubscription;
+    isTableHeaderCheckboxSelection = false;
     constructor(dt, tableService, cd) {
       this.dt = dt;
       this.tableService = tableService;
       this.cd = cd;
       this.subscription = this.dt.tableService.selectionSource$.subscribe(() => {
-        this.checked = this.dt.isSelected(this.value) && !this.disabled;
+        setTimeout(() => {
+          this.checked = this.isTableHeaderCheckboxSelection ? this.dt.isSelected(this.value) && !this.disabled : this.dt.isSelected(this.value);
+          this.cd.markForCheck();
+        });
         this.ariaLabel = this.ariaLabel || this.dt.config.translation.aria ? this.checked ? this.dt.config.translation.aria.selectRow : this.dt.config.translation.aria.unselectRow : undefined;
-        this.cd.markForCheck();
+      });
+      this.tableHeaderCheckboxSubscription = this.dt.tableService.isHeaderCheckboxSelection$.subscribe(val => {
+        this.isTableHeaderCheckboxSelection = val;
       });
     }
     ngOnInit() {
@@ -14941,6 +14957,7 @@ let TableCheckbox = /*#__PURE__*/(() => {
           originalEvent: event,
           rowIndex: this.index
         }, this.value);
+        this.tableService.onHeaderCheckboxSelection(false);
       }
       primeng_dom__WEBPACK_IMPORTED_MODULE_4__.DomHandler.clearSelection();
     }
@@ -14953,6 +14970,9 @@ let TableCheckbox = /*#__PURE__*/(() => {
     ngOnDestroy() {
       if (this.subscription) {
         this.subscription.unsubscribe();
+      }
+      if (this.tableHeaderCheckboxSubscription) {
+        this.tableHeaderCheckboxSubscription.unsubscribe();
       }
     }
     static ɵfac = function TableCheckbox_Factory(t) {
@@ -15032,6 +15052,7 @@ let TableHeaderCheckbox = /*#__PURE__*/(() => {
     focused;
     selectionChangeSubscription;
     valueChangeSubscription;
+    tableHeaderCheckboxSubscription;
     constructor(dt, tableService, cd) {
       this.dt = dt;
       this.tableService = tableService;
@@ -15050,6 +15071,7 @@ let TableHeaderCheckbox = /*#__PURE__*/(() => {
     onClick(event) {
       if (!this.disabled) {
         if (this.dt.value && this.dt.value.length > 0) {
+          this.tableService.onHeaderCheckboxSelection(true);
           this.dt.toggleRowsWithCheckbox(event, !this.checked);
         }
       }
@@ -16552,4 +16574,4 @@ let TriStateCheckboxModule = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=676.c7cef0ee2e2e94a2.js.map
+//# sourceMappingURL=676.23ee8ec511e7f95a.js.map

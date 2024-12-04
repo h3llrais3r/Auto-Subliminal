@@ -10339,6 +10339,7 @@ let MultiSelect = /*#__PURE__*/(() => {
             }
           }
           this.onPanelShow.emit();
+          break;
         case 'void':
           this.itemsWrapper = null;
           this.onModelTouched();
@@ -10942,4 +10943,4 @@ let ProgressBarModule = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=499.6969c43cd2673501.js.map
+//# sourceMappingURL=499.cc757e29f149f40e.js.map
