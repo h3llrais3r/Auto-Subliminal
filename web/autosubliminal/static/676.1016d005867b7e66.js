@@ -2439,7 +2439,7 @@ let Calendar = /*#__PURE__*/(() => {
       return new Date(dateMeta.year, dateMeta.month, dateMeta.day);
     }
     formatDateKey(date) {
-      return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+      return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
     }
     setCurrentHourPM(hours) {
       if (this.hourFormat == '12') {
@@ -6520,7 +6520,7 @@ let InputNumber = /*#__PURE__*/(() => {
         return;
       }
       this.lastValue = event.target.value;
-      if (event.shiftKey || event.altKey) {
+      if (event.shiftKey || event.altKey || event.key === 'Dead') {
         this.isSpecialChar = true;
         return;
       }
@@ -6679,9 +6679,17 @@ let InputNumber = /*#__PURE__*/(() => {
         char = this._decimalChar;
         code = char.charCodeAt(0);
       }
-      const newValue = this.parseValue(this.input.nativeElement.value + char);
+      const {
+        value,
+        selectionStart,
+        selectionEnd
+      } = this.input.nativeElement;
+      const newValue = this.parseValue(value + char);
       const newValueStr = newValue != null ? newValue.toString() : '';
-      if (this.maxlength && this.getSelectedText()?.length == this.maxlength) {
+      const selectedValue = value.substring(selectionStart, selectionEnd);
+      const selectedValueParsed = this.parseValue(selectedValue);
+      const selectedValueStr = selectedValueParsed != null ? selectedValueParsed.toString() : '';
+      if (selectionStart !== selectionEnd && selectedValueStr.length > 0) {
         this.insert(event, char, {
           isDecimalSign,
           isMinusSign
@@ -6697,9 +6705,6 @@ let InputNumber = /*#__PURE__*/(() => {
           isMinusSign
         });
       }
-    }
-    getSelectedText() {
-      return window?.getSelection()?.toString().replaceAll(/[^0-9']/g, '') || '';
     }
     onPaste(event) {
       if (!this.disabled && !this.readonly) {
@@ -7167,7 +7172,7 @@ let InputNumber = /*#__PURE__*/(() => {
       features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵProvidersFeature"]([INPUTNUMBER_VALUE_ACCESSOR]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵInputTransformsFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵNgOnChangesFeature"]],
       decls: 7,
       vars: 43,
-      consts: [["input", ""], [3, "ngClass", "ngStyle"], ["pInputText", "", "role", "spinbutton", "inputmode", "decimal", "pAutoFocus", "", 3, "input", "keydown", "keypress", "paste", "click", "focus", "blur", "ngClass", "ngStyle", "value", "disabled", "readonly", "autofocus"], [4, "ngIf"], ["class", "p-inputnumber-button-group", 4, "ngIf"], ["type", "button", "pButton", "", "class", "p-button-icon-only", "tabindex", "-1", 3, "ngClass", "class", "disabled", "mousedown", "mouseup", "mouseleave", "keydown", "keyup", 4, "ngIf"], [3, "ngClass", "click", 4, "ngIf"], ["class", "p-inputnumber-clear-icon", 3, "click", 4, "ngIf"], [3, "click", "ngClass"], [1, "p-inputnumber-clear-icon", 3, "click"], [4, "ngTemplateOutlet"], [1, "p-inputnumber-button-group"], ["type", "button", "pButton", "", "tabindex", "-1", 1, "p-button-icon-only", 3, "mousedown", "mouseup", "mouseleave", "keydown", "keyup", "ngClass", "disabled"], [3, "ngClass", 4, "ngIf"], [3, "ngClass"]],
+      consts: [["input", ""], [3, "ngClass", "ngStyle"], ["pInputText", "", "role", "spinbutton", "inputmode", "decimal", "pAutoFocus", "", 3, "input", "keydown", "keypress", "paste", "click", "focus", "blur", "ngClass", "ngStyle", "value", "disabled", "readonly", "autofocus"], [4, "ngIf"], ["class", "p-inputnumber-button-group", 4, "ngIf"], ["type", "button", "pButton", "", "class", "p-button-icon-only", "tabindex", "0", 3, "ngClass", "class", "disabled", "mousedown", "mouseup", "mouseleave", "keydown", "keyup", 4, "ngIf"], [3, "ngClass", "click", 4, "ngIf"], ["class", "p-inputnumber-clear-icon", 3, "click", 4, "ngIf"], [3, "click", "ngClass"], [1, "p-inputnumber-clear-icon", 3, "click"], [4, "ngTemplateOutlet"], [1, "p-inputnumber-button-group"], ["type", "button", "pButton", "", "tabindex", "0", 1, "p-button-icon-only", 3, "mousedown", "mouseup", "mouseleave", "keydown", "keyup", "ngClass", "disabled"], [3, "ngClass", 4, "ngIf"], [3, "ngClass"]],
       template: function InputNumber_Template(rf, ctx) {
         if (rf & 1) {
           const _r1 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵgetCurrentView"]();
@@ -10434,7 +10439,7 @@ function ColumnFilterFormElement_ng_container_0_Template(rf, ctx) {
   if (rf & 2) {
     const ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
     _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngTemplateOutlet", ctx_r0.filterTemplate)("ngTemplateOutletContext", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunctionV"](2, _c36, [ctx_r0.filterConstraint.value, ctx_r0.filterCallback, ctx_r0.type, ctx_r0.field, ctx_r0.filterConstraint, ctx_r0.placeholder, ctx_r0.minFractionDigits, ctx_r0.maxFractionDigits, ctx_r0.prefix, ctx_r0.suffix, ctx_r0.locale, ctx_r0.localeMatcher, ctx_r0.currency, ctx_r0.currencyDisplay, ctx_r0.useGrouping, ctx_r0.showButtons]));
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngTemplateOutlet", ctx_r0.filterTemplate)("ngTemplateOutletContext", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunctionV"](2, _c36, [ctx_r0.filterConstraint == null ? null : ctx_r0.filterConstraint.value, ctx_r0.filterCallback, ctx_r0.type, ctx_r0.field, ctx_r0.filterConstraint, ctx_r0.placeholder, ctx_r0.minFractionDigits, ctx_r0.maxFractionDigits, ctx_r0.prefix, ctx_r0.suffix, ctx_r0.locale, ctx_r0.localeMatcher, ctx_r0.currency, ctx_r0.currencyDisplay, ctx_r0.useGrouping, ctx_r0.showButtons]));
   }
 }
 function ColumnFilterFormElement_ng_template_1_input_1_Template(rf, ctx) {
@@ -12515,7 +12520,7 @@ let Table = /*#__PURE__*/(() => {
     }
     onColumnResizeBegin(event) {
       let containerLeft = primeng_dom__WEBPACK_IMPORTED_MODULE_4__.DomHandler.getOffset(this.containerViewChild?.nativeElement).left;
-      this.resizeColumnElement = event.target.parentElement;
+      this.resizeColumnElement = event.target.closest('th');
       this.columnResizing = true;
       if (event.type == 'touchstart') {
         this.lastResizerHelperX = event.changedTouches[0].clientX - containerLeft + this.containerViewChild?.nativeElement.scrollLeft;
@@ -12538,20 +12543,21 @@ let Table = /*#__PURE__*/(() => {
       this.resizeHelperViewChild.nativeElement.style.display = 'block';
     }
     onColumnResizeEnd() {
-      let delta = this.resizeHelperViewChild?.nativeElement.offsetLeft - this.lastResizerHelperX;
-      let columnWidth = this.resizeColumnElement.offsetWidth;
-      let newColumnWidth = columnWidth + delta;
-      let minWidth = this.resizeColumnElement.style.minWidth.replace(/[^\d.]/g, '') || 15;
+      const delta = this.resizeHelperViewChild?.nativeElement.offsetLeft - this.lastResizerHelperX;
+      const columnWidth = this.resizeColumnElement.offsetWidth;
+      const newColumnWidth = columnWidth + delta;
+      const elementMinWidth = this.resizeColumnElement.style.minWidth.replace(/[^\d.]/g, '');
+      const minWidth = elementMinWidth ? parseFloat(elementMinWidth) : 15;
       if (newColumnWidth >= minWidth) {
         if (this.columnResizeMode === 'fit') {
-          let nextColumn = this.resizeColumnElement.nextElementSibling;
-          let nextColumnWidth = nextColumn.offsetWidth - delta;
+          const nextColumn = this.resizeColumnElement.nextElementSibling;
+          const nextColumnWidth = nextColumn.offsetWidth - delta;
           if (newColumnWidth > 15 && nextColumnWidth > 15) {
             this.resizeTableCells(newColumnWidth, nextColumnWidth);
           }
         } else if (this.columnResizeMode === 'expand') {
           this._initialColWidths = this._totalTableWidth();
-          let tableWidth = this.tableViewChild?.nativeElement.offsetWidth + delta;
+          const tableWidth = this.tableViewChild?.nativeElement.offsetWidth + delta;
           this.setResizeTableWidth(tableWidth + 'px');
           this.resizeTableCells(newColumnWidth, null);
         }
@@ -15658,7 +15664,7 @@ let ColumnFilter = /*#__PURE__*/(() => {
       this.hide();
     }
     isRowMatchModeSelected(matchMode) {
-      return this.dt.filters[this.field].matchMode === matchMode;
+      return this.dt.filters[this.field]?.matchMode === matchMode;
     }
     addConstraint() {
       this.dt.filters[this.field].push({
@@ -16574,4 +16580,4 @@ let TriStateCheckboxModule = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=676.23ee8ec511e7f95a.js.map
+//# sourceMappingURL=676.1016d005867b7e66.js.map
