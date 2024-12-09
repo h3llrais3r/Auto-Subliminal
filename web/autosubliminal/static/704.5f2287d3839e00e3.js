@@ -1489,7 +1489,9 @@ let Dropdown = /*#__PURE__*/(() => {
     });
     filled = (0,_angular_core__WEBPACK_IMPORTED_MODULE_0__.computed)(() => {
       if (typeof this.modelValue() === 'string') return !!this.modelValue();
-      return this.label() !== 'p-emptylabel' && this.modelValue() !== undefined && this.modelValue() !== null;
+      const options = this.getAllVisibleAndNonVisibleOptions();
+      const isOptionSelected = options.findIndex(option => this.isOptionValueEqualsModelValue(option)) !== -1;
+      return this.label() !== 'p-emptylabel' && isOptionSelected;
     });
     selectedOption;
     editableInputValue = (0,_angular_core__WEBPACK_IMPORTED_MODULE_0__.computed)(() => this.getOptionLabel(this.selectedOption) || this.modelValue() || '');
@@ -1650,12 +1652,14 @@ let Dropdown = /*#__PURE__*/(() => {
       this.modelValue.set(value);
       this.selectedOptionUpdated = true;
     }
-    writeValue(value) {
+    writeValue(value, emitEvent = true) {
       if (this.filter) {
         this.resetFilter();
       }
       this.value = value;
-      this.allowModelChange() && this.onModelChange(value);
+      if (emitEvent && this.allowModelChange()) {
+        this.onModelChange(value);
+      }
       this.modelValue.set(this.value);
       this.updateEditableLabel();
       this.cd.markForCheck();
@@ -4775,6 +4779,11 @@ let Scroller = /*#__PURE__*/(() => {
           this.d_numToleratedItems = currentValue.numToleratedItems;
         }
       }
+      if (simpleChanges.items) {
+        this.setSpacerSize();
+        this.setSize();
+        this.cd.detectChanges();
+      }
       if (this.initialized) {
         const isChanged = !isLoadingChanged && (simpleChanges.items?.previousValue?.length !== simpleChanges.items?.currentValue?.length || simpleChanges.itemSize || simpleChanges.scrollHeight || simpleChanges.scrollWidth);
         if (isChanged) {
@@ -5072,6 +5081,10 @@ let Scroller = /*#__PURE__*/(() => {
             this.contentEl.style.minHeight = this.contentEl.style.minWidth = '';
             this.contentEl.style.position = '';
             this.elementViewChild.nativeElement.style.contain = '';
+            this.defaultWidth = width;
+            this.defaultHeight = height;
+            this.defaultContentWidth = contentWidth;
+            this.defaultContentHeight = contentHeight;
           }
         });
       }
@@ -5131,7 +5144,7 @@ let Scroller = /*#__PURE__*/(() => {
           setProp('height', numItems, this._itemSize[0]);
           setProp('width', this._columns?.length || this._items[1]?.length, this._itemSize[1]);
         } else {
-          this.horizontal ? setProp('width', this._columns.length || this._items.length, this._itemSize) : setProp('height', numItems, this._itemSize);
+          this.horizontal ? setProp('width', this._columns?.length || this._items.length, this._itemSize) : setProp('height', numItems, this._itemSize);
         }
       }
     }
@@ -5300,12 +5313,6 @@ let Scroller = /*#__PURE__*/(() => {
           const reinit = this.both ? isDiffWidth || isDiffHeight : this.horizontal ? isDiffWidth : this.vertical ? isDiffHeight : false;
           reinit && this.zone.run(() => {
             this.d_numToleratedItems = this._numToleratedItems;
-            this.defaultWidth = width;
-            this.defaultHeight = height;
-            if (this.contentEl) {
-              this.defaultContentWidth = primeng_dom__WEBPACK_IMPORTED_MODULE_2__.DomHandler.getWidth(this.contentEl);
-              this.defaultContentHeight = primeng_dom__WEBPACK_IMPORTED_MODULE_2__.DomHandler.getHeight(this.contentEl);
-            }
             this.init();
             this.calculateAutoSize();
           });
@@ -5468,4 +5475,4 @@ let ScrollerModule = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=704.ca76679af2b2ac54.js.map
+//# sourceMappingURL=704.5f2287d3839e00e3.js.map

@@ -99611,9 +99611,9 @@ let PrimeIcons = /*#__PURE__*/(() => {
     static ARROW_UP_LEFT = 'pi pi-arrow-up-left';
     static ARROW_UP_RIGHT = 'pi pi-arrow-up-right';
     static ARROW_UP_RIGHT_AND_ARROW_DOWN_LEFT_FROM_CENTER = 'pi pi-arrow-up-right-and-arrow-down-left-from-center';
-    static ARROW_H = 'pi pi-arrows-h';
-    static ARROW_V = 'pi pi-arrows-v';
-    static ASTERIKS = 'pi pi-asteriks';
+    static ARROWS_H = 'pi pi-arrows-h';
+    static ARROWS_V = 'pi pi-arrows-v';
+    static ASTERISK = 'pi pi-asterisk';
     static AT = 'pi pi-at';
     static BACKWARD = 'pi pi-backward';
     static BAN = 'pi pi-ban';
@@ -106776,6 +106776,7 @@ let Tooltip = /*#__PURE__*/(() => {
     clickListener;
     focusListener;
     blurListener;
+    documentEscapeListener;
     scrollHandler;
     resizeListener;
     interactionInProgress = false;
@@ -106811,6 +106812,15 @@ let Tooltip = /*#__PURE__*/(() => {
           }
         });
       }
+    }
+    setAriaDescribedBy() {
+      const tooltipId = this.getOption('id');
+      if (tooltipId && this.active) {
+        this.renderer.setAttribute(this.el.nativeElement, 'aria-describedby', tooltipId);
+      }
+    }
+    removeAriaDescribedBy() {
+      this.renderer.removeAttribute(this.el.nativeElement, 'aria-describedby');
     }
     ngOnChanges(simpleChange) {
       if (simpleChange.tooltipPosition) {
@@ -106950,11 +106960,6 @@ let Tooltip = /*#__PURE__*/(() => {
     onInputClick(e) {
       this.deactivate();
     }
-    onPressEscape() {
-      if (this.hideOnEscape) {
-        this.deactivate();
-      }
-    }
     activate() {
       if (!this.interactionInProgress) {
         this.active = true;
@@ -106967,6 +106972,12 @@ let Tooltip = /*#__PURE__*/(() => {
           this.hideTimeout = setTimeout(() => {
             this.hide();
           }, duration);
+        }
+        if (this.getOption('hideOnEscape')) {
+          this.documentEscapeListener = this.renderer.listen('document', 'keydown.escape', () => {
+            this.deactivate();
+            this.documentEscapeListener();
+          });
         }
       }
       this.interactionInProgress = true;
@@ -106982,6 +106993,9 @@ let Tooltip = /*#__PURE__*/(() => {
         }, this.getOption('hideDelay'));
       } else {
         this.hide();
+      }
+      if (this.documentEscapeListener) {
+        this.documentEscapeListener();
       }
     }
     create() {
@@ -107013,6 +107027,7 @@ let Tooltip = /*#__PURE__*/(() => {
         this.container.style.pointerEvents = 'unset';
         this.bindContainerMouseleaveListener();
       }
+      this.setAriaDescribedBy();
     }
     bindContainerMouseleaveListener() {
       if (!this.containerMouseleaveListener) {
@@ -107251,6 +107266,7 @@ let Tooltip = /*#__PURE__*/(() => {
       this.unbindScrollListener();
       this.unbindContainerMouseleaveListener();
       this.clearTimeouts();
+      this.removeAriaDescribedBy();
       this.container = null;
       this.scrollHandler = null;
     }
@@ -107280,6 +107296,9 @@ let Tooltip = /*#__PURE__*/(() => {
         this.scrollHandler.destroy();
         this.scrollHandler = null;
       }
+      if (this.documentEscapeListener) {
+        this.documentEscapeListener();
+      }
     }
     static ɵfac = function Tooltip_Factory(t) {
       return new (t || Tooltip)(_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_3__.PLATFORM_ID), _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_3__.ElementRef), _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_3__.NgZone), _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdirectiveInject"](primeng_api__WEBPACK_IMPORTED_MODULE_4__.PrimeNGConfig), _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_3__.Renderer2), _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_3__.ViewContainerRef));
@@ -107288,13 +107307,6 @@ let Tooltip = /*#__PURE__*/(() => {
       type: Tooltip,
       selectors: [["", "pTooltip", ""]],
       hostAttrs: [1, "p-element"],
-      hostBindings: function Tooltip_HostBindings(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵlistener"]("keydown.escape", function Tooltip_keydown_escape_HostBindingHandler($event) {
-            return ctx.onPressEscape($event);
-          }, false, _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵresolveDocument"]);
-        }
-      },
       inputs: {
         tooltipPosition: "tooltipPosition",
         tooltipEvent: "tooltipEvent",
@@ -108141,4 +108153,4 @@ function __rewriteRelativeImportExtension(path, preserveJsx) {
 /******/ var __webpack_exports__ = (__webpack_exec__(4429));
 /******/ }
 ]);
-//# sourceMappingURL=main.36e74c2af9fe9ba4.js.map
+//# sourceMappingURL=main.e7262e8112c98afc.js.map

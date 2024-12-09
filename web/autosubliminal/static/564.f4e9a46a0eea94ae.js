@@ -1496,7 +1496,7 @@ let TabView = /*#__PURE__*/(() => {
         tab.selected = false;
         for (let i = 0; i < this.tabs.length; i++) {
           let tabPanel = this.tabs[i];
-          if (!tabPanel.closed && !tab.disabled) {
+          if (!tabPanel.closed && !tab.disabled && tabPanel != tab) {
             tabPanel.selected = true;
             break;
           }
@@ -1727,4 +1727,4 @@ let TabViewModule = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=564.f746b27aa3259f9c.js.map
+//# sourceMappingURL=564.f4e9a46a0eea94ae.js.map
