@@ -1597,14 +1597,14 @@ files = [
 
 [[package]]
 name = "pigar"
-version = "2.1.6"
+version = "2.1.7"
 description = "A tool to generate requirements.txt for Python project."
 category = "dev"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pigar-2.1.6-py3-none-any.whl", hash = "sha256:cf4d9e2f69fd94e3bba714639da9eac21e1691b50a137b9b2eb7eb746516c466"},
-    {file = "pigar-2.1.6.tar.gz", hash = "sha256:a524cd7b9aa67efba3a403988e4630676b05831fcbcb7ecaa01377e88abb5e96"},
+    {file = "pigar-2.1.7-py3-none-any.whl", hash = "sha256:45e62cef12e0373cca12b741788b53113009089a7ad79d11ef72ce718cf0ac33"},
+    {file = "pigar-2.1.7.tar.gz", hash = "sha256:7918d6dece3ecc7003b8281d3493ac9c67d82c870016237be2f9993d8095155e"},
 ]
 
 [package.dependencies]
@@ -3170,4 +3170,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9.1,<4"
-content-hash = "0a9d039772b9170cc51be4647ca385e0e15f3725fcec82a4beaddeed3730ace7"
+content-hash = "6bf79d2b7932753b5cae74e9f373bf5018fe258ce5f254f4651e43370ba83734"
