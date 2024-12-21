@@ -4779,11 +4779,6 @@ let Scroller = /*#__PURE__*/(() => {
           this.d_numToleratedItems = currentValue.numToleratedItems;
         }
       }
-      if (simpleChanges.items) {
-        this.setSpacerSize();
-        this.setSize();
-        this.cd.detectChanges();
-      }
       if (this.initialized) {
         const isChanged = !isLoadingChanged && (simpleChanges.items?.previousValue?.length !== simpleChanges.items?.currentValue?.length || simpleChanges.itemSize || simpleChanges.scrollHeight || simpleChanges.scrollWidth);
         if (isChanged) {
@@ -5076,8 +5071,6 @@ let Scroller = /*#__PURE__*/(() => {
             contentWidth !== this.defaultContentWidth && (this.elementViewChild.nativeElement.style.width = '');
             contentHeight !== this.defaultContentHeight && (this.elementViewChild.nativeElement.style.height = '');
             const [width, height] = [primeng_dom__WEBPACK_IMPORTED_MODULE_2__.DomHandler.getWidth(this.elementViewChild.nativeElement), primeng_dom__WEBPACK_IMPORTED_MODULE_2__.DomHandler.getHeight(this.elementViewChild.nativeElement)];
-            (this.both || this.horizontal) && (this.elementViewChild.nativeElement.style.width = width < this.defaultWidth ? width + 'px' : this._scrollWidth || this.defaultWidth + 'px');
-            (this.both || this.vertical) && (this.elementViewChild.nativeElement.style.height = height < this.defaultHeight ? height + 'px' : this._scrollHeight || this.defaultHeight + 'px');
             this.contentEl.style.minHeight = this.contentEl.style.minWidth = '';
             this.contentEl.style.position = '';
             this.elementViewChild.nativeElement.style.contain = '';
@@ -5085,6 +5078,8 @@ let Scroller = /*#__PURE__*/(() => {
             this.defaultHeight = height;
             this.defaultContentWidth = contentWidth;
             this.defaultContentHeight = contentHeight;
+            (this.both || this.horizontal) && (this.elementViewChild.nativeElement.style.width = width < this.defaultWidth ? width + 'px' : this._scrollWidth || this.defaultWidth + 'px');
+            (this.both || this.vertical) && (this.elementViewChild.nativeElement.style.height = height < this.defaultHeight ? height + 'px' : this._scrollHeight || this.defaultHeight + 'px');
           }
         });
       }
@@ -5475,4 +5470,4 @@ let ScrollerModule = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=704.5f2287d3839e00e3.js.map
+//# sourceMappingURL=704.c0d58d73ac7502ce.js.map
