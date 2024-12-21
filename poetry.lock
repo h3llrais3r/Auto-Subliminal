@@ -3013,14 +3013,14 @@ files = [
 
 [[package]]
 name = "ws4py"
-version = "0.5.1"
+version = "0.6.0"
 description = "WebSocket client and server library for Python 2 and 3 as well as PyPy"
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "ws4py-0.5.1-py3-none-any.whl", hash = "sha256:b451fed98044061184a1b5be4e6ae54e9b7448e006da7683c472a81a188dc71e"},
-    {file = "ws4py-0.5.1.tar.gz", hash = "sha256:29d073d7f2e006373e6a848b1d00951a1107eb81f3742952be905429dc5a5483"},
+    {file = "ws4py-0.6.0-py3-none-any.whl", hash = "sha256:1499c3fc103a65eb12d7b1ead7566f88487f6f678ab10ee4e53cf2411c068752"},
+    {file = "ws4py-0.6.0.tar.gz", hash = "sha256:9f87b19b773f0a0744a38f3afa36a803286dd3197f0bb35d9b75293ec7002d19"},
 ]
 
 [[package]]
@@ -3171,4 +3171,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9.1,<4"
-content-hash = "c770be0dc01bdc62b596ff1269ad86f81e9bcc96123b56955ea45f8693993976"
+content-hash = "d962517634a9653aa74cfd61add10b34d4b65ca56e38399de3378329f3c8a9aa"
