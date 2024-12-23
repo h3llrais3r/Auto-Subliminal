@@ -93,7 +93,7 @@ imdbpie 5.6.4.dev0 Python IMDB client using the IMDB json web service made avail
 |-- six >=1.0.0
 |-- trans >=2.1.0
 `-- wheel >=0.38.0
-jsonpickle 3.4.2 jsonpickle encodes/decodes any Python object to/from JSON
+jsonpickle 4.0.1 jsonpickle encodes/decodes any Python object to/from JSON
 langdetect 1.0.9 Language detection library ported from Google's language-detection.
 `-- six *
 packaging 24.2 Core utilities for Python packages
