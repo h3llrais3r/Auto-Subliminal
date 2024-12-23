@@ -115,5 +115,5 @@ webrtcvad-wheels==2.0.14
 # autosubliminal\__init__.py: 16
 # autosubliminal\application.py: 14,15
 # autosubliminal\core\websocket.py: 10,11
-ws4py==0.5.1
+ws4py==0.6.0
 ```

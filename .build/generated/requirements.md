@@ -84,7 +84,7 @@ webencodings==0.5.1 ; python_full_version >= "3.9.1" and python_version < "4"
 webrtcvad-wheels==2.0.14 ; python_full_version >= "3.9.1" and python_version < "4" and platform_system == "Windows"
 webrtcvad==2.0.10 ; python_full_version >= "3.9.1" and python_version < "4" and platform_system != "Windows"
 wheel==0.44.0 ; python_full_version >= "3.9.1" and python_version < "4"
-ws4py==0.5.1 ; python_full_version >= "3.9.1" and python_version < "4"
+ws4py==0.6.0 ; python_full_version >= "3.9.1" and python_version < "4"
 zc-lockfile==3.0.post1 ; python_full_version >= "3.9.1" and python_version < "4"
 zipp==3.20.2 ; python_full_version >= "3.9.1" and python_version < "3.10"
 ```
