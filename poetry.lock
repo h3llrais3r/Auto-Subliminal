@@ -787,14 +787,14 @@ dev = ["Sphinx (==2.1.0)", "future (==0.17.1)", "numpy (==1.16.4)", "pytest (==4
 
 [[package]]
 name = "ffsubsync"
-version = "0.4.26"
+version = "0.4.27"
 description = "Language-agnostic synchronization of subtitles with video."
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "ffsubsync-0.4.26-py2.py3-none-any.whl", hash = "sha256:47bf954686f843165625509169fce203e88646f787e1623662b20a6ea5388f66"},
-    {file = "ffsubsync-0.4.26.tar.gz", hash = "sha256:1ac03a832edba9da88ceeed753e2daaa4e620b632fd7949710cb31516b611410"},
+    {file = "ffsubsync-0.4.27-py2.py3-none-any.whl", hash = "sha256:d8a039af610ef1ee95eb8ab422565e0f51b63b0e35205a7d9ef946c6082012af"},
+    {file = "ffsubsync-0.4.27.tar.gz", hash = "sha256:66bcbbded86dd003cce472e5f3db608c38fb102bc3efa6c72f98e1e4472d5426"},
 ]
 
 [package.dependencies]
@@ -807,6 +807,7 @@ future = ">=0.18.2"
 numpy = ">=1.12.0"
 pysubs2 = {version = ">=1.2.0", markers = "python_version >= \"3.7\""}
 rich = "*"
+setuptools = "*"
 six = "*"
 srt = ">=3.0.0"
 tqdm = "*"
@@ -3171,4 +3172,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9.1,<4"
-content-hash = "18df0b45ec87a4e1c450a67440c988fdc2fda6120aafd1f3e39a3d8d82c8e354"
+content-hash = "ad24f6ee3b5123d110dd7fd5a6b080713db148052c856c57504129608af2593c"
