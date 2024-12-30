@@ -67,7 +67,7 @@ requests-mock = "1.12.1"
 vcrpy = "6.0.2"
 
 # Tooling
-mypy = "1.14.0"
+mypy = "1.14.1"
 pigar = "2.1.7"
 ruff = "0.8.4"
 types-requests = "2.31.0.6"
