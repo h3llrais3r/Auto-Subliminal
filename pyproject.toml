@@ -64,7 +64,7 @@ coverage = "7.6.10"
 pytest = "8.3.4"
 pytest-mock = "3.14.0"
 requests-mock = "1.12.1"
-vcrpy = "6.0.2"
+vcrpy = "7.0.0"
 
 # Tooling
 mypy = "1.14.1"
