@@ -40,7 +40,7 @@ enzyme==0.5.2
 # autosubliminal\subsynchronizer.py: 8
 ffsubsync==0.4.27
 # autosubliminal\versionchecker.py: 11
-GitPython==3.1.43
+GitPython==3.1.44
 # autosubliminal\notifiers\growl.py: 7
 gntp==1.0.3
 # autosubliminal\__init__.py: 284
