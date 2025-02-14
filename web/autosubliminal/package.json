@@ -75,7 +75,7 @@
     "@angular-eslint/template-parser": "17.5.3",
     "@angular/cli": "17.3.11",
     "@angular/compiler-cli": "17.3.12",
-    "@types/jasmine": "4.6.4",
+    "@types/jasmine": "4.6.5",
     "@types/jasminewd2": "2.0.13",
     "@types/jquery": "3.5.32",
     "@types/lodash-es": "4.17.12",
