@@ -278,36 +278,40 @@ let SystemInfoComponent = /*#__PURE__*/(() => {
       });
       return result;
     }
-    static #_ = this.ɵfac = function SystemInfoComponent_Factory(t) {
-      return new (t || SystemInfoComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdefineComponent"]({
-      type: SystemInfoComponent,
-      selectors: [["app-system-info"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵStandaloneFeature"]],
-      decls: 6,
-      vars: 2,
-      consts: [[1, "container-lg"], ["header", "General"], ["class", "info-wrapper", 4, "ngIf"], ["header", "Changelog"], ["class", "changelog-wrapper", 3, "innerHTML", 4, "ngIf"], [1, "info-wrapper"], [1, "info-item", "row"], [1, "info-label", "col-sm-12", "col-md-4"], [1, "info", "col-sm-12", "col-md-8"], ["class", "info col-sm-12 col-md-8", 4, "ngIf"], ["class", "info-item row", 4, "ngIf"], [1, "separator"], ["target", "_blank", 3, "href"], [1, "changelog-wrapper", 3, "innerHTML"]],
-      template: function SystemInfoComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](0, "div", 0)(1, "p-tabView")(2, "p-tabPanel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](3, SystemInfoComponent_div_3_Template, 67, 18, "div", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](4, "p-tabPanel", 3);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](5, SystemInfoComponent_div_5_Template, 1, 1, "div", 4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]()()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](3);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("ngIf", ctx.systemInfo);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("ngIf", ctx.changelog);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_7__.NgIf, primeng_tabview__WEBPACK_IMPORTED_MODULE_8__.TabViewModule, primeng_tabview__WEBPACK_IMPORTED_MODULE_8__.TabView, primeng_tabview__WEBPACK_IMPORTED_MODULE_8__.TabPanel],
-      styles: [".info-wrapper[_ngcontent-%COMP%]   .info-item[_ngcontent-%COMP%] {\n  margin-bottom: 1rem;\n}\n.info-wrapper[_ngcontent-%COMP%]   .info-label[_ngcontent-%COMP%] {\n  font-weight: 500;\n}\n\n.changelog-wrapper[_ngcontent-%COMP%]     .release .version {\n  margin-bottom: 1rem;\n}\n.changelog-wrapper[_ngcontent-%COMP%]     .release .version-label {\n  font-weight: 500;\n}\n.changelog-wrapper[_ngcontent-%COMP%]     .release .releasedate {\n  margin-bottom: 1rem;\n}\n.changelog-wrapper[_ngcontent-%COMP%]     .release .releasedate-label {\n  font-weight: 500;\n}\n.changelog-wrapper[_ngcontent-%COMP%]     .release .changelog {\n  margin-bottom: 1rem;\n}\n.changelog-wrapper[_ngcontent-%COMP%]     .release .changelog-label {\n  font-weight: 500;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvc3lzdGVtL2luZm8vc3lzdGVtLWluZm8uY29tcG9uZW50LnNjc3MiLCJ3ZWJwYWNrOi8vLi9zcmMvc2Nzcy9fdmFyaWFibGVzLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBSUk7RUFDRSxtQkFBQTtBQUhOO0FBTUk7RUFDRSxnQkNITTtBRERaOztBQVVFO0VBQ0UsbUJBQUE7QUFQSjtBQVNJO0VBQ0UsZ0JDYk07QURNWjtBQVdFO0VBQ0UsbUJBQUE7QUFUSjtBQVdJO0VBQ0UsZ0JDckJNO0FEWVo7QUFhRTtFQUNFLG1CQUFBO0FBWEo7QUFhSTtFQUNFLGdCQzdCTTtBRGtCWiIsInNvdXJjZXNDb250ZW50IjpbIkBpbXBvcnQgJy4uLy4uLy4uLy4uL3Njc3MvdmFyaWFibGVzJztcclxuXHJcbi5pbmZvLXdyYXBwZXIge1xyXG4gIC5pbmZvIHtcclxuICAgICYtaXRlbSB7XHJcbiAgICAgIG1hcmdpbi1ib3R0b206IDFyZW07XHJcbiAgICB9XHJcblxyXG4gICAgJi1sYWJlbCB7XHJcbiAgICAgIGZvbnQtd2VpZ2h0OiAkZm9udC1ib2xkO1xyXG4gICAgfVxyXG4gIH1cclxufVxyXG5cclxuLmNoYW5nZWxvZy13cmFwcGVyIDo6bmctZGVlcCAucmVsZWFzZSB7XHJcbiAgLnZlcnNpb24ge1xyXG4gICAgbWFyZ2luLWJvdHRvbTogMXJlbTtcclxuXHJcbiAgICAmLWxhYmVsIHtcclxuICAgICAgZm9udC13ZWlnaHQ6ICRmb250LWJvbGQ7XHJcbiAgICB9XHJcbiAgfVxyXG5cclxuICAucmVsZWFzZWRhdGUge1xyXG4gICAgbWFyZ2luLWJvdHRvbTogMXJlbTtcclxuXHJcbiAgICAmLWxhYmVsIHtcclxuICAgICAgZm9udC13ZWlnaHQ6ICRmb250LWJvbGQ7XHJcbiAgICB9XHJcbiAgfVxyXG5cclxuICAuY2hhbmdlbG9nIHtcclxuICAgIG1hcmdpbi1ib3R0b206IDFyZW07XHJcblxyXG4gICAgJi1sYWJlbCB7XHJcbiAgICAgIGZvbnQtd2VpZ2h0OiAkZm9udC1ib2xkO1xyXG4gICAgfVxyXG4gIH1cclxufVxyXG4iLCIvLyBHbG9iYWwgdmFyaWFibGVzICh2YXIoLS14eHh4KSkgYXJlIHVzZWQgZnJvbSBpbXBvcnRlZCBwcmltZW5nIHN0eWxlc1xyXG5cclxuLy8gRm9udFxyXG4kZm9udC1zaXplOiAxcmVtO1xyXG4kZm9udC1zaXplLXNtOiAoJGZvbnQtc2l6ZSAqIC44NzUpICFkZWZhdWx0O1xyXG4kZm9udC1kZWZhdWx0OiA0MDA7XHJcbiRmb250LWJvbGQ6IDUwMDtcclxuJGZvbnQtY29sb3I6IHZhcigtLXRleHQtY29sb3IpO1xyXG5cclxuLy8gQmFja2dyb3VuZFxyXG4kYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tc3VyZmFjZS1hKTtcclxuXHJcbi8vTWVkaWEgYm91bmRhcmllc1xyXG4kbWVkaWEtbW9iaWxlLW1heC13aWR0aDogNzY3cHg7XHJcbiRtZWRpYS10YWJsZXQtbWluLXdpZHRoOiA3NjhweDtcclxuJG1lZGlhLXRhYmxldC1tYXgtd2lkdGg6IDk5MXB4O1xyXG4kbWVkaWEtZGVza3RvcC1taW4td2lkdGg6IDk5MnB4O1xyXG4iXSwic291cmNlUm9vdCI6IiJ9 */"]
-    });
+    static {
+      this.ɵfac = function SystemInfoComponent_Factory(t) {
+        return new (t || SystemInfoComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdefineComponent"]({
+        type: SystemInfoComponent,
+        selectors: [["app-system-info"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵStandaloneFeature"]],
+        decls: 6,
+        vars: 2,
+        consts: [[1, "container-lg"], ["header", "General"], ["class", "info-wrapper", 4, "ngIf"], ["header", "Changelog"], ["class", "changelog-wrapper", 3, "innerHTML", 4, "ngIf"], [1, "info-wrapper"], [1, "info-item", "row"], [1, "info-label", "col-sm-12", "col-md-4"], [1, "info", "col-sm-12", "col-md-8"], ["class", "info col-sm-12 col-md-8", 4, "ngIf"], ["class", "info-item row", 4, "ngIf"], [1, "separator"], ["target", "_blank", 3, "href"], [1, "changelog-wrapper", 3, "innerHTML"]],
+        template: function SystemInfoComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](0, "div", 0)(1, "p-tabView")(2, "p-tabPanel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](3, SystemInfoComponent_div_3_Template, 67, 18, "div", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](4, "p-tabPanel", 3);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](5, SystemInfoComponent_div_5_Template, 1, 1, "div", 4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]()()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](3);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("ngIf", ctx.systemInfo);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("ngIf", ctx.changelog);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_7__.NgIf, primeng_tabview__WEBPACK_IMPORTED_MODULE_8__.TabViewModule, primeng_tabview__WEBPACK_IMPORTED_MODULE_8__.TabView, primeng_tabview__WEBPACK_IMPORTED_MODULE_8__.TabPanel],
+        styles: [".info-wrapper[_ngcontent-%COMP%]   .info-item[_ngcontent-%COMP%] {\n  margin-bottom: 1rem;\n}\n.info-wrapper[_ngcontent-%COMP%]   .info-label[_ngcontent-%COMP%] {\n  font-weight: 500;\n}\n\n.changelog-wrapper[_ngcontent-%COMP%]     .release .version {\n  margin-bottom: 1rem;\n}\n.changelog-wrapper[_ngcontent-%COMP%]     .release .version-label {\n  font-weight: 500;\n}\n.changelog-wrapper[_ngcontent-%COMP%]     .release .releasedate {\n  margin-bottom: 1rem;\n}\n.changelog-wrapper[_ngcontent-%COMP%]     .release .releasedate-label {\n  font-weight: 500;\n}\n.changelog-wrapper[_ngcontent-%COMP%]     .release .changelog {\n  margin-bottom: 1rem;\n}\n.changelog-wrapper[_ngcontent-%COMP%]     .release .changelog-label {\n  font-weight: 500;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvc3lzdGVtL2luZm8vc3lzdGVtLWluZm8uY29tcG9uZW50LnNjc3MiLCJ3ZWJwYWNrOi8vLi9zcmMvc2Nzcy9fdmFyaWFibGVzLnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBSUk7RUFDRSxtQkFBQTtBQUhOO0FBTUk7RUFDRSxnQkNITTtBRERaOztBQVVFO0VBQ0UsbUJBQUE7QUFQSjtBQVNJO0VBQ0UsZ0JDYk07QURNWjtBQVdFO0VBQ0UsbUJBQUE7QUFUSjtBQVdJO0VBQ0UsZ0JDckJNO0FEWVo7QUFhRTtFQUNFLG1CQUFBO0FBWEo7QUFhSTtFQUNFLGdCQzdCTTtBRGtCWiIsInNvdXJjZXNDb250ZW50IjpbIkBpbXBvcnQgJy4uLy4uLy4uLy4uL3Njc3MvdmFyaWFibGVzJztcclxuXHJcbi5pbmZvLXdyYXBwZXIge1xyXG4gIC5pbmZvIHtcclxuICAgICYtaXRlbSB7XHJcbiAgICAgIG1hcmdpbi1ib3R0b206IDFyZW07XHJcbiAgICB9XHJcblxyXG4gICAgJi1sYWJlbCB7XHJcbiAgICAgIGZvbnQtd2VpZ2h0OiAkZm9udC1ib2xkO1xyXG4gICAgfVxyXG4gIH1cclxufVxyXG5cclxuLmNoYW5nZWxvZy13cmFwcGVyIDo6bmctZGVlcCAucmVsZWFzZSB7XHJcbiAgLnZlcnNpb24ge1xyXG4gICAgbWFyZ2luLWJvdHRvbTogMXJlbTtcclxuXHJcbiAgICAmLWxhYmVsIHtcclxuICAgICAgZm9udC13ZWlnaHQ6ICRmb250LWJvbGQ7XHJcbiAgICB9XHJcbiAgfVxyXG5cclxuICAucmVsZWFzZWRhdGUge1xyXG4gICAgbWFyZ2luLWJvdHRvbTogMXJlbTtcclxuXHJcbiAgICAmLWxhYmVsIHtcclxuICAgICAgZm9udC13ZWlnaHQ6ICRmb250LWJvbGQ7XHJcbiAgICB9XHJcbiAgfVxyXG5cclxuICAuY2hhbmdlbG9nIHtcclxuICAgIG1hcmdpbi1ib3R0b206IDFyZW07XHJcblxyXG4gICAgJi1sYWJlbCB7XHJcbiAgICAgIGZvbnQtd2VpZ2h0OiAkZm9udC1ib2xkO1xyXG4gICAgfVxyXG4gIH1cclxufVxyXG4iLCIvLyBHbG9iYWwgdmFyaWFibGVzICh2YXIoLS14eHh4KSkgYXJlIHVzZWQgZnJvbSBpbXBvcnRlZCBwcmltZW5nIHN0eWxlc1xyXG5cclxuLy8gRm9udFxyXG4kZm9udC1zaXplOiAxcmVtO1xyXG4kZm9udC1zaXplLXNtOiAoJGZvbnQtc2l6ZSAqIC44NzUpICFkZWZhdWx0O1xyXG4kZm9udC1kZWZhdWx0OiA0MDA7XHJcbiRmb250LWJvbGQ6IDUwMDtcclxuJGZvbnQtY29sb3I6IHZhcigtLXRleHQtY29sb3IpO1xyXG5cclxuLy8gQmFja2dyb3VuZFxyXG4kYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tc3VyZmFjZS1hKTtcclxuXHJcbi8vTWVkaWEgYm91bmRhcmllc1xyXG4kbWVkaWEtbW9iaWxlLW1heC13aWR0aDogNzY3cHg7XHJcbiRtZWRpYS10YWJsZXQtbWluLXdpZHRoOiA3NjhweDtcclxuJG1lZGlhLXRhYmxldC1tYXgtd2lkdGg6IDk5MXB4O1xyXG4kbWVkaWEtZGVza3RvcC1taW4td2lkdGg6IDk5MnB4O1xyXG4iXSwic291cmNlUm9vdCI6IiJ9 */"]
+      });
+    }
   }
   return SystemInfoComponent;
 })();
@@ -526,42 +530,46 @@ let SystemStatusComponent = /*#__PURE__*/(() => {
         error: () => this.messageService.showErrorMessage('Unable to get the system paths!')
       });
     }
-    static #_ = this.ɵfac = function SystemStatusComponent_Factory(t) {
-      return new (t || SystemStatusComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdefineComponent"]({
-      type: SystemStatusComponent,
-      selectors: [["app-system-status"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵStandaloneFeature"]],
-      decls: 14,
-      vars: 6,
-      consts: [[1, "container-lg"], ["header", "Status"], [1, "panel-section"], [1, "panel-section-header"], ["styleClass", "p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode", 3, "value", "autoLayout", "rowHover"], ["pTemplate", "header"], ["pTemplate", "body"], ["pSortableColumn", "name"], ["field", "name"], ["pSortableColumn", "active"], ["field", "active"], ["pSortableColumn", "alive"], ["field", "alive"], ["pSortableColumn", "interval"], ["field", "interval"], ["pSortableColumn", "lastRun"], ["field", "lastRun"], ["pSortableColumn", "nextRun"], ["field", "nextRun"], [3, "ngClass"], [1, "p-column-title"], [1, "p-column-data"], ["pSortableColumn", "path"], ["field", "path"], ["pSortableColumn", "freeBytes"], ["field", "freeBytes"], [1, "p-column-data", "wrap-text"], ["class", "fa fa-exclamation-triangle text-danger ml-1", "title", "Low disk space", 4, "ngIf"], ["title", "Low disk space", 1, "fa", "fa-exclamation-triangle", "text-danger", "ml-1"]],
-      template: function SystemStatusComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1)(2, "div", 2)(3, "div", 3);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](4, "Schedulers");
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](5, "p-table", 4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](6, SystemStatusComponent_ng_template_6_Template, 25, 0, "ng-template", 5)(7, SystemStatusComponent_ng_template_7_Template, 31, 9, "ng-template", 6);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]()();
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](8, "div", 2)(9, "div", 3);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](10, "Paths");
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](11, "p-table", 4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](12, SystemStatusComponent_ng_template_12_Template, 13, 0, "ng-template", 5)(13, SystemStatusComponent_ng_template_13_Template, 17, 4, "ng-template", 6);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]()()()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](5);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("value", ctx.schedulers)("autoLayout", true)("rowHover", true);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](6);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("value", ctx.paths)("autoLayout", true)("rowHover", true);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_5__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_5__.NgClass, primeng_panel__WEBPACK_IMPORTED_MODULE_6__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_6__.Panel, primeng_api__WEBPACK_IMPORTED_MODULE_7__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_8__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_8__.Table, primeng_table__WEBPACK_IMPORTED_MODULE_8__.SortableColumn, primeng_table__WEBPACK_IMPORTED_MODULE_8__.SortIcon, primeng_api__WEBPACK_IMPORTED_MODULE_7__.SharedModule],
-      styles: [".scheduler-running[_ngcontent-%COMP%] {\n  background-color: var(--success) !important;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvc3lzdGVtL3N0YXR1cy9zeXN0ZW0tc3RhdHVzLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVBO0VBQ0UsMkNBQUE7QUFERiIsInNvdXJjZXNDb250ZW50IjpbIkBpbXBvcnQgJy4uLy4uLy4uLy4uL3Njc3MvdmFyaWFibGVzJztcclxuXHJcbi5zY2hlZHVsZXItcnVubmluZyB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tc3VjY2VzcykgIWltcG9ydGFudDtcclxufVxyXG4iXSwic291cmNlUm9vdCI6IiJ9 */"]
-    });
+    static {
+      this.ɵfac = function SystemStatusComponent_Factory(t) {
+        return new (t || SystemStatusComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdefineComponent"]({
+        type: SystemStatusComponent,
+        selectors: [["app-system-status"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵStandaloneFeature"]],
+        decls: 14,
+        vars: 6,
+        consts: [[1, "container-lg"], ["header", "Status"], [1, "panel-section"], [1, "panel-section-header"], ["styleClass", "p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode", 3, "value", "autoLayout", "rowHover"], ["pTemplate", "header"], ["pTemplate", "body"], ["pSortableColumn", "name"], ["field", "name"], ["pSortableColumn", "active"], ["field", "active"], ["pSortableColumn", "alive"], ["field", "alive"], ["pSortableColumn", "interval"], ["field", "interval"], ["pSortableColumn", "lastRun"], ["field", "lastRun"], ["pSortableColumn", "nextRun"], ["field", "nextRun"], [3, "ngClass"], [1, "p-column-title"], [1, "p-column-data"], ["pSortableColumn", "path"], ["field", "path"], ["pSortableColumn", "freeBytes"], ["field", "freeBytes"], [1, "p-column-data", "wrap-text"], ["class", "fa fa-exclamation-triangle text-danger ml-1", "title", "Low disk space", 4, "ngIf"], ["title", "Low disk space", 1, "fa", "fa-exclamation-triangle", "text-danger", "ml-1"]],
+        template: function SystemStatusComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1)(2, "div", 2)(3, "div", 3);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](4, "Schedulers");
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](5, "p-table", 4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](6, SystemStatusComponent_ng_template_6_Template, 25, 0, "ng-template", 5)(7, SystemStatusComponent_ng_template_7_Template, 31, 9, "ng-template", 6);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]()();
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](8, "div", 2)(9, "div", 3);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtext"](10, "Paths");
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](11, "p-table", 4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](12, SystemStatusComponent_ng_template_12_Template, 13, 0, "ng-template", 5)(13, SystemStatusComponent_ng_template_13_Template, 17, 4, "ng-template", 6);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]()()()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](5);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("value", ctx.schedulers)("autoLayout", true)("rowHover", true);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"](6);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("value", ctx.paths)("autoLayout", true)("rowHover", true);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_5__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_5__.NgClass, primeng_panel__WEBPACK_IMPORTED_MODULE_6__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_6__.Panel, primeng_api__WEBPACK_IMPORTED_MODULE_7__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_8__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_8__.Table, primeng_table__WEBPACK_IMPORTED_MODULE_8__.SortableColumn, primeng_table__WEBPACK_IMPORTED_MODULE_8__.SortIcon, primeng_api__WEBPACK_IMPORTED_MODULE_7__.SharedModule],
+        styles: [".scheduler-running[_ngcontent-%COMP%] {\n  background-color: var(--success) !important;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvc3lzdGVtL3N0YXR1cy9zeXN0ZW0tc3RhdHVzLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVBO0VBQ0UsMkNBQUE7QUFERiIsInNvdXJjZXNDb250ZW50IjpbIkBpbXBvcnQgJy4uLy4uLy4uLy4uL3Njc3MvdmFyaWFibGVzJztcclxuXHJcbi5zY2hlZHVsZXItcnVubmluZyB7XHJcbiAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tc3VjY2VzcykgIWltcG9ydGFudDtcclxufVxyXG4iXSwic291cmNlUm9vdCI6IiJ9 */"]
+      });
+    }
   }
   return SystemStatusComponent;
 })();
@@ -1727,4 +1735,4 @@ let TabViewModule = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=564.f4e9a46a0eea94ae.js.map
+//# sourceMappingURL=564.e67d8a6badeee27a.js.map

@@ -203,45 +203,49 @@ let ManualRefineComponent = /*#__PURE__*/(() => {
       wantedItem.releaseGroup = _utils_form_utils__WEBPACK_IMPORTED_MODULE_3__.FormUtils.getFormControlValue(this.itemForm, 'releaseGroup');
       return wantedItem;
     }
-    static #_ = this.ɵfac = function ManualRefineComponent_Factory(t) {
-      return new (t || ManualRefineComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵdefineComponent"]({
-      type: ManualRefineComponent,
-      selectors: [["app-manual-refine"]],
-      inputs: {
-        visible: "visible",
-        wantedItem: "wantedItem"
-      },
-      outputs: {
-        visibleChange: "visibleChange",
-        wantedItemChange: "wantedItemChange"
-      },
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵStandaloneFeature"]],
-      decls: 3,
-      vars: 5,
-      consts: [["header", "Manually refine item details", "styleClass", "dialog-manual-refine", 3, "visibleChange", "visible", "modal", "closable", "resizable"], ["class", "form", 3, "formGroup", 4, "ngIf"], ["pTemplate", "footer"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "col-sm-4", "form-row-label"], ["for", "title", 1, "label"], [1, "col-12", "col-sm-8"], ["formControlName", "title", 3, "validationFeedback"], ["for", "year", 1, "label"], ["formControlName", "year", 3, "showButtons"], ["for", "season", 1, "label"], ["formControlName", "season", 3, "showButtons"], ["for", "episode", 1, "label"], ["formControlName", "episode"], ["for", "source", 1, "label"], ["formControlName", "source"], ["for", "codec", 1, "label"], ["formControlName", "codec"], ["for", "releaseGroup", 1, "label"], ["formControlName", "releaseGroup"], [1, "btn-group"], ["icon", "pi pi-times", "label", "Cancel", "styleClass", "p-button p-button-secondary", 3, "click"], ["icon", "pi pi-undo", "label", "Reset", "styleClass", "p-button", 3, "click"], ["icon", "pi pi-check", "label", "Update", "styleClass", "p-button mr-0", 3, "click"]],
-      template: function ManualRefineComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵelementStart"](0, "p-dialog", 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵtwoWayListener"]("visibleChange", function ManualRefineComponent_Template_p_dialog_visibleChange_0_listener($event) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵtwoWayBindingSet"](ctx.visible, $event) || (ctx.visible = $event);
-            return $event;
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵtemplate"](1, ManualRefineComponent_form_1_Template, 43, 4, "form", 1)(2, ManualRefineComponent_ng_template_2_Template, 4, 0, "ng-template", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵelementEnd"]();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵtwoWayProperty"]("visible", ctx.visible);
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵproperty"]("modal", true)("closable", false)("resizable", false);
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵproperty"]("ngIf", ctx.itemForm);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_11__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_9__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_9__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_9__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_9__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_9__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_9__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_9__.FormControlName, primeng_dialog__WEBPACK_IMPORTED_MODULE_12__.DialogModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_12__.Dialog, primeng_api__WEBPACK_IMPORTED_MODULE_13__.PrimeTemplate, primeng_button__WEBPACK_IMPORTED_MODULE_14__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_14__.Button, primeng_api__WEBPACK_IMPORTED_MODULE_13__.SharedModule, _input_text_input_text_component__WEBPACK_IMPORTED_MODULE_7__.InputTextComponent, _input_number_input_number_component__WEBPACK_IMPORTED_MODULE_6__.InputNumberComponent],
-      styles: [".dialog-manual-refine {\n  width: 30rem;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvY29tcG9uZW50cy9tYW51YWwtcmVmaW5lL21hbnVhbC1yZWZpbmUuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxZQUFBO0FBQ0YiLCJzb3VyY2VzQ29udGVudCI6WyI6Om5nLWRlZXAgLmRpYWxvZy1tYW51YWwtcmVmaW5lIHtcclxuICB3aWR0aDogMzByZW07XHJcbn1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function ManualRefineComponent_Factory(t) {
+        return new (t || ManualRefineComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵdefineComponent"]({
+        type: ManualRefineComponent,
+        selectors: [["app-manual-refine"]],
+        inputs: {
+          visible: "visible",
+          wantedItem: "wantedItem"
+        },
+        outputs: {
+          visibleChange: "visibleChange",
+          wantedItemChange: "wantedItemChange"
+        },
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵStandaloneFeature"]],
+        decls: 3,
+        vars: 5,
+        consts: [["header", "Manually refine item details", "styleClass", "dialog-manual-refine", 3, "visibleChange", "visible", "modal", "closable", "resizable"], ["class", "form", 3, "formGroup", 4, "ngIf"], ["pTemplate", "footer"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "col-sm-4", "form-row-label"], ["for", "title", 1, "label"], [1, "col-12", "col-sm-8"], ["formControlName", "title", 3, "validationFeedback"], ["for", "year", 1, "label"], ["formControlName", "year", 3, "showButtons"], ["for", "season", 1, "label"], ["formControlName", "season", 3, "showButtons"], ["for", "episode", 1, "label"], ["formControlName", "episode"], ["for", "source", 1, "label"], ["formControlName", "source"], ["for", "codec", 1, "label"], ["formControlName", "codec"], ["for", "releaseGroup", 1, "label"], ["formControlName", "releaseGroup"], [1, "btn-group"], ["icon", "pi pi-times", "label", "Cancel", "styleClass", "p-button p-button-secondary", 3, "click"], ["icon", "pi pi-undo", "label", "Reset", "styleClass", "p-button", 3, "click"], ["icon", "pi pi-check", "label", "Update", "styleClass", "p-button mr-0", 3, "click"]],
+        template: function ManualRefineComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵelementStart"](0, "p-dialog", 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵtwoWayListener"]("visibleChange", function ManualRefineComponent_Template_p_dialog_visibleChange_0_listener($event) {
+              _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵtwoWayBindingSet"](ctx.visible, $event) || (ctx.visible = $event);
+              return $event;
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵtemplate"](1, ManualRefineComponent_form_1_Template, 43, 4, "form", 1)(2, ManualRefineComponent_ng_template_2_Template, 4, 0, "ng-template", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵelementEnd"]();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵtwoWayProperty"]("visible", ctx.visible);
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵproperty"]("modal", true)("closable", false)("resizable", false);
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵproperty"]("ngIf", ctx.itemForm);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_11__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_9__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_9__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_9__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_9__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_9__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_9__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_9__.FormControlName, primeng_dialog__WEBPACK_IMPORTED_MODULE_12__.DialogModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_12__.Dialog, primeng_api__WEBPACK_IMPORTED_MODULE_13__.PrimeTemplate, primeng_button__WEBPACK_IMPORTED_MODULE_14__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_14__.Button, primeng_api__WEBPACK_IMPORTED_MODULE_13__.SharedModule, _input_text_input_text_component__WEBPACK_IMPORTED_MODULE_7__.InputTextComponent, _input_number_input_number_component__WEBPACK_IMPORTED_MODULE_6__.InputNumberComponent],
+        styles: [".dialog-manual-refine {\n  width: 30rem;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvY29tcG9uZW50cy9tYW51YWwtcmVmaW5lL21hbnVhbC1yZWZpbmUuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7RUFDRSxZQUFBO0FBQ0YiLCJzb3VyY2VzQ29udGVudCI6WyI6Om5nLWRlZXAgLmRpYWxvZy1tYW51YWwtcmVmaW5lIHtcclxuICB3aWR0aDogMzByZW07XHJcbn1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return ManualRefineComponent;
 })();
@@ -560,38 +564,42 @@ let HomeDownloadedComponent = /*#__PURE__*/(() => {
         }
       });
     }
-    static #_ = this.ɵfac = function HomeDownloadedComponent_Factory(t) {
-      return new (t || HomeDownloadedComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdefineComponent"]({
-      type: HomeDownloadedComponent,
-      selectors: [["app-home-downloaded"]],
-      inputs: {
-        downloadedItems: "downloadedItems"
-      },
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵStandaloneFeature"]],
-      decls: 5,
-      vars: 14,
-      consts: [["downloadedTable", ""], ["stateStorage", "local", "currentPageReportTemplate", "{first} to {last} of {totalRecords}", "styleClass", "p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode", 3, "sortFunction", "value", "stateKey", "loading", "autoLayout", "rowHover", "paginator", "rows", "rowsPerPageOptions", "showCurrentPageReport", "globalFilterFields", "customSort"], ["pTemplate", "caption"], ["pTemplate", "header"], ["pTemplate", "body"], [1, "caption"], [1, "p-inputgroup", "dropdown"], [1, "p-inputgroup-addon"], ["inputId", "downloadedVideoTypes", 3, "onChange", "options"], [1, "ml-auto"], ["matchMode", "contains", 3, "table", "tableStateKey"], ["pSortableColumn", "name"], ["field", "name"], ["pSortableColumn", "season"], ["field", "season"], ["pSortableColumn", "episode"], ["field", "episode"], ["pSortableColumn", "source"], ["field", "source"], ["pSortableColumn", "quality"], ["field", "quality"], ["pSortableColumn", "codec"], ["field", "codec"], ["pSortableColumn", "releaseGroup"], ["field", "releaseGroup"], ["pSortableColumn", "languages"], ["field", "languages"], ["pSortableColumn", "timestamp"], ["field", "timestamp"], [1, "p-column-title"], [1, "p-column-data"], [4, "ngIf"], [1, "icon-dropdown-title"], [1, "p-tag", "language"]],
-      template: function HomeDownloadedComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          const _r1 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵgetCurrentView"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](0, "p-table", 1, 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("sortFunction", function HomeDownloadedComponent_Template_p_table_sortFunction_0_listener($event) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r1);
-            return _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵresetView"](ctx.sort($event));
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtemplate"](2, HomeDownloadedComponent_ng_template_2_Template, 7, 3, "ng-template", 2)(3, HomeDownloadedComponent_ng_template_3_Template, 37, 0, "ng-template", 3)(4, HomeDownloadedComponent_ng_template_4_Template, 61, 13, "ng-template", 4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("value", ctx.downloadedItems)("stateKey", ctx.tableStateKey)("loading", ctx.loading)("autoLayout", true)("rowHover", true)("paginator", true)("rows", 10)("rowsPerPageOptions", _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵpureFunction1"](12, _c1, _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵpureFunction0"](11, _c0)))("showCurrentPageReport", true)("globalFilterFields", ctx.globalFilterFields)("customSort", true);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_9__.NgIf, primeng_table__WEBPACK_IMPORTED_MODULE_10__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_10__.Table, primeng_api__WEBPACK_IMPORTED_MODULE_11__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_10__.SortableColumn, primeng_table__WEBPACK_IMPORTED_MODULE_10__.SortIcon, primeng_dropdown__WEBPACK_IMPORTED_MODULE_12__.DropdownModule, primeng_dropdown__WEBPACK_IMPORTED_MODULE_12__.Dropdown, primeng_api__WEBPACK_IMPORTED_MODULE_11__.SharedModule, _components_table_filter_table_filter_component__WEBPACK_IMPORTED_MODULE_3__.TableFilterComponent, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.IconDropdownComponent],
-      styles: [".p-datatable-auto-layout > .p-datatable-wrapper {\n  overflow-x: visible !important;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvaG9tZS9kb3dubG9hZGVkL2hvbWUtZG93bmxvYWRlZC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFDQTtFQUNFLDhCQUFBO0FBQUYiLCJzb3VyY2VzQ29udGVudCI6WyIvLyBBbGxvdyBkcm9wZG93biBvdmVyZmxvdyB3aXRoaW4gdGFibGVcclxuOjpuZy1kZWVwLnAtZGF0YXRhYmxlLWF1dG8tbGF5b3V0Pi5wLWRhdGF0YWJsZS13cmFwcGVyIHtcclxuICBvdmVyZmxvdy14OiB2aXNpYmxlICFpbXBvcnRhbnQ7XHJcbn1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function HomeDownloadedComponent_Factory(t) {
+        return new (t || HomeDownloadedComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdefineComponent"]({
+        type: HomeDownloadedComponent,
+        selectors: [["app-home-downloaded"]],
+        inputs: {
+          downloadedItems: "downloadedItems"
+        },
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵStandaloneFeature"]],
+        decls: 5,
+        vars: 14,
+        consts: [["downloadedTable", ""], ["stateStorage", "local", "currentPageReportTemplate", "{first} to {last} of {totalRecords}", "styleClass", "p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode", 3, "sortFunction", "value", "stateKey", "loading", "autoLayout", "rowHover", "paginator", "rows", "rowsPerPageOptions", "showCurrentPageReport", "globalFilterFields", "customSort"], ["pTemplate", "caption"], ["pTemplate", "header"], ["pTemplate", "body"], [1, "caption"], [1, "p-inputgroup", "dropdown"], [1, "p-inputgroup-addon"], ["inputId", "downloadedVideoTypes", 3, "onChange", "options"], [1, "ml-auto"], ["matchMode", "contains", 3, "table", "tableStateKey"], ["pSortableColumn", "name"], ["field", "name"], ["pSortableColumn", "season"], ["field", "season"], ["pSortableColumn", "episode"], ["field", "episode"], ["pSortableColumn", "source"], ["field", "source"], ["pSortableColumn", "quality"], ["field", "quality"], ["pSortableColumn", "codec"], ["field", "codec"], ["pSortableColumn", "releaseGroup"], ["field", "releaseGroup"], ["pSortableColumn", "languages"], ["field", "languages"], ["pSortableColumn", "timestamp"], ["field", "timestamp"], [1, "p-column-title"], [1, "p-column-data"], [4, "ngIf"], [1, "icon-dropdown-title"], [1, "p-tag", "language"]],
+        template: function HomeDownloadedComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            const _r1 = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵgetCurrentView"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](0, "p-table", 1, 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵlistener"]("sortFunction", function HomeDownloadedComponent_Template_p_table_sortFunction_0_listener($event) {
+              _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵrestoreView"](_r1);
+              return _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵresetView"](ctx.sort($event));
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtemplate"](2, HomeDownloadedComponent_ng_template_2_Template, 7, 3, "ng-template", 2)(3, HomeDownloadedComponent_ng_template_3_Template, 37, 0, "ng-template", 3)(4, HomeDownloadedComponent_ng_template_4_Template, 61, 13, "ng-template", 4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("value", ctx.downloadedItems)("stateKey", ctx.tableStateKey)("loading", ctx.loading)("autoLayout", true)("rowHover", true)("paginator", true)("rows", 10)("rowsPerPageOptions", _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵpureFunction1"](12, _c1, _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵpureFunction0"](11, _c0)))("showCurrentPageReport", true)("globalFilterFields", ctx.globalFilterFields)("customSort", true);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_9__.NgIf, primeng_table__WEBPACK_IMPORTED_MODULE_10__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_10__.Table, primeng_api__WEBPACK_IMPORTED_MODULE_11__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_10__.SortableColumn, primeng_table__WEBPACK_IMPORTED_MODULE_10__.SortIcon, primeng_dropdown__WEBPACK_IMPORTED_MODULE_12__.DropdownModule, primeng_dropdown__WEBPACK_IMPORTED_MODULE_12__.Dropdown, primeng_api__WEBPACK_IMPORTED_MODULE_11__.SharedModule, _components_table_filter_table_filter_component__WEBPACK_IMPORTED_MODULE_3__.TableFilterComponent, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.IconDropdownComponent],
+        styles: [".p-datatable-auto-layout > .p-datatable-wrapper {\n  overflow-x: visible !important;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvaG9tZS9kb3dubG9hZGVkL2hvbWUtZG93bmxvYWRlZC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFDQTtFQUNFLDhCQUFBO0FBQUYiLCJzb3VyY2VzQ29udGVudCI6WyIvLyBBbGxvdyBkcm9wZG93biBvdmVyZmxvdyB3aXRoaW4gdGFibGVcclxuOjpuZy1kZWVwLnAtZGF0YXRhYmxlLWF1dG8tbGF5b3V0Pi5wLWRhdGF0YWJsZS13cmFwcGVyIHtcclxuICBvdmVyZmxvdy14OiB2aXNpYmxlICFpbXBvcnRhbnQ7XHJcbn1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return HomeDownloadedComponent;
 })();
@@ -632,36 +640,40 @@ let HomeComponent = /*#__PURE__*/(() => {
     getWantedHeader() {
       return `Wanted subtitles (${this.total}) - Episodes (${this.totalEpisodes}) - Movies (${this.totalMovies})`;
     }
-    static #_ = this.ɵfac = function HomeComponent_Factory(t) {
-      return new (t || HomeComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineComponent"]({
-      type: HomeComponent,
-      selectors: [["app-home"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵStandaloneFeature"]],
-      decls: 5,
-      vars: 1,
-      consts: [[1, "container-lg"], ["styleClass", "mb-3", 3, "header"], [3, "totals"], ["header", "Downloaded subtitles"]],
-      template: function HomeComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1)(2, "app-home-wanted", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("totals", function HomeComponent_Template_app_home_wanted_totals_2_listener($event) {
-            return ctx.getTotals($event);
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](3, "p-panel", 3);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](4, "app-home-downloaded");
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("header", ctx.getWantedHeader());
-        }
-      },
-      dependencies: [primeng_panel__WEBPACK_IMPORTED_MODULE_3__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_3__.Panel, _wanted_home_wanted_component__WEBPACK_IMPORTED_MODULE_1__.HomeWantedComponent, _downloaded_home_downloaded_component__WEBPACK_IMPORTED_MODULE_0__.HomeDownloadedComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function HomeComponent_Factory(t) {
+        return new (t || HomeComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineComponent"]({
+        type: HomeComponent,
+        selectors: [["app-home"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵStandaloneFeature"]],
+        decls: 5,
+        vars: 1,
+        consts: [[1, "container-lg"], ["styleClass", "mb-3", 3, "header"], [3, "totals"], ["header", "Downloaded subtitles"]],
+        template: function HomeComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1)(2, "app-home-wanted", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("totals", function HomeComponent_Template_app_home_wanted_totals_2_listener($event) {
+              return ctx.getTotals($event);
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](3, "p-panel", 3);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](4, "app-home-downloaded");
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("header", ctx.getWantedHeader());
+          }
+        },
+        dependencies: [primeng_panel__WEBPACK_IMPORTED_MODULE_3__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_3__.Panel, _wanted_home_wanted_component__WEBPACK_IMPORTED_MODULE_1__.HomeWantedComponent, _downloaded_home_downloaded_component__WEBPACK_IMPORTED_MODULE_0__.HomeDownloadedComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return HomeComponent;
 })();
@@ -1279,62 +1291,66 @@ let HomeSearchComponent = /*#__PURE__*/(() => {
     goHome() {
       this.router.navigateByUrl('/home');
     }
-    static #_ = this.ɵfac = function HomeSearchComponent_Factory(t) {
-      return new (t || HomeSearchComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵdefineComponent"]({
-      type: HomeSearchComponent,
-      selectors: [["app-home-search"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵStandaloneFeature"]],
-      decls: 9,
-      vars: 13,
-      consts: [[1, "container-lg"], [4, "ngIf"], ["header", "Subtitle preview", 3, "visibleChange", "visible", "modal", "closable", "resizable"], [1, "dialog-content"], [3, "innerHTML"], ["header", "Score details", 3, "visibleChange", "visible", "modal", "closable", "resizable"], ["class", "dialog-content", 4, "ngIf"], [3, "visible", "videoPath", "subtitlePath", "visibleChange", 4, "ngIf"], [3, "visible"], ["pTemplate", "header"], ["aria-hidden", "true", 1, "fa", "fa-spinner", "fa-spin", "mr-2"], [1, "panel-section"], [1, "panel-section-header"], [1, "wanted-item-container"], [1, "row"], [1, "col-12", "col-sm-12", "col-md-2", "col-lg-2"], [1, "wanted-item-label"], [1, "col-12", "col-sm-12", "col-md-10", "col-lg-10"], [1, "wanted-item-value"], [1, "p-tag", "language"], ["styleClass", "p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode", 3, "value", "loading", "autoLayout", "rowHover"], ["pTemplate", "body"], ["type", "button", "pButton", "", "icon", "pi pi-chevron-left", "label", "Return", 3, "click"], [1, "w-100"], [1, "p-panel-title"], ["label", "Search", "icon", "pi pi-refresh", "styleClass", "p-button-outlined", 3, "onClick", "disabled"], ["pSortableColumn", "score"], ["field", "score"], ["pSortableColumn", "providerName"], ["field", "providerName"], [1, "p-column-title"], [1, "p-column-data"], ["class", "icon-link ml-1", 3, "click", 4, "ngIf"], [1, "dropdown"], ["data-toggle", "dropdown", "data-display", "static", "aria-haspopup", "true", "aria-expanded", "false", "title", "Click to show releases", 1, "dropdown-toggle", "has-tip", "icon-link"], [1, "dropdown-menu", "has-tip"], [4, "ngFor", "ngForOf"], [1, "p-column-data", "subtitle-preview"], [1, "icon-link", "subtitle-preview-icon", 3, "click"], ["aria-hidden", "true", "title", "Click to show preview", 1, "fa", "fa-search-plus"], [1, "subtitle-preview-content", 3, "innerHTML"], [1, "subtitle-action"], ["target", "_blank", 1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to visit website", 1, "fa", "fa-external-link"], [1, "icon-link", 3, "click"], ["class", "fa fa-floppy-o", "aria-hidden", "true", "title", "Click to save subtitle", 4, "ngIf"], ["class", "fa fa-check-circle-o text-success", "aria-hidden", "true", "title", "Subtitle saved", 4, "ngIf"], ["aria-hidden", "true", "title", "Click to delete subtitle", 1, "fa", "fa-times"], ["class", "subtitle-action", 4, "ngIf"], [1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to play video", 1, "fa", "fa-play-circle-o"], [1, "icon-link", 3, "click", "ngClass"], ["aria-hidden", "true", "title", "Click to execute post processing", 1, "fa", "fa-paper-plane"], [1, "icon-link", "ml-1", 3, "click"], ["aria-hidden", "true", "title", "Click to show score details", 1, "fa", "fa-times-circle", "text-warning"], ["aria-hidden", "true", "title", "Click to show score details", 1, "fa", "fa-check-circle", "text-success"], ["aria-hidden", "true", "title", "Click to save subtitle", 1, "fa", "fa-floppy-o"], ["aria-hidden", "true", "title", "Subtitle saved", 1, "fa", "fa-check-circle-o", "text-success"], ["aria-hidden", "true", "title", "Click to synchronize subtitle", 1, "fa", "fa-refresh"], ["aria-hidden", "true", 1, "fa", "fa-arrow-right"], ["class", "fa fa-times-circle text-warning", "aria-hidden", "true", "title", "Below minimum required configured score", 4, "ngIf"], ["class", "fa fa-check-circle text-success", "aria-hidden", "true", "title", "Equal or more than minimum required configured score", 4, "ngIf"], ["aria-hidden", "true", "title", "Below minimum required configured score", 1, "fa", "fa-times-circle", "text-warning"], ["aria-hidden", "true", "title", "Equal or more than minimum required configured score", 1, "fa", "fa-check-circle", "text-success"], [3, "visibleChange", "visible", "videoPath", "subtitlePath"]],
-      template: function HomeSearchComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](0, "div", 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](1, HomeSearchComponent_p_panel_1_Template, 40, 9, "p-panel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](2, "p-dialog", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayListener"]("visibleChange", function HomeSearchComponent_Template_p_dialog_visibleChange_2_listener($event) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayBindingSet"](ctx.showSubtitlePreviewDialog, $event) || (ctx.showSubtitlePreviewDialog = $event);
-            return $event;
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](3, "div", 3);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](4, "div", 4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]()();
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](5, "p-dialog", 5);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayListener"]("visibleChange", function HomeSearchComponent_Template_p_dialog_visibleChange_5_listener($event) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayBindingSet"](ctx.showScoreDetailsDialog, $event) || (ctx.showScoreDetailsDialog = $event);
-            return $event;
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](6, HomeSearchComponent_div_6_Template, 17, 7, "div", 6);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](7, HomeSearchComponent_app_subtitle_sync_7_Template, 1, 3, "app-subtitle-sync", 7);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](8, "app-loading", 8);
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.wantedItem);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayProperty"]("visible", ctx.showSubtitlePreviewDialog);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("modal", true)("closable", true)("resizable", false);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("innerHTML", ctx.subtitlePreview, _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵsanitizeHtml"]);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayProperty"]("visible", ctx.showScoreDetailsDialog);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("modal", true)("closable", true)("resizable", false);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.matches);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.showSubtitleSyncDialog);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("visible", ctx.postProcessInProgress);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_13__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_13__.NgFor, _angular_common__WEBPACK_IMPORTED_MODULE_13__.NgClass, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.Panel, primeng_api__WEBPACK_IMPORTED_MODULE_15__.Footer, primeng_api__WEBPACK_IMPORTED_MODULE_15__.PrimeTemplate, primeng_button__WEBPACK_IMPORTED_MODULE_16__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_16__.ButtonDirective, primeng_button__WEBPACK_IMPORTED_MODULE_16__.Button, primeng_table__WEBPACK_IMPORTED_MODULE_17__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_17__.Table, primeng_table__WEBPACK_IMPORTED_MODULE_17__.SortableColumn, primeng_table__WEBPACK_IMPORTED_MODULE_17__.SortIcon, primeng_dialog__WEBPACK_IMPORTED_MODULE_18__.DialogModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_18__.Dialog, primeng_api__WEBPACK_IMPORTED_MODULE_15__.SharedModule, _components_message_message_component__WEBPACK_IMPORTED_MODULE_2__.MessageComponent, _components_subtitle_sync_subtitle_sync_component__WEBPACK_IMPORTED_MODULE_3__.SubtitleSyncComponent, _components_loading_loading_component__WEBPACK_IMPORTED_MODULE_1__.LoadingComponent],
-      styles: [".wanted-item-container[_ngcontent-%COMP%]   .row[_ngcontent-%COMP%] {\n  margin-bottom: 0.5rem;\n}\n.dropdown[_ngcontent-%COMP%]   .dropdown-menu[_ngcontent-%COMP%] {\n  white-space: nowrap;\n  margin-top: 0.5rem;\n  padding: 0.5rem;\n}\n\n.subtitle-preview[_ngcontent-%COMP%] {\n  position: relative;\n}\n.subtitle-preview[_ngcontent-%COMP%]   .subtitle-preview-icon[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 0rem;\n  right: 2rem;\n}\n.subtitle-preview[_ngcontent-%COMP%]   .subtitle-preview-content[_ngcontent-%COMP%] {\n  height: 6.25rem;\n  overflow-y: scroll;\n  word-break: normal;\n  white-space: nowrap;\n}\n\n.subtitle-action[_ngcontent-%COMP%] {\n  text-align: center !important;\n}\n@media screen and (max-width: 767px) {\n  .subtitle-action[_ngcontent-%COMP%] {\n    text-align: left !important;\n  }\n}\n.subtitle-action[_ngcontent-%COMP%]   .disabled[_ngcontent-%COMP%] {\n  pointer-events: none;\n  -moz-filter: brightness(50%);\n  -o-filter: brightness(50%);\n  filter: brightness(50%);\n}\n\n .p-datatable-auto-layout > .p-datatable-wrapper {\n  overflow-x: visible !important;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvaG9tZS9zZWFyY2gvaG9tZS1zZWFyY2guY29tcG9uZW50LnNjc3MiLCJ3ZWJwYWNrOi8vLi9zcmMvc2Nzcy9taXhpbnMvX2ZpbHRlci5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUlFO0VBQ0UscUJBQUE7QUFISjtBQWdCRTtFQUNFLG1CQUFBO0VBQ0Esa0JBQUE7RUFDQSxlQUFBO0FBZEo7O0FBa0JBO0VBQ0Usa0JBQUE7QUFmRjtBQWlCRTtFQUNFLGtCQUFBO0VBQ0EsU0FBQTtFQUNBLFdBQUE7QUFmSjtBQWtCRTtFQUNFLGVBQUE7RUFDQSxrQkFBQTtFQUNBLGtCQUFBO0VBQ0EsbUJBQUE7QUFoQko7O0FBb0JBO0VBQ0UsNkJBQUE7QUFqQkY7QUFtQkU7RUFIRjtJQUlJLDJCQUFBO0VBaEJGO0FBQ0Y7QUFrQkU7RUFDRSxvQkFBQTtFQ2hERiw0QkRpRGtCO0VDaERsQiwwQkRnRGtCO0VDL0NsQix1QkQrQ2tCO0FBYnBCOztBQWtCQTtFQUNFLDhCQUFBO0FBZkYiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0ICcuLi8uLi8uLi8uLi9zY3NzL3ZhcmlhYmxlcyc7XHJcbkBpbXBvcnQgJy4uLy4uLy4uLy4uL3Njc3MvbWl4aW5zL2ZpbHRlcic7XHJcblxyXG4ud2FudGVkLWl0ZW0tY29udGFpbmVyIHtcclxuICAucm93IHtcclxuICAgIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcclxuICB9XHJcblxyXG4gIC53YW50ZWQtaXRlbS1sYWJlbCB7XHJcbiAgICAvLyBmb250LXdlaWdodDogJGZvbnQtYm9sZDtcclxuICB9XHJcblxyXG4gIC53YW50ZWQtaXRlbS12YWx1ZSB7XHJcbiAgICAvLyBmb250LXN0eWxlOiBpdGFsaWM7XHJcbiAgfVxyXG59XHJcblxyXG4uZHJvcGRvd24ge1xyXG4gIC5kcm9wZG93bi1tZW51IHtcclxuICAgIHdoaXRlLXNwYWNlOiBub3dyYXA7XHJcbiAgICBtYXJnaW4tdG9wOiAwLjVyZW07XHJcbiAgICBwYWRkaW5nOiAwLjVyZW07XHJcbiAgfVxyXG59XHJcblxyXG4uc3VidGl0bGUtcHJldmlldyB7XHJcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG5cclxuICAuc3VidGl0bGUtcHJldmlldy1pY29uIHtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICAgIHRvcDogMHJlbTtcclxuICAgIHJpZ2h0OiAycmVtO1xyXG4gIH1cclxuXHJcbiAgLnN1YnRpdGxlLXByZXZpZXctY29udGVudCB7XHJcbiAgICBoZWlnaHQ6IDYuMjVyZW07XHJcbiAgICBvdmVyZmxvdy15OiBzY3JvbGw7XHJcbiAgICB3b3JkLWJyZWFrOiBub3JtYWw7XHJcbiAgICB3aGl0ZS1zcGFjZTogbm93cmFwO1xyXG4gIH1cclxufVxyXG5cclxuLnN1YnRpdGxlLWFjdGlvbiB7XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyICFpbXBvcnRhbnQ7XHJcblxyXG4gIEBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6ICRtZWRpYS1tb2JpbGUtbWF4LXdpZHRoKSB7XHJcbiAgICB0ZXh0LWFsaWduOiBsZWZ0ICFpbXBvcnRhbnQ7XHJcbiAgfVxyXG5cclxuICAuZGlzYWJsZWQge1xyXG4gICAgcG9pbnRlci1ldmVudHM6IG5vbmU7XHJcbiAgICBAaW5jbHVkZSBmaWx0ZXIoYnJpZ2h0bmVzcyg1MCUpKTtcclxuICB9XHJcbn1cclxuXHJcbi8vIEFsbG93IGRyb3Bkb3duIG92ZXJmbG93IHdpdGhpbiB0YWJsZVxyXG46Om5nLWRlZXAucC1kYXRhdGFibGUtYXV0by1sYXlvdXQ+LnAtZGF0YXRhYmxlLXdyYXBwZXIge1xyXG4gIG92ZXJmbG93LXg6IHZpc2libGUgIWltcG9ydGFudDtcclxufVxyXG4iLCJAbWl4aW4gZmlsdGVyKCR2YWx1ZSkge1xyXG4gIC13ZWJraXQtZmlsdGVyOiAkdmFsdWU7XHJcbiAgLW1vei1maWx0ZXI6ICR2YWx1ZTtcclxuICAtby1maWx0ZXI6ICR2YWx1ZTtcclxuICBmaWx0ZXI6ICR2YWx1ZTtcclxufVxyXG4iXSwic291cmNlUm9vdCI6IiJ9 */"]
-    });
+    static {
+      this.ɵfac = function HomeSearchComponent_Factory(t) {
+        return new (t || HomeSearchComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵdefineComponent"]({
+        type: HomeSearchComponent,
+        selectors: [["app-home-search"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵStandaloneFeature"]],
+        decls: 9,
+        vars: 13,
+        consts: [[1, "container-lg"], [4, "ngIf"], ["header", "Subtitle preview", 3, "visibleChange", "visible", "modal", "closable", "resizable"], [1, "dialog-content"], [3, "innerHTML"], ["header", "Score details", 3, "visibleChange", "visible", "modal", "closable", "resizable"], ["class", "dialog-content", 4, "ngIf"], [3, "visible", "videoPath", "subtitlePath", "visibleChange", 4, "ngIf"], [3, "visible"], ["pTemplate", "header"], ["aria-hidden", "true", 1, "fa", "fa-spinner", "fa-spin", "mr-2"], [1, "panel-section"], [1, "panel-section-header"], [1, "wanted-item-container"], [1, "row"], [1, "col-12", "col-sm-12", "col-md-2", "col-lg-2"], [1, "wanted-item-label"], [1, "col-12", "col-sm-12", "col-md-10", "col-lg-10"], [1, "wanted-item-value"], [1, "p-tag", "language"], ["styleClass", "p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode", 3, "value", "loading", "autoLayout", "rowHover"], ["pTemplate", "body"], ["type", "button", "pButton", "", "icon", "pi pi-chevron-left", "label", "Return", 3, "click"], [1, "w-100"], [1, "p-panel-title"], ["label", "Search", "icon", "pi pi-refresh", "styleClass", "p-button-outlined", 3, "onClick", "disabled"], ["pSortableColumn", "score"], ["field", "score"], ["pSortableColumn", "providerName"], ["field", "providerName"], [1, "p-column-title"], [1, "p-column-data"], ["class", "icon-link ml-1", 3, "click", 4, "ngIf"], [1, "dropdown"], ["data-toggle", "dropdown", "data-display", "static", "aria-haspopup", "true", "aria-expanded", "false", "title", "Click to show releases", 1, "dropdown-toggle", "has-tip", "icon-link"], [1, "dropdown-menu", "has-tip"], [4, "ngFor", "ngForOf"], [1, "p-column-data", "subtitle-preview"], [1, "icon-link", "subtitle-preview-icon", 3, "click"], ["aria-hidden", "true", "title", "Click to show preview", 1, "fa", "fa-search-plus"], [1, "subtitle-preview-content", 3, "innerHTML"], [1, "subtitle-action"], ["target", "_blank", 1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to visit website", 1, "fa", "fa-external-link"], [1, "icon-link", 3, "click"], ["class", "fa fa-floppy-o", "aria-hidden", "true", "title", "Click to save subtitle", 4, "ngIf"], ["class", "fa fa-check-circle-o text-success", "aria-hidden", "true", "title", "Subtitle saved", 4, "ngIf"], ["aria-hidden", "true", "title", "Click to delete subtitle", 1, "fa", "fa-times"], ["class", "subtitle-action", 4, "ngIf"], [1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to play video", 1, "fa", "fa-play-circle-o"], [1, "icon-link", 3, "click", "ngClass"], ["aria-hidden", "true", "title", "Click to execute post processing", 1, "fa", "fa-paper-plane"], [1, "icon-link", "ml-1", 3, "click"], ["aria-hidden", "true", "title", "Click to show score details", 1, "fa", "fa-times-circle", "text-warning"], ["aria-hidden", "true", "title", "Click to show score details", 1, "fa", "fa-check-circle", "text-success"], ["aria-hidden", "true", "title", "Click to save subtitle", 1, "fa", "fa-floppy-o"], ["aria-hidden", "true", "title", "Subtitle saved", 1, "fa", "fa-check-circle-o", "text-success"], ["aria-hidden", "true", "title", "Click to synchronize subtitle", 1, "fa", "fa-refresh"], ["aria-hidden", "true", 1, "fa", "fa-arrow-right"], ["class", "fa fa-times-circle text-warning", "aria-hidden", "true", "title", "Below minimum required configured score", 4, "ngIf"], ["class", "fa fa-check-circle text-success", "aria-hidden", "true", "title", "Equal or more than minimum required configured score", 4, "ngIf"], ["aria-hidden", "true", "title", "Below minimum required configured score", 1, "fa", "fa-times-circle", "text-warning"], ["aria-hidden", "true", "title", "Equal or more than minimum required configured score", 1, "fa", "fa-check-circle", "text-success"], [3, "visibleChange", "visible", "videoPath", "subtitlePath"]],
+        template: function HomeSearchComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](0, "div", 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](1, HomeSearchComponent_p_panel_1_Template, 40, 9, "p-panel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](2, "p-dialog", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayListener"]("visibleChange", function HomeSearchComponent_Template_p_dialog_visibleChange_2_listener($event) {
+              _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayBindingSet"](ctx.showSubtitlePreviewDialog, $event) || (ctx.showSubtitlePreviewDialog = $event);
+              return $event;
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](3, "div", 3);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](4, "div", 4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]()();
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](5, "p-dialog", 5);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayListener"]("visibleChange", function HomeSearchComponent_Template_p_dialog_visibleChange_5_listener($event) {
+              _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayBindingSet"](ctx.showScoreDetailsDialog, $event) || (ctx.showScoreDetailsDialog = $event);
+              return $event;
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](6, HomeSearchComponent_div_6_Template, 17, 7, "div", 6);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](7, HomeSearchComponent_app_subtitle_sync_7_Template, 1, 3, "app-subtitle-sync", 7);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](8, "app-loading", 8);
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.wantedItem);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayProperty"]("visible", ctx.showSubtitlePreviewDialog);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("modal", true)("closable", true)("resizable", false);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("innerHTML", ctx.subtitlePreview, _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵsanitizeHtml"]);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayProperty"]("visible", ctx.showScoreDetailsDialog);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("modal", true)("closable", true)("resizable", false);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.matches);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.showSubtitleSyncDialog);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("visible", ctx.postProcessInProgress);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_13__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_13__.NgFor, _angular_common__WEBPACK_IMPORTED_MODULE_13__.NgClass, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.Panel, primeng_api__WEBPACK_IMPORTED_MODULE_15__.Footer, primeng_api__WEBPACK_IMPORTED_MODULE_15__.PrimeTemplate, primeng_button__WEBPACK_IMPORTED_MODULE_16__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_16__.ButtonDirective, primeng_button__WEBPACK_IMPORTED_MODULE_16__.Button, primeng_table__WEBPACK_IMPORTED_MODULE_17__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_17__.Table, primeng_table__WEBPACK_IMPORTED_MODULE_17__.SortableColumn, primeng_table__WEBPACK_IMPORTED_MODULE_17__.SortIcon, primeng_dialog__WEBPACK_IMPORTED_MODULE_18__.DialogModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_18__.Dialog, primeng_api__WEBPACK_IMPORTED_MODULE_15__.SharedModule, _components_message_message_component__WEBPACK_IMPORTED_MODULE_2__.MessageComponent, _components_subtitle_sync_subtitle_sync_component__WEBPACK_IMPORTED_MODULE_3__.SubtitleSyncComponent, _components_loading_loading_component__WEBPACK_IMPORTED_MODULE_1__.LoadingComponent],
+        styles: [".wanted-item-container[_ngcontent-%COMP%]   .row[_ngcontent-%COMP%] {\n  margin-bottom: 0.5rem;\n}\n.dropdown[_ngcontent-%COMP%]   .dropdown-menu[_ngcontent-%COMP%] {\n  white-space: nowrap;\n  margin-top: 0.5rem;\n  padding: 0.5rem;\n}\n\n.subtitle-preview[_ngcontent-%COMP%] {\n  position: relative;\n}\n.subtitle-preview[_ngcontent-%COMP%]   .subtitle-preview-icon[_ngcontent-%COMP%] {\n  position: absolute;\n  top: 0rem;\n  right: 2rem;\n}\n.subtitle-preview[_ngcontent-%COMP%]   .subtitle-preview-content[_ngcontent-%COMP%] {\n  height: 6.25rem;\n  overflow-y: scroll;\n  word-break: normal;\n  white-space: nowrap;\n}\n\n.subtitle-action[_ngcontent-%COMP%] {\n  text-align: center !important;\n}\n@media screen and (max-width: 767px) {\n  .subtitle-action[_ngcontent-%COMP%] {\n    text-align: left !important;\n  }\n}\n.subtitle-action[_ngcontent-%COMP%]   .disabled[_ngcontent-%COMP%] {\n  pointer-events: none;\n  -moz-filter: brightness(50%);\n  -o-filter: brightness(50%);\n  filter: brightness(50%);\n}\n\n .p-datatable-auto-layout > .p-datatable-wrapper {\n  overflow-x: visible !important;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvaG9tZS9zZWFyY2gvaG9tZS1zZWFyY2guY29tcG9uZW50LnNjc3MiLCJ3ZWJwYWNrOi8vLi9zcmMvc2Nzcy9taXhpbnMvX2ZpbHRlci5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUlFO0VBQ0UscUJBQUE7QUFISjtBQWdCRTtFQUNFLG1CQUFBO0VBQ0Esa0JBQUE7RUFDQSxlQUFBO0FBZEo7O0FBa0JBO0VBQ0Usa0JBQUE7QUFmRjtBQWlCRTtFQUNFLGtCQUFBO0VBQ0EsU0FBQTtFQUNBLFdBQUE7QUFmSjtBQWtCRTtFQUNFLGVBQUE7RUFDQSxrQkFBQTtFQUNBLGtCQUFBO0VBQ0EsbUJBQUE7QUFoQko7O0FBb0JBO0VBQ0UsNkJBQUE7QUFqQkY7QUFtQkU7RUFIRjtJQUlJLDJCQUFBO0VBaEJGO0FBQ0Y7QUFrQkU7RUFDRSxvQkFBQTtFQ2hERiw0QkRpRGtCO0VDaERsQiwwQkRnRGtCO0VDL0NsQix1QkQrQ2tCO0FBYnBCOztBQWtCQTtFQUNFLDhCQUFBO0FBZkYiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0ICcuLi8uLi8uLi8uLi9zY3NzL3ZhcmlhYmxlcyc7XHJcbkBpbXBvcnQgJy4uLy4uLy4uLy4uL3Njc3MvbWl4aW5zL2ZpbHRlcic7XHJcblxyXG4ud2FudGVkLWl0ZW0tY29udGFpbmVyIHtcclxuICAucm93IHtcclxuICAgIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcclxuICB9XHJcblxyXG4gIC53YW50ZWQtaXRlbS1sYWJlbCB7XHJcbiAgICAvLyBmb250LXdlaWdodDogJGZvbnQtYm9sZDtcclxuICB9XHJcblxyXG4gIC53YW50ZWQtaXRlbS12YWx1ZSB7XHJcbiAgICAvLyBmb250LXN0eWxlOiBpdGFsaWM7XHJcbiAgfVxyXG59XHJcblxyXG4uZHJvcGRvd24ge1xyXG4gIC5kcm9wZG93bi1tZW51IHtcclxuICAgIHdoaXRlLXNwYWNlOiBub3dyYXA7XHJcbiAgICBtYXJnaW4tdG9wOiAwLjVyZW07XHJcbiAgICBwYWRkaW5nOiAwLjVyZW07XHJcbiAgfVxyXG59XHJcblxyXG4uc3VidGl0bGUtcHJldmlldyB7XHJcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG5cclxuICAuc3VidGl0bGUtcHJldmlldy1pY29uIHtcclxuICAgIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICAgIHRvcDogMHJlbTtcclxuICAgIHJpZ2h0OiAycmVtO1xyXG4gIH1cclxuXHJcbiAgLnN1YnRpdGxlLXByZXZpZXctY29udGVudCB7XHJcbiAgICBoZWlnaHQ6IDYuMjVyZW07XHJcbiAgICBvdmVyZmxvdy15OiBzY3JvbGw7XHJcbiAgICB3b3JkLWJyZWFrOiBub3JtYWw7XHJcbiAgICB3aGl0ZS1zcGFjZTogbm93cmFwO1xyXG4gIH1cclxufVxyXG5cclxuLnN1YnRpdGxlLWFjdGlvbiB7XHJcbiAgdGV4dC1hbGlnbjogY2VudGVyICFpbXBvcnRhbnQ7XHJcblxyXG4gIEBtZWRpYSBzY3JlZW4gYW5kIChtYXgtd2lkdGg6ICRtZWRpYS1tb2JpbGUtbWF4LXdpZHRoKSB7XHJcbiAgICB0ZXh0LWFsaWduOiBsZWZ0ICFpbXBvcnRhbnQ7XHJcbiAgfVxyXG5cclxuICAuZGlzYWJsZWQge1xyXG4gICAgcG9pbnRlci1ldmVudHM6IG5vbmU7XHJcbiAgICBAaW5jbHVkZSBmaWx0ZXIoYnJpZ2h0bmVzcyg1MCUpKTtcclxuICB9XHJcbn1cclxuXHJcbi8vIEFsbG93IGRyb3Bkb3duIG92ZXJmbG93IHdpdGhpbiB0YWJsZVxyXG46Om5nLWRlZXAucC1kYXRhdGFibGUtYXV0by1sYXlvdXQ+LnAtZGF0YXRhYmxlLXdyYXBwZXIge1xyXG4gIG92ZXJmbG93LXg6IHZpc2libGUgIWltcG9ydGFudDtcclxufVxyXG4iLCJAbWl4aW4gZmlsdGVyKCR2YWx1ZSkge1xyXG4gIC13ZWJraXQtZmlsdGVyOiAkdmFsdWU7XHJcbiAgLW1vei1maWx0ZXI6ICR2YWx1ZTtcclxuICAtby1maWx0ZXI6ICR2YWx1ZTtcclxuICBmaWx0ZXI6ICR2YWx1ZTtcclxufVxyXG4iXSwic291cmNlUm9vdCI6IiJ9 */"]
+      });
+    }
   }
   return HomeSearchComponent;
 })();
@@ -2114,68 +2130,72 @@ let HomeWantedComponent = /*#__PURE__*/(() => {
         totalMovies
       });
     }
-    static #_ = this.ɵfac = function HomeWantedComponent_Factory(t) {
-      return new (t || HomeWantedComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵdefineComponent"]({
-      type: HomeWantedComponent,
-      selectors: [["app-home-wanted"]],
-      inputs: {
-        wantedItems: "wantedItems"
-      },
-      outputs: {
-        totals: "totals"
-      },
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵStandaloneFeature"]],
-      decls: 17,
-      vars: 19,
-      consts: [["wantedTable", ""], ["cd", ""], ["stateStorage", "local", "currentPageReportTemplate", "{first} to {last} of {totalRecords}", "styleClass", "p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode", 3, "sortFunction", "value", "stateKey", "loading", "autoLayout", "rowHover", "paginator", "rows", "rowsPerPageOptions", "showCurrentPageReport", "globalFilterFields", "customSort"], ["pTemplate", "caption"], ["pTemplate", "header"], ["pTemplate", "body"], [3, "visible", "tvdbId", "title", "visibleChange", 4, "ngIf"], [3, "visible", "imdbId", "title", "visibleChange", 4, "ngIf"], [3, "visible", "wantedItem", "visibleChange", "wantedItemChange", 4, "ngIf"], ["header", "Confirmation", "icon", "pi pi-exclamation-triangle"], [1, "confirmation-buttons"], ["class", "confirmation-cleanup-toggle", 4, "ngIf"], ["class", "confirmation-skip-season", 4, "ngIf"], [1, "btn-group"], ["type", "button", "pButton", "", "icon", "pi pi-times", "label", "No", 3, "click"], ["type", "button", "pButton", "", "icon", "pi pi-check", "label", "Yes", 3, "click"], [1, "caption"], [1, "p-inputgroup", "dropdown"], [1, "p-inputgroup-addon"], ["inputId", "wantedVideoTypes", 3, "onChange", "options"], [1, "ml-auto"], ["matchMode", "contains", 3, "table", "tableStateKey"], ["pSortableColumn", "name"], ["field", "name"], ["pSortableColumn", "season"], ["field", "season"], ["pSortableColumn", "episode"], ["field", "episode"], ["pSortableColumn", "source"], ["field", "source"], ["pSortableColumn", "quality"], ["field", "quality"], ["pSortableColumn", "codec"], ["field", "codec"], ["pSortableColumn", "releaseGroup"], ["field", "releaseGroup"], ["pSortableColumn", "languages"], ["field", "languages"], ["pSortableColumn", "timestamp"], ["field", "timestamp"], [1, "p-column-title"], [1, "p-column-data"], [1, "dropdown"], ["data-toggle", "dropdown", "data-display", "static", "aria-haspopup", "true", "aria-expanded", "false", "title", "Click for actions", 1, "dropdown-toggle", "has-tip", "dropdown-link"], ["class", "dropdown-menu has-tip", 4, "ngIf"], [1, "icon-dropdown-title"], [1, "icon-group"], [4, "ngIf"], ["class", "fa fa-check-circle text-success", "aria-hidden", "true", "title", "Included in automatic search", 4, "ngIf"], ["class", "fa fa-pause-circle text-warning", "aria-hidden", "true", "title", "Not included in automatic search", 4, "ngIf"], ["class", "p-tag language mr-2", 4, "ngFor", "ngForOf"], [1, "dropdown-menu", "has-tip"], [1, "dropdown-item"], [3, "click"], ["class", "icon-link text-danger", 3, "click", 4, "ngIf"], ["class", "icon-link", "target", "_blank", 3, "href", 4, "ngIf"], [1, "icon-link", 3, "click"], ["aria-hidden", "true", "title", "Click to edit show settings", 1, "fa", "fa-wrench"], [1, "icon-link", "text-danger", 3, "click"], ["aria-hidden", "true", "title", "Click to search tvdb id", 1, "fa", "fa-exclamation-triangle"], ["target", "_blank", 1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to visit Tvdb", 1, "fa", "fa-television"], ["aria-hidden", "true", "title", "Click to edit movie settings", 1, "fa", "fa-wrench"], ["aria-hidden", "true", "title", "Click to search imdb id", 1, "fa", "fa-exclamation-triangle"], ["aria-hidden", "true", "title", "Click to visit Imdb", 1, "fa", "fa-imdb"], ["aria-hidden", "true", "title", "Click to manually refine item details", 1, "fa", "fa-pencil"], ["aria-hidden", "true", "title", "Included in automatic search", 1, "fa", "fa-check-circle", "text-success"], ["aria-hidden", "true", "title", "Not included in automatic search", 1, "fa", "fa-pause-circle", "text-warning"], [1, "p-tag", "language", "mr-2"], ["title", "Click to search subtitles", 1, "icon-link", 3, "click"], [3, "visibleChange", "visible", "tvdbId", "title"], [3, "visibleChange", "visible", "imdbId", "title"], [3, "visibleChange", "wantedItemChange", "visible", "wantedItem"], [1, "confirmation-cleanup-toggle"], [1, "label"], [3, "ngModelChange", "ngModel"], [1, "confirmation-skip-season"], ["type", "text", "pInputText", "", 3, "ngModelChange", "ngModel"]],
-      template: function HomeWantedComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          const _r1 = _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵgetCurrentView"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementStart"](0, "p-table", 2, 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵlistener"]("sortFunction", function HomeWantedComponent_Template_p_table_sortFunction_0_listener($event) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵrestoreView"](_r1);
-            return _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵresetView"](ctx.sort($event));
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵtemplate"](2, HomeWantedComponent_ng_template_2_Template, 7, 3, "ng-template", 3)(3, HomeWantedComponent_ng_template_3_Template, 37, 0, "ng-template", 4)(4, HomeWantedComponent_ng_template_4_Template, 72, 19, "ng-template", 5);
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementEnd"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵtemplate"](5, HomeWantedComponent_app_show_settings_5_Template, 1, 3, "app-show-settings", 6)(6, HomeWantedComponent_app_movie_settings_6_Template, 1, 3, "app-movie-settings", 7)(7, HomeWantedComponent_app_manual_refine_7_Template, 1, 2, "app-manual-refine", 8);
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementStart"](8, "p-confirmDialog", 9, 1)(10, "p-footer")(11, "div", 10);
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵtemplate"](12, HomeWantedComponent_div_12_Template, 4, 1, "div", 11)(13, HomeWantedComponent_div_13_Template, 4, 1, "div", 12);
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementStart"](14, "div", 13)(15, "button", 14);
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵlistener"]("click", function HomeWantedComponent_Template_button_click_15_listener() {
-            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵrestoreView"](_r1);
-            const cd_r20 = _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵreference"](9);
-            return _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵresetView"](cd_r20.reject());
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementEnd"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementStart"](16, "button", 15);
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵlistener"]("click", function HomeWantedComponent_Template_button_click_16_listener() {
-            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵrestoreView"](_r1);
-            const cd_r20 = _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵreference"](9);
-            return _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵresetView"](cd_r20.accept());
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementEnd"]()()()()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵproperty"]("value", ctx.wantedItems)("stateKey", ctx.tableStateKey)("loading", ctx.loading)("autoLayout", true)("rowHover", true)("paginator", true)("rows", 10)("rowsPerPageOptions", _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵpureFunction1"](17, _c1, _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵpureFunction0"](16, _c0)))("showCurrentPageReport", true)("globalFilterFields", ctx.globalFilterFields)("customSort", true);
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵadvance"](5);
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵproperty"]("ngIf", ctx.showShowSettings);
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵproperty"]("ngIf", ctx.showMovieSettings);
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵproperty"]("ngIf", ctx.showManualRefine);
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵadvance"](5);
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵproperty"]("ngIf", ctx.confirmationType === "delete");
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵproperty"]("ngIf", ctx.confirmationType === "skip");
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_17__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_17__.NgFor, _angular_forms__WEBPACK_IMPORTED_MODULE_18__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_18__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_18__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_18__.NgModel, primeng_table__WEBPACK_IMPORTED_MODULE_19__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_19__.Table, primeng_api__WEBPACK_IMPORTED_MODULE_15__.Footer, primeng_api__WEBPACK_IMPORTED_MODULE_15__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_19__.SortableColumn, primeng_table__WEBPACK_IMPORTED_MODULE_19__.SortIcon, primeng_dropdown__WEBPACK_IMPORTED_MODULE_20__.DropdownModule, primeng_dropdown__WEBPACK_IMPORTED_MODULE_20__.Dropdown, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_21__.ConfirmDialogModule, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_21__.ConfirmDialog, primeng_button__WEBPACK_IMPORTED_MODULE_22__.ButtonDirective, primeng_inputswitch__WEBPACK_IMPORTED_MODULE_23__.InputSwitchModule, primeng_inputswitch__WEBPACK_IMPORTED_MODULE_23__.InputSwitch, primeng_inputtext__WEBPACK_IMPORTED_MODULE_24__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_24__.InputText, primeng_button__WEBPACK_IMPORTED_MODULE_22__.ButtonModule, primeng_api__WEBPACK_IMPORTED_MODULE_15__.SharedModule, _components_table_filter_table_filter_component__WEBPACK_IMPORTED_MODULE_8__.TableFilterComponent, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_4__.IconDropdownComponent, _components_show_settings_show_settings_component__WEBPACK_IMPORTED_MODULE_7__.ShowSettingsComponent, _components_movie_settings_movie_settings_component__WEBPACK_IMPORTED_MODULE_6__.MovieSettingsComponent, _components_manual_refine_manual_refine_component__WEBPACK_IMPORTED_MODULE_5__.ManualRefineComponent],
-      styles: [".p-datatable-auto-layout > .p-datatable-wrapper {\n  overflow-x: visible !important;\n}\n\n.dropdown[_ngcontent-%COMP%]   .dropdown-menu[_ngcontent-%COMP%] {\n  white-space: nowrap;\n}\n\n.confirmation-buttons[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n.confirmation-buttons[_ngcontent-%COMP%]   .confirmation-cleanup-toggle[_ngcontent-%COMP%], .confirmation-buttons[_ngcontent-%COMP%]   .confirmation-skip-season[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n}\n.confirmation-buttons[_ngcontent-%COMP%]   .confirmation-cleanup-toggle[_ngcontent-%COMP%]   .label[_ngcontent-%COMP%], .confirmation-buttons[_ngcontent-%COMP%]   .confirmation-skip-season[_ngcontent-%COMP%]   .label[_ngcontent-%COMP%] {\n  margin-right: 0.5rem;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvaG9tZS93YW50ZWQvaG9tZS13YW50ZWQuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0E7RUFDRSw4QkFBQTtBQUFGOztBQUlFO0VBQ0UsbUJBQUE7QUFESjs7QUFLQTtFQUNFLGFBQUE7RUFDQSw4QkFBQTtFQUNBLG1CQUFBO0FBRkY7QUFJRTs7RUFFRSxhQUFBO0VBQ0EsbUJBQUE7QUFGSjtBQUlJOztFQUNFLG9CQUFBO0FBRE4iLCJzb3VyY2VzQ29udGVudCI6WyIvLyBBbGxvdyBkcm9wZG93biBvdmVyZmxvdyB3aXRoaW4gdGFibGVcclxuOjpuZy1kZWVwLnAtZGF0YXRhYmxlLWF1dG8tbGF5b3V0Pi5wLWRhdGF0YWJsZS13cmFwcGVyIHtcclxuICBvdmVyZmxvdy14OiB2aXNpYmxlICFpbXBvcnRhbnQ7XHJcbn1cclxuXHJcbi5kcm9wZG93biB7XHJcbiAgLmRyb3Bkb3duLW1lbnUge1xyXG4gICAgd2hpdGUtc3BhY2U6IG5vd3JhcDtcclxuICB9XHJcbn1cclxuXHJcbi5jb25maXJtYXRpb24tYnV0dG9ucyB7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuXHJcbiAgLmNvbmZpcm1hdGlvbi1jbGVhbnVwLXRvZ2dsZSxcclxuICAuY29uZmlybWF0aW9uLXNraXAtc2Vhc29uIHtcclxuICAgIGRpc3BsYXk6IGZsZXg7XHJcbiAgICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG5cclxuICAgIC5sYWJlbCB7XHJcbiAgICAgIG1hcmdpbi1yaWdodDogMC41cmVtO1xyXG4gICAgfVxyXG4gIH1cclxufVxyXG4iXSwic291cmNlUm9vdCI6IiJ9 */"]
-    });
+    static {
+      this.ɵfac = function HomeWantedComponent_Factory(t) {
+        return new (t || HomeWantedComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵdefineComponent"]({
+        type: HomeWantedComponent,
+        selectors: [["app-home-wanted"]],
+        inputs: {
+          wantedItems: "wantedItems"
+        },
+        outputs: {
+          totals: "totals"
+        },
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵStandaloneFeature"]],
+        decls: 17,
+        vars: 19,
+        consts: [["wantedTable", ""], ["cd", ""], ["stateStorage", "local", "currentPageReportTemplate", "{first} to {last} of {totalRecords}", "styleClass", "p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode", 3, "sortFunction", "value", "stateKey", "loading", "autoLayout", "rowHover", "paginator", "rows", "rowsPerPageOptions", "showCurrentPageReport", "globalFilterFields", "customSort"], ["pTemplate", "caption"], ["pTemplate", "header"], ["pTemplate", "body"], [3, "visible", "tvdbId", "title", "visibleChange", 4, "ngIf"], [3, "visible", "imdbId", "title", "visibleChange", 4, "ngIf"], [3, "visible", "wantedItem", "visibleChange", "wantedItemChange", 4, "ngIf"], ["header", "Confirmation", "icon", "pi pi-exclamation-triangle"], [1, "confirmation-buttons"], ["class", "confirmation-cleanup-toggle", 4, "ngIf"], ["class", "confirmation-skip-season", 4, "ngIf"], [1, "btn-group"], ["type", "button", "pButton", "", "icon", "pi pi-times", "label", "No", 3, "click"], ["type", "button", "pButton", "", "icon", "pi pi-check", "label", "Yes", 3, "click"], [1, "caption"], [1, "p-inputgroup", "dropdown"], [1, "p-inputgroup-addon"], ["inputId", "wantedVideoTypes", 3, "onChange", "options"], [1, "ml-auto"], ["matchMode", "contains", 3, "table", "tableStateKey"], ["pSortableColumn", "name"], ["field", "name"], ["pSortableColumn", "season"], ["field", "season"], ["pSortableColumn", "episode"], ["field", "episode"], ["pSortableColumn", "source"], ["field", "source"], ["pSortableColumn", "quality"], ["field", "quality"], ["pSortableColumn", "codec"], ["field", "codec"], ["pSortableColumn", "releaseGroup"], ["field", "releaseGroup"], ["pSortableColumn", "languages"], ["field", "languages"], ["pSortableColumn", "timestamp"], ["field", "timestamp"], [1, "p-column-title"], [1, "p-column-data"], [1, "dropdown"], ["data-toggle", "dropdown", "data-display", "static", "aria-haspopup", "true", "aria-expanded", "false", "title", "Click for actions", 1, "dropdown-toggle", "has-tip", "dropdown-link"], ["class", "dropdown-menu has-tip", 4, "ngIf"], [1, "icon-dropdown-title"], [1, "icon-group"], [4, "ngIf"], ["class", "fa fa-check-circle text-success", "aria-hidden", "true", "title", "Included in automatic search", 4, "ngIf"], ["class", "fa fa-pause-circle text-warning", "aria-hidden", "true", "title", "Not included in automatic search", 4, "ngIf"], ["class", "p-tag language mr-2", 4, "ngFor", "ngForOf"], [1, "dropdown-menu", "has-tip"], [1, "dropdown-item"], [3, "click"], ["class", "icon-link text-danger", 3, "click", 4, "ngIf"], ["class", "icon-link", "target", "_blank", 3, "href", 4, "ngIf"], [1, "icon-link", 3, "click"], ["aria-hidden", "true", "title", "Click to edit show settings", 1, "fa", "fa-wrench"], [1, "icon-link", "text-danger", 3, "click"], ["aria-hidden", "true", "title", "Click to search tvdb id", 1, "fa", "fa-exclamation-triangle"], ["target", "_blank", 1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to visit Tvdb", 1, "fa", "fa-television"], ["aria-hidden", "true", "title", "Click to edit movie settings", 1, "fa", "fa-wrench"], ["aria-hidden", "true", "title", "Click to search imdb id", 1, "fa", "fa-exclamation-triangle"], ["aria-hidden", "true", "title", "Click to visit Imdb", 1, "fa", "fa-imdb"], ["aria-hidden", "true", "title", "Click to manually refine item details", 1, "fa", "fa-pencil"], ["aria-hidden", "true", "title", "Included in automatic search", 1, "fa", "fa-check-circle", "text-success"], ["aria-hidden", "true", "title", "Not included in automatic search", 1, "fa", "fa-pause-circle", "text-warning"], [1, "p-tag", "language", "mr-2"], ["title", "Click to search subtitles", 1, "icon-link", 3, "click"], [3, "visibleChange", "visible", "tvdbId", "title"], [3, "visibleChange", "visible", "imdbId", "title"], [3, "visibleChange", "wantedItemChange", "visible", "wantedItem"], [1, "confirmation-cleanup-toggle"], [1, "label"], [3, "ngModelChange", "ngModel"], [1, "confirmation-skip-season"], ["type", "text", "pInputText", "", 3, "ngModelChange", "ngModel"]],
+        template: function HomeWantedComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            const _r1 = _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵgetCurrentView"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementStart"](0, "p-table", 2, 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵlistener"]("sortFunction", function HomeWantedComponent_Template_p_table_sortFunction_0_listener($event) {
+              _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵrestoreView"](_r1);
+              return _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵresetView"](ctx.sort($event));
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵtemplate"](2, HomeWantedComponent_ng_template_2_Template, 7, 3, "ng-template", 3)(3, HomeWantedComponent_ng_template_3_Template, 37, 0, "ng-template", 4)(4, HomeWantedComponent_ng_template_4_Template, 72, 19, "ng-template", 5);
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵtemplate"](5, HomeWantedComponent_app_show_settings_5_Template, 1, 3, "app-show-settings", 6)(6, HomeWantedComponent_app_movie_settings_6_Template, 1, 3, "app-movie-settings", 7)(7, HomeWantedComponent_app_manual_refine_7_Template, 1, 2, "app-manual-refine", 8);
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementStart"](8, "p-confirmDialog", 9, 1)(10, "p-footer")(11, "div", 10);
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵtemplate"](12, HomeWantedComponent_div_12_Template, 4, 1, "div", 11)(13, HomeWantedComponent_div_13_Template, 4, 1, "div", 12);
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementStart"](14, "div", 13)(15, "button", 14);
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵlistener"]("click", function HomeWantedComponent_Template_button_click_15_listener() {
+              _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵrestoreView"](_r1);
+              const cd_r20 = _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵreference"](9);
+              return _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵresetView"](cd_r20.reject());
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementStart"](16, "button", 15);
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵlistener"]("click", function HomeWantedComponent_Template_button_click_16_listener() {
+              _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵrestoreView"](_r1);
+              const cd_r20 = _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵreference"](9);
+              return _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵresetView"](cd_r20.accept());
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵelementEnd"]()()()()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵproperty"]("value", ctx.wantedItems)("stateKey", ctx.tableStateKey)("loading", ctx.loading)("autoLayout", true)("rowHover", true)("paginator", true)("rows", 10)("rowsPerPageOptions", _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵpureFunction1"](17, _c1, _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵpureFunction0"](16, _c0)))("showCurrentPageReport", true)("globalFilterFields", ctx.globalFilterFields)("customSort", true);
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵadvance"](5);
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵproperty"]("ngIf", ctx.showShowSettings);
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵproperty"]("ngIf", ctx.showMovieSettings);
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵproperty"]("ngIf", ctx.showManualRefine);
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵadvance"](5);
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵproperty"]("ngIf", ctx.confirmationType === "delete");
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_13__["ɵɵproperty"]("ngIf", ctx.confirmationType === "skip");
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_17__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_17__.NgFor, _angular_forms__WEBPACK_IMPORTED_MODULE_18__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_18__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_18__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_18__.NgModel, primeng_table__WEBPACK_IMPORTED_MODULE_19__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_19__.Table, primeng_api__WEBPACK_IMPORTED_MODULE_15__.Footer, primeng_api__WEBPACK_IMPORTED_MODULE_15__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_19__.SortableColumn, primeng_table__WEBPACK_IMPORTED_MODULE_19__.SortIcon, primeng_dropdown__WEBPACK_IMPORTED_MODULE_20__.DropdownModule, primeng_dropdown__WEBPACK_IMPORTED_MODULE_20__.Dropdown, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_21__.ConfirmDialogModule, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_21__.ConfirmDialog, primeng_button__WEBPACK_IMPORTED_MODULE_22__.ButtonDirective, primeng_inputswitch__WEBPACK_IMPORTED_MODULE_23__.InputSwitchModule, primeng_inputswitch__WEBPACK_IMPORTED_MODULE_23__.InputSwitch, primeng_inputtext__WEBPACK_IMPORTED_MODULE_24__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_24__.InputText, primeng_button__WEBPACK_IMPORTED_MODULE_22__.ButtonModule, primeng_api__WEBPACK_IMPORTED_MODULE_15__.SharedModule, _components_table_filter_table_filter_component__WEBPACK_IMPORTED_MODULE_8__.TableFilterComponent, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_4__.IconDropdownComponent, _components_show_settings_show_settings_component__WEBPACK_IMPORTED_MODULE_7__.ShowSettingsComponent, _components_movie_settings_movie_settings_component__WEBPACK_IMPORTED_MODULE_6__.MovieSettingsComponent, _components_manual_refine_manual_refine_component__WEBPACK_IMPORTED_MODULE_5__.ManualRefineComponent],
+        styles: [".p-datatable-auto-layout > .p-datatable-wrapper {\n  overflow-x: visible !important;\n}\n\n.dropdown[_ngcontent-%COMP%]   .dropdown-menu[_ngcontent-%COMP%] {\n  white-space: nowrap;\n}\n\n.confirmation-buttons[_ngcontent-%COMP%] {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n.confirmation-buttons[_ngcontent-%COMP%]   .confirmation-cleanup-toggle[_ngcontent-%COMP%], .confirmation-buttons[_ngcontent-%COMP%]   .confirmation-skip-season[_ngcontent-%COMP%] {\n  display: flex;\n  align-items: center;\n}\n.confirmation-buttons[_ngcontent-%COMP%]   .confirmation-cleanup-toggle[_ngcontent-%COMP%]   .label[_ngcontent-%COMP%], .confirmation-buttons[_ngcontent-%COMP%]   .confirmation-skip-season[_ngcontent-%COMP%]   .label[_ngcontent-%COMP%] {\n  margin-right: 0.5rem;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvaG9tZS93YW50ZWQvaG9tZS13YW50ZWQuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0E7RUFDRSw4QkFBQTtBQUFGOztBQUlFO0VBQ0UsbUJBQUE7QUFESjs7QUFLQTtFQUNFLGFBQUE7RUFDQSw4QkFBQTtFQUNBLG1CQUFBO0FBRkY7QUFJRTs7RUFFRSxhQUFBO0VBQ0EsbUJBQUE7QUFGSjtBQUlJOztFQUNFLG9CQUFBO0FBRE4iLCJzb3VyY2VzQ29udGVudCI6WyIvLyBBbGxvdyBkcm9wZG93biBvdmVyZmxvdyB3aXRoaW4gdGFibGVcclxuOjpuZy1kZWVwLnAtZGF0YXRhYmxlLWF1dG8tbGF5b3V0Pi5wLWRhdGF0YWJsZS13cmFwcGVyIHtcclxuICBvdmVyZmxvdy14OiB2aXNpYmxlICFpbXBvcnRhbnQ7XHJcbn1cclxuXHJcbi5kcm9wZG93biB7XHJcbiAgLmRyb3Bkb3duLW1lbnUge1xyXG4gICAgd2hpdGUtc3BhY2U6IG5vd3JhcDtcclxuICB9XHJcbn1cclxuXHJcbi5jb25maXJtYXRpb24tYnV0dG9ucyB7XHJcbiAgZGlzcGxheTogZmxleDtcclxuICBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47XHJcbiAgYWxpZ24taXRlbXM6IGNlbnRlcjtcclxuXHJcbiAgLmNvbmZpcm1hdGlvbi1jbGVhbnVwLXRvZ2dsZSxcclxuICAuY29uZmlybWF0aW9uLXNraXAtc2Vhc29uIHtcclxuICAgIGRpc3BsYXk6IGZsZXg7XHJcbiAgICBhbGlnbi1pdGVtczogY2VudGVyO1xyXG5cclxuICAgIC5sYWJlbCB7XHJcbiAgICAgIG1hcmdpbi1yaWdodDogMC41cmVtO1xyXG4gICAgfVxyXG4gIH1cclxufVxyXG4iXSwic291cmNlUm9vdCI6IiJ9 */"]
+      });
+    }
   }
   return HomeWantedComponent;
 })();
@@ -2275,17 +2295,21 @@ let ItemService = /*#__PURE__*/(() => {
     getDownloadedItems() {
       return this.httpClient.get(`${this.URL}/downloaded`, this.options).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_5__.map)(downloadedItems => downloadedItems.map(downloadedItem => new _models_item__WEBPACK_IMPORTED_MODULE_1__.DownloadedItem(downloadedItem))));
     }
-    static #_ = this.ɵfac = /*@__PURE__*/(() => {
-      let ɵItemService_BaseFactory;
-      return function ItemService_Factory(t) {
-        return (ɵItemService_BaseFactory || (ɵItemService_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵgetInheritedFactory"](ItemService)))(t || ItemService);
-      };
-    })();
-    static #_2 = this.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdefineInjectable"]({
-      token: ItemService,
-      factory: ItemService.ɵfac,
-      providedIn: 'root'
-    });
+    static {
+      this.ɵfac = /*@__PURE__*/(() => {
+        let ɵItemService_BaseFactory;
+        return function ItemService_Factory(t) {
+          return (ɵItemService_BaseFactory || (ɵItemService_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵgetInheritedFactory"](ItemService)))(t || ItemService);
+        };
+      })();
+    }
+    static {
+      this.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdefineInjectable"]({
+        token: ItemService,
+        factory: ItemService.ɵfac,
+        providedIn: 'root'
+      });
+    }
   }
   return ItemService;
 })();
@@ -2354,4 +2378,4 @@ function capitalizeFirstChar(value) {
 /***/ })
 
 }]);
-//# sourceMappingURL=160.0f543c41fe05b662.js.map
+//# sourceMappingURL=160.3641ec816404301c.js.map
