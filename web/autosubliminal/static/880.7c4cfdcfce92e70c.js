@@ -39,40 +39,44 @@ let ProgressBarComponent = /*#__PURE__*/(() => {
     getWidth() {
       return `${this.percentage}%`;
     }
-    static #_ = this.ɵfac = function ProgressBarComponent_Factory(t) {
-      return new (t || ProgressBarComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
-      type: ProgressBarComponent,
-      selectors: [["app-progress-bar"]],
-      inputs: {
-        value: "value",
-        total: "total",
-        showPercentage: "showPercentage"
-      },
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵStandaloneFeature"]],
-      decls: 4,
-      vars: 5,
-      consts: [[1, "progress-bar-container"], [1, "progress-bar-text"], [1, "progress-bar-progress"]],
-      template: function ProgressBarComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0)(1, "div", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](3, "div", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx.getText());
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassMap"](ctx.getStyleClass());
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵstyleProp"]("width", ctx.getWidth());
-        }
-      },
-      styles: [".progress-bar-container[_ngcontent-%COMP%] {\n  position: relative;\n  width: 100%;\n  background-color: #f4f4f4;\n  border: 1px solid var(--surface-d);\n  border-radius: 0.25rem;\n  color: #fff;\n}\n.progress-bar-container[_ngcontent-%COMP%]   .progress-bar-text[_ngcontent-%COMP%] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  color: #000000;\n  text-align: center;\n  font-size: 0.875rem;\n  margin: 0.0625rem;\n}\n.progress-bar-container[_ngcontent-%COMP%]   .progress-bar-progress[_ngcontent-%COMP%] {\n  min-width: 15%;\n  min-height: 1.5rem;\n  white-space: nowrap;\n  overflow: hidden;\n  border-radius: 0.125rem 0 0 0.125rem;\n}\n\n.progress-0[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0));\n  background: -o-linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0));\n}\n\n.progress-5[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0));\n  background: -o-linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0));\n}\n\n.progress-10[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0));\n  background: -o-linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0));\n}\n\n.progress-15[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0));\n  background: -o-linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0));\n}\n\n.progress-20[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0));\n  background: -o-linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0));\n}\n\n.progress-25[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0));\n  background: -o-linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0));\n}\n\n.progress-30[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0));\n  background: -o-linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0));\n}\n\n.progress-35[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0));\n  background: -o-linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0));\n}\n\n.progress-40[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0));\n  background: -o-linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0));\n}\n\n.progress-45[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0));\n  background: -o-linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0));\n}\n\n.progress-50[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0));\n  background: -o-linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0));\n}\n\n.progress-55[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0));\n  background: -o-linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0));\n}\n\n.progress-60[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0));\n  background: -o-linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0));\n}\n\n.progress-65[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0));\n  background: -o-linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0));\n}\n\n.progress-70[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0));\n  background: -o-linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0));\n}\n\n.progress-75[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0));\n  background: -o-linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0));\n}\n\n.progress-80[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0));\n  background: -o-linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0));\n}\n\n.progress-85[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0));\n  background: -o-linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0));\n}\n\n.progress-90[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0));\n  background: -o-linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0));\n}\n\n.progress-95[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0));\n  background: -o-linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0));\n}\n\n.progress-100[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0));\n  background: -o-linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0));\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvY29tcG9uZW50cy9wcm9ncmVzcy1iYXIvcHJvZ3Jlc3MtYmFyLmNvbXBvbmVudC5zY3NzIiwid2VicGFjazovLy4vc3JjL3Njc3MvX3ZhcmlhYmxlcy5zY3NzIiwid2VicGFjazovLy4vc3JjL3Njc3MvbWl4aW5zL19saW5lYXItZ3JhZGllbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFHQTtFQUNFLGtCQUFBO0VBQ0EsV0FBQTtFQUNBLHlCQUFBO0VBQ0Esa0NBQUE7RUFDQSxzQkFBQTtFQUNBLFdBQUE7QUFGRjtBQUlFO0VBQ0Usa0JBQUE7RUFDQSxPQUFBO0VBQ0EsUUFBQTtFQUNBLGNBQUE7RUFDQSxrQkFBQTtFQUNBLG1CQ2JXO0VEY1gsaUJBQUE7QUFGSjtBQUtFO0VBQ0UsY0FBQTtFQUNBLGtCQUFBO0VBQ0EsbUJBQUE7RUFDQSxnQkFBQTtFQUNBLG9DQUFBO0FBSEo7O0FBU0E7RUUvQkUsMkRBQUE7RUFHQSw4REFBQTtBRjBCRjs7QUFNQTtFRW5DRSw0REFBQTtFQUdBLCtEQUFBO0FGaUNGOztBQUdBO0VFdkNFLDZEQUFBO0VBR0EsZ0VBQUE7QUZ3Q0Y7O0FBQUE7RUUzQ0UsNkRBQUE7RUFHQSxnRUFBQTtBRitDRjs7QUFIQTtFRS9DRSw4REFBQTtFQUdBLGlFQUFBO0FGc0RGOztBQU5BO0VFbkRFLCtEQUFBO0VBR0Esa0VBQUE7QUY2REY7O0FBVEE7RUV2REUsK0RBQUE7RUFHQSxrRUFBQTtBRm9FRjs7QUFaQTtFRTNERSwrREFBQTtFQUdBLGtFQUFBO0FGMkVGOztBQWZBO0VFL0RFLCtEQUFBO0VBR0Esa0VBQUE7QUZrRkY7O0FBbEJBO0VFbkVFLCtEQUFBO0VBR0Esa0VBQUE7QUZ5RkY7O0FBckJBO0VFdkVFLCtEQUFBO0VBR0Esa0VBQUE7QUZnR0Y7O0FBeEJBO0VFM0VFLCtEQUFBO0VBR0Esa0VBQUE7QUZ1R0Y7O0FBM0JBO0VFL0VFLCtEQUFBO0VBR0Esa0VBQUE7QUY4R0Y7O0FBOUJBO0VFbkZFLCtEQUFBO0VBR0Esa0VBQUE7QUZxSEY7O0FBakNBO0VFdkZFLCtEQUFBO0VBR0Esa0VBQUE7QUY0SEY7O0FBcENBO0VFM0ZFLCtEQUFBO0VBR0Esa0VBQUE7QUZtSUY7O0FBdkNBO0VFL0ZFLCtEQUFBO0VBR0Esa0VBQUE7QUYwSUY7O0FBMUNBO0VFbkdFLDhEQUFBO0VBR0EsaUVBQUE7QUZpSkY7O0FBN0NBO0VFdkdFLDZEQUFBO0VBR0EsZ0VBQUE7QUZ3SkY7O0FBaERBO0VFM0dFLDZEQUFBO0VBR0EsZ0VBQUE7QUYrSkY7O0FBbkRBO0VFL0dFLDJEQUFBO0VBR0EsOERBQUE7QUZzS0YiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0ICcuLi8uLi8uLi9zY3NzL3ZhcmlhYmxlcyc7XHJcbkBpbXBvcnQgJy4uLy4uLy4uL3Njc3MvbWl4aW5zL2xpbmVhci1ncmFkaWVudCc7XHJcblxyXG4ucHJvZ3Jlc3MtYmFyLWNvbnRhaW5lciB7XHJcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICNmNGY0ZjQ7XHJcbiAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tc3VyZmFjZS1kKTtcclxuICBib3JkZXItcmFkaXVzOiAwLjI1cmVtO1xyXG4gIGNvbG9yOiAjZmZmO1xyXG5cclxuICAucHJvZ3Jlc3MtYmFyLXRleHQge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgbGVmdDogMDtcclxuICAgIHJpZ2h0OiAwO1xyXG4gICAgY29sb3I6ICMwMDAwMDA7XHJcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgICBmb250LXNpemU6ICRmb250LXNpemUtc207XHJcbiAgICBtYXJnaW46IDAuMDYyNXJlbTtcclxuICB9XHJcblxyXG4gIC5wcm9ncmVzcy1iYXItcHJvZ3Jlc3Mge1xyXG4gICAgbWluLXdpZHRoOiAxNSU7XHJcbiAgICBtaW4taGVpZ2h0OiAxLjVyZW07XHJcbiAgICB3aGl0ZS1zcGFjZTogbm93cmFwO1xyXG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcclxuICAgIGJvcmRlci1yYWRpdXM6IDAuMTI1cmVtIDAgMCAwLjEyNXJlbTtcclxuICB9XHJcbn1cclxuXHJcbi8vIEJhc2VkIG9uIGh0dHBzOi8vc3RhY2tvdmVyZmxvdy5jb20vcXVlc3Rpb25zLzcxMjg2NzUvZnJvbS1ncmVlbi10by1yZWQtY29sb3ItZGVwZW5kLW9uLXBlcmNlbnRhZ2VcclxuXHJcbi5wcm9ncmVzcy0wIHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDEwMCwgMCwgMCksIHJnYigyMDAsIDIsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTUge1xyXG4gIEBpbmNsdWRlIGxpbmVhci1ncmFkaWVudChyZ2IoMjAwLCAyLCAwKSwgcmdiKDI1NSwgMjgsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTEwIHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDI1NSwgMjgsIDApLCByZ2IoMjU1LCA1MywgMCkpO1xyXG59XHJcblxyXG4ucHJvZ3Jlc3MtMTUge1xyXG4gIEBpbmNsdWRlIGxpbmVhci1ncmFkaWVudChyZ2IoMjU1LCA1MywgMCksIHJnYigyNTUsIDc4LCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy0yMCB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYigyNTUsIDc4LCAwKSwgcmdiKDI1NSwgMTAzLCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy0yNSB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYigyNTUsIDEwMywgMCksIHJnYigyNTUsIDEyOSwgMCkpO1xyXG59XHJcblxyXG4ucHJvZ3Jlc3MtMzAge1xyXG4gIEBpbmNsdWRlIGxpbmVhci1ncmFkaWVudChyZ2IoMjU1LCAxMjksIDApLCByZ2IoMjU1LCAxNTQsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTM1IHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDI1NSwgMTU0LCAwKSwgcmdiKDI1NSwgMTc5LCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy00MCB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYigyNTUsIDE3OSwgMCksIHJnYigyNTUsIDIwNCwgMCkpO1xyXG59XHJcblxyXG4ucHJvZ3Jlc3MtNDUge1xyXG4gIEBpbmNsdWRlIGxpbmVhci1ncmFkaWVudChyZ2IoMjU1LCAyMDQsIDApLCByZ2IoMjU1LCAyMzAsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTUwIHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDI1NSwgMjMwLCAwKSwgcmdiKDI1NSwgMjU1LCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy01NSB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYigyNTUsIDI1NSwgMCksIHJnYigyMzAsIDI1NSwgMCkpO1xyXG59XHJcblxyXG4ucHJvZ3Jlc3MtNjAge1xyXG4gIEBpbmNsdWRlIGxpbmVhci1ncmFkaWVudChyZ2IoMjMwLCAyNTUsIDApLCByZ2IoMjA0LCAyNTUsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTY1IHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDIwNCwgMjU1LCAwKSwgcmdiKDE3OSwgMjU1LCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy03MCB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYigxNzksIDI1NSwgMCksIHJnYigxNTQsIDI1NSwgMCkpO1xyXG59XHJcblxyXG4ucHJvZ3Jlc3MtNzUge1xyXG4gIEBpbmNsdWRlIGxpbmVhci1ncmFkaWVudChyZ2IoMTU0LCAyNTUsIDApLCByZ2IoMTI5LCAyNTUsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTgwIHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDEyOSwgMjU1LCAwKSwgcmdiKDEwMywgMjU1LCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy04NSB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYigxMDMsIDI1NSwgMCksIHJnYig3OCwgMjU1LCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy05MCB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYig3OCwgMjU1LCAwKSwgcmdiKDUzLCAyNTUsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTk1IHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDUzLCAyNTUsIDApLCByZ2IoMjgsIDI1NSwgMCkpO1xyXG59XHJcblxyXG4ucHJvZ3Jlc3MtMTAwIHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDIsIDIwMCwgMCksIHJnYigyLCAxNTAsIDApKTtcclxufVxyXG4iLCIvLyBHbG9iYWwgdmFyaWFibGVzICh2YXIoLS14eHh4KSkgYXJlIHVzZWQgZnJvbSBpbXBvcnRlZCBwcmltZW5nIHN0eWxlc1xyXG5cclxuLy8gRm9udFxyXG4kZm9udC1zaXplOiAxcmVtO1xyXG4kZm9udC1zaXplLXNtOiAoJGZvbnQtc2l6ZSAqIC44NzUpICFkZWZhdWx0O1xyXG4kZm9udC1kZWZhdWx0OiA0MDA7XHJcbiRmb250LWJvbGQ6IDUwMDtcclxuJGZvbnQtY29sb3I6IHZhcigtLXRleHQtY29sb3IpO1xyXG5cclxuLy8gQmFja2dyb3VuZFxyXG4kYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tc3VyZmFjZS1hKTtcclxuXHJcbi8vTWVkaWEgYm91bmRhcmllc1xyXG4kbWVkaWEtbW9iaWxlLW1heC13aWR0aDogNzY3cHg7XHJcbiRtZWRpYS10YWJsZXQtbWluLXdpZHRoOiA3NjhweDtcclxuJG1lZGlhLXRhYmxldC1tYXgtd2lkdGg6IDk5MXB4O1xyXG4kbWVkaWEtZGVza3RvcC1taW4td2lkdGg6IDk5MnB4O1xyXG4iLCJAbWl4aW4gbGluZWFyLWdyYWRpZW50KCRkaXJlY3Rpb24sICRsaXN0Li4uKSB7XHJcbiAgYmFja2dyb3VuZDogbGluZWFyLWdyYWRpZW50KCRkaXJlY3Rpb24sICRsaXN0KTtcclxuICBiYWNrZ3JvdW5kOiAtd2Via2l0LWxpbmVhci1ncmFkaWVudCgkZGlyZWN0aW9uLCAkbGlzdCk7XHJcbiAgYmFja2dyb3VuZDogLW1vei1saW5lYXItZ3JhZGllbnQoJGRpcmVjdGlvbiwgJGxpc3QpO1xyXG4gIGJhY2tncm91bmQ6IC1vLWxpbmVhci1ncmFkaWVudCgkZGlyZWN0aW9uLCAkbGlzdCk7XHJcbn1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function ProgressBarComponent_Factory(t) {
+        return new (t || ProgressBarComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
+        type: ProgressBarComponent,
+        selectors: [["app-progress-bar"]],
+        inputs: {
+          value: "value",
+          total: "total",
+          showPercentage: "showPercentage"
+        },
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵStandaloneFeature"]],
+        decls: 4,
+        vars: 5,
+        consts: [[1, "progress-bar-container"], [1, "progress-bar-text"], [1, "progress-bar-progress"]],
+        template: function ProgressBarComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0)(1, "div", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](3, "div", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtextInterpolate"](ctx.getText());
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassMap"](ctx.getStyleClass());
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵstyleProp"]("width", ctx.getWidth());
+          }
+        },
+        styles: [".progress-bar-container[_ngcontent-%COMP%] {\n  position: relative;\n  width: 100%;\n  background-color: #f4f4f4;\n  border: 1px solid var(--surface-d);\n  border-radius: 0.25rem;\n  color: #fff;\n}\n.progress-bar-container[_ngcontent-%COMP%]   .progress-bar-text[_ngcontent-%COMP%] {\n  position: absolute;\n  left: 0;\n  right: 0;\n  color: #000000;\n  text-align: center;\n  font-size: 0.875rem;\n  margin: 0.0625rem;\n}\n.progress-bar-container[_ngcontent-%COMP%]   .progress-bar-progress[_ngcontent-%COMP%] {\n  min-width: 15%;\n  min-height: 1.5rem;\n  white-space: nowrap;\n  overflow: hidden;\n  border-radius: 0.125rem 0 0 0.125rem;\n}\n\n.progress-0[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0));\n  background: -o-linear-gradient(rgb(100, 0, 0), rgb(200, 2, 0));\n}\n\n.progress-5[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0));\n  background: -o-linear-gradient(rgb(200, 2, 0), rgb(255, 28, 0));\n}\n\n.progress-10[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0));\n  background: -o-linear-gradient(rgb(255, 28, 0), rgb(255, 53, 0));\n}\n\n.progress-15[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0));\n  background: -o-linear-gradient(rgb(255, 53, 0), rgb(255, 78, 0));\n}\n\n.progress-20[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0));\n  background: -o-linear-gradient(rgb(255, 78, 0), rgb(255, 103, 0));\n}\n\n.progress-25[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0));\n  background: -o-linear-gradient(rgb(255, 103, 0), rgb(255, 129, 0));\n}\n\n.progress-30[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0));\n  background: -o-linear-gradient(rgb(255, 129, 0), rgb(255, 154, 0));\n}\n\n.progress-35[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0));\n  background: -o-linear-gradient(rgb(255, 154, 0), rgb(255, 179, 0));\n}\n\n.progress-40[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0));\n  background: -o-linear-gradient(rgb(255, 179, 0), rgb(255, 204, 0));\n}\n\n.progress-45[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0));\n  background: -o-linear-gradient(rgb(255, 204, 0), rgb(255, 230, 0));\n}\n\n.progress-50[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0));\n  background: -o-linear-gradient(rgb(255, 230, 0), rgb(255, 255, 0));\n}\n\n.progress-55[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0));\n  background: -o-linear-gradient(rgb(255, 255, 0), rgb(230, 255, 0));\n}\n\n.progress-60[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0));\n  background: -o-linear-gradient(rgb(230, 255, 0), rgb(204, 255, 0));\n}\n\n.progress-65[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0));\n  background: -o-linear-gradient(rgb(204, 255, 0), rgb(179, 255, 0));\n}\n\n.progress-70[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0));\n  background: -o-linear-gradient(rgb(179, 255, 0), rgb(154, 255, 0));\n}\n\n.progress-75[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0));\n  background: -o-linear-gradient(rgb(154, 255, 0), rgb(129, 255, 0));\n}\n\n.progress-80[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0));\n  background: -o-linear-gradient(rgb(129, 255, 0), rgb(103, 255, 0));\n}\n\n.progress-85[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0));\n  background: -o-linear-gradient(rgb(103, 255, 0), rgb(78, 255, 0));\n}\n\n.progress-90[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0));\n  background: -o-linear-gradient(rgb(78, 255, 0), rgb(53, 255, 0));\n}\n\n.progress-95[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0));\n  background: -o-linear-gradient(rgb(53, 255, 0), rgb(28, 255, 0));\n}\n\n.progress-100[_ngcontent-%COMP%] {\n  background: linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0));\n  background: -o-linear-gradient(rgb(2, 200, 0), rgb(2, 150, 0));\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvY29tcG9uZW50cy9wcm9ncmVzcy1iYXIvcHJvZ3Jlc3MtYmFyLmNvbXBvbmVudC5zY3NzIiwid2VicGFjazovLy4vc3JjL3Njc3MvX3ZhcmlhYmxlcy5zY3NzIiwid2VicGFjazovLy4vc3JjL3Njc3MvbWl4aW5zL19saW5lYXItZ3JhZGllbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFHQTtFQUNFLGtCQUFBO0VBQ0EsV0FBQTtFQUNBLHlCQUFBO0VBQ0Esa0NBQUE7RUFDQSxzQkFBQTtFQUNBLFdBQUE7QUFGRjtBQUlFO0VBQ0Usa0JBQUE7RUFDQSxPQUFBO0VBQ0EsUUFBQTtFQUNBLGNBQUE7RUFDQSxrQkFBQTtFQUNBLG1CQ2JXO0VEY1gsaUJBQUE7QUFGSjtBQUtFO0VBQ0UsY0FBQTtFQUNBLGtCQUFBO0VBQ0EsbUJBQUE7RUFDQSxnQkFBQTtFQUNBLG9DQUFBO0FBSEo7O0FBU0E7RUUvQkUsMkRBQUE7RUFHQSw4REFBQTtBRjBCRjs7QUFNQTtFRW5DRSw0REFBQTtFQUdBLCtEQUFBO0FGaUNGOztBQUdBO0VFdkNFLDZEQUFBO0VBR0EsZ0VBQUE7QUZ3Q0Y7O0FBQUE7RUUzQ0UsNkRBQUE7RUFHQSxnRUFBQTtBRitDRjs7QUFIQTtFRS9DRSw4REFBQTtFQUdBLGlFQUFBO0FGc0RGOztBQU5BO0VFbkRFLCtEQUFBO0VBR0Esa0VBQUE7QUY2REY7O0FBVEE7RUV2REUsK0RBQUE7RUFHQSxrRUFBQTtBRm9FRjs7QUFaQTtFRTNERSwrREFBQTtFQUdBLGtFQUFBO0FGMkVGOztBQWZBO0VFL0RFLCtEQUFBO0VBR0Esa0VBQUE7QUZrRkY7O0FBbEJBO0VFbkVFLCtEQUFBO0VBR0Esa0VBQUE7QUZ5RkY7O0FBckJBO0VFdkVFLCtEQUFBO0VBR0Esa0VBQUE7QUZnR0Y7O0FBeEJBO0VFM0VFLCtEQUFBO0VBR0Esa0VBQUE7QUZ1R0Y7O0FBM0JBO0VFL0VFLCtEQUFBO0VBR0Esa0VBQUE7QUY4R0Y7O0FBOUJBO0VFbkZFLCtEQUFBO0VBR0Esa0VBQUE7QUZxSEY7O0FBakNBO0VFdkZFLCtEQUFBO0VBR0Esa0VBQUE7QUY0SEY7O0FBcENBO0VFM0ZFLCtEQUFBO0VBR0Esa0VBQUE7QUZtSUY7O0FBdkNBO0VFL0ZFLCtEQUFBO0VBR0Esa0VBQUE7QUYwSUY7O0FBMUNBO0VFbkdFLDhEQUFBO0VBR0EsaUVBQUE7QUZpSkY7O0FBN0NBO0VFdkdFLDZEQUFBO0VBR0EsZ0VBQUE7QUZ3SkY7O0FBaERBO0VFM0dFLDZEQUFBO0VBR0EsZ0VBQUE7QUYrSkY7O0FBbkRBO0VFL0dFLDJEQUFBO0VBR0EsOERBQUE7QUZzS0YiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0ICcuLi8uLi8uLi9zY3NzL3ZhcmlhYmxlcyc7XHJcbkBpbXBvcnQgJy4uLy4uLy4uL3Njc3MvbWl4aW5zL2xpbmVhci1ncmFkaWVudCc7XHJcblxyXG4ucHJvZ3Jlc3MtYmFyLWNvbnRhaW5lciB7XHJcbiAgcG9zaXRpb246IHJlbGF0aXZlO1xyXG4gIHdpZHRoOiAxMDAlO1xyXG4gIGJhY2tncm91bmQtY29sb3I6ICNmNGY0ZjQ7XHJcbiAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tc3VyZmFjZS1kKTtcclxuICBib3JkZXItcmFkaXVzOiAwLjI1cmVtO1xyXG4gIGNvbG9yOiAjZmZmO1xyXG5cclxuICAucHJvZ3Jlc3MtYmFyLXRleHQge1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgbGVmdDogMDtcclxuICAgIHJpZ2h0OiAwO1xyXG4gICAgY29sb3I6ICMwMDAwMDA7XHJcbiAgICB0ZXh0LWFsaWduOiBjZW50ZXI7XHJcbiAgICBmb250LXNpemU6ICRmb250LXNpemUtc207XHJcbiAgICBtYXJnaW46IDAuMDYyNXJlbTtcclxuICB9XHJcblxyXG4gIC5wcm9ncmVzcy1iYXItcHJvZ3Jlc3Mge1xyXG4gICAgbWluLXdpZHRoOiAxNSU7XHJcbiAgICBtaW4taGVpZ2h0OiAxLjVyZW07XHJcbiAgICB3aGl0ZS1zcGFjZTogbm93cmFwO1xyXG4gICAgb3ZlcmZsb3c6IGhpZGRlbjtcclxuICAgIGJvcmRlci1yYWRpdXM6IDAuMTI1cmVtIDAgMCAwLjEyNXJlbTtcclxuICB9XHJcbn1cclxuXHJcbi8vIEJhc2VkIG9uIGh0dHBzOi8vc3RhY2tvdmVyZmxvdy5jb20vcXVlc3Rpb25zLzcxMjg2NzUvZnJvbS1ncmVlbi10by1yZWQtY29sb3ItZGVwZW5kLW9uLXBlcmNlbnRhZ2VcclxuXHJcbi5wcm9ncmVzcy0wIHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDEwMCwgMCwgMCksIHJnYigyMDAsIDIsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTUge1xyXG4gIEBpbmNsdWRlIGxpbmVhci1ncmFkaWVudChyZ2IoMjAwLCAyLCAwKSwgcmdiKDI1NSwgMjgsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTEwIHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDI1NSwgMjgsIDApLCByZ2IoMjU1LCA1MywgMCkpO1xyXG59XHJcblxyXG4ucHJvZ3Jlc3MtMTUge1xyXG4gIEBpbmNsdWRlIGxpbmVhci1ncmFkaWVudChyZ2IoMjU1LCA1MywgMCksIHJnYigyNTUsIDc4LCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy0yMCB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYigyNTUsIDc4LCAwKSwgcmdiKDI1NSwgMTAzLCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy0yNSB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYigyNTUsIDEwMywgMCksIHJnYigyNTUsIDEyOSwgMCkpO1xyXG59XHJcblxyXG4ucHJvZ3Jlc3MtMzAge1xyXG4gIEBpbmNsdWRlIGxpbmVhci1ncmFkaWVudChyZ2IoMjU1LCAxMjksIDApLCByZ2IoMjU1LCAxNTQsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTM1IHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDI1NSwgMTU0LCAwKSwgcmdiKDI1NSwgMTc5LCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy00MCB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYigyNTUsIDE3OSwgMCksIHJnYigyNTUsIDIwNCwgMCkpO1xyXG59XHJcblxyXG4ucHJvZ3Jlc3MtNDUge1xyXG4gIEBpbmNsdWRlIGxpbmVhci1ncmFkaWVudChyZ2IoMjU1LCAyMDQsIDApLCByZ2IoMjU1LCAyMzAsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTUwIHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDI1NSwgMjMwLCAwKSwgcmdiKDI1NSwgMjU1LCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy01NSB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYigyNTUsIDI1NSwgMCksIHJnYigyMzAsIDI1NSwgMCkpO1xyXG59XHJcblxyXG4ucHJvZ3Jlc3MtNjAge1xyXG4gIEBpbmNsdWRlIGxpbmVhci1ncmFkaWVudChyZ2IoMjMwLCAyNTUsIDApLCByZ2IoMjA0LCAyNTUsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTY1IHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDIwNCwgMjU1LCAwKSwgcmdiKDE3OSwgMjU1LCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy03MCB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYigxNzksIDI1NSwgMCksIHJnYigxNTQsIDI1NSwgMCkpO1xyXG59XHJcblxyXG4ucHJvZ3Jlc3MtNzUge1xyXG4gIEBpbmNsdWRlIGxpbmVhci1ncmFkaWVudChyZ2IoMTU0LCAyNTUsIDApLCByZ2IoMTI5LCAyNTUsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTgwIHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDEyOSwgMjU1LCAwKSwgcmdiKDEwMywgMjU1LCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy04NSB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYigxMDMsIDI1NSwgMCksIHJnYig3OCwgMjU1LCAwKSk7XHJcbn1cclxuXHJcbi5wcm9ncmVzcy05MCB7XHJcbiAgQGluY2x1ZGUgbGluZWFyLWdyYWRpZW50KHJnYig3OCwgMjU1LCAwKSwgcmdiKDUzLCAyNTUsIDApKTtcclxufVxyXG5cclxuLnByb2dyZXNzLTk1IHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDUzLCAyNTUsIDApLCByZ2IoMjgsIDI1NSwgMCkpO1xyXG59XHJcblxyXG4ucHJvZ3Jlc3MtMTAwIHtcclxuICBAaW5jbHVkZSBsaW5lYXItZ3JhZGllbnQocmdiKDIsIDIwMCwgMCksIHJnYigyLCAxNTAsIDApKTtcclxufVxyXG4iLCIvLyBHbG9iYWwgdmFyaWFibGVzICh2YXIoLS14eHh4KSkgYXJlIHVzZWQgZnJvbSBpbXBvcnRlZCBwcmltZW5nIHN0eWxlc1xyXG5cclxuLy8gRm9udFxyXG4kZm9udC1zaXplOiAxcmVtO1xyXG4kZm9udC1zaXplLXNtOiAoJGZvbnQtc2l6ZSAqIC44NzUpICFkZWZhdWx0O1xyXG4kZm9udC1kZWZhdWx0OiA0MDA7XHJcbiRmb250LWJvbGQ6IDUwMDtcclxuJGZvbnQtY29sb3I6IHZhcigtLXRleHQtY29sb3IpO1xyXG5cclxuLy8gQmFja2dyb3VuZFxyXG4kYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tc3VyZmFjZS1hKTtcclxuXHJcbi8vTWVkaWEgYm91bmRhcmllc1xyXG4kbWVkaWEtbW9iaWxlLW1heC13aWR0aDogNzY3cHg7XHJcbiRtZWRpYS10YWJsZXQtbWluLXdpZHRoOiA3NjhweDtcclxuJG1lZGlhLXRhYmxldC1tYXgtd2lkdGg6IDk5MXB4O1xyXG4kbWVkaWEtZGVza3RvcC1taW4td2lkdGg6IDk5MnB4O1xyXG4iLCJAbWl4aW4gbGluZWFyLWdyYWRpZW50KCRkaXJlY3Rpb24sICRsaXN0Li4uKSB7XHJcbiAgYmFja2dyb3VuZDogbGluZWFyLWdyYWRpZW50KCRkaXJlY3Rpb24sICRsaXN0KTtcclxuICBiYWNrZ3JvdW5kOiAtd2Via2l0LWxpbmVhci1ncmFkaWVudCgkZGlyZWN0aW9uLCAkbGlzdCk7XHJcbiAgYmFja2dyb3VuZDogLW1vei1saW5lYXItZ3JhZGllbnQoJGRpcmVjdGlvbiwgJGxpc3QpO1xyXG4gIGJhY2tncm91bmQ6IC1vLWxpbmVhci1ncmFkaWVudCgkZGlyZWN0aW9uLCAkbGlzdCk7XHJcbn1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return ProgressBarComponent;
 })();
@@ -681,47 +685,51 @@ let LibraryMovieDetailComponent = /*#__PURE__*/(() => {
         error: () => this.messageService.showErrorMessage('Unable to get the movie details!')
       });
     }
-    static #_ = this.ɵfac = function LibraryMovieDetailComponent_Factory(t) {
-      return new (t || LibraryMovieDetailComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵdefineComponent"]({
-      type: LibraryMovieDetailComponent,
-      selectors: [["app-library-movie-detail"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵStandaloneFeature"]],
-      decls: 12,
-      vars: 5,
-      consts: [[1, "container-lg"], ["header", "Movie details"], [3, "visible"], ["aria-hidden", "true", 1, "fa", "fa-spinner", "fa-spin", "mr-2"], ["class", "library-details-container", 4, "ngIf"], ["header", "Confirmation", "icon", "pi pi-exclamation-triangle"], [3, "visible", "imdbId", "title", "movieSettings", "visibleChange", 4, "ngIf"], [3, "visible", "videoPath", "subtitlePath", "visibleChange", 4, "ngIf"], [3, "visible", "videoSubtitles", "visibleChange", "save", 4, "ngIf"], [1, "library-details-container"], [1, "row", "mb-3"], [1, "col-12", "library-details-info-container"], [1, "library-details-info-poster"], ["target", "_blank", 3, "href"], ["title", "Click to view full size", 1, "library-details-info-poster-image", 3, "lazyLoad", "defaultImage"], [1, "library-details-info"], [1, "row"], [1, "col-12", "library-details-info-title"], [1, "icon-group"], ["target", "_blank", 1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to visit Imdb", 1, "fa", "fa-imdb"], [1, "icon-link", 3, "click"], ["aria-hidden", "true", "title", "Click to edit movie settings", 1, "fa", "fa-wrench"], ["aria-hidden", "true", "title", "Click to refresh movie details", 1, "fa", "fa-repeat"], ["aria-hidden", "true", "title", "Click to delete movie from the database", 1, "fa", "fa-trash"], [1, "col-12"], [1, "row", "mb-2"], [1, "col-3"], [1, "col-9", "wrap-text"], ["class", "icon-link", 3, "click", 4, "ngIf"], [1, "col-9"], ["class", "p-tag language mr-2", 4, "ngFor", "ngForOf"], [1, "library-details-files-summary"], [1, "summary-title"], [1, "summary-progress-bar", "ml-auto"], [3, "value", "total"], [1, "col-12", "library-details-files"], ["styleClass", "p-datatable-sm", 3, "value", "autoLayout"], ["pTemplate", "body"], ["aria-hidden", "true", "title", "Click to add the movie path to the video paths to scan", 1, "fa", "fa-plus"], [1, "p-tag", "language", "mr-2"], [1, "wrap-text"], ["class", "icon-link", 3, "href", 4, "ngIf"], ["class", "text-right", 4, "ngIf"], [1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to play video", 1, "fa", "fa-play-circle-o"], ["aria-hidden", "true", "title", "Click to save hardcoded subtitle languages", 1, "fa", "fa-wrench"], ["aria-hidden", "true", "title", "Click to synchronize subtitle", 1, "fa", "fa-refresh"], ["aria-hidden", "true", "title", "Click to remove subtitle", 1, "fa", "fa-trash"], [1, "text-right"], ["class", "p-tag language ml-2", 4, "ngFor", "ngForOf"], ["class", "p-tag language ml-2", 4, "ngIf"], [1, "p-tag", "filetype", "ml-2"], [1, "p-tag", "language", "ml-2"], [3, "visibleChange", "visible", "imdbId", "title", "movieSettings"], [3, "visibleChange", "visible", "videoPath", "subtitlePath"], [3, "visibleChange", "save", "visible", "videoSubtitles"]],
-      template: function LibraryMovieDetailComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelement"](2, "app-library-scanning");
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelementStart"](3, "app-message", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelement"](4, "i", 3);
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelementStart"](5, "span");
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵtext"](6, "Refreshing movie details...");
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelementEnd"]()();
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵtemplate"](7, LibraryMovieDetailComponent_div_7_Template, 50, 13, "div", 4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelementEnd"]()();
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelement"](8, "p-confirmDialog", 5);
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵtemplate"](9, LibraryMovieDetailComponent_app_movie_settings_9_Template, 1, 4, "app-movie-settings", 6)(10, LibraryMovieDetailComponent_app_subtitle_sync_10_Template, 1, 3, "app-subtitle-sync", 7)(11, LibraryMovieDetailComponent_app_library_video_subtitles_11_Template, 1, 2, "app-library-video-subtitles", 8);
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵadvance"](3);
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵproperty"]("visible", ctx.refreshInProgress);
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵadvance"](4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵproperty"]("ngIf", ctx.movie);
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵproperty"]("ngIf", ctx.showMovieSettings);
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵproperty"]("ngIf", ctx.showSubtitleSync);
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵproperty"]("ngIf", ctx.showVideoSubtitles);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_20__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_20__.NgFor, primeng_panel__WEBPACK_IMPORTED_MODULE_21__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_21__.Panel, primeng_api__WEBPACK_IMPORTED_MODULE_18__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_22__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_22__.Table, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_23__.ConfirmDialogModule, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_23__.ConfirmDialog, primeng_api__WEBPACK_IMPORTED_MODULE_18__.SharedModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_24__.LazyLoadImageModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_24__.LazyLoadImageDirective, _scanning_library_scanning_component__WEBPACK_IMPORTED_MODULE_13__.LibraryScanningComponent, _components_message_message_component__WEBPACK_IMPORTED_MODULE_5__.MessageComponent, _components_movie_settings_movie_settings_component__WEBPACK_IMPORTED_MODULE_6__.MovieSettingsComponent, _components_subtitle_sync_subtitle_sync_component__WEBPACK_IMPORTED_MODULE_8__.SubtitleSyncComponent, _video_library_video_subtitles_component__WEBPACK_IMPORTED_MODULE_14__.LibraryVideoSubtitlesComponent, _components_progress_bar_progress_bar_component__WEBPACK_IMPORTED_MODULE_7__.ProgressBarComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function LibraryMovieDetailComponent_Factory(t) {
+        return new (t || LibraryMovieDetailComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵdefineComponent"]({
+        type: LibraryMovieDetailComponent,
+        selectors: [["app-library-movie-detail"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵStandaloneFeature"]],
+        decls: 12,
+        vars: 5,
+        consts: [[1, "container-lg"], ["header", "Movie details"], [3, "visible"], ["aria-hidden", "true", 1, "fa", "fa-spinner", "fa-spin", "mr-2"], ["class", "library-details-container", 4, "ngIf"], ["header", "Confirmation", "icon", "pi pi-exclamation-triangle"], [3, "visible", "imdbId", "title", "movieSettings", "visibleChange", 4, "ngIf"], [3, "visible", "videoPath", "subtitlePath", "visibleChange", 4, "ngIf"], [3, "visible", "videoSubtitles", "visibleChange", "save", 4, "ngIf"], [1, "library-details-container"], [1, "row", "mb-3"], [1, "col-12", "library-details-info-container"], [1, "library-details-info-poster"], ["target", "_blank", 3, "href"], ["title", "Click to view full size", 1, "library-details-info-poster-image", 3, "lazyLoad", "defaultImage"], [1, "library-details-info"], [1, "row"], [1, "col-12", "library-details-info-title"], [1, "icon-group"], ["target", "_blank", 1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to visit Imdb", 1, "fa", "fa-imdb"], [1, "icon-link", 3, "click"], ["aria-hidden", "true", "title", "Click to edit movie settings", 1, "fa", "fa-wrench"], ["aria-hidden", "true", "title", "Click to refresh movie details", 1, "fa", "fa-repeat"], ["aria-hidden", "true", "title", "Click to delete movie from the database", 1, "fa", "fa-trash"], [1, "col-12"], [1, "row", "mb-2"], [1, "col-3"], [1, "col-9", "wrap-text"], ["class", "icon-link", 3, "click", 4, "ngIf"], [1, "col-9"], ["class", "p-tag language mr-2", 4, "ngFor", "ngForOf"], [1, "library-details-files-summary"], [1, "summary-title"], [1, "summary-progress-bar", "ml-auto"], [3, "value", "total"], [1, "col-12", "library-details-files"], ["styleClass", "p-datatable-sm", 3, "value", "autoLayout"], ["pTemplate", "body"], ["aria-hidden", "true", "title", "Click to add the movie path to the video paths to scan", 1, "fa", "fa-plus"], [1, "p-tag", "language", "mr-2"], [1, "wrap-text"], ["class", "icon-link", 3, "href", 4, "ngIf"], ["class", "text-right", 4, "ngIf"], [1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to play video", 1, "fa", "fa-play-circle-o"], ["aria-hidden", "true", "title", "Click to save hardcoded subtitle languages", 1, "fa", "fa-wrench"], ["aria-hidden", "true", "title", "Click to synchronize subtitle", 1, "fa", "fa-refresh"], ["aria-hidden", "true", "title", "Click to remove subtitle", 1, "fa", "fa-trash"], [1, "text-right"], ["class", "p-tag language ml-2", 4, "ngFor", "ngForOf"], ["class", "p-tag language ml-2", 4, "ngIf"], [1, "p-tag", "filetype", "ml-2"], [1, "p-tag", "language", "ml-2"], [3, "visibleChange", "visible", "imdbId", "title", "movieSettings"], [3, "visibleChange", "visible", "videoPath", "subtitlePath"], [3, "visibleChange", "save", "visible", "videoSubtitles"]],
+        template: function LibraryMovieDetailComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelement"](2, "app-library-scanning");
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelementStart"](3, "app-message", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelement"](4, "i", 3);
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelementStart"](5, "span");
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵtext"](6, "Refreshing movie details...");
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelementEnd"]()();
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵtemplate"](7, LibraryMovieDetailComponent_div_7_Template, 50, 13, "div", 4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelementEnd"]()();
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵelement"](8, "p-confirmDialog", 5);
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵtemplate"](9, LibraryMovieDetailComponent_app_movie_settings_9_Template, 1, 4, "app-movie-settings", 6)(10, LibraryMovieDetailComponent_app_subtitle_sync_10_Template, 1, 3, "app-subtitle-sync", 7)(11, LibraryMovieDetailComponent_app_library_video_subtitles_11_Template, 1, 2, "app-library-video-subtitles", 8);
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵadvance"](3);
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵproperty"]("visible", ctx.refreshInProgress);
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵadvance"](4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵproperty"]("ngIf", ctx.movie);
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵproperty"]("ngIf", ctx.showMovieSettings);
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵproperty"]("ngIf", ctx.showSubtitleSync);
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_15__["ɵɵproperty"]("ngIf", ctx.showVideoSubtitles);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_20__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_20__.NgFor, primeng_panel__WEBPACK_IMPORTED_MODULE_21__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_21__.Panel, primeng_api__WEBPACK_IMPORTED_MODULE_18__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_22__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_22__.Table, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_23__.ConfirmDialogModule, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_23__.ConfirmDialog, primeng_api__WEBPACK_IMPORTED_MODULE_18__.SharedModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_24__.LazyLoadImageModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_24__.LazyLoadImageDirective, _scanning_library_scanning_component__WEBPACK_IMPORTED_MODULE_13__.LibraryScanningComponent, _components_message_message_component__WEBPACK_IMPORTED_MODULE_5__.MessageComponent, _components_movie_settings_movie_settings_component__WEBPACK_IMPORTED_MODULE_6__.MovieSettingsComponent, _components_subtitle_sync_subtitle_sync_component__WEBPACK_IMPORTED_MODULE_8__.SubtitleSyncComponent, _video_library_video_subtitles_component__WEBPACK_IMPORTED_MODULE_14__.LibraryVideoSubtitlesComponent, _components_progress_bar_progress_bar_component__WEBPACK_IMPORTED_MODULE_7__.ProgressBarComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return LibraryMovieDetailComponent;
 })();
@@ -950,38 +958,42 @@ let LibraryMovieOverviewComponent = /*#__PURE__*/(() => {
         error: () => this.messageService.showErrorMessage('Unable to get the movies!')
       });
     }
-    static #_ = this.ɵfac = function LibraryMovieOverviewComponent_Factory(t) {
-      return new (t || LibraryMovieOverviewComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵdefineComponent"]({
-      type: LibraryMovieOverviewComponent,
-      selectors: [["app-library-movie-overview"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵStandaloneFeature"]],
-      decls: 10,
-      vars: 14,
-      consts: [["movieTable", ""], [1, "container-lg"], ["header", "Movie library"], [1, "row"], [1, "col-12", "library-overview-container"], ["stateStorage", "local", "currentPageReportTemplate", "{first} to {last} of {totalRecords}", "styleClass", "p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode", 3, "sortFunction", "value", "stateKey", "loading", "autoLayout", "rowHover", "paginator", "rows", "rowsPerPageOptions", "showCurrentPageReport", "globalFilterFields", "customSort"], ["pTemplate", "caption"], ["pTemplate", "header"], ["pTemplate", "body"], [1, "caption"], [1, "w-100"], ["styleClass", "p-button-static p-button-outlined", 3, "label"], [1, "ml-auto"], ["matchMode", "contains", 3, "table", "tableStateKey"], ["pSortableColumn", "title"], ["field", "title"], ["pSortableColumn", "year"], ["field", "year"], ["pSortableColumn", "path"], ["field", "path"], ["pSortableColumn", "settings.wantedLanguages"], ["field", "settings.wantedLanguages"], ["pSortableColumn", "totalSubtitlesAvailable"], ["field", "totalSubtitlesAvailable"], [1, "p-column-title"], [1, "p-column-data", "title-container"], [1, "title-container-wrapper"], [1, "title-poster-container"], [3, "routerLink", "title"], ["class", "title-poster-image", 3, "lazyLoad", "defaultImage", 4, "ngIf"], [1, "title-text"], [3, "routerLink"], [1, "p-column-data"], [1, "p-column-data", "wrap-text"], ["class", "p-tag p-tag-small p-tag-secondary mr-2", 4, "ngFor", "ngForOf"], [1, "w-100", 3, "value", "total"], [1, "title-poster-image", 3, "lazyLoad", "defaultImage"], [1, "p-tag", "p-tag-small", "p-tag-secondary", "mr-2"]],
-      template: function LibraryMovieOverviewComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          const _r1 = _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵgetCurrentView"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](0, "div", 1)(1, "p-panel", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](2, "app-library-scanning");
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](3, "div", 3)(4, "div", 4)(5, "p-table", 5, 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵlistener"]("sortFunction", function LibraryMovieOverviewComponent_Template_p_table_sortFunction_5_listener($event) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵrestoreView"](_r1);
-            return _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵresetView"](ctx.sort($event));
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](7, LibraryMovieOverviewComponent_ng_template_7_Template, 5, 3, "ng-template", 6)(8, LibraryMovieOverviewComponent_ng_template_8_Template, 21, 0, "ng-template", 7)(9, LibraryMovieOverviewComponent_ng_template_9_Template, 32, 14, "ng-template", 8);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]()()()()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](5);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("value", ctx.movies)("stateKey", ctx.tableStateKey)("loading", ctx.loading)("autoLayout", true)("rowHover", true)("paginator", true)("rows", 10)("rowsPerPageOptions", _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵpureFunction1"](12, _c1, _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵpureFunction0"](11, _c0)))("showCurrentPageReport", true)("globalFilterFields", ctx.globalFilterFields)("customSort", true);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_11__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_11__.NgFor, _angular_router__WEBPACK_IMPORTED_MODULE_12__.RouterLink, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.Panel, primeng_api__WEBPACK_IMPORTED_MODULE_14__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_15__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_15__.Table, primeng_table__WEBPACK_IMPORTED_MODULE_15__.SortableColumn, primeng_table__WEBPACK_IMPORTED_MODULE_15__.SortIcon, primeng_button__WEBPACK_IMPORTED_MODULE_16__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_16__.Button, primeng_api__WEBPACK_IMPORTED_MODULE_14__.SharedModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_17__.LazyLoadImageModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_17__.LazyLoadImageDirective, _scanning_library_scanning_component__WEBPACK_IMPORTED_MODULE_8__.LibraryScanningComponent, _components_table_filter_table_filter_component__WEBPACK_IMPORTED_MODULE_6__.TableFilterComponent, _components_progress_bar_progress_bar_component__WEBPACK_IMPORTED_MODULE_5__.ProgressBarComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function LibraryMovieOverviewComponent_Factory(t) {
+        return new (t || LibraryMovieOverviewComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵdefineComponent"]({
+        type: LibraryMovieOverviewComponent,
+        selectors: [["app-library-movie-overview"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵStandaloneFeature"]],
+        decls: 10,
+        vars: 14,
+        consts: [["movieTable", ""], [1, "container-lg"], ["header", "Movie library"], [1, "row"], [1, "col-12", "library-overview-container"], ["stateStorage", "local", "currentPageReportTemplate", "{first} to {last} of {totalRecords}", "styleClass", "p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode", 3, "sortFunction", "value", "stateKey", "loading", "autoLayout", "rowHover", "paginator", "rows", "rowsPerPageOptions", "showCurrentPageReport", "globalFilterFields", "customSort"], ["pTemplate", "caption"], ["pTemplate", "header"], ["pTemplate", "body"], [1, "caption"], [1, "w-100"], ["styleClass", "p-button-static p-button-outlined", 3, "label"], [1, "ml-auto"], ["matchMode", "contains", 3, "table", "tableStateKey"], ["pSortableColumn", "title"], ["field", "title"], ["pSortableColumn", "year"], ["field", "year"], ["pSortableColumn", "path"], ["field", "path"], ["pSortableColumn", "settings.wantedLanguages"], ["field", "settings.wantedLanguages"], ["pSortableColumn", "totalSubtitlesAvailable"], ["field", "totalSubtitlesAvailable"], [1, "p-column-title"], [1, "p-column-data", "title-container"], [1, "title-container-wrapper"], [1, "title-poster-container"], [3, "routerLink", "title"], ["class", "title-poster-image", 3, "lazyLoad", "defaultImage", 4, "ngIf"], [1, "title-text"], [3, "routerLink"], [1, "p-column-data"], [1, "p-column-data", "wrap-text"], ["class", "p-tag p-tag-small p-tag-secondary mr-2", 4, "ngFor", "ngForOf"], [1, "w-100", 3, "value", "total"], [1, "title-poster-image", 3, "lazyLoad", "defaultImage"], [1, "p-tag", "p-tag-small", "p-tag-secondary", "mr-2"]],
+        template: function LibraryMovieOverviewComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            const _r1 = _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵgetCurrentView"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](0, "div", 1)(1, "p-panel", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelement"](2, "app-library-scanning");
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](3, "div", 3)(4, "div", 4)(5, "p-table", 5, 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵlistener"]("sortFunction", function LibraryMovieOverviewComponent_Template_p_table_sortFunction_5_listener($event) {
+              _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵrestoreView"](_r1);
+              return _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵresetView"](ctx.sort($event));
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](7, LibraryMovieOverviewComponent_ng_template_7_Template, 5, 3, "ng-template", 6)(8, LibraryMovieOverviewComponent_ng_template_8_Template, 21, 0, "ng-template", 7)(9, LibraryMovieOverviewComponent_ng_template_9_Template, 32, 14, "ng-template", 8);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]()()()()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](5);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("value", ctx.movies)("stateKey", ctx.tableStateKey)("loading", ctx.loading)("autoLayout", true)("rowHover", true)("paginator", true)("rows", 10)("rowsPerPageOptions", _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵpureFunction1"](12, _c1, _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵpureFunction0"](11, _c0)))("showCurrentPageReport", true)("globalFilterFields", ctx.globalFilterFields)("customSort", true);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_11__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_11__.NgFor, _angular_router__WEBPACK_IMPORTED_MODULE_12__.RouterLink, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.Panel, primeng_api__WEBPACK_IMPORTED_MODULE_14__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_15__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_15__.Table, primeng_table__WEBPACK_IMPORTED_MODULE_15__.SortableColumn, primeng_table__WEBPACK_IMPORTED_MODULE_15__.SortIcon, primeng_button__WEBPACK_IMPORTED_MODULE_16__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_16__.Button, primeng_api__WEBPACK_IMPORTED_MODULE_14__.SharedModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_17__.LazyLoadImageModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_17__.LazyLoadImageDirective, _scanning_library_scanning_component__WEBPACK_IMPORTED_MODULE_8__.LibraryScanningComponent, _components_table_filter_table_filter_component__WEBPACK_IMPORTED_MODULE_6__.TableFilterComponent, _components_progress_bar_progress_bar_component__WEBPACK_IMPORTED_MODULE_5__.ProgressBarComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return LibraryMovieOverviewComponent;
 })();
@@ -1181,35 +1193,39 @@ let LibraryOverviewComponent = /*#__PURE__*/(() => {
         error: () => this.messageService.showErrorMessage('Unable to get the library overview!')
       });
     }
-    static #_ = this.ɵfac = function LibraryOverviewComponent_Factory(t) {
-      return new (t || LibraryOverviewComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵdefineComponent"]({
-      type: LibraryOverviewComponent,
-      selectors: [["app-library-overview"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵStandaloneFeature"]],
-      decls: 6,
-      vars: 2,
-      consts: [[1, "container-lg"], ["header", "Library overview"], [1, "row"], ["class", "col-12 col-sm-12 col-md-6 col-lg-6 mb-3 mb-sm-3 mb-md-0 mb-lg-0", 4, "ngIf"], ["class", "col-12 col-sm-12 col-md-6 col-lg-6", 4, "ngIf"], [1, "col-12", "col-sm-12", "col-md-6", "col-lg-6", "mb-3", "mb-sm-3", "mb-md-0", "mb-lg-0"], [1, "overview-container"], [1, "overview-data"], [3, "routerLink"], ["src", "assets/shows.jpg", "title", "Click to view shows", 1, "overview-image"], ["iconClass", "fa fa-exclamation-triangle text-danger", 4, "ngIf"], [1, "w-100", 3, "value", "total"], ["iconClass", "fa fa-exclamation-triangle text-danger"], [1, "icon-dropdown-title"], [4, "ngFor", "ngForOf"], [1, "col-12", "col-sm-12", "col-md-6", "col-lg-6"], ["src", "assets/movies.jpg", "title", "Click to view movies", 1, "overview-image", "image-hover"]],
-      template: function LibraryOverviewComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵelement"](2, "app-library-scanning");
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵelementStart"](3, "div", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵtemplate"](4, LibraryOverviewComponent_div_4_Template, 17, 7, "div", 3)(5, LibraryOverviewComponent_div_5_Template, 15, 6, "div", 4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵelementEnd"]()()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵadvance"](4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵproperty"]("ngIf", ctx.showsOverview);
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵproperty"]("ngIf", ctx.moviesOverview);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_11__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_11__.NgFor, _angular_router__WEBPACK_IMPORTED_MODULE_12__.RouterLink, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.Panel, _scanning_library_scanning_component__WEBPACK_IMPORTED_MODULE_7__.LibraryScanningComponent, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_5__.IconDropdownComponent, _components_progress_bar_progress_bar_component__WEBPACK_IMPORTED_MODULE_6__.ProgressBarComponent],
-      styles: [".image-box[_ngcontent-%COMP%], .overview-container[_ngcontent-%COMP%]   .overview-image[_ngcontent-%COMP%] {\n  box-shadow: 3px 3px 3px #000000;\n  -webkit-box-shadow: 3px 3px 3px #000000;\n  -moz-box-shadow: 3px 3px 3px #000000;\n  border: 1px solid #000000;\n}\n\n.image-hover[_ngcontent-%COMP%]:hover, .overview-container[_ngcontent-%COMP%]   .overview-image[_ngcontent-%COMP%]:hover {\n  -moz-filter: brightness(75%);\n  -o-filter: brightness(75%);\n  filter: brightness(75%);\n}\n\n.overview-container[_ngcontent-%COMP%] {\n  border: 1px solid var(--surface-d);\n  border-radius: 0.25rem;\n  padding: 1rem;\n}\n.overview-container[_ngcontent-%COMP%]   .overview-image[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.overview-container[_ngcontent-%COMP%]   .overview-data[_ngcontent-%COMP%] {\n  display: flex;\n  -moz-justify-content: space-between;\n  -ms-justify-content: space-between;\n  justify-content: space-between;\n  -ms-flex-pack: space-between;\n}\n.overview-container[_ngcontent-%COMP%]   .overview-data[_ngcontent-%COMP%]:not(:last-of-type) {\n  margin-bottom: 0.5rem;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9zY3NzL2NvbXBvbmVudHMvX2ltYWdlcy5zY3NzIiwid2VicGFjazovLy4vc3JjL3Njc3MvbWl4aW5zL19ib3gtc2hhZG93LnNjc3MiLCJ3ZWJwYWNrOi8vLi9zcmMvYXBwL3BhZ2VzL2xpYnJhcnkvb3ZlcnZpZXcvbGlicmFyeS1vdmVydmlldy5jb21wb25lbnQuc2NzcyIsIndlYnBhY2s6Ly8uL3NyYy9zY3NzL21peGlucy9fZmlsdGVyLnNjc3MiLCJ3ZWJwYWNrOi8vLi9zcmMvc2Nzcy9taXhpbnMvX2ZsZXhib3guc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFHQTtFQ0ZFLCtCREdvQjtFQ0ZwQix1Q0RFb0I7RUNEcEIsb0NEQ29CO0VBQ3BCLHlCQUFBO0FFQUY7O0FGSUU7RUdQQSw0QkhRa0I7RUdQbEIsMEJIT2tCO0VHTmxCLHVCSE1rQjtBRUVwQjs7QUFSQTtFQUNFLGtDQUFBO0VBQ0Esc0JBQUE7RUFDQSxhQUFBO0FBV0Y7QUFURTtFQUdFLFdBQUE7QUFTSjtBQU5FO0VFSEEsYUFBQTtFQTJGQSxtQ0Z0RjJCO0VFdUYzQixrQ0Z2RjJCO0VFd0YzQiw4QkZ4RjJCO0VFeUYzQiw0QkZ6RjJCO0FBZ0I3QjtBQWRJO0VBQ0UscUJBQUE7QUFnQk4iLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0ICcuLi9taXhpbnMvYm94LXNoYWRvdyc7XHJcbkBpbXBvcnQgJy4uL21peGlucy9maWx0ZXInO1xyXG5cclxuLmltYWdlLWJveCB7XHJcbiAgQGluY2x1ZGUgYm94LXNoYWRvdygzcHggM3B4IDNweCAjMDAwMDAwKTtcclxuICBib3JkZXI6IDFweCBzb2xpZCAjMDAwMDAwO1xyXG59XHJcblxyXG4uaW1hZ2UtaG92ZXIge1xyXG4gICY6aG92ZXIge1xyXG4gICAgQGluY2x1ZGUgZmlsdGVyKGJyaWdodG5lc3MoNzUlKSk7XHJcbiAgfVxyXG59XHJcbiIsIkBtaXhpbiBib3gtc2hhZG93KCRib3gtc2hhZG93KSB7XHJcbiAgYm94LXNoYWRvdzogJGJveC1zaGFkb3c7XHJcbiAgLXdlYmtpdC1ib3gtc2hhZG93OiAkYm94LXNoYWRvdztcclxuICAtbW96LWJveC1zaGFkb3c6ICRib3gtc2hhZG93O1xyXG59XHJcbiIsIkBpbXBvcnQgJy4uLy4uLy4uLy4uL3Njc3MvdmFyaWFibGVzJztcclxuQGltcG9ydCAnLi4vLi4vLi4vLi4vc2Nzcy9taXhpbnMvZmxleGJveCc7XHJcbkBpbXBvcnQgJy4uLy4uLy4uLy4uL3Njc3MvY29tcG9uZW50cy9pbWFnZXMnO1xyXG5cclxuLm92ZXJ2aWV3LWNvbnRhaW5lciB7XHJcbiAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tc3VyZmFjZS1kKTtcclxuICBib3JkZXItcmFkaXVzOiAwLjI1cmVtO1xyXG4gIHBhZGRpbmc6IDFyZW07XHJcblxyXG4gIC5vdmVydmlldy1pbWFnZSB7XHJcbiAgICBAZXh0ZW5kIC5pbWFnZS1ib3g7XHJcbiAgICBAZXh0ZW5kIC5pbWFnZS1ob3ZlcjtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG4gIH1cclxuXHJcbiAgLm92ZXJ2aWV3LWRhdGEge1xyXG4gICAgQGluY2x1ZGUgZmxleGJveDtcclxuICAgIEBpbmNsdWRlIGp1c3RpZnktY29udGVudChzcGFjZS1iZXR3ZWVuKTtcclxuXHJcbiAgICAmOm5vdCg6bGFzdC1vZi10eXBlKSB7XHJcbiAgICAgIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcclxuICAgIH1cclxuICB9XHJcbn1cclxuIiwiQG1peGluIGZpbHRlcigkdmFsdWUpIHtcclxuICAtd2Via2l0LWZpbHRlcjogJHZhbHVlO1xyXG4gIC1tb3otZmlsdGVyOiAkdmFsdWU7XHJcbiAgLW8tZmlsdGVyOiAkdmFsdWU7XHJcbiAgZmlsdGVyOiAkdmFsdWU7XHJcbn1cclxuIiwiLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cclxuLy8gRmxleGJveCBTQVNTIG1peGluc1xyXG4vLyBUaGUgc3BlYzogaHR0cDovL3d3dy53My5vcmcvVFIvY3NzMy1mbGV4Ym94XHJcbi8vIENvcGllZCBmcm9tIGh0dHBzOi8vZ2lzdC5naXRodWIuY29tL3JpY2hhcmR0b3JyZXMzMTQvMjZiMThlMTI5NThiYTQxOGJiMzc5OTNmZGNiZmMxYmRcclxuLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cclxuXHJcbi8vIEZsZXhib3ggZGlzcGxheVxyXG5AbWl4aW4gZmxleGJveCgpIHtcclxuICBkaXNwbGF5OiAtd2Via2l0LWJveDtcclxuICBkaXNwbGF5OiAtbW96LWJveDtcclxuICBkaXNwbGF5OiAtbXMtZmxleGJveDtcclxuICBkaXNwbGF5OiAtd2Via2l0LWZsZXg7XHJcbiAgZGlzcGxheTogZmxleDtcclxufVxyXG5cclxuLy8gVGhlICdmbGV4JyBzaG9ydGhhbmRcclxuLy8gLSBhcHBsaWVzIHRvOiBmbGV4IGl0ZW1zXHJcbi8vIDxwb3NpdGl2ZS1udW1iZXI+LCBpbml0aWFsLCBhdXRvLCBvciBub25lXHJcbkBtaXhpbiBmbGV4KCR2YWx1ZXMpIHtcclxuICAtd2Via2l0LWJveC1mbGV4OiAkdmFsdWVzO1xyXG4gIC1tb3otYm94LWZsZXg6ICR2YWx1ZXM7XHJcbiAgLXdlYmtpdC1mbGV4OiAkdmFsdWVzO1xyXG4gIC1tcy1mbGV4OiAkdmFsdWVzO1xyXG4gIGZsZXg6ICR2YWx1ZXM7XHJcbn1cclxuXHJcbi8vIEZsZXggRmxvdyBEaXJlY3Rpb25cclxuLy8gLSBhcHBsaWVzIHRvOiBmbGV4IGNvbnRhaW5lcnNcclxuLy8gcm93IHwgcm93LXJldmVyc2UgfCBjb2x1bW4gfCBjb2x1bW4tcmV2ZXJzZVxyXG5AbWl4aW4gZmxleC1kaXJlY3Rpb24oJGRpcmVjdGlvbikge1xyXG4gIC13ZWJraXQtZmxleC1kaXJlY3Rpb246ICRkaXJlY3Rpb247XHJcbiAgLW1vei1mbGV4LWRpcmVjdGlvbjogJGRpcmVjdGlvbjtcclxuICAtbXMtZmxleC1kaXJlY3Rpb246ICRkaXJlY3Rpb247XHJcbiAgZmxleC1kaXJlY3Rpb246ICRkaXJlY3Rpb247XHJcbn1cclxuXHJcbi8vIEZsZXggTGluZSBXcmFwcGluZ1xyXG4vLyAtIGFwcGxpZXMgdG86IGZsZXggY29udGFpbmVyc1xyXG4vLyBub3dyYXAgfCB3cmFwIHwgd3JhcC1yZXZlcnNlXHJcbkBtaXhpbiBmbGV4LXdyYXAoJHdyYXApIHtcclxuICAtd2Via2l0LWZsZXgtd3JhcDogJHdyYXA7XHJcbiAgLW1vei1mbGV4LXdyYXA6ICR3cmFwO1xyXG4gIC1tcy1mbGV4LXdyYXA6ICR3cmFwO1xyXG4gIGZsZXgtd3JhcDogJHdyYXA7XHJcbn1cclxuXHJcbi8vIEZsZXggRGlyZWN0aW9uIGFuZCBXcmFwXHJcbi8vIC0gYXBwbGllcyB0bzogZmxleCBjb250YWluZXJzXHJcbi8vIDxmbGV4LWRpcmVjdGlvbj4gfHwgPGZsZXgtd3JhcD5cclxuQG1peGluIGZsZXgtZmxvdygkZmxvdykge1xyXG4gIC13ZWJraXQtZmxleC1mbG93OiAkZmxvdztcclxuICAtbW96LWZsZXgtZmxvdzogJGZsb3c7XHJcbiAgLW1zLWZsZXgtZmxvdzogJGZsb3c7XHJcbiAgZmxleC1mbG93OiAkZmxvdztcclxufVxyXG5cclxuLy8gRGlzcGxheSBPcmRlclxyXG4vLyAtIGFwcGxpZXMgdG86IGZsZXggaXRlbXNcclxuLy8gPGludGVnZXI+XHJcbkBtaXhpbiBvcmRlcigkdmFsKSB7XHJcbiAgLXdlYmtpdC1ib3gtb3JkaW5hbC1ncm91cDogJHZhbDtcclxuICAtbW96LWJveC1vcmRpbmFsLWdyb3VwOiAkdmFsO1xyXG4gIC1tcy1mbGV4LW9yZGVyOiAkdmFsO1xyXG4gIC13ZWJraXQtb3JkZXI6ICR2YWw7XHJcbiAgb3JkZXI6ICR2YWw7XHJcbn1cclxuXHJcbi8vIEZsZXggZ3JvdyBmYWN0b3JcclxuLy8gLSBhcHBsaWVzIHRvOiBmbGV4IGl0ZW1zXHJcbi8vIDxudW1iZXI+XHJcbkBtaXhpbiBmbGV4LWdyb3coJGdyb3cpIHtcclxuICAtd2Via2l0LWZsZXgtZ3JvdzogJGdyb3c7XHJcbiAgLW1vei1mbGV4LWdyb3c6ICRncm93O1xyXG4gIC1tcy1mbGV4LWdyb3c6ICRncm93O1xyXG4gIGZsZXgtZ3JvdzogJGdyb3c7XHJcbn1cclxuXHJcbi8vIEZsZXggc2hyaW5rXHJcbi8vIC0gYXBwbGllcyB0bzogZmxleCBpdGVtIHNocmluayBmYWN0b3JcclxuLy8gPG51bWJlcj5cclxuQG1peGluIGZsZXgtc2hyaW5rKCRzaHJpbmspIHtcclxuICAtd2Via2l0LWZsZXgtc2hyaW5rOiAkc2hyaW5rO1xyXG4gIC1tb3otZmxleC1zaHJpbms6ICRzaHJpbms7XHJcbiAgLW1zLWZsZXgtc2hyaW5rOiAkc2hyaW5rO1xyXG4gIGZsZXgtc2hyaW5rOiAkc2hyaW5rO1xyXG59XHJcblxyXG4vLyBGbGV4IGJhc2lzXHJcbi8vIC0gdGhlIGluaXRpYWwgbWFpbiBzaXplIG9mIHRoZSBmbGV4IGl0ZW1cclxuLy8gLSBhcHBsaWVzIHRvOiBmbGV4IGl0ZW1zbml0aWFsIG1haW4gc2l6ZSBvZiB0aGUgZmxleCBpdGVtXHJcbi8vIDx3aWR0aD5cclxuQG1peGluIGZsZXgtYmFzaXMoJHdpZHRoKSB7XHJcbiAgLXdlYmtpdC1mbGV4LWJhc2lzOiAkd2lkdGg7XHJcbiAgLW1vei1mbGV4LWJhc2lzOiAkd2lkdGg7XHJcbiAgLW1zLWZsZXgtYmFzaXM6ICR3aWR0aDtcclxuICBmbGV4LWJhc2lzOiAkd2lkdGg7XHJcbn1cclxuXHJcbi8vIEF4aXMgQWxpZ25tZW50XHJcbi8vIC0gYXBwbGllcyB0bzogZmxleCBjb250YWluZXJzXHJcbi8vIGZsZXgtc3RhcnQgfCBmbGV4LWVuZCB8IGNlbnRlciB8IHNwYWNlLWJldHdlZW4gfCBzcGFjZS1hcm91bmRcclxuQG1peGluIGp1c3RpZnktY29udGVudCgkanVzdGlmeSkge1xyXG4gIC13ZWJraXQtanVzdGlmeS1jb250ZW50OiAkanVzdGlmeTtcclxuICAtbW96LWp1c3RpZnktY29udGVudDogJGp1c3RpZnk7XHJcbiAgLW1zLWp1c3RpZnktY29udGVudDogJGp1c3RpZnk7XHJcbiAganVzdGlmeS1jb250ZW50OiAkanVzdGlmeTtcclxuICAtbXMtZmxleC1wYWNrOiAkanVzdGlmeTtcclxufVxyXG5cclxuLy8gUGFja2luZyBGbGV4IExpbmVzXHJcbi8vIC0gYXBwbGllcyB0bzogbXVsdGktbGluZSBmbGV4IGNvbnRhaW5lcnNcclxuLy8gZmxleC1zdGFydCB8IGZsZXgtZW5kIHwgY2VudGVyIHwgc3BhY2UtYmV0d2VlbiB8IHNwYWNlLWFyb3VuZCB8IHN0cmV0Y2hcclxuQG1peGluIGFsaWduLWNvbnRlbnQoJGFsaWduKSB7XHJcbiAgLXdlYmtpdC1hbGlnbi1jb250ZW50OiAkYWxpZ247XHJcbiAgLW1vei1hbGlnbi1jb250ZW50OiAkYWxpZ247XHJcbiAgLW1zLWFsaWduLWNvbnRlbnQ6ICRhbGlnbjtcclxuICBhbGlnbi1jb250ZW50OiAkYWxpZ247XHJcbn1cclxuXHJcbi8vIENyb3NzLWF4aXMgQWxpZ25tZW50XHJcbi8vIC0gYXBwbGllcyB0bzogZmxleCBjb250YWluZXJzXHJcbi8vIGZsZXgtc3RhcnQgfCBmbGV4LWVuZCB8IGNlbnRlciB8IGJhc2VsaW5lIHwgc3RyZXRjaFxyXG5AbWl4aW4gYWxpZ24taXRlbXMoJGFsaWduKSB7XHJcbiAgLXdlYmtpdC1hbGlnbi1pdGVtczogJGFsaWduO1xyXG4gIC1tb3otYWxpZ24taXRlbXM6ICRhbGlnbjtcclxuICAtbXMtYWxpZ24taXRlbXM6ICRhbGlnbjtcclxuICBhbGlnbi1pdGVtczogJGFsaWduO1xyXG59XHJcblxyXG4vLyBDcm9zcy1heGlzIEFsaWdubWVudFxyXG4vLyAtIGFwcGxpZXMgdG86IGZsZXggaXRlbXNcclxuLy8gYXV0byB8IGZsZXgtc3RhcnQgfCBmbGV4LWVuZCB8IGNlbnRlciB8IGJhc2VsaW5lIHwgc3RyZXRjaFxyXG5AbWl4aW4gYWxpZ24tc2VsZigkYWxpZ24pIHtcclxuICAtd2Via2l0LWFsaWduLXNlbGY6ICRhbGlnbjtcclxuICAtbW96LWFsaWduLXNlbGY6ICRhbGlnbjtcclxuICAtbXMtYWxpZ24tc2VsZjogJGFsaWduO1xyXG4gIGFsaWduLXNlbGY6ICRhbGlnbjtcclxufVxyXG4iXSwic291cmNlUm9vdCI6IiJ9 */"]
-    });
+    static {
+      this.ɵfac = function LibraryOverviewComponent_Factory(t) {
+        return new (t || LibraryOverviewComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵdefineComponent"]({
+        type: LibraryOverviewComponent,
+        selectors: [["app-library-overview"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵStandaloneFeature"]],
+        decls: 6,
+        vars: 2,
+        consts: [[1, "container-lg"], ["header", "Library overview"], [1, "row"], ["class", "col-12 col-sm-12 col-md-6 col-lg-6 mb-3 mb-sm-3 mb-md-0 mb-lg-0", 4, "ngIf"], ["class", "col-12 col-sm-12 col-md-6 col-lg-6", 4, "ngIf"], [1, "col-12", "col-sm-12", "col-md-6", "col-lg-6", "mb-3", "mb-sm-3", "mb-md-0", "mb-lg-0"], [1, "overview-container"], [1, "overview-data"], [3, "routerLink"], ["src", "assets/shows.jpg", "title", "Click to view shows", 1, "overview-image"], ["iconClass", "fa fa-exclamation-triangle text-danger", 4, "ngIf"], [1, "w-100", 3, "value", "total"], ["iconClass", "fa fa-exclamation-triangle text-danger"], [1, "icon-dropdown-title"], [4, "ngFor", "ngForOf"], [1, "col-12", "col-sm-12", "col-md-6", "col-lg-6"], ["src", "assets/movies.jpg", "title", "Click to view movies", 1, "overview-image", "image-hover"]],
+        template: function LibraryOverviewComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵelement"](2, "app-library-scanning");
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵelementStart"](3, "div", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵtemplate"](4, LibraryOverviewComponent_div_4_Template, 17, 7, "div", 3)(5, LibraryOverviewComponent_div_5_Template, 15, 6, "div", 4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵelementEnd"]()()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵadvance"](4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵproperty"]("ngIf", ctx.showsOverview);
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_8__["ɵɵproperty"]("ngIf", ctx.moviesOverview);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_11__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_11__.NgFor, _angular_router__WEBPACK_IMPORTED_MODULE_12__.RouterLink, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.Panel, _scanning_library_scanning_component__WEBPACK_IMPORTED_MODULE_7__.LibraryScanningComponent, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_5__.IconDropdownComponent, _components_progress_bar_progress_bar_component__WEBPACK_IMPORTED_MODULE_6__.ProgressBarComponent],
+        styles: [".image-box[_ngcontent-%COMP%], .overview-container[_ngcontent-%COMP%]   .overview-image[_ngcontent-%COMP%] {\n  box-shadow: 3px 3px 3px #000000;\n  -webkit-box-shadow: 3px 3px 3px #000000;\n  -moz-box-shadow: 3px 3px 3px #000000;\n  border: 1px solid #000000;\n}\n\n.image-hover[_ngcontent-%COMP%]:hover, .overview-container[_ngcontent-%COMP%]   .overview-image[_ngcontent-%COMP%]:hover {\n  -moz-filter: brightness(75%);\n  -o-filter: brightness(75%);\n  filter: brightness(75%);\n}\n\n.overview-container[_ngcontent-%COMP%] {\n  border: 1px solid var(--surface-d);\n  border-radius: 0.25rem;\n  padding: 1rem;\n}\n.overview-container[_ngcontent-%COMP%]   .overview-image[_ngcontent-%COMP%] {\n  width: 100%;\n}\n.overview-container[_ngcontent-%COMP%]   .overview-data[_ngcontent-%COMP%] {\n  display: flex;\n  -moz-justify-content: space-between;\n  -ms-justify-content: space-between;\n  justify-content: space-between;\n  -ms-flex-pack: space-between;\n}\n.overview-container[_ngcontent-%COMP%]   .overview-data[_ngcontent-%COMP%]:not(:last-of-type) {\n  margin-bottom: 0.5rem;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9zY3NzL2NvbXBvbmVudHMvX2ltYWdlcy5zY3NzIiwid2VicGFjazovLy4vc3JjL3Njc3MvbWl4aW5zL19ib3gtc2hhZG93LnNjc3MiLCJ3ZWJwYWNrOi8vLi9zcmMvYXBwL3BhZ2VzL2xpYnJhcnkvb3ZlcnZpZXcvbGlicmFyeS1vdmVydmlldy5jb21wb25lbnQuc2NzcyIsIndlYnBhY2s6Ly8uL3NyYy9zY3NzL21peGlucy9fZmlsdGVyLnNjc3MiLCJ3ZWJwYWNrOi8vLi9zcmMvc2Nzcy9taXhpbnMvX2ZsZXhib3guc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFHQTtFQ0ZFLCtCREdvQjtFQ0ZwQix1Q0RFb0I7RUNEcEIsb0NEQ29CO0VBQ3BCLHlCQUFBO0FFQUY7O0FGSUU7RUdQQSw0QkhRa0I7RUdQbEIsMEJIT2tCO0VHTmxCLHVCSE1rQjtBRUVwQjs7QUFSQTtFQUNFLGtDQUFBO0VBQ0Esc0JBQUE7RUFDQSxhQUFBO0FBV0Y7QUFURTtFQUdFLFdBQUE7QUFTSjtBQU5FO0VFSEEsYUFBQTtFQTJGQSxtQ0Z0RjJCO0VFdUYzQixrQ0Z2RjJCO0VFd0YzQiw4QkZ4RjJCO0VFeUYzQiw0QkZ6RjJCO0FBZ0I3QjtBQWRJO0VBQ0UscUJBQUE7QUFnQk4iLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0ICcuLi9taXhpbnMvYm94LXNoYWRvdyc7XHJcbkBpbXBvcnQgJy4uL21peGlucy9maWx0ZXInO1xyXG5cclxuLmltYWdlLWJveCB7XHJcbiAgQGluY2x1ZGUgYm94LXNoYWRvdygzcHggM3B4IDNweCAjMDAwMDAwKTtcclxuICBib3JkZXI6IDFweCBzb2xpZCAjMDAwMDAwO1xyXG59XHJcblxyXG4uaW1hZ2UtaG92ZXIge1xyXG4gICY6aG92ZXIge1xyXG4gICAgQGluY2x1ZGUgZmlsdGVyKGJyaWdodG5lc3MoNzUlKSk7XHJcbiAgfVxyXG59XHJcbiIsIkBtaXhpbiBib3gtc2hhZG93KCRib3gtc2hhZG93KSB7XHJcbiAgYm94LXNoYWRvdzogJGJveC1zaGFkb3c7XHJcbiAgLXdlYmtpdC1ib3gtc2hhZG93OiAkYm94LXNoYWRvdztcclxuICAtbW96LWJveC1zaGFkb3c6ICRib3gtc2hhZG93O1xyXG59XHJcbiIsIkBpbXBvcnQgJy4uLy4uLy4uLy4uL3Njc3MvdmFyaWFibGVzJztcclxuQGltcG9ydCAnLi4vLi4vLi4vLi4vc2Nzcy9taXhpbnMvZmxleGJveCc7XHJcbkBpbXBvcnQgJy4uLy4uLy4uLy4uL3Njc3MvY29tcG9uZW50cy9pbWFnZXMnO1xyXG5cclxuLm92ZXJ2aWV3LWNvbnRhaW5lciB7XHJcbiAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tc3VyZmFjZS1kKTtcclxuICBib3JkZXItcmFkaXVzOiAwLjI1cmVtO1xyXG4gIHBhZGRpbmc6IDFyZW07XHJcblxyXG4gIC5vdmVydmlldy1pbWFnZSB7XHJcbiAgICBAZXh0ZW5kIC5pbWFnZS1ib3g7XHJcbiAgICBAZXh0ZW5kIC5pbWFnZS1ob3ZlcjtcclxuICAgIHdpZHRoOiAxMDAlO1xyXG4gIH1cclxuXHJcbiAgLm92ZXJ2aWV3LWRhdGEge1xyXG4gICAgQGluY2x1ZGUgZmxleGJveDtcclxuICAgIEBpbmNsdWRlIGp1c3RpZnktY29udGVudChzcGFjZS1iZXR3ZWVuKTtcclxuXHJcbiAgICAmOm5vdCg6bGFzdC1vZi10eXBlKSB7XHJcbiAgICAgIG1hcmdpbi1ib3R0b206IDAuNXJlbTtcclxuICAgIH1cclxuICB9XHJcbn1cclxuIiwiQG1peGluIGZpbHRlcigkdmFsdWUpIHtcclxuICAtd2Via2l0LWZpbHRlcjogJHZhbHVlO1xyXG4gIC1tb3otZmlsdGVyOiAkdmFsdWU7XHJcbiAgLW8tZmlsdGVyOiAkdmFsdWU7XHJcbiAgZmlsdGVyOiAkdmFsdWU7XHJcbn1cclxuIiwiLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cclxuLy8gRmxleGJveCBTQVNTIG1peGluc1xyXG4vLyBUaGUgc3BlYzogaHR0cDovL3d3dy53My5vcmcvVFIvY3NzMy1mbGV4Ym94XHJcbi8vIENvcGllZCBmcm9tIGh0dHBzOi8vZ2lzdC5naXRodWIuY29tL3JpY2hhcmR0b3JyZXMzMTQvMjZiMThlMTI5NThiYTQxOGJiMzc5OTNmZGNiZmMxYmRcclxuLy8gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cclxuXHJcbi8vIEZsZXhib3ggZGlzcGxheVxyXG5AbWl4aW4gZmxleGJveCgpIHtcclxuICBkaXNwbGF5OiAtd2Via2l0LWJveDtcclxuICBkaXNwbGF5OiAtbW96LWJveDtcclxuICBkaXNwbGF5OiAtbXMtZmxleGJveDtcclxuICBkaXNwbGF5OiAtd2Via2l0LWZsZXg7XHJcbiAgZGlzcGxheTogZmxleDtcclxufVxyXG5cclxuLy8gVGhlICdmbGV4JyBzaG9ydGhhbmRcclxuLy8gLSBhcHBsaWVzIHRvOiBmbGV4IGl0ZW1zXHJcbi8vIDxwb3NpdGl2ZS1udW1iZXI+LCBpbml0aWFsLCBhdXRvLCBvciBub25lXHJcbkBtaXhpbiBmbGV4KCR2YWx1ZXMpIHtcclxuICAtd2Via2l0LWJveC1mbGV4OiAkdmFsdWVzO1xyXG4gIC1tb3otYm94LWZsZXg6ICR2YWx1ZXM7XHJcbiAgLXdlYmtpdC1mbGV4OiAkdmFsdWVzO1xyXG4gIC1tcy1mbGV4OiAkdmFsdWVzO1xyXG4gIGZsZXg6ICR2YWx1ZXM7XHJcbn1cclxuXHJcbi8vIEZsZXggRmxvdyBEaXJlY3Rpb25cclxuLy8gLSBhcHBsaWVzIHRvOiBmbGV4IGNvbnRhaW5lcnNcclxuLy8gcm93IHwgcm93LXJldmVyc2UgfCBjb2x1bW4gfCBjb2x1bW4tcmV2ZXJzZVxyXG5AbWl4aW4gZmxleC1kaXJlY3Rpb24oJGRpcmVjdGlvbikge1xyXG4gIC13ZWJraXQtZmxleC1kaXJlY3Rpb246ICRkaXJlY3Rpb247XHJcbiAgLW1vei1mbGV4LWRpcmVjdGlvbjogJGRpcmVjdGlvbjtcclxuICAtbXMtZmxleC1kaXJlY3Rpb246ICRkaXJlY3Rpb247XHJcbiAgZmxleC1kaXJlY3Rpb246ICRkaXJlY3Rpb247XHJcbn1cclxuXHJcbi8vIEZsZXggTGluZSBXcmFwcGluZ1xyXG4vLyAtIGFwcGxpZXMgdG86IGZsZXggY29udGFpbmVyc1xyXG4vLyBub3dyYXAgfCB3cmFwIHwgd3JhcC1yZXZlcnNlXHJcbkBtaXhpbiBmbGV4LXdyYXAoJHdyYXApIHtcclxuICAtd2Via2l0LWZsZXgtd3JhcDogJHdyYXA7XHJcbiAgLW1vei1mbGV4LXdyYXA6ICR3cmFwO1xyXG4gIC1tcy1mbGV4LXdyYXA6ICR3cmFwO1xyXG4gIGZsZXgtd3JhcDogJHdyYXA7XHJcbn1cclxuXHJcbi8vIEZsZXggRGlyZWN0aW9uIGFuZCBXcmFwXHJcbi8vIC0gYXBwbGllcyB0bzogZmxleCBjb250YWluZXJzXHJcbi8vIDxmbGV4LWRpcmVjdGlvbj4gfHwgPGZsZXgtd3JhcD5cclxuQG1peGluIGZsZXgtZmxvdygkZmxvdykge1xyXG4gIC13ZWJraXQtZmxleC1mbG93OiAkZmxvdztcclxuICAtbW96LWZsZXgtZmxvdzogJGZsb3c7XHJcbiAgLW1zLWZsZXgtZmxvdzogJGZsb3c7XHJcbiAgZmxleC1mbG93OiAkZmxvdztcclxufVxyXG5cclxuLy8gRGlzcGxheSBPcmRlclxyXG4vLyAtIGFwcGxpZXMgdG86IGZsZXggaXRlbXNcclxuLy8gPGludGVnZXI+XHJcbkBtaXhpbiBvcmRlcigkdmFsKSB7XHJcbiAgLXdlYmtpdC1ib3gtb3JkaW5hbC1ncm91cDogJHZhbDtcclxuICAtbW96LWJveC1vcmRpbmFsLWdyb3VwOiAkdmFsO1xyXG4gIC1tcy1mbGV4LW9yZGVyOiAkdmFsO1xyXG4gIC13ZWJraXQtb3JkZXI6ICR2YWw7XHJcbiAgb3JkZXI6ICR2YWw7XHJcbn1cclxuXHJcbi8vIEZsZXggZ3JvdyBmYWN0b3JcclxuLy8gLSBhcHBsaWVzIHRvOiBmbGV4IGl0ZW1zXHJcbi8vIDxudW1iZXI+XHJcbkBtaXhpbiBmbGV4LWdyb3coJGdyb3cpIHtcclxuICAtd2Via2l0LWZsZXgtZ3JvdzogJGdyb3c7XHJcbiAgLW1vei1mbGV4LWdyb3c6ICRncm93O1xyXG4gIC1tcy1mbGV4LWdyb3c6ICRncm93O1xyXG4gIGZsZXgtZ3JvdzogJGdyb3c7XHJcbn1cclxuXHJcbi8vIEZsZXggc2hyaW5rXHJcbi8vIC0gYXBwbGllcyB0bzogZmxleCBpdGVtIHNocmluayBmYWN0b3JcclxuLy8gPG51bWJlcj5cclxuQG1peGluIGZsZXgtc2hyaW5rKCRzaHJpbmspIHtcclxuICAtd2Via2l0LWZsZXgtc2hyaW5rOiAkc2hyaW5rO1xyXG4gIC1tb3otZmxleC1zaHJpbms6ICRzaHJpbms7XHJcbiAgLW1zLWZsZXgtc2hyaW5rOiAkc2hyaW5rO1xyXG4gIGZsZXgtc2hyaW5rOiAkc2hyaW5rO1xyXG59XHJcblxyXG4vLyBGbGV4IGJhc2lzXHJcbi8vIC0gdGhlIGluaXRpYWwgbWFpbiBzaXplIG9mIHRoZSBmbGV4IGl0ZW1cclxuLy8gLSBhcHBsaWVzIHRvOiBmbGV4IGl0ZW1zbml0aWFsIG1haW4gc2l6ZSBvZiB0aGUgZmxleCBpdGVtXHJcbi8vIDx3aWR0aD5cclxuQG1peGluIGZsZXgtYmFzaXMoJHdpZHRoKSB7XHJcbiAgLXdlYmtpdC1mbGV4LWJhc2lzOiAkd2lkdGg7XHJcbiAgLW1vei1mbGV4LWJhc2lzOiAkd2lkdGg7XHJcbiAgLW1zLWZsZXgtYmFzaXM6ICR3aWR0aDtcclxuICBmbGV4LWJhc2lzOiAkd2lkdGg7XHJcbn1cclxuXHJcbi8vIEF4aXMgQWxpZ25tZW50XHJcbi8vIC0gYXBwbGllcyB0bzogZmxleCBjb250YWluZXJzXHJcbi8vIGZsZXgtc3RhcnQgfCBmbGV4LWVuZCB8IGNlbnRlciB8IHNwYWNlLWJldHdlZW4gfCBzcGFjZS1hcm91bmRcclxuQG1peGluIGp1c3RpZnktY29udGVudCgkanVzdGlmeSkge1xyXG4gIC13ZWJraXQtanVzdGlmeS1jb250ZW50OiAkanVzdGlmeTtcclxuICAtbW96LWp1c3RpZnktY29udGVudDogJGp1c3RpZnk7XHJcbiAgLW1zLWp1c3RpZnktY29udGVudDogJGp1c3RpZnk7XHJcbiAganVzdGlmeS1jb250ZW50OiAkanVzdGlmeTtcclxuICAtbXMtZmxleC1wYWNrOiAkanVzdGlmeTtcclxufVxyXG5cclxuLy8gUGFja2luZyBGbGV4IExpbmVzXHJcbi8vIC0gYXBwbGllcyB0bzogbXVsdGktbGluZSBmbGV4IGNvbnRhaW5lcnNcclxuLy8gZmxleC1zdGFydCB8IGZsZXgtZW5kIHwgY2VudGVyIHwgc3BhY2UtYmV0d2VlbiB8IHNwYWNlLWFyb3VuZCB8IHN0cmV0Y2hcclxuQG1peGluIGFsaWduLWNvbnRlbnQoJGFsaWduKSB7XHJcbiAgLXdlYmtpdC1hbGlnbi1jb250ZW50OiAkYWxpZ247XHJcbiAgLW1vei1hbGlnbi1jb250ZW50OiAkYWxpZ247XHJcbiAgLW1zLWFsaWduLWNvbnRlbnQ6ICRhbGlnbjtcclxuICBhbGlnbi1jb250ZW50OiAkYWxpZ247XHJcbn1cclxuXHJcbi8vIENyb3NzLWF4aXMgQWxpZ25tZW50XHJcbi8vIC0gYXBwbGllcyB0bzogZmxleCBjb250YWluZXJzXHJcbi8vIGZsZXgtc3RhcnQgfCBmbGV4LWVuZCB8IGNlbnRlciB8IGJhc2VsaW5lIHwgc3RyZXRjaFxyXG5AbWl4aW4gYWxpZ24taXRlbXMoJGFsaWduKSB7XHJcbiAgLXdlYmtpdC1hbGlnbi1pdGVtczogJGFsaWduO1xyXG4gIC1tb3otYWxpZ24taXRlbXM6ICRhbGlnbjtcclxuICAtbXMtYWxpZ24taXRlbXM6ICRhbGlnbjtcclxuICBhbGlnbi1pdGVtczogJGFsaWduO1xyXG59XHJcblxyXG4vLyBDcm9zcy1heGlzIEFsaWdubWVudFxyXG4vLyAtIGFwcGxpZXMgdG86IGZsZXggaXRlbXNcclxuLy8gYXV0byB8IGZsZXgtc3RhcnQgfCBmbGV4LWVuZCB8IGNlbnRlciB8IGJhc2VsaW5lIHwgc3RyZXRjaFxyXG5AbWl4aW4gYWxpZ24tc2VsZigkYWxpZ24pIHtcclxuICAtd2Via2l0LWFsaWduLXNlbGY6ICRhbGlnbjtcclxuICAtbW96LWFsaWduLXNlbGY6ICRhbGlnbjtcclxuICAtbXMtYWxpZ24tc2VsZjogJGFsaWduO1xyXG4gIGFsaWduLXNlbGY6ICRhbGlnbjtcclxufVxyXG4iXSwic291cmNlUm9vdCI6IiJ9 */"]
+      });
+    }
   }
   return LibraryOverviewComponent;
 })();
@@ -1267,32 +1283,36 @@ let LibraryScanningComponent = /*#__PURE__*/(() => {
         }
       });
     }
-    static #_ = this.ɵfac = function LibraryScanningComponent_Factory(t) {
-      return new (t || LibraryScanningComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵdefineComponent"]({
-      type: LibraryScanningComponent,
-      selectors: [["app-library-scanning"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵStandaloneFeature"]],
-      decls: 4,
-      vars: 1,
-      consts: [[3, "visible"], ["aria-hidden", "true", 1, "fa", "fa-spinner", "fa-spin", "mr-2"]],
-      template: function LibraryScanningComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "app-message", 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](1, "i", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](2, "span");
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](3, "Scanning library...");
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("visible", ctx.scanningInProgress);
-        }
-      },
-      dependencies: [_components_message_message_component__WEBPACK_IMPORTED_MODULE_3__.MessageComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function LibraryScanningComponent_Factory(t) {
+        return new (t || LibraryScanningComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵdefineComponent"]({
+        type: LibraryScanningComponent,
+        selectors: [["app-library-scanning"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵStandaloneFeature"]],
+        decls: 4,
+        vars: 1,
+        consts: [[3, "visible"], ["aria-hidden", "true", 1, "fa", "fa-spinner", "fa-spin", "mr-2"]],
+        template: function LibraryScanningComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "app-message", 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelement"](1, "i", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](2, "span");
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtext"](3, "Scanning library...");
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("visible", ctx.scanningInProgress);
+          }
+        },
+        dependencies: [_components_message_message_component__WEBPACK_IMPORTED_MODULE_3__.MessageComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return LibraryScanningComponent;
 })();
@@ -1937,47 +1957,51 @@ let LibraryShowDetailComponent = /*#__PURE__*/(() => {
         error: () => this.messageService.showErrorMessage('Unable to get the show details!')
       });
     }
-    static #_ = this.ɵfac = function LibraryShowDetailComponent_Factory(t) {
-      return new (t || LibraryShowDetailComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵdefineComponent"]({
-      type: LibraryShowDetailComponent,
-      selectors: [["app-library-show-detail"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵStandaloneFeature"]],
-      decls: 12,
-      vars: 5,
-      consts: [[1, "container-lg"], ["header", "Show details"], [3, "visible"], ["aria-hidden", "true", 1, "fa", "fa-spinner", "fa-spin", "mr-2"], ["class", "library-details-container", 4, "ngIf"], ["header", "Confirmation", "icon", "pi pi-exclamation-triangle"], [3, "visible", "tvdbId", "title", "showSettings", "visibleChange", 4, "ngIf"], [3, "visible", "videoPath", "subtitlePath", "visibleChange", 4, "ngIf"], [3, "visible", "videoSubtitles", "visibleChange", "save", 4, "ngIf"], [1, "library-details-container"], [1, "row", "mb-3"], [1, "col-12", "library-details-info-container"], [1, "library-details-info-poster"], ["target", "_blank", 3, "href"], ["title", "Click to view full size", 1, "library-details-info-poster-image", 3, "lazyLoad", "defaultImage"], [1, "library-details-info"], [1, "row"], [1, "col-12", "library-details-info-title"], [1, "icon-group"], ["target", "_blank", 1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to visit Tvdb", 1, "fa", "fa-television"], [1, "icon-link", 3, "click"], ["aria-hidden", "true", "title", "Click to edit show settings", 1, "fa", "fa-wrench"], ["aria-hidden", "true", "title", "Click to refresh show details", 1, "fa", "fa-repeat"], ["aria-hidden", "true", "title", "Click to delete show from the database", 1, "fa", "fa-trash"], [1, "col-12"], [1, "row", "mb-2"], [1, "col-3"], [1, "col-9", "wrap-text"], ["class", "icon-link", 3, "click", 4, "ngIf"], [1, "col-9"], ["class", "p-tag language mr-2", 4, "ngFor", "ngForOf"], [1, "library-details-files-summary"], [1, "summary-title"], [1, "summary-progress-bar", "ml-auto"], [3, "value", "total"], ["class", "row mb-3", 4, "ngFor", "ngForOf"], ["aria-hidden", "true", "title", "Click to add the show path to the video paths to scan", 1, "fa", "fa-plus"], [1, "p-tag", "language", "mr-2"], [1, "col-12", "library-details-files"], ["styleClass", "p-datatable-sm", 3, "value", "autoLayout"], ["pTemplate", "caption"], ["pTemplate", "body"], [1, "table-caption"], [1, "table-caption-title"], [1, "ml-auto"], ["styleClass", "p-button-static p-button-outlined p-button-sm ml-2", 3, "label", "badge", 4, "ngFor", "ngForOf"], ["label", "video", "styleClass", "p-button-static p-button-outlined p-button-sm ml-2", 3, "badge"], ["styleClass", "p-button-static p-button-outlined p-button-sm ml-2", 3, "label", "badge"], [1, "wrap-text"], ["class", "icon-link", 3, "href", 4, "ngIf"], ["class", "text-right", 4, "ngIf"], [1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to play video", 1, "fa", "fa-play-circle-o"], ["aria-hidden", "true", "title", "Click to save hardcoded subtitle languages", 1, "fa", "fa-wrench"], ["aria-hidden", "true", "title", "Click to synchronize subtitle", 1, "fa", "fa-refresh"], ["aria-hidden", "true", "title", "Click to remove subtitle", 1, "fa", "fa-trash"], [1, "text-right"], ["class", "p-tag language ml-2", 4, "ngFor", "ngForOf"], ["class", "p-tag language ml-2", 4, "ngIf"], [1, "p-tag", "filetype", "ml-2"], [1, "p-tag", "language", "ml-2"], [3, "visibleChange", "visible", "tvdbId", "title", "showSettings"], [3, "visibleChange", "visible", "videoPath", "subtitlePath"], [3, "visibleChange", "save", "visible", "videoSubtitles"]],
-      template: function LibraryShowDetailComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelement"](2, "app-library-scanning");
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelementStart"](3, "app-message", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelement"](4, "i", 3);
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelementStart"](5, "span");
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵtext"](6, "Refreshing show details...");
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelementEnd"]()();
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵtemplate"](7, LibraryShowDetailComponent_div_7_Template, 47, 12, "div", 4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelementEnd"]()();
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelement"](8, "p-confirmDialog", 5);
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵtemplate"](9, LibraryShowDetailComponent_app_show_settings_9_Template, 1, 4, "app-show-settings", 6)(10, LibraryShowDetailComponent_app_subtitle_sync_10_Template, 1, 3, "app-subtitle-sync", 7)(11, LibraryShowDetailComponent_app_library_video_subtitles_11_Template, 1, 2, "app-library-video-subtitles", 8);
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵadvance"](3);
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵproperty"]("visible", ctx.refreshInProgress);
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵadvance"](4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵproperty"]("ngIf", ctx.show);
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵproperty"]("ngIf", ctx.showShowSettings);
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵproperty"]("ngIf", ctx.showSubtitleSync);
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵproperty"]("ngIf", ctx.showVideoSubtitles);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_21__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_21__.NgFor, primeng_panel__WEBPACK_IMPORTED_MODULE_22__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_22__.Panel, primeng_api__WEBPACK_IMPORTED_MODULE_19__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_23__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_23__.Table, primeng_button__WEBPACK_IMPORTED_MODULE_24__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_24__.Button, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_25__.ConfirmDialogModule, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_25__.ConfirmDialog, primeng_api__WEBPACK_IMPORTED_MODULE_19__.SharedModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_26__.LazyLoadImageModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_26__.LazyLoadImageDirective, _scanning_library_scanning_component__WEBPACK_IMPORTED_MODULE_14__.LibraryScanningComponent, _components_message_message_component__WEBPACK_IMPORTED_MODULE_6__.MessageComponent, _components_progress_bar_progress_bar_component__WEBPACK_IMPORTED_MODULE_7__.ProgressBarComponent, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_5__.IconDropdownComponent, _components_show_settings_show_settings_component__WEBPACK_IMPORTED_MODULE_8__.ShowSettingsComponent, _components_subtitle_sync_subtitle_sync_component__WEBPACK_IMPORTED_MODULE_9__.SubtitleSyncComponent, _video_library_video_subtitles_component__WEBPACK_IMPORTED_MODULE_15__.LibraryVideoSubtitlesComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function LibraryShowDetailComponent_Factory(t) {
+        return new (t || LibraryShowDetailComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵdefineComponent"]({
+        type: LibraryShowDetailComponent,
+        selectors: [["app-library-show-detail"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵStandaloneFeature"]],
+        decls: 12,
+        vars: 5,
+        consts: [[1, "container-lg"], ["header", "Show details"], [3, "visible"], ["aria-hidden", "true", 1, "fa", "fa-spinner", "fa-spin", "mr-2"], ["class", "library-details-container", 4, "ngIf"], ["header", "Confirmation", "icon", "pi pi-exclamation-triangle"], [3, "visible", "tvdbId", "title", "showSettings", "visibleChange", 4, "ngIf"], [3, "visible", "videoPath", "subtitlePath", "visibleChange", 4, "ngIf"], [3, "visible", "videoSubtitles", "visibleChange", "save", 4, "ngIf"], [1, "library-details-container"], [1, "row", "mb-3"], [1, "col-12", "library-details-info-container"], [1, "library-details-info-poster"], ["target", "_blank", 3, "href"], ["title", "Click to view full size", 1, "library-details-info-poster-image", 3, "lazyLoad", "defaultImage"], [1, "library-details-info"], [1, "row"], [1, "col-12", "library-details-info-title"], [1, "icon-group"], ["target", "_blank", 1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to visit Tvdb", 1, "fa", "fa-television"], [1, "icon-link", 3, "click"], ["aria-hidden", "true", "title", "Click to edit show settings", 1, "fa", "fa-wrench"], ["aria-hidden", "true", "title", "Click to refresh show details", 1, "fa", "fa-repeat"], ["aria-hidden", "true", "title", "Click to delete show from the database", 1, "fa", "fa-trash"], [1, "col-12"], [1, "row", "mb-2"], [1, "col-3"], [1, "col-9", "wrap-text"], ["class", "icon-link", 3, "click", 4, "ngIf"], [1, "col-9"], ["class", "p-tag language mr-2", 4, "ngFor", "ngForOf"], [1, "library-details-files-summary"], [1, "summary-title"], [1, "summary-progress-bar", "ml-auto"], [3, "value", "total"], ["class", "row mb-3", 4, "ngFor", "ngForOf"], ["aria-hidden", "true", "title", "Click to add the show path to the video paths to scan", 1, "fa", "fa-plus"], [1, "p-tag", "language", "mr-2"], [1, "col-12", "library-details-files"], ["styleClass", "p-datatable-sm", 3, "value", "autoLayout"], ["pTemplate", "caption"], ["pTemplate", "body"], [1, "table-caption"], [1, "table-caption-title"], [1, "ml-auto"], ["styleClass", "p-button-static p-button-outlined p-button-sm ml-2", 3, "label", "badge", 4, "ngFor", "ngForOf"], ["label", "video", "styleClass", "p-button-static p-button-outlined p-button-sm ml-2", 3, "badge"], ["styleClass", "p-button-static p-button-outlined p-button-sm ml-2", 3, "label", "badge"], [1, "wrap-text"], ["class", "icon-link", 3, "href", 4, "ngIf"], ["class", "text-right", 4, "ngIf"], [1, "icon-link", 3, "href"], ["aria-hidden", "true", "title", "Click to play video", 1, "fa", "fa-play-circle-o"], ["aria-hidden", "true", "title", "Click to save hardcoded subtitle languages", 1, "fa", "fa-wrench"], ["aria-hidden", "true", "title", "Click to synchronize subtitle", 1, "fa", "fa-refresh"], ["aria-hidden", "true", "title", "Click to remove subtitle", 1, "fa", "fa-trash"], [1, "text-right"], ["class", "p-tag language ml-2", 4, "ngFor", "ngForOf"], ["class", "p-tag language ml-2", 4, "ngIf"], [1, "p-tag", "filetype", "ml-2"], [1, "p-tag", "language", "ml-2"], [3, "visibleChange", "visible", "tvdbId", "title", "showSettings"], [3, "visibleChange", "visible", "videoPath", "subtitlePath"], [3, "visibleChange", "save", "visible", "videoSubtitles"]],
+        template: function LibraryShowDetailComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelement"](2, "app-library-scanning");
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelementStart"](3, "app-message", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelement"](4, "i", 3);
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelementStart"](5, "span");
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵtext"](6, "Refreshing show details...");
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelementEnd"]()();
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵtemplate"](7, LibraryShowDetailComponent_div_7_Template, 47, 12, "div", 4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelementEnd"]()();
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵelement"](8, "p-confirmDialog", 5);
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵtemplate"](9, LibraryShowDetailComponent_app_show_settings_9_Template, 1, 4, "app-show-settings", 6)(10, LibraryShowDetailComponent_app_subtitle_sync_10_Template, 1, 3, "app-subtitle-sync", 7)(11, LibraryShowDetailComponent_app_library_video_subtitles_11_Template, 1, 2, "app-library-video-subtitles", 8);
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵadvance"](3);
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵproperty"]("visible", ctx.refreshInProgress);
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵadvance"](4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵproperty"]("ngIf", ctx.show);
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵproperty"]("ngIf", ctx.showShowSettings);
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵproperty"]("ngIf", ctx.showSubtitleSync);
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_16__["ɵɵproperty"]("ngIf", ctx.showVideoSubtitles);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_21__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_21__.NgFor, primeng_panel__WEBPACK_IMPORTED_MODULE_22__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_22__.Panel, primeng_api__WEBPACK_IMPORTED_MODULE_19__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_23__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_23__.Table, primeng_button__WEBPACK_IMPORTED_MODULE_24__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_24__.Button, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_25__.ConfirmDialogModule, primeng_confirmdialog__WEBPACK_IMPORTED_MODULE_25__.ConfirmDialog, primeng_api__WEBPACK_IMPORTED_MODULE_19__.SharedModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_26__.LazyLoadImageModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_26__.LazyLoadImageDirective, _scanning_library_scanning_component__WEBPACK_IMPORTED_MODULE_14__.LibraryScanningComponent, _components_message_message_component__WEBPACK_IMPORTED_MODULE_6__.MessageComponent, _components_progress_bar_progress_bar_component__WEBPACK_IMPORTED_MODULE_7__.ProgressBarComponent, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_5__.IconDropdownComponent, _components_show_settings_show_settings_component__WEBPACK_IMPORTED_MODULE_8__.ShowSettingsComponent, _components_subtitle_sync_subtitle_sync_component__WEBPACK_IMPORTED_MODULE_9__.SubtitleSyncComponent, _video_library_video_subtitles_component__WEBPACK_IMPORTED_MODULE_15__.LibraryVideoSubtitlesComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return LibraryShowDetailComponent;
 })();
@@ -2201,38 +2225,42 @@ let LibraryShowOverviewComponent = /*#__PURE__*/(() => {
         error: () => this.messageService.showErrorMessage('Unable to get the shows!')
       });
     }
-    static #_ = this.ɵfac = function LibraryShowOverviewComponent_Factory(t) {
-      return new (t || LibraryShowOverviewComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdefineComponent"]({
-      type: LibraryShowOverviewComponent,
-      selectors: [["app-library-show-overview"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵStandaloneFeature"]],
-      decls: 10,
-      vars: 14,
-      consts: [["showTable", ""], [1, "container-lg"], ["header", "Show library"], [1, "row"], [1, "col-12", "library-overview-container"], ["stateStorage", "local", "currentPageReportTemplate", "{first} to {last} of {totalRecords}", "styleClass", "p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode", 3, "sortFunction", "value", "stateKey", "loading", "autoLayout", "rowHover", "paginator", "rows", "rowsPerPageOptions", "showCurrentPageReport", "globalFilterFields", "customSort"], ["pTemplate", "caption"], ["pTemplate", "header"], ["pTemplate", "body"], [1, "caption"], [1, "w-100"], ["styleClass", "p-button-static p-button-outlined", 3, "label"], [1, "ml-auto"], ["matchMode", "contains", 3, "table", "tableStateKey"], ["pSortableColumn", "title"], ["field", "title"], ["pSortableColumn", "year"], ["field", "year"], ["pSortableColumn", "path"], ["field", "path"], ["pSortableColumn", "settings.wantedLanguages"], ["field", "settings.wantedLanguages"], ["pSortableColumn", "totalSubtitlesAvailable"], ["field", "totalSubtitlesAvailable"], [1, "p-column-title"], [1, "p-column-data", "title-banner-container"], [1, "title-banner"], [3, "routerLink", "title"], ["class", "title-banner-image", 3, "lazyLoad", "defaultImage", 4, "ngIf"], [1, "p-column-data"], [1, "p-column-data", "wrap-text"], ["class", "p-tag p-tag-small p-tag-secondary mr-2", 4, "ngFor", "ngForOf"], [1, "w-100", 3, "value", "total"], [1, "title-banner-image", 3, "lazyLoad", "defaultImage"], [1, "p-tag", "p-tag-small", "p-tag-secondary", "mr-2"]],
-      template: function LibraryShowOverviewComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          const _r1 = _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵgetCurrentView"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementStart"](0, "div", 1)(1, "p-panel", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelement"](2, "app-library-scanning");
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementStart"](3, "div", 3)(4, "div", 4)(5, "p-table", 5, 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵlistener"]("sortFunction", function LibraryShowOverviewComponent_Template_p_table_sortFunction_5_listener($event) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵrestoreView"](_r1);
-            return _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵresetView"](ctx.sort($event));
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵtemplate"](7, LibraryShowOverviewComponent_ng_template_7_Template, 5, 3, "ng-template", 6)(8, LibraryShowOverviewComponent_ng_template_8_Template, 21, 0, "ng-template", 7)(9, LibraryShowOverviewComponent_ng_template_9_Template, 28, 10, "ng-template", 8);
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementEnd"]()()()()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵadvance"](5);
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵproperty"]("value", ctx.shows)("stateKey", ctx.tableStateKey)("loading", ctx.loading)("autoLayout", true)("rowHover", true)("paginator", true)("rows", 10)("rowsPerPageOptions", _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵpureFunction1"](12, _c1, _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵpureFunction0"](11, _c0)))("showCurrentPageReport", true)("globalFilterFields", ctx.globalFilterFields)("customSort", true);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_12__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_12__.NgFor, _angular_router__WEBPACK_IMPORTED_MODULE_13__.RouterLink, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.Panel, primeng_api__WEBPACK_IMPORTED_MODULE_15__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_16__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_16__.Table, primeng_table__WEBPACK_IMPORTED_MODULE_16__.SortableColumn, primeng_table__WEBPACK_IMPORTED_MODULE_16__.SortIcon, primeng_button__WEBPACK_IMPORTED_MODULE_17__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_17__.Button, primeng_api__WEBPACK_IMPORTED_MODULE_15__.SharedModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_18__.LazyLoadImageModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_18__.LazyLoadImageDirective, _scanning_library_scanning_component__WEBPACK_IMPORTED_MODULE_9__.LibraryScanningComponent, _components_table_filter_table_filter_component__WEBPACK_IMPORTED_MODULE_6__.TableFilterComponent, _components_progress_bar_progress_bar_component__WEBPACK_IMPORTED_MODULE_5__.ProgressBarComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function LibraryShowOverviewComponent_Factory(t) {
+        return new (t || LibraryShowOverviewComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdefineComponent"]({
+        type: LibraryShowOverviewComponent,
+        selectors: [["app-library-show-overview"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵStandaloneFeature"]],
+        decls: 10,
+        vars: 14,
+        consts: [["showTable", ""], [1, "container-lg"], ["header", "Show library"], [1, "row"], [1, "col-12", "library-overview-container"], ["stateStorage", "local", "currentPageReportTemplate", "{first} to {last} of {totalRecords}", "styleClass", "p-datatable-sm p-datatable-gridlines p-datatable-striped p-datatable-responsive-mode", 3, "sortFunction", "value", "stateKey", "loading", "autoLayout", "rowHover", "paginator", "rows", "rowsPerPageOptions", "showCurrentPageReport", "globalFilterFields", "customSort"], ["pTemplate", "caption"], ["pTemplate", "header"], ["pTemplate", "body"], [1, "caption"], [1, "w-100"], ["styleClass", "p-button-static p-button-outlined", 3, "label"], [1, "ml-auto"], ["matchMode", "contains", 3, "table", "tableStateKey"], ["pSortableColumn", "title"], ["field", "title"], ["pSortableColumn", "year"], ["field", "year"], ["pSortableColumn", "path"], ["field", "path"], ["pSortableColumn", "settings.wantedLanguages"], ["field", "settings.wantedLanguages"], ["pSortableColumn", "totalSubtitlesAvailable"], ["field", "totalSubtitlesAvailable"], [1, "p-column-title"], [1, "p-column-data", "title-banner-container"], [1, "title-banner"], [3, "routerLink", "title"], ["class", "title-banner-image", 3, "lazyLoad", "defaultImage", 4, "ngIf"], [1, "p-column-data"], [1, "p-column-data", "wrap-text"], ["class", "p-tag p-tag-small p-tag-secondary mr-2", 4, "ngFor", "ngForOf"], [1, "w-100", 3, "value", "total"], [1, "title-banner-image", 3, "lazyLoad", "defaultImage"], [1, "p-tag", "p-tag-small", "p-tag-secondary", "mr-2"]],
+        template: function LibraryShowOverviewComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            const _r1 = _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵgetCurrentView"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementStart"](0, "div", 1)(1, "p-panel", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelement"](2, "app-library-scanning");
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementStart"](3, "div", 3)(4, "div", 4)(5, "p-table", 5, 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵlistener"]("sortFunction", function LibraryShowOverviewComponent_Template_p_table_sortFunction_5_listener($event) {
+              _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵrestoreView"](_r1);
+              return _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵresetView"](ctx.sort($event));
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵtemplate"](7, LibraryShowOverviewComponent_ng_template_7_Template, 5, 3, "ng-template", 6)(8, LibraryShowOverviewComponent_ng_template_8_Template, 21, 0, "ng-template", 7)(9, LibraryShowOverviewComponent_ng_template_9_Template, 28, 10, "ng-template", 8);
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementEnd"]()()()()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵadvance"](5);
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵproperty"]("value", ctx.shows)("stateKey", ctx.tableStateKey)("loading", ctx.loading)("autoLayout", true)("rowHover", true)("paginator", true)("rows", 10)("rowsPerPageOptions", _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵpureFunction1"](12, _c1, _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵpureFunction0"](11, _c0)))("showCurrentPageReport", true)("globalFilterFields", ctx.globalFilterFields)("customSort", true);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_12__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_12__.NgFor, _angular_router__WEBPACK_IMPORTED_MODULE_13__.RouterLink, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.Panel, primeng_api__WEBPACK_IMPORTED_MODULE_15__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_16__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_16__.Table, primeng_table__WEBPACK_IMPORTED_MODULE_16__.SortableColumn, primeng_table__WEBPACK_IMPORTED_MODULE_16__.SortIcon, primeng_button__WEBPACK_IMPORTED_MODULE_17__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_17__.Button, primeng_api__WEBPACK_IMPORTED_MODULE_15__.SharedModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_18__.LazyLoadImageModule, ng_lazyload_image__WEBPACK_IMPORTED_MODULE_18__.LazyLoadImageDirective, _scanning_library_scanning_component__WEBPACK_IMPORTED_MODULE_9__.LibraryScanningComponent, _components_table_filter_table_filter_component__WEBPACK_IMPORTED_MODULE_6__.TableFilterComponent, _components_progress_bar_progress_bar_component__WEBPACK_IMPORTED_MODULE_5__.ProgressBarComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return LibraryShowOverviewComponent;
 })();
@@ -2341,45 +2369,49 @@ let LibraryVideoSubtitlesComponent = /*#__PURE__*/(() => {
         languages: [this.videoSubtitles.languages || [], []]
       });
     }
-    static #_ = this.ɵfac = function LibraryVideoSubtitlesComponent_Factory(t) {
-      return new (t || LibraryVideoSubtitlesComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdefineComponent"]({
-      type: LibraryVideoSubtitlesComponent,
-      selectors: [["app-library-video-subtitles"]],
-      inputs: {
-        visible: "visible",
-        videoSubtitles: "videoSubtitles"
-      },
-      outputs: {
-        visibleChange: "visibleChange",
-        save: "save"
-      },
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵStandaloneFeature"]],
-      decls: 3,
-      vars: 5,
-      consts: [["header", "Hardcoded/embedded video subtitles", "styleClass", "p-dialog-video-subtitles", 3, "visibleChange", "visible", "modal", "closable", "resizable"], ["class", "form", 3, "formGroup", 4, "ngIf"], ["pTemplate", "footer"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12"], [1, "col-12", "file"], ["formControlName", "languages", "placeholder", "Select languages", 3, "options"], [1, "btn-group"], ["icon", "pi pi-times", "label", "Cancel", "styleClass", "p-button p-button-secondary", 3, "click"], ["icon", "pi pi-check", "label", "Save", "styleClass", "p-button mr-0", 3, "click"]],
-      template: function LibraryVideoSubtitlesComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](0, "p-dialog", 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtwoWayListener"]("visibleChange", function LibraryVideoSubtitlesComponent_Template_p_dialog_visibleChange_0_listener($event) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtwoWayBindingSet"](ctx.visible, $event) || (ctx.visible = $event);
-            return $event;
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](1, LibraryVideoSubtitlesComponent_form_1_Template, 9, 3, "form", 1)(2, LibraryVideoSubtitlesComponent_ng_template_2_Template, 3, 0, "ng-template", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtwoWayProperty"]("visible", ctx.visible);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("modal", true)("closable", false)("resizable", false);
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("ngIf", ctx.videoSubtitlesForm);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_5__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_4__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormControlName, primeng_dialog__WEBPACK_IMPORTED_MODULE_6__.DialogModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_6__.Dialog, primeng_api__WEBPACK_IMPORTED_MODULE_7__.PrimeTemplate, primeng_button__WEBPACK_IMPORTED_MODULE_8__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_8__.Button, primeng_api__WEBPACK_IMPORTED_MODULE_7__.SharedModule, _components_input_multi_select_input_multi_select_component__WEBPACK_IMPORTED_MODULE_0__.InputMultiSelectComponent],
-      styles: [".p-dialog-video-subtitles {\n  width: 40rem;\n}\n\n.file[_ngcontent-%COMP%] {\n  font-weight: 500;\n  font-style: italic;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvbGlicmFyeS92aWRlby9saWJyYXJ5LXZpZGVvLXN1YnRpdGxlcy5jb21wb25lbnQuc2NzcyIsIndlYnBhY2s6Ly8uL3NyYy9zY3NzL192YXJpYWJsZXMuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFFQTtFQUNFLFlBQUE7QUFERjs7QUFJQTtFQUNFLGdCQ0RVO0VERVYsa0JBQUE7QUFERiIsInNvdXJjZXNDb250ZW50IjpbIkBpbXBvcnQgJy4uLy4uLy4uLy4uL3Njc3MvdmFyaWFibGVzJztcclxuXHJcbjo6bmctZGVlcCAucC1kaWFsb2ctdmlkZW8tc3VidGl0bGVzIHtcclxuICB3aWR0aDogNDByZW07XHJcbn1cclxuXHJcbi5maWxlIHtcclxuICBmb250LXdlaWdodDogJGZvbnQtYm9sZDtcclxuICBmb250LXN0eWxlOiBpdGFsaWM7XHJcbn1cclxuIiwiLy8gR2xvYmFsIHZhcmlhYmxlcyAodmFyKC0teHh4eCkpIGFyZSB1c2VkIGZyb20gaW1wb3J0ZWQgcHJpbWVuZyBzdHlsZXNcclxuXHJcbi8vIEZvbnRcclxuJGZvbnQtc2l6ZTogMXJlbTtcclxuJGZvbnQtc2l6ZS1zbTogKCRmb250LXNpemUgKiAuODc1KSAhZGVmYXVsdDtcclxuJGZvbnQtZGVmYXVsdDogNDAwO1xyXG4kZm9udC1ib2xkOiA1MDA7XHJcbiRmb250LWNvbG9yOiB2YXIoLS10ZXh0LWNvbG9yKTtcclxuXHJcbi8vIEJhY2tncm91bmRcclxuJGJhY2tncm91bmQtY29sb3I6IHZhcigtLXN1cmZhY2UtYSk7XHJcblxyXG4vL01lZGlhIGJvdW5kYXJpZXNcclxuJG1lZGlhLW1vYmlsZS1tYXgtd2lkdGg6IDc2N3B4O1xyXG4kbWVkaWEtdGFibGV0LW1pbi13aWR0aDogNzY4cHg7XHJcbiRtZWRpYS10YWJsZXQtbWF4LXdpZHRoOiA5OTFweDtcclxuJG1lZGlhLWRlc2t0b3AtbWluLXdpZHRoOiA5OTJweDtcclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function LibraryVideoSubtitlesComponent_Factory(t) {
+        return new (t || LibraryVideoSubtitlesComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdefineComponent"]({
+        type: LibraryVideoSubtitlesComponent,
+        selectors: [["app-library-video-subtitles"]],
+        inputs: {
+          visible: "visible",
+          videoSubtitles: "videoSubtitles"
+        },
+        outputs: {
+          visibleChange: "visibleChange",
+          save: "save"
+        },
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵStandaloneFeature"]],
+        decls: 3,
+        vars: 5,
+        consts: [["header", "Hardcoded/embedded video subtitles", "styleClass", "p-dialog-video-subtitles", 3, "visibleChange", "visible", "modal", "closable", "resizable"], ["class", "form", 3, "formGroup", 4, "ngIf"], ["pTemplate", "footer"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12"], [1, "col-12", "file"], ["formControlName", "languages", "placeholder", "Select languages", 3, "options"], [1, "btn-group"], ["icon", "pi pi-times", "label", "Cancel", "styleClass", "p-button p-button-secondary", 3, "click"], ["icon", "pi pi-check", "label", "Save", "styleClass", "p-button mr-0", 3, "click"]],
+        template: function LibraryVideoSubtitlesComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementStart"](0, "p-dialog", 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtwoWayListener"]("visibleChange", function LibraryVideoSubtitlesComponent_Template_p_dialog_visibleChange_0_listener($event) {
+              _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtwoWayBindingSet"](ctx.visible, $event) || (ctx.visible = $event);
+              return $event;
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtemplate"](1, LibraryVideoSubtitlesComponent_form_1_Template, 9, 3, "form", 1)(2, LibraryVideoSubtitlesComponent_ng_template_2_Template, 3, 0, "ng-template", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵelementEnd"]();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵtwoWayProperty"]("visible", ctx.visible);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("modal", true)("closable", false)("resizable", false);
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵproperty"]("ngIf", ctx.videoSubtitlesForm);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_5__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_4__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_4__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_4__.FormControlName, primeng_dialog__WEBPACK_IMPORTED_MODULE_6__.DialogModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_6__.Dialog, primeng_api__WEBPACK_IMPORTED_MODULE_7__.PrimeTemplate, primeng_button__WEBPACK_IMPORTED_MODULE_8__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_8__.Button, primeng_api__WEBPACK_IMPORTED_MODULE_7__.SharedModule, _components_input_multi_select_input_multi_select_component__WEBPACK_IMPORTED_MODULE_0__.InputMultiSelectComponent],
+        styles: [".p-dialog-video-subtitles {\n  width: 40rem;\n}\n\n.file[_ngcontent-%COMP%] {\n  font-weight: 500;\n  font-style: italic;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvbGlicmFyeS92aWRlby9saWJyYXJ5LXZpZGVvLXN1YnRpdGxlcy5jb21wb25lbnQuc2NzcyIsIndlYnBhY2s6Ly8uL3NyYy9zY3NzL192YXJpYWJsZXMuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFFQTtFQUNFLFlBQUE7QUFERjs7QUFJQTtFQUNFLGdCQ0RVO0VERVYsa0JBQUE7QUFERiIsInNvdXJjZXNDb250ZW50IjpbIkBpbXBvcnQgJy4uLy4uLy4uLy4uL3Njc3MvdmFyaWFibGVzJztcclxuXHJcbjo6bmctZGVlcCAucC1kaWFsb2ctdmlkZW8tc3VidGl0bGVzIHtcclxuICB3aWR0aDogNDByZW07XHJcbn1cclxuXHJcbi5maWxlIHtcclxuICBmb250LXdlaWdodDogJGZvbnQtYm9sZDtcclxuICBmb250LXN0eWxlOiBpdGFsaWM7XHJcbn1cclxuIiwiLy8gR2xvYmFsIHZhcmlhYmxlcyAodmFyKC0teHh4eCkpIGFyZSB1c2VkIGZyb20gaW1wb3J0ZWQgcHJpbWVuZyBzdHlsZXNcclxuXHJcbi8vIEZvbnRcclxuJGZvbnQtc2l6ZTogMXJlbTtcclxuJGZvbnQtc2l6ZS1zbTogKCRmb250LXNpemUgKiAuODc1KSAhZGVmYXVsdDtcclxuJGZvbnQtZGVmYXVsdDogNDAwO1xyXG4kZm9udC1ib2xkOiA1MDA7XHJcbiRmb250LWNvbG9yOiB2YXIoLS10ZXh0LWNvbG9yKTtcclxuXHJcbi8vIEJhY2tncm91bmRcclxuJGJhY2tncm91bmQtY29sb3I6IHZhcigtLXN1cmZhY2UtYSk7XHJcblxyXG4vL01lZGlhIGJvdW5kYXJpZXNcclxuJG1lZGlhLW1vYmlsZS1tYXgtd2lkdGg6IDc2N3B4O1xyXG4kbWVkaWEtdGFibGV0LW1pbi13aWR0aDogNzY4cHg7XHJcbiRtZWRpYS10YWJsZXQtbWF4LXdpZHRoOiA5OTFweDtcclxuJG1lZGlhLWRlc2t0b3AtbWluLXdpZHRoOiA5OTJweDtcclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return LibraryVideoSubtitlesComponent;
 })();
@@ -2387,4 +2419,4 @@ let LibraryVideoSubtitlesComponent = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=880.b48ab64b01db88b5.js.map
+//# sourceMappingURL=880.7c4cfdcfce92e70c.js.map

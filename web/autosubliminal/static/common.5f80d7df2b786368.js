@@ -31,52 +31,56 @@ let InputNumberComponent = /*#__PURE__*/(() => {
       this.showButtons = true; // default show buttons
       this.step = 1; // default 1
     }
-    static #_ = this.ɵfac = /*@__PURE__*/(() => {
-      let ɵInputNumberComponent_BaseFactory;
-      return function InputNumberComponent_Factory(t) {
-        return (ɵInputNumberComponent_BaseFactory || (ɵInputNumberComponent_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetInheritedFactory"](InputNumberComponent)))(t || InputNumberComponent);
-      };
-    })();
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({
-      type: InputNumberComponent,
-      selectors: [["app-input-number"]],
-      inputs: {
-        mode: "mode",
-        useGrouping: "useGrouping",
-        showButtons: "showButtons",
-        step: "step",
-        min: "min",
-        max: "max",
-        suffix: "suffix"
-      },
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵProvidersFeature"]([{
-        provide: _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NG_VALUE_ACCESSOR,
-        useExisting: (0,_angular_core__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(() => InputNumberComponent),
-        multi: true
-      }]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵInheritDefinitionFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵStandaloneFeature"]],
-      decls: 1,
-      vars: 9,
-      consts: [["decrementButtonClass", "p-button-outlined input-addon", "incrementButtonClass", "p-button-outlined input-addon", "styleClass", "w-100", "inputStyleClass", "w-100", 1, "w-100", 3, "onFocus", "onKeyDown", "onBlur", "inputId", "formControl", "mode", "useGrouping", "step", "min", "max", "suffix", "showButtons"]],
-      template: function InputNumberComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "p-inputNumber", 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("onFocus", function InputNumberComponent_Template_p_inputNumber_onFocus_0_listener($event) {
-            return ctx.onFocus($event);
-          })("onKeyDown", function InputNumberComponent_Template_p_inputNumber_onKeyDown_0_listener($event) {
-            return ctx.onKeyDown($event);
-          })("onBlur", function InputNumberComponent_Template_p_inputNumber_onBlur_0_listener($event) {
-            return ctx.onBlur($event);
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("inputId", ctx.id || ctx.formControlName)("formControl", ctx.control)("mode", ctx.mode)("useGrouping", ctx.useGrouping)("step", ctx.step)("min", ctx.min)("max", ctx.max)("suffix", ctx.suffix)("showButtons", ctx.showButtons);
-        }
-      },
-      dependencies: [_angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormControlDirective, primeng_inputnumber__WEBPACK_IMPORTED_MODULE_3__.InputNumberModule, primeng_inputnumber__WEBPACK_IMPORTED_MODULE_3__.InputNumber],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = /*@__PURE__*/(() => {
+        let ɵInputNumberComponent_BaseFactory;
+        return function InputNumberComponent_Factory(t) {
+          return (ɵInputNumberComponent_BaseFactory || (ɵInputNumberComponent_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetInheritedFactory"](InputNumberComponent)))(t || InputNumberComponent);
+        };
+      })();
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({
+        type: InputNumberComponent,
+        selectors: [["app-input-number"]],
+        inputs: {
+          mode: "mode",
+          useGrouping: "useGrouping",
+          showButtons: "showButtons",
+          step: "step",
+          min: "min",
+          max: "max",
+          suffix: "suffix"
+        },
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵProvidersFeature"]([{
+          provide: _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NG_VALUE_ACCESSOR,
+          useExisting: (0,_angular_core__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(() => InputNumberComponent),
+          multi: true
+        }]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵInheritDefinitionFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵStandaloneFeature"]],
+        decls: 1,
+        vars: 9,
+        consts: [["decrementButtonClass", "p-button-outlined input-addon", "incrementButtonClass", "p-button-outlined input-addon", "styleClass", "w-100", "inputStyleClass", "w-100", 1, "w-100", 3, "onFocus", "onKeyDown", "onBlur", "inputId", "formControl", "mode", "useGrouping", "step", "min", "max", "suffix", "showButtons"]],
+        template: function InputNumberComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "p-inputNumber", 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("onFocus", function InputNumberComponent_Template_p_inputNumber_onFocus_0_listener($event) {
+              return ctx.onFocus($event);
+            })("onKeyDown", function InputNumberComponent_Template_p_inputNumber_onKeyDown_0_listener($event) {
+              return ctx.onKeyDown($event);
+            })("onBlur", function InputNumberComponent_Template_p_inputNumber_onBlur_0_listener($event) {
+              return ctx.onBlur($event);
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("inputId", ctx.id || ctx.formControlName)("formControl", ctx.control)("mode", ctx.mode)("useGrouping", ctx.useGrouping)("step", ctx.step)("min", ctx.min)("max", ctx.max)("suffix", ctx.suffix)("showButtons", ctx.showButtons);
+          }
+        },
+        dependencies: [_angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormControlDirective, primeng_inputnumber__WEBPACK_IMPORTED_MODULE_3__.InputNumberModule, primeng_inputnumber__WEBPACK_IMPORTED_MODULE_3__.InputNumber],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return InputNumberComponent;
 })();
@@ -121,53 +125,57 @@ let InputTextComponent = /*#__PURE__*/(() => {
       super.writeValue(obj);
       this.changeDetectorRef.detectChanges(); // ngx-mask makes changes to the input, so detect changes again to prevent ExpressionChangedAfterItHasBeenCheckedError
     }
-    static #_ = this.ɵfac = /*@__PURE__*/(() => {
-      let ɵInputTextComponent_BaseFactory;
-      return function InputTextComponent_Factory(t) {
-        return (ɵInputTextComponent_BaseFactory || (ɵInputTextComponent_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetInheritedFactory"](InputTextComponent)))(t || InputTextComponent);
-      };
-    })();
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({
-      type: InputTextComponent,
-      selectors: [["app-input-text"]],
-      inputs: {
-        type: "type",
-        placeholder: "placeholder",
-        mask: "mask",
-        dropSpecialCharacters: "dropSpecialCharacters"
-      },
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵProvidersFeature"]([{
-        provide: _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NG_VALUE_ACCESSOR,
-        useExisting: (0,_angular_core__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(() => InputTextComponent),
-        multi: true
-      }]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵInheritDefinitionFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵStandaloneFeature"]],
-      decls: 1,
-      vars: 7,
-      consts: [["pInputText", "", 1, "w-100", 3, "focus", "keydown", "keyup", "change", "blur", "type", "id", "formControl", "placeholder", "ngClass", "mask", "dropSpecialCharacters"]],
-      template: function InputTextComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "input", 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("focus", function InputTextComponent_Template_input_focus_0_listener($event) {
-            return ctx.onFocus($event);
-          })("keydown", function InputTextComponent_Template_input_keydown_0_listener($event) {
-            return ctx.onKeyDown($event);
-          })("keyup", function InputTextComponent_Template_input_keyup_0_listener($event) {
-            return ctx.onKeyUp($event);
-          })("change", function InputTextComponent_Template_input_change_0_listener($event) {
-            return ctx.onChange($event);
-          })("blur", function InputTextComponent_Template_input_blur_0_listener($event) {
-            return ctx.onBlur($event);
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("type", ctx.type)("id", ctx.id || ctx.formControlName)("formControl", ctx.control)("placeholder", ctx.placeholder)("ngClass", ctx.validationClass)("mask", ctx.mask)("dropSpecialCharacters", ctx.dropSpecialCharacters);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_3__.NgClass, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormControlDirective, primeng_inputtext__WEBPACK_IMPORTED_MODULE_4__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_4__.InputText, ngx_mask__WEBPACK_IMPORTED_MODULE_5__.NgxMaskDirective],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = /*@__PURE__*/(() => {
+        let ɵInputTextComponent_BaseFactory;
+        return function InputTextComponent_Factory(t) {
+          return (ɵInputTextComponent_BaseFactory || (ɵInputTextComponent_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetInheritedFactory"](InputTextComponent)))(t || InputTextComponent);
+        };
+      })();
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({
+        type: InputTextComponent,
+        selectors: [["app-input-text"]],
+        inputs: {
+          type: "type",
+          placeholder: "placeholder",
+          mask: "mask",
+          dropSpecialCharacters: "dropSpecialCharacters"
+        },
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵProvidersFeature"]([{
+          provide: _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NG_VALUE_ACCESSOR,
+          useExisting: (0,_angular_core__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(() => InputTextComponent),
+          multi: true
+        }]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵInheritDefinitionFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵStandaloneFeature"]],
+        decls: 1,
+        vars: 7,
+        consts: [["pInputText", "", 1, "w-100", 3, "focus", "keydown", "keyup", "change", "blur", "type", "id", "formControl", "placeholder", "ngClass", "mask", "dropSpecialCharacters"]],
+        template: function InputTextComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "input", 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("focus", function InputTextComponent_Template_input_focus_0_listener($event) {
+              return ctx.onFocus($event);
+            })("keydown", function InputTextComponent_Template_input_keydown_0_listener($event) {
+              return ctx.onKeyDown($event);
+            })("keyup", function InputTextComponent_Template_input_keyup_0_listener($event) {
+              return ctx.onKeyUp($event);
+            })("change", function InputTextComponent_Template_input_change_0_listener($event) {
+              return ctx.onChange($event);
+            })("blur", function InputTextComponent_Template_input_blur_0_listener($event) {
+              return ctx.onBlur($event);
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("type", ctx.type)("id", ctx.id || ctx.formControlName)("formControl", ctx.control)("placeholder", ctx.placeholder)("ngClass", ctx.validationClass)("mask", ctx.mask)("dropSpecialCharacters", ctx.dropSpecialCharacters);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_3__.NgClass, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormControlDirective, primeng_inputtext__WEBPACK_IMPORTED_MODULE_4__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_4__.InputText, ngx_mask__WEBPACK_IMPORTED_MODULE_5__.NgxMaskDirective],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return InputTextComponent;
 })();
@@ -194,39 +202,43 @@ let LoadingComponent = /*#__PURE__*/(() => {
     constructor() {
       this.visible = false;
     }
-    static #_ = this.ɵfac = function LoadingComponent_Factory(t) {
-      return new (t || LoadingComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
-      type: LoadingComponent,
-      selectors: [["app-loading"]],
-      inputs: {
-        visible: "visible"
-      },
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵStandaloneFeature"]],
-      decls: 3,
-      vars: 6,
-      consts: [["styleClass", "dialog-transparent", 3, "visibleChange", "visible", "modal", "closable", "draggable", "resizable", "showHeader"], [1, "loading"], ["aria-hidden", "true", 1, "fa", "fa-spinner", "fa-spin", "fa-5x"]],
-      template: function LoadingComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "p-dialog", 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtwoWayListener"]("visibleChange", function LoadingComponent_Template_p_dialog_visibleChange_0_listener($event) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtwoWayBindingSet"](ctx.visible, $event) || (ctx.visible = $event);
-            return $event;
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](2, "i", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtwoWayProperty"]("visible", ctx.visible);
-          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("modal", true)("closable", false)("draggable", false)("resizable", false)("showHeader", false);
-        }
-      },
-      dependencies: [primeng_dialog__WEBPACK_IMPORTED_MODULE_1__.DialogModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_1__.Dialog],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function LoadingComponent_Factory(t) {
+        return new (t || LoadingComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
+        type: LoadingComponent,
+        selectors: [["app-loading"]],
+        inputs: {
+          visible: "visible"
+        },
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵStandaloneFeature"]],
+        decls: 3,
+        vars: 6,
+        consts: [["styleClass", "dialog-transparent", 3, "visibleChange", "visible", "modal", "closable", "draggable", "resizable", "showHeader"], [1, "loading"], ["aria-hidden", "true", 1, "fa", "fa-spinner", "fa-spin", "fa-5x"]],
+        template: function LoadingComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "p-dialog", 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtwoWayListener"]("visibleChange", function LoadingComponent_Template_p_dialog_visibleChange_0_listener($event) {
+              _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtwoWayBindingSet"](ctx.visible, $event) || (ctx.visible = $event);
+              return $event;
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](2, "i", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtwoWayProperty"]("visible", ctx.visible);
+            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("modal", true)("closable", false)("draggable", false)("resizable", false)("showHeader", false);
+          }
+        },
+        dependencies: [primeng_dialog__WEBPACK_IMPORTED_MODULE_1__.DialogModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_1__.Dialog],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return LoadingComponent;
 })();
@@ -412,17 +424,21 @@ let SettingsService = /*#__PURE__*/(() => {
     updatePostProcessSettings(postProcessSettings) {
       return this.httpClient.put(`${this.URL}/postprocessing`, JSON.stringify(postProcessSettings), this.options).pipe((0,rxjs__WEBPACK_IMPORTED_MODULE_3__.map)(() => true));
     }
-    static #_ = this.ɵfac = /*@__PURE__*/(() => {
-      let ɵSettingsService_BaseFactory;
-      return function SettingsService_Factory(t) {
-        return (ɵSettingsService_BaseFactory || (ɵSettingsService_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵgetInheritedFactory"](SettingsService)))(t || SettingsService);
-      };
-    })();
-    static #_2 = this.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵdefineInjectable"]({
-      token: SettingsService,
-      factory: SettingsService.ɵfac,
-      providedIn: 'root'
-    });
+    static {
+      this.ɵfac = /*@__PURE__*/(() => {
+        let ɵSettingsService_BaseFactory;
+        return function SettingsService_Factory(t) {
+          return (ɵSettingsService_BaseFactory || (ɵSettingsService_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵgetInheritedFactory"](SettingsService)))(t || SettingsService);
+        };
+      })();
+    }
+    static {
+      this.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵdefineInjectable"]({
+        token: SettingsService,
+        factory: SettingsService.ɵfac,
+        providedIn: 'root'
+      });
+    }
   }
   return SettingsService;
 })();
@@ -430,4 +446,4 @@ let SettingsService = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=common.e25888efab1ba501.js.map
+//# sourceMappingURL=common.5f80d7df2b786368.js.map

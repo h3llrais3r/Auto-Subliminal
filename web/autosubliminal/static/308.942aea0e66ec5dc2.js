@@ -269,67 +269,71 @@ let FileBrowserComponent = /*#__PURE__*/(() => {
       }
       return fileBrowserPath ? (0,_utils_path_utils__WEBPACK_IMPORTED_MODULE_3__.joinPaths)(fileBrowserPath, path) : path;
     }
-    static #_ = this.ɵfac = function FileBrowserComponent_Factory(t) {
-      return new (t || FileBrowserComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵdefineComponent"]({
-      type: FileBrowserComponent,
-      selectors: [["app-file-browser"]],
-      viewQuery: function FileBrowserComponent_Query(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵviewQuery"](_c0, 5);
-        }
-        if (rf & 2) {
-          let _t;
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵloadQuery"]()) && (ctx.rowElements = _t);
-        }
-      },
-      inputs: {
-        visible: "visible",
-        path: "path",
-        folderMode: "folderMode"
-      },
-      outputs: {
-        visibleChange: "visibleChange",
-        pathChange: "pathChange"
-      },
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵStandaloneFeature"]],
-      decls: 6,
-      vars: 7,
-      consts: [["rowElement", ""], ["header", "File browser", "styleClass", "dialog-file-browser", 3, "visibleChange", "visible", "modal", "closable", "resizable"], ["selectionMode", "single", "scrollHeight", "50vh", "styleClass", "p-datatable-sm p-datatable-striped", 3, "selectionChange", "onRowSelect", "value", "selection", "scrollable"], ["pTemplate", "caption"], ["pTemplate", "header"], ["pTemplate", "body"], ["pTemplate", "footer"], [1, "caption", "w-100"], ["type", "text", "pInputText", "", "placeholder", "Select or type path", 1, "p-inputtext-sm", "w-100", 3, "formControl"], [1, "col-type"], [1, "col-name"], [3, "pSelectableRow"], ["class", "fa fa-level-up", "aria-hidden", "true", "title", "File", 4, "ngIf"], ["class", "fa fa-folder-o", "aria-hidden", "true", "title", "Folder", 4, "ngIf"], ["class", "fa fa-file-o", "aria-hidden", "true", "title", "File", 4, "ngIf"], ["aria-hidden", "true", "title", "File", 1, "fa", "fa-level-up"], ["aria-hidden", "true", "title", "Folder", 1, "fa", "fa-folder-o"], ["aria-hidden", "true", "title", "File", 1, "fa", "fa-file-o"], [1, "btn-group"], ["icon", "pi pi-times", "label", "Cancel", "styleClass", "p-button p-button-secondary", 3, "click"], ["icon", "pi pi-check", "label", "Ok", "styleClass", "p-button mr-0", 3, "click"]],
-      template: function FileBrowserComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "p-dialog", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtwoWayListener"]("visibleChange", function FileBrowserComponent_Template_p_dialog_visibleChange_0_listener($event) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtwoWayBindingSet"](ctx.visible, $event) || (ctx.visible = $event);
-            return $event;
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](1, "p-table", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtwoWayListener"]("selectionChange", function FileBrowserComponent_Template_p_table_selectionChange_1_listener($event) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtwoWayBindingSet"](ctx.selectedFile, $event) || (ctx.selectedFile = $event);
-            return $event;
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵlistener"]("onRowSelect", function FileBrowserComponent_Template_p_table_onRowSelect_1_listener() {
-            return ctx.select();
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtemplate"](2, FileBrowserComponent_ng_template_2_Template, 2, 1, "ng-template", 3)(3, FileBrowserComponent_ng_template_3_Template, 5, 0, "ng-template", 4)(4, FileBrowserComponent_ng_template_4_Template, 8, 6, "ng-template", 5);
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtemplate"](5, FileBrowserComponent_ng_template_5_Template, 3, 0, "ng-template", 6);
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtwoWayProperty"]("visible", ctx.visible);
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("modal", true)("closable", false)("resizable", false);
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("value", ctx.fileBrowserFiles);
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtwoWayProperty"]("selection", ctx.selectedFile);
-          _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("scrollable", true);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_11__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_5__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_5__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_5__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_5__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_5__.FormControlDirective, primeng_dialog__WEBPACK_IMPORTED_MODULE_12__.DialogModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_12__.Dialog, primeng_api__WEBPACK_IMPORTED_MODULE_13__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_14__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_14__.Table, primeng_table__WEBPACK_IMPORTED_MODULE_14__.SelectableRow, primeng_button__WEBPACK_IMPORTED_MODULE_15__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_15__.Button, primeng_api__WEBPACK_IMPORTED_MODULE_13__.SharedModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_16__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_16__.InputText],
-      styles: [".dialog-file-browser {\n  width: 50rem;\n}\n  .dialog-file-browser .p-datatable .p-datatable-header {\n  padding-left: 0;\n  padding-right: 0;\n}\n\n.caption[_ngcontent-%COMP%]   .label[_ngcontent-%COMP%] {\n  font-weight: 500;\n}\n.caption[_ngcontent-%COMP%]   .value[_ngcontent-%COMP%] {\n  font-weight: 400;\n}\n\n.col-type[_ngcontent-%COMP%] {\n  width: 50px;\n}\n\n.col-name[_ngcontent-%COMP%] {\n  width: 100%;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvY29tcG9uZW50cy9maWxlLWJyb3dzZXIvZmlsZS1icm93c2VyLmNvbXBvbmVudC5zY3NzIiwid2VicGFjazovLy4vc3JjL3Njc3MvX3ZhcmlhYmxlcy5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVBO0VBQ0UsWUFBQTtBQURGO0FBR0U7RUFDRSxlQUFBO0VBQ0EsZ0JBQUE7QUFESjs7QUFNRTtFQUNFLGdCQ1BRO0FESVo7QUFNRTtFQUNFLGdCQ1pXO0FEUWY7O0FBUUE7RUFDRSxXQUFBO0FBTEY7O0FBUUE7RUFDRSxXQUFBO0FBTEYiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0ICcuLi8uLi8uLi9zY3NzL3ZhcmlhYmxlcyc7XHJcblxyXG46Om5nLWRlZXAgLmRpYWxvZy1maWxlLWJyb3dzZXIge1xyXG4gIHdpZHRoOiA1MHJlbTtcclxuXHJcbiAgLnAtZGF0YXRhYmxlIC5wLWRhdGF0YWJsZS1oZWFkZXIge1xyXG4gICAgcGFkZGluZy1sZWZ0OiAwOyAvLyByZW1vdmUgcGFkZGluZyBmcm9tIHRhYmxlIGhlYWRlclxyXG4gICAgcGFkZGluZy1yaWdodDogMDsgLy8gcmVtb3ZlIHBhZGRpbmcgZnJvbSB0YWJsZSBoZWFkZXJcclxuICB9XHJcbn1cclxuXHJcbi5jYXB0aW9uIHtcclxuICAubGFiZWwge1xyXG4gICAgZm9udC13ZWlnaHQ6ICRmb250LWJvbGQ7XHJcbiAgfVxyXG5cclxuICAudmFsdWUge1xyXG4gICAgZm9udC13ZWlnaHQ6ICRmb250LWRlZmF1bHQ7XHJcbiAgfVxyXG59XHJcblxyXG4uY29sLXR5cGUge1xyXG4gIHdpZHRoOiA1MHB4O1xyXG59XHJcblxyXG4uY29sLW5hbWUge1xyXG4gIHdpZHRoOiAxMDAlO1xyXG59XHJcbiIsIi8vIEdsb2JhbCB2YXJpYWJsZXMgKHZhcigtLXh4eHgpKSBhcmUgdXNlZCBmcm9tIGltcG9ydGVkIHByaW1lbmcgc3R5bGVzXHJcblxyXG4vLyBGb250XHJcbiRmb250LXNpemU6IDFyZW07XHJcbiRmb250LXNpemUtc206ICgkZm9udC1zaXplICogLjg3NSkgIWRlZmF1bHQ7XHJcbiRmb250LWRlZmF1bHQ6IDQwMDtcclxuJGZvbnQtYm9sZDogNTAwO1xyXG4kZm9udC1jb2xvcjogdmFyKC0tdGV4dC1jb2xvcik7XHJcblxyXG4vLyBCYWNrZ3JvdW5kXHJcbiRiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1zdXJmYWNlLWEpO1xyXG5cclxuLy9NZWRpYSBib3VuZGFyaWVzXHJcbiRtZWRpYS1tb2JpbGUtbWF4LXdpZHRoOiA3NjdweDtcclxuJG1lZGlhLXRhYmxldC1taW4td2lkdGg6IDc2OHB4O1xyXG4kbWVkaWEtdGFibGV0LW1heC13aWR0aDogOTkxcHg7XHJcbiRtZWRpYS1kZXNrdG9wLW1pbi13aWR0aDogOTkycHg7XHJcbiJdLCJzb3VyY2VSb290IjoiIn0= */"]
-    });
+    static {
+      this.ɵfac = function FileBrowserComponent_Factory(t) {
+        return new (t || FileBrowserComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵdefineComponent"]({
+        type: FileBrowserComponent,
+        selectors: [["app-file-browser"]],
+        viewQuery: function FileBrowserComponent_Query(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵviewQuery"](_c0, 5);
+          }
+          if (rf & 2) {
+            let _t;
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵqueryRefresh"](_t = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵloadQuery"]()) && (ctx.rowElements = _t);
+          }
+        },
+        inputs: {
+          visible: "visible",
+          path: "path",
+          folderMode: "folderMode"
+        },
+        outputs: {
+          visibleChange: "visibleChange",
+          pathChange: "pathChange"
+        },
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵStandaloneFeature"]],
+        decls: 6,
+        vars: 7,
+        consts: [["rowElement", ""], ["header", "File browser", "styleClass", "dialog-file-browser", 3, "visibleChange", "visible", "modal", "closable", "resizable"], ["selectionMode", "single", "scrollHeight", "50vh", "styleClass", "p-datatable-sm p-datatable-striped", 3, "selectionChange", "onRowSelect", "value", "selection", "scrollable"], ["pTemplate", "caption"], ["pTemplate", "header"], ["pTemplate", "body"], ["pTemplate", "footer"], [1, "caption", "w-100"], ["type", "text", "pInputText", "", "placeholder", "Select or type path", 1, "p-inputtext-sm", "w-100", 3, "formControl"], [1, "col-type"], [1, "col-name"], [3, "pSelectableRow"], ["class", "fa fa-level-up", "aria-hidden", "true", "title", "File", 4, "ngIf"], ["class", "fa fa-folder-o", "aria-hidden", "true", "title", "Folder", 4, "ngIf"], ["class", "fa fa-file-o", "aria-hidden", "true", "title", "File", 4, "ngIf"], ["aria-hidden", "true", "title", "File", 1, "fa", "fa-level-up"], ["aria-hidden", "true", "title", "Folder", 1, "fa", "fa-folder-o"], ["aria-hidden", "true", "title", "File", 1, "fa", "fa-file-o"], [1, "btn-group"], ["icon", "pi pi-times", "label", "Cancel", "styleClass", "p-button p-button-secondary", 3, "click"], ["icon", "pi pi-check", "label", "Ok", "styleClass", "p-button mr-0", 3, "click"]],
+        template: function FileBrowserComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](0, "p-dialog", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtwoWayListener"]("visibleChange", function FileBrowserComponent_Template_p_dialog_visibleChange_0_listener($event) {
+              _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtwoWayBindingSet"](ctx.visible, $event) || (ctx.visible = $event);
+              return $event;
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementStart"](1, "p-table", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtwoWayListener"]("selectionChange", function FileBrowserComponent_Template_p_table_selectionChange_1_listener($event) {
+              _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtwoWayBindingSet"](ctx.selectedFile, $event) || (ctx.selectedFile = $event);
+              return $event;
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵlistener"]("onRowSelect", function FileBrowserComponent_Template_p_table_onRowSelect_1_listener() {
+              return ctx.select();
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtemplate"](2, FileBrowserComponent_ng_template_2_Template, 2, 1, "ng-template", 3)(3, FileBrowserComponent_ng_template_3_Template, 5, 0, "ng-template", 4)(4, FileBrowserComponent_ng_template_4_Template, 8, 6, "ng-template", 5);
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtemplate"](5, FileBrowserComponent_ng_template_5_Template, 3, 0, "ng-template", 6);
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵelementEnd"]();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtwoWayProperty"]("visible", ctx.visible);
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("modal", true)("closable", false)("resizable", false);
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("value", ctx.fileBrowserFiles);
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵtwoWayProperty"]("selection", ctx.selectedFile);
+            _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵproperty"]("scrollable", true);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_11__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_5__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_5__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_5__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_5__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_5__.FormControlDirective, primeng_dialog__WEBPACK_IMPORTED_MODULE_12__.DialogModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_12__.Dialog, primeng_api__WEBPACK_IMPORTED_MODULE_13__.PrimeTemplate, primeng_table__WEBPACK_IMPORTED_MODULE_14__.TableModule, primeng_table__WEBPACK_IMPORTED_MODULE_14__.Table, primeng_table__WEBPACK_IMPORTED_MODULE_14__.SelectableRow, primeng_button__WEBPACK_IMPORTED_MODULE_15__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_15__.Button, primeng_api__WEBPACK_IMPORTED_MODULE_13__.SharedModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_16__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_16__.InputText],
+        styles: [".dialog-file-browser {\n  width: 50rem;\n}\n  .dialog-file-browser .p-datatable .p-datatable-header {\n  padding-left: 0;\n  padding-right: 0;\n}\n\n.caption[_ngcontent-%COMP%]   .label[_ngcontent-%COMP%] {\n  font-weight: 500;\n}\n.caption[_ngcontent-%COMP%]   .value[_ngcontent-%COMP%] {\n  font-weight: 400;\n}\n\n.col-type[_ngcontent-%COMP%] {\n  width: 50px;\n}\n\n.col-name[_ngcontent-%COMP%] {\n  width: 100%;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvY29tcG9uZW50cy9maWxlLWJyb3dzZXIvZmlsZS1icm93c2VyLmNvbXBvbmVudC5zY3NzIiwid2VicGFjazovLy4vc3JjL3Njc3MvX3ZhcmlhYmxlcy5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUVBO0VBQ0UsWUFBQTtBQURGO0FBR0U7RUFDRSxlQUFBO0VBQ0EsZ0JBQUE7QUFESjs7QUFNRTtFQUNFLGdCQ1BRO0FESVo7QUFNRTtFQUNFLGdCQ1pXO0FEUWY7O0FBUUE7RUFDRSxXQUFBO0FBTEY7O0FBUUE7RUFDRSxXQUFBO0FBTEYiLCJzb3VyY2VzQ29udGVudCI6WyJAaW1wb3J0ICcuLi8uLi8uLi9zY3NzL3ZhcmlhYmxlcyc7XHJcblxyXG46Om5nLWRlZXAgLmRpYWxvZy1maWxlLWJyb3dzZXIge1xyXG4gIHdpZHRoOiA1MHJlbTtcclxuXHJcbiAgLnAtZGF0YXRhYmxlIC5wLWRhdGF0YWJsZS1oZWFkZXIge1xyXG4gICAgcGFkZGluZy1sZWZ0OiAwOyAvLyByZW1vdmUgcGFkZGluZyBmcm9tIHRhYmxlIGhlYWRlclxyXG4gICAgcGFkZGluZy1yaWdodDogMDsgLy8gcmVtb3ZlIHBhZGRpbmcgZnJvbSB0YWJsZSBoZWFkZXJcclxuICB9XHJcbn1cclxuXHJcbi5jYXB0aW9uIHtcclxuICAubGFiZWwge1xyXG4gICAgZm9udC13ZWlnaHQ6ICRmb250LWJvbGQ7XHJcbiAgfVxyXG5cclxuICAudmFsdWUge1xyXG4gICAgZm9udC13ZWlnaHQ6ICRmb250LWRlZmF1bHQ7XHJcbiAgfVxyXG59XHJcblxyXG4uY29sLXR5cGUge1xyXG4gIHdpZHRoOiA1MHB4O1xyXG59XHJcblxyXG4uY29sLW5hbWUge1xyXG4gIHdpZHRoOiAxMDAlO1xyXG59XHJcbiIsIi8vIEdsb2JhbCB2YXJpYWJsZXMgKHZhcigtLXh4eHgpKSBhcmUgdXNlZCBmcm9tIGltcG9ydGVkIHByaW1lbmcgc3R5bGVzXHJcblxyXG4vLyBGb250XHJcbiRmb250LXNpemU6IDFyZW07XHJcbiRmb250LXNpemUtc206ICgkZm9udC1zaXplICogLjg3NSkgIWRlZmF1bHQ7XHJcbiRmb250LWRlZmF1bHQ6IDQwMDtcclxuJGZvbnQtYm9sZDogNTAwO1xyXG4kZm9udC1jb2xvcjogdmFyKC0tdGV4dC1jb2xvcik7XHJcblxyXG4vLyBCYWNrZ3JvdW5kXHJcbiRiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1zdXJmYWNlLWEpO1xyXG5cclxuLy9NZWRpYSBib3VuZGFyaWVzXHJcbiRtZWRpYS1tb2JpbGUtbWF4LXdpZHRoOiA3NjdweDtcclxuJG1lZGlhLXRhYmxldC1taW4td2lkdGg6IDc2OHB4O1xyXG4kbWVkaWEtdGFibGV0LW1heC13aWR0aDogOTkxcHg7XHJcbiRtZWRpYS1kZXNrdG9wLW1pbi13aWR0aDogOTkycHg7XHJcbiJdLCJzb3VyY2VSb290IjoiIn0= */"]
+      });
+    }
   }
   return FileBrowserComponent;
 })();
@@ -368,46 +372,50 @@ let InputDropdownComponent = /*#__PURE__*/(() => {
     onDropDownChange(event) {
       this.changeEvent.emit(event.originalEvent);
     }
-    static #_ = this.ɵfac = /*@__PURE__*/(() => {
-      let ɵInputDropdownComponent_BaseFactory;
-      return function InputDropdownComponent_Factory(t) {
-        return (ɵInputDropdownComponent_BaseFactory || (ɵInputDropdownComponent_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetInheritedFactory"](InputDropdownComponent)))(t || InputDropdownComponent);
-      };
-    })();
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({
-      type: InputDropdownComponent,
-      selectors: [["app-input-dropdown"]],
-      inputs: {
-        options: "options"
-      },
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵProvidersFeature"]([{
-        provide: _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NG_VALUE_ACCESSOR,
-        useExisting: (0,_angular_core__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(() => InputDropdownComponent),
-        multi: true
-      }]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵInheritDefinitionFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵStandaloneFeature"]],
-      decls: 1,
-      vars: 4,
-      consts: [["styleClass", "w-100", 3, "onFocus", "onChange", "onBlur", "inputId", "formControl", "options", "ngClass"]],
-      template: function InputDropdownComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "p-dropdown", 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("onFocus", function InputDropdownComponent_Template_p_dropdown_onFocus_0_listener($event) {
-            return ctx.onFocus($event);
-          })("onChange", function InputDropdownComponent_Template_p_dropdown_onChange_0_listener($event) {
-            return ctx.onDropDownChange($event);
-          })("onBlur", function InputDropdownComponent_Template_p_dropdown_onBlur_0_listener($event) {
-            return ctx.onBlur($event);
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("inputId", ctx.id || ctx.formControlName)("formControl", ctx.control)("options", ctx.options)("ngClass", ctx.validationClass);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_3__.NgClass, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormControlDirective, primeng_dropdown__WEBPACK_IMPORTED_MODULE_4__.DropdownModule, primeng_dropdown__WEBPACK_IMPORTED_MODULE_4__.Dropdown],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = /*@__PURE__*/(() => {
+        let ɵInputDropdownComponent_BaseFactory;
+        return function InputDropdownComponent_Factory(t) {
+          return (ɵInputDropdownComponent_BaseFactory || (ɵInputDropdownComponent_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetInheritedFactory"](InputDropdownComponent)))(t || InputDropdownComponent);
+        };
+      })();
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({
+        type: InputDropdownComponent,
+        selectors: [["app-input-dropdown"]],
+        inputs: {
+          options: "options"
+        },
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵProvidersFeature"]([{
+          provide: _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NG_VALUE_ACCESSOR,
+          useExisting: (0,_angular_core__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(() => InputDropdownComponent),
+          multi: true
+        }]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵInheritDefinitionFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵStandaloneFeature"]],
+        decls: 1,
+        vars: 4,
+        consts: [["styleClass", "w-100", 3, "onFocus", "onChange", "onBlur", "inputId", "formControl", "options", "ngClass"]],
+        template: function InputDropdownComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "p-dropdown", 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("onFocus", function InputDropdownComponent_Template_p_dropdown_onFocus_0_listener($event) {
+              return ctx.onFocus($event);
+            })("onChange", function InputDropdownComponent_Template_p_dropdown_onChange_0_listener($event) {
+              return ctx.onDropDownChange($event);
+            })("onBlur", function InputDropdownComponent_Template_p_dropdown_onBlur_0_listener($event) {
+              return ctx.onBlur($event);
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("inputId", ctx.id || ctx.formControlName)("formControl", ctx.control)("options", ctx.options)("ngClass", ctx.validationClass);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_3__.NgClass, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormControlDirective, primeng_dropdown__WEBPACK_IMPORTED_MODULE_4__.DropdownModule, primeng_dropdown__WEBPACK_IMPORTED_MODULE_4__.Dropdown],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return InputDropdownComponent;
 })();
@@ -482,61 +490,65 @@ let InputFileBrowserComponent = /*#__PURE__*/(() => {
     setFilePath(filePath) {
       this.control.setValue(filePath);
     }
-    static #_ = this.ɵfac = /*@__PURE__*/(() => {
-      let ɵInputFileBrowserComponent_BaseFactory;
-      return function InputFileBrowserComponent_Factory(t) {
-        return (ɵInputFileBrowserComponent_BaseFactory || (ɵInputFileBrowserComponent_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵgetInheritedFactory"](InputFileBrowserComponent)))(t || InputFileBrowserComponent);
-      };
-    })();
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineComponent"]({
-      type: InputFileBrowserComponent,
-      selectors: [["app-input-file-browser"]],
-      inputs: {
-        path: "path",
-        folderMode: "folderMode",
-        placeholder: "placeholder"
-      },
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵProvidersFeature"]([{
-        provide: _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NG_VALUE_ACCESSOR,
-        useExisting: (0,_angular_core__WEBPACK_IMPORTED_MODULE_2__.forwardRef)(() => InputFileBrowserComponent),
-        multi: true
-      }]), _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵInheritDefinitionFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵStandaloneFeature"]],
-      decls: 4,
-      vars: 5,
-      consts: [[1, "p-inputgroup"], ["pInputText", "", "type", "text", 1, "w-100", 3, "focus", "keydown", "keyup", "change", "blur", "id", "formControl", "placeholder", "ngClass"], ["icon", "pi pi-folder-open", "styleClass", "p-button-outlined input-addon", 3, "onClick"], [3, "visible", "path", "folderMode", "visibleChange", "pathChange", 4, "ngIf"], [3, "visibleChange", "pathChange", "visible", "path", "folderMode"]],
-      template: function InputFileBrowserComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "div", 0)(1, "input", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("focus", function InputFileBrowserComponent_Template_input_focus_1_listener($event) {
-            return ctx.onFocus($event);
-          })("keydown", function InputFileBrowserComponent_Template_input_keydown_1_listener($event) {
-            return ctx.onKeyDown($event);
-          })("keyup", function InputFileBrowserComponent_Template_input_keyup_1_listener($event) {
-            return ctx.onKeyUp($event);
-          })("change", function InputFileBrowserComponent_Template_input_change_1_listener($event) {
-            return ctx.onChange($event);
-          })("blur", function InputFileBrowserComponent_Template_input_blur_1_listener($event) {
-            return ctx.onBlur($event);
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](2, "p-button", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("onClick", function InputFileBrowserComponent_Template_p_button_onClick_2_listener() {
-            return ctx.openFileBrowser();
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](3, InputFileBrowserComponent_app_file_browser_3_Template, 1, 3, "app-file-browser", 3);
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("id", ctx.id || ctx.formControlName)("formControl", ctx.control)("placeholder", ctx.placeholder)("ngClass", ctx.validationClass);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngIf", ctx.showFileBrowser);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_4__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_4__.NgClass, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormControlDirective, primeng_inputtext__WEBPACK_IMPORTED_MODULE_5__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_5__.InputText, primeng_button__WEBPACK_IMPORTED_MODULE_6__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_6__.Button, _file_browser_file_browser_component__WEBPACK_IMPORTED_MODULE_0__.FileBrowserComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = /*@__PURE__*/(() => {
+        let ɵInputFileBrowserComponent_BaseFactory;
+        return function InputFileBrowserComponent_Factory(t) {
+          return (ɵInputFileBrowserComponent_BaseFactory || (ɵInputFileBrowserComponent_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵgetInheritedFactory"](InputFileBrowserComponent)))(t || InputFileBrowserComponent);
+        };
+      })();
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineComponent"]({
+        type: InputFileBrowserComponent,
+        selectors: [["app-input-file-browser"]],
+        inputs: {
+          path: "path",
+          folderMode: "folderMode",
+          placeholder: "placeholder"
+        },
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵProvidersFeature"]([{
+          provide: _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NG_VALUE_ACCESSOR,
+          useExisting: (0,_angular_core__WEBPACK_IMPORTED_MODULE_2__.forwardRef)(() => InputFileBrowserComponent),
+          multi: true
+        }]), _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵInheritDefinitionFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵStandaloneFeature"]],
+        decls: 4,
+        vars: 5,
+        consts: [[1, "p-inputgroup"], ["pInputText", "", "type", "text", 1, "w-100", 3, "focus", "keydown", "keyup", "change", "blur", "id", "formControl", "placeholder", "ngClass"], ["icon", "pi pi-folder-open", "styleClass", "p-button-outlined input-addon", 3, "onClick"], [3, "visible", "path", "folderMode", "visibleChange", "pathChange", 4, "ngIf"], [3, "visibleChange", "pathChange", "visible", "path", "folderMode"]],
+        template: function InputFileBrowserComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "div", 0)(1, "input", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("focus", function InputFileBrowserComponent_Template_input_focus_1_listener($event) {
+              return ctx.onFocus($event);
+            })("keydown", function InputFileBrowserComponent_Template_input_keydown_1_listener($event) {
+              return ctx.onKeyDown($event);
+            })("keyup", function InputFileBrowserComponent_Template_input_keyup_1_listener($event) {
+              return ctx.onKeyUp($event);
+            })("change", function InputFileBrowserComponent_Template_input_change_1_listener($event) {
+              return ctx.onChange($event);
+            })("blur", function InputFileBrowserComponent_Template_input_blur_1_listener($event) {
+              return ctx.onBlur($event);
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](2, "p-button", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("onClick", function InputFileBrowserComponent_Template_p_button_onClick_2_listener() {
+              return ctx.openFileBrowser();
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()();
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](3, InputFileBrowserComponent_app_file_browser_3_Template, 1, 3, "app-file-browser", 3);
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("id", ctx.id || ctx.formControlName)("formControl", ctx.control)("placeholder", ctx.placeholder)("ngClass", ctx.validationClass);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngIf", ctx.showFileBrowser);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_4__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_4__.NgClass, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormControlDirective, primeng_inputtext__WEBPACK_IMPORTED_MODULE_5__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_5__.InputText, primeng_button__WEBPACK_IMPORTED_MODULE_6__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_6__.Button, _file_browser_file_browser_component__WEBPACK_IMPORTED_MODULE_0__.FileBrowserComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return InputFileBrowserComponent;
 })();
@@ -689,72 +701,76 @@ let InputMultiFileBrowserComponent = /*#__PURE__*/(() => {
       }
       this.control.setValue(this.values);
     }
-    static #_ = this.ɵfac = /*@__PURE__*/(() => {
-      let ɵInputMultiFileBrowserComponent_BaseFactory;
-      return function InputMultiFileBrowserComponent_Factory(t) {
-        return (ɵInputMultiFileBrowserComponent_BaseFactory || (ɵInputMultiFileBrowserComponent_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵgetInheritedFactory"](InputMultiFileBrowserComponent)))(t || InputMultiFileBrowserComponent);
-      };
-    })();
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineComponent"]({
-      type: InputMultiFileBrowserComponent,
-      selectors: [["app-input-multi-file-browser"]],
-      inputs: {
-        folderMode: "folderMode"
-      },
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵProvidersFeature"]([{
-        provide: _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NG_VALUE_ACCESSOR,
-        useExisting: (0,_angular_core__WEBPACK_IMPORTED_MODULE_2__.forwardRef)(() => InputMultiFileBrowserComponent),
-        multi: true
-      }]), _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵInheritDefinitionFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵStandaloneFeature"]],
-      decls: 9,
-      vars: 9,
-      consts: [[1, "input-multi-text"], ["class", "p-inputgroup", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "p-inputgroup"], ["type", "text", "pInputText", "", "placeholder", "New value", 3, "ngModelChange", "keyup", "id", "ngModel", "ngClass"], ["icon", "pi pi-folder-open", "styleClass", "p-button-outlined input-addon", 3, "onClick"], ["icon", "pi pi-plus", "styleClass", "p-button-outlined input-addon", 3, "onClick", "disabled"], [3, "visible", "path", "folderMode", "visibleChange", "pathChange", 4, "ngIf"], ["type", "hidden", 3, "id", "formControl"], ["type", "text", "pInputText", "", 3, "keyup", "id", "value"], ["icon", "pi pi-times", "styleClass", "p-button-outlined input-addon", 3, "onClick"], [3, "visibleChange", "pathChange", "visible", "path", "folderMode"]],
-      template: function InputMultiFileBrowserComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "div", 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](1, InputMultiFileBrowserComponent_div_1_Template, 5, 2, "div", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](2, "div", 2)(3, "div", 2)(4, "input", 3);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtwoWayListener"]("ngModelChange", function InputMultiFileBrowserComponent_Template_input_ngModelChange_4_listener($event) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtwoWayBindingSet"](ctx.newValue, $event) || (ctx.newValue = $event);
-            return $event;
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("keyup", function InputMultiFileBrowserComponent_Template_input_keyup_4_listener($event) {
-            return ctx.onNewValueKeyup($event);
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](5, "p-button", 4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("onClick", function InputMultiFileBrowserComponent_Template_p_button_onClick_5_listener() {
-            return ctx.openFileBrowser(ctx.newValue, -1);
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](6, "p-button", 5);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("onClick", function InputMultiFileBrowserComponent_Template_p_button_onClick_6_listener() {
-            return ctx.addNewValue();
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()()();
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](7, InputMultiFileBrowserComponent_app_file_browser_7_Template, 1, 3, "app-file-browser", 6);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](8, "input", 7);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngForOf", ctx.values)("ngForTrackBy", ctx.trackValueByIndex);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](3);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("id", (ctx.id || ctx.formControlName) + "New");
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtwoWayProperty"]("ngModel", ctx.newValue);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngClass", ctx.validationClass);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("disabled", ctx.addButtonDisabled);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngIf", ctx.showFileBrowser);
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("id", ctx.id || ctx.formControlName)("formControl", ctx.control);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_4__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_4__.NgFor, _angular_common__WEBPACK_IMPORTED_MODULE_4__.NgClass, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NgModel, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormControlDirective, primeng_inputtext__WEBPACK_IMPORTED_MODULE_5__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_5__.InputText, primeng_button__WEBPACK_IMPORTED_MODULE_6__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_6__.Button, _file_browser_file_browser_component__WEBPACK_IMPORTED_MODULE_0__.FileBrowserComponent],
-      styles: [".p-inputgroup[_ngcontent-%COMP%]    > [_ngcontent-%COMP%]:first-child {\n  flex-grow: 1;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvY29tcG9uZW50cy9pbnB1dC9tdWx0aS1maWxlLWJyb3dzZXIvaW5wdXQtbXVsdGktZmlsZS1icm93c2VyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUNFO0VBQ0UsWUFBQTtBQUFKIiwic291cmNlc0NvbnRlbnQiOlsiLnAtaW5wdXRncm91cCB7XHJcbiAgPjpmaXJzdC1jaGlsZCB7XHJcbiAgICBmbGV4LWdyb3c6IDE7IC8vIGF1dG8gc3RyZXRjaCBmaXJzdCBlbGVtZW50IG9mIHRoZSBpbnB1dGdyb3VwXHJcbiAgfVxyXG59XHJcbiJdLCJzb3VyY2VSb290IjoiIn0= */"]
-    });
+    static {
+      this.ɵfac = /*@__PURE__*/(() => {
+        let ɵInputMultiFileBrowserComponent_BaseFactory;
+        return function InputMultiFileBrowserComponent_Factory(t) {
+          return (ɵInputMultiFileBrowserComponent_BaseFactory || (ɵInputMultiFileBrowserComponent_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵgetInheritedFactory"](InputMultiFileBrowserComponent)))(t || InputMultiFileBrowserComponent);
+        };
+      })();
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineComponent"]({
+        type: InputMultiFileBrowserComponent,
+        selectors: [["app-input-multi-file-browser"]],
+        inputs: {
+          folderMode: "folderMode"
+        },
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵProvidersFeature"]([{
+          provide: _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NG_VALUE_ACCESSOR,
+          useExisting: (0,_angular_core__WEBPACK_IMPORTED_MODULE_2__.forwardRef)(() => InputMultiFileBrowserComponent),
+          multi: true
+        }]), _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵInheritDefinitionFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵStandaloneFeature"]],
+        decls: 9,
+        vars: 9,
+        consts: [[1, "input-multi-text"], ["class", "p-inputgroup", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "p-inputgroup"], ["type", "text", "pInputText", "", "placeholder", "New value", 3, "ngModelChange", "keyup", "id", "ngModel", "ngClass"], ["icon", "pi pi-folder-open", "styleClass", "p-button-outlined input-addon", 3, "onClick"], ["icon", "pi pi-plus", "styleClass", "p-button-outlined input-addon", 3, "onClick", "disabled"], [3, "visible", "path", "folderMode", "visibleChange", "pathChange", 4, "ngIf"], ["type", "hidden", 3, "id", "formControl"], ["type", "text", "pInputText", "", 3, "keyup", "id", "value"], ["icon", "pi pi-times", "styleClass", "p-button-outlined input-addon", 3, "onClick"], [3, "visibleChange", "pathChange", "visible", "path", "folderMode"]],
+        template: function InputMultiFileBrowserComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](0, "div", 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](1, InputMultiFileBrowserComponent_div_1_Template, 5, 2, "div", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](2, "div", 2)(3, "div", 2)(4, "input", 3);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtwoWayListener"]("ngModelChange", function InputMultiFileBrowserComponent_Template_input_ngModelChange_4_listener($event) {
+              _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtwoWayBindingSet"](ctx.newValue, $event) || (ctx.newValue = $event);
+              return $event;
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("keyup", function InputMultiFileBrowserComponent_Template_input_keyup_4_listener($event) {
+              return ctx.onNewValueKeyup($event);
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](5, "p-button", 4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("onClick", function InputMultiFileBrowserComponent_Template_p_button_onClick_5_listener() {
+              return ctx.openFileBrowser(ctx.newValue, -1);
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementStart"](6, "p-button", 5);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵlistener"]("onClick", function InputMultiFileBrowserComponent_Template_p_button_onClick_6_listener() {
+              return ctx.addNewValue();
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]()()();
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtemplate"](7, InputMultiFileBrowserComponent_app_file_browser_7_Template, 1, 3, "app-file-browser", 6);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelement"](8, "input", 7);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵelementEnd"]();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngForOf", ctx.values)("ngForTrackBy", ctx.trackValueByIndex);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](3);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("id", (ctx.id || ctx.formControlName) + "New");
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵtwoWayProperty"]("ngModel", ctx.newValue);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngClass", ctx.validationClass);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("disabled", ctx.addButtonDisabled);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("ngIf", ctx.showFileBrowser);
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵproperty"]("id", ctx.id || ctx.formControlName)("formControl", ctx.control);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_4__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_4__.NgFor, _angular_common__WEBPACK_IMPORTED_MODULE_4__.NgClass, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.NgModel, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_3__.FormControlDirective, primeng_inputtext__WEBPACK_IMPORTED_MODULE_5__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_5__.InputText, primeng_button__WEBPACK_IMPORTED_MODULE_6__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_6__.Button, _file_browser_file_browser_component__WEBPACK_IMPORTED_MODULE_0__.FileBrowserComponent],
+        styles: [".p-inputgroup[_ngcontent-%COMP%]    > [_ngcontent-%COMP%]:first-child {\n  flex-grow: 1;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvY29tcG9uZW50cy9pbnB1dC9tdWx0aS1maWxlLWJyb3dzZXIvaW5wdXQtbXVsdGktZmlsZS1icm93c2VyLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUNFO0VBQ0UsWUFBQTtBQUFKIiwic291cmNlc0NvbnRlbnQiOlsiLnAtaW5wdXRncm91cCB7XHJcbiAgPjpmaXJzdC1jaGlsZCB7XHJcbiAgICBmbGV4LWdyb3c6IDE7IC8vIGF1dG8gc3RyZXRjaCBmaXJzdCBlbGVtZW50IG9mIHRoZSBpbnB1dGdyb3VwXHJcbiAgfVxyXG59XHJcbiJdLCJzb3VyY2VSb290IjoiIn0= */"]
+      });
+    }
   }
   return InputMultiFileBrowserComponent;
 })();
@@ -956,57 +972,61 @@ let InputMultiTextComponent = /*#__PURE__*/(() => {
         this.addButtonDisabled = true;
       }
     }
-    static #_ = this.ɵfac = /*@__PURE__*/(() => {
-      let ɵInputMultiTextComponent_BaseFactory;
-      return function InputMultiTextComponent_Factory(t) {
-        return (ɵInputMultiTextComponent_BaseFactory || (ɵInputMultiTextComponent_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetInheritedFactory"](InputMultiTextComponent)))(t || InputMultiTextComponent);
-      };
-    })();
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({
-      type: InputMultiTextComponent,
-      selectors: [["app-input-multi-text"]],
-      inputs: {
-        options: "options"
-      },
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵProvidersFeature"]([{
-        provide: _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NG_VALUE_ACCESSOR,
-        useExisting: (0,_angular_core__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(() => InputMultiTextComponent),
-        multi: true
-      }]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵInheritDefinitionFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵStandaloneFeature"]],
-      decls: 7,
-      vars: 7,
-      consts: [[1, "input-multi-text"], ["class", "p-inputgroup", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "p-inputgroup"], ["styleClass", "w-100", 3, "inputId", "options", "ngModel", "ngClass", "ngModelChange", "onChange", 4, "ngIf"], ["type", "text", "pInputText", "", "placeholder", "New value", 3, "id", "ngModel", "ngClass", "ngModelChange", "keyup", 4, "ngIf"], ["icon", "pi pi-plus", "styleClass", "p-button-outlined input-addon", 3, "onClick", "disabled"], ["type", "hidden", 3, "id", "formControl"], ["styleClass", "w-100", 3, "inputId", "options", "ngModel", "onChange", 4, "ngIf"], ["type", "text", "pInputText", "", 3, "id", "value", "keyup", 4, "ngIf"], ["icon", "pi pi-times", "styleClass", "p-button-outlined input-addon", 3, "onClick"], ["styleClass", "w-100", 3, "onChange", "inputId", "options", "ngModel"], ["type", "text", "pInputText", "", 3, "keyup", "id", "value"], ["styleClass", "w-100", 3, "ngModelChange", "onChange", "inputId", "options", "ngModel", "ngClass"], ["type", "text", "pInputText", "", "placeholder", "New value", 3, "ngModelChange", "keyup", "id", "ngModel", "ngClass"]],
-      template: function InputMultiTextComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 0);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](1, InputMultiTextComponent_div_1_Template, 4, 2, "div", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "div", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](3, InputMultiTextComponent_p_dropdown_3_Template, 1, 4, "p-dropdown", 3)(4, InputMultiTextComponent_input_4_Template, 1, 3, "input", 4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](5, "p-button", 5);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("onClick", function InputMultiTextComponent_Template_p_button_onClick_5_listener() {
-            return ctx.addNewValue();
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]()();
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](6, "input", 6);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngForOf", ctx.values)("ngForTrackBy", ctx.trackValueByIndex);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx.options);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx.options);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("disabled", ctx.addButtonDisabled);
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("id", ctx.id || ctx.formControlName)("formControl", ctx.control);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_3__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_3__.NgFor, _angular_common__WEBPACK_IMPORTED_MODULE_3__.NgClass, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NgModel, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormControlDirective, primeng_inputtext__WEBPACK_IMPORTED_MODULE_4__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_4__.InputText, primeng_dropdown__WEBPACK_IMPORTED_MODULE_5__.DropdownModule, primeng_dropdown__WEBPACK_IMPORTED_MODULE_5__.Dropdown, primeng_button__WEBPACK_IMPORTED_MODULE_6__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_6__.Button],
-      styles: [".p-inputgroup[_ngcontent-%COMP%]    > [_ngcontent-%COMP%]:first-child {\n  flex-grow: 1;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvY29tcG9uZW50cy9pbnB1dC9tdWx0aS10ZXh0L2lucHV0LW11bHRpLXRleHQuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0U7RUFDRSxZQUFBO0FBQUoiLCJzb3VyY2VzQ29udGVudCI6WyIucC1pbnB1dGdyb3VwIHtcclxuICA+OmZpcnN0LWNoaWxkIHtcclxuICAgIGZsZXgtZ3JvdzogMTsgLy8gYXV0byBzdHJldGNoIGZpcnN0IGVsZW1lbnQgb2YgdGhlIGlucHV0Z3JvdXBcclxuICB9XHJcbn1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = /*@__PURE__*/(() => {
+        let ɵInputMultiTextComponent_BaseFactory;
+        return function InputMultiTextComponent_Factory(t) {
+          return (ɵInputMultiTextComponent_BaseFactory || (ɵInputMultiTextComponent_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵgetInheritedFactory"](InputMultiTextComponent)))(t || InputMultiTextComponent);
+        };
+      })();
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({
+        type: InputMultiTextComponent,
+        selectors: [["app-input-multi-text"]],
+        inputs: {
+          options: "options"
+        },
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵProvidersFeature"]([{
+          provide: _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NG_VALUE_ACCESSOR,
+          useExisting: (0,_angular_core__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(() => InputMultiTextComponent),
+          multi: true
+        }]), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵInheritDefinitionFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵStandaloneFeature"]],
+        decls: 7,
+        vars: 7,
+        consts: [[1, "input-multi-text"], ["class", "p-inputgroup", 4, "ngFor", "ngForOf", "ngForTrackBy"], [1, "p-inputgroup"], ["styleClass", "w-100", 3, "inputId", "options", "ngModel", "ngClass", "ngModelChange", "onChange", 4, "ngIf"], ["type", "text", "pInputText", "", "placeholder", "New value", 3, "id", "ngModel", "ngClass", "ngModelChange", "keyup", 4, "ngIf"], ["icon", "pi pi-plus", "styleClass", "p-button-outlined input-addon", 3, "onClick", "disabled"], ["type", "hidden", 3, "id", "formControl"], ["styleClass", "w-100", 3, "inputId", "options", "ngModel", "onChange", 4, "ngIf"], ["type", "text", "pInputText", "", 3, "id", "value", "keyup", 4, "ngIf"], ["icon", "pi pi-times", "styleClass", "p-button-outlined input-addon", 3, "onClick"], ["styleClass", "w-100", 3, "onChange", "inputId", "options", "ngModel"], ["type", "text", "pInputText", "", 3, "keyup", "id", "value"], ["styleClass", "w-100", 3, "ngModelChange", "onChange", "inputId", "options", "ngModel", "ngClass"], ["type", "text", "pInputText", "", "placeholder", "New value", 3, "ngModelChange", "keyup", "id", "ngModel", "ngClass"]],
+        template: function InputMultiTextComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 0);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](1, InputMultiTextComponent_div_1_Template, 4, 2, "div", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "div", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtemplate"](3, InputMultiTextComponent_p_dropdown_3_Template, 1, 4, "p-dropdown", 3)(4, InputMultiTextComponent_input_4_Template, 1, 3, "input", 4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](5, "p-button", 5);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("onClick", function InputMultiTextComponent_Template_p_button_onClick_5_listener() {
+              return ctx.addNewValue();
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]()();
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelement"](6, "input", 6);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngForOf", ctx.values)("ngForTrackBy", ctx.trackValueByIndex);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", ctx.options);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngIf", !ctx.options);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("disabled", ctx.addButtonDisabled);
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("id", ctx.id || ctx.formControlName)("formControl", ctx.control);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_3__.NgIf, _angular_common__WEBPACK_IMPORTED_MODULE_3__.NgFor, _angular_common__WEBPACK_IMPORTED_MODULE_3__.NgClass, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.NgModel, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_2__.FormControlDirective, primeng_inputtext__WEBPACK_IMPORTED_MODULE_4__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_4__.InputText, primeng_dropdown__WEBPACK_IMPORTED_MODULE_5__.DropdownModule, primeng_dropdown__WEBPACK_IMPORTED_MODULE_5__.Dropdown, primeng_button__WEBPACK_IMPORTED_MODULE_6__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_6__.Button],
+        styles: [".p-inputgroup[_ngcontent-%COMP%]    > [_ngcontent-%COMP%]:first-child {\n  flex-grow: 1;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvY29tcG9uZW50cy9pbnB1dC9tdWx0aS10ZXh0L2lucHV0LW11bHRpLXRleHQuY29tcG9uZW50LnNjc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQ0U7RUFDRSxZQUFBO0FBQUoiLCJzb3VyY2VzQ29udGVudCI6WyIucC1pbnB1dGdyb3VwIHtcclxuICA+OmZpcnN0LWNoaWxkIHtcclxuICAgIGZsZXgtZ3JvdzogMTsgLy8gYXV0byBzdHJldGNoIGZpcnN0IGVsZW1lbnQgb2YgdGhlIGlucHV0Z3JvdXBcclxuICB9XHJcbn1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return InputMultiTextComponent;
 })();
@@ -1596,31 +1616,35 @@ let SettingsGeneralComponent = /*#__PURE__*/(() => {
       settings.timestampFormat = _utils_form_utils__WEBPACK_IMPORTED_MODULE_10__.FormUtils.getFormControlValue(this.settingsForm, 'timestampFormat');
       return settings;
     }
-    static #_ = this.ɵfac = function SettingsGeneralComponent_Factory(t) {
-      return new (t || SettingsGeneralComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵdefineComponent"]({
-      type: SettingsGeneralComponent,
-      selectors: [["app-settings-general"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵStandaloneFeature"]],
-      decls: 3,
-      vars: 1,
-      consts: [[1, "container-lg"], ["header", "General settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "videoPaths", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "videoPaths", 3, "folderMode", "validationFeedback"], ["for", "defaultLanguage", 1, "label"], ["formControlName", "defaultLanguage", 3, "options", "validationFeedback"], ["for", "defaultLanguageSuffix", 1, "label"], ["formControlName", "defaultLanguageSuffix", 3, "options"], ["for", "additionalLanguages", 1, "label"], ["formControlName", "additionalLanguages", 3, "options"], ["for", "manualSearchWithScoring", 1, "label"], ["formControlName", "manualSearchWithScoring", 3, "options"], ["for", "scanDiskInterval", 1, "label"], ["formControlName", "scanDiskInterval", "suffix", " hour(s)", 3, "min"], ["for", "scanDiskAtStartup", 1, "label"], ["formControlName", "scanDiskAtStartup", 3, "options"], ["for", "checkSubInterval", 1, "label"], ["formControlName", "checkSubInterval", "suffix", " hour(s)", 3, "min"], ["for", "checkSubAtStartup", 1, "label"], ["formControlName", "checkSubAtStartup", 3, "options"], ["for", "checkSubDeadline", 1, "label"], ["formControlName", "checkSubDeadline", "suffix", " week(s)", 3, "min"], ["for", "checkSubDelta", 1, "label"], ["formControlName", "checkSubDelta", "suffix", " day(s)", 3, "min"], ["for", "checkVersionInterval", 1, "label"], ["formControlName", "checkVersionInterval", "suffix", " hour(s)", 3, "min"], ["for", "checkVersionAtStartup", 1, "label"], ["formControlName", "checkVersionAtStartup", 3, "options"], ["for", "checkVersionAutoUpdate", 1, "label"], ["formControlName", "checkVersionAutoUpdate", 3, "options"], ["for", "scanEmbeddedSubs", 1, "label"], ["formControlName", "scanEmbeddedSubs", 3, "options"], ["for", "scanHardcodedSubs", 1, "label"], ["formControlName", "scanHardcodedSubs", 3, "options"], ["for", "skipHiddenDirs", 1, "label"], ["formControlName", "skipHiddenDirs", 3, "options"], ["for", "detectInvalidSubLanguage", 1, "label"], ["formControlName", "detectInvalidSubLanguage", 3, "options"], ["for", "detectedLanguageProbability", 1, "label"], ["formControlName", "detectedLanguageProbability", "suffix", " %", 3, "min", "max"], ["for", "manualSubSync", 1, "label"], ["formControlName", "manualSubSync", 3, "options"], ["class", "row form-row", 4, "ngIf"], ["for", "minVideoFileSize", 1, "label"], ["formControlName", "minVideoFileSize", "suffix", " MB", 3, "min"], ["for", "maxDbResults", 1, "label"], ["formControlName", "maxDbResults", "mode", "decimal", "suffix", " results", 3, "min"], ["for", "timestampFormat", 1, "label"], ["formControlName", "timestampFormat", 3, "options"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"], ["for", "ffmpegPath", 1, "label"], ["formControlName", "ffmpegPath", 3, "folderMode", "validationFeedback"]],
-      template: function SettingsGeneralComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵtemplate"](2, SettingsGeneralComponent_form_2_Template, 252, 33, "form", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵelementEnd"]()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵproperty"]("ngIf", ctx.settingsForm);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_15__.NgIf, primeng_panel__WEBPACK_IMPORTED_MODULE_16__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_16__.Panel, _angular_forms__WEBPACK_IMPORTED_MODULE_13__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_13__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_13__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_13__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_13__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_13__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_13__.FormControlName, primeng_button__WEBPACK_IMPORTED_MODULE_17__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_17__.Button, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_multi_file_browser_input_multi_file_browser_component__WEBPACK_IMPORTED_MODULE_4__.InputMultiFileBrowserComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent, _components_input_multi_text_input_multi_text_component__WEBPACK_IMPORTED_MODULE_5__.InputMultiTextComponent, _components_input_number_input_number_component__WEBPACK_IMPORTED_MODULE_6__.InputNumberComponent, _components_input_file_browser_input_file_browser_component__WEBPACK_IMPORTED_MODULE_3__.InputFileBrowserComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function SettingsGeneralComponent_Factory(t) {
+        return new (t || SettingsGeneralComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵdefineComponent"]({
+        type: SettingsGeneralComponent,
+        selectors: [["app-settings-general"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵStandaloneFeature"]],
+        decls: 3,
+        vars: 1,
+        consts: [[1, "container-lg"], ["header", "General settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "videoPaths", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "videoPaths", 3, "folderMode", "validationFeedback"], ["for", "defaultLanguage", 1, "label"], ["formControlName", "defaultLanguage", 3, "options", "validationFeedback"], ["for", "defaultLanguageSuffix", 1, "label"], ["formControlName", "defaultLanguageSuffix", 3, "options"], ["for", "additionalLanguages", 1, "label"], ["formControlName", "additionalLanguages", 3, "options"], ["for", "manualSearchWithScoring", 1, "label"], ["formControlName", "manualSearchWithScoring", 3, "options"], ["for", "scanDiskInterval", 1, "label"], ["formControlName", "scanDiskInterval", "suffix", " hour(s)", 3, "min"], ["for", "scanDiskAtStartup", 1, "label"], ["formControlName", "scanDiskAtStartup", 3, "options"], ["for", "checkSubInterval", 1, "label"], ["formControlName", "checkSubInterval", "suffix", " hour(s)", 3, "min"], ["for", "checkSubAtStartup", 1, "label"], ["formControlName", "checkSubAtStartup", 3, "options"], ["for", "checkSubDeadline", 1, "label"], ["formControlName", "checkSubDeadline", "suffix", " week(s)", 3, "min"], ["for", "checkSubDelta", 1, "label"], ["formControlName", "checkSubDelta", "suffix", " day(s)", 3, "min"], ["for", "checkVersionInterval", 1, "label"], ["formControlName", "checkVersionInterval", "suffix", " hour(s)", 3, "min"], ["for", "checkVersionAtStartup", 1, "label"], ["formControlName", "checkVersionAtStartup", 3, "options"], ["for", "checkVersionAutoUpdate", 1, "label"], ["formControlName", "checkVersionAutoUpdate", 3, "options"], ["for", "scanEmbeddedSubs", 1, "label"], ["formControlName", "scanEmbeddedSubs", 3, "options"], ["for", "scanHardcodedSubs", 1, "label"], ["formControlName", "scanHardcodedSubs", 3, "options"], ["for", "skipHiddenDirs", 1, "label"], ["formControlName", "skipHiddenDirs", 3, "options"], ["for", "detectInvalidSubLanguage", 1, "label"], ["formControlName", "detectInvalidSubLanguage", 3, "options"], ["for", "detectedLanguageProbability", 1, "label"], ["formControlName", "detectedLanguageProbability", "suffix", " %", 3, "min", "max"], ["for", "manualSubSync", 1, "label"], ["formControlName", "manualSubSync", 3, "options"], ["class", "row form-row", 4, "ngIf"], ["for", "minVideoFileSize", 1, "label"], ["formControlName", "minVideoFileSize", "suffix", " MB", 3, "min"], ["for", "maxDbResults", 1, "label"], ["formControlName", "maxDbResults", "mode", "decimal", "suffix", " results", 3, "min"], ["for", "timestampFormat", 1, "label"], ["formControlName", "timestampFormat", 3, "options"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"], ["for", "ffmpegPath", 1, "label"], ["formControlName", "ffmpegPath", 3, "folderMode", "validationFeedback"]],
+        template: function SettingsGeneralComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵtemplate"](2, SettingsGeneralComponent_form_2_Template, 252, 33, "form", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵelementEnd"]()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_12__["ɵɵproperty"]("ngIf", ctx.settingsForm);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_15__.NgIf, primeng_panel__WEBPACK_IMPORTED_MODULE_16__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_16__.Panel, _angular_forms__WEBPACK_IMPORTED_MODULE_13__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_13__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_13__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_13__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_13__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_13__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_13__.FormControlName, primeng_button__WEBPACK_IMPORTED_MODULE_17__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_17__.Button, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_multi_file_browser_input_multi_file_browser_component__WEBPACK_IMPORTED_MODULE_4__.InputMultiFileBrowserComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent, _components_input_multi_text_input_multi_text_component__WEBPACK_IMPORTED_MODULE_5__.InputMultiTextComponent, _components_input_number_input_number_component__WEBPACK_IMPORTED_MODULE_6__.InputNumberComponent, _components_input_file_browser_input_file_browser_component__WEBPACK_IMPORTED_MODULE_3__.InputFileBrowserComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return SettingsGeneralComponent;
 })();
@@ -1815,31 +1839,35 @@ let SettingsLibraryComponent = /*#__PURE__*/(() => {
       settings.libraryEditMode = _utils_form_utils__WEBPACK_IMPORTED_MODULE_8__.FormUtils.getFormControlValue(this.settingsForm, 'libraryEditMode');
       return settings;
     }
-    static #_ = this.ɵfac = function SettingsLibraryComponent_Factory(t) {
-      return new (t || SettingsLibraryComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵdefineComponent"]({
-      type: SettingsLibraryComponent,
-      selectors: [["app-settings-library"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵStandaloneFeature"]],
-      decls: 3,
-      vars: 1,
-      consts: [[1, "container-lg"], ["header", "Log settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "libraryMode", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "libraryMode", 3, "options"], ["for", "libraryPaths", 1, "label"], ["formControlName", "libraryPaths", 3, "folderMode", "validationFeedback"], ["for", "scanLibraryInterval", 1, "label"], ["formControlName", "scanLibraryInterval", "suffix", " hour(s)", 3, "min"], ["for", "scanLibraryAtStartup", 1, "label"], ["formControlName", "scanLibraryAtStartup", 3, "options"], ["for", "libraryEditMode", 1, "label"], ["formControlName", "libraryEditMode", 3, "options"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
-      template: function SettingsLibraryComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](2, SettingsLibraryComponent_form_2_Template, 57, 8, "form", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.settingsForm);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_12__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_14__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_14__.Button, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent, _components_input_multi_file_browser_input_multi_file_browser_component__WEBPACK_IMPORTED_MODULE_3__.InputMultiFileBrowserComponent, _components_input_number_input_number_component__WEBPACK_IMPORTED_MODULE_4__.InputNumberComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function SettingsLibraryComponent_Factory(t) {
+        return new (t || SettingsLibraryComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵdefineComponent"]({
+        type: SettingsLibraryComponent,
+        selectors: [["app-settings-library"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵStandaloneFeature"]],
+        decls: 3,
+        vars: 1,
+        consts: [[1, "container-lg"], ["header", "Log settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "libraryMode", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "libraryMode", 3, "options"], ["for", "libraryPaths", 1, "label"], ["formControlName", "libraryPaths", 3, "folderMode", "validationFeedback"], ["for", "scanLibraryInterval", 1, "label"], ["formControlName", "scanLibraryInterval", "suffix", " hour(s)", 3, "min"], ["for", "scanLibraryAtStartup", 1, "label"], ["formControlName", "scanLibraryAtStartup", 3, "options"], ["for", "libraryEditMode", 1, "label"], ["formControlName", "libraryEditMode", 3, "options"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
+        template: function SettingsLibraryComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](2, SettingsLibraryComponent_form_2_Template, 57, 8, "form", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.settingsForm);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_12__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_14__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_14__.Button, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent, _components_input_multi_file_browser_input_multi_file_browser_component__WEBPACK_IMPORTED_MODULE_3__.InputMultiFileBrowserComponent, _components_input_number_input_number_component__WEBPACK_IMPORTED_MODULE_4__.InputNumberComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return SettingsLibraryComponent;
 })();
@@ -2104,31 +2132,35 @@ let SettingsLoggingComponent = /*#__PURE__*/(() => {
       settings.logLevelConsole = _utils_form_utils__WEBPACK_IMPORTED_MODULE_8__.FormUtils.getFormControlValue(this.settingsForm, 'logLevelConsole');
       return settings;
     }
-    static #_ = this.ɵfac = function SettingsLoggingComponent_Factory(t) {
-      return new (t || SettingsLoggingComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdefineComponent"]({
-      type: SettingsLoggingComponent,
-      selectors: [["app-settings-logging"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵStandaloneFeature"]],
-      decls: 3,
-      vars: 1,
-      consts: [[1, "container-lg"], ["header", "Log settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "logFile", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "logFile", 3, "validationFeedback"], ["for", "logLevel", 1, "label"], ["formControlName", "logLevel", 3, "options", "validationFeedback"], ["for", "logNum", 1, "label"], ["formControlName", "logNum", "suffix", " file(s)", 3, "min"], ["for", "logSize", 1, "label"], ["formControlName", "logSize", "suffix", " MB", 3, "min"], ["for", "logHttpAccess", 1, "label"], ["formControlName", "logHttpAccess", 3, "options"], ["for", "logExternalLibs", 1, "label"], ["formControlName", "logExternalLibs", 3, "options"], ["for", "logDetailedFormat", 1, "label"], ["formControlName", "logDetailedFormat", 3, "options"], ["for", "logReversed", 1, "label"], ["formControlName", "logReversed", 3, "options"], ["for", "logLevelConsole", 1, "label"], ["formControlName", "logLevelConsole", 3, "options", "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
-      template: function SettingsLoggingComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵtemplate"](2, SettingsLoggingComponent_form_2_Template, 93, 12, "form", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementEnd"]()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵproperty"]("ngIf", ctx.settingsForm);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_13__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_11__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_11__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_15__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_15__.Button, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_text_input_text_component__WEBPACK_IMPORTED_MODULE_4__.InputTextComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent, _components_input_number_input_number_component__WEBPACK_IMPORTED_MODULE_3__.InputNumberComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function SettingsLoggingComponent_Factory(t) {
+        return new (t || SettingsLoggingComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdefineComponent"]({
+        type: SettingsLoggingComponent,
+        selectors: [["app-settings-logging"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵStandaloneFeature"]],
+        decls: 3,
+        vars: 1,
+        consts: [[1, "container-lg"], ["header", "Log settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "logFile", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "logFile", 3, "validationFeedback"], ["for", "logLevel", 1, "label"], ["formControlName", "logLevel", 3, "options", "validationFeedback"], ["for", "logNum", 1, "label"], ["formControlName", "logNum", "suffix", " file(s)", 3, "min"], ["for", "logSize", 1, "label"], ["formControlName", "logSize", "suffix", " MB", 3, "min"], ["for", "logHttpAccess", 1, "label"], ["formControlName", "logHttpAccess", 3, "options"], ["for", "logExternalLibs", 1, "label"], ["formControlName", "logExternalLibs", 3, "options"], ["for", "logDetailedFormat", 1, "label"], ["formControlName", "logDetailedFormat", 3, "options"], ["for", "logReversed", 1, "label"], ["formControlName", "logReversed", 3, "options"], ["for", "logLevelConsole", 1, "label"], ["formControlName", "logLevelConsole", 3, "options", "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
+        template: function SettingsLoggingComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵtemplate"](2, SettingsLoggingComponent_form_2_Template, 93, 12, "form", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementEnd"]()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵproperty"]("ngIf", ctx.settingsForm);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_13__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_11__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_11__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_15__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_15__.Button, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_text_input_text_component__WEBPACK_IMPORTED_MODULE_4__.InputTextComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent, _components_input_number_input_number_component__WEBPACK_IMPORTED_MODULE_3__.InputNumberComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return SettingsLoggingComponent;
 })();
@@ -2353,31 +2385,35 @@ let SettingsNamemappingComponent = /*#__PURE__*/(() => {
       settings.alternativeMovieNameMapping = _utils_form_utils__WEBPACK_IMPORTED_MODULE_6__.FormUtils.getFormControlValue(this.settingsForm, 'alternativeMovieNameMapping');
       return settings;
     }
-    static #_ = this.ɵfac = function SettingsNamemappingComponent_Factory(t) {
-      return new (t || SettingsNamemappingComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdefineComponent"]({
-      type: SettingsNamemappingComponent,
-      selectors: [["app-settings-namemapping"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵStandaloneFeature"]],
-      decls: 3,
-      vars: 1,
-      consts: [[1, "container-lg"], ["header", "Namemapping settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "form-row-notification"], ["severity", "warning", "text", "Use the namemapping at own risk! Incorrect use of the namemapping may result in subtitles not being found!", "styleClass", "w-100"], [1, "col-12"], [1, "p-tag", "p-tag-rounded", "p-tag-small"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "showNameMapping", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "showNameMapping", 3, "validationFeedback"], ["for", "addic7edShowNameMapping", 1, "label"], ["formControlName", "addic7edShowNameMapping", 3, "validationFeedback"], ["for", "alternativeShowNameMapping", 1, "label"], ["formControlName", "alternativeShowNameMapping", 3, "validationFeedback"], ["for", "movieNameMapping", 1, "label"], ["formControlName", "movieNameMapping", 3, "validationFeedback"], ["for", "alternativeMovieNameMapping", 1, "label"], ["formControlName", "alternativeMovieNameMapping", 3, "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
-      template: function SettingsNamemappingComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtemplate"](2, SettingsNamemappingComponent_form_2_Template, 90, 6, "form", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("ngIf", ctx.settingsForm);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_10__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_8__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_8__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_11__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_11__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_12__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_12__.Button, primeng_message__WEBPACK_IMPORTED_MODULE_13__.MessageModule, primeng_message__WEBPACK_IMPORTED_MODULE_13__.UIMessage, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_multi_text_input_multi_text_component__WEBPACK_IMPORTED_MODULE_2__.InputMultiTextComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function SettingsNamemappingComponent_Factory(t) {
+        return new (t || SettingsNamemappingComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdefineComponent"]({
+        type: SettingsNamemappingComponent,
+        selectors: [["app-settings-namemapping"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵStandaloneFeature"]],
+        decls: 3,
+        vars: 1,
+        consts: [[1, "container-lg"], ["header", "Namemapping settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "form-row-notification"], ["severity", "warning", "text", "Use the namemapping at own risk! Incorrect use of the namemapping may result in subtitles not being found!", "styleClass", "w-100"], [1, "col-12"], [1, "p-tag", "p-tag-rounded", "p-tag-small"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "showNameMapping", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "showNameMapping", 3, "validationFeedback"], ["for", "addic7edShowNameMapping", 1, "label"], ["formControlName", "addic7edShowNameMapping", 3, "validationFeedback"], ["for", "alternativeShowNameMapping", 1, "label"], ["formControlName", "alternativeShowNameMapping", 3, "validationFeedback"], ["for", "movieNameMapping", 1, "label"], ["formControlName", "movieNameMapping", 3, "validationFeedback"], ["for", "alternativeMovieNameMapping", 1, "label"], ["formControlName", "alternativeMovieNameMapping", 3, "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
+        template: function SettingsNamemappingComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtemplate"](2, SettingsNamemappingComponent_form_2_Template, 90, 6, "form", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("ngIf", ctx.settingsForm);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_10__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_8__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_8__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_11__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_11__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_12__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_12__.Button, primeng_message__WEBPACK_IMPORTED_MODULE_13__.MessageModule, primeng_message__WEBPACK_IMPORTED_MODULE_13__.UIMessage, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_multi_text_input_multi_text_component__WEBPACK_IMPORTED_MODULE_2__.InputMultiTextComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return SettingsNamemappingComponent;
 })();
@@ -3233,43 +3269,47 @@ let SettingsNotificationComponent = /*#__PURE__*/(() => {
       settings.telegramChatId = _utils_form_utils__WEBPACK_IMPORTED_MODULE_8__.FormUtils.getFormControlValue(this.settingsForm, 'telegramChatId');
       return settings;
     }
-    static #_ = this.ɵfac = function SettingsNotificationComponent_Factory(t) {
-      return new (t || SettingsNotificationComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵdefineComponent"]({
-      type: SettingsNotificationComponent,
-      selectors: [["app-settings-notification"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵStandaloneFeature"]],
-      decls: 5,
-      vars: 7,
-      consts: [[1, "container-lg"], ["header", "Notification settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], ["header", "Twitter registration", 3, "visibleChange", "visible", "modal", "closable", "resizable", "showHeader"], [4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "form-row-notification"], ["severity", "warning", "text", "Passwords and keys are stored in plaintext!", "styleClass", "w-100"], ["severity", "info", "text", "You first need to save before you can test a notification.", "styleClass", "w-100"], [1, "col-12"], [1, "p-tag", "p-tag-rounded", "p-tag-small"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "notify", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "notify", 3, "options"], ["label", "Save", 3, "onClick"], ["src", "assets/notifiers/email.png", "alt", "Mail", "title", "Mail", 1, "notifier-icon"], ["for", "notifyMail", 1, "label"], ["formControlName", "notifyMail", 3, "options"], ["for", "mailServer", 1, "label"], ["formControlName", "mailServer", 3, "validationFeedback"], ["for", "mailFromName", 1, "label"], ["formControlName", "mailFromName", 3, "validationFeedback"], ["for", "mailFrom", 1, "label"], ["formControlName", "mailFrom", 3, "validationFeedback"], ["for", "mailTo", 1, "label"], ["formControlName", "mailTo", 3, "validationFeedback"], ["for", "mailUserName", 1, "label"], ["formControlName", "mailUserName", 3, "validationFeedback"], ["for", "mailPassword", 1, "label"], ["formControlName", "mailPassword", "type", "password", 3, "validationFeedback"], ["for", "mailSubject", 1, "label"], ["formControlName", "mailSubject", 3, "validationFeedback"], ["for", "mailEncryption", 1, "label"], ["formControlName", "mailEncryption", 3, "validationFeedback"], ["for", "mailAuthentication", 1, "label"], ["formControlName", "mailAuthentication", 3, "validationFeedback"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8", "offset-0", "offset-sm-0", "offset-md-4", "offset-lg-4", "form-row-buttons"], ["label", "Test", "styleClass", "p-button-secondary", 3, "onClick"], ["href", "https://twitter.com/", "target", "_blank"], ["src", "assets/notifiers/twitter.png", "alt", "Twitter", "title", "Twitter", 1, "notifier-icon"], ["for", "notifyTwitter", 1, "label"], ["formControlName", "notifyTwitter", 3, "options"], ["for", "twitterKey", 1, "label"], ["formControlName", "twitterKey", 3, "validationFeedback"], ["for", "twitterSecret", 1, "label"], ["formControlName", "twitterSecret", "type", "password", 3, "validationFeedback"], ["label", "Register", "styleClass", "p-button-secondary", 3, "onClick"], ["href", "https://pushalot.com/", "target", "_blank"], ["src", "assets/notifiers/pushalot.png", "alt", "Pushalot", "title", "Pushalot", 1, "notifier-icon"], ["for", "notifyPushalot", 1, "label"], ["formControlName", "notifyPushalot", 3, "options"], ["for", "pushalotApi", 1, "label"], ["formControlName", "pushalotApi", 3, "validationFeedback"], ["href", "https://pushover.net/", "target", "_blank"], ["src", "assets/notifiers/pushover.png", "alt", "Pushover", "title", "Pushover", 1, "notifier-icon"], ["for", "notifyPushover", 1, "label"], ["formControlName", "notifyPushover", 3, "options"], ["for", "pushoverKey", 1, "label"], ["formControlName", "pushoverKey", 3, "validationFeedback"], ["for", "pushoverApi", 1, "label"], ["formControlName", "pushoverApi", 3, "validationFeedback"], ["for", "pushoverDevices", 1, "label"], ["formControlName", "pushoverDevices", 3, "validationFeedback"], ["href", "http://www.growl.info/", "target", "_blank"], ["src", "assets/notifiers/growl.png", "alt", "Growl", "title", "Growl", 1, "notifier-icon"], ["for", "notifyGrowl", 1, "label"], ["formControlName", "notifyGrowl", 3, "options"], ["for", "growlHost", 1, "label"], ["formControlName", "growlHost", 3, "validationFeedback"], ["for", "growlPort", 1, "label"], ["formControlName", "growlPort", 3, "showButtons", "validationFeedback"], ["for", "growlPassword", 1, "label"], ["formControlName", "growlPassword", "type", "password", 3, "validationFeedback"], ["for", "growlPriority", 1, "label"], ["formControlName", "growlPriority", 3, "options", "validationFeedback"], ["href", "https://www.prowlapp.com/", "target", "_blank"], ["src", "assets/notifiers/prowl.png", "alt", "Prowl", "title", "Prowl", 1, "notifier-icon"], ["for", "notifyProwl", 1, "label"], ["formControlName", "notifyProwl", 3, "options"], ["for", "prowlApi", 1, "label"], ["href", "https://prowlapp.com/api_settings.php", "target", "_blank"], ["formControlName", "prowlApi", 3, "validationFeedback"], ["for", "prowlPriority", 1, "label"], ["formControlName", "prowlPriority", 3, "options", "validationFeedback"], ["href", "https://www.pushbullet.com/", "target", "_blank"], ["src", "assets/notifiers/pushbullet.png", "alt", "Pushbullet", "title", "Pushbullet", 1, "notifier-icon"], ["for", "notifyPushbullet", 1, "label"], ["formControlName", "notifyPushbullet", 3, "options"], ["for", "pushbulletApi", 1, "label"], ["formControlName", "pushbulletApi", 3, "validationFeedback"], ["href", "https://telegram.org/", "target", "_blank"], ["src", "assets/notifiers/telegram.png", "alt", "Telegram", "title", "Telegram", 1, "notifier-icon"], ["for", "notifyTelegram", 1, "label"], ["formControlName", "notifyTelegram", 3, "options"], ["for", "telegramBotApi", 1, "label"], ["href", "https://core.telegram.org/bots", "target", "_blank"], ["formControlName", "telegramBotApi", 3, "validationFeedback"], ["for", "telegramChatId", 1, "label"], ["formControlName", "telegramChatId", 3, "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["target", "_blank", 3, "href"], [1, "col-6", "col-6", "col-sm-6", "col-md-4", "col-lg-4"], [1, "p-inputgroup"], ["type", "text", "pInputText", "", "placeholder", "Pin", 3, "ngModelChange", "ngModel"], ["label", "Ok", "styleClass", "p-button-outlined input-addon", 3, "onClick"]],
-      template: function SettingsNotificationComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](2, SettingsNotificationComponent_form_2_Template, 413, 37, "form", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]()();
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](3, "p-dialog", 3);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayListener"]("visibleChange", function SettingsNotificationComponent_Template_p_dialog_visibleChange_3_listener($event) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayBindingSet"](ctx.twitterRegistrationDialog, $event) || (ctx.twitterRegistrationDialog = $event);
-            return $event;
-          });
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](4, SettingsNotificationComponent_div_4_Template, 31, 2, "div", 4);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.settingsForm);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayProperty"]("visible", ctx.twitterRegistrationDialog);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("modal", true)("closable", true)("resizable", false)("showHeader", true);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.twitterRegistration);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_12__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgModel, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_14__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_14__.Button, primeng_dialog__WEBPACK_IMPORTED_MODULE_15__.DialogModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_15__.Dialog, primeng_inputtext__WEBPACK_IMPORTED_MODULE_16__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_16__.InputText, primeng_message__WEBPACK_IMPORTED_MODULE_17__.MessageModule, primeng_message__WEBPACK_IMPORTED_MODULE_17__.UIMessage, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent, _components_input_text_input_text_component__WEBPACK_IMPORTED_MODULE_4__.InputTextComponent, _components_input_number_input_number_component__WEBPACK_IMPORTED_MODULE_3__.InputNumberComponent],
-      styles: [".notifier-icon[_ngcontent-%COMP%] {\n  margin-left: 0.5rem;\n  position: absolute;\n  height: 1.5rem;\n  width: 1.5rem;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvc2V0dGluZ3Mvbm90aWZpY2F0aW9uL3NldHRpbmdzLW5vdGlmaWNhdGlvbi5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBRTtFQUNFLG1CQUFBO0VBQ0Esa0JBQUE7RUFDQSxjQUFBO0VBQ0EsYUFBQTtBQUNKIiwic291cmNlc0NvbnRlbnQiOlsiICAubm90aWZpZXItaWNvbiB7XHJcbiAgICBtYXJnaW4tbGVmdDogMC41cmVtO1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgaGVpZ2h0OiAxLjVyZW07XHJcbiAgICB3aWR0aDogMS41cmVtO1xyXG4gIH1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function SettingsNotificationComponent_Factory(t) {
+        return new (t || SettingsNotificationComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵdefineComponent"]({
+        type: SettingsNotificationComponent,
+        selectors: [["app-settings-notification"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵStandaloneFeature"]],
+        decls: 5,
+        vars: 7,
+        consts: [[1, "container-lg"], ["header", "Notification settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], ["header", "Twitter registration", 3, "visibleChange", "visible", "modal", "closable", "resizable", "showHeader"], [4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "form-row-notification"], ["severity", "warning", "text", "Passwords and keys are stored in plaintext!", "styleClass", "w-100"], ["severity", "info", "text", "You first need to save before you can test a notification.", "styleClass", "w-100"], [1, "col-12"], [1, "p-tag", "p-tag-rounded", "p-tag-small"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "notify", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "notify", 3, "options"], ["label", "Save", 3, "onClick"], ["src", "assets/notifiers/email.png", "alt", "Mail", "title", "Mail", 1, "notifier-icon"], ["for", "notifyMail", 1, "label"], ["formControlName", "notifyMail", 3, "options"], ["for", "mailServer", 1, "label"], ["formControlName", "mailServer", 3, "validationFeedback"], ["for", "mailFromName", 1, "label"], ["formControlName", "mailFromName", 3, "validationFeedback"], ["for", "mailFrom", 1, "label"], ["formControlName", "mailFrom", 3, "validationFeedback"], ["for", "mailTo", 1, "label"], ["formControlName", "mailTo", 3, "validationFeedback"], ["for", "mailUserName", 1, "label"], ["formControlName", "mailUserName", 3, "validationFeedback"], ["for", "mailPassword", 1, "label"], ["formControlName", "mailPassword", "type", "password", 3, "validationFeedback"], ["for", "mailSubject", 1, "label"], ["formControlName", "mailSubject", 3, "validationFeedback"], ["for", "mailEncryption", 1, "label"], ["formControlName", "mailEncryption", 3, "validationFeedback"], ["for", "mailAuthentication", 1, "label"], ["formControlName", "mailAuthentication", 3, "validationFeedback"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8", "offset-0", "offset-sm-0", "offset-md-4", "offset-lg-4", "form-row-buttons"], ["label", "Test", "styleClass", "p-button-secondary", 3, "onClick"], ["href", "https://twitter.com/", "target", "_blank"], ["src", "assets/notifiers/twitter.png", "alt", "Twitter", "title", "Twitter", 1, "notifier-icon"], ["for", "notifyTwitter", 1, "label"], ["formControlName", "notifyTwitter", 3, "options"], ["for", "twitterKey", 1, "label"], ["formControlName", "twitterKey", 3, "validationFeedback"], ["for", "twitterSecret", 1, "label"], ["formControlName", "twitterSecret", "type", "password", 3, "validationFeedback"], ["label", "Register", "styleClass", "p-button-secondary", 3, "onClick"], ["href", "https://pushalot.com/", "target", "_blank"], ["src", "assets/notifiers/pushalot.png", "alt", "Pushalot", "title", "Pushalot", 1, "notifier-icon"], ["for", "notifyPushalot", 1, "label"], ["formControlName", "notifyPushalot", 3, "options"], ["for", "pushalotApi", 1, "label"], ["formControlName", "pushalotApi", 3, "validationFeedback"], ["href", "https://pushover.net/", "target", "_blank"], ["src", "assets/notifiers/pushover.png", "alt", "Pushover", "title", "Pushover", 1, "notifier-icon"], ["for", "notifyPushover", 1, "label"], ["formControlName", "notifyPushover", 3, "options"], ["for", "pushoverKey", 1, "label"], ["formControlName", "pushoverKey", 3, "validationFeedback"], ["for", "pushoverApi", 1, "label"], ["formControlName", "pushoverApi", 3, "validationFeedback"], ["for", "pushoverDevices", 1, "label"], ["formControlName", "pushoverDevices", 3, "validationFeedback"], ["href", "http://www.growl.info/", "target", "_blank"], ["src", "assets/notifiers/growl.png", "alt", "Growl", "title", "Growl", 1, "notifier-icon"], ["for", "notifyGrowl", 1, "label"], ["formControlName", "notifyGrowl", 3, "options"], ["for", "growlHost", 1, "label"], ["formControlName", "growlHost", 3, "validationFeedback"], ["for", "growlPort", 1, "label"], ["formControlName", "growlPort", 3, "showButtons", "validationFeedback"], ["for", "growlPassword", 1, "label"], ["formControlName", "growlPassword", "type", "password", 3, "validationFeedback"], ["for", "growlPriority", 1, "label"], ["formControlName", "growlPriority", 3, "options", "validationFeedback"], ["href", "https://www.prowlapp.com/", "target", "_blank"], ["src", "assets/notifiers/prowl.png", "alt", "Prowl", "title", "Prowl", 1, "notifier-icon"], ["for", "notifyProwl", 1, "label"], ["formControlName", "notifyProwl", 3, "options"], ["for", "prowlApi", 1, "label"], ["href", "https://prowlapp.com/api_settings.php", "target", "_blank"], ["formControlName", "prowlApi", 3, "validationFeedback"], ["for", "prowlPriority", 1, "label"], ["formControlName", "prowlPriority", 3, "options", "validationFeedback"], ["href", "https://www.pushbullet.com/", "target", "_blank"], ["src", "assets/notifiers/pushbullet.png", "alt", "Pushbullet", "title", "Pushbullet", 1, "notifier-icon"], ["for", "notifyPushbullet", 1, "label"], ["formControlName", "notifyPushbullet", 3, "options"], ["for", "pushbulletApi", 1, "label"], ["formControlName", "pushbulletApi", 3, "validationFeedback"], ["href", "https://telegram.org/", "target", "_blank"], ["src", "assets/notifiers/telegram.png", "alt", "Telegram", "title", "Telegram", 1, "notifier-icon"], ["for", "notifyTelegram", 1, "label"], ["formControlName", "notifyTelegram", 3, "options"], ["for", "telegramBotApi", 1, "label"], ["href", "https://core.telegram.org/bots", "target", "_blank"], ["formControlName", "telegramBotApi", 3, "validationFeedback"], ["for", "telegramChatId", 1, "label"], ["formControlName", "telegramChatId", 3, "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["target", "_blank", 3, "href"], [1, "col-6", "col-6", "col-sm-6", "col-md-4", "col-lg-4"], [1, "p-inputgroup"], ["type", "text", "pInputText", "", "placeholder", "Pin", 3, "ngModelChange", "ngModel"], ["label", "Ok", "styleClass", "p-button-outlined input-addon", 3, "onClick"]],
+        template: function SettingsNotificationComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](2, SettingsNotificationComponent_form_2_Template, 413, 37, "form", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]()();
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](3, "p-dialog", 3);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayListener"]("visibleChange", function SettingsNotificationComponent_Template_p_dialog_visibleChange_3_listener($event) {
+              _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayBindingSet"](ctx.twitterRegistrationDialog, $event) || (ctx.twitterRegistrationDialog = $event);
+              return $event;
+            });
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](4, SettingsNotificationComponent_div_4_Template, 31, 2, "div", 4);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.settingsForm);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtwoWayProperty"]("visible", ctx.twitterRegistrationDialog);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("modal", true)("closable", true)("resizable", false)("showHeader", true);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"]();
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.twitterRegistration);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_12__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__.DefaultValueAccessor, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgModel, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_14__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_14__.Button, primeng_dialog__WEBPACK_IMPORTED_MODULE_15__.DialogModule, primeng_dialog__WEBPACK_IMPORTED_MODULE_15__.Dialog, primeng_inputtext__WEBPACK_IMPORTED_MODULE_16__.InputTextModule, primeng_inputtext__WEBPACK_IMPORTED_MODULE_16__.InputText, primeng_message__WEBPACK_IMPORTED_MODULE_17__.MessageModule, primeng_message__WEBPACK_IMPORTED_MODULE_17__.UIMessage, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent, _components_input_text_input_text_component__WEBPACK_IMPORTED_MODULE_4__.InputTextComponent, _components_input_number_input_number_component__WEBPACK_IMPORTED_MODULE_3__.InputNumberComponent],
+        styles: [".notifier-icon[_ngcontent-%COMP%] {\n  margin-left: 0.5rem;\n  position: absolute;\n  height: 1.5rem;\n  width: 1.5rem;\n}\n/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8uL3NyYy9hcHAvcGFnZXMvc2V0dGluZ3Mvbm90aWZpY2F0aW9uL3NldHRpbmdzLW5vdGlmaWNhdGlvbi5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBRTtFQUNFLG1CQUFBO0VBQ0Esa0JBQUE7RUFDQSxjQUFBO0VBQ0EsYUFBQTtBQUNKIiwic291cmNlc0NvbnRlbnQiOlsiICAubm90aWZpZXItaWNvbiB7XHJcbiAgICBtYXJnaW4tbGVmdDogMC41cmVtO1xyXG4gICAgcG9zaXRpb246IGFic29sdXRlO1xyXG4gICAgaGVpZ2h0OiAxLjVyZW07XHJcbiAgICB3aWR0aDogMS41cmVtO1xyXG4gIH1cclxuIl0sInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return SettingsNotificationComponent;
 })();
@@ -3487,31 +3527,35 @@ let SettingsPostprocessingComponent = /*#__PURE__*/(() => {
       settings.moviePostProcessArgs = _utils_form_utils__WEBPACK_IMPORTED_MODULE_8__.FormUtils.getFormControlValue(this.settingsForm, 'moviePostProcessArgs');
       return settings;
     }
-    static #_ = this.ɵfac = function SettingsPostprocessingComponent_Factory(t) {
-      return new (t || SettingsPostprocessingComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵdefineComponent"]({
-      type: SettingsPostprocessingComponent,
-      selectors: [["app-settings-postprocessing"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵStandaloneFeature"]],
-      decls: 3,
-      vars: 1,
-      consts: [[1, "container-lg"], ["header", "Postprocessing settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12"], [1, "p-tag", "p-tag-rounded", "p-tag-small"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "postProcess", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "postProcess", 3, "options"], ["for", "postProcessIndividual", 1, "label"], ["formControlName", "postProcessIndividual", 3, "options"], ["for", "postProcessUtf8Encoding", 1, "label"], ["formControlName", "postProcessUtf8Encoding", 3, "options"], ["for", "showPostProcessCmd", 1, "label"], ["formControlName", "showPostProcessCmd", 3, "validationFeedback"], ["for", "showPostProcessArgs", 1, "label"], ["formControlName", "showPostProcessArgs", 3, "validationFeedback"], ["for", "moviePostProcessCmd", 1, "label"], ["formControlName", "moviePostProcessCmd", 3, "validationFeedback"], ["for", "moviePostProcessArgs", 1, "label"], ["formControlName", "moviePostProcessArgs", 3, "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
-      template: function SettingsPostprocessingComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](2, SettingsPostprocessingComponent_form_2_Template, 83, 8, "form", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.settingsForm);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_12__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_14__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_14__.Button, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent, _components_input_file_browser_input_file_browser_component__WEBPACK_IMPORTED_MODULE_3__.InputFileBrowserComponent, _components_input_text_input_text_component__WEBPACK_IMPORTED_MODULE_4__.InputTextComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function SettingsPostprocessingComponent_Factory(t) {
+        return new (t || SettingsPostprocessingComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵdefineComponent"]({
+        type: SettingsPostprocessingComponent,
+        selectors: [["app-settings-postprocessing"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵStandaloneFeature"]],
+        decls: 3,
+        vars: 1,
+        consts: [[1, "container-lg"], ["header", "Postprocessing settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12"], [1, "p-tag", "p-tag-rounded", "p-tag-small"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "postProcess", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "postProcess", 3, "options"], ["for", "postProcessIndividual", 1, "label"], ["formControlName", "postProcessIndividual", 3, "options"], ["for", "postProcessUtf8Encoding", 1, "label"], ["formControlName", "postProcessUtf8Encoding", 3, "options"], ["for", "showPostProcessCmd", 1, "label"], ["formControlName", "showPostProcessCmd", 3, "validationFeedback"], ["for", "showPostProcessArgs", 1, "label"], ["formControlName", "showPostProcessArgs", 3, "validationFeedback"], ["for", "moviePostProcessCmd", 1, "label"], ["formControlName", "moviePostProcessCmd", 3, "validationFeedback"], ["for", "moviePostProcessArgs", 1, "label"], ["formControlName", "moviePostProcessArgs", 3, "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
+        template: function SettingsPostprocessingComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](2, SettingsPostprocessingComponent_form_2_Template, 83, 8, "form", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.settingsForm);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_12__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_14__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_14__.Button, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent, _components_input_file_browser_input_file_browser_component__WEBPACK_IMPORTED_MODULE_3__.InputFileBrowserComponent, _components_input_text_input_text_component__WEBPACK_IMPORTED_MODULE_4__.InputTextComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return SettingsPostprocessingComponent;
 })();
@@ -3739,31 +3783,35 @@ let SettingsSkipmappingComponent = /*#__PURE__*/(() => {
       settings.skipMovieMapping = _utils_form_utils__WEBPACK_IMPORTED_MODULE_6__.FormUtils.getFormControlValue(this.settingsForm, 'skipMovieMapping');
       return settings;
     }
-    static #_ = this.ɵfac = function SettingsSkipmappingComponent_Factory(t) {
-      return new (t || SettingsSkipmappingComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdefineComponent"]({
-      type: SettingsSkipmappingComponent,
-      selectors: [["app-settings-skipmapping"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵStandaloneFeature"]],
-      decls: 3,
-      vars: 1,
-      consts: [[1, "container-lg"], ["header", "Skipmapping settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12"], [1, "p-tag", "p-tag-rounded", "p-tag-small"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "skipShowMapping", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "skipShowMapping", 3, "validationFeedback"], ["for", "skipMovieMapping", 1, "label"], ["formControlName", "skipMovieMapping", 3, "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
-      template: function SettingsSkipmappingComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtemplate"](2, SettingsSkipmappingComponent_form_2_Template, 46, 3, "form", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("ngIf", ctx.settingsForm);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_10__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_8__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_8__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_11__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_11__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_12__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_12__.Button, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_multi_text_input_multi_text_component__WEBPACK_IMPORTED_MODULE_2__.InputMultiTextComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function SettingsSkipmappingComponent_Factory(t) {
+        return new (t || SettingsSkipmappingComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdefineComponent"]({
+        type: SettingsSkipmappingComponent,
+        selectors: [["app-settings-skipmapping"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵStandaloneFeature"]],
+        decls: 3,
+        vars: 1,
+        consts: [[1, "container-lg"], ["header", "Skipmapping settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12"], [1, "p-tag", "p-tag-rounded", "p-tag-small"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "skipShowMapping", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "skipShowMapping", 3, "validationFeedback"], ["for", "skipMovieMapping", 1, "label"], ["formControlName", "skipMovieMapping", 3, "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
+        template: function SettingsSkipmappingComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵtemplate"](2, SettingsSkipmappingComponent_form_2_Template, 46, 3, "form", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵelementEnd"]()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵproperty"]("ngIf", ctx.settingsForm);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_10__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_8__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_8__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_8__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_11__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_11__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_12__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_12__.Button, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_multi_text_input_multi_text_component__WEBPACK_IMPORTED_MODULE_2__.InputMultiTextComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return SettingsSkipmappingComponent;
 })();
@@ -4158,31 +4206,35 @@ let SettingsSubliminalComponent = /*#__PURE__*/(() => {
       settings.opensubtitlesApiKey = _utils_form_utils__WEBPACK_IMPORTED_MODULE_8__.FormUtils.getFormControlValue(this.settingsForm, 'opensubtitlesApiKey');
       return settings;
     }
-    static #_ = this.ɵfac = function SettingsSubliminalComponent_Factory(t) {
-      return new (t || SettingsSubliminalComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵdefineComponent"]({
-      type: SettingsSubliminalComponent,
-      selectors: [["app-settings-subliminal"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵStandaloneFeature"]],
-      decls: 3,
-      vars: 1,
-      consts: [[1, "container-lg"], ["header", "Subliminal settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "form-row-notification"], ["severity", "warning", "text", "Passwords and keys are stored in plain text!", "styleClass", "w-100"], [1, "col-12"], [1, "p-tag", "p-tag-rounded", "p-tag-small"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], [1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8", "form-row-switches"], ["formControlName", "showMatchSource", "label", "Source"], ["formControlName", "showMatchQuality", "label", "Quality"], ["formControlName", "showMatchCodec", "label", "Codec"], ["formControlName", "showMatchReleaseGroup", "label", "Group"], ["formControlName", "movieMatchSource", "label", "Source"], ["formControlName", "movieMatchQuality", "label", "Quality"], ["formControlName", "movieMatchCodec", "label", "Codec"], ["formControlName", "movieMatchReleaseGroup", "label", "Group"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8", "form-row-label"], ["formControlName", "subliminalProviders", 3, "options", "multiple"], ["for", "subtitleUtf8Encoding", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "subtitleUtf8Encoding", 3, "options", "validationFeedback"], ["for", "refineVideo", 1, "label"], ["formControlName", "refineVideo", 3, "options", "validationFeedback"], ["for", "omdbApiKey", 1, "label"], ["formControlName", "omdbApiKey", 3, "validationFeedback"], ["for", "manualRefineVideo", 1, "label"], ["formControlName", "manualRefineVideo", 3, "options", "validationFeedback"], ["for", "preferHearingImpaired", 1, "label"], ["formControlName", "preferHearingImpaired", 3, "options", "validationFeedback"], ["for", "antiCaptchaClass", 1, "label"], ["formControlName", "antiCaptchaClass", 3, "options", "validationFeedback"], ["for", "antiCaptchaClientKey", 1, "label"], ["formControlName", "antiCaptchaClientKey", 3, "validationFeedback"], ["for", "addic7edUserName", 1, "label"], ["formControlName", "addic7edUserName", 3, "validationFeedback"], ["for", "addic7edPassword", 1, "label"], ["formControlName", "addic7edPassword", "type", "password", 3, "validationFeedback"], ["for", "addic7edUserId", 1, "label"], ["formControlName", "addic7edUserId", 3, "validationFeedback"], ["for", "opensubtitlesUserName", 1, "label"], ["formControlName", "opensubtitlesUserName", 3, "validationFeedback"], ["for", "opensubtitlesPassword", 1, "label"], ["formControlName", "opensubtitlesPassword", "type", "password", 3, "validationFeedback"], ["for", "opensubtitlesApiKey", 1, "label"], ["formControlName", "opensubtitlesApiKey", 3, "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
-      template: function SettingsSubliminalComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](2, SettingsSubliminalComponent_form_2_Template, 193, 21, "form", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.settingsForm);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_12__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.Panel, primeng_message__WEBPACK_IMPORTED_MODULE_14__.MessageModule, primeng_message__WEBPACK_IMPORTED_MODULE_14__.UIMessage, primeng_button__WEBPACK_IMPORTED_MODULE_15__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_15__.Button, primeng_listbox__WEBPACK_IMPORTED_MODULE_16__.ListboxModule, primeng_listbox__WEBPACK_IMPORTED_MODULE_16__.Listbox, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_switch_input_switch_component__WEBPACK_IMPORTED_MODULE_3__.InputSwitchComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent, _components_input_text_input_text_component__WEBPACK_IMPORTED_MODULE_4__.InputTextComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function SettingsSubliminalComponent_Factory(t) {
+        return new (t || SettingsSubliminalComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵdefineComponent"]({
+        type: SettingsSubliminalComponent,
+        selectors: [["app-settings-subliminal"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵStandaloneFeature"]],
+        decls: 3,
+        vars: 1,
+        consts: [[1, "container-lg"], ["header", "Subliminal settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "form-row-notification"], ["severity", "warning", "text", "Passwords and keys are stored in plain text!", "styleClass", "w-100"], [1, "col-12"], [1, "p-tag", "p-tag-rounded", "p-tag-small"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], [1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8", "form-row-switches"], ["formControlName", "showMatchSource", "label", "Source"], ["formControlName", "showMatchQuality", "label", "Quality"], ["formControlName", "showMatchCodec", "label", "Codec"], ["formControlName", "showMatchReleaseGroup", "label", "Group"], ["formControlName", "movieMatchSource", "label", "Source"], ["formControlName", "movieMatchQuality", "label", "Quality"], ["formControlName", "movieMatchCodec", "label", "Codec"], ["formControlName", "movieMatchReleaseGroup", "label", "Group"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8", "form-row-label"], ["formControlName", "subliminalProviders", 3, "options", "multiple"], ["for", "subtitleUtf8Encoding", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "subtitleUtf8Encoding", 3, "options", "validationFeedback"], ["for", "refineVideo", 1, "label"], ["formControlName", "refineVideo", 3, "options", "validationFeedback"], ["for", "omdbApiKey", 1, "label"], ["formControlName", "omdbApiKey", 3, "validationFeedback"], ["for", "manualRefineVideo", 1, "label"], ["formControlName", "manualRefineVideo", 3, "options", "validationFeedback"], ["for", "preferHearingImpaired", 1, "label"], ["formControlName", "preferHearingImpaired", 3, "options", "validationFeedback"], ["for", "antiCaptchaClass", 1, "label"], ["formControlName", "antiCaptchaClass", 3, "options", "validationFeedback"], ["for", "antiCaptchaClientKey", 1, "label"], ["formControlName", "antiCaptchaClientKey", 3, "validationFeedback"], ["for", "addic7edUserName", 1, "label"], ["formControlName", "addic7edUserName", 3, "validationFeedback"], ["for", "addic7edPassword", 1, "label"], ["formControlName", "addic7edPassword", "type", "password", 3, "validationFeedback"], ["for", "addic7edUserId", 1, "label"], ["formControlName", "addic7edUserId", 3, "validationFeedback"], ["for", "opensubtitlesUserName", 1, "label"], ["formControlName", "opensubtitlesUserName", 3, "validationFeedback"], ["for", "opensubtitlesPassword", 1, "label"], ["formControlName", "opensubtitlesPassword", "type", "password", 3, "validationFeedback"], ["for", "opensubtitlesApiKey", 1, "label"], ["formControlName", "opensubtitlesApiKey", 3, "validationFeedback"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
+        template: function SettingsSubliminalComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵtemplate"](2, SettingsSubliminalComponent_form_2_Template, 193, 21, "form", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵelementEnd"]()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_9__["ɵɵproperty"]("ngIf", ctx.settingsForm);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_12__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_10__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_13__.Panel, primeng_message__WEBPACK_IMPORTED_MODULE_14__.MessageModule, primeng_message__WEBPACK_IMPORTED_MODULE_14__.UIMessage, primeng_button__WEBPACK_IMPORTED_MODULE_15__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_15__.Button, primeng_listbox__WEBPACK_IMPORTED_MODULE_16__.ListboxModule, primeng_listbox__WEBPACK_IMPORTED_MODULE_16__.Listbox, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_switch_input_switch_component__WEBPACK_IMPORTED_MODULE_3__.InputSwitchComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent, _components_input_text_input_text_component__WEBPACK_IMPORTED_MODULE_4__.InputTextComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return SettingsSubliminalComponent;
 })();
@@ -4414,31 +4466,35 @@ let SettingsWebserverComponent = /*#__PURE__*/(() => {
       settings.launchBrowser = _utils_form_utils__WEBPACK_IMPORTED_MODULE_8__.FormUtils.getFormControlValue(this.settingsForm, 'launchBrowser');
       return settings;
     }
-    static #_ = this.ɵfac = function SettingsWebserverComponent_Factory(t) {
-      return new (t || SettingsWebserverComponent)();
-    };
-    static #_2 = this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdefineComponent"]({
-      type: SettingsWebserverComponent,
-      selectors: [["app-settings-webserver"]],
-      standalone: true,
-      features: [_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵStandaloneFeature"]],
-      decls: 3,
-      vars: 1,
-      consts: [[1, "container-lg"], ["header", "Webserver settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "form-row-notification"], ["severity", "warning", "text", "Changing webserver settings will result in no automatic reload! You'll need to change the url manually in order to reload correctly!", "styleClass", "w-100"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "webServerIp", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "webServerIp", "mask", "IP", 3, "dropSpecialCharacters", "validationFeedback"], ["for", "webServerPort", 1, "label"], ["formControlName", "webServerPort", 3, "showButtons", "validationFeedback"], ["for", "webRoot", 1, "label"], ["formControlName", "webRoot", 3, "keyUpEvent", "validationFeedback"], ["for", "userName", 1, "label"], ["formControlName", "userName", 3, "validationFeedback"], ["for", "password", 1, "label"], ["formControlName", "password", "type", "password", 3, "validationFeedback"], ["for", "launchBrowser", 1, "label"], ["formControlName", "launchBrowser", 3, "options"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
-      template: function SettingsWebserverComponent_Template(rf, ctx) {
-        if (rf & 1) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵtemplate"](2, SettingsWebserverComponent_form_2_Template, 73, 9, "form", 2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementEnd"]()();
-        }
-        if (rf & 2) {
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵadvance"](2);
-          _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵproperty"]("ngIf", ctx.settingsForm);
-        }
-      },
-      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_13__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_11__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_11__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_15__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_15__.Button, primeng_message__WEBPACK_IMPORTED_MODULE_16__.MessageModule, primeng_message__WEBPACK_IMPORTED_MODULE_16__.UIMessage, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_text_input_text_component__WEBPACK_IMPORTED_MODULE_4__.InputTextComponent, _components_input_number_input_number_component__WEBPACK_IMPORTED_MODULE_3__.InputNumberComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent],
-      styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
-    });
+    static {
+      this.ɵfac = function SettingsWebserverComponent_Factory(t) {
+        return new (t || SettingsWebserverComponent)();
+      };
+    }
+    static {
+      this.ɵcmp = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵdefineComponent"]({
+        type: SettingsWebserverComponent,
+        selectors: [["app-settings-webserver"]],
+        standalone: true,
+        features: [_angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵStandaloneFeature"]],
+        decls: 3,
+        vars: 1,
+        consts: [[1, "container-lg"], ["header", "Webserver settings"], ["class", "form", 3, "formGroup", 4, "ngIf"], [1, "form", 3, "formGroup"], [1, "row", "form-row"], [1, "col-12", "form-row-notification"], ["severity", "warning", "text", "Changing webserver settings will result in no automatic reload! You'll need to change the url manually in order to reload correctly!", "styleClass", "w-100"], [1, "col-12", "col-sm-12", "col-md-4", "col-lg-4", "form-row-label"], ["for", "webServerIp", 1, "label"], [1, "col-12", "col-sm-12", "col-md-8", "col-lg-8"], ["formControlName", "webServerIp", "mask", "IP", 3, "dropSpecialCharacters", "validationFeedback"], ["for", "webServerPort", 1, "label"], ["formControlName", "webServerPort", 3, "showButtons", "validationFeedback"], ["for", "webRoot", 1, "label"], ["formControlName", "webRoot", 3, "keyUpEvent", "validationFeedback"], ["for", "userName", 1, "label"], ["formControlName", "userName", 3, "validationFeedback"], ["for", "password", 1, "label"], ["formControlName", "password", "type", "password", 3, "validationFeedback"], ["for", "launchBrowser", 1, "label"], ["formControlName", "launchBrowser", 3, "options"], [1, "row", "button-row"], [1, "col-12", "col-sm-12", "col-md-12", "col-lg-10"], ["label", "Save", 3, "onClick"]],
+        template: function SettingsWebserverComponent_Template(rf, ctx) {
+          if (rf & 1) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementStart"](0, "div", 0)(1, "p-panel", 1);
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵtemplate"](2, SettingsWebserverComponent_form_2_Template, 73, 9, "form", 2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵelementEnd"]()();
+          }
+          if (rf & 2) {
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵadvance"](2);
+            _angular_core__WEBPACK_IMPORTED_MODULE_10__["ɵɵproperty"]("ngIf", ctx.settingsForm);
+          }
+        },
+        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_13__.NgIf, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.FormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_11__["ɵNgNoValidate"], _angular_forms__WEBPACK_IMPORTED_MODULE_11__.NgControlStatus, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.NgControlStatusGroup, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.ReactiveFormsModule, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.FormGroupDirective, _angular_forms__WEBPACK_IMPORTED_MODULE_11__.FormControlName, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.PanelModule, primeng_panel__WEBPACK_IMPORTED_MODULE_14__.Panel, primeng_button__WEBPACK_IMPORTED_MODULE_15__.ButtonModule, primeng_button__WEBPACK_IMPORTED_MODULE_15__.Button, primeng_message__WEBPACK_IMPORTED_MODULE_16__.MessageModule, primeng_message__WEBPACK_IMPORTED_MODULE_16__.UIMessage, _components_icon_dropdown_icon_dropdown_component__WEBPACK_IMPORTED_MODULE_1__.IconDropdownComponent, _components_input_text_input_text_component__WEBPACK_IMPORTED_MODULE_4__.InputTextComponent, _components_input_number_input_number_component__WEBPACK_IMPORTED_MODULE_3__.InputNumberComponent, _components_input_dropdown_input_dropdown_component__WEBPACK_IMPORTED_MODULE_2__.InputDropdownComponent],
+        styles: ["/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsInNvdXJjZVJvb3QiOiIifQ== */"]
+      });
+    }
   }
   return SettingsWebserverComponent;
 })();
@@ -4471,17 +4527,21 @@ let FileSystemService = /*#__PURE__*/(() => {
       const url = `${this.URL}?path=${path}&includeFiles=${includeFiles}&includeFolders=${includeFolders}`;
       return this.httpClient.get(url, this.options);
     }
-    static #_ = this.ɵfac = /*@__PURE__*/(() => {
-      let ɵFileSystemService_BaseFactory;
-      return function FileSystemService_Factory(t) {
-        return (ɵFileSystemService_BaseFactory || (ɵFileSystemService_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵgetInheritedFactory"](FileSystemService)))(t || FileSystemService);
-      };
-    })();
-    static #_2 = this.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineInjectable"]({
-      token: FileSystemService,
-      factory: FileSystemService.ɵfac,
-      providedIn: 'root'
-    });
+    static {
+      this.ɵfac = /*@__PURE__*/(() => {
+        let ɵFileSystemService_BaseFactory;
+        return function FileSystemService_Factory(t) {
+          return (ɵFileSystemService_BaseFactory || (ɵFileSystemService_BaseFactory = _angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵgetInheritedFactory"](FileSystemService)))(t || FileSystemService);
+        };
+      })();
+    }
+    static {
+      this.ɵprov = /*@__PURE__*/_angular_core__WEBPACK_IMPORTED_MODULE_2__["ɵɵdefineInjectable"]({
+        token: FileSystemService,
+        factory: FileSystemService.ɵfac,
+        providedIn: 'root'
+      });
+    }
   }
   return FileSystemService;
 })();
@@ -6668,4 +6728,4 @@ let MessageModule = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=308.872aba3ccf40f4ed.js.map
+//# sourceMappingURL=308.942aea0e66ec5dc2.js.map
