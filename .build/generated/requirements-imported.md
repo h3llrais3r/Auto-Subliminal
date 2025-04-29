@@ -109,7 +109,7 @@ tailer==0.4.1
 # autosubliminal\core\show.py: 7,8,9,10,11
 tvdb_api==3.0.0
 # autosubliminal\core\indexer.py: 22
-Unidecode==1.3.8
+Unidecode==1.4.0
 # autosubliminal\subsynchronizer.py: 26
 webrtcvad-wheels==2.0.14
 # autosubliminal\__init__.py: 16
