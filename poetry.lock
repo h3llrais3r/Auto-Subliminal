@@ -2660,14 +2660,14 @@ types-urllib3 = "*"
 
 [[package]]
 name = "types-setuptools"
-version = "80.0.0.20250429"
+version = "80.1.0.20250503"
 description = "Typing stubs for setuptools"
 category = "dev"
 optional = false
 python-versions = ">=3.9"
 files = [
-    {file = "types_setuptools-80.0.0.20250429-py3-none-any.whl", hash = "sha256:9bbcdcea88d1fda4b0f1371488333f606c78a8b10154a42530ed926ecf3242cb"},
-    {file = "types_setuptools-80.0.0.20250429.tar.gz", hash = "sha256:a4de44f1110f531e7f9453d72999437a1caa6052609e2c7c859dd6613ab0d593"},
+    {file = "types_setuptools-80.1.0.20250503-py3-none-any.whl", hash = "sha256:b25bcbfeebae06bc4d2d09231b0c0622e95bdbb36df070cfe40b925fcef97dd3"},
+    {file = "types_setuptools-80.1.0.20250503.tar.gz", hash = "sha256:3cbdbe42c12e1d9179e6e87644a2cf176259411b5a3cc1d0fb0d824dc711d9ed"},
 ]
 
 [package.dependencies]
@@ -3180,4 +3180,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9.1,<4"
-content-hash = "30e76267f1b4ba90c5853691718193cee6e95737b816fdcb661bd731be00227e"
+content-hash = "44a51ea93784dfdaf32a6c2b2a4c8c2111f03d8b04dae7e2a8097d7dd70e94a8"
