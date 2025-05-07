@@ -35,6 +35,7 @@ def read_config(check_upgrade: bool = False) -> None:
         print('ERROR: No valid configuration file found. Using default values instead.')
         print('***********************************************************************')
         cfg = _create_config_parser()
+        write_config()
 
     # Section 'general'
     if cfg.has_section('general'):

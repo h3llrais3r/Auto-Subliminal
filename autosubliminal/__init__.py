@@ -19,7 +19,7 @@ from autosubliminal.core.indexer import MovieIndexer, ShowIndexer
 from autosubliminal.core.item import WantedItem
 from autosubliminal.core.scheduler import Scheduler
 from autosubliminal.core.websocket import WebSocketBroadCaster
-from autosubliminal.version import RELEASE_VERSION
+from autosubliminal.version import CONFIG_VERSION, DB_VERSION, RELEASE_VERSION
 
 # Startup
 EXECUTABLE: str = ''
@@ -61,11 +61,11 @@ MOVIEINDEXER: MovieIndexer
 # Db
 DBFILE = 'database.db'
 DBTIMESTAMPFORMAT = '%Y-%m-%d %H:%M:%S'
-DBVERSION: int = 1
+DBVERSION: int = DB_VERSION
 
 # Config
 CONFIGFILE: str = 'config.properties'
-CONFIGVERSION: int = 1
+CONFIGVERSION: int = CONFIG_VERSION
 CONFIGUPGRADED: bool = False
 
 # General config section
