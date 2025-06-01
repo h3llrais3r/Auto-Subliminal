@@ -77,6 +77,7 @@ class _GeneralApi(RestResource):
             'manual_search_with_scoring': autosubliminal.MANUALSEARCHWITHSCORING,
             'scan_disk_interval': autosubliminal.SCANDISKINTERVAL,
             'scan_disk_at_startup': autosubliminal.SCANDISKATSTARTUP,
+            'scan_disk_include_all_items': autosubliminal.SCANDISKINCLUDEALLITEMS,
             'check_sub_interval': autosubliminal.CHECKSUBINTERVAL,
             'check_sub_at_startup': autosubliminal.CHECKSUBATSTARTUP,
             'check_sub_deadline': autosubliminal.CHECKSUBDEADLINE,
@@ -122,6 +123,8 @@ class _GeneralApi(RestResource):
                 autosubliminal.SCANDISKINTERVAL = input_dict['scan_disk_interval']
             if 'scan_disk_at_startup' in input_dict:
                 autosubliminal.SCANDISKATSTARTUP = input_dict['scan_disk_at_startup']
+            if 'scan_disk_include_all_items' in input_dict:
+                autosubliminal.SCANDISKINCLUDEALLITEMS = input_dict['scan_disk_include_all_items']
             if 'check_sub_interval' in input_dict:
                 autosubliminal.CHECKSUBINTERVAL = input_dict['check_sub_interval']
             if 'check_sub_at_startup' in input_dict:

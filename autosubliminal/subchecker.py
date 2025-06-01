@@ -85,9 +85,28 @@ class SubChecker(ScheduledProcess):
                 # Clear discarded providers for each new wanted_item
                 provider_pool.discarded_providers.clear()
 
-                # Check subtitles for each language
-                # Loop over cloned list so we can remove the language directly when downloaded
+                # Check subtitles for each language or postprocess when all languages are already available
                 languages = wanted_item.languages
+
+                # Handle wanted items that already have all subtitles available
+                if not languages:
+                    # Post process only as all subtitles are already available
+                    processed = PostProcessor(wanted_item).run()
+
+                    # Remove wanted item if processed
+                    if processed:
+                        delete_wanted_item_in_queue(wanted_item)
+                        log.debug('Removed item from the wanted queue: %s', wanted_item)
+                        db.delete_wanted_item(wanted_item.id)
+                        log.debug('Removed %s from wanted_items database', wanted_item.video_path)
+                        send_websocket_event(WANTED_ITEM_DELETE, data=wanted_item.to_dict(camelize))
+                        send_websocket_notification('Post processed %s.' % (wanted_item.long_name), severity='success')
+                    else:
+                        send_websocket_notification(
+                            'Unable to handle post processing! Please check the log file!', severity='error'
+                        )
+
+                # Loop over cloned list so we can remove the language directly when downloaded
                 for lang in languages[:]:
                     # Search the best subtitle with the minimal score
                     try:

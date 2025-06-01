@@ -72,6 +72,9 @@ def read_config(check_upgrade: bool = False) -> None:
         if cfg.has_option('general', 'scandiskatstartup'):
             autosubliminal.SCANDISKATSTARTUP = cfg.getboolean('general', 'scandiskatstartup')
 
+        if cfg.has_option('general', 'scandiskincludeallitems'):
+            autosubliminal.SCANDISKINCLUDEALLITEMS = cfg.getboolean('general', 'scandiskincludeallitems')
+
         if cfg.has_option('general', 'checksubinterval'):
             autosubliminal.CHECKSUBINTERVAL = cfg.getint('general', 'checksubinterval')
             if autosubliminal.CHECKSUBINTERVAL < autosubliminal.CHECKSUBINTERVALDEFAULT:
@@ -623,6 +626,7 @@ def write_config_general_section() -> None:
     cfg.set(section, 'manualsearchwithscoring', str(autosubliminal.MANUALSEARCHWITHSCORING))
     cfg.set(section, 'scandiskinterval', str(autosubliminal.SCANDISKINTERVAL))
     cfg.set(section, 'scandiskatstartup', str(autosubliminal.SCANDISKATSTARTUP))
+    cfg.set(section, 'scandiskincludeallitems', str(autosubliminal.SCANDISKINCLUDEALLITEMS))
     cfg.set(section, 'checksubinterval', str(autosubliminal.CHECKSUBINTERVAL))
     cfg.set(section, 'checksubatstartup', str(autosubliminal.CHECKSUBATSTARTUP))
     cfg.set(section, 'checksubdeadline', str(autosubliminal.CHECKSUBDEADLINE))

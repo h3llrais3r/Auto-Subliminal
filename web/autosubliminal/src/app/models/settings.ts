@@ -6,6 +6,7 @@ export class GeneralSettings {
   manualSearchWithScoring: boolean;
   scanDiskInterval: number;
   scanDiskAtStartup: boolean;
+  scanDiskIncludeAllItems: boolean;
   checkSubInterval: number;
   checkSubAtStartup: boolean;
   checkSubDeadline: number;

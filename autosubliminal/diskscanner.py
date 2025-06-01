@@ -134,8 +134,8 @@ class DiskScanner(ScheduledProcess):
                     wanted_languages=wanted_languages,
                 )
 
-                # Process the video file if there are missing subtitles
-                if len(languages) > 0:
+                # Process the video file if there are missing subtitles (or when all items should be included)
+                if len(languages) > 0 or autosubliminal.SCANDISKINCLUDEALLITEMS:
                     # Add missing languages and store in wanted_items database
                     wanted_item.languages = languages
                     self.wanted_db.set_wanted_item(wanted_item)

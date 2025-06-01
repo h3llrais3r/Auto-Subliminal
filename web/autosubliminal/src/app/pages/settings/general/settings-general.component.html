@@ -90,6 +90,22 @@
           <app-input-dropdown formControlName="scanDiskAtStartup" [options]="enabledOrDisabled"></app-input-dropdown>
         </div>
       </div>
+      <!-- Scan disk include all items -->
+      <div class="row form-row">
+        <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">
+          <label for="scanDiskIncludeAllItems" class="label">Disk scan include all items</label>
+          <app-icon-dropdown>
+            <li>When enabled, the ScanDisk thread will include all video items in the list of wanted items.</li>
+            <li>If not, it will only include the video items that have missing subtitles.</li>
+            <li>When enabled, the CheckSub thread can post process video files that already have all wanted subtitles (embeddded or external).</li>
+            <li>ATTENTION: Do not enable when any of your video paths is pointing to a library video path!</li>
+            <li>ATTENTION: Only enable when using dedicated video paths for subtitle checking!</li>
+          </app-icon-dropdown>
+        </div>
+        <div class="col-12 col-sm-12 col-md-8 col-lg-8">
+          <app-input-dropdown formControlName="scanDiskIncludeAllItems" [options]="enabledOrDisabled"></app-input-dropdown>
+        </div>
+      </div>
       <!-- Check sub interval -->
       <div class="row form-row">
         <div class="col-12 col-sm-12 col-md-4 col-lg-4 form-row-label">

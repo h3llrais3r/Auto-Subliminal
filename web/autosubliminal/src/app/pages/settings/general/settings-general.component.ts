@@ -109,6 +109,7 @@ export class SettingsGeneralComponent implements OnInit {
       manualSearchWithScoring: [generalSettings.manualSearchWithScoring, [Validators.required]],
       scanDiskInterval: [generalSettings.scanDiskInterval, [Validators.required]],
       scanDiskAtStartup: [generalSettings.scanDiskAtStartup, [Validators.required]],
+      scanDiskIncludeAllItems: [generalSettings.scanDiskIncludeAllItems, [Validators.required]],
       checkSubInterval: [generalSettings.checkSubInterval, [Validators.required]],
       checkSubAtStartup: [generalSettings.checkSubAtStartup, [Validators.required]],
       checkSubDeadline: [generalSettings.checkSubDeadline, [Validators.required]],
@@ -151,6 +152,7 @@ export class SettingsGeneralComponent implements OnInit {
     settings.manualSearchWithScoring = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'manualSearchWithScoring');
     settings.scanDiskInterval = FormUtils.getFormControlValue<number>(this.settingsForm, 'scanDiskInterval');
     settings.scanDiskAtStartup = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'scanDiskAtStartup');
+    settings.scanDiskIncludeAllItems = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'scanDiskIncludeAllItems');
     settings.checkSubInterval = FormUtils.getFormControlValue<number>(this.settingsForm, 'checkSubInterval');
     settings.checkSubAtStartup = FormUtils.getFormControlValue<boolean>(this.settingsForm, 'checkSubAtStartup');
     settings.checkSubDeadline = FormUtils.getFormControlValue<number>(this.settingsForm, 'checkSubDeadline');
