@@ -21,5 +21,6 @@ export function getImdbUrl(imdbId: string): string {
 }
 
 export function getPlayVideoUrl(filePath: string, fileName: string): string {
-  return `playvideo://${filePath}${appSettings.pathSeparator}${fileName}`;
+  const path = `${filePath}${appSettings.pathSeparator}${fileName}`;
+  return `playvideo://${encodeURIComponent(path)}`;
 }

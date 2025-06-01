@@ -1816,7 +1816,8 @@ function getImdbUrl(imdbId) {
   return getDereferUrl(`${_app_settings_service__WEBPACK_IMPORTED_MODULE_0__.appSettings.imdbUrl}${imdbId}`);
 }
 function getPlayVideoUrl(filePath, fileName) {
-  return `playvideo://${filePath}${_app_settings_service__WEBPACK_IMPORTED_MODULE_0__.appSettings.pathSeparator}${fileName}`;
+  const path = `${filePath}${_app_settings_service__WEBPACK_IMPORTED_MODULE_0__.appSettings.pathSeparator}${fileName}`;
+  return `playvideo://${encodeURIComponent(path)}`;
 }
 
 /***/ }),
@@ -11020,4 +11021,4 @@ let ProgressBarModule = /*#__PURE__*/(() => {
 /***/ })
 
 }]);
-//# sourceMappingURL=499.dca776752b639562.js.map
+//# sourceMappingURL=499.b2f9c6989980456f.js.map
