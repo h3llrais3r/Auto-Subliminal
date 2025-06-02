@@ -6,6 +6,7 @@ import { Scheduler } from './scheduler';
 import { SystemUpdate } from './systemupdate';
 
 export enum SystemWebSocketServerEventType {
+  KEEP_ALIVE = 'KEEP_ALIVE',
   SYSTEM_START = 'SYSTEM_START',
   SYSTEM_RESTART = 'SYSTEM_RESTART',
   SYSTEM_SHUTDOWN = 'SYSTEM_SHUTDOWN',
@@ -22,7 +23,7 @@ export class SystemWebSocketServerEvent {
   type = 'EVENT';
   event: {
     type: SystemWebSocketServerEventType;
-    data: SystemWebSocketServerEventData;
+    data?: SystemWebSocketServerEventData;
   };
 
   constructor(obj: any) {

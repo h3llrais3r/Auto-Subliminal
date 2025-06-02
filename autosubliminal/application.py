@@ -16,7 +16,12 @@ from ws4py.server.cherrypyserver import WebSocketPlugin, WebSocketTool
 
 import autosubliminal
 from autosubliminal.core.scheduler import Scheduler
-from autosubliminal.core.websocket import WebSocketBroadCaster, WebSocketHandler, WebSocketLogHandler
+from autosubliminal.core.websocket import (
+    WebSocketBroadCaster,
+    WebSocketHandler,
+    WebSocketKeepAliveBroadCaster,
+    WebSocketLogHandler,
+)
 from autosubliminal.diskscanner import DiskScanner
 from autosubliminal.libraryscanner import LibraryScanner
 from autosubliminal.server.root import AppRoot, Root
@@ -229,8 +234,9 @@ def start() -> None:
         'LibraryScanner', LibraryScanner(), autosubliminal.SCANLIBRARYINTERVAL, active=autosubliminal.LIBRARYMODE
     )
 
-    # Start websocket thread
+    # Start websocket threads
     autosubliminal.WEBSOCKETBROADCASTER = WebSocketBroadCaster(name='WebSocketBroadCaster')
+    autosubliminal.WEBSOCKETKEEPALIVEBROADCASTER = WebSocketKeepAliveBroadCaster(name='WebSocketKeepAliveBroadCaster')
 
     # Send the start event trough websocket
     send_websocket_event(SYSTEM_START)

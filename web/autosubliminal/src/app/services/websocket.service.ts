@@ -41,6 +41,8 @@ export class WebSocketService {
         if (serverMessage.type === 'EVENT') {
           const serverEvent = serverMessage as SystemWebSocketServerEvent;
           switch (serverEvent.event.type) {
+            case SystemWebSocketServerEventType.KEEP_ALIVE:
+              break; // do nothing, just keep alive
             case SystemWebSocketServerEventType.SYSTEM_START:
               this.systemEventService.notifySystemStart();
               break;

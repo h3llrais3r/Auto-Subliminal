@@ -2,6 +2,7 @@
 
 import codecs
 import logging
+import time
 from typing import cast
 
 import cherrypy
@@ -104,6 +105,19 @@ class WebSocketBroadCaster(Runner):
             log.debug('Broadcasting websocket message: %r', message)
             # The message on the websocket queue is a dict, so convert it to a json string
             cherrypy.engine.publish('websocket-broadcast', to_json(message))
+
+
+class WebSocketKeepAliveBroadCaster(Runner):
+    """
+    WebSocket broadcaster class for broadcasting keep alive message through the websocket system.
+    This is to prevent the websocket connection from becoming idle and closing.
+    """
+
+    def run(self) -> None:
+        # Send keep alive message
+        keep_alive_event = {'type': 'EVENT', 'event': {'type': 'KEEP_ALIVE'}}
+        cherrypy.engine.publish('websocket-broadcast', to_json(keep_alive_event))
+        time.sleep(30)
 
 
 class WebSocketLogHandler(WebSocket):

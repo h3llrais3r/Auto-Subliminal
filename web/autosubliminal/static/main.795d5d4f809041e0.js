@@ -1262,6 +1262,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 // System websocket event received from server
 var SystemWebSocketServerEventType = /*#__PURE__*/function (SystemWebSocketServerEventType) {
+  SystemWebSocketServerEventType["KEEP_ALIVE"] = "KEEP_ALIVE";
   SystemWebSocketServerEventType["SYSTEM_START"] = "SYSTEM_START";
   SystemWebSocketServerEventType["SYSTEM_RESTART"] = "SYSTEM_RESTART";
   SystemWebSocketServerEventType["SYSTEM_SHUTDOWN"] = "SYSTEM_SHUTDOWN";
@@ -1731,6 +1732,9 @@ let WebSocketService = /*#__PURE__*/(() => {
           if (serverMessage.type === 'EVENT') {
             const serverEvent = serverMessage;
             switch (serverEvent.event.type) {
+              case _models_websocket__WEBPACK_IMPORTED_MODULE_4__.SystemWebSocketServerEventType.KEEP_ALIVE:
+                break;
+              // do nothing, just keep alive
               case _models_websocket__WEBPACK_IMPORTED_MODULE_4__.SystemWebSocketServerEventType.SYSTEM_START:
                 this.systemEventService.notifySystemStart();
                 break;
@@ -108927,4 +108931,4 @@ function __rewriteRelativeImportExtension(path, preserveJsx) {
 /******/ var __webpack_exports__ = (__webpack_exec__(4429));
 /******/ }
 ]);
-//# sourceMappingURL=main.31168d1842d8f616.js.map
+//# sourceMappingURL=main.795d5d4f809041e0.js.map

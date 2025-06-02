@@ -18,7 +18,7 @@ from ws4py.server.cherrypyserver import WebSocketPlugin
 from autosubliminal.core.indexer import MovieIndexer, ShowIndexer
 from autosubliminal.core.item import WantedItem
 from autosubliminal.core.scheduler import Scheduler
-from autosubliminal.core.websocket import WebSocketBroadCaster
+from autosubliminal.core.websocket import WebSocketBroadCaster, WebSocketKeepAliveBroadCaster
 from autosubliminal.version import CONFIG_VERSION, DB_VERSION, RELEASE_VERSION
 
 # Startup
@@ -42,6 +42,7 @@ WANTEDQUEUELOCK: bool = False
 WEBSOCKETPLUGIN: WebSocketPlugin = None
 WEBSOCKETMESSAGEQUEUE: List[Any] = []
 WEBSOCKETBROADCASTER: WebSocketBroadCaster = None
+WEBSOCKETKEEPALIVEBROADCASTER: WebSocketKeepAliveBroadCaster = None
 SCHEDULERS: Dict[str, Scheduler] = {}
 SCANDISK: Scheduler = None
 SCANLIBRARY: Scheduler = None
