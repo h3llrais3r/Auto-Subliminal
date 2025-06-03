@@ -13,7 +13,7 @@
 # autosubliminal\util\language.py: 5,6
 babelfish==0.6.1
 # autosubliminal\application.py: 12,13
-# autosubliminal\core\websocket.py: 7
+# autosubliminal\core\websocket.py: 8
 # autosubliminal\server\api\items.py: 5
 # autosubliminal\server\api\logs.py: 7
 # autosubliminal\server\api\movies.py: 7
@@ -43,7 +43,7 @@ ffsubsync==0.4.29
 GitPython==3.1.44
 # autosubliminal\notifiers\growl.py: 7
 gntp==1.0.3
-# autosubliminal\__init__.py: 284
+# autosubliminal\__init__.py: 286
 # autosubliminal\fileprocessor.py: 8
 # autosubliminal\parsers\guessit\__init__.py: 3
 # autosubliminal\parsers\guessit\rules.py: 5,6,7
@@ -54,8 +54,8 @@ guessit==3.8.0
 # autosubliminal\core\movie.py: 8
 imdbpie==5.6.4.dev0
 # autosubliminal\util\json.py: 6
-jsonpickle==4.1.0
-# autosubliminal\__init__.py: 377,378
+jsonpickle==4.1.1
+# autosubliminal\__init__.py: 379,380
 # autosubliminal\util\filesystem.py: 10
 langdetect==1.0.9
 # autosubliminal\versionchecker.py: 8
@@ -83,11 +83,11 @@ rebulk==3.2.0
 requests==2.32.3
 # autosubliminal\server\api\settings.py: 8
 requests-oauthlib==2.0.0
-# autosubliminal\core\websocket.py: 9
+# autosubliminal\core\websocket.py: 10
 schema==0.7.7
 # autosubliminal\__init__.py: 15
 stevedore==5.3.0
-# autosubliminal\__init__.py: 299,331,332,333
+# autosubliminal\__init__.py: 301,333,334,335
 # autosubliminal\core\item.py: 11
 # autosubliminal\providers\addic7ed_custom.py: 12,13,14,15,16,17,18,19,20
 # autosubliminal\providers\exceptions.py: 3
@@ -103,7 +103,7 @@ stevedore==5.3.0
 # autosubliminal\subdownloader.py: 6
 # autosubliminal\util\filesystem.py: 12
 subliminal==2.2.1
-# autosubliminal\core\websocket.py: 8
+# autosubliminal\core\websocket.py: 9
 tailer==0.4.1
 # autosubliminal\core\indexer.py: 12,13,14,15,16,17,18,19,20,21
 # autosubliminal\core\show.py: 7,8,9,10,11
@@ -114,6 +114,6 @@ Unidecode==1.4.0
 webrtcvad-wheels==2.0.14
 # autosubliminal\__init__.py: 16
 # autosubliminal\application.py: 14,15
-# autosubliminal\core\websocket.py: 10,11
+# autosubliminal\core\websocket.py: 11,12
 ws4py==0.6.0
 ```
