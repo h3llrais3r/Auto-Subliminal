@@ -40,10 +40,10 @@ def authenticate(func: Callable) -> Callable:
     @wraps(func)
     def wrapper(self: 'ShowIndexer', *args: Any, **kwargs: Any) -> Any:
         if not self._token or self._token_expired:
-            self._token = self._client.login()  # type: ignore
+            self._token = self._client.login()
             self._token_generation_time = time()
         elif self._token_needs_refresh:
-            self._token = self._client.refresh_token()  # type: ignore
+            self._token = self._client.refresh_token()
             self._token_generation_time = time()
         return func(self, *args, **kwargs)
 
