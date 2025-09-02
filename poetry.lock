@@ -718,6 +718,7 @@ description = "cChardet is high speed universal character encoding detector."
 optional = false
 python-versions = "*"
 groups = ["main"]
+markers = "python_version < \"3.13\""
 files = [
     {file = "faust-cchardet-2.1.19.tar.gz", hash = "sha256:f89386297cde0c8e0f5e21464bc2d6d0e4a4fc1b1d77cdb238ca24d740d872e0"},
     {file = "faust_cchardet-2.1.19-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:fd76c4c39fde29d8d8a0a79d63c15cd698d79a6cd21350f27a55c5f700ae37a0"},
@@ -823,21 +824,21 @@ dev = ["Sphinx (==2.1.0)", "future (==0.17.1)", "numpy (==1.16.4)", "pytest (==4
 
 [[package]]
 name = "ffsubsync"
-version = "0.4.29"
+version = "0.4.30"
 description = "Language-agnostic synchronization of subtitles with video."
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "ffsubsync-0.4.29-py2.py3-none-any.whl", hash = "sha256:6722e7c22a22065cb41da466d6eff9b090b1a8e15a44126260e41f79c88663a6"},
-    {file = "ffsubsync-0.4.29.tar.gz", hash = "sha256:ca0d641e6dd20e6ac5a1d622f5877b0b9c2a489034de822ff168fd5af29edcd6"},
+    {file = "ffsubsync-0.4.30-py2.py3-none-any.whl", hash = "sha256:cc351ef0dbd71e95a1294879f0d8679e0373fd37e3b4fcd17fce43a64bf2ad1e"},
+    {file = "ffsubsync-0.4.30.tar.gz", hash = "sha256:36e38f60d2a311e13deb61f86166dd4931df3146e4b1c7637c05b03d54aa07a3"},
 ]
 
 [package.dependencies]
 auditok = "0.1.5"
 chardet = {version = "*", markers = "python_version >= \"3.7\""}
 charset-normalizer = "*"
-faust-cchardet = "*"
+faust-cchardet = {version = "*", markers = "python_version < \"3.13\""}
 ffmpeg-python = "*"
 numpy = ">=1.12.0"
 pysubs2 = {version = ">=1.2.0", markers = "python_version >= \"3.7\""}
@@ -3236,4 +3237,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9.1,<4"
-content-hash = "affcf9386fb1fb16877d2d89256eb1fdbff0ee6c6b0626668569c710514b5ac4"
+content-hash = "b7e25c56f2774b193504732f274dc14c93245cd383fbdb66eea800f7e89e9ee3"
