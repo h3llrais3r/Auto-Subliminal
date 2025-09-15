@@ -639,14 +639,14 @@ files = [
 
 [[package]]
 name = "dogpile-cache"
-version = "1.4.0"
+version = "1.4.1"
 description = "A caching front-end based on the Dogpile lock."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "dogpile_cache-1.4.0-py3-none-any.whl", hash = "sha256:f1581953afefd5f55743178694bf3b3ffb2782bba3d9537566a09db6daa48a63"},
-    {file = "dogpile_cache-1.4.0.tar.gz", hash = "sha256:b00a9e2f409cf9bf48c2e7a3e3e68dac5fa75913acbf1a62f827c812d35f3d09"},
+    {file = "dogpile_cache-1.4.1-py3-none-any.whl", hash = "sha256:99130ce990800c8d89c26a5a8d9923cbe1b78c8a9972c2aaa0abf3d2ef2984ad"},
+    {file = "dogpile_cache-1.4.1.tar.gz", hash = "sha256:e25c60e677a5e28ff86124765fbf18c53257bcd7830749cd5ba350ace2a12989"},
 ]
 
 [package.dependencies]
@@ -3237,4 +3237,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9.1,<4"
-content-hash = "a50918a2fbff72c96bb333e1f3442714d0ae1a03333894957c29d80993cdc601"
+content-hash = "e428aeb8c2e5c037816e5becba80c069e645736b05bba6932a3e80cc524ede3f"
