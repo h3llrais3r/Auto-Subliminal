@@ -2341,14 +2341,14 @@ files = [
 
 [[package]]
 name = "schema"
-version = "0.7.7"
+version = "0.7.8"
 description = "Simple data validation library"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "schema-0.7.7-py2.py3-none-any.whl", hash = "sha256:5d976a5b50f36e74e2157b47097b60002bd4d42e65425fcc9c9befadb4255dde"},
-    {file = "schema-0.7.7.tar.gz", hash = "sha256:7da553abd2958a19dc2547c388cde53398b39196175a9be59ea1caf5ab0a1807"},
+    {file = "schema-0.7.8-py2.py3-none-any.whl", hash = "sha256:00bd977fadc7d9521bf289850cd8a8aa5f4948f575476b8daaa5c1b57af2dce1"},
+    {file = "schema-0.7.8.tar.gz", hash = "sha256:e86cc08edd6fe6e2522648f4e47e3a31920a76e82cce8937535422e310862ab5"},
 ]
 
 [[package]]
@@ -3253,4 +3253,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9.1,<4"
-content-hash = "723cd759cae1a6e2b771a8401ef8136d8e16591638523157ff7e2a325e1cbdd4"
+content-hash = "dd56020c13aafc24ae4b7ae44d963a022142b6f0f27cbf4dd8263257772548ac"
