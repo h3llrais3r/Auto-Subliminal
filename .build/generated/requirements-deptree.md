@@ -4,8 +4,6 @@
 
 ```
 babelfish 0.6.1 A module to work with countries and languages
-`-- importlib-metadata >=4.6,<5.0
-    `-- zipp >=0.5 
 cherrypy 18.10.0 Object-Oriented HTTP framework
 |-- cheroot >=8.2.1
 |   |-- jaraco-functools * 
@@ -26,7 +24,6 @@ cherrypy 18.10.0 Object-Oriented HTTP framework
 |       |   `-- more-itertools * 
 |       `-- python-dateutil * 
 |           `-- six >=1.5 
-|-- pywin32 >=227
 `-- zc-lockfile *
     `-- setuptools * 
 deathbycaptcha 0.1.1 A library aims to support deathbycaptcha.
@@ -40,6 +37,7 @@ dogpile-cache 1.4.1 A caching front-end based on the Dogpile lock.
 |-- decorator >=4.0.0
 |-- stevedore >=3.0.0
 |   `-- pbr >=2.0.0 
+|       `-- setuptools * 
 `-- typing-extensions >=4.0.1
 enzyme 0.5.2 Video metadata parser
 ffsubsync 0.4.30 Language-agnostic synchronization of subtitles with video.
@@ -54,8 +52,7 @@ ffsubsync 0.4.30 Language-agnostic synchronization of subtitles with video.
 |-- rich *
 |   |-- markdown-it-py >=2.2.0 
 |   |   `-- mdurl >=0.1,<1.0 
-|   |-- pygments >=2.13.0,<3.0.0 
-|   `-- typing-extensions >=4.0.0,<5.0 
+|   `-- pygments >=2.13.0,<3.0.0 
 |-- setuptools *
 |-- srt >=3.0.0
 |-- tqdm *
@@ -64,14 +61,11 @@ ffsubsync 0.4.30 Language-agnostic synchronization of subtitles with video.
 |-- webrtcvad *
 `-- webrtcvad-wheels *
 gitpython 3.1.45 GitPython is a Python library used to interact with Git repositories
-|-- gitdb >=4.0.1,<5
-|   `-- smmap >=3.0.1,<6 
-`-- typing-extensions >=3.10.0.2
+`-- gitdb >=4.0.1,<5
+    `-- smmap >=3.0.1,<6 
 gntp 1.0.3 Growl Notification Transport Protocol for Python
 guessit 3.8.0 GuessIt - a library for guessing information from video filenames.
 |-- babelfish >=0.6.0
-|   `-- importlib-metadata >=4.6,<5.0 
-|       `-- zipp >=0.5 
 |-- python-dateutil *
 |   `-- six >=1.5 
 `-- rebulk >=3.2.0
@@ -137,28 +131,29 @@ requests-oauthlib 2.0.0 OAuthlib authentication support for Requests.
     `-- urllib3 >=1.21.1,<3 
 schema 0.7.8 Simple data validation library
 simplejson 3.20.2 Simple, fast, extensible JSON encoder/decoder for Python
+stevedore 5.3.0 Manage dynamic plugins for Python applications
+`-- pbr >=2.0.0
+    `-- setuptools * 
 subliminal 2.2.1 Subtitles, faster than your thoughts
 |-- babelfish >=0.6.1
-|   `-- importlib-metadata >=4.6,<5.0 
-|       `-- zipp >=0.5 
 |-- beautifulsoup4 >=4.4.0
-|   `-- soupsieve >1.2 
+|   |-- soupsieve >=1.6.1 
+|   `-- typing-extensions >=4.0.0 
 |-- chardet >=5.0
 |-- click >=8.0
 |   `-- colorama * 
 |-- click-option-group >=0.5.6
-|   `-- click >=7.0,<9 
+|   `-- click >=7.0 
 |       `-- colorama * 
 |-- dogpile-cache >=1.0
 |   |-- decorator >=4.0.0 
 |   |-- stevedore >=3.0.0 
 |   |   `-- pbr >=2.0.0 
+|   |       `-- setuptools * 
 |   `-- typing-extensions >=4.0.1 
 |-- enzyme >=0.5.0
 |-- guessit >=3.0.0
 |   |-- babelfish >=0.6.0 
-|   |   `-- importlib-metadata >=4.6,<5.0 
-|   |       `-- zipp >=0.5 
 |   |-- python-dateutil * 
 |   |   `-- six >=1.5 
 |   `-- rebulk >=3.2.0 
@@ -173,6 +168,7 @@ subliminal 2.2.1 Subtitles, faster than your thoughts
 |-- srt >=3.5
 |-- stevedore >=3.0
 |   `-- pbr >=2.0.0 
+|       `-- setuptools * 
 `-- tomli >=2
 tailer 0.4.1 Python tail is a simple implementation of GNU tail and head.
 tvdb_api 3.0.0 Client implementation for TheTVDB API v2 and v3

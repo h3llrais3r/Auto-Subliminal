@@ -17,16 +17,18 @@ classifiers = [
   "Development Status :: 5 - Production/Stable",
   "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Topic :: Multimedia :: Video",
 ]
 packages = [{ include = "autosubliminal" }, { include = "AutoSubliminal.py" }]
 
+[tool.poetry.requires-plugins]
+poetry-plugin-export = "1.9.0"
+
 [tool.poetry.dependencies]
 # Python version
-python = ">=3.9.1,<4"
+python = ">=3.10,<4"
 
 # Runtime dependencies
 babelfish = "0.6.1"
@@ -52,6 +54,7 @@ requests = "2.32.5"
 requests-oauthlib = "2.0.0"
 schema = "0.7.8"
 simplejson = "3.20.2"
+stevedore = "5.3.0"
 subliminal = "2.2.1"
 tailer = "0.4.1"
 tvdb_api = { git = "https://github.com/h3llrais3r/tvdb_api.git", rev = "32228cc4af864398198e280bbafbd1ec98567d8f" }

@@ -35,9 +35,9 @@ def install() -> None:
 
 
 def _check_min_python_version() -> None:
-    min_python_version = (3, 8)
+    min_python_version = (3, 10)
     if sys.version_info < min_python_version:
-        print('ERROR: Python 3.8 or higher is required.')
+        print('ERROR: Python 3.10 or higher is required.')
         os._exit(1)
 
 
