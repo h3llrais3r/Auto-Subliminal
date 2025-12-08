@@ -684,14 +684,14 @@ files = [
 
 [[package]]
 name = "dogpile-cache"
-version = "1.4.1"
+version = "1.5.0"
 description = "A caching front-end based on the Dogpile lock."
 optional = false
-python-versions = ">=3.9"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "dogpile_cache-1.4.1-py3-none-any.whl", hash = "sha256:99130ce990800c8d89c26a5a8d9923cbe1b78c8a9972c2aaa0abf3d2ef2984ad"},
-    {file = "dogpile_cache-1.4.1.tar.gz", hash = "sha256:e25c60e677a5e28ff86124765fbf18c53257bcd7830749cd5ba350ace2a12989"},
+    {file = "dogpile_cache-1.5.0-py3-none-any.whl", hash = "sha256:dc7b47d37844db15e8fdc0243c1b58857a2ddc52a5118237a97127bac200e18d"},
+    {file = "dogpile_cache-1.5.0.tar.gz", hash = "sha256:849c5573c9a38f155cd4173103c702b637ede0361c12e864876877d0cd125eec"},
 ]
 
 [package.dependencies]
@@ -702,7 +702,7 @@ typing_extensions = {version = ">=4.0.1", markers = "python_version < \"3.11\""}
 [package.extras]
 bmemcached = ["python-binary-memcached"]
 memcached = ["python-memcached"]
-pifpaf = ["pifpaf (>=3.2.0)"]
+pifpaf = ["pifpaf (>=3.3.0)"]
 pylibmc = ["pylibmc"]
 pymemcache = ["pymemcache"]
 redis = ["redis"]
@@ -3514,4 +3514,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "a26b0d6e81084ab9a3f2c84ccd762dcdb81f1017320b996c1170606a6595b3f0"
+content-hash = "e59fa1a66e72517b85a2af28c8744037637eb8dee3ec9601e5eb47ff13fa8776"
