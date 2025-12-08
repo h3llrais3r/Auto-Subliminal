@@ -40,7 +40,7 @@ dogpile-cache 1.5.0 A caching front-end based on the Dogpile lock.
 |       `-- setuptools * 
 `-- typing-extensions >=4.0.1
 enzyme 0.5.2 Video metadata parser
-ffsubsync 0.4.30 Language-agnostic synchronization of subtitles with video.
+ffsubsync 0.4.31
 |-- auditok 0.1.5
 |-- chardet *
 |-- charset-normalizer *
