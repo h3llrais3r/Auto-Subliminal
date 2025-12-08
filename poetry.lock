@@ -872,20 +872,20 @@ dev = ["Sphinx (==2.1.0)", "future (==0.17.1)", "numpy (==1.16.4)", "pytest (==4
 
 [[package]]
 name = "ffsubsync"
-version = "0.4.30"
-description = "Language-agnostic synchronization of subtitles with video."
+version = "0.4.31"
+description = ""
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "ffsubsync-0.4.30-py2.py3-none-any.whl", hash = "sha256:cc351ef0dbd71e95a1294879f0d8679e0373fd37e3b4fcd17fce43a64bf2ad1e"},
-    {file = "ffsubsync-0.4.30.tar.gz", hash = "sha256:36e38f60d2a311e13deb61f86166dd4931df3146e4b1c7637c05b03d54aa07a3"},
+    {file = "ffsubsync-0.4.31-py2.py3-none-any.whl", hash = "sha256:8579cd4a573026cf0fe0645c7ffe68fb907e8c1310898323c36d11555c8520eb"},
+    {file = "ffsubsync-0.4.31.tar.gz", hash = "sha256:9a01f79bc1243b8a55242dfb7832d0a93314e386f70062b99ca33ac6440f92c7"},
 ]
 
 [package.dependencies]
 auditok = "0.1.5"
 chardet = {version = "*", markers = "python_version >= \"3.7\""}
-charset-normalizer = "*"
+charset_normalizer = "*"
 faust-cchardet = {version = "*", markers = "python_version < \"3.13\""}
 ffmpeg-python = "*"
 numpy = ">=1.12.0"
@@ -894,7 +894,7 @@ rich = "*"
 setuptools = "*"
 srt = ">=3.0.0"
 tqdm = "*"
-typing-extensions = "*"
+typing_extensions = "*"
 webrtcvad = {version = "*", markers = "platform_system != \"Windows\""}
 webrtcvad-wheels = {version = "*", markers = "platform_system == \"Windows\""}
 
@@ -3514,4 +3514,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "e59fa1a66e72517b85a2af28c8744037637eb8dee3ec9601e5eb47ff13fa8776"
+content-hash = "7b2f65f24006732c9e07ba5dc2998ea5172b86460d2289cbd9930c7d3dc03766"
