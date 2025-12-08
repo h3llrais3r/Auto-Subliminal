@@ -3064,14 +3064,14 @@ zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 
 [[package]]
 name = "vcrpy"
-version = "8.0.0"
+version = "8.1.0"
 description = "Automatically mock your HTTP interactions to simplify and speed up testing"
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "vcrpy-8.0.0-py2.py3-none-any.whl", hash = "sha256:3e5aae652bb1e2703e9a32869ebf903ff823420f98f80974aa99ceb7a5fdbb17"},
-    {file = "vcrpy-8.0.0.tar.gz", hash = "sha256:25622ec65c5c007597d417e6867ccb6e6ab0d5f8826e2a03feb5911b3011f8ad"},
+    {file = "vcrpy-8.1.0-py3-none-any.whl", hash = "sha256:fc4fb6e954c6d082ba6d329c6f3d1228f5b1b1d2836f9022c301b587cfad7378"},
+    {file = "vcrpy-8.1.0.tar.gz", hash = "sha256:e585ca3cd9bb751e402728a00394847561250588eebc047b4d3c8948d5487733"},
 ]
 
 [package.dependencies]
@@ -3553,4 +3553,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "80013a12e25b923260ea5a47555b3d0d4e56b0833bd3da9bc1d1dfa69d3f3f8d"
+content-hash = "c679719e4719fc29bfce18c18ce12f3860097ec909774861fe43278d44f600cf"
