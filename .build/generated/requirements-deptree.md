@@ -36,8 +36,6 @@ deathbycaptcha 0.1.1 A library aims to support deathbycaptcha.
 dogpile-cache 1.5.0 A caching front-end based on the Dogpile lock.
 |-- decorator >=4.0.0
 |-- stevedore >=3.0.0
-|   `-- pbr >=2.0.0 
-|       `-- setuptools * 
 `-- typing-extensions >=4.0.1
 enzyme 0.5.2 Video metadata parser
 ffsubsync 0.4.31
@@ -131,9 +129,7 @@ requests-oauthlib 2.0.0 OAuthlib authentication support for Requests.
     `-- urllib3 >=1.21.1,<3 
 schema 0.7.8 Simple data validation library
 simplejson 3.20.2 Simple, fast, extensible JSON encoder/decoder for Python
-stevedore 5.3.0 Manage dynamic plugins for Python applications
-`-- pbr >=2.0.0
-    `-- setuptools * 
+stevedore 5.6.0 Manage dynamic plugins for Python applications
 subliminal 2.2.1 Subtitles, faster than your thoughts
 |-- babelfish >=0.6.1
 |-- beautifulsoup4 >=4.4.0
@@ -148,8 +144,6 @@ subliminal 2.2.1 Subtitles, faster than your thoughts
 |-- dogpile-cache >=1.0
 |   |-- decorator >=4.0.0 
 |   |-- stevedore >=3.0.0 
-|   |   `-- pbr >=2.0.0 
-|   |       `-- setuptools * 
 |   `-- typing-extensions >=4.0.1 
 |-- enzyme >=0.5.0
 |-- guessit >=3.0.0
@@ -167,8 +161,6 @@ subliminal 2.2.1 Subtitles, faster than your thoughts
 |   `-- urllib3 >=1.21.1,<3 
 |-- srt >=3.5
 |-- stevedore >=3.0
-|   `-- pbr >=2.0.0 
-|       `-- setuptools * 
 `-- tomli >=2
 tailer 0.4.1 Python tail is a simple implementation of GNU tail and head.
 tvdb_api 3.0.0 Client implementation for TheTVDB API v2 and v3
