@@ -1857,21 +1857,6 @@ files = [
 ]
 
 [[package]]
-name = "pbr"
-version = "7.0.3"
-description = "Python Build Reasonableness"
-optional = false
-python-versions = ">=2.6"
-groups = ["main"]
-files = [
-    {file = "pbr-7.0.3-py2.py3-none-any.whl", hash = "sha256:ff223894eb1cd271a98076b13d3badff3bb36c424074d26334cd25aebeecea6b"},
-    {file = "pbr-7.0.3.tar.gz", hash = "sha256:b46004ec30a5324672683ec848aed9e8fc500b0d261d40a3229c2d2bbfcedc29"},
-]
-
-[package.dependencies]
-setuptools = "*"
-
-[[package]]
 name = "pigar"
 version = "2.2.0"
 description = "A tool to generate requirements.txt for Python project."
@@ -2775,18 +2760,15 @@ files = [
 
 [[package]]
 name = "stevedore"
-version = "5.3.0"
+version = "5.6.0"
 description = "Manage dynamic plugins for Python applications"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "stevedore-5.3.0-py3-none-any.whl", hash = "sha256:1efd34ca08f474dad08d9b19e934a22c68bb6fe416926479ba29e5013bcc8f78"},
-    {file = "stevedore-5.3.0.tar.gz", hash = "sha256:9a64265f4060312828151c204efbe9b7a9852a0d9228756344dbc7e4023e375a"},
+    {file = "stevedore-5.6.0-py3-none-any.whl", hash = "sha256:4a36dccefd7aeea0c70135526cecb7766c4c84c473b1af68db23d541b6dc1820"},
+    {file = "stevedore-5.6.0.tar.gz", hash = "sha256:f22d15c6ead40c5bbfa9ca54aa7e7b4a07d59b36ae03ed12ced1a54cf0b51945"},
 ]
-
-[package.dependencies]
-pbr = ">=2.0.0"
 
 [[package]]
 name = "subliminal"
@@ -3589,4 +3571,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "e2037e700991db222b19a1dec73498ee3b929c6bf017e95e7d0c9cca59a60419"
+content-hash = "c7551f73fdad0bc21c9067f99e4621ea176776e8fa1e8d82d14d47ad45d68f25"
