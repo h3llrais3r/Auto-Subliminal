@@ -96832,7 +96832,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   COUNTDOWN_CONFIG: () => (/* binding */ COUNTDOWN_CONFIG),
 /* harmony export */   CountdownComponent: () => (/* binding */ CountdownComponent),
-/* harmony export */   CountdownModule: () => (/* binding */ CountdownModule),
 /* harmony export */   CountdownStatus: () => (/* binding */ CountdownStatus),
 /* harmony export */   CountdownTimer: () => (/* binding */ CountdownTimer),
 /* harmony export */   provideCountdown: () => (/* binding */ provideCountdown)
@@ -96856,7 +96855,7 @@ function CountdownComponent_Conditional_0_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngTemplateOutlet", ctx_r0.render)("ngTemplateOutletContext", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](2, _c0, ctx_r0.i));
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("ngTemplateOutlet", ctx_r0.render())("ngTemplateOutletContext", _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵpureFunction1"](2, _c0, ctx_r0.i()));
   }
 }
 function CountdownComponent_Conditional_1_Template(rf, ctx) {
@@ -96865,7 +96864,7 @@ function CountdownComponent_Conditional_1_Template(rf, ctx) {
   }
   if (rf & 2) {
     const ctx_r0 = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵnextContext"]();
-    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("innerHTML", ctx_r0.i.text, _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeHtml"]);
+    _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵproperty"]("innerHTML", ctx_r0.i().text, _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsanitizeHtml"]);
   }
 }
 var CountdownStatus = /*#__PURE__*/function (CountdownStatus) {
@@ -96877,22 +96876,17 @@ var CountdownStatus = /*#__PURE__*/function (CountdownStatus) {
 }(CountdownStatus || {});
 let CountdownTimer = /*#__PURE__*/(() => {
   class CountdownTimer {
-    constructor(ngZone) {
-      this.ngZone = ngZone;
-      this.fns = [];
-      this.commands = [];
-      this.nextTime = 0;
-      this.ing = false;
-    }
+    fns = [];
+    commands = [];
+    nextTime = 0;
+    ing = false;
     start() {
       if (this.ing === true) {
         return;
       }
       this.ing = true;
       this.nextTime = +new Date();
-      this.ngZone.runOutsideAngular(() => {
-        this.process();
-      });
+      this.process();
     }
     process() {
       while (this.commands.length) {
@@ -96942,17 +96936,13 @@ let CountdownTimer = /*#__PURE__*/(() => {
       });
       return this;
     }
-    static {
-      this.ɵfac = function CountdownTimer_Factory(t) {
-        return new (t || CountdownTimer)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__.NgZone));
-      };
-    }
-    static {
-      this.ɵprov = /* @__PURE__ */_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({
-        token: CountdownTimer,
-        factory: CountdownTimer.ɵfac
-      });
-    }
+    static ɵfac = function CountdownTimer_Factory(t) {
+      return new (t || CountdownTimer)();
+    };
+    static ɵprov = /* @__PURE__ */_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({
+      token: CountdownTimer,
+      factory: CountdownTimer.ɵfac
+    });
   }
   return CountdownTimer;
 })();
@@ -96968,28 +96958,55 @@ function provideCountdown(config) {
 }
 let CountdownComponent = /*#__PURE__*/(() => {
   class CountdownComponent {
-    set config(i) {
-      if (i.notify != null && !Array.isArray(i.notify) && i.notify > 0) {
-        i.notify = [i.notify];
+    locale = (0,_angular_core__WEBPACK_IMPORTED_MODULE_0__.inject)(_angular_core__WEBPACK_IMPORTED_MODULE_0__.LOCALE_ID);
+    timer = (0,_angular_core__WEBPACK_IMPORTED_MODULE_0__.inject)(CountdownTimer);
+    defCog = (0,_angular_core__WEBPACK_IMPORTED_MODULE_0__.inject)(COUNTDOWN_CONFIG, {
+      optional: true
+    });
+    frequency = 1000;
+    _notify = {};
+    status = CountdownStatus.ing;
+    isDestroy = false;
+    _config;
+    left = 0;
+    i = (0,_angular_core__WEBPACK_IMPORTED_MODULE_0__.signal)({}, {
+      ...(ngDevMode ? {
+        debugName: "i"
+      } : {})
+    });
+    config = _angular_core__WEBPACK_IMPORTED_MODULE_0__.input.required({
+      ...(ngDevMode ? {
+        debugName: "config"
+      } : {}),
+      transform: i => {
+        if (i.notify != null && !Array.isArray(i.notify) && i.notify > 0) {
+          i.notify = [i.notify];
+        }
+        return i;
       }
-      this._config = i;
-    }
-    get config() {
-      return this._config;
-    }
-    constructor(locale, timer, cdr, ngZone, defCog) {
-      this.locale = locale;
-      this.timer = timer;
-      this.cdr = cdr;
-      this.ngZone = ngZone;
-      this.defCog = defCog;
-      this.frequency = 1000;
-      this._notify = {};
-      this.status = CountdownStatus.ing;
-      this.isDestroy = false;
-      this.i = {};
-      this.left = 0;
-      this.event = new _angular_core__WEBPACK_IMPORTED_MODULE_0__.EventEmitter();
+    });
+    render = (0,_angular_core__WEBPACK_IMPORTED_MODULE_0__.input)(undefined, {
+      ...(ngDevMode ? {
+        debugName: "render"
+      } : {})
+    });
+    event = (0,_angular_core__WEBPACK_IMPORTED_MODULE_0__.output)();
+    constructor() {
+      (0,_angular_core__WEBPACK_IMPORTED_MODULE_0__.afterNextRender)(() => {
+        this.init();
+        if (!this._config?.demand) {
+          this.begin();
+        }
+      });
+      let cfgFirst = true;
+      (0,_angular_core__WEBPACK_IMPORTED_MODULE_0__.effect)(() => {
+        this.config();
+        if (cfgFirst) {
+          cfgFirst = false;
+          return;
+        }
+        this.restart();
+      });
     }
     /**
      * Start countdown, you must manually call when `demand: false`
@@ -97044,11 +97061,11 @@ let CountdownComponent = /*#__PURE__*/(() => {
         action,
         left: this.left,
         status: this.status,
-        text: this.i.text
+        text: this.i().text
       });
     }
     init() {
-      const config = this.config = {
+      const config = {
         demand: false,
         leftTime: 0,
         format: 'HH:mm:ss',
@@ -97061,8 +97078,9 @@ let CountdownComponent = /*#__PURE__*/(() => {
           return (0,_angular_common__WEBPACK_IMPORTED_MODULE_1__.formatDate)(new Date(date), formatStr, this.locale, timezone || '+0000');
         },
         ...this.defCog,
-        ...this.config
+        ...this.config()
       };
+      this._config = config;
       const frq = this.frequency = ~config.format.indexOf('S') ? 100 : 1000;
       this.status = config.demand ? CountdownStatus.pause : CountdownStatus.ing;
       this.getLeft();
@@ -97090,12 +97108,11 @@ let CountdownComponent = /*#__PURE__*/(() => {
      * 更新时钟
      */
     reflow(count = 0, force = false) {
-      if (this.isDestroy) {
+      if (this.isDestroy || this._config == null) {
         return;
       }
       const {
         status,
-        config,
         _notify
       } = this;
       if (!force && status !== CountdownStatus.ing) {
@@ -97105,29 +97122,32 @@ let CountdownComponent = /*#__PURE__*/(() => {
       if (value < 1) {
         value = 0;
       }
-      this.i = {
+      const {
+        formatDate,
+        format,
+        timezone,
+        prettyText,
+        notify
+      } = this._config;
+      const item = {
         value,
-        text: config.formatDate({
+        text: formatDate({
           date: value,
-          formatStr: config.format,
-          timezone: config.timezone
+          formatStr: format,
+          timezone: timezone
         })
       };
-      if (typeof config.prettyText === 'function') {
-        this.i.text = config.prettyText(this.i.text);
+      if (typeof prettyText === 'function') {
+        item.text = prettyText(item.text);
       }
-      this.cdr.detectChanges();
-      if (config.notify === 0 || _notify[value]) {
-        this.ngZone.run(() => {
-          this.callEvent('notify');
-        });
+      this.i.set(item);
+      if (notify === 0 || _notify[value]) {
+        this.callEvent('notify');
       }
       if (value === 0) {
-        this.ngZone.run(() => {
-          this.status = CountdownStatus.done;
-          this.destroy();
-          this.callEvent('done');
-        });
+        this.status = CountdownStatus.done;
+        this.destroy();
+        this.callEvent('done');
       }
     }
     /**
@@ -97135,95 +97155,57 @@ let CountdownComponent = /*#__PURE__*/(() => {
      */
     getLeft() {
       const {
-        config,
         frequency
       } = this;
-      let left = config.leftTime * 1000;
-      const end = config.stopTime;
+      const {
+        leftTime,
+        stopTime
+      } = this._config;
+      let left = leftTime * 1000;
+      const end = stopTime;
       if (!left && end) {
         left = end - new Date().getTime();
       }
       this.left = left - left % frequency;
     }
-    ngOnInit() {
-      this.init();
-      if (!this.config.demand) {
-        this.begin();
-      }
-    }
     ngOnDestroy() {
       this.isDestroy = true;
       this.destroy();
     }
-    ngOnChanges(changes) {
-      if (!changes.config.firstChange) {
-        this.restart();
-      }
-    }
-    static {
-      this.ɵfac = function CountdownComponent_Factory(t) {
-        return new (t || CountdownComponent)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__.LOCALE_ID), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](CountdownTimer), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__.ChangeDetectorRef), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__.NgZone), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](COUNTDOWN_CONFIG, 8));
-      };
-    }
-    static {
-      this.ɵcmp = /* @__PURE__ */_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
-        type: CountdownComponent,
-        selectors: [["countdown"]],
-        hostVars: 2,
-        hostBindings: function CountdownComponent_HostBindings(rf, ctx) {
-          if (rf & 2) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵclassProp"]("count-down", true);
-          }
-        },
-        inputs: {
-          config: "config",
-          render: "render"
-        },
-        outputs: {
-          event: "event"
-        },
-        standalone: true,
-        features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵProvidersFeature"]([CountdownTimer]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵNgOnChangesFeature"], _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵStandaloneFeature"]],
-        decls: 2,
-        vars: 1,
-        consts: [[4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "innerHTML"]],
-        template: function CountdownComponent_Template(rf, ctx) {
-          if (rf & 1) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](0, CountdownComponent_Conditional_0_Template, 1, 4, "ng-container")(1, CountdownComponent_Conditional_1_Template, 1, 1);
-          }
-          if (rf & 2) {
-            _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵconditional"](0, ctx.render ? 0 : 1);
-          }
-        },
-        dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_1__.NgTemplateOutlet],
-        styles: [".count-down{font-variant-numeric:tabular-nums}\n"],
-        encapsulation: 2,
-        changeDetection: 0
-      });
-    }
+    static ɵfac = function CountdownComponent_Factory(t) {
+      return new (t || CountdownComponent)();
+    };
+    static ɵcmp = /* @__PURE__ */_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({
+      type: CountdownComponent,
+      selectors: [["countdown"]],
+      hostAttrs: [1, "count-down"],
+      inputs: {
+        config: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵInputFlags"].SignalBased, "config"],
+        render: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵInputFlags"].SignalBased, "render"]
+      },
+      outputs: {
+        event: "event"
+      },
+      standalone: true,
+      features: [_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵProvidersFeature"]([CountdownTimer]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵStandaloneFeature"]],
+      decls: 2,
+      vars: 1,
+      consts: [[4, "ngTemplateOutlet", "ngTemplateOutletContext"], [3, "innerHTML"]],
+      template: function CountdownComponent_Template(rf, ctx) {
+        if (rf & 1) {
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtemplate"](0, CountdownComponent_Conditional_0_Template, 1, 4, "ng-container")(1, CountdownComponent_Conditional_1_Template, 1, 1);
+        }
+        if (rf & 2) {
+          _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵconditional"](0, ctx.render() ? 0 : 1);
+        }
+      },
+      dependencies: [_angular_common__WEBPACK_IMPORTED_MODULE_1__.NgTemplateOutlet],
+      styles: [".count-down{font-variant-numeric:tabular-nums}\n"],
+      encapsulation: 2,
+      changeDetection: 0
+    });
   }
   return CountdownComponent;
-})();
-(() => {
-  (typeof ngDevMode === "undefined" || ngDevMode) && void 0;
-})();
-let CountdownModule = /*#__PURE__*/(() => {
-  class CountdownModule {
-    static {
-      this.ɵfac = function CountdownModule_Factory(t) {
-        return new (t || CountdownModule)();
-      };
-    }
-    static {
-      this.ɵmod = /* @__PURE__ */_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({
-        type: CountdownModule
-      });
-    }
-    static {
-      this.ɵinj = /* @__PURE__ */_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjector"]({});
-    }
-  }
-  return CountdownModule;
 })();
 (() => {
   (typeof ngDevMode === "undefined" || ngDevMode) && void 0;
@@ -108931,4 +108913,4 @@ function __rewriteRelativeImportExtension(path, preserveJsx) {
 /******/ var __webpack_exports__ = (__webpack_exec__(4429));
 /******/ }
 ]);
-//# sourceMappingURL=main.6185a076476bc4cc.js.map
+//# sourceMappingURL=main.e6b138ca84d300a6.js.map
