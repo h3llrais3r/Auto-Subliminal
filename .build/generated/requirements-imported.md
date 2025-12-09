@@ -31,7 +31,7 @@ babelfish==0.6.1
 CherryPy==18.10.0
 # autosubliminal\providers\pitcher.py: 9,10
 deathbycaptcha==0.1.1
-# autosubliminal\core\cache.py: 10,11,12
+# autosubliminal\core\cache.py: 9,10,11
 # autosubliminal\providers\opensubtitles_com.py: 7
 # autosubliminal\providers\pitcher.py: 11
 dogpile.cache==1.5.0
@@ -52,7 +52,7 @@ gntp==1.0.3
 guessit==3.8.0
 # autosubliminal\core\indexer.py: 10,11
 # autosubliminal\core\movie.py: 8
-imdbpie==5.6.4.dev0
+imdbinfo==0.6.3
 # autosubliminal\util\json.py: 6
 jsonpickle==4.1.1
 # autosubliminal\__init__.py: 379,380
@@ -70,7 +70,7 @@ python-dateutil==2.9.0.post0
 python-twitter==3.5
 # autosubliminal\parsers\guessit\rules.py: 8,9,10,11
 rebulk==3.2.0
-# autosubliminal\core\cache.py: 9
+# autosubliminal\core\cache.py: 8
 # autosubliminal\notifiers\prowl.py: 7
 # autosubliminal\notifiers\pushalot.py: 7
 # autosubliminal\notifiers\pushbullet.py: 7

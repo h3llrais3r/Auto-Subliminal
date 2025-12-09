@@ -72,21 +72,25 @@ guessit 3.8.0 GuessIt - a library for guessing information from video filenames.
 html5lib 1.1 HTML parser based on the WHATWG HTML specification
 |-- six >=1.9
 `-- webencodings *
-imdbpie 5.6.4.dev0 Python IMDB client using the IMDB json web service made available for their iOS app.
-|-- attrs >=18.1.0
-|-- boto >=2.48.0
-|-- diskcache >=2.9.0
-|-- python-dateutil >=2.6.1
-|   `-- six >=1.5 
-|-- requests >=0.10
-|   |-- certifi >=2017.4.17 
+imdbinfo 0.6.3 A Python service for querying IMDb data
+|-- deprecated *
+|   `-- wrapt >=1.10,<3 
+|-- jmespath *
+|-- lxml *
+|-- niquests *
 |   |-- charset-normalizer >=2,<4 
-|   |-- idna >=2.5,<4 
-|   `-- urllib3 >=1.21.1,<3 
-|-- setuptools >=65.5.1
-|-- six >=1.0.0
-|-- trans >=2.1.0
-`-- wheel >=0.38.0
+|   |-- urllib3-future >=2.13.903,<3 
+|   |   |-- h11 >=0.11.0,<1.0.0 
+|   |   |-- jh2 >=5.0.3,<6.0.0 
+|   |   `-- qh3 >=1.5.4,<2.0.0 
+|   `-- wassima >=1.0.1,<3 
+`-- pydantic *
+    |-- annotated-types >=0.6.0 
+    |-- pydantic-core 2.41.5 
+    |   `-- typing-extensions >=4.14.1 
+    |-- typing-extensions >=4.14.1 (circular dependency aborted here)
+    `-- typing-inspection >=0.4.2 
+        `-- typing-extensions >=4.12.0 (circular dependency aborted here)
 jsonpickle 4.1.1 jsonpickle encodes/decodes any Python object to/from JSON
 langdetect 1.0.9 Language detection library ported from Google's language-detection.
 `-- six *

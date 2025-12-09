@@ -7,8 +7,8 @@ from functools import wraps
 from time import time
 from typing import Any, Callable, List, Optional, Set, Tuple, cast
 
-from imdbpie.facade import ImdbFacade
-from imdbpie.objects import Title, TitleSearchResult
+from imdbinfo import get_akas, get_movie, search_title
+from imdbinfo.models import MovieBriefInfo, MovieDetail, SearchResult
 from tvdb_api.client import TvdbClient
 from tvdb_api.models.episode import Episode
 from tvdb_api.models.links import Links
@@ -260,13 +260,13 @@ class MovieIndexer(_BaseIndexer):
     """
 
     def __init__(self) -> None:
-        self._client = ImdbFacade()
+        self._client = None  # no client for now
 
     @property
     def name(self) -> str:
         return 'imdb'
 
-    def _search(self, title: str, year: int = None, fallback_search: bool = False) -> Optional[TitleSearchResult]:
+    def _search(self, title: str, year: int = None, fallback_search: bool = False) -> Optional[MovieBriefInfo]:
         """Search the api for a movie.
 
         :param title: the title to search for
@@ -274,60 +274,51 @@ class MovieIndexer(_BaseIndexer):
         :param year: the year
         :type year: int or None
         :return: the search result or None if not found
-        :rtype: imdbpie.objects.TitleSearchResult or None
+        :rtype: imdbinfo.models.MovieBriefInfo or None
         """
         name = title
         if year:
             name += ' (' + str(year) + ')'
 
-        search_results: Tuple[TitleSearchResult, ...] = ()
+        search_results: Optional[SearchResult]
         if fallback_search:
             log.info('Searching imdb api again with year included for %s', name)
-            search_results = self._client.search_for_title(re.sub('[()]', '', name))
+            search_results = search_title(re.sub('[()]', '', name))
         else:
             log.info('Searching imdb api for %s', name)
-            search_results = self._client.search_for_title(title)
+            search_results = search_title(title)
 
         # Find the first movie that matches the title (and year if present)
-        for search_result in cast(Tuple[TitleSearchResult, ...], search_results):
-            if self.sanitize_imdb_title(search_result.title) == self.sanitize_imdb_title(title):
+        search_result_titles = search_results.titles if search_results else []
+        for movie_brief_info in search_result_titles:
+            if self.sanitize_imdb_title(movie_brief_info.title) == self.sanitize_imdb_title(title):
                 # If a year is present, it should also be the same
                 if year:
-                    if search_result.year == int(year):
-                        return search_result
+                    if movie_brief_info.year == int(year):
+                        return movie_brief_info
                     else:
                         continue
                 # If no year is present, take the first match
                 else:
-                    return search_result
+                    return movie_brief_info
 
         # If no match is found, try to search for alternative titles of the first (most relevant) result
-        if len(search_results) > 0:
-            best_match: TitleSearchResult = search_results[0]
+        if len(search_result_titles) > 0:
+            best_match: MovieBriefInfo = search_result_titles[0]
             # Need to use lowlevel client on the imdbFacade client for 'get_title_versions'
-            best_match_title_versions = self._client._client.get_title_versions(best_match.imdb_id)
+            best_match_title_versions = get_akas(best_match.imdb_id)
             if best_match_title_versions and 'alternateTitles' in best_match_title_versions:
                 for alternate_title in best_match_title_versions['alternateTitles']:
                     if self.sanitize_imdb_title(alternate_title['title']) == self.sanitize_imdb_title(title):
                         # If a year is present, it should also be the same
                         if year:
                             if best_match.year == int(year):
-                                return TitleSearchResult(
-                                    imdb_id=best_match.imdb_id,
-                                    title=best_match.title,
-                                    type=best_match.type,
-                                    year=best_match.year,
-                                )
+                                return best_match
                             else:
                                 continue
                         # If no year is present, take the first match
                         else:
-                            return TitleSearchResult(
-                                imdb_id=best_match.imdb_id,
-                                title=best_match.title,
-                                type=best_match.type,
-                                year=best_match.year,
-                            )
+                            return best_match
 
         # Fallback search in case nothing could be found
         if not fallback_search:
@@ -335,16 +326,16 @@ class MovieIndexer(_BaseIndexer):
 
         return None
 
-    def _get_by_id(self, id: str) -> Title:
+    def _get_by_id(self, id: str) -> Optional[MovieDetail]:
         """Get details for a movie from the api by it's id.
 
         :param id: the id of the movie
         :type id: str
         :return: the movie details or None if not found
-        :rtype : imdbpie.objects.Title or None
+        :rtype : imdbinfo.models.MovieDetail or None
         """
         log.info('Querying imdb api for id %s', id)
-        movie = self._client.get_title(id)
+        movie = get_movie(id)
 
         return movie
 
@@ -377,7 +368,7 @@ class MovieIndexer(_BaseIndexer):
         try:
             api_obj = self._search(title, year)
             if api_obj:
-                imdb_id, year = api_obj.imdb_id, api_obj.year
+                imdb_id, year = api_obj.imdbId, api_obj.year  # imdbId is the value prefixed with 'tt'
         except Exception:
             log.exception('Error while getting imdb id for %s', name)
 

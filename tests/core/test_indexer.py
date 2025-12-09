@@ -1,6 +1,6 @@
 # coding=utf-8
 
-from imdbpie.objects import TitleSearchResult
+from imdbinfo.models import MovieBriefInfo
 from pytest import MonkeyPatch
 from pytest_mock import MockerFixture
 from tvdb_api.models.series_search_result import SeriesSearchResult
@@ -172,7 +172,9 @@ def test_get_imdb_id_from_cache_not_found(monkeypatch: MonkeyPatch, mocker: Mock
 
 
 def test_get_imdb_id_and_store_in_cache(mocker: MockerFixture) -> None:
-    search_result = TitleSearchResult(imdb_id='tt1798684', title='Southpaw', type='feature', year=2015)
+    search_result = MovieBriefInfo(
+        id='1798684', imdb_id='1798684', imdbId='tt1798684', title='Southpaw', title_localized='Southpaw', year=2015
+    )
     mocker.patch('autosubliminal.core.indexer.MovieIndexer._search', return_value=search_result)
     db_mock_delete = mocker.patch('autosubliminal.db.ImdbIdCacheDb.delete_imdb_id')
     db_mock_set = mocker.patch('autosubliminal.db.ImdbIdCacheDb.set_imdb_id')

@@ -5,7 +5,7 @@ import os
 from typing import Any, Callable, Dict, List, Optional, Type
 from urllib.parse import urlparse, urlunparse
 
-from imdbpie.objects import Title
+from imdbinfo.models import MovieDetail
 
 import autosubliminal
 from autosubliminal.core.subtitle import Subtitle
@@ -119,18 +119,16 @@ class MovieDetails(object):
         return to_dict(self, key_fn, *exclude_args, **include_kwargs)
 
     @classmethod
-    def from_indexer(cls: Type['MovieDetails'], obj: Title) -> 'MovieDetails':
+    def from_indexer(cls: Type['MovieDetails'], obj: MovieDetail) -> 'MovieDetails':
         """Construct a :class:`MovieDetails` object from the indexer object.
 
         :param obj: the indexer object
-        :type obj: Title
+        :type obj: MovieDetail
         :return: the :class:`MovieDetails` object or None
         :rtype: MovieDetails or None
         """
-        if obj and isinstance(obj, Title):
-            return cls(
-                imdb_id=obj.imdb_id, title=obj.title, year=obj.year, overview=obj.plot_outline, poster=obj.image.url
-            )
+        if obj and isinstance(obj, MovieDetail):
+            return cls(imdb_id=obj.imdbId, title=obj.title, year=obj.year, overview=obj.plot, poster=obj.cover_url)
 
         return None
 

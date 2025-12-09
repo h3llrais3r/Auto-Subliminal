@@ -3,7 +3,6 @@
 import datetime
 import logging
 import os
-import tempfile
 from typing import Optional, Union
 
 import requests
@@ -80,7 +79,6 @@ def clear_cache() -> None:
     """Clear all caches."""
     _clear_autosubliminal_cache()
     _clear_subliminal_cache()
-    _clear_imdbpie_cache()
 
 
 def _clear_autosubliminal_cache() -> None:
@@ -91,15 +89,6 @@ def _clear_autosubliminal_cache() -> None:
 
 def _clear_subliminal_cache() -> None:
     cache_file = os.path.abspath(os.path.join(autosubliminal.CACHEDIR, 'subliminal.cache.dbm'))
-    if os.path.exists(cache_file):
-        os.remove(cache_file)
-
-
-def _clear_imdbpie_cache() -> None:
-    # Cache is created by imdbpie in temp location (see auth.py in imdbpie)
-    # Cleanup is required when switching between python versions
-    # If not, 'ValueError: unsupported pickle protocol' is thrown
-    cache_file = os.path.abspath(os.path.join(tempfile.gettempdir(), 'cache.db'))
     if os.path.exists(cache_file):
         os.remove(cache_file)
 

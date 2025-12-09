@@ -8,7 +8,6 @@ from typing import Any, Dict, List, Set
 import pytest
 from pytest import MonkeyPatch
 from pytest_mock import MockerFixture
-from vcr import VCR
 
 import autosubliminal
 from autosubliminal import version
@@ -39,13 +38,6 @@ from autosubliminal.util.common import (
     to_obj,
     to_obj_or_list,
     wait_for_internet_connection,
-)
-
-vcr = VCR(
-    path_transformer=VCR.ensure_suffix('.yaml'),
-    record_mode='once',
-    match_on=['method', 'scheme', 'host', 'port', 'path', 'query', 'body'],
-    cassette_library_dir=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'cassettes', 'common'),
 )
 
 text_value = 'test'
@@ -98,7 +90,6 @@ def test_run_cmd() -> None:
     assert run_cmd('cd') is not None
 
 
-@vcr.use_cassette()
 def test_connect_url(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.setattr('autosubliminal.USERAGENT', 'Auto-Subliminal/' + version.RELEASE_VERSION)
     monkeypatch.setattr('autosubliminal.TIMEOUT', 60)
