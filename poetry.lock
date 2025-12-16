@@ -1163,14 +1163,14 @@ all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2
 
 [[package]]
 name = "imdbinfo"
-version = "0.6.3"
+version = "0.6.4"
 description = "A Python service for querying IMDb data"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "imdbinfo-0.6.3-py3-none-any.whl", hash = "sha256:5d04cdb2123dd3195ef57fd754a6f28cfa17bf21b8e9d8a805070e435ea05557"},
-    {file = "imdbinfo-0.6.3.tar.gz", hash = "sha256:e1227afb180c8acf5f9892663a01b49c31ba6913280a9477ff638ae7c2691c28"},
+    {file = "imdbinfo-0.6.4-py3-none-any.whl", hash = "sha256:0cb24e829ff84770a270e6f7dafdff48cf9dbee4691b3e2be631cafa168de5b8"},
+    {file = "imdbinfo-0.6.4.tar.gz", hash = "sha256:776488a4574fc49c25fda61057c701ce5a36d49404f610b555a09465efe5f026"},
 ]
 
 [package.dependencies]
@@ -1179,6 +1179,11 @@ jmespath = "*"
 lxml = "*"
 niquests = "*"
 pydantic = "*"
+
+[package.extras]
+build = ["build", "twine"]
+dev = ["black", "mypy", "pytest (>=7.0)", "ruff"]
+test = ["pytest (>=7.0)"]
 
 [[package]]
 name = "iniconfig"
@@ -4083,4 +4088,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "8e8f7bc4a9528af49e8e00c137065e4fe80650ed4772cfff390fb9df22bece01"
+content-hash = "ad7ce03357f589122913d38907411d76d8ad094c289141d46c95e4d003e4e510"
