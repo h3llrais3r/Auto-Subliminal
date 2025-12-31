@@ -7,7 +7,6 @@
 
 # autosubliminal\core\item.py: 10
 # autosubliminal\providers\addic7ed_custom.py: 9
-# autosubliminal\providers\opensubtitles_com.py: 6
 # autosubliminal\subchecker.py: 9
 # autosubliminal\util\filesystem.py: 13,14
 # autosubliminal\util\language.py: 5,6
@@ -32,7 +31,6 @@ CherryPy==18.10.0
 # autosubliminal\providers\pitcher.py: 9,10
 deathbycaptcha==0.1.1
 # autosubliminal\core\cache.py: 9,10,11
-# autosubliminal\providers\opensubtitles_com.py: 7
 # autosubliminal\providers\pitcher.py: 11
 dogpile.cache==1.5.0
 # autosubliminal\util\filesystem.py: 15,16
@@ -48,14 +46,13 @@ gntp==1.0.3
 # autosubliminal\parsers\guessit\__init__.py: 3
 # autosubliminal\parsers\guessit\rules.py: 5,6,7
 # autosubliminal\providers\addic7ed_custom.py: 10
-# autosubliminal\providers\opensubtitles_com.py: 8
 guessit==3.8.0
 # autosubliminal\core\indexer.py: 10,11
 # autosubliminal\core\movie.py: 8
 imdbinfo==0.6.4
 # autosubliminal\util\json.py: 6
 jsonpickle==4.1.1
-# autosubliminal\__init__.py: 379,380
+# autosubliminal\__init__.py: 376,377
 # autosubliminal\util\filesystem.py: 10
 langdetect==1.0.9
 # autosubliminal\versionchecker.py: 8
@@ -77,7 +74,6 @@ rebulk==3.2.0
 # autosubliminal\notifiers\pushover.py: 7
 # autosubliminal\notifiers\telegram.py: 7
 # autosubliminal\providers\addic7ed_custom.py: 11
-# autosubliminal\providers\opensubtitles_com.py: 9
 # autosubliminal\refiners\omdb_custom.py: 5
 # autosubliminal\util\common.py: 16
 requests==2.32.5
@@ -86,12 +82,11 @@ requests-oauthlib==2.0.0
 # autosubliminal\core\websocket.py: 10
 schema==0.7.8
 # autosubliminal\__init__.py: 15
-stevedore==5.3.0
+stevedore==5.6.0
 # autosubliminal\__init__.py: 301,333,334,335
 # autosubliminal\core\item.py: 11
 # autosubliminal\providers\addic7ed_custom.py: 12,13,14,15,16,17,18,19,20
 # autosubliminal\providers\exceptions.py: 3
-# autosubliminal\providers\opensubtitles_com.py: 10,11,12,19,20,21,22
 # autosubliminal\providers\pitcher.py: 13
 # autosubliminal\providers\provider_cache.py: 3
 # autosubliminal\refiners\manual.py: 6
@@ -102,7 +97,7 @@ stevedore==5.3.0
 # autosubliminal\subchecker.py: 10,11,12,13,14,15,16,17,18,19
 # autosubliminal\subdownloader.py: 6
 # autosubliminal\util\filesystem.py: 12
-subliminal==2.2.1
+subliminal==2.5.0
 # autosubliminal\core\websocket.py: 9
 tailer==0.4.1
 # autosubliminal\core\indexer.py: 12,13,14,15,16,17,18,19,20,21

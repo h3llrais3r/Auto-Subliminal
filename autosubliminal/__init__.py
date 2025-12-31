@@ -311,7 +311,7 @@ def _init_scores() -> None:
         + episode_scores['country']
     )
     global MOVIEMINMATCHSCOREDEFAULT
-    MOVIEMINMATCHSCOREDEFAULT = movie_scores['title'] + movie_scores['year'] + episode_scores['country']
+    MOVIEMINMATCHSCOREDEFAULT = movie_scores['title'] + movie_scores['year'] + movie_scores['country']
 
     # Init scores
     global SHOWMINMATCHSCORE
@@ -331,7 +331,7 @@ def _init_subliminal() -> None:
 
     # Imports
     from subliminal.cache import region
-    from subliminal.cli import MutexLock
+    from subliminal.cli.helpers import MutexLock
     from subliminal.extensions import provider_manager, refiner_manager
 
     from autosubliminal.util.system import is_python_version_changed
@@ -359,10 +359,7 @@ def _init_subliminal() -> None:
         refiner_manager.register(omdb_refiner)
 
     # Add our custom providers to list of subliminal providers
-    providers = [
-        'addic7ed_custom = autosubliminal.providers.addic7ed_custom:Addic7edProvider',
-        'opensubtitles_com = autosubliminal.providers.opensubtitles_com:OpenSubtitlesComProvider',
-    ]
+    providers = ['addic7ed_custom = autosubliminal.providers.addic7ed_custom:Addic7edProvider']
     for provider in providers:
         if provider not in provider_manager.registered_extensions:
             provider_manager.register(provider)

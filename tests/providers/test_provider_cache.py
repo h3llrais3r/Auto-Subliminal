@@ -4,7 +4,7 @@ import os
 
 from pytest import MonkeyPatch
 from subliminal.cache import region
-from subliminal.cli import MutexLock
+from subliminal.cli.helpers import MutexLock
 
 from autosubliminal.providers.provider_cache import (
     ADDIC7ED_SEARCH_SHOW_ID_CACHE_PREFIX,

@@ -138,9 +138,6 @@ export class HomeSearchComponent implements OnInit, OnDestroy {
     if (this.matches.includes('release_group')) {
       matches.push(`Release group: ${this.scores.releaseGroup}`);
     }
-    if (this.matches.includes('hearing_impaired')) {
-      matches.push(`Hearing impaired: ${this.scores.hearingImpaired}`);
-    }
     return matches;
   }
 

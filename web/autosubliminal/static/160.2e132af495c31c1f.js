@@ -1235,9 +1235,6 @@ let HomeSearchComponent = /*#__PURE__*/(() => {
       if (this.matches.includes('release_group')) {
         matches.push(`Release group: ${this.scores.releaseGroup}`);
       }
-      if (this.matches.includes('hearing_impaired')) {
-        matches.push(`Hearing impaired: ${this.scores.hearingImpaired}`);
-      }
       return matches;
     }
     showSubtitlePreview(subtitle) {
@@ -2378,4 +2375,4 @@ function capitalizeFirstChar(value) {
 /***/ })
 
 }]);
-//# sourceMappingURL=160.3641ec816404301c.js.map
+//# sourceMappingURL=160.2e132af495c31c1f.js.map

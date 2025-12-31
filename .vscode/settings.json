@@ -81,7 +81,6 @@
   "mypy-type-checker.ignorePatterns": [
     "autosubliminal/parsers/guessit/rules.py",
     "autosubliminal/providers/addic7ed_custom.py",
-    "autosubliminal/providers/opensubtitles_com.py",
     "autosubliminal/providers/pitcher.py",
     "autosubliminal/refiners/omdb_custom.py"
   ]

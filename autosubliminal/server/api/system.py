@@ -149,10 +149,9 @@ class _SettingsApi(RestResource):
             'quality': episode_scores['resolution'],
             'codec': episode_scores['video_codec'],
             'release_group': episode_scores['release_group'],
-            'hearing_impaired': episode_scores['hearing_impaired'],
             'default': autosubliminal.SHOWMINMATCHSCOREDEFAULT,
             'min': autosubliminal.SHOWMINMATCHSCORE,
-            'max': episode_scores['hash'] + episode_scores['hearing_impaired'],
+            'max': episode_scores['hash'],
         }
 
     def _get_movie_scores(self) -> Dict[str, Any]:
@@ -165,10 +164,9 @@ class _SettingsApi(RestResource):
             'quality': movie_scores['resolution'],
             'codec': movie_scores['video_codec'],
             'release_group': movie_scores['release_group'],
-            'hearing_impaired': movie_scores['hearing_impaired'],
             'default': autosubliminal.MOVIEMINMATCHSCOREDEFAULT,
             'min': autosubliminal.MOVIEMINMATCHSCORE,
-            'max': movie_scores['hash'] + movie_scores['hearing_impaired'],
+            'max': movie_scores['hash'],
         }
 
 

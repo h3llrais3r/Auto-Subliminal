@@ -4,7 +4,7 @@ import logging
 import operator
 import os
 import shutil
-from typing import Any, Dict, List, Optional, Set, Tuple, cast
+from typing import Any, Dict, List, Optional, Tuple, cast
 
 import babelfish
 import subliminal
@@ -31,7 +31,6 @@ from autosubliminal.db import WantedItemsDb
 from autosubliminal.postprocessor import PostProcessor
 from autosubliminal.providers import provider_cache
 from autosubliminal.providers.addic7ed_custom import Addic7edSubtitle as CustomAddic7edSubtitle
-from autosubliminal.providers.opensubtitles_com import OpenSubtitlesComSubtitle as CustomOpenSubtitlesComSubtitle
 from autosubliminal.subdownloader import SubDownloader
 from autosubliminal.subsynchronizer import SubSynchronizer
 from autosubliminal.util.common import camelize, set_rw_and_remove, wait_for_internet_connection
@@ -181,7 +180,7 @@ def search_subtitle(wanted_item_index: int, lang: str) -> Tuple[List[Dict[str, A
                         (
                             index,
                             s,
-                            subliminal.compute_score(s, video, hearing_impaired=autosubliminal.PREFERHEARINGIMPAIRED),
+                            subliminal.compute_score(s, video),
                         )
                         for index, s in enumerate(subtitles)
                     ],
@@ -195,11 +194,6 @@ def search_subtitle(wanted_item_index: int, lang: str) -> Tuple[List[Dict[str, A
 
                     # Only add subtitle when content is found
                     if subtitle.content:
-                        # Get the matches (hearing_impaired is used for score increasing, so add it if matched)
-                        # This is to get the same behaviour as in the subliminal.compute_score()
-                        matches: Set[str] = subtitle.get_matches(video)
-                        if subtitle.hearing_impaired == autosubliminal.PREFERHEARINGIMPAIRED:
-                            matches.add('hearing_impaired')
                         # Create new sub dict for showing result
                         sub = {
                             'subtitle_index': index,
@@ -210,7 +204,7 @@ def search_subtitle(wanted_item_index: int, lang: str) -> Tuple[List[Dict[str, A
                             'single': single,
                             'page_link': subtitle.page_link,
                             'releases': _get_releases(subtitle),
-                            'matches': matches,
+                            'matches': subtitle.get_matches(video),
                             'wanted_item_index': wanted_item_index,
                             'playvideo_url': _construct_playvideo_url(wanted_item),
                         }
@@ -737,7 +731,7 @@ def _get_releases(subtitle: subliminal.Subtitle) -> List[str]:
         releases.extend([subtitle.text])
     elif isinstance(subtitle, OpenSubtitlesSubtitle):
         releases.extend([subtitle.movie_release_name])
-    elif isinstance(subtitle, (OpenSubtitlesComSubtitle, CustomOpenSubtitlesComSubtitle)):
+    elif isinstance(subtitle, OpenSubtitlesComSubtitle):
         releases.extend([subtitle.release])
     elif isinstance(subtitle, PodnapisiSubtitle):
         releases.extend(subtitle.releases)

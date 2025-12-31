@@ -352,7 +352,6 @@ def read_config(check_upgrade: bool = False) -> None:
             autosubliminal.OPENSUBTITLESPASSWORD = cfg.get('subliminal', 'opensubtitlespassword')
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles'] = {}
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitlescom'] = {}
-            autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles_com'] = {}
             if autosubliminal.OPENSUBTITLESUSERNAME and autosubliminal.OPENSUBTITLESPASSWORD:
                 autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles'].update(
                     {'username': autosubliminal.OPENSUBTITLESUSERNAME, 'password': autosubliminal.OPENSUBTITLESPASSWORD}
@@ -360,21 +359,14 @@ def read_config(check_upgrade: bool = False) -> None:
                 autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitlescom'].update(
                     {'username': autosubliminal.OPENSUBTITLESUSERNAME, 'password': autosubliminal.OPENSUBTITLESPASSWORD}
                 )
-                autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles_com'].update(
-                    {'username': autosubliminal.OPENSUBTITLESUSERNAME, 'password': autosubliminal.OPENSUBTITLESPASSWORD}
-                )
         else:
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles'] = {}
             autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitlescom'] = {}
-            autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles_com'] = {}
 
         if cfg.has_option('subliminal', 'opensubtitlesapikey'):
             autosubliminal.OPENSUBTITLESAPIKEY = cfg.get('subliminal', 'opensubtitlesapikey')
             if autosubliminal.OPENSUBTITLESAPIKEY:
                 autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitlescom'].update(
-                    {'apikey': autosubliminal.OPENSUBTITLESAPIKEY}
-                )
-                autosubliminal.SUBLIMINALPROVIDERCONFIGS['opensubtitles_com'].update(
                     {'apikey': autosubliminal.OPENSUBTITLESAPIKEY}
                 )
 
@@ -1666,6 +1658,97 @@ def _upgrade_config(from_version: int, to_version: int) -> None:
             print('INFO: New calculated value movieminmatchscore: %d' % autosubliminal.MOVIEMINMATCHSCORE)
             print('INFO: Config upgraded to version 14.')
             autosubliminal.CONFIGVERSION = 14
+            autosubliminal.CONFIGUPGRADED = True
+            send_websocket_notification(
+                'Config upgraded. Please check or reconfigure you subliminal configuration!',
+                severity='warn',
+                sticky=True,
+            )
+
+        ############################
+        # Suliminal version >= 2.4.0
+        ############################
+        # new subliminal episode scores (see examples below on how it is calculated)
+        ############################################################################
+        # 'hash': 971
+        # --> perfect match -> not configurable
+        # 'series': 486
+        # 'year': 162
+        # 'country': 262
+        # 'season': 54
+        # 'episode': 54
+        # --> these 5 should always be matched by default -> not visible in GUI -> showminmatchscore = 918
+        # 'release_group': 18
+        # 'source': 4
+        # 'resolution': 1
+        # 'video_codec': 1
+        # --> these 4 are configurable -> max showminmatchscore = 918 + 18 + 4 + 1 + 1 = 942
+        # 'audio_codec': 2
+        # --> not used
+        #
+        # new subliminal movie scores (see examples below on how it is calculated)
+        ##########################################################################
+        # 'hash': 323
+        # --> perfect match -> not configurable
+        # 'title': 162
+        # 'year': 54
+        # 'country': 54
+        # --> these 3 should always be matched by default -> not visible in GUI -> showminmatchscore = 270
+        # 'release_group': 18
+        # 'source': 4
+        # 'resolution': 1
+        # 'video_codec': 1
+        # --> these 4 are configurable -> max showminmatchscore = 90 + 18 + 4 + 1 + 1 = 294
+        # 'audio_codec': 2
+        # --> not used
+        if from_version == 14 and to_version == 15:
+            print('INFO: Removing custom opensubtitles_com provider')
+            # Read config file
+            cfg = _create_config_parser()
+            try:
+                with codecs.open(autosubliminal.CONFIGFILE, mode='r', encoding=ENCODING) as f:
+                    cfg.read_file(f)
+            except Exception:
+                # No config yet, just mark as upgraded
+                cfg = _create_config_parser()
+            if cfg.has_section('subliminal'):
+                if cfg.has_option('subliminal', 'providers'):
+                    providers = cfg.get('subliminal', 'providers')
+                    provider_list = providers.lower().split(',')
+                    if 'opensubtitles_com' in provider_list:
+                        provider_list.remove('opensubtitles_com')
+                    providers = ','.join(provider_list)
+                    cfg.set('subliminal', 'providers', providers)
+                # Write to file
+                with codecs.open(autosubliminal.CONFIGFILE, mode='wb', encoding=ENCODING) as f:
+                    cfg.write(f)
+            print('INFO: Upgrading scoring calculation. Please check/reconfigure your min match scores!')
+            autosubliminal.SHOWMINMATCHSCORE = autosubliminal.SHOWMINMATCHSCOREDEFAULT
+            print('INFO: Default value showminmatchscore: %d' % autosubliminal.SHOWMINMATCHSCORE)
+            if autosubliminal.SHOWMATCHSOURCE:
+                autosubliminal.SHOWMINMATCHSCORE += 4
+            if autosubliminal.SHOWMATCHQUALITY:
+                autosubliminal.SHOWMINMATCHSCORE += 1
+            if autosubliminal.SHOWMATCHCODEC:
+                autosubliminal.SHOWMINMATCHSCORE += 1
+            if autosubliminal.SHOWMATCHRELEASEGROUP:
+                autosubliminal.SHOWMINMATCHSCORE += 18
+            print('INFO: New calculated value showminmatchscore: %d' % autosubliminal.SHOWMINMATCHSCORE)
+            autosubliminal.MOVIEMINMATCHSCORE = autosubliminal.MOVIEMINMATCHSCOREDEFAULT
+            print('INFO: Default value movieminmatchscore: %d' % autosubliminal.MOVIEMINMATCHSCORE)
+            if autosubliminal.MOVIEMATCHSOURCE:
+                autosubliminal.MOVIEMINMATCHSCORE += 4
+            if autosubliminal.MOVIEMATCHQUALITY:
+                autosubliminal.MOVIEMINMATCHSCORE += 1
+            if autosubliminal.MOVIEMATCHCODEC:
+                autosubliminal.MOVIEMINMATCHSCORE += 1
+            if autosubliminal.MOVIEMATCHRELEASEGROUP:
+                autosubliminal.MOVIEMINMATCHSCORE += 18
+            print('INFO: New calculated value movieminmatchscore: %d' % autosubliminal.MOVIEMINMATCHSCORE)
+            print('INFO: Hearing impaired logic changed. Please check your config!')
+            autosubliminal.PREFERHEARINGIMPAIRED = False
+            print('INFO: Config upgraded to version 15.')
+            autosubliminal.CONFIGVERSION = 15
             autosubliminal.CONFIGUPGRADED = True
             send_websocket_notification(
                 'Config upgraded. Please check or reconfigure you subliminal configuration!',

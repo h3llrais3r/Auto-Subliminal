@@ -36,8 +36,6 @@ deathbycaptcha 0.1.1 A library aims to support deathbycaptcha.
 dogpile-cache 1.5.0 A caching front-end based on the Dogpile lock.
 |-- decorator >=4.0.0
 |-- stevedore >=3.0.0
-|   `-- pbr >=2.0.0 
-|       `-- setuptools * 
 `-- typing-extensions >=4.0.1
 enzyme 0.5.2 Video metadata parser
 ffsubsync 0.4.31
@@ -135,35 +133,38 @@ requests-oauthlib 2.0.0 OAuthlib authentication support for Requests.
     `-- urllib3 >=1.21.1,<3 
 schema 0.7.8 Simple data validation library
 simplejson 3.20.2 Simple, fast, extensible JSON encoder/decoder for Python
-stevedore 5.3.0 Manage dynamic plugins for Python applications
-`-- pbr >=2.0.0
-    `-- setuptools * 
-subliminal 2.2.1 Subtitles, faster than your thoughts
+stevedore 5.6.0 Manage dynamic plugins for Python applications
+subliminal 2.5.0 Subtitles, faster than your thoughts
 |-- babelfish >=0.6.1
 |-- beautifulsoup4 >=4.4.0
 |   |-- soupsieve >=1.6.1 
 |   `-- typing-extensions >=4.0.0 
 |-- chardet >=5.0
-|-- click >=8.0
+|-- click *
 |   `-- colorama * 
 |-- click-option-group >=0.5.6
 |   `-- click >=7.0 
 |       `-- colorama * 
+|-- defusedxml >=0.7.1
 |-- dogpile-cache >=1.0
 |   |-- decorator >=4.0.0 
 |   |-- stevedore >=3.0.0 
-|   |   `-- pbr >=2.0.0 
-|   |       `-- setuptools * 
 |   `-- typing-extensions >=4.0.1 
-|-- enzyme >=0.5.0
 |-- guessit >=3.0.0
 |   |-- babelfish >=0.6.0 
 |   |-- python-dateutil * 
 |   |   `-- six >=1.5 
 |   `-- rebulk >=3.2.0 
+|-- knowit >=0.5.5
+|   |-- babelfish >=0.6.1,<0.7.0 
+|   |-- enzyme >=0.5.2,<0.6.0 
+|   |-- pymediainfo >=7.0.1,<8.0.0 
+|   |-- pyyaml >=6.0,<7.0 
+|   `-- trakit >=0.2.2,<0.3.0 
+|       |-- babelfish >=0.6.0,<0.7.0 (circular dependency aborted here)
+|       `-- rebulk >=3.1.0,<4.0.0 
 |-- platformdirs >=3
 |-- pysubs2 >=1.7
-|-- rarfile >=2.7
 |-- requests >=2.0
 |   |-- certifi >=2017.4.17 
 |   |-- charset-normalizer >=2,<4 
@@ -171,9 +172,7 @@ subliminal 2.2.1 Subtitles, faster than your thoughts
 |   `-- urllib3 >=1.21.1,<3 
 |-- srt >=3.5
 |-- stevedore >=3.0
-|   `-- pbr >=2.0.0 
-|       `-- setuptools * 
-`-- tomli >=2
+`-- tomlkit >=0.13.2
 tailer 0.4.1 Python tail is a simple implementation of GNU tail and head.
 tvdb_api 3.0.0 Client implementation for TheTVDB API v2 and v3
 |-- certifi >=14.05.14

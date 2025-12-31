@@ -55,8 +55,8 @@ requests = "2.32.5"
 requests-oauthlib = "2.0.0"
 schema = "0.7.8"
 simplejson = "3.20.2"
-stevedore = "5.3.0"
-subliminal = "2.2.1"
+stevedore = "5.6.0"
+subliminal = "2.5.0"
 tailer = "0.4.1"
 tvdb_api = { git = "https://github.com/h3llrais3r/tvdb_api.git", rev = "32228cc4af864398198e280bbafbd1ec98567d8f" }
 Unidecode = "1.4.0"
@@ -102,7 +102,6 @@ files = ["AutoSubliminal.py", "autosubliminal", "tests"]
 exclude = [
   "autosubliminal/parsers/guessit/rules.py",
   "autosubliminal/providers/addic7ed_custom.py",
-  "autosubliminal/providers/opensubtitles_com.py",
   "autosubliminal/providers/pitcher.py",
   "autosubliminal/refiners/omdb_custom.py",
 ]
@@ -142,7 +141,6 @@ ignore = ["E402"]
 "autosubliminal/providers/addic7ed_custom.py" = ["F401", "E741"]
 "autosubliminal/subsynchronizer.py" = ["F401"]
 "autosubliminal/util/common.py" = ["E731"]
-"autosubliminal/providers/opensubtitles_com.py" = ["E741"]
 "autosubliminal/core/scheduler.py" = ["E722"]
 
 [tool.ruff.lint.isort]
