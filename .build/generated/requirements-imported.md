@@ -49,7 +49,7 @@ gntp==1.0.3
 guessit==3.8.0
 # autosubliminal\core\indexer.py: 10,11
 # autosubliminal\core\movie.py: 8
-imdbinfo==0.6.4
+imdbinfo==0.6.5
 # autosubliminal\util\json.py: 6
 jsonpickle==4.1.1
 # autosubliminal\__init__.py: 376,377
