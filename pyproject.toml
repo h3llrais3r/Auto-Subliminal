@@ -75,7 +75,7 @@ pigar = "2.2.0"
 ruff = "0.14.14"
 types-requests = "2.32.4.20260107"
 types-setuptools = "80.10.0.20260124"
-types-python-dateutil = "2.9.0.20251115"
+types-python-dateutil = "2.9.0.20260124"
 
 [tool.coverage.run]
 branch = false
