@@ -1175,14 +1175,14 @@ all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2
 
 [[package]]
 name = "imdbinfo"
-version = "0.6.7"
+version = "0.7.0"
 description = "A Python service for querying IMDb data"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "imdbinfo-0.6.7-py3-none-any.whl", hash = "sha256:336d02f114556271029414cd7b437e872f1aebe302868ecf08475bbd90dd2e90"},
-    {file = "imdbinfo-0.6.7.tar.gz", hash = "sha256:8c7b0672ec110ff8794ec99eb5de42d7a5140211e1a2f067b71e8f766d031cd6"},
+    {file = "imdbinfo-0.7.0-py3-none-any.whl", hash = "sha256:7f79d1b10f3e5c25c8010f7cf435f81f4bc56a31616ea3ea581f2e827c0597d5"},
+    {file = "imdbinfo-0.7.0.tar.gz", hash = "sha256:81b3ed2b6d96d89e825bd55520706a4535cce09ccfd0ecad535e8487c67c0070"},
 ]
 
 [package.dependencies]
@@ -4226,4 +4226,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "582defe8c53ac2483d9667bafddf1e0d511d1545259ec43ff3aa61a298c13397"
+content-hash = "2dfae2fd082a70b8536afb69ac086dc7d1306a78612eae3a51b742a391273538"
