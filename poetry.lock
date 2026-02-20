@@ -3428,14 +3428,14 @@ files = [
 
 [[package]]
 name = "stevedore"
-version = "5.6.0"
+version = "5.7.0"
 description = "Manage dynamic plugins for Python applications"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "stevedore-5.6.0-py3-none-any.whl", hash = "sha256:4a36dccefd7aeea0c70135526cecb7766c4c84c473b1af68db23d541b6dc1820"},
-    {file = "stevedore-5.6.0.tar.gz", hash = "sha256:f22d15c6ead40c5bbfa9ca54aa7e7b4a07d59b36ae03ed12ced1a54cf0b51945"},
+    {file = "stevedore-5.7.0-py3-none-any.whl", hash = "sha256:fd25efbb32f1abb4c9e502f385f0018632baac11f9ee5d1b70f88cc5e22ad4ed"},
+    {file = "stevedore-5.7.0.tar.gz", hash = "sha256:31dd6fe6b3cbe921e21dcefabc9a5f1cf848cf538a1f27543721b8ca09948aa3"},
 ]
 
 [[package]]
@@ -4239,4 +4239,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "b1b64c8988d6bcfc7ed1aae46e02fbec2cabc0293b713397b4fb114570087451"
+content-hash = "16291f24fcad3622e1d2a97829fcb8f786a9979a5bf4e3d86f410c53a6f5e5c7"

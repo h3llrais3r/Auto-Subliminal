@@ -55,7 +55,7 @@ requests = "2.32.5"
 requests-oauthlib = "2.0.0"
 schema = "0.7.8"
 simplejson = "3.20.2"
-stevedore = "5.6.0"
+stevedore = "5.7.0"
 subliminal = "2.5.0"
 tailer = "0.4.1"
 tvdb_api = { git = "https://github.com/h3llrais3r/tvdb_api.git", rev = "32228cc4af864398198e280bbafbd1ec98567d8f" }
