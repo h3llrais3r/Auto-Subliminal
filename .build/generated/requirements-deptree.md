@@ -134,7 +134,7 @@ requests-oauthlib 2.0.0 OAuthlib authentication support for Requests.
 schema 0.7.8 Simple data validation library
 simplejson 3.20.2 Simple, fast, extensible JSON encoder/decoder for Python
 stevedore 5.7.0 Manage dynamic plugins for Python applications
-subliminal 2.5.0 Subtitles, faster than your thoughts
+subliminal 2.6.0 Subtitles, faster than your thoughts
 |-- babelfish >=0.6.1
 |-- beautifulsoup4 >=4.4.0
 |   |-- soupsieve >=1.6.1 

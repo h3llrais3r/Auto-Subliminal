@@ -97,7 +97,7 @@ stevedore==5.7.0
 # autosubliminal\subchecker.py: 10,11,12,13,14,15,16,17,18,19
 # autosubliminal\subdownloader.py: 6
 # autosubliminal\util\filesystem.py: 12
-subliminal==2.5.0
+subliminal==2.6.0
 # autosubliminal\core\websocket.py: 9
 tailer==0.4.1
 # autosubliminal\core\indexer.py: 12,13,14,15,16,17,18,19,20,21
