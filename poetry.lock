@@ -3440,14 +3440,14 @@ files = [
 
 [[package]]
 name = "subliminal"
-version = "2.5.0"
+version = "2.6.0"
 description = "Subtitles, faster than your thoughts"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "subliminal-2.5.0-py3-none-any.whl", hash = "sha256:219f969024882c4699416a4b155ba0ddf09c0952e4c15aefc52db4003cc8226e"},
-    {file = "subliminal-2.5.0.tar.gz", hash = "sha256:3c79507e9c304895fb41eb0039b11f5abcb9f77376fe550cb605932836dfadc3"},
+    {file = "subliminal-2.6.0-py3-none-any.whl", hash = "sha256:b03316094668cdbd7e3a08289b4cdb51d75ad62209822c089acbbf33dee7751f"},
+    {file = "subliminal-2.6.0.tar.gz", hash = "sha256:e6e7aee1b218d543dcb3b7b2248ea0f92afc4c223ce3e7af8d2c3843e31bafe5"},
 ]
 
 [package.dependencies]
@@ -4239,4 +4239,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "16291f24fcad3622e1d2a97829fcb8f786a9979a5bf4e3d86f410c53a6f5e5c7"
+content-hash = "c4a24c83a7e35a0fc367d01b2f39704c9d8c9a5bf777dbaa8430145e953dce9a"
