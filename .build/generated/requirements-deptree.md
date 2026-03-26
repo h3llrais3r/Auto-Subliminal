@@ -28,10 +28,10 @@ cherrypy 18.10.0 Object-Oriented HTTP framework
     `-- setuptools * 
 deathbycaptcha 0.1.1 A library aims to support deathbycaptcha.
 |-- requests *
-|   |-- certifi >=2017.4.17 
+|   |-- certifi >=2023.5.7 
 |   |-- charset-normalizer >=2,<4 
 |   |-- idna >=2.5,<4 
-|   `-- urllib3 >=1.21.1,<3 
+|   `-- urllib3 >=1.26,<3 
 `-- simplejson *
 dogpile-cache 1.5.0 A caching front-end based on the Dogpile lock.
 |-- decorator >=4.0.0
@@ -97,40 +97,40 @@ pysrt 1.1.2 SubRip (.srt) subtitle parser and writer
 `-- chardet *
 python-anticaptcha 1.0.0 Client library for solve captchas with Anticaptcha.com support.
 |-- requests *
-|   |-- certifi >=2017.4.17 
+|   |-- certifi >=2023.5.7 
 |   |-- charset-normalizer >=2,<4 
 |   |-- idna >=2.5,<4 
-|   `-- urllib3 >=1.21.1,<3 
+|   `-- urllib3 >=1.26,<3 
 `-- six *
 python-dateutil 2.9.0.post0 Extensions to the standard Python datetime module
 `-- six >=1.5
 python-twitter 3.5 A Python wrapper around the Twitter API
 |-- future *
 |-- requests *
-|   |-- certifi >=2017.4.17 
+|   |-- certifi >=2023.5.7 
 |   |-- charset-normalizer >=2,<4 
 |   |-- idna >=2.5,<4 
-|   `-- urllib3 >=1.21.1,<3 
+|   `-- urllib3 >=1.26,<3 
 `-- requests-oauthlib *
     |-- oauthlib >=3.0.0 
     `-- requests >=2.0.0 
-        |-- certifi >=2017.4.17 
+        |-- certifi >=2023.5.7 
         |-- charset-normalizer >=2,<4 
         |-- idna >=2.5,<4 
-        `-- urllib3 >=1.21.1,<3 
+        `-- urllib3 >=1.26,<3 
 rebulk 3.2.0 Rebulk - Define simple search patterns in bulk to perform advanced matching on any string.
-requests 2.32.5 Python HTTP for Humans.
-|-- certifi >=2017.4.17
+requests 2.33.0 Python HTTP for Humans.
+|-- certifi >=2023.5.7
 |-- charset-normalizer >=2,<4
 |-- idna >=2.5,<4
-`-- urllib3 >=1.21.1,<3
+`-- urllib3 >=1.26,<3
 requests-oauthlib 2.0.0 OAuthlib authentication support for Requests.
 |-- oauthlib >=3.0.0
 `-- requests >=2.0.0
-    |-- certifi >=2017.4.17 
+    |-- certifi >=2023.5.7 
     |-- charset-normalizer >=2,<4 
     |-- idna >=2.5,<4 
-    `-- urllib3 >=1.21.1,<3 
+    `-- urllib3 >=1.26,<3 
 schema 0.7.8 Simple data validation library
 simplejson 3.20.2 Simple, fast, extensible JSON encoder/decoder for Python
 stevedore 5.7.0 Manage dynamic plugins for Python applications
@@ -166,10 +166,10 @@ subliminal 2.5.0 Subtitles, faster than your thoughts
 |-- platformdirs >=3
 |-- pysubs2 >=1.7
 |-- requests >=2.0
-|   |-- certifi >=2017.4.17 
+|   |-- certifi >=2023.5.7 
 |   |-- charset-normalizer >=2,<4 
 |   |-- idna >=2.5,<4 
-|   `-- urllib3 >=1.21.1,<3 
+|   `-- urllib3 >=1.26,<3 
 |-- srt >=3.5
 |-- stevedore >=3.0
 `-- tomlkit >=0.13.2
