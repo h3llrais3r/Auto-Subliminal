@@ -130,9 +130,12 @@ def test_get_show_artwork_url() -> None:
 def test_get_imdb_id() -> None:
     indexer = MovieIndexer()
     # By title
-    assert indexer.get_imdb_id_and_year('Southpaw', force_search=True, store_id=False) == ('tt1798684', 2015)
+    assert indexer.get_imdb_id_and_year('The Matrix', force_search=True, store_id=False) == ('tt0133093', 1999)
     # By title and year
-    assert indexer.get_imdb_id_and_year('Southpaw', year=2015, force_search=True, store_id=False) == ('tt1798684', 2015)
+    assert indexer.get_imdb_id_and_year('The Matrix', year=1999, force_search=True, store_id=False) == (
+        'tt0133093',
+        1999,
+    )
     assert indexer.get_imdb_id_and_year('Joyeux Noël', year=2005, force_search=True, store_id=False) == (
         'tt0424205',
         2005,
@@ -148,38 +151,38 @@ def test_get_imdb_id() -> None:
         2010,
     )
     # By fallback search
-    assert indexer.get_imdb_id_and_year('Bullet', year=2014, force_search=True, store_id=False) == ('tt2544734', 2014)
+    assert indexer.get_imdb_id_and_year('Bullet', year=2019, force_search=True, store_id=False) == ('tt14741500', 2019)
 
 
 def test_get_imdb_id_from_movie_name_mapping(monkeypatch: MonkeyPatch) -> None:
-    monkeypatch.setattr('autosubliminal.MOVIENAMEMAPPING', {'southpaw (2015)': 'tt1798684'})
+    monkeypatch.setattr('autosubliminal.MOVIENAMEMAPPING', {'the matrix (1999)': 'tt0133093'})
     indexer = MovieIndexer()
-    assert indexer.get_imdb_id_and_year('Southpaw', 2015, force_search=False, store_id=False) == ('tt1798684', 2015)
+    assert indexer.get_imdb_id_and_year('The Matrix', 1999, force_search=False, store_id=False) == ('tt0133093', 1999)
 
 
 def test_get_imdb_id_from_cache(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
     monkeypatch.setattr('autosubliminal.MOVIENAMEMAPPING', {})
-    mocker.patch('autosubliminal.db.ImdbIdCacheDb.get_imdb_id', return_value='tt1798684')
+    mocker.patch('autosubliminal.db.ImdbIdCacheDb.get_imdb_id', return_value='tt0133093')
     indexer = MovieIndexer()
-    assert indexer.get_imdb_id_and_year('Southpaw', 2015, force_search=False, store_id=False) == ('tt1798684', 2015)
+    assert indexer.get_imdb_id_and_year('The Matrix', 1999, force_search=False, store_id=False) == ('tt0133093', 1999)
 
 
 def test_get_imdb_id_from_cache_not_found(monkeypatch: MonkeyPatch, mocker: MockerFixture) -> None:
     monkeypatch.setattr('autosubliminal.MOVIENAMEMAPPING', {})
     mocker.patch('autosubliminal.db.ImdbIdCacheDb.get_imdb_id', return_value=IMDB_ID_UNKNOWN)
     indexer = MovieIndexer()
-    assert indexer.get_imdb_id_and_year('Southpaw', 2015, force_search=False, store_id=False) == (None, 2015)
+    assert indexer.get_imdb_id_and_year('The Matrix', 1999, force_search=False, store_id=False) == (None, 1999)
 
 
 def test_get_imdb_id_and_store_in_cache(mocker: MockerFixture) -> None:
     search_result = MovieBriefInfo(
-        id='1798684', imdb_id='1798684', imdbId='tt1798684', title='Southpaw', title_localized='Southpaw', year=2015
+        id='133093', imdb_id='133093', imdbId='tt0133093', title='The Matrix', title_localized='The Matrix', year=1999
     )
     mocker.patch('autosubliminal.core.indexer.MovieIndexer._search', return_value=search_result)
     db_mock_delete = mocker.patch('autosubliminal.db.ImdbIdCacheDb.delete_imdb_id')
     db_mock_set = mocker.patch('autosubliminal.db.ImdbIdCacheDb.set_imdb_id')
     indexer = MovieIndexer()
-    assert indexer.get_imdb_id_and_year('Southpaw', 2015, force_search=True, store_id=True) == ('tt1798684', 2015)
+    assert indexer.get_imdb_id_and_year('The Matrix', 1999, force_search=True, store_id=True) == ('tt0133093', 1999)
     assert db_mock_delete.called
     assert db_mock_set.called
 
@@ -189,19 +192,19 @@ def test_get_imdb_id_exception(mocker: MockerFixture) -> None:
     db_mock_delete = mocker.patch('autosubliminal.db.ImdbIdCacheDb.delete_imdb_id')
     db_mock_set = mocker.patch('autosubliminal.db.ImdbIdCacheDb.set_imdb_id')
     indexer = MovieIndexer()
-    assert indexer.get_imdb_id_and_year('Southpaw', 2015, force_search=True, store_id=True) == (None, 2015)
+    assert indexer.get_imdb_id_and_year('The Matrix', 1999, force_search=True, store_id=True) == (None, 1999)
     assert db_mock_delete.called
     assert db_mock_set.called
 
 
 def test_get_movie_details() -> None:
     indexer = MovieIndexer()
-    movie_details = indexer.get_movie_details('tt1798684')
+    movie_details = indexer.get_movie_details('tt0133093')
     assert movie_details is not None
     assert isinstance(movie_details, MovieDetails)
-    assert movie_details.imdb_id == 'tt1798684'
-    assert movie_details.title == 'Southpaw'
-    assert movie_details.year == 2015
+    assert movie_details.imdb_id == 'tt0133093'
+    assert movie_details.title == 'The Matrix'
+    assert movie_details.year == 1999
     assert movie_details.overview is not None
     assert movie_details.poster is not None
 

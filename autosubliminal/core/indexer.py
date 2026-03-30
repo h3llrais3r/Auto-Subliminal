@@ -7,7 +7,7 @@ from functools import wraps
 from time import time
 from typing import Any, Callable, List, Optional, Set, Tuple, cast
 
-from imdbinfo import get_akas, get_movie, search_title
+from imdbinfo import TitleType, get_akas, get_movie, search_title
 from imdbinfo.models import MovieBriefInfo, MovieDetail, SearchResult
 from tvdb_api.client import TvdbClient
 from tvdb_api.models.episode import Episode
@@ -282,8 +282,9 @@ class MovieIndexer(_BaseIndexer):
 
         search_results: Optional[SearchResult]
         if fallback_search:
+            # Fallback search: include year and type = movie to get more specific results
             log.info('Searching imdb api again with year included for %s', name)
-            search_results = search_title(re.sub('[()]', '', name))
+            search_results = search_title(re.sub('[()]', '', name), title_type=TitleType.Movies)
         else:
             log.info('Searching imdb api for %s', name)
             search_results = search_title(title)
