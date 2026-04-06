@@ -2,8 +2,8 @@
 
 import logging
 import sqlite3
-from sqlite3 import Cursor, Row
-from typing import List, Optional, Type, TypeVar
+from sqlite3 import Cursor
+from typing import Any, List, Optional, Type, TypeVar
 
 import autosubliminal
 from autosubliminal.core.item import DownloadedItem, DownloadItem, WantedItem
@@ -14,18 +14,18 @@ log = logging.getLogger(__name__)
 T = TypeVar('T', WantedItem, DownloadedItem)
 
 
-def _item_factory(cursor: Cursor, row: Row, item_type: Type[T]) -> T:
+def _item_factory(cursor: Cursor, row: tuple[Any, ...], item_type: Type[T]) -> T:
     item = item_type()
     for idx, col in enumerate(cursor.description):
         item.set_attr(col[0], row[idx])
     return item
 
 
-def _wanted_item_factory(cursor: Cursor, row: Row) -> WantedItem:
+def _wanted_item_factory(cursor: Cursor, row: tuple[Any, ...]) -> WantedItem:
     return _item_factory(cursor, row, WantedItem)
 
 
-def _downloaded_item_factory(cursor: Cursor, row: Row) -> DownloadedItem:
+def _downloaded_item_factory(cursor: Cursor, row: tuple[Any, ...]) -> DownloadedItem:
     return _item_factory(cursor, row, DownloadedItem)
 
 

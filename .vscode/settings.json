@@ -78,6 +78,7 @@
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "python.analysis.completeFunctionParens": true,
+  "mypy-type-checker.importStrategy": "fromEnvironment",
   "mypy-type-checker.ignorePatterns": [
     "autosubliminal/parsers/guessit/rules.py",
     "autosubliminal/providers/addic7ed_custom.py",

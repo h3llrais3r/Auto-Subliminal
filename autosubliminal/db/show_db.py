@@ -2,8 +2,8 @@
 
 import logging
 import sqlite3
-from sqlite3 import Connection, Cursor, Row
-from typing import List, Optional
+from sqlite3 import Connection, Cursor
+from typing import Any, List, Optional
 
 import autosubliminal
 from autosubliminal.core.show import ShowDetails, ShowEpisodeDetails, ShowSettings
@@ -13,28 +13,28 @@ from autosubliminal.util.db import to_text
 log = logging.getLogger(__name__)
 
 
-def _show_details_factory(cursor: Cursor, row: Row) -> ShowDetails:
+def _show_details_factory(cursor: Cursor, row: tuple[Any, ...]) -> ShowDetails:
     show_details = ShowDetails()
     for idx, col in enumerate(cursor.description):
         show_details.set_attr(col[0], row[idx])
     return show_details
 
 
-def _show_episode_details_factory(cursor: Cursor, row: Row) -> ShowEpisodeDetails:
+def _show_episode_details_factory(cursor: Cursor, row: tuple[Any, ...]) -> ShowEpisodeDetails:
     show_episode_details = ShowEpisodeDetails()
     for idx, col in enumerate(cursor.description):
         show_episode_details.set_attr(col[0], row[idx])
     return show_episode_details
 
 
-def _show_settings_factory(cursor: Cursor, row: Row) -> ShowSettings:
+def _show_settings_factory(cursor: Cursor, row: tuple[Any, ...]) -> ShowSettings:
     show_settings = ShowSettings()
     for idx, col in enumerate(cursor.description):
         show_settings.set_attr(col[0], row[idx])
     return show_settings
 
 
-def _subtitle_factory(cursor: Cursor, row: Row) -> Subtitle:
+def _subtitle_factory(cursor: Cursor, row: tuple[Any, ...]) -> Subtitle:
     subtitle = Subtitle()
     for idx, col in enumerate(cursor.description):
         subtitle.set_attr(col[0], row[idx])
@@ -145,7 +145,7 @@ class ShowEpisodeDetailsDb(object):
 
         self._query_get_all_for_show = 'SELECT * FROM show_episode_details WHERE show_tvdb_id=?'
         self._query_get_all_for_show_available = (
-            'SELECT * FROM show_episode_details ' 'WHERE show_tvdb_id=? AND path IS NOT NULL AND path!=""'
+            'SELECT * FROM show_episode_details WHERE show_tvdb_id=? AND path IS NOT NULL AND path!=""'
         )
         self._query_get = 'SELECT * FROM show_episode_details WHERE tvdb_id=?'
         self._query_get_by_show = 'SELECT * FROM show_episode_details WHERE show_tvdb_id=? AND season=? AND episode=?'
@@ -420,8 +420,7 @@ class ShowSettingsDb(object):
         self._query_get = 'SELECT * FROM show_settings WHERE tvdb_id=?'
         self._query_set = 'INSERT INTO show_settings VALUES(?,?,?,?,?)'
         self._query_update = (
-            'UPDATE show_settings SET wanted_languages=?, refine=?, hearing_impaired=?, '
-            'utf8_encoding=? WHERE tvdb_id=?'
+            'UPDATE show_settings SET wanted_languages=?, refine=?, hearing_impaired=?, utf8_encoding=? WHERE tvdb_id=?'
         )
         self._query_delete = 'DELETE FROM show_settings WHERE tvdb_id=?'
 

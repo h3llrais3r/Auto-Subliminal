@@ -2,8 +2,8 @@
 
 import logging
 import sqlite3
-from sqlite3 import Connection, Cursor, Row
-from typing import List, Optional
+from sqlite3 import Connection, Cursor
+from typing import Any, List, Optional
 
 import autosubliminal
 from autosubliminal.core.movie import MovieDetails, MovieSettings
@@ -13,21 +13,21 @@ from autosubliminal.util.db import to_text
 log = logging.getLogger(__name__)
 
 
-def _movie_details_factory(cursor: Cursor, row: Row) -> MovieDetails:
+def _movie_details_factory(cursor: Cursor, row: tuple[Any, ...]) -> MovieDetails:
     movie_details = MovieDetails()
     for idx, col in enumerate(cursor.description):
         movie_details.set_attr(col[0], row[idx])
     return movie_details
 
 
-def _movie_settings_factory(cursor: Cursor, row: Row) -> MovieSettings:
+def _movie_settings_factory(cursor: Cursor, row: tuple[Any, ...]) -> MovieSettings:
     movie_settings = MovieSettings()
     for idx, col in enumerate(cursor.description):
         movie_settings.set_attr(col[0], row[idx])
     return movie_settings
 
 
-def _subtitle_factory(cursor: Cursor, row: Row) -> Subtitle:
+def _subtitle_factory(cursor: Cursor, row: tuple[Any, ...]) -> Subtitle:
     subtitle = Subtitle()
     for idx, col in enumerate(cursor.description):
         subtitle.set_attr(col[0], row[idx])
