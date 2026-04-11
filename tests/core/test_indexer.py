@@ -152,6 +152,7 @@ def test_get_imdb_id() -> None:
     )
     # By fallback search
     assert indexer.get_imdb_id_and_year('Bullet', year=2019, force_search=True, store_id=False) == ('tt14741500', 2019)
+    assert indexer.get_imdb_id_and_year('Bullet', year=2014, force_search=True, store_id=False) == ('tt2544734', 2014)
 
 
 def test_get_imdb_id_from_movie_name_mapping(monkeypatch: MonkeyPatch) -> None:
