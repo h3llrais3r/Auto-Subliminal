@@ -8,7 +8,7 @@ cherrypy 18.10.0 Object-Oriented HTTP framework
 |-- cheroot >=8.2.1
 |   |-- jaraco-functools * 
 |   |   `-- more-itertools * 
-|   `-- more-itertools >=2.6 (circular dependency aborted here)
+|   `-- more-itertools >=2.6 
 |-- jaraco-collections *
 |   `-- jaraco-text * 
 |       |-- autocommand * 
@@ -16,7 +16,7 @@ cherrypy 18.10.0 Object-Oriented HTTP framework
 |       |   `-- backports-tarfile * 
 |       |-- jaraco-functools * 
 |       |   `-- more-itertools * 
-|       `-- more-itertools * (circular dependency aborted here)
+|       `-- more-itertools * 
 |-- more-itertools *
 |-- portend >=2.1.1
 |   `-- tempora >=1.8 
@@ -58,7 +58,7 @@ ffsubsync 0.4.31
 |-- typing-extensions *
 |-- webrtcvad *
 `-- webrtcvad-wheels *
-gitpython 3.1.49 GitPython is a Python library used to interact with Git repositories
+gitpython 3.1.50 GitPython is a Python library used to interact with Git repositories
 `-- gitdb >=4.0.1,<5
     `-- smmap >=3.0.1,<6 
 gntp 1.0.3 Growl Notification Transport Protocol for Python
@@ -94,9 +94,9 @@ imdbinfo 0.8.3 A Python service for querying IMDb data
     |-- annotated-types >=0.6.0 
     |-- pydantic-core 2.41.5 
     |   `-- typing-extensions >=4.14.1 
-    |-- typing-extensions >=4.14.1 (circular dependency aborted here)
+    |-- typing-extensions >=4.14.1 
     `-- typing-inspection >=0.4.2 
-        `-- typing-extensions >=4.12.0 (circular dependency aborted here)
+        `-- typing-extensions >=4.12.0 
 jsonpickle 4.1.1 jsonpickle encodes/decodes any Python object to/from JSON
 langdetect 1.0.9 Language detection library ported from Google's language-detection.
 `-- six *
@@ -169,7 +169,7 @@ subliminal 2.5.0 Subtitles, faster than your thoughts
 |   |-- pymediainfo >=7.0.1,<8.0.0 
 |   |-- pyyaml >=6.0,<7.0 
 |   `-- trakit >=0.2.2,<0.3.0 
-|       |-- babelfish >=0.6.0,<0.7.0 (circular dependency aborted here)
+|       |-- babelfish >=0.6.0,<0.7.0 
 |       `-- rebulk >=3.1.0,<4.0.0 
 |-- platformdirs >=3
 |-- pysubs2 >=1.7
