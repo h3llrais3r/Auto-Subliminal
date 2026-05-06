@@ -70,7 +70,7 @@ pytest-mock = "3.15.1"
 requests-mock = "1.12.1"
 
 # Tooling
-mypy = "1.20.2"
+mypy = "2.0.0"
 pigar = "2.2.0"
 ruff = "0.15.12"
 types-requests = "2.33.0.20260408"
