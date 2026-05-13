@@ -70,17 +70,18 @@ guessit 3.8.0 GuessIt - a library for guessing information from video filenames.
 html5lib 1.1 HTML parser based on the WHATWG HTML specification
 |-- six >=1.9
 `-- webencodings *
-imdbinfo 0.8.4 A Python service for querying IMDb data
-|-- cryptography *
-|   |-- cffi >=2.0.0 
-|   |   `-- pycparser * 
-|   `-- typing-extensions >=4.13.2 
-|-- curl-cffi *
-|   |-- certifi >=2024.2.2 
-|   `-- cffi >=1.12.0 
-|       `-- pycparser * 
+imdbinfo 0.9.0 A Python service for querying IMDb data
 |-- deprecated *
 |   `-- wrapt >=1.10,<3 
+|-- imdbinfo-aws *
+|   |-- cryptography >=41 
+|   |   |-- cffi >=2.0.0 
+|   |   |   `-- pycparser * 
+|   |   `-- typing-extensions >=4.13.2 
+|   `-- curl-cffi >=0.6 
+|       |-- certifi >=2024.2.2 
+|       `-- cffi >=1.12.0 
+|           `-- pycparser * 
 |-- jmespath *
 |-- lxml *
 |-- niquests *
