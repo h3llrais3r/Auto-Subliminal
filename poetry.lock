@@ -1432,20 +1432,19 @@ all = ["flake8 (>=7.1.1)", "mypy (>=1.11.2)", "pytest (>=8.3.2)", "ruff (>=0.6.2
 
 [[package]]
 name = "imdbinfo"
-version = "0.8.4"
+version = "0.9.0"
 description = "A Python service for querying IMDb data"
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "imdbinfo-0.8.4-py3-none-any.whl", hash = "sha256:3134e706ca4a1534511742fcea2def11dd50e7bd7f05134c311faad405dead5e"},
-    {file = "imdbinfo-0.8.4.tar.gz", hash = "sha256:8cedb3ad1cb72cd30a1a13f6b04587880f68085f8945af4ea7772f929e626f61"},
+    {file = "imdbinfo-0.9.0-py3-none-any.whl", hash = "sha256:1b25319b58227cb8d21615afac35a3668739cc1d81da1943b8059751e105493c"},
+    {file = "imdbinfo-0.9.0.tar.gz", hash = "sha256:fcdb797c019a36cf294d45e0fd79dd7caaab4c8ce81e13b621e25a8822078df6"},
 ]
 
 [package.dependencies]
-cryptography = "*"
-curl_cffi = "*"
 deprecated = "*"
+imdbinfo-aws = "*"
 jmespath = "*"
 lxml = "*"
 niquests = "*"
@@ -1455,6 +1454,43 @@ pydantic = "*"
 build = ["build", "twine"]
 dev = ["black", "mypy", "pytest (>=7.0)", "ruff"]
 test = ["pytest (>=7.0)"]
+
+[[package]]
+name = "imdbinfo-aws"
+version = "1.0.3"
+description = "Compiled AWS WAF solver extension for imdbinfo (Cython binary)"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "imdbinfo_aws-1.0.3-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:1e264a15ebd3ff7e607956a98e1689f9bbebe053d6fc35bf7a224b3dd514709a"},
+    {file = "imdbinfo_aws-1.0.3-cp310-cp310-macosx_11_0_x86_64.whl", hash = "sha256:8c955a34a468a23448b41bdcc8f53af66364e0bbf6385fb6fa2b4bb153b8efd6"},
+    {file = "imdbinfo_aws-1.0.3-cp310-cp310-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:75ac3f025ff5accdc9800894fcc84e8f9e25aa56d71fc9e337332bb8addb959b"},
+    {file = "imdbinfo_aws-1.0.3-cp310-cp310-win_amd64.whl", hash = "sha256:9695ab883c2b1621eda8c7d5b9c75d76442bd5b0c27b92ea9931185fdb310ad9"},
+    {file = "imdbinfo_aws-1.0.3-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:b0138bf14fa102ba48008c67171559762c7efd9c0fa38017d9c5e8575f60603e"},
+    {file = "imdbinfo_aws-1.0.3-cp311-cp311-macosx_11_0_x86_64.whl", hash = "sha256:178d6d3822039f36b851691677d0ebba8159ab941b4d10d31dc9c87793f0d684"},
+    {file = "imdbinfo_aws-1.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:dbc7659a682ffb3b425431ecee11ec3d7d72db28d74e9d03879e3430622fab9c"},
+    {file = "imdbinfo_aws-1.0.3-cp311-cp311-win_amd64.whl", hash = "sha256:8a88fb9e69b0e3c5e9582755175f630ae9def694768251b8315a3b0db66496e1"},
+    {file = "imdbinfo_aws-1.0.3-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:061fbacbb0477b7a18d8a80e2105a4603162b8098a2c5202ddffbdcad22cb6ce"},
+    {file = "imdbinfo_aws-1.0.3-cp312-cp312-macosx_11_0_x86_64.whl", hash = "sha256:9070bd153b1b2e46213de0e97453397247148f56ca38d653ba57cf8e151bdbd7"},
+    {file = "imdbinfo_aws-1.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:173da7af6f204005094704fdb2f9f1db35bf74661b912cda1d4170559d513214"},
+    {file = "imdbinfo_aws-1.0.3-cp312-cp312-win_amd64.whl", hash = "sha256:a0bbeaa6174caa2059962255b6b9f356e9a016ffe9b73626c9d5cbf1789dacd7"},
+    {file = "imdbinfo_aws-1.0.3-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:65ac7593b0e15291221952a05ac09de80774585ac6e929fbe24af2715e6239f5"},
+    {file = "imdbinfo_aws-1.0.3-cp313-cp313-macosx_11_0_x86_64.whl", hash = "sha256:02157140d01a59f063a15a8df4d06f5c772010067874e2cef08e6f0206289db1"},
+    {file = "imdbinfo_aws-1.0.3-cp313-cp313-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:0beddfb963e9537254d631ca7b434c1690caae9e0019a27f59bd41eceb18bb81"},
+    {file = "imdbinfo_aws-1.0.3-cp313-cp313-win_amd64.whl", hash = "sha256:144a1af7b43500714803188a4ff221457f97938b09e391317c46b8c8243709ec"},
+    {file = "imdbinfo_aws-1.0.3-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:45f379bff72f1216b917d00605dfad2998b564aa374e7034b8ebbbd54d841dff"},
+    {file = "imdbinfo_aws-1.0.3-cp314-cp314-macosx_11_0_x86_64.whl", hash = "sha256:8527a5e2fe66b270c710e80f8edf910367b2e3735d3b21e53ae2ec79350d86ef"},
+    {file = "imdbinfo_aws-1.0.3-cp314-cp314-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:317efdc51e647d3ecd69d3f88ded9ff1d8b7a66a2294a078c6a471f2ebb6181b"},
+    {file = "imdbinfo_aws-1.0.3-cp314-cp314-win_amd64.whl", hash = "sha256:476e0fa7979eb53a2ca68e25478e46fedad38cd0d7f22fab5851facac71e5272"},
+]
+
+[package.dependencies]
+cryptography = ">=41"
+curl_cffi = ">=0.6"
+
+[package.extras]
+dev = ["Cython (>=3.0)", "cibuildwheel (>=2.19)", "pytest"]
 
 [[package]]
 name = "iniconfig"
@@ -4511,4 +4547,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "0d4dbbb24a6c7e4361480fd8aa191f35b310cb6b5195aaf6248980f7a108f310"
+content-hash = "ce87cfb4cb89f30fe184d5f4cbf36b73084005ac167b9e03e2b378a029bf95de"
