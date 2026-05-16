@@ -76,7 +76,7 @@ rebulk==3.2.0
 # autosubliminal\providers\addic7ed_custom.py: 11
 # autosubliminal\refiners\omdb_custom.py: 5
 # autosubliminal\util\common.py: 16
-requests==2.33.1
+requests==2.34.2
 # autosubliminal\server\api\settings.py: 8
 requests-oauthlib==2.0.0
 # autosubliminal\core\websocket.py: 10
