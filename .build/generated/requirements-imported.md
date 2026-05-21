@@ -82,7 +82,7 @@ requests-oauthlib==2.0.0
 # autosubliminal\core\websocket.py: 10
 schema==0.7.8
 # autosubliminal\__init__.py: 15
-stevedore==5.7.0
+stevedore==5.8.0
 # autosubliminal\__init__.py: 301,333,334,335
 # autosubliminal\core\item.py: 11
 # autosubliminal\providers\addic7ed_custom.py: 12,13,14,15,16,17,18,19,20
