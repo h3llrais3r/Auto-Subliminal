@@ -1135,14 +1135,14 @@ dev = ["Sphinx (==2.1.0)", "future (==0.17.1)", "numpy (==1.16.4)", "pytest (==4
 
 [[package]]
 name = "ffsubsync"
-version = "0.4.31"
+version = "0.4.32"
 description = ""
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "ffsubsync-0.4.31-py2.py3-none-any.whl", hash = "sha256:8579cd4a573026cf0fe0645c7ffe68fb907e8c1310898323c36d11555c8520eb"},
-    {file = "ffsubsync-0.4.31.tar.gz", hash = "sha256:9a01f79bc1243b8a55242dfb7832d0a93314e386f70062b99ca33ac6440f92c7"},
+    {file = "ffsubsync-0.4.32-py2.py3-none-any.whl", hash = "sha256:78d340f24cca3169dfaf32e3c7d6d691ea8c256d07f46150bb6ee9684a01f2b3"},
+    {file = "ffsubsync-0.4.32.tar.gz", hash = "sha256:1748f896c62c4a22f388aa81b5ded111cd46cd485347207c739a9217133d617d"},
 ]
 
 [package.dependencies]
@@ -1154,12 +1154,10 @@ ffmpeg-python = "*"
 numpy = ">=1.12.0"
 pysubs2 = {version = ">=1.2.0", markers = "python_version >= \"3.7\""}
 rich = "*"
-setuptools = "*"
 srt = ">=3.0.0"
 tqdm = "*"
 typing_extensions = "*"
-webrtcvad = {version = "*", markers = "platform_system != \"Windows\""}
-webrtcvad-wheels = {version = "*", markers = "platform_system == \"Windows\""}
+webrtcvad-wheels = "*"
 
 [[package]]
 name = "frozenlist"
@@ -4105,28 +4103,12 @@ files = [
 ]
 
 [[package]]
-name = "webrtcvad"
-version = "2.0.10"
-description = "Python interface to the Google WebRTC Voice Activity Detector (VAD)"
-optional = false
-python-versions = "*"
-groups = ["main"]
-markers = "platform_system != \"Windows\""
-files = [
-    {file = "webrtcvad-2.0.10.tar.gz", hash = "sha256:f1bed2fb25b63fb7b1a55d64090c993c9c9167b28485ae0bcdd81cf6ede96aea"},
-]
-
-[package.extras]
-dev = ["check-manifest", "memory_profiler", "nose", "psutil", "unittest2", "zest.releaser"]
-
-[[package]]
 name = "webrtcvad-wheels"
 version = "2.0.14"
 description = "Python interface to the Google WebRTC Voice Activity Detector (VAD) [released with binary wheels!]"
 optional = false
 python-versions = "*"
 groups = ["main"]
-markers = "platform_system == \"Windows\""
 files = [
     {file = "webrtcvad_wheels-2.0.14-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:83824316430e3d7bea1461fcd58840190bfea3cf54f574b562bc09d9233d7404"},
     {file = "webrtcvad_wheels-2.0.14-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:52d446a7f7ca07ad4c17b67ed7610871f157c58412a71c36782ae85e0e822e11"},
@@ -4549,4 +4531,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "7349c07ff8fff1e60cd8f51a1b286b094900b444bb938cabc7231b9884a377db"
+content-hash = "23d6569402f5557216e8af69033342f6ba3f2d1d7542e314b07f9fdf149080bf"
