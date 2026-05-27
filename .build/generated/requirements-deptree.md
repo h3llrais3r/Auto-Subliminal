@@ -102,13 +102,12 @@ langdetect 1.0.9 Language detection library ported from Google's language-detect
 packaging 26.2 Core utilities for Python packages
 pysrt 1.1.2 SubRip (.srt) subtitle parser and writer
 `-- chardet *
-python-anticaptcha 1.0.0 Client library for solve captchas with Anticaptcha.com support.
-|-- requests *
-|   |-- certifi >=2023.5.7 
-|   |-- charset-normalizer >=2,<4 
-|   |-- idna >=2.5,<4 
-|   `-- urllib3 >=1.26,<3 
-`-- six *
+python-anticaptcha 2.0.0 Client library for solve captchas with Anticaptcha.com support.
+`-- requests *
+    |-- certifi >=2023.5.7 
+    |-- charset-normalizer >=2,<4 
+    |-- idna >=2.5,<4 
+    `-- urllib3 >=1.26,<3 
 python-dateutil 2.9.0.post0 Extensions to the standard Python datetime module
 `-- six >=1.5
 python-twitter 3.5 A Python wrapper around the Twitter API
