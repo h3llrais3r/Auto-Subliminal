@@ -3027,23 +3027,23 @@ dev = ["pre-commit", "pytest-asyncio", "tox"]
 
 [[package]]
 name = "python-anticaptcha"
-version = "1.0.0"
+version = "2.0.0"
 description = "Client library for solve captchas with Anticaptcha.com support."
 optional = false
-python-versions = "*"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "python-anticaptcha-1.0.0.tar.gz", hash = "sha256:058a9e3ca5dbdcaa98108c8b5181404cb4ffdba5261162a4301d60f985c63710"},
-    {file = "python_anticaptcha-1.0.0-py2.py3-none-any.whl", hash = "sha256:12e47cc1f27a0ab2080975a9c8b2554219570dad1d8feb0b9911078b17767f27"},
+    {file = "python_anticaptcha-2.0.0-py3-none-any.whl", hash = "sha256:0b27481a54b73526f78752c57c3029585895ac3f7bcedbc5269bcd82c635dd66"},
+    {file = "python_anticaptcha-2.0.0.tar.gz", hash = "sha256:4a5c4c1068cf5a24af2e91deda5615066b8399df544f103e60045de554b95fed"},
 ]
 
 [package.dependencies]
 requests = "*"
-six = "*"
 
 [package.extras]
-docs = ["sphinx"]
-tests = ["nose2", "retry", "selenium"]
+async = ["httpx (>=0.24)"]
+docs = ["sphinx", "sphinx-rtd-theme"]
+tests = ["httpx (>=0.24)", "pytest", "pytest-asyncio", "retry", "selenium"]
 
 [[package]]
 name = "python-dateutil"
@@ -4531,4 +4531,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "0b509c44a6d35be83de56c28309ef7b5047d2e550296d955a4fdbdb38ca29425"
+content-hash = "9c49ece6a84b77fbb01f6dbcc825d743e2791d9440b92caefbe136613405174c"
