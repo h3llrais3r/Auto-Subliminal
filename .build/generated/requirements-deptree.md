@@ -96,7 +96,7 @@ imdbinfo 0.9.1 A Python service for querying IMDb data
     |-- typing-extensions >=4.14.1 
     `-- typing-inspection >=0.4.2 
         `-- typing-extensions >=4.12.0 
-jsonpickle 4.1.1 jsonpickle encodes/decodes any Python object to/from JSON
+jsonpickle 4.1.2 jsonpickle encodes/decodes any Python object to/from JSON
 langdetect 1.0.9 Language detection library ported from Google's language-detection.
 `-- six *
 packaging 26.2 Core utilities for Python packages
