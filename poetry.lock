@@ -1135,14 +1135,14 @@ dev = ["Sphinx (==2.1.0)", "future (==0.17.1)", "numpy (==1.16.4)", "pytest (==4
 
 [[package]]
 name = "ffsubsync"
-version = "0.4.32"
+version = "0.5.0"
 description = ""
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "ffsubsync-0.4.32-py2.py3-none-any.whl", hash = "sha256:78d340f24cca3169dfaf32e3c7d6d691ea8c256d07f46150bb6ee9684a01f2b3"},
-    {file = "ffsubsync-0.4.32.tar.gz", hash = "sha256:1748f896c62c4a22f388aa81b5ded111cd46cd485347207c739a9217133d617d"},
+    {file = "ffsubsync-0.5.0-py2.py3-none-any.whl", hash = "sha256:ecaa33340ebc61ad993bc735ffbe903a76457df216ac4a5b0756d56029ae3cfe"},
+    {file = "ffsubsync-0.5.0.tar.gz", hash = "sha256:d23d56bca31e5529693bb0bcbd036da16702114fed44ee349a48b685361538e4"},
 ]
 
 [package.dependencies]
@@ -4531,4 +4531,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "05ad24fc6b911dc87911ba4fa173fd0e3050808b76bfba07aa050a2daea7bc3a"
+content-hash = "cf42c41334ab69ebd9703da91ea0ef2faddef5560b25ba1cef6a3c78680ab2ab"
