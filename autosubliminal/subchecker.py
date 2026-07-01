@@ -684,7 +684,7 @@ def _construct_download_item(
 
     # Construct the download item
     download_item = DownloadItem(wanted_item)
-    subtitle_path = subliminal.subtitle.get_subtitle_path(download_item.video.name, None if single else language)
+    subtitle_path = subliminal.subtitle.get_subtitle_path(download_item.video.name, '' if single else str(language))
     download_item.subtitle_path = subtitle_path
     download_item.subtitle_link = subtitle.page_link
     download_item.language = str(language)  # return alpha2 (f.e. 'nl') or ietf code (f.e. 'pt-BR')
