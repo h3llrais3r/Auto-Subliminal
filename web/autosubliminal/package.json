@@ -70,7 +70,7 @@
     "@angular-eslint/eslint-plugin-template": "15.2.1",
     "@angular-eslint/schematics": "15.2.1",
     "@angular-eslint/template-parser": "15.2.1",
-    "@angular/cli": "15.2.8",
+    "@angular/cli": "22.0.5",
     "@angular/compiler-cli": "15.2.9",
     "@types/jasmine": "4.3.1",
     "@types/jasminewd2": "2.0.10",
