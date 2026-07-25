@@ -38,7 +38,7 @@ dogpile-cache 1.5.0 A caching front-end based on the Dogpile lock.
 |-- stevedore >=3.0.0
 `-- typing-extensions >=4.0.1
 enzyme 0.5.2 Video metadata parser
-ffsubsync 0.5.0
+ffsubsync 0.5.1
 |-- auditok 0.1.5
 |-- chardet *
 |-- charset-normalizer *
