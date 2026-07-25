@@ -1014,7 +1014,6 @@ description = "cChardet is high speed universal character encoding detector."
 optional = false
 python-versions = "*"
 groups = ["main"]
-markers = "python_version < \"3.13\""
 files = [
     {file = "faust-cchardet-2.1.19.tar.gz", hash = "sha256:f89386297cde0c8e0f5e21464bc2d6d0e4a4fc1b1d77cdb238ca24d740d872e0"},
     {file = "faust_cchardet-2.1.19-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:fd76c4c39fde29d8d8a0a79d63c15cd698d79a6cd21350f27a55c5f700ae37a0"},
@@ -1120,21 +1119,21 @@ dev = ["Sphinx (==2.1.0)", "future (==0.17.1)", "numpy (==1.16.4)", "pytest (==4
 
 [[package]]
 name = "ffsubsync"
-version = "0.5.0"
+version = "0.5.1"
 description = ""
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "ffsubsync-0.5.0-py2.py3-none-any.whl", hash = "sha256:ecaa33340ebc61ad993bc735ffbe903a76457df216ac4a5b0756d56029ae3cfe"},
-    {file = "ffsubsync-0.5.0.tar.gz", hash = "sha256:d23d56bca31e5529693bb0bcbd036da16702114fed44ee349a48b685361538e4"},
+    {file = "ffsubsync-0.5.1-py2.py3-none-any.whl", hash = "sha256:a312ea5d3c7e3e15a13565b2327022e2568ed6f12104b3ecf940ec4566d9ab4e"},
+    {file = "ffsubsync-0.5.1.tar.gz", hash = "sha256:91a57724d95839f2e861758852e320789fb003c4f8c3432b3ecd928d9df65eb5"},
 ]
 
 [package.dependencies]
 auditok = "0.1.5"
 chardet = {version = "*", markers = "python_version >= \"3.7\""}
 charset_normalizer = "*"
-faust-cchardet = {version = "*", markers = "python_version < \"3.13\""}
+faust-cchardet = "*"
 ffmpeg-python = "*"
 numpy = ">=1.12.0"
 pysubs2 = {version = ">=1.2.0", markers = "python_version >= \"3.7\""}
@@ -4516,4 +4515,4 @@ test = ["zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "31ce37917173ab846cb4427b455ca9dd3da26017f70bb1d22f17cff5ac311f45"
+content-hash = "dd0678eca3aa41b5cbb659186e3f4cc4825419a9f1cd321775f312477ba866df"
