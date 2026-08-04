@@ -56,7 +56,7 @@ ffsubsync 0.5.1
 |   `-- colorama * 
 |-- typing-extensions *
 `-- webrtcvad-wheels *
-gitpython 3.1.55 GitPython is a Python library used to interact with Git repositories
+gitpython 3.1.57 GitPython is a Python library used to interact with Git repositories
 `-- gitdb >=4.0.1,<5
     `-- smmap >=3.0.1,<6 
 gntp 1.0.3 Growl Notification Transport Protocol for Python
