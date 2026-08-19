@@ -99,7 +99,7 @@ imdbinfo 0.9.9 A Python service for querying IMDb data
 jsonpickle 4.1.2 jsonpickle encodes/decodes any Python object to/from JSON
 langdetect 1.0.9 Language detection library ported from Google's language-detection.
 `-- six *
-packaging 26.2 Core utilities for Python packages
+packaging 26.3 Core utilities for Python packages
 pysrt 1.1.2 SubRip (.srt) subtitle parser and writer
 `-- chardet *
 python-anticaptcha 1.0.0 Client library for solve captchas with Anticaptcha.com support.
