@@ -68,7 +68,7 @@ guessit 3.8.0 GuessIt - a library for guessing information from video filenames.
 html5lib 1.1 HTML parser based on the WHATWG HTML specification
 |-- six >=1.9
 `-- webencodings *
-imdbinfo 0.9.10 A Python service for querying IMDb data
+imdbinfo 0.10.0 A Python service for querying IMDb data
 |-- deprecated *
 |   `-- wrapt >=1.10,<3 
 |-- imdbinfo-aws *
@@ -125,7 +125,7 @@ python-twitter 3.5 A Python wrapper around the Twitter API
         |-- charset-normalizer >=2,<4 
         |-- idna >=2.5,<4 
         `-- urllib3 >=1.26,<3 
-rebulk 3.2.0 Rebulk - Define simple search patterns in bulk to perform advanced matching on any string.
+rebulk 6.0.1 Rebulk - Define simple search patterns in bulk to perform advanced matching on any string.
 requests 2.34.2 Python HTTP for Humans.
 |-- certifi >=2023.5.7
 |-- charset-normalizer >=2,<4
@@ -163,13 +163,13 @@ subliminal 2.5.0 Subtitles, faster than your thoughts
 |   |   `-- six >=1.5 
 |   `-- rebulk >=3.2.0 
 |-- knowit >=0.5.5
-|   |-- babelfish >=0.6.1,<0.7.0 
-|   |-- enzyme >=0.5.2,<0.6.0 
-|   |-- pymediainfo >=7.0.1,<8.0.0 
-|   |-- pyyaml >=6.0,<7.0 
-|   `-- trakit >=0.2.2,<0.3.0 
-|       |-- babelfish >=0.6.0,<0.7.0 
-|       `-- rebulk >=3.1.0,<4.0.0 
+|   |-- babelfish >=0.6.1 
+|   |-- enzyme >=0.5.2 
+|   |-- pymediainfo >=7.0.1 
+|   |-- pyyaml >=6.0 
+|   `-- trakit >=0.2.2 
+|       |-- babelfish >=0.6.0 
+|       `-- rebulk >=3.1.0 
 |-- platformdirs >=3
 |-- pysubs2 >=1.7
 |-- requests >=2.0
