@@ -74,7 +74,7 @@ mypy = "2.3.1"
 pigar = "2.2.0"
 ruff = "0.16.6"
 types-requests = "2.33.0.20260712"
-types-setuptools = "82.0.0.20260518"
+types-setuptools = "84.0.0.20260812"
 types-python-dateutil = "2.9.0.20260807"
 
 [tool.coverage.run]
