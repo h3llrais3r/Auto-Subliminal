@@ -49,7 +49,7 @@ gntp==1.0.3
 guessit==3.8.0
 # autosubliminal\core\indexer.py: 10,11
 # autosubliminal\core\movie.py: 8
-imdbinfo==0.9.10
+imdbinfo==0.10.0
 # autosubliminal\util\json.py: 6
 jsonpickle==4.1.2
 # autosubliminal\__init__.py: 376,377
@@ -66,7 +66,7 @@ python-dateutil==2.9.0.post0
 # autosubliminal\notifiers\twitter.py: 7
 python-twitter==3.5
 # autosubliminal\parsers\guessit\rules.py: 8,9,10,11
-rebulk==3.2.0
+rebulk==6.0.1
 # autosubliminal\core\cache.py: 8
 # autosubliminal\notifiers\prowl.py: 7
 # autosubliminal\notifiers\pushalot.py: 7
