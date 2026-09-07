@@ -38,7 +38,7 @@ enzyme==0.5.2
 # autosubliminal\subsynchronizer.py: 8
 ffsubsync==0.5.1
 # autosubliminal\versionchecker.py: 11
-GitPython==3.1.57
+GitPython==3.1.61
 # autosubliminal\notifiers\growl.py: 7
 gntp==1.0.3
 # autosubliminal\__init__.py: 286
@@ -49,7 +49,7 @@ gntp==1.0.3
 guessit==3.8.0
 # autosubliminal\core\indexer.py: 10,11
 # autosubliminal\core\movie.py: 8
-imdbinfo==0.9.10
+imdbinfo==0.10.0
 # autosubliminal\util\json.py: 6
 jsonpickle==4.1.2
 # autosubliminal\__init__.py: 376,377

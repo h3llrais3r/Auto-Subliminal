@@ -56,7 +56,7 @@ ffsubsync 0.5.1
 |   `-- colorama * 
 |-- typing-extensions *
 `-- webrtcvad-wheels *
-gitpython 3.1.57 GitPython is a Python library used to interact with Git repositories
+gitpython 3.1.61 GitPython is a Python library used to interact with Git repositories
 `-- gitdb >=4.0.1,<5
     `-- smmap >=3.0.1,<6 
 gntp 1.0.3 Growl Notification Transport Protocol for Python
@@ -68,7 +68,7 @@ guessit 3.8.0 GuessIt - a library for guessing information from video filenames.
 html5lib 1.1 HTML parser based on the WHATWG HTML specification
 |-- six >=1.9
 `-- webencodings *
-imdbinfo 0.9.10 A Python service for querying IMDb data
+imdbinfo 0.10.0 A Python service for querying IMDb data
 |-- deprecated *
 |   `-- wrapt >=1.10,<3 
 |-- imdbinfo-aws *
