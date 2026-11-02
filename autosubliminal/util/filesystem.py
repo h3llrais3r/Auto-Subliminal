@@ -183,12 +183,20 @@ def get_embedded_subtitles(dirname: str, filename: str, log_scan: bool = False) 
                 for st in cast(List[SubtitleTrack], mkv.subtitle_tracks):
                     if st.language:
                         try:
-                            languages.add(Language.fromalpha3b(st.language))
+                            # Check alpha2 and alpha3t codes
+                            languages.add(Language.fromietf(st.language))
                         except BabelfishError:
-                            if log_scan:
-                                log.error('Embedded subtitle track language %r is not a valid language', st.language)
+                            try:
+                                # Check alpha3b codes
+                                languages.add(Language.fromalpha3b(st.language))
+                            except BabelfishError:
+                                if log_scan:
+                                    log.error(
+                                        'Embedded subtitle track language %r is not a valid language', st.language
+                                    )
                     elif st.name:
                         try:
+                            # Check name codes
                             languages.add(Language.fromname(st.name))
                         except BabelfishError:
                             if log_scan:
